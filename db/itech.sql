@@ -84,7 +84,6 @@ LOCK TABLES `_system` WRITE;
 INSERT INTO `_system` VALUES ('Country','','en_EN.UTF-8','en_EN.UTF-8',0,0,1,1,1,5,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,0,0,1,1,1);
 /*!40000 ALTER TABLE `_system` ENABLE KEYS */;
 alter table _system add column display_facility_custom1 tinyint(1) NOT NULL DEFAULT '0';
-alter table _system add column display_training_completion tinyint(1) NOT NULL DEFAULT '0';
 UNLOCK TABLES;
 
 --
@@ -221,8 +220,6 @@ SET character_set_client = utf8;
 CREATE TABLE `evaluation_response` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `evaluation_to_training_id` int(11) NOT NULL,
-  `person_id` int(11),
-  `trainer_person_id` int(11),
   `modified_by` int(11) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `is_deleted` tinyint(1) NOT NULL DEFAULT '0',

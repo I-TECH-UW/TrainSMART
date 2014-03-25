@@ -88,6 +88,15 @@ class Peopleadd extends ITechTable
 			"id_address"	=>	$addressid,
 		);
 		$rowArray = $db->insert("link_tutor_addresses", $link);
+		
+		# LINK TUTOR TO INSTITUTION
+		$link = array(
+			"id_tutor"		=>	$tutorid,
+			"id_institution" =>	$param['institutionid'],
+		);
+		$rowArray = $db->insert("link_tutor_institution", $link);
+		
+		
 		return $id;
 	}
 

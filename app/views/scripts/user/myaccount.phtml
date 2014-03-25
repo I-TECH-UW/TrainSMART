@@ -17,7 +17,7 @@ print ScriptContainer::$instance->renderJSHead();
   <div id="content">
      <h1><?php tp('My Account');?></h1>
     <div class="clear"></div>
-    <form action="" id="userForm" method="post">
+    <form action="" id="userForm" method="POST">
 	  <div class="fieldLabel" id="first_name_lbl"><span class="required">*</span><?php echo $this->translation['First Name'];?></div>
 	  <div class="fieldInput"><input type="text" name="first_name" size="32" maxlength="32" value="<?php echo $this->user['first_name'];?>"/></div>
 	  <div class="fieldLabel" id="last_name_lbl"><span class="required">*</span><?php echo $this->translation['Last Name'];?></div>

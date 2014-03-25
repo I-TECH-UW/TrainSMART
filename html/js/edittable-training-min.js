@@ -1,10 +1,10 @@
 /**
  * edittable-training.js / Created by Fuse IQ for ITech /
  * jonah.ellison@fuseiq.com
- *
+ * 
  * Purpose: Creates an YUI DataTable that allows for inline editing and
  * dynamically adding/deleting rows
- *
+ * 
  * For adding/editing training sessions
  */
 
@@ -15,7 +15,7 @@ function makeEditTableTraining(labelAdd, tableData, columnDefs, jsonUrl, linkInf
 		alert(idContainer + ' id not found.');
 	}
 	ITECH.curtablecontainer = idContainer;
-
+	
 	var InlineCellEditing = new function() {
 		this.config = {
 			editLinks : "<a href=\"#\" onclick=\"return false;\">"
@@ -23,10 +23,10 @@ function makeEditTableTraining(labelAdd, tableData, columnDefs, jsonUrl, linkInf
 			deletingText : "<div class=\"editTableDelete\">"
 					+ tr('Deleting...') + "</div>"
 		}
-
+		
 		//for some reason, this function never return, so set our global table objects here
 		ITECH[ITECH.curtablecontainer] = this;
-
+		
 		ITECH.labelTotal = document.getElementById(labelSafe + "_total");
 
 		// Dynamic edit links onClick event handled here
@@ -110,7 +110,7 @@ function makeEditTableTraining(labelAdd, tableData, columnDefs, jsonUrl, linkInf
 					ajaxCallback, queryString);
 		}
 
-		// animate row
+		// animate row        
 		this.flashRow = function(pttId) {
 
 			// Grab the row el and the 2 colors
@@ -541,9 +541,6 @@ var cacheScores = {};
  * Update training score via ajax
  */
 function updateScore(label, pttId, jsonUrl, promptDefault) {
-	
-	var denom = document.trainingForm.denom.value;
-	
 	promptScore = "";
 	if (cacheScores[label] != null && cacheScores[label][pttId] != null) {
 		promptScore = cacheScores[label][pttId];
@@ -551,22 +548,20 @@ function updateScore(label, pttId, jsonUrl, promptDefault) {
 		promptScore = promptDefault;
 	}
 
-	inputScore = prompt( "Denom = " + denom + " Please enter a " + label +
-		" score between 1-100:\nOptionally enter Number Questions Correct/Total Questions, for example 80/105,\n or enter a default denominator, the percentage will be calculated.", promptScore);
+	inputScore = prompt("Please enter a " + label + " score between 1-100:\nOptionally enter Number Questions Correct/Total Questions, for example 80/105, we will calculate the percentage.",
+			promptScore);
 	if (inputScore) {
 		// fraction?
 		if(inputScore.indexOf('/') > 0){
 			parts = inputScore.split('/');
 			inputScore = score = parseInt((parseInt( $.trim(parts[0]) ) / parseInt( $.trim(parts[1]) ) * 100 ));
 		}
-
-		var fScore = parseInt(inputScore)/denom;
-		var score = fScore*100;
-		
-		if (score < 1 || score > 100) {
-		  alert('That is not a valid score.');
-		  updateScore(label, pttId,  jsonUrl, promptDefault);
-		  return;
+		// int
+		score = parseInt(inputScore);
+		if (inputScore != score || score < 1 || score > 100) {
+			alert('That is not a valid score.');
+			updateScore(label, pttId,  jsonUrl, promptDefault);
+			return;
 		}
 
 		// perform Ajax to update score
@@ -591,6 +586,7 @@ function updateScore(label, pttId, jsonUrl, promptDefault) {
 
 		queryPost = "ptt_id=" + pttId + "&label=" + label + "&value=" + score;
 
-		cObj = YAHOO.util.Connect.asyncRequest('POST', jsonUrl, ajaxCallback, queryPost);
+		cObj = YAHOO.util.Connect.asyncRequest('POST', jsonUrl, ajaxCallback,
+				queryPost);
 	}
 }

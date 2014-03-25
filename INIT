@@ -1,0 +1,97 @@
+# Sean Smith 03/25/2014 @ 11:36AM
+#
+# This is the rsync log syncing the latest merged code base
+# (last merge of Greg's and Sean's bases circa Feb 2, 2014)
+# to a clean copy of the latest (at the time) production svn
+# repo hosted by UW. 
+#
+# The files below represent the latest development work since
+# the last commit to the production svn repo.
+# 
+2014/03/25 11:35:16 [3021] building file list
+2014/03/25 11:35:17 [3021] >f+++++++++ .buildpath
+2014/03/25 11:35:17 [3021] >f+++++++++ .project
+2014/03/25 11:35:17 [3021] cd+++++++++ .settings/
+2014/03/25 11:35:17 [3021] >f+++++++++ .settings/org.eclipse.php.core.prefs
+2014/03/25 11:35:17 [3021] >fcsT...... app/controllers/AdminController.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/controllers/DataController.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/controllers/EmployeeController.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/controllers/FacilityController.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/controllers/PartnerController.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/controllers/PersonController.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/controllers/PsfacilityController.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/controllers/ReportsController.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/controllers/StudenteditController.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/controllers/TrainingController.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/models/table/Helper.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/models/table/ITechTable.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/models/table/Institution.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/models/table/Peopleadd.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/models/table/Studentedit.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/models/table/Training.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/models/table/Tutoredit.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/models/table/peoplefind.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/views/helpers/DropDown.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/views/helpers/TrainingViewHelper.php
+2014/03/25 11:35:17 [3021] >fcsT...... app/views/scripts/nav-admin.phtml
+2014/03/25 11:35:17 [3021] >fcsT...... app/views/scripts/admin/training-settings.phtml
+2014/03/25 11:35:17 [3021] >fcsT...... app/views/scripts/cohort/cohortedit.phtml
+2014/03/25 11:35:17 [3021] >fcsT...... app/views/scripts/employee/edit.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/employee/search.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/external/add.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/facility/edit.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/facility/search-location.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/facility/search.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/facility/view.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/index/index.phtml
+2014/03/25 11:35:17 [3021] >fcsT...... app/views/scripts/institution/institutionsearch.phtml
+2014/03/25 11:35:17 [3021] >fcsT...... app/views/scripts/partner/edit.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/partner/search.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/person/addcomd.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/person/addcomp.phtml
+2014/03/25 11:35:17 [3021] >fcsT...... app/views/scripts/person/edit-home-address.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/person/lh.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/person/reports.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/person/viewcomd.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/psfacility/edit.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/psfacility/search-location.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/psfacility/search.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/psfacility/view.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/reports/budgetcode.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/reports/comp.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/reports/compcomp.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/reports/detail.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/reports/employees.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/reports/evaluations.phtml
+2014/03/25 11:35:17 [3021] >fcsT...... app/views/scripts/reports/evaluations_results.phtml
+2014/03/25 11:35:17 [3021] >fcsT...... app/views/scripts/reports/participants-by-training.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/reports/partners.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/reports/prof.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/reports/quescomp.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/reports/ss-comp.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/reports/ss-compcomp.phtml
+2014/03/25 11:35:17 [3021] >fc.T...... app/views/scripts/reports/ss-detail.phtml
+2014/03/25 11:35:18 [3021] >fc.T...... app/views/scripts/reports/ss-prof.phtml
+2014/03/25 11:35:18 [3021] >fc.T...... app/views/scripts/reports/ss-quescomp.phtml
+2014/03/25 11:35:18 [3021] >fcsT...... app/views/scripts/reports/trainings.phtml
+2014/03/25 11:35:18 [3021] >fc.T...... app/views/scripts/site/edit.phtml
+2014/03/25 11:35:18 [3021] >fc.T...... app/views/scripts/site/search-location.phtml
+2014/03/25 11:35:18 [3021] >fc.T...... app/views/scripts/site/view.phtml
+2014/03/25 11:35:18 [3021] >fcsT...... app/views/scripts/studentedit/personview.phtml
+2014/03/25 11:35:18 [3021] >fcsT...... app/views/scripts/studentedit/studentedit.phtml
+2014/03/25 11:35:18 [3021] >fcsT...... app/views/scripts/studentedit/transcript.phtml
+2014/03/25 11:35:18 [3021] >fc.T...... app/views/scripts/training-partner/view.phtml
+2014/03/25 11:35:18 [3021] >fcsT...... app/views/scripts/training/_template_editform.phtml
+2014/03/25 11:35:18 [3021] >fcsT...... app/views/scripts/user/edit.phtml
+2014/03/25 11:35:18 [3021] >fc.T...... app/views/scripts/user/forgot-password.phtml
+2014/03/25 11:35:18 [3021] >fc.T...... app/views/scripts/user/login.phtml
+2014/03/25 11:35:18 [3021] >fc.T...... app/views/scripts/user/myaccount.phtml
+2014/03/25 11:35:18 [3021] >f+++++++++ db/INTERNAL_Merge_20140214.sql
+2014/03/25 11:35:18 [3021] >fcsT...... db/itech.sql
+2014/03/25 11:35:18 [3021] >f+++++++++ html/dummy.php
+2014/03/25 11:35:18 [3021] >f+++++++++ html/css/jquery.tabledrag.css
+2014/03/25 11:35:18 [3021] >fcsT...... html/js/edittable-training-min.js
+2014/03/25 11:35:18 [3021] >fcsT...... html/js/itech-min.js
+2014/03/25 11:35:18 [3021] >f+++++++++ html/js/jquery.tabledrag-min.js
+2014/03/25 11:35:18 [3021] >f+++++++++ sites/globals.php_malawi
+2014/03/25 11:35:18 [3021] sent 2280263 bytes  received 1773 bytes  total size 84277875

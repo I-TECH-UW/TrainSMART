@@ -79,91 +79,14 @@ class ReportsController extends ReportFilterHelpers {
 			'score_percent_change' => '% change',
 			'custom1_phrase' => 'Professional registration number',
 			'city_name' => 'City',
-			'cnt' => t ( 'Count' ), 
-			'active' => @$translation ['Is Active'], 
-			'first_name' => @$translation ['First Name'], 
-			'middle_name' => @$translation ['Middle Name'], 
-			'last_name' => @$translation ['Last Name'], 
-			'training_title' => t('Training').' '.t('Name'), 
-			'province_name' => @$translation ['Region A (Province)'], 
-			'district_name' => @$translation ['Region B (Health District)'], 
-			'pepfar_category_phrase' => @$translation ['PEPFAR Category'],
-			'training_organizer_phrase' => t('Training').' '.t('Organizer'), 
-			'training_level_phrase'=> t('Training').' '.t('Level'),
-			'trainer_language_phrase' => t ( 'Language' ),
-			'training_location_name' => t ( 'Location' ),
-			'training_start_date' => t ( 'Date' ),
-			'training_topic_phrase' => t ('Training').' '.t('topic'),
-			'funding_phrase' => t ( 'Funding' ),
-			'is_tot' => t ( 'TOT' ),
-			'facility_name' => t ('Facility').' '.t('name'),
-		    'facility_id' => t ('Facility ID'),
-			'facility_type_phrase' => t ('Facility').' '.t('type'),
-			'facility_sponsor_phrase' => t ('Facility').' '.t('sponsor'),
-			'course_recommended' => t ( 'Recommended classes' ),
-			'recommended' => t ( 'Recommended' ),
-			'qualification_phrase' => t ( 'Qualification' ) . ' ' . t ( '(primary)' ),
-			'qualification_secondary_phrase' => t ( 'Qualification' ) . ' ' . t ( '(secondary)' ),
-			'gender' => t ( 'Gender' ),
-			'name' => t ( 'Name' ),
-			'email' => t ( 'Email' ),
-			'phone' => t ( 'Phone' ),
-			'cat' => t ( 'Category' ),
-			'language_phrase' => t ( 'Language' ),
-			'trainer_type_phrase' => t ( 'Type' ),
-			'trainer_skill_phrase' => t ( 'Skill' ),
-			'trainer_language_phrase' => t ( 'Language' ),
-			'trainer_topic_phrase' => t ( 'Topics taught' ),
-			'phone_work' => t ( 'Work phone' ),
-			'phone_home' => t ( 'Home phone' ),
-			'phone_mobile' => t ( 'Mobile phone' ),
-			'type_option_id' => 'Type' );
-	
+			'cnt' => t ( 'Count' ), 'active' => @$translation ['Is Active'], 'first_name' => @$translation ['First Name'], 'middle_name' => @$translation ['Middle Name'], 'last_name' => @$translation ['Last Name'], 'training_title' => t('Training').' '.t('Name'), 'province_name' => @$translation ['Region A (Province)'], 'district_name' => @$translation ['Region B (Health District)'], 'pepfar_category_phrase' => @$translation ['PEPFAR Category'], 'training_organizer_phrase' => t('Training').' '.t('Organizer'), 'training_level_phrase' => t('Training').' '.t('Level'), 'trainer_language_phrase' => t ( 'Language' ), 'training_location_name' => t ( 'Location' ), 'training_start_date' => t ( 'Date' ), 'training_topic_phrase' => t ('Training').' '.t('topic'), 'funding_phrase' => t ( 'Funding' ), 'is_tot' => t ( 'TOT' ), 'facility_name' => t ('Facility').' '.t('name'), 'facility_type_phrase' => t ('Facility').' '.t('type'), 'facility_sponsor_phrase' => t ('Facility').' '.t('sponsor'), 'course_recommended' => t ( 'Recommended classes' ), 'recommended' => t ( 'Recommended' ), 'qualification_phrase' => t ( 'Qualification' ) . ' ' . t ( '(primary)' ), 'qualification_secondary_phrase' => t ( 'Qualification' ) . ' ' . t ( '(secondary)' ), 'gender' => t ( 'Gender' ), 'name' => t ( 'Name' ), 'email' => t ( 'Email' ), 'phone' => t ( 'Phone' ), 'cat' => t ( 'Category' ), 'language_phrase' => t ( 'Language' ), 'trainer_type_phrase' => t ( 'Type' ), 'trainer_skill_phrase' => t ( 'Skill' ), 'trainer_language_phrase' => t ( 'Language' ), 'trainer_topic_phrase' => t ( 'Topics taught' ), 'phone_work' => t ( 'Work phone' ), 'phone_home' => t ( 'Home phone' ), 'phone_mobile' => t ( 'Mobile phone' ), 'type_option_id' => 'Type' );
+
 			// action => array(field => label)
 			$headersSpecific = array ('peopleByFacility' => array ('qualification_phrase' => t ( 'Qualification' ) ), 'participantsByCategory' => array ('cnt' => t ( 'Participants' ), 'person_cnt' => t ( 'Unique participants' ) ) );
 		} else {
 			$headers = array (// fieldname => label
-			'id' => 'ID', 
-			'cnt' => t ( 'Count' ), 
-			'active' => @$translation ['Is Active'], 
-			'first_name' => @$translation ['First Name'], 
-			'middle_name' => @$translation ['Middle Name'], 
-			'last_name' => @$translation ['Last Name'], 
-			'training_title' => t('Training').' '.t('Name'), 
-			'province_name' => @$translation ['Region A (Province)'], 
-			'district_name' => @$translation ['Region B (Health District)'], 
-			'pepfar_category_phrase' => @$translation ['PEPFAR Category'], 
-			'training_organizer_phrase' => t('Training').' '.t('Organizer'),
-			'training_level_phrase' => t('Training').' '.t('Level'),
-			'trainer_language_phrase' => t ( 'Language' ),
-			'training_location_name' => t ( 'Location' ),
-			'training_start_date' => t ( 'Date' ),
-			'training_topic_phrase' => t ('Training').' '.t('Topic'),
-			'funding_phrase' => t ( 'Funding' ),
-			'is_tot' => t ( 'TOT' ),
-			'facility_name' => t ('Facility').' '.t('Name'),
-			'facility_id' => t ('Facility ID'),
-			'facility_type_phrase' => t ('Facility').' '.t('Type'),
-			'facility_sponsor_phrase' => t ('Facility').' '.t('Sponsor'),
-			'course_recommended' => t ( 'Recommended classes' ),
-			'recommended' => t ( 'Recommended' ),
-			'qualification_phrase' => t ( 'Qualification' ) . ' ' . t ( '(primary)' ),
-			'qualification_secondary_phrase' => t ( 'Qualification' ) . ' ' . t ( '(secondary)' ),
-			'gender' => t ( 'Gender' ),
-			'name' => t ( 'Name' ),
-			'email' => t ( 'Email' ),
-			'phone' => t ( 'Phone' ),
-			'cat' => t ( 'Category' ),
-			'language_phrase' => t ( 'Language' ),
-			'trainer_type_phrase' => t ( 'Type' ),
-			'trainer_skill_phrase' => t ( 'Skill' ),
-			'trainer_language_phrase' => t ( 'Language' ),
-			'trainer_topic_phrase' => t ( 'Topics Taught' ),
-			'phone_work' => t ( 'Work Phone' ),
-			'phone_home' => t ( 'Home Phone' ),
-			'phone_mobile' => t ( 'Mobile Phone' ),
-			'type_option_id' => 'Type' );
-				
+			'id' => 'ID', 'cnt' => t ( 'Count' ), 'active' => @$translation ['Is Active'], 'first_name' => @$translation ['First Name'], 'middle_name' => @$translation ['Middle Name'], 'last_name' => @$translation ['Last Name'], 'training_title' => t('Training').' '.t('Name'), 'province_name' => @$translation ['Region A (Province)'], 'district_name' => @$translation ['Region B (Health District)'], 'pepfar_category_phrase' => @$translation ['PEPFAR Category'], 'training_organizer_phrase' => t('Training').' '.t('Organizer'), 'training_level_phrase' => t('Training').' '.t('Level'), 'trainer_language_phrase' => t ( 'Language' ), 'training_location_name' => t ( 'Location' ), 'training_start_date' => t ( 'Date' ), 'training_topic_phrase' => t ('Training').' '.t('Topic'), 'funding_phrase' => t ( 'Funding' ), 'is_tot' => t ( 'TOT' ), 'facility_name' => t ('Facility').' '.t('Name'), 'facility_type_phrase' => t ('Facility').' '.t('Type'), 'facility_sponsor_phrase' => t ('Facility').' '.t('Sponsor'), 'course_recommended' => t ( 'Recommended classes' ), 'recommended' => t ( 'Recommended' ), 'qualification_phrase' => t ( 'Qualification' ) . ' ' . t ( '(primary)' ), 'qualification_secondary_phrase' => t ( 'Qualification' ) . ' ' . t ( '(secondary)' ), 'gender' => t ( 'Gender' ), 'name' => t ( 'Name' ), 'email' => t ( 'Email' ), 'phone' => t ( 'Phone' ), 'cat' => t ( 'Category' ), 'language_phrase' => t ( 'Language' ), 'trainer_type_phrase' => t ( 'Type' ), 'trainer_skill_phrase' => t ( 'Skill' ), 'trainer_language_phrase' => t ( 'Language' ), 'trainer_topic_phrase' => t ( 'Topics Taught' ), 'phone_work' => t ( 'Work Phone' ), 'phone_home' => t ( 'Home Phone' ), 'phone_mobile' => t ( 'Mobile Phone' ), 'type_option_id' => 'Type' );
+
 			// action => array(field => label)
 			$headersSpecific = array ('peopleByFacility' => array ('qualification_phrase' => t ( 'Qualification' ) ), 'participantsByCategory' => array ('cnt' => t ( 'Participants' ), 'person_cnt' => t ( 'Unique Participants' ) ) );
 		}
@@ -1346,7 +1269,6 @@ echo $sql . "<br>";
 		$criteria ['training_level_id'] =                        $this->getSanParam ( 'training_level_id' );
 		$criteria ['training_primary_language_option_id'] =      $this->getSanParam ( 'training_primary_language_option_id' );
 		$criteria ['training_secondary_language_option_id'] =    $this->getSanParam ( 'training_secondary_language_option_id' );
-		$criteria ['person_to_training_training_completion_option_id'] =   $this->getSanParam ( 'person_to_training_training_completion_option_id' );
 		$criteria ['training_category_id'] =                     $this->getSanParam ( 'training_category_id' ); //reset(explode('_',$ct_ids));//
 		$criteria ['training_got_curric_id'] =                   $this->getSanParam ( 'training_got_curric_id' );
 		$criteria ['is_tot'] =                                   $this->getSanParam ( 'is_tot' );
@@ -1399,7 +1321,6 @@ echo $sql . "<br>";
 		$criteria ['showGotComment'] = ($this->getSanParam ( 'showGotComment' ));
 		$criteria ['showPrimaryLanguage'] = ($this->getSanParam ( 'showPrimaryLanguage' ) or ($criteria ['doCount'] and $criteria ['training_primary_language_option_id'] or $criteria ['training_primary_language_option_id'] === '0'));
 		$criteria ['showSecondaryLanguage'] = ($this->getSanParam ( 'showSecondaryLanguage' ) or ($criteria ['doCount'] and $criteria ['training_secondary_language_option_id'] or $criteria ['training_secondary_language_option_id'] === '0'));
-		$criteria ['showTrainingCompletion'] = ($this->getSanParam ( 'showTrainingCompletion' ));
 		$criteria ['showFunding'] =   ($this->getSanParam ( 'showFunding' ) or ($criteria ['doCount'] and $criteria ['funding_id'] or $criteria ['funding_id'] === '0' or $criteria ['funding_min'] or $criteria ['funding_max']));
 		$criteria ['showCategory'] =  ($this->getSanParam ( 'showCategory' ) or ($criteria ['doCount'] and $criteria ['training_category_id'] or $criteria ['training_category_id'] === '0'));
 		$criteria ['showGotCurric'] = ($this->getSanParam ( 'showGotCurric' ) or ($criteria ['doCount'] and $criteria ['training_got_curric_id'] or $criteria ['training_got_curric_id'] === '0'));
@@ -1598,10 +1519,6 @@ echo $sql . "<br>";
 			if ($criteria ['showRefresher']) {
 				$sql .= ", IF(is_refresher,'" . t ( 'Yes' ) . "','" . t ( 'No' ) . "') AS is_refresher";
 			}
-			
-			if ($criteria ['showTrainingCompletion']) {
-				$sql .= ', ptao.award_phrase as "award_phrase" ';
-			}
 
 			if ($criteria ['showSecondaryLanguage']) {
 				$sql .= ', tlos.language_phrase as "secondary_language_phrase" ';
@@ -1729,10 +1646,6 @@ echo $sql . "<br>";
 
 			if ($criteria ['showSecondaryLanguage'] || $criteria ['training_secondary_language_option_id']) {
 				$sql .= ' LEFT JOIN trainer_language_option as tlos ON tlos.id = pt.training_secondary_language_option_id ';
-			}
-			
-			if ($criteria ['showTrainingCompletion'] || $criteria ['person_to_training_training_completion_option_id']) {
-				$sql .= ' LEFT JOIN person_to_training_award_option as ptao ON ptao.id = pt.person_to_training_training_completion_option_id ';
 			}
 
 			if ($criteria ['showFunding'] || (intval ( $criteria ['funding_min'] ) or intval ( $criteria ['funding_max'] ))) {
@@ -1997,7 +1910,6 @@ echo $sql . "<br>";
 				if ($criteria ['showGotCurric'])         $groupBy []=  '  pt.training_got_curriculum_option_id';
 				if ($criteria ['showPrimaryLanguage'])   $groupBy []=  '  pt.training_primary_language_option_id';
 				if ($criteria ['showSecondaryLanguage']) $groupBy []=  '  pt.training_secondary_language_option_id';
-				if ($criteria ['showTrainingCompletion']) $groupBy []=  '  pt.person_to_training_training_completion_option_id';
 				if ($criteria ['showFunding'])           $groupBy []=  '  tfund.training_funding_option_id';
 				if ($criteria ['showCreatedBy'])         $groupBy []=  '  pt.created_by';
 				if ($criteria ['showCreationDate'])      $groupBy []=  '  pt.timestamp_created';
@@ -2107,11 +2019,6 @@ echo $sql . "<br>";
 		//training methods
 		$methodTitle = OptionList::suggestionList ( 'training_method_option', 'training_method_phrase', false, false, false );
 		$this->view->assign ( 'methods', $methodTitle );
-		
-		//training completion
-		$trainingCompleteTitle = OptionList::suggestionList ( 'person_to_training_award_option', 'award_phrase', false, false, false );
-		$this->view->assign ( 'training_complete', $trainingCompleteTitle );
-		
 
 		$customArray = OptionList::suggestionList ( 'training_custom_1_option', 'custom1_phrase', false, false, false );
 		$this->viewAssignEscaped ( 'custom1', $customArray );
@@ -2270,7 +2177,6 @@ echo $sql . "<br>";
 		$criteria ['showGotComment'] = ($this->getSanParam ( 'showGotComment' ));
 		$criteria ['showPrimaryLanguage'] = ($this->getSanParam ( 'showPrimaryLanguage' ) or ($criteria ['doCount'] and $criteria ['training_primary_language_option_id'] or $criteria ['training_primary_language_option_id'] === '0'));
 		$criteria ['showSecondaryLanguage'] = ($this->getSanParam ( 'showSecondaryLanguage' ) or ($criteria ['doCount'] and $criteria ['training_secondary_language_option_id'] or $criteria ['training_secondary_language_option_id'] === '0'));
-		$criteria ['showTrainingCompletion'] = ($this->getSanParam ( 'showTrainingCompletion' ));
 		$criteria ['showFunding'] = ($this->getSanParam ( 'showFunding' ) or ($criteria ['doCount'] and $criteria ['funding_id'] or $criteria ['funding_id'] === '0' or $criteria ['funding_min'] or $criteria ['funding_max']));
 		$criteria ['showCategory'] = ($this->getSanParam ( 'showCategory' ) or ($criteria ['doCount'] and $criteria ['training_category_id'] or $criteria ['training_category_id'] === '0'));
 		$criteria ['showGotCurric'] = ($this->getSanParam ( 'showGotCurric' ) or ($criteria ['doCount'] and $criteria ['training_got_curric_id'] or $criteria ['training_got_curric_id'] === '0'));
@@ -2371,9 +2277,6 @@ echo $sql . "<br>";
 			if ($criteria ['showSecondaryLanguage']) {
 				$sql .= ', tlos.language_phrase as "secondary_language_phrase" ';
 			}
-			if ($criteria ['showTrainingCompletion']) {
-				$sql .= ', ptao.award_phrase as "award_phrase" ';
-			}
 			if ($criteria ['showPrimaryLanguage']) {
 				$sql .= ', tlop.language_phrase as "primary_language_phrase" ';
 			}
@@ -2463,10 +2366,6 @@ echo $sql . "<br>";
 
 			if ($criteria ['showSecondaryLanguage'] || $criteria ['training_secondary_language_option_id']) {
 				$sql .= ' LEFT JOIN trainer_language_option as tlos ON tlos.id = pt.training_secondary_language_option_id ';
-			}
-			
-			if ($criteria ['showTrainingCompletion'] || $criteria ['person_to_training_training_completion_option_id']) {
-				$sql .= ' LEFT JOIN person_to_training_award_option as ptao ON ptao.id = pt.person_to_training_training_completion_option_id ';
 			}
 
 			if ($criteria ['showFunding'] || (intval ( $criteria ['funding_min'] ) or intval ( $criteria ['funding_max'] ))) {
@@ -2622,7 +2521,6 @@ echo $sql . "<br>";
 				if ($criteria ['showGotCurric'])         $groupBy [] = 'pt.training_got_curriculum_option_id';
 				if ($criteria ['showPrimaryLanguage'])   $groupBy [] = 'pt.training_primary_language_option_id';
 				if ($criteria ['showSecondaryLanguage']) $groupBy [] = 'pt.training_secondary_language_option_id';
-				if ($criteria ['showTrainingCompletion']) $groupBy [] = 'pt.person_to_training_training_completion_option_id';
 				if ($criteria ['showFunding'])           $groupBy [] = 'tfund.training_funding_option_id';
 
 				if ($groupBy) {
@@ -2902,9 +2800,6 @@ echo $sql . "<br>";
 		$criteria ['custom_5_id']                  = $this->getSanParam ( 'custom_5_id' );
 		$criteria ['distinctCount']                = $this->getSanParam ( 'distinctCount' );
 		$criteria ['person_to_training_viewing_loc_option_id'] = $this->getSanParam('person_to_training_viewing_loc_option_id');
-		
-		$criteria ['person_to_training_award_option_id'] = $this->getSanParam ( 'person_to_training_award_option_id' );
-		
 		if ($this->view->isScoreReport) {
 			$criteria ['score_min'] = (is_numeric ( trim ( $this->getSanParam ( 'score_min' ) ) )) ? trim ( $this->getSanParam ( 'score_min' ) ) : '';
 			$criteria ['score_percent_min'] = (is_numeric ( trim ( $this->getSanParam ( 'score_percent_min' ) ) )) ? trim ( $this->getSanParam ( 'score_percent_min' ) ) : '';
@@ -2925,7 +2820,6 @@ echo $sql . "<br>";
 		$criteria ['showQualification'] = false; // ($this->getSanParam('showQualification') OR ($criteria['doCount']  and ($criteria['qualification_id'] or $criteria['qualification_id'] === '0') ));
 		$criteria ['showTopic']         = ($this->getSanParam ( 'showTopic' ) or ($criteria ['doCount'] and ($criteria ['training_topic_id'] or $criteria ['training_topic_id'] === '0')));
 		$criteria ['showFacility']      = ($this->getSanParam ( 'showFacility' ) or ($criteria ['doCount'] and $criteria ['facilityInput']));
-		$criteria ['showFacilityId']    = ($this->getSanParam ( 'showFacility' ));
 		$criteria ['showGender']        = ($this->getSanParam ( 'showGender' ) or ($criteria ['doCount'] and $criteria ['training_gender']));
 		$criteria ['showActive']        = ($this->getSanParam ( 'showActive' ) or ($criteria ['doCount'] and $criteria ['training_active']));
 		$criteria ['showSuffix']        = ($this->getSanParam ( 'showSuffix' ));
@@ -2946,7 +2840,6 @@ echo $sql . "<br>";
 		$criteria ['showHighestEd']     = ($this->getSanParam ( 'showHighestEd' ));
 		$criteria ['showReason']        = ($this->getSanParam ( 'showReason' ));
 		$criteria ['showViewingLoc']    = $this->getSanParam ( 'showViewingLoc' );
-		$criteria ['showTrainingCompletion'] = ($this->getSanParam ( 'showTrainingCompletion' ));
 
 		$criteria ['primary_responsibility_option_id'] = $this->getSanParam ( 'primary_responsibility_option_id' );
 		$criteria ['secondary_responsibility_option_id'] = $this->getSanParam ( 'secondary_responsibility_option_id' );
@@ -2959,7 +2852,7 @@ echo $sql . "<br>";
 		if ($criteria ['go']) {
 
 			$sql = 'SELECT ';
-/*
+
 			if ($criteria ['doCount']) {
 				$distinct = ($criteria ['distinctCount']) ? 'DISTINCT ' : '';
 				$sql .= ' COUNT(' . $distinct . 'person_id) as "cnt" ';
@@ -2969,33 +2862,6 @@ echo $sql . "<br>";
 				else
 				$sql .= ' DISTINCT person_id as "id", IFNULL(suffix_phrase, ' . "' '" . ') as suffix_phrase, last_name, first_name, middle_name, pt.training_start_date  ';
 			}
-*/
-
-			
-			if ($criteria ['doCount']) {
-				$distinct = ($criteria ['distinctCount']) ? 'DISTINCT ' : '';
-				$sql .= ' COUNT(' . $distinct . 'person_id) as "cnt" ';
-			}
-			else {
-				if ($criteria ['concatNames']) {
-					$sql .= ' DISTINCT person_id as "id", CONCAT(first_name, ' . "' '" . ',last_name, ' . "' '" . ', IFNULL(suffix_phrase, ' . "' '" . '))
-              as "name", IFNULL(suffix_phrase, ' . "' '" . ') as suffix_phrase ';
-				}
-				else {
-					$sql .= ' DISTINCT person_id as "id", IFNULL(suffix_phrase, ' . "' '" . ') as suffix_phrase, last_name, first_name, middle_name ';
-				}
-			}
-			
-			if ($criteria ['distinctCount']){
-				// $sql .= ' , pt.training_title ';
-			}
-			else {
-				$sql .= ' , pt.training_start_date ';
-			}
-						
-			
-			
-			
 			if ($criteria ['showPhone']) {
 				$sql .= ", CASE WHEN (pt.phone_work IS NULL OR pt.phone_work = '') THEN NULL ELSE pt.phone_work END as \"phone_work\", CASE WHEN (pt.phone_home IS NULL OR pt.phone_home = '') THEN NULL ELSE pt.phone_home END as \"phone_home\", CASE WHEN (pt.phone_mobile IS NULL OR pt.phone_mobile = '') THEN NULL ELSE pt.phone_mobile END as \"phone_mobile\" ";
 			}
@@ -3052,10 +2918,6 @@ echo $sql . "<br>";
 
 			if ($criteria ['showFacility']) {
 				$sql .= ', pt.facility_name ';
-			}
-			
-			if ($criteria ['showFacilityId']) {
-				$sql .= ', pt.facility_id ';
 			}
 
 			if ($criteria ['showTot']) {
@@ -3118,10 +2980,6 @@ echo $sql . "<br>";
 				$sql .= ', person_custom_5 ';
 			}
 
-			if ( $criteria['showTrainingCompletion']) {
-				$sql .= ', pt.award_phrase '; 
-			}
-			
 			if ( $criteria['showViewingLoc']) {
 				$sql .= ', person_to_training_viewing_loc_option.location_phrase '; // wont work on is_trainers report
 			}
@@ -3152,14 +3010,8 @@ echo $sql . "<br>";
 			$sql .= 'CASE WHEN person.gender IS NULL THEN \'na\' WHEN person.gender = \'\' THEN \'na\' ELSE person.gender END as "gender", ';
 			$sql .= 'primary_qualification_option_id, primary_responsibility_option_id, secondary_responsibility_option_id, highest_edu_level_option_id, attend_reason_option_id, attend_reason_other, tto.training_title_phrase AS training_title,facility.facility_name, ';
 			$sql .= $intersection_table.'.id AS ptt_id, l.'.implode(', l.',$field_name);
-			
-			$sql .= ', ptao.award_phrase ';
-			
 			$sql .= ' FROM training LEFT JOIN training_title_option tto ON training.training_title_option_id = tto.id ';
 			$sql .= '    INNER JOIN '.$intersection_table.' ON training.id = '.$intersection_table.'.training_id ';
-			
-			$sql .= '    LEFT JOIN person_to_training_award_option as ptao on ptao.id = person_to_training.award_id';
-			
 			$sql .= '    INNER JOIN person ON person.id = '.$intersection_table.'.'.$intersection_person_id;
 			$sql .= '    INNER JOIN facility ON person.facility_id = facility.id ';
 			$sql .= '    LEFT JOIN ('.$location_sub_query.') AS l ON facility.location_id = l.id ';
@@ -3223,7 +3075,7 @@ echo $sql . "<br>";
 			if ( $criteria['showReason'] ) {
 				$sql .= ' LEFT JOIN person_attend_reason_option as ra ON pt.attend_reason_option_id = ra.id  ';
 			}
-			
+
 			if ( $criteria['showViewingLoc'] ) {
 				$sql .= ' LEFT JOIN (SELECT id as pttid, viewing_location_option_id,training_id FROM person_to_training) viewloc ON viewloc.pttid = ptt_id AND pt.id = viewloc.training_id';
 				$sql .= ' LEFT JOIN person_to_training_viewing_loc_option ON viewing_location_option_id = person_to_training_viewing_loc_option.id ';
@@ -3573,10 +3425,6 @@ echo $sql . "<br>";
 		$viewingLocArray = OptionList::suggestionList ( 'person_to_training_viewing_loc_option', 'location_phrase', false, false, false );
 		$this->viewAssignEscaped ( 'viewing_loc', $viewingLocArray );
 
-		//training completion
-		$trainingCompleteArray = OptionList::suggestionList ( 'person_to_training_award_option', 'award_phrase', false, false, false );
-		$this->viewAssignEscaped ( 'training_complete', $trainingCompleteArray );
-		
 		//organizers
 		// restricted access?? only show trainings we have the ACL to view
 		require_once('views/helpers/TrainingViewHelper.php');
@@ -4449,13 +4297,6 @@ echo $sql . "<br>";
 					$sql .= ' LEFT JOIN training_to_training_pepfar_categories_option as tpfr ON t.id = tpfr.training_id ';
 					$sql .= ' LEFT JOIN training_pepfar_categories_option as pfr ON tpfr.training_pepfar_categories_option_id = pfr.id ';
 				break;
-				
-				case 'name' :
-					$sql = 'SELECT count(DISTINCT ptt.id) as "cnt", count(DISTINCT ptt.person_id) as "person_cnt", pfr.pepfar_category_phrase as "cat" ' . $selectFields . ' FROM ' . ' person_to_training as ptt JOIN training as t ON ptt.training_id = t.id ';
-					$sql .= '  JOIN person as p ON ptt.person_id = p.id ';
-					$sql .= ' LEFT JOIN training_to_training_pepfar_categories_option as tpfr ON t.id = tpfr.training_id ';
-					$sql .= ' LEFT JOIN training_pepfar_categories_option as pfr ON tpfr.training_pepfar_categories_option_id = pfr.id ';
-				break;
 			}
 
 			if ($criteria['cat'] != 'qualification' AND ($criteria['qualification_option_id'] OR $criteria['showQualification'])) {
@@ -4650,7 +4491,7 @@ echo $sql . "<br>";
 		$criteria ['qualification_id']   = $this->getSanParam ( 'qualification_id' );
 		$criteria ['showAge']            = ( $this->getSanParam ( 'showAge' )    or ($criteria ['doCount'] and ($criteria['age_min'] or $criteria['age_max'])) );
 		$criteria ['showGender']         = ( $this->getSanParam ( 'showGender' ) or ($criteria ['doCount'] and $criteria ['training_gender']) );
-		$criteria ['showQual']           = ( $this->getSanParam ( 'showQual' )  );
+		$criteria ['showQual']           = ( $this->getSanParam ( 'showQual' )   or ($criteria ['doCount'] and $criteria ['qualification_id']) );
 		if ($criteria ['go']) {
 
 			$sql = 'SELECT '; //todo test
@@ -4662,10 +4503,6 @@ echo $sql . "<br>";
 			}
 			if ($criteria ['showFacility']) {
 				$sql .= ', pt.facility_name ';
-			}
-			
-			if ($criteria ['showFacilityId']) {
-				$sql .= ', pt.facility_id ';
 			}
 
 			if ($criteria ['showTrainingTitle'] or ($this->view->mode == 'search')) {
@@ -4697,20 +4534,7 @@ echo $sql . "<br>";
 			}
 
 			if ($criteria ['showSponsor']) {
-				
-				// gnr: $sql .= ', fso.facility_sponsor_phrase ';
-				
-				$sql .= ', ( SELECT group_concat(facility_sponsor_option.facility_sponsor_phrase 
-  order by facility_sponsor_option.facility_sponsor_phrase asc separator ", ") as _list
-  from facility inner_facility
-  left outer join facility_sponsors 
-  on inner_facility.id = facility_sponsors.facility_id
-  left outer join facility_sponsor_option 
-  on facility_sponsors.facility_sponsor_phrase_id = facility_sponsor_option.id
-  left outer join facility_type_option 
-  on inner_facility.type_option_id = facility_type_option.id 
-  where  pt.is_deleted = 0  
-  and inner_facility.facility_name = pt.facility_name ) as facility_sponsor_phrase ';
+				$sql .= ', fso.facility_sponsor_phrase ';
 			}
 
 			if ($criteria ['showPepfar']) {
@@ -4733,28 +4557,15 @@ echo $sql . "<br>";
 				//$sql .= ', pt.is_tot ';
 				$sql .= ", IF(pt.is_tot,'" . t ( 'Yes' ) . "','" . t ( 'No' ) . "') AS is_tot";
 			}
-			
-			/*
 			if ($criteria ['showAge']) {
 				$sql .= ', CASE WHEN birthdate  IS NULL OR birthdate = \'0000-00-00\' THEN NULL ELSE ((date_format(now(),\'%Y\') - date_format(birthdate,\'%Y\')) - (date_format(now(),\'00-%m-%d\') < date_format(birthdate,\'00-%m-%d\')) ) END as "age" ';
 			}
 			if ($criteria ['showGender']) {
 				$sql .= ' , CASE WHEN gender IS NULL THEN \'na\' WHEN gender = \'\' THEN \'na\' ELSE gender END as "gender" ';
 			}
-			*/
-			
-			if ($criteria ['doCount'] ) {
-				$sql .= ', CASE WHEN birthdate  IS NULL OR birthdate = \'0000-00-00\' THEN NULL ELSE ((date_format(now(),\'%Y\') - date_format(birthdate,\'%Y\')) - (date_format(now(),\'00-%m-%d\') < date_format(birthdate,\'00-%m-%d\')) ) END as "age" ';
-				$sql .= ' , CASE WHEN gender IS NULL THEN \'na\' WHEN gender = \'\' THEN \'na\' ELSE gender END as "gender" ';
+			if ($criteria ['showQual']) {
 				$sql .= ', qualification_phrase ';
-			} else {
-				$criteria ['showAge'] = 0;
-				$criteria['age_min'] = 0;
-				$criteria['age_max'] = '';
-				$criteria ['showGender'] = 0;
-				$criteria ['showQual'] = 0;
 			}
-			
 
 			//JOIN with the participants to get facility
 
@@ -4867,17 +4678,7 @@ echo $sql . "<br>";
 			$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
 			if ($site_orgs)
 				$where []= " training_organizer_option_id in ($site_orgs) ";
-			
-			if ($criteria ['age_min'] or $criteria ['age_max']) {
-				
-				$where []= " ((date_format(now(), '%Y') - date_format(birthdate, '%Y')) - (date_format(now(), '00-%m-%d') < date_format(birthdate, '00-%m-%d'))) >= " . $criteria['age_min'];	
-				$where []= " ((date_format(now(), '%Y') - date_format(birthdate, '%Y')) - (date_format(now(), '00-%m-%d') < date_format(birthdate, '00-%m-%d'))) <= " . $criteria['age_max'];
-			}
-			
-			if ($criteria ['training_gender'] ) {
-				$where []= ' gender = \'' . $criteria ['training_gender'] . '\'';
-			}
-			
+
 			if ($where)
 			$sql .= ' WHERE ' . implode(' AND ', $where);
 
@@ -4897,7 +4698,7 @@ echo $sql . "<br>";
 				if ($criteria ['showType'])          $groupBy []= '  pt.type_option_id';
 				if ($criteria ['showSponsor'])       $groupBy []= '  pt.sponsor_option_id';
 				if ($criteria ['showTot'])           $groupBy []= '  pt.is_tot';
-				if ($criteria ['showAge'])           $groupBy []= '  age ';
+				if ( $criteria['showAge'])           $groupBy []= '  age ';
 				if ($criteria ['showGender'])        $groupBy []= '  pt.gender';
 				if ($criteria ['showQual'])          $groupBy []= '  pt.qualification_phrase ';
 
@@ -4990,10 +4791,11 @@ echo $sql . "<br>";
 			$facilitiesArray [] = $val;
 		}
 		$this->viewAssignEscaped ( 'facilities', $facilitiesArray );
-	
+
 		// qualifications
 		$qualificationsArray = OptionList::suggestionListHierarchical ( 'person_qualification_option', 'qualification_phrase', false, false, array ('0 AS is_default', 'child.is_default' ) );
 		$this->viewAssignEscaped ( 'qualifications', $qualificationsArray );
+
 	}
 
 	//
@@ -5126,10 +4928,6 @@ echo $sql . "<br>";
 
 			if ($criteria ['showFacility']) {
 				$sql .= ', pt.facility_name ';
-			}
-			
-			if ($criteria ['showFacilityId']) {
-				$sql .= ', pt.facility_id ';
 			}
 
 			if ($criteria ['showQualPrim']) {
@@ -6059,8 +5857,7 @@ echo $sql . "<br>";
 					}
 					if ( $this->setting ( 'module_attendance_enabled' ) ) {
 						$body_fields[] = $r['duration_days'];
-						//$body_fields[] = $r['award_id'] ? $r['award_id'] : '';
-						$body_fields[] = $r['award_phrase'] ? $r['award_phrase'] : '';
+						$body_fields[] = $r['award_id'] ? $r['award_id'] : '';
 					}
 					if ( $is_extended ) {
 						$body_fields[] = $r['score_pre'];
@@ -6326,7 +6123,7 @@ echo $sql . "<br>";
 		require_once('views/helpers/DropDown.php');
 		$this->view->assign ( 'titles',   DropDown::generateHtml ( 'training_title_option', 'training_title_phrase', $criteria['training_title_option_id'], false, $this->view->viewonly, false ) );
 	}
-	
+
 	public function evaluationsReportAction()
 	{
 		require_once('models/table/Trainer.php');

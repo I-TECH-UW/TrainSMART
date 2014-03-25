@@ -475,34 +475,10 @@ class FacilityController extends ReportFilterHelpers {
 			$num_locs = $this->setting ( 'num_location_tiers' );
 			list ( $field_name, $location_sub_query ) = Location::subquery ( $num_locs, $location_tier, $location_id, true );
 
-			// gnr: replaced facility_sponsor_option.facility_sponsor_phrase 
-			
-			$sql = 'SELECT 
-					facility.id,
-					facility.facility_name,
-					facility.location_id,
-					facility.address_1,
-					facility.address_2,
-					facility.postal_code,
-					facility.phone,
-					facility.fax,
-					facility.type_option_id,
-	                facility_type_option.facility_type_phrase,
-					facility.facility_comments,
-										
-					( SELECT group_concat(facility_sponsor_option.facility_sponsor_phrase 
-  order by facility_sponsor_option.facility_sponsor_phrase asc separator ", ") as _list
-  from facility inner_facility
-  left outer join facility_sponsors 
-  on inner_facility.id = facility_sponsors.facility_id
-  left outer join facility_sponsor_option 
-  on facility_sponsors.facility_sponsor_phrase_id = facility_sponsor_option.id
-  left outer join facility_type_option 
-  on inner_facility.type_option_id = facility_type_option.id 
-  where  facility.is_deleted = 0  
-  and inner_facility.facility_name = facility.facility_name ) as facility_sponsor_phrase , 
-			    
-                ' . implode ( ',', $field_name ) . '
+			$sql = 'SELECT facility_sponsor_option.facility_sponsor_phrase, facility.location_id,
+                facility_type_option.facility_type_phrase,
+                facility.facility_name,
+                facility.id , ' . implode ( ',', $field_name ) . '
               FROM facility LEFT JOIN (' . $location_sub_query . ') as l ON facility.location_id = l.id
               LEFT OUTER JOIN facility_type_option ON facility.type_option_id = facility_type_option.id
               LEFT JOIN facility_sponsors ON facility_sponsors.facility_id = facility.id
@@ -766,7 +742,7 @@ class FacilityController extends ReportFilterHelpers {
 						try {
 							$tableObj = $facilityObj->createRow();
 							$tableObj = ITechController::fillFromArray($tableObj, $values);
-							$tableObj->type_option_id = $this->_importHelperFindOrCreate('facility_type_option', 'id', $tableObj->type_option_id);
+							$tableObj->type_option_id = $this->_importHelperFindOrCreate('facility_type_option', 'facility_type_phrase', $tableObj->type_option_id);
 							if ( $values['type_option_id'] && ! $tableObj->type_option_id ) { $errs[] = t("Couldn't save facility type for facility:").' '.$tableObj->facility_name; }
 							$row_id = $tableObj->save();
 						} catch (Exception $e) {
@@ -818,29 +794,27 @@ class FacilityController extends ReportFilterHelpers {
 
 		$sorted = array (
 			array (
-				'id' => '',
-				'facility_name' => '',
-				'location_id' => '',
-				'address_1'     => '',
+				'facility_name' => 'New Facility',
+				'address_1'     => '1234 Home Street',
 				'address_2'     => '',
-				'postal_code'   => '',
-				'phone' 		=> '',
-				'fax'   		=> '',
-				'type_option_id'     => '',
-				'facility_type_phrase' => '',
-				'facility_comments'  => '',
+				'postal_code'   => '98765',
+				'phone' => '',
+				'fax'   => '',
+				'type_option_id'     => t('Facility Type (Hospital, Dispensary, Clinic, Etc)'),
+				'sponsor_option_id'  => t('Facility Sponsor').' '.t('Label').' '.'(Public, NGO, Ministry of Health, Etc) '.t('Please seperate multiple entries by Comma') . ' ex: Ministry of Health,ITECH',
+				'sponsor_start_date' => '30/10/2011 '.(@$this->setting('require_sponsor_dates') ? '('.t('Required').') ' : '').t('Please seperate multiple entries by Comma').', '.t("The same number of sponsor_option_id's is required"),
+				'sponsor_end_date'   => '30/10/2012 '.(@$this->setting('require_sponsor_dates') ? '('.t('Required').') ' : '').t('Please seperate multiple entries by Comma').', '.t("The same number of sponsor_option_id's is required"),
+				'facility_comments'  => t('Comments'),
 			)
 		);
-		// add some regions
+		// add on a few regions equal to the number the site is using... examples!
 		$num_location_tiers = $this->setting('num_location_tiers');
 		$regionNames = array ('', t('Region A (Province)'), t('Region B (Health District)'), t('Region C (Local Region)'), t('Region D'), t('Region E'), t('Region F'), t('Region G'), t('Region H'), t('Region I') );
 		for ($i=1; $i < $num_location_tiers; $i++) {
-			//add regions
-			$sorted[0][$regionNames[$i]] = '';
+			$sorted[0][$regionNames[$i]] = $regionNames[$i];
 		}
 		// add city region
-		$sorted[0][t('City')] = '';
-		
+		$sorted[0][t('City')] = t('City');
 		//done, output a csv
 		if( $this->getSanParam('outputType') == 'csv' )
 			$this->sendData ( $this->reportHeaders ( false, $sorted ) );

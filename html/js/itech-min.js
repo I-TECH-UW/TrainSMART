@@ -7,15 +7,15 @@ standardDatePickOpts = {
 };
 
 YAHOO.util.Event.onDOMReady(function () {
-
+  
   // set focus to first input element
   if(!window.location.hash) {
-    var inputNodes = document.getElementsByTagName("input");
+    var inputNodes = document.getElementsByTagName("input");  
     if(inputNodes.length > 0) {
       inputNodes[0].focus();
     }
   }
-
+     
 });
 
 function clearAge() {
@@ -28,10 +28,10 @@ function clearAge() {
 
 /**
  * Add item to drop-down select box and update via JSON
- */
+ */ 
 function addToSelect(promptMsg, selectId, jsonUrl) {
   var SAVETEXT = "Inserting...";
-
+    
   // titles need training category?
   var catId = false;
   if(selectId == "select_training_title_option") {
@@ -45,166 +45,166 @@ function addToSelect(promptMsg, selectId, jsonUrl) {
       catId = oSelectCategory.options[oSelectCategory.selectedIndex].value;
     }
   }
-
+  
   var newValue = prompt(promptMsg);
-
-  if(newValue) {
-
+  
+  if(newValue) {  
+    
     var oSelect = document.getElementById(selectId);
     var firstItem = oSelect.options[0];
     var oldIndex = oSelect.selectedIndex;
-
+    
     if(firstItem.text == SAVETEXT) {
       alert("Trying to save... please wait.");
       return false;
     }
-
+    
     // inform user we are attempting to save
     oSelect.options[0] = new Option(SAVETEXT, 0);
     oSelect.selectedIndex = 0;
     oSelect.className = "errorText";
-
-
+        
+    
     // AJAX (drop down)
     var ajaxCallback = {
       success: function(o) {
-
-        oSelect.options[0] = firstItem; // reset saving message
+        
+        oSelect.options[0] = firstItem; // reset saving message         
         oSelect.className = "";
-
-        var status = YAHOO.lang.JSON.parse(o.responseText);
-
+        
+        var status = YAHOO.lang.JSON.parse(o.responseText);                      
+        
         // error handling
         if(status.error != null) {
           status.error = status.error.replace('%s', newValue);
-
+          
           // user trying to add a value that is flagged as deleted in the database
-          if(status.insert != null && status.insert == -2) {
+          if(status.insert != null && status.insert == -2) {  
             if(confirm(status.error)) { // undelete
               oSelect.options[0] = new Option('Undeleting...', 0);
               cObj = YAHOO.util.Connect.asyncRequest('POST', jsonUrl, ajaxCallback, "value=" + newValue + "&undelete=1");
-             } else {
-              oSelect.selectedIndex = oldIndex;
+             } else {               
+              oSelect.selectedIndex = oldIndex;     
              }
           } else {
             alert(status.error);
             oSelect.selectedIndex = oldIndex;
-          }
-
+          }       
+        
         } else if(status.insert != null && status.insert > 0) { // SUCCESS
-
+                         
           var addIndex = oSelect.options.length;
           oSelect.options[addIndex] =  new Option(newValue, status.insert);
-          oSelect.selectedIndex = addIndex;
+          oSelect.selectedIndex = addIndex;                    
         }
-
+        
       },
-      failure: function() {
+      failure: function() {        
         // display error message
         alert("Couldn't save, sorry!");
         oSelect.options[0] = firstItem;
         oSelect.className = "";
-        return false;
+        return false;        
       },
       scope: this
     }
-
+    
     queryPost = "value=" + newValue;
     if(catId) {
       queryPost += "&cat_id=" + catId;
     }
-
+        
     cObj = YAHOO.util.Connect.asyncRequest('POST', jsonUrl, ajaxCallback, queryPost);
   }
-
+  
   return false;
 }
 
 
 /**
  * Add checkbox and update via JSON
- */
+ */ 
 function addCheckbox(promptMsg, checkboxName, containerId, jsonUrl) {
-  var SAVETEXT = "Adding checkbox...";
+  var SAVETEXT = "Adding checkbox...";  
   var newValue = prompt(promptMsg);
-
+  
   if(newValue) {
     // inform user we are attempting to save
     var elDiv = document.getElementById(containerId).appendChild(document.createElement("div"));
     elDiv.className = "float50";
     elDiv.innerHTML = '<div class="errorText">' + SAVETEXT + '</div>';
-
+    
     // AJAX (checkbox)
     var ajaxCallback = {
       success: function(o) {
-        var status = YAHOO.lang.JSON.parse(o.responseText);
-
+        var status = YAHOO.lang.JSON.parse(o.responseText);                      
+        
         // error handling
         if(status.error != null) {
           status.error = status.error.replace('%s', newValue);
-
+          
           // user trying to add a value that is flagged as deleted in the database
-          if(status.insert != null && status.insert == -2) {
-            if(confirm(status.error)) { // undelete
+          if(status.insert != null && status.insert == -2) {  
+            if(confirm(status.error)) { // undelete              
               cObj = YAHOO.util.Connect.asyncRequest('POST', jsonUrl, ajaxCallback, "value=" + newValue + "&undelete=1");
              }
           } else {
             alert(status.error);
             document.getElementById(containerId).removeChild(elDiv);
-          }
-
-
+          }        
+                  
+        
         } else if(status.insert != null && status.insert > 0) { // SUCCESS
-
-          // dynamically create checkbox
+                         
+          // dynamically create checkbox               
           var elCheckbox = document.createElement("input");
           elCheckbox.type = "checkbox";
           elCheckbox.name = checkboxName + "[]";
           elCheckbox.id = checkboxName + "_" + status.insert;
           elCheckbox.value = status.insert;
           elCheckbox.checked = "checked";
-
+          
           // dynamically create label
           var elLabel = document.createElement("label");
           elLabel.htmlFor = checkboxName + "_" + status.insert;
           elLabel.innerHTML = " " + newValue;
-
+          
           elDiv.innerHTML = '';
           elDiv.appendChild(elCheckbox);
           elDiv.appendChild(elLabel);
-
+          
         }
-
+        
       },
-      failure: function() {
+      failure: function() {        
         // display error message
         alert("Couldn't save, sorry!");
         oSelect.options[0] = firstItem;
         oSelect.className = "";
-        return false;
+        return false;        
       },
       scope: this
     }
 
-    cObj = YAHOO.util.Connect.asyncRequest('POST', jsonUrl, ajaxCallback, "value=" + newValue);
-  }
+    cObj = YAHOO.util.Connect.asyncRequest('POST', jsonUrl, ajaxCallback, "value=" + newValue);    
+  }  
 
 }
 
 // Filter hierarchical dropdowns using a naming convention of 'Parent_Child'
   function filterSubTypeOptions(selectObjParentId, selectObjChildId) {
-
+  
    var selectObj = document.getElementById(selectObjChildId);
    if ( (selectObj == undefined) || (selectObj == null) )
    	return;
-
+   
    if ( selectObj ) {
    var selectObjParent = document.getElementById(selectObjParentId);
 
    if ( selectObj.originalOptions == undefined ) {
      clone(selectObj);
    }
-
+   
    // allow for multiple-select
    var curTypes = [ ];
    for(j = 0; j < selectObjParent.options.length; j++) {
@@ -218,34 +218,34 @@ function addCheckbox(promptMsg, checkboxName, containerId, jsonUrl) {
    var oldSubType = 0;
    if(selectObj.selectedIndex != -1) {
      oldSubType = selectObj.options[selectObj.selectedIndex].value ;
-     selectObj.selectedIndex = 0;
+     selectObj.selectedIndex = 0; 
    }
    */
-
+   
    var oldSubTypes = [ ];
    for(j = 0; j < selectObj.options.length; j++) {
      if(selectObj.options[j].selected) {
        oldSubTypes.push(selectObj.options[j].value);
      }
-   }
-
+   }   
+     	
     var i = 0;
   	var tmpOpt = '';
-
-
+  	
+ 
  	ilength = selectObj.options.length;
   	for(i = 1; i < ilength; i++) {
  		selectObj.remove(1);
  	}
-
+ 	
  	var prefix = '';
  	var prefix2 = '';
-
+ 	
 	var newi = 0;
-
-	for (i in selectObj.originalOptions) {
+	
+	for (i in selectObj.originalOptions) { 
    		tmpOpt = selectObj.originalOptions[i];
-
+   		
    		for(j in curTypes) {
    		  curType = curTypes[j];
      		prefix = i.substring(0,curType.length + 1);
@@ -253,49 +253,49 @@ function addCheckbox(promptMsg, checkboxName, containerId, jsonUrl) {
     		if ( prefix == prefix2 ) {
   			newi++;
    			appendOptionLast(selectObj, tmpOpt, i);
-
+   			
    			for(k in oldSubTypes ) {
     			if ( i == oldSubTypes[k] )
     				//selectObj.selectedIndex = newi;
     				selectObj.options[newi].selected = true;
     				selectObj.disabled = false;
-      		}
+      		}   			  
    			}
-
-
+   			
+   		 
    		}
-
+   		
   	}
    }
-
+  	
    // disable if no options (other than --choose--)
    if (newi < 1)
     $(selectObj).attr('disabled', 'disabled');
   }
-
+  
      function clone(myObj)
 	{
-
+		
 		var i;
 		var count = 0;
   		myObj.originalOptions = new Object();
   		for(i = 1; i < myObj.options.length; i++) {
   			if ( myObj.options[i].value != '' )
   				myObj.originalOptions[myObj.options[i].value] = myObj.options[i].text;
-
+  				
  		}
  		for(var f in myObj.originalOptions) {
    			count++;
  		}
  		myObj.originalOptions.length = count;
- 	}
-
+ 	}  
+	
 function appendOptionLast(selectObj, myText, myVal)
 	{
 	  var elOptNew = document.createElement('option');
 	  elOptNew.text = myText;
 	  elOptNew.value = myVal;
-
+	
 	  try {
 	    selectObj.add(elOptNew, null); // standards compliant; doesn't work in IE
 	  }
@@ -304,7 +304,7 @@ function appendOptionLast(selectObj, myText, myVal)
 	  }
 	  selectObj.disabled = false;
 	}
-
+	
 function setChildStatus(selectedIndex, districtId, provinceId)  {
 	var districtObj = YAHOO.util.Dom.get(districtId);
 	if ( districtObj ) {
@@ -314,14 +314,14 @@ function setChildStatus(selectedIndex, districtId, provinceId)  {
 		} else {
 			districtObj.selectedIndex = 0;
 			districtObj.disabled = true;
-
+			
 		}
 		//also filter the child of the child
 		var childFunction = "setChildStatus_" + districtId;
 		try {
 			eval(childFunction + "()");
 		} catch(err) {
-
+			
 		}
 	}
 }

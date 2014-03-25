@@ -18,7 +18,7 @@ print ScriptContainer::$instance->renderJSHead();
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
     <h1><?php tp('Question Compare Reports');?></h1>
-	   <form action="" method="get">
+	   <form action="" method="GET">
    <fieldset><legend><?php tp('Select Criteria');?></legend>
     <div class="fieldLabel" style="padding:0px;margin:0px;margin-bottom:4px;text-align:left;float:none"><?php echo t('Occupational category'); ?></div><div>
 	<select id="qualification_id" name="qualification_id" onchange="SwHd(this);document.getElementById('Questions').value='';RenderNow();">
