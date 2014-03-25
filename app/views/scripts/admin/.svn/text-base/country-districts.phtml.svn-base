@@ -1,0 +1,16 @@
+<?php
+
+$formPrefix = '
+
+Enter Districts for this country.<br/>
+<br/><br/>Province  <select name="province_id" onchange="window.location=\''.($this->base_url).'/admin/country-districts/province/\' + this.options[selectedIndex].value;">
+	<option value="">--<?php tp("choose");?>--</option>';
+foreach($this->provinces as $prov)	{
+
+	$formPrefix .= '<option value="'.($prov['id']). '" '.($this->province == $prov['id']?'SELECTED':'').'>'.($prov['province_name']).'</option>';
+}
+$formPrefix .= '</select>';
+
+require '_template_edittable.phtml';
+
+?>

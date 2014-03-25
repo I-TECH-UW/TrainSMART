@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php if(isset($pageTitle)) echo $this->pageTitle; ?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body  class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php require_once('views/scripts/header.phtml'); ?></div>
+  <div id="content" class="adminDiv">
+    
+    <form method="post" name="adminForm" id="adminForm" action="" enctype="multipart/form-data">
+    
+    <div id="navAdmin"><?php require_once('views/scripts/nav-admin.phtml');?></div>
+    
+    <div id="contentAdmin">
+    <h1><?php echo $this->pageTitle; ?></h1>
+    <br/>
+  <?php 
+require_once('views/helpers/Location.php');
+
+$name = array();
+$flds = array();
+
+$name[] = ''; $flds[] = ''; // prepend 1 for readability, tiers start at 1
+$name[] = 'Region A (Province)'; // always show // this form has to be dynamic becasue city tier is num_tiers - 1
+$flds[] = 'province_id';
+if($this->setting['display_region_b']){ $name[] = 'Region B (Health District)'; $flds[] = 'district_id'; }
+if($this->setting['display_region_c']){ $name[] = 'Region C (Local Region)';    $flds[] = 'region_c_id'; }
+if($this->setting['display_region_d']){ $name[] = 'Region D'; $flds[] = 'region_d_id'; }
+if($this->setting['display_region_e']){ $name[] = 'Region E'; $flds[] = 'region_e_id'; }
+if($this->setting['display_region_f']){ $name[] = 'Region F'; $flds[] = 'region_f_id'; }
+if($this->setting['display_region_g']){ $name[] = 'Region G'; $flds[] = 'region_g_id'; }
+if($this->setting['display_region_h']){ $name[] = 'Region H'; $flds[] = 'region_h_id'; }
+if($this->setting['display_region_i']){ $name[] = 'Region I'; $flds[] = 'region_i_id'; }
+$name[] = 'City or Town';  // always show
+$flds[] = 'city_id';
+$flds[] = '';
+
+$num_tiers = $this->setting['num_location_tiers'];
+$num_tiers = count($name);
+
+
+$formPrefix = '
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+
+YAHOO.util.Event.onDOMReady(function () {
+  function change_tier(e, obj) {
+      window.location=\''.($this->base_url).'/admin/country-region-move/tier/\' + obj.value + \'/location/'.($this->location_id).'\';
+  }
+  function change_location(e, obj) { 
+      if (!obj.value)
+        return;
+      window.location=\''.($this->base_url).'/admin/country-region-move/tier/'.($this->tier).'/location/\' + obj.value;
+  }
+  
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("province_id"), "change", change_location,YAHOO.util.Dom.get("province_id"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("district_id"), "change", change_location,YAHOO.util.Dom.get("district_id"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("region_c_id"), "change", change_location,YAHOO.util.Dom.get("region_c_id"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("region_d_id"), "change", change_location,YAHOO.util.Dom.get("region_d_id"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("region_e_id"), "change", change_location,YAHOO.util.Dom.get("region_e_id"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("region_f_id"), "change", change_location,YAHOO.util.Dom.get("region_f_id"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("region_g_id"), "change", change_location,YAHOO.util.Dom.get("region_g_id"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("region_h_id"), "change", change_location,YAHOO.util.Dom.get("region_h_id"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("region_i_id"), "change", change_location,YAHOO.util.Dom.get("region_i_id"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("t1"), "click", change_tier,YAHOO.util.Dom.get("t1"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("t2"), "click", change_tier,YAHOO.util.Dom.get("t2"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("t3"), "click", change_tier,YAHOO.util.Dom.get("t3"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("t4"), "click", change_tier,YAHOO.util.Dom.get("t4"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("t5"), "click", change_tier,YAHOO.util.Dom.get("t5"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("t6"), "click", change_tier,YAHOO.util.Dom.get("t6"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("t7"), "click", change_tier,YAHOO.util.Dom.get("t7"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("t8"), "click", change_tier,YAHOO.util.Dom.get("t8"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("t9"), "click", change_tier,YAHOO.util.Dom.get("t9"));
+  YAHOO.util.Event.addListener(YAHOO.util.Dom.get("city"), "click", change_tier,YAHOO.util.Dom.get("city"));
+  
+});
+
+
+//--><!]]> 
+</script>
+<div id="region_move" style="float:left;width:300px; border-right: 1px solid black; padding: 1em;">'
+.t('Select the region level you want to move') . ':<br/><br/><ul>';
+print $formPrefix;
+
+// options
+for($i = 1; $i < $num_tiers; $i++) {
+  print '<li><input type="radio" id="t'.$i.'" name="tier" value="'.$i.'" '.($this->tier == $i ? "checked='checked'":"")." />";
+  print ' <label>'.@$this->translation[$name[$i]]."</label></li>";
+}
+print '</ul><br/><br/><br/>';
+
+// drop downs
+for($i = 1; $i < $this->tier; $i++) {
+  print '<label class="rgmovelbl">' . t('Filter by') . ' ' .@$this->translation[$name[$i]].'</label>'; 
+  renderFilter($this->locations, $i, $flds[$i], $this->{$flds[$i]}, $flds[$i+1]); // locations_array, tier_number, view value, child form object
+  //expected: renderFilter($this->locations, 2, 'district_id', $this->district_id, 'region_c_id');
+  print '<br/>';
+}
+
+?> 
+</div>
+<div id="region_move_rightbox" style="float:right; width: 300px; padding: 1em;">
+<?php tp('Select the region to move to') ?>:<br/><br/>
+<?php 
+for($i = 1; $i < $this->tier; $i++) {
+  print '<label class="rgmovelbl">' . t('Filter by') . ' ' . @$this->translation[$name[$i]] . '</label>'; 
+  renderFilter($this->locations, $i, 'target_'.$flds[$i], $this->{$flds[$i]}, 'target_'.$flds[$i+1]); // locations_array, tier_number, view value, child form object
+  //expected: 
+  //print '<label>'.@$this->translation['Region A (Province)'].'</label>'; 
+  //renderFilter($this->locations, 1, 'target_province_id', $this->target_province_id, 'target_district_id');
+  print '<br/><br/>';
+}
+?>
+    <input type="submit" value="<?php tp('Move'); ?>" name="move" class="submitNoArrow">
+    </div>
+    <br clear="all"/>
+<hr/>
+
+<?php if ( isset($this->candidates) && $this->location_id && ($this->locations[$this->location_id]['tier'] == ($this->tier - 1))) { ?>
+    <div class="yui-dt"><table><tr><th>Region</th><th><?php tp('Move');?></th></tr>
+        <?php foreach($this->candidates as $c) {
+          echo '<tr><td>'.$c['name'].'</td><td><input type="checkbox" value="'.$c['id'].'" name="move[]" /></td></tr>';
+        }?>
+    </table>  </div>
+    
+<?php } ?>
+    
+    <div class="clear"></div>
+    <br>    
+    
+    </form>
+    
+    
+    </div>
+    
+    <div class="clear"></div>
+      
+  </div>
+<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+</body>
+</html>

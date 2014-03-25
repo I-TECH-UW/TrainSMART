@@ -1,0 +1,338 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php tp('Competence Compare Reports');?></title>
+<?php
+require_once('views/helpers/Location.php');
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+<style>
+
+</style>
+
+</head>
+<body class="yui-skin-sam" onload="RenderNow();SwHd(document.getElementById('qualification_id'))">
+
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+
+    <h1><?php tp('Competence Compare Reports');?></h1>
+	   <form action="" method="get">
+   <fieldset><legend><?php tp('Select Criteria');?></legend>
+	 <div class="fieldLabel" id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></div>
+  <div class="fieldInput"><?php renderFilter($this->locations, 1, 'province_id', $this->criteria['province_id'], 'district_id');?></div>
+  <?php if ( $this->setting['display_region_b'] ) { ?>
+  <div class="fieldLabel" id="district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?></div>
+  <div class="fieldInput"><?php renderFilter($this->locations, 2, 'district_id', $this->criteria['district_id'], ($this->setting['display_region_c']?'region_c_id':false));?></div>
+  <?php } ?>
+  <?php if ( $this->setting['display_region_c'] ) { ?>
+  <div class="fieldLabel" id="region_c_id_lbl"><?php echo (@$this->translation['Region C (Local Region)']); ?></div>
+  <div class="fieldInput"><?php renderFilter($this->locations, 3, 'region_c_id', $this->criteria['region_c_id'], false);?></div>
+  <?php } ?>
+
+<div class="fieldLabel"  id="facilityInput_lbl"><?php tp('Facility');?></div><div class="fieldInput"><select id="facilityInput" name="facilityInput" >
+	<option value="">--<?php tp('choose');?>--</option>
+	<?php
+		foreach ( $this->facilities as $vals ) {
+			echo '<option value="'.$vals['id'].'" '.($this->criteria['facilityInput'] == $vals['id']?'SELECTED':'').'>'.$vals['facility_name'].'</option>';
+	}
+	?>
+</select></div>
+	<div class="clear"></div>
+    <div class="fieldLabel"><?php echo t('Occupational category'); ?></div><div class="fieldInput">
+	<select id="qualification_id" name="qualification_id" onchange="SwHd(this);document.getElementById('Questions').value='';RenderNow();">
+	<option value="">--<?php echo t('choose'); ?>--</option>
+   <?php
+    $lastParent = null;
+    foreach ( $this->qualifications as $vals ) {
+     if ( !$vals['id'] ) {
+      $lastParent = $vals['parent_phrase'];
+	  echo '<option value="'.$vals['parent_id'].'" '.((@$this->criteria['qualification_id']) == $vals['parent_id']?'SELECTED':'').'>'.htmlspecialchars($vals['parent_phrase']).'</option>';
+	 }
+    }
+   ?>
+	</select></div>
+	<script type="text/javascript">
+		function SwHd(obj)
+		{
+			document.getElementById("listc").style.display="none";
+			document.getElementById("listd").style.display="none";
+			document.getElementById("listn").style.display="none";
+			document.getElementById("listp").style.display="none";
+			document.getElementById("listc").selectedIndex=0;
+			document.getElementById("listd").selectedIndex=0;
+			document.getElementById("listn").selectedIndex=0;
+			document.getElementById("listp").selectedIndex=0;
+			document.getElementById("score_id").selectedIndex=0;
+			if(obj.value=="6")
+			{
+				document.getElementById("listc").style.display="block";
+			}
+			if(obj.value=="7")
+			{
+				document.getElementById("listd").style.display="block";
+			}
+			if(obj.value=="8")
+			{
+				document.getElementById("listn").style.display="block";
+			}
+			if(obj.value=="9")
+			{
+				document.getElementById("listp").style.display="block";
+			}
+		}
+		function ShwHid(obj)
+		{
+		}
+	</script>
+	<div class="fieldLabel"><?php echo t('Competence'); ?><br /><a href="javascript:void(0)" onclick="SelAll()"><?php echo t('Select All'); ?></a></div><div class="fieldInput" style="margin-left:251px">
+	<?php require_once('listcomn.phtml');?>
+	<?php require_once('listcomd.phtml');?>
+	<?php require_once('listcomp.phtml');?>
+	<?php require_once('listcomc.phtml');?>
+	</div>
+    <div class="clear"></div>
+    <div class="fieldLabel"><?php echo t('Score'); ?><br /><a href="javascript:void(0)" onclick="SelAllS()"><?php echo t('Select All'); ?></a></div><div class="fieldInput">
+	<select id="score_id" multiple="multiple">
+	<option value="100">90 - 100%</option>
+	<option value="89">75 - 89%</option>
+	<option value="74">60 - 74%</option>
+	<option value="0"><?php echo t('Less than 60%'); ?></option>
+	</select></div>
+    <div class="fieldLabel"></div>
+	<div class="fieldInput"><button type="button" onclick="Add_Question();return false"><?php echo t('Add Criteria'); ?></button></div>
+<script type="text/javascript">
+ 		document.getElementById("listc").setAttribute("multiple","multiple");
+		document.getElementById("listd").setAttribute("multiple","multiple");
+		document.getElementById("listn").setAttribute("multiple","multiple");
+		document.getElementById("listp").setAttribute("multiple","multiple");
+		document.getElementById("listc").options.remove(0);
+		document.getElementById("listd").options.remove(0);
+		document.getElementById("listn").options.remove(0);
+		document.getElementById("listp").options.remove(0);
+        function SelAllS()
+        {
+            var List;
+            List=document.getElementById("score_id")
+                for(var i=0;i<List.options.length;i++)
+                {
+                    List.options[i].selected=true;
+                }
+        }
+        function SelAll()
+        {
+            if(document.getElementById("listc").style.display!="none" ||
+                document.getElementById("listd").style.display!="none" ||
+                document.getElementById("listn").style.display!="none" ||
+                document.getElementById("listp").style.display!="none")
+            {
+                var List;
+                if(document.getElementById("listc").style.display!="none")
+                {
+                    List=document.getElementById("listc");
+                }
+                if(document.getElementById("listd").style.display!="none")
+                {
+                    List=document.getElementById("listd");
+                }
+                if(document.getElementById("listn").style.display!="none")
+                {
+                    List=document.getElementById("listn");
+                }
+                if(document.getElementById("listp").style.display!="none")
+                {
+                    List=document.getElementById("listp");
+                }
+                for(var i=0;i<List.options.length;i++)
+                {
+                    List.options[i].selected=true;
+                }
+                ShwHid(List);
+            }
+
+        }
+function FindComp(obj)
+ {
+	if(obj=="6")
+	{
+		return "listc";
+	}
+	if(obj=="7")
+	{
+		return "listd";
+	}
+	if(obj=="8")
+	{
+		return "listn";
+	}
+	if(obj=="9")
+	{
+		return "listp";
+	}
+ }
+ function FindText(obj,vals)
+ {
+  var i;
+  for(i=0;i<obj.options.length;i++)
+  {
+   if(obj.options[i].value==vals)
+   {
+    return obj.options[i].text;
+   }
+  }
+ }
+ function Add_Question()
+ {
+  var Main1;
+  Main1=document.getElementById("qualification_id");
+  if(Main1.selectedIndex == 0)
+  {
+   alert("Please select occupational category");
+   return;
+  }
+  var Main2;
+  Main2=document.getElementById(FindComp(Main1.value));
+  var Main4;
+  Main4=document.getElementById("score_id");
+  var Hid=document.getElementById("Questions");
+  var NewVal;
+  for(var i=0;i<Main2.options.length;i++)
+  {
+   for(var j=0;j<Main4.options.length;j++)
+   {    if(Main2.options[i].selected==true && Main4.options[j].selected==true)
+        {
+            NewVal=Main1.value+'^'+Main2.options[i].value+'^'+Main4.options[j].value;
+            if(Hid.value.indexOf(NewVal)>=0)
+                Remove_Question(NewVal);
+            if(Hid.value.length!=0)
+                Hid.value=Hid.value+"$";
+            Hid.value=Hid.value+NewVal;
+        }
+   }
+  }
+  RenderNow();
+ }
+ function Remove_Question(KeyVal)
+ {
+   var Hid=document.getElementById("Questions");
+   if(Hid.value.indexOf(KeyVal)>=0)
+   {
+    var HidVal = Hid.value;
+	HidVal=HidVal.replace(KeyVal,"");
+	HidVal=HidVal.replace("$$","$");
+	if(HidVal.indexOf("$")==0)
+	 HidVal=HidVal.substr(1);
+	if(HidVal.lastIndexOf("$")==HidVal.length-1)
+	 HidVal=HidVal.substr(0,HidVal.length-1);
+	Hid.value=HidVal;
+	RenderNow();
+   }
+ }
+ function RenderNow()
+ {
+  var Target = document.getElementById("RenderInput");
+  var HTM = "";
+  HTM = HTM + '<table cellspacing="0" cellpadding="0" border="1" style="width:100%">';
+  HTM = HTM + '<tr><td><div class="nwtxtbig"><?php echo t("Occupational category"); ?></div></td><td><div class="nwtxtbig"><?php echo t("Competence"); ?></div></td><td><div class="nwtxtbig"><?php echo t("Score"); ?></div></td><td><div class="nwtxtbig"><?php echo t("Action"); ?></div></td></tr>';
+  if(document.getElementById("Questions").value!="")
+   var Hid=document.getElementById("Questions").value.split("$");
+  else
+   var Hid="";
+  var i;
+  var Vals;
+  var Main1;
+  var Main2;
+  var Main4;
+  Main4=document.getElementById("score_id");
+  for(i=0;i<Hid.length;i++)
+  {
+   Vals=Hid[i].split("^");
+   Main1=document.getElementById("qualification_id");
+   Main2=document.getElementById(FindComp(Vals[0]));
+   HTM = HTM + "<tr><td><div class='nwtxt'>";
+   HTM = HTM + FindText(Main1,Vals[0]);
+   HTM = HTM + "</div></td><td><div class='nwtxt'>";
+   HTM = HTM + FindText(Main2,Vals[1]);
+   HTM = HTM + "</div></td><td><div class='nwtxt'>";
+   HTM = HTM + FindText(Main4,Vals[2]);
+   HTM = HTM + "</div></td>";
+   HTM = HTM + '<td><div style="margin:4px"><a href="javascript:void(0)" onclick="Remove_Question(\''+Vals[0]+'^'+Vals[1]+'^'+Vals[2]+'\')">Delete</a></td></div></tr>';
+  }
+  HTM = HTM + "</table>";
+  Target.innerHTML = HTM;
+ }
+        function PrintProvince()
+        {
+            if(document.getElementById("province_id").value != "")
+            {
+                document.write(document.getElementById("province_id").options[document.getElementById("province_id").selectedIndex].text);
+            }
+        }
+        function PrintDistrict()
+        {
+            if(document.getElementById("district_id").value != "")
+            {
+                document.write(document.getElementById("district_id").options[document.getElementById("district_id").selectedIndex].text);
+            }
+        }
+        function PrintSubdistrict()
+        {
+            if(document.getElementById("region_c_id").value != "")
+            {
+                document.write(document.getElementById("region_c_id").options[document.getElementById("region_c_id").selectedIndex].text);
+            }
+        }
+        function PrintFacility()
+        {
+            if(document.getElementById("facilityInput").value != "")
+            {
+                document.write(document.getElementById("facilityInput").options[document.getElementById("facilityInput").selectedIndex].text);
+            }
+        }
+</script>
+<div id="RenderInput"></div>
+	<input type="hidden" name="Questions" id="Questions" value="<?php echo $this->criteria['Questions']; ?>" />
+	<input type="hidden" name="listcq" id="listcq" value="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20~21,22,23" />
+	<input type="hidden" name="listdq" id="listdq" value="~1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18~01,02,03,04,05,06,08,09~31,32,33,34,35,36,37~41,42,43,44~51,52,53,54,55,56,57,58,59,510,511,512,513,514,515,516,517,518~61,62,63,64,65,66,67~71,72,73,74,75,76,77,78,79,710,711~21,22,23" />
+	<input type="hidden" name="listnq" id="listnq" value="~1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,200~01,02,03,04,05,06,07,08,09~31,32,33,34,35,36,37,38~41,42,43,44,45~51,52,53,54,55,56,57,58,59,510,511,512,513~61,62,63,64,65~71,72,73,74,75,76,77,78,79,710,711~21,22,23" />
+	<input type="hidden" name="listpq" id="listpq" value="1,2,3,4,5,6,7~8,9,10" />
+	<input type="hidden" name="limit" id="limit" value="1" />
+    <input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+   </fieldset>
+   </form>
+<?php if ( $this->criteria['go'] ) { ?>
+		    <div class="hrGrey"></div>
+    <div class="fieldIndentNoMargin"><?php tp('Results');?>  <?php echo $this->printAndExport();?></div>
+	<table cellpadding="0" cellspacing="0" border="0" style="width:40%;border:solid 1px #AAA">
+	<tr><td><div class="nwtxtbig"><?php echo t('ID'); ?></div></td><td><div class="nwtxtbig"><?php echo t('First Name'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Surname'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Gender'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Province'); ?></div></td><td><div class="nwtxtbig"><?php echo t('District'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Sub-district'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Facility'); ?></div></td></tr>
+	<?php
+	foreach ( $this->results as $k => $y ) {
+		echo '<tr><td><div class="nwtxt">'.$y['id'].'</div></td><td><div class="nwtxt">'.$y['first_name'].'</div></td><td><div class="nwtxt">'.$y['last_name'].'</div></td><td><div class="nwtxt">'.$y['gender'].'</div></td>';
+         echo '<td><div class="nwtxt">';
+         echo '<script type="text/javascript">PrintProvince()</script>';
+         echo '</div></td>';
+         echo '<td><div class="nwtxt">';
+         echo '<script type="text/javascript">PrintDistrict()</script>';
+         echo '</div></td>';
+         echo '<td><div class="nwtxt">';
+         echo '<script type="text/javascript">PrintSubdistrict()</script>';
+         echo '</div></td>';
+         echo '<td><div class="nwtxt">';
+         echo '<script type="text/javascript">PrintFacility()</script>';
+         echo '</div></td></tr>';
+	}
+	?>
+	</table>
+<?php } ?>
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+</div>
+
+</body>
+</html>

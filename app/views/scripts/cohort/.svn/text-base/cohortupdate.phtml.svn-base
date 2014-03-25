@@ -1,0 +1,32 @@
+<html>
+	<head>
+		<title><?php echo $this->escape($this->title);?></title>
+		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+	<?php
+    require_once('views/helpers/ScriptContainer.php');
+    print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();?>
+    
+	</head>
+	<body>
+     <div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+            <div id="content">
+				<div id="subcontent">
+				<div id="contentheader">
+					<h2><?php echo t('Update Succesfully'); ?></h2><br>
+					<?php $this->escape($this->success); ?>
+				</div>
+				<div class="pad50 clear"></div>
+                <?php echo $this->escape($this->type); ?>
+                
+                
+            </div>
+		</div>
+        				
+
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+        </div>
+	</body>
+</html>

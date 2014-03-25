@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php echo t('Assign Evaluation to').' '.t('Training');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+require_once('views/helpers/DropDown.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+
+?>
+
+</head>
+<body class="yui-skin-sam">
+
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+
+    <h1><?php echo t('Assign Evaluation to').' '.t('Training');?></h1>
+    <label><?php echo $this->training_name; ?></label><br/><br/>
+
+   	   <form action="" method="post" id="assignForm">
+
+
+		    <div id="trainings"></div>
+		    <?php
+              echo DropDown::render('evaluation_id', t('Evaluations'), $this->evaluations, 'title', 'id', $this->evaluation_id);
+		?>
+              <p>
+		<button type="button" id="submitButton"><?php tp('Submit');?></button><br>
+    <script>
+    addAjaxSubmit('submitButton','assignForm','<?php echo $this->base_url;?>/evaluation/assign-training/id/<?php echo $this->id;?>/outputType/json');
+    </script>
+    <div class="clear"></div>
+		</form>
+
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+</div>
+
+</body>
+</html>

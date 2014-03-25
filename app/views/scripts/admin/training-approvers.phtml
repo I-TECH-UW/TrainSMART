@@ -1,0 +1,86 @@
+<?php
+// need admin nav bar $nextUri variables from these includes
+ob_start();
+require_once('views/scripts/header.phtml');
+$header = ob_get_contents();
+ob_end_clean();
+
+ob_start();
+require_once('views/scripts/nav-admin.phtml');
+$nav = ob_get_contents();
+ob_end_clean();
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title><?php echo $this->translation['Application Name'];?> | <?php echo tp("Approvers"); ?></title>
+	<?php
+	require_once('views/helpers/ScriptContainer.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+	?>
+</head>
+<body  class="yui-skin-sam">
+<div id="pageHolder">
+<div id="header"><?php echo $header; ?></div>
+<div id="content" class="adminDiv">
+
+<form method="post" name="adminForm">
+
+	<div id="navAdmin"><?php echo $nav;?></div>
+
+	<div id="contentAdmin">
+
+	<h1><?php echo $this->pageTitle; ?></h1>
+
+	<div class="fieldLabel"><?php tp("Two Levels of Approval"); ?></div><div class="fieldInput"><input type="checkbox" name="master_approver" <?php if($this->master_approver) echo ' checked'; ?>><label for="master_approver"><?php tp("Enable"); ?></label></div>
+
+	<br clear="all"/>
+
+	<div id="editTable" class="editTable"><?php echo $this->editTable; ?></div>
+
+	<br clear="all"/>
+
+	<a href="<?php echo $this->base_url;?>/user/search" onclick="return submitAdminForm(this);"><?php tp('Edit Users'); ?></a>
+
+	<br clear="all"/>
+
+
+	<input type="hidden" name="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>">
+
+	<div style="float:right;">
+		<input type="submit" value="<?php tp('Save'); ?>" name="saveonly" class="submitNoArrow" onclick="document.adminForm.redirect.value=''" style="float:left;margin-right:1em;">
+		<input type="submit" value="<?php tp('Save And Continue'); ?>" name="save" class="submitArrow" style="float:float:left;right;margin-right:1em;">
+	</div>
+</form>
+
+<script type="text/javascript">
+
+function ajaxApprover(actionName, id){
+	$.ajax({
+		type: 'POST',
+		url: '<?php echo $this->base_url; ?>/admin/training-approvers',
+		dataType: "json",
+		data: {outputType: 'json', ajaxAction: actionName, ajax:1, 'id': id},
+		success: function(json)
+		{
+			location.href="<?php echo $this->base_url; ?>/admin/training-approvers";
+		},
+		error: function(json){
+			displayStatus('<?php tp('Your changes could not be saved'); ?>');
+		}
+		});
+}
+</script>
+
+</div>
+
+<div class="clear"></div>
+
+</div>
+<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+</body>
+</html>

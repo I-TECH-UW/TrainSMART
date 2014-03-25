@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php echo t('View').' '.t('Training').' '.t('Location');?></title>
+<?php
+require_once('views/helpers/Location.php');
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam" >
+<div id="pageHolder">
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+
+		<h1><?php echo t('View').' '.t('Training').' '.t('Location');?></h1>
+
+		<div class="fieldLabel">
+		<?php tp('Location');?>
+		</div>
+		<div class="fieldInput">
+
+    <?php
+			$jsnippet = "window.location = '$this->base_url/facility/view-location/id/' + this.value;";
+			training_location_dropdown( $this->tlocations, $this->id, 'name="training_location_id" id="select_training_location" onchange="'.$jsnippet.'"'.space.$this->viewonly);
+    ?>
+  </div>
+
+    <?php if($this->id) : ?>
+
+
+  		<?php require_once('views/scripts/training/_template_locationform.phtml'); ?>
+
+  		<?php if(!$this->viewonly): ?>
+
+   		<button type="button" id="submitLocation"><?php tp('Save Changes');?></button>
+ 		<div style="float:right;">&nbsp;</div><?php if (@$this->okToDelete) { ?><input type="button" id="deleteLocation" name="deleteLocation" value="Delete" class="submitNoArrow"  onclick="doDelete();" /><?php } ?>
+  		<script type="text/javascript">
+  			addAjaxSubmit('submitLocation','addLocationForm','<?php echo $this->base_url;?>/training/location-add/update/<?php echo $this->id; ?>/info/extra/outputType/json');
+  		</script>
+    <br/><br/>
+
+      <?php endif; ?>
+
+    <?php endif; ?>
+
+
+    <div class="clear"></div>
+
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+<script language="JavaScript">
+function doDelete() {
+	if(confirm("<?php tp('Are you sure you wish to delete this location?');?>")) {
+		window.location = '<?php echo $this->base_url;?>/facility/deleteLocation/id/<?php echo $this->id;?>';
+		return false;
+	}
+}
+</script>
+
+</body>
+</html>

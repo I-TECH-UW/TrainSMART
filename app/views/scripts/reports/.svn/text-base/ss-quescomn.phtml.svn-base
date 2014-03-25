@@ -1,0 +1,91 @@
+<select id="listn1" style="display:none" multiple="multiple">
+<option value="1">Take an appropriate history of all patients (e.g. medical, family, reproductive, and HIV history)?</option>
+<option value="2">Perform head to toe physical examination?</option>
+<option value="3">Advise HIV positive patients to encourage partners and children to test?</option>
+<option value="4">Provide all patients with HIV counseling and testing using the PICT model?</option>
+<option value="5">Screen for and manage opportunistic infections?</option>
+<option value="6">Stage patients according to WHO and SA guidelines?</option>
+<option value="7">Interpret blood results (e.g. viral load, CD4 count, ALT, FBC, Creatinine Clearance, and HepB)?</option>
+<option value="8">Prescribe ARVs to all HIV positive patients and provide follow up care (NIMART/ART initiation)?</option>
+<option value="9">Discuss all medications including possible drug interactions?</option>
+<option value="10">Discuss the importance of treatment adherence with all patients about to begin or already on ARVs?</option>
+<option value="11">Follow up with patients on ARVs who do not show up for appointments?</option>
+<option value="12">Initiate and manage support groups?</option>
+<option value="13">Treat the common ART side effects in all patients?</option>
+<option value="14">Screen for and treat HIV positive patients with TB?</option>
+<option value="15">Identify and treat a patient with clinical depression?</option>
+<option value="16">Provide mentorship support for lay counselors?</option>
+<option value="17">Provide mentorship to other nurses new to initiation and HIV care?</option>
+<option value="18">Provide the correct level of referral for treatment when required?</option>
+<option value="19">Discuss how to avoid infecting a sexual partner with HIV with an HIV-positive patient?</option>
+<option value="20">Provide family planning for HIV positive patients?</option>
+<option value="200">Discuss rights and access for HIV positive patients?</option>
+</select>
+<select id="listn2" style="display:none" multiple="multiple">
+<option value="01">Correctly diagnose, classify, and treat HIV positive infants and children (Initiate eligible infants on ART)?</option>
+<option value="02">Treat ARV side effects in children (Monitor baseline and routine blood test periodically)?</option>
+<option value="03">Correctly treat an HIV positive child with TB and on ARV therapy?</option>
+<option value="04">Provide counseling for HIV positive children and their caregivers?</option>
+<option value="05">Monitor the nutritional status of HIV positive children?</option>
+<option value="06">Explain the importance of ARV adherence to HIV positive children and their caregivers?</option>
+<option value="07">Disclose HIV status to children?</option>
+<option value="08">Follow up with HIV positive children who miss their appointments?</option>
+<option value="09">Provide the correct level of referral for treatment when required?</option>
+</select>
+<select id="listn3" style="display:none" multiple="multiple">
+<option value="31">Recognise and correctly diagnose TB in patients?</option>
+<option value="32">Initiate treatment and manage all patients with TB?</option>
+<option value="33">Manage TB / HIV / HBV co-infected patients?</option>
+<option value="34">Discuss adherence to TB treatment and implications if treatment is not taken as prescribed or completed?</option>
+<option value="35">Follow up with the smear negative patient and diagnose treatment failure?</option>
+<option value="36">Manage MDR and XDR in co-infected patients?</option>
+<option value="37">Manage the common ART side effects in TB patients?</option>
+<option value="38">Provide the correct level of referral for treatment when required?</option>
+</select>
+<select id="listn4" style="display:none" multiple="multiple">
+<option value="41">Discuss STIs and implications for acquiring and transmitting HIV (while promoting the use of condoms)?</option>
+<option value="42">Recognise and correctly diagnose and provide syndromic management of STIs in patients?</option>
+<option value="43">Manage a patient with a positive syphilis result?</option>
+<option value="44">Follow up with patients who do not show up for appointments?</option>
+<option value="45">Provide the correct level of referral for treatment when required?</option>
+</select>
+<select id="listn5" style="display:none" multiple="multiple">
+<option value="51">Counsel and test pregnant women for HIV?</option>
+<option value="52">Provide BANC using integrated BANC/HIV checklist during the Antenatal period?</option>
+<option value="53">Perform PAP smears?</option>
+<option value="54">Initiate ART prophylaxis and treatment for HIV positive women during pregnancy, labour and postnatal periods?</option>
+<option value="55">Recognise and treat common ART side effects in HIV positive pregnant women?</option>
+<option value="56">Counsel and provide appropriate contraception to HIV positive women?</option>
+<option value="57">Counsel for and terminate unwanted pregnancies; counsel women and partner/family on postnatal care; provide Cotrimoxazole prophylaxis?</option>
+<option value="58">Correctly treat HIV positive pregnant and lactating women with TB/HBV co-infection who are also on ART?</option>
+<option value="59">Follow up with HIV positive pregnant women who miss their appointments?</option>
+<option value="510">Provide the correct level of referral for treatment when required?</option>
+<option value="511">Collect DBS-PCR from all HIV exposed infants?</option>
+<option value="512">Promote, monitor and support safe infant feeding?</option>
+<option value="513">Promote correct childhood immunisations for HIV-exposed children?</option>
+</select>
+<select id="listn6" style="display:none" multiple="multiple">
+<option value="61">Provide care for sexually assaulted adults and children, including HIV prophylaxis?</option>
+<option value="62">Provide prophylactic treatment to HIV exposed patients?</option>
+<option value="63">Protect yourself from HIV exposure e.g. needle stick injury?</option>
+<option value="64">Apply the protocol for occupational exposure?</option>
+<option value="65">Provide the correct level of referral for treatment when required?</option>
+</select>
+<select id="listn7" style="display:none" multiple="multiple">
+<option value="71">Understand and use the 2007 guidelines on nutrition for people living with HIV, AIDS, TB and other chronic debilitating conditions?</option>
+<option value="72">Understand and use the CCMT/ART guidelines for adults and children?</option>
+<option value="73">Understand and use the Sexual Assault Management guidelines?</option>
+<option value="74">Understand and use the Contraceptive Management guidelines?</option>
+<option value="75">Understand and use the Choice on Termination of Pregnancy Act (No. 92 of 1996)?</option>
+<option value="76">Understand and use the National STI syndromic management guidelines?</option>
+<option value="77">Understand and use the Prevention of Mother to Child Transmission guidelines?</option>
+<option value="78">Understand and use the Maternity guidelines?</option>
+<option value="79">Understand and use the National TB Control guidelines?</option>
+<option value="710">Understand and use the IMCI booklet?</option>
+<option value="711">Understand and use the National HIV Counselor Mentorship guidelines?</option>
+</select>
+<select id="listn8" style="display:none" multiple="multiple">
+<option value="21">Do you require additional training to perform your tasks?</option>
+<option value="22">Would you like to become a mentor?</option>
+<option value="23">Do you feel prepared to become a mentor?</option>
+</select>

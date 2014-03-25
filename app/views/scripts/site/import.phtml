@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam">
+  <div id="pageHolder">
+    <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+    <div id="content">
+      <h1><?php echo $this->pageTitle; ?></h1>
+      <p><?php tp('Select the file that contains the data (Excel Comma Seperated Values database - CSV) you want to import.'); ?></p>
+      <p>&nbsp;</p>
+      <p><a href="<?php echo $this->base_url; ?>/facility/import/download/template/outputType/csv"><?php tp('Get sample template'); ?></a></p>
+      <p>&nbsp;</p>
+      <form id="uploadFileForm" enctype="multipart/form-data" method="post">
+      <div class="fieldIndent">
+        <div class="fieldLabel"><?php tp('File to upload');?></div><input type="file" name="upload" /><br>
+          <div class="fieldLabel"><?php tp('Max file upload size'); print ' '; print ini_get('upload_max_filesize')?></div>&nbsp;</div>
+        <div class="fieldLabel"><input type="submit" class="submitArrow" name="go" value="Continue" /></div>&nbsp;
+        <br/><br/><br/>
+        </div>
+      </form>
+    </div>
+    <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+  </div>
+</body>
+</html>

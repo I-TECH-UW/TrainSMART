@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php tp('History');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+
+?>
+
+</head>
+<body class="yui-skin-sam" >
+
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+
+    <h1><?php tp('History');?></h1>
+        <table border="0">
+            <tr>
+                <td>
+        <b>From:</b>
+                </td>
+                <td>
+        <div id="fromdate">
+        <?php tp('Day');?> <input id="from-day" class="dayfield" type="text" name="from-day" value="" />
+        / <?php tp('Month');?> <input id="from-month" class="monthfield" type="text" name="from-month" value="" />
+        / <?php tp('Year');?> <input id="from-year" class="yearfield" type="text" name="from-year" value="" />
+        <script type="text/javascript">
+		    YAHOO.util.Event.onDOMReady(function () {
+		    	makeCalendar("fromdate", "from-day", "from-month", "from-year");
+		    });
+		</script>
+        </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+        <b>To:</b>
+                </td>
+                <td>
+        <div id="todate">
+        <?php tp('Day');?> <input id="to-day" class="dayfield" type="text" name="to-day" value="" />
+        / <?php tp('Month');?> <input id="to-month" class="monthfield" type="text" name="to-month" value="" />
+        / <?php tp('Year');?> <input id="to-year" class="yearfield" type="text" name="to-year" value="" />
+        </div>
+        <script type="text/javascript">
+		    YAHOO.util.Event.onDOMReady(function () {
+		    	makeAdditionalCalendar("todate", "to-day", "to-month", "to-year");
+		    });
+		</script>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" value=" Submit " onclick="DateSearch();return false;" />
+        <script type="text/javascript">
+            function DateSearch()
+            {
+                FromD = document.getElementById("from-day").value;
+                FromM = document.getElementById("from-month").value;
+                FromY = document.getElementById("from-year").value;
+                ToD = document.getElementById("to-day").value;
+                ToM = document.getElementById("to-month").value;
+                ToY = document.getElementById("to-year").value;
+                if(FromD.length > 0 && FromM.length > 0 && FromY.length > 0 && ToD.length > 0 && ToM.length > 0 && ToY.length > 0)
+                {
+                    window.location = window.location.href.split("?")[0] + '?s=' + FromY + '-' + FromM + '-' + FromD + '&e=' + ToY + '-' + ToM + '-' + ToD;
+                }
+            }
+            <?php
+            echo 'var SD = \'' . $this->s . '\';';
+            echo 'var ED = \'' . $this->e . '\';';
+            ?>
+            if(SD.length > 0)
+            {
+                var SDA = SD.split("-");
+                if(SDA.length==3)
+                {
+                    document.getElementById("from-year").value = SDA[0];
+                    document.getElementById("from-month").value = SDA[1];
+                    document.getElementById("from-day").value = SDA[2];
+                }
+            }
+            if(ED.length > 0)
+            {
+                var EDA = ED.split("-");
+                if(EDA.length==3)
+                {
+                    document.getElementById("to-year").value = EDA[0];
+                    document.getElementById("to-month").value = EDA[1];
+                    document.getElementById("to-day").value = EDA[2];
+                }
+            }
+        </script>
+        <br />
+        <br />
+        <br />
+        <br />
+        <table border="1" cellpadding="40" cellspacing="40">
+            <tr>
+                <td>
+                    <div style="padding:4px"><b>URL</b></div>
+                </td>
+                <td>
+                    <div style="padding:4px"><b>On</b></div>
+                </td>
+            </tr>
+	   <form action="" method="get">
+       <?php
+        $db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+        if(strlen($this->s) > 0 && strlen($this->e))
+        {
+            $rows = $db->fetchAll ( 'SELECT `URL`, DATE_FORMAT(`On`, \'%M %D, %Y at %h:%i %p\') `On` FROM tracking WHERE `UID`='.$this->person_id.' AND `On`<\''.$this->e.'\' AND `On`>\''.$this->s.'\' ORDER BY `On` DESC');
+        }
+        else
+        {
+            $rows = $db->fetchAll ( 'SELECT `URL`, DATE_FORMAT(`On`, \'%M %D, %Y at %h:%i %p\') `On` FROM tracking WHERE `UID`='.$this->person_id.' ORDER BY `On` DESC LIMIT 0, 25');
+        }
+        foreach ( $rows as $rw ) {
+            echo '<tr><td><div style="width:900px;overflow:auto;padding:4px">';
+            echo $rw['URL'];
+            echo '</div></td><td><div style="padding:4px">';
+            echo $rw['On'];
+            echo '</div></td></tr>';
+        }
+       ?>
+       </table>
+   </form>
+</body>
+</html>

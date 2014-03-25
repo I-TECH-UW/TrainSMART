@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<?php
+require_once('views/helpers/ITechTranslate.php');
+
+?>
+<title><?php echo $this->translation['Application Name'];?> | <?php tp('Oops');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+
+
+?>
+</head>
+<body class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+	<?php tp('Sorry. An error just occurred. Please try again, or contact a system administrator.');?>
+
+    <div class="clear"></div>
+
+  <br><br>
+
+  <div style="background:#eee;padding:10px; border:1px solid #555; ">
+
+  <?php
+   if ( isset($this->info ) ) { ?>
+  <?php if ( 404 == $this->code ) { ?>
+    <p><b>Reason:</b> <?php print  $this->info ?></p>
+  <?php } elseif (500 == $this->code) { ?>
+   <p><tt>Message: <b><?php print  $this->info->getMessage() ?></b></tt></p>
+   <br>
+   <h4><a href="" onclick="document.getElementById('stacktrace').style.display = ''; return false; ">Stack trace &raquo;</a></h4>
+  <?php } ?>
+  <?php } ?>
+  </div>
+
+
+
+ <div style="display:none;" id="stacktrace">
+ <pre><div style="background:#fff;border:1px solid #000; padding:10px;margin-top:1em; position:absolute;"><?php if ( isset($this->info) ) print $this->info->getTraceAsString() ?></div></pre>
+ </div>
+
+
+
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+<?php
+
+// template for page that contains an EditTable
+
+// need $pageTitle and $nextUri variables from these includes
+
+ob_start();
+require_once('views/scripts/header.phtml');
+$header = ob_get_contents();
+ob_end_clean();
+
+ob_start();
+require_once('views/scripts/nav-admin.phtml');
+$nav = ob_get_contents();
+ob_end_clean();
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+</head>
+<body  class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php echo $header; ?></div>
+  <div id="content" class="adminDiv">
+
+    <form method="post" name="adminForm">
+
+    <div id="navAdmin"><?php echo $nav;?></div>
+
+    <div id="contentAdmin">
+    <h1><?php echo $this->pageTitle; ?></h1>
+    <div style="font-style:italic;">Create geographical hierarchy</div>
+    <br/>
+
+    <div class="fieldLabel">Name of country</div>
+    <div class="fieldInput"><input type="text" name="country" value="<?php echo $this->country; ?>"></div>
+
+    <!-- country -->
+    <div class="clear"></div><br/>
+    Enter labels for levels for this Country:<br/><br/>
+
+    <div class="fieldLabel">Region A</div>
+    <div class="fieldInput"><input type="text" name="label_regiona" value="<?php echo $this->label_regiona; ?>"></div>
+
+    <div class="fieldLabel">Region B</div>
+    <div class="fieldInput"><input type="text" name="label_regionb" value="<?php echo $this->label_regionb; ?>">
+       <input type="checkbox" name="check_regionb" <?php if(!$this->check_regionb) echo 'checked'; ?> id="check_regionb"><label for="check_regionb">Don't display</label>
+</div>
+
+    <div class="fieldLabel">City/Town</div>
+    <div class="fieldInput"><input type="text" name="label_citytown" value="<?php echo $this->label_citytown; ?>"></div>
+
+    <!-- training -->
+    <div class="clear"></div><br/>
+    Enter labels for Training:<br/><br/>
+
+    <div class="fieldLabel">Training category</div>
+    <div class="fieldInput"><input type="text" name="label_training_category" value="<?php echo $this->label_training_category; ?>"></div>
+
+    <div class="fieldLabel">Training name</div>
+    <div class="fieldInput"><input type="text" name="label_training_name" value="<?php echo $this->label_training_name; ?>"></div>
+
+    <div class="fieldLabel">Training organizer</div>
+    <div class="fieldInput"><input type="text" name="label_training_org" value="<?php echo $this->label_training_org; ?>"></div>
+
+    <div class="fieldLabel">Training level</div>
+    <div class="fieldInput"><input type="text" name="label_training_level" value="<?php echo $this->label_training_level; ?>"></div>
+
+    <div class="fieldLabel">PEPFAR Category</div>
+    <div class="fieldInput"><input type="text" name="label_pepfar" value="<?php echo $this->label_pepfar; ?>"></div>
+
+    <div class="fieldLabel">Training topic</div>
+    <div class="fieldInput"><input type="text" name="label_training_topic" value="<?php echo $this->label_training_topic; ?>">
+      <input type="checkbox" name="check_training_topic" <?php if(!$this->check_training_topic) echo 'checked'; ?> id="check_training_topic"><label for="check_training_topic">Don't display</label>
+    </div>
+
+    <div class="fieldLabel"><!--Training of Trainers-->TOT</div>
+    <div class="fieldInput"><input type="text" name="label_training_trainers" value="<?php echo $this->label_training_trainers; ?>">
+      <input type="checkbox" name="check_training_trainers" <?php if(!$this->check_training_trainers) echo 'checked'; ?> id="check_training_trainers"><label for="check_training_trainers">Don't display</label>
+    </div>
+
+
+    <div class="fieldLabel">Nat. Curriculum</div>
+    <div class="fieldInput"><input type="text" name="label_training_got_curric" value="<?php echo $this->label_training_got_curric; ?>">
+      <input type="checkbox" name="check_training_got_curric" <?php if(!$this->check_training_got_curric) echo 'checked'; ?> id="check_training_got_curric"><label for="check_training_got_curric">Don't display</label>
+    </div>
+
+    <div class="fieldLabel">Nat. Curriculum Comment</div>
+    <div class="fieldInput"><input type="text" name="label_training_got_comment" value="<?php echo $this->label_training_got_comment; ?>">
+      <input type="checkbox" name="check_training_got_comment" <?php if(!$this->check_training_got_comment) echo 'checked'; ?> id="check_training_got_comment"><label for="check_training_got_comment">Don't display</label>
+    </div>
+
+    <div class="fieldLabel">Refresher Course</div>
+    <div class="fieldInput"><input type="text" name="label_training_refresher" value="<?php echo $this->label_training_refresher; ?>">
+      <input type="checkbox" name="check_training_refresher" <?php if(!$this->check_training_refresher) echo 'checked'; ?> id="check_training_refresher"><label for="check_training_refresher">Don't display</label>
+    </div>
+
+    <div class="fieldLabel">Comments</div>
+    <div class="fieldInput"><input type="text" name="label_training_comments" value="<?php echo $this->label_training_comments; ?>"></div>
+
+    <div class="fieldLabel">Course Objectives</div>
+    <div class="fieldInput"><input type="text" name="label_course_objectives" value="<?php echo $this->label_course_objectives; ?>">
+      <input type="checkbox" name="check_course_objectives" <?php if(!$this->check_course_objectives) echo 'checked'; ?> id="check_course_objectives"><label for="check_course_objectives">Don't display</label>    </div>
+
+    <div class="fieldLabel">Pre test score</div>
+    <div class="fieldInput"><input type="text" name="label_training_pre" value="<?php echo $this->label_training_pre; ?>">
+      <input type="checkbox" name="check_training_pre" <?php if(!$this->check_training_pre) echo 'checked'; ?> id="check_training_pre"><label for="check_training_pre">Don't display</label>
+    </div>
+
+    <div class="fieldLabel">Post test score</div>
+    <div class="fieldInput"><input type="text" name="label_training_post" value="<?php echo $this->label_training_post; ?>">
+      <input type="checkbox" name="check_training_post" <?php if(!$this->check_training_post) echo 'checked'; ?> id="check_training_post"><label for="check_training_post">Don't display</label>
+    </div>
+
+    <div class="fieldLabel">Custom field 1</div>
+    <div class="fieldInput"><input type="text" name="label_training_custom1" value="<?php echo $this->label_training_custom1; ?>">
+      <input type="checkbox" name="check_training_custom1" <?php if(!$this->check_training_custom1) echo 'checked'; ?> id="check_training_custom1"><label for="check_training_custom1">Don't display</label>
+    </div>
+
+    <div class="fieldLabel">Custom field 2</div>
+    <div class="fieldInput"><input type="text" name="label_training_custom2" value="<?php echo $this->label_training_custom2; ?>">
+      <input type="checkbox" name="check_training_custom2" <?php if(!$this->check_training_custom2) echo 'checked'; ?> id="check_training_custom2"><label for="check_training_custom2">Don't display</label>
+    </div>
+
+    <!-- people -->
+    <div class="clear"></div><br/>
+    Enter labels for People:<br/><br/>
+
+    <div class="fieldLabel">National ID</div>
+    <div class="fieldInput"><input type="text" name="label_people_national" value="<?php echo $this->label_people_national; ?>">
+      <input type="checkbox" name="check_people_national" <?php if(!$this->check_people_national) echo 'checked'; ?> id="check_people_national"><label for="check_people_national">Don't display</label>
+    </div>
+
+    <div class="fieldLabel">File Number</div>
+    <div class="fieldInput"><input type="text" name="label_people_file_num" value="<?php echo $this->label_people_file_num; ?>">
+      <input type="checkbox" name="check_people_file_num" <?php if(!$this->check_people_file_num) echo 'checked'; ?> id="check_people_file_num"><label for="check_people_file_num">Don't display</label>
+    </div>
+
+    <div class="fieldLabel">Is active</div>
+    <div class="fieldInput"><input type="text" name="label_people_active" value="<?php echo $this->label_people_active; ?>">
+      <input type="checkbox" name="check_people_active" <?php if(!$this->check_people_active) echo 'checked'; ?> id="check_people_active"><label for="check_people_active">Don't display</label>
+    </div>
+
+   <div class="fieldLabel">First Name</div>
+    <div class="fieldInput">
+      <input type="text" name="label_people_first" value="<?php echo $this->label_people_first; ?>">
+    </div>
+    <div class="fieldLabel">Middle Name</div>
+    <div class="fieldInput">
+      <input type="text" name="label_people_middle" value="<?php echo $this->label_people_middle; ?>">
+      <input type="checkbox" name="check_people_middle" <?php if($this->check_people_middle) echo 'checked'; ?> id="check_people_middle"><label for="check_people_middle">Display Last</label>
+    </div>
+    <div class="fieldLabel">Last Name</div>
+    <div class="fieldInput">
+      <input type="text" name="label_people_last" value="<?php echo $this->label_people_last; ?>">
+    </div>
+
+    <div class="fieldLabel">Home Phone</div>
+    <div class="fieldInput">
+      <input type="checkbox" name="check_people_home_phone" <?php if(!$this->check_people_home_phone) echo 'checked'; ?> id="check_people_home_phone"><label for="check_people_home_phone">Don't display</label>
+    </div>
+
+    <div class="fieldLabel">Fax</div>
+    <div class="fieldInput">
+      <input type="checkbox" name="check_people_fax" <?php if(!$this->check_people_fax) echo 'checked'; ?> id="check_people_fax"><label for="check_people_fax">Don't display</label>
+    </div>
+
+     <div class="fieldLabel">Custom field 1</div>
+    <div class="fieldInput">
+      <input type="text" name="label_people_custom1" value="<?php echo $this->label_people_custom1; ?>">
+      <input type="checkbox" name="check_people_custom1" <?php if(!$this->check_people_custom1) echo 'checked'; ?> id="check_people_custom1"><label for="check_people_custom1">Don't display</label>
+    </div>
+
+    <div class="fieldLabel">Custom field 2</div>
+    <div class="fieldInput">
+      <input type="text" name="label_people_custom2" value="<?php echo $this->label_people_custom2; ?>">
+      <input type="checkbox" name="check_people_custom2" <?php if(!$this->check_people_custom2) echo 'checked'; ?> id="label_people_custom2"><label for="label_people_custom2">Don't display</label>
+    </div>
+
+    <!-- languages -->
+    <div class="clear"></div><br/>
+    Languages:<br/><br/>
+
+    <?php foreach($this->languages as $key => $label) { ?>
+      <div class="fieldLabel"><?php print $label; ?></div>
+      <div class="fieldInput">
+        <input type="checkbox" name="locales[]" value="<?php echo $key; ?>" id="<?php echo $key;?>"<?php if(in_array($key, $this->locale_enabled) || $key == $this->locale) print 'checked'; ?>><label for="<?php echo $key;?>">Enable</label>
+        &nbsp;
+        <input type="radio" name="locale_default" value="<?php echo $key; ?>" id="d<?php echo $key;?>" <?php if($this->locale == $key) print 'checked'; ?>><label for="d<?php echo $key;?>">Default</label>
+      </div>
+
+    <?php } ?>
+
+    </table>
+
+
+    <div class="clear"></div>
+    <br>
+
+    <input type="hidden" name="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>">
+    <input type="submit" value="Save & Continue" class="submitArrow">
+    <input type="submit" value="Save" name="saveonly" class="submitNoArrow" onclick="document.adminForm.redirect.value=''" style="margin-right:1em;">
+    </form>
+
+
+    </div>
+
+    <div class="clear"></div>
+
+	</div>
+<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+</body>
+</html>

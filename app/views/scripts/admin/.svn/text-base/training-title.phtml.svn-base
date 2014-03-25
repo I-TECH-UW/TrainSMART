@@ -1,0 +1,10 @@
+<?php
+
+if($_SERVER['REQUEST_METHOD'] == 'GET') {
+  // additional add training link
+  $this->extraHtml = '<a class="editTableAdd" href="javascript:void(0)" onclick="setTimeout(function() { TrainingTitleTable.addRow(); }, 50); return false;" >'.t('Add').' '.t('Training Title').'</a>';  
+}
+
+require '_template_edittable.phtml'; 
+
+?>

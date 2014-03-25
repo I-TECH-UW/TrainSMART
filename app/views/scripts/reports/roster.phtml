@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php tp('Roster Reports');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+<script type="text/css">
+.yui-dt-liner {
+  overflow: visible;
+}
+</script>
+</head>
+<body class="yui-skin-sam" onload="filterSubTypeOptions('province_id','district_id');">
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+
+    <h1><?php tp('Roster Reports');?></h1>
+
+    <form action="" method="get">
+
+	<div class="fieldLabel" id="training_organizer_id_lbl"><?php echo (@$this->translation['Training Organizer']); ?></div>
+	<div class="fieldInput">
+	  <select name="training_organizer_id[]" multiple="multiple" size="10">
+		<option value="">&mdash;<?php tp('select');?>&mdash;</option>
+		<?php
+			foreach ( $this->organizers as $vals ) {
+				echo '<option value="'.$vals['id'].'" '.((@$this->criteria['training_organizer_id']) == $vals['id']? 'SELECTED="selected"':'').' >'.($vals['training_organizer_phrase']).'</option>';
+		}
+		?>
+	</select>
+	</div>
+
+	<div class="fieldLabel" id="training_title_id_lbl"><?php echo (@$this->translation['Training Name']); ?></div>
+	<div class="fieldInput">
+	  <select name="training_title_id[]" multiple="multiple" size="10">
+		<option value="">&mdash;<?php tp('All');?>&mdash;</option>
+		<?php
+			foreach ( $this->titles as $vals ) {
+				echo '<option value="'.$vals['id'].'" '.((@$this->criteria['training_title_id']) == $vals['id']? 'SELECTED="selected"':'').' >'.($vals['training_title_phrase']).'</option>';
+		}
+		?>
+	  </select>
+  </div>
+
+	<div class="clear"></div>
+<div class="fieldLabel"><?php tp('Start date');?></div>
+<div class="fieldInput" id="startdate">
+    <?php tp("Day");?> <input id="start-day" class="dayfield" type="text" name="start-day" maxlength="2" value="<?php echo $this->criteria['start-day']; ?>"  >
+    / <?php tp("Month");?> <input id="start-month" class="monthfield" type="text" name="start-month" maxlength="2" value="<?php echo $this->criteria['start-month']; ?>"  >
+    / <?php tp("Year");?> <input id="start-year" class="yearfield" type="text" name="start-year" maxlength="4" value="<?php echo $this->criteria['start-year'];  ?>" >
+		            <script  type="text/javascript">
+		    YAHOO.util.Event.onDOMReady(function () {
+		    	makeCalendar("startdate","start-day", "start-month", "start-year");
+		    });
+		</script>
+	</div>
+<div class="fieldLabel" style="padding-top:1em;"><?php tp('End date');?></div>
+<div class="fieldInput" id="enddate" style="margin-top:1em;">
+    <?php tp("Day");?> <input id="end-day" class="dayfield" type="text" name="end-day" maxlength="2" value="<?php echo $this->criteria['end-day']; ?>"  >
+    / <?php tp("Month");?> <input id="end-month" class="monthfield" type="text" name="end-month" maxlength="2" value="<?php echo $this->criteria['end-month']; ?>"  >
+    / <?php tp("Year");?> <input id="end-year" class="yearfield" type="text" name="end-year" maxlength="4" value="<?php echo $this->criteria['end-year'];  ?>" >
+		            <script  type="text/javascript">
+		    YAHOO.util.Event.onDOMReady(function () {
+		    	makeAdditionalCalendar("enddate","end-day", "end-month", "end-year");
+		    });
+		</script>
+	</div>
+
+<div class="fieldLabel" style="padding-top:1em;"></div>
+<div class="fieldInput" id="enddate" style="margin-top:1em;">
+<input type="checkbox" id="is_extended" name="is_extended" value="1"><label for="is_extended"><?php tp('Extended Report with Test Scores');?></label><br/>
+</div>
+<div class="fieldLabel" style="padding-top:1em;"></div>
+<div class="fieldInput" id="enddate" style="margin-top:1em;">
+<input type="checkbox" id="add_additional" name="add_additional" value="1"><label for="add_additional"><?php tp('Extended Report with Regions and Qualification');?></label><br/>
+</div>
+
+
+	<div class="clear"></div>
+   	<input type="submit" class="submitNoArrow" name="go" value="<?php tp("Generate Report");?>" />
+   </form>
+
+  <div class="clear"></div>
+  </div>
+
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+</div>
+
+</body>
+</html>

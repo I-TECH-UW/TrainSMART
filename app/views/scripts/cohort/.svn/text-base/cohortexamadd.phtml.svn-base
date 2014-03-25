@@ -1,0 +1,97 @@
+<html>
+	<head>
+		<title><?php echo $this->escape($this->title);?></title>
+		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+	<?php
+    require_once('views/helpers/ScriptContainer.php');
+    print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+	?>
+    
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				$( ".calendarbox" ).datepicker({
+					changeMonth: true,
+					changeYear: true
+				});
+				/* Add a click handler to the rows - this could be used as a callback */
+				$(".tablegrid tbody").click(function(event) {
+					$(oTable.fnSettings().aoData).each(function (){
+						$(this.nTr).removeClass('row_selected');
+					});
+					$(event.target.parentNode).addClass('row_selected');
+				});
+	 
+				/* Add a click handler for the delete row */
+				$('#delete').click( function() {
+					var anSelected = fnGetSelected( oTable );
+					oTable.fnDeleteRow( anSelected[0] );
+				} );
+	 
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+			} );
+
+			/* Get the rows which are currently selected */
+			function fnGetSelected( oTableLocal ){
+				var aReturn = new Array();
+				var aTrs = oTableLocal.fnGetNodes();
+				 
+				for ( var i=0 ; i<aTrs.length ; i++ ){
+					if ( $(aTrs[i]).hasClass('row_selected') ){
+						aReturn.push( aTrs[i] );
+					}
+				}
+				return aReturn;
+			}
+		</script>
+	</head>
+	<body>
+    
+     <div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+            <div id="content">
+			<div id="subcontent">
+				<div id="contentheader">
+					<h2><?php echo t('Exams associated with the cohort'); ?></h2>
+					<br>
+			
+				</div>
+				<div class="pad50 clear"></div>
+				<form  action="<?php echo $this->escape($this->action); ?>" id="peopleadd" method="post">
+				<div class="mainformholder">
+                    
+               <p style="padding-left:105px;font-weight:bold;"><?php echo t('Select Criteria'); ?></p><br>
+               		
+ 					<label><?php echo t('Exam'); ?></label>
+					<input type="text" name="exam" size="32" maxlength="32" >
+
+					<label><?php echo t('Date'); ?></label>
+					<input type="text" name="examdate" size="32" maxlength="32" class="calendarbox">
+                    
+                    <label><?php echo t('Grade'); ?></label>
+					<input type="text" name="grade" size="32" maxlength="32" >
+
+                </div>
+                
+         <div  style="margin:-130px 0 0 510px;">
+         <a href="<?php echo Settings::$COUNTRY_BASE_URL.'/cohort/cohortedit' ?>" class="tsbutton green large"><?php echo t('Go back'); ?> &raquo;</a> 
+		<input type="submit" name="updateexam" value="Add &raquo;" class="tsbutton green large">
+					</div>
+
+
+                </form>
+               
+				</div>
+            </div>
+		</div>
+        				
+
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+        </div>
+	</body>
+</html>

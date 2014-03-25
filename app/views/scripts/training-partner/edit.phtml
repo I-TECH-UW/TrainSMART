@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php echo t('Edit').' '.t('Training').' '.t('Partner');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam">
+<div id="pageHolder">
+ 	<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+	<div id="content">
+
+		<h1><?php 
+
+		if ($this->mode == 'add')
+			echo t('Add').' '.t('new').' '.t('Training').' '.t('Partner');
+		else
+			echo t('Edit').' '.t('Training').' '.t('Partner');
+		?></h1>
+
+		<form id="edit" action="<?php echo $this->base_url; ?>/training-partner/edit" method="post">
+		<input type="hidden" name="id" value="<?php echo $this->partner['id']; ?>">
+
+		<div class="fieldLabel" id="training_organizer_option_id_lbl"><span class="required">*</span><?php echo $this->translation['Training Organizer']; ?></div>
+		  <div class="fieldInput">
+		    <?php echo $this->dropDownOrg; ?>
+		  </div>
+		  
+		<div class="fieldLabel" id="partner_subpartner_lbl"><?php echo t('Training').' '.t('Sub Partner');?></div>
+		  <div class="fieldInput"><input type="text" name="partner_subpartner" id="partner_subpartner" value="<?php echo $this->partner['subpartner']; ?>" size="40" maxlength="64"/></div>
+		
+		<div class="fieldLabel" id="partner_mechanism_id_lbl"><?php tp('Mechanism ID');?></div>
+		  <div class="fieldInput"><input type="text" name="partner_mechanism_id" id="partner_mechanism_id" value="<?php echo $this->partner['mechanism_id']; ?>" size="40" maxlength="32"/></div>
+
+		<div class="fieldLabel" id="funder_name_lbl"><?php tp('Funder Name');?></div>
+		  <div class="fieldInput"><input type="text" name="funder_name" id="funder_name" value="<?php echo $this->partner['funder_name']; ?>" size="40" maxlength="64"/></div>
+		
+		<div class="fieldLabel" id="funder_id_lbl"><?php tp('Funder ID');?></div>
+		  <div class="fieldInput"><input type="text" name="funder_id" id="funder_id" value="<?php echo $this->partner['funder_id']; ?>" size="40" maxlength="32"/></div>
+
+		<div class="clear" ></div>
+
+		<button type="button" id="submitPartner" class="submitNoArrow"><?php tp('Save changes');?></button>
+    		<div style="float:right;">&nbsp;</div><input type="button" id="deleteFacility" name="deleteFacility" value="Delete" class="submitNoArrow"  onclick="doDelete();" />
+		
+		</form>
+		
+		<div class="clear" ></div>
+
+	</div>
+	<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+<script language="JavaScript">
+
+addAjaxSubmit('submitPartner','edit','<?php echo $this->base_url;?>/training-partner/edit/outputType/json');
+
+function doDelete() {
+	if(confirm("<?php tp('Are you sure you wish to delete this partner?');?>")) {
+		window.location = '<?php echo $this->base_url;?>/training-partner/delete/id/<?php echo $this->partner['id'];?>';
+		return false;
+	}
+}
+</script>
+
+</body>
+</html>

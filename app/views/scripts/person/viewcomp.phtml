@@ -1,0 +1,386 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title><?php echo $this->translation['Application Name'];?> | <?php tp('Competencies');?></title>
+
+<?php
+require_once('views/helpers/Location.php');
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+<script type="text/javascript">
+var vwvls=new Array();
+<?php
+if(isset($this->vwvls[0]))
+{
+	$lscntr=0;
+	foreach ( $this->vwvls as $ys => $ls ) {
+	 echo 'vwvls['.$lscntr.']="'.$ls.'";';
+	 $lscntr++;
+	}
+}
+?>
+function SetAll() {
+var i;
+for(i=0;i<vwvls.length;i++)
+{
+if(vwvls[i].indexOf("240")==0)
+{
+document.getElementById('grp240').value=vwvls[i].substr(3);
+}
+else
+{
+document.getElementById('grp'+vwvls[i].toLowerCase()).checked=true;
+document.getElementById('grp'+vwvls[i].toLowerCase()).removeAttribute("disabled");
+}
+}
+}
+function FindScore(q)
+{
+var i;
+for(i=0;i<vwvls.length;i++)
+{
+if(vwvls[i].substring(0,vwvls[i].length-1)==q)
+{
+return vwvls[i].substring(vwvls[i].length-1);
+}
+}
+}
+function FindTotal(ids)
+{
+var i;
+var j;
+var Total;
+Total=0;
+for(i=0;i<ids.length;i++)
+{
+switch(FindScore(ids[i]).toLowerCase())
+{
+case 'a':
+j=4;
+break;
+case 'b':
+j=3;
+break;
+case 'c':
+j=2;
+break;
+case 'd':
+j=1;
+break;
+default:
+j=0;
+break;
+}
+Total=Total+j;
+}
+return Total;
+}
+function ScoreAll() {
+var Total;
+var Avg;
+var All;
+var AllQues;
+All=0;
+AllQues=0;
+var ids;
+ids=document.getElementById("ids1").value.split(",");
+Total=FindTotal(ids);
+Avg=((Total/(4*ids.length))*100);
+All=All+Total;
+AllQues=AllQues+ids.length;
+document.getElementById("dids1").innerHTML=document.getElementById("dids1").innerHTML+' <i>(Average Score: '+Avg.toFixed(2)+'%)</i>';
+Avg=((All/(4*AllQues))*100);
+document.getElementById("TotalScore").innerHTML=' <b>Total Average Score: '+Avg.toFixed(2)+'%</b>';
+}
+</script>
+</head>
+<body class="yui-skin-sam" onload="SetAll();ScoreAll()">
+<div id="pageHolder">
+<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+<div id="content">
+<h1><?php echo t('View Competency'); ?></h1>
+<div style="height:54px">
+<div style="width:486px;text-align:left;float:right">
+<div><b>A</b> - <?php echo t('fully competent and confident; able to teach others (mentor)'); ?></div>
+<div><b>B</b> - <?php echo t('fully competent; not able to teach others (not able to be a mentor)'); ?></div>
+<div><b>C</b> - <?php echo t('capable'); ?></div>
+<div><b>D</b> - <?php echo t('not capable'); ?></div>
+<div><b>E</b> - <?php echo t('not currently in my job description/duties'); ?></div>
+</div>
+</div>
+<form action="" id="personCompForm" method="post">
+<div style="height:12px"></div>
+<div class="nwtxthead" id="dids1"><?php echo t('HIV/AIDS'); ?></div>
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%;border:solid 1px #AAA">
+<tr>
+<td colspan="7">
+ <div class="nwtxtbig"><?php echo t('Clinical competency tasks'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxtbig"><?php echo t('Do you feel competent and confident to ...'); ?></div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">A</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">B</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">C</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">D</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">E</div>
+</td>
+<td style="width:7%;text-align:center">
+ <div class="nwtxtbig">No Answer</div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">1)&nbsp;&nbsp;&nbsp;Provide patients with basic information on HIV and AIDS?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp1a" value="A" name="grp1" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp1b" value="B" name="grp1" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp1c" value="C" name="grp1" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp1d" value="D" name="grp1" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp1e" value="E" name="grp1" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp1f" value="F" name="grp1" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">2)&nbsp;&nbsp;&nbsp;Counsel all patients on drug adherence?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp2a" value="A" name="grp2" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp2b" value="B" name="grp2" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp2c" value="C" name="grp2" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp2d" value="D" name="grp2" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp2e" value="E" name="grp2" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp2f" value="F" name="grp2" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">3)&nbsp;&nbsp;&nbsp;Provide all patients with information relating to drug interaction?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp3a" value="A" name="grp3" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp3b" value="B" name="grp3" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp3c" value="C" name="grp3" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp3d" value="D" name="grp3" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp3e" value="E" name="grp3" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp3f" value="F" name="grp3" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">4)&nbsp;&nbsp;&nbsp;Dispense basic ARVs?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp4a" value="A" name="grp4" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp4b" value="B" name="grp4" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp4c" value="C" name="grp4" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp4d" value="D" name="grp4" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp4e" value="E" name="grp4" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp4f" value="F" name="grp4" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">5)&nbsp;&nbsp;&nbsp;Dispense all medications accurately?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp5a" value="A" name="grp5" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp5b" value="B" name="grp5" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp5c" value="C" name="grp5" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp5d" value="D" name="grp5" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp5e" value="E" name="grp5" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp5f" value="F" name="grp5" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">6)&nbsp;&nbsp;&nbsp;Manage the supply of ARVs?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp6a" value="A" name="grp6" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp6b" value="B" name="grp6" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp6c" value="C" name="grp6" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp6d" value="D" name="grp6" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp6e" value="E" name="grp6" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp6f" value="F" name="grp6" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">7)&nbsp;&nbsp;&nbsp;Order drugs as needed?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp7a" value="A" name="grp7" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp7b" value="B" name="grp7" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp7c" value="C" name="grp7" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp7d" value="D" name="grp7" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp7e" value="E" name="grp7" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp7f" value="F" name="grp7" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxtbig"></div>
+</td>
+<td colspan="2" style="text-align:center">
+ <div class="nwtxtbig">Yes</div>
+</td>
+<td colspan="3" style="text-align:center">
+ <div class="nwtxtbig">No</div>
+</td>
+<td style="width:7%;text-align:center">
+ <div class="nwtxtbig">No Answer</div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">8)&nbsp;&nbsp;&nbsp;Do you require additional training to perform your tasks?</div>
+</td>
+<td colspan="2" style="text-align:center">
+ <input type="radio" disabled="disabled" id="grp8a" value="A" name="grp8" />
+</td>
+<td colspan="3" style="text-align:center">
+ <input type="radio" disabled="disabled" id="grp8b" value="B" name="grp8" />
+</td>
+<td style="text-align:center">
+ <input type="radio" disabled="disabled" id="grp8f" value="F" name="grp8" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">9)&nbsp;&nbsp;&nbsp;Would you like to become a mentor?</div>
+</td>
+<td colspan="2" style="text-align:center">
+ <input type="radio" disabled="disabled" id="grp9a" value="A" name="grp9" />
+</td>
+<td colspan="3" style="text-align:center">
+ <input type="radio" disabled="disabled" id="grp9b" value="B" name="grp9" />
+</td>
+<td style="text-align:center">
+ <input type="radio" disabled="disabled" id="grp9f" value="F" name="grp9" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">10)&nbsp;&nbsp;Do you feel prepared to become a mentor?</div>
+</td>
+<td colspan="2" style="text-align:center">
+ <input type="radio" disabled="disabled" id="grp10a" value="A" name="grp10" />
+</td>
+<td colspan="3" style="text-align:center">
+ <input type="radio" disabled="disabled" id="grp10b" value="B" name="grp10" />
+</td>
+<td style="text-align:center">
+ <input type="radio" disabled="disabled" id="grp10f" value="F" name="grp10" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">11)&nbsp;&nbsp;If yes to question 1, what additional training needs do you have?</div>
+</td>
+<td colspan="6" style="text-align:center">
+ <input disabled="disabled" type="text" id="grp240" name="grp240" maxlength="128" />
+</td>
+</tr>
+</table>
+<input type="hidden" name="ids1" id="ids1" value="1,2,3,4,5,6,7" />
+<div class="clear"></div>
+<div class="hrGrey"></div>
+<div class="clear"></div>
+<div id="TotalScore"></div>
+<div class="clear"></div>
+<div class="hrGrey"></div>
+<div class="clear"></div>
+<?php require_once('edit-body-class-history.phtml');?>
+<?php require_once('edit-body-exclass-history.phtml'); ?>
+</form>
+</div>
+</div>
+<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php tp('Data Synchronization');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+
+function conflict_table($li) {
+	
+?>
+			<table class="sync" >
+		    <thead>
+		    <tr><th><?php tp('Uploaded Data');?></th><th><?php tp('Existing Data');?></th><th><?php tp('Conflict(s)');?></th><th><?php tp('Resolution');?></th></tr>
+		    </thead>
+		    <?php if ( isset($li['update-conflict']) ) {
+		    	foreach( $li['update-conflict'] as $item) {
+		    		$larray = unserialize($item['left_data']);
+		    		$rarray = unserialize($item['right_data']);
+		    		unset($rarray['created_by']);
+		    		
+		    		?>
+		    	<tr>
+		    	<td ><?php foreach($larray as $k=>$v){ echo '['.$k.'] '.$v.'<br/>';}?></td>
+		    	<td ><?php foreach($rarray as $k=>$v){ echo '['.$k.'] '.$v.'<br/>';}?></td>
+		    	<td ><?php echo implode('<br/>',array_keys(array_diff($rarray, $larray)))?></td>
+		    	<td width="200px"><input type="radio" name="id[<?php echo $item['id'];?>]" value="" <?php echo ( !$item['is_skipped']? ' checked="checked" ':'');?> /> Use uploaded data<br/>
+					<input type="radio" name="id[<?php echo $item['id'];?>]" value="skip" <?php echo ( $item['is_skipped']? ' checked="checked" ':'');?>/> Use existing data<br/>
+		    	</td>
+		    	</tr>
+		    <?php }
+		    } ?>
+		    </table>			
+<?php
+}
+
+?>
+<style type="text/css">
+table.sync {
+	border:1px solid #DDDDDD;
+	width: 100%;
+}
+
+table.sync thead th  {
+	font-style: italic;
+	padding: 4px;
+	border:1px solid #DDDDDD;
+	
+}
+
+table.sync td.fieldTitle {
+}
+
+table.sync tbody td {
+	font-weight: bold;
+	color:#696969;
+	font-size:11px;
+	border:1px solid #DDDDDD;
+	padding: .5em;
+	
+
+}
+</style>
+
+</head>
+<body class="yui-skin-sam">
+	<div id="pageHolder">
+	  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+	  <div id="content">
+			<h1><?php tp('Preview Upload Data');?></h1>
+			<h2><?php tp('Import Summary');?></h2>
+		    <table class="sync">
+		    <thead>
+		    <tr><th><?php tp('Record');?></th><th><?php tp('Additions');?></th><th><?php tp('Modifications');?></th><th><?php tp('Deletions');?></th><th><?php tp('Add Alias (Duplicate)');?></th><th><?php tp('Conflicts');?></th></tr>
+		    </thead>
+		    <?php foreach( $this->stats as $item => $s) {?>
+		    	<tr><td class="fieldTitle"><?php echo $item;?></td>
+		    	<td><?php echo ( isset($s['insert']) ? $s['insert'] :'0')?></td>
+		    	<td><?php echo ( isset($s['update']) ? $s['update'] :'0')?></td>
+		    	<td><?php echo ( isset($s['delete']) ? $s['delete'] :'0')?></td>
+		    	<td><?php echo ( isset($s['add-alias']) ? $s['add-alias'] :'0')?></td>
+		    	<td><?php echo ( isset($s['update-conflict']) ? $s['update-conflict'] :'0')?></td>
+		    	</tr>
+		    <?php } ?>
+		    </table>			
+			<form name="commit-changes"  method="post">
+				<input type="submit" class="submitArrow" name="go" value="Commit Changes" />
+		    <br/>
+			<br/>
+			<h2><?php echo t('Training').' '.t('Conflicts');?></h2>
+			<?php conflict_table(@$this->items['training']);?><br/>
+			<h2><?php echo t('People').' '.t('Conflicts');?></h2>
+			<?php conflict_table(@$this->items['person']);?><br/>
+			<h2><?php echo t('Facility').' '.t('Conflicts');?></h2>
+			<?php conflict_table(@$this->items['facility']);?><br/>
+			<h2><?php tp('Training Location').' '.t('Conflicts');?></h2>
+			<?php conflict_table(@$this->items['training_location']);?><br/>
+			
+			
+			</form>
+	  </div>
+	  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+	</div>
+</body>
+</html>

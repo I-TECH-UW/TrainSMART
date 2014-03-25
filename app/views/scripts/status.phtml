@@ -1,0 +1,17 @@
+<?php
+//include in the page if you are using a old style form POST to display the status messages
+?>
+<div id="status"></div>
+<script type="text/javascript">
+	<?php
+		if ( isset($this->status) ) {
+		if ( isset($this->status->status) and $this->status->status ) { ?>	displayStatus('<?php echo $this->status->status?>'); <?php } ?>
+	<?php foreach($this->status->messages as $field => $msg) { ?>
+		displayErrorMessage('<?php echo $field; ?>', '<?php echo $msg; ?>');
+	<?php } ?>
+	<?php if ( $this->status->redirect ) { ?>
+		window.location = '<?php echo $this->status->redirect?>';
+	<?php }
+		}
+		 ?>
+</script>

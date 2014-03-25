@@ -1,0 +1,19 @@
+<?php
+
+// Aggregate all our JS files into one file
+
+// gzip
+// Sean Smith: Commented out compression. Wasn't working on some sites. Couldn't find compress() 
+//   When viewing source, then clicking on script link, error was: 
+//		"The page you are trying to view cannot be shown because it uses an invalid or unsupported form of compression."
+//ob_start("ob_gzhandler");
+//ob_start("compress");
+
+require_once('views/helpers/ScriptContainer.php');
+
+foreach(ScriptContainer::$jsfiles as $file) {
+  readfile(Globals::$BASE_PATH.Globals::$WEB_FOLDER.$file);
+  echo "\n\n";  
+}
+
+ob_flush();

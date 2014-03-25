@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+require_once('views/helpers/DropDown.php');
+?>
+
+</head>
+<body class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+
+		<h1><?php echo t('Search for').' '.t('Training').' '.t('Partner');?></h1>
+
+		<form id="search" action="" method="get">
+		<fieldset><legend><?php tp('Select Criteria');?></legend>
+
+		<div class="fieldLabel" id="	lbl"><?php echo t('Training').' '.t('Partner').' '.t('Name');?></div>
+		<div class="fieldInput"><select id="partner_name" name="partner_name">
+			<option value="">--<?php tp('All');?>--</option>
+			<?php
+				foreach ( $this->partners as $vals ) {
+					echo '<option value="'.htmlspecialchars($vals['organizer_id']).'" '.((@$this->criteria['partner_name']) == $vals['organizer_id']? 'SELECTED':'').' >'.$vals['organizer_id'].'</option>';
+			}
+			?>
+			</select>
+		</div>
+
+		<div class="fieldLabel" id="partner_funder_lbl"><?php tp('Funder');?></div>
+		<div class="fieldInput"><select id="partner_funder" name="partner_funder">
+			<option value="">--<?php tp('All');?>--</option>
+			<?php
+				foreach ( $this->funders as $vals ) {
+					echo '<option value="'.htmlspecialchars($vals['funder_name']).'" '.((@$this->criteria['partner_funder']) == $vals['funder_name']? 'SELECTED':'').' >'.$vals['funder_name'].'</option>';
+			}
+			?>
+			</select>
+		</div>
+<!-- end input fields -->
+
+ 		<div class="clear" ></div>
+		<input type="hidden" name="limit" id="limit" value="1" />
+		<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+		</fieldset>
+		</form>
+		<div class="clear" ></div>
+<!-- end form -->
+
+<?php if ( $this->criteria['go'] ) { ?>
+		    <div class="hrGrey"></div>
+		    <div class="fieldIndentNoMargin"><?php echo t('Training').' '.t('Partners');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+			<a href="<?php echo $this->base_url;?>/training-partner/add"><?php echo t('Add').' '.t('new').' '.t('Training').' '.t('Partner');?></a><br/><br/>
+		    <div id="partners"></div>
+		    <script type="text/javascript">
+		var partnersData = [
+		<?php
+		$cnt = 0;
+		 	$isFirstRow = true;
+			foreach($this->results as $row) {
+				if ( (isset($_REQUEST['limit']) AND !$_REQUEST['limit'])  or ($cnt < 100) ) {
+				if (!$isFirstRow )
+					echo ',';
+				$isFirstRow = false;
+				echo "[\"{$row['id']}\",\"{$row['organizer_id']}\",\"{$row['subpartner']}\",\"{$row['mechanism_id']}\",\"{$row['funder_name']}\",\"{$row['funder_id']}\"]";
+				$cnt++;
+			}
+			}
+		   ?>];
+
+
+		   var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
+			if ( (sData == null) || (sData.length == 0) ) {
+				sData = '&nbsp;&nbsp;&nbsp;';
+				elCell.innerHTML = '';
+				return;
+			}
+		    elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/training-partner/<?php echo ($this->hasACL ( 'edit_course' ) ? 'edit' : 'view'); ?>/id/" + oRecord.getData("id") + "' >" + sData + "</a>";
+		}
+
+			var partnersColumnDefs = [
+				{key:"id", label: "ID", sortable:false, resizable:false, formatter: formatViewUrl},
+			    {key:"organizer_id", label: "<?php echo t('Training').' '.t('Partner').' '.t('Name'); ?>", sortable:true, resizeable:true},
+			    {key:"subpartner", label: "<?php echo t('Training').' '.t('Sub').' '.t('Partner'); ?>", sortable:true, resizeable:true},
+			    {key:"mechanism_id", label: "<?php tp('Mechanism ID'); ?>", sortable:true, resizeable:true},
+			    {key:"funder_name", label: "<?php tp('Funder Name'); ?>", sortable:true, resizeable:true},
+			    {key:"funder_id", label: "<?php tp('Funder ID'); ?>", sortable:true, resizeable:true},
+			];
+
+			makeDataTable("partners", null, partnersData, partnersColumnDefs);
+		</script>
+		<?php if ($cnt < count($this->results)) { ?>
+		[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a>
+		<?php } ?>
+<?php } ?>
+
+<!-- end javascript search results -->
+
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+</body>
+</html>

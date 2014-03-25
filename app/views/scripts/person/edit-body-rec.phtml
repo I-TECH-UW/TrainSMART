@@ -1,0 +1,67 @@
+<?php if($this->setting['display_training_recommend']) : ?>
+
+  <div class="fieldIndentNoMargin"><?php echo t('Recommended').' '.t('Training Topics');?> </div>
+
+  <?php if(!$this->training_recommend) : ?>
+    <?php tp('No recommended classes were found for the above primary qualification'); ?>.
+  <?php else : ?>
+    <?php
+    for($j = 0; $j < 4; $j++) {
+      echo '<select name="training_recommend[]">
+      <option value="">--'.t('choose').'--</option>
+      ';
+      foreach($this->training_recommend as $training) {
+        $isSelected = (isset($this->training_recommend_saved[$j]) && $this->training_recommend_saved[$j]['training_topic_option_id'] == $training['training_topic_option_id']) ? ' selected' : '';
+        echo '<option value="'.$training['training_topic_option_id'].'"'.$isSelected.'>' . $training['training_topic_phrase'];
+      }
+      echo '</select><br><br>';
+    }
+    ?>
+
+   <div class="fieldIndentNoMargin"><?php echo t('Upcoming').' '.t('Trainings');?> </div>
+   <div id="classRecommend"  class="itechTable"></div>
+
+    <script type="text/javascript">
+      <!--//--><![CDATA[//><!--
+ //     YAHOO.util.Event.onDOMReady(function() {
+    var classInfoData = [
+        ];
+
+        var formatTrainingViewUrl = function(elCell, oRecord, oColumn, sData) {
+        if ( oRecord.getData("training_id") == null )
+          return;
+
+      if ( (sData == null) || (sData.length == 0) )
+        sData = '&nbsp;&nbsp;&nbsp;';
+        elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/training/view/id/" + oRecord.getData("training_id") + "' >" + sData + "</a>";
+    }
+
+  var classColumnDefs = [
+      {key:"training_id", label: "ID", sortable:false, resizeable:true,
+                    formatter: formatTrainingViewUrl},
+      {key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true},
+      {key:"training_title", label: "<?php tp('Name');?>", sortable:true, resizeable:true},
+      {key:"topics", label: "<?php tp('Topic(s)');?>", sortable:true, resizeable:true},
+       {key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true},
+      {key:"training_organizer_phrase", label: "<?php echo t('Training').' '.t('Organizer');?>", sortable:true, resizeable:true}
+  ];
+
+    var caction = '<?php echo $this->base_url;?>/training/listByTrainingRecommendPerson/id/<?php echo $this->person['id'];?>/outputType/json';
+    makeJSONDataTable("classRecommend", null, caction, classColumnDefs);
+  //    });
+//--><!]]> 
+     </script>
+
+
+
+  <?php endif; ?>
+
+
+
+
+
+  <div class="clear"></div>
+  <div class="hrGrey"></div>
+  <div class="clear"></div>
+
+<?php endif; ?>

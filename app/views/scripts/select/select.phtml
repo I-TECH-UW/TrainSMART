@@ -1,0 +1,53 @@
+<html>
+	<head>
+		<title>TrainSmart</title>
+		 <title><?php echo $this->escape($this->title);?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead(); ?>
+
+	</head>
+	<body class="yui-skin-sam">
+        <div id="pageHolder">
+			 <div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+              <div id="content">
+			<div id="subcontent">
+				<div id="contentheader">
+					<h2>Welcome to TrainSmart</h2><br>
+					<p style="float:left;font-size:13px;">Training System Monitoring and Reporting Tool</p>
+				</div>
+				<div class="pad50 clear"></div>
+				<div class="centerdiv">
+					<div id="loginholder" style="height : <?php echo $this->setting['module_employee_enabled'] ? '145px' : '115px'; ?>;">
+						Please select the TrainSmart module to enter
+						<div class="pad10 clear"></div>
+						<form method="post">
+							<input type="hidden" name="dashaction" id="dashaction" value="inservice">
+							<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/index/index'; ?>" class="tsbutton green large"><?php tp('In-Service Training Tracking System'); ?> &raquo;</a>
+<!--							<button type="submit" class="tsbutton green large"><?php tp('In-Service Training Tracking System'); ?> &raquo;</button> -->
+						</form>
+						<div class="pad10 clear"></div>
+						<form method="post">
+							<input type="hidden" name="dashaction" id="dashaction" value="preservice">
+							<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dash/dash'; ?>" class="tsbutton green large"><?php tp('Pre-Service Training Tracking System'); ?> &raquo;</a>
+<!--							<button type="submit" class="tsbutton green large"><?php tp('Pre-Service Training Tracking System'); ?> &raquo;</button> -->
+						</form>
+					<?php if($this->setting['module_employee_enabled']): ?>
+						<div class="pad10 clear"></div>
+						<form method="post">
+							<input type="hidden" name="dashaction" id="dashaction" value="employee">
+							<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/employee/'; ?>" class="tsbutton green large"><?php tp('Employee Tracking System'); ?> &raquo;</a>
+<!--							<button type="submit" class="tsbutton green large">Employee Tracking System'); ?> &raquo;</button> -->
+						</form>
+					<?php endif; ?>
+					</div>
+				</div>
+			</div>
+		</div>
+        </div>
+		<?php /*?><div id="footer"><div id="footercontent">Copyright &copy; 2011.</div></div><?php */?>
+         <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+         </div>
+	</body>
+</html>

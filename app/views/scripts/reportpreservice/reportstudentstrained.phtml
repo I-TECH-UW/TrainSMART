@@ -1,0 +1,243 @@
+<html>
+	<head>
+		<title><?php echo $this->escape($this->title);?></title>
+		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+	<?php
+    require_once('views/helpers/ScriptContainer.php');
+    print ScriptContainer::$instance->renderCSSHead();
+    print ScriptContainer::$instance->renderJSHead();
+  ?>
+    <script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				$( ".calendarbox" ).datepicker({
+					changeMonth: true,
+					changeYear: true
+				});
+				/* Add a click handler to the rows - this could be used as a callback */
+				$(".tablegrid tbody").click(function(event) {
+					$(oTable.fnSettings().aoData).each(function (){
+						$(this.nTr).removeClass('row_selected');
+					});
+					$(event.target.parentNode).addClass('row_selected');
+				});
+	 
+				/* Add a click handler for the delete row */
+				$('#delete').click( function() {
+					var anSelected = fnGetSelected( oTable );
+					oTable.fnDeleteRow( anSelected[0] );
+				} );
+	 
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+			} );
+
+			/* Get the rows which are currently selected */
+			function fnGetSelected( oTableLocal ){
+				var aReturn = new Array();
+				var aTrs = oTableLocal.fnGetNodes();
+				 
+				for ( var i=0 ; i<aTrs.length ; i++ ){
+					if ( $(aTrs[i]).hasClass('row_selected') ){
+						aReturn.push( aTrs[i] );
+					}
+				}
+				return aReturn;
+			}
+		</script>
+	</head>
+   
+   
+   
+	<body>
+     <div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+            <div id="content">
+			<div id="subcontent">
+				<div id="contentheader">
+					<h2><?php echo t('Reports'); ?></h2>
+					<br>
+			
+				</div>
+				<div class="pad50 clear"></div>
+				<form  action="" id="peopleadd" method="post">
+				<div class="mainformholder" style="height:1000px;">
+                    
+               <p style="padding-left:105px;font-weight:bold;"><?php echo t('Students Trained'); ?></p><br>
+               
+               <p style="padding-left:230px;font-weight:bold;"><?php echo t('Group'); ?></p><br>
+               		
+                  <p> <span style="margin-left:40px;"><?php echo t('Geog 1(Inst)'); ?></span>
+                   <span style="margin-left:120px;"><input type="checkbox" ></span>
+                   <span style="padding-left:80px; position:absolute;"><input type="text"></span>
+                   </p>
+                   <p>&nbsp;</p>
+                   <p>&nbsp;</p>
+                   
+                   <p> <span style="margin-left:40px;"><?php echo t('Geog 2(Inst)'); ?></span>
+                   <span style="margin-left:120px;"><input type="checkbox" ></span>
+                   <span style="padding-left:80px; position:absolute;"><input type="text"></span>
+                   </p>
+                   
+                   <p>&nbsp;</p>
+                      <p>&nbsp;</p>
+                   
+                   <p> <span style="margin-left:40px;"><?php echo t('Geog 3(Inst)'); ?></span>
+                   <span style="margin-left:120px;"><input type="checkbox" ></span>
+                   <span style="padding-left:80px; position:absolute;"><input type="text"></span>
+                   </p>
+                   
+                   <p>&nbsp;</p>
+                      <p>&nbsp;</p>
+                   
+                   <p> <span style="margin-left:40px;"><?php echo t('Institution'); ?></span>
+                   <span style="margin-left:136px;"><input type="checkbox" ></span>
+                   <span style="padding-left:80px; position:absolute;"><input type="text"></span>
+                   </p>
+                   
+                   <p>&nbsp;</p>
+                      <p>&nbsp;</p>
+                   
+                   <p> <span style="margin-left:40px;">	<?php echo t('Cadre'); ?>	</span>
+                   <span style="margin-left:166px;"><input type="checkbox"></span>
+                   <span style="padding-left:80px; position:absolute;"><input type="text"></span>
+                   </p>
+                 				
+                    
+                    
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                       <p> <span style="margin-left:40px;">	<?php echo t('Cohort'); ?>	</span>
+                   <span style="margin-left:160px;"><input type="checkbox"></span>
+                   <span style="padding-left:80px; position:absolute;"><input type="text"></span>
+                   </p>
+                 				
+                    
+                    
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                       <p> <span style="margin-left:40px;">	<?php echo t('Gender'); ?>	</span>
+                   <span style="margin-left:157px;"><input type="checkbox"></span>
+                   <span style="padding-left:80px; position:absolute;"><input type="text"></span>
+                   </p>
+                 				
+                    
+                    
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                       <p> <span style="margin-left:40px;"><?php echo t('Nationality'); ?>	</span>
+                   <span style="margin-left:132px;"><input type="checkbox"></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                        <p> <span style="margin-left:40px;"><?php echo t('Age'); ?>	</span>
+                   <span style="margin-left:175px;"><input type="checkbox"></span>
+                   <span style="padding-left:80px; position:absolute;"><input type="text"><input type="text"></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                    
+                       <p> <span style="margin-left:40px;"><?php echo t('Active'); ?>	</span>
+                   <span style="margin-left:160px;"><input type="checkbox"></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                         <p> <span style="margin-left:40px;"><?php echo t('Terminated Early'); ?>	</span>
+                   <span style="margin-left:91px;"><input type="checkbox"></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                  
+                   <p> <span style="margin-left:40px;"><?php echo t('Graduated'); ?>	</span>
+                   <span style="margin-left:136px;"><input type="checkbox"></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                  
+                   <p> <span style="margin-left:40px;"><?php echo t('Funding Source'); ?>	</span>
+                   <span style="margin-left:100px;"><input type="checkbox"></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                      <p> <span style="margin-left:40px;">	<?php echo t('Facility @ Graduation'); ?>	</span>
+                   <span style="margin-left:62px;"><input type="checkbox"></span>
+                   <span style="padding-left:120px; position:absolute;"><input type="text"></span>
+                   </p>
+                 				
+                    
+                    
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                        <p> <span style="margin-left:40px;">	<?php echo t('Tutor Advisor'); ?>	</span>
+                   <span style="margin-left:115px;"><input type="checkbox"></span>
+                   <span style="padding-left:120px; position:absolute;"><input type="text"></span>
+                   </p>
+                 				
+                    
+                    
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                       
+                   <span style="margin-left:250px;"><input type="checkbox"></span>
+                   <span style="padding-left:80px; position:absolute;"><?php echo t('Return Unique Participants'); ?></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                          <span style="padding-left:80px; position:absolute;"><?php echo t('Start Date Between'); ?></span>
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+
+                     
+             <p> <span style="margin-left:40px;">	<?php echo t('Day'); ?>	</span>
+             <span style="padding-left:10px; position:absolute;">
+             <input type="text"><input type="text"><input type="text"></span>
+                  </p>
+                 				
+                  <p>&nbsp;</p>
+                   <p>&nbsp;</p>
+                   
+              <p> <span style="margin-left:40px;">	<?php echo t('Day'); ?>	</span>
+               <span style="padding-left:10px; position:absolute;"><input type="text"><input type="text"><input type="text"></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                  
+                   <div class="rightdiv" style="margin-top:20px;">
+		<input type="submit" name="update" value="<?php echo t('Report'); ?>" class="tsbutton green large">
+					</div>
+
+                      
+                        </form>
+                    
+                  
+
+				</div>
+            </div>
+		</div>
+        				
+
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+        </div>
+	</body>
+</html>

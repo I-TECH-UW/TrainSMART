@@ -1,0 +1,21 @@
+<?php
+header("Pragma: public");
+header("Expires: 0");
+header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+header("Cache-Control: private",false);
+header("Content-Type: text/x-csv");
+header("Content-Disposition: attachment; filename=\"report.csv\"");
+
+echo 
+
+$data = array( t('Competence'),t('Province'),t('District'),t('Sub-district'),t('Facility'),t('Result'));
+
+echo '"' . implode('","', $data) . "\"\015\012"; // "comp", "province", "etc"\015\012    - the last two are excel codes
+
+$cnt=0;
+foreach ( $this->v1 as $kys => $vls ) {
+	echo "\"".$vls."\",\"".$this->p."\",\"".$this->d."\",\"".$this->s."\",\"".$this->f."\",\"".$this->v2[$cnt]."%\"\015\012";
+	$cnt=$cnt+1;
+}
+
+?>

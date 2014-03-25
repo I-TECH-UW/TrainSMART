@@ -1,0 +1,25 @@
+ <div class="historyDiv">
+  <b><?php tp('ID');?> </b><?php echo $this->person['id'];?><br/>
+      <b><?php tp('Date created');?> </b><?php echo str_replace(' ','&nbsp;',$this->person['timestamp_created']);?><br/>
+       <b><?php tp('Created by');?> </b><?php echo $this->person['creator'];?><br/>
+       <b><?php tp('Date modified');?> </b><?php echo str_replace(' ','&nbsp;',$this->person['timestamp_updated']);?><br/>
+       <b><?php tp('Modified by');?> </b><?php echo $this->person['updater'];?><br/>
+       <b>UUID</b><br/><span style="font-size: 6pt;"><?php echo str_replace('}','',str_replace('{','',$this->person['uuid']));?></span><br/>
+      <?php if (@$this->okToDelete) { ?>
+       <hr size="1">
+      <a href="" onclick="doDelete(); return false;"><?php tp('Delete this Person');?></a>
+<script language="JavaScript">
+function doDelete() {
+  if(confirm("<?php tp('Are you sure you wish to delete this person?');?>")) {
+    window.location = '<?php echo $this->base_url;?>/person/delete/id/<?php echo $this->person['id'];?>';
+    return false;
+  }
+}
+</script>
+    <?php } ?>
+    <?php if ( $this->mode == 'edit' ) { ?>
+       <hr size="1" />
+      <a href="#" onclick="submitThenRedirect('<?php echo $this->base_url;?>/person/assign-training/id/<?php echo $this->person['id'];?>'); return false;"><?php tp('Assign this person to a class');?></a>
+    <?php } ?>
+
+          </div>

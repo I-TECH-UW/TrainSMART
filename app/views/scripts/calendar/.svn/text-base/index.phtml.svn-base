@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title><?php echo $this->translation['Application Name'];?> Training Calendar</title>
+	<?php
+	require_once('views/helpers/ScriptContainer.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+	?>
+
+</head>
+<body class="yui-skin-sam">
+
+	<div id="pageHolder">
+
+		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+		<div id="content">
+
+			<h1><?php print t('Training Calendar');?></h1>
+
+			<div class="calenderLinks hideFromPrint" style="font-weight:bold; float:left; ">
+				<a href="#" onclick="window.print(); return false; "><?php tp('Print Calendar');?></a> <br/>
+				<a href="#" onclick="return showControls();"><?php tp("Add trainings"); ?></a> <br/>
+				<?php echo t('Training'.space.'Reports'); ?> <a href="<?php echo $this->base_url; ?>/reports/trainings?showProvince=on&showCategory=on&showTrainingTitle=on&showLocation=on&showOrganizer=on&end-day=<?php echo date('d'); ?>&end-month=<?php echo date('m'); ?>&end-year=<?php echo date('Y'); ?>&limit=1&go=Preview"><?php  tp('Past');   ?></a> <a href="<?php echo $this->base_url; ?>/reports/trainings?showProvince=on&showCategory=on&showTrainingTitle=on&showLocation=on&showOrganizer=on&end-day=31&end-month=12&end-year=2099&start-day=<?php echo date('d'); ?>&start-month=<?php echo date('m'); ?>&start-year=<?php echo date('Y'); ?>&limit=1&go=Preview"><?php  tp('Future'); ?></a>
+				<br/><br/>
+				<form action="" method="get">
+					<input name="fmt" type="hidden" value="largeMonth">
+					<select name="mon" id="mon">
+						<option value="1"  <?php if ($this->calMonth == 1)  echo 'selected' ?>><?php tp('January'); ?></option>
+						<option value="2"  <?php if ($this->calMonth == 2)  echo 'selected' ?>><?php tp('February'); ?></option>
+						<option value="3"  <?php if ($this->calMonth == 3)  echo 'selected' ?>><?php tp('March'); ?></option>
+						<option value="4"  <?php if ($this->calMonth == 4)  echo 'selected' ?>><?php tp('April'); ?></option>
+						<option value="5"  <?php if ($this->calMonth == 5)  echo 'selected' ?>><?php tp('May'); ?></option>
+						<option value="6"  <?php if ($this->calMonth == 6)  echo 'selected' ?>><?php tp('June'); ?></option>
+						<option value="7"  <?php if ($this->calMonth == 7)  echo 'selected' ?>><?php tp('July'); ?></option>
+						<option value="8"  <?php if ($this->calMonth == 8)  echo 'selected' ?>><?php tp('August'); ?></option>
+						<option value="9"  <?php if ($this->calMonth == 9)  echo 'selected' ?>><?php tp('September'); ?></option>
+						<option value="10" <?php if ($this->calMonth == 10) echo 'selected' ?>><?php tp('October'); ?></option>
+						<option value="11" <?php if ($this->calMonth == 11) echo 'selected' ?>><?php tp('November'); ?></option>
+						<option value="12" <?php if ($this->calMonth == 12) echo 'selected' ?>><?php tp('December'); ?></option>
+					</select>
+					<select name="yr" id="yr">
+						<?php
+							$years = range('2000', '2030');
+							foreach ($years as $val) {
+								echo "<option value=\"$val\"".($this->calYear == $val ? ' selected' : '').">$val</option>";
+							}
+						?>
+					</select>
+				</form>
+			</div>
+
+			<div class="hideFromPrint right" style="max-width:200px;padding:0 20px; margin-bottom:1em;">
+				<span style="font-weight:bold;clear:right;"><?php tp('Legend'); ?></span> <br/>
+				<span class="block trainOld width100"> <?php echo t('Future').space.t('Training'); ?> </span>
+				<span class="block trainNew width100"> <?php echo t('Past').space.t('Training'); ?>   </span>
+				<span class="red"><?php tp('Today'); ?></span>
+			</div>
+
+			<?php print $this->calendar; ?>
+
+
+		</div>
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+		<script type="text/javascript">
+
+			<?php
+				if($this->calMonth) echo "var calMonth = $this->calMonth;" . PHP_EOL;
+				if($this->calYear) echo "var calYear = $this->calYear;" . PHP_EOL;
+			?>
+
+			function showControls () {
+				var btns = '<div class="hideFromPrint"><div class="calendar-gui-btn"><button>+</button></div></div>';
+				var tds = $('#content table td div').parents('td');
+				tds.append(btns).wrapInner('<div style="position:relative;display:block;height:100%;width:100%;">');
+				$('#content table button').click(function () {
+					location.href= '<?php echo $this->base_url; ?>/training/add/?start-date='+$(this).parents('td').find('.calDay').html()+'/'+calMonth+'/'+calYear;
+				});
+				return false;
+			}
+
+			$(document).ready( function () {
+				// compare dates and style calender
+				var tds = $('#content table td div').parent('td');
+				tds.each(function () {
+					if (!calMonth && !calYear)
+						return;
+
+					var me = $(this);
+					if(me.find('.calDay').length)
+						calDay = me.find('.calDay').html();
+					if(calDay && new Date() < new Date(calYear,calMonth-1,calDay))
+						me.addClass('trainOld');
+					if(calDay && new Date() > new Date(calYear,calMonth-1,calDay))
+						me.addClass('trainNew');
+				});
+
+				// date changer
+				$('#yr,#mon').change(function () {
+					$(this).parents('form').submit();
+				});
+			});
+		</script>
+	</div>
+</body>
+</html>

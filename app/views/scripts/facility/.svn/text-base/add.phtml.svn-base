@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title><?php echo $this->translation['Application Name'];?> | <?php echo t('Add').space.t('Facility');?></title>
+	<?php
+	require_once('views/helpers/ScriptContainer.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+	?>
+
+</head>
+<body class="yui-skin-sam">
+	<div id="pageHolder">
+		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+		<div id="content">
+
+			<h1><?php echo t('Add new').space.t('Facility');?></h1>
+
+			<form id="add" action="" method="post">
+
+				<?php require_once('addfacility-form.phtml');?>
+
+				<div class="clear" ></div>
+
+				<?php if( $this->hasACL('import_facility') ) : ?>
+				<!-- import facility button -->
+				<span id="importfacility" class="yui-button yui-push-button" style="float:left;">
+					<span class="first-child">
+						<button onclick="location.href='<?php echo $this->base_url; ?>/facility/import';return false;" type="button" tabindex=1 id="facilityImportBtn" class="yui-button yui-push-button"><?php tp('Import facility from Excel');?></button>
+					</span>
+				</span>
+				<?php endif; ?>
+
+				<button type="button" id="submitFacility"><?php echo t('Add').space.t('Facility');?></button><br>
+
+				<script type="text/javascript">
+				addAjaxSubmit('submitFacility','add','<?php echo $this->base_url;?>/facility/add/outputType/json');
+				</script>
+
+			</form>
+			<div class="clear" ></div>
+
+		</div>
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+	</div>
+</body>
+</html>

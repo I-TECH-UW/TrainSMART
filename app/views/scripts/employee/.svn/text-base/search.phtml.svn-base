@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title><?php echo $this->translation['Application Name'] . " | " . $this->pageTitle; ?></title>
+	<?php
+	require_once('views/helpers/Location.php');
+	require_once('views/helpers/ScriptContainer.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+	?>
+
+</head>
+<body class="yui-skin-sam"  >
+
+	<div id="pageHolder">
+
+		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+		<div id="content">
+
+			<h1><?php tp('Search Employees');?></h1>
+			<form action="" method="get" class="form_employee">
+				<fieldset><legend><?php tp('Select Criteria');?></legend>
+
+
+					<?php
+						$this->required_fields = array();
+						echo labelAndField($this, t('First Name'), 'text', 'first_name', $this->criteria['first_name']);
+						echo labelAndField($this, t('Last Name'), 'text', 'last_name', $this->criteria['last_name']);
+						echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, false );
+						
+						if ( $this->setting['display_employee_partner'] )
+						echo labelAndField($this, t('Partner'),        $this->partners);
+						
+						if ( $this->setting['display_employee_site_name'] )
+						echo labelAndField($this, t('Site'), renderFacilityDropDown($this->sites, $this->criteria['facilityInput']));
+						
+						echo labelAndField($this, t('Staff Cadre'),    $this->cadres);
+						
+						if ( $this->setting['display_employee_staff_category'] )
+						echo labelAndField($this, t('Staff Category'), $this->categories);
+
+					?>
+					<div class="clear"></div>
+					<input type="hidden" name="limit" id="limit" value="1" />
+					<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+				</fieldset>
+			</form>
+
+			<?php if ( $this->criteria['go'] ) { ?>
+			<div class="hrGrey"></div>
+			<div class="fieldIndentNoMargin"><?php tp('Employees');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+			<a href="<?php echo $this->base_url;?>/employee/add"><?php echo t('Add New').space.t('employee');?></a><br/><br/>
+			<div id="employees"></div>
+			<script type="text/javascript">
+			var employeesData = [
+			<?php
+			$cnt = 0;
+			$isFirstRow = true;
+			foreach($this->results as $row) {
+
+				if ( ( $cnt < 100 ) or ( isset($_REQUEST['limit']) AND !$_REQUEST['limit'] ) ) {
+					if ( !$isFirstRow ) {
+						echo ',';
+					}
+					$isFirstRow = false;
+
+					echo '[';
+						echo $row['id'].',';
+						$data = array();
+						$data[] = $row['first_name'];
+						$data[] = $row['last_name'];
+						$data[] = $row['gender'];
+						$data[] = $row['province_name'];
+						if ($this->setting['display_region_b']) $data[] = $row['district_name'];
+						if ($this->setting['display_region_c']) $data[] = $row['region_c_name'];
+						if ($this->setting['display_region_d']) $data[] = $row['region_d_name'];
+						if ($this->setting['display_region_e']) $data[] = $row['region_e_name'];
+						if ($this->setting['display_region_f']) $data[] = $row['region_f_name'];
+						if ($this->setting['display_region_g']) $data[] = $row['region_g_name'];
+						if ($this->setting['display_region_h']) $data[] = $row['region_h_name'];
+						if ($this->setting['display_region_i']) $data[] = $row['region_i_name'];
+						if ($this->setting['display_employee_chw_supervisor']) $data[] = $row['supervisor'];
+						if ($this->setting['display_employee_site_name']) $data[] = $row['facility_name'];
+						$data[] = $row['national_id'];
+						$data[] = $row['other_id'];
+						$data[] = $row['staff_cadre'];
+						if ($this->setting['display_employee_staff_category']) $data[] = $row['staff_category'];
+						echo '"'.implode('","', $data).'"';
+					echo ']';
+					$cnt++;
+				}
+			}
+			?>];
+
+			var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
+				if ( (sData == null) || (sData.length == 0) )
+					sData = '&nbsp;&nbsp;&nbsp;';
+				elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/employee/edit/id/" + oRecord.getData("id") + "' >" + sData + "</a>";
+			}
+
+			var employeesColumnDefs = [
+				{key:"id", label: "<?php tp("ID");?>", sortable:true, resizable:false,
+				formatter: formatViewUrl},
+				{key:"first_name",    label: "<?php tp('First Name');?>", sortable:true, resizeable:true},
+				{key:"last_name",     label: "<?php tp('Last Name');?>", sortable:true, resizeable:true},
+				{key:"gender",        label: "<?php tp('Gender');?>",     sortable:true, resizeable:true},
+				{key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true},
+				<?php if ( $this->setting['display_region_b'] ) { ?>
+				{key:"district_name", label: "<?php echo (@$this->translation['Region B (Health District)']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->setting['display_region_c'] ) { ?>
+				{key:"region_c_name", label: "<?php echo (@$this->translation['Region C (Local Region)']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->setting['display_region_d'] ) { ?>
+				{key:"region_d_name", label: "<?php echo (@$this->translation['Region D']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->setting['display_region_e'] ) { ?>
+				{key:"region_e_name", label: "<?php echo (@$this->translation['Region E']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->setting['display_region_f'] ) { ?>
+				{key:"region_f_name", label: "<?php echo (@$this->translation['Region F']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->setting['display_region_g'] ) { ?>
+				{key:"region_g_name", label: "<?php echo (@$this->translation['Region G']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->setting['display_region_h'] ) { ?>
+				{key:"region_h_name", label: "<?php echo (@$this->translation['Region H']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->setting['display_region_i'] ) { ?>
+				{key:"region_i_name", label: "<?php echo (@$this->translation['Region I']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->setting['display_employee_chw_supervisor'] ) { ?>
+				{key:"supervisor",    label: "<?php tp('CHW Supervisor');?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->setting['display_employee_site_name'] ) { ?>
+				{key:"facility_name", label: "<?php tp('Site');?>", sortable:true, resizeable:true},
+				<?php } ?>
+				{key:"national_id",   label: "<?php tp('National ID');?>", sortable:true, resizeable:true},
+				{key:"other_id",      label: "<?php tp('Other ID');?>", sortable:true, resizeable:true},
+				{key:"staff_cadre",   label: "<?php tp('Staff Cadre');?>", sortable:true, resizeable:true}
+				<?php if ( $this->setting['display_employee_staff_category'] ) { ?>
+				, {key:"staff_category", label: "<?php tp('Staff Category');?>", sortable:true, resizeable:true}
+				<?php } ?>
+			];
+
+			makeDataTable("employees", null, employeesData, employeesColumnDefs);
+		</script>
+			<?php if ($cnt < count($this->results)) { ?>
+			[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a>
+			<?php } ?>
+			<?php } ?>
+		</div>
+	</body>
+</html>

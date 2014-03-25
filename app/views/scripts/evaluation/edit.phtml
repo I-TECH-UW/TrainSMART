@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php tp('Evaluations');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+<script type="text/javascript">
+function add20evaluations() {
+	$rows = $('.settings tr');
+	$template = $($rows[1]).clone();
+	$template = $template.add( $($rows[1]).next('tr.evalRelabelWrapper:first,tr.evalRelabelWrapper:hidden:first').first().clone() ); // bugfix: all might be :hidden, or !:hidden, so collect both, take the first one.
+	cnt = ($rows.length+1)/2; // theres a hidden row under each obviously
+	$template.find('option:selected').attr('selected', null);
+	$template.find('select,input').val('');
+	for(var i = 0; i < 20; i++){
+		$template.find('td').first().find('label').html(cnt+i); // update label
+		var result = $($template.get(1)).find('input[name*="answers"]').attr("name", "answers" + (cnt+i) + "[]"); // update answersN input name
+		if (!result.length)
+			return;
+		$('.settings').append($template.clone());
+	}
+	// rebind all relabel commands
+	customAnswerInit();
+
+}
+</script>
+
+</head>
+<body class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+
+  <h1><?php tp('Evaluations');?></h1>
+  <form name="evaluationForm" id="evaluationForm" method="post" action="">
+
+	<label><?php tp('Enter title of Evaluation');?></label>  <input type="text" name="title" maxlength="255" size="40" value="<?php echo $this->title;?>" /><br/><br/>
+	<table class="settings">
+	<thead>
+	<tr><th><?php tp('Number');?></th><th><?php tp('Question');?></th><th><?php tp('Type');?></th><th><?php tp('Re-Label Answers');?></th></tr></thead>
+	<?php
+		$num_rows = 20;
+		if(is_array($this->qtext)){
+			$num_rows = count($this->qtext);
+		}
+
+		for($i = 0; $i < $num_rows; $i++) {
+
+			$custom_answers = array();
+			if (!$this->answers)
+				$this->answers = array();
+
+			foreach ($this->answers as $a) {
+				if ($a['question_id'] == $this->qid[$i] && $a['answer_phrase'])
+					$custom_answers[] = $a['answer_phrase']; // db rowset
+			}
+
+			if (is_array($this->answers) && empty($custom_answers)) { // same variable but is _post array not a result set
+				$custom_answers = isset($this->answers[$i]) && count($this->answers[$i]) ? $this->answers[$i] : array();
+			}
+
+			$isRelabeled = ( count($custom_answers) || $this->qrelabel[$i] ); // empty?
+
+			//print row:
+	?>
+	<tr>
+		<td><label for="" class="label"><?php echo $i+1;?></label></td>
+		<td><input type="hidden" name="qid[]" value="<?php echo (isset($this->qid[$i]) ? $this->qid[$i] : '-1'); ?>"><input type="text" name="qtext[]" maxlength="255" size="50" value="<?php if ( is_array($this->qtext) ) echo $this->qtext[$i];?>"  ></input></td>
+		<td><select name="qtype[]"><option value="">&mdash; <?php tp('select');?> &mdash;</option><option value="Likert" <?php if ( is_array($this->qtype) ) echo ($this->qtype[$i] == 'Likert'?'selected':'');?>><?php tp('Likert');?></option><option value="LikertNA" <?php if ( is_array($this->qtype) ) echo ($this->qtype[$i] == 'LikertNA'?'selected':'');?>><?php tp('Likert');?> + N/A</option><option value="Likert3" <?php if ( is_array($this->qtype) ) echo ($this->qtype[$i] == 'Likert3'?'selected':'');?>><?php tp('Likert');?> (1-3)</option><option value="Likert3NA" <?php if ( is_array($this->qtype) ) echo ($this->qtype[$i] == 'Likert3NA'?'selected':'');?>><?php tp('Likert');?> (1-3) + N/A</option><option value="Text" <?php if ( is_array($this->qtype) ) echo  ($this->qtype[$i] == 'Text'?'selected':'');?>><?php tp('Text');?></option></select></td>
+		<td class="col_4"><input type="checkbox" name="qrelabel[<?php echo $i; ?>]" <?php echo $isRelabeled ? 'checked="checked"' : ''; ?>><label for="qrelabel[]" class="label"><?php tp('Re-Label Likert Answers'); ?></label></td>
+		</tr>
+	<tr class="<?php echo !$isRelabeled ? 'displayNone ': ''; ?>evalRelabelWrapper">
+		<td> </td>
+			<td colspan="4">
+			<label for="" class="label">Answer</label>
+			<label for="" class="label">1</label> <input type="text" name="answers<?php echo ($i+1); ?>[]" value="<?php echo $custom_answers[0]; ?>">
+			<label for="" class="label">2</label> <input type="text" name="answers<?php echo ($i+1); ?>[]" value="<?php echo $custom_answers[1]; ?>">
+			<label for="" class="label">3</label> <input type="text" name="answers<?php echo ($i+1); ?>[]" value="<?php echo $custom_answers[2]; ?>">
+			<label for="" class="label">4</label> <input type="text" name="answers<?php echo ($i+1); ?>[]" value="<?php echo $custom_answers[3]; ?>">
+			<label for="" class="label">5</label> <input type="text" name="answers<?php echo ($i+1); ?>[]" value="<?php echo $custom_answers[4]; ?>">
+			<label for="" class="label">6</label> <input type="text" name="answers<?php echo ($i+1); ?>[]" value="<?php echo $custom_answers[5]; ?>">
+			<button class="custom_paste" onclick="javascript:void(0)"><?php tp('Paste'); ?></button>
+			<button class="custom_copy" onclick="javascript:void(0)"><?php tp('Copy'); ?></button>
+			<button class="custom_copyAll" onclick="javascript:void(0)"><?php tp('Copy to All'); ?></button>
+			</td>
+		</tr>
+	<?php } ?>
+	</table>
+	<br/><a href="#" onclick="add20evaluations();return false;"><?php tp('Add 20 more rows'); ?></a>
+	<br/><br/>
+    <input type="submit" class="submitNoArrow" name="go" value="<?php tp('SAVE');?>" />
+	<br/><br/>
+	</form>
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+<script type="text/javascript">
+answers = [];
+
+// interface for relabel answer functionality
+customAnswerInit = function () {
+	$('.col_4 input').unbind('change').change(function (e) { /* watch the checkbox */
+		var row = $(this).parents('tr:first');
+		if ($(this).is(':checked'))
+			row.next('tr.evalRelabelWrapper').removeClass('displayNone');
+		else
+			row.next('tr.evalRelabelWrapper').addClass('displayNone').find('input').val(null); //reset
+		row.find('select[name="qtype\[\]"]').change(); // fire hide/show 4 or 6 elements
+	});
+
+	$('.custom_paste').unbind('click').click(function (e) { /* paste button */
+		e.preventDefault();
+		var row  = $(this).parents('tr:first');
+		row.find('input').each(function (ix, val) {
+			$(this).val((typeof answers[ix] != 'undefined') ? answers[ix] : "");
+		});
+	});
+	$('.custom_copy').unbind('click').click(function (e) { /* copy button*/
+		e.preventDefault();
+		answers = [];
+		var row = $(this).parents('tr:first');
+		row.find('input').each(function (ix, val) {
+			answers.push($(this).val());
+		});
+
+	});
+	$('.custom_copyAll').unbind('click').click(function (e) { /* copy all button */
+		e.preventDefault();
+		answers = [];
+		var row = $(this).parents('tr').first();
+		row.find('input').each(function (ix, val) {
+			answers.push($(this).val());
+		});
+		var typeOfQuest = row.find('select').val();
+		$('tr.evalRelabelWrapper').each(function (ix, val) {
+			$(this).find('input').each(function (ix, val) {
+				$(this).val((typeof answers[ix] != 'undefined') ? answers[ix] : "");
+			});
+		});
+		$('.col_4 input').each(function (ix, val) {
+			if ($(this).is(':checked') == false && typeOfQuest != "Text")
+				$(this).change(); // attr(checked), and fire change javascript.
+		});
+    });
+
+	$('select[name="qtype\[\]"]').unbind('change').change(function (e) { /* watch the type of Likert dropdown */
+		var select      = $(this);
+		var row         = $(this).parents('tr:first');
+		var reLabelRow  = row.next('tr.evalRelabelWrapper');
+		var isRelabeled = row.find('.col_4 input').is(':checked');
+		if (select.val() == 'Text' || !isRelabeled) {
+			reLabelRow.addClass('displayNone'); return;
+		}
+		reLabelRow.removeClass('displayNone').show();
+		reLabelRow.find('input').each(function (i, val) {
+			if ((i > 3 && isRelabeled && (select.val() == 'Likert3' || select.val() == 'Likert3NA'))
+			|| (i > 5 && isRelabeled && (select.val() == 'Likert' || select.val() == 'LikertNA'))) {
+				$(this).prev('label').addClass('displayNone');
+				$(this).val(null).addClass('displayNone');
+			}
+			else {
+				$(this).prev('label').removeClass('displayNone');
+				$(this).removeClass('displayNone');
+			}
+		});
+	});
+}
+
+$(document).ready(customAnswerInit);
+
+</script>
+
+</body>
+</html>

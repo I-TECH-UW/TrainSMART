@@ -1,0 +1,254 @@
+<?php
+	if (isset ($_GET['csv'])){
+		$data = array();
+		
+		$_row = array();
+		foreach ($this->headers as $key=>$value){
+			$_row[] = $value;
+		}
+		$data[] = $_row;
+		
+		foreach ($this->output as $row){
+			$_row = array();
+			foreach ($row as $key=>$value){
+				$_row[] = $value;
+			}
+			$data[] = $_row;
+		}
+		
+
+		$delimiter = ',';
+		$enclosure = '"';
+		$encloseAll = false;
+		$nullToMysqlNull = false;
+	
+		$delimiter_esc = preg_quote($delimiter, '/');
+		$enclosure_esc = preg_quote($enclosure, '/');
+	
+		$output = array();
+		foreach ($data as $row){
+			$outputrow = array();
+			foreach ($row as $field){
+				if ($field === null && $nullToMysqlNull) {
+					$outputrow[] = 'NULL';
+					continue;
+				}
+		
+				// Enclose fields containing $delimiter, $enclosure or whitespace
+				if ( $encloseAll || preg_match( "/(?:${delimiter_esc}|${enclosure_esc}|\s)/", $field ) ) {
+					$outputrow[] = $enclosure . str_replace($enclosure, $enclosure . $enclosure, $field) . $enclosure;
+				}
+				else {
+					$outputrow[] = $field;
+				}
+			}
+			$output[] = implode($delimiter,$outputrow);
+		}
+		$output = implode("\n", $output);
+		header("Content-type: text/csv");
+		header("Content-Disposition: attachment; filename=course-by-student-count-" . date("d.m.Y.H.m.s") . ".csv");
+		header("Pragma: no-cache");
+		header("Expires: 0");
+		echo $output;
+		exit;
+	}
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title><?php echo $this->translation['Application Name'];?> | <?php tp('Course By Student Count Report');?></title>
+		<?php
+		require_once('views/helpers/Location.php');
+		require_once('views/helpers/ScriptContainer.php');
+		print ScriptContainer::$instance->renderCSSHead();
+		print ScriptContainer::$instance->renderJSHead();
+		?>
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+			} );
+			function gotoPage(objId) {
+				var reportSelector = YAHOO.util.Dom.get(objId);
+				if ( reportSelector[reportSelector.selectedIndex].value ) {
+					window.location = '<?php echo $this->base_url;?>' + reportSelector[reportSelector.selectedIndex].value + '?<?php echo $_SERVER['QUERY_STRING'];?>';
+				}
+			}
+		</script>
+	</head>
+	<body class="yui-skin-sam" >
+		<div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+			<div id="content">
+				<div id="subcontent">
+					<div class="fieldLabel" id="training_lbl"><?php tp('Select course report');?></div>
+						<select id="pscrs" name="pscrs" onchange="gotoPage('pscrs');">
+							<option value="">--<?php tp('choose');?>--</option>
+							<option value="/reports/psCourseByStudentCount" selected ><?php tp('Course By Student Count');?></option>
+							<option value="/reports/psCourseByName"                  ><?php tp('Course By Name');?></option>
+						</select><br/><br/>
+					<div class="clear"></div>
+					<div id="contentheader">
+						<h2><?php tp('Course By Student Count');?></h2><br>
+					</div>
+					<div class="pad50 clear"></div>
+					<form  action="" method="get">
+						<div class="mainformholder" style="height:100%;">
+					<input type="hidden" name="process" id="process" value="1">
+					<?php tp('Select Criteria');?><br>
+
+							<div class="fieldquestion"><?php echo t('Institution'); ?></div>
+							<div class="fieldshow"><input type="checkbox" name="showinstitution" id="showinstitution" value="1"<?php echo $_GET['showcoursename'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"><select name="institution" id="institution" style="" size="10">
+	<?php
+		foreach ($this->institutions as $item){
+			echo "<option value=\"" . $item['id'] . "\">" . $item['institutionname'] . "</option>\n";
+		}
+	?>
+							</select></div>
+							<div class="clear pad20">&nbsp;</div>
+	
+							<div class="fieldquestion"><?php echo t('Cohort'); ?></div>
+							<div class="fieldshow"><input type="checkbox" name="showcohort" id="showcohort" value="1"<?php echo $_GET['showcohort'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"><select name="cohort" id="cohort" style="" size="10">
+	<?php
+		foreach ($this->cohorts as $item){
+			echo "<option value=\"" . $item['id'] . "\">" . $item['cohortname'] . "</option>\n";
+		}
+	?>
+							</select></div>
+							<div class="clear pad20">&nbsp;</div>
+	
+							<div class="fieldquestion"><?php echo t('Course Name'); ?></div>
+							<div class="fieldshow"><input type="checkbox" name="showcoursename" id="showcoursename" value="1"<?php echo $_GET['showcoursename'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"><input type="text" name="coursename" id="coursename" value="" style="margin-left : 5px;"></div>
+							<div class="clear pad20">&nbsp;</div>
+	
+							<div class="fieldquestion"><?php echo t('Grades'); ?></div>
+							<div class="fieldshow"><input type="checkbox" name="showgrades" id="showgrades" value="1"<?php echo $_GET['showgrades'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"><input type="text" name="grades" id="grades" value="" style="margin-left : 5px;"></div>
+							<div class="clear pad20">&nbsp;</div>
+	
+							<div class="fieldquestion"><?php echo t('Cadre'); ?></div>
+							<div class="fieldshow"><input type="checkbox" name="showcadre" id="showcadre" value="1"<?php echo $_GET['showcadre'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"><select name="cadre" id="cadre" style="" size="10">
+	<?php
+		foreach ($this->cadres as $item){
+			echo "<option value=\"" . $item['id'] . "\">" . $item['cadrename'] . "</option>\n";
+		}
+	?>
+							</select></div>
+							<div class="clear pad20">&nbsp;</div>
+	
+							<div class="fieldquestion"><?php echo t('Year In School'); ?></div>
+							<div class="fieldshow"><input type="checkbox" name="showyearinschool" id="showyearinschool" value="1"<?php echo $_GET['showyearinschool'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"><select name="yearinschool" id="yearinschool" style="height : 25px;">
+<?php
+	echo "<option value=''>Select...</option>\n";
+	for ($i = 1990; $i <= date("Y"); $i++){
+		echo "<option value='" . $i . "'>" . $i . "</option>\n";
+	}
+?>
+							</select></div>
+							<div class="clear pad20">&nbsp;</div>
+	
+							<div class="fieldquestion"><?php echo t('Course Type'); ?></div>
+							<div class="fieldshow"><input type="checkbox" name="showcoursetype" id="showcoursetype" value="1"<?php echo $_GET['showcoursetype'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"><select name="coursetype" id="coursetype" style="" size="10">
+	<?php
+		foreach ($this->coursetypes as $item){
+			echo "<option value=\"" . $item['id'] . "\">" . $item['coursetype'] . "</option>\n";
+		}
+	?>
+							</select></div>
+							<div class="clear pad20">&nbsp;</div>
+	
+							<div class="fieldquestion"><?php echo t('Topic'); ?></div>
+							<div class="fieldshow"><input type="checkbox" name="showtopic" id="showtopic" value="1"<?php echo $_GET['showtopic'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"><input type="text" name="topic" id="topic" value="" style="margin-left : 5px;"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('Start date between'); ?></div>
+							<div class="fieldshow">&nbsp;</div>
+							<div class="fieldselect"><input type="text" name="startday" id="startday" value="" placeholder="Day" style="width : 30px; margin-right : 10px; margin-left : 0px;"><input type="text" name="startmonth" id="startmonth" value="" placeholder="Month" style="width : 30px; margin-right : 10px; margin-left : 0px;"> <input type="text" name="startyear" id="startyear" value="" placeholder="Year" style="width : 50px; margin-right : 10px; margin-left : 0px;"><br><br>and<br><br><input type="text" name="endday" id="endday" value="" placeholder="Day" style="width : 30px; margin-right : 10px; margin-left : 0px;"> <input type="text" name="endmonth" id="endmonth" value="" placeholder="Month" style="width : 30px; margin-right : 10px; margin-left : 0px;"> <input type="text" name="endyear" id="endyear" value="" placeholder="Year" style="width : 50px; margin-right : 10px; margin-left : 0px;"></div>
+							<div class="clear pad20">&nbsp;</div>
+						</div>
+						<div class="pad20 clear"></div>
+						<div class="mainformholder" style="height : 100px;">
+							<div  style="float : right;" >
+								<input type="submit" name="go" value="<?php tp('Preview');?> &raquo;" class="tsbutton green large">
+							</div>
+							<div class="clear pad20">&nbsp;</div>
+						</div>
+						<div class="clear pad20">&nbsp;</div>
+					</form>
+<?php
+if (isset($this->output)) {
+	if (count ($this->output) == 0){
+		echo "				<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"display tablegrid\" id=\"\" style=\"width:100%\">\n";
+		echo "					<thead>\n";
+		echo "						<tr>\n";
+		echo "							<th>Output</th>\n";
+		echo "						</tr>\n";
+		echo "					</thead>\n";
+		echo "					<tbody>\n";
+		echo "						<tr>\n";
+		echo "							<td>Your search criteria returned no results</td>\n";
+		echo "						</tr>\n";
+		echo "					</tbody>\n";
+		echo "				</table>\n";
+	} else {
+?>
+				<br>
+				<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+					<thead>
+						<tr>
+<?php
+		foreach ($this->headers as $key=>$value){
+			echo "							<th>" . $value . "</th>\n";
+		}
+?>
+						</tr>
+					</thead>
+					<tbody>
+<?php
+		foreach ($this->output as $row){
+			echo "						<tr style=\"cursor : pointer;\" class=\"GradeA\">\n";
+			foreach ($row as $key=>$value){
+				echo "				   			<td>" . $value . "</td>\n";
+			}
+			echo "						</tr>\n";
+		}
+?>
+					</tbody>
+				</table>
+				<input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large" onclick="window.open('<?php
+$_GET['csv'] = 1;
+$url = $_SERVER['REQUEST_URI'] . "&csv=1";
+#foreach ($_GET as $key=>$value){
+#	$url .= $key . "=" . $value . "&";
+#}
+echo $url;  ?>')">
+<?php
+	}
+}
+?>
+					<div class="clear" style=""></div>
+				</div>
+				<div class="clear" style=""></div>
+			</div>   
+			<div class="clear" style="height : 100px;"></div>
+			<div class="clear" style=""></div>
+							
+	
+			<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+			</div>
+		</div>
+	</body>
+</html>
+
+
+

@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php tp('View Facility');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+require_once('views/helpers/Location.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+
+<h1><?php tp('View Facility');?></h1>
+
+<div>
+	<form id="change" action="<?php echo $this->base_url;?>/facility/view" method="get">
+	<div class="fieldInput"><select name="id"  id="id" onchange="this.form.submit();">
+	<option value="">-- <?php tp('choose');?> --</option>
+	<?php foreach ( $this->facilities as $facility) {
+		echo '<option value="'.($facility['id']).'" '.((@$this->facility['id']) == $facility['id']? 'SELECTED':'').' >'.($facility['facility_name']).'</option>';
+	}
+	?>
+	</select><?php if ($this->facility['id'] and $this->hasACL('edit_people')) { ?><a href="<?php echo $this->base_url;?>/facility/edit/id/<?php echo $this->facility['id'];?>" >Edit</a><?php } ?>
+	</div>
+	</form>
+
+<?php if ($this->facility['id']) { ?>
+	<input type="hidden" name="id" value="<?php echo $this->facility['id'];?>"></input>
+	<div class="fieldLabel" id="facility_address1_lbl"><?php tp('Address 1');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_address1" id="facility_address1" readonly="readonly"  value="<?php echo $this->facility['address_1'];?>" size="40" maxlength="128"/></div>
+	<div class="fieldLabel" id="facility_address2_lbl"><?php tp('Address 2');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_address2" id="facility_address2" readonly="readonly"  value="<?php echo $this->facility['address_2'];?>" size="40" maxlength="128"/></div>
+	<div class="fieldLabel" id="facility_city_lbl"><?php echo (@$this->translation['City or Town']); ?></div>
+	    <div class="fieldInput"><input name="facility_city" id="facility_city" type="text" size="40" readonly="readonly"  maxlength="128" value="<?php echo $this->facility['facility_city'];?>" />
+	</div>
+
+<?php region_filters_dropdown($this, $this->locations, $this->facility); ?>
+
+	<div class="fieldLabel" id="facility_postal_code_lbl"><?php tp('Postal Code');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_postal_code" readonly="readonly"  id="facility_postal_code" value="<?php echo $this->facility['postal_code'];?>" size="40" maxlength="20"/></div>
+	<div class="fieldLabel" id="facility_latitude_lbl"><?php tp('Latitude');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_latitude" id="facility_latitude" readonly="readonly"  value="<?php echo $this->facility['lat'];?>" size="40" maxlength="11"/></div>
+	<div class="fieldLabel" id="facility_longitude_lbl"><?php tp('Longitude');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_longitude" id="facility_longitude" readonly="readonly"  value="<?php echo $this->facility['long'];?>" size="40" maxlength="11"/></div>
+	<div class="fieldLabel" id="facility_phone_lbl"><?php tp('Phone');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_phone" readonly="readonly"  id="facility_phone" value="<?php echo $this->facility['phone'];?>" size="40" maxlength="32"/></div>
+	<div class="fieldLabel" id="facility_fax_lbl"><?php tp('Fax');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_fax"  readonly="readonly" id="facility_fax" value="<?php echo $this->facility['fax'];?>" size="40" maxlength="32"/></div>
+	<div class="fieldLabel" id="facility_type_id_lbl"><?php tp('Facility type');?></div>
+	<div class="fieldInput"><input type="text" readonly="readonly" id="facility_type_id" name="facility_type_id" size="40" value="<?php
+		foreach ( $this->facility_types as $vals ) {
+			if ((@$this->facility['type_option_id']) == $vals['id']) echo $vals['facility_type_phrase'];
+		}
+		?>" /></div>
+  	<?php foreach($this->sponsor_data as $i => $sponsorRow) { ?>
+	<div class="fieldLabel" id="<?php if ($i==0) echo 'facility_sponsor_id_lbl'; ?>"><?php tp('Facility'); echo ' '; tp('sponsor');?></div>
+	  <div class="fieldInput" id="<?php if ($i==0) echo 'facility_sponsor_wrapper'; ?>">
+		<select id="facility_sponsor_id" name="facility_sponsor_id[]" readonly="readonly" disabled="disabled">
+			<option value="">--<?php tp('choose');?>--</option>
+			<?php
+			  if ( @$this->facility_sponsors ) {
+						foreach ( $this->facility_sponsors as $vals ) {
+							$sel = ($vals['id'] == $sponsorRow['facility_sponsor_phrase_id'] ? 'selected' : '');
+							echo '<option value="'.$vals['id'].'" '.$sel.' >'.$vals['facility_sponsor_phrase'].'</option>';
+					}
+			  }
+			?>
+		</select>
+	</div>
+<?php if ( @$this->setting['display_sponsor_dates'] ) { ?>
+	<div class="fieldLabel" id="<?php if ($i==0) echo 'facility_sponsor_id_lbl'; ?>"><?php if( @$this->setting['require_sponsor_dates'] ) echo '<span class="required">*</span>'; ?><?php tp('Sponsor Date');?></div>
+	<div class="fieldInput sponsorDates" id="<?php if ($i==0) echo 'facility_sponsor_wrapper'; ?>">
+		<span><input class="datepicker" type="text" name="sponsor_start_date[]" readonly="readonly" value="<?php echo ($sponsorRow['end_date'] != "0000-00-00" ? @date("m/d/Y", strtotime($sponsorRow['start_date'])) : ''); ?>" /></span>&nbsp;&nbsp;
+		<?php if( @$this->setting['require_sponsor_dates'] ) echo '<span class="required">*</span>'; ?><label class="label"><?php tp('to'); ?></label>&nbsp;&nbsp;
+		<span><input class="datepicker" type="text" name="sponsor_end_date[]" readonly="readonly" value="<?php echo ($sponsorRow['end_date'] != "0000-00-00" ? @date("m/d/Y", strtotime($sponsorRow['end_date'])) : ''); ?>" /></span>
+	</div>
+<?php } ?>
+<?php } ?>
+
+  	<div class="fieldLabel" id="facility_comments_lbl"><?php tp('Facility Comments');?></div>
+	<div class="fieldInput"><textarea name="facility_comments" readonly="readonly"  id="facility_comments" size="40" maxlength="255" ><?php echo $this->facility['facility_comments'];?></textarea></div>
+<?php } ?>
+
+<div class="clear" ></div>
+
+<script type="text/javascript">
+
+	$(document).ready(function ( ) {
+		var objs = ['province_id', 'district_id', 'region_c_id','region_d_id','region_e_id','region_f_id','region_g_id','region_h_id','region_i_id'];
+		for (var i in objs)
+			$('#'+objs[i]).attr('disabled', 'disabled').attr('readonly', 'readonly');
+	});
+</script>
+
+</div>
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+</body>
+</html>

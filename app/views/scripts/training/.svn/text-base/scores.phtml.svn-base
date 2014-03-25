@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam">
+
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+
+    <h1>Test scores</h1>
+
+    <div class="simpleLabel"><?php tp('Course');?></div>
+    <div class="simpleValue"><?php echo $this->courseName; ?></div>
+
+    <div class="simpleLabel"><?php tp('Person');?></div>
+    <div class="simpleValue"><?php echo "{$this->personRow->first_name} {$this->personRow->middle_name} {$this->personRow->last_name}"; ?></div>
+
+    <div class="simpleLabel"><?php tp('Scores');?></div>
+    <div class="simpleValue">
+
+      <?php echo $this->editTable; ?>
+
+      <script>
+      var fickle = function(elCell, oRecord, oColumn, sData) {
+        if (sData == undefined)
+          sData = '';
+        if (sData.indexOf('/') > -1){
+          parts = sData.split('/');
+          sData = parseInt(parseInt($.trim(parts[0])) / parseInt($.trim(parts[1])) * 100);
+        }
+        elCell.innerHTML = sData;
+      }
+
+        //ITECH.ScoreTable.config.autoTabOnSubmit = true;
+        //ITECH.ScoreTable.config.deleteConfirm = "<?php tp('Are you sure you wish to delete this score?');?>";
+      </script>
+
+    </div>
+
+
+
+    <form method="get" action="<?php echo $this->base_url;?>/training/edit/id/<?php echo $this->training_id; ?>">
+    <input type="hidden">
+    <input type="submit" value="<?php echo t('Return to').' '.t('Training');?>" class="submitArrow">
+    </form>
+
+    <div class="clear"></div>
+
+
+
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,140 @@
+<html>
+	<head>
+		<title><?php echo $this->escape($this->title);?></title>
+		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+	<?php
+	require_once('views/helpers/Location.php');
+    require_once('views/helpers/ScriptContainer.php');
+    print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();      ?>
+    
+
+
+
+
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				/* Add a click handler to the rows - this could be used as a callback */
+				$(".tablegrid tbody").click(function(event) {
+					$(oTable.fnSettings().aoData).each(function (){
+						$(this.nTr).removeClass('row_selected');
+					});
+					$(event.target.parentNode).addClass('row_selected');
+				});
+	 
+				/* Add a click handler for the delete row */
+				$('#delete').click( function() {
+					var anSelected = fnGetSelected( oTable );
+					oTable.fnDeleteRow( anSelected[0] );
+				} );
+	 
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+			} );
+
+			/* Get the rows which are currently selected */
+			function fnGetSelected( oTableLocal ){
+				var aReturn = new Array();
+				var aTrs = oTableLocal.fnGetNodes();
+				 
+				for ( var i=0 ; i<aTrs.length ; i++ ){
+					if ( $(aTrs[i]).hasClass('row_selected') ){
+						aReturn.push( aTrs[i] );
+					}
+				}
+				return aReturn;
+			}
+		</script>
+	</head>
+    
+    <body  class="yui-skin-sam">
+     <div id="pageHolder">
+			 <div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+		<div id="content">
+		
+            
+			<div id="subcontent">
+				<div id="contentheader">
+					<h2><?php echo t('Institution Search'); ?></h2><br>
+					<p style="float:left;font-size:13px;"><?php echo t('Select criteria'); ?></p>
+				</div>
+				<div class="pad50 clear"></div>
+				<form  action="./institutionsearch" id="peopleadd" method="post">
+				<div class="mainformholder" style="height:450px;">
+ 					<label><?php echo t('Institution Name'); ?></label>
+					<input type="text" name="name" size="32" maxlength="32" value="<?php echo $this->escape($_POST['name']);?>">
+
+<!--
+					<label>Geography Level 1</label>
+					<input type="text" name="geo1" size="32" maxlength="32" value="<?php echo $this->escape($_POST['geo1']);?>">
+
+					<label>Geography Level 2</label>
+					<input type="text" name="geo2" size="32" maxlength="32" value="<?php echo $this->escape($_POST['geo2']);?>">
+                    
+                    <label>Geography Level 3</label>
+					<input type="text" name="geo3" size="32" maxlength="32" value="<?php echo $this->escape($_POST['geo3']);?>">
+-->
+
+							<!-- geographical area-->
+							<label id="province_id_lbl"><span class="required">*</span> <?php echo (@$this->translation['Region A (Province)']); ?></label>
+<?php
+	renderFilter($this->locations, 1, 'geo1', $_POST['geo1'], 'geo2');
+	if ( $this->setting['display_region_b'] ) {
+?>
+							<label id="district_id_lbl"><span class="required">*</span> <?php echo (@$this->translation['Region B (Health District)']); ?></label>
+<?php
+		renderFilter($this->locations, 2, 'geo2', $_POST['geo2'], ($this->setting['geo3']?'region_c_id':false));
+?>
+<?php
+	}
+?>
+<?php
+	if ( $this->setting['display_region_c'] ) {
+?>
+							<label id="region_c_id_lbl"><span class="required">*</span> <?php echo (@$this->translation['Region C (Local Region)']); ?></label>
+<?php
+		renderFilter($this->locations, 3, 'geo3', $_POST['geo3'], false);
+?>
+<?php
+	}
+?>
+
+                     <label><?php echo t('Institution Sponsor'); ?></label>
+					<select name="sponsor">
+<?php
+	echo "<option value=\"0\">Any</option>\n";
+	foreach ($this->sponsors as $sponsor){
+		echo "<option value=\"" . $sponsor['id'] . "\"" . ($sponsor['id'] == $_POST['sponsor'] ? " selected" : "") . ">" . $sponsor['sponsorname'] . "</option>\n";
+	}
+?>
+					</select>
+                     
+					<label><?php echo t('Institution Type'); ?></label>
+					<select name="instype" id="instype">
+						<option value="0"><?php echo t('Select...'); ?></option>
+<?php
+	foreach ($this->institutiontypes as $instype){
+?>
+						<option value="<?php echo $instype['id']; ?>"<?php echo $this->type == $instype['id'] ? " selected" : ""; ?>> <?php echo $instype['typename']; ?></option>
+<?php
+	}
+?>
+					</select>
+                    
+					<div class="rightdiv" style="margin-top:20px;">
+	                    <input type="submit" name="submit" value="<?php tp('Search'); ?> &raquo;" class="tsbutton green large"></div>
+					</div>
+				</div>
+				<form>
+			</div>
+		</div>
+        </div>
+        
+		<?php /*?><div id="footer"><div id="footercontent">Copyright &copy; 2011.</div><?php */?>
+        <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+        </div>
+	</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title><?php echo $this->translation['Application Name'];?> | <?php tp('Evaluations');?></title>
+	<?php
+	require_once('views/helpers/ScriptContainer.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+	?>
+
+</head>
+<body class="yui-skin-sam">
+	<div id="pageHolder">
+		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+		<div id="content">
+
+			<h1><?php tp('Evaluations');?></h1>
+
+			<div id="evaluations"  class="itechTable" ></div>
+
+			<script type="text/javascript">
+			function confirmDeleteEval(id){
+				if(confirm('<?php tp('Are you sure you wish to delete this evaluation?'); ?>'))
+					location.href = '<?php echo $this->base_url;?>/evaluation/delete/id/'+id;
+			}
+
+			var evaluationInfoData = [
+			<?php
+			$raw = array();
+			foreach($this->evaluations as $row) {
+				$raw []= '["'.$row['title'].'","'.$row['timestamp_created'].'",'.$row['id'].']';
+			}
+			echo implode(",\n",$raw);
+			?>
+			];
+
+			var formatActionsUrl = function(elCell, oRecord, oColumn, sData) {
+				var contents = "";
+				contents = "<a href='<?php echo $this->base_url;?>/evaluation/add_copy/id/" + sData + "' ><?php tp('Copy'); ?></a>";
+				contents = contents + "&nbsp;&nbsp;<a href='<?php echo $this->base_url;?>/evaluation/assign-evaluation/id/" + sData + "' ><?php tp('Assign'); ?></a>";
+				contents = contents + "&nbsp;&nbsp;<a target='_blank' href='<?php echo $this->base_url;?>/evaluation/print/id/" + sData + "' ><?php tp('Print'); ?></a>";
+				<?php if($this->hasACL('edit_evaluations')) : ?>contents = contents + "&nbsp;&nbsp;<a href='<?php echo $this->base_url;?>/evaluation/edit/id/" + sData + "' ><?php tp('Edit'); ?></a>"; <?php endif; ?>
+				<?php if($this->hasACL('edit_evaluations')) : ?>contents = contents + "&nbsp;&nbsp;<a href=\"#\" onclick=\"confirmDeleteEval(" + sData + ");\"><?php tp('Delete'); ?></a>"; <?php endif; ?>
+				elCell.innerHTML = contents;
+			}
+
+			var evColumnDefs = [
+				{key:"title", label: "<?php tp('Title');?>", sortable:true, resizeable:true},
+				{key:"timestamp_created", label: "<?php tp('Date created');?>", sortable:true, resizeable:true},
+				{key:"id", label: "Action", sortable:false, resizeable:true,
+				formatter: formatActionsUrl}
+			];
+
+			makeDataTable("evaluations", null, evaluationInfoData, evColumnDefs);
+			</script>
+
+			<a href="<?php echo $this->base_url;?>/evaluation/add_copy"><?php tp('Add New Evaluation');?></a><br/><br/>
+
+
+		</div>
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+	</div>
+
+</body>
+</html>

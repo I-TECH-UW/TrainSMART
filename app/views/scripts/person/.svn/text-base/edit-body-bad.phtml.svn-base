@@ -1,0 +1,592 @@
+<div id="pageHolder">
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+	<?php if ( $this->mode != 'add' ) { ?>
+ <div>
+ <div class="historyDiv">
+      <b><?php tp('Date created');?> </b><?php echo str_replace(' ','&nbsp;',$this->person['timestamp_created']);?><br/>
+       <b><?php tp('Created by');?> </b><?php echo $this->person['creator'];?><br/>
+       <b><?php tp('Date modified');?> </b><?php echo str_replace(' ','&nbsp;',$this->person['timestamp_updated']);?><br/>
+       <b><?php tp('Modified by');?> </b><?php echo $this->person['updater'];?><br/>
+       <b>UUID</b><br/><span style="font-size: 6pt;"><?php echo str_replace('}','',str_replace('{','',$this->person['uuid']));?></span><br/>
+     	<?php if (@$this->okToDelete) { ?>
+       <hr size="1">
+      <a href="" onclick="doDelete(); return false;"><?php tp('Delete this Person');?></a>
+<script language="JavaScript">
+function doDelete() {
+	if(confirm("<?php tp('Are you sure you wish to delete this person?');?>")) {
+		window.location = '<?php echo $this->base_url;?>/person/delete/id/<?php echo $this->person['id'];?>';
+		return false;
+	}
+}
+</script>
+		<?php } ?>
+          </div>
+       </div>
+
+    <?php } ?>
+<?php if ( $this->mode != 'add' ) { ?>
+<h1><?php tp('Edit person\'s record');?></h1>
+<?php } else { ?>
+<h1><?php tp('Add person\'s record');?></h1>
+<?php } ?>
+<form action="" id="personForm" method="POST">
+<div class="fieldIndentNoMargin"><?php tp('Personal Information');?></div>
+
+ <?php if ($this->setting['display_people_active']) { ?>
+ <div class="fieldLabel"><label for="active"><?php echo (@$this->translation['Is Active']); ?></label></div>
+  <div class="fieldInput"><input type="checkbox" id="active" name="active" <?php echo ( $this->person['active'] !== 'active' ? '': 'CHECKED');?>/></div>
+ <?php } ?>
+  <div class="fieldLabel" id="first_name_lbl"><span class="required">*</span><?php echo (@$this->translation['First Name']); ?></div>
+  <div class="fieldInput"><input type="text" name="first_name" id="first_name" size="32" maxlength="32" value="<?php echo $this->person['first_name'];?>"/></div>
+   <?php if ( !$this->setting['display_middle_name_last'] ) { ?>
+  <div class="fieldLabel" id="middle_name_lbl"><?php echo (@$this->translation['Middle Name']); ?></div>
+  <div class="fieldInput"><input type="text" name="middle_name" size="32" maxlength="32" value="<?php echo $this->person['middle_name'];?>"/></div>
+  <?php }?>
+  <div class="fieldLabel" id="last_name_lbl"><span class="required">*</span><?php echo (@$this->translation['Last Name']); ?></div>
+  <div class="fieldInput"><input type="text" name="last_name" id="last_name" size="32" maxlength="32" value="<?php echo $this->person['last_name'];?>"/></div>
+   <?php if ( $this->setting['display_middle_name_last'] ) { ?>
+  <div class="fieldLabel" id="middle_name_lbl"><?php echo (@$this->translation['Middle Name']); ?></div>
+  <div class="fieldInput"><input type="text" name="middle_name" size="32" maxlength="32" value="<?php echo $this->person['middle_name'];?>"/></div>
+  <?php }?>
+  <?php if ( $this->setting['display_national_id'] ) { ?>
+ <div class="fieldLabel" id="national_id_lbl"><?php echo (@$this->translation['National ID']); ?></div>
+  <div class="fieldInput"><input type="text" name="national_id" size="32" maxlength="32" value="<?php echo $this->person['national_id'];?>"/></div>
+	<?php } ?>
+    <div class="fieldLabel" id="gender_lbl"><span class="required">*</span><?php tp('Gender');?></div><div class="fieldInput">
+    <label for="female"><?php tp('Female');?><input type="radio" id="female" name="gender" value="female" <?php echo ( $this->person['gender'] == 'female' ? 'CHECKED' :'');?> ></input></label>
+    <label for="male"><?php tp('Male');?><input type="radio" id="male" name="gender" value="male" <?php echo ( $this->person['gender'] == 'male' ? 'CHECKED' :'');?>></input></label>
+     <label for="na"><?php tp('Unknown');?><input type="radio" id="na" name="gender" value="na" <?php echo ( $this->person['gender'] == 'na' ? 'CHECKED' :'');?>></input></label></div>
+  <div class="clear"></div>
+<div class="fieldLabel"><?php tp('Birth date');?></div>
+		<div class="fieldInput">
+		            <?php tp('Day');?> <input id="birth-day" class="dayfield" type="text" value="<?php echo $this->person['birthdate-day'];?>" name="birth-day">
+		            / <?php tp('Month');?> <input id="birth-month" class="monthfield" type="text" value="<?php echo $this->person['birthdate-month'];?>" name="birth-month">
+		            / <?php tp('Year');?> <input id="birth-year" class="yearfield" type="text" value="<?php echo $this->person['birthdate-year'];?>" name="birth-year">
+</div>
+
+<?php if($this->mode == 'add') { ?>
+
+  <div class="clear"></div>
+
+  <div class="fieldIndentNoMargin hidden" id="duplicateCheckLabel"><?php tp('Duplicate Check');?></div>
+  
+  <div id="dupecheck"></div>
+  
+  <input type="submit" id="submitAddContinue" class="submitArrow" value="<?php tp('Continue');?>" onclick="return continueClick();">
+  <div class="clear"></div>
+  
+  
+<!-- Person Duplicate check -->  
+  <script>
+  
+var dupeColDefs = 
+[ {key:"id", hidden:"true", width:"0", label:"", className:"hidden"},
+{key:"input", width:15, resizeable:true , label:""},
+{key:"first_name", width:60, resizeable:true , label:"<?php tp("First Name"); ?>"},
+<?php if ( !$this->setting['display_middle_name_last'] ) { ?>
+{key:"middle_name", width:66, resizeable:true , label:"<?php echo (@$this->translation['Middle Name']); ?>"},
+<?php } ?>
+{key:"last_name", width:54, resizeable:true , label:"<?php echo (@$this->translation['Last Name']); ?>"},
+{key:"birthdate", width:78, resizeable:true , label:"<?php tp("Date of Birth"); ?>"},
+{key:"gender", width:78, resizeable:true , label:"<?php tp("Gender"); ?>"},
+{key:"facility_name", width:120, resizeable:true , label:"Facility"},
+{key:"national_id", width:80, resizeable:true , label:"<?php echo (@$this->translation['National ID']); ?>"} ];
+
+var dupeDataSource = { } // filled via ajaxDupeSuccess callback
+
+var ajaxDupeSuccess = function(o) {
+	if(o.responseText !== undefined){
+	  if(!o.responseText) {
+	    YAHOO.util.Dom.get('dupecheck').innerHTML = "<em>No duplicates found.</em>";
+	  } else {
+  	  dupeDataSource = eval(o.responseText);
+  	  makeDynamicDataTable("dupecheck", "<?php tp("If the person already exists, please select their name below."); ?>", dupeDataSource, dupeColDefs);
+      YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('submitAddContinue'), "hidden");
+	  }
+	}
+}
+
+var ajaxDupeFailure = function(o){
+	if(o.responseText !== undefined){
+		YAHOO.util.Dom.get('dupecheck').innerHTML = o.status + "<br />" + o.statusText;
+	}
+}
+
+var callback = {
+  success:ajaxDupeSuccess,
+  failure: ajaxDupeFailure
+};
+
+var isTimeout = false;
+
+function buildDupeTable(e) {
+  if(!isTimeout) {
+    last_name = YAHOO.util.Dom.get('last_name').value;
+    first_name = YAHOO.util.Dom.get('first_name').value;
+    
+    if(last_name || first_name) {
+      YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('duplicateCheckLabel'), "hidden");
+      
+      var sUrl = "<?php echo $this->base_url;?>/person/dupeList/outputType/json?";
+      sUrl += "last_name=" + last_name + "&";
+      sUrl += "first_name=" + first_name + "&";      
+      var request = YAHOO.util.Connect.asyncRequest('GET', sUrl, callback);  
+  
+      isTimeout = true;
+      setTimeout(function() { 
+        isTimeout = false;
+        if(e) {
+          buildDupeTable(false);  
+        }
+      }, 300);  
+    } else {
+      YAHOO.util.Dom.get('dupecheck').innerHTML = "";
+    }    
+  }  
+}
+
+function continueClick() {
+  last_name = YAHOO.util.Dom.get('last_name').value;
+  first_name = YAHOO.util.Dom.get('first_name').value;
+
+  if(!last_name || !first_name) {
+    alert("<?php tp("Please enter a first and last name."); ?>");
+  } else {
+    
+    // find checked radio        
+    var elChecked = YAHOO.util.Dom.getElementsBy( function(el) {
+      return el.checked;
+    }, 'input',YAHOO.util.Dom.get('dupecheck')); 
+    if(elChecked && elChecked.length) {
+      elChecked.form.submit();
+    } else {
+      YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('personAddHide'), "hidden");
+      YAHOO.util.Dom.addClass(YAHOO.util.Dom.get('submitAddContinue'), "hidden");
+    }
+  }
+  
+  return false;
+}
+
+YAHOO.util.Event.addListener(YAHOO.util.Dom.get('last_name'), "keyup", buildDupeTable);
+YAHOO.util.Event.addListener(YAHOO.util.Dom.get('first_name'), "keyup", buildDupeTable);
+
+</script>
+  
+  
+<?php } ?>
+
+  <?php if($this->mode == 'edit') : ?>
+    <button type="button" id="submitPersonTop"><?php tp('Save changes');?></button><br>
+  <?php else : ?>
+    <div id="personAddHide" class="hidden">
+  <?php endif; ?>
+  
+  
+
+  <div class="clear"></div>
+  <div class="hrGrey"></div>
+  <div class="clear"></div>
+
+<div class="fieldIndentNoMargin"><?php tp('Current Contact Information');?></div>
+<div class="fieldLabel"  id="facilityInput_lbl"><span class="required">*</span><?php tp('Facility');?></div><div class="fieldInput"><select id="facilityInput" name="facilityInput" >
+	<option value="">--<?php tp('choose');?>--</option>
+	<?php
+		foreach ( $this->facilities as $vals ) {
+			echo '<option value="'.$vals['id'].'" '.($this->person['facility_id'] == $vals['id']?'SELECTED':'').'>'.$vals['facility_name'].'</option>';
+	}
+	?>
+</select><a href="#" id="show"><?php print str_replace(' ','&nbsp;',t('Insert new facility'));?></a></div>
+
+
+<div class="clear" />
+  <div class="fieldLabel"  id="phone_home_lbl"><?php tp('Home phone');?></div>
+  <div class="fieldInput"><input type="text" id="phone_home" name="phone_home" size="32" maxlength="32" value="<?php echo $this->person['phone_home'];?>"/></div>
+  <div class="fieldLabel" ><?php tp('Work phone');?></div>
+  <div class="fieldInput"><input type="text" id="phone_work" name="phone_work" size="32" maxlength="32" value="<?php echo $this->person['phone_work'];?>"/></div>
+  <div class="fieldLabel" ><?php tp('Mobile phone');?></div>
+  <div class="fieldInput"><input type="text" id="phone_mobile" name="phone_mobile" size="32" maxlength="32" value="<?php echo $this->person['phone_mobile'];?>"/></div>
+  <div class="fieldLabel"  id="email_lbl"><?php tp('Email');?></div>
+  <div class="fieldInput"><input type="text" id="email" name="email" size="32" maxlength="32" value="<?php echo $this->person['email'];?>"/><br/><span style="color: #696969;">johndoe@example.net</span></div>
+  <div class="fieldLabel" ><?php tp('Fax');?></div>
+  <div class="fieldInput"><input type="text" id="fax" name="fax" size="32" maxlength="32" value="<?php echo $this->person['fax'];?>"/></div>
+
+<script>
+YAHOO.namespace("example.container");
+
+function init() {
+
+	// Define various event handlers for Dialog
+	var handleSubmit = function() {
+		//clear error text
+		var els = YAHOO.util.Dom.getElementsByClassName('errorText');
+		if ( els.length )
+			YAHOO.util.Dom.setStyle(els, 'display', 'none');
+		this.submit();
+	};
+	var handleCancel = function() {
+		this.cancel();
+	};
+	var handleSuccess = function(o) {
+		var response = o.responseText;
+		var responseObj = YAHOO.lang.JSON.parse(response);
+		displayStatus(responseObj.status);
+		var allGood = true;
+		if ( responseObj.messages ) {
+			for (var key in responseObj.messages) {
+				YAHOO.example.container.addFacility.show();
+				displayErrorMessage(key,responseObj.messages[key]);
+				allGood = false;
+			}
+		}
+
+		if ( allGood ) {
+			//var facilityEl =  YAHOO.util.Dom.get('facilityInput');
+			//var newName = YAHOO.util.Dom.get('facility_name').value;
+			//facilityEl.value = newName;
+			//alert(YAHOO.util.Dom.get('obj_id').value);
+			var newOpt = document.createElement('option');
+			newOpt.text = YAHOO.util.Dom.get('facility_name').value;
+			newOpt.value = responseObj.obj_id;
+			var facSel = document.getElementById('facilityInput');
+			facSel.add(newOpt, facSel.options.length);
+			facSel.selectedIndex = facSel.options.length - 1;
+		}
+
+	};
+	var handleFailure = function(o) {
+		alert("<?php tp('Submission failed:');?> " + o.status);
+	};
+
+	// Instantiate the Dialog
+	YAHOO.example.container.addFacility = new YAHOO.widget.Dialog("addFacility",
+							{ width : "50em",
+							  fixedcenter : false,
+							  visible : false,
+							  constraintoviewport : true,
+							  modal : true,
+							  zIndex: 9100,
+							  context : ["personForm", "tl", "bl"],
+							  buttons : [ { text:"Submit", handler:handleSubmit, isDefault:true },
+								      { text:"Cancel", handler:handleCancel } ]
+							});
+
+
+	// Validate the entries in the form to require that both first and last name are entered
+	YAHOO.example.container.addFacility.validate = function() {
+		return true;//do all validation server side
+	};
+
+	// Wire up the success and failure handlers
+	YAHOO.example.container.addFacility.callback = { success: handleSuccess,
+						     failure: handleFailure };
+
+	// Render the Dialog
+	YAHOO.example.container.addFacility.render();
+
+	YAHOO.util.Event.addListener("show", "click", YAHOO.example.container.addFacility.show, YAHOO.example.container.addFacility, true);
+}
+
+YAHOO.util.Event.onDOMReady(init);
+</script>
+ <div class="clear"></div>
+  <div class="hrGrey"></div>
+  <div class="clear"></div>
+<div class="fieldIndentNoMargin"><?php tp('Qualifications');?></div>
+<div class="fieldLabel" id="primary_qualification_option_id_lbl"><span class="required">*</span><?php tp('Professional qualification');?></div><div class="fieldInput"><select id="primary_qualification_option_id" name="primary_qualification_option_id">
+	<option value="">--<?php tp('choose');?>--</option>
+	<?php
+		$lastParent = null;
+		foreach ( $this->qualifications as $vals ) {
+		if ( !$vals['id'] ) {
+			$lastParent = $vals['parent_phrase'];
+			echo '<option value="'.$vals['parent_id'].'" '.($this->person['primary_qualification_option_id'] == $vals['parent_id']?'SELECTED':'').'>'.$vals['parent_phrase'].'</option>';
+		} else {
+			echo '<option value="'.$vals['id'].'" '.($this->person['primary_qualification_option_id'] == $vals['id']?'SELECTED':'').'>&nbsp;&nbsp;'. $vals['qualification_phrase'].'</option>';
+		}
+	}
+		?>
+</select></div>
+<div class="fieldLabel"  id="primary_responsibility_option_id_lbl"><?php tp('Primary responsibility');?></div><div class="fieldInput"><select id="primary_responsibility_option_id" name="primary_responsibility_option_id" onChange='makeUniqueOptions("primary_responsibility_option_id","secondary_responsibility_option_id");'>
+	<option value="">--<?php tp('choose');?>--</option>
+	<?php
+		foreach ( $this->responsibilities as $vals ) {
+			echo '<option value="'.$vals['id'].'" '.($this->person['primary_responsibility_option_id'] == $vals['id']?'SELECTED':'').'>'.$vals['responsibility_phrase'].'</option>';
+	}
+	?>
+</select></div>
+<div class="fieldLabel"  id="secondary_responsibility_option_id_lbl"><?php tp('Secondary responsibility');?></div><div class="fieldInput"><select id="secondary_responsibility_option_id" name="secondary_responsibility_option_id" onChange='makeUniqueOptions("secondary_responsibility_option_id","primary_responsibility_option_id");'>
+	<option value="">--<?php tp('choose');?>--</option>
+	<?php
+		foreach ( $this->responsibilities as $vals ) {
+			echo '<option value="'.$vals['id'].'" '.($this->person['secondary_responsibility_option_id'] == $vals['id']?'SELECTED':'').'>'.$vals['responsibility_phrase'].'</option>';
+	}
+	?>
+</select></div>
+<script type="text/javascript">
+	function makeUniqueOptions(updatedSelect,alternateSelect) {
+		var updatedObj = YAHOO.util.Dom.get(updatedSelect);
+		var alternateObj = YAHOO.util.Dom.get(alternateSelect);
+		if ( updatedObj.selectedIndex == alternateObj.selectedIndex )
+			alternateObj.selectedIndex = 0;
+	}
+</script>
+  	<?php if ( $this->setting['display_people_custom1'] ) { ?>
+	<div id="custom1AutoComplete" >
+	    <div class="fieldLabel" id="custom1Input_lbl"><?php echo (@$this->translation['People Custom 1']); ?> </div><div class="fieldInput"><input id="custom1Input" name="custom1Input" type="text" size="40" maxlength="128" value="<?php echo @$this->person['custom1'];?>" /><div class="clear"></div><div id="custom1Container" class="autoComplete"></div></div>
+	</div>
+	<?php } ?>
+  	<?php if ( $this->setting['display_people_custom2'] ) { ?>
+	<div id="custom2AutoComplete" >
+	    <div class="fieldLabel" id="custom2Input_lbl"><?php echo (@$this->translation['People Custom 2']); ?> </div><div class="fieldInput"><input id="custom2Input" name="custom2Input" type="text" size="40" maxlength="128" value="<?php echo @$this->person['custom2'];?>" /><div class="clear"></div><div id="custom2Container" class="autoComplete"></div></div>
+	</div>
+	<?php } ?>
+<script type="text/javascript">
+/*
+  	<?php if ( $this->setting['display_people_custom1'] ) { ?>
+		makeAutocomplete('custom1Input', 'custom1Container', '<?php echo $this->base_url;?>/person/custom1List/outputType/text/' );
+	<?php } ?>
+  	<?php if ( $this->setting['display_people_custom2'] ) { ?>
+		makeAutocomplete('custom2Input', 'custom2Container', '<?php echo $this->base_url;?>/person/custom2List/outputType/text/' );
+	<?php } ?>
+*/</script>
+<div class="fieldLabel" ><?php tp('Qualification Comments');?></div><div class="fieldInput"><textarea name="comments"><?php echo $this->person['comments'];?></textarea></div>
+
+
+<script type="text/javascript">
+	function toggleDiv(divId,placeholderId) {
+		var divObj = YAHOO.util.Dom.get(divId);
+		var placeObj = YAHOO.util.Dom.get(placeholderId);
+		if ( divObj.style.display == 'none' ) {
+			divObj.style.display = 'block';
+			if ( placeObj != null )
+				placeObj.style.display = 'none';
+		} else {
+			divObj.style.display = 'none';
+			if ( placeObj != null)
+				placeObj.style.display = 'block';
+		}
+	}
+</script>
+
+ <div class="clear"></div>
+  <div class="hrGrey"></div>
+  <div class="clear"></div>
+  <a name="training"></a>
+ <div class="fieldIndentNoMargin"><?php echo t('Trainer').' '.t('Information');?> <a href="javascript:toggleDiv('trainingInfo','placeholderTraining');"><?php tp('Show/Hide');?></a></div>
+<div id="trainingInfo" style="<?php echo ($this->person['trainer_is_active'] ? 'display:block;' : 'display:none;');?>"><br/>
+	<div class="fieldInput"><input type="checkbox" id="is_trainer" name="is_trainer" <?php if (@$this->person['trainer_is_active']) echo 'CHECKED ';?>/><label for="is_trainer"><?php tp('Is person an active trainer?');?></label></div>
+	<div class="fieldLabel" id="trainer_type_option_id_lbl"><span class="required">*</span><?php tp('Trainer type');?></div>
+	<div class="fieldInput"><select id="trainer_type_option_id" name="trainer_type_option_id" >
+		<option value="">--<?php tp('choose');?>--</option>
+		<?php
+			foreach ( $this->trainer_types as $vals ) {
+				echo '<option value="'.$vals['id'].'" '.($this->person['trainer_type_option_id'] == $vals['id']?'SELECTED':'').'>'.$vals['trainer_type_phrase'].'</option>';
+		}
+		?>
+	</select></div>
+	<?php if ($this->setting['display_trainer_affiliations'] ) { ?>
+	<div class="fieldLabel"  id="trainer_affiliation_option_id_lbl"><span class="required">*</span><?php echo t('Trainer').' '.t('Affiliation');?></div>
+	<div class="fieldInput"><select id="trainer_affiliation_option_id" name="trainer_affiliation_option_id" >
+		<option value="">--<?php tp('choose');?>--</option>
+		<?php
+			foreach ( $this->trainer_affiliations as $vals ) {
+				echo '<option value="'.$vals['id'].'" '.($this->person['trainer_affiliation_option_id'] == $vals['id']?'SELECTED':'').'>'.$vals['trainer_affiliation_phrase'].'</option>';
+		}
+		?>
+	</select></div>
+	<?php } ?>
+<div class="clear" ></div>
+	<div class="fieldLabel"  id="trainer_skill_id_lbl"><span class="required">*</span><?php echo('Trainer').' '.t('skills');?></div>
+	<div class="fieldInput">
+	      (<?php tp('check all that apply');?>)<br/><br/>
+	       <span class="checkBoxes">
+	 <?php
+		foreach( $this->trainer_skills as $skill ) {
+			echo '<div class="float50"><input type="checkbox" name="trainer_skill_id[]" id="trainer_skill_'.$skill['id'].'" value="'.$skill['id'].'" '.(@$skill['trainer_id']? 'CHECKED':'').' /><label for="trainer_skill_'.$skill['id'].'">'.$skill['trainer_skill_phrase'].'</label></div>';
+		}
+	?>      </span></div>
+
+<div class="clear" ></div>
+	<div class="fieldLabel" ><?php echo('Trainer').' '.t('languages');?></div>
+		<div class="fieldInput">
+	      (<?php tp('check all that apply');?>)<br/><br/>
+	      <span class="checkBoxes">
+	 	<?php
+			foreach( $this->trainer_languages as $lang ) {
+				echo '<div class="float50"><input type="checkbox" name="trainer_language_id[]" id="trainer_language_'.$lang['id'].'"  value="'.$lang['id'].'" '.(@$lang['trainer_id']? 'CHECKED':'').' /><label for="trainer_language_'.$lang['id'].'">'.$lang['language_phrase'].'</label></div>';
+			}
+		?></span></div>
+</div>
+<?php if ($this->hasTrainerHistory) { ?>
+	</div><div class="clear" ></div>
+
+	<?php if ( $this->mode != 'add' ) { ?>
+	<div id="trainerInfo" class="itechTable"></div>
+	<script type="text/javascript">
+		var trainerColumnDefs = [
+		    {key:"id", label: "ID", sortable:false, resizeable:true},
+		    {key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true},
+		    {key:"course_name", label: "<?php tp('Name');?>", sortable:true, resizeable:true},
+		    {key:"training_location_name", label: "<?php tp('Location');?>", sortable:true, resizeable:true}
+		];
+
+		var action = '<?php echo $this->base_url;?>/training/listByTrainer/id/<?php echo $this->person['id'];?>/outputType/json';
+		makeJSONDataTable("trainerInfo", null, action, trainerColumnDefs);
+	</script>
+	<?php }?>
+<?php }?>
+<?php if ( $this->mode != 'add' ) { ?>
+<div class="clear"></div>
+  <div class="hrGrey"></div>
+  <div class="clear"></div>
+
+<?php if($this->setting['display_training_recommend']) : ?>
+
+  <div class="fieldIndentNoMargin"><?php tp('Recommended Training Topics');?> </div>
+
+  <?php if(!$this->training_recommend) : ?>
+    <?php tp('No recommended classes were found for the above primary qualification'); ?>.
+  <?php else : ?>
+    <?php
+    for($j = 0; $j < 4; $j++) {
+      echo '<select name="training_recommend[]">
+      <option value="">--'.t('choose').'--</option>
+      ';
+      foreach($this->training_recommend as $training) {
+        $isSelected = (isset($this->training_recommend_saved[$j]) && $this->training_recommend_saved[$j]['training_topic_option_id'] == $training['training_topic_option_id']) ? ' selected' : '';
+        echo '<option value="'.$training['training_topic_option_id'].'"'.$isSelected.'>' . $training['training_topic_phrase'];
+      }
+      echo '</select><br><br>';
+    }
+    ?>
+
+   <div class="fieldIndentNoMargin"><?php echo t('Upcoming').' '.t('Trainings');?> </div>
+   <div id="classRecommend"  class="itechTable"></div>
+
+    <script type="text/javascript">
+    var classInfoData = [
+        ];
+
+        var formatTrainingViewUrl = function(elCell, oRecord, oColumn, sData) {
+        if ( oRecord.getData("training_id") == null )
+        	return;
+
+    	if ( (sData == null) || (sData.length == 0) )
+    		sData = '&nbsp;&nbsp;&nbsp;';
+        elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/training/view/id/" + oRecord.getData("training_id") + "' >" + sData + "</a>";
+    }
+
+  var classColumnDefs = [
+      {key:"training_id", label: "ID", sortable:false, resizeable:true,
+  	                formatter: formatTrainingViewUrl},
+      {key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true},
+      {key:"course_name", label: "<?php tp('Name');?>", sortable:true, resizeable:true},
+      {key:"topics", label: "<?php tp('Topic(s)');?>", sortable:true, resizeable:true},
+       {key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true},
+      {key:"training_organizer_phrase", label: "<?php echo('Training').' '.t('Organizer');?>", sortable:true, resizeable:true}
+  ];
+
+  	var action = '<?php echo $this->base_url;?>/training/listByTrainingRecommendPerson/id/<?php echo $this->person['id'];?>/outputType/json';
+  	makeJSONDataTable("classRecommend", null, action, classColumnDefs);
+     </script>
+
+
+
+  <?php endif; ?>
+
+
+
+
+
+  <div class="clear"></div>
+  <div class="hrGrey"></div>
+  <div class="clear"></div>
+
+<?php endif; ?>
+
+
+<div class="fieldIndentNoMargin"><?php tp('Class History');?></div>
+<div id="classInfo"  class="itechTable"></div>
+
+<script type="text/javascript">
+var classInfoData = [
+    ];
+
+    var formatTrainingViewUrl = function(elCell, oRecord, oColumn, sData) {
+    if ( oRecord.getData("training_id") == null )
+    	return;
+
+	if ( (sData == null) || (sData.length == 0) )
+		sData = '&nbsp;&nbsp;&nbsp;';
+    elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/training/view/id/" + oRecord.getData("training_id") + "' >" + sData + "</a>";
+}
+var classColumnDefs = [
+    {key:"training_id", label: "ID", sortable:false, resizeable:true,
+	                formatter: formatTrainingViewUrl},
+    {key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true},
+    {key:"course_name", label: "<?php tp('Name');?>", sortable:true, resizeable:true},
+    {key:"topics", label: "<?php tp('Topics(s)');?>", sortable:true, resizeable:true},
+    {key:"training_location_name", label: "<?php tp('Location');?>", sortable:true, resizeable:true}
+];
+
+	var action = '<?php echo $this->base_url;?>/training/listByParticipant/id/<?php echo $this->person['id'];?>/outputType/json';
+	makeJSONDataTable("classInfo", null, action, classColumnDefs);
+</script>
+
+<?php } ?>
+
+<?php if($this->trainingredirect) : ?>
+  <input type="hidden" name="trainingredirect" value="<?php echo $this->trainingredirect; ?>">
+<?php endif; ?>
+<?php if($this->maketrainer) : ?>
+  <input type="hidden" name="maketrainer" value="<?php echo $this->maketrainer; ?>">
+<?php endif; ?>
+<?php if($this->days) : ?>
+  <input type="hidden" name="days" value="<?php echo $this->days; ?>">
+<?php endif; ?>
+
+<div class="clear"></div>
+	<button type="button" id="submitPerson"><?php tp('Save changes');?></button><br>
+</form>
+<div class="clear"></div>
+</div>
+<script type="text/javascript">
+	<?php if ( $this->mode == 'edit' ) { ?>
+		addAjaxSubmit('submitPerson','personForm','<?php echo $this->base_url;?>/person/edit/id/<?php echo $this->person['id'];?>/outputType/json');
+	<?php } else { ?>
+		addAjaxSubmit('submitPerson','personForm','<?php echo $this->base_url;?>/person/add/outputType/json');
+	<?php } ?>
+	<?php if ( $this->mode == 'edit' ) { ?>
+		addAjaxSubmit('submitPersonTop','personForm','<?php echo $this->base_url;?>/person/edit/id/<?php echo $this->person['id'];?>/outputType/json');
+	<?php } else { ?>
+		//addAjaxSubmit('submitPersonTop','personForm','<?php echo $this->base_url;?>/person/add/outputType/json');
+	<?php } ?>
+	<?php if ( $this->mode == 'edit' && $this->maketrainer) { ?>
+	 displayStatus("<?php echo t('Please add or verify the').' '.t('trainer').' '.t('information below.'); ?>");
+	<?php } ?>
+	
+</script>
+<div id="addFacility" >
+<div class="hd"><?php tp('Add New Facility');?></div>
+<div class="bd">
+<h1><?php tp('Please enter facility information');?></h1>
+<form action="<?php echo $this->base_url;?>/facility/add/outputType/json" method="POST">
+<?php require_once('views/scripts/facility/addfacility-form.phtml');?>
+</form>
+    <div class="clear"></div>
+</div>
+</div>
+    <div class="clear"></div>
+
+<?php if($this->mode == 'add') : ?>
+  </div> <!-- // personAddHide -->
+<?php endif ?>
+
+
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+</div>

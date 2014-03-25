@@ -1,0 +1,14 @@
+<script language="javascript">
+	function gotoPeoplePage(objId) {
+		var reportSelector = YAHOO.util.Dom.get(objId);
+		if ( reportSelector[reportSelector.selectedIndex].value ) {
+			window.location = '<?php echo $this->base_url;?>' + reportSelector[reportSelector.selectedIndex].value + '?<?php echo $_SERVER['QUERY_STRING'];?>';
+		}
+	}
+</script>
+    	<div class="fieldLabel" id="peopleSelect_lbl" style="width: auto;"><?php print str_replace(' ','&nbsp;', t('Select person report'));?></div>
+    	<select id="peopleSelect" name="peopleSelect" onchange="gotoPeoplePage('peopleSelect');">
+    		<option value="">--<?php tp('choose');?>--</option>
+    		<option value="/reports/needsByPersonName" <?php if ( strstr($path[2], 'needsByPersonName') !== FALSE) echo 'SELECTED';?> ><?php tp('Needs by Person\'s Name');?></option>
+     		<option value="/reports/needsByPersonCount" <?php if ( strstr($path[2], 'needsByPersonCount') !== FALSE ) echo 'SELECTED';?> ><?php tp('Needs by Person Count');?></option>
+ 	</select>

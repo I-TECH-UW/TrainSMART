@@ -1,0 +1,6 @@
+RewriteEngine on
+Options FollowSymLinks
+#RewriteBase /itech/web/html/
+RewriteRule !\.(js.php|js|ico|txt|gif|jpg|png|css|zip)$ index.php
+#php_flag magic_quotes_gpc off 
+#php_value memory_limit 20M

@@ -1,0 +1,18 @@
+<?php require_once("views/helpers/DropDown.php"); ?>
+<div class="fieldLabel" id="home_address_1_lbl"><?php tp('Address 1');?></div>
+	  <div class="fieldInput"><input type="text" name="home_address_1" id="home_address_1" value="<?php echo $this->person['home_address_1'];?>" size="40" maxlength="40"/></div>
+	<div class="fieldLabel" id="home_address_2_lbl"><?php tp('Address 2');?></div>
+	  <div class="fieldInput"><input type="text" name="home_address_2" id="home_address_2" value="<?php echo $this->person['home_address_2'];?>" size="40" maxlength="40"/></div>
+
+
+<?php region_filters_dropdown($this, $this->locations, $this->person, false, false, $prefix = 'home'); ?>
+		
+	<div class="fieldLabel" id="home_city_lbl"><?php echo (@$this->translation['City or Town']); ?></div><div id="cityAutoComplete">
+	    <div class="fieldInput"><input name="home_city" id="home_city" type="text" size="40" maxlength="128" value="<?php echo @$this->person['home_city'];?>" /><input style="margin-left:10px;" type="checkbox" id="is_new_home_city" name="is_new_home_city" value="is_new_home_city" /><label class="label"><?php tp('New city'); ?></label><div class="clear"></div>
+	    <div id="cityHomeContainer"  class="autocomplete"></div></div>
+	</div>
+ <?php renderCityAutocomplete('home','cityHomeContainer',$this->base_url.'/facility/cityList/outputType/text/',$this->setting['num_location_tiers']);?>
+	
+
+	<div class="fieldLabel" id="home_postal_code_lbl"><?php tp('Postal code');?></div>
+	  <div class="fieldInput"><input type="text" name="home_postal_code" id="home_postal_code" value="<?php echo $this->person['home_postal_code'];?>" size="40" maxlength="40"/></div>

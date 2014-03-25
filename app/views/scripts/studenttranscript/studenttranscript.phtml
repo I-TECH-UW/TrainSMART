@@ -1,0 +1,139 @@
+<html>
+	<head>
+		<title><?php echo $this->escape($this->title);?></title>
+		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+	<?php
+    require_once('views/helpers/ScriptContainer.php');
+    print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();      ?>
+    
+
+
+
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				$( ".calendarbox" ).datepicker({
+					changeMonth: true,
+					changeYear: true
+				});
+				/* Add a click handler to the rows - this could be used as a callback */
+				$(".tablegrid tbody").click(function(event) {
+					$(oTable.fnSettings().aoData).each(function (){
+						$(this.nTr).removeClass('row_selected');
+					});
+					$(event.target.parentNode).addClass('row_selected');
+				});
+	 
+				/* Add a click handler for the delete row */
+				$('#delete').click( function() {
+					var anSelected = fnGetSelected( oTable );
+					oTable.fnDeleteRow( anSelected[0] );
+				} );
+	 
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+			} );
+
+			/* Get the rows which are currently selected */
+			function fnGetSelected( oTableLocal ){
+				var aReturn = new Array();
+				var aTrs = oTableLocal.fnGetNodes();
+				 
+				for ( var i=0 ; i<aTrs.length ; i++ ){
+					if ( $(aTrs[i]).hasClass('row_selected') ){
+						aReturn.push( aTrs[i] );
+					}
+				}
+				return aReturn;
+			}
+		</script>
+	</head>
+	<body>
+     <div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+            <div id="content">
+			<div id="subcontent">
+				<div id="contentheader">
+					<h2>Student Transcript Report</h2><br>
+				</div>
+				<div class="pad50 clear"></div>
+				<div class="mainformholder" style="height:600px;">
+             <form action="<?php echo $this->escape($this->action); ?>" method="post" name="second" >
+             <input type="hidden" name="studenttrans" value="<?php echo $this->escape($this->id);?>">
+ 					<label>Student Name</label>
+					<input type="text" name="firstname"  value="<?php echo $this->escape($this->firstname);?>">
+
+					<label>Student Id</label>
+					<input type="text" name="studid" value="" >
+
+					<label>Cadre</label>
+					<input type="text" name="cadre" value="<?php echo $this->escape($this->cadre);?>">
+
+					<label>Tutor</label>
+					<input type="text" name="tutor" value="">
+
+					<label>Date of Enrollment</label>
+					<input type="text" name="dateofenroll" value="<?php echo $this->escape($this->dateofenroll);?>" >
+                    
+                    <label>Gender</label>
+					<input type="text" name="gender" value="<?php echo $this->escape($this->gender);?>">
+
+					<label>Date of birth</label>
+					<input type="text" name="dob" value="<?php echo $this->escape($this->dob);?>"><br>
+
+					<label>Cohort</label>
+					<input type="text" name="cohort" value="">
+
+					<label>Facility</label>
+					<input type="text" name="facility" value="">
+
+					<label>Date Of Sepration</label>
+					<input type="text" name="dateofsepration" value="<?php echo $this->escape($this->sepration);?>">
+
+					<label>Address 1</label>
+					<input type="text" name="address1" value="<?php echo $this->escape($this->address1);?>">
+				
+                    </form>
+				</div>
+			</div>
+		</div>
+        
+ <div style="width :900px; margin:-250px 0 0 80px;">
+       <p style="margin:15px 0 15px 0;">Class History</p>   
+<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:900px">
+	<thead>
+		<tr>
+			<th>Class/Practicum/Exams</th>
+			<th>Grade</th>
+			<th>Hours required</th>
+			<th>Hours Completed</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="GradeA">
+			<td>123</td>
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class="">Institution</td>
+		</tr>
+		<tr class="GradeA">
+			<td>123</td>
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class="">Institution</td>
+		</tr>
+	
+	
+	</tbody>
+</table>
+</div>          
+        				
+
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+        </div>
+	</body>
+</html>

@@ -1,0 +1,14 @@
+<select id="listp1" style="display:none" multiple="multiple">
+<option value="1">Provide patients with basic information on HIV and AIDS?</option>
+<option value="2">Counsel all patients on drug adherence?</option>
+<option value="3">Provide all patients with information relating to drug interaction?</option>
+<option value="4">Dispense basic ARVs?</option>
+<option value="5">Dispense all medications accurately?</option>
+<option value="6">Manage the supply of ARVs?</option>
+<option value="7">Order drugs as needed?</option>
+</select>
+<select id="listp2" style="display:none" multiple="multiple">
+<option value="21">Do you require additional training to perform your tasks?</option>
+<option value="22">Would you like to become a mentor?</option>
+<option value="23">Do you feel prepared to become a mentor?</option>
+</select>

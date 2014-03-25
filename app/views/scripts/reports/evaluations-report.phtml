@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title><?php echo $this->translation['Application Name'];?> | <?php tp('Evaluation Reports');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+</head>
+<body class="yui-skin-sam" >
+<div id="pageHolder">
+<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+<div id="content">
+
+<h1><?php tp('Evaluation Reports');?></h1>
+
+<form action="" method="get">
+<fieldset id="criteria"><legend><?php tp('Select Criteria');?></legend>
+
+<div id="dividers" style="overflow:hidden;">
+<div class="fieldLabel"></div>
+<div class="fieldInput criteria-header"><div  class="criteria-label" ><?php tp('show');?></div><div  class="criteria-label" style="padding-left: 20px;"><?php tp('filter');?></div></div>
+
+<div class="fieldLabel" id="evaluation_id_lbl"><?php echo tp('Evaluation'); ?></div>
+<div class="leftBorderPad"></div>
+<div class="leftBorder"><div class="fieldInput">
+<select name="evaluation_id">
+	<option value="">&mdash;<?php tp('select');?>&mdash;</option>
+	<?php
+	foreach ( $this->evaluations as $vals ) {
+		echo '<option value="'.$vals['id'].'" '.((@$this->criteria['evaluation_id']) == $vals['id']? 'SELECTED="selected"':'').' >'.($vals['title']).'</option>';
+	}
+	?>
+</select>
+</div></div>
+
+
+<?php
+
+
+	require_once('views/helpers/DropDown.php');
+	echo DropDown::render_report_filter('training_location',  'showLocation',   t('Training Location'), $this->tlocations, 'training_location_name', @$this->criteria['training_location_id'], $this->criteria['showLocation']);
+	echo DropDown::render_report_filter('trainer',            'showTrainer',    t('Trainer'), $this->trainers, 'fullname', @$this->criteria['trainer_id'], $this->criteria['showTrainer']);
+	echo DropDown::render_report_filter('training_category',  'showCategory',   @$this->translation['Training Category'], $this->category, 'training_category_phrase', @$this->criteria['training_category_id'], $this->criteria['showCategory']);
+	echo DropDown::render_report_filter('training_title',     'showTitle',      @$this->translation['Training Name'],   $this->courses, 'training_title_phrase', @$this->criteria['training_title_id'], $this->criteria['showTitle']);
+	echo DropDown::render_report_filter('training_organizer', 'showOrganizer',  @$this->translation['Training Organizer'], $this->organizers, 'training_organizer_phrase', @$this->criteria['training_organizer_id'], $this->criteria['showOrganizer']);
+	echo DropDown::render_report_filter('training_mechanism', 'showMechanism',  t('Mechanism ID'), $this->mechanisms, 'mechanism_id', @$this->criteria['training_mechanism_id'], $this->criteria['showMechanism']);
+	echo DropDown::render_report_filter('training_topic',     'showTopic',      @$this->translation['Training Topic'],  $this->topics, 'training_topic_phrase', @$this->criteria['training_topic_id'], $this->criteria['showTopic']);
+	echo DropDown::render_report_filter('training_level',     'showLevel',      @$this->translation['Training Level'],  $this->levels, 'training_level_phrase', @$this->criteria['training_level_id'], $this->criteria['showLevel']);
+	echo DropDown::render_report_filter('training_pepfar',    'showPepfar',     @$this->translation['PEPFAR Category'], $this->pepfars, 'pepfar_category_phrase', @$this->criteria['training_pepfar_id'], $this->criteria['showPepfar']);
+	echo DropDown::render_report_filter('training_method',    'showMethod',     @$this->translation['Training Method'], $this->methods, 'training_method_phrase', @$this->criteria['training_method_id'], $this->criteria['showMethod']);
+	echo DropDown::render_report_filter('training_funding',   'showFunding',    t('Funding'), $this->funding, 'funding_phrase', @$this->criteria['training_funding_id'], $this->criteria['showFunding']);
+	echo "<div class=\"fieldLabel\" id=\"showTOT_lbl\">".@$this->translation['Training of Trainers']."</div>\n<div class=\"fieldInput\"><div class=\"leftBorderPad\">\n<input type=\"checkbox\" name=\"showTOT\"" . ($this->criteria['showTOT'] ? 'checked="checked"' : '') . "/></div></div>\n";
+
+	if ( $this->setting['multi_opt_refresher_course'] )
+		echo DropDown::render_report_filter('training_refresher','showRefresher',@$this->translation['Refresher Course'], $this->refresher, 'refresher_phrase_option', @$this->criteria['training_refresher_id'], $this->criteria['showRefresher']);
+	else
+		echo "<div class=\"fieldLabel\" id=\"showRefresher_lbl\">".@$this->translation['Refresher Course']."</div>\n<div class=\"fieldInput\"><div class=\"leftBorderPad\">\n<input type=\"checkbox\" name=\"showRefresher\"". ($this->criteria['showRefresher'] ? 'checked="checked"' : '') . "/></div></div>\n";
+	echo DropDown::render_report_filter('training_got',      'showGotCurric',  @$this->translation['GOT Curriculum'], $this->gotcurric, 'training_got_curriculum_phrase', @$this->criteria['training_got_id'], $this->criteria['showRefresher']);
+	//show Got Comment checkbox
+	echo "<div class=\"fieldLabel\" id=\"showGotComment_lbl\">".t('Got Comment')."</div>\n<div class=\"fieldInput\"><div class=\"leftBorderPad\">\n<input type=\"checkbox\" name=\"showGotComment\"" . ($this->criteria['showGotComment'] ? 'checked="checked"' : '') . "/></div></div>\n";
+	echo DropDown::render_report_filter('training_lang1',    'showLang1',      @$this->translation['Primary Language'],  $this->language,'language_phrase', @$this->criteria['training_lang1_id'], $this->criteria['showLang1']);
+	echo DropDown::render_report_filter('training_lang2', '   showLang2',      @$this->translation['Secondary Language'],$this->language,'language_phrase', @$this->criteria['training_lang2_id'], $this->criteria['showLang2']);
+	echo DropDown::render_report_filter('training_custom1',  'showCustom1',    @$this->translation['Training Custom 1'], $this->custom1, 'custom1_phrase',  @$this->criteria['training_custom1_id'], $this->criteria['showCustom1']);
+	echo DropDown::render_report_filter('training_custom2',  'showCustom2',    @$this->translation['Training Custom 2'], $this->custom2, 'custom2_phrase',  @$this->criteria['training_custom2_id'], $this->criteria['showCustom2']);
+	echo DropDown::render_report_filter('training_custom3',  'showCustom3',    @$this->translation['Training Custom 3'], $this->custom3, 'custom_3', @$this->criteria['training_custom3_id'], $this->criteria['showCustom3']);
+	echo DropDown::render_report_filter('training_custom4',  'showCustom4',    @$this->translation['Training Custom 4'], $this->custom4, 'custom_4', @$this->criteria['training_custom4_id'], $this->criteria['showCustom4']);
+
+	require_once('views/helpers/Location.php');
+
+	region_filters_dropdown($this, $this->locations, $this->criteria, false, true);
+
+?>
+</div>
+
+<div class="clear"></div><br>
+<div class="fieldLabel autoHeight"><?php tp('Start date');?></div>
+<div class="fieldInput autoHeight"><input type="text" name="startdate" class="datepicker" value="<?php echo $this->criteria['startdate'] ?>"><a class="datepickerCal" href="#"><img src="<?php echo $this->base_url; ?>/js/yui/assets/calbtn.gif"></a></div>
+
+<div class="fieldLabel autoHeight"><?php tp('End date');?></div>
+<div class="fieldInput autoHeight"><input type="text" name="enddate" class="datepicker" value="<?php echo $this->criteria['enddate'] ?>"><a class="datepickerCal" href="#"><img src="<?php echo $this->base_url; ?>/js/yui/assets/calbtn.gif"></a></div>
+
+<div class="fieldLabel autoHeight">&nbsp;</div>
+<div class="fieldInput autoHeight"><input type="checkbox" id="has_response" name="has_response" <?php if ($this->criteria['has_response']) echo 'checked'; ?>"><label for="has_response" class="label"><?php tp('Show Only Evaluations with Response Data'); ?></label></div>
+
+<div class="clear"></div>
+
+<input type="hidden" name="limit" value="1" />
+<input type="submit" class="submitNoArrow" name="go" value="<?php tp("Generate Report");?>" />
+
+
+</fieldset>
+</form>
+
+<script type="text/javascript">
+$(document).ready(function () {
+	$('.datepicker').datepicker({
+		changeMonth: true,
+		changeYear: true,
+		dateFormat: 'dd/mm/yy'
+	});
+	$('a.datepickerCal').click(openNearestDatePicker);
+
+	//todo this is a bugfix, render_report_filter is assigning bogus ids to a text val field, custom3/4 shouldnt work like this
+	$('#training_custom3_id option,#training_custom4_id option').each( function(){
+		if($(this).text() == '--<?php tp('All'); ?>--')
+		return;
+		$(this).attr('value', $(this).text());
+	});
+});
+</script>
+
+<div class="clear"></div>
+
+<?php if ( $this->criteria['go'] ) { ?>
+<div class="hrGrey"></div>
+<div class="fieldIndentNoMargin"><?php tp('Trainings');?> <span class="total"><?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span><?php echo $this->printAndExport();?></div>
+
+<div id="trainings" class="itechTable"></div>
+
+<script type="text/javascript">
+	var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
+		elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/training/view/id/" + oRecord.getData("id") + "'>" + sData + "</a>";
+	};
+
+	var trainingData = [
+	<?php
+
+	$isFirstRow = true;
+	$cnt = 0;
+	foreach($this->results as $row) {
+		if ( $_REQUEST['limit'] == 0  or $cnt < 100 ) {
+			if (!$isFirstRow )
+				echo ',';
+			$isFirstRow = false;
+
+			echo '[';
+			if (array_key_exists('cnt', $row) !== false )
+			echo ( $row['cnt'] ? $row['cnt'] : 0 ) ;
+			if (isset($row['id'] ) )
+			echo ((array_key_exists('cnt', $row) !== false )? ','.$row['id']: $row['id']);
+			if ( isset($row['id']) )
+			echo ',"'.@$row['training_start_date'].'"';
+			if ( $this->criteria['showProvince'] )
+			echo ',"'.$row['province_name'].'"';
+			if ( $this->criteria['showDistrict'] )
+			echo ',"'.$row['district_name'].'"';
+			if ( $this->criteria['showRegionC'] )
+			echo ',"'.$row['region_c_name'].'"';
+			if ( $this->criteria['showCategory'])
+			echo ',"'.$row['training_category_phrase'].'"';
+			if ( $this->criteria['showTitle'])
+			echo ',"'.$row['training_title'].'"';
+			if ( $this->criteria['showLocation'] )
+			echo ',"'.$row['training_location_name'].'"';
+			if ( $this->criteria['showOrganizer'] )
+			echo ',"'.$row['training_organizer_phrase'].'"';
+			if ( $this->criteria['showMechanism'] )
+			echo ',"'.$row['mechanism_id'].'"';
+			if ( $this->criteria['showLevel'] )
+			echo ',"'.$row['training_level_phrase'].'"';
+			if ( $this->criteria['showTopic'] )
+			echo ',"'.$row['training_topic_phrase'].'"';
+			if ( $this->criteria['showPepfar'] )
+			echo ',"'.$row['pepfar_category_phrase'].'"';
+			if ( $this->criteria['showMethod'] )
+			echo ',"'.$row['training_method_phrase'].'"';
+			if ( $this->criteria['showFunding'] )
+			echo ',"'.$row['funding_phrase'].'"';
+			if ( $this->criteria['showTOT'] )
+			echo ',"'.$row['is_tot'].'"';
+			if ( $this->criteria['showRefresher'] )
+			echo ',"'.$row['is_refresher'].'"';
+			if ( $this->criteria['showGotComment'] )
+			echo ',"'.$row['got_comments'].'"';
+			if ( $this->criteria['showLang1'] )
+			echo ',"'.$row['primary_language_phrase'].'"';
+			if ( $this->criteria['showLang2'] )
+			echo ',"'.$row['secondary_language_phrase'].'"';
+			if ( $this->criteria['showGotCurric'] )
+			echo ',"'.$row['training_got_curriculum_phrase'].'"';
+			if ( $this->criteria['showCustom1'] )
+			echo ',"'.$row['custom1_phrase'].'"';
+			if ( $this->criteria['showCustom2'] )
+			echo ',"'.$row['custom2_phrase'].'"';
+			if ( $this->criteria['showCustom3'] )
+			echo ',"'.$row['custom_3'].'"';
+			if ( $this->criteria['showCustom4'] )
+			echo ',"'.$row['custom_4'].'"';
+			if (array_key_exists('pcnt', $row) !== false )
+			echo ','.( ($row['has_known_participants']? ($row['pcnt'] ? $row['pcnt'] :0):'"-"') );
+			// evals
+			echo ',"'.$row['title'].'"';
+			echo ',"'.$row['first_name'].' '.$row['last_name'].'"';
+			echo ',"'.(++$row['weight']).'"';
+			echo ',"'.$row['question_text'].'"';
+			echo ',"'.$row['question_type'].'"';
+			echo ',"'.$row['value_text'].'"';
+			echo ',"'.$row['value_int'].'"';
+			echo ']';
+			$cnt++;
+		}
+	} ?>
+	];
+
+		var trainingColumnDefs = [
+		<?php
+		if (isset($this->results[0]['cnt'])) {
+			echo '{key:"cnt", label: "'.t('Count').'", sortable:true, resizeable:true}';
+		}
+		if (isset($this->results[0]['id'])) {
+			if (isset($this->results[0]['cnt']))
+				echo ',';
+			echo '{key:"id", label: "ID", sortable:true, resizeable:true, formatter: formatViewUrl},';
+			echo '{key:"training_start_date", label: "'.t('Start Date').'", sortable:true, resizeable:true}';
+		}
+		if ( $this->criteria['showProvince'] )
+		echo ',{key:"province_name", label: "'.(@$this->translation['Region A (Province)']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showDistrict'] )
+		echo ',{key:"district_name", label: "'.(@$this->translation['Region B (Health District)']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showRegionC'] )
+		echo ',{key:"region_c_name", label: "'.(@$this->translation['Region C (Local Region)']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showRegionD'] )
+		echo ',{key:"region_d_name", label: "'.(@$this->translation['Region D (Local Region)']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showRegionE'] )
+		echo ',{key:"region_e_name", label: "'.(@$this->translation['Region E (Local Region)']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showRegionF'] )
+		echo ',{key:"region_f_name", label: "'.(@$this->translation['Region F (Local Region)']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showRegionG'] )
+		echo ',{key:"region_g_name", label: "'.(@$this->translation['Region G (Local Region)']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showRegionH'] )
+		echo ',{key:"region_h_name", label: "'.(@$this->translation['Region H (Local Region)']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showRegionI'] )
+		echo ',{key:"region_i_name", label: "'.(@$this->translation['Region I (Local Region)']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showCategory'] )
+		echo ',{key:"training_category_phrase", label: "'.(@$this->translation['Training Category']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showTitle'] )
+		echo ',{key:"training_title", label: "'.(@$this->translation['Training Name']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showLocation'] )
+		echo ',{key:"location_name", label: "'.t('Location').'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showOrganizer'] )
+		echo ',{key:"training_organizer_phrase", label: "'.(@$this->translation['Training Organizer']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showMechanism'] )
+		echo ',{key:"mechanism_id", label: "'.t('Mechanism ID').'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showLevel'] )
+		echo ',{key:"training_level_phrase", label: "'.(@$this->translation['Training Level']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showTopic'] )
+		echo ',{key:"training_topic_phrase", label: "'.@$this->translation['Training Topic'].'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showPepfar'] )
+		echo ',{key:"pepfar_category_phrase", label: "'.@$this->translation['PEPFAR Category'].'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showMethod'] )
+		echo ',{key:"training_method_phrase", label: "'.@$this->translation['Training Method'].'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showFunding'] )
+		echo ',{key:"funding_phrase", label: "'.t('Funding').'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showTOT'] )
+		echo ',{key:"is_tot", label: "'.t('TOT').'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showRefresher'] )
+		echo ',{key:"is_refresher", label: "'.t('Refresher').'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showGotComment'] )
+		echo ',{key:"got_comments", label: "'.@$this->translation['GOT Comment'].'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showLang1'] )
+		echo ',{key:"primary_language_phrase", label: "'.@$this->translation['Primary Language'].'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showLang2'] )
+		echo ',{key:"secondary_language_phrase", label: "'.@$this->translation['Secondary Language'].'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showGotCurric'] )
+		echo ',{key:"training_got_curriculum_phrase", label: "'.@$this->translation['GOT Curriculum'].'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showCustom1'] )
+		echo ',{key:"custom1_phrase", label: "'.(@$this->translation['Training Custom 1']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showCustom2'] )
+		echo ',{key:"custom2_phrase", label: "'.(@$this->translation['Training Custom 2']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showCustom3'] )
+		echo ',{key:"custom3_phrase", label: "'.(@$this->translation['Training Custom 3']).'", sortable:true, resizeable:true}';
+		if ( $this->criteria['showCustom4'] )
+		echo ',{key:"custom4_phrase", label: "'.(@$this->translation['Training Custom 4']).'", sortable:true, resizeable:true}';
+		if (@array_key_exists('pcnt', $this->results[0]) !== false)
+		echo ',{key:"pcnt", label: "'.t('Participants').'", sortable:true, resizeable:true}';
+		// evals
+		echo ',{key:"title", label: "'.t('Evaluation').'", sortable:true, resizeable:true}';
+		echo ',{key:"trainer_person_id", label: "'.t('Trainer').' '.t('Name').'", sortable:true, resizeable:true}';
+		echo ',{key:"weight", label: "'.t('Question No.').'", sortable:true, resizeable:true}';
+		echo ',{key:"question_text", label: "'.t('Question').' '.t('Text').'", sortable:true, resizeable:true}';
+		echo ',{key:"question_type", label: "'.t('Question Type').'", sortable:true, resizeable:true}';
+		echo ',{key:"value_text", label: "'.t('Value Text').'", sortable:true, resizeable:true}';
+		echo ',{key:"value_int", label: "'.t('Value').' '.t('Likert').'", sortable:true, resizeable:true}';
+		?>
+		];
+
+		<?php
+		if  ( $this->results ) echo 'makeDataTable("trainings", null, trainingData, trainingColumnDefs);';
+
+		?>
+	</script>
+	<?php if ($cnt < count($this->results)) { ?>
+	<div  class="fieldIndentNoMargin">[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a></div>
+	<?php } ?>
+	<?php } ?>
+</div>
+
+
+</div>
+
+<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div></div>
+
+</body>
+</html>

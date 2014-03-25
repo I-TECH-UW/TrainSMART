@@ -1,0 +1,232 @@
+<?php 
+// template for page that contains an EditTable
+// need $pageTitle and $nextUri variables from these includes
+ob_start();
+require_once('views/scripts/header.phtml');
+$header = ob_get_contents();
+ob_end_clean(); 
+
+ob_start();
+require_once('views/scripts/nav-admin.phtml');
+$nav = ob_get_contents();
+ob_end_clean(); 
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+	<script type='text/javascript'>
+		function submitAdminForm () { return true;} // Added because was missing. Referenced by lots of onlick properties.
+	</script>
+
+</head>
+<body  class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php echo $header; ?></div>
+  <div id="content" class="adminDiv">
+    
+    <form method="post" name="adminForm" id="adminForm" action="" enctype="multipart/form-data">
+    
+    <div id="navAdmin"><?php echo $nav;?></div>
+    
+    <div id="contentAdmin">
+    <h1><?php echo $this->pageTitle; ?></h1>
+    <br/>
+    
+    <?php if(isset($formPrefix)) echo $formPrefix . '<br/><br/>'; ?> 
+    <?php 
+      if(isset($this->checkbox) && is_array($this->checkbox)) { // render checkbox
+        echo '<input type="checkbox" value="1" name="'.$this->checkbox['name'].'" id="'.$this->checkbox['name'].'" '.($this->checkbox['value']?' checked':'').'>';
+        echo '<label for="'.$this->checkbox['name'].'">'.$this->checkbox['label'].'</label>';
+        echo '<br/><br/>';        
+      }
+     ?>
+     
+    <?php echo $this->extraHtml; ?>    
+    <?php echo $this->editTable; ?>
+    
+    <div id="personUnapproved" class="personUnapproved">
+<script type="text/javascript">
+
+var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
+	elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/training/view/id/" + oRecord.getData("id") + "'>" + sData + "</a>";
+};
+
+var ppl1Data = [
+<?php
+// people data for edit table
+
+$isFirstRow = true;
+$cnt = 0;
+$linksA = '<a class=\"dupeCheckLink\" onclick=\"ppl_new_ppl_showDupeMenu(this);return false;\" href=\"#\">look for<br>duplicates</a>';
+
+foreach($this->primary_results as $row) {
+	if ( $cnt < 100 )
+	{
+		foreach ($row as $i => $v)
+			$row[$i] = htmlspecialchars($v, ENT_QUOTES); // ESCAPE
+
+		$links = '';
+		if ( isset($row['id']) )
+			$links = '<a href=\"'.$this->base_url.'/person/approve/id/'.$row['id'].'\">approve</a>';
+		$name = implode(' ', array($row['first_name'] , $row['middle_name'] , $row['last_name']));
+		if ( $this->setting['display_middle_name_last'] )
+			$name = implode(' ', array($row['first_name'] , $row['last_name']), $row['middle_name']);
+
+		if (!$isFirstRow ) echo ',';
+		$isFirstRow = false;
+		echo '[';
+			echo '"' .$linksA            .'",';
+			echo '"' .$name              .'"';
+			echo ',"'.$row['national_id'].'"';
+			echo ',"'.$row['file_number'].'"';
+			echo ',"'.$row['birthdate']  .'"';
+			echo ',"'.$row['gender']     .'"';
+			echo ',"'.$row['facility_name'].', '.$row['location_name'].'"';
+			#echo ',"'.$row['phone_work']  .'"';
+			#echo ',"'.$row['phone_mobile'].'"';
+			#echo ',"'.$row['fax']         .'"';
+			#echo ',"'.$row['phone_home']  .'"';
+			#echo ',"'.$row['email']       .'"';
+			#echo ',"'.$row['email_secondary'].'"';
+			echo ',"'.$row['qualification_phrase'].'"';
+			#echo ',"'.$row['home_address_1']  .'"';
+			#echo ',"'.$row['home_location_id'].'"';
+			#echo ',"'.$row['home_postal_code'].'"';
+			#echo ',"'.$row['active']          .'"';
+			echo ',"'.$row['created_by']         .'"';
+			echo ',"'.$links.'"';
+		echo ']';
+		$cnt++;
+	}
+}?>
+];
+
+	var ppl1ColumnDefs = [
+	 {key:"linksa",label: "<?php tp('Search'); ?>",sortable:true, resizable:true}
+	,{key:"name",label: "<?php tp('Name'); ?>",sortable:true, resizable:true}
+	,{key:"national_id",label: "<?php tp('National id'); ?>",sortable:true, resizable:true}
+	,{key:"file_number",label: "<?php tp('File number'); ?>",sortable:true, resizable:true}
+	,{key:"birthdate",label: "<?php tp('Birthdate'); ?>",sortable:true, resizable:true}
+	,{key:"gender",label: "<?php tp('Gender'); ?>",sortable:true, resizable:true}
+	,{key:"facility_id",label: "<?php tp('Facility'); ?>",sortable:true, resizable:true}
+	/*//,{key:"phone_work",label: "<?php tp('Phone work'); ?>",sortable:true, resizable:true}
+	//,{key:"phone_mobile",label: "<?php tp('Phone mobile'); ?>",sortable:true, resizable:true}
+	//,{key:"fax",label: "<?php tp('Fax'); ?>",sortable:true, resizable:true}
+	//,{key:"phone_home",label: "<?php tp('Phone home'); ?>",sortable:true, resizable:true}
+	//,{key:"email",label: "<?php tp('Email'); ?>",sortable:true, resizable:true}
+	//,{key:"email_secondary",label: "<?php tp('Email secondary'); ?>",sortable:true, resizable:true}
+	*/
+	,{key:"primary_qualification_option_id",label: "<?php tp('Primary Qualification'); ?>",sortable:true, resizable:true}
+	/*//,{key:"home_address_1",label: "<?php tp('Home Address 1'); ?>",sortable:true, resizable:true}
+	//,{key:"home_location_id",label: "<?php tp('Home location id'); ?>",sortable:true, resizable:true}
+	//,{key:"home_postal_code",label: "<?php tp('Home postal code'); ?>",sortable:true, resizable:true}
+	//,{key:"active",label: "<?php tp('Active'); ?>",sortable:true, resizable:true}
+	*/
+	,{key:"created_by",label: "<?php tp('Created by'); ?>",sortable:true, resizable:true}
+	,{key:"actions",label: "<?php tp('Actions'); ?>",sortable:false, resizable:true}
+	];
+
+	makeDataTable('personUnapproved', '<?php tp('Unapproved People'); ?>', ppl1Data, ppl1ColumnDefs);
+	// done
+
+function ppl_new_ppl_showDupeMenu (obj)
+{
+	obj = $(obj);
+	if (obj.siblings('.dupeMenu').length > 0) {
+		obj.siblings('.dupeMenu').remove();
+		return false;
+	}
+	obj.after($('.dupeMenu').clone().menu());
+	return false;
+}
+
+
+function ppl_new_ppl_dupeSearch(obj, val)
+{
+	obj = $(obj);
+	$row = obj.parents('tr').first();
+	switch (val) {
+		case 1:
+			$names = $row.find('.yui-dt-col-1').html().split(' ');
+			$('#last_name').val('');
+			$('#first_name').val($names[0]);
+		break;
+		case 2:
+			$names = $row.find('.yui-dt-col-1').html().split(' ');
+			$('#first_name').val('');
+			$('#last_name').val($names[$names.length-1]);
+		break;
+		case 3:
+			$names = $row.find('.yui-dt-col-1').html().split(' ');
+			$('#first_name').val($names[0]);
+			$('#last_name').val($names[$names.length-1]);
+		break;
+		case 4:
+			$facility = $row.find('.yui-dt-col-6').html().split(', ')[0];
+			$('#facilityInput option').each(function (i) {
+				if( $(this).html().indexOf($facility) == 0 ) {
+					$('#facilityInput').val($(this).val());
+					return false; 
+				}
+			});
+		break;
+		case 5:
+			$qual = $row.find('.yui-dt-col-7').html();
+			$('#qualification_id option').each(function (i) {
+				if( $(this).html().indexOf($qual) > -1 ) {
+					$('#qualification_id').val($(this).val());
+					return false; 
+				}
+			});
+		break;
+	}
+
+	$row.find('.dupeMenu').remove();
+	return false;
+}
+
+</script>
+</div>
+    <br/>    
+    
+    <input type="hidden" name="redirect" id="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>" />
+    <input type="submit" value="<?php tp('Save & Continue'); ?>" class="submitArrow" />
+    </form>
+
+<div id="personSearchWrapper">
+	<?php require_once 'views/scripts/person/_search.phtml'; ?>
+</div>
+
+<div class="clear"></div>
+
+</div>
+
+<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+<div class="clear"></div>
+
+</div>
+
+<div style="display:none;">
+	<ul class="dupeMenu">
+	<li><label onclick="ppl_new_ppl_dupeSearch(this, 1);"><?php tp('First Name'); ?></label></li>
+	<li><label onclick="ppl_new_ppl_dupeSearch(this, 2);"><?php tp('Last Name'); ?></label></li>
+	<li><label onclick="ppl_new_ppl_dupeSearch(this, 3);"><?php tp('Both Names'); ?></label></li>
+	<li><label onclick="ppl_new_ppl_dupeSearch(this, 4);"><?php tp('Facility'); ?></label></li>
+	<li><label onclick="ppl_new_ppl_dupeSearch(this, 5);"><?php tp('Qualification'); ?></label></li>
+	</ul>
+</div>
+
+</body>
+</html>
+
+
+

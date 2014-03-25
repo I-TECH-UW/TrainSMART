@@ -1,0 +1,302 @@
+  <html>
+	<head>
+		<title><?php echo $this->escape($this->title);?></title>
+		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+	<?php
+	require_once('views/helpers/Location.php');
+	require_once('views/helpers/ScriptContainer.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();	  ?>
+	
+
+
+
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				$( ".calendarbox" ).datepicker({
+					changeMonth: true,
+					changeYear: true
+				});
+				/* Add a click handler to the rows - this could be used as a callback */
+				$(".tablegrid tbody").click(function(event) {
+					$(oTable.fnSettings().aoData).each(function (){
+						$(this.nTr).removeClass('row_selected');
+					});
+					$(event.target.parentNode).addClass('row_selected');
+				});
+	 
+				/* Add a click handler for the delete row */
+				$('#delete').click( function() {
+					var anSelected = fnGetSelected( oTable );
+					oTable.fnDeleteRow( anSelected[0] );
+				} );
+	 
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+
+				$("#institutionadd").validate();
+
+				// INITIATE DORMS AND HOUSING
+				setselector('dorm',0);
+				setselector('housing',0);
+
+			} );
+
+			/* Get the rows which are currently selected */
+			function fnGetSelected( oTableLocal ){
+				var aReturn = new Array();
+				var aTrs = oTableLocal.fnGetNodes();
+				 
+				for ( var i=0 ; i<aTrs.length ; i++ ){
+					if ( $(aTrs[i]).hasClass('row_selected') ){
+						aReturn.push( aTrs[i] );
+					}
+				}
+				return aReturn;
+			}
+
+			function setselector(tp,sel){
+				switch (tp){
+					case "dorm":
+						if ((sel * 1) != 0){
+							$("#dormcount").removeAttr("readonly");
+							$("#studbeds").removeAttr("readonly");
+						} else {
+							$("#dormcount").val("0");
+							$("#dormcount").attr("readonly",true);
+							$("#studbeds").val("0");
+							$("#studbeds").attr("readonly",true);
+						}
+					break;
+					case "housing":
+						if ((sel * 1) != 0){
+							$("#tutorhouses").removeAttr("readonly");
+						} else {
+							$("#tutorhouses").val("0");
+							$("#tutorhouses").attr("readonly",true);
+						}
+					break;
+				}
+			}
+ 
+ 		</script>
+	</head>
+	<body>
+	 <div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+			<div id="content">
+			<div id="subcontent">
+				<div id="contentheader">
+					<h2><?php echo t('Add Institution'); ?></h2>
+					<br>
+			
+				</div>
+				<div class="pad50 clear"></div>
+				<form id="institutionadd" method="post">
+				<div class="mainformholder" >
+					
+			   <p style=""><?php echo t('Institution details'); ?></p><br>
+			   		
+					<label><?php echo t('Institution Name'); ?></label>
+					<input type="text" name="instutitonname" value="<?php echo $this->escape($this->name);?>" class="required">
+					
+					<label><?php echo t('Address 1'); ?></label>
+					<input type="text" name="address1" value="<?php echo $this->escape($this->address1);?>">
+					
+					<label><?php echo t('Address 2'); ?></label>
+					<input type="text" name="address2" value="<?php echo $this->escape($this->address2);?>">
+	
+					<label><?php echo t('City'); ?></label>
+					<input type="text" name="city" value="<?php echo $this->escape($this->city);?>">
+	
+	
+					<label id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></label>
+					<?php renderFilter($this->locations, 1, 'province_id', $this->escape($this->selgeo1), 'district_id');?>
+					<?php if ( $this->setting['display_region_b'] ) { ?>
+					<label id="district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?></label>
+					<?php renderFilter($this->locations, 2, 'district_id', $this->escape($this->selgeo2), ($this->setting['display_region_c']?'region_c_id':false));?>
+					<?php } ?>
+					<?php if ( $this->setting['display_region_c'] ) { ?>
+					<label id="region_c_id_lbl"><?php echo (@$this->translation['Region C (Local Region)']); ?></label>
+					<?php renderFilter($this->locations, 3, 'region_c_id', $this->escape($this->selgeo3), false);?>
+					<?php } ?>
+	
+					<label><?php echo t('Postal Code'); ?></label>
+					<input type="text" name="postalcode" value="<?php echo $this->escape($this->zip);?>">
+					
+					<label><?php echo t('Phone'); ?></label>
+					<input type="text" name="phone" value="<?php echo $this->escape($this->phone);?>">
+					
+					<label><?php echo t('Fax'); ?></label>
+					<input type="text" name="fax" value="<?php echo $this->escape($this->fax);?>">
+					
+					
+<?php
+/*
+					<label>Institution Type</label>
+					<input type="text" name="instype" value="<?php echo $this->escape($this->type);?>">
+*/
+?>
+					<label><?php echo t('Institution Type'); ?></label>
+					<select name="instype" id="instype">
+						<option value="0"><?php echo t('Select...'); ?></option>
+<?php
+	foreach ($this->institutiontypes as $instype){
+?>
+						<option value="<?php echo $instype['id']; ?>"> <?php echo $instype['typename']; ?></option>
+<?php
+	}
+?>
+					</select>
+					
+					<label><?php echo t('Institution Sponsor'); ?></label>
+
+					<select name="sponser" id="sponser" class="comboeditable">
+						<option value="0"><?php echo t('Select...'); ?></option>
+<?php
+	foreach ($this->lookupsponsors as $sponsor){
+?>
+						<option value="<?php echo $sponsor['id']; ?>"> <?php echo $sponsor['sponsorname']; ?></option>
+<?php
+	}
+?>
+					</select>
+					
+<?php
+/*
+					<label>Cadres Trained</label>
+					<select name="cadre">
+						<option value="">--Choose--</option>  
+						<?php foreach ($this->getcadre as $cadre){ ?>
+							<option value="< ? php echo $cadre['id']; ? >" ><?php echo $cadre['cadrename'];?></option>
+						<?php } ?>
+					</select>
+*/
+?>
+
+					<label><?php echo t('Cadres Trained'); ?></label>
+					<div style="overflow : auto; float : left; width : 250px; height : 100px; border : 1px solid #CCCCCC; border-radius : 3px; margin-left : 25px; -moz-border-radius : 3px; -webkit-border-radius : 3px; border : 1px solid #85B1DE; background-image : url(/html/images/trainsmart-gradient.gif); background-repeat : repeat-x; margin-bottom : 10px;">
+<?php
+	foreach ($this->getcadre as $cadre){
+		if (trim($cadre['cadrename']) != ""){
+?>
+						<div style="height : 20px; overflow : hidden;">
+							<input type="checkbox" style="margin : 3px;" name="cadre[]" id="cadre[]" value="<?php echo $cadre['id']; ?>"> <?php echo $cadre['cadrename']; ?><br>
+						</div>
+<?php
+		}
+	}
+?>
+					</div>
+	
+					<label><?php echo t('Qualification Attained'); ?></label>
+					<div style="overflow : auto; float : left; width : 250px; height : 100px; border : 1px solid #CCCCCC; border-radius : 3px; margin-left : 25px; -moz-border-radius : 3px; -webkit-border-radius : 3px; border : 1px solid #85B1DE; background-image : url(/html/images/trainsmart-gradient.gif); background-repeat : repeat-x; margin-bottom : 10px;">
+<?php
+	foreach ($this->lookupdegrees as $degree){
+?>
+						<div style="height : 20px; overflow : hidden;">
+							<input type="checkbox" style="margin : 3px;" name="degreetypeid[]" id="degreetypeid[]" value="<?php echo $degree['id']; ?>"> <?php echo $degree['degree']; ?><br>
+						</div>
+<?php
+	}
+?>
+					</div>
+
+					<label><?php echo t('# of Computers'); ?></label>
+					<input type="text" name="computer" value="<?php echo $this->escape($this->computers);?>">
+					
+<!--
+					<label># of Tutors</label>
+					<input type="text" name="tutor" value="<?php echo $this->escape($this->tutor);?>">
+					
+					<label># of Students</label>
+					<input type="text" name="students" value="<?php echo $this->escape($this->students);?>">
+					
+
+					<label>Tutor to Student Ratio</label>
+					<input type="text" name="tutorratio" value="<?php echo $this->escape($this->tutorratio);?>" readonly>
+-->
+	
+					<label><?php echo t('Dormitories?(y/n)'); ?></label>
+					<select name="hasdormitories" id="hasdormitories" onchange="setselector('dorm',this.value)">
+						<option value="0">No</option>
+						<option value="1"<?php echo $this->escape($this->hasdormitories) ? " selected" : "" ?>>Yes</option>
+					</select>
+
+					<label><?php echo t('# Dormitories'); ?></label>
+					<input type="text" name="dormcount" id="dormcount" value="<?php echo $this->escape($this->dormcount);?>">
+					
+					<label><?php echo t('# of beds (students)'); ?></label>
+					<input type="text" name="studbeds" id="studbeds" value="<?php echo $this->escape($this->studbeds);?>">
+					
+					<label><?php echo t('Tutor housing?(y/n)'); ?></label>
+					<select name="tutorhousing" id="tutorhousing" onchange="setselector('housing',this.value)">
+						<option value="0">No</option>
+						<option value="1"<?php echo $this->escape($this->tutorhousing) ? " selected" : "" ?>>Yes</option>
+					</select>
+
+					<label><?php echo t('# Tutor houses'); ?></label>
+					<input type="text" id="tutorhouses" name="tutorhouses" value="<?php echo $this->escape($this->tutorhouses);?>">
+					
+					<label><?php echo t('Year Founded'); ?></label>
+					<input type="text" name="yearfound" value="<?php echo $this->escape($this->year);?>">
+					
+					<label style="margin:20px 0 0 0;"><?php echo t('Comments'); ?></label>
+					<textarea name="comments" rows="3" cols="32" style="margin:-40px 0 0 340px;"><?php echo $this->escape($this->comments);?></textarea>
+						
+						
+					<div class="clear pad50"></div>
+					<div class="rightdiv" style="">
+						<input type="submit" name="submit" value="<?php echo t('Add Institution'); ?> &raquo;" class="tsbutton green large">
+					</div>
+					<div class="clear"></div>
+				</form> 
+
+				</div>
+					<div class="clear pad20"></div>
+					
+				   <!-- <div class="pad20 clear"></div>
+					<p style="float:left;font-size:14px; font-weight:bold;">Principal/Key Staff Members</p>
+					</div>
+					
+					
+<div style="width :900px;">
+<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:900px">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Title</th>
+			<th>Phone</th>
+			<th>Email</th>
+			
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="GradeA">
+			<td>123</td>
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class="">Institution</td>
+		</tr>
+		<tr class="GradeA">
+			<td>123</td>
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class="">Institution</td>
+		</tr>
+	</tbody>
+</table>
+
+</div>-->
+</div>
+				</div>
+			</div>
+						
+
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+	</body>
+</html>

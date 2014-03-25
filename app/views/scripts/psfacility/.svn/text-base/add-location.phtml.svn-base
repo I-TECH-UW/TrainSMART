@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php print t('Add').' '.t('Training').' '.t('Location'); ?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam" <?php if ( $this->setting['display_region_b'] && !$this->viewonly) { ?>onload="filterSubTypeOptions('select_location_province','select_location_district');" <?php } ?>>
+<div id="pageHolder">
+  <div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+  <div id="content">
+
+		<h1><?php print t('Add').' '.t('Training').' '.t('Location'); ?></h1>
+
+    <p><?php print t('Please enter').' '.t('Training').' '.t('location').' '.t('information'); ?>:</p>
+    <br>
+
+		<?php require_once('views/scripts/training/_template_locationform.phtml'); ?>
+
+    <div class="actionBtn">
+		<button type="button" id="submitLocation"><?php print t('Add').' '.t('Location'); ?></button></div>
+		<br/><br/>
+		<script type="text/javascript">
+			addAjaxSubmit('submitLocation','addLocationForm','<?php echo $this->base_url;?>/training/location-add/info/extra/outputType/json');
+		</script>
+
+
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+</body>
+</html>

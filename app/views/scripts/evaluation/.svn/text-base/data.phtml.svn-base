@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title><?php echo $this->translation['Application Name'];?> | <?php tp('Evaluation Data Entry');?></title>
+	<?php
+	require_once('views/helpers/ScriptContainer.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+
+	function renderLikert($qid, $qtext, $qtype, $idx) {
+		echo "<div class='qtext'>".$qtext."</div><br/>";
+		echo "<div class='likert'><input type='radio' value='1' name='value_".$qid."' /><label>1</label>";
+		echo "<input type='radio' value='2' name='value_".$qid."' /><label>2</label>";
+		echo "<input type='radio' value='3' name='value_".$qid."' /><label>3</label>";
+		if ($qtype == 'Likert' || $qtype == 'LikertNA') {
+			echo "<input type='radio' value='4' name='value_".$qid."' /><label>4</label>";
+			echo "<input type='radio' value='5' name='value_".$qid."' /><label>5</label>";
+		}
+		if ($qtype == 'Likert3NA' || $qtype == 'LikertNA')
+			echo "<input type='radio' value='0' name='value_".$qid."' /><label>".t('Not Applicable')."</label>";
+		echo '</div>';
+	}
+
+	function renderLikertCustomAnswers($qid, $qtext, $qtype, $idx, $answers) {
+		echo "<div class='qtext'>".$qtext."</div><br/>";
+		echo "<div class='likert'>";
+		foreach ($answers as  $i => $ans) {
+			if ( empty($ans) )
+				continue;
+			echo "<input type='radio' value='$ans' name='value_".$qid."' /><label>$ans</label>";
+		}
+		echo '</div>';
+	}
+
+	function renderText($qid, $qtext, $idx) {
+		echo "<div class='qtext'>".$qtext."</div><br/>";
+		echo "<div class='likert'><textarea cols='80' rows='5' name='value_".$qid."'></textarea></div>";
+	}
+
+	?>
+
+</head>
+<body class="yui-skin-sam">
+	<div id="pageHolder">
+		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+		<div id="content">
+
+			<h1><?php tp('Evaluation Data Entry');?></h1>
+			<form name="evaluationForm" id="evaluationForm" method="post" action="">
+
+				<?php echo $this->otherEvalDropDown; ?><br/><br/>
+
+				<h2><?php echo $this->title;?> - <?php echo $this->course_name;?></h2><br/>
+
+				<label class="label"><?php tp('Trainer (Optional)'); ?></label>
+				<select id="trainer" name="trainer_id"><option value="">&mdash;<?php tp('select'); ?>&mdash;</option>
+					<?php foreach($this->trainers as $row) {
+						if ($this->setting [ 'display_middle_name_last' ])
+							$fullName = implode(' ', array( $row['first_name'], $row['last_name'], $row['middle_name'] ));
+						else
+							$fullName = implode(' ', array( $row['first_name'], $row['middle_name'], $row['last_name'] ));
+						echo '<option value="'.$row['trainer_id'].'">'.$fullName.'</option>';
+					}
+					?>
+				</select>
+				<label class="label"><?php tp('Participant (Optional)'); ?></label>
+				<select id="person" name="person_id"><option value="">&mdash;<?php tp('select'); ?>&mdash;</option>
+					<?php foreach($this->participants as $row) {
+						if ($this->setting [ 'display_middle_name_last' ])
+							$fullName = implode(' ', array( $row['first_name'], $row['last_name'], $row['middle_name'] ));
+						else
+							$fullName = implode(' ', array( $row['first_name'], $row['middle_name'], $row['last_name'] ));
+						echo '<option value="'.$row['person_id'].'">'.$fullName.'</option>';
+					}
+					?>
+				</select>
+
+				<br/><br/>
+				<ol>
+					<?php foreach($this->qid as $i=>$qid) {?>
+					<li><label class="qnum"><?php echo $i + 1;?></label>
+						<?php
+							if ( $this->qtype[$i] == 'Text' )
+								renderText($qid, $this->qtext[$i], $i);
+							else if (isset($this->answers[$qid]) && !empty($this->answers[$qid]) && count($this->answers[$qid]))
+								renderLikertCustomAnswers($qid, $this->qtext[$i], $this->qtype[$i], $i, $this->answers[$qid]);
+							else
+								renderLikert($qid, $this->qtext[$i], $this->qtype[$i], $i);
+						?>
+					</li>
+					<?php } ?>
+				</ol>
+				<br/><br/>
+				<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Save and Exit');?>" />
+				<input type="submit" class="submitNoArrow" name="continue" value="<?php tp('Save and Continue');?>" />
+				<br/><br/>
+			</form>
+		</div>
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function (e) {
+			$('#other_evals').change(function (e) {
+				if(!$(this).val())
+					return;
+				window.location = '<?php echo $this->base_url; ?>/evaluation/data/id/' + $(this).val();
+			});
+		});
+	</script>
+</body>
+</html>

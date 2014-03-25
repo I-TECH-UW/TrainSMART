@@ -1,0 +1,23 @@
+<?php 
+
+$this->extraHtml = '
+<script>
+
+function callbackClick(e) { 
+  if(!this.checked) {
+    displayStatus("Note: Switching from \"multiple\" PEPFAR to \"single\" may hide data.");
+  } else {
+    
+  }
+}
+
+oCheckbox = YAHOO.util.Dom.get("allow_multi_pepfar");
+YAHOO.util.Event.addListener(oCheckbox, "click", callbackClick); 
+
+</script>
+
+';
+
+require '_template_edittable.phtml'; 
+
+?>

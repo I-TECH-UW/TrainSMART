@@ -1,0 +1,194 @@
+<div id="addCourseDlg" style="display:none;">
+	<input type="hidden" id="course_id" name="course_id" />
+	<div class="fieldLabelThin"><label for="" class="label"><?php tp('Course Name'); ?></label></div>  <div class="fieldInput"><input type="text" id="course_name"    name="course_name" /></div><br/>
+	<div class="fieldLabelThin"><label for="" class="label"><?php tp('Provider'); ?></label></div>     <div class="fieldInput"><input type="text" id="provider"       name="provider" /></div><br/>
+	<div class="fieldLabelThin"><label for="" class="label"><?php tp('Content'); ?></label></div>      <div class="fieldInput"><input type="text" id="course_content" name="content" /></div><br/>
+	<div class="fieldLabelThin"><label for="" class="label"><?php tp('Duration'); ?></label></div>     <div class="fieldInput"><input type="text" id="duration"       name="duration" /></div><br/>
+	<div class="fieldLabelThin"><label for="" class="label"><?php tp('NQF Level'); ?></label></div>    <div class="fieldInput"><input type="text" id="nqf_level"      name="nqf_level" /></div><br/>
+	<div class="fieldLabelThin"><label for="" class="label"><?php tp('Certificate'); ?></label></div>  <div class="fieldInput"><input type="text" id="certificate"    name="certificate" /></div><br/>
+	<div class="fieldLabelThin"><label for="" class="label"><?php tp('Accredited'); ?></label></div>   <div class="fieldInput"><input type="text" id="accredited"     name="accredited" /></div><br/>
+</div>
+
+<div id="classWrapper">
+	<div class="fieldIndentNoMargin"><?php tp('All Courses completed by the Community Health Worker');?></div>
+	<div id="classInfo"  class="itechTable"></div>
+	<div id="classInfoTable"  class="itechTable"></div>
+		<a id="course_add" href="#"><?php tp('Add a completed course');?></a>
+</div>
+
+
+<script type="text/javascript">
+
+	$(document).ajaxError(function(event, request, settings, err) {
+		alert("Couldn't save, sorry! \nError:" + err);
+	});
+
+	// json script to add/edit users
+	function editCourseRow (obj) { // edit link
+		edit_record = ITECH.classInfoTable.myDataTable.getRecord(obj);
+
+		obj = $(obj);
+		var parent = obj.parents('tr:first');
+
+		$('#course_id').val(       parent.find('div.yui-dt-col-0').text()  );
+		$('#course_name').val(     parent.find('div.yui-dt-col-1').text()  );
+		$('#provider').val(        parent.find('div.yui-dt-col-2').text()  );
+		$('#course_content').val(  parent.find('div.yui-dt-col-3').text()  );
+		$('#duration').val(        parent.find('div.yui-dt-col-4').text()  );
+		$('#nqf_level').val(       parent.find('div.yui-dt-col-5').text()  );
+		$('#certificate').val(     parent.find('div.yui-dt-col-6').text()  );
+		$('#accredited').val(      parent.find('div.yui-dt-col-7').text()  );
+		$('#addCourseDlg').dialog('open');
+
+		return false;
+	}
+
+	function deleteCourseRow(obj){ // remove link
+		var go = confirm(tr("Are you sure you want to delete") + '?');
+		if (!go)
+			return false;
+
+		oRecord = ITECH.classInfoTable.myDataTable.getRecord(obj);
+		var parent = $(obj).parents('tr:first');
+		var id = parent.find('div.yui-dt-col-0').text();
+
+		if (!id)
+			return false;
+
+		$.getJSON(
+				'<?php echo $this->base_url;?>/employee/courses/outputType/json/', //url
+				{'id': id, mode: 'delete'},  // data
+				function(json) {             // success
+					if (json && json.errored) {
+						alert(json.msg);
+						return false;
+					}
+					ITECH.classInfoTable.myDataTable.deleteRow(oRecord);
+				}
+		);
+
+		return false;
+	}
+
+	function SaveCourse () { // dialog save click
+		var data = {
+			id          : $('#course_id').val(),
+			employee_id : $('#id').val(),
+			course_name : $('#course_name').val(),
+			provider    : $('#provider').val(),
+			content     : $('#course_content').val(),
+			duration    : $('#duration').val(),
+			nqf_level   : $('#nqf_level').val(),
+			certificate : $('#certificate').val(),
+			accredited  : $('#accredited').val(),
+			mode        : 'addedit'
+
+		};
+
+		var old_id = data.id;
+		var success = function () {
+			alert('success');
+		};
+		$.getJSON(
+			'<?php echo $this->base_url;?>/employee/courses/outputType/json',
+			data,
+			function(json) {
+
+				$('#addCourseDlg').dialog('close');
+
+				if (json && json.errored) {
+					alert(json.msg);
+					return false;
+				}
+
+				json.cmds = "<a href=\"#\" id=\"editlnk\"><?php tp('Edit'); ?></a> <a href=\"#\" id=\"deletelnk\"><?php tp('Remove'); ?></a>";
+
+				if (old_id == json.id) //update
+					ITECH.classInfoTable.myDataTable.updateRow(edit_record, json); // global edit_record
+				else
+					ITECH.classInfoTable.addDataRow(json);
+			});
+	}
+
+	// make data table
+	var classInfoData = [
+		<?php
+			$links = ',"<a href=\"#\" id=\"editlnk\">' . t('Edit') . '</a> <a href=\"#\" id=\"deletelnk\">' . t('Remove') . '</a>"';
+			if (!count($this->emlpoyee['courses']))
+				$this->employee['courses'] = array();
+			foreach ($this->employee['courses'] as $i => $row) {
+				unset($row['employee_id']); // fields we dont show.
+				unset($row['created_by']);
+				unset($row['timestamp_created']);
+				if ($i > 0) echo ',';
+				echo '["' . implode('","', $row) . '"' . $links . ']'; // print an array of data
+			}
+		?>
+	];
+
+	var classColumnDefs = [
+		{key:"id",          label: "<?php tp('ID');?>",          hidden:false,   resizeable:true},
+		{key:"course_name", label: "<?php tp('Course Name');?>", sortable:true, resizeable:true},
+		{key:"provider",    label: "<?php tp('Provider');?>",    sortable:true, resizeable:true},
+		{key:"content",     label: "<?php tp('Content');?>",     sortable:true, resizeable:true},
+		{key:"duration",    label: "<?php tp('Duration');?>",    sortable:true, resizeable:true},
+		{key:"nqf_level",   label: "<?php tp('NQF Level');?>",   sortable:true, resizeable:true},
+		{key:"certificate", label: "<?php tp('Certificate');?>", sortable:true, resizeable:true},
+		{key:"accredited",  label: "<?php tp('Accredited');?>",  sortable:true, resizeable:true},
+		{key:"cmds",        label: "<?php tp('Actions');?>",     sortable:true, resizeable:true},
+	];
+
+	classInfoDataTable = makeEditTable("classInfo", classInfoData, classColumnDefs, null, true);
+	classInfoDataTable.myDataTable.deleteAjax       = null; // dont need their function
+	classInfoDataTable.myDataTable.config.editOnly  = true; // hide their edit/delete links
+	classInfoDataTable.myDataTable.config.editLinks = '';
+	classInfoDataTable.myDataTable.config.deleteOnly= '';
+	ITECH.classInfoTable = classInfoDataTable;
+	// we are not using default DataTable editor AJAX function because they are designed for cell-editing and saving
+
+	// doc ready
+	$(function () {
+		$(window).click(function (e) { // watch window for click because rows are added later by JS
+			if(e.type == "click" && $(e.target).is('#editlnk')){
+				editCourseRow(e.target); e.preventDefault(); return false;
+			}
+			if(e.type == "click" && $(e.target).is('#deletelnk')){
+				deleteCourseRow(e.target); e.preventDefault(); return false;
+			}
+		});
+
+		$('#addCourseDlg').dialog({ 	// create our dialogs
+			title: "<?php tp('Add a Course'); ?>",
+			autoOpen: false,
+			height: 520,
+			width: 425,
+			modal: true,
+			buttons: {
+				"Save": function() {
+					SaveCourse();
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				$(this).find('input').val( "" ).removeClass( "ui-state-error" );
+			}
+		});
+
+		$('#course_add').click(function (e) { // add a course button
+			if (! $('#id').val() ) {
+				alert('<?php tp('Please save the user before adding a course.'); ?>'); //todo I'd move this to the JS tr
+				return;
+			}
+
+			$('#course_id').val('0');
+
+			$('#addCourseDlg').find('input').val( "" ).removeClass( "ui-state-error" );
+			$('#addCourseDlg').dialog('open').show();
+			e.preventDefault();
+			return false;
+		})
+	});
+</script>
+

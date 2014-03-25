@@ -1,0 +1,2116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title><?php echo $this->translation['Application Name'];?> | <?php tp('Competencies');?></title>
+
+<?php
+require_once('views/helpers/Location.php');
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+<script type="text/javascript">
+var vwvls=new Array();
+<?php
+if(isset($this->vwvls[0]))
+{
+	$lscntr=0;
+	foreach ( $this->vwvls as $ys => $ls ) {
+	 echo 'vwvls['.$lscntr.']="'.$ls.'";';
+	 $lscntr++;
+	}
+}
+?>
+function SetAll() {
+var i;
+for(i=0;i<vwvls.length;i++)
+{
+if(vwvls[i].indexOf("240")==0)
+{
+document.getElementById('grp240').value=vwvls[i].substr(3);
+}
+else
+{
+document.getElementById('grp'+vwvls[i].toLowerCase()).checked=true;
+document.getElementById('grp'+vwvls[i].toLowerCase()).removeAttribute("disabled");
+}
+}
+}
+function FindScore(q)
+{
+var i;
+for(i=0;i<vwvls.length;i++)
+{
+if(vwvls[i].substring(0,vwvls[i].length-1)==q)
+{
+return vwvls[i].substring(vwvls[i].length-1);
+}
+}
+}
+function FindTotal(ids)
+{
+var i;
+var j;
+var Total;
+Total=0;
+for(i=0;i<ids.length;i++)
+{
+switch(FindScore(ids[i]).toLowerCase())
+{
+case 'a':
+j=4;
+break;
+case 'b':
+j=3;
+break;
+case 'c':
+j=2;
+break;
+case 'd':
+j=1;
+break;
+default:
+j=0;
+break;
+}
+Total=Total+j;
+}
+return Total;
+}
+function ScoreAll() {
+var Total;
+var Avg;
+var All;
+var AllQues;
+All=0;
+AllQues=0;
+var ids;
+ids=document.getElementById("ids1").value.split(",");
+Total=FindTotal(ids);
+Avg=((Total/(4*ids.length))*100);
+All=All+Total;
+AllQues=AllQues+ids.length;
+document.getElementById("dids1").innerHTML=document.getElementById("dids1").innerHTML+' <i>(Average Score: '+Avg.toFixed(2)+'%)</i>';
+ids=document.getElementById("ids2").value.split(",");
+Total=FindTotal(ids);
+Avg=((Total/(4*ids.length))*100);
+All=All+Total;
+AllQues=AllQues+ids.length;
+document.getElementById("dids2").innerHTML=document.getElementById("dids2").innerHTML+' <i>(Average Score: '+Avg.toFixed(2)+'%)</i>';
+ids=document.getElementById("ids3").value.split(",");
+Total=FindTotal(ids);
+Avg=((Total/(4*ids.length))*100);
+All=All+Total;
+AllQues=AllQues+ids.length;
+document.getElementById("dids3").innerHTML=document.getElementById("dids3").innerHTML+' <i>(Average Score: '+Avg.toFixed(2)+'%)</i>';
+ids=document.getElementById("ids4").value.split(",");
+Total=FindTotal(ids);
+Avg=((Total/(4*ids.length))*100);
+All=All+Total;
+AllQues=AllQues+ids.length;
+document.getElementById("dids4").innerHTML=document.getElementById("dids4").innerHTML+' <i>(Average Score: '+Avg.toFixed(2)+'%)</i>';
+ids=document.getElementById("ids5").value.split(",");
+Total=FindTotal(ids);
+Avg=((Total/(4*ids.length))*100);
+All=All+Total;
+AllQues=AllQues+ids.length;
+document.getElementById("dids5").innerHTML=document.getElementById("dids5").innerHTML+' <i>(Average Score: '+Avg.toFixed(2)+'%)</i>';
+ids=document.getElementById("ids6").value.split(",");
+Total=FindTotal(ids);
+Avg=((Total/(4*ids.length))*100);
+All=All+Total;
+AllQues=AllQues+ids.length;
+document.getElementById("dids6").innerHTML=document.getElementById("dids6").innerHTML+' <i>(Average Score: '+Avg.toFixed(2)+'%)</i>';
+Avg=((All/(4*AllQues))*100);
+document.getElementById("TotalScore").innerHTML=' <b>Total Average Score: '+Avg.toFixed(2)+'%</b>';
+}
+</script>
+</head>
+<body class="yui-skin-sam" onload="SetAll();ScoreAll()">
+<div id="pageHolder">
+<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+<div id="content">
+<h1><?php echo t('View Competency'); ?></h1>
+<div style="height:54px">
+<div style="width:486px;text-align:left;float:right">
+<div><b>A</b> - <?php echo t('fully competent and confident; able to teach others (mentor)'); ?></div>
+<div><b>B</b> - <?php echo t('fully competent; not able to teach others (not able to be a mentor)'); ?></div>
+<div><b>C</b> - <?php echo t('capable'); ?></div>
+<div><b>D</b> - <?php echo t('not capable'); ?></div>
+<div><b>E</b> - <?php echo t('not currently in my job description/duties'); ?></div>
+</div>
+</div>
+<form action="" id="personCompForm" method="post">
+<div style="height:12px"></div>
+<div class="nwtxthead" id="dids1"><?php echo t('Adult HIV Care'); ?></div>
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%;border:solid 1px #AAA">
+<tr>
+<td colspan="7">
+ <div class="nwtxtbig"><?php echo t('Clinical competency tasks'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxtbig"><?php echo t('Do you feel competent and confident to ...'); ?></div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">A</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">B</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">C</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">D</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">E</div>
+</td>
+<td style="width:7%;text-align:center">
+ <div class="nwtxtbig"><?php echo t('No Answer'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">1)&nbsp;&nbsp;&nbsp;Take an appropriate history of all patients (e.g. medical, family, reproductive, and HIV history)?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp1a" value="A" name="grp1" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp1b" value="B" name="grp1" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp1c" value="C" name="grp1" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp1d" value="D" name="grp1" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp1e" value="E" name="grp1" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp1f" value="F" name="grp1" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">2)&nbsp;&nbsp;&nbsp;Perform head to toe physical examination?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp2a" value="A" name="grp2" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp2b" value="B" name="grp2" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp2c" value="C" name="grp2" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp2d" value="D" name="grp2" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp2e" value="E" name="grp2" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp2f" value="F" name="grp2" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">3)&nbsp;&nbsp;&nbsp;Advise HIV positive patients to encourage partners and children to test?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp3a" value="A" name="grp3" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp3b" value="B" name="grp3" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp3c" value="C" name="grp3" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp3d" value="D" name="grp3" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp3e" value="E" name="grp3" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp3f" value="F" name="grp3" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">4)&nbsp;&nbsp;&nbsp;Provide all patients with HIV counseling and testing using the PICT model?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp4a" value="A" name="grp4" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp4b" value="B" name="grp4" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp4c" value="C" name="grp4" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp4d" value="D" name="grp4" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp4e" value="E" name="grp4" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp4f" value="F" name="grp4" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">5)&nbsp;&nbsp;&nbsp;Screen for and manage opportunistic infections?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp5a" value="A" name="grp5" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp5b" value="B" name="grp5" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp5c" value="C" name="grp5" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp5d" value="D" name="grp5" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp5e" value="E" name="grp5" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp5f" value="F" name="grp5" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">6)&nbsp;&nbsp;&nbsp;Stage patients according to WHO and SA guidelines?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp6a" value="A" name="grp6" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp6b" value="B" name="grp6" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp6c" value="C" name="grp6" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp6d" value="D" name="grp6" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp6e" value="E" name="grp6" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp6f" value="F" name="grp6" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">7)&nbsp;&nbsp;&nbsp;Interpret blood results (e.g. viral load, CD4 count, ALT, FBC, Creatinine Clearance, and HepB)?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp7a" value="A" name="grp7" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp7b" value="B" name="grp7" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp7c" value="C" name="grp7" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp7d" value="D" name="grp7" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp7e" value="E" name="grp7" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp7f" value="F" name="grp7" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">8)&nbsp;&nbsp;&nbsp;Prescribe ARVs to all HIV positive patients and provide follow up care (NIMART/ART initiation)?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp8a" value="A" name="grp8" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp8b" value="B" name="grp8" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp8c" value="C" name="grp8" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp8d" value="D" name="grp8" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp8e" value="E" name="grp8" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp8f" value="F" name="grp8" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">9)&nbsp;&nbsp;&nbsp;Discuss all medications including possible drug interactions?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp9a" value="A" name="grp9" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp9b" value="B" name="grp9" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp9c" value="C" name="grp9" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp9d" value="D" name="grp9" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp9e" value="E" name="grp9" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp9f" value="F" name="grp9" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">10)&nbsp;&nbsp;Discuss the importance of treatment adherence with all patients about to begin or already on ARVs?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp10a" value="A" name="grp10" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp10b" value="B" name="grp10" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp10c" value="C" name="grp10" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp10d" value="D" name="grp10" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp10e" value="E" name="grp10" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp10f" value="F" name="grp10" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">11)&nbsp;&nbsp;Follow up with patients on ARVs who do not show up for appointments?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp11a" value="A" name="grp11" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp11b" value="B" name="grp11" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp11c" value="C" name="grp11" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp11d" value="D" name="grp11" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp11e" value="E" name="grp11" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp11f" value="F" name="grp11" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">12)&nbsp;&nbsp;Initiate and manage support groups?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp12a" value="A" name="grp12" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp12b" value="B" name="grp12" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp12c" value="C" name="grp12" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp12d" value="D" name="grp12" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp12e" value="E" name="grp12" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp12f" value="F" name="grp12" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">13)&nbsp;&nbsp;Treat the common ART side effects in all patients?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp13a" value="A" name="grp13" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp13b" value="B" name="grp13" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp13c" value="C" name="grp13" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp13d" value="D" name="grp13" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp13e" value="E" name="grp13" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp13f" value="F" name="grp13" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">14)&nbsp;&nbsp;Screen for and treat HIV positive patients with TB?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp14a" value="A" name="grp14" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp14b" value="B" name="grp14" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp14c" value="C" name="grp14" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp14d" value="D" name="grp14" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp14e" value="E" name="grp14" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp14f" value="F" name="grp14" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">15)&nbsp;&nbsp;Identify and treat a patient with clinical depression?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp15a" value="A" name="grp15" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp15b" value="B" name="grp15" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp15c" value="C" name="grp15" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp15d" value="D" name="grp15" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp15e" value="E" name="grp15" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp15f" value="F" name="grp15" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">16)&nbsp;&nbsp;Provide mentorship support for lay counselors?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp16a" value="A" name="grp16" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp16b" value="B" name="grp16" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp16c" value="C" name="grp16" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp16d" value="D" name="grp16" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp16e" value="E" name="grp16" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp16f" value="F" name="grp16" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">17)&nbsp;&nbsp;Provide mentorship to other nurses new to initiation and HIV care?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp17a" value="A" name="grp17" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp17b" value="B" name="grp17" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp17c" value="C" name="grp17" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp17d" value="D" name="grp17" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp17e" value="E" name="grp17" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp17f" value="F" name="grp17" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">18)&nbsp;&nbsp;Provide the correct level of referral for treatment when required?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp18a" value="A" name="grp18" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp18b" value="B" name="grp18" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp18c" value="C" name="grp18" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp18d" value="D" name="grp18" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp18e" value="E" name="grp18" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp18f" value="F" name="grp18" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">19)&nbsp;&nbsp;Discuss how to avoid infecting a sexual partner with HIV with an HIV-positive patient?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp19a" value="A" name="grp19" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp19b" value="B" name="grp19" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp19c" value="C" name="grp19" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp19d" value="D" name="grp19" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp19e" value="E" name="grp19" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp19f" value="F" name="grp19" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">20)&nbsp;&nbsp;Provide family planning for HIV positive patients?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp20a" value="A" name="grp20" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp20b" value="B" name="grp20" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp20c" value="C" name="grp20" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp20d" value="D" name="grp20" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp20e" value="E" name="grp20" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp20f" value="F" name="grp20" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">21)&nbsp;&nbsp;Discuss rights and access for HIV positive patients?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp200a" value="A" name="grp200" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp200b" value="B" name="grp200" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp200c" value="C" name="grp200" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp200d" value="D" name="grp200" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp200e" value="E" name="grp200" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp200f" value="F" name="grp200" />
+</td>
+</tr>
+</table>
+<div style="height:20px"></div>
+<div class="nwtxthead" id="dids2"><?php echo t('Pediatric HIV Care'); ?></div>
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%;border:solid 1px #AAA">
+<tr>
+<td colspan="7">
+ <div class="nwtxtbig"><?php echo t('Clinical competency tasks'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxtbig"><?php echo t('Do you feel competent and confident to ...'); ?></div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">A</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">B</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">C</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">D</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">E</div>
+</td>
+<td style="width:7%;text-align:center">
+ <div class="nwtxtbig"><?php echo t('No Answer'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">1)&nbsp;&nbsp;&nbsp;Correctly diagnose, classify, and treat HIV positive infants and children (Initiate eligible infants on ART)?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp01a" value="A" name="grp01" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp01b" value="B" name="grp01" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp01c" value="C" name="grp01" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp01d" value="D" name="grp01" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp01e" value="E" name="grp01" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp01f" value="F" name="grp01" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">2)&nbsp;&nbsp;&nbsp;Treat ARV side effects in children (Monitor baseline and routine blood test periodically; interpret blood results e.g.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;viral load, CD4 count(%),CreatinineClearance, FBC, LFT (ALT))?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp02a" value="A" name="grp02" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp02b" value="B" name="grp02" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp02c" value="C" name="grp02" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp02d" value="D" name="grp02" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp02e" value="E" name="grp02" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp02f" value="F" name="grp02" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">3)&nbsp;&nbsp;&nbsp;Correctly treat an HIV positive child with TB and on ARV therapy?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp03a" value="A" name="grp03" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp03b" value="B" name="grp03" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp03c" value="C" name="grp03" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp03d" value="D" name="grp03" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp03e" value="E" name="grp03" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp03f" value="F" name="grp03" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">4)&nbsp;&nbsp;&nbsp;Provide counseling for HIV positive children and their caregivers?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp04a" value="A" name="grp04" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp04b" value="B" name="grp04" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp04c" value="C" name="grp04" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp04d" value="D" name="grp04" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp04e" value="E" name="grp04" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp04f" value="F" name="grp04" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">5)&nbsp;&nbsp;&nbsp;Monitor the nutritional status of HIV positive children?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp05a" value="A" name="grp05" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp05b" value="B" name="grp05" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp05c" value="C" name="grp05" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp05d" value="D" name="grp05" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp05e" value="E" name="grp05" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp05f" value="F" name="grp05" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">6)&nbsp;&nbsp;&nbsp;Explain the importance of ARV adherence to HIV positive children and their caregivers?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp06a" value="A" name="grp06" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp06b" value="B" name="grp06" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp06c" value="C" name="grp06" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp06d" value="D" name="grp06" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp06e" value="E" name="grp06" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp06f" value="F" name="grp06" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">7)&nbsp;&nbsp;&nbsp;Disclose HIV status to children?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp07a" value="A" name="grp07" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp07b" value="B" name="grp07" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp07c" value="C" name="grp07" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp07d" value="D" name="grp07" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp07e" value="E" name="grp07" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp07f" value="F" name="grp07" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">8)&nbsp;&nbsp;&nbsp;Follow up with HIV positive children who miss their appointments?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp08a" value="A" name="grp08" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp08b" value="B" name="grp08" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp08c" value="C" name="grp08" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp08d" value="D" name="grp08" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp08e" value="E" name="grp08" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp08f" value="F" name="grp08" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">9)&nbsp;&nbsp;&nbsp;Provide the correct level of referral for treatment when required?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp09a" value="A" name="grp09" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp09b" value="B" name="grp09" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp09c" value="C" name="grp09" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp09d" value="D" name="grp09" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp09e" value="E" name="grp09" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp09f" value="F" name="grp09" />
+</td>
+</tr>
+</table>
+<div style="height:20px"></div>
+<div class="nwtxthead" id="dids3"><?php echo t('Tuberculosis'); ?></div>
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%;border:solid 1px #AAA">
+<tr>
+<td colspan="7">
+ <div class="nwtxtbig"><?php echo t('Clinical competency tasks'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxtbig"><?php echo t('Do you feel competent and confident to ...'); ?></div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">A</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">B</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">C</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">D</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">E</div>
+</td>
+<td style="width:7%;text-align:center">
+ <div class="nwtxtbig"><?php echo t('No Answer'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">1)&nbsp;&nbsp;&nbsp;Recognise and correctly diagnose TB in patients?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp31a" value="A" name="grp31" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp31b" value="B" name="grp31" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp31c" value="C" name="grp31" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp31d" value="D" name="grp31" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp31e" value="E" name="grp31" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp31f" value="F" name="grp31" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">2)&nbsp;&nbsp;&nbsp;Initiate treatment and manage all patients with TB?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp32a" value="A" name="grp32" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp32b" value="B" name="grp32" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp32c" value="C" name="grp32" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp32d" value="D" name="grp32" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp32e" value="E" name="grp32" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp32f" value="F" name="grp32" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">3)&nbsp;&nbsp;&nbsp;Manage TB / HIV / HBV co-infected patients?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp33a" value="A" name="grp33" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp33b" value="B" name="grp33" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp33c" value="C" name="grp33" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp33d" value="D" name="grp33" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp33e" value="E" name="grp33" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp33f" value="F" name="grp33" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">4)&nbsp;&nbsp;&nbsp;Discuss adherence to TB treatment and implications if treatment is not taken as prescribed or completed?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp34a" value="A" name="grp34" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp34b" value="B" name="grp34" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp34c" value="C" name="grp34" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp34d" value="D" name="grp34" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp34e" value="E" name="grp34" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp34f" value="F" name="grp34" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">5)&nbsp;&nbsp;&nbsp;Follow up with the smear negative patient and diagnose treatment failure?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp35a" value="A" name="grp35" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp35b" value="B" name="grp35" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp35c" value="C" name="grp35" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp35d" value="D" name="grp35" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp35e" value="E" name="grp35" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp35f" value="F" name="grp35" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">6)&nbsp;&nbsp;&nbsp;Manage MDR and XDR in co-infected patients?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp36a" value="A" name="grp36" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp36b" value="B" name="grp36" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp36c" value="C" name="grp36" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp36d" value="D" name="grp36" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp36e" value="E" name="grp36" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp36f" value="F" name="grp36" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">7)&nbsp;&nbsp;&nbsp;Manage the common ART side effects in TB patients?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp37a" value="A" name="grp37" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp37b" value="B" name="grp37" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp37c" value="C" name="grp37" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp37d" value="D" name="grp37" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp37e" value="E" name="grp37" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp37f" value="F" name="grp37" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">8)&nbsp;&nbsp;&nbsp;Provide the correct level of referral for treatment when required?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp38a" value="A" name="grp38" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp38b" value="B" name="grp38" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp38c" value="C" name="grp38" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp38d" value="D" name="grp38" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp38e" value="E" name="grp38" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp38f" value="F" name="grp38" />
+</td>
+</tr>
+</table>
+<div style="height:20px"></div>
+<div class="nwtxthead" id="dids4"><?php echo t('STIs'); ?></div>
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%;border:solid 1px #AAA">
+<tr>
+<td colspan="7">
+ <div class="nwtxtbig"><?php echo t('Clinical competency tasks'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxtbig"><?php echo t('Do you feel competent and confident to ...'); ?></div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">A</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">B</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">C</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">D</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">E</div>
+</td>
+<td style="width:7%;text-align:center">
+ <div class="nwtxtbig"><?php echo t('No Answer'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">1)&nbsp;&nbsp;&nbsp;Discuss STIs and implications for acquiring and transmitting HIV (while promoting the use of condoms)?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp41a" value="A" name="grp41" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp41b" value="B" name="grp41" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp41c" value="C" name="grp41" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp41d" value="D" name="grp41" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp41e" value="E" name="grp41" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp41f" value="F" name="grp41" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">2)&nbsp;&nbsp;&nbsp;Recognise and correctly diagnose and provide syndromic management of STIs in patients?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp42a" value="A" name="grp42" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp42b" value="B" name="grp42" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp42c" value="C" name="grp42" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp42d" value="D" name="grp42" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp42e" value="E" name="grp42" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp42f" value="F" name="grp42" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">3)&nbsp;&nbsp;&nbsp;Manage a patient with a positive syphilis result?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp43a" value="A" name="grp43" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp43b" value="B" name="grp43" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp43c" value="C" name="grp43" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp43d" value="D" name="grp43" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp43e" value="E" name="grp43" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp43f" value="F" name="grp43" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">4)&nbsp;&nbsp;&nbsp;Follow up with patients who do not show up for appointments?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp44a" value="A" name="grp44" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp44b" value="B" name="grp44" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp44c" value="C" name="grp44" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp44d" value="D" name="grp44" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp44e" value="E" name="grp44" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp44f" value="F" name="grp44" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">5)&nbsp;&nbsp;&nbsp;Provide the correct level of referral for treatment when required?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp45a" value="A" name="grp45" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp45b" value="B" name="grp45" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp45c" value="C" name="grp45" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp45d" value="D" name="grp45" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp45e" value="E" name="grp45" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp45f" value="F" name="grp45" />
+</td>
+</tr>
+</table>
+<div style="height:20px"></div>
+<div class="nwtxthead" id="dids5"><?php echo t('PMTCT'); ?></div>
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%;border:solid 1px #AAA">
+<tr>
+<td colspan="7">
+ <div class="nwtxtbig"><?php echo t('Clinical competency tasks'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxtbig"><?php echo t('Do you feel competent and confident to ...'); ?></div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">A</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">B</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">C</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">D</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">E</div>
+</td>
+<td style="width:7%;text-align:center">
+ <div class="nwtxtbig"><?php echo t('No Answer'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">1)&nbsp;&nbsp;&nbsp;Counsel and test pregnant women for HIV?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp51a" value="A" name="grp51" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp51b" value="B" name="grp51" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp51c" value="C" name="grp51" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp51d" value="D" name="grp51" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp51e" value="E" name="grp51" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp51f" value="F" name="grp51" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">2)&nbsp;&nbsp;Provide BANC using integrated BANC/HIV checklist during the Antenatal period?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp52a" value="A" name="grp52" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp52b" value="B" name="grp52" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp52c" value="C" name="grp52" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp52d" value="D" name="grp52" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp52e" value="E" name="grp52" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp52f" value="F" name="grp52" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">3)&nbsp;&nbsp;Perform PAP smears?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp53a" value="A" name="grp53" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp53b" value="B" name="grp53" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp53c" value="C" name="grp53" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp53d" value="D" name="grp53" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp53e" value="E" name="grp53" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp53f" value="F" name="grp53" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">4)&nbsp;&nbsp;Initiate ART prophylaxis and treatment for HIV positive women during pregnancy, labour and postnatal periods?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp54a" value="A" name="grp54" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp54b" value="B" name="grp54" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp54c" value="C" name="grp54" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp54d" value="D" name="grp54" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp54e" value="E" name="grp54" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp54f" value="F" name="grp54" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">5)&nbsp;&nbsp;Recognise and treat common ART side effects in HIV positive pregnant women?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp55a" value="A" name="grp55" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp55b" value="B" name="grp55" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp55c" value="C" name="grp55" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp55d" value="D" name="grp55" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp55e" value="E" name="grp55" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp55f" value="F" name="grp55" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">6)&nbsp;&nbsp;Counsel and provide appropriate contraception to HIV positive women?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp56a" value="A" name="grp56" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp56b" value="B" name="grp56" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp56c" value="C" name="grp56" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp56d" value="D" name="grp56" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp56e" value="E" name="grp56" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp56f" value="F" name="grp56" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">7)&nbsp;&nbsp;Counsel for and terminate unwanted pregnancies; counsel women and partner/family on postnatal care; provide<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cotrimoxazole prophylaxis?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp57a" value="A" name="grp57" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp57b" value="B" name="grp57" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp57c" value="C" name="grp57" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp57d" value="D" name="grp57" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp57e" value="E" name="grp57" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp57f" value="F" name="grp57" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">8)&nbsp;&nbsp;&nbsp;Correctly treat HIV positive pregnant and lactating women with TB/HBV co-infection who are also on ART?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp58a" value="A" name="grp58" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp58b" value="B" name="grp58" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp58c" value="C" name="grp58" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp58d" value="D" name="grp58" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp58e" value="E" name="grp58" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp58f" value="F" name="grp58" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">9)&nbsp;&nbsp;&nbsp;Follow up with HIV positive pregnant women who miss their appointments?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp59a" value="A" name="grp59" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp59b" value="B" name="grp59" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp59c" value="C" name="grp59" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp59d" value="D" name="grp59" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp59e" value="E" name="grp59" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp59f" value="F" name="grp59" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">10)&nbsp;&nbsp;Provide the correct level of referral for treatment when required?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp510a" value="A" name="grp510" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp510b" value="B" name="grp510" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp510c" value="C" name="grp510" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp510d" value="D" name="grp510" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp510e" value="E" name="grp510" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp510f" value="F" name="grp510" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">11)&nbsp;&nbsp;Collect DBS-PCR from all HIV exposed infants?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp511a" value="A" name="grp511" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp511b" value="B" name="grp511" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp511c" value="C" name="grp511" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp511d" value="D" name="grp511" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp511e" value="E" name="grp511" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp511f" value="F" name="grp511" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">12)&nbsp;&nbsp;Promote, monitor and support safe infant feeding?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp512a" value="A" name="grp512" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp512b" value="B" name="grp512" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp512c" value="C" name="grp512" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp512d" value="D" name="grp512" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp512e" value="E" name="grp512" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp512f" value="F" name="grp512" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">13)&nbsp;&nbsp;Promote correct childhood immunisations for HIV-exposed children?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp513a" value="A" name="grp513" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp513b" value="B" name="grp513" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp513c" value="C" name="grp513" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp513d" value="D" name="grp513" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp513e" value="E" name="grp513" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp513f" value="F" name="grp513" />
+</td>
+</tr>
+</table>
+<div style="height:20px"></div>
+<div class="nwtxthead" id="dids6"><?php echo t('Post Exposure Prophylaxis'); ?></div>
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%;border:solid 1px #AAA">
+<tr>
+<td colspan="7">
+ <div class="nwtxtbig"><?php echo t('Clinical competency tasks'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxtbig"><?php echo t('Do you feel competent and confident to ...'); ?></div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">A</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">B</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">C</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">D</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">E</div>
+</td>
+<td style="width:7%;text-align:center">
+ <div class="nwtxtbig"><?php echo t('No Answer'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">1)&nbsp;&nbsp;&nbsp;Provide care for sexually assaulted adults and children, including HIV prophylaxis?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp61a" value="A" name="grp61" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp61b" value="B" name="grp61" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp61c" value="C" name="grp61" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp61d" value="D" name="grp61" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp61e" value="E" name="grp61" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp61f" value="F" name="grp61" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">2)&nbsp;&nbsp;Provide prophylactic treatment to HIV exposed patients?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp62a" value="A" name="grp62" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp62b" value="B" name="grp62" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp62c" value="C" name="grp62" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp62d" value="D" name="grp62" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp62e" value="E" name="grp62" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp62f" value="F" name="grp62" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">3)&nbsp;&nbsp;Protect yourself from HIV exposure e.g. needle stick injury?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp63a" value="A" name="grp63" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp63b" value="B" name="grp63" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp63c" value="C" name="grp63" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp63d" value="D" name="grp63" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp63e" value="E" name="grp63" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp63f" value="F" name="grp63" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">4)&nbsp;&nbsp;Apply the protocol for occupational exposure?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp64a" value="A" name="grp64" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp64b" value="B" name="grp64" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp64c" value="C" name="grp64" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp64d" value="D" name="grp64" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp64e" value="E" name="grp64" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp64f" value="F" name="grp64" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">5)&nbsp;&nbsp;Provide the correct level of referral for treatment when required?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp65a" value="A" name="grp65" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp65b" value="B" name="grp65" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp65c" value="C" name="grp65" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp65d" value="D" name="grp65" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp65e" value="E" name="grp65" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp65f" value="F" name="grp65" />
+</td>
+</tr>
+</table>
+<div style="height:20px"></div>
+<div class="nwtxthead"><?php echo t('Guidelines:'); ?> <span style="font-weight:normal"><i><?php echo t('(Answer those relevant to you)'); ?></i></span></div>
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%;border:solid 1px #AAA">
+<tr>
+<td colspan="7">
+ <div class="nwtxtbig"><?php echo t('Clinical competency tasks'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxtbig"><?php echo t('Do you feel competent and confident to ...'); ?></div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">A</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">B</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">C</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">D</div>
+</td>
+<td style="width:5%;text-align:center">
+ <div class="nwtxtbig">E</div>
+</td>
+<td style="width:7%;text-align:center">
+ <div class="nwtxtbig"><?php echo t('No Answer'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">1)&nbsp;&nbsp;&nbsp;Understand and use the 2007 guidelines on nutrition for people living with HIV, AIDS, TB and other chronic debilitating conditions?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp71a" value="A" name="grp71" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp71b" value="B" name="grp71" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp71c" value="C" name="grp71" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp71d" value="D" name="grp71" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp71e" value="E" name="grp71" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp71f" value="F" name="grp71" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">2)&nbsp;&nbsp;&nbsp;Understand and use the CCMT/ART guidelines for adults and children?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp72a" value="A" name="grp72" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp72b" value="B" name="grp72" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp72c" value="C" name="grp72" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp72d" value="D" name="grp72" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp72e" value="E" name="grp72" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp72f" value="F" name="grp72" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">3)&nbsp;&nbsp;&nbsp;Understand and use the Sexual Assault Management guidelines?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp73a" value="A" name="grp73" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp73b" value="B" name="grp73" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp73c" value="C" name="grp73" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp73d" value="D" name="grp73" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp73e" value="E" name="grp73" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp73f" value="F" name="grp73" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">4)&nbsp;&nbsp;&nbsp;Understand and use the Contraceptive Management guidelines?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp74a" value="A" name="grp74" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp74b" value="B" name="grp74" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp74c" value="C" name="grp74" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp74d" value="D" name="grp74" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp74e" value="E" name="grp74" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp74f" value="F" name="grp74" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">5)&nbsp;&nbsp;&nbsp;Understand and use the Choice on Termination of Pregnancy Act (No. 92 of 1996)?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp75a" value="A" name="grp75" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp75b" value="B" name="grp75" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp75c" value="C" name="grp75" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp75d" value="D" name="grp75" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp75e" value="E" name="grp75" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp75f" value="F" name="grp75" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">6)&nbsp;&nbsp;&nbsp;Understand and use the National STI syndromic management guidelines?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp76a" value="A" name="grp76" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp76b" value="B" name="grp76" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp76c" value="C" name="grp76" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp76d" value="D" name="grp76" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp76e" value="E" name="grp76" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp76f" value="F" name="grp76" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">7)&nbsp;&nbsp;&nbsp;Understand and use the Prevention of Mother to Child Transmission guidelines?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp77a" value="A" name="grp77" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp77b" value="B" name="grp77" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp77c" value="C" name="grp77" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp77d" value="D" name="grp77" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp77e" value="E" name="grp77" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp77f" value="F" name="grp77" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">8)&nbsp;&nbsp;&nbsp;Understand and use the Maternity guidelines?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp78a" value="A" name="grp78" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp78b" value="B" name="grp78" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp78c" value="C" name="grp78" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp78d" value="D" name="grp78" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp78e" value="E" name="grp78" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp78f" value="F" name="grp78" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">9)&nbsp;&nbsp;&nbsp;Understand and use the National TB Control guidelines?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp79a" value="A" name="grp79" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp79b" value="B" name="grp79" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp79c" value="C" name="grp79" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp79d" value="D" name="grp79" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp79e" value="E" name="grp79" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp79f" value="F" name="grp79" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">10)&nbsp;&nbsp;Understand and use the IMCI booklet?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp710a" value="A" name="grp710" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp710b" value="B" name="grp710" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp710c" value="C" name="grp710" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp710d" value="D" name="grp710" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp710e" value="E" name="grp710" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp710f" value="F" name="grp710" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">11)&nbsp;&nbsp;Understand and use the National HIV Counselor Mentorship guidelines?</div>
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp711a" value="A" name="grp711" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp711b" value="B" name="grp711" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp711c" value="C" name="grp711" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp711d" value="D" name="grp711" />
+</td>
+<td style="width:5%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp711e" value="E" name="grp711" />
+</td>
+<td style="width:7%;text-align:center">
+ <input type="radio" disabled="disabled" id="grp711f" value="F" name="grp711" />
+</td>
+</tr>
+</table>
+<div style="height:20px"></div>
+<div class="nwtxthead"><?php echo t('Other'); ?></div>
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%;border:solid 1px #AAA">
+<tr>
+<td style="width:68%">
+ <div class="nwtxtbig"><?php echo t('Clinical competency tasks'); ?></div>
+</td>
+<td style="text-align:center;width:10%">
+ <div class="nwtxtbig"><?php echo t('Yes'); ?></div>
+</td>
+<td style="text-align:center;width:15%">
+ <div class="nwtxtbig"><?php echo t('No'); ?></div>
+</td>
+<td style="width:7%;text-align:center">
+ <div class="nwtxtbig"><?php echo t('No Answer'); ?></div>
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">1)&nbsp;&nbsp;&nbsp;Do you require additional training to perform your tasks?</div>
+</td>
+<td style="text-align:center;width:10%">
+ <input type="radio" disabled="disabled" id="grp21a" value="A" name="grp21" />
+</td>
+<td style="text-align:center;width:15%">
+ <input type="radio" disabled="disabled" id="grp21b" value="B" name="grp21" />
+</td>
+<td style="text-align:center;width:7%">
+ <input type="radio" disabled="disabled" id="grp21f" value="F" name="grp21" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">2)&nbsp;&nbsp;&nbsp;Would you like to become a mentor?</div>
+</td>
+<td style="text-align:center;width:10%">
+ <input type="radio" disabled="disabled" id="grp22a" value="A" name="grp22" />
+</td>
+<td style="text-align:center;width:15%">
+ <input type="radio" disabled="disabled" id="grp22b" value="B" name="grp22" />
+</td>
+<td style="text-align:center;width:7%">
+ <input type="radio" disabled="disabled" id="grp22f" value="F" name="grp22" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">3)&nbsp;&nbsp;&nbsp;Do you feel prepared to become a mentor?</div>
+</td>
+<td style="text-align:center;width:10%">
+ <input type="radio" disabled="disabled" id="grp23a" value="A" name="grp23" />
+</td>
+<td style="text-align:center;width:15%">
+ <input type="radio" disabled="disabled" id="grp23b" value="B" name="grp23" />
+</td>
+<td style="text-align:center;width:7%">
+ <input type="radio" disabled="disabled" id="grp23f" value="F" name="grp23" />
+</td>
+</tr>
+<tr>
+<td style="width:68%">
+ <div class="nwtxt">4)&nbsp;&nbsp;&nbsp;If yes to question 1, what additional training needs do you have?</div>
+</td>
+<td style="text-align:center;width:10%">
+</td>
+<td style="text-align:center;width:15%">
+ <input disabled="disabled" type="text" id="grp240" name="grp240" maxlength="128" />
+</td>
+<td style="text-align:center;width:7%">
+</td>
+</tr>
+</table>
+<input type="hidden" id="ids1" value="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,200" />
+<input type="hidden" id="ids2" value="01,02,03,04,05,06,07,08,09" />
+<input type="hidden" id="ids3" value="31,32,33,34,35,36,37,38" />
+<input type="hidden" id="ids4" value="41,42,43,44,45" />
+<input type="hidden" id="ids5" value="51,52,53,54,55,56,57,58,59,510,511,512,513" />
+<input type="hidden" id="ids6" value="61,62,63,64,65" />
+<div class="clear"></div>
+<div class="hrGrey"></div>
+<div class="clear"></div>
+<div id="TotalScore"></div>
+<div class="clear"></div>
+<div class="hrGrey"></div>
+<div class="clear"></div>
+<?php require_once('edit-body-class-history.phtml');?>
+<?php require_once('edit-body-exclass-history.phtml'); ?>
+</form>
+</div>
+</div>
+<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</body>
+</html>

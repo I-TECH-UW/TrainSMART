@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title><?php echo $this->translation['Application Name'];?> | <?php tp('Competencies');?></title>
+		
+		<style>
+		</style>
+		<?php
+		require_once('views/helpers/Location.php');
+		require_once('views/helpers/ScriptContainer.php');
+		print ScriptContainer::$instance->renderCSSHead();
+		print ScriptContainer::$instance->renderJSHead();
+		?>
+		<script type="text/javascript">
+			var vwvls=new Array();
+			function SetAll() {
+				<?php
+				if(isset($this->vwvls[0]))
+				{
+					$lscntr=0;
+					foreach ( $this->vwvls as $ys => $ls ) {
+						echo 'vwvls['.$lscntr.']="'.$ls.'";';
+						$lscntr++;
+					}
+				}
+				?>
+				var i;
+				for(i=0;i<vwvls.length;i++){
+					if(vwvls[i].indexOf("240")==0){
+						document.getElementById('grp240').value=vwvls[i].substr(3);
+					} else {
+						document.getElementById('grp'+vwvls[i].toLowerCase()).checked=true;
+					}
+				}
+			}
+		</script>
+	</head>
+	<body  class="yui-skin-sam" onload="SetAll()">
+		<div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+			<div id="content">
+				<h1><?php echo t('Add/Edit Competency'); ?></h1>
+				<div style="height:54px">
+					<div style="width:486px;text-align:left;float:right">
+						<div><b>A</b> - <?php echo t('fully competent and confident; able to teach others (mentor)'); ?></div>
+						<div><b>B</b> - <?php echo t('fully competent; not able to teach others (not able to be a mentor)'); ?></div>
+						<div><b>C</b> - <?php echo t('capable'); ?></div>
+						<div><b>D</b> - <?php echo t('not capable'); ?></div>
+						<div><b>E</b> - <?php echo t('not currently in my job description/duties'); ?></div>
+					</div>
+				</div>
+
+					<?php
+					foreach ($this->comps as $comp){
+						$counter = 0;
+						?>
+						<div style="height:12px"></div>
+						<div class="nwtxthead"><?php echo $comp['name']; ?></div>
+						<table cellpadding="0" cellspacing="0" border="0" style="width:100%;border:solid 1px #AAA">
+<?php
+							$lasttype = "";
+							foreach ($comp['questions'] as $question){
+								switch ($question['itemtype']){
+									case "text":
+										echo "						<tr>\n";
+										echo "							<td colspan=\"7\">\n";
+										echo "								<div class=\"nwtxtbig\">" . $question['question'] . "</div>\n";
+										echo "							</td>\n";
+										echo "						</tr>\n";
+									break;
+									case "questionyesno":
+										$counter++;
+										if ($lasttype != $question['itemtype']){
+											echo '						<tr>';
+											echo '							<td style="width:68%">';
+											echo '								<div class="nwtxtbig">&nbsp;</div>';
+											echo '							</td>';
+											echo '							<td style="width:5%;text-align:center">';
+											echo '								<div class="nwtxtbig">'.t('Yes').'</div>';
+											echo '							</td>';
+											echo '							<td style="width:5%;text-align:center">';
+											echo '								<div class="nwtxtbig">'.t('No').'</div>';
+											echo '							</td>';
+											echo '							<td style="width:5%;text-align:center">';
+											echo '								<div class="nwtxtbig">&nbsp;</div>';
+											echo '							</td>';
+											echo '							<td style="width:5%;text-align:center">';
+											echo '								<div class="nwtxtbig">&nbsp;</div>';
+											echo '							</td>';
+											echo '							<td style="width:5%;text-align:center">';
+											echo '								<div class="nwtxtbig">&nbsp;</div>';
+											echo '							</td>';
+											echo '							<td style="width:7%;text-align:center">';
+											echo '								<div class="nwtxtbig">'.t('No Answer').'</div>';
+											echo '							</td>';
+											echo '						</tr>';
+										}
+
+$answer = "F";
+foreach ($comp['answers'] as $a){
+	if ($a['question'] == $question['id']){
+		$answer = $a['option'];
+	}
+}
+										echo '						<tr>';
+										echo '							<td style="width:68%">';
+										echo '								<div class="nwtxt">' . $counter . ')&nbsp;' . $question['question'] . '</div>';
+										echo '							</td>';
+										echo '							<td style="width:5%;text-align:center">';
+										echo '								<input type="radio" disabled="disabled" id="question' . $question['id'] . '" value="A"' . ($answer == "A" ? " checked" : "") . ' name="question[' . $question['id'] . ']" />';
+										echo '							</td>';
+										echo '							<td style="width:5%;text-align:center">';
+										echo '								<input type="radio" disabled="disabled" id="question' . $question['id'] . '" value="B"' . ($answer == "B" ? " checked" : "") . ' name="question[' . $question['id'] . ']" />';
+										echo '							</td>';
+										echo '							<td style="width:5%;text-align:center">&nbsp;</td>';
+										echo '							<td style="width:5%;text-align:center">&nbsp;</td>';
+										echo '							<td style="width:5%;text-align:center">&nbsp;</td>';
+										echo '							<td style="width:7%;text-align:center">';
+										echo '								<input type="radio" disabled="disabled" id="question' . $question['id'] . '" value="F"' . ($answer == "F" ? " checked" : "") . ' name="question[' . $question['id'] . ']" />';
+										echo '							</td>';
+										echo '						</tr>';
+									break;
+									case "questiontext":
+										$counter++;
+
+										$answer = "";
+										foreach ($comp['answers'] as $a){
+											if ($a['question'] == $question['id']){
+												$answer = $a['option'];
+											}
+										}
+
+										echo '						<tr>';
+										echo '							<td style="width:68%">';
+										echo '								<div class="nwtxt">' . $counter . ')&nbsp;' . $question['question'] . '</div>';
+										echo '							</td>';
+										echo '							<td colspan="6" style="text-align:center">';
+										echo '								<input type="text" disabled="disabled" id="question' . $question['id'] . '" name="question[' . $question['id'] . ']" maxlength="128" style="width : 87%;" value="' . substr($answer,0,128) . '" />';
+										echo '							</td>';
+										echo '						</tr>';
+									break;
+									default:
+										// questionmulti
+										$counter++;
+										if ($lasttype != $question['itemtype']){
+											echo '						<tr>';
+											echo '							<td style="width:68%">';
+											echo '								<div class="nwtxtbig">&nbsp;</div>';
+											echo '							</td>';
+											echo '							<td style="width:5%;text-align:center">';
+											echo '								<div class="nwtxtbig">A</div>';
+											echo '							</td>';
+											echo '							<td style="width:5%;text-align:center">';
+											echo '								<div class="nwtxtbig">B</div>';
+											echo '							</td>';
+											echo '							<td style="width:5%;text-align:center">';
+											echo '								<div class="nwtxtbig">C</div>';
+											echo '							</td>';
+											echo '							<td style="width:5%;text-align:center">';
+											echo '								<div class="nwtxtbig">D</div>';
+											echo '							</td>';
+											echo '							<td style="width:5%;text-align:center">';
+											echo '								<div class="nwtxtbig">E</div>';
+											echo '							</td>';
+											echo '							<td style="width:7%;text-align:center">';
+											echo '								<div class="nwtxtbig">'.t('No Answer').'</div>';
+											echo '							</td>';
+											echo '						</tr>';
+										}
+	
+										$answer = "F";
+										foreach ($comp['answers'] as $a){
+											if ($a['question'] == strtoupper($question['id'])){
+												$answer = $a['option'];
+											}
+										}
+
+										echo '						<tr>';
+										echo '							<td style="width:68%">';
+										echo '								<div class="nwtxt">' . $counter . ')&nbsp;' . $question['question'] . '</div>';
+										echo '							</td>';
+										echo '							<td style="width:5%;text-align:center">';
+										echo '								<input type="radio" disabled="disabled" id="question' . $question['id'] . '" value="A"' . ($answer == "A" ? " checked" : "") . ' name="question[' . $question['id'] . ']" />';
+										echo '							</td>';
+										echo '							<td style="width:5%;text-align:center">';
+										echo '								<input type="radio" disabled="disabled" id="question' . $question['id'] . '" value="B"' . ($answer == "B" ? " checked" : "") . ' name="question[' . $question['id'] . ']" />';
+										echo '							</td>';
+										echo '							<td style="width:5%;text-align:center">';
+										echo '								<input type="radio" disabled="disabled" id="question' . $question['id'] . '" value="C"' . ($answer == "C" ? " checked" : "") . ' name="question[' . $question['id'] . ']" />';
+										echo '							</td>';
+										echo '							<td style="width:5%;text-align:center">';
+										echo '								<input type="radio" disabled="disabled" id="question' . $question['id'] . '" value="D"' . ($answer == "D" ? " checked" : "") . ' name="question[' . $question['id'] . ']" />';
+										echo '							</td>';
+										echo '							<td style="width:5%;text-align:center">';
+										echo '								<input type="radio" disabled="disabled" id="question' . $question['id'] . '" value="E"' . ($answer == "E" ? " checked" : "") . ' name="question[' . $question['id'] . ']" />';
+										echo '							</td>';
+										echo '							<td style="width:7%;text-align:center">';
+										echo '								<input type="radio" disabled="disabled" id="question' . $question['id'] . '" value="F"' . ($answer == "F" ? " checked" : "") . ' name="question[' . $question['id'] . ']" />';
+										echo '							</td>';
+										echo '						</tr>';
+	
+									break;
+								}
+								$lasttype = $question['itemtype'];
+							}
+							echo "						<tr>\n";
+							echo "							<td colspan=\"7\">\n";
+							echo "								<div class=\"nwtxtbig\">&nbsp;</div>\n";
+							echo "							</td>\n";
+							echo "						</tr>\n";
+
+?>
+						</table>
+						<div style="height:16px"></div>
+						<?php
+					}
+
+					?>
+					<div class="clear"></div>
+			</div>
+		</div>
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+	</body>
+</html>

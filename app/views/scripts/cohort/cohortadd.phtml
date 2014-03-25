@@ -1,0 +1,325 @@
+<html>
+
+	<head>
+
+		<title><?php echo $this->escape($this->title);?></title>
+
+		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+
+
+	<?php
+
+	require_once('views/helpers/ScriptContainer.php');
+
+	print ScriptContainer::$instance->renderCSSHead();
+
+	print ScriptContainer::$instance->renderJSHead();	  ?>
+
+	
+
+		<script type="text/javascript" charset="utf-8">
+
+			$(document).ready(function() {
+
+				$( ".calendarbox" ).datepicker({
+
+					changeMonth: true,
+
+					changeYear: true
+
+				});
+
+				/* Add a click handler to the rows - this could be used as a callback */
+
+				$(".tablegrid tbody").click(function(event) {
+
+					$(oTable.fnSettings().aoData).each(function (){
+
+						$(this.nTr).removeClass('row_selected');
+
+					});
+
+					$(event.target.parentNode).addClass('row_selected');
+
+				});
+
+	 
+
+				/* Add a click handler for the delete row */
+
+				$('#delete').click( function() {
+
+					var anSelected = fnGetSelected( oTable );
+
+					oTable.fnDeleteRow( anSelected[0] );
+
+				} );
+
+	 
+
+				/* Init the table */
+
+				oTable = $('.tablegrid').dataTable({
+
+					"bJQueryUI": true,
+
+					"sPaginationType": "full_numbers"
+
+				});
+
+				$(document).ready(function(){
+
+					$("#cohortadd").validate();
+
+				});
+
+			} );
+
+
+
+
+
+			function in_array (needle, haystack, argStrict) {
+
+				var key = '',
+
+					strict = !! argStrict;
+
+			 
+
+				if (strict) {
+
+					for (key in haystack) {
+
+						if (haystack[key] === needle) {
+
+							return true;
+
+						}
+
+					}
+
+				} else {
+
+					for (key in haystack) {
+
+						if (haystack[key] == needle) {
+
+							return true;
+
+						}
+
+					}
+
+				}
+
+			 
+
+				return false;
+
+			}
+
+
+
+			var cohorts = [<?php echo $this->allcohorts ?>];
+
+
+
+			/* Get the rows which are currently selected */
+
+			function fnGetSelected( oTableLocal ){
+
+				var aReturn = new Array();
+
+				var aTrs = oTableLocal.fnGetNodes();
+
+				 
+
+				for ( var i=0 ; i<aTrs.length ; i++ ){
+
+					if ( $(aTrs[i]).hasClass('row_selected') ){
+
+						aReturn.push( aTrs[i] );
+
+					}
+
+				}
+
+				return aReturn;
+
+			}
+
+			
+
+			function checkcohortname(){
+
+				if (in_array ($("#cohortname").val(), cohorts)){
+
+					alert ('<?php echo t("That cohort name is already taken.\nPlease use a different one."); ?>');
+
+					$("#cohortname").focus();
+
+				}
+
+			}
+
+		</script>
+
+	</head>
+
+	<body>
+
+		<div id="pageHolder">
+
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+
+			<div id="content">
+
+			<div id="subcontent">
+
+				<div id="contentheader">
+
+					<h2><?php echo t('Add Cohort Record'); ?></h2>
+
+					<br>
+
+			
+
+				</div>
+
+				<div class="pad50 clear"></div>
+
+				<form id="cohortadd" method="post">
+
+				<input type="hidden" name="id" value="<?php echo $this->escape($this->id);?>">
+
+ 				<div class="mainformholder">
+
+				<p style=""><?php echo t('Enter Criteria'); ?></p><br>
+
+						
+
+					<label><?php echo t('Cohort Name'); ?></label>
+
+					<input type="text" name="cohortname" id="cohortname" size="32" class="required" onblur="checkcohortname()">
+
+					
+
+					<label><?php echo t('Degree'); ?></label>
+
+					<select name="degree" id="degree" class="required">
+
+						<option value="0"><?php echo t('Select...'); ?></option>
+
+<?php
+
+	foreach ($this->degrees as $degree){
+
+		echo "<option value=\"" . $degree['id'] . "\">" . $degree['degree'] . "</option>\n";
+
+	}
+
+?>
+
+					</select>
+
+						
+
+ 					<label><?php echo t('Cohort Start Date'); ?></label>
+
+					<input type="text" name="startdate" size="32"  class="calendarbox required">
+
+
+
+					<label><?php echo t('Cohort Gruduation Date'); ?></label>
+
+					<input type="text" name="graddate" size="32" class="calendarbox required">
+
+
+
+					<label><?php echo t('Institution'); ?></label>
+
+					<select name="institution" id="institution">
+
+						<?php
+
+							foreach ($this->institutions as $institution){
+
+							?>
+
+								<option value="<?php echo $institution['id']; ?>"><?php echo $institution['institutionname']; ?></option>
+
+							<?php
+
+							}
+
+						?>
+
+					</select>
+
+					
+
+					<label><?php echo t('Cadre'); ?></label>
+
+					<select name="cadre">
+
+						<?php
+
+							foreach ($this->getcadres as $cadre){
+
+								if (trim($cadre['cadrename']) != ""){
+
+								?>
+
+									<option value="<?php echo $cadre['id']; ?>"<?php echo ($this->escape($this->cadre) == $cadre['id'] ? " selected" : "") ?>><?php echo $cadre['cadrename']; ?></option>
+
+								<?php
+
+								}
+
+							}
+
+						?>
+
+					</select>
+
+					
+
+					<div class="rightdiv" style="margin:auto;">
+
+						<input type="submit" name="update" value="<?php echo t('Add Cohort'); ?> &raquo;" class="tsbutton green large">
+
+					</div>
+
+					<div class="clear"></div>
+
+
+
+
+
+				</form></div>
+
+				<div class="clear"></div>
+
+				
+
+				</div>
+
+				<div class="clear"></div>
+
+			</div>
+
+			<div class="clear"></div>
+
+						
+
+
+
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+		
+
+	</body>
+
+</html>

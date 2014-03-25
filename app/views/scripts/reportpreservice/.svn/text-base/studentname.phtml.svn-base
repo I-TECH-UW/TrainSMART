@@ -1,0 +1,367 @@
+<html>
+	<head>
+		<title><?php echo $this->escape($this->title);?></title>
+		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+	<?php
+	require_once('views/helpers/Location.php');
+    require_once('views/helpers/ScriptContainer.php');
+    print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead(); 
+	
+	$checkLabel = t('show');
+if ( $this->mode == 'count' )
+	$checkLabel = t('group');
+$checkVisible = '';
+if ($this->mode == 'search' ) {
+	$checkVisible = ' style="display:none;" ';
+}
+	     ?>
+    
+
+
+
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				$( ".calendarbox" ).datepicker({
+					changeMonth: true,
+					changeYear: true
+				});
+				/* Add a click handler to the rows - this could be used as a callback */
+				$(".tablegrid tbody").click(function(event) {
+					$(oTable.fnSettings().aoData).each(function (){
+						$(this.nTr).removeClass('row_selected');
+					});
+					$(event.target.parentNode).addClass('row_selected');
+				});
+	 
+				/* Add a click handler for the delete row */
+				$('#delete').click( function() {
+					var anSelected = fnGetSelected( oTable );
+					oTable.fnDeleteRow( anSelected[0] );
+				} );
+	 
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+			} );
+
+			/* Get the rows which are currently selected */
+			function fnGetSelected( oTableLocal ){
+				var aReturn = new Array();
+				var aTrs = oTableLocal.fnGetNodes();
+				 
+				for ( var i=0 ; i<aTrs.length ; i++ ){
+					if ( $(aTrs[i]).hasClass('row_selected') ){
+						aReturn.push( aTrs[i] );
+					}
+				}
+				return aReturn;
+			}
+		</script>
+	</head>
+   
+   
+   
+	<body>
+     <div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+            <div id="content">
+			<div id="subcontent">
+				<div id="contentheader">
+					<h2><?php echo t('Reports'); ?></h2>
+					<br>
+			
+				</div>
+				<div class="pad50 clear"></div>
+				<form  action="" id="peopleadd" method="get">
+				<div class="mainformholder" style="height:1000px;">
+                    
+               <p style="padding-left:105px;font-weight:bold;"><?php echo t('Students Trained'); ?></p><br>
+               
+               <p style="padding-left:230px;font-weight:bold;"><?php echo t('Show'); ?></p><br>
+               		
+                  <p> <span style="margin-left:40px;"><?php echo (@$this->translation['Region A (Province)']); ?>(<?php tp('facility');?>)</span>
+                   <span style="margin-left:105px;"><input type="checkbox" name="showProvince"  <?php echo $checkVisible;?>  <?php  if ($this->criteria['showProvince'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></span>
+                   <span style="padding-left:80px; position:absolute;"><?php renderFilter($this->locations, 1, 'province_id', $this->criteria['province_id'], 'district_id', false); ?></span>
+                   </p>
+                   <p>&nbsp;</p>
+                   <p>&nbsp;</p>
+                  <?php if ( $this->setting['display_region_b'] ) { ?> 
+                   <p> <span style="margin-left:40px;"><?php echo (@$this->translation['Region B (Health District)']); ?>(<?php tp('facility');?>)</span>
+                   <span style="margin-left:105px;"><input type="checkbox" name="showDistrict"  <?php echo $checkVisible;?> <?php  if ($this->criteria['showDistrict'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></span>
+                   <span style="padding-left:80px; position:absolute;"><?php renderFilter($this->locations, 2, 'district_id', $this->criteria['district_id'], ($this->setting['display_region_c']?'region_c_id':false), false); ?></span>
+                   </p>
+                   <?php } ?>
+                  
+                    <?php if ( $this->setting['display_region_c'] ) { ?>
+                     <p>&nbsp;</p>
+                      <p>&nbsp;</p>
+                   <p> <span style="margin-left:40px;"><?php echo (@$this->translation['Region B (Health District)']); ?> (<?php tp('facility');?>)</span>
+                   <span style="margin-left:120px;"><input type="checkbox" name="showDistrict"  <?php echo $checkVisible;?> <?php  if ($this->criteria['showDistrict'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></span>
+                   <span style="padding-left:80px; position:absolute;"><?php renderFilter($this->locations, 2, 'district_id', $this->criteria['district_id'], ($this->setting['display_region_c']?'region_c_id':false), false); ?></span>
+                   </p>
+                    <?php } ?>
+                   <p>&nbsp;</p>
+                      <p>&nbsp;</p>
+                   
+                   <p> <span style="margin-left:40px;"><?php echo t('Institution'); ?></span>
+                   <span style="margin-left:136px;"><input type="checkbox" ></span>
+                   <span style="padding-left:80px; position:absolute;"><input type="text"></span>
+                   </p>
+                   
+                   <p>&nbsp;</p>
+                      <p>&nbsp;</p>
+                   
+                   <p> <span style="margin-left:40px;">	<?php echo t('Cadre'); ?>	</span>
+                   <span style="margin-left:166px;"><input type="checkbox" name="showCadre"  <?php echo $checkVisible;?> <?php  if ($this->criteria['showCadre'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></span>
+                   <span style="padding-left:80px; position:absolute;"><input type="text" name="cadre"></span>
+                   </p>
+                 				
+                    
+                    
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                       <p> <span style="margin-left:40px;">	<?php echo t('Cohort'); ?>	</span>
+                   <span style="margin-left:160px;"><input type="checkbox"></span>
+                   <span style="padding-left:80px; position:absolute;"><input type="text"></span>
+                   </p>
+                 				
+                    
+                    
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                       <p> <span style="margin-left:40px;">	<?php echo t('Gender'); ?>	</span>
+                   <span style="margin-left:157px;"><input type="checkbox"></span>
+                   <span style="padding-left:80px; position:absolute;"><input type="text"></span>
+                   </p>
+                 				
+                    
+                    
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                       <p> <span style="margin-left:40px;"><?php echo t('Nationality'); ?>	</span>
+                   <span style="margin-left:132px;"><input type="checkbox"></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                        <p> <span style="margin-left:40px;"><?php echo t('Age'); ?>	</span>
+                   <span style="margin-left:175px;"><input type="checkbox"></span>
+                   <span style="padding-left:80px; position:absolute;"><input type="text"><input type="text"></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                    
+                       <p> <span style="margin-left:40px;"><?php echo t('Active'); ?>	</span>
+                   <span style="margin-left:160px;"><input type="checkbox"></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                         <p> <span style="margin-left:40px;"><?php echo t('Terminated Early'); ?>	</span>
+                   <span style="margin-left:91px;"><input type="checkbox"></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                  
+                   <p> <span style="margin-left:40px;"><?php echo t('Graduated'); ?>	</span>
+                   <span style="margin-left:136px;"><input type="checkbox"></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                  
+                   <p> <span style="margin-left:40px;"><?php echo t('Funding Source'); ?>	</span>
+                   <span style="margin-left:100px;"><input type="checkbox"></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                      <p> <span style="margin-left:40px;">	<?php echo t('Facility @ Graduation'); ?>	</span>
+                   <span style="margin-left:62px;"><input type="checkbox"></span>
+                   <span style="padding-left:120px; position:absolute;"><input type="text"></span>
+                   </p>
+                 				
+                    
+                    
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                        <p> <span style="margin-left:40px;">	<?php echo t('Tutor Advisor'); ?>	</span>
+                   <span style="margin-left:115px;"><input type="checkbox"></span>
+                   <span style="padding-left:120px; position:absolute;"><input type="text"></span>
+                   </p>
+                 				
+                    
+                    
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                       
+                   <span style="margin-left:250px;"><input type="checkbox"></span>
+                   <span style="padding-left:80px; position:absolute;"><?php echo t('Return Unique Participants'); ?></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                     
+                          <span style="padding-left:80px; position:absolute;"><?php echo t('Start Date Between'); ?></span>
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+
+                     
+             <p> <span style="margin-left:40px;">	<?php echo t('Day'); ?>	</span>
+             <span style="padding-left:10px; position:absolute;">
+             <input type="text"><input type="text"><input type="text"></span>
+                  </p>
+                 				
+                  <p>&nbsp;</p>
+                   <p>&nbsp;</p>
+                   
+              <p> <span style="margin-left:40px;">	<?php echo t('Day'); ?>	</span>
+               <span style="padding-left:10px; position:absolute;"><input type="text"><input type="text"><input type="text"></span>
+                   </p>
+                 				
+                  <p>&nbsp;</p>
+                     <p>&nbsp;</p>
+                  
+                   <div class="rightdiv" style="margin-top:20px;">
+		<input type="submit" name="go" value="<?php echo t('Run report'); ?>" class="tsbutton green large">
+					</div>
+
+                      
+                        </form>
+                    
+                  
+
+				</div>
+               <?php if ( $this->criteria['go'] ) { ?>
+<div class="hrGrey"></div>
+    <div class="fieldIndentNoMargin"><?php echo t('Trainings').' '.t('matched with').' '.t('Facilities');?> <span class="total"><?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span><?php echo $this->printAndExport();?></div>
+<?php } ?>
+    <div id="trainings" class="itechTable"></div>
+    <script type="text/javascript">
+    	        var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
+	            elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/training/view/id/" + oRecord.getData("id") + "'>" + sData + "</a>";
+	        };
+
+	        var trainingData = [
+<?php $isFirstRow = true;
+$cnt = 0;
+foreach($this->results as $row) {
+	if ( (!$_REQUEST['limit'])  or ($cnt < 100) ) {
+		if (!$isFirstRow )
+			echo ',';
+		$isFirstRow = false;
+		echo '['.(isset($row['cnt'])?$row['cnt']:$row['id']);
+		if ( isset($row['id']) )
+			echo ',"'.$row['training_start_date'].'"';
+		if ( $this->criteria['showFacility'] )
+			echo ',"'.$row['facility_name'].'"';
+		if ( $this->criteria['showType'] )
+			echo ',"'.$row['facility_type_phrase'].'"';
+		if ( $this->criteria['showSponsor'] )
+			echo ',"'.$row['facility_sponsor_phrase'].'"';
+		if ( $this->criteria['showProvince'] )
+			echo ',"'.$row['province_name'].'"';
+		if ( $this->criteria['showDistrict'] )
+			echo ',"'.$row['district_name'].'"';
+		/*	if ( $this->criteria['showCadre'] )
+			echo ',"'.$row['cadrename'].'"';*/
+    if ( $this->criteria['showRegionC'] )
+      echo ',"'.$row['region_c_name'].'"';
+			if ( $this->criteria['showTrainingTitle'] or ($this->mode == 'search' ))
+			echo ',"'.$row['training_title'].'"';
+		if ( $this->criteria['showLocation'] )
+			echo ',"'.$row['training_location_name'].'"';
+		if ( $this->criteria['showOrganizer'] )
+			echo ',"'.$row['training_organizer_phrase'].'"';
+		if ( $this->criteria['showLevel'] )
+			echo ',"'.$row['training_level_phrase'].'"';
+		if ( $this->criteria['showTopic'] )
+			echo ',"'.$row['training_topic_phrase'].'"';
+		if ( $this->criteria['showPepfar'] )
+			echo ',"'.$row['pepfar_category_phrase'].'"';
+		if ( $this->criteria['showTot'] )
+			echo ',"'.$row['is_tot'].'"';
+		echo "]";
+		$cnt++;
+}}
+   ?>];
+
+var trainingColumnDefs = [
+<?php if (isset($this->results[0]['cnt'])) { ?>
+{key:"cnt", label: "Count", sortable:true, resizeable:true}
+<?php } else { ?>
+{key:"id", label: "ID", sortable:true, resizeable:true, formatter: formatViewUrl},
+{key:"training_start_date", label: "<?php tp('Date');?>", sortable:true, resizeable:true}
+<?php } ?>
+<?php if ( $this->criteria['showFacility'] ) { ?>
+   ,{key:"facility_name", label: "<?php tp('Facility Name');?>", sortable:true, resizeable:true}
+ <?php } ?>
+<?php if ( $this->criteria['showType'] ) { ?>
+   ,{key:"facility_type_phrase", label: "<?php tp('Facility Type');?>", sortable:true, resizeable:true}
+ <?php } ?>
+<?php if ( $this->criteria['showSponsor'] ) { ?>
+   ,{key:"facility_sponsor_phrase", label: "<?php tp('Facility Sponsor');?>", sortable:true, resizeable:true}
+ <?php } ?>
+ <?php if ( $this->criteria['showProvince'] ) { ?>
+   ,{key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true}
+ <?php } ?>
+<?php if ( $this->criteria['showDistrict'] ) { ?>
+   ,{key:"district_name", label: "<?php echo (@$this->translation['Region B (Health District)']); ?>", sortable:true, resizeable:true}
+ <?php } ?>
+<?php /*?> <?php if ( $this->criteria['showCadre'] ) { ?>
+   ,{key:"cadrename", label: "Cadre", sortable:true, resizeable:true}
+ <?php } ?><?php */?>
+<?php if ( $this->criteria['showRegionC'] ) { ?>
+   ,{key:"region_c_name", label: "<?php echo (@$this->translation['Region C (Local Region)']); ?>", sortable:true, resizeable:true}
+ <?php } ?>
+ <?php if ( $this->criteria['showTrainingTitle']  or ($this->mode == 'search' )) { ?>
+   ,{key:"training_title", label: "<?php echo (@$this->translation['Training Name']); ?>", sortable:true, resizeable:true}
+ <?php } ?>
+<?php if ( $this->criteria['showLocation'] ) { ?>
+   ,{key:"training_location_name", label: "<?php tp('Training Location');?>", sortable:true, resizeable:true}
+ <?php } ?>
+<?php if ( $this->criteria['showOrganizer'] ) { ?>
+   ,{key:"training_organizer_phrase", label: "<?php echo (@$this->translation['Training Organizer']); ?>", sortable:true, resizeable:true}
+ <?php } ?>
+<?php if ( $this->criteria['showLevel'] ) { ?>
+   ,{key:"training_level_phrase", label: "<?php echo (@$this->translation['Training Level']); ?>", sortable:true, resizeable:true}
+ <?php } ?>
+<?php if ( $this->criteria['showTopic'] ) { ?>
+   ,{key:"training_topic_phrase", label: "<?php echo (@$this->translation['Training Topic']); ?>", sortable:true, resizeable:true}
+ <?php } ?>
+<?php if ( $this->criteria['showPepfar'] ) { ?>
+   ,{key:"pepfar_category_phrase", label: "<?php tp('PEPFAR');?>", sortable:true, resizeable:true}
+ <?php } ?>
+<?php if ( $this->criteria['showTot'] ) { ?>
+   ,{key:"is_tot", label: "<?php echo tp('TOT'); ?>", sortable:true, resizeable:true}
+ <?php } ?>
+];
+
+	makeDataTable("trainings", null, trainingData, trainingColumnDefs);
+</script>
+<?php if ($cnt < count($this->results)) { ?>
+<div  class="fieldIndentNoMargin">[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a></div>
+<?php } ?>
+            </div>
+		</div>
+        				
+
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+        </div>
+	</body>
+</html>

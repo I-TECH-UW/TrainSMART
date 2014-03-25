@@ -1,0 +1,135 @@
+<h1><?php echo t('Search').space.t('Facility');?></h1>
+
+<form action="" method="GET">
+
+<fieldset><legend><?php tp('Select Criteria');?></legend>
+
+<div class="fieldLabel"><?php echo t('Facility').space.t('Name');?></div>
+<div class="fieldInput"><select id="facility_name" name="facility_name">
+<option value="">--<?php tp('All');?>--</option>
+<?php
+	foreach ( $this->facility_names as $vals ) {
+	echo '<option value="'.htmlspecialchars($vals['facility_name']).'" '.((@$this->criteria['facility_name']) == $vals['facility_name']? 'SELECTED':'').' >'.$vals['facility_name'].'</option>';
+}
+?>
+</select></div>
+
+<?php echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, false ); ?>
+
+<div class="fieldLabel" id="type_id_lbl"><?php echo t('Facility').space.t('Type');?></div>
+<div class="fieldInput">
+<select id="type_id" name="type_id" >
+<option value="">--<?php tp('All');?>--</option>
+<?php
+foreach ( $this->facility_types as $vals ) {
+	echo '<option value="'.$vals['id'].'" '.((@$this->criteria['type_id']) == $vals['id']? 'SELECTED':'').' >'.$vals['facility_type_phrase'].'</option>';
+}
+?>
+</select></div>
+
+<?php if ( $this->setting['display_facility_sponsor'] ) { ?>
+<div class="fieldLabel" id="sponsor_id_lbl"><?php echo t('Facility').space.t('Sponsor');?></div>
+<div class="fieldInput">
+<select id="sponsor_id" name="sponsor_id" >
+	<option value="">--<?php tp('All');?>--</option>
+	<?php
+	foreach ( $this->facility_sponsors as $vals ) {
+		echo '<option value="'.$vals['id'].'" '.((@$this->criteria['sponsor_id']) == $vals['id']? 'SELECTED':'').' >'.$vals['facility_sponsor_phrase'].'</option>';
+	}
+	?>
+</select></div>
+<?php } ?>
+
+<div class="clear"></div>
+<input type="hidden" name="limit" id="limit" value="1" />
+<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+</fieldset>
+</form>
+<?php if ( $this->criteria['go'] ) { ?>
+<div class="hrGrey"></div>
+<div class="fieldIndentNoMargin"><?php tp('Facility');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+<a href="<?php echo $this->base_url;?>/site/add"><?php echo t('Add New').space.t('Facility');?></a><br/><br/>
+<div id="facilities"></div>
+<script type="text/javascript">
+var facilitiesData = [
+<?php
+	$cnt = 0;
+	$isFirstRow = true;
+
+	foreach($this->results as $row) {
+
+		if ( ( $cnt < 100 ) or ( isset($_REQUEST['limit']) AND !$_REQUEST['limit'] ) ) {
+			if ( !$isFirstRow ) {
+				echo ',';
+			}
+			$isFirstRow = false;
+
+			echo '[';
+				echo '"'.$row['id'];
+				echo '","'.str_replace('\\', '', $row['facility_name']);
+				echo '","'.$row['province_name'];
+				echo '","'.($this->setting['display_region_b']?$row['district_name'].'","':'');
+				echo ($this->setting['display_region_c']?$row['region_c_name'].'","':'');
+				echo ($this->setting['display_region_d']?$row['region_d_name'].'","':'');
+				echo ($this->setting['display_region_e']?$row['region_e_name'].'","':'');
+				echo ($this->setting['display_region_f']?$row['region_f_name'].'","':'');
+				echo ($this->setting['display_region_g']?$row['region_g_name'].'","':'');
+				echo ($this->setting['display_region_h']?$row['region_h_name'].'","':'');
+				echo ($this->setting['display_region_i']?$row['region_i_name'].'","':'');
+				echo $row['facility_type_phrase'] . '"';
+				if ( $this->setting['display_facility_sponsor'] )
+					echo ',"'.$row['facility_sponsor_phrase'].'"';
+			echo ']';
+			$cnt++;
+			}
+		}
+?>];
+
+var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
+	if ( (sData == null) || (sData.length == 0) )
+		sData = '&nbsp;&nbsp;&nbsp;';
+	elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/site/view/id/" + oRecord.getData("id") + "' >" + sData + "</a>";
+}
+
+var facilitiesColumnDefs = [
+	{key:"id", label: "<?php tp("ID");?>", sortable:false, resizable:false,
+	formatter: formatViewUrl},
+	{key:"facility_name", label: "<?php echo t('Facility').space.t('Name');?>", sortable:true, resizeable:true},
+	{key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true},
+<?php if ( $this->setting['display_region_b'] ) { ?>
+	{key:"district_name", label: "<?php echo (@$this->translation['Region B (Health District)']); ?>", sortable:true, resizeable:true},
+<?php } ?>
+<?php if ( $this->setting['display_region_c'] ) { ?>
+	{key:"region_c_name", label: "<?php echo (@$this->translation['Region C (Local Region)']); ?>", sortable:true, resizeable:true},
+<?php } ?>
+<?php if ( $this->setting['display_region_d'] ) { ?>
+	{key:"region_d_name", label: "<?php echo (@$this->translation['Region D']); ?>", sortable:true, resizeable:true},
+<?php } ?>
+<?php if ( $this->setting['display_region_e'] ) { ?>
+	{key:"region_e_name", label: "<?php echo (@$this->translation['Region E']); ?>", sortable:true, resizeable:true},
+<?php } ?>
+<?php if ( $this->setting['display_region_f'] ) { ?>
+	{key:"region_f_name", label: "<?php echo (@$this->translation['Region F']); ?>", sortable:true, resizeable:true},
+<?php } ?>
+<?php if ( $this->setting['display_region_g'] ) { ?>
+	{key:"region_g_name", label: "<?php echo (@$this->translation['Region G']); ?>", sortable:true, resizeable:true},
+<?php } ?>
+<?php if ( $this->setting['display_region_h'] ) { ?>
+	{key:"region_h_name", label: "<?php echo (@$this->translation['Region H']); ?>", sortable:true, resizeable:true},
+<?php } ?>
+<?php if ( $this->setting['display_region_i'] ) { ?>
+	{key:"region_i_name", label: "<?php echo (@$this->translation['Region I']); ?>", sortable:true, resizeable:true},
+<?php } ?>
+	{key:"facility_type_phrase", label: "<?php tp('Type');?>", sortable:true, resizeable:true}
+<?php if ( $this->setting['display_facility_sponsor'] ) { ?>
+	,{key:"facility_sponsor_phrase", label: "<?php tp('Sponsor');?>", sortable:true, resizeable:true}
+<?php } ?>
+];
+
+makeDataTable("facilities", null, facilitiesData, facilitiesColumnDefs);
+</script>
+<?php if ($cnt < count($this->results)) { ?>
+[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a>
+<?php } ?>
+<?php } ?>
+</div>

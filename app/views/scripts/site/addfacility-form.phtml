@@ -1,0 +1,121 @@
+<?php require_once('views/helpers/Location.php');
+      require_once('views/helpers/TrainingViewHelper.php'); ?>
+<div class="fieldLabelThin" id="facility_name_lbl"><span class="required">*</span><?php echo t('Site').space.t('name');?></div>
+	<div class="fieldInput"><input type="text" name="facility_name"  id="facility_name" value="" size="40" maxlength="128"/></div>
+
+	<div class="fieldLabelThin" id="facility_address1_lbl"><?php tp('Address 1');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_address1" id="facility_address1" value="" size="40" maxlength="128"/></div>
+	<div class="fieldLabelThin" id="facility_address2_lbl"><?php tp('Address 2');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_address2" id="facility_address2" value="" size="40" maxlength="128"/></div>
+
+  <div class="fieldLabelThin" id="facility_province_id_lbl"><span class="required">*</span><?php echo (@$this->translation['Region A (Province)']); ?></div>
+  <div class="fieldInput"><?php renderFilter($this->locations, 1, 'facility_province_id', false, 'facility_district_id');?></div>
+
+  <?php if ($this->setting['display_region_b'] ) { ?>
+    <div class="fieldLabelThin" id="facility_district_id_lbl"><span class="required">*</span><?php echo (@$this->translation['Region B (Health District)']); ?></div>
+    <div class="fieldInput"><?php renderFilter($this->locations, 2, 'facility_district_id', false, ($this->setting['display_region_c']?'facility_region_c_id':false));?></div>
+  <?php } ?>
+  <?php if ($this->setting['display_region_c'] ) { ?>
+    <div class="fieldLabelThin" id="facility_region_c_id_lbl"><span class="required">*</span><?php echo (@$this->translation['Region C (Local Region)']); ?></div>
+    <div class="fieldInput"><?php renderFilter($this->locations, 3, 'facility_region_c_id', false, ($this->setting['display_region_d']?'facility_region_d_id':false));?></div>
+  <?php } ?>
+  <?php if ($this->setting['display_region_d'] ) { ?>
+    <div class="fieldLabelThin" id="facility_region_d_id_lbl"><span class="required">*</span><?php echo (@$this->translation['Region D']); ?></div>
+    <div class="fieldInput"><?php renderFilter($this->locations, 4, 'facility_region_d_id', false, ($this->setting['display_region_e']?'facility_region_e_id':false));?></div>
+  <?php } ?>
+  <?php if ($this->setting['display_region_e'] ) { ?>
+    <div class="fieldLabelThin" id="facility_region_e_id_lbl"><span class="required">*</span><?php echo (@$this->translation['Region E']); ?></div>
+    <div class="fieldInput"><?php renderFilter($this->locations, 5, 'facility_region_e_id', false, ($this->setting['display_region_f']?'facility_region_f_id':false));?></div>
+  <?php } ?>
+  <?php if ($this->setting['display_region_f'] ) { ?>
+    <div class="fieldLabelThin" id="facility_region_f_id_lbl"><span class="required">*</span><?php echo (@$this->translation['Region F']); ?></div>
+    <div class="fieldInput"><?php renderFilter($this->locations, 6, 'facility_region_f_id', false, ($this->setting['display_region_g']?'facility_region_g_id':false));?></div>
+  <?php } ?>
+  <?php if ($this->setting['display_region_g'] ) { ?>
+    <div class="fieldLabelThin" id="facility_region_g_id_lbl"><span class="required">*</span><?php echo (@$this->translation['Region G']); ?></div>
+    <div class="fieldInput"><?php renderFilter($this->locations, 7, 'facility_region_g_id', false, ($this->setting['display_region_h']?'facility_region_h_id':false));?></div>
+  <?php } ?>
+  <?php if ($this->setting['display_region_h'] ) { ?>
+    <div class="fieldLabelThin" id="facility_region_h_id_lbl"><span class="required">*</span><?php echo (@$this->translation['Region H']); ?></div>
+    <div class="fieldInput"><?php renderFilter($this->locations, 8, 'facility_region_h_id', false, ($this->setting['display_region_i']?'facility_region_i_id':false));?></div>
+  <?php } ?>
+  <?php if ($this->setting['display_region_i'] ) { ?>
+    <div class="fieldLabelThin" id="facility_region_i_id_lbl"><span class="required">*</span><?php echo (@$this->translation['Region I']); ?></div>
+    <div class="fieldInput"><?php renderFilter($this->locations, 9, 'facility_region_i_id', false, false);?></div>
+  <?php } ?>
+  <div class="fieldLabelThin" id="facility_city_lbl"><?php echo (@$this->translation['City or Town']); ?></div><div id="cityAutoComplete">
+      <div class="fieldInput"><input name="facility_city" id="facility_city" type="text" size="40" maxlength="128" value="" /><input style="margin-left:10px;" type="checkbox" id="is_new_city" name="is_new_city" value="is_new_city" /><label class="label"><?php tp('New city'); ?></label><div class="clear"></div>
+      <div id="facilityCityContainer"  class="autocomplete"></div></div>
+
+  	</div>
+<?php renderCityAutocomplete('facility','facilityCityContainer',$this->base_url.'/facility/cityList/outputType/text/', $this->setting['num_location_tiers']);?>
+
+  <?php if ($this->setting['display_facility_postal_code'] ) { ?>
+    <div class="fieldLabelThin" id="facility_postal_code_lbl"><?php tp('Postal code');?></div>
+      <div class="fieldInput"><input type="text" name="facility_postal_code" id="facility_postal_code" value="" size="40" maxlength="20"/></div>
+  <?php } ?>
+  <?php if ($this->setting['display_facility_lat_long'] ) { ?>
+    <div class="fieldLabelThin" id="facility_latitude_lbl"><?php tp('Latitude');?></div>
+      <div class="fieldInput"><input type="text" name="facility_latitude" id="facility_latitude" value="" size="40" maxlength="11"/></div>
+    <div class="fieldLabelThin" id="facility_longitude_lbl"><?php tp('Longitude');?></div>
+      <div class="fieldInput"><input type="text" name="facility_longitude" id="facility_longitude" value="" size="40" maxlength="11"/></div>
+  <?php } ?>
+	<div class="fieldLabelThin" id="facility_phone_lbl"><?php tp('Phone'); ?></div>
+	  <div class="fieldInput"><input type="text" name="facility_phone" id="facility_phone" value="" size="40" maxlength="32"/></div>
+	<div class="fieldLabelThin" id="facility_fax_lbl"><?php tp('Fax');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_fax" id="facility_fax" value="" size="40" maxlength="32"/></div>
+	<div class="fieldLabelThin" id="facility_type_id_lbl"><span class="required">*</span><?php tp('Facility'); echo ' '; tp('type');?></div>
+	<div class="fieldInput"><select id="facility_type_id" name="facility_type_id">
+		<option value="">--<?php tp('choose');?>--</option>
+		<?php
+			foreach ( $this->facility_types as $vals ) {
+				echo '<option value="'.$vals['id'].'" >'.$vals['facility_type_phrase'].'</option>';
+		}
+		?>
+	</select></div>
+<?php if($this->setting['display_facility_sponsor']) { ?>
+	<div class="fieldLabelThin" id="facility_sponsor_id_lbl"><?php tp('Facility'); echo ' '; tp('sponsor');?></div>
+	<div class="fieldInput" id="facility_sponsor_wrapper">
+		<select id="facility_sponsor_id" name="facility_sponsor_id[]">
+			<option value="">--<?php tp('choose');?>--</option>
+			<?php
+			  if ( @$this->facility_sponsors ) {
+						foreach ( $this->facility_sponsors as $vals ) {
+							echo '<option value="'.$vals['id'].'" >'.$vals['facility_sponsor_phrase'].'</option>';
+					}
+			  }
+			?>
+		</select>
+		<?php if ( $this->hasACL( 'acl_editor_facility_sponsors' ) && $i==0 ) { echo '<a href="#" onclick="addToSelect(\''.t('Please enter your new').' '.t('Facility sponsor').':'.'\', \'facility_sponsor_id\', \''.Settings::$COUNTRY_BASE_URL.'/training/insert-table/table/facility_sponsor_option/column/facility_sponsor_phrase/outputType/json\'); return false;">'.t('Insert New').'</a>'; } ?>
+		<?php echo hasACLEdit( 'acl_editor_facility_sponsors', 'admin/facilities-sponsors' , $this ); ?>
+		<?php if ( @$this->setting['allow_multi_sponsors'] ) {         echo '<a id="sponsor_add"    href="#" onclick="addSponsorRow();return false;">'.t('Add another sponsor to this Facility').'</a>'; } ?>
+	</div>
+<?php if ( @$this->setting['display_sponsor_dates'] ) { ?>
+	<div class="fieldLabelThin" id="facility_sponsor_id_lbl"><?php if( @$this->setting['require_sponsor_dates'] ) echo '<span class="required">*</span>'; ?><?php tp('Sponsor Date');?></div>
+	<div class="fieldInput sponsorDates" id="facility_sponsor_wrapper">
+		<span><input class="datepicker" type="text" name="sponsor_start_date[]" /><a class="calendarbtn" href="#"><img src="<?php echo $this->base_url; ?>/js/yui/assets/calbtn.gif"></a></span>&nbsp;&nbsp;
+		<?php if( @$this->setting['require_sponsor_dates'] ) echo '<span class="required">*</span>'; ?><label class="label"><?php tp('to'); ?></label>
+		<span><input class="datepicker" type="text" name="sponsor_end_date[]" /><a class="calendarbtn" href="#"><img src="<?php echo $this->base_url; ?>/js/yui/assets/calbtn.gif"></a></span>
+	</div>
+<?php } ?>
+
+<?php } ?>
+
+<?php if ( @$this->setting['display_facility_comments'] ) { ?>
+	<div class="fieldLabelThin" id="facility_comments_lbl"><?php tp('Facility Comments');?></div>
+	<div class="fieldInput"><textarea name="facility_comments" id="facility_comments" cols="40" rows="5"></textarea></div>
+<?php } ?>
+
+<script type="text/javascript">
+// on load
+$(document).ready(function () {
+	$('.datepicker').datepicker();
+	$('.calendarbtn').click(openNearestDatePicker);
+});
+</script>
+
+<?php if ( $this->setting['display_region_b'] ) { ?>
+<script type="text/javascript">
+	filterSubTypeOptions('facility_province_id','facility_district_id');
+</script>
+<?php } ?>

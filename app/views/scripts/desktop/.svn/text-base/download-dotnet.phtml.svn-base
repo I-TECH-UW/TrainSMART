@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam">
+
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+
+  <h1>Desktop Download</h1>
+  	
+  <?php if ($this->error_message == "") {  ?>
+  
+  	<?php echo $this->error_message; ?>
+		<b>New in TrainSMART 4.0</b><br/><br/>
+		To reduce download size we have packaged the required .NET 2.0 installer seperately from TrainSMART.<br/><br/>
+		If you have never run TrainSMART or don't have .NET installed, make sure you run the required .NET 2.0 installer if the application crashes upon starting. (Required for Windows XP and any OS older than Windows Vista or Windows Server 2003)<br/><br/>
+		The .NET 2.0 installer only has to be ran once.<br/><br/>
+		Download the required .NET 2.0 installer click <a href="download-dotnet?go=1">here</a> (45mb).<br/><br/>
+		In low-bandwidth situations consider using a download manger (e.g. FlashGet) that supports resuming downloads of incomplete files when downloading a large file like the required .NET 2.0 installer.<br/><br/>
+		To download the application please choose Download Application from the menu to obtain the zip file, or click <a href="download">here</a>.<br/><br/>
+
+	<?php } else { ?>
+	
+		<?php echo $this->error_message; ?>
+	
+	<?php } ?> 
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+</div>	
+</body>
+</html>

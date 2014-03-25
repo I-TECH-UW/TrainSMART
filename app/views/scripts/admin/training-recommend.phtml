@@ -1,0 +1,116 @@
+<?php
+
+// template for page that contains an EditTable
+
+// need $pageTitle and $nextUri variables from these includes
+
+
+ob_start();
+require_once('views/scripts/header.phtml');
+$header = ob_get_contents();
+ob_end_clean();
+
+ob_start();
+require_once('views/scripts/nav-admin.phtml');
+$nav = ob_get_contents();
+ob_end_clean();
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+</head>
+<body  class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php echo $header; ?></div>
+  <div id="content" class="adminDiv">
+
+    <form method="post" name="adminForm"  enctype="multipart/form-data">
+
+    <div id="navAdmin"><?php echo $nav;?></div>
+
+    <div id="contentAdmin">
+    <h1><?php echo $this->pageTitle; ?></h1>
+    <div style="font-style:italic;">Add/edit Recommended Training Topics</div>
+    <br/>
+
+    <?php
+      if(isset($this->checkbox) && is_array($this->checkbox)) { // render checkbox
+        echo '<input type="checkbox" value="1" name="'.$this->checkbox['name'].'" id="'.$this->checkbox['name'].'" '.($this->checkbox['value']?' checked':'').'>';
+        echo '<label for="'.$this->checkbox['name'].'">'.$this->checkbox['label'].'</label>';
+        echo '<br/><br/>';
+      }
+     ?>
+
+	<div id="trainingRecommend"></div>
+	<script type="text/javascript">
+		var trainerColumnDefs = [
+		    {key:"qualification_phrase", label: "Qualification", sortable:true, resizeable:true},
+		    {key:"topics", label: "Topics", sortable:true, resizeable:true},
+		    {key:"edit", label: "Edit", sortable:true, resizeable:true}
+		];
+
+		var action = '<?php echo $this->base_url;?>/admin/listByRecommend/outputType/json';
+		makeJSONDataTable("trainingRecommend", null, action, trainerColumnDefs);
+	</script>
+
+  <a name="edit"></a>
+
+  <div class="hrGrey"></div>
+
+  Select the recommended topics for this qualification:
+  <br><br>
+
+  <div class="fieldLabel" id="qual_lbl">Qualification</div>
+  <div class="fieldInput">
+    <select id="person_qualification_option_id" name="person_qualification_option_id">
+    	<option value="">&mdash; select &mdash;</option>
+    	<?php
+    		$lastParent = null;
+    		foreach ( $this->qualifications as $vals ) {
+    		if ( !$vals['id'] ) {
+    			$lastParent = $vals['parent_phrase'];
+    			echo '<option value="'.$vals['parent_id'].'" '.($this->qualId === $vals['parent_id']?'SELECTED':'').'>'.$vals['parent_phrase'].'</option>';
+    		} else {
+    			echo '<option value="'.$vals['id'].'" '.($this->qualId === $vals['id']?'SELECTED':'').'>&nbsp;&nbsp;'. $vals['qualification_phrase'].'</option>';
+    		}
+    	}
+    		?>
+    </select>
+  </div>
+
+
+  <?php for($j = 1; $j <= $this->NUM_TOPICS; $j++) { ?>
+    <div class="fieldLabel" id="topic_lbl">Topic <?php print $j; ?></div>
+    <div class="fieldInput">
+      <?php print $this->{"dropDownTopic{$j}"}; ?>
+    </div>
+  <?php } ?>
+
+
+
+    <div class="clear"></div>
+    <br>
+
+    <input type="hidden" name="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>">
+    <input type="submit" value="Save & Continue" class="submitArrow">
+    <input type="submit" value="Save" name="saveonly" class="submitNoArrow" onclick="document.adminForm.redirect.value=''" style="margin-right:1em;">
+    </form>
+
+
+    </div>
+
+    <div class="clear"></div>
+
+	</div>
+<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+</body>
+</html>

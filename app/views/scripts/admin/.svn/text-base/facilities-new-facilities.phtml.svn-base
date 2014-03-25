@@ -1,0 +1,219 @@
+<?php 
+// template for page that contains an EditTable
+// need $pageTitle and $nextUri variables from these includes
+ob_start();
+require_once('views/scripts/header.phtml');
+$header = ob_get_contents();
+ob_end_clean(); 
+
+ob_start();
+require_once('views/scripts/nav-admin.phtml');
+$nav = ob_get_contents();
+ob_end_clean(); 
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+	<script type='text/javascript'>
+		function submitAdminForm () { return true;} // Added because was missing. Referenced by lots of onlick properties.
+	</script>
+
+</head>
+<body  class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php echo $header; ?></div>
+  
+  <div id="content" class="adminDiv">
+
+    <form method="post" name="adminForm" id="adminForm" action="" enctype="multipart/form-data">
+    
+    <div id="navAdmin"><?php echo $nav;?></div>
+    
+    <div id="contentAdmin">
+
+    <h1><?php echo $this->pageTitle; ?></h1>
+
+    <br/>
+    
+    <?php if(isset($formPrefix)) echo $formPrefix . '<br/><br/>'; ?> 
+    <?php 
+      if(isset($this->checkbox) && is_array($this->checkbox)) { // render checkbox
+        echo '<input type="checkbox" value="1" name="'.$this->checkbox['name'].'" id="'.$this->checkbox['name'].'" '.($this->checkbox['value']?' checked':'').'>';
+        echo '<label for="'.$this->checkbox['name'].'">'.$this->checkbox['label'].'</label>';
+        echo '<br/><br/>';        
+      }
+     ?>
+     
+    <?php echo $this->extraHtml; ?>    
+    <?php echo $this->editTable; ?>
+    
+    <div id="facilityUnapproved" class="facilityUnapproved">
+<script type="text/javascript">
+
+var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
+	elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/training/view/id/" + oRecord.getData("id") + "'>" + sData + "</a>";
+};
+
+var facilities1Data = [
+<?php
+// facility data for edit table
+
+$isFirstRow = true;
+$cnt = 0;
+$linksA = '<a class=\"dupeCheckLink\" onclick=\"facility_dupesearch_showDupeMenu(this);return false;\" href=\"#\">look for<br>duplicates</a>';
+
+foreach($this->primary_results as $row) {
+	if ( $cnt < 100 )
+	{
+		foreach ($row as $i => $v)
+			$row[$i] = htmlspecialchars($v, ENT_QUOTES); // ESCAPE
+
+		$links = isset($row['id']) ? '<a href=\"'.$this->base_url.'/facility/approve/id/'.$row['id'].'\">approve</a>' : '';
+
+		if (! $isFirstRow ) echo ',';
+		$isFirstRow = false;
+		echo '[';
+			echo '"' .$linksA                         .'"';
+			echo ',"'.$row['facility_name']           .'"';
+			echo ',"'.$row['city_name']               .'"';
+			echo ',"'.$row['region_c_name']           .'"';
+			echo ',"'.$row['district_name']           .'"';
+			echo ',"'.$row['province_name']           .'"';
+			echo ',"'.$row['address_1']               .'"';
+			echo ',"'.$row['address_2']               .'"';
+			echo ',"'.$row['postal_code']             .'"';
+			echo ',"'.$row['phone']                   .'"';
+			echo ',"'.$row['fax']                     .'"';
+			echo ',"'.$row['facility_type_phrase']    .'"';
+			echo ',"'.$row['facility_sponsor_phrase'] .'"';
+			echo ',"'.$links.'"';
+		echo ']';
+		$cnt++;
+	}
+}
+?>
+];
+
+	var facilities1ColumnDefs = [
+	 {key:"linksa",label: "<?php tp('Search'); ?>",sortable:true, resizable:true}
+	,{key:"facility_name",label: "<?php tp('Name'); ?>",sortable:true, resizable:true}
+	,{key:"city_name",label: "<?php tp('City'); ?>",sortable:true, resizable:true}
+	,{key:"region_c_name",label: "<?php tp('Region A (Province)'); ?>",sortable:true, resizable:true}
+	,{key:"district_name",label: "<?php tp('Region B (Health District)'); ?>",sortable:true, resizable:true}
+	,{key:"province_name",label: "<?php tp('Region C (Local Region)'); ?>",sortable:true, resizable:true}
+	,{key:"address_1",label: "<?php tp('Address 1'); ?>",sortable:true, resizable:true}
+	,{key:"address_2",label: "<?php tp('Address 2'); ?>",sortable:true, resizable:true}
+	,{key:"postal_code",label: "<?php tp('Postal Code'); ?>",sortable:true, resizable:true}
+	,{key:"phone",label: "<?php tp('Phone'); ?>",sortable:true, resizable:true}
+	,{key:"fax",label: "<?php tp('Fax'); ?>",sortable:true, resizable:true}
+	,{key:"type_option_id",label: "<?php tp('Facility Type'); ?>",sortable:true, resizable:true}
+	,{key:"sponsor_option_id",label: "<?php tp('Facility Sponsor'); ?>",sortable:true, resizable:true}
+	,{key:"Actions",label: "<?php tp('Actions'); ?>",sortable:false, resizable:true}
+	];
+
+	makeDataTable('facilityUnapproved', '<?php echo t('Unapproved').' '.t('Facilities'); ?>', facilities1Data, facilities1ColumnDefs);
+</script>
+</div>
+    <br/>    
+    
+    <input type="hidden" name="redirect" id="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>" />
+    <input type="submit" value="<?php tp('Save & Continue'); ?>" class="submitArrow" />
+    </form>
+
+<div id="facilitySearchWrapper">
+	<?php require_once 'views/scripts/facility/_search.phtml'; ?>
+</div>
+
+<div class="clear"></div>
+
+</div>
+
+<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+<div class="clear"></div>
+
+</div>
+
+<div style="display:none;">
+	<ul class="dupeMenu">
+	<li><label onclick="facility_dupesearch_dupeSearch(this, 1);"><?php tp('Name'); ?>  </label></li>
+	<li><label onclick="facility_dupesearch_dupeSearch(this, 2);"><?php tp('Region'); ?></label></li>
+	<li><label onclick="facility_dupesearch_dupeSearch(this, 3);"><?php echo t('Name')  .' + '.t('Region'); ?> </label></li>
+	<li><label onclick="facility_dupesearch_dupeSearch(this, 4);"><?php echo t('Region').' + '.t('Type'); ?>   </label></li>
+	<li><label onclick="facility_dupesearch_dupeSearch(this, 5);"><?php echo t('Region').' + '.t('Sponsor'); ?></label></li>
+	<li><label onclick="facility_dupesearch_dupeSearch(this, 6);"><?php tp('Everything'); ?></label></li>
+	<li><label onclick="facility_dupesearch_dupeSearch(this, 7);"><?php tp('Reset Search'); ?></label></li>
+	</ul>
+</div>
+<script type="text/javascript">
+function facility_dupesearch_showDupeMenu (obj)
+{
+	obj = $(obj);
+	if (obj.siblings('.dupeMenu').length > 0) {
+		obj.siblings('.dupeMenu').remove();
+		return false;
+	}
+	obj.after($('.dupeMenu').clone().menu());
+	return false;
+}
+
+
+function facility_dupesearch_dupeSearch(obj, val)
+{
+	obj = $(obj);
+	$row = obj.parents('tr').first();
+	switch (val) {
+		case 1: // Name
+			$('#facility_name').val( $row.find('.yui-dt-col-1').html() );
+		break;
+		case 2: // Region
+			// set val - sleep until ready() - set val - sleep - etc
+			$('#province_id option:contains("'         + $row.find('.yui-dt-col-5').html() + '")').attr('selected', true).ready(function () {
+				$('#district_id option:contains("'     + $row.find('.yui-dt-col-4').html() + '")').attr('selected', true).ready(function () {
+					$('#region_c_id option:contains("' + $row.find('.yui-dt-col-3').html() + '")').attr('selected', true).ready; });
+			});
+			$('#province_id, #district_id, #region_c_id').removeAttr('disabled');
+		break;
+		case 3: // Name + region
+			$names = $row.find('.yui-dt-col-1').html().split(' ');
+			$('#facility_name').val($names[0]);
+			facility_dupesearch_dupeSearch(obj, 2);
+		break;
+		case 4: // Region + Type
+			$('#type_id option:contains("'      + $row.find('.yui-dt-col-11').html() +   '")').attr('selected', true);
+			facility_dupesearch_dupeSearch(obj, 2); // region	
+		break;
+		case 5: // Region + Sponsor
+			$('#sponsor_id option:contains("'   + $row.find('.yui-dt-col-12').html() +   '")').attr('selected', true);
+			facility_dupesearch_dupeSearch(obj, 2); // region
+		break;
+		case 6: // Everything
+			$('#type_id option:contains("'      + $row.find('.yui-dt-col-11').html() +   '")').attr('selected', true);
+			$('#sponsor_id option:contains("'   + $row.find('.yui-dt-col-12').html() +   '")').attr('selected', true);
+			$('#facility_name').val( $row.find('.yui-dt-col-1').html() );
+			
+			facility_dupesearch_dupeSearch(obj, 2); // region
+		break;
+		case 7:
+			$('#facilitySearchWrapper select').val(null);
+		break;
+	}
+
+	$row.find('.dupeMenu').remove();
+	return false;
+}
+
+</script>
+</body>
+</html>
+
+
+

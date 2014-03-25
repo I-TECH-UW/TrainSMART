@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?></title>
+<?php
+require_once('views/helpers/Location.php');
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam" >
+
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+  <div id="content">
+
+    <h1><?php echo t('Search for').' '.t('Training').' '.t('Location');?></h1>
+	   <form action="" method="get">
+   <fieldset><legend><?php tp('Select Criteria');?></legend>
+   
+	<div class="fieldLabel"><?php tp('Training').' '.t('Location').' '.t('Name');?></div>
+	<div class="fieldInput"><select id="training_location_name" name="training_location_name">
+		<option value="">--<?php tp('All');?>--</option>
+		<?php
+			foreach ( $this->location_names as $vals ) {
+				if(trim($vals['training_location_name']) == '')
+					continue;
+				echo '<option value="'.htmlspecialchars($vals['training_location_name']).'" '.((@$this->criteria['training_location_name']) == $vals['training_location_name']? 'SELECTED':'').' >'.$vals['training_location_name'].'</option>';
+		}
+		?>
+	</select></div>
+   
+  <div class="fieldLabel" id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></div>
+  <div class="fieldInput"><?php renderFilter($this->locations, 1, 'province_id', $this->criteria['province_id'], 'district_id');?></div>
+  <?php if ( $this->setting['display_region_b'] ) { ?>
+  <div class="fieldLabel" id="district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?></div>
+  <div class="fieldInput"><?php renderFilter($this->locations, 2, 'district_id', $this->criteria['district_id'], ($this->setting['display_region_c']?'region_c_id':false));?></div>
+  <?php } ?>
+  <?php if ( $this->setting['display_region_c'] ) { ?>
+  <div class="fieldLabel" id="region_c_id_lbl"><?php echo (@$this->translation['Region C (Local Region)']); ?></div>
+  <div class="fieldInput"><?php renderFilter($this->locations, 3, 'region_c_id', $this->criteria['region_c_id'], false);?></div>
+  <?php } ?>
+
+
+	<div class="clear"></div>
+	<input type="hidden" name="limit" id="limit" value="1" />
+    <input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+   </fieldset>
+   </form>
+<?php if ( $this->criteria['go'] ) { ?>
+		    <div class="hrGrey"></div>
+		    <div class="fieldIndentNoMargin"><?php tp('Training').' '.t('locations');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+			<a href="<?php echo $this->base_url;?>/facility/add-location"><?php tp('Add new').' '.t('training').' '.t('location');?></a><br/><br/>
+		    <div id="locations"></div>
+		    <script type="text/javascript">
+		var locationsData = [
+		<?php
+		$cnt = 0;
+		 	$isFirstRow = true;
+			foreach($this->results as $row) {
+				if ( (isset($_REQUEST['limit']) AND !$_REQUEST['limit'])  or ($cnt < 100) ) {
+				if (!$isFirstRow )
+					echo ',';
+				$isFirstRow = false;
+					echo '[';
+						echo '"'.$row['id'];
+						echo '","';
+						echo str_replace('\\','',$row['training_location_name']);
+						echo '","'.$row['province_name'];
+						echo ($this->setting['display_region_b']) ? '","'.$row['district_name'] : '';
+						echo ($this->setting['display_region_c']) ? '","'.$row['region_c_name'] : '';
+						echo ($this->setting['display_region_d']) ? '","'.$row['region_d_name'] : '';
+						echo ($this->setting['display_region_e']) ? '","'.$row['region_e_name'] : '';
+						echo ($this->setting['display_region_f']) ? '","'.$row['region_f_name'] : '';
+						echo ($this->setting['display_region_g']) ? '","'.$row['region_g_name'] : '';
+						echo ($this->setting['display_region_h']) ? '","'.$row['region_h_name'] : '';
+						echo ($this->setting['display_region_i']) ? '","'.$row['region_i_name'] : '';
+					echo '"]';
+			}
+			}
+		   ?>];
+
+		   var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
+			if ( (sData == null) || (sData.length == 0) )
+				sData = '&nbsp;&nbsp;&nbsp;';
+		    elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/facility/view-location/id/" + oRecord.getData("id") + "' >" + sData + "</a>";
+		}
+
+		var locationsColumnDefs = [
+			{key:"id", label: "ID", sortable:false, resizable:false, formatter: formatViewUrl},
+		    {key:"training_location_name", label: "<?php tp('Location Name'); ?>", sortable:true, resizeable:true},
+	        {key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true}
+	        <?php if ( $this->setting['display_region_b'] ) { ?>
+	                ,{key:"district_name", label: "<?php echo (@$this->translation['Region B (Health District)']); ?>", sortable:true, resizeable:true}
+	        <?php } ?>
+	        <?php if ( $this->setting['display_region_c'] ) { ?>
+	                ,{key:"region_c_name", label: "<?php echo (@$this->translation['Region C (Local Region)']); ?>", sortable:true, resizeable:true}
+	        <?php } ?>
+
+		];
+
+			makeDataTable("locations", null, locationsData, locationsColumnDefs);
+		</script>
+		<?php if ($cnt < count($this->results)) { ?>
+		[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a>
+		<?php } ?>
+<?php } ?>
+  </div>
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+</div>
+
+</body>
+</html>

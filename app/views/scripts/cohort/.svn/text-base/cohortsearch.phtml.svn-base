@@ -1,0 +1,145 @@
+<html>
+	<head>
+		<title><?php echo $this->escape($this->title);?></title>
+		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+		<?php
+		require_once('views/helpers/ScriptContainer.php');
+		print ScriptContainer::$instance->renderCSSHead();
+		print ScriptContainer::$instance->renderJSHead();
+		?>
+		<script type="text/javascript" charset="utf-8">
+		$(document).ready(function() {
+			$( ".calendarbox" ).datepicker({
+				changeMonth: true,
+				changeYear: true
+			});
+			/* Add a click handler to the rows - this could be used as a callback */
+			$(".tablegrid tbody").click(function(event) {
+				$(oTable.fnSettings().aoData).each(function (){
+					$(this.nTr).removeClass('row_selected');
+				});
+				$(event.target.parentNode).addClass('row_selected');
+			});
+
+			/* Add a click handler for the delete row */
+			$('#delete').click( function() {
+				var anSelected = fnGetSelected( oTable );
+				oTable.fnDeleteRow( anSelected[0] );
+			} );
+
+			/* Init the table */
+			oTable = $('.tablegrid').dataTable({
+				"bJQueryUI": true,
+				"sPaginationType": "full_numbers"
+			});
+		} );
+		/* Get the rows which are currently selected */
+		function fnGetSelected( oTableLocal ){
+			var aReturn = new Array();
+			var aTrs = oTableLocal.fnGetNodes();
+
+			for ( var i=0 ; i<aTrs.length ; i++ ){
+				if ( $(aTrs[i]).hasClass('row_selected') ){
+					aReturn.push( aTrs[i] );
+				}
+			}
+			return aReturn;
+		}
+		</script>
+	</head>
+	<body>
+		<div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+			<div id="content">
+				<div id="subcontent">
+					<div id="contentheader">
+						<h2><?php echo t('Cohort Search'); ?></h2><br>
+					</div>
+					<form action="<?php echo $this->base_url; ?>/cohort/cohortsearch" id="peopleadd" method="post">
+						<div class="mainformholder">
+							<p style=""><?php echo t('Select Criteria'); ?></p><br>
+							<label><?php echo t('Cohort Name'); ?></label>
+							<input type="text" name="cohortname" size="32" maxlength="32" value="<?php echo $this->escape($_REQUEST['cohortname']);?>">
+
+							<label style="display : none;"><?php echo t('Cohort ID'); ?></label>
+							<input style="display : none;" type="text" name="cohortid" size="32" maxlength="32" value="<?php echo $this->escape($_REQUEST['cohortid']);?>">
+
+							<label><?php echo t('Cohort Start Date'); ?></label>
+							<input type="text" name="startdate" size="32"  class="calendarbox" value="<?php echo $this->escape($_REQUEST['startdate']);?>">
+
+							<label><?php echo t('Cohort Graduation Date'); ?></label>
+							<input type="text" name="graddate" size="32" maxlength="32" class="calendarbox" value="<?php echo $this->escape($_REQUEST['graddate']);?>">
+
+							<label><?php echo t('Institution'); ?></label>
+							<select name="institution" id="institution">
+								<option value="">Any</option>
+								<?php
+								foreach ($this->lookup_institutions as $ins){
+									echo "<option value=\"" . $ins['id'] . "\"" . ($_REQUEST['institution'] == $ins['id'] ? " selected" : "") . ">" . $ins['institutionname'] . "</option>\n";
+								}
+								?>
+							</select>
+
+							<label><?php echo t('Cadre'); ?></label>
+							<select name="cadre" id="cadre">
+								<option value=""><?php echo t('Any'); ?></option>
+								<?php
+								foreach ($this->lookup_cadres as $cadre){
+									echo "<option value=\"" . $cadre['id'] . "\"" . ($_REQUEST['cadre'] == $cadre['id'] ? " selected" : "") . ">" . $cadre['cadrename'] . "</option>\n";
+								}
+								?>
+							</select>
+							<div class="rightdiv" style="">
+								<input type="submit" name="update" value="<?php echo t('Search'); ?> &raquo;" class="tsbutton green large">
+							</div>
+						</div>
+					</form>
+					<?php
+					if (isset ($_REQUEST['cohortname'])){
+						?>
+						<div class="pad50 clear"></div>
+						<p style="float:left;font-size:14px;"><?php echo t('Cohorts'); ?></p>
+						<div class="pad20 clear"></div>
+						<div style="width :100%;">
+							<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+								<thead>
+									<tr>
+										<th><?php echo t('ID'); ?></th>
+										<th><?php echo t('Name'); ?></th>
+										<th><?php echo t('Start Date'); ?></th>
+										<th><?php echo t('Graduation Date'); ?></th>
+										<th><?php echo t('Institution'); ?></th>
+										<th><?php echo t('# of members'); ?></th>
+										<th><?php echo t('Cadre'); ?></th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php
+									foreach ($this->cohort as $fetchcohort){
+										?>
+										<tr class="GradeA" onclick="location='<?php  echo Settings::$COUNTRY_BASE_URL; ?>/cohort/cohortedit/id/<?php echo $fetchcohort['id']; ?>'">
+											<td><?php echo $fetchcohort['id']; ?></td>
+											<td><?php echo $fetchcohort['cohortname']; ?></td>
+											<td class=""><?php echo trim($fetchcohort['startdate']) != "" ? date("d/m/Y", strtotime($fetchcohort['startdate'])) : "N/A"; ?></td>
+											<td class=""><?php echo trim($fetchcohort['graddate']) != "" ? date("d/m/Y", strtotime($fetchcohort['graddate'])) : "N/A"; ?></td>
+											<td class=""><?php echo trim($fetchcohort['institutionname']) != "" ? $fetchcohort['institutionname'] : "N/A"; ?></td>
+											<td class=""><?php echo($fetchcohort['studentcount']); ?></td>
+											<td class=""><?php echo trim($fetchcohort['cadrename']) != "" ? $fetchcohort['cadrename'] : "N/A"; ?></td>
+										</tr>
+										<?php
+									}
+									?>
+								</tbody>
+							</table>
+						</div>
+						<div class="pad50 clear"></div>
+						<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/cohort/cohortadd'; ?>" style="float:right;font-size:14px;" class="tsbutton green large"><?php echo t('Add New Cohort'); ?></a>
+						<?php
+					}
+					?>
+				</div>
+			</div>
+			<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+		</div>
+	</body>
+</html>

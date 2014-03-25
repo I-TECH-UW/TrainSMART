@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title><?php echo $this->translation['Application Name'];?> | <?php tp('Evaluation Data Entry');?></title>
+
+	<?php
+		require_once('views/helpers/ScriptContainer.php');
+		print ScriptContainer::$instance->renderCSSHead();
+		print ScriptContainer::$instance->renderJSHead();
+
+		function renderLikert($qid, $qtext, $qtype, $idx) {
+			echo "<div class='qtext'>".$qtext."</div><br/>";
+			echo "<div class='likert'><input type='radio' value='1' name='value_".$qid."' /><label>1</label>";
+			echo "<input type='radio' value='2' name='value_".$qid."' /><label>2</label>";
+			echo "<input type='radio' value='3' name='value_".$qid."' /><label>3</label>";
+			if ($qtype == 'Likert' || $qtype == 'LikertNA') {
+				echo "<input type='radio' value='4' name='value_".$qid."' /><label>4</label>";
+				echo "<input type='radio' value='5' name='value_".$qid."' /><label>5</label>";
+			}
+			if ($qtype == 'Likert3NA' || $qtype == 'LikertNA')
+				echo "<input type='radio' value='0' name='value_".$qid."' /><label>".t('Not Applicable')."</label>";
+			echo '</div>';
+		}
+
+		function renderLikertCustomAnswers($qid, $qtext, $qtype, $idx, $answers) {
+			echo "<div class='qtext'>".$qtext."</div><br/>";
+			echo "<div class='likert'>";
+			foreach ($answers as  $qNo => $ans) {
+				if ( empty($ans) )
+					continue;
+				echo "<input type='radio' value='$ans' name='value_".$qid."' /><label>$ans</label>";
+			}
+			echo '</div>';
+		}
+
+		function renderText($qid, $qtext, $idx) {
+			echo "<div class='qtext'>".$qtext."</div><br/>";
+			echo "<div class='likert'><textarea cols='80' rows='5' name='value_".$qid."'></textarea></div>";
+		}
+	?>
+
+</head>
+<body class="yui-skin-sam">
+	<script type="text/javascript">
+	YAHOO.util.Event.onDOMReady(function () {
+		window.print();
+
+	});
+
+	</script>
+	<div id="pageHolder">
+		<div id="content">
+
+			<form name="evaluationForm" id="evaluationForm" method="post" action="">
+
+				<h2><?php echo $this->title;?></h2><br/><br/>
+				<ol>
+					<?php foreach($this->qid as $i => $qid) {?>
+					<li><label class="qnum"><?php echo $i + 1;?></label><?php
+					if ( $this->qtype[$i] == 'Text')
+						renderText($qid, $this->qtext[$i], $i);
+					else if ( isset($this->answers[$qid]) && !empty($this->answers[$qid]) && count($this->answers[$qid]) )
+						renderLikertCustomAnswers($qid, $this->qtext[$i], $this->qtype[$i], $i, $this->answers[$qid]);
+					else
+						renderLikert($qid, $this->qtext[$i], $this->qtype[$i], $i);
+					?></li>
+					<?php } ?>
+				</ol>
+				<br/><br/>
+			</form>
+		</div>
+	</div>
+
+</body>
+</html>

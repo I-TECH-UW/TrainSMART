@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php echo t('Facilities').' '.t('Data');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+
+?>
+
+</head>
+<body >
+
+<div id="pageHolder">
+  <div id="content">
+
+<?php foreach($this->data as $row) {
+   if ( $row['is_deleted'] ) echo ' (DELETED) '; unset($row['is_deleted']);?>
+  <?php  foreach($row as $k=>$v) {
+    if ( is_array($v) ) {
+      if ( $v && is_array(reset($v))) {
+       echo "<span style='font-weight:bold;'>".(str_replace('_phrase','',$k))."</span>";
+       foreach($v as $vals) {
+          echo '<br/>&nbsp;&nbsp;'.implode(', ',$vals);
+       }
+       echo '<br/>';
+     } else {
+       echo "<span style='font-weight:bold;'>".(str_replace('_phrase','',$k))."</span> ".implode(',',$v)."<br/>";
+      }
+    } else if ( strstr($k,'is_') !== false or strstr($k,'has_') !== false ) {
+      echo "<span style='font-weight:bold;'>".$k."</span> ".($v?'yes':'no')."<br/>";
+    } else {
+      echo "<span style='font-weight:bold;'>".(str_replace('_phrase','',$k))."</span> ".$v."<br/>";
+    }
+  }?><hr/>
+<?php }?>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php echo t('View').' '.t('Training').' '.t('Partner');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+
+		<h1><?php echo t('View').' '.t('Training').' '.t('Partner'); ?></h1>
+
+		<form id="change" action="<?php echo $this->base_url;?>/training-partner/view" method="get">
+		<div class="fieldInput"><select name="id"  id="id" onchange="this.form.submit();">
+			<?php
+				foreach ( $this->partners as $vals ) {
+					echo '<option value="'.$vals['id'].'" '.((@$this->partner['organizer_id']) == $vals['organizer_id']? 'SELECTED':'').' >'.$vals['organizer_id'].'</option>';
+			}
+			?>
+			</select>
+		</div>
+		</form>
+
+
+		<div class="fieldLabel" id="partner_name_lbl"><?php tp('Training organizer');?></div>
+		  <div class="fieldInput"><input type="text" readonly="readonly" name="organizer_id" id="organizer_id" value="<?php echo $this->partner['training_organizer_phrase']; ?>" size="40" maxlength="64"/></div>
+
+		<div class="fieldLabel" id="partner_subpartner_lbl"><?php echo t('Training').' '.t('Sub').' '.t('Partner');?></div>
+		  <div class="fieldInput"><input type="text" readonly="readonly" name="partner_subpartner" id="partner_subpartner" value="<?php echo $this->partner['subpartner']; ?>" size="40" maxlength="64"/></div>
+		
+		<div class="fieldLabel" id="partner_mechanism_id_lbl"><?php tp('Mechanism ID');?></div>
+		  <div class="fieldInput"><input type="text" readonly="readonly" name="partner_mechanism_id" id="partner_mechanism_id" value="<?php echo $this->partner['mechanism_id']; ?>" size="40" maxlength="32"/></div>
+
+		<div class="fieldLabel" id="funder_name_lbl"><?php tp('Funder Name');?></div>
+		  <div class="fieldInput"><input type="text" readonly="readonly" name="funder_name" id="funder_name" value="<?php echo $this->partner['funder_name']; ?>" size="40" maxlength="64"/></div>
+		
+		<div class="fieldLabel" id="funder_id_lbl"><?php tp('Funder ID');?></div>
+		  <div class="fieldInput"><input type="text" readonly="readonly" name="funder_id" id="funder_id" value="<?php echo $this->partner['funder_id']; ?>" size="40" maxlength="32"/></div>
+
+		<div class="clear" ></div>
+
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php tp('Trainer Report');?></title>
+<?php
+require_once('views/helpers/Location.php');
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+
+?>
+
+</head>
+<body class="yui-skin-sam" >
+
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+
+    <h1><?php echo t('Trainer').' '.t('Report');?></h1>
+      <?php require_once('trainerReportsPicker.phtml'); ?>
+	   <form action="" method="get">
+   <fieldset><legend><?php tp('Select Criteria');?></legend>
+
+
+	<?php region_filters_dropdown($this, $this->locations, $this->criteria, false, false); ?>
+	
+	<div class="fieldLabel" id="trainer_type_id_lbl"><?php echo t('Trainer').' '.t('type');?></div>
+	<div class="fieldInput"><select id="trainer_type_id" name="trainer_type_id">
+		<option value="">--<?php tp('All');?>--</option>
+		<?php
+			foreach ( $this->types as $vals ) {
+				echo '<option value="'.$vals['id'].'" '.((@$this->criteria['type_id']) == $vals['id']? 'SELECTED':'').' >'.$vals['trainer_type_phrase'].'</option>';
+		}
+		?>
+	</select></div>
+ 	<div class="fieldLabel" id="trainer_skill_id_lbl"><?php echo t('Trainer').' '.t('skill');?></div>
+	<div class="fieldInput"><select id="trainer_skill_id" name="trainer_skill_id[]" multiple="multiple" size="10">
+		<option value="">--<?php tp('All');?>--</option>
+		<?php
+			foreach ( $this->skills as $vals ) {
+				echo '<option value="'.$vals['id'].'" '.((@in_array($vals['id'], $this->criteria['skill_id']))? 'SELECTED':'').' >'.$vals['trainer_skill_phrase'].'</option>';
+		}
+		?>
+	</select></div>
+	<div class="fieldLabel" id="trainer_language_id_lbl"><?php echo t('Trainer').' '.t('language');?></div>
+	<div class="fieldInput"><select id="trainer_language_id" name="trainer_language_id">
+		<option value="">--<?php tp('All');?>--</option>
+		<?php
+			foreach ( $this->language as $vals ) {
+				echo '<option value="'.$vals['id'].'" '.((@$this->criteria['language_id']) == $vals['id']? 'SELECTED':'').' >'.$vals['language_phrase'].'</option>';
+		}
+		?>
+	</select></div>
+
+  <?php if ( $this->setting['display_training_topic'] ) { ?>
+	<div class="fieldLabel" id="trainer_language_id_lbl"><?php echo t('Training Topic'); ?></div>
+	<div class="fieldInput"><?php echo $this->topic_checkboxes; ?></div>
+
+	<div class="fieldLabel"></div>
+   	<div class="fieldInput" style="margin-top:1em;"><input type="checkbox" name="concatNames"  <?php  if ($this->criteria['concatNames']) echo 'CHECKED';?> /><label for="concatNames" ><?php tp('Combine first and last names');?></label></div>
+	<?php } ?>
+  
+  <div class="clear"></div>
+	<input type="hidden" name="limit" id="limit" value="1" />
+   	<input type="submit" class="submitNoArrow" name="go" value="Preview" />
+   </fieldset>
+   </form>
+<?php if ( $this->criteria['go'] ) { ?>
+    <div class="hrGrey"></div>
+    <div class="fieldIndentNoMargin"><?php tp('Trainers');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+
+    <div id="trainers"></div>
+    <script type="text/javascript">
+var trainerData = [
+<?php $isFirstRow = true;
+$cnt = 0;
+	foreach($this->results as $row) {
+		if ( (!$_REQUEST['limit'])  or ($cnt < 100) ) {
+				if (!$isFirstRow )
+					echo ',';
+				$isFirstRow = false;
+				echo '['.$row['id'].',';
+				if ($this->criteria['concatNames'] ) {
+					echo '"'.$row['name'].'",';
+				} else {
+					echo '"'.$row['first_name'].'",';
+					if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) {
+					   	echo '"'.$row['middle_name'].'",';
+					}
+					echo '"'.$row['last_name'].'",';
+					if ($this->setting['display_people_suffix'] && $this->criteria['showSuffix']) {
+						echo '"'. $row['suffix_phrase'].'",';
+						//echo '"'. implode(",", array_keys($row)) . '",';
+					}
+					if ( $this->setting['display_middle_name'] && $this->setting['display_middle_name_last'] ) {
+						echo '"'.$row['middle_name'].'",';
+					}
+				}
+				echo '"'.$row['trainer_type_phrase'].'","'.$row['trainer_skill_phrase'].'","'.$row['language_phrase'].'","'.$row['province_name'].'","';
+				
+				if ( $this->setting['display_region_b'] ) {
+          echo $row['district_name'].'","';			  
+				}
+        if ( $this->setting['display_region_c'] ) {
+          echo $row['region_c_name'].'","';       
+        }
+				
+        echo $row['training_topic_phrase'].'"]';
+			
+      $cnt++;
+      }
+
+			
+	}
+
+   ?>];
+
+var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
+	if ( (sData == null) || (sData.length == 0) )
+		sData = '&nbsp;&nbsp;&nbsp;';
+    elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/person/view/id/" + oRecord.getData("id") + "' >" + sData + "</a>";
+}
+
+var trainerColumnDefs = [
+    {key:"id", label: "ID", sortable:false, resizeable:true,
+	                formatter: formatViewUrl},
+<?php if (!@$this->criteria['concatNames']) { ?>
+		{key:"first_name", label: "<?php echo (@$this->translation['First Name']); ?>", sortable:true, resizeable:true},
+   <?php if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) { ?>
+		    {key:"middle_name", label: "<?php echo (@$this->translation['Middle Name']); ?>", sortable:true, resizeable:true},
+	<?php }?>
+		    {key:"last_name", label: "<?php echo (@$this->translation['Last Name']); ?>", sortable:true, resizeable:true},
+	<?php if ( $this->setting['display_people_suffix'] && $this->criteria['showSuffix']) {?>
+		    {key:"suffix_phrase", label: "<?php echo (@$this->translation['Suffix']); ?>", sortable:true, resizeable:true},
+	<?php } ?>
+   <?php if ( $this->setting['display_middle_name'] && $this->setting['display_middle_name_last'] ) { ?>
+		    {key:"middle_name", label: "<?php echo (@$this->translation['Middle Name']); ?>", sortable:true, resizeable:true},
+	<?php }?>
+<?php } else { ?>
+    {key:"name", label: "<?php tp('Name');?>", sortable:true, resizeable:true},
+<?php } ?>
+    {key:"trainer_type_phrase", label: "<?php tp('Type');?>", sortable:true, resizeable:true},
+    {key:"trainer_skill_phrase", label: "<?php tp('Skill');?>", sortable:true, resizeable:true},
+    {key:"trainer_language_phrase", label: "<?php tp('Language');?>", sortable:true, resizeable:true},
+    {key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true}
+    <?php if ( $this->setting['display_region_b'] ) { ?>,
+    {key:"district_name", label: "<?php echo (@$this->translation['Region B (Health District)']); ?>", sortable:true, resizeable:true} <?php } ?>
+    <?php if ( $this->setting['display_region_c'] ) { ?>,
+    {key:"region_c_name", label: "<?php echo (@$this->translation['Region C (Local Region)']); ?>", sortable:true, resizeable:true} <?php } ?>
+    <?php if ( $this->setting['display_training_topic'] ) { ?>
+    ,{key:"trainer_topic_phrase", label: "<?php tp('Topics Taught');?>", sortable:true, resizeable:true}
+    <?php } ?>
+];
+
+	makeDataTable("trainers", null, trainerData, trainerColumnDefs);
+</script>
+
+<?php if ($cnt < count($this->results)) { ?>
+[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a>
+<?php } ?>
+<?php } ?>
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+</div>
+
+</body>
+</html>

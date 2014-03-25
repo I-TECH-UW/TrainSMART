@@ -1,0 +1,414 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title><?php echo $this->translation['Application Name'];?> | <?php tp('Professionals Reports');?></title>
+		<?php
+		require_once('views/helpers/Location.php');
+		require_once('views/helpers/ScriptContainer.php');
+		print ScriptContainer::$instance->renderCSSHead();
+		print ScriptContainer::$instance->renderJSHead();
+		?>
+		<style>
+
+		</style>
+	</head>
+	<body class="yui-skin-sam" onload="SwHd(document.getElementById('qualification_id'));Sel();">
+		<div id="pageHolder">
+
+			<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+			<div id="content">
+
+				<h1><?php tp('Professionals Reports');?></h1>
+				<form action="" method="get">
+					<fieldset><legend><?php tp('Select Criteria');?></legend>
+						<div class="fieldLabel" id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></div>
+						<div class="fieldInput"><?php renderFilter($this->locations, 1, 'province_id', $this->criteria['province_id'], 'district_id');?></div>
+						<?php if ( $this->setting['display_region_b'] ) { ?>
+						<div class="fieldLabel" id="district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?></div>
+						<div class="fieldInput"><?php renderFilter($this->locations, 2, 'district_id', $this->criteria['district_id'], ($this->setting['display_region_c']?'region_c_id':false));?></div>
+						<?php } ?>
+						<?php if ( $this->setting['display_region_c'] ) { ?>
+						<div class="fieldLabel" id="region_c_id_lbl"><?php echo (@$this->translation['Region C (Local Region)']); ?></div>
+						<div class="fieldInput"><?php renderFilter($this->locations, 3, 'region_c_id', $this->criteria['region_c_id'], false);?></div>
+						<?php } ?>
+
+					<div class="fieldLabel"  id="facilityInput_lbl"><?php tp('Facility');?></div><div class="fieldInput"><select id="facilityInput" name="facilityInput" >
+						<option value="">--<?php tp('choose');?>--</option>
+						<?php
+						foreach ( $this->facilities as $vals ) {
+							echo '<option value="'.$vals['id'].'" '.($this->criteria['facilityInput'] == $vals['id']?'SELECTED':'').'>'.$vals['facility_name'].'</option>';
+						}
+						?>
+					</select></div>
+					<div class="clear"></div>
+
+					<!-- course taken -->
+					<div class="fieldLabel" id="training_title_option_id_lbl"><?php echo (@$this->translation['Training Name']); ?></div>
+					<div class="fieldInput">
+						<select id="training_title_option_id" name="training_title_option_id" >
+							<option value="">--<?php tp('All');?>--</option>
+							<?php
+							foreach ( $this->courses as $vals ) {
+								echo '<option value="'.$vals['id'].'" '.((@$this->criteria['training_title_option_id']) == $vals['id']? 'SELECTED':'').' >'.$this->truncate($vals['training_title_phrase']).'</option>';
+							}
+							?>
+						</select></div>
+						<div class="clear"></div>
+
+<script language="JavaScript">
+	
+	var competencies = new Array();
+<?php
+#	var_dump ($this->competencies);
+#	echo "<br><br><br>";
+	foreach ($this->compqualification as $cq){
+		echo "\tcompetencies['c" . $cq['id'] . "'] = [";
+		$first = true;
+		foreach ($cq['competencies'] as $comp){
+			if (!$first){
+				echo ",";
+			}
+			echo "[" . $comp['id'] . ",'" . addslashes($comp['name']) . "']";
+			$first = false;
+		}
+		echo "];\n";
+	}
+?>
+
+	function SwHd(){
+		// removing all options
+		$("#competencyselect").empty();
+
+		if ($("#qualification_id").val() != "--"){
+			var items = competencies['c' + $("#qualification_id").val()];
+			var ctr = 0;
+			while (items[ctr]){
+				$('#competencyselect').append($('<option>', { value : items[ctr][0] }).text(items[ctr][1])); 
+				ctr++;
+			}
+		}
+	}
+
+</script>
+
+						<div class="fieldLabel" id="qualification_id_lbl"><?php echo t('Occupational category'); ?><br /><!--<a href="javascript:void(0)" onclick="ShowAll()">All</a>--></div>
+						<div class="fieldInput"><select id="qualification_id" name="qualification_id" onchange="SwHd(this)">
+							<option value="">--<?php tp('choose');?>--</option>
+							<?php
+							$lastParent = null;
+							foreach ( $this->qualifications as $vals ) {
+								if ( !$vals['id'] ) {
+									$lastParent = $vals['parent_phrase'];
+									echo '<option value="'.$vals['parent_id'].'" '.((@$this->criteria['qualification_id']) == $vals['parent_id']?'SELECTED':'').'>'.htmlspecialchars($vals['parent_phrase']).'</option>';
+								}
+							}
+							?>
+						</select></div>
+						<div class="fieldLabel" id="qualification_id_lbl"><?php echo t('Competence'); ?><br /><a href="javascript:void(0)" onclick="SelAll()"><?php echo t('Select All'); ?></a></div>
+						<div class="fieldInput">
+							<select name="competencyselect[]" id="competencyselect" size="5" style="width : 100%;" multiple="multiple" onchange="ShwHid(this)">
+							</select>
+						</div>
+						<script type="text/javascript">
+							function SelAll(){
+								$('#competencyselect option').attr('selected', 'selected');
+								ShwHid(document.getElementById('competencyselect'));
+							}
+							
+							function myExport()
+							{
+								var v1;
+								var v2;
+								var v3;
+								var v4;
+								var v5;
+								var v6;
+								v1="";
+								v2=""
+								v3=""
+								v4=""
+								v5=""
+								v6=""
+								if(document.getElementById('dv0')!=null)
+								{
+									v1=v1+document.getElementById('dv0').innerHTML+"~";
+									v2=v2+document.getElementById('prA0').innerHTML.replace("%","")+"~";
+									v3=v3+document.getElementById('prB0').innerHTML.replace("%","")+"~";
+									v4=v4+document.getElementById('prC0').innerHTML.replace("%","")+"~";
+									v5=v5+document.getElementById('prD0').innerHTML.replace("%","")+"~";
+									v6=v6+document.getElementById('prE0').innerHTML.replace("%","")+"~";
+								}
+								if(document.getElementById('dv1')!=null)
+								{
+									v1=v1+document.getElementById('dv1').innerHTML+"~";
+									v2=v2+document.getElementById('prA1').innerHTML.replace("%","")+"~";
+									v3=v3+document.getElementById('prB1').innerHTML.replace("%","")+"~";
+									v4=v4+document.getElementById('prC1').innerHTML.replace("%","")+"~";
+									v5=v5+document.getElementById('prD1').innerHTML.replace("%","")+"~";
+									v6=v6+document.getElementById('prE1').innerHTML.replace("%","")+"~";
+								}
+								if(document.getElementById('dv2')!=null)
+								{
+									v1=v1+document.getElementById('dv2').innerHTML+"~";
+									v2=v2+document.getElementById('prA2').innerHTML.replace("%","")+"~";
+									v3=v3+document.getElementById('prB2').innerHTML.replace("%","")+"~";
+									v4=v4+document.getElementById('prC2').innerHTML.replace("%","")+"~";
+									v5=v5+document.getElementById('prD2').innerHTML.replace("%","")+"~";
+									v6=v6+document.getElementById('prE2').innerHTML.replace("%","")+"~";
+								}
+								if(document.getElementById('dv3')!=null)
+								{
+									v1=v1+document.getElementById('dv3').innerHTML+"~";
+									v2=v2+document.getElementById('prA3').innerHTML.replace("%","")+"~";
+									v3=v3+document.getElementById('prB3').innerHTML.replace("%","")+"~";
+									v4=v4+document.getElementById('prC3').innerHTML.replace("%","")+"~";
+									v5=v5+document.getElementById('prD3').innerHTML.replace("%","")+"~";
+									v6=v6+document.getElementById('prE3').innerHTML.replace("%","")+"~";
+								}
+								if(document.getElementById('dv4')!=null)
+								{
+									v1=v1+document.getElementById('dv4').innerHTML+"~";
+									v2=v2+document.getElementById('prA4').innerHTML.replace("%","")+"~";
+									v3=v3+document.getElementById('prB4').innerHTML.replace("%","")+"~";
+									v4=v4+document.getElementById('prC4').innerHTML.replace("%","")+"~";
+									v5=v5+document.getElementById('prD4').innerHTML.replace("%","")+"~";
+									v6=v6+document.getElementById('prE4').innerHTML.replace("%","")+"~";
+								}
+								if(document.getElementById('dv5')!=null)
+								{
+									v1=v1+document.getElementById('dv5').innerHTML+"~";
+									v2=v2+document.getElementById('prA5').innerHTML.replace("%","")+"~";
+									v3=v3+document.getElementById('prB5').innerHTML.replace("%","")+"~";
+									v4=v4+document.getElementById('prC5').innerHTML.replace("%","")+"~";
+									v5=v5+document.getElementById('prD5').innerHTML.replace("%","")+"~";
+									v6=v6+document.getElementById('prE5').innerHTML.replace("%","")+"~";
+								}
+								if(document.getElementById('dv6')!=null)
+								{
+									v1=v1+document.getElementById('dv6').innerHTML+"~";
+									v2=v2+document.getElementById('prA6').innerHTML.replace("%","")+"~";
+									v3=v3+document.getElementById('prB6').innerHTML.replace("%","")+"~";
+									v4=v4+document.getElementById('prC6').innerHTML.replace("%","")+"~";
+									v5=v5+document.getElementById('prD6').innerHTML.replace("%","")+"~";
+									v6=v6+document.getElementById('prE6').innerHTML.replace("%","")+"~";
+								}
+								if(document.getElementById('dv7')!=null)
+								{
+									v1=v1+document.getElementById('dv7').innerHTML+"~";
+									v2=v2+document.getElementById('prA7').innerHTML.replace("%","")+"~";
+									v3=v3+document.getElementById('prB7').innerHTML.replace("%","")+"~";
+									v4=v4+document.getElementById('prC7').innerHTML.replace("%","")+"~";
+									v5=v5+document.getElementById('prD7').innerHTML.replace("%","")+"~";
+									v6=v6+document.getElementById('prE7').innerHTML.replace("%","")+"~";
+								}
+								v1=v1.substring(0,v1.length-1);
+								v2=v2.substring(0,v2.length-1);
+								v3=v3.substring(0,v3.length-1);
+								v4=v4.substring(0,v4.length-1);
+								v5=v5.substring(0,v5.length-1);
+								v6=v6.substring(0,v6.length-1);
+								var loc=window.location.href;
+								var loc1;
+								var loc2;
+								var loc3;
+								var loc4;
+								loc1="&p=";
+								loc2="&d=";
+								loc3="&s=";
+								loc4="&f=";
+								if(document.getElementById("province_id").value != "")
+								{
+									loc1=loc1+document.getElementById("province_id").options[document.getElementById("province_id").selectedIndex].text;
+								}
+								if(document.getElementById("district_id").value != "")
+								{
+									loc2=loc2+document.getElementById("district_id").options[document.getElementById("district_id").selectedIndex].text;
+								}
+								if(document.getElementById("region_c_id").value != "")
+								{
+									loc3=loc3+document.getElementById("region_c_id").options[document.getElementById("region_c_id").selectedIndex].text;
+								}
+								if(document.getElementById("facilityInput").value != "")
+								{
+									loc4=loc4+document.getElementById("facilityInput").options[document.getElementById("facilityInput").selectedIndex].text;
+								}
+								window.location=loc.substr(0,loc.indexOf("?"))+"csv?v1="+v1+"&v2="+v2+"&v3="+v3+"&v4="+v4+"&v5="+v5+"&v6="+v6+loc1+loc2+loc3+loc4;
+							}
+							function Sel()
+							{
+								if(document.getElementById("ques").value!="")
+								{
+									var Vls=document.getElementById("ques").value.split(",");
+									for(var i=0;i<Vls.length;i++)
+									{
+										if(document.getElementById('qualification_id').value=="6")
+										{
+											document.getElementById('listc').options[Vls[i]].selected=true;
+											document.getElementById('dv'+i).innerHTML=document.getElementById('listc').options[Vls[i]].text;
+										}
+										if(document.getElementById('qualification_id').value=="7")
+										{
+											document.getElementById('listd').options[Vls[i]].selected=true;
+											document.getElementById('dv'+i).innerHTML=document.getElementById('listd').options[Vls[i]].text;
+										}
+										if(document.getElementById('qualification_id').value=="8")
+										{
+											document.getElementById('listn').options[Vls[i]].selected=true;
+											document.getElementById('dv'+i).innerHTML=document.getElementById('listn').options[Vls[i]].text;
+										}
+										if(document.getElementById('qualification_id').value=="9")
+										{
+											document.getElementById('listp').options[Vls[i]].selected=true;
+											document.getElementById('dv'+i).innerHTML=document.getElementById('listp').options[Vls[i]].text;
+										}
+									}
+									if(document.getElementById('qualification_id').value=="")
+									{
+										document.getElementById('dv0').innerHTML=document.getElementById('listd').options[0].text;
+										document.getElementById('dv1').innerHTML=document.getElementById('listd').options[1].text;
+										document.getElementById('dv2').innerHTML=document.getElementById('listd').options[2].text;
+										document.getElementById('dv3').innerHTML=document.getElementById('listd').options[3].text;
+										document.getElementById('dv4').innerHTML=document.getElementById('listd').options[4].text;
+										document.getElementById('dv5').innerHTML=document.getElementById('listd').options[5].text;
+										document.getElementById('dv6').innerHTML=document.getElementById('listd').options[6].text;
+										document.getElementById('dv7').innerHTML=document.getElementById('listd').options[7].text;
+									}
+								}
+							}
+							function SwHdOLD(obj)
+							{
+								document.getElementById("listc").style.display="none";
+								document.getElementById("listd").style.display="none";
+								document.getElementById("listn").style.display="none";
+								document.getElementById("listp").style.display="none";
+								document.getElementById("listc").selectedIndex=0;
+								document.getElementById("listd").selectedIndex=0;
+								document.getElementById("listn").selectedIndex=0;
+								document.getElementById("listp").selectedIndex=0;
+								document.getElementById("listc").options[0].selected=false;
+								document.getElementById("listd").options[0].selected=false;
+								document.getElementById("listn").options[0].selected=false;
+								document.getElementById("listp").options[0].selected=false;
+								if(obj.value=="6")
+								{
+									document.getElementById("listc").style.display="inline";
+								}
+								if(obj.value=="7")
+								{
+									document.getElementById("listd").style.display="inline";
+								}
+								if(obj.value=="8")
+								{
+									document.getElementById("listn").style.display="inline";
+								}
+								if(obj.value=="9")
+								{
+									document.getElementById("listp").style.display="inline";
+								}
+							}
+							function ShwHid(obj)
+							{
+								document.getElementById("ques").value="";
+								for(var i=0;i<obj.options.length;i++)
+								{
+									if(obj.options[i].selected)
+									{
+										document.getElementById("ques").value=document.getElementById("ques").value+i+",";
+									}
+								}
+								document.getElementById("ques").value=document.getElementById("ques").value.replace(/,+$/,'');
+							}
+							function PrintProvince()
+							{
+								if(document.getElementById("province_id").value != "")
+								{
+									document.write(document.getElementById("province_id").options[document.getElementById("province_id").selectedIndex].text);
+								}
+							}
+							function PrintDistrict()
+							{
+								if(document.getElementById("district_id").value != "")
+								{
+									document.write(document.getElementById("district_id").options[document.getElementById("district_id").selectedIndex].text);
+								}
+							}
+							function PrintSubdistrict()
+							{
+								if(document.getElementById("region_c_id").value != "")
+								{
+									document.write(document.getElementById("region_c_id").options[document.getElementById("region_c_id").selectedIndex].text);
+								}
+							}
+							function PrintFacility()
+							{
+								if(document.getElementById("facilityInput").value != "")
+								{
+									document.write(document.getElementById("facilityInput").options[document.getElementById("facilityInput").selectedIndex].text);
+								}
+							}
+						</script>
+						<input type="hidden" name="listcq" id="listcq" value="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20~21,22,23" />
+						<input type="hidden" name="listdq" id="listdq" value="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18~01,02,03,04,05,06,08,09~31,32,33,34,35,36,37~41,42,43,44~51,52,53,54,55,56,57,58,59,510,511,512,513,514,515,516,517,518~61,62,63,64,65,66,67~71,72,73,74,75,76,77,78,79,710,711~21,22,23" />
+						<input type="hidden" name="listnq" id="listnq" value="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,200~01,02,03,04,05,06,07,08,09~31,32,33,34,35,36,37,38~41,42,43,44,45~51,52,53,54,55,56,57,58,59,510,511,512,513~61,62,63,64,65~71,72,73,74,75,76,77,78,79,710,711~21,22,23" />
+						<input type="hidden" name="listpq" id="listpq" value="1,2,3,4,5,6,7~8,9,10" />
+						<input type="hidden" name="ques" id="ques" value="<?php echo $this->criteria['ques'] ?>" />
+						<input type="hidden" name="limit" id="limit" value="1" />
+						<input type="submit" onclick="if(document.getElementById('competencyselect').selectedIndex == -1){alert('<?php echo t('Please select a competence'); ?>');return false;}" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+					</fieldset>
+				</form>
+				<?php if ( $this->criteria['go'] ) { ?>
+				<div class="hrGrey"></div>
+			<div class="fieldIndentNoMargin"><?php tp('Results');?></span><span class="printAndExport"><a href="javascript:window.print()"><?php echo t('Print'); ?></a>&nbsp;&nbsp;<a href="javascript:myExport()"><?php echo t('Export'); ?></a>&nbsp;&nbsp;<a href="javascript:myExport()"><img src="<?php echo (Settings::$COUNTRY_BASE_URL).'/images/excel.jpg'; ?>" /></a></span></div>
+				<?php
+				if(isset($this->rssA[0]))
+				{
+					$cntr;
+					$cntr=0;
+					echo '<table cellpadding="0" cellspacing="0" border="0" style="width:40%;border:solid 1px #AAA">';
+					echo '<tr><td><div class="nwtxtbig">Competence</div></td><td><div class="nwtxtbig">'.t('Province').'</div></td><td><div class="nwtxtbig">'.t('District').'</div></td><td><div class="nwtxtbig">'.t('Sub-district').'</div></td><td><div class="nwtxtbig">'.t('Facility').'</div></td><td><div class="nwtxtbig">A</div></td><td><div class="nwtxtbig">B</div></td><td><div class="nwtxtbig">C</div></td><td><div class="nwtxtbig">D</div></td><td><div class="nwtxtbig">E</div></td></tr>';
+					$crrrr;
+					$crrrr=0;
+					for ( $crrrr=0;$crrrr<count($this->rssA);$crrrr++ ) {
+						echo '<tr><td><div class="nwtxt" id="dv'.$cntr.'"></div></td>';
+						echo '<td><div class="nwtxt" id="lcc1'.$cntr.'">';
+						echo '<script type="text/javascript">PrintProvince()</script>';
+						echo '</div></td>';
+						echo '<td><div class="nwtxt" id="lcc2'.$cntr.'">';
+						echo '<script type="text/javascript">PrintDistrict()</script>';
+						echo '</div></td>';
+						echo '<td><div class="nwtxt" id="lcc3'.$cntr.'">';
+						echo '<script type="text/javascript">PrintSubdistrict()</script>';
+						echo '</div></td>';
+						echo '<td><div class="nwtxt" id="lcc4'.$cntr.'">';
+						echo '<script type="text/javascript">PrintFacility()</script>';
+						echo '</div></td>';
+						echo '<td><div class="nwtxt" id="prA'.$cntr.'">';
+						echo $this->rssA[$crrrr].'%';
+						echo '</div></td>';
+						echo '<td><div class="nwtxt" id="prB'.$cntr.'">';
+						echo $this->rssB[$crrrr].'%';
+						echo '</div></td>';
+						echo '<td><div class="nwtxt" id="prC'.$cntr.'">';
+						echo $this->rssC[$crrrr].'%';
+						echo '</div></td>';
+						echo '<td><div class="nwtxt" id="prD'.$cntr.'">';
+						echo $this->rssD[$crrrr].'%';
+						echo '</div></td>';
+						echo '<td><div class="nwtxt" id="prE'.$cntr.'">';
+						echo $this->rssE[$crrrr].'%';
+						echo '</div></td>';
+						echo '</tr>';
+						$cntr=$cntr+1;;
+					}
+					echo '</table>';
+				}
+				?>
+				<?php } ?>
+			</div>
+			<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+		</div>
+
+	</body>
+</html>

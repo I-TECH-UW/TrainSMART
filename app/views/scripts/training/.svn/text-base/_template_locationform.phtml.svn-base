@@ -1,0 +1,20 @@
+<?php require_once('views/helpers/Location.php');?>
+<form id="addLocationForm"  action="<?php echo $this->base_url;?>/training/location-add/outputType/json" method="POST" <?php if($this->viewonly) echo 'disabled="disabled"'; ?>>
+
+  <div class="fieldLabel" id="training_location_name_lbl"><span class="required">*</span><?php tp('Location name');?></div>
+  <div class="fieldInput" >
+    <input type="text" size="70" name="training_location_name" id="locationName" value="<?php if(isset($this->rowLocation)) echo $this->rowLocation['training_location_name']; ?>" <?php echo $this->viewonly; ?>>
+  </div>
+
+  <?php region_filters_dropdown($this, $this->locations, $this->rowLocation); ?>
+
+  <div class="fieldLabel" id="city_lbl"><?php echo (@$this->translation['City or Town']); ?></div><div id="cityAutoComplete">
+      <div class="fieldInput"><input name="city" id="city" type="text" size="40" maxlength="128" value="<?php echo $this->rowLocation['city_name'];?>" /><input style="margin-left:10px;" type="checkbox" id="is_new_city" name="is_new_city" value="is_new_city" /><label class="label"><?php tp('New city'); ?></label><div class="clear"></div>
+      <div id="cityContainer"  class="autocomplete"></div></div>
+  </div>
+  <?php renderCityAutocomplete('','cityContainer',$this->base_url.'/facility/cityList/outputType/text/',$this->setting['num_location_tiers']);?>
+
+
+</form>
+
+<div class="clear"></div>

@@ -1,0 +1,122 @@
+<?php
+
+// template for page that contains an EditTable
+
+// need $pageTitle and $nextUri variables from these includes
+
+ob_start();
+require_once('views/scripts/header.phtml');
+$header = ob_get_contents();
+ob_end_clean();
+
+ob_start();
+require_once('views/scripts/nav-admin.phtml');
+$nav = ob_get_contents();
+ob_end_clean();
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title><?php echo $this->translation['Application Name'];?> | <?php echo $pageTitle; ?></title>
+		<?php
+		require_once('views/helpers/ScriptContainer.php');
+		print ScriptContainer::$instance->renderCSSHead();
+		print ScriptContainer::$instance->renderJSHead();
+		?>
+	</head>
+	<body  class="yui-skin-sam">
+		<div id="pageHolder">
+			<div id="header"><?php echo $header; ?></div>
+			<div id="content" class="adminDiv">
+
+				<form method="post" name="adminForm">
+
+					<div id="navAdmin"><?php echo $nav;?></div>
+
+					<div id="contentAdmin">
+						<h1><?php echo $pageTitle; ?></h1>
+
+						<table class="settings">
+							<thead>
+								<tr>
+									<th>Field</th>
+									<th>Display</th>
+									<th>Label</th>
+								</tr>
+
+							</thead>
+							<!--
+							<tr>
+								<td class="fieldTitle">Occupational category</td>
+								<td><input type="checkbox" name="check_occupational_category" <?php if($this->check_occupational_category) echo 'checked'; ?> id="check_occupational_category"></td>
+								<td><input type="text" name="label_occupational_category" value="<?php echo $this->label_occupational_category; ?>"></td>
+							</tr>
+							-->
+							<tr>
+								<td class="fieldTitle">Government employee</td>
+								<td><input type="checkbox" name="check_government_employee" <?php if($this->check_government_employee) echo 'checked'; ?> id="check_government_employee"></td>
+								<td><input type="text" name="label_government_employee" value="<?php echo $this->label_government_employee; ?>"></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Professional bodies</td>
+								<td><input type="checkbox" name="check_professional_bodies" <?php if($this->check_professional_bodies) echo 'checked'; ?> id="check_professional_bodies"></td>
+								<td><input type="text" name="label_professional_bodies" value="<?php echo $this->label_professional_bodies; ?>"></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Race</td>
+								<td><input type="checkbox" name="check_race" <?php if($this->check_race) echo 'checked'; ?> id="check_race"></td>
+								<td><input type="text" name="label_race" value="<?php echo $this->label_race; ?>"></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Disability</td>
+								<td><input type="checkbox" name="check_disability" <?php if($this->check_disability) echo 'checked'; ?> id="check_disability"></td>
+								<td><input type="text" name="label_disability" value="<?php echo $this->label_disability; ?>"></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Nurse trainer type</td>
+								<td><input type="checkbox" name="check_nurse_trainer_type" <?php if($this->check_nurse_trainer_type) echo 'checked'; ?> id="check_nurse_trainer_type"></td>
+								<td><input type="text" name="label_nurse_trainer_type" value="<?php echo $this->label_nurse_trainer_type; ?>"></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Year you started providing care</td>
+								<td><input type="checkbox" name="check_provider_start" <?php if($this->check_provider_start) echo 'checked'; ?> id="check_provider_start"></td>
+								<td><input type="text" name="label_provider_start" value="<?php echo $this->label_provider_start; ?>"></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Rank patient groups based on time</td>
+								<td><input type="checkbox" name="check_rank_groups" <?php if($this->check_rank_groups) echo 'checked'; ?> id="check_rank_groups"></td>
+								<td><input type="text" name="label_rank_groups" value="<?php echo $this->label_rank_groups; ?>"></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Supervised</td>
+								<td><input type="checkbox" name="check_supervised" <?php if($this->check_supervised) echo 'checked'; ?> id="check_supervised"></td>
+								<td><input type="text" name="label_supervised" value="<?php echo $this->label_supervised; ?>"></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Indicate the training you received</td>
+								<td><input type="checkbox" name="check_training_received" <?php if($this->check_training_received) echo 'checked'; ?> id="check_training_received"></td>
+								<td><input type="text" name="label_training_received" value="<?php echo $this->label_training_received; ?>"></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Facility department</td>
+								<td><input type="checkbox" name="check_facility_department" <?php if($this->check_facility_department) echo 'checked'; ?> id="check_facility_department"></td>
+								<td><input type="text" name="label_facility_department" value="<?php echo $this->label_facility_department; ?>"></td>
+							</tr>
+						</table>
+
+						<input type="hidden" name="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>">
+						<input type="submit" value="Save" name="saveonly" class="submitNoArrow" onclick="document.adminForm.redirect.value=''" style="margin-right:1em;">
+					</form>
+
+
+				</div>
+
+				<div class="clear"></div>
+
+			</div>
+			<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+		</div>
+
+	</body>
+</html>

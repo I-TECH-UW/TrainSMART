@@ -1,0 +1,267 @@
+<?php
+
+// template for page that contains an EditTable
+
+// need $pageTitle and $nextUri variables from these includes
+
+ob_start();
+require_once('views/scripts/header.phtml');
+$header = ob_get_contents();
+ob_end_clean();
+
+ob_start();
+require_once('views/scripts/nav-admin.phtml');
+$nav = ob_get_contents();
+ob_end_clean();
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+	<?php
+	require_once('views/helpers/ScriptContainer.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+	?>
+
+</head>
+<body  class="yui-skin-sam">
+	<div id="pageHolder">
+		<div id="header"><?php echo $header; ?></div>
+		<div id="content" class="adminDiv">
+
+			<form method="post" name="adminForm">
+
+				<div id="navAdmin"><?php echo $nav;?></div>
+
+				<div id="contentAdmin">
+					<h1><?php echo $this->pageTitle; ?></h1>
+
+					<table class="settings">
+
+						<thead> <tr><th>Field</th><th>Display</th><th>Label</th><th>Options</th></tr> </thead>
+						<tbody>
+
+							<tr>
+								<td class="fieldTitle">Training category</td>
+								<td></td>
+								<td><input type="text" name="label_training_category" value="<?php echo $this->label_training_category; ?>"></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-category" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle">Training name</td>
+								<td></td>
+								<td><input type="text" name="label_training_name" value="<?php echo $this->label_training_name; ?>"></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-title" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle">Training organizer</td>
+								<td></td>
+								<td><input type="text" name="label_training_org" value="<?php echo $this->label_training_org; ?>"></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-organizer" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle">End Date</td>
+								<td><input type="checkbox" name="check_training_end_date" <?php if($this->check_training_end_date) echo 'checked'; ?> id="check_training_end_date"></td>
+								<td></td>
+								<td></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle">Training level</td>
+								<td></td>
+								<td><input type="text" name="label_training_level" value="<?php echo $this->label_training_level; ?>"></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-level" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle">PEPFAR Category</td>
+								<td><input type="checkbox" name="check_training_pepfar" <?php if($this->check_training_pepfar) echo 'checked'; ?> id="check_training_pepfar"></td>
+								<td><input type="text" name="label_pepfar" value="<?php echo $this->label_pepfar; ?>"></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-pepfar" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle">Training topic</td>
+								<td><input type="checkbox" name="check_training_topic" <?php if($this->check_training_topic) echo 'checked'; ?> id="check_training_topic"></td>
+								<td><input type="text" name="label_training_topic" value="<?php echo $this->label_training_topic; ?>">
+
+								</td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-topic" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Training method</td>
+								<td><input type="checkbox" name="check_training_method" <?php if($this->check_training_method) echo 'checked'; ?> id="check_training_method"></td>
+								<td><input type="text" name="label_training_method" value="<?php echo $this->label_training_method; ?>">
+
+								</td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-method" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle"><!--Training of Trainers-->TOT</td>
+								<td><input type="checkbox" name="check_training_trainers" <?php if($this->check_training_trainers) echo 'checked'; ?> id="check_training_trainers"></td>
+								<td><input type="text" name="label_training_trainers" value="<?php echo $this->label_training_trainers; ?>">
+
+								</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Funding</td>
+								<td><input type="checkbox" name="check_training_funding_options" <?php if($this->check_training_funding_options) echo 'checked'; ?> id="check_training_funding_options"></td>
+								<td>
+
+								</td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-funding" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Funding Amount</td>
+								<td><input type="checkbox" name="check_training_funding_amounts" <?php if($this->check_training_funding_amounts) echo 'checked'; ?> id="check_training_funding_amounts"></td>
+								<td><input type="text" name="label_training_funding_amt" value="<?php echo $this->label_training_funding_amt; ?>"></td>
+								<td></td>
+							</tr>
+
+
+
+							<tr>
+								<td class="fieldTitle">Nat. Curriculum</td>
+								<td><input type="checkbox" name="check_training_got_curric" <?php if($this->check_training_got_curric) echo 'checked'; ?> id="check_training_got_curric"></td>
+								<td><input type="text" name="label_training_got_curric" value="<?php echo $this->label_training_got_curric; ?>">
+
+								</td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-gotcurriculum" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle">Nat. Curriculum Comment</td>
+								<td><input type="checkbox" name="check_training_got_comment" <?php if($this->check_training_got_comment) echo 'checked'; ?> id="check_training_got_comment"></td>
+								<td><input type="text" name="label_training_got_comment" value="<?php echo $this->label_training_got_comment; ?>">
+
+								</td>
+								<td></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle">Refresher Course</td>
+								<td><input type="checkbox" name="check_training_refresher" <?php if($this->check_training_refresher) echo 'checked'; ?> id="check_training_refresher"></td>
+								<td><input type="text" name="label_training_refresher" value="<?php echo $this->label_training_refresher; ?>"></td>
+								<td><input type="checkbox" name="check_multi_refresher" <?php if($this->check_multi_refresher) echo 'checked'; ?> id="check_multi_refresher"><label><?php tp('Mutiple checkbox field'); ?></label><br><a href="<?php echo $this->base_url;?>/admin/training-refreshercourse" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+							</tr>
+
+
+							<tr>
+								<td class="fieldTitle">Comments</td>
+								<td></td>
+								<td><input type="text" name="label_training_comments" value="<?php echo $this->label_training_comments; ?>"></td>
+								<td></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle">Course Objectives</td>
+								<td><input type="checkbox" name="check_course_objectives" <?php if($this->check_course_objectives) echo 'checked'; ?> id="check_course_objectives"></td>
+								<td><input type="text" name="label_course_objectives" value="<?php echo $this->label_course_objectives; ?>">
+								</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Primary language</td>
+								<td><input type="checkbox" name="check_training_primary_language" <?php if($this->check_training_primary_language) echo 'checked'; ?> id="check_training_primary_language"></td>
+								<td><input type="text" name="label_primary_language" value="<?php echo $this->label_primary_language; ?>">
+								</td>
+								<td><a href="<?php echo $this->base_url;?>/admin/people-languages" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Secondary language</td>
+								<td><input type="checkbox" name="check_training_secondary_language" <?php if($this->check_training_secondary_language) echo 'checked'; ?> id="check_training_secondary_language"></td>
+								<td><input type="text" name="label_secondary_language" value="<?php echo $this->label_secondary_language; ?>">
+								</td>
+								<td></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle">Pre test score</td>
+								<td><input type="checkbox" name="check_training_pre" <?php if($this->check_training_pre) echo 'checked'; ?> id="check_training_pre"></td>
+								<td><input type="text" name="label_training_pre" value="<?php echo $this->label_training_pre; ?>">
+
+								</td>
+								<td></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle">Post test score</td>
+								<td><input type="checkbox" name="check_training_post" <?php if($this->check_training_post) echo 'checked'; ?> id="check_training_post"></td>
+								<td><input type="text" name="label_training_post" value="<?php echo $this->label_training_post; ?>">
+
+								</td>
+								<td></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle">Custom field 1</td>
+								<td><input type="checkbox" name="check_training_custom1" <?php if($this->check_training_custom1) echo 'checked'; ?> id="check_training_custom1"></td>
+								<td><input type="text" name="label_training_custom1" value="<?php echo $this->label_training_custom1; ?>"></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Custom field 2</td>
+								<td><input type="checkbox" name="check_training_custom2" <?php if($this->check_training_custom2) echo 'checked'; ?> id="check_training_custom2"></td>
+								<td><input type="text" name="label_training_custom2" value="<?php echo $this->label_training_custom2; ?>"></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Custom field 3</td>
+								<td><input type="checkbox" name="check_training_custom3" <?php if($this->check_training_custom3) echo 'checked'; ?> id="check_training_custom3"></td>
+								<td><input type="text" name="label_training_custom3" value="<?php echo $this->label_training_custom3; ?>"></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td class="fieldTitle">Custom field 4</td>
+								<td><input type="checkbox" name="check_training_custom4" <?php if($this->check_training_custom4) echo 'checked'; ?> id="check_training_custom4"></td>
+								<td><input type="text" name="label_training_custom4" value="<?php echo $this->label_training_custom4; ?>"></td>
+								<td></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle">Particpant Training Completion</td>
+								<td><input type="checkbox" name="check_display_training_completion" <?php if($this->check_display_training_completion) echo 'checked'; ?> id="check_display_training_completion"></td>
+								<td><input type="text" name="label_award" value="<?php echo $this->label_award; ?>"></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-completion" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle">Particpant Viewing Location</td>
+								<td><input type="checkbox" name="check_display_viewing_location" <?php if($this->check_display_viewing_location) echo 'checked'; ?> id="check_display_viewing_location"></td>
+								<td><input type="text" name="label_viewing_location" value="<?php echo $this->label_viewing_location; ?>"></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-viewing-location" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+							</tr>
+
+							<tr>
+								<td class="fieldTitle">Participant Budget Code</td>
+								<td><input type="checkbox" name="check_display_budget_code" <?php if($this->check_display_budget_code) echo 'checked'; ?> id="check_display_budget_code"></td>
+								<td><input type="text" name="label_budget_code" value="<?php echo $this->label_budget_code; ?>"></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-budget-code" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+							</tr>
+
+					</tbody>
+
+				</table>
+
+				<input type="hidden" name="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>">
+				<input type="submit" value="Save" name="saveonly" class="submitNoArrow" onclick="document.adminForm.redirect.value=''" style="margin-right:1em;">
+				</form>
+
+
+			</div>
+
+			<div class="clear"></div>
+
+		</div>
+
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+	</div>
+
+</body>
+</html>

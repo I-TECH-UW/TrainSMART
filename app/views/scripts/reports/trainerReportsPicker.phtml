@@ -1,0 +1,16 @@
+<script language="javascript">
+	function gotoPeoplePage(objId) {
+		var reportSelector = YAHOO.util.Dom.get(objId);
+		if ( reportSelector[reportSelector.selectedIndex].value ) {
+			window.location = '<?php echo $this->base_url;?>' + reportSelector[reportSelector.selectedIndex].value + '?<?php echo $_SERVER['QUERY_STRING'];?>';
+		}
+	}
+</script>
+
+<?php $is_tbn = strstr($_SERVER['REQUEST_URI'],'trainersByName'); ?>
+    	<div class="fieldLabel" id="peopleSelect_lbl" ><?php print str_replace(' ','&nbsp;', t('Select').' '.t('trainer').' '.t('report'));?></div>
+    	<select id="peopleSelect" name="peopleSelect" onchange="gotoPeoplePage('peopleSelect');">
+    		<option value="">--<?php tp('choose');?>--</option>
+      		<option value="/reports/trainersByName" <?php if ( $is_tbn ) echo 'SELECTED';?>><?php echo t('Trainers').' '.t('by').' '.t('Name');?></option>
+     		<option value="/reports/trainers" <?php if ( !$is_tbn ) echo 'SELECTED';?>><?php echo t('Trainer').' '.t('Report');?></option>
+ 	</select>

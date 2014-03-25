@@ -1,0 +1,75 @@
+    /*
+        Set the "zoom" property to "normal" since it is set to "1" by the 
+        ".example-container .bd" rule in yui.css and this causes a Menu
+        instance's width to expand to 100% of the browser viewport.
+    */
+    
+    div.yuimenu .bd {
+    
+        zoom: normal;
+    
+    }
+
+    /*
+        Restore default padding of 10px for the calendar containtainer 
+        that is overridden by the ".example-container .bd .bd" rule 
+        in yui.css.
+    */
+
+    #calendarcontainer {
+
+        padding:10px;
+
+    }
+
+    #calendarmenu {
+    
+        position: absolute;
+    
+    }
+    
+    .yui-skin-sam #calendarpicker.yui-button,
+    .yui-skin-sam #calendarpicker2.yui-button {        
+        background:none;
+        border:0px; 
+     }
+     
+     .yui-skin-sam #calendarpicker.yui-button .first-child,
+     .yui-skin-sam #calendarpicker2.yui-button .first-child {
+       border-style:none;
+     }
+    
+
+    #calendarpicker button,#calendarpicker2 button {
+
+        background: url(../js/yui/assets/calbtn.gif) center center no-repeat;
+        text-align: left;
+        text-indent: -10em;
+        overflow: hidden;
+        *margin-left: 10em; /* For IE */
+        
+        white-space: nowrap;
+        margin-top:-4px;
+
+    }
+
+    .dayfield,
+    .monthfield{
+        width: 2em;
+    }
+    .yearfield{
+        width: 3em;
+    }
+
+	#birthdate {
+	
+		border: solid 1px #666;
+		padding: .5em;
+	
+	}
+	
+	#calendarpicker,#calendarpicker2  {
+	
+		vertical-align: baseline;
+		
+	}

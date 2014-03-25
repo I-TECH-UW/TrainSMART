@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title><?php echo $this->translation['Application Name'];?> | <?php tp('Data'); ?></title>
+	<?php
+	require_once('views/helpers/ScriptContainer.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+	?>
+
+</head>
+<body class="yui-skin-sam">
+
+
+
+	<div id="pageHolder">
+
+		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+		<div id="content">
+
+			<h1><?php tp("Data Downloads");?></h1>
+			<ul>
+				<li><a href="<?php echo $this->base_url;?>/data/persons" target="_blank"><?php tp('All'); echo '&nbsp;'; tp('People'); echo '&nbsp;'; tp('Data');?></a>
+					<a href="<?php echo $this->base_url;?>/data/persons/outputType/csv"><?php tp('Export'); ?></a>
+					<a href="<?php echo $this->base_url;?>/data/persons/outputType/csv"><img src="http://localhost/d/html/images/excel.jpg"></a>
+				</li>
+				<li><a href="<?php echo $this->base_url;?>/data/facilities" target="_blank"><?php tp('All'); echo '&nbsp;'; tp('Facilities'); echo '&nbsp;'; tp('Data');?></a>
+					<a href="<?php echo $this->base_url;?>/data/facilities/outputType/csv"><?php tp('Export'); ?></a>
+					<a href="<?php echo $this->base_url;?>/data/facilities/outputType/csv"><img src="http://localhost/d/html/images/excel.jpg"></a>
+				</li>
+				<li><a href="<?php echo $this->base_url;?>/data/trainings" target="_blank"><?php tp('All'); echo '&nbsp;'; tp('Training'); echo '&nbsp;'; tp('Data');?></a>
+					<a href="<?php echo $this->base_url;?>/data/trainings/outputType/csv"><?php tp('Export'); ?></a>
+					<a href="<?php echo $this->base_url;?>/data/trainings/outputType/csv"><img src="http://localhost/d/html/images/excel.jpg"></a>
+				</li>
+				<li>
+					<a href="<?php echo $this->base_url;?>/training/search"><?php tp('Select Trainings'); ?></a>
+				</li>
+			</ul>
+
+		</div>
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php tp('Data Synchronization');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+
+?>
+
+</head>
+<body class="yui-skin-sam">
+	<div id="pageHolder">
+	  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+	  <div id="content">
+			<h1>Syncronize Client Software Data</h1>
+			<p>After each step you have the option to make changes or start over from scratch.</p>
+			<p>To begin, <a href="<?php print $this->uploadUrl?>">upload</a> a client-database file, then 
+			<a href="<?php print $this->searchUrl?>">search for desktop changes</a>, <a href="<?php print $this->reviewUrl?>">review 
+			changes found</a> and <a href="<?php print $this->commitUrl?>">commit</a> the results.</p>
+			<p>&nbsp;</p>
+			<p>Other notes.... </p>
+	  </div>
+	  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+	</div>
+</body>
+</html>

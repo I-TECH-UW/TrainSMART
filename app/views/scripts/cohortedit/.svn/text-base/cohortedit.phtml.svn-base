@@ -1,0 +1,191 @@
+<html>
+	<head>
+		<title><?php echo $this->escape($this->title);?></title>
+		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+	<?php
+    require_once('views/helpers/ScriptContainer.php');
+    print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+	?>
+    
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				$( ".calendarbox" ).datepicker({
+					changeMonth: true,
+					changeYear: true
+				});
+				/* Add a click handler to the rows - this could be used as a callback */
+				$(".tablegrid tbody").click(function(event) {
+					$(oTable.fnSettings().aoData).each(function (){
+						$(this.nTr).removeClass('row_selected');
+					});
+					$(event.target.parentNode).addClass('row_selected');
+				});
+	 
+				/* Add a click handler for the delete row */
+				$('#delete').click( function() {
+					var anSelected = fnGetSelected( oTable );
+					oTable.fnDeleteRow( anSelected[0] );
+				} );
+	 
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+			} );
+
+			/* Get the rows which are currently selected */
+			function fnGetSelected( oTableLocal ){
+				var aReturn = new Array();
+				var aTrs = oTableLocal.fnGetNodes();
+				 
+				for ( var i=0 ; i<aTrs.length ; i++ ){
+					if ( $(aTrs[i]).hasClass('row_selected') ){
+						aReturn.push( aTrs[i] );
+					}
+				}
+				return aReturn;
+			}
+		</script>
+	</head>
+	<body>
+     <div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+            <div id="content">
+			<div id="subcontent">
+				<div id="contentheader">
+					<h2><?php echo t('Edit/View Cohort Record'); ?></h2>
+					<br>
+			
+				</div>
+				<div class="pad50 clear"></div>
+				<form  action="<?php echo $this->escape($this->action);?>" id="peopleadd" method="post">
+                <input type="hidden" name="id" value="<?php echo $this->escape($this->id);?>">
+				<div class="mainformholder">
+                    
+               <p style="padding-left:105px;font-weight:bold;"><?php echo t('Select Criteria'); ?></p><br>
+               		
+                    <label><?php echo t('Degree Information'); ?></label>
+					<input type="text" name="degreeinfo" size="32" value="<?php echo $this->escape($this->degree);?>">	
+               		
+ 					<label><?php echo t('Cohort Start Date'); ?></label>
+					<input type="text" name="cohortstart" class="calendarbox" value="<?php echo $this->escape($this->startname);?>">
+
+					<label><?php echo t('Cohort Gruduation Date'); ?></label>
+					<input type="text" name="cohortgrade" class="calendarbox" value="<?php echo $this->escape($this->graddate);?>">
+
+					<label><?php echo t('Cohort Participants at Start'); ?></label>
+					<input type="text" name="startdate" size="32" maxlength="32">
+                    
+                    <label><?php echo t('Cohort Participants Dropped Out'); ?></label>
+					<input type="text" name="sepratedate" size="32" maxlength="32">
+                    
+                     <label><?php echo t('Graduating Number'); ?></label>
+					<input type="text" name="graddate" size="32" maxlength="32">
+
+					<div class="pad20 clear"></div>
+					<p style="float:left;font-size:14px;"><?php echo t('Cohort'); ?></p>
+					<div class="pad20 clear"></div><br>
+                    
+                    <div class="pad20 clear"></div>
+					<a style="float:left;font-size:14px;"><?php echo t('Add New Cohort'); ?></a>
+					</div>
+                    
+					
+<div style="width :900px;">
+<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:900px">
+	<thead>
+		<tr>
+			<th><?php echo t('ID'); ?></th>
+			<th><?php echo t('Name'); ?></th>
+			<th><?php echo t('Gender'); ?></th>
+			<th><?php echo t('Institution'); ?></th>
+			<th><?php echo t('Cohort'); ?></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="GradeA">
+			<td>123</td>
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class=""><?php echo t('Institution'); ?></td>
+			<td class=""><?php echo t('Cohort'); ?></td>
+		</tr>
+		<tr class="GradeA">
+			<td>123</td>
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class=""><?php echo t('Institution'); ?></td>
+			<td class=""><?php echo t('Cohort'); ?></td>
+		</tr>
+		<tr class="GradeA">
+			<td>123</td>
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class=""><?php echo t('Institution'); ?></td>
+			<td class=""><?php echo t('Cohort'); ?></td>
+		</tr>
+		
+		<tr class="GradeA">
+			<td>123</td>
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class=""><?php echo t('Institution'); ?></td>
+			<td class=""><?php echo t('Cohort'); ?></td>
+		</tr>
+		<tr class="GradeA">
+			<td>123</td>
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class=""><?php echo t('Institution'); ?></td>
+			<td class=""><?php echo t('Cohort'); ?></td>
+		</tr>
+		<tr class="GradeA">
+			<td>123</td>
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class=""><?php echo t('Institution'); ?></td>
+			<td class=""><?php echo t('Cohort'); ?></td>
+		</tr>
+		<tr class="GradeA">
+			<td>123</td>
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class=""><?php echo t('Institution'); ?></td>
+			<td class=""><?php echo t('Cohort'); ?></td>
+		</tr>
+		<tr class="GradeA">
+			<td>123</td>
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class=""><?php echo t('Institution'); ?></td>
+			<td class=""><?php echo t('Cohort'); ?></td>
+		</tr>
+		<tr class="GradeA">
+			<td>123</td>
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class=""><?php echo t('Institution'); ?></td>
+			<td class=""><?php echo t('Cohort'); ?></td>
+		</tr>
+		
+	</tbody>
+</table>
+</div>
+
+           <div class="rightdiv">
+		<input type="submit" name="update" value="<?php echo t('Add'); ?>" class="tsbutton green large">
+					</div>
+                
+               </form>
+				</div>
+            </div>
+		</div>
+        				
+
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+        </div>
+	</body>
+</html>s

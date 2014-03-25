@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'] . ' | ' . t('Employee Tracking System');?></title>
+  <link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam">
+
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+		<div id="headerpad">&nbsp;</div>
+			<div id="subcontent">
+				<div id="contentheader" style="float:left;">
+					<h1><?php print t('Welcome to').' '.$this->translation['Application Name'];?></h1>
+				</div>
+				<div id="contentheaderNeighbor" style="float:left;display:block;margin-left:20px;min-width: 300px;max-width:500px;">
+					<p><?php print $this->setting['employee_header'];?></p>
+				</div>
+				<div class="pad50 clear"></div>
+
+				<div style="width:100%;">
+				<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+					<thead>
+						<tr>
+							<th><?php tp('Partner'); ?></th>
+							<th width="170"># <?php tp('of employees'); ?></th>
+							<th width="135"></th>
+							<th width="135"></th>
+							<th width="135"></th>
+							<th width="135"></th>
+						</tr>
+					</thead>
+					<tbody>
+<?php
+	foreach ($this->getins as $getresult){
+?>
+						<tr style="cursor : pointer;" class="GradeA" onclick="location='<?php echo $getresult['link'];?>'">
+				   			<td<?php echo ($getresult['type'] == 2 ? " style=\"padding-left : 50px;\"" : "") ?>><?php echo $getresult['col1'];?></td>
+							<td class=""><?php echo $getresult['col2'];?></td>
+							<td class=""><?php echo $getresult['col3'];?></td>
+							<td class=""><?php echo $getresult['col4'];?></td>
+							<td class=""><?php echo $getresult['col5'];?></td>
+							<td class=""><?php echo $getresult['col6'];?></td>
+						</tr>
+<?php
+	}
+?>
+					</tbody>
+				</table>
+				</div>
+				<div style="line-height:50px;">&nbsp;</div>
+
+				<div class="rightdiv" style="float:right;">
+					<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/partner/search'; ?>" class="tsbutton green large"><?php tp('Partners'); ?> &raquo;</a>
+					<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/employee/search'; ?>" class="tsbutton green large"><?php tp('Employees'); ?> &raquo;</a>
+					<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/site/search'; ?>" class="tsbutton green large"><?php tp('Sites'); ?> &raquo;</a>
+					<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/reports/employees'; ?>" class="tsbutton green large"><?php tp('Reports'); ?> &raquo;</a>
+				</div>
+
+			</div>
+
+<!-------   /////////////////////////// attached docs ////////////////////// -->
+			<div class="clear"></div>
+
+			    <div class="hrGrey"></div>
+			    <div class="clear"></div>
+			    <div class="fieldIndentNoMargin"><?php tp('Attached Documents'); ?></div>
+			    <div class="fieldIndent2">
+			      <?php echo $this->editTableFiles; ?>
+			      <span class="caption"><?php tp('Right-click and select "Save Target As..." to download.');?></span>
+			    </div>
+			    <?php if($this->filesForm) : ?>
+			    <div class="fieldIndentNoMargin"><?php tp('Document Upload'); ?></div>
+			    <div class="fieldIndent2">
+			      <?php echo $this->filesForm; ?>
+			    </div>
+			<script type="text/javascript">
+			YAHOO.util.Event.on(window, 'load', initUploadButton);
+			</script>
+			    <?php endif; ?>
+
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+</div>
+
+<script type="text/javascript" charset="utf-8">
+
+	$(document).ready(function() {
+		/* Add a click handler to the rows - this could be used as a callback */
+		$(".tablegrid tbody").click(function(event) {
+			$(oTable.fnSettings().aoData).each(function (){
+				$(this.nTr).removeClass('row_selected');
+			});
+			$(event.target.parentNode).addClass('row_selected');
+		});
+
+		/* Add a click handler for the delete row */
+		$('#delete').click( function() {
+			var anSelected = fnGetSelected( oTable );
+			oTable.fnDeleteRow( anSelected[0] );
+		} );
+
+		/* Init the table */
+		oTable = $('.tablegrid').dataTable({
+			"bJQueryUI": true,
+			"sPaginationType": "full_numbers",
+			"bSort": false
+		});
+	} );
+
+	/* Get the rows which are currently selected */
+	function fnGetSelected( oTableLocal ){
+		var aReturn = new Array();
+		var aTrs = oTableLocal.fnGetNodes();
+
+		for ( var i=0 ; i<aTrs.length ; i++ ){
+			if ( $(aTrs[i]).hasClass('row_selected') ){
+				aReturn.push( aTrs[i] );
+			}
+		}
+		return aReturn;
+	}
+</script>
+
+</body>
+</html>

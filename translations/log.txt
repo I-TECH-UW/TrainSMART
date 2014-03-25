@@ -1,0 +1,30 @@
+13:04:15: No files found in: controllers
+13:04:15: Poedit did not find any files in scanned directories.
+13:04:16: Entries in the catalog are probably incorrect.
+13:04:16: Updating the catalog failed. Click on 'More>>' for details.
+12:41:20: /Applications/Poedit.app/Contents/MacOS/xgettext: warning: file `–language=PHP' extension `' is unknown; will try C
+12:41:20: /Applications/Poedit.app/Contents/MacOS/xgettext: error while opening "–language=PHP" for reading: No such file or directory
+12:41:20: Entries in the catalog are probably incorrect.
+12:41:20: Updating the catalog failed. Click on 'More>>' for details.
+12:43:34: /Applications/Poedit.app/Contents/MacOS/xgettext: warning: file `–language=PHP' extension `' is unknown; will try C
+12:43:34: /Applications/Poedit.app/Contents/MacOS/xgettext: error while opening "–language=PHP" for reading: No such file or directory
+12:43:34: Entries in the catalog are probably incorrect.
+12:43:34: Updating the catalog failed. Click on 'More>>' for details.
+12:46:32: /Applications/Poedit.app/Contents/MacOS/xgettext: warning: file `–language=PHP' extension `' is unknown; will try C
+12:46:32: /Applications/Poedit.app/Contents/MacOS/xgettext: error while opening "–language=PHP" for reading: No such file or directory
+12:46:32: Entries in the catalog are probably incorrect.
+12:46:32: Updating the catalog failed. Click on 'More>>' for details.
+12:49:31: /Applications/Poedit.app/Contents/MacOS/xgettext: warning: file `–-language=PHP' extension `' is unknown; will try C
+12:49:31: /Applications/Poedit.app/Contents/MacOS/xgettext: error while opening "–-language=PHP" for reading: No such file or directory
+12:49:31: Entries in the catalog are probably incorrect.
+12:49:31: Updating the catalog failed. Click on 'More>>' for details.
+12:56:23: /Applications/Poedit.app/Contents/MacOS/xgettext: warning: file `–-language=PHP' extension `' is unknown; will try C
+12:56:23: /Applications/Poedit.app/Contents/MacOS/xgettext: error while opening "–-language=PHP" for reading: No such file or directory
+12:56:23: Entries in the catalog are probably incorrect.
+12:56:23: Updating the catalog failed. Click on 'More>>' for details.
+12:59:27: /Applications/Poedit.app/Contents/MacOS/xgettext: error while opening "" for reading: No such file or directory
+12:59:27: Entries in the catalog are probably incorrect.
+12:59:27: Updating the catalog failed. Click on 'More>>' for details.
+13:03:55: /Applications/Poedit.app/Contents/MacOS/xgettext: error while opening "" for reading: No such file or directory
+13:03:55: Entries in the catalog are probably incorrect.
+13:03:55: Updating the catalog failed. Click on 'More>>' for details.

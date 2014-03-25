@@ -1,0 +1,208 @@
+<html>
+	<head>
+		<title><?php echo $this->escape($this->title);?></title>
+		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+<?php
+	require_once('views/helpers/Location.php');
+	require_once('views/helpers/ScriptContainer.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+?>
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				$( ".calendarbox" ).datepicker({
+					changeMonth: true,
+					changeYear: true,
+					yearRange:'1900:2099(new Date).getFullYear()'
+				});
+				/* Add a click handler to the rows - this could be used as a callback */
+				$(".tablegrid tbody").click(function(event) {
+					$(oTable.fnSettings().aoData).each(function (){
+						$(this.nTr).removeClass('row_selected');
+					});
+					$(event.target.parentNode).addClass('row_selected');
+				});
+
+				/* Add a click handler for the delete row */
+				$('#delete').click( function() {
+					var anSelected = fnGetSelected( oTable );
+					oTable.fnDeleteRow( anSelected[0] );
+				} );
+
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+			} );
+
+			/* Get the rows which are currently selected */
+			function fnGetSelected( oTableLocal ){
+				var aReturn = new Array();
+				var aTrs = oTableLocal.fnGetNodes();
+
+				for ( var i=0 ; i<aTrs.length ; i++ ){
+					if ( $(aTrs[i]).hasClass('row_selected') ){
+						aReturn.push( aTrs[i] );
+					}
+				}
+				return aReturn;
+			}
+
+			$(document).ready(function(){
+				$("#second").validate();
+			});
+
+			function clickform(getthing){
+				if(getthing=="tutor" || getthing=="key"){
+					document.forms['second'].action="../peopleadd/peopleadd/";
+				} else{
+					document.forms['second'].action="../studentedit/studentedit/";
+				}
+			}
+		</script>
+
+<!--<input type="radio' name="student" value="student" onclick=click(this.value);>
+<input type="radio' name="tutor" value="tutor" onclick=click(this.value);>-->
+	</head>
+	<body>
+		<div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+			<div id="content">
+				<div id="subcontent">
+					<div id="contentheader">
+						<h2><?php echo t('Add a New Student or Tutor Record'); ?></h2><br>
+						<p style="float:left;font-size:13px;"><?php echo t('Enter details'); ?></p>
+					</div>
+
+					<div class="pad50 clear"></div>
+
+					<div class="mainformholder" style="">
+						<form action="<?php echo $this->escape($this->action); ?>" method="post" name="second" id="second" >
+							<label><?php echo t('Title'); ?></label>
+							<select name="title" >
+								<option value="0"><?php echo t('Select...'); ?></option>
+<?php
+	foreach ($this->fetchtitle as $fetchtitle){
+?>
+								<option value="<?php echo $fetchtitle[id];?>"><?php echo $fetchtitle[title_phrase];?></option>
+<?php
+	}
+?>
+							</select>
+
+							<label><span class="required">*</span> <?php echo t('First name'); ?></label>
+							<input type="text" name="firstname" value="" class="required">
+
+							<label><?php echo t('Middle name'); ?></label>
+							<input type="text" name="middlename" value="" class="">
+
+							<label><span class="required">*</span> <?php echo t('Last name'); ?></label>
+							<input type="text" name="lastname" value="" class="required">
+
+							<label>Gender</label>
+							<select name="gender" id="gender">
+								<option value="male" ><?php echo t('Male'); ?></option>
+								<option value="female" ><?php echo t('Female'); ?></option>
+								<option value="unknown" ><?php echo t('Unknown'); ?></option>
+							</select>
+
+							<label><?php echo t('Date of birth'); ?></label>
+							<input type="text" class="calendarbox" name="dob" value=""><br>
+
+							<label><?php echo t('Institution'); ?></label>
+							<select name="institutionid" id="institutionid">
+<?php
+	foreach ($this->institutions as $institution){
+?>
+								<option value="<?php echo $institution['id'];?>"><?php echo $institution['institutionname'];?></option>
+<?php
+	}
+?>
+							</select>
+
+							<div class="pad50 clear"></div>
+							<p style="float:left;font-size:14px;"><?php echo t('Local address'); ?></p>
+
+							<div class="pad20 clear"></div>
+
+							<!-- geographical area-->
+							<label id="province_id_lbl"><span class="required">*</span> <?php echo (@$this->translation['Region A (Province)']); ?></label>
+<?php
+	renderFilter($this->locations, 1, 'province_id', 0, 'district_id');
+	if ( $this->setting['display_region_b'] ) {
+?>
+							<label id="district_id_lbl"><span class="required">*</span> <?php echo (@$this->translation['Region B (Health District)']); ?></label>
+<?php
+		renderFilter($this->locations, 2, 'district_id', 0, ($this->setting['display_region_c']?'region_c_id':false));
+?>
+<?php
+	}
+?>
+<?php
+	if ( $this->setting['display_region_c'] ) {
+?>
+							<label id="region_c_id_lbl"><span class="required">*</span> <?php echo (@$this->translation['Region C (Local Region)']); ?></label>
+<?php
+		renderFilter($this->locations, 3, 'region_c_id', 0, false);
+?>
+<?php
+	}
+?>
+							<!-- geographical area-->
+
+							<label><?php echo t('Facility'); ?></label>
+							<select name="facility" id="facility" >
+								<option value="0"><?php echo t('Select...'); ?></option>
+<?php
+	foreach ($this->fetchfacility as $facility){
+?>
+								<option value="<?php echo $facility[id];?>"><?php echo $facility[facility_name];?></option>
+<?php
+	}
+?>
+							</select>
+
+							<label><?php echo t('Address 1'); ?></label>
+							<input type="text" name="address1" value="">
+
+							<label><?php echo t('Address 2'); ?></label>
+							<input type="text" name="address2">
+
+							<label><?php echo t('City'); ?></label>
+							<select name="city" >
+								<option value="0"><?php echo t('Select...'); ?></option>
+<?php
+	foreach ($this->fetchcity as $city){
+?>
+								<option value="<?php echo $city[id];?>"><?php echo $city[city_name];?></option>
+<?php
+	}
+?>
+							</select>
+							<!--<input type="text" name="city" value="">-->
+
+							<label style="display : none;"><?php echo t('Postal code / ZIP'); ?></label>
+							<input type="text" name="zip" value="" style="display : none;">
+
+							<label><?php echo t('Type'); ?></label>
+							<select name="type" onchange="clickform(this.value)">
+								<option value="student"><?php echo t('Student'); ?></option>
+								<option value="tutor"><?php echo t('Tutor'); ?></option>
+								<option value="key"><?php echo t('Personal'); ?></option>
+							</select>
+
+							<div class="rightdiv" style="padding-top:50px;margin-left:25px;;">
+								<input type="submit" border="0" class="tsbutton green large" name="addpeople" value="<?php echo t('Add person'); ?> &raquo;">
+							</div>
+						</form>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+		</div>
+	</body>
+</html>

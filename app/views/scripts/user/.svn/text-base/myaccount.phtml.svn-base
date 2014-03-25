@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php tp('My Account');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam">
+
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+     <h1><?php tp('My Account');?></h1>
+    <div class="clear"></div>
+    <form action="" id="userForm" method="post">
+	  <div class="fieldLabel" id="first_name_lbl"><span class="required">*</span><?php echo $this->translation['First Name'];?></div>
+	  <div class="fieldInput"><input type="text" name="first_name" size="32" maxlength="32" value="<?php echo $this->user['first_name'];?>"/></div>
+	  <div class="fieldLabel" id="last_name_lbl"><span class="required">*</span><?php echo $this->translation['Last Name'];?></div>
+	  <div class="fieldInput"><input type="text" name="last_name" size="32" maxlength="32" value="<?php echo $this->user['last_name'];?>"/></div>
+	  <div class="fieldLabel"  id="username_lbl"><span class="required">*</span><?php tp('Login');?></div>
+	  <div class="fieldInput"><input type="text" name="username" size="32" maxlength="32" value="<?php echo $this->user['username'];?>"/></div>
+ 	  <div class="fieldLabel"  id="email_lbl"><span class="required">*</span><?php tp('E-mail');?></div>
+	  <div class="fieldInput"><input type="text" name="email" size="32" maxlength="255" value="<?php echo $this->user['email'];?>"/></div>
+ 	  <div class="fieldLabel"  id="password_lbl"><?php tp('New password');?></div>
+	  <div class="fieldInput"><input type="password" name="password" size="32" maxlength="32" autocomplete="false" autocomplete='off' value=""/></div>
+ 	  <div class="fieldLabel"  id="confirm_password_lbl"><?php tp('Confirm New password');?></div>
+	  <div class="fieldInput"><input type="password" name="confirm_password" size="32" maxlength="32" autocomplete='off' value=""/></div>
+ 	  <div class="clear"></div>
+    	<button type="button" id="Finished" title="save this record" class="submitNoArrow" /><?php tp('Save changes');?></button>
+    	<div class="clear"></div>
+
+ 	</form>
+<div class="clear"></div>
+<script type="text/javascript">
+		addAjaxSubmit('Finished','userForm','<?php echo $this->base_url;?>/user/myaccount/outputType/json');
+</script>
+
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+</div>
+
+</body>
+</html>

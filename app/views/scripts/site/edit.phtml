@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php echo t('Edit').space.t('Site');?></title>
+<?php
+require_once('views/helpers/Location.php');
+require_once('views/helpers/ScriptContainer.php');
+require_once('views/helpers/TrainingViewHelper.php');
+require_once('views/helpers/FormHelper.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam" >
+<div id="pageHolder">
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+
+		<h1><?php echo t('Edit').space.t('Site');?></h1>
+
+
+<div class="fieldLabel" id="facility_name_lbl"><?php tp('Site');?></div>
+	<form id="change" action="<?php echo $this->base_url;?>/site/edit" method="get">
+	<div class="fieldInput"><select name="id"  id="id" onchange="if(this.value != '') this.form.submit();">
+	<option value="">-- <?php tp('choose');?> --</option>
+	<?php foreach ( $this->facilities as $facility) {
+		echo '<option value="'.($facility['id']).'" '.((@$this->facility['id']) == $facility['id']? 'SELECTED':'').' >'.($facility['facility_name']).'</option>';
+	}
+	?>
+	</select>
+	</div>
+	</form>
+
+	<form id="edit" action="" method="post">
+	<div class="fieldLabel" id="facility_name_lbl"><?php echo t('Site').space.('name');?></div>
+	<div class="fieldInput"><input type="text" name="facility_name"  id="facility_name" value="<?php echo $this->facility['facility_name'];?>" size="40" maxlength="128"/></div>
+	<input type="hidden" name="id" value="<?php echo $this->facility['id'];?>"></input>
+	<div class="fieldLabel" id="facility_address1_lbl"><?php tp('Address 1');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_address1" id="facility_address1" value="<?php echo $this->facility['address_1'];?>" size="40" maxlength="128"/></div>
+	<div class="fieldLabel" id="facility_address2_lbl"><?php tp('Address 2');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_address2" id="facility_address2" value="<?php echo $this->facility['address_2'];?>" size="40" maxlength="128"/></div>
+
+<?php region_filters_dropdown($this, $this->locations, $this->facility, false, false, 'facility'); ?>
+
+	<div class="fieldLabel" id="facility_city_lbl"><?php echo (@$this->translation['City or Town']); ?></div><div id="cityAutoComplete">
+	    <div class="fieldInput"><input name="facility_city" id="facility_city" type="text" size="40" maxlength="128" value="<?php echo $this->facility['facility_city'];?>" /><input style="margin-left:10px;" type="checkbox" id="is_new_city" name="is_new_city" value="is_new_city" /><label class="label"><?php tp('New city'); ?></label><div class="clear"></div>
+	    <div id="cityContainer"  class="autocomplete"></div></div>
+	</div>
+	<?php renderCityAutocomplete('facility','cityContainer',$this->base_url.'/site/cityList/outputType/text/',$this->setting['num_location_tiers']);?>
+
+<?php if ($this->setting['display_facility_postal_code'] ) { ?>
+	<div class="fieldLabel" id="facility_postal_code_lbl"><?php tp('Postal code');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_postal_code" id="facility_postal_code" value="<?php echo $this->facility['postal_code'];?>" size="40" maxlength="20"/></div>
+<?php } ?>
+<?php if ($this->setting['display_facility_lat_long'] ) { ?>
+	<div class="fieldLabel" id="facility_latitude_lbl"><?php tp('Latitude');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_latitude" id="facility_latitude" value="<?php echo $this->facility['lat'];?>" size="40" maxlength="11"/></div>
+	<div class="fieldLabel" id="facility_longitude_lbl"><?php tp('Longitude');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_longitude" id="facility_longitude" value="<?php echo $this->facility['long'];?>" size="40" maxlength="11"/></div>
+<?php } ?>
+	<div class="fieldLabel" id="facility_phone_lbl"><?php tp('Phone');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_phone" id="facility_phone" value="<?php echo $this->facility['phone'];?>" size="40" maxlength="32"/></div>
+	<div class="fieldLabel" id="facility_fax_lbl"><?php tp('Fax');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_fax" id="facility_fax" value="<?php echo $this->facility['fax'];?>" size="40" maxlength="32"/></div>
+	<div class="fieldLabel" id="facility_type_id_lbl"><span class="required">*</span><?php tp('Facility'); echo ' '; tp('type');?></div>
+	  <div class="fieldInput"><select id="facility_type_id" name="facility_type_id">
+		<option value="">--<?php tp('choose');?>--</option>
+		<?php
+			foreach ( $this->facility_types as $vals ) {
+				echo '<option value="'.$vals['id'].'" '.((@$this->facility['type_option_id']) == $vals['id']? 'SELECTED':'').' >'.$vals['facility_type_phrase'].'</option>';
+		}
+		?>
+	</select></div>
+<?php if($this->setting['display_facility_sponsor']) { ?>
+<?php foreach($this->sponsor_data as $i => $sponsorRow) { ?>
+	<div class="fieldLabel" id="<?php if ($i==0) echo 'facility_sponsor_id_lbl'; ?>"><?php tp('Facility'); echo ' '; tp('sponsor');?></div>
+	  <div class="fieldInput" id="<?php if ($i==0) echo 'facility_sponsor_wrapper'; ?>">
+		<select id="facility_sponsor_id" name="facility_sponsor_id[]">
+		<option value="">--<?php tp('choose');?>--</option>
+		<?php
+			  if ( @$this->facility_sponsors ) {
+			foreach ( $this->facility_sponsors as $vals ) {
+							$sel = ($vals['id'] == $sponsorRow['facility_sponsor_phrase_id'] ? 'selected' : '');
+							echo '<option value="'.$vals['id'].'" '.$sel.' >'.$vals['facility_sponsor_phrase'].'</option>';
+					}
+		}
+		?>
+		</select>
+		<?php if ( $this->hasACL( 'acl_editor_facility_sponsors' ) && $i==0 ) { echo '<a href="#" onclick="addToSelect(\''.t('Please enter your new').' '.t('Facility sponsor').':'.'\', \'facility_sponsor_id\', \''.Settings::$COUNTRY_BASE_URL.'/training/insert-table/table/facility_sponsor_option/column/facility_sponsor_phrase/outputType/json\'); return false;">'.t('Insert New').'</a>'; } ?>
+		<?php if ( @$this->setting['allow_multi_sponsors'] && $i==0 ) {         echo '<a id="sponsor_add" href="#" onclick="addSponsorRow();return false;">'.t('Add another sponsor to this Facility').'</a>'; } ?>
+		<?php echo hasACLEdit( 'acl_editor_facility_sponsors', 'admin/facilities-sponsors' , $this ); ?>
+	</div>
+<?php if ( @$this->setting['display_sponsor_dates'] ) { ?>
+	<div class="fieldLabel" id="<?php if ($i==0) echo 'facility_sponsor_id_lbl'; ?>"><?php if( @$this->setting['require_sponsor_dates'] ) echo '<span class="required">*</span>'; ?><?php tp('Sponsor Date');?></div>
+	<div class="fieldInput sponsorDates" id="<?php if ($i==0) echo 'facility_sponsor_wrapper'; ?>">
+		<span><input class="datepicker" type="text" name="sponsor_start_date[]" value="<?php echo formhelperdate($sponsorRow['start_date']); ?>" /><a class="calendarbtn" href="#"><img src="<?php echo $this->base_url; ?>/js/yui/assets/calbtn.gif"></a></span>&nbsp;&nbsp;
+		<?php if( @$this->setting['require_sponsor_dates'] ) echo '<span class="required">*</span>'; ?><label class="label"><?php tp('to'); ?></label>
+		<span><input class="datepicker" type="text" name="sponsor_end_date[]" value="<?php echo formhelperdate($sponsorRow['end_date']); ?>" /><a class="calendarbtn" href="#"><img src="<?php echo $this->base_url; ?>/js/yui/assets/calbtn.gif"></a></span>
+	</div>
+<?php } ?>
+<?php } ?>
+<?php } ?>
+
+<?php if ( @$this->setting['display_facility_comments'] ) { ?>
+	<div class="fieldLabel" id="facility_comments_lbl"><?php tp('Facility Comments');?></div>
+	<div class="fieldInput"><textarea name="facility_comments" id="facility_comments" size="40" maxlength="255" ><?php echo $this->facility['facility_comments'];?></textarea></div>
+<?php } ?>
+
+
+<div class="clear" ></div>
+
+		<button type="button" id="submitFacility" class="submitNoArrow"><?php tp('Save changes');?></button>
+		<div style="float:right;">&nbsp;</div><?php if ($this->hasACL('edit_country_options') && $this->okToDelete) { ?><input type="button" id="deleteFacility" name="deleteFacility" value="Delete" class="submitNoArrow"  onclick="doDelete();" /><?php } ?>
+		<script type="text/javascript">
+			addAjaxSubmit('submitFacility','edit','<?php echo $this->base_url;?>/site/edit/outputType/json');
+		</script>
+		</form>
+		<div class="clear" ></div>
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+<script language="JavaScript">
+// on load
+$(document).ready(function () {
+  $('.datepicker').datepicker();
+  $('.calendarbtn').click(openNearestDatePicker);
+});
+
+function doDelete() {
+	if(confirm("<?php tp('Are you sure you wish to delete this site?');?>")) {
+		window.location = '<?php echo $this->base_url;?>/site/delete/id/<?php echo $this->facility['id'];?>';
+		return false;
+	}
+}
+</script>
+
+</body>
+</html>
+

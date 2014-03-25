@@ -1,0 +1,190 @@
+<?php 
+
+$caption = "professionalbodies";
+
+// template for page that contains an EditTable
+
+// need $pageTitle and $nextUri variables from these includes
+  
+ob_start();
+require_once('views/scripts/header.phtml');
+$header = ob_get_contents();
+ob_end_clean(); 
+
+ob_start();
+require_once('views/scripts/nav-admin.phtml');
+$nav = ob_get_contents();
+ob_end_clean(); 
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title><?php echo $this->translation['Application Name'];?> | <?php echo $pageTitle; ?></title>
+<?php
+	require_once('views/helpers/ScriptContainer.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+?>
+
+		<style>
+			input.text { margin-bottom:12px; width:95%; padding: .4em; }
+			fieldset { padding:0; border:0; margin-top:25px; text-align : left; font-size : .9em }
+			h1 { font-size: 1.2em; margin: .6em 0; }
+			.ui-dialog .ui-state-error { padding: .3em; }
+			.validateTips { border: 1px solid transparent; padding: 0.3em; }
+		</style>
+		<script>
+			$(function() {
+				$( "#dialog-form" ).dialog({
+					autoOpen: false,
+					height: 250,
+					width: 350,
+					modal: true,
+					buttons: {
+						"Save": function() {
+							$("#_fieldtoupdate").val($("#title").val());
+							$("#_id").val($("#currentid").val());
+							if ($("#currentid").val() == 0){
+								$("#_action").val("addnew");
+							} else {
+								$("#_action").val("update");
+							}
+							$( this ).dialog( "close" );
+							document.getElementById("adminform").submit();
+						},
+						Cancel: function() {
+							$( this ).dialog( "close" );
+						}
+					},
+					close: function() {
+						//allFields.val( "" ).removeClass( "ui-state-error" );
+					}
+				});
+		
+				$( "#update" )
+					.button()
+					.click(function() {
+						$('#dialog-form').dialog('option', 'title', 'Add <?php echo $caption ?>');
+						$("#currentid").val("0");
+						$("#title").val("");
+						$( "#dialog-form" ).dialog( "open" );
+					});
+			});
+
+			function edititem(iid,itxt){
+				$('#dialog-form').dialog('option', 'title', 'Update <?php echo $caption ?>');
+				$("#currentid").val(iid);
+				$("#title").val(itxt);
+				$( "#dialog-form" ).dialog( "open" );
+			}
+		</script>
+
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				$( ".calendarbox" ).datepicker({
+					changeMonth: true,
+					changeYear: true
+				});
+				/* Add a click handler to the rows - this could be used as a callback */
+				$(".tablegrid tbody").click(function(event) {
+					$(oTable.fnSettings().aoData).each(function (){
+						$(this.nTr).removeClass('row_selected');
+					});
+					$(event.target.parentNode).addClass('row_selected');
+				});
+	 
+				/* Add a click handler for the delete row */
+				$('#delete').click( function() {
+					var anSelected = fnGetSelected( oTable );
+					oTable.fnDeleteRow( anSelected[0] );
+				} );
+	 
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+				$("#peopleadd").validate();
+
+			} );
+
+			/* Get the rows which are currently selected */
+			function fnGetSelected( oTableLocal ){
+				var aReturn = new Array();
+				var aTrs = oTableLocal.fnGetNodes();
+				 
+				for ( var i=0 ; i<aTrs.length ; i++ ){
+					if ( $(aTrs[i]).hasClass('row_selected') ){
+						aReturn.push( aTrs[i] );
+					}
+				}
+				return aReturn;
+			}
+			
+		</script>
+	</head>
+	<body  class="yui-skin-sam">
+<div id="dialog-form" title="Update <?php echo $caption ?>">
+	<p class="validateTips">All form fields are required.</p>
+
+	<form method="post">
+		<fieldset>
+			<label for="name"><?php echo strtoupper($caption) ?></label>
+			<input type="text" name="title" id="title" class="text ui-widget-content ui-corner-all" />
+		</fieldset>
+		<input type="hidden" name="currentid" id="currentid" class="text ui-widget-content ui-corner-all" />
+	</form>
+</div>
+		<div id="pageHolder">
+			<div id="header"><?php echo $header; ?></div>
+			<div id="content" class="adminDiv">
+				<div id="navAdmin"><?php echo $nav;?></div>
+				<div id="contentAdmin" style="width : 900px;">
+					<div id="contentheader">
+						<h2><?php echo $this->header; ?></h2>
+					</div>
+	
+					<div class="pad20"></div>
+					<div style="width :100%;">
+						<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Title</th>
+								</tr>
+							</thead>
+							<tbody>
+					
+<?php
+	foreach ($this->lookup as $lookup){
+?>
+								<tr class="GradeA" style="cursor : pointer;" onclick="edititem('<?php echo $lookup['id']; ?>','<?php echo ($lookup['label']); ?>');">
+									<td><?php echo $lookup['id']; ?></td>
+									<td class=""><?php echo $lookup['label']; ?></td>
+								</tr>
+<?php
+	}
+?>
+							</tbody>
+						</table>
+						<div style="text-align : right;">
+							<br>
+							<input type="submit" name="update" id="update" value="Add <?php echo $caption ?>" class="tsbutton green large">
+						</div>
+					</div>
+
+
+<form action="" id="adminform" method="post" class="formvalidate">
+<input type="hidden" name="_action" id="_action" value="addnew">
+<input type="hidden" name="_fieldtoupdate" id="_fieldtoupdate" value="">
+<input type="hidden" name="_id" id="_id" value="0">
+</form>
+
+				</div>
+				<div class="clear"></div>
+				<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+			</div>
+		</div>
+	</body>
+</html>

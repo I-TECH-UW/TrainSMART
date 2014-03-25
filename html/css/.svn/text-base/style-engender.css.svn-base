@@ -1,0 +1,20 @@
+/* 
+
+Updates to the EventSmart CSS
+
+Tor de Vries, tdevries@engenderhealth.org
+
+*/
+
+body { margin-top: 0px; padding:0; font-family:verdana; } /* TDV: reduced margin-top to 0px */
+html, body, .yui-skin-sam { background: #3a0000; } /* TDV: changed background color to closely match textured bkgd on web site */
+h1 { font-size:18px; color:#e17000; margin-bottom:0.5em; } /* TDV: changed color to orange */
+#header { background:#e3e1d5; } /* TDV: changed to beige */
+#header { background:#e3e1d5 url('../images/weave.jpg') repeat fixed center; }
+#header #headerLinks, #header #headerLinks a { color:#000; font-size:12px; } /* TDV: changed link color to black */
+#header div span { color:#555; } /* TDV: added to adjust internal title color */
+#navMain { height:30px; line-height:20px; background:#275937; margin-top:4px; } /* TDV: changed color to darker green, height to 30px */
+#navMain a { padding-top:5px; padding-bottom: 5px; padding-left:8px; display:block; color:#fff; font-weight:bold; font-size:11px; text-transform:uppercase; width:105px; text-decoration:none; } /* TDV: changed margin-top to padding-top; added padding-bottom */
+#navMain a a { margin-bottom: 0px; } /* TDV: removed bottom margin for submenu items */
+#navMain a:hover,#navMain a.hover { background:#083215; } /* TDV: changed to darker green */
+#navMain .flydownItems a:hover { background-color:#275937; color:#fff; } /* TDV: changed color to match menubar green, above */

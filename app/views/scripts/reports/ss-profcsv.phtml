@@ -1,0 +1,14 @@
+<?php
+header("Pragma: public");
+header("Expires: 0");
+header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+header("Cache-Control: private",false);
+header("Content-Type: text/x-csv");
+header("Content-Disposition: attachment; filename=\"report.csv\"");
+echo "\"Competence\",\"Province\",\"District\",\"Sub-district\",\"Facility\",\"A\",\"B\",\"C\",\"D\",\"E\"\015\012";
+$crrrr;
+$crrrr=0;
+for ( $crrrr=0;$crrrr<count($this->v1);$crrrr++ ) {
+echo "\"".$this->v1[$crrrr]."\",\"".$this->p."\",\"".$this->d."\",\"".$this->s."\",\"".$this->f."\",\"".$this->v2[$crrrr]."%\",\"".$this->v3[$crrrr]."%\",\"".$this->v4[$crrrr]."%\",\"".$this->v5[$crrrr]."%\",\"".$this->v6[$crrrr]."%\"\015\012";
+}
+?>

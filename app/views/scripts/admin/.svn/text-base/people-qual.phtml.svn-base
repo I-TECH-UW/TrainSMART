@@ -1,0 +1,15 @@
+<?php 
+
+$formPrefix = '
+
+Enter Secondary Qualifications for this qualification.<br/>
+<br/><br/>Primary Qualification  <select name="province_id" onchange="window.location=\''.($this->base_url).'/admin/people-qual/parent/\' + this.options[selectedIndex].value;">
+	<option value="">--' . t('choose') . '--</option>';
+foreach($this->parents as $par)	{
+
+	$formPrefix .= '<option value="'.($par['id']). '" '.($this->parent == $par['id']?'SELECTED':'').'>'.($par['qualification_phrase']).'</option>';
+}
+$formPrefix .= '</select>';
+
+
+require '_template_edittable.phtml'; ?>

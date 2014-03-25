@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php tp('Person Search');?></title>
+<?php
+require_once('views/helpers/Location.php');
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+
+?>
+
+</head>
+<body class="yui-skin-sam" >
+
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+
+    <h1><?php tp('Individual Reports');?></h1>
+	   <form action="" method="get">
+   <fieldset><legend><?php tp('Select Criteria');?></legend>
+	 <div class="fieldLabel" id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></div>
+  <div class="fieldInput"><?php renderFilter($this->locations, 1, 'province_id', $this->criteria['province_id'], 'district_id');?></div>
+  <?php if ( $this->setting['display_region_b'] ) { ?>
+  <div class="fieldLabel" id="district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?></div>
+  <div class="fieldInput"><?php renderFilter($this->locations, 2, 'district_id', $this->criteria['district_id'], ($this->setting['display_region_c']?'region_c_id':false));?></div>
+  <?php } ?>
+  <?php if ( $this->setting['display_region_c'] ) { ?>
+  <div class="fieldLabel" id="region_c_id_lbl"><?php echo (@$this->translation['Region C (Local Region)']); ?></div>
+  <div class="fieldInput"><?php renderFilter($this->locations, 3, 'region_c_id', $this->criteria['region_c_id'], false);?></div>
+  <?php } ?>
+
+<div class="fieldLabel"  id="facilityInput_lbl"><?php tp('Facility');?></div><div class="fieldInput"><select id="facilityInput" name="facilityInput" >
+	<option value="">--<?php tp('choose');?>--</option>
+	<?php
+		foreach ( $this->facilities as $vals ) {
+			echo '<option value="'.$vals['id'].'" '.($this->criteria['facilityInput'] == $vals['id']?'SELECTED':'').'>'.$vals['facility_name'].'</option>';
+	}
+	?>
+</select></div>
+	<div class="clear"></div>
+
+<!-- course taken -->
+	<div class="fieldLabel" id="training_title_option_id_lbl"><?php echo (@$this->translation['Training Name']); ?></div>
+	<div class="fieldInput">
+	<select id="training_title_option_id" name="training_title_option_id" >
+		<option value="">--<?php tp('All');?>--</option>
+		<?php
+			foreach ( $this->courses as $vals ) {
+				echo '<option value="'.$vals['id'].'" '.((@$this->criteria['training_title_option_id']) == $vals['id']? 'SELECTED':'').' >'.$this->truncate($vals['training_title_phrase']).'</option>';
+		}
+		?>
+	</select></div>
+	<div class="clear"></div>
+
+	<div class="fieldLabel" id="qualification_id_lbl"><?php echo t('Occupational category'); ?></div>
+	<div class="fieldInput"><select id="qualification_id" name="qualification_id">
+		<option value="">--<?php tp('All');?>--</option>
+   <?php
+    $lastParent = null;
+    foreach ( $this->qualifications as $vals ) {
+     if ( !$vals['id'] ) {
+      $lastParent = $vals['parent_phrase'];
+echo '<option style="background-color:#CCC" value="'.$vals['parent_id'].'" '.((@$this->criteria['qualification_id']) == $vals['parent_id']?'SELECTED':'').'>'.htmlspecialchars($vals['parent_phrase']).'</option>';
+} else {
+echo '<option value="'.$vals['id'].'" '.((@$this->criteria['qualification_id']) == $vals['id']?'SELECTED':'').'>&nbsp;&nbsp;'. htmlspecialchars($vals['qualification_phrase']).'</option>';
+     }
+    }
+   ?>
+	</select></div>
+	<div class="fieldLabel" id="persal_id_lbl"><?php echo t('Persal number'); ?></div>
+	<div class="fieldInput">
+	<input id="persal" name="persal" type="text" size="20" maxlength="128" value="<?php if(isset($this->criteria ['persal'])){echo $this->criteria ['persal'];}?>" />
+	</div>
+ <script type="text/javascript">
+  var i;
+  for(i=0;i<document.getElementById("qualification_id").options.length;i++)
+  {
+   if(document.getElementById("qualification_id").options[i].text.indexOf("ther (Please")>0)
+    document.getElementById("qualification_id").options[i].text=document.getElementById("qualification_id").options[i].text.substr(0,document.getElementById("qualification_id").options[i].text.length-2).replace("Z_","");
+  }
+ </script>
+	<div  id="firstAutoComplete">
+	    <div class="fieldLabel"><?php echo (@$this->translation['First Name']); ?></div><div class="fieldInput"><input id="first_name" type="text" name="first_name" value="<?php echo $this->criteria['first_name'];?>" /><div class="clear"></div><div id="firstContainer" class="autoComplete"></div></div>
+	</div>
+<script type="text/javascript">
+	var firstAuto = makeAutocomplete('first_name', 'firstContainer', '<?php echo $this->base_url;?>/person/firstList/outputType/text/' );
+</script>
+	<div id="lastAutoComplete">
+	    <div class="fieldLabel"><?php echo (@$this->translation['Last Name']); ?></div><div class="fieldInput"><input id="last_name" type="text" name="last_name" value="<?php echo $this->criteria['last_name'];?>" /><div class="clear"></div><div id="lastContainer" class="autoComplete"></div></div>
+	</div>
+<script type="text/javascript">
+	var lastAuto = makeAutocomplete('last_name', 'lastContainer', '<?php echo $this->base_url;?>/person/lastList/outputType/text/' );
+</script>
+	<div class="clear"></div>
+      <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_trainer" value="is_trainer" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_trainer') echo 'CHECKED'; ?> /><?php tp('Trainers only');?></div>
+      <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_participant" value="is_participant" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_participant' ) echo 'CHECKED'; ?> /><?php tp('Participants only');?></div>
+      <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_unattached_person" value="is_unattached_person" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_unattached_person' ) echo 'CHECKED'; ?> /><?php tp('Unattached only');?></div>
+      <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_everyone" value="is_everyone" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_everyone' ) echo 'CHECKED'; ?> /><?php tp('Everyone');?></div>
+	<input type="hidden" name="limit" id="limit" value="1" />
+    <input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+   </fieldset>
+   </form>
+<?php if ( $this->criteria['go'] ) { ?>
+		    <div class="hrGrey"></div>
+		    <div class="fieldIndentNoMargin"><?php tp('People');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+		    <div id="people"></div>
+		    <script type="text/javascript">
+		var peopleData = [
+		<?php
+		$cnt = 0;
+		 	$isFirstRow = true;
+			foreach($this->results as $row) {
+				if ( (isset($_REQUEST['limit']) AND !$_REQUEST['limit'])  or ($cnt < 100) ) {
+				if (!$isFirstRow )
+					echo ',';
+				$isFirstRow = false;
+				echo '['.'"'.$row['id'].'","'.$row['first_name'].'","';
+			   if ( $this->setting['display_middle_name'] &&  !$this->setting['display_middle_name_last'] ) {
+			   	echo $row['middle_name'].'","';
+			   }
+				echo $row['last_name'].'","';
+			   if ( $this->setting['display_middle_name'] && $this->setting['display_middle_name_last'] ) {
+			   	echo $row['middle_name'].'","';
+			   }
+				if($row['parent_id']=="6")
+				{
+				 if($row['cmp']=="0")
+				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""]';
+				 else
+				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomc/id/'.$row['id'].'\'>View</a>"]';
+				}
+				if($row['parent_id']=="7")
+				{
+				 if($row['cmp']=="0")
+				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""]';
+				 else
+				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomd/id/'.$row['id'].'\'>View</a>"]';
+				}
+				if($row['parent_id']=="8")
+				{
+				 if($row['cmp']=="0")
+				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""]';
+				 else
+				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomn/id/'.$row['id'].'\'>View</a>"]';
+				}
+				if($row['parent_id']=="9")
+				{
+				 if($row['cmp']=="0")
+				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""]';
+				 else
+				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomp/id/'.$row['id'].'\'>View</a>"]';
+				}
+				$cnt++;
+			}
+			}
+		   ?>];
+
+		   var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
+			if ( (sData == null) || (sData.length == 0) )
+				sData = '&nbsp;&nbsp;&nbsp;';
+		    elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/person/view/id/" + oRecord.getData("id") + "' >" + sData + "</a>";
+		}
+
+		var peopleColumnDefs = [
+			{key:"id", label: "ID", sortable:false, resizable:false,
+			                formatter: formatViewUrl},
+		    {key:"first_name", label: "<?php echo (@$this->translation['First Name']); ?>", sortable:true, resizeable:true},
+   <?php if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) { ?>
+		    {key:"middle_name", label: "<?php echo (@$this->translation['Middle Name']); ?>", sortable:true, resizeable:true},
+	<?php }?>
+		    {key:"last_name", label: "<?php echo (@$this->translation['Last Name']); ?>", sortable:true, resizeable:true},
+   <?php if ( $this->setting['display_middle_name'] && $this->setting['display_middle_name_last'] ) { ?>
+		    {key:"middle_name", label: "<?php echo (@$this->translation['Middle Name']); ?>", sortable:true, resizeable:true},
+	<?php }?>
+		    {key:"gender", label: "<?php tp('Gender');?>", sortable:true, resizeable:true},
+		    {key:"birthdate", label: "DOB", sortable:true, resizeable:true},
+		    {key:"qualification_phrase", label: "<?php tp('Occupational category');?>", sortable:true, resizeable:true},
+		    {key:"persal", label: "<?php tp('Persal number');?>", sortable:true, resizeable:true},
+		    {key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true},
+			{key:"rpt", label: "<?php tp('Report');?>", sortable:false, resizeable:false}
+		];
+
+			makeDataTable("people", null, peopleData, peopleColumnDefs);
+		</script>
+		<?php if ($cnt < count($this->results)) { ?>
+		[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a>
+		<?php } ?>
+<?php } ?>
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+</div>
+
+</body>
+</html>

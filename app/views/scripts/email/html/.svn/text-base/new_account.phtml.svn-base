@@ -1,0 +1,6 @@
+<?php tp('Dear');?> <?php echo $this->first_name;?><br/>
+<?php tp('Your new account has been created and is ready for use.');?><br/>
+<?php tp('Your login is as follows:');?><br/>
+<?php tp('username:');?> <?php echo $this->username;?><br/>
+<?php tp('password:');?> <?php echo $this->password;?><br/>
+<?php tp('website:');?> <a href="<?php echo Settings::$COUNTRY_BASE_URL;?>"><?php echo Settings::$COUNTRY_BASE_URL;?></a><br/>

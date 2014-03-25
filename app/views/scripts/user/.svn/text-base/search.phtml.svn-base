@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php tp('User List');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+</head>
+<body  class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+	<h1><?php tp('Browse Users');?></h1>
+
+	<div id="userList" ></div>
+
+<script type="text/javascript">
+    var formatEditUrl = function(elCell, oRecord, oColumn, sData) {
+        elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/user/edit/id/" + oRecord.getData("id") + "'>" + sData + "</a>";
+    };
+
+    var formatStatus = function(elCell, oRecord, oColumn, sData) {
+    	if ( oRecord.getData("is_blocked") == '1' ) {
+            elCell.innerHTML = '<?php tp('blocked');?>';
+      } else {
+            elCell.innerHTML = '<?php tp('active');?>';
+      }  	
+    };
+
+var userColumnDefs = [
+    {key:"id", label: "ID", sortable:false, resizeable:true,
+	                formatter: formatEditUrl},
+    {key:"first_name", label: "<?php tp('First');?>", sortable:true, resizeable:true},
+    {key:"last_name", label: "<?php tp('Last');?>", sortable:true, resizeable:true},
+    {key:"email", label: "<?php tp('Email');?>", sortable:true, resizeable:true},
+    {key:"username", label: "<?php tp('Username');?>", sortable:true, resizeable:true},
+    {key:"is_blocked", label: "<?php tp('Status');?>", sortable:true, resizeable:true,
+        formatter: formatStatus}
+];
+
+	var action = '<?php echo $this->base_url;?>/user/list/outputType/json';
+	makeJSONDataTable("userList", null, action, userColumnDefs);
+</script>
+	    <div class="clear"></div>
+
+
+ </div>
+<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+</body>
+</html>

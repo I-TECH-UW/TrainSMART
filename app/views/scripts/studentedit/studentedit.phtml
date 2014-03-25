@@ -1,0 +1,420 @@
+<html>
+	<head>
+		<title><?php echo $this->escape($this->title);?></title>
+		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+	<?php
+	require_once('views/helpers/Location.php');
+    require_once('views/helpers/ScriptContainer.php');
+    print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();      ?>
+
+
+
+
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				$( ".calendarbox" ).datepicker({
+					changeMonth: true,
+					changeYear: true
+				});
+				/* Add a click handler to the rows - this could be used as a callback */
+				$(".tablegrid tbody").click(function(event) {
+					$(oTable.fnSettings().aoData).each(function (){
+						$(this.nTr).removeClass('row_selected');
+					});
+					$(event.target.parentNode).addClass('row_selected');
+				});
+
+				/* Add a click handler for the delete row */
+				$('#delete').click( function() {
+					var anSelected = fnGetSelected( oTable );
+					oTable.fnDeleteRow( anSelected[0] );
+				} );
+
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+			} );
+
+			/* Get the rows which are currently selected */
+			function fnGetSelected( oTableLocal ){
+				var aReturn = new Array();
+				var aTrs = oTableLocal.fnGetNodes();
+
+				for ( var i=0 ; i<aTrs.length ; i++ ){
+					if ( $(aTrs[i]).hasClass('row_selected') ){
+						aReturn.push( aTrs[i] );
+					}
+				}
+				return aReturn;
+			}
+		</script>
+	</head>
+	<body>
+     <div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+            <div id="content">
+				<div id="subcontent">
+				<div id="contentheader">
+	<h2>Edit/view person's Record <a href="../../studenttranscript/studenttranscript/<?php echo $this->escape($this->id); ?>" style="margin-left:405px;text-decoration:none;">Student Transcript Report</a></h2><br>
+				</div>
+				<div class="pad50 clear"></div>
+				<?php echo $this->escape($this->name); ?>
+                 <?php echo $this->escape($this->newid);?>
+
+				<form  action="<?php echo $this->escape($this->action);?>" id="peopleadd" method="post">
+                <input type="hidden" name="id" value="<?php echo $this->escape($this->id); ?>">
+                 <input type="hidden" name="studentid" value="<?php echo $this->escape($this->stdid); ?>">
+                <input type="hidden" name="cadreid" value="<?php echo $this->escape($this->cadreid); ?>">
+				<div class="mainformholder" style="height:1500px;">
+
+               <p style="margin-left:200px;">Graduated?(Y/N)&nbsp;&nbsp;&nbsp;&nbsp;
+               <?php $grade = $this->escape($this->grade); ?>
+               		<?php if($grade=="1"){?>
+                    <input type="radio" name="graduated" value="1" checked >&nbsp;Yes<?php } else { ?>
+                    <input type="radio" name="graduated" value="1"  >&nbsp;Yes <?php } ?>
+
+                    <?php if($grade=="0"){?>
+                    <input type="radio" name="graduated" value="0" checked >&nbsp;No<?php } else { ?>
+                    <input type="radio" name="graduated" value="0"  >&nbsp;No <?php } ?></p><br>
+
+
+                 	<label>Cohort ID</label>
+					<input type="text" name="cohortid" size="32" maxlength="32"><br><br><br>
+                    <?php echo $this->escape($this->type);?>
+               <p style="padding-left:105px;">Personal Information</p><br>
+ 					<label>Title</label>
+                    <select name="title" >
+                    <?php foreach ($this->gettitle as $fetchtitle){ ?>
+                    <option value="<?php echo $fetchtitle[id]; ?>"><?php echo $fetchtitle[title_phrase]; ?>
+                    </option>
+                      <?php } ?>
+       <option value="<?php echo $this->escape($this->selid);?>" selected><?php echo $this->escape($this->seltitle); ?></option>
+                    </select>
+
+					<label>First name</label>
+				<input type="text" name="firstname" size="32" maxlength="32" value="<?php echo $this->escape($this->firstname);?>">
+
+					<label>Last name</label>
+				<input type="text" name="lastname" size="32" maxlength="32" value="<?php echo $this->escape($this->lastname);?>">
+
+                    <label>School ID</label>
+					<input type="text" name="nationalid" size="32" maxlength="32">
+
+                    <label>Nationality</label>
+					<input type="text" name="nationality" size="32" maxlength="32">
+
+					<label>Gender</label>
+					<input type="text" name="gender" size="32" maxlength="32" value="<?php echo $this->escape($this->gender);?>">
+
+					<label>Date of birth</label>
+					<input type="text" class="calendarbox" name="dob" value="<?php echo $this->escape($this->dob);?>"><br>
+
+					<div class="pad20 clear"></div>
+					<p style="float:left;font-size:14px;">Current contact information</p>
+					<div class="pad20 clear"></div><br>
+
+                    <div class="pad20 clear"></div>
+					<p style="float:left;font-size:14px;">Permanent Address</p>
+					<div class="pad20 clear"></div><br>
+
+                    <label id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></label>
+			<?php renderFilter($this->locations, 1, 'province_id', $this->escape($this->selgeo1), 'district_id');?>
+          <?php if ( $this->setting['display_region_b'] ) { ?>
+            <label id="district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?></label>
+            <?php renderFilter($this->locations, 2, 'district_id', $this->escape($this->selgeo2), ($this->setting['display_region_c']?'region_c_id':false));?>
+            <?php } ?>
+          <?php if ( $this->setting['display_region_c'] ) { ?>
+          <label id="region_c_id_lbl"><?php echo (@$this->translation['Region C (Local Region)']); ?></label>
+          <?php renderFilter($this->locations, 3, 'region_c_id', $this->escape($this->selgeo3), false);?>
+          <?php } ?>
+
+					<?php /*?><label>Geography Level 1</label>
+					<input type="text" name="geog1" size="32" maxlength="32" value="<?php echo $this->escape($this->geo1);?>">
+
+					<label>Geography Level 2</label>
+					<input type="text" name="geog2" size="32" maxlength="32" value="<?php echo $this->escape($this->geo2);?>">
+
+					<label>Geography Level 3</label>
+					<input type="text" name="geog3" size="32" maxlength="32" value="<?php echo $this->escape($this->geo3);?>"><?php */?>
+
+					<label>Address 1</label>
+					<input type="text" name="peraddress1" size="32" maxlength="32" value="<?php echo $this->escape($this->address1);?>">
+
+					<label>Address 2</label>
+					<input type="text" name="address2" size="32" maxlength="32" value="<?php echo $this->escape($this->address2);?>" >
+
+
+					<label>City</label>
+                <input type="text" name="city" size="32" maxlength="32" value="" >
+
+					<?php /*?><select name="city" >
+                    <?php foreach ($this->getcity as $city){ ?>
+                    <option value="<?php echo $city[id];?>"><?php echo $city[city_name];?></option>
+                      <?php } ?>
+                    <option value="" selected> <?php echo $this->escape($this->selcity);?></option>
+                    </select><?php */?>
+
+					<label>Postal code / ZIP</label>
+					<input type="text" name="postalcode" size="32" maxlength="32" value="<?php echo $this->escape($this->zip);?>">
+
+                     <div class="pad20 clear"></div>
+					<p style="float:left;font-size:14px;">Local Address</p>
+					<div class="pad20 clear"></div><br>
+
+                      <label id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></label>
+			<?php renderFilter($this->locations, 1, 'province_id', $this->criteria['province_id'], 'district_id');?>
+          <?php if ( $this->setting['display_region_b'] ) { ?>
+            <label id="district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?></label>
+            <?php renderFilter($this->locations, 2, 'district_id', $this->criteria['district_id'], ($this->setting['display_region_c']?'region_c_id':false));?>
+            <?php } ?>
+          <?php if ( $this->setting['display_region_c'] ) { ?>
+          <label id="region_c_id_lbl"><?php echo (@$this->translation['Region C (Local Region)']); ?></label>
+          <?php renderFilter($this->locations, 3, 'region_c_id', $this->criteria['region_c_id'], false);?>
+          <?php } ?>
+
+					<?php /*?><label>Geography Level 1</label>
+					<input type="text" name="localgeog1" size="32" maxlength="32" value="<?php echo $this->escape($this->geo1);?>">
+
+					<label>Geography Level 2</label>
+					<input type="text" name="localgeog2" size="32" maxlength="32" value="<?php echo $this->escape($this->geo2);?>">
+
+					<label>Geography Level 3</label>
+					<input type="text" name="localgeog3" size="32" maxlength="32" value="<?php echo $this->escape($this->geo3);?>"><?php */?>
+
+					<label>Address 1</label>
+					<input type="text" name="localaddress1" size="32" maxlength="32" value="<?php echo $this->escape($this->address1);?>">
+
+					<label>Address 2</label>
+					<input type="text" name="localaddress2" size="32" maxlength="32" value="<?php echo $this->escape($this->address2);?>" >
+
+					<label>City</label>
+                    <input type="text" name="city" size="32" maxlength="32" value="" >
+					<?php /*?><select name="city" >
+                    <?php foreach ($this->getcity as $city){ ?>
+                    <option value="<?php echo $city[id];?>"><?php echo $city[city_name];?></option>
+                      <?php } ?>
+                    <option value="" selected> <?php echo $this->escape($this->selcity);?></option>
+                    </select>
+<?php */?>
+					<label>Postal code / ZIP</label>
+					<input type="text" name="localpostalcode" size="32" maxlength="32" value="<?php echo $this->escape($this->zip);?>">
+                    <label>Phone</label>
+					<input type="text" name="localphone" size="32" maxlength="32" value="<?php echo $this->escape($this->phone);?>">
+
+                    <label>Cellphone</label>
+                    <input type="text" name="localcell" size="32" maxlength="32" value="<?php echo $this->escape($this->cell);?>" >
+
+                    <label>Cellphone 2</label>
+                    <input type="text" name="localcell2" size="32" maxlength="32" value="<?php echo $this->escape($this->cell2);?>" >
+
+					<label>Email</label>
+			<input type="text" name="email" size="32" maxlength="32" value="<?php echo $this->escape($this->email);?>">
+
+					<label>Email 2</label>
+			<input type="text" name="email_secondary" size="32" maxlength="32" value="<?php echo $this->escape($this->email2);?>">
+
+                     <div class="pad20 clear"></div>
+					<p style="float:left;font-size:14px;">Student Information</p>
+					<div class="pad20 clear"></div><br>
+
+					<label>Student ID</label>
+					<input type="text" name="studenentid" size="32" maxlength="32">
+
+					<label>Student Type</label>
+					<input type="text" name="studenttype" size="32" maxlength="32">
+
+					<label>Date of Enrollment</label>
+					<input type="text" name="enrollmentdate" size="32" maxlength="32" class="calendarbox"
+                    value="<?php echo $this->escape($this->enrollmentdate);?>">
+
+					<label>Reason for Enrollment</label>
+					<input type="text" name="enrollmentreason" size="32" maxlength="32"
+                    value="<?php echo $this->escape($this->enrollmentreason);?>">
+
+					<label>Date of Separation</label>
+					<input type="text" name="separationdate" size="32" maxlength="32" class="calendarbox"
+                    value="<?php echo $this->escape($this->separation);?>">
+
+					<label>Reason for Separation</label>
+					<input type="text" name="separationreason" size="32" maxlength="32"
+                    value="<?php echo $this->escape($this->separationreason);?>">
+
+					<label>Program Enrolled in(Cadre)</label>
+					<input type="text" name="cadre" size="32" maxlength="32" value="<?php echo $this->escape($this->cadrename);?>">
+
+                    <label>Year of Study</label>
+				<input type="text" name="yearofstudy" size="32" maxlength="32" value="<?php echo $this->escape($this->study);?>">
+
+                     <div class="pad20 clear"></div>
+					<p style="float:left;font-size:14px;">Funding</p>
+					<div class="pad20 clear"></div><br>
+
+
+
+					<label>Funding Source</label>
+					<input type="text" name="fundingsource" size="32" maxlength="32">
+
+					<label>Amount</label>
+					<input type="text" name="amount" size="32" maxlength="32">
+
+				<p>&nbsp;&nbsp;&nbsp;</p>
+
+                    <label>Tutor Advisor</label>
+					<input type="text" name="tutoradviser" size="32" maxlength="32">
+
+
+
+
+                <table><tr><td style="margin-top:-50px;font-weight:bold;">Facility After Graduation</td></tr>
+                <tr><td>&nbsp;</td></tr></table>
+
+
+                	  <label id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></label>
+			<?php renderFilter($this->locations, 1, 'province_id', $this->criteria['province_id'], 'district_id');?>
+			  <?php if ( $this->setting['display_region_b'] ) { ?>
+                <label id="district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?></label>
+                <?php renderFilter($this->locations, 2, 'district_id', $this->criteria['district_id'], ($this->setting['display_region_c']?'region_c_id':false));?>
+            <?php } ?>
+          <?php if ( $this->setting['display_region_c'] ) { ?>
+          <label id="region_c_id_lbl"><?php echo (@$this->translation['Region C (Local Region)']); ?></label>
+          <?php renderFilter($this->locations, 3, 'region_c_id', $this->criteria['region_c_id'], false);?>
+          <?php } ?>
+
+					<!--<label>Geography Level 1</label>
+					<input type="text" name="geo1" size="32" maxlength="32" value="">
+
+					<label>Geography Level 2</label>
+					<input type="text" name="geo2" size="32" maxlength="32" value="">
+
+					<label>Geography Level 3</label>
+					<input type="text" name="geo3" size="32" maxlength="32" value="">-->
+
+					<label>Address 1</label>
+				<input type="text" name="address1" size="32" maxlength="32" value="">
+
+                    <label>Faclity Name</label>
+					<input type="text" name="tutoradviser" size="32" maxlength="32">
+
+
+					<p style="margin-left:5px;"><label>Comments</label>
+                    <textarea name="comments" rows="3" cols="33" style="margin:-19px 0 0 333px;">
+                    <?php echo $this->escape($this->comments);?></textarea></p>
+
+					<div style="margin:15px 0 0 500px;" >
+				<input type="submit" name="update" value="Update Student &raquo;" class="tsbutton green large">
+					</div>
+			</form>
+            </div>
+
+
+
+      <div style="width :900px; ">
+       <p style="margin:400px 0px 15px 0px;font-weight:bold;">Class History</p>
+<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:900px">
+	<thead>
+		<tr>
+			<th>Class ID</th>
+			<th>Class Name</th>
+			<th>Date</th>
+			<th>Instructor</th>
+			<th>Grade</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="GradeA">
+			<td>123</td>
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class="">Institution</td>
+			<td class="">Cohort</td>
+		</tr>
+		<tr class="GradeA">
+			<td>123</td>
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class="">Institution</td>
+			<td class="">Cohort</td>
+		</tr>
+
+
+	</tbody>
+</table>
+
+
+<div style="margin-top:-150px;">
+ <p style="margin:15px 0 15px 0;font-weight:bold;">Practicum</p>
+<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:900px">
+	<thead>
+		<tr>
+            <th class="">Practicum name</th>
+			<th class="">Facility</th>
+			<th class="">Clinical Advisor</th>
+			<th class=""># of hours completed</th>
+            <th class=""># of hours required</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="GradeA">
+			<td class="">John Doe</td>
+			<td class="">Facility</td>
+			<td class="">Institution</td>
+			<td class="">Cohort</td>
+            <td class="">Cohort</td>
+
+		</tr>
+		<tr class="GradeA">
+			<td class="">John Doe</td>
+			<td class="">M</td>
+			<td class="">Institution</td>
+			<td class="">Cohort</td>
+            <td class="">Cohort</td>
+		</tr>
+
+
+	</tbody>
+</table></div>
+
+
+<div style="margin-top:-150px;">
+ <p style="margin:15px 0 15px 0;font-weight:bold;">Exams (licensure/registration)</p>
+<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:900px">
+	<thead>
+		<tr>
+            <th class="">Exam ID</th>
+			<th class="">Exam Name</th>
+			<th class="">Date completed</th>
+            <th class="">Grade</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="GradeA">
+			<td class="">John Doe</td>
+			<td class="">Facility</td>
+			<td class="">Cohort</td>
+            <td class="">Cohort</td>
+
+		</tr>
+		<tr class="GradeA">
+			<td class="">John Doe</td>
+			<td class="">Institution</td>
+			<td class="">Cohort</td>
+            <td class="">Cohort</td>
+		</tr>
+
+
+	</tbody>
+</table></div>
+
+</div>
+
+		</div>
+
+
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+        </div>
+	</body>
+</html>

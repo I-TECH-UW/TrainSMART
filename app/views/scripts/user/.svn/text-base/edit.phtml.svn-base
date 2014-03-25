@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title><?php echo $this->translation['Application Name'];?> | <?php tp('Edit Account');?></title>
+		<?php
+			require_once('views/helpers/ScriptContainer.php');
+			print ScriptContainer::$instance->renderCSSHead();
+			print ScriptContainer::$instance->renderJSHead();
+		?>
+	</head>
+	<body class="yui-skin-sam">
+
+		<div id="pageHolder">
+
+			<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+			<div id="content">
+				<h1><?php tp('Edit Account');?></h1>
+				<div class="clear"></div>
+				<form action="" id="userForm" method="post">
+					<div class="fieldLabel" id="first_name_lbl"><span class="required">*</span><?php echo $this->translation['First Name'];?></div>
+					<div class="fieldInput"><input type="text" name="first_name" size="32" maxlength="32" value="<?php echo $this->user['first_name'];?>"/></div>
+					<div class="fieldLabel" id="last_name_lbl"><span class="required">*</span><?php echo $this->translation['Last Name'];?></div>
+					<div class="fieldInput"><input type="text" name="last_name" size="32" maxlength="32" value="<?php echo $this->user['last_name'];?>"/></div>
+					<div class="fieldLabel"  id="username_lbl"><span class="required">*</span><?php tp('Login');?></div>
+					<div class="fieldInput"><input type="text" name="username" size="32" maxlength="32" value="<?php echo $this->user['username'];?>"/></div>
+					<div class="fieldLabel"  id="email_lbl"><span class="required">*</span><?php tp('E-mail');?></div>
+					<div class="fieldInput"><input type="text" name="email" size="32" maxlength="255" value="<?php echo $this->user['email'];?>"/></div>
+					<div class="fieldLabel"  id="password_lbl"> <?php tp('New password');?></div>
+					<div class="fieldInput"><input type="password" name="password" size="32" maxlength="32" autocomplete="false" autocomplete='off' value=""/></div>
+					<div class="fieldLabel"  id="confirm_password_lbl"> <?php tp('Confirm new password');?></div>
+					<div class="fieldInput"><input type="password" name="confirm_password" size="32" maxlength="32" autocomplete='off' value=""/></div>
+					<div class="clear"></div>
+
+					<fieldset><legend><?php tp('Access Level');?></legend>
+						<div class="fieldLabelThin"> <?php tp('In-Service');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="in_service" id="in_service" <?php if ( array_search('in_service',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="in_service"> <?php tp('In-service access');?></label></div></div>
+						<div class="fieldLabelThin"> <?php tp('Pre-Service');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="pre_service" id="pre_service" <?php if ( array_search('pre_service',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="pre_service"> <?php tp('Pre-service access');?></label></div></div>
+						<?php if ($this->setting['module_employee_enabled']): ?>
+						<div class="fieldLabelThin"> <?php tp('Employee Module');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="edit_employee" id="edit_employee" <?php if ( array_search('edit_employee', $this->user['acls']) !== false) echo 'CHECKED'; ?> /><label for="edit_employee"> <?php tp('Add/Edit/Delete Employees');?></label></div></div>
+						<?php endif; ?>
+						<br/><br/>
+						<div class="fieldLabelThin"> <?php tp('Restrict Access');?></div><div class="fieldInput"><div class="float50"><label for="acl_orgAll"><input type="radio" id="acl_orgAll" name="acl_restrict" value="" onchange="setOrgAccessStatus();" <?php if ( array_search('training_organizer_option_all',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('All organizations data');?></label></div><label for="acl_restrict"><input type="radio" id="acl_restrict" name="acl_restrict" value="acl_restrict" <?php if ( array_search('training_organizer_option_all',$this->user['acls']) === false ) echo 'CHECKED'; ?> onchange="setOrgAccessStatus();"> <?php tp('Only selected organizations');?></label></div>
+						<br/><br/>
+						<div class="fieldLabelThin"> <?php tp('Reports');?></div><div class="fieldInput width100"><div class=""><input type="checkbox" id="view_create_reports" name="view_create_reports" <?php if ( array_search('view_create_reports',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="view_create_reports"> <?php tp('View/create reports');?></label></div></div>
+						<div class="fieldLabelThin"> <?php tp('Trainings');?></div>
+						<div class="fieldInput"><div class="float50"><label for="edit_course"><input type="radio" id="edit_course" name="edit_course" value="edit_course" onchange="setOrgAccessStatus();" <?php if ( array_search('edit_course',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit/Delete');?></label></div><label for="view_course"><input type="radio" id="view_course" name="edit_course" value="view_course"  onchange="setOrgAccessStatus();" <?php if ( array_search('view_course',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput float50"><input type="checkbox" id="duplicate_training" name="duplicate_training" <?php if ( array_search('duplicate_training',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="duplicate_training"> <?php tp('Ability to duplicate Training');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput float50"><input type="checkbox" id="use_offline_app" name="use_offline_app" <?php if ( array_search('use_offline_app',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="use_offline_app"> <?php tp('Use Offline Application')?></label></div>
+						<div class="fieldLabelThin"> <?php tp('People');?></div>
+						<div class="fieldInput">
+							<div class="float50"><label for="edit_people"><input type="radio" id="edit_people" name="edit_people" value="edit_people" <?php if ( array_search('edit_people',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit/Delete');?></label></div>
+							<label for="view_people"><input type="radio" id="view_people" name="edit_people" value="view_people" <?php if ( array_search('view_people',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>
+						</div>
+						<div class="fieldLabelThin"> <?php tp('Facilities');?></div>
+						<div class="fieldInput">
+							<div class="float50"><label for="edit_facility"><input type="radio" id="edit_facility" name="edit_facility" value="edit_facility" <?php if ( array_search('edit_facility',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit/Delete');?></label></div>
+							<label for="view_facility"><input type="radio" id="view_facility" name="edit_facility" value="view_facility" <?php if ( array_search('view_facility',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>
+						</div>
+						<div class="fieldLabelThin"> <?php tp('Training Location');?></div>
+						<div class="fieldInput">
+							<div class="float50"><label for="edit_training_location"><input type="radio" id="edit_training_location" name="edit_training_location" value="edit_training_location" <?php if ( array_search('edit_training_location',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit/Delete');?></label></div>
+							<label for="view_training_location"><input type="radio" id="view_training_location" name="edit_training_location" value="view_traininglocation" <?php if ( array_search('view_facility',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>
+						</div>
+						<div><div class="fieldLabelThin"> <?php tp('Files');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" id="admin_files" name="admin_files" <?php if ( array_search('admin_files',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="admin_files"> <?php tp('Upload and delete');?></label></div></div></div>
+						<div style="width:100%;height:auto;display:block;;">
+						<div class="fieldLabelThin"> <?php tp('Approval');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" id="approve_trainings" name="approve_trainings" <?php if ( array_search('approve_trainings',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="approve_trainings"> <?php tp('Approve trainings');?></label></div></div>
+
+						<div class="fieldLabelThin"> <?php tp('Evaluations');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" id="edit_evaluations" name="edit_evaluations" <?php if ( array_search('edit_evaluations',$this->user['acls']) !== false ) echo 'CHECKED'; ?>/><label for="edit_evaluations"> <?php echo t('Edit').' '.t('Evaluations');?></label></div></div>
+
+						<div class="fieldLabelThin"> <?php tp('Approver');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" id="facility_and_person_approver" name="facility_and_person_approver" <?php if ( array_search('facility_and_person_approver',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="facility_and_person_approver"> <?php tp('Approve people and facilities');?></label></div></div>
+
+
+						<div class="fieldLabelThin"> <?php echo t('Training').' '.t('and').' '.t('People'); ?></div><div class="fieldInput"><div class="float50"><label for="acl_editor_training_category"><input type="checkbox" id="acl_editor_training_category" name="acl_editor_training_category" <?php if ( array_search('acl_editor_training_category',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="acl_editor_training_category"> <?php echo t('Edit').' '.t('Training category').' '.t('and').' '.t('Assignment');?></label></div><label for="acl_editor_people_qualifications"><input type="checkbox" id="acl_editor_people_qualifications" name="acl_editor_people_qualifications" <?php if ( array_search('acl_editor_people_qualifications',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Professional Qualification');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="training_title_option_all"><input type="checkbox" id="training_title_option_all" name="training_title_option_all" onchange="setOrgAccessStatus();" <?php if ( array_search('training_title_option_all',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="training_title_option_all"> <?php tp('Add Training Titles');?></label></div><label for="acl_editor_people_responsibility"><input type="checkbox" id="acl_editor_people_responsibility" name="acl_editor_people_responsibility" <?php if ( array_search('acl_editor_people_responsibility',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Responsibility');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="acl_editor_training_organizer"><input type="checkbox" id="acl_editor_training_organizer" name="acl_editor_training_organizer" <?php if ( array_search('acl_editor_training_organizer',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="acl_editor_training_organizer"> <?php echo t('Edit').' '.t('Training Organizer');?></label></div><label for="acl_editor_people_trainer"><input type="checkbox" id="acl_editor_people_trainer" name="acl_editor_people_trainer" <?php if ( array_search('acl_editor_people_trainer',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Trainer Types');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="acl_editor_training_topic"><input type="checkbox" id="acl_editor_training_topic" name="acl_editor_training_topic" <?php if ( array_search('acl_editor_training_topic',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="acl_editor_training_topic"> <?php echo t('Edit').' '.t('Training Topic');?></label></div><label for="acl_editor_people_titles"><input type="checkbox" id="acl_editor_people_titles" name="acl_editor_people_titles" <?php if ( array_search('acl_editor_people_titles',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Titles');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="acl_editor_training_level"><input type="checkbox" id="acl_editor_training_level" name="acl_editor_training_level" <?php if ( array_search('acl_editor_training_level',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="acl_editor_training_level"> <?php echo t('Edit').' '.t('Training level');?></label></div><label for="acl_editor_people_trainer_skills"><input type="checkbox" id="acl_editor_people_trainer_skills" name="acl_editor_people_trainer_skills" <?php if ( array_search('acl_editor_people_trainer_skills',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Trainer Skills');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="acl_editor_pepfar_category"><input type="checkbox" id="acl_editor_pepfar_category" name="acl_editor_pepfar_category" <?php if ( array_search('acl_editor_pepfar_category',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="acl_editor_pepfar_category"> <?php echo t('Edit').' '.t('PEPFAR category');?></label></div><label for="acl_editor_people_languages"><input type="checkbox" id="acl_editor_people_languages" name="acl_editor_people_languages" <?php if ( array_search('acl_editor_people_languages',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Languages');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="acl_editor_funding></"><input type="checkbox" id="acl_editor_funding" name="acl_editor_funding" <?php if ( array_search('acl_editor_funding',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="acl_editor_funding"> <?php echo t('Edit').' '.t('Funding');?></label></div><label for="acl_editor_people_affiliations"><input type="checkbox" id="acl_editor_people_affiliations" name="acl_editor_people_affiliations" <?php if ( array_search('acl_editor_people_affiliations',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Affiliations');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="acl_editor_recommended_topic"><input type="checkbox" id="acl_editor_recommended_topic" name="acl_editor_recommended_topic" <?php if ( array_search('acl_editor_recommended_topic',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="acl_editor_recommended_topic"> <?php echo t('Edit').' '.t('Recommended topic');?></label></div><label for="acl_editor_people_titles"><input type="checkbox" id="acl_editor_people_titles" name="acl_editor_people_titles" <?php if ( array_search('acl_editor_people_titles',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Titles');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="acl_editor_nationalcurriculum"><input type="checkbox" id="acl_editor_nationalcurriculum" name="acl_editor_nationalcurriculum" <?php if ( array_search('acl_editor_nationalcurriculum',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="acl_editor_nationalcurriculum"> <?php echo t('Edit').' '.t('Nat. Curriculum');?></label></div><label for="acl_editor_people_suffix"><input type="checkbox" id="acl_editor_people_suffix" name="acl_editor_people_suffix" <?php if ( array_search('acl_editor_people_suffix',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Suffix');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="acl_editor_method"><input type="checkbox" id="acl_editor_method" name="acl_editor_method" <?php if ( array_search('acl_editor_method',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="acl_editor_method"> <?php echo t('Edit').' '.t('Training Method');?></label></div><label for="acl_editor_people_active_trainer"><input type="checkbox" id="acl_editor_people_active_trainer" name="acl_editor_people_active_trainer" <?php if ( array_search('acl_editor_people_active_trainer',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Active Trainer');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="acl_editor_refresher_course"><input type="checkbox" id="acl_editor_refresher_course" name="acl_editor_refresher_course" <?php if ( array_search('acl_editor_refresher_course',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="acl_editor_refresher_course"> <?php echo t('Edit').' '.t('Refresher Course');?></label></div></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="import_training"><input type="checkbox" id="import_training" name="import_training" <?php if ( array_search('import_training',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="import_training"> <?php echo t('Import').' '.t('Training');?></label></div><label for="import_person"><input type="checkbox" id="import_person" name="import_person" <?php if ( array_search('import_person',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Import').' '.t('Person');?></label></div>
+
+						<br clear="all"/>
+						<br clear="all"/>
+
+						<div class="fieldLabelThin"> <?php echo t('Facilities').'&nbsp;'.t('and').'&nbsp;'.t('Preservice'); ?></div><div class="fieldInput"><div class="float50"><label for="acl_editor_facility_types"><input type="checkbox" id="acl_editor_facility_types" name="acl_editor_facility_types" <?php if ( array_search('acl_editor_facility_types',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="acl_editor_facility_types"> <?php echo t('Edit').' '.t('Facility Types');?></label></div><label for="acl_editor_ps_classes"><input type="checkbox" id="acl_editor_ps_classes" name="acl_editor_ps_classes" <?php if ( array_search('acl_editor_ps_classes',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Classes');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="acl_editor_facility_sponsors"><input type="checkbox" id="acl_editor_facility_sponsors" name="acl_editor_facility_sponsors" <?php if ( array_search('acl_editor_facility_sponsors',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="acl_editor_facility_sponsors"> <?php echo t('Edit').' '.t('Facility Sponsors');?></label></div><label for="acl_editor_ps_cadres"><input type="checkbox" id="acl_editor_ps_cadres" name="acl_editor_ps_cadres" <?php if ( array_search('acl_editor_ps_cadres',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Cadres');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="import_facility"><input type="checkbox" id="import_facility" name="import_facility" <?php if ( array_search('import_facility',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Import').' '.t('Facility');?></label></div>	<label for="acl_editor_ps_degrees"><input type="checkbox" id="acl_editor_ps_degrees" name="acl_editor_ps_degrees" <?php if ( array_search('acl_editor_ps_degrees',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Degrees');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="import_training_location"><input type="checkbox" id="import_training_location" name="import_training_location" <?php if ( array_search('import_training_location',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Import').' '.t('Training Location');?></label></div>	<label for="acl_editor_ps_funding"><input type="checkbox" id="acl_editor_ps_funding" name="acl_editor_ps_funding" <?php if ( array_search('acl_editor_ps_funding',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Funding');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50">&nbsp;</div>	<label for="acl_editor_ps_institutions"><input type="checkbox" id="acl_editor_ps_institutions" name="acl_editor_ps_institutions" <?php if ( array_search('acl_editor_ps_institutions',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Institution Types');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50">&nbsp;</div>	<label for="acl_editor_ps_languages"><input type="checkbox" id="acl_editor_ps_languages" name="acl_editor_ps_languages" <?php if ( array_search('acl_editor_ps_languages',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Languages');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50">&nbsp;</div>	<label for="acl_editor_ps_nationalities"><input type="checkbox" id="acl_editor_ps_nationalities" name="acl_editor_ps_nationalities" <?php if ( array_search('acl_editor_ps_nationalities',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Nationalities');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50">&nbsp;</div>	<label for="acl_editor_ps_joindropreasons"><input type="checkbox" id="acl_editor_ps_joindropreasons" name="acl_editor_ps_joindropreasons" <?php if ( array_search('acl_editor_ps_joindropreasons',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Join & drop reasons');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50">&nbsp;</div>	<label for="acl_editor_ps_sponsors"><input type="checkbox" id="acl_editor_ps_sponsors" name="acl_editor_ps_sponsors" <?php if ( array_search('acl_editor_ps_sponsors',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Sponsors');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50">&nbsp;</div>	<label for="acl_editor_ps_tutortypes"><input type="checkbox" id="acl_editor_ps_tutortypes" name="acl_editor_ps_tutortypes" <?php if ( array_search('acl_editor_ps_tutortypes',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Tutor Types');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50">&nbsp;</div>	<label for="acl_editor_ps_coursetypes"><input type="checkbox" id="acl_editor_ps_coursetypes" name="acl_editor_ps_coursetypes" <?php if ( array_search('acl_editor_ps_coursetypes',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Course Types');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50">&nbsp;</div>	<label for="acl_editor_ps_religions"><input type="checkbox" id="acl_editor_ps_religions" name="acl_editor_ps_religions" <?php if ( array_search('acl_editor_ps_religions',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Edit').' '.t('Religious denominations');?></label></div>
+	
+							
+						<div class="fieldLabelThin"> <?php tp('Admin'); ?></div><div class="fieldInput width100"><label for="toggle"><input type="checkbox" id="toggle" onchange="showAdminLevels();" /><label for=""> <?php tp('User is Administrator or can edit drop down lists, titles, and data, or import excel records');?></label></div>
+					</fieldset>
+
+					<fieldset id="orgs" ><legend><?php tp('Organizer access');?></legend>
+						<div><div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><input type="checkbox" name="training_organizer_option_all" id="training_organizer_option_all" value="training_organizer_option_all"  <?php if ( array_search('training_organizer_option_all',$this->user['acls']) !== false ) echo 'CHECKED'; ?> onchange="setOrgAccessStatus();" /><label for="training_organizer_option_all"> <?php tp('All Training Organizers');?></label></div></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><a href="#" id="orgcheckall"> <?php tp('check all'); ?></a> <a href="#" id="orguncheckall"> <?php tp('uncheck all'); ?></a></div>
+							<?php
+							foreach( $this->training_organizer as $org ) {
+								echo '<div><div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><input type="checkbox" name="training_organizer_option_id[]" id="training_organizer_option_'.$org['id'].'" value="'.$org['id'].'" '.(@$org['user_id']? 'CHECKED':'').' /><label for="training_organizer_option_'.$org['id'].'">'.$org['training_organizer_phrase'].'</label></div></div></div>';
+							}
+							?>
+					</fieldset>
+
+	<?php
+	if ($this->showinstitutions){
+		echo "      <fieldset id=\"institutions\" ><legend>Institution access</legend>\n";
+		echo "        <div>\n";
+		echo "          <div class=\"fieldLabel\">\n";
+		echo "          </div>\n";
+		echo "          <div class=\"fieldInput\">\n";
+		echo "            <div class=\"float50\">\n";
+		echo "              <input type=\"checkbox\" name=\"institutions_all\" id=\"institutions_all\" value=\"institutions_all\"" . (count($this->userinstitutions) == 0 ? " checked" : "") . " onchange=\"toggleinstitution(this);\" /><label for=\"institutions_all\">" . tp('All Institutions') . "</label>\n";
+		echo "            </div>\n";
+		echo "          </div>\n";
+
+		$disable = false;
+		if (count($this->userinstitutions) == 0){
+			$disable = true;
+		}
+		foreach( $this->institutions as $ins ) {
+			echo "          <div>\n";
+			echo "            <div class=\"fieldLabel\">\n";
+			echo "            </div>\n";
+			echo "            <div class=\"fieldInput\">\n";
+			echo "              <div class=\"float50\">\n";
+			echo "                <input class=\"institutioncheck\" type=\"checkbox\" name=\"institutionselect[]\" id=\"institutionselect[]\" value=\"" . $ins['id'] . "\"" . ($disable ? " disabled checked" : (in_array($ins['id'],$this->userinstitutions) ? " checked" : "")) . " /><label for=\"training_organizer_" . $ins['id'] . "\">" . $ins['institutionname'] . "</label>\n";
+			echo "              </div>\n";
+			echo "            </div>\n";
+			echo "          </div>\n";
+		}
+		echo "        </div>\n";
+		echo "      </fieldset>\n";
+	}
+	?>
+					<fieldset id="admin_box" class="width100">
+						<legend><?php tp('Admin Access');?></legend>
+						<div class="fieldLabelThin"> <?php tp('Admin'); ?></div><div class="fieldInput"><label><a href="#" id="admin_select_all"><button>select all admin capabilities</button></a><a href="#" id="admin_select_none"><button>de-select all</button></a></label></div>
+						<div class="fieldLabelThin"> <?php tp('Restricted Settings'); ?></div><div class="fieldInput"><div class="width100"><input type="checkbox" id="edit_country_options" name="edit_country_options" <?php if ( array_search('edit_country_options',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="edit_country_options"> <?php tp('Edit country options');?></label></div></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><input type="checkbox" id="add_edit_users" name="add_edit_users" <?php if ( array_search('add_edit_users',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="add_edit_users"> <?php tp('Add/Edit users');?></label></div>
+						<div class="fieldLabelThin"> <?php tp('Fields on/off and Labels'); ?></div><div class="fieldInput"><label for="acl_admin_training"><input type="checkbox" id="acl_admin_training" name="acl_admin_training" <?php if ( array_search('acl_admin_training',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="acl_admin_training"> <?php tp('Training Settings');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><label for="acl_admin_people"><input type="checkbox" id="acl_admin_people" name="acl_admin_people" <?php if ( array_search('acl_admin_people',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="acl_admin_people"> <?php tp('People Settings');?></label></div>
+						<div class="fieldLabelThin"></div><div class="fieldInput"><label for="acl_admin_facilities"><input type="checkbox" id="acl_admin_facilities" name="acl_admin_facilities" <?php if ( array_search('acl_admin_facilities',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="acl_admin_facilities"> <?php tp('Facility Settings');?></label></div>
+
+				</fieldset>
+					<?php if ( !$this->user['is_blocked'] ) { ?>
+					<div style="margin-left:2em;"><a href="" onclick="doDelete(); return false;"> <?php tp('Block this User');?></a></div>
+					<script language="JavaScript">
+						function doDelete() {
+							if(confirm("<?php tp('Are you sure you wish to block this user?');?>")) {
+								window.location = '<?php echo $this->base_url;?>/user/delete/id/<?php echo $this->user['id'];?>';
+								return false;
+							}
+						}
+					</script>
+					<?php } else { ?>
+					<div style="margin-left:2em;">This user is currently blocked. <a href="" onclick="doActivate(); return false;"> <?php tp('Activate this User');?></a></div>
+					<script language="JavaScript">
+						function doActivate() {
+							if(confirm("<?php tp('Are you sure you wish to activate this user?');?>")) {
+								window.location = '<?php echo $this->base_url;?>/user/activate/id/<?php echo $this->user['id'];?>';
+								return false;
+							}
+						}
+					</script>
+					<?php } ?>
+					<button type="button" id="Finished" title="save this record" class="submitNoArrow" /><?php tp('Save changes');?></button>
+					<div class="clear"></div>
+
+
+				</form>
+				<div class="clear"></div>
+				<script type="text/javascript">
+					addAjaxSubmit('Finished','userForm','<?php echo $this->base_url;?>/user/edit/id/<?php echo $this->user['id'];?>/outputType/json');
+				</script>
+
+			</div>
+			<div id="footer"> <?php require_once('views/scripts/footer.phtml');?></div>
+
+
+		</div>
+
+<script language="javascript">
+
+
+	$(document).ready(function () {
+		$('#orgcheckall').click(function (e) {   /* check all btn  */
+			e.preventDefault();
+			$('#orgs input[name="training_organizer_option_id[]"]').attr('checked', 'checked');
+		});
+		$('#orguncheckall').click(function (e) { /* check none btn */
+			e.preventDefault();
+			$('#training_organizer_option_all,#orgs input[name="training_organizer_option_id[]"]').removeAttr('checked').removeAttr('readonly').removeAttr('disabled');
+		});
+
+		$('#edit_country_options').click(function (e) { /* edit country options checkbox (this is master admin) */
+			$('#admin_box input[type="checkbox"]').attr('checked', $(this).is(':checked'));
+		});
+
+		$('#admin_select_all').click(function (e) {
+			e.preventDefault();
+			adminChecks(1);
+		});
+		$('#admin_select_none').click(function (e) {
+			e.preventDefault();
+			adminChecks(0);
+		})
+	});
+
+	function adminChecks(val) { /* check all admin options btn */
+		chked = null;
+		if( val==1 )
+			chked = 'checked';
+		$('#admin_box input[type="checkbox"]').attr('checked', chked);
+		return false;
+	}
+
+	function showAdminLevels() { /* show hide #admin_box btn */
+		$('#admin_box').toggle();
+		if(!$('#toggle').is(':checked')){
+			$('#admin_box input').removeAttr('checked');
+		}
+	}
+
+	function setOrgAccessStatus() { /* organizer logic (restrict access), show hide, uncheck and check */
+		if ($('#acl_restrict').attr('checked') == 'checked') {
+			$('#orgs').slideDown();
+			$('#orgs input').removeAttr('disabled');
+		}
+		else {
+			$('#training_organizer_option_all').attr('checked', 'checked');
+			$('#orgs').slideUp();
+		}
+
+		var edCourseRB = YAHOO.util.Dom.get("edit_course");
+		var orgFields = YAHOO.util.Dom.get("orgs").getElementsByTagName('input');
+		for(var i = 0; i < orgFields.length; i++) {
+			var isDisabled = false;
+			if (edCourseRB.checked == false) isDisabled = true;
+			orgFields[i].disabled = isDisabled;
+		}
+		var allOrgsRB = YAHOO.util.Dom.get("training_organizer_option_all");
+		if ( allOrgsRB.checked &&  edCourseRB.checked ) {
+			for(var i = 0; i < orgFields.length; i++) {
+				orgFields[i].checked = true;
+				orgFields[i].disabled = true;
+			}
+			allOrgsRB.disabled = false;
+		} else if ( edCourseRB.checked ) {
+			for(var i = 0; i < orgFields.length; i++) {
+				orgFields[i].disabled = false;
+			}
+		}
+	}
+
+	$(document).ready(setOrgAccessStatus);
+
+
+	<?php
+		$showAdmin = false; // docready - show #admin_box if user has admin acls
+		foreach ($this->user['acls'] as $key => $value) {
+			if(strpos($value, 'acl_editor_') !== false){
+				$showAdmin = true;
+				break;
+			}
+		}
+
+		if( in_array('edit_country_options',$this->user['acls'])  ) $showAdmin = true;
+		if( in_array('add_edit_users',      $this->user['acls'])  ) $showAdmin = true;
+		if( in_array('acl_admin_training',  $this->user['acls'])  ) $showAdmin = true;
+		if( in_array('acl_admin_people',    $this->user['acls'])  ) $showAdmin = true;
+		if( in_array('acl_admin_facilities',$this->user['acls'])  ) $showAdmin = true;
+
+		if ($showAdmin) { // add docready javascript
+			echo '$(document).ready(function () {
+				$("#toggle").attr("checked", "checked");
+				$("#admin_box").show();
+			});';
+		}
+
+	?>
+
+
+	function toggleinstitution(sender){
+		if (sender.checked){
+			$(".institutioncheck").prop('checked',true);
+			$(".institutioncheck").prop('disabled',true);
+		} else {
+			$(".institutioncheck").prop('disabled',false);
+		}
+	}
+
+</script>
+
+	<div class="clear"></div>
+
+	</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam">
+
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+    
+    <h1>Add New Course</h1>
+    
+    <div class="fieldLabel">Course Name</div>
+    <div class="fieldInput"><input type="input"></div>
+    
+    <div class="fieldLabel">Course Start Date</div>
+    <div class="fieldInput"><input type="input"></div>
+
+    <div class="fieldLabel">Course End Date</div>
+    <div class="fieldInput"><input type="input"></div>
+
+    <div class="fieldLabel">Training Center</div>
+    <div class="fieldInput">
+      <select><option>(select one)</option><option>Lorem ipsum...</option></select>
+      <a href="">Add new</a>
+    </div>
+
+
+    <div class="clear"></div>      
+    <div class="hrGrey"></div>
+
+    <div class="fieldLabel">Funding Sources</div>
+    <div class="fieldInput">
+      (check all that apply)<br/><br/>
+      <span class="checkBoxes">
+      <div class="float50"><input type="checkbox" id="c1"> <label for="c1">Checkbox #1</label></div>
+      <div class="float50"><input type="checkbox" id="c2"> <label for="c2">Checkbox #2</label></div>
+      <div class="float50"><input type="checkbox" id="c3"> <label for="c3">Checkbox #3</label></div>
+      <div class="float50"><input type="checkbox" id="c4"> <label for="c4">Checkbox #4</label></div>
+      <div class="float50"><input type="checkbox" id="c5"> <label for="c5">Checkbox #5</label></div>
+      <div class="float50"><input type="checkbox" id="c6"> <label for="c6">Checkbox #6</label></div>
+      <div class="float50"><input type="checkbox" id="c7"> <label for="c7">Checkbox #7</label></div>
+      <div class="float50"><input type="checkbox" id="c8"> <label for="c8">Checkbox #8  Long, very very very long item</label></div>
+      </span>
+    </div>
+
+    <div class="clear"></div>
+    <div class="hrGrey"></div>
+    
+    
+    <div class="fieldLabel">Comments</div>
+    <div class="fieldInput"><textarea></textarea></div>    
+    
+    <div class="clear"></div>  
+    <input type="submit" value="Save Course" class="submitArrow">    
+    <div class="clear"></div>
+    
+    
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+</div>
+
+</body>
+</html>

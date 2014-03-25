@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php tp('Login');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam">
+
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+     <h1><?php tp('Login');?></h1>
+    <div class="clear"></div>
+    <form action="" id="userForm" method="post">
+   		<div class="fieldLabel" id="username_lbl"><?php tp('User name');?></div>
+	  <div class="fieldInput"><input type="text" name="username" size="32" maxlength="32" tabindex=1 value=""/></div>
+   		<div class="fieldLabel" id="password_lbl"><?php tp('Password');?></div>
+	  <div class="fieldInput"><input type="password" name="password" size="32" maxlength="32" tabindex=2 value=""/></div>
+		<div class="fieldLabel" for="spacer"></div>
+		<div class="fieldInput"><a href="<?php echo $this->base_url;?>/user/forgotPassword" tabindex=4 ><?php tp('Forgot your password?');?></a></div>
+      <input type="submit" tabindex=3  value="Sign In" title="log in now" class="submitArrow"/>
+
+
+  	</form>
+<div class="clear"></div>
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+</div>
+
+</body>
+</html>

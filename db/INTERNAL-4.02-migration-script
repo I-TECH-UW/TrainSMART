@@ -1,0 +1,54 @@
+ALTER TABLE `facility` DROP INDEX  `facility_name` , ADD UNIQUE  `facility_name` (  `facility_name` ,  `location_id` );
+
+/* change refresher course to multi select value */
+ALTER TABLE  `_system`
+	ADD  `multi_opt_refresher_course` TINYINT( 1 ) NOT NULL DEFAULT '0';
+ALTER TABLE `training`
+	ADD `training_refresher_option_id` INT(11) NULL DEFAULT NULL;
+/* tables */
+DROP TABLE IF EXISTS `training_refresher_option`;
+CREATE TABLE `training_refresher_option` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `refresher_phrase_option` varchar(128) NOT NULL DEFAULT '',
+  `is_default` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `modified_by` int(11) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `timestamp_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `timestamp_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_unique` (`refresher_phrase_option`),
+  KEY `created_by` (`created_by`),
+  KEY `modified_by` (`modified_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `training_to_training_refresher_option`;
+CREATE TABLE `training_to_training_refresher_option` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `training_id` int(11) NOT NULL,
+  `training_refresher_option_id` int(11) NOT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `timestamp_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_training_cat` (`training_refresher_option_id`,`training_id`),
+  KEY `training_id` (`training_id`),
+  KEY `created_by` (`created_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `training_refresher_option` ADD COLUMN `uuid` char(36) AFTER `id`;
+ALTER TABLE `training_refresher_option` ADD UNIQUE `uuid_idx`(uuid);
+ALTER TABLE `training_refresher_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
+ALTER TABLE `training_to_training_refresher_option` ADD COLUMN `uuid` char(36) AFTER `id`;
+ALTER TABLE `training_to_training_refresher_option` ADD UNIQUE `uuid_idx`(uuid);
+ALTER TABLE `training_to_training_refresher_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
+
+DELIMITER ;;
+CREATE TRIGGER `training_to_training_refresher_option_insert` BEFORE INSERT ON `training_to_training_refresher_option` FOR EACH ROW BEGIN
+	SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
+	END;;
+CREATE TRIGGER `training_refresher_option_insert` BEFORE INSERT ON `training_refresher_option` FOR EACH ROW BEGIN
+	SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
+	END;;
+DELIMITER ;
+
+/*UPDATE training_to_training_refresher_option SET uuid = UUID(); */
+/*UPDATE training_refresher_option SET uuid = UUID(); */
+/* end live refresher update */

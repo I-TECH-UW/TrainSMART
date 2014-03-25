@@ -1,0 +1,6 @@
+Dear <?php echo $this->first_name;?><br/>
+<?php tp('You have been assigned a new temporary password.');?><br/>
+<?php tp('Please change your password once you log in');?><a href="<?php echo $this->base_url;?>/user/login?redirect=<?php echo urlencode($this->base_url.'/user/myaccount');?>"><?php tp('here');?></a>.<br/>
+<?php tp('Your login is as follows:');?><br/>
+<?php tp('username:');?> <?php echo $this->username;?><br/>
+<?php tp('password:');?> <?php echo $this->password;?><br/>

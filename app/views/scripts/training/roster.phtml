@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php echo t('Training').' '.t('Roster');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam"> <?php // turn of YUI style for this page ?>
+
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+     <span style="float:right;"> <a href="javascript:window.print();"><?php tp('Print');?></a></span>
+    <span style="text-align:center;"><h1><?php tp('Course Roster');?><br/> <?php echo $this->row['training_title']; ?></h1></span>
+     <hr/>
+    <div>
+     <div class="historyDiv" style="border:none;">
+      <b><?php tp('Start Date:');?></b> <?php echo $this->row['training_start_date']; ?> <br>
+      <b><?php tp('End Date:');?></b>  <?php echo $this->row['training_end_date']; ?> <br>
+    </div>
+    </div>
+
+
+    <div class="simpleLabel longerWidth"><?php tp('Course Name');?></div>
+    <div class="simpleValueNoMargin">
+      <a href="<?php echo $this->base_url . '/training/view/id/' . $this->row['id']; ?>"><?php echo $this->row['training_title']; ?></a>
+    </div>
+
+    <div class="simpleLabel longerWidth"><?php echo t('Training').' '.t('Location');?></div>
+    <div class="simpleValueNoMargin">
+      <?php echo $this->row['training_location_name']; ?>
+    </div>
+    <div class="simpleLabel longerWidth"><?php tp('Course Length');?></div>
+    <div class="simpleValueNoMargin"> <?php echo $this->row['duration']; ?> </div>
+
+    <div class="simpleLabel longerWidth"><?php tp('Training topic');?></div>
+    <div class="simpleValueNoMargin">
+      <?php echo $this->row['training_topic_phrase']; ?>
+    </div>
+
+    <div class="simpleLabel longerWidth"><?php tp('Training Level');?></div>
+    <div class="simpleValueNoMargin">
+      <?php echo $this->row['training_level_phrase']; ?>
+    </div>
+
+    <div class="simpleLabel longerWidth"><?php echo $this->translation['PEPFAR Category']; ?></div>
+    <div class="simpleValueNoMargin">
+      <?php echo $this->row['pepfar']; ?>
+    </div>
+
+    <?php if($this->row['objectives']) : ?>
+      <div class="simpleLabel longerWidth"><?php echo $this->translation['Course Objectives']; ?></div>
+      <div class="simpleValueNoMargin">
+        <?php echo nl2br($this->row['objectives']); ?>
+      </div>
+    <?php endif; ?>
+
+    <div class="clear"></div>
+
+      <hr/>
+
+    <div class="fieldIndentNoMargin"><?php echo t('Course').' '.t('Trainers');?> </div>
+    <div class="fieldIndent2">
+      <div class="roster">
+   	  <div id="trainerTable"></div>
+   	  <span class="total"><?php echo t('Total').' '.t('Trainers:');?> <span id="trainer_total">0</span></span>
+      <?php echo $this->tableTrainers; ?>
+
+
+    </div></div>
+
+
+
+    <div class="fieldIndentNoMargin"><?php echo t('Course').' '.t('Participants');?></div>
+    <div class="fieldIndent2">
+      <div class="roster">
+   	  <div id="personsTable"></div>
+   	  <span class="total"><?php tp('Total Participants:');?> <span id="persons_total">0</span></span>
+        <?php echo $this->tablePersons; ?>
+
+    </div></div>
+
+    <br />
+    <a class="hideFromPrint" href="<?php echo $this->base_url . '/training/view/id/' . $this->row['id']; ?>"><?php print t('Return to').' '.t('Training'); ?></a>
+
+
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+</div>
+
+</body>
+</html>

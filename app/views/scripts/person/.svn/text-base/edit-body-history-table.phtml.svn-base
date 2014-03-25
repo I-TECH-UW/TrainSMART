@@ -1,0 +1,26 @@
+<div class="fieldIndentNoMargin"><?php tp('Change History');?></div>
+    <div id="historyinfo"  class="itechTable"></div>
+    
+    <script type="text/javascript">
+    <!--//--><![CDATA[//><!--
+    var historyInfoData = [
+        ];
+    
+    var dataformatter = function(elCell, oRecord, oColumn, sData) {
+        if (!sData)
+            return;
+        items = sData.split(',');
+        for (i in items) if (items[i] == " " || items[i] == "") items[i] = " <i>empty</i>";
+    
+        elCell.innerHTML = items.join(",");
+    }
+    var historyColumnDefs = [
+        {key:"timestamp_updated", label: "<?php tp('Date');?>", sortable:false, resizeable:true},
+        {key:"translated_keys", label: "<?php tp('Change');?>", sortable:false, resizeable:true},
+        {key:"translated_values", label: "<?php tp('Previous entry');?>", sortable:false, resizeable:true, formatter:dataformatter}
+    ];
+    
+      var haction = '<?php echo $this->base_url;?>/person/history/id/<?php echo $this->person['id'];?>/outputType/json';
+      makeJSONDataTable("historyinfo", null, haction, historyColumnDefs);
+    //--><!]]> 
+    </script>

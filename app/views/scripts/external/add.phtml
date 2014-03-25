@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php tp('Add External Course');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+
+		<h1><?php echo t('Add new External Course for ').' '.$this->person['first_name'].'&nbsp;'.$this->person['last_name'];?></h1>
+
+		<form id="add" action="" method="post">
+		  <div class="fieldLabel" id="title_lbl"><?php tp('Title');?><span class="required">*</span></div>
+		  <div class="fieldInput">
+		    <input type="text" name="title" value="" />
+			  </div>
+
+		 <div class="fieldLabel"><?php tp('Date');?></div>
+		  <div class="fieldInput" id="startdate">
+		    <?php tp('Day');?> <input id="start-day" class="dayfield" type="text" name="start-day" maxlength="2" value="<?php echo $this->row['start-day']; ?>"  <?php echo $this->viewonly; ?>>
+		    / <?php tp('Month');?> <input id="start-month" class="monthfield" type="text" name="start-month" maxlength="2" value="<?php echo $this->row['start-month']; ?>"  <?php echo $this->viewonly; ?>>
+		    / <?php tp('Year');?> <input id="start-year" class="yearfield" type="text" name="start-year" maxlength="4" value="<?php if($this->row['start-year']) echo $this->row['start-year']; else echo date('Y'); ?>"  <?php echo $this->viewonly; ?>>
+		
+		    <?php if(!$this->viewonly) : ?>
+		      <script  type="text/javascript">
+		  		    YAHOO.util.Event.onDOMReady(function () {
+		  		    	makeCalendar("startdate","start-day", "start-month", "start-year");
+		  		    });
+		  		</script>
+		    <?php endif; ?>
+		  </div>
+			
+		  <div class="fieldLabel" id="training_length_value_lbl"><?php tp('Length');?></div>
+		  <div class="fieldInput">
+		    <input type="text" name="training_length_value" size="6" value="<?php echo $this->row['training_length_value']; ?>" >&nbsp;<?php tp('days');?>
+			  </div>
+		
+		  <div class="fieldLabel" id="training_location_lbl"><?php tp('Location');?></div>
+		  <div class="fieldInput">
+		    <input type="text" name="training_location" value="" />
+			  </div>
+
+		  <div class="fieldLabel" id="training_funder_lbl"><?php tp('Who Funded');?></div>
+		  <div class="fieldInput">
+		    <input type="text" name="training_funder" value="" />
+			  </div>
+
+
+		<div class="clear" ></div>
+		<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Add Course');?>" />
+		</form>
+		<div class="clear" ></div>
+
+  </div>
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+</body>
+</html>

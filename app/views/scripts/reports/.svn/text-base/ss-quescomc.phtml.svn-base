@@ -1,0 +1,27 @@
+<select id="listc1" style="display:none" multiple="multiple">
+<option value="1">Conduct group education sessions on HIV and AIDS?</option>
+<option value="2">Provide information on signs and symptoms of TB?</option>
+<option value="3">Provide directly observed treatment and support?</option>
+<option value="4">Perform HIV prick tests?</option>
+<option value="5">Provide individual pre, post, and ongoing HIV test counseling?</option>
+<option value="6">Provide couples with HIV counseling?</option>
+<option value="7">Establish and monitor support groups for HIV positive and lactating women?</option>
+<option value="8">Provide all patients with drug adherence counseling?</option>
+<option value="9">Involve family members in the patient's drug adherence regimen?</option>
+<option value="10">Verify pill counts?</option>
+<option value="11">Recognise and report side effects of medication?</option>
+<option value="12">Identify adherence problems and report them?</option>
+<option value="13">Counsel on and demonstrate condom use; distribute condoms to patients?</option>
+<option value="14">Counsel all HIV positive mothers on getting HIV tests for their infants?</option>
+<option value="15">Counsel on Family Planning and termination of unwanted pregnancies?</option>
+<option value="16">Correctly counsel HIV positive pregnant women with TB who are also on ARV therapy?</option>
+<option value="17">Follow-up with HIV positive pregnant women who miss their appointments?</option>
+<option value="18">Identify the need for referral of patients for further evaluation and treatment?</option>
+<option value="19">Promote, monitor and support safe infant feeding?</option>
+<option value="20">Promote childhood immunisation?</option>
+</select>
+<select id="listc2" style="display:none" multiple="multiple">
+<option value="21">Do you require additional training to perform your tasks?</option>
+<option value="22">Would you like to become a mentor?</option>
+<option value="23">Do you feel prepared to become a mentor?</option>
+</select>

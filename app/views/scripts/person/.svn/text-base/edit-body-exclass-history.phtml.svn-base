@@ -1,0 +1,27 @@
+    <div class="fieldIndentNoMargin"><?php tp('External Class History');?></div>
+    <div id="externalclassInfo"  class="itechTable"></div>
+          <a href="#" onclick="submitThenRedirect('<?php echo $this->base_url;?>/external/add/id/<?php echo $this->person['id'];?>'); return false;"><?php tp('Add an external class');?></a>
+    <script type="text/javascript">
+    <!--//--><![CDATA[//><!--
+   // YAHOO.util.Event.onDOMReady(function() {
+    	    var exclassInfoData = [
+        ];
+    
+     
+    var exclassColumnDefs = [
+         {key:"title", label: "<?php tp('Name');?>", sortable:true, resizeable:true},
+       {key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true},
+        {key:"training_length_value", label: "<?php tp('Length');?>", sortable:true, resizeable:true},
+        {key:"training_location", label: "<?php tp('Location');?>", sortable:true, resizeable:true},
+        {key:"training_funder", label: "<?php tp('Who Funded');?>", sortable:true, resizeable:true}
+    ];
+    
+      var eaction = '<?php echo $this->base_url;?>/external/listByParticipant/id/<?php echo $this->person['id'];?>/outputType/json';
+      makeJSONDataTable("externalclassInfo", null, eaction, exclassColumnDefs);
+ //   });
+    //--><!]]> 
+    </script>
+      <div class="clear"></div>
+      <div class="hrGrey"></div>
+      <div class="clear"></div>
+
