@@ -202,16 +202,8 @@
 <?php */?>
 					<label>Postal code / ZIP</label>
 					<input type="text" name="localpostalcode" size="32" maxlength="32" value="<?php echo $this->escape($this->zip);?>">
-
-					<label style="display:block; padding-right: 25px" ><?php echo t('Residential Address?'); ?></label>
-                    <input type="checkbox" name="localisresidential" id="localisresidential" value="1" <?php echo ( $this->escape['home_is_residential'] == 1 ? 'CHECKED' :'');?>>
-
                     <label>Phone</label>
 					<input type="text" name="localphone" size="32" maxlength="32" value="<?php echo $this->escape($this->phone);?>">
-
-					<div class="pad20 clear"></div>
-					<p style="float:left;font-size:14px;"><?php echo t('Other Contact Information'); ?></p>
-					<div class="pad20 clear"></div><br>
 
                     <label>Cellphone</label>
                     <input type="text" name="localcell" size="32" maxlength="32" value="<?php echo $this->escape($this->cell);?>" >

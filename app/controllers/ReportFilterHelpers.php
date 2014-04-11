@@ -63,7 +63,11 @@ class ReportFilterHelpers extends ITechController {
 		} else if ( $this->setting ( 'display_region_c' ) ) {
 			$city_parent_id = $criteria[$prefix.'region_c_id'];
     } else if ( $this->setting ( 'display_region_b' ) ) {
-			$city_parent_id = $criteria[$prefix.'region_b_id'];
+    	
+    	    if (isset($criteria[$prefix.'region_b_id'])) {
+				$city_parent_id = $criteria[$prefix.'region_b_id'];
+    	    }
+			
     } else {
 			$city_parent_id = $criteria['_id'];
     }

@@ -77,8 +77,7 @@ class EditTableHelper {
 		foreach($colDefs as $key => $lbl) {
 
 			$customDef = (isset($customColDefs[$key])) ? ', ' . $customColDefs[$key] : '';
-
-			$colDefsClone[$key] = '{key:"' . htmlspecialchars($key) . '", width:'.($key == 'facility_name'?80:$key == 'training_title'?120:(strlen($lbl)*6)).', resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+			$colDefsClone[$key] = '{key:"' . htmlspecialchars($key) . '", width:'.($key == 'first_name'?20:$key == 'last_name'?20:$key == 'facility_name'?80:$key == 'training_title'?120:(strlen($lbl)*6)).', resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
 		}
 
 		// Format data

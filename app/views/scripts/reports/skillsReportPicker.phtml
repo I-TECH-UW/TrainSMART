@@ -1,0 +1,17 @@
+<script language="javascript">
+	function gotoSkillsPage(objId) {
+		var reportSelector = YAHOO.util.Dom.get(objId);
+		if ( reportSelector[reportSelector.selectedIndex].value ) {
+			window.location = '<?php echo $this->base_url;?>' + reportSelector[reportSelector.selectedIndex].value + '?<?php echo $_SERVER['QUERY_STRING'];?>';
+		}
+	}
+</script>
+    	<div class="fieldLabel" id="skillsSelect_lbl" ><?php print str_replace(' ','&nbsp;', t('Select SkillSmart report'));?></div>
+    	<select id="skillsSelect" name="skillsSelect" onchange="gotoSkillsPage('skillsSelect');">
+    		<option value="">--<?php tp('choose');?>--</option>
+    		<option value="/person/reports" <?php if ( strstr($_SERVER['REQUEST_URI'],'reports')) echo 'SELECTED';?> ><?php tp('Individual Reports ');?> </option>
+     		<option value="/reports/comp" <?php if ( strstr($_SERVER['REQUEST_URI'],'comp')) echo 'SELECTED';?> ><?php tp('Competence Overview');?> </option>
+    		<option value="/reports/prof" <?php if ( strstr($_SERVER['REQUEST_URI'],'prof')) echo 'SELECTED';?>><?php tp('Professionals Reports');?></option>
+     		<option value="/reports/compcomp" <?php if ( strstr($_SERVER['REQUEST_URI'],'compcomp')) echo 'SELECTED';?>><?php tp('Competence Compare Reports');?></option>
+     		<option value="/reports/quescomp" <?php if ( strstr($_SERVER['REQUEST_URI'],'quescomp')) echo 'SELECTED';?>><?php tp('Question Compare Reports');?></option>
+ 	</select>

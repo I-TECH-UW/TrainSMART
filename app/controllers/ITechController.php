@@ -645,7 +645,7 @@ protected function sendData($data) {
   }
 
   // create option phrase and return option ID
-  protected function _importHelperFindOrCreate($table, $col, $val)
+  protected function _importHelperFindOrCreate($table, $col, $val, $create = true)
   {
   	require_once('models/table/MultiOptionList.php');
 
@@ -656,7 +656,8 @@ protected function sendData($data) {
 
 	$tableCustom = new ITechTable ( array ('name' => $table ) );
 	$row = $tableCustom->fetchRow($tableCustom->select()->where( "$col = ?", $val ));
-	if (! $row) {
+	if (!$row) {
+		if(!$create) return null; // error
 		$row = $tableCustom->createRow();
 		$row->{$col} = $val;
 		if(isset($row->is_default)) $row->is_default = 0;

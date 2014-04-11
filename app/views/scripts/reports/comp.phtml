@@ -17,8 +17,10 @@
 			<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
 			<div id="content">
 
-				<h1><?php tp('Competence Overview Reports');?></h1>
-				<form action="" method="GET">
+		<h1><?php tp('SkillSmart Reports ');?></h1>
+		<p></p>
+    	<?php require_once('skillsReportPicker.phtml'); ?>
+				<form action="" method="get">
 					<fieldset><legend><?php tp('Select Criteria');?></legend>
 						<div class="fieldLabel" id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></div>
 						<div class="fieldInput"><?php renderFilter($this->locations, 1, 'province_id', $this->criteria['province_id'], 'district_id');?></div>

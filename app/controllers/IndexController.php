@@ -49,6 +49,11 @@ class IndexController extends ITechController {
 		$NIMART = 0;
 		foreach($rowsArray as $key => $row) {
 			$NIMARTsplit=split("§",$rowsArray[$key]['comments']);
+			
+			if ( ! isset($NIMARTsplit[21] )) {
+				$NIMARTsplit[21] = null;
+			}			
+			
 			if(strlen($NIMARTsplit[21])>0) {
 				if($NIMARTsplit[21] = "Nurse Initiating ART") {
 					$NIMART = $NIMART + 1;

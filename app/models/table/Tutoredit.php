@@ -121,7 +121,6 @@ class Tutoredit extends ITechTable
 			'home_address_1'	=>	$param['localaddress1'],
 			'home_address_2'	=>	$param['localaddress2'],
 			'home_postal_code'	=>	$param['localpostalcode'],
-			'home_is_residential' => $param['localisresidential'],
 			'email'				=>	$param['email'],
 			'email_secondary'	=>	$param['email_secondary'],
 			'phone_work'		=>	$param['localphone'],

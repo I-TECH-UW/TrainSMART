@@ -147,7 +147,7 @@ class TrainingController extends ReportFilterHelpers {
 
 		if ($request->isPost () && ! $this->getSanParam ( 'edittabledelete' )) {
 
-			//$status->checkRequired($this, 'training_title_option_id',t('Training Name'));
+			$status->checkRequired($this, 'training_category_and_title_option_id',t('Training Name'));
 			//$status->checkRequired($this, 'training_category_and_title_option_id',t('Training Name'));
 			$status->checkRequired ( $this, 'training_length_value', t ( 'Training' ).' '.t( 'Length' ) );
 			$status->checkRequired ( $this, 'training_length_interval', t ( 'Training' ).' '.t( 'Interval' ) );
@@ -532,6 +532,7 @@ class TrainingController extends ReportFilterHelpers {
 		$this->view->assign ( 'dropDownMethod', DropDown::generateHtml ( 'training_method_option', 'training_method_phrase', $rowRay ['training_method_option_id'], 'training/insert-table', $this->view->viewonly ) );
 		$this->view->assign ( 'dropDownPrimaryLanguage', DropDown::generateHtml ( 'trainer_language_option', 'language_phrase', $rowRay ['training_primary_language_option_id'], false, $this->view->viewonly, false, false, array ('name' => 'training_primary_language_option_id' ) ) );
 		$this->view->assign ( 'dropDownSecondaryLanguage', DropDown::generateHtml ( 'trainer_language_option', 'language_phrase', $rowRay ['training_secondary_language_option_id'], false, $this->view->viewonly, false, false, array ('name' => 'training_secondary_language_option_id' ) ) );
+		$this->view->assign ( 'dropDownTrainingCompletion', DropDown::generateHtml ( 'person_to_training_award_option', 'award_phrase', $rowRay ['person_to_training_training_completion_option_id'], false, $this->view->viewonly, false, false, array ('name' => 'person_to_training_training_completion_option_id' ) ) );
 
 		//$catTitleArray = OptionList::suggestionList('location_district',array('district_name','parent_province_id'),false,false);
 
@@ -540,7 +541,7 @@ class TrainingController extends ReportFilterHelpers {
 		// training categories & titles
 		$categoryTitle = MultiAssignList::getOptions ( 'training_title_option', 'training_title_phrase', 'training_category_option_to_training_title_option', 'training_category_option' );
 		$this->view->assign ( 'categoryTitle', $categoryTitle );
-		// add title link
+		// add title link		
 		if ($this->hasACL ( 'training_title_option_all' )) {
 			$this->view->assign ( 'titleInsertLink', " <a href=\"#\" onclick=\"addToSelect('" . str_replace ( "'", "\\" . "'", t ( 'Please enter your new' ) ) . " " . strtolower ( $this->view->translation ['Training'] . t('Name') ) . ":', 'select_training_title_option', '" . Settings::$COUNTRY_BASE_URL . "/training/insert-table/table/training_title_option/column/training_title_phrase/outputType/json'); return false;\">" . t ( 'Insert new' ) . "</a>" );
 		}
@@ -654,7 +655,7 @@ class TrainingController extends ReportFilterHelpers {
 		$tlocations = TrainingLocation::selectAllLocations ( $this->setting ( 'num_location_tiers' ) );
 		$this->viewAssignEscaped ( 'tlocations', $tlocations );
 		if ($this->hasACL ( 'edit_facility' )) {
-			$this->view->assign ( "insertLocationLink", '<a href="#" onclick="return false;" id="show">'. t(str_replace(' ','&nbsp;',t('Insert new'))) . '</a>' );
+			//$this->view->assign ( "insertLocationLink", '<a href="#" onclick="return false;" id="show">'. t(str_replace(' ','&nbsp;',t('Insert new'))) . '</a>' );
 		}
 
 		// pepfar durations
@@ -699,7 +700,7 @@ class TrainingController extends ReportFilterHelpers {
 		}
 		$this->view->assign ( 'fundingArray', $fundingArray );
 		if ($this->hasACL ( 'acl_editor_funding' )) {
-		$this->view->assign ( 'fundingJsonUrl', Settings::$COUNTRY_BASE_URL . '/training/insert-table/table/training_funding_option/column/funding_phrase/outputType/json' );
+		    $this->view->assign ( 'fundingJsonUrl', Settings::$COUNTRY_BASE_URL . '/training/insert-table/table/training_funding_option/column/funding_phrase/outputType/json' );
 			$this->view->assign ( "fundingInsertLink", ' <a href="#" onclick="addCheckbox(\''.t('Please enter the name your new funding item:') .  '\', \'funding_id\', \'fundingContainer\', \''.$this->view->fundingJsonUrl.'\'); return false;">'.t('Insert New').'</a>' );
 		}
 
@@ -896,7 +897,6 @@ class TrainingController extends ReportFilterHelpers {
 			$personsFields ['province_name'] = $this->tr ( 'Region A (Province)' );
 		}
 
-
 		$colStatic = array_keys ( $personsFields ); // static calumns (From field keys)
 		if ( $this->setting ( 'module_attendance_enabled' ) || $this->setting ( 'display_viewing_location' ) || $this->setting( 'display_budget_code' ) ) {
 			foreach( $colStatic as $i => $v )
@@ -904,11 +904,12 @@ class TrainingController extends ReportFilterHelpers {
 					unset( $colStatic[$i] ); // remove 1 so we can edit the field
 		}
 
+		/****************************************************************************************************************/
 		if ($this->view->viewonly) {
 			$editLinkInfo ['disabled'] = 1;
 			$linkInfo = array ();
 		} else {
-
+            
 			$linkInfo = array (// add links to datatable fields
 			'linkFields' => $colStatic, 'linkId' => 'person_id', // use ths value in link
 			'linkUrl' => Settings::$COUNTRY_BASE_URL . '/person/edit/id/%person_id%' );
@@ -922,7 +923,7 @@ class TrainingController extends ReportFilterHelpers {
 
 			if ($this->setting('display_training_post_test')) {
 				$editLinkInfo[] = array ('linkName' => t ( 'Post-Test' ), 'linkId' => 'id', // use this value in link
-				'linkUrl' => "javascript:updateScore('Post-Test', %id%, '" . Settings::$COUNTRY_BASE_URL . "/training/scores-update', '%score_post%');" ); // do not translate label/key
+				'linkUrl' => "javascript:updateScore('Post_Test', %id%, '" . Settings::$COUNTRY_BASE_URL . "/training/scores-update', '%score_post%');" ); // do not translate label/key
 			}
 
 			$editLinkInfo[] = array ('linkName' => t ( 'Scores' ), 'linkId' => 'id', // use this value in link
@@ -930,7 +931,6 @@ class TrainingController extends ReportFilterHelpers {
 			// old
 			//'linkUrl' => Settings::$COUNTRY_BASE_URL."/training/scores/training/$training_id/person/%person_id%",
 			//$editLinkInfo['linkUrl'] = "javascript:submitThenRedirect('{$editLinkInfo['linkUrl']}');";
-
 
 		}
 
@@ -1399,7 +1399,8 @@ class TrainingController extends ReportFilterHelpers {
 						if (isset($values['custom2_phrase'])){                       $values['training_custom_2_option_id']          = $this->_importHelperFindOrCreate('training_custom_2_option',       'custom2_phrase',                  $values['custom2_phrase']); }
 						if (isset($values['training_organizer_phrase'])){            $values['training_organizer_option_id']         = $this->_importHelperFindOrCreate('training_organizer_option',      'training_organizer_phrase',       $values['training_organizer_phrase']); }
 						if (isset($values['training_method_phrase'])){               $values['training_method_option_id']            = $this->_importHelperFindOrCreate('training_method_option',         'training_method_phrase',          $values['training_method_phrase']); }
-						if (isset($values['training_primary_language_option_id'])){  $values['training_primary_language_option_id']  = $this->_importHelperFindOrCreate('trainer_language_option',        'language_phrase',                 $values['training_primary_language_option_id']); }
+						if (isset($values['language_phrase'])){                      $values['training_primary_language_option_id']  = $this->_importHelperFindOrCreate('trainer_language_option',        'language_phrase',                 $values['training_primary_language_option_id']); }
+						//if (isset($values['secondary_language_phrase'])){  $values['training_secondary_language_option_id']  = $this->_importHelperFindOrCreate('trainer_language_option',        'secondary_language_phrase',             $values['training_secondary_language_option_id']); }
 						if (isset($values['training_refresher_phrase']) && !is_array($values['training_refresher_phrase'])){ $values['training_refresher_option_id'] = $this->_importHelperFindOrCreate('training_refresher_option', 'refresher_phrase_option', $values['training_refresher_phrase']); }
 						// participants, trainers
 						$tableObj = $trainingObj->createRow();
@@ -1594,7 +1595,7 @@ class TrainingController extends ReportFilterHelpers {
 				'training_level_phrase' => '',
 				'training_method_phrase' => '',
 				'training_primary_language_phrase' => '',
-				'training_secondary_language_phrase' => '',
+				//'training_secondary_language_phrase' => '',
 				'funding_phrase' => '',
 				'funding_amount' => '',
 				'pepfar_category_phrase' => '',
@@ -1858,9 +1859,9 @@ class TrainingController extends ReportFilterHelpers {
 		//$editTable->customColDef = array('training_date' => 'width:120');
 		$editTable->customColDef = array('score_value' => 'formatter:fickle');/*Todo rename this*/
 
-
 		$editTable->execute ();
 	}
+	
 
 	/**
 	* Update test scores via Ajax
@@ -2016,6 +2017,16 @@ class TrainingController extends ReportFilterHelpers {
 
 	}
 
+	public function evaluationsAction() {
+		$training_id = $this->_getParam ( 'id' );
+		$this->view->assign ( 'url', Settings::$COUNTRY_BASE_URL . "/training/roster/id/$training_id" );
+
+		$tableObj = new Training ( );
+
+		$rowRay = $tableObj->getTrainingInfo ( $training_id );
+	}
+	
+	
 	/**
 	* Training Roster
 	*/
@@ -2089,8 +2100,7 @@ class TrainingController extends ReportFilterHelpers {
 		$locations = Location::getAll ();
 		foreach ( $persons as $pid => $person ) {
 			$region_ids = Location::getCityInfo ( $person ['location_id'], $this->setting ( 'num_location_tiers' ) );
-			$ordered_l = array( $region_ids['cityname'] );
-
+			$ordered_l = array();
 			foreach ($region_ids as $key => $value) {
 				if( !empty ($value) && isset($locations[$value]['name']))
 					$ordered_l [] = $locations [$value] ['name'];
@@ -2183,7 +2193,7 @@ class TrainingController extends ReportFilterHelpers {
 		if(! ($this->hasACL($requireACL) || $this->hasACL('edit_country_options')))
 			return null;
 
-		return ' &nbsp; &nbsp; <a href="'.$linkURL.'" onclick="submitThenRedirect(\''.$linkURL.'\');return false;">'.t('Edit').'</a>';
+		return ' &nbsp; &nbsp; <a href="'.$linkURL.'" onclick="submitThenRedirect(\''.$linkURL.'\');return false;">'.t('Add/Edit').'</a>';
 	}
 }
 ?>

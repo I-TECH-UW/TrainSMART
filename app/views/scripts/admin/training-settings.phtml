@@ -226,7 +226,7 @@ ob_end_clean();
 
 							<tr>
 								<td class="fieldTitle">Particpant Training Completion</td>
-								<td></td>
+								<td><input type="checkbox" name="check_display_training_completion" <?php if($this->check_display_training_completion) echo 'checked'; ?> id="check_display_training_completion"></td>
 								<td><input type="text" name="label_award" value="<?php echo $this->label_award; ?>"></td>
 								<td><a href="<?php echo $this->base_url;?>/admin/training-completion" onclick="return submitAdminForm(this);">Add/Edit</a></td>
 							</tr>

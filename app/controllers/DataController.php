@@ -79,8 +79,9 @@ class DataController extends ITechController {
    $sorted = $table->_fill_related($sorted, 'training_organizer_option', 'training_organizer_option_id', 'training_organizer_phrase');
    $sorted = $table->_fill_related($sorted, 'training_level_option', 'training_level_option_id', 'training_level_phrase');
    $sorted = $table->_fill_related($sorted, 'training_method_option', 'training_method_option_id', 'training_method_phrase');
+   
    $sorted = $table->_fill_related($sorted, 'trainer_language_option', 'training_primary_language_option_id', 'language_phrase');
-   $sorted = $table->_fill_related($sorted, 'trainer_language_option', 'training_secondary_language_option_id', 'language_phrase');
+   
    $sorted = $table->_fill_intersection_related($sorted, 'training_funding_option', 'training_to_training_funding_option', 'training_funding_option_id', 'funding_phrase');
    $sorted = $table->_fill_intersection_related($sorted, 'training_pepfar_categories_option', 'training_to_training_pepfar_categories_option', 'training_pepfar_categories_option_id', 'pepfar_category_phrase');
    $sorted = $table->_fill_intersection_related($sorted, 'training_topic_option', 'training_to_training_topic_option', 'training_topic_option_id', 'training_topic_phrase');
@@ -146,6 +147,7 @@ class DataController extends ITechController {
       echo $e->getMessage();
       error_log($e->getMessage());      
     }
+    
  }
 
   public function facilitiesAction() {
@@ -182,13 +184,13 @@ class DataController extends ITechController {
       if ( $city_info[8] ) $sorted[$id]['region_h_name'] = $locations[$city_info[8]]['name'];
       if ( $city_info[9] ) $sorted[$id]['region_i_name'] = $locations[$city_info[9]]['name'];
     }
-     unset($sorted[$id]['location_id']); 
+     //unset($sorted[$id]['location_id']); 
         
    }
    
 	   
-   $sorted = $facilityTable->_fill_lookup($sorted, 'facility_type_option', 'type_option_id', 'facility_type_phrase');
-   $sorted = $facilityTable->_fill_lookup($sorted, 'facility_sponsor_option', 'sponsor_option_id', 'facility_sponsor_phrase');
+   //$sorted = $facilityTable->_fill_lookup($sorted, 'facility_type_option', 'type_option_id', 'facility_type_phrase');
+   //$sorted = $facilityTable->_fill_lookup($sorted, 'facility_sponsor_option', 'sponsor_option_id', 'facility_sponsor_phrase');
    
     if ($this->getSanParam('outputType') == 'csv') 
       $this->sendData ( $this->reportHeaders ( false, $sorted ) );
@@ -248,7 +250,9 @@ class DataController extends ITechController {
    $sorted = $personTable->_fill_lookup($sorted, 'person_secondary_responsibility_option', 'secondary_responsibility_option_id', 'responsibility_phrase');
    $sorted = $personTable->_fill_lookup($sorted, 'person_custom_1_option', 'person_custom_1_option_id', 'custom1_phrase');
    $sorted = $personTable->_fill_lookup($sorted, 'person_custom_2_option', 'person_custom_2_option_id', 'custom2_phrase');
-   $sorted = $personTable->_fill_lookup($sorted, 'facility', 'facility_id', 'facility_name');
+   $sorted = $personTable->_fill_lookup($sorted, 'facility', 'facility_id', 'facility_name', false);
+   
+   
    
      
    //fill participants

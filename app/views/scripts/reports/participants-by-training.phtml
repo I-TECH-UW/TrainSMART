@@ -49,9 +49,7 @@ if ( $this->mode == 'count' )
 			echo '<option value="'.$vals['id'].'" '.($this->criteria['facilityInput'] == $vals['id']?'SELECTED':'').'>'.$vals['facility_name'].'</option>';
 	}
 	?>
-</select>
-	    </div></div>
-	</div>
+</select></div></div></div>
 
 
 	<div class="fieldLabel" id="training_title_option_id_lbl"><?php echo (@$this->translation['Training Name']); ?></div>
@@ -315,9 +313,16 @@ if ( $this->mode == 'count' )
 
 <?php
 if ( $this->setting['display_viewing_location'] && $this->mode != 'search' && ! $this->is_trainers ) {
-	echo DropDown::render_report_filter('person_to_training_viewing_loc_option', 'showViewingLoc', @$this->translation['Viewing Location'], $this->viewing_loc, 'location_phrase', @$this->criteria['person_to_training_viewing_loc_option_id'], $this->criteria['showViewingLoc']);
-} ?>
+	echo DropDown::render_report_filter('person_to_training_viewing_loc_option', 'showViewingLoc', @$this->translation['Viewing Location'], $this->viewing_loc, 
+'location_phrase', @$this->criteria['person_to_training_viewing_loc_option_id'], $this->criteria['showViewingLoc']);
+} 
 
+if ( $this->setting['display_training_completion'] && $this->mode != 'search') {
+    echo DropDown::render_report_filter('person_to_training_award_option', 'showTrainingCompletion', 'Training Completion', $this->training_complete, 
+'award_phrase', @$this->criteria['person_to_training_award_option_id'], $this->criteria['showTrainingCompletion']);
+} 
+
+?>
 <?php if ($this->setting['display_people_active']) { ?>
 	<div class="fieldLabel" id="training_active_lbl"><?php echo (@$this->translation['Is Active']); ?></div>
 	<div class="fieldInput">
@@ -391,11 +396,15 @@ if ( $this->setting['display_viewing_location'] && $this->mode != 'search' && ! 
 
 </div>
 
-<?php if(strstr($path[2], 'participantsByTraining') != FALSE ) { ?>
+<?php if(strstr($path[2], 'participantsByTraining') == TRUE or strstr($path[2], 'participantsByName') == TRUE) { ?>
   <div class="clear"></div>
 	<div class="fieldLabel">&nbsp;</div>
-   	<div class="fieldInput" style="margin-top:1em;"><input type="checkbox" name="distinctCount" id="distinctCount" <?php  if ($this->criteria['distinctCount']) echo 'checked="checked"';?> /><label for="distinctCount" > <?php tp('Return Unique Participants');?></label></div>
-<?php }; ?>
+   	<div class="fieldInput" style="margin-top:1em;"><input type="checkbox" name="distinctCount" id="distinctCount" 
+   	<?php  if ($this->criteria['distinctCount']) echo 'checked="checked"';?> /><label for="distinctCount" > 
+   	<?php if(strstr($path[2], 'participantsByTraining') == TRUE) tp('Return Unique Participants');?>
+   	<?php if(strstr($path[2], 'participantsByName') == TRUE) tp('Return Unique Participants By Training Names');?>
+   	
+   	</label></div><?php }; ?>
 
 
 	<div class="clear"></div><br /><br />
@@ -501,8 +510,14 @@ foreach($this->results as $row) {
 		echo ',"'.$row['region_i_name'].'"';
 	if ( $this->criteria['showFacility'] )
 		echo ',"'.$row['facility_name'].'"';
+	if ( $this->criteria['showFacilityId'] )
+		echo ',"'.$row['facility_id'].'"';
 	if ( $this->criteria['showTrainingTitle'] )
 		echo ',"'.$row['training_title'].'"';
+	
+	if ( $this->criteria['showTrainingCompletion'] )
+		echo ',"'.$row['award_phrase'].'"';
+	
 	if ( $this->criteria['showQualification'] )
 		echo ',"'.$row['qualification_phrase'].'"';
 	if ( $this->criteria['showQualPrim'] )
@@ -613,8 +628,11 @@ var trainingColumnDefs = [
 <?php if ( $this->criteria['showPhone'] ) { ?>
    {key:"phone", label: "<?php tp('Phone');?>", sortable:true, resizeable:true},
  <?php } ?>
+
 	{key:"training_start_date", label: "<?php tp('Date');?>", sortable:true, resizeable:true}
 <?php } ?>
+
+
 <?php if ( $this->criteria['showGender'] ) { ?>
    ,{key:"gender", label: "<?php tp('Gender');?>", sortable:true, resizeable:true}
  <?php } ?>
@@ -657,9 +675,17 @@ var trainingColumnDefs = [
  <?php if ( $this->criteria['showFacility'] ) { ?>
    ,{key:"facility_name", label: "<?php tp('Facility');?>", sortable:true, resizeable:true}
  <?php } ?>
+ <?php if ( $this->criteria['showFacilityId'] ) { ?>
+ ,{key:"facility_id", label: "<?php tp('Facility ID');?>", sortable:true, resizeable:true}
+<?php } ?>
 <?php if ( $this->criteria['showTrainingTitle'] ) { ?>
    ,{key:"training_title", label: "<?php echo (@$this->translation['Training Name']); ?>", sortable:true, resizeable:true}
  <?php } ?>
+ 
+ <?php if ( $this->criteria['showTrainingCompletion'] ) { ?>
+ ,{key:"training_completion", label: "<?php echo ('Training Completion'); ?>", sortable:true, resizeable:true}
+<?php } ?>
+
 <?php if ( $this->criteria['showQualification'] ) { ?>
    ,{key:"qualification_phrase", label: "<?php tp('Qualification');?>", sortable:true, resizeable:true}
  <?php } ?>
@@ -743,21 +769,21 @@ var trainingColumnDefs = [
 
 <script type="text/javascript">
 
-// uncheck return unique if training_title is used, they are not companitable
+//uncheck return unique if training_title is used, they are not companitable
 $('document').ready(function () {
-	if ($('#training_title_id').val() != "") {
-		$('#distinctCount').removeAttr('checked');
-	}
-	$('#training_title_id').change(function () {
-		if ($('#training_title_id').val() != "") {
-			$('#distinctCount').removeAttr('checked');
-		}
-	})
-	$('#distinctCount').change(function (e) {
-		if ($(this).is(':checked') && $('#training_title_id').val() != "") {
-			alert('<?php echo @$this->translation["Training Name"].space.t("cannot be used with".space.t("Return Unique Participants")); ?>');
-			e.preventDefault();
-			$('#distinctCount').removeAttr('checked');
+	//if ($('#training_title_id').val() != "") {
+		//$('#distinctCount').removeAttr('checked');
+	//}
+	//$('#training_title_id').change(function () {
+		//if ($('#training_title_id').val() != "") {
+			//$('#distinctCount').removeAttr('checked');
+		//}
+	//})
+	//$('#distinctCount').change(function (e) {
+		//if ($(this).is(':checked') && $('#training_title_id').val() != "" ) {
+			//alert('<?php echo @$this->translation["Training Name"].space.t("cannot be used with".space.t("Return Unique Participants ")); ?>');
+			//e.preventDefault();
+			//$('#distinctCount').removeAttr('checked');
 		}
 	})
 })

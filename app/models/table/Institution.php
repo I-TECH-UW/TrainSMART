@@ -200,9 +200,10 @@ class Institution extends ITechTable
 		$select = $this->dbfunc()->select()
 			->from(array('i' => $this->_name),
 				array ('id', 'institutionname','geography1','geography2','geography3'))
-			->joinLeft(array('t' => 'lookup_institutiontype'),
+			->join(array('t' => 'lookup_institutiontype'),
 				'i.type = t.id',
 				array('typename'));
+
 #		if ((isset($param['geo1'])) && (is_numeric($param['geo1'])) && ($param['geo1'] > 0)){
 			$select->joinLeft(array('l1' => 'location'),
 				'l1.id = i.geography1',
@@ -310,4 +311,4 @@ class Institution extends ITechTable
 
  }
   
-?>
+?>

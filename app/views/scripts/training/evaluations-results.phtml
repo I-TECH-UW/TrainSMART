@@ -1,0 +1,101 @@
+<?php
+// need $pageTitle from these includes
+ob_start();
+require_once('views/scripts/header.phtml');
+$header = ob_get_contents();
+ob_end_clean();
+
+ob_start();
+require_once('views/scripts/nav-admin.phtml');
+$nav = ob_get_contents();
+ob_end_clean();
+
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body  class="yui-skin-sam">
+<div id="pageHolder">
+	<div id="header"><?php echo $header; ?></div>
+	<div id="content">
+
+	<div class="fieldIndentNoMargin">
+		<?php tp('gnrTEvaluations');?>
+		<!--<span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span>-->
+		<?php echo $this->printAndExport();?>
+	</div>
+
+	<div id="evalInfoTable"></div>
+
+	<script type="text/javascript">
+	var evalInfoData = [
+		<?php
+			foreach ($this->results as $i => $row) {
+				if ($i != 0) echo ',';
+				echo '[';
+				echo '"'.($row['title'] ?                       $row['title'] : '-') . '",';
+				echo '"'.($row['training_id'] ?                 $row['training_id'] : '-') . '",';
+				echo '"'.($row['training_title_phrase'] ?       $row['training_title_phrase'] : '-') . '",';
+				echo '"'.($row['province_name'] ?               $row['province_name'] : '-') . '",';
+				echo '"'.($row['district_name'] ?               $row['district_name'] : '-') . '",';
+				echo '"'.($row['training_location_name'] ?      $row['training_location_name'] : '-') . '",';
+				echo '"'.($row['person_full_name'] ?            $row['person_full_name'] : '-') . '",';
+				echo '"'.($row['trainer_full_name'] ?           $row['trainer_full_name'] : '-')  .'",';
+				echo ($row['question_number']) . ',';
+				echo '"'.($row['question_type'] ?               $row['question_type'] : '-') . '",';
+				echo '"'.($row['question_text'] ?               $row['question_text'] : '-') . '",';
+				for ($k = 1; $k <= $this->numColumns; $k++) {
+					echo '"'. $row['response'.$k] . '",';
+				}
+				echo '"'.$row['average'].'"';
+				echo ']';
+			}
+		?>
+	];
+
+	var evalColumnDefs = [
+		{key:"title", label: "<?php tp('Evaluation'); ?>", sortable:true, resizeable:true},
+		{key:"training_id", label: "<?php echo t('Training').space.t('ID'); ?>", sortable:true, resizeable:true},
+		{key:"training_title", label: "<?php tp('Training Title'); ?>", sortable:true, resizeable:true},
+		{key:"province_name", label: "<?php echo @$this->translation['Region A (Province)']; ?>", sortable:true, resizeable:true},
+		{key:"district_name", label: "<?php echo @$this->translation['Region B (Health District)']; ?>", sortable:true, resizeable:true},
+		{key:"training_location_name", label: "<?php tp('Training Location'); ?>", sortable:true, resizeable:true},
+		{key:"person_full_name", label: "<?php tp('Participant'); ?>", sortable:true, resizeable:true},
+		{key:"trainer_full_name", label: "<?php tp('Trainer'); ?>", sortable:true, resizeable:true},
+		{key:"question_number", label: "<?php tp('Question Number'); ?>", sortable:true, resizeable:true},
+		{key:"question_type", label: "<?php tp('Question Type'); ?>", sortable:true, resizeable:true},
+		{key:"question_text", label: "<?php tp('Question Text'); ?>", sortable:true, resizeable:true},
+		<?php
+			for ($i = 1; $i <= $this->numColumns; $i++) {
+				echo '{key:"score'.$i.'", label: "'.t('Response').'&nbsp;'.$i.'", sortable:true, resizeable:true},'.PHP_EOL;
+			}
+		?>
+		{key:"avg", label: "<?php tp('Average'); ?>", sortable:true, resizeable:true}
+];
+
+		evalInfoDataTable = makeEditTable("evalInfo", evalInfoData, evalColumnDefs, null, true);
+		evalInfoDataTable.myDataTable.config.editOnly  = true; // hide their edit/delete links
+		evalInfoDataTable.myDataTable.config.editLinks = '';
+		evalInfoDataTable.myDataTable.config.deleteOnly= '';
+		ITECH.evalInfoTable = evalInfoDataTable;
+
+		</script>
+
+		<div class="clear"></div>
+
+	</div>
+	<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+</body>
+</html>

@@ -1,8 +1,5 @@
 <?php
-
 require_once('ITechTable.php');
-
-#
 
 class Helper extends ITechTable
 {
@@ -1394,138 +1391,173 @@ class Helper extends ITechTable
 		}
 	}
 
-	public function ListCurrentClasses($cid,$sid = false) {
+	public function ListCurrentClasses($cid,$pid = false) {
 		# SHOW ALL CLASSES BASED ON COHORT ID AND POTENTIALLY CROSS WITH STUDENT ID
 		$db = $this->dbfunc();
 
-		if (!$sid){
-			$query = "
-				SELECT c.*, p.first_name, p.last_name, lct.coursetype
+		if (!$pid){
+			$query = "SELECT c.*, p.first_name, p.last_name, lct.coursetype
 				FROM classes c
 				INNER JOIN link_cohorts_classes lcc ON lcc.classid = c.id
-				LEFT JOIN tutor t ON t.id = c.instructorid
-				LEFT JOIN person p ON t.personid = p.id
+				INNER JOIN tutor t ON t.id = c.instructorid
+				INNER JOIN person p ON t.personid = p.id
 				LEFT JOIN lookup_coursetype lct ON lct.id = c.coursetypeid
 				WHERE lcc.cohortid = '" . $cid . "'
 				ORDER BY c.classname, p.first_name, p.last_name";
+			$select = $db->query($query);
+			$result = $select->fetchAll();
+			return $result;
 		} else {
-			
-			/* Sean: Had to redo. Was using personid in place of studentid
-			 * Sean: Converted foreach loop (one query per iteration) to a single query
-			 */ 
-			$query = "
-				SELECT c.*, p.first_name, p.last_name, lct.coursetype,
-					CASE WHEN sc.linkclasscohortid IS NULL THEN 0 ELSE sc.linkclasscohortid END linkid,
-					CASE WHEN sc.classid IS NULL OR LENGTH(grade) = 0 OR grade IS NULL THEN 'N/A' ELSE grade END grade,
-					CASE WHEN sc.classid IS NULL OR LENGTH(credits) = 0 OR credits IS NULL THEN 'N/A' ELSE credits END credits
-
-				FROM  classes c
+			$query = "SELECT c.*, p.first_name, p.last_name, lct.coursetype
+				FROM classes c
 				INNER JOIN link_cohorts_classes lcc ON lcc.classid = c.id
-				LEFT JOIN tutor t ON t.id = c.instructorid
-				LEFT JOIN person p ON t.personid = p.id
+				INNER JOIN tutor t ON t.id = c.instructorid
+				INNER JOIN person p ON t.personid = p.id
 				LEFT JOIN lookup_coursetype lct ON lct.id = c.coursetypeid
-				LEFT JOIN (
-					SELECT classid, linkclasscohortid, grade, credits
-					FROM   link_student_classes 
-					WHERE	studentid = " . $sid . "
-					AND		classid IN (SELECT classid FROM link_cohorts_classes WHERE cohortid = " . $cid . ")
-				) AS sc ON sc.classid = c.id
-				WHERE lcc.cohortid = " . $cid . "
-				ORDER BY c.classname, p.first_name, p.last_name";		
+				WHERE lcc.cohortid = '" . $cid . "'
+				ORDER BY c.classname, p.first_name, p.last_name";
+			$select = $db->query($query);
+			$result = $select->fetchAll();
+
+			$output = array();
+
+			foreach ($result as $row){
+				$newclass = $row;
+				$query = "SELECT * FROM link_student_classes WHERE
+					studentid = " . $pid . " AND
+					classid = " . $row['id'] . " AND
+					cohortid = " . $cid;
+				$select = $db->query($query);
+				$result = $select->fetchAll();
+				if (count ($result) > 0){
+					$row = $result[0];
+					$newclass['linkid'] = $row['linkclasscohortid'];
+					$newclass['grade'] = $row['grade'];
+				} else {
+					$newclass['linkid'] = 0;
+					$newclass['grade'] = "N/A";
+				}
+
+				$output[] = $newclass;
+			}
+
+			return $output;
 		}
-		$select = $db->query($query);
-		$result = $select->fetchAll();
-		return $result;		
 	}
 
-	public function ListCurrentPracticum($cid,$sid = false){
+	public function ListCurrentPracticum($cid,$pid = false){
 		# SHOW ALL CLASSES BASED ON COHORT ID AND POTENTIALLY CROSS WITH STUDENT ID
 		$db = $this->dbfunc();
 
-		if (!$sid){
-			$query = "
-				SELECT p.*, f.facility_name, pe.first_name, pe.last_name, pe.id AS personid
+		if (!$pid){
+			$query = "SELECT p.*, f.facility_name, pe.first_name, pe.last_name, pe.id AS personid
 				FROM practicum p
-				LEFT JOIN facility f ON f.id = p.facilityid
-				LEFT JOIN tutor t ON t.id = p.advisorid
-				LEFT JOIN person pe ON pe.id = t.personid
+				INNER JOIN facility f ON f.id = p.facilityid
+				INNER JOIN tutor t ON t.id = p.advisorid
+				INNER JOIN person pe ON pe.id = t.personid
 				WHERE cohortid = " . $cid . "
 				ORDER BY practicumdate DESC, practicumname";
-
+			$select = $db->query($query);
+			$result = $select->fetchAll();
+			return $result;
 		} else {
-			/* Sean: Had to redo. Was using personid in place of studentid
-			 * Sean: Converted foreach loop (one query per iteration) to a single query
-			 */ 
-			$query = "
-				SELECT p.*, f.facility_name, pe.first_name, pe.last_name, pe.id AS personid,
-					CASE WHEN sp.linkcohortpracticumid IS NULL THEN 0 ELSE sp.linkcohortpracticumid END linkid,
-					CASE WHEN sp.practicumid IS NULL OR LENGTH(grade) = 0 OR grade IS NULL THEN 'N/A' ELSE grade END grade,
-					CASE WHEN sp.practicumid IS NULL OR LENGTH(hourscompleted) = 0 OR hourscompleted IS NULL THEN 'N/A' ELSE hourscompleted END hourscompleted
+			$query = "SELECT p.*, f.facility_name, pe.first_name, pe.last_name, pe.id AS personid
 				FROM practicum p
-				LEFT JOIN facility f ON f.id = p.facilityid
-				LEFT JOIN tutor t ON t.id = p.advisorid
-				LEFT JOIN person pe ON pe.id = t.personid
-				LEFT JOIN (
-					SELECT practicumid, linkcohortpracticumid, grade, hourscompleted
-					FROM   link_student_practicums 
-					WHERE	studentid = " . $sid . "
-					AND		practicumid IN (SELECT id FROM practicum WHERE cohortid = " . $cid . ")
-				) AS sp ON sp.practicumid = p.id
-				WHERE cohortid = " . $cid ."
+				INNER JOIN facility f ON f.id = p.facilityid
+				INNER JOIN tutor t ON t.id = p.advisorid
+				INNER JOIN person pe ON pe.id = t.personid
+				WHERE cohortid = " . $cid . "
 				ORDER BY practicumdate DESC, practicumname";
+			$select = $db->query($query);
+			$result = $select->fetchAll();
+
+			$output = array();
+
+			foreach ($result as $row){
+				$newclass = $row;
+				$query = "SELECT * FROM link_student_practicums WHERE
+					studentid = " . $pid . " AND
+					practicumid = " . $row['id'] . " AND
+					cohortid = " . $cid;
+				$select = $db->query($query);
+				$result = $select->fetchAll();
+				if (count ($result) > 0){
+					$row = $result[0];
+					$newclass['linkid'] = $row['linkcohortpracticumid'];
+					$newclass['hourscompleted'] = $row['hourscompleted'];
+					$newclass['grade'] = $row['grade'];
+				} else {
+					$newclass['linkid'] = $row['linkcohortpracticumid'];
+					$newclass['hourscompleted'] = "0";
+					$newclass['grade'] = "N/A";
+				}
+
+				$output[] = $newclass;
+			}
+
+			return $output;
 		}
-		$select = $db->query($query);
-		$result = $select->fetchAll();
-		return $result;
 	}
 
-	public function ListCurrentLicenses($cid,$sid = false){
+	public function ListCurrentLicenses($cid,$pid = false){
 		# SHOW ALL CLASSES BASED ON COHORT ID AND POTENTIALLY CROSS WITH STUDENT ID
 		$db = $this->dbfunc();
 
-		if (!$sid){
-			$query = "
-				SELECT id, licensename, licensedate
+		if (!$pid){
+			$query = "SELECT id, licensename, licensedate
 				FROM licenses
 				WHERE cohortid = " . $cid . "
 				ORDER BY licensedate, licensename";
+			$select = $db->query($query);
+			$result = $select->fetchAll();
+			return $result;
 		} else {
-			/* Sean: Had to redo. Was using personid in place of studentid
-			 * Sean: Converted foreach loop (one query per iteration) to a single query
-			 */ 
-			$query = "
-				SELECT l.id, licensename, licensedate,
-					CASE WHEN sl.linkclasslicenseid IS NULL THEN 0 ELSE sl.linkclasslicenseid END linkid,
-					CASE WHEN sl.licenseid IS NULL OR LENGTH(grade) = 0 OR grade IS NULL THEN 'N/A' ELSE grade END grade,
-					CASE WHEN sl.licenseid IS NULL OR LENGTH(credits) = 0 OR credits IS NULL THEN 'N/A' ELSE credits END credits
-				FROM licenses l 
-				LEFT JOIN (
-					SELECT licenseid, linkclasslicenseid, grade, credits
-					FROM   link_student_licenses 
-					WHERE  studentid = " . $sid . "
-					AND    licenseid IN (SELECT id FROM licenses WHERE cohortid = " . $cid . ")
-				) AS sl ON sl.licenseid = l.id
+			$query = "SELECT id, licensename, licensedate
+				FROM licenses
 				WHERE cohortid = " . $cid . "
 				ORDER BY licensedate, licensename";
+			$select = $db->query($query);
+			$result = $select->fetchAll();
+
+			$output = array();
+
+			foreach ($result as $row){
+				$newclass = $row;
+				$query = "SELECT * FROM link_student_licenses WHERE
+					studentid = " . $pid . " AND
+					licenseid = " . $row['id'] . " AND
+					cohortid = " . $cid;
+				$select = $db->query($query);
+				$result = $select->fetchAll();
+				if (count ($result) > 0){
+					$row = $result[0];
+					$newclass['linkid'] = $row['linkclasslicenseid'];
+					$newclass['grade'] = $row['grade'];
+				} else {
+					$newclass['linkid'] = $row['linkclasslicenseid'];
+					$newclass['grade'] = "N/A";
+				}
+
+				$output[] = $newclass;
+			}
+
+			return $output;
 		}
-		$select = $db->query($query);
-		$result = $select->fetchAll();
-		return $result;
 	}
 
 
-	function updateStudentLicense($sid,$param){
+	function updateStudentLicense($pid,$param){
 		$db = $this->dbfunc();
 		foreach ($param['grade'] as $key=>$value){
 			$query = "SELECT * FROM link_student_licenses WHERE
-				studentid = " . $sid . " AND
+				studentid = " . $pid . " AND
 				licenseid = " . $key . " AND
 				cohortid = " . $param['cohortid'];
 			$select = $db->query($query);
 			$result = $select->fetchAll();
 			if (count ($result) == 0){
 				$insert = array(
-					'studentid'		=> $sid, 
+					'studentid'		=> $pid,
 					'licenseid'		=> $key,
 					'cohortid'		=> $param['cohortid'],
 					'grade'			=> $value,
@@ -1542,47 +1574,45 @@ class Helper extends ITechTable
 		}
 	}
 
-	function updateStudentClass($sid,$param){
+	function updateStudentClass($pid,$param){
 		$db = $this->dbfunc();
-		foreach (array_keys($param['grade']) as $cid) {
+		foreach ($param['grade'] as $key=>$value){
 			$query = "SELECT * FROM link_student_classes WHERE
-				studentid = " . $sid . " AND
-				classid = " . $cid . " AND
+				studentid = " . $pid . " AND
+				classid = " . $key . " AND
 				cohortid = " . $param['cohortid'];
 			$select = $db->query($query);
 			$result = $select->fetchAll();
-			if (count ($result) == 0) {
+			if (count ($result) == 0){
 				$insert = array(
-					'studentid'		=> $sid, 
-					'classid'		=> $cid,
+					'studentid'		=> $pid,
+					'classid'		=> $key,
 					'cohortid'		=> $param['cohortid'],
-					'grade'			=> $param['grade'][$cid],
-					'credits'	=> $param['credits'][$cid]
+					'grade'			=> $value,
 				);
 				$db->insert("link_student_classes", $insert);
 			} else {
 				$row = $result[0];
 				$insert = array(
-					'grade'			=> $param['grade'][$cid],
-					'credits'	=> $param['credits'][$cid]
+					'grade'			=> $value,
 				);
 				$db->update("link_student_classes", $insert,'id = ' . $row['id']);
 			}
 		}
 	}
 
-	function updateStudentPracticum($sid,$param){
+	function updateStudentPracticum($pid,$param){
 		$db = $this->dbfunc();
 		foreach ($param['practicum'] as $key=>$value){
 			$query = "SELECT * FROM link_student_practicums WHERE
-				studentid = " . $sid . " AND 
+				studentid = " . $pid . " AND
 				practicumid = " . $key . " AND
 				cohortid = " . $param['cohortid'];
 			$select = $db->query($query);
 			$result = $select->fetchAll();
 			if (count ($result) == 0){
 				$insert = array(
-					'studentid'			=> $sid,
+					'studentid'			=> $pid,
 					'practicumid'		=> $key,
 					'cohortid'			=> $param['cohortid'],
 					'hourscompleted'	=> $value['completed'],
@@ -1653,7 +1683,7 @@ class Helper extends ITechTable
 		}
 	}
 
-	public function getCohortInstitution($sid, $tp){
+	public function getCohortInstitution($pid, $tp){
 		$db = $this->dbfunc();
 		$cohort = array();
 		$institution = array();
@@ -1665,7 +1695,7 @@ class Helper extends ITechTable
 					->from("link_student_cohort")
 					->join(array("c" => "cohort"),
 							"id_cohort = c.id")
-					->where('id_student = ?', $sid);
+					->where('id_student = ?', $pid);
 
 				$result = $db->fetchAll($select);
 				if (count ($result) > 0){
@@ -1687,7 +1717,7 @@ class Helper extends ITechTable
 						->from("institution")
 						->join(array("s" => "student"),
 								"s.institutionid = institution.id")
-						->where('s.id = ?', $sid); 
+						->where('s.id = ?', $pid);
 					$result = $db->fetchAll($select);
 					if (count ($result) > 0){
 						$institution = $result[0];
