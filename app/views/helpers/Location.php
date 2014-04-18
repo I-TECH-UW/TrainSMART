@@ -26,7 +26,6 @@ function renderFilter(&$locations, $tier, $widget_id, $default_val_id = false, $
           $default_val_id = $val['id'];
     }
   }
-  $also_match_id = null;
   if ( !is_array($default_val_id) && strpos($default_val_id, '_')){ // bugfix - print_all_region_filters() might get actual option value="123_123" from some controllers (partnerController)
     $also_match_id = array_pop(explode('_', $default_val_id));
   }
@@ -36,18 +35,16 @@ function renderFilter(&$locations, $tier, $widget_id, $default_val_id = false, $
   <?php if ($child_widget_id ) { ?>onchange="setChildStatus_<?php echo str_replace('-', '_', $widget_id);?>();" <?php }?>>
     <option value="">--<?php tp('choose');?>--</option>
     <?php
-	  foreach ( $locations as $val ) {
+      foreach ( $locations as $val ) {
         if ( $val['tier'] == $tier) {
         	  $selected = '';
         	  if ( is_array($default_val_id) && (@in_array($val['id'], $default_val_id) ) ) {
         	   $selected = 'selected="selected"';
             } else if ( !is_array($default_val_id) && $val['id'] === $default_val_id ) {
         	   $selected = 'selected="selected"';
-        	  } else if ( substr($val['id'], strlen($val['id'])-strlen($default_val_id)-1) == $default_val_id ) {
-        	   $selected = 'selected="selected"';
-            } // else if ( $also_match_id === $val['id'] ) {
-              // $selected = 'selected="selected"';
-        	  //}
+            } else if ( $also_match_id === $val['id'] ) {
+              $selected = 'selected="selected"';
+        	  }
             echo '<option value="'.buildId($tier, $locations, $val['id']).'" '.$selected.'>'.$val['name'].'</option>';
         }
       }
@@ -156,7 +153,6 @@ function renderFacilityDropDown($facilities, $selected_index)
   }
   $dupe = '';
   // lets build a visible <select> and also a display:none <select> with all locations
-  $output = null;
   $output .= '<select id="facilityInput" name="facilityInput">';
   $output .= '<option class="defaultval" value="">--'.t('choose').'--</option>';
   foreach ( $facilities as $vals ) {

@@ -16,7 +16,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 		<h1><?php echo t('View').' '.t('Training').' '.t('Partner'); ?></h1>
 
-		<form id="change" action="<?php echo $this->base_url;?>/training-partner/view" method="get">
+		<form id="change" action="<?php echo $this->base_url;?>/training-partner/view" method="GET">
 		<div class="fieldInput"><select name="id"  id="id" onchange="this.form.submit();">
 			<?php
 				foreach ( $this->partners as $vals ) {

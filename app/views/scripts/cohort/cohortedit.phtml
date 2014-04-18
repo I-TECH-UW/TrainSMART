@@ -167,7 +167,9 @@
 				$( ".calendarbox" ).datepicker({
 					changeMonth: true,
 					changeYear: true,
+					yearRange: "c-50:+50",
 				});
+
 				/* Add a click handler to the rows - this could be used as a callback */
 				$(".tablegrid tbody").click(function(event) {
 					$(oTable.fnSettings().aoData).each(function (){

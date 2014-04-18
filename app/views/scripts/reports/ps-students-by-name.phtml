@@ -71,7 +71,12 @@
 					"sPaginationType": "full_numbers"
 				});
 			} );
-			
+			function gotoPage(objId) {
+				var reportSelector = YAHOO.util.Dom.get(objId);
+				if ( reportSelector[reportSelector.selectedIndex].value ) {
+					window.location = '<?php echo $this->base_url;?>' + reportSelector[reportSelector.selectedIndex].value + '?<?php echo $_SERVER['QUERY_STRING'];?>';
+				}
+			}
 		</script>
 	</head>
 	<body class="yui-skin-sam" >
@@ -79,9 +84,17 @@
 			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
 			<div id="content">
 				<div id="subcontent">
-					<h1><?php tp('Pre-service Reports');?></h1>
-					<p></p>
-    				<?php require_once('psReportsPicker.phtml'); ?>
+					<div class="fieldLabel" id="training_lbl"><?php tp('Select student report');?></div>
+					<select id="pstraining" name="pstraining" onchange="gotoPage('pstraining');">
+						<option value="">--<?php tp('choose');?>--</option>
+						<option value="/reports/psStudentsTrained"             ><?php tp('Students Trained');?></option>
+						<option value="/reports/psStudentsByName"    selected  ><?php tp('Students By Name');?></option>
+						<option value="/reports/psGraduatedStudents"           ><?php tp('Graduated Students');?></option>
+					</select><br/><br/>
+					<div class="clear"></div>
+					<div id="contentheader">
+						<h2><?php tp('Students By Name');?></h2><br>
+					</div>
 					<div class="pad50 clear"></div>
 					<form  action="" method="get">
 						<div class="mainformholder" style="height:100%;">

@@ -197,19 +197,12 @@
 															echo DropDown::render_report_filter('training_primary_language_option', 'showPrimaryLanguage', @$this->translation['Primary Language'], $this->language, 'language_phrase', @$this->criteria['training_primary_language_option_id'], $this->criteria['showPrimaryLanguage']);
 														}
 
-if ( $this->setting['display_secondary_language'] && $this->mode != 'search') {
-echo DropDown::render_report_filter('training_secondary_language_option', 'showSecondaryLanguage', @$this->translation['Secondary Language'], $this->language, 
-'language_phrase', @$this->criteria['training_secondary_language_option_id'], $this->criteria['showSecondaryLanguage']);
+														if ( $this->setting['display_secondary_language'] && $this->mode != 'search') {
+															echo DropDown::render_report_filter('training_secondary_language_option', 'showSecondaryLanguage', @$this->translation['Secondary Language'], $this->language, 'language_phrase', @$this->criteria['training_secondary_language_option_id'], $this->criteria['showSecondaryLanguage']);
 														}
-														
-if ( $this->setting['display_training_completion'] && $this->mode != 'search') {
-echo DropDown::render_report_filter('person_to_training_award_option', 'showTrainingCompletion', 'Training Completion', $this->training_complete, 
-'award_phrase', @$this->criteria['person_to_training_award_option_id'], $this->criteria['showTrainingCompletion']);
-}
 
 														if ( $this->setting['display_viewing_location'] && $this->mode != 'search') {
-echo DropDown::render_report_filter('person_to_training_viewing_loc_option', 'showViewingLoc', @$this->translation['Viewing Location'], $this->viewing_loc, 
-'location_phrase', @$this->criteria['person_to_training_viewing_loc_option_id'], $this->criteria['showViewingLoc']);
+															echo DropDown::render_report_filter('person_to_training_viewing_loc_option', 'showViewingLoc', @$this->translation['Viewing Location'], $this->viewing_loc, 'location_phrase', @$this->criteria['person_to_training_viewing_loc_option_id'], $this->criteria['showViewingLoc']);
 														}
 
 														?>
@@ -458,8 +451,6 @@ echo DropDown::render_report_filter('person_to_training_viewing_loc_option', 'sh
 																	echo ',"'.$row['primary_language_phrase'].'"';
 																	if ( $this->criteria['showSecondaryLanguage'] )
 																	echo ',"'.$row['secondary_language_phrase'].'"';
-																	if ( $this->criteria['showTrainingCompletion'] )
-																	echo ',"'.$row['award_phrase'].'"';
 																	if ( $this->criteria['showGotCurric'] )
 																	echo ',"'.$row['training_got_curriculum_phrase'].'"';
 																	if ( $this->criteria['showCustom1'] )
@@ -605,9 +596,6 @@ echo DropDown::render_report_filter('person_to_training_viewing_loc_option', 'sh
 																<?php   if ( $this->criteria['showGender'] ) { ?>
 																	,{key:"gender", label: "<?php tp('Gender'); ?>", sortable:true, resizeable:true}
 																<?php } ?>
-																<?php   if ( $this->criteria['showTrainingCompletion'] ) { ?>
-																    ,{key:"trainingcomp", label: "<?php tp('Training Completion'); ?>", sortable:true, resizeable:true}
-															    <?php } ?>
 																<?php   if ( $this->criteria['showViewingLoc'] ) { ?>
 																	,{key:"viewingloc", label: "<?php tp('Viewing Location'); ?>", sortable:true, resizeable:true}
 																<?php } ?>

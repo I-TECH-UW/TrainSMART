@@ -84,9 +84,10 @@
 			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
 			<div id="content">
 				<div id="subcontent">
-					<h1><?php tp('Pre-service Reports');?></h1>
-					<p></p>
-    				<?php require_once('psReportsPicker.phtml'); ?><div class="pad50 clear"></div>
+					<div id="contentheader">
+						<h2><?php tp('Cohort By Participant Count');?></h2><br>
+					</div>
+					<div class="pad50 clear"></div>
 					<form  action="" method="get">
 						<div class="mainformholder" style="height:100%;">
 					<input type="hidden" name="process" id="process" value="1">

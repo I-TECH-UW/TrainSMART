@@ -431,7 +431,6 @@ class AdminController extends UserController
 		'label_primary_language' => 'Primary Language',
 		'label_secondary_language' => 'Secondary Language',
 		'label_award'                => 'Award',
-	    'label_training_completion'		=> 'Training Completion',
 		'label_viewing_location'     => 'Viewing Location',
 		'label_budget_code'          => 'Budget Code'
 		);
@@ -459,7 +458,6 @@ class AdminController extends UserController
 		'check_training_funding_options' => 'display_funding_options',
 		'check_training_funding_amounts'     => 'display_funding_amounts',
 		'check_display_viewing_location'     => 'display_viewing_location',
-		'check_display_training_completion'     => 'display_training_completion',
 		'check_display_budget_code'          => 'display_budget_code'
 		);
 
@@ -1521,10 +1519,10 @@ class AdminController extends UserController
 		}
 		$this->sendData($rowArray);
 	}
-	
+
 	public function trainingCompletionAction()
 	{
-	
+
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'person_to_training_award_option';
@@ -3006,7 +3004,6 @@ class AdminController extends UserController
 			'training-recommend'          => 'acl_editor_recommended_topic',
 			'training-gotcurriculum'      => 'acl_editor_nationalcurriculum',
 			'training-method'             => 'acl_editor_method',
-			'training-completion'		  => 'acl_admin_training',
 			'training-viewing-location'   => 'acl_admin_training',
 			'training-budget-code'        => 'acl_admin_training',
 			'facilities-types'            => 'acl_editor_facility_types',

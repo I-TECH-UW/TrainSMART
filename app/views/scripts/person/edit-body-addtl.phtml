@@ -11,7 +11,7 @@
 <script type="text/javascript">
 	$(document).ready(function () {
 		var sels = $('#facwrapper select').not('#facilityInput'); // all selects
-    $('#facilityInput').filterByText(sels, true);                 // filter by value on change filterFacilityByText
+    $('#facilityInput').filterFacilityByText(sels, true);                 // filter by value on change
 	});
 </script>
 
