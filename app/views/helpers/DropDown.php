@@ -113,7 +113,7 @@ class DropDown {
 			$jsonUrl = "$jsonUrl/table/$table/column/$column";
 			$jsonUrl = Settings::$COUNTRY_BASE_URL . '/' . $jsonUrl . '/outputType/json';
 
-		    //$html .= " <a href=\"#\" onclick=\"addToSelect('" . str_replace("'", "\\"."'",t ( 'Please enter your new' )) . " {$label}:', 'select_{$table}', '{$jsonUrl}'); return false;\">" . t ( 'Insert new' ) . "</a>";
+			$html .= " <a href=\"#\" onclick=\"addToSelect('" . str_replace("'", "\\"."'",t ( 'Please enter your new' )) . " {$label}:', 'select_{$table}', '{$jsonUrl}'); return false;\">" . t ( 'Insert new' ) . "</a>";
 		}
 
 		return $html;

@@ -2,7 +2,6 @@
 require_once ('ReportFilterHelpers.php');
 require_once ('FacilityController.php');
 require_once ('models/table/Person.php');
-require_once ('models/table/Employee.php');
 require_once ('models/table/Facility.php');
 require_once ('models/table/OptionList.php');
 require_once ('models/table/MultiOptionList.php');
@@ -50,7 +49,7 @@ class EmployeeController extends ReportFilterHelpers {
 		$allowedWhereClause = $org_allowed_ids ? " partner.organizer_option_id in ($org_allowed_ids) " : "";
 		// restricted access?? only show organizers that belong to this site if its a multi org site
 		$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
-		$allowedWhereClause .= $site_orgs ? "  partner.organizer_option_id in ($site_orgs) " : "";
+		$allowedWhereClause .= $site_orgs ? " AND partner.organizer_option_id in ($site_orgs) " : "";
 
 		$partners = new DashviewEmployee();
 		$details = $partners->fetchdetails($allowedWhereClause);
@@ -201,32 +200,26 @@ class EmployeeController extends ReportFilterHelpers {
 		if ( $this->getRequest()->isPost() )
 		{
 			//validate then save
-			$params['location_id'] 				= regionFiltersGetLastID( '', $params );
+			$params['location_id'] = regionFiltersGetLastID( '', $params );
 			$params['dob']                      = $this->_euro_date_to_sql( $params['dob'] );
 			$params['agreement_end_date']       = $this->_euro_date_to_sql( $params['agreement_end_date'] );
 			$params['transition_date']          = $this->_euro_date_to_sql( $params['transition_date'] );
 			$params['transition_complete_date'] = $this->_euro_date_to_sql( $params['transition_complete_date'] );
 			$params['site_id']                  = $params['facilityInput'];
-			#$params['option_nationality_id']    = $params['lookup_nationalities_id'];
+			$params['option_nationality_id']    = $params['lookup_nationalities_id'];
 			$params['facility_type_option_id']  = $params['employee_site_type_option_id'];
-			#$params['race_option_id']           = $params['person_race_option_id'];
+			$params['race_option_id']           = $params['person_race_option_id'];
 
-			//$status->checkRequired ( $this, 'first_name', t ( 'Frist Name' ) );
-			//$status->checkRequired ( $this, 'last_name',  t ( 'Last Name' ) );
-			//$status->checkRequired ( $this, 'dob',        t ( 'Date of Birth' ) );
-			
-			/*
-			if($this->setting('display_gender'))
-				$status->checkRequired ( $this, 'gender', t('Gender') );
-			
-			if($this->setting('display_employee_race'))
-				$status->checkRequired ( $this, 'person_race_option_id', t('Race') );
-				*/
-			
+			$status->checkRequired ( $this, 'first_name', t ( 'Frist Name' ) );
+			$status->checkRequired ( $this, 'last_name',  t ( 'Last Name' ) );
+			$status->checkRequired ( $this, 'dob',        t ( 'Date of Birth' ) );
 			if($this->setting('display_employee_nationality'))
 				$status->checkRequired ( $this, 'lookup_nationalities_id', t ( 'Employee Nationality' ) );
 			$status->checkRequired ( $this, 'employee_qualification_option_id', t ( 'Staff Cadre' ) );
-			
+			if($this->setting('display_gender'))
+				$status->checkRequired ( $this, 'gender', t('Gender') );
+			if($this->setting('display_employee_race'))
+				$status->checkRequired ( $this, 'person_race_option_id', t('Race') );
 			if($this->setting('display_employee_disability')) {
 				$status->checkRequired ( $this, 'disability_option_id', t('Disability') );
 				if ($params['disability_option_id'] == 1)
@@ -242,8 +235,8 @@ class EmployeeController extends ReportFilterHelpers {
 				$status->checkRequired ( $this, 'stipend', t('Stipend') );
 			if ( $this->setting('display_employee_partner') )
 				$status->checkRequired ( $this, 'partner_id', t ( 'Partner' ) );
-			//if($this->setting('display_employee_sub_partner'))
-				//$status->checkRequired ( $this, 'subpartner_id', t ( 'Sub Partner' ) );
+			if($this->setting('display_employee_sub_partner'))
+				$status->checkRequired ( $this, 'subpartner_id', t ( 'Sub Partner' ) );
 			if($this->setting('display_employee_intended_transition'))
 				$status->checkRequired ( $this, 'employee_transition_option_id', t ( 'Intended Transition' ) );
 			if(($this->setting('display_employee_base') && !$params['employee_base_option_id']) || !$this->setting('display_employee_base')) // either one is OK, javascript disables regions if base is on & has a value choice
@@ -432,301 +425,6 @@ class EmployeeController extends ReportFilterHelpers {
 		$this->viewAssignEscaped ( 'sites', $helper->getFacilities() );
 		$this->view->assign ( 'categories',  DropDown::generateHtml ( 'employee_category_option', 'category_phrase', $criteria['employee_category_option_id'], false, $this->view->viewonly, false ) );
 	}
-	
-	/**
-	 * Import an Employee
-	 */
-	public function importAction() {
-	
-		$this->view->assign('pageTitle', t( 'Import an employee' ));
-		require_once('models/table/TrainingToTrainer.php');
-	
-		// template redirect
-		if ( $this->getSanParam('download') )
-			return $this->importTrainingTemplateAction();
-	
-		#if( ! $this->hasACL('import_person') )
-			#$this->doNoAccessError ();
-	
-		//CSV STUFF
-		$filename = ($_FILES['upload']['tmp_name']);
-		if ( $filename )
-		{
-			$db = $this->dbfunc();
-			$employeeObj = new Employee ();
-			$errs = array();
-			while ($row = $this->_csv_get_row($filename) )
-			{
-				$values = array();
-				if (! is_array($row) )
-					continue;		   // sanity?
-				if (! isset($cols) ) { // set headers (field names)
-					$cols = $row;	   // first row is headers (field names)
-					continue;
-				}
-				$countValidFields = 0;
-				if (! empty($row) ) {  // add
-					foreach($row as $i=>$v){ // proccess each column
-						if ( empty($v) && $v !== '0' )
-							continue;
-						if ( $v == 'n/a') // has to be able to process values from a data export
-							$v = NULL;
-						$countValidFields++;
-						$delimiter = strpos($v, ','); // is this field a comma seperated list too (or array)?
-						if ($delimiter && $v[$delimiter - 1] != '\\')	// handle arrays as field values(Export), and comma seperated values(import manual entry), and strings or int
-							$values[$cols[$i]] = explode(',', $this->sanitize($v));
-						else
-							$values[$cols[$i]] = $this->sanitize($v);
-					}
-				}
-				// done now all fields are named and in $values[my_field]
-				if ( $countValidFields ) {
-					//validate
-					if ( isset($values['uuid']) ){ unset($values['uuid']); }
-					if ( isset($values['id']) )  { unset($values['id']); }
-					if ( isset($values['is_deleted']) ) { unset($values['is_deleted']); }
-					if ( isset($values['created_by']) ) { unset($values['created_by']); }
-					if ( isset($values['modified_by']) ){ unset($values['modified_by']); }
-					if ( isset($values['timestamp_created']) ){ unset($values['timestamp_created']); }
-					if ( isset($values['timestamp_updated']) ){ unset($values['timestamp_updated']); }
-					if ( ! $this->hasACL('approve_trainings') ){ unset($values['approved']); }
-					
-					
-// field map
-$values['employee_qualification_option_id'] = 
-  $this->_importHelperFindOrCreate('employee_qualification_option', 'qualification_phrase', $values['Occupational-Classification(Required)'], false);
-  
-$values['employee_role_option_id'] = $this->_importHelperFindOrCreate('employee_role_option', 'role_phrase', $values['Primary-Role(Required)'], false);
-
-$values['first_name'] = $values['First-Name(Required)'];
-$values['middle_name'] = $values['Middle-Name(Optional)'];
-$values['last_name'] = $values['Surname(Required)'];
-
-//$values['title_option_id'] = $values['Title (Optional)'];
-$values['title_option_id'] = $this->_importHelperFindOrCreate('person_title_option', 'title_phrase', $values['Title(Optional)'], false);
-
-$values['employee_code'] = $values['Employee-Code(Required)'];
-$values['dob'] = $this->_date_to_sql($values['Date-of-Birth(Required)']);
-
-$values['national_id'] = $values['ID-Number(Optional)'];
-
-$values['option_nationality_id'] = 
-  $this->_importHelperFindOrCreate('lookup_nationalities', 'nationality', $values['Nationality(Optional)'], false);
-
-$values['race_option_id'] = 
-  $this->_importHelperFindOrCreate('person_race_option', 'race_phrase', $values['Race(Optional)'], false);
-
-$values['gender'] = $values['Gender(Optional)'];
-
-if ($values['Disability(Y/N)(Required)'] == 'Y') {
-	$values['disability_option_id'] = 1;
-	$values['disability_comments'] = $values['Nature-of-Disability(Optional)'];
-}
-else
-	$values['disability_option_id'] = 0;
- 
-$values['partner_id'] = 
-  $this->_importHelperFindOrCreate('partner', 'partner', $values['Partner(Required)'], false);
-
-$values['employee_base_option_id'] = 
-  $this->_importHelperFindOrCreate('employee_base_option', 'base_phrase', $values['Based-at(Required)'], false);
-
-$values['location_id'] = 
-  $this->_importHelperFindOrCreate('location', 'location_name', $values['District(Required)'], false);
-
-$values[''] = $values['District(Required)'];
-$values[''] = $values['Sub-District(Required)'];
-
-$values['site_id'] = 
-  $this->_importHelperFindOrCreate('facility', 'facility_name', $values['Site-Name(Required)'], false);
-
-$values['facility_type_option_id'] =
-  $this->_importHelperFindOrCreate('facility_type_option', 'facility_type_phrase', $values['Site-Type(Required)'], false);
-
-$values['funded_hours_per_week'] = $values['Hours-Worked-Per-Week(Required)'];
-$values['salary'] = $values['Annual-Salary (No spaces)(Required)'];
-$values['benefits'] = $values['Annual-Benefits(Required)'];
-$values['additional_expenses'] = $values['Annual-Additional-Expenses(Required)'];
-$values['stipend'] = $values['Annual-Stipend(Required)'];
-$values['annual_cost'] = $values['salary'] + $values['benefits'] + $values['additional_expenses'] + $values['stipend'];
-$values['external_funding_percent'] = $values['Percentage-Not-Paid-By-Partner(Optional)'];
-$values['agreement_end_date'] =  $this->_date_to_sql($values['Contract-End-Date(Required)']);
-
-$values['employee_transition_option_id'] =
-  $this->_importHelperFindOrCreate('employee_transition_option', 'transition_phrase', $values['Intended-Transition(Required)'], false);
-
-$values['transition_complete_other'] = 
-  $this->_importHelperFindOrCreate('employee_transition_option', 'transition_phrase', $values['Other-Transition(Optional)'], false);
-
-$values['transition_complete_date'] = $this->_date_to_sql($values['Intended-Transition-Date(Required)']);
-
-$values['employee_transition_complete_option_id'] =
-  $this->_importHelperFindOrCreate('employee_transition_option', 'transition_phrase', $values['Actual-Transition(Optional)'], false);
-
-$values['transition_date'] = $values['Actual-Transition-Date(Optional)'];
-
-					//locations
-/*
-					$regionNames = array (t('Region A (Province)'), t('Region B (Health District)'), t('Region C (Local Region)'), t('Region D'), t('Region E'), t('Region F'), t('Region G'), t('Region H'), t('Region I') );
-					$num_location_tiers = $this->setting('num_location_tiers');
-					$bSuccess = true;
-					$facility_id = null;
-					$fac_location_id = null;
-	
-					if ( $values['facility_name'] ) { // something set for facility (name or id) (id is duplicated to name to support importing from a data export.... TODO clean this up now that both fields are supported in this function)
-	
-						if (! $values['facility_id']) { // get the id somehow
-	
-							if(is_array($values['facility_name']))
-								$values['facility_id'] = $values['facility_name'][0]; //
-							else if ( is_numeric($values['facility_name']) && !trim( $values[ t('Region A (Province)') ] ) ) // bugfix: numbers w/ no province = ID, numbers + location data = Fac Name all numbers... its in facility_name b/c of data export
-								$values['facility_id'] = $values['facility_name']; // support export'ed values. (remap)
-							else // lookup id
-							{
-								// verify location, do not allow insert
-								$tier = 1;
-								for ($i=0; $i <= $num_location_tiers; $i++) { // find locations
-									$regionName = $regionNames[$i]; // first location field in csv row // could use this too: $values[t('Region A (Province)')]
-									if ( empty($values[$regionName]) || $bSuccess == false )
-										continue;
-									$fac_location_id = $db->fetchOne(
-											"select id FROM location WHERE location_name = '". $values[$regionName] . "'"
-											. ($fac_location_id ? " AND parent_id = $fac_location_id " : '')
-											. " LIMIT 1");
-									if (! $fac_location_id) {
-										$bSuccess = false;
-										break;
-									}
-									$tier++;
-								}
-	
-								// lookup facility
-								if ($fac_location_id) {
-									$facility_id = $db->fetchOne( "select id FROM facility WHERE location_id = $fac_location_id AND facility_name = '".$values['facility_name']."' LIMIT 1" );
-									$values['facility_id'] = $facility_id ? $facility_id : 0;
-								} else {
-									$errs[] = t('Error locating region or city:').' '.$values[$regionName].' '.t('Facility').': '.$values['facility_name'].space.t("This person will have no assigned facility if the save is successful.");
-								}
-								if (! $values['facility_id'] && $bSuccess) { // found region(bSuccess) but not facility
-									$errs[] = t('Error locating facility:').space.$values['facility_name'].space.t("This person will have no assigned facility if the save is successful.");
-								}
-							}
-						}
-					} else {
-						if (! $values['facility_id'])
-							$errs[] = t('Error locating facility:').$values['facility_name'].space.t("This person will have no assigned facility if the save is successful.");
-					}
-					
-					
-					*/
-					$bSuccess = true; //reset, we allow saving with no facility.
-	
-					if(! $bSuccess)
-						continue;
-	
-					//field mapping (Export vs import)
-					#if ( isset($values["qualification_phrase"]) )            $values["primary_qualification_option_id"] = $values["qualification_phrase"];
-					#if ( isset($values["primary_qualification_phrase"]) )    $values["primary_qualification_option_id"] = $values["primary_qualification_phrase"];
-					#if ( isset($values["primary_responsibility_phrase"]) )   $values["primary_responsibility_option_id"] = $values["primary_responsibility_phrase"];
-					#if ( isset($values["secondary_responsibility_phrase"]) ) $values["secondary_responsibility_option_id"] = $values["secondary_responsibility_phrase"];
-					#if ( isset($values["highest_edu_level_phrase"]) )        $values["highest_edu_level_option_id"] = $values["highest_edu_level_phrase"];
-					#if ( isset($values["attend_reason_phrase"]) )            $values["attend_reason_option_id"] = $values["attend_reason_phrase"];
-					#if ( isset($values["custom_1"]) )                        $values["person_custom_1_option_id"] = $values["custom_1"];
-					#if ( isset($values["custom_2"]) )                        $values["person_custom_2_option_id"] = $values["custom_2"];
-					//save
-					try { 
-						//$values['title_option_id']                    = $this->_importHelperFindOrCreate('person_title_option', 'title_phrase', $values['title_option_id']); //title_option_id multiAssign (insert via helper)
-						//$values['suffix_option_id']                   = $this->_importHelperFindOrCreate('person_suffix_option',          'suffix_phrase',          $values['suffix_option_id']);
-						#$values['primary_qualification_option_id']    = $this->_importHelperFindOrCreate('person_qualification_option',   'qualification_phrase',   $values['primary_qualification_option_id']);
-						#$values['primary_responsibility_option_id']   = $this->_importHelperFindOrCreate('person_responsibility_option',  'responsibility_phrase',  $values['primary_responsibility_option_id']);
-						#$values['secondary_responsibility_option_id'] = $this->_importHelperFindOrCreate('person_secondary_responsibility_option',  'responsibility_phrase', $values['secondary_responsibility_option_id']);
-						#$values['attend_reason_option_id']            = $this->_importHelperFindOrCreate('person_attend_reason_option',   'attend_reason_phrase',   $values['attend_reason_option_id']);
-						#$values['person_custom_1_option_id']          = $this->_importHelperFindOrCreate('person_custom_1_option',        'custom1_phrase',         $values['person_custom_1_option_id']);
-						#$values['person_custom_2_option_id']          = $this->_importHelperFindOrCreate('person_custom_2_option',        'custom2_phrase',         $values['person_custom_2_option_id']);
-						#$values['highest_level_option_id']            = $this->_importHelperFindOrCreate('person_education_level_option', 'education_level_phrase', $values['highest_level_option_id']);
-						//$values['courses']                            = $this->_importHelperFindOrCreate('???',         '?????', null, $values['courses']);
-						
-						
-						$employeerow = $employeeObj->createRow();
-						$employeerow = ITechController::fillFromArray($employeerow, $values);
-						$row_id = $employeerow->save();
-					} catch (Exception $e) {
-						$errored = 1;
-						$errs[]  = nl2br($e->getMessage()).' '.t ( 'ERROR: The employee could not be saved.' );
-					}
-					if(! $row_id){
-						$errored = 1;
-						$errs[] = t('That employee could not be saved.').space.t("Name").": ".$values['first_name'].space.$values['last_name'].space.$values['employee_code'];
-					}
-					//sucess - done
-				}//loop
-			}
-			// done processing rows
-			$_POST['redirect'] = null;
-			if( empty($errored) && empty($errs) )
-				$stat = t ('Your changes have been saved.');
-			else
-				$stat = t ('Error importing data. Some data may have been imported and some may not have.');
-	
-			foreach($errs as $errmsg)
-				$stat .= '<br>'.'Error: '.htmlspecialchars($errmsg, ENT_QUOTES);
-	
-			$status = ValidationContainer::instance();
-			$status->setStatusMessage($stat);
-			$this->view->assign('status', $status);
-		}
-		// done with import
-	}
-
-	
-	/**
-	 * A template for importing a training
-	 */
-	public function importTrainingTemplateAction() {
-		$sorted = array (
-				array (
-						"Occupational-Classification(Required)" => '',
-						"Primary-Role(Required)" => '',
-						"First-Name(Required)" => '',
-						"Middle-Name(Optional)" => '',
-						"Surname(Required)" => '',
-						"Title(Optional)" => '',
-						"Employee-Code(Required)" => '',
-						"Date-of-Birth(Required)" => '',
-						"ID-Number(Optional)" => '',
-						"Nationality(Optional)" => '',
-						"Race(Optional)" => '',
-						"Gender(Optional)" => '',
-						"Disability(Y/N)(Required)" => '',
-						"Nature-of-Disability(Optional)" => '',
-						"Partner(Required)" => '',
-						"Based-at(Required)" => '',
-						"Province(Required)" => '',
-						"District(Required)" => '',
-						"Sub-District(Required)" => '',
-						"Site-Name(Required)" => '',
-						"Hours-Worked-Per-Week(Required)" => '',
-						"Annual-Salary (No spaces)(Required)" => '',
-						"Annual-Benefits(Required)" => '',
-						"Annual-Additional-Expenses(Required)" => '',
-						"Annual-Stipend(Required)" => '',
-						"Percentage-Not-Paid-By-Partner(Optional)" => '',
-						"Contract-End-Date(Required)" => '',
-						"Intended-Transition(Required)" => '',
-						"Other-Transition(Optional)" => '',
-						"Intended-Transition-Date(Required)" => '',
-						"Actual-Transition(Optional)" => '',
-						"Actual-Transition-Date(Optional)" => ''
-						
-				));
-	
-	
-		//done, output a csv
-		if( $this->getSanParam('outputType') == 'csv' )
-			$this->sendData ( $this->reportHeaders ( false, $sorted ) );
-	}
-	
-	
 }
 
 ?>

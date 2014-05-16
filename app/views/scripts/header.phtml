@@ -71,12 +71,12 @@ if ( $this->isLoggedIn() ) {
 
 			if ( $this->setting['display_mod_skillsmart'] ) {
 
-				$navMain['reports']['person->reports']               = t('SkillSmart Reports');
-				/*$navMain['reports']['comp']                          = t('Competence Overview Report');
+				$navMain['reports']['person->reports']               = t('Individual Report');
+				$navMain['reports']['comp']                          = t('Competence Overview Report');
 				$navMain['reports']['prof']                          = t('Professional Reports');
 				$navMain['reports']['compcomp']                      = t('Competence Compare Reports');
 				$navMain['reports']['quescomp']                      = t('Question Compare Reports');
-				$navMain['reports']['../']                           = '---------------';*/
+				$navMain['reports']['../']                           = '---------------';
 			}
 
 			$navMain['reports']['trainingByParticipants']            = t('Training').space.t('Reports');
@@ -98,12 +98,12 @@ if ( $this->isLoggedIn() ) {
 
 			if ( $this->hasACL('pre_service')) {
 				$navMain['reports']['..//']                          = '---------------';
-				$navMain['reports']['psStudentsTrained']			= t('Pre-service Reports');
-				/*$navMain['reports']['psCourseByName']				= t('Course Reports');
+				$navMain['reports']['psStudentsTrained']			= t('Student Reports');
+				$navMain['reports']['psCourseByName']				= t('Course Reports');
 				$navMain['reports']['psCohortByParticipantCount']	= t('Cohort Reports');
 				$navMain['reports']['psInstitutionInformation']		= t('Institution Reports');
 				$navMain['reports']['psTutorByName']				= t('Tutor Reports');
-				$navMain['reports']['psFacilityReport']				= t('Facility Report');*/
+				$navMain['reports']['psFacilityReport']				= t('Facility Report');
 			}
 		}
 
@@ -182,8 +182,8 @@ if ( $this->isLoggedIn() ) {
 	}
 	if (( $this->hasACL('admin_preservice')) || ( $this->hasACL('pre_service'))) {
 		$navMain['user']['../'] = '---------------';
-		$navMain['user']['../admin/preservice-labels'] = t('Pre-service Setup');
-		/*$navMain['user']['../admin/preservice-classes'] = t('PS Classes');
+		$navMain['user']['../admin/preservice-labels'] = t('PS Field labels');
+		$navMain['user']['../admin/preservice-classes'] = t('PS Classes');
 		$navMain['user']['../admin/preservice-cadres'] = t('PS Cadres');
 		$navMain['user']['../admin/preservice-degrees'] = t('PS Degrees');
 		$navMain['user']['../admin/preservice-funding'] = t('PS Funding');
@@ -195,13 +195,8 @@ if ( $this->isLoggedIn() ) {
 		$navMain['user']['../admin/preservice-studenttypes'] = t('PS Student Types');
 		$navMain['user']['../admin/preservice-tutortypes'] = t('PS Tutor Types');
 		$navMain['user']['../admin/preservice-coursetypes'] = t('PS Course Types');
-		$navMain['user']['../admin/preservice-religion'] = t('PS Religions');*/
+		$navMain['user']['../admin/preservice-religion'] = t('PS Religions');
 	}
-	if ( isset($this->setting['display_mod_skillsmart']) && $this->setting['display_mod_skillsmart'] == 1 ) {
-    if ( $this->hasACL('edit_country_options') ) {
-      $navMain['user']['../admin/skillsmart-settings']  = no_soft_space_str( t('SkillSMART').' '.t('Settings') );
-    }
-  }
 }
 
 

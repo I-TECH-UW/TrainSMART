@@ -457,6 +457,7 @@ class FacilityController extends ReportFilterHelpers {
 			
 			$num_locs = $this->setting ( 'num_location_tiers' );
 			list ( $field_name, $location_sub_query ) = Location::subquery ( $num_locs, $location_tier, $location_id, true );
+
 			
 			// gnr: replaced facility_sponsor_option.facility_sponsor_phrase
 			
@@ -486,9 +487,12 @@ class FacilityController extends ReportFilterHelpers {
   and inner_facility.id = facility.id ) as facility_sponsor_phrase , 
 			    
                 ' . implode ( ',', $field_name ) . '
+
               FROM facility LEFT JOIN (' . $location_sub_query . ') as l ON facility.location_id = l.id
-              LEFT OUTER JOIN facility_type_option ON facility.type_option_id = facility_type_option.id';
-			
+              LEFT OUTER JOIN facility_type_option ON facility.type_option_id = facility_type_option.id
+              LEFT JOIN facility_sponsors ON facility_sponsors.facility_id = facility.id
+              LEFT OUTER JOIN facility_sponsor_option ON facility.sponsor_option_id = facility_sponsor_option.id OR facility_sponsors.facility_sponsor_phrase_id = facility_sponsor_option.id';
+
 			$where = array ();
 			$where [] = ' facility.is_deleted = 0 ';
 			
@@ -759,6 +763,7 @@ class FacilityController extends ReportFilterHelpers {
 					// save
 					if ($bSuccess) {
 						try {
+
 							$tableObj = $facilityObj->createRow ();
 							$tableObj = ITechController::fillFromArray ( $tableObj, $values );
 							$tableObj->type_option_id = $this->_importHelperFindOrCreate ( 'facility_type_option', 'id', $tableObj->type_option_id );
@@ -767,6 +772,7 @@ class FacilityController extends ReportFilterHelpers {
 							}
 							$row_id = $tableObj->save ();
 						} catch ( Exception $e ) {
+
 							$errored = 1;
 							$errs [] = nl2br ( $e->getMessage () ) . ' ' . t ( 'ERROR: The facility could not be saved.' );
 						}
@@ -813,6 +819,7 @@ class FacilityController extends ReportFilterHelpers {
 	public function importFacilityTemplateAction() {
 		// gimme a csv template for an example Facility
 		$sorted = array (
+
 				array (
 						'id' => '',
 						'facility_name' => '',
@@ -852,6 +859,7 @@ class FacilityController extends ReportFilterHelpers {
 		
 		// done, output a csv
 		if ($this->getSanParam ( 'outputType' ) == 'csv')
+
 			$this->sendData ( $this->reportHeaders ( false, $sorted ) );
 	}
 	

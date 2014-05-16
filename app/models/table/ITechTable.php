@@ -228,7 +228,7 @@ class ITechTable extends Zend_Db_Table_Abstract
       if ( isset($datum[$id_col]) && isset($topic[$datum[$id_col]]) ) {
         $sorted_data[$id][$value_col] = $topic[$datum[$id_col]];
       }
-      if ( $remove_id )
+       if ( $remove_id )
         unset($sorted_data[$id][$id_col]);
     }
 

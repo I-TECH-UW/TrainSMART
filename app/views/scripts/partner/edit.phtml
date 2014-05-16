@@ -21,7 +21,7 @@
 			<?php require_once 'views/scripts/status.phtml' ?>
 
 			<h1><?php $this->mode == 'add' ? tp('Add Partner') : tp('Edit Partner'); ?></h1>
-			<form action="" method="post" id="employeePartnerEdit" class="form_employee">
+			<form action="" method="POST" id="employeePartnerEdit" class="form_employee">
 				<?php if ($this->partner['id']): ?>
 				<div class="historyDiv">
 					<a href="<?php echo $this->base_url; ?>/partner/delete/id/<?php echo $this->partner['id']; ?>"><?php echo t('Delete this').space.t('Partner'); ?></a>
@@ -164,14 +164,6 @@
 
 				<div class="clear"></div>
 				<input type="hidden" name="limit" id="limit" value="1" />
-				
-  <!-- import partner button -->
-  <span id="importpartner" class="yui-button yui-push-button" style="float:left;">
-    <span class="first-child">
-      <button onclick="location.href='<?php echo $this->base_url; ?>/partner/import';return false;" type="button" tabindex=1 id="partnerImportBtn" class="yui-button yui-push-button"><?php tp('Import Partner from Excel');?></button>
-    </span>
-  </span>
-				
 				<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Save');?>" />
 			</form>
 			<div class="clear"></div>

@@ -161,7 +161,8 @@ class Peoplefind extends ITechTable
 #								$joins[] = "INNER JOIN link_student_institution lsi ON lsi.id_student = s.id";
 								$joins[] = "INNER JOIN institution i ON i.id = s.institutionid";
 							} elseif ($output == "tutor"){
-								$where[] = "i.institutionname LIKE '%" . addslashes($value) . "%'";
+								//$where[] = "i.institutionname LIKE '%" . addslashes($value) . "%'";
+								$where[] = "i.id = " . addslashes($value) . "";
 								$jointutor = true;
 								$joins[] = "INNER JOIN link_tutor_institution lti ON lti.id_tutor = t.id";
 								$joins[] = "INNER JOIN institution i ON i.id = lti.id_institution";

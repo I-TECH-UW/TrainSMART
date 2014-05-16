@@ -447,22 +447,13 @@ class PsfacilityController extends ReportFilterHelpers {
 			$num_locs = $this->setting ( 'num_location_tiers' );
 			list ( $field_name, $location_sub_query ) = Location::subquery ( $num_locs, $location_tier, $location_id, true);
 			
-			$sql1 =
-'select (SELECT group_concat(facility_sponsor_option.facility_sponsor_phrase
-order by facility_sponsor_option.facility_sponsor_phrase asc separator ", ") as _list
-from facility inner_facility
-left outer join facility_sponsors on inner_facility.id = facility_sponsors.facility_id
-left outer join facility_sponsor_option on facility_sponsors.facility_sponsor_phrase_id = facility_sponsor_option.id
-left outer join facility_type_option on inner_facility.type_option_id = facility_type_option.id';		
-
-			$sql2 = 		
-') as facility_sponsor_phrase, facility.location_id,
-facility_type_option.facility_type_phrase,
-facility.facility_name,
-facility.id , ' . implode ( ',', $field_name ) . '
-FROM facility LEFT JOIN (' . $location_sub_query . ') as l ON facility.location_id = l.id
-LEFT OUTER JOIN facility_sponsor_option ON facility.sponsor_option_id = facility_sponsor_option.id	
-LEFT OUTER JOIN facility_type_option ON facility.type_option_id = facility_type_option.id ';
+			$sql = 'SELECT facility_sponsor_option.facility_sponsor_phrase, facility.location_id,
+                facility_type_option.facility_type_phrase,
+                facility.facility_name,
+                facility.id , ' . implode ( ',', $field_name ) . '
+              FROM facility LEFT JOIN (' . $location_sub_query . ') as l ON facility.location_id = l.id
+              LEFT OUTER JOIN facility_sponsor_option ON facility.sponsor_option_id = facility_sponsor_option.id
+              LEFT OUTER JOIN facility_type_option ON facility.type_option_id = facility_type_option.id ';
 			
 			$where = array ();
 			$where [] = ' facility.is_deleted = 0 ';
@@ -484,17 +475,9 @@ LEFT OUTER JOIN facility_type_option ON facility.type_option_id = facility_type_
 				$where [] = " facility_name = '" . mysql_escape_string ( $criteria ['facility_name'] ) . "'";
 			}
 			
-			if ($where) {
-				$sql1 .= ' WHERE ' . implode ( ' AND ', $where );
-				$sql1 .= ' AND inner_facility.facility_name = facility.facility_name ';
-				$sql2 .= ' WHERE ' . implode ( ' AND ', $where );
-			}
-			else {
-				$sql1 .= ' WHERE inner_facility.facilty_name = facility.facility_name ';
-			}
+			if ($where)
+				$sql .= ' WHERE ' . implode ( ' AND ', $where );
 			
-			$sql .= $sql1 .$sql2;
-						
 			$sql .= " ORDER BY " . " facility_name ASC ";
 			
 			$rowArray = $db->fetchAll ( $sql );
@@ -520,7 +503,6 @@ LEFT OUTER JOIN facility_type_option ON facility.type_option_id = facility_type_
 		//sponsor types
 		$sponsorsArray = OptionList::suggestionList ( 'facility_sponsor_option', 'facility_sponsor_phrase', false, false );
 		$this->viewAssignEscaped ( 'facility_sponsors', $sponsorsArray );
-
 	
 	}
 	

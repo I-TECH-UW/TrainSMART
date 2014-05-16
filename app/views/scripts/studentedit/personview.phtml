@@ -159,6 +159,7 @@
 		<input type="hidden" name="licenseaction" id="licenseaction" value="license">
 		<input type="hidden" name="licenseid" id="licenseid" value="<?php echo $this->id; ?>">
 		<input type="hidden" name="cohortid" id="cohortid" value="<?php echo $this->cohortid ?>">
+		<input type="hidden" name="sid" value="<?php echo $this->escape($this->sid); ?>">
 		<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 			<thead>
 				<tr>
@@ -198,6 +199,7 @@
 		<input type="hidden" name="classaction" id="classaction" value="classaction">
 		<input type="hidden" name="classid" id="classid" value="<?php echo $this->id; ?>">
 		<input type="hidden" name="cohortid" id="cohortid" value="<?php echo $this->cohortid ?>">
+		<input type="hidden" name="sid" value="<?php echo $this->escape($this->sid); ?>">
 		<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 			<thead>
 				<tr>
@@ -206,6 +208,7 @@
 					<th><?php echo t('Start date'); ?></th>
 					<th><?php echo t('End date'); ?></th>
 					<th><?php echo t('Grade'); ?></th>
+					<th><?php echo t('Credits'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -218,6 +221,7 @@
 					<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($classes['startdate'])); ?></td>
 					<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($classes['enddate'])); ?></td>
 					<td class="" style="width : 120px;"><input type="text" name="grade[<?php echo $classes['id'] ?>]" id="grade[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['grade'])) != "n/a" ? $classes['grade'] : ""; ?>" style="width : 100%;"></td>
+					<td class="" style="width : 120px;"><input type="text" name="credits[<?php echo $classes['id'] ?>]" id="credits[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['credits'])) != "n/a" ? $classes['credits'] : ""; ?>" style="width : 100%;"></td>
 				</tr>
 <?php
 	}
@@ -240,6 +244,7 @@
 		<input type="hidden" name="practicumaction" id="practicumaction" value="practicumaction">
 		<input type="hidden" name="practicumid" id="practicumid" value="0">
 		<input type="hidden" name="cohortid" id="cohortid" value="<?php echo $this->cohortid ?>">
+		<input type="hidden" name="sid" value="<?php echo $this->escape($this->sid); ?>">
 		<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 			<thead>
 				<tr>
@@ -252,7 +257,7 @@
 			</thead>
 			<tbody>
 <?php
-	foreach ($this->allpracticum as $classes){
+	foreach ($this->currentpracticum as $classes){
 ?>
 				<tr class="GradeA">
 					<td><?php echo $classes['practicumname']; ?></td>
@@ -300,6 +305,7 @@
 					<div class="pad50 clear"></div>
 					<form  action="#" id="peopleadd" method="post">
 						<input type="hidden" name="id" value="<?php echo $this->escape($this->id); ?>">
+						<input type="hidden" name="sid" value="<?php echo $this->escape($this->sid); ?>">
 						<div class="mainformholder" style="height:100%;">
 							<label><?php echo t('Graduated?'); ?></label>
 							<select name="graduated">
@@ -422,6 +428,11 @@
 							<label><?php echo t('Postal code / ZIP'); ?></label>
 							<input type="text" name="localpostalcode" value="<?php echo ($this->escape($this->zip) != "0" ? $this->escape($this->zip) : "");?>">
 
+							<label style="display:block; padding-right: 25px" ><?php echo t('Residential Address?'); ?></label>
+							
+                            <input type="checkbox" name="localisresidential" id="localisresidential" value="1" <?php echo ( $this->escape($this->home_is_residential) == 1 ? 'CHECKED' :'');?>>
+                            
+                            <div class="pad20 clear"></div>
 							<div class="pad20 clear"></div>
 							<p style="float:left;font-size:14px;"><?php echo t('Next of Kin Address'); ?></p>
 							<div class="pad20 clear"></div><br>
@@ -456,6 +467,8 @@
 							<label><?php echo t('Postal code / ZIP'); ?></label>
 							<input type="text" name="permanent-postalcode" value="<?php echo $this->escape($this->permanentzip);?>">
 
+							<div class="pad20 clear"></div>
+							<p style="float:left;font-size:14px;"><?php echo t('Other Contact Information'); ?></p>
 							<div class="pad20 clear"></div><br>
 
 							<label><?php echo t('Phone'); ?></label>
@@ -478,7 +491,7 @@
 							<div class="pad20 clear"></div><br>
 
 							<label><?php echo t('Student ID'); ?></label>
-							<input readonly type="text" name="studentid" id="studentid" value="<?php echo $this->escape($this->id);?>">
+							<input type="text" name="studentid" id="studentid" value="<?php echo $this->escape($this->studentid);?>">
 
 							<label><?php echo t('Religious Denomination'); ?></label>
 							<select name="studenttype" id="studenttype" class="comboeditable"<?php echo !$this->hascohort ? " disabled" : "";?>>
@@ -658,6 +671,7 @@
 									<th><?php echo t('Instructor'); ?></th>
 									<th><?php echo t('Course type'); ?></th>
 									<th><?php echo t('Grade'); ?></th>
+									<th class=""><?php echo t('Credits'); ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -672,6 +686,7 @@
 									<td class="" style="width : 120px;"><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
 									<td class="" style="width : 120px;"><?php echo $row['coursetype']; ?></td>
 									<td class="" style="width : 120px;"><?php echo $row['grade']; ?></td>
+									<td class="" style="width : 120px;"><?php echo $row['credits']; ?></td>
 								</tr>
 <?php
 	}

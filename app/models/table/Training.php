@@ -367,7 +367,7 @@ class Training extends ITechTable
 		$rowArray = $rows->toArray();
 		return $rowArray;
 	}
-	
+
 	/**
 	* Update person score in training
 	*/

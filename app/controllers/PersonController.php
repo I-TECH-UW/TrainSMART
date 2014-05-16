@@ -302,7 +302,7 @@ class PersonController extends ReportFilterHelpers {
 						$this->view->assign ( 'status', $status );
 					}
 				}
-				$rows = $db->fetchAll ( 'select CONCAT(`question`,`option`) `A` FROM `comp` WHERE `person`='.$id.' AND `Active`=\'Y\' ORDER BY id ASC;' );
+				$rows = $db->fetchAll ( 'SELECT CONCAT(`question`,`option`) `A` FROM `comp` WHERE `person`='.$id.' AND `Active`=\'Y\' ORDER BY id ASC;' );
 				$nvwvls=array();
 				$nvwlscntr=0;
 				foreach ( $rows as $rw ) {
@@ -381,7 +381,7 @@ class PersonController extends ReportFilterHelpers {
 		// and for enabling/disabling reason_other field
 		$other_reason_option_id = -1;
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
-		$sql = "select * FROM person_attend_reason_option where LCASE(attend_reason_phrase) LIKE '%other%'";
+		$sql = "SELECT * FROM person_attend_reason_option where LCASE(attend_reason_phrase) LIKE '%other%'";
 		$rowArray = $db->fetchAll ( $sql );
 		if ($rowArray) {
 			$other_reason_option_id = $rowArray[0]['id'];
@@ -852,7 +852,7 @@ class PersonController extends ReportFilterHelpers {
 
 		if ($this->setting('display_mod_skillsmart')){
 			if($person_id) {
-				$rows = $db->fetchAll ( 'select `facstring` FROM `facs` INNER JOIN `facility` ON `facs`.`facility` = `facility`.`id` WHERE `facility`.`is_deleted`=0 AND `facs`.`person`='.$person_id.' AND `facs`.`Active`=\'Y\' ORDER BY `facs`.`sno` ASC;' );
+				$rows = $db->fetchAll ( 'SELECT `facstring` FROM `facs` INNER JOIN `facility` ON `facs`.`facility` = `facility`.`id` WHERE `facility`.`is_deleted`=0 AND `facs`.`person`='.$person_id.' AND `facs`.`Active`=\'Y\' ORDER BY `facs`.`sno` ASC;' );
 				$Fcs="";
 				foreach ( $rows as $rw ) {
 					$Fcs=$Fcs.$rw['facstring'].'$';
@@ -860,7 +860,7 @@ class PersonController extends ReportFilterHelpers {
 				$Fcs=trim($Fcs,'$');
 				$this->view->assign ( 'Fcs', $Fcs );
 
-				$rows = $db->fetchAll ( 'select `id`, `chk`, `yr`, `transstring` FROM `trans` WHERE `person`='.$person_id.' AND `Active`=\'Y\' ORDER BY sno ASC;' );
+				$rows = $db->fetchAll ( 'SELECT `id`, `chk`, `yr`, `transstring` FROM `trans` WHERE `person`='.$person_id.' AND `Active`=\'Y\' ORDER BY sno ASC;' );
 				$Trs=array();
 				$cok=0;
 				for($cok=1;$cok<=20;$cok++) {
@@ -1107,35 +1107,7 @@ class PersonController extends ReportFilterHelpers {
 				if ($criteria ['person_type'] == 'is_everyone') {
 					// left join instead of inner for everyone
 					$sql = '
-					select DISTINCT 
-							
-
-p.id,
-p.last_name,
-p.first_name,
-p.middle_name,
-p.national_id,
-p.file_number,
-p.birthdate,
-p.gender,
-p.phone_work,
-p.phone_mobile,
-p.fax,
-p.phone_home,
-p.email,
-p.email_secondary,
-p.comments,
-p.home_address_1,
-p.home_address_2,
-p.home_postal_code,
-p.active,
-q.qualification_phrase,
-p.me_responsibility,
-
-														
-							p.facility_id, 
-							f.facility_name, 							
-							'.implode(',',$field_name).'
+					SELECT DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).'
 					FROM person as p
 					LEFT JOIN person_qualification_option as q ON p.primary_qualification_option_id = q.id
 					LEFT JOIN facility as f ON p.facility_id = f.id
@@ -1143,14 +1115,14 @@ p.me_responsibility,
 
 				} else {
 				$sql = '
-					select DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, p.facility_id, f.facility_name,'.implode(',',$field_name).'
+					SELECT DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).'
 					FROM person AS p, person_qualification_option AS q, facility AS f, ('.$location_sub_query.') AS l';
 				}
 			} else {
 				if ($criteria ['person_type'] == 'is_everyone') {
 					// left join instead of inner for everyone
 					$sql = '
-					select DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, p.facility_id, f.facility_name
+					SELECT DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase
 					FROM person as p
 					LEFT JOIN person_qualification_option as q ON p.primary_qualification_option_id = q.id
 					LEFT JOIN facility as f ON p.facility_id = f.id ';
@@ -1159,7 +1131,7 @@ p.me_responsibility,
 					// Removed $field_name from SQL query. person table does
 				// not have province_name, district_name, or city_name columns. - its supposed to be from the facility
 				$sql = '
-					select DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, p.facility_id, f.facility_name
+					SELECT DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase
 					FROM person AS p,
 					person_qualification_option AS q,
 					facility AS f';
@@ -1205,7 +1177,7 @@ p.me_responsibility,
 			}
 
 			if ($criteria ['person_type'] == 'is_unattached_person'){
-				$where []= 'p.id NOT IN (select person_id FROM trainer) AND  p.id NOT IN (select person_id FROM person_to_training)  ';
+				$where []= 'p.id NOT IN (SELECT person_id FROM trainer) AND  p.id NOT IN (SELECT person_id FROM person_to_training)  ';
 			}
 
 			if ($criteria ['facilityInput']) {
@@ -1221,7 +1193,7 @@ p.me_responsibility,
 			}
 
 			if ($criteria ['qualification_id'] or $criteria ['qualification_id'] === '0') {
-				$where []= '(primary_qualification_option_id = ' . $criteria ['qualification_id'] . ' OR primary_qualification_option_id IN (select id FROM person_qualification_option WHERE parent_id = ' . $criteria ['qualification_id'] . ')) ';
+				$where []= '(primary_qualification_option_id = ' . $criteria ['qualification_id'] . ' OR primary_qualification_option_id IN (SELECT id FROM person_qualification_option WHERE parent_id = ' . $criteria ['qualification_id'] . ')) ';
 			}
 			if ($criteria ['first_name']) {
 				$where []= 'p.first_name LIKE "' . $criteria ['first_name'] . '%"';
@@ -1321,8 +1293,8 @@ p.me_responsibility,
 			if ($criteria ['person_type'] == 'is_everyone') {
 				// left join instead of inner for everyone
 				$sql = '
-				select DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).'
-				,q.parent_id, (select COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.comments as "persal",IFNULL(cmpr.res,10) `res` FROM person as p
+				SELECT DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).'
+				,q.parent_id, (SELECT COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.comments as "persal",IFNULL(cmpr.res,10) `res` FROM person as p
 				LEFT JOIN person_qualification_option as q ON p.primary_qualification_option_id = q.id
 				LEFT JOIN facility as f ON p.facility_id = f.id
 				LEFT JOIN compres as cmpr ON cmpr.person = p.id AND cmpr.active=\'Y\'
@@ -1331,9 +1303,9 @@ p.me_responsibility,
 			} else {
 				# removing from query, filtering happens on front-end
 				#if($criteria ['is_complete']=='is_complete'){
-				#	$sql = 'select DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).',q.parent_id, (select COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.comments as "persal", cmpr.res from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l, compres as cmpr';
+				#	$sql = 'select DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).',q.parent_id, (SELECT COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.comments as "persal", cmpr.res from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l, compres as cmpr';
 				#} else {
-					$sql = 'select DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).',q.parent_id, (select COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.comments as "persal", IFNULL((select `res` FROM `compres` WHERE `compres`.`person` = `p`.`id` AND `compres`.`active` = \'Y\'),10) `res` from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l';
+					$sql = 'select DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).',q.parent_id, (SELECT COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.comments as "persal", IFNULL((SELECT `res` FROM `compres` WHERE `compres`.`person` = `p`.`id` AND `compres`.`active` = \'Y\'),10) `res` from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l';
 				#}
 			}
 
@@ -1371,7 +1343,7 @@ p.me_responsibility,
 			}
 
 			if ($criteria ['person_type'] == 'is_unattached_person'){
-				$where []= 'p.id NOT IN (select person_id FROM trainer) AND  p.id NOT IN (select person_id FROM person_to_training)  ';
+				$where []= 'p.id NOT IN (SELECT person_id FROM trainer) AND  p.id NOT IN (SELECT person_id FROM person_to_training)  ';
 			}
 
 			if ($criteria ['facilityInput']) {
@@ -1389,7 +1361,7 @@ p.me_responsibility,
 			}
 
 			if ($criteria ['qualification_id'] or $criteria ['qualification_id'] === '0') {
-				$where []= '(primary_qualification_option_id = ' . $criteria ['qualification_id'] . ' OR primary_qualification_option_id IN (select id FROM person_qualification_option WHERE parent_id = ' . $criteria ['qualification_id'] . ')) ';
+				$where []= '(primary_qualification_option_id = ' . $criteria ['qualification_id'] . ' OR primary_qualification_option_id IN (SELECT id FROM person_qualification_option WHERE parent_id = ' . $criteria ['qualification_id'] . ')) ';
 			}
 			if ($criteria ['first_name']) {
 				$where []= 'p.first_name LIKE "' . $criteria ['first_name'] . '%"';
@@ -1817,7 +1789,7 @@ p.me_responsibility,
 									if ( empty($values[$regionName]) || $bSuccess == false )
 										continue;
 									$fac_location_id = $db->fetchOne(
-										"select id FROM location WHERE location_name = '". $values[$regionName] . "'"
+										"SELECT id FROM location WHERE location_name = '". $values[$regionName] . "'"
 										. ($fac_location_id ? " AND parent_id = $fac_location_id " : '')
 										. " LIMIT 1");
 									if (! $fac_location_id) {
@@ -1829,7 +1801,7 @@ p.me_responsibility,
 
 								// lookup facility
 								if ($fac_location_id) {
-									$facility_id = $db->fetchOne( "select id FROM facility WHERE location_id = $fac_location_id AND facility_name = '".$values['facility_name']."' LIMIT 1" );
+									$facility_id = $db->fetchOne( "SELECT id FROM facility WHERE location_id = $fac_location_id AND facility_name = '".$values['facility_name']."' LIMIT 1" );
 									$values['facility_id'] = $facility_id ? $facility_id : 0;
 								} else {
 									$errs[] = t('Error locating region or city:').' '.$values[$regionName].' '.t('Facility').': '.$values['facility_name'].space.t("This person will have no assigned facility if the save is successful.");
@@ -1913,7 +1885,8 @@ p.me_responsibility,
 	public function importTrainingTemplateAction() {
 			$sorted = array (
 				array (
-				"id"                          => '',	
+				"id"                          => '',
+				"uuid"                        => '',
 				"first_name"                  => '',
 				"middle_name"                 => '',
 				"last_name"                   => '',
@@ -1932,18 +1905,24 @@ p.me_responsibility,
 				"home_address_2"              => '',
 				"home_postal_code"            => '',
 				"active"                      => '',
+				"timestamp_created"           => '',
+				"timestamp_updated"           => '',
+				"created_by"                  => '',
+				"modified_by"                 => '',
+				"is_deleted"                  => '',
 				"qualification_phrase"        => '',
 				"me_responsibility"           => '',
-				"facility_id" 		=> '',
-				"facility_name"         => '',
-				"province_name"		=> '',
-				"province_id"		=> '',
-				"district_name"		=> '',
-				"district_id"		=> '',
-				"city_name"		=> '',
-				"city_id"		=> ''
-					
-						
+				"primary_responsibility_phrase"    => '',
+				"secondary_responsibility_phrase"  => '',
+				"highest_edu_level_phrase"    => '',
+				"attend_reason_phrase"        => '',
+				"attend_reason_other"         => '',
+				"custom_1"                    => '',
+				"custom_2"                    => '',
+				"custom_3"                    => '',
+				"custom_4"                    => '',
+				"custom_5"                    => '',
+				"facility_name"               => ''
 				));
 
 		// add some regions
