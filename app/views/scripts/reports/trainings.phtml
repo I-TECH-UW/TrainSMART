@@ -193,8 +193,9 @@
 													<div class="leftBorder"></div></div>
 														<?php } ?>
 														<?php
-														if ( $this->setting['display_primary_language'] && $this->mode != 'search') {
-															echo DropDown::render_report_filter('training_primary_language_option', 'showPrimaryLanguage', @$this->translation['Primary Language'], $this->language, 'language_phrase', @$this->criteria['training_primary_language_option_id'], $this->criteria['showPrimaryLanguage']);
+if ( $this->setting['display_primary_language'] && $this->mode != 'search') {
+echo DropDown::render_report_filter('training_primary_language_option', 'showPrimaryLanguage', @$this->translation['Primary Language'], $this->language, 
+'language_phrase', @$this->criteria['training_primary_language_option_id'], $this->criteria['showPrimaryLanguage']);
 														}
 
 if ( $this->setting['display_secondary_language'] && $this->mode != 'search') {
@@ -573,7 +574,7 @@ echo DropDown::render_report_filter('person_to_training_viewing_loc_option', 'sh
 																	,{key:"primary_language_phrase", label: "<?php echo @$this->translation['Primary Language']; ?>", sortable:true, resizeable:true}
 																<?php } ?>
 																<?php if ( $this->criteria['showSecondaryLanguage'] ) { ?>
-																	,{key:"secondary_language_phrase", label: "<?php echo @$this->translation['Secondary Language']; ?>", sortable:true, resizeable:true}
+																	,{key:"secondary_language_phrase", label: "<?php echo @$this->translation['Secondary Languages']; ?>", sortable:true, resizeable:true}
 																<?php } ?>
 																<?php if ( $this->criteria['showGotCurric'] ) { ?>
 																	,{key:"training_got_curriculum_phrase", label: "<?php echo @$this->translation['GOT Curriculum']; ?>", sortable:true, resizeable:true}

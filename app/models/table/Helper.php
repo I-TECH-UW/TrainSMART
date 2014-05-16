@@ -1653,7 +1653,7 @@ class Helper extends ITechTable
 		}
 	}
 
-	public function getCohortInstitution($sid, $tp){
+	public function getCohortInstitution($pid, $tp){
 		$db = $this->dbfunc();
 		$cohort = array();
 		$institution = array();
@@ -1665,7 +1665,7 @@ class Helper extends ITechTable
 					->from("link_student_cohort")
 					->join(array("c" => "cohort"),
 							"id_cohort = c.id")
-					->where('id_student = ?', $sid);
+					->where('id_student = ?', $pid);
 
 				$result = $db->fetchAll($select);
 				if (count ($result) > 0){
@@ -1687,7 +1687,7 @@ class Helper extends ITechTable
 						->from("institution")
 						->join(array("s" => "student"),
 								"s.institutionid = institution.id")
-						->where('s.id = ?', $sid); 
+						->where('s.id = ?', $pid); 
 					$result = $db->fetchAll($select);
 					if (count ($result) > 0){
 						$institution = $result[0];

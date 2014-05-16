@@ -16,7 +16,8 @@ class DropDown {
 	 * $id      - option value to select as default
 	 * $jsonUrl - do not begin or end with slash or add output type
 	 */
-	public static function generateHtml($table, $column, $id = false, $jsonUrl = false, $disabled = false, $allowIds = false, $multiple = false, $attributes = array(), $set_default = true) {
+	public static function generateHtml($table, $column, $id = false, $jsonUrl = false, $disabled = false, $allowIds = false, 
+			$multiple = false, $attributes = array(), $set_default = true, $multiple_choice = false, $size = 0) {
 		$mutliple_id = false;
 		if ( is_int($multiple) or ($multiple === 0) )
       $mutliple_id = $multiple;
@@ -48,13 +49,25 @@ class DropDown {
 
 		$html = '<select name="' . $name . '" id="select_' . $table . ($multiple && ($mutliple_id !== false) ?'_'.$mutliple_id:'').'"' . (($disabled) ? ' disabled="disabled" ' : ' ');
 
+		if ($multiple_choice) {
+			$html .= ' multiple="multiple" ';
+		}
+		
+		if ($size) {
+			$html .= ' size=' . $size;
+		}
+		
+		
 		foreach ( $attributes as $k => $v ) {
 			$html .= " {$k}=\"$v\"";
 		}
 
 		$html .= ' >';
 
-		$html .= "\t<option value=\"\">&mdash; " . t ( 'select' ) . " &mdash;</option>\n";
+		// if (!$multiple_choice) {
+			 $html .= "\t<option value=\"\">&mdash; " . t ( 'select' ) . " &mdash;</option>\n";
+		// }
+		
 		foreach ( $rows as $r ) {
 			if (($allowIds === false) or (array_search ( $r->id, $allowIds ) !== false)) {
 				$isSelected = '';
@@ -104,7 +117,6 @@ class DropDown {
 		}
 
 		return $html;
-
 	}
 
 	/**

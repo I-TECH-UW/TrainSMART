@@ -65,7 +65,7 @@ print ScriptContainer::$instance->renderJSHead();
 	  <div class="fieldInput"><input type="text" name="facility_fax" id="facility_fax" value="<?php echo $this->facility['fax'];?>" size="40" maxlength="32"/></div>
 <?php if ( $this->setting['display_facility_custom1'] ) { ?>
   <div id="custom1AutoComplete" >
-      <div class="fieldLabel" id="custom1Input_lbl"><?php echo (@$this->translation['Facility Custom 1']); ?> </div><div class="fieldInput"><input id="custom_1" name="custom_1" type="text" size="40" maxlength="128" value="<?php echo @$this->facility['custom_1'];?>" /><div class="clear"></div><div id="custom1Container" class="autoComplete"></div></div>
+      <div class="fieldLabel" id="custom1Input_lbl"><?php echo (@$this->translation['Facility Custom 1']); ?> </div><div class="fieldInput"><input id="facility_custom1" name="facility_custom1" type="text" size="40" maxlength="128" value="<?php echo @$this->facility['custom_1'];?>" /><div class="clear"></div><div id="custom1Container" class="autoComplete"></div></div>
   </div><br/>
 <?php } ?>  
 	<div class="fieldLabel" id="facility_type_id_lbl"><span class="required">*</span><?php tp('Facility'); echo ' '; tp('type');?></div>

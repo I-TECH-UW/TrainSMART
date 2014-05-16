@@ -2853,6 +2853,7 @@ echo $sql . "<br>";
 
 	
 	public function peopleReport() {
+		require_once ('views/helpers/DropDown.php');
 		$criteria = array ();
 
 		//find the first date in the database
@@ -3363,10 +3364,10 @@ echo $sql . "<br>";
 				$where [] = ' pt.training_organizer_option_id = \'' . $criteria ['training_organizer_id'] . '\'';
 			}
 
-			if ($criteria ['training_organizer_option_id'] && is_array ( $criteria ['training_organizer_option_id'] )) {
+			if ($criteria ['training_organizer_option_id'][0] && is_array ( $criteria ['training_organizer_option_id'] )) {
 				$where [] = ' pt.training_organizer_option_id IN (' . implode ( ',', $criteria ['training_organizer_option_id'] ) . ')';
 			}
-
+			
 			if ($criteria ['funding_id'] or $criteria ['funding_id'] === '0') {
 				$where [] = ' tfund.training_funding_option_id = \'' . $criteria ['funding_id'] . '\'';
 			}
@@ -3620,7 +3621,10 @@ echo $sql . "<br>";
 		}
 
 		$this->view->assign ( 'organizers_checkboxes', Checkboxes::generateHtml ( 'training_organizer_option', 'training_organizer_phrase', $this->view, array(), $orgWhere ) );
-
+		
+		  $this->view->assign ( 'organizers_dropdown', DropDown::generateHtml ('training_organizer_option', 'training_organizer_phrase',
+		    $criteria['training_organizer_option_id'], true, $this->view->viewonly, false,null,null,null,     true, 10 ) );
+		
 		//facilities list
 		$rowArray = OptionList::suggestionList ( 'facility', array ('facility_name', 'id' ), false, 9999 );
 		$facilitiesArray = array ();
@@ -3649,6 +3653,7 @@ echo $sql . "<br>";
 	}
 
 	public function participantsByFacilityTypeAction() {
+		require_once ('views/helpers/DropDown.php');
 		$this->view->assign ( 'mode', 'id' );
 		$criteria = array ();
 
@@ -4149,6 +4154,10 @@ echo $sql . "<br>";
 		}
 
 		$this->view->assign ( 'organizers_checkboxes', Checkboxes::generateHtml ( 'training_organizer_option', 'training_organizer_phrase', $this->view, array(), $orgWhere ) );
+		
+		$this->view->assign ( 'organizers_dropdown', DropDown::generateHtml ('training_organizer_option', 'training_organizer_phrase',
+			$criteria['training_organizer_option_id'], true, $this->view->viewonly, false,null,null,null,     true, 10 ) );
+		
 		//facilities list
 		$rowArray = OptionList::suggestionList ( 'facility', array ('facility_name', 'id' ), false, 9999 );
 		$facilitiesArray = array ();
@@ -4376,6 +4385,7 @@ echo $sql . "<br>";
 
 	public function participantsByCategoryAction() {
 		require_once ('views/helpers/Location.php');
+		require_once ('views/helpers/DropDown.php');
 		$criteria = array ();
 
 		//find the first date in the database
@@ -4535,7 +4545,7 @@ echo $sql . "<br>";
 				$sql .= ' AND ' . $locWhere;
 			}
 
-			if ($criteria ['training_organizer_option_id'] && is_array ( $criteria ['training_organizer_option_id'] )) {
+			if ($criteria ['training_organizer_option_id'][0] && is_array ( $criteria ['training_organizer_option_id'] )) {
 				$sql .= ' AND t.training_organizer_option_id IN (' . implode ( ',', $criteria ['training_organizer_option_id'] ) . ')';
 			}
 
@@ -4585,7 +4595,11 @@ echo $sql . "<br>";
 			$orgWhere .= $orgWhere ? " AND id in ($site_orgs) " : " id in ($site_orgs) ";
 		}
 
-		$this->view->assign ( 'organizers_checkboxes', Checkboxes::generateHtml ( 'training_organizer_option', 'training_organizer_phrase', $this->view, array(), $orgWhere) );
+		$this->view->assign ( 'organizers_checkboxes', Checkboxes::generateHtml ( 'training_organizer_option', 'training_organizer_phrase', 
+				$this->view, array(), $orgWhere) );
+	//gnr
+		$this->view->assign ( 'organizers_dropdown', DropDown::generateHtml ('training_organizer_option', 'training_organizer_phrase', 
+				$criteria['training_organizer_option_id'], true, $this->view->viewonly, false,null,null,null,     true, 10 ) );
 
 	}
 

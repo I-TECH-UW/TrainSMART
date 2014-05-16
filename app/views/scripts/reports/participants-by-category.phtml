@@ -44,16 +44,15 @@ switch ( $this->criteria['cat'] ) {
 
 	<div class="fieldLabel" id="training_organizer_id_lbl"><?php echo (@$this->translation['Training Organizer']); ?></div>
 	<div class="fieldInput">
-		<div class="leftBorderPad"> </div>
-  	<div  class="leftBorder autoHeight">
-	<select id="training_organizer_option_id" name="training_organizer_option_id[]" multiple="multiple" size="10">
-		<option value="" <?php if (is_array($this->criteria['training_organzier_option_id']) && in_array("", $this->criteria['training_organizer_option_id'])) echo "selected"; ?>>--<?php tp('All');?>--</option>
-		<?php
-			foreach ( $this->organizers_array as $vals ) {
-				echo '<option value="'.$vals['id'].'" '.(@$this->criteria['training_organizer_option_id'] == $vals['id'] || @in_array($vals['id'], $this->criteria['training_organizer_option_id'])? 'SELECTED':'').' >'.$this->truncate($vals['training_organizer_phrase']).'</option>';
-		}
-		?>
-	</select></div></div>
+	<div class="leftBorderPad"></div>
+  	<div class="leftBorder autoHeight">
+  	
+
+<?php echo $this->organizers_dropdown; ?><br />
+	
+	
+	</div>
+	</div>
 
 	<div class="fieldLabel" id="gender_lbl"><?php tp('Gender');?></div>
 	<div class="fieldInput">

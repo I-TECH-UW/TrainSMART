@@ -324,7 +324,12 @@
 
 							<div class="clear pad20"></div>
 							<p style=""><?php echo t('Personal Information'); ?></p><br>
+							
 							<div class="clear pad20"></div>
+							
+							<label><?php echo t('Student ID'); ?></label>
+							<input readonly type="text" name="studentid" id="studentid" value="<?php echo $this->escape($this->id);?>">
+							
 
 		 					<label><?php echo t('Title'); ?></label>
 							<select name="title" >

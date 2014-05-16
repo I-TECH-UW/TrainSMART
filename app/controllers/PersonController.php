@@ -1353,7 +1353,8 @@ p.me_responsibility,
 				$where []= 'p.primary_qualification_option_id = q.id and p.facility_id = f.id and f.location_id = l.id ';
 			}
 
-			$locationWhere = $this->getLocationCriteriaWhereClause($criteria, '', 'pt');
+			//$locationWhere = $this->getLocationCriteriaWhereClause($criteria, '', 'pt'); //gnr: May 9, 2014 drop pt 
+			$locationWhere = $this->getLocationCriteriaWhereClause($criteria, '', '');
 			if ($locationWhere) {
 				$where[] = $locationWhere;
 			}

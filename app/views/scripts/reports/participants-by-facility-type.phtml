@@ -102,10 +102,17 @@ function setDistrictStatus(selectedIndex)  {
 
 
 	<div class="fieldLabel" id="training_organizer_id_lbl"><?php echo (@$this->translation['Training Organizer']); ?></div>
-	<div class="fieldInput bordered"><div  class="leftBorderPad"><input type="checkbox" name="showOrganizer" <?php  if ($this->criteria['showOrganizer']) echo 'CHECKED';?> /></div><label for="showOrganizer" ></label>
+	<div class="fieldInput">
+	<div  class="leftBorderPad"><input type="checkbox" name="showOrganizer" <?php  if ($this->criteria['showOrganizer']) echo 'CHECKED';?> /></div>
+  	<div  class="leftBorder autoHeight">
+  	
 
-	<div  class="leftBorder autoHeight"><?php echo $this->organizers_checkboxes; ?><br /></div></div>
-
+<?php echo $this->organizers_dropdown; ?><br />
+	
+	
+	</div>
+	</div>
+	
   <?php if ( $this->setting['display_training_topic'] ) { ?>
 	<div class="fieldLabel" id="training_topic_id_lbl"><?php echo (@$this->translation['Training Topic']); ?></div>
 	<div class="fieldInput">

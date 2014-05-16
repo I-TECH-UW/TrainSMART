@@ -655,7 +655,7 @@ class TrainingController extends ReportFilterHelpers {
 		$tlocations = TrainingLocation::selectAllLocations ( $this->setting ( 'num_location_tiers' ) );
 		$this->viewAssignEscaped ( 'tlocations', $tlocations );
 		if ($this->hasACL ( 'edit_facility' )) {
-			//$this->view->assign ( "insertLocationLink", '<a href="#" onclick="return false;" id="show">'. t(str_replace(' ','&nbsp;',t('Insert new'))) . '</a>' );
+			$this->view->assign ( "insertLocationLink", '<a href="#" onclick="return false;" id="show">'. t(str_replace(' ','&nbsp;',t('Insert new'))) . '</a>' );
 		}
 
 		// pepfar durations

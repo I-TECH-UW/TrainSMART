@@ -320,7 +320,7 @@ YAHOO.util.Event.onDOMReady(init);
     <?php echo $this->dropDownOrg; ?>
     <?php echo hasACLEdit('acl_editor_training_organizer', 'admin/training-organizer', $this); ?>
   </div><br/>
-  <div class="fieldLabel"><?php echo t('Training').' '.t('location');?></div>
+  <div class="fieldLabel"><?php echo t('Training').' '.t('Location');?></div>
   <div class="fieldInput">
     <?php
       training_location_dropdown ($this->tlocations, $this->row['training_location_id'], 'name="training_location_id" id="select_training_location" '.$this->viewonly);
