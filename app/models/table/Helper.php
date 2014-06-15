@@ -1698,7 +1698,7 @@ class Helper extends ITechTable
 					->from("institution")
 					->join(array("l" => "link_tutor_institution"),
 							"l.id_institution = institution.id")
-					->where('l.id_tutor = ?', $sid);
+					->where('l.id_tutor = ?', $pid);
 
 				$result = $db->fetchAll($select);
 
@@ -1710,7 +1710,7 @@ class Helper extends ITechTable
 						->from("institution")
 						->join(array("t" => "tutor"),
 								"t.institutionid = institution.id")
-						->where('t.id = ?', $sid);
+						->where('t.id = ?', $pid);
 					$result = $db->fetchAll($select);
 					if (count ($result) > 0){
 						$institution = $result[0];
