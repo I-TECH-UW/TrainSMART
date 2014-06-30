@@ -677,7 +677,6 @@ class Helper extends ITechTable
 	############################################################################
 
 	public function setExternalValues($linktable,$maincolumn,$linkcolumn,$originalvar,$id){
-		$implodedvar = implode(",", $originalvar);
 
 		#	$linktable		= PIVOT TABLE TO BE USED
 		#	$maincolumn		= LINK TO 'MAIN' OBJECT - SHOULD BE SAME FOR ALL ENTRIES HERE
@@ -693,6 +692,7 @@ class Helper extends ITechTable
 			$languagesspoken = implode(",", $param['languagesspoken']);
 
 			# REMOVING OLD LINKS NO LONGER SELECTED
+      $implodedvar = implode(",", $originalvar);
 			$query = "DELETE FROM " . $linktable . " WHERE " . $maincolumn . " = " . $id . " AND " . $linkcolumn . " NOT IN (" . $implodedvar . ")";
 			$this->dbfunc()->query($query);
 
