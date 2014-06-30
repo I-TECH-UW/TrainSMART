@@ -10,6 +10,132 @@
  */
 
 class DropDown {
+	
+	/**
+	 * $table - a string for the table name, or an array of rows to be used as the option values
+	 * $id      - option value to select as default
+	 * $jsonUrl - do not begin or end with slash or add output type
+	 */
+	public static function generateFunderMechanism(
+			$table, 
+			$column, 
+			$id = false, 
+			$jsonUrl = false, 
+			$disabled = false, 
+			$allowIds = false,
+			$multiple = false, 
+			$attributes = array(), 
+			$set_default = true, 
+			$multiple_choice = false, 
+			$size = 0,
+	        $mechanism = 'default') {
+	
+	
+	
+		$mutliple_id = false;
+		if ( is_int($multiple) or ($multiple === 0) )
+			$mutliple_id = $multiple;
+	
+		$multiple = ( $multiple !== false ? '[]' : ''); // allow multiple drop-downs w/same table
+	
+		if (is_string ( $table )) {
+			$tableObj = new ITechTable ( array ('name' => $table ) );
+			$info = $tableObj->info ();
+			$cols = array ($column );
+	
+			if ( $set_default ) {
+				if (array_search ( 'is_default', $info ['cols'] )) {
+					$cols = array ($column, 'is_default' );
+				}
+			}
+			$rows = $tableObj->fetchAll ( $tableObj->select ( $cols ) );
+		} else if (is_array ( $table ) or is_object ( $table )) {
+			$rows = $table;
+			//$info = ($rows->getTable()->info ());
+			$table = $info ['name'];
+		}
+	
+		$name = $table . '_id' . $multiple;
+		if (isset ( $attributes ['name'] )) {
+			$name = $attributes ['name'] ;
+			unset ( $attributes ['name'] );
+		}
+	
+		$html = '<select name="' . $name . '" id="select_' . $table . ($multiple && ($mutliple_id !== false) ?'_'.$mutliple_id:'').'"' . (($disabled) ? ' disabled="disabled" ' : ' ');
+	
+		if ($multiple_choice) {
+			$html .= ' multiple="multiple" ';
+		}
+	
+		if ($size) {
+			$html .= ' size=' . $size;
+		}
+	
+	
+		foreach ( $attributes as $k => $v ) {
+			$html .= " {$k}=\"$v\"";
+		}
+	
+		$html .= ' >';
+	
+		// if (!$multiple_choice) {
+		$html .= "\t<option value=\"\">&mdash; " . t ( 'select' ) . " &mdash;</option>\n";
+		// }
+	
+		file_put_contents('c:\wamp\logs\php_debug.log', 'dd 85>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		var_dump($mechanism);
+		$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		
+		foreach ( $rows as $r ) {
+			if (($allowIds === false) or (array_search ( $r->id, $allowIds ) !== false)) {
+				$isSelected = '';
+	
+				//check for default value in table
+				if ($set_default && isset ( $r->is_default ) && $r->is_default && ($id === false || $id === null)) {
+					$isSelected = ' selected="selected" ';
+				} else if ( $r->id === $id ) { //assign default value
+					$isSelected = ' selected="selected" ';
+	
+				}
+	
+				$html .= "\t<option value=\"{$r->id}\"$isSelected>{$r->$column}" . " {$mechanism}"  . "</option>\n";
+			}
+		}
+		$html .= "</select>\n\n";
+	
+		// add edit link
+		if ($jsonUrl && ! $disabled) {
+			$fieldlabel = explode ( '_', str_replace ( '_phrase', '', $column ) );
+			$label = $fieldlabel [0];
+			if(isset($fieldlabel[1])){ $label .= ' ' . $fieldlabel [1]; }
+	
+	
+			//$label = substr($column, strpos($column, '_'));
+			//$label = str_replace('phrase', '', $label);
+			//$label = trim(str_replace('_', ' ', $label));
+			if (trim ( $label )) {
+				switch ($label) { // modify so label translates nicely, if needed
+					case 'training got' :
+						$label = "GOT Curriculum";
+						break;
+					default :
+						break;
+				}
+	
+				require_once ('models/table/Translation.php');
+				$translate = @Translation::translate ( ucwords ( $label ) );
+				if ($translate)
+					$label = $translate;
+			}
+	
+			$jsonUrl = "$jsonUrl/table/$table/column/$column";
+			$jsonUrl = Settings::$COUNTRY_BASE_URL . '/' . $jsonUrl . '/outputType/json';
+	
+			$html .= " <a href=\"#\" onclick=\"addToSelect('" . str_replace("'", "\\"."'",t ( 'Please enter your new' )) . " {$label}:', 'select_{$table}', '{$jsonUrl}'); return false;\">" . t ( 'Insert new' ) . "</a>";
+		}
+	
+		return $html;
+	}
 
 	/**
 	 * $table - a string for the table name, or an array of rows to be used as the option values
@@ -18,6 +144,9 @@ class DropDown {
 	 */
 	public static function generateHtml($table, $column, $id = false, $jsonUrl = false, $disabled = false, $allowIds = false, 
 			$multiple = false, $attributes = array(), $set_default = true, $multiple_choice = false, $size = 0) {
+		
+
+		
 		$mutliple_id = false;
 		if ( is_int($multiple) or ($multiple === 0) )
       $mutliple_id = $multiple;
@@ -37,7 +166,7 @@ class DropDown {
 			$rows = $tableObj->fetchAll ( $tableObj->select ( $cols ) );
 		} else if (is_array ( $table ) or is_object ( $table )) {
 			$rows = $table;
-			$info = ($rows->getTable ()->info ());
+			//$info = ($rows->getTable()->info ());
 			$table = $info ['name'];
 		}
 
@@ -68,6 +197,7 @@ class DropDown {
 			 $html .= "\t<option value=\"\">&mdash; " . t ( 'select' ) . " &mdash;</option>\n";
 		// }
 		
+			 
 		foreach ( $rows as $r ) {
 			if (($allowIds === false) or (array_search ( $r->id, $allowIds ) !== false)) {
 				$isSelected = '';

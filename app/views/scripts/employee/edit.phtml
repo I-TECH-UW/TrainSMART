@@ -21,7 +21,7 @@
 			<?php require_once 'views/scripts/status.phtml' ?>
 
 			<h1><?php $this->mode == 'add' ? tp('Add Employee') : tp('Edit Employee'); ?></h1>
-			<form action="" method="POST" class="form_employee">
+			<form action="" method="post" class="form_employee">
 				<legend></legend>
 
 					<?php if ($this->employee['id']): ?>
@@ -33,7 +33,8 @@
 
 						// form fields
 						//if (! $this->hasACL('edit_employee')) $this->read_only = true; // readonly
-						$this->required_fields = array('first_name', 'last_name','dob','select_lookup_nationalities', 'partner_id', 'subpartner_id', 'based_at', 'select_employee_qualification_option','salary','benefits','additional_expenses','stipend','employee_transition_option_id', 'select_employee_role_option', 'race', 'gender', 'disability_option_id', 'disability_comments', 'funded_hours_per_week', 'agreement_end_date');
+						// gnr:Jan.9.14 SA Emergency $this->required_fields = array('first_name', 'last_name','dob','select_lookup_nationalities', 'partner_id', 'subpartner_id', 'based_at', 'select_employee_qualification_option','salary','benefits','additional_expenses','stipend','employee_transition_option_id', 'select_employee_role_option', 'race', 'gender', 'disability_option_id', 'disability_comments', 'funded_hours_per_week', 'agreement_end_date');
+						$this->required_fields = array('employee_code', 'partner_id', 'based_at', 'select_employee_qualification_option','salary','benefits','additional_expenses','stipend','employee_transition_option_id', 'select_employee_role_option', 'disability_option_id', 'disability_comments', 'funded_hours_per_week', 'agreement_end_date');
 
 						#if ($this->mode != 'add' && $this->employee['id'])
 						#echo labelAndField($this, 'Person ID',       'text', 'id', $this->employee['id']);
@@ -41,31 +42,55 @@
 						echo labelAndField($this, t('Staff Cadre'),    $this->cadres, 'select_employee_qualification_option');
 						if($this->setting['display_employee_primary_role'])
 						echo labelAndField($this, t('Primary Role'),   $this->roles,   'select_employee_role_option');
+						/*
 						echo labelAndField($this, t('Title'),        $this->titles);
 						echo labelAndField($this, t('First Name'),   'text', 'first_name',  $this->employee['first_name'] );
 						if($this->setting['display_middle_name'])
 						echo labelAndField($this, t('Middle Name'),  'text', 'middle_name', $this->employee['middle_name'] );
 						echo labelAndField($this, t('Last Name'),    'text', 'last_name',   $this->employee['last_name'] );
+						*/
+						
+						echo labelAndField($this, t('Employee Code'),    'text', 'employee_code',   $this->employee['employee_code'] );
+						
 						if($this->setting['display_employee_dob'])
 						echo labelAndField($this, t('Date of Birth').space.('(dd/mm/yyyy)'),'date', 'dob',         $this->employee['dob'] );
-						if($this->setting['display_employee_nationality'])
-						echo labelAndField($this, t('Employee Nationality'), $this->nationality, 'select_lookup_nationalities');
-						echo labelAndField($this, t('National ID'),  'text', 'national_id', $this->employee['national_id'] );
-						if($this->setting['display_employee_other_id'])
-						echo labelAndField($this, t('Other ID'),     'text', 'other_id',    $this->employee['other_id'] );
-						if($this->setting['display_employee_race'])
-						echo labelAndField($this, t('Race'),         $this->race, 'race');
-						echo genderDropdown($this,t('Gender'),       'gender', $this->employee['gender']);
+						
+						// if($this->setting['display_employee_nationality'])
+						// echo labelAndField($this, t('Employee Nationality'), $this->nationality, 'select_lookup_nationalities');
+						
+						// echo labelAndField($this, t('National ID'),  'text', 'national_id', $this->employee['national_id'] );
+						
+						// if($this->setting['display_employee_other_id'])
+						// echo labelAndField($this, t('Other ID'),     'text', 'other_id',    $this->employee['other_id'] );
+						
+						//if($this->setting['display_employee_race'])
+						//echo labelAndField($this, t('Race'),         $this->race, 'race');
+						//echo genderDropdown($this,t('Gender'),       'gender', $this->employee['gender']);
+						
 						echo confirmDropdown($this, t('Disability'), 'disability_option_id', $this->employee['disability_option_id']);
 						echo labelAndField($this, t('Nature of Disability'), 'text', 'disability_comments', $this->employee['disability_comments']);
 						echo '<div class="clear"></div><br /><br />'.PHP_EOL;
 
 						if ($this->mode != 'add' && $this->employee['partner_employee_number'])
 						echo labelAndField($this, t('Employee Number'),       'text', 'partner_employee_number', $this->employee['partner_employee_number']);
-						if($this->setting['display_employee_partner'])
+						
+						if($this->setting['display_employee_partner'])	
 						echo labelAndField($this, t('Partner'),     $this->partners, 'partner_id');
-						if($this->setting['display_employee_sub_partner'])
-						echo labelAndField($this, t('Sub Partner'), $this->subpartners, 'subpartner_id');
+						
+						foreach ($this->employee['funder'] as $i => $row) 
+						{	
+							
+							
+							employee_funder_dropdown($this, $this->subPartner, $this->partnerFunder, $this->mechanism, $row['subpartner_id'], $row['partner_funder_option_id'], $row['mechanism_option_id']);
+							
+        					echo labelAndField($this, t('Percentage'), 'text','percentage[]', $row['percentage']);
+							
+						}
+						echo '<button id="funder_add">'.t('Add a new').space.t('Funder').'</button><br />';
+							
+						
+						//if($this->setting['display_employee_sub_partner'])
+						//echo labelAndField($this, t('Sub Partner'), $this->subpartners, 'subpartner_id');
 						if($this->setting['display_employee_base'])
 						echo labelAndField($this, t('Employee Based at'), $this->bases, 'based_at');
 						region_filters_dropdown( $this, $this->locations, $this->employee, false, false, '', true );
@@ -85,8 +110,8 @@
 						#echo labelAndField($this, t('Second Phone'), 'text', 'secondary_phone', $this->employee['secondary_phone']);
 						#echo labelAndField($this, t('Email'),        'text', 'email',           $this->employee['email']);
 
-						echo '<div class="clear"></div><br /><br />'.PHP_EOL;
-						echo '<div class="clear"></div><br /><br />'.PHP_EOL;
+						//echo '<div class="clear"></div><br /><br />'.PHP_EOL;
+						//echo '<div class="clear"></div><br /><br />'.PHP_EOL;
 						if($this->setting['display_employee_staff_category'])
 						echo labelAndField($this, t('Staff Category'), $this->categories);
 						if($this->setting['display_employee_registration_number'])
@@ -115,7 +140,7 @@
 							|| $this->setting['display_employee_benefits']
 							|| $this->setting['display_employee_additional_expenses']
 							|| $this->setting['display_employee_stipend']) {
-							echo '<h2>' . t('Annual Cost to Company (CTC) Amount') . '</h2>';
+							echo '<h2>' . t('Annual Cost to Company  (CTC) funded by PEPFAR only Amount') . '</h2>';
 							
 							if ($this->translation['Employee Local Currency'] && $this->translation['Employee Local Currency'] != 'Employee Local Currency')
 								echo "<br>".t('Currency:').space.$this->translation['Employee Local Currency'].'<br clear="all"/>'; #TODO rework
@@ -130,7 +155,7 @@
 						if($this->setting['display_employee_stipend'])
 						echo labelAndField($this, t('Stipend'),  'text', 'stipend',  $this->employee['stipend']);
 						if($this->setting['display_employee_annual_cost'])
-						echo labelAndField($this, t('Annual Cost'), 'text', 'annual_cost', $this->employee['annual_cost']);
+						echo labelAndField($this, t('(R)Annual Cost'), 'text', 'annual_cost', $this->employee['annual_cost']);
 						if($this->setting['display_employee_external_funding'])
 						echo labelAndField($this, t('Percentage not paid by').space.t('Partner'), 'text', 'external_funding_percent', $this->employee['external_funding_percent']);
 
@@ -166,6 +191,26 @@
 						$(document).ready(function () {  /* doc ready */
 
 							itech_save_confirm_on_leave();
+
+							$('#funder_add').click( function (e) { /* button - add a new funder */
+								e.preventDefault();
+								var btn = $(this);
+								var target = null;
+
+								$(".subPartner_lbl:first").add(".partnerFunder_lbl:first").add(".mechanism_lbl:first").add(".percentage\\[\\]:first").each(function () { // class="fieldlabel funder[]", then 'funding_end_date[]' (we'll use these as a template)
+									btn.before( $(this).clone() );
+									var template = $(this).next().clone();
+									template.find('input,select').val('');							
+									btn.before( template );
+								});
+
+								$(target).removeClass('hasDatepicker').removeAttr('id').datepicker({ // rebind datepicker and calender
+									changeMonth: true,
+									changeYear: true
+								});
+								$('.calendarbtn').unbind('click').click(openNearestDatePicker);
+								return false;
+							});
 
 							$('#select_employee_qualification_option').change( function () { /* watch Cadre field and show/hide CHW divs on CHW fields */
 
@@ -294,6 +339,8 @@
 								else
 									$('#facilityInput').removeAttr('disabled');
 							});
+
+
 						});
 					</script>
 

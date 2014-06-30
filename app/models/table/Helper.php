@@ -260,7 +260,115 @@ class Helper extends ITechTable
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
+	
+	public function getEmployeeSubpartner($pid) {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array('psfm' => 'partner_to_subpartner_to_funder_to_mechanism'), array('subpartner_id'))
+		->join(array("p" => "partner"), "subpartner_id = p.id")
+		->where("partner_id = ?", $pid)
+		->order('psfm.subpartner_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getEmployeeFunder($pid) {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array("psfm" => "partner_to_subpartner_to_funder_to_mechanism"), array('partner_funder_option_id'))
+		->join(array("f" => "partner_funder_option"), "f.id = psfm.partner_funder_option_id")
+		->where("partner_id = ?", $pid)
+		->order('psfm.subpartner_id', 'psfm.partner_funder_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getEmployeeMechanism($pid) {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array("psfm" => "partner_to_subpartner_to_funder_to_mechanism"), array('mechanism_option_id'))
+		->join(array("m" => "mechanism_option"), "m.id = psfm.mechanism_option_id")
+		->where("partner_id = ?", $pid)
+		->order('psfm.subpartner_id', 'psfm.partner_funder_option_id', 'psfm.mechanism_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getSubpartner() {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array('sfm' => 'subpartner_to_funder_to_mechanism'), array('subpartner_id'))
+		->join(array("p" => "partner"), "subpartner_id = p.id")
+		->order('sfm.subpartner_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getFunder() {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array("sfm" => "subpartner_to_funder_to_mechanism"), array('partner_funder_option_id'))
+		->join(array("f" => "partner_funder_option"), "f.id = sfm.partner_funder_option_id")
+		->order('sfm.subpartner_id', 'sfm.partner_funder_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getMechanism() {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array("sfm" => "subpartner_to_funder_to_mechanism"), array('mechanism_option_id'))
+		->join(array("m" => "mechanism_option"), "m.id = sfm.mechanism_option_id")
+		->order('sfm.subpartner_id', 'sfm.partner_funder_option_id', 'sfm.mechanism_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getAllSubPartners() {
+		$select = $this->dbfunc()->select()
+		->from(array("p" => "partner"));
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getAllFunders() {
+		$select = $this->dbfunc()->select()
+		->from(array("f" => "partner_funder_option"));
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getAllMechanisms() {
+		$select = $this->dbfunc()->select()
+		->from(array("m" => "mechanism_option"));
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	
+/*
+ * from("facility_type_option",array('id','facilitytypename' => 'facility_type_phrase'))
+	$select = $this->dbfunc()->select()
+	->from("link_student_cohort")
+	->join(array("c" => "cohort"),
+			"id_cohort = c.id")
+			->where("dropdate = '0000-00-00' OR dropdate = c.graddate")
+			->where('id_cohort = ?', $cid);
+			*/
+	
 
+	public function getPartnerToFunder() {
+		$select = $this->dbfunc()->select()
+		->from("partner_to_funder")
+		->join(array("a" => "partner_funder_option"), "partner_funder_option_id = a.id")
+		->order('partner_id', 'partner_funder_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	
+	public function getpartnerFunderMechanisms() {
+		$select = $this->dbfunc()->select()
+		->from("partnerfunder_to_mechanism")
+		->order('id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
 	#################################
 	#                               #
 	#   DEGREE SPECIFIC FUNCTIONS   #
@@ -1610,9 +1718,10 @@ class Helper extends ITechTable
 	}
 
 	public function saveLabels($param){
+
 		$db = $this->dbfunc();
 		foreach ($param['fields'] as $field=>$value){
-
+			
 			$select = $db->select()
 				->from("translation")
 				->where("key_phrase = ?",$field)
@@ -1640,7 +1749,8 @@ class Helper extends ITechTable
 						'key_phrase'	=> $field,
 						'phrase'		=> $value,
 					);
-					$db->insert("translation", $insert);
+					
+				  $db->insert("translation", $insert);
 				}
 			}
 #			echo $select->__toString() . "<br>";
@@ -1698,7 +1808,7 @@ class Helper extends ITechTable
 					->from("institution")
 					->join(array("l" => "link_tutor_institution"),
 							"l.id_institution = institution.id")
-					->where('l.id_tutor = ?', $sid);
+					->where('l.id_tutor = ?', $pid);
 
 				$result = $db->fetchAll($select);
 
@@ -1710,7 +1820,7 @@ class Helper extends ITechTable
 						->from("institution")
 						->join(array("t" => "tutor"),
 								"t.institutionid = institution.id")
-						->where('t.id = ?', $sid);
+						->where('t.id = ?', $pid);
 					$result = $db->fetchAll($select);
 					if (count ($result) > 0){
 						$institution = $result[0];

@@ -10,6 +10,9 @@ require_once('UserController.php');
 require_once('models/table/OptionList.php');
 require_once('models/table/Helper.php');
 require_once('EditTableController.php');
+require_once ('views/helpers/DropDown.php');
+require_once ('views/helpers/CheckBoxes.php');
+
 
 class AdminController extends UserController
 {
@@ -2956,7 +2959,7 @@ class AdminController extends UserController
 		$editTable->execute();
 	}
 
-	public function employeePartnerFundingAction()
+	public function employeePartnerFunderAction()
 	{
 
 		/* edit table */
@@ -2964,7 +2967,7 @@ class AdminController extends UserController
 		$editTable->table   = 'partner_funder_option';
 		$editTable->fields  = array('funder_phrase' => 'Funder');
 		$editTable->label   = 'Funder';
-		$editTable->dependencies = array('partner_funder_option_id' => 'partner_to_funder');
+		$editTable->dependencies = array('partner_funder_option_id' => 'subpartner_to_funder_to_mechanism');
 		$editTable->execute();
 	}
 
@@ -2978,6 +2981,147 @@ class AdminController extends UserController
 		$editTable->label   = 'Importance';
 		$editTable->dependencies = array('partner_importance_option_id' => 'partner');
 		$editTable->execute();
+	}
+	
+	public function employeeAgencyAction()
+	{
+	
+		/* edit table */
+		$editTable = new EditTableController($this);
+		$editTable->table   = 'agency_option';
+		$editTable->fields  = array('agency_phrase' => 'Agency');
+		$editTable->label   = 'Agency';
+		// $editTable->dependencies = array('partner_importance_option_id' => 'partner');
+		$editTable->execute();
+	}
+	
+	public function employeeMechanismAction()
+	{
+	
+		/* edit table */
+		$editTable = new EditTableController($this);
+		$editTable->table   = 'mechanism_option';
+		$editTable->fields  = array('mechanism_phrase' => 'Mechanism');
+		$editTable->label   = 'Mechanism';
+		$editTable->dependencies = array('mechanism_option_id' => 'subpartner_to_funder_to_mechanism');
+		$editTable->execute();
+	}
+	
+	public function employeeBuildFundingAction()
+	{
+				
+		require_once('views/helpers/location.php'); // funder stuff
+		require_once('models/table/partner.php'); 
+		
+		if ( $this->getRequest()->isPost() ) {
+		  $db     = $this->dbfunc();
+		  $status = ValidationContainer::instance ();
+		  $params = $this->getAllParams();
+		
+		file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3021> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		var_dump($params);
+		$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+				
+		  // prepare date for database
+		  $params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
+		
+		  foreach ($params['funding_end_date'] as $i => $value)
+			$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
+		
+		  // test for all values
+		  if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
+			$status->addError('', t ( 'All fields' ) . space . t('are required'));
+		
+		  // test for existing record
+		  //$id = $this->_findOrCreateSaveGeneric('partner_to_funder_to_mechanism', $params);
+		  $id = false;
+		  if ($id) {
+		  	$status->addError('', t('Record exists'));
+		  }
+		
+			
+		  if ( $status->hasError() ) 
+		    $status->setStatusMessage( t('That funding mechanism could not be saved.') );
+				
+		  else {	
+	        		//save
+       		$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
+       				
+       		
+      				$data = array(
+      						'subpartner_id'  => $params['subPartner'],
+      						'partner_funder_option_id' => $params['partnerFunder'],
+      						'mechanism_option_id' => $params['mechanism'],
+      						'funding_end_date' => $params['funding_end_date'][0],
+      				);
+      		
+      		  $insert_result = $sfm->insert($data);
+      		  $status->setStatusMessage( t('The funding mechanism was saved.') );
+      		  $this->_redirect("admin/employee-build_funding");
+	        }
+		}
+		
+		$helper = new Helper();
+		
+		$subPartner = $helper->getAllSubPartners();
+		$this->viewAssignEscaped ( 'subPartner', $subPartner );
+		
+		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3068>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		//var_dump($subPartner);
+		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		
+		$partnerFunder = $helper->getAllFunders();
+		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+		
+		$mechanism = $helper->getAllMechanisms();
+		$this->viewAssignEscaped ( 'mechanism', $mechanism );	
+		
+	} //employeeBuildFundingAction
+	
+	public function employeeFunderFilterAction()
+	{
+	
+		require_once('views/helpers/location.php'); // funder stuff
+		require_once('models/table/partner.php');
+	
+		//$this->view->assign('title', $this->translation['Application Name'].space.t('Employee Tracking System'));
+		//$this->view->assign ( 'partner',    DropDown::generateHtml   ( 'partner', 'partner', $params['partner_id'], false, $this->view->viewonly, false ) );
+		$helper = new Helper();
+		/*
+			$partners = Partner::getall();
+		$partnersArray = $partners->toArray();
+		$this->viewAssignEscaped ( 'partners', $partners );
+	
+		$agencies = $helper->getPartnerToAgency();
+		$agencyNames = $helper->getAgencies();
+		$this->viewAssignEscaped ( 'agencies', $agencies );
+		*/
+	
+		$partners = Partner::getall();
+		$partnersArray = $partners->toArray();
+		$this->viewAssignEscaped ( 'partners', $partners );
+	
+		$helper = new Helper();
+		$partnerFunder = $helper->getFunder();
+		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+	
+		$mechanism = $helper->getMechanism();
+		$this->viewAssignEscaped ( 'mechanism', $mechanism );
+	
+		file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3110>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		var_dump($mechanism);
+		$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+	
+		//$this->viewAssignEscaped ( 'agencyNames', $agencyNames );
+	
+		//$checkedArray = array(7 => 7,8 => 8,10 => 10,12 => 12,15 => 15,	);
+		//$checkedArray = array();
+		//$this->view->assign ( 'agenciesNames', Checkboxes::generateHtml('agency_option', 'agency_phrase', $this->view->viewonly, $agencyNames ) );
+		//$this->view->assign ( 'agenciesNames', Checkboxes::generateHtml('agency_option', 'agency_phrase', $this->view->viewonly, $checkedArray, 'id in (7,8)') );
+		//$this->view->assign ( 'agenciesNames', Checkboxes::generateHtml('agency_option', 'agency_phrase', $this->view->viewonly, $checkedArray, '') );
+	
+		echo('stop');
+	
 	}
 
 	public function hasEditorACL(){
