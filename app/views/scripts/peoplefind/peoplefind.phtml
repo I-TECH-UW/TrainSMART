@@ -154,19 +154,28 @@
 								<td name="getpeo" style="width : 120px;"><?php echo $getpeople['id']; ?></td>
 								<td class=""><?php echo trim ($getpeople['first_name'] . " " . $getpeople['last_name'] . ($_REQUEST['type'] == "every" ? " (" . $getpeople['type'] . ")" : "")); ?></td>
 								<td class="" style="width : 150px;"><?php echo $getpeople['gender'] ? $getpeople['gender'] : 'N/A'; ?></td>
-								<?php
-									if (count ($getpeople['institution']) > 0){
-										echo "<td class=\"\" style=\"width : 150px;\">" . $getpeople['institution']['institutionname'] . "</td>\n";
-									} else {
-										echo "<td class=\"\" style=\"width : 150px;\">N/A</td>\n";
-									}
-
-									if (count ($getpeople['cohort']) > 0){
-										echo "<td class=\"\" style=\"width : 150px;\">" . $getpeople['cohort']['cohortname'] . "</td>\n";
-									} else {
-										echo "<td class=\"\" style=\"width : 150px;\">N/A</td>\n";
-									}
-								?>
+                <?php
+                if (array_key_exists('institution',$getpeople)) {
+                ?>
+                <td class="" style="width : 150px;"><?php echo $getpeople['institution']['institutionname'] ? $getpeople['institution']['institutionname'] : 'N/A'; ?></td>
+                <?php
+                } else {
+                ?>
+                 <td class="" style="width : 150px;"><?php echo array_key_exists('institutionname',$getpeople) ? $getpeople['institutionname'] : 'N/A'; ?></td>
+                <?php
+                }
+                ?>                
+                <?php
+                if (is_array($getpeople['cohort'])) {
+                ?>
+                <td class="" style="width : 150px;"><?php echo $getpeople['cohort']['cohortname'] ? $getpeople['cohort']['cohortname'] : 'N/A'; ?></td>
+                <?php
+                } else {
+                ?>
+                <td class="" style="width : 150px;"><?php echo $getpeople['cohort'] ? $getpeople['cohort'] : 'N/A'; ?></td>
+                <?php
+                }
+                ?>
 							</tr>
 						<?php
 						}

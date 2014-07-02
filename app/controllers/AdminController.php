@@ -3007,11 +3007,26 @@ class AdminController extends UserController
 		$editTable->execute();
 	}
 	
+	//$editTable->dependencies = array('partner_importance_option_id' => 'partner');
+	
+	public function employeeSubpartnerToFunderToMechanismAction()
+	{
+	
+		/* edit table */ 
+		$editTable = new EditTableController($this);
+		$editTable->table   = 'subpartner_to_funder_to_mechanism';
+		$editTable->fields  = array('id' => 'ID', 'subpartner_id' => 'Subpartner', 'partner_funder_option_id' => 'Funder', 'mechanism_option_id' => 'Mechanism', 'funding_end_date' => 'Funding End Date');
+		$editTable->label   = 'Funding  Mechanisms';
+		$editTable->dependencies = array('id' => 'partner_to_subpartner_to_funder_to_mechanism');
+		$editTable->execute();
+		
+	}
+	
 	public function employeeBuildFundingAction()
 	{
 				
-		require_once('views/helpers/location.php'); // funder stuff
-		require_once('models/table/partner.php'); 
+		require_once('views/helpers/Location.php'); // funder stuff
+		require_once('models/table/Partner.php'); 
 		
 		if ( $this->getRequest()->isPost() ) {
 		  $db     = $this->dbfunc();

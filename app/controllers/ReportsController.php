@@ -10967,8 +10967,6 @@ left join mechanism_option m on m.id = epsfm.mechanism_option_id
 		if ( count ($where) )
 			$sql .= ' WHERE ' . implode(' AND ', $where);
 		
-		//$sql .= ' GROUP BY partner.id ';
-		
 		switch ($criteria['report']) {
 			case "defined":
 				$sql .= ' order by subp.partner, funder_phrase, mechanism_phrase ';

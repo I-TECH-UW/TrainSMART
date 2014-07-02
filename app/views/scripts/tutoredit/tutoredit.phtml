@@ -157,29 +157,27 @@
 
 <?php  region_filters_dropdown_ps($this, 'local');  ?>
 
-							<label>Facility</label>
-							<select name="facilityid">
-	<?php
-		foreach ($this->fetchfacility as $facility){
-	?>
-								<option value="<?php echo $facility[id];?>"><?php echo $facility[facility_name];?></option>
-	<?php
-		}
-	?>
-	<!--						<option value="<?php echo $this->escape($this->facid);?>" selected><?php echo $this->escape($this->facility);?></option>	 -->
-							</select>
+              <label><?php echo t('Facility'); ?></label>
+              <select id="facilityid" name="facilityid">
+                <option value="0"><?php echo t('Select...'); ?></option>
+                <?php
+                  foreach ($this->facilities as $facility){
+                    echo "<option value=\"" . $facility['id'] . "\"" . ($this->facilityid == $facility['id'] ? " selected" : "") . ">" . $facility['facility_name'] . "</option>\n";
+                  }
+                ?>
+              </select>
 
-							<label><?php echo t('Cadre'); ?></label>
-							<select name="cadreid">
-	<?php
-		foreach ($this->getcadre as $cadre){
-	?>
-								<option value="<?php echo $cadre[id];?>"<?php echo ($this->cadreid == $cadre['id'] ? " selected" : ""); ?>><?php echo $cadre[cadrename];?></option>
-	<?php
-		}
-	?>
-							</select>
+              <label><?php echo t('Instituion'); ?></label>
+              <select id="institutionid" name="institutionid">
+                <option value="0"><?php echo t('Select...'); ?></option>
+                <?php
+                  foreach ($this->institutions as $institution){
+                    echo "<option value=\"" . $institution['id'] . "\"" . ($this->institutionid == $institution['id'] ? " selected" : "") . ">" . $institution['institutionname'] . "</option>\n";
+                  }
+                ?>
+              </select>
 
+  
 							<label><?php echo t('Tutor Since'); ?></label>
 							<select name="tutorsince">
 								<option value="0"><?php echo t('Select...'); ?></option>
@@ -202,6 +200,7 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
 	}
 ?>
 							</div>
+              
 
 							<label><?php echo t('Tutor at this Inst. Since'); ?></label>
 							<select name="tutortimehere">
@@ -247,7 +246,7 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
 						</div>
 
 					<div class="clear pad50"></div>
-					<div style="clear width :100%;">
+					<div style="width:100%;">
 						<p style=""><?php echo t('Students Advised'); ?></p>
 						<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 							<thead>
