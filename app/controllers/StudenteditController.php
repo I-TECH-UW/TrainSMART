@@ -3,6 +3,7 @@ require_once ('ITechController.php');
 require_once ('models/table/Peopleadd.php');
 require_once ('models/table/Studentedit.php');
 require_once ('models/table/Helper.php');
+require_once ('models/table/System.php');
 
 class StudenteditController extends ITechController {
 	public function __construct(Zend_Controller_Request_Abstract $request, Zend_Controller_Response_Abstract $response, array $invokeArgs = array()) {
@@ -20,7 +21,6 @@ class StudenteditController extends ITechController {
 			$this->doNoAccessError ();
 
 	}
-
 
 	public function studenteditAction(){
 
@@ -153,7 +153,9 @@ class StudenteditController extends ITechController {
 			$this->view->assign('titid',$update['title_option_id']);
 			$this->view->assign('phone',$update['phone_work']);
 			$this->view->assign('cell',$update['phone_mobile']);
-			$this->view->assign('cell2',$update['phone_mobile_2']);
+			//TA: there is no 'phone_mobile_2' column in PERSON table -> link it 'phone_home' column
+			//$this->view->assign('cell2',$update['phone_mobile_2']);
+			$this->view->assign('cell2',$update['phone_home']);
 			$this->view->assign('cadre',$update['cadre']);
 
 
@@ -317,7 +319,7 @@ class StudenteditController extends ITechController {
 		$this->view->assign('titid',$details['person'][0]['title_option_id']);
 		$this->view->assign('phone',$details['person'][0]['phone_work']);
 		$this->view->assign('cell',$details['person'][0]['phone_mobile']);
-		$this->view->assign('cell2',$details['person'][0]['phone_mobile_2']);
+		$this->view->assign('cell2',$details['person'][0]['phone_home']);
 		$this->view->assign('nationalid',$details['person'][0]['national_id']);
 		$this->view->assign('graduated',$details['student'][0]['isgraduated']);
 		$this->view->assign('cohortid',$details['link_cohort'][0]['id_cohort']);
@@ -374,6 +376,59 @@ class StudenteditController extends ITechController {
 
 		$this->view->assign('fundingsource',$details['funding'][0]['fundingsource']);
 		$this->view->assign('fundingamount',$details['funding'][0]['fundingamount']);
+		
+		//TA: added 7/17/2014 - 7/25/2014
+ 		$sysTable = new System();
+		$sysRows = $sysTable->fetchAll()->toArray();
+		foreach($sysRows as $row) {
+			foreach($row as $column=>$value) {
+				if($column == 'ps_display_inst_compl_date' && $value != '0'){
+					$this->view->assign('label_hscomldate',$this->view->translation['ps high school completion date']);
+ 					$this->view->assign('hscomldate',$details['student'][0]['hscomldate']);
+				}else if($column == 'ps_display_last_inst_attended' && $value != '0'){
+					$this->view->assign('label_lastinstatt',$this->view->translation['ps last school attended']);
+ 					$this->view->assign('lastinstatt',$details['student'][0]['lastinstatt']);
+				}else if($column == 'ps_display_start_school_date' && $value != '0'){
+					$this->view->assign('label_schoolstartdate',$this->view->translation['ps school start date']);
+ 					$this->view->assign('schoolstartdate',$details['student'][0]['schoolstartdate']);
+				}else if($column == 'ps_display_equivalence' && $value != '0'){
+					$this->view->assign('label_equivalence',$this->view->translation['ps equivalence']);
+ 					$this->view->assign('equivalence',$details['student'][0]['equivalence']);
+				}else if($column == 'ps_display_last_univ_attended' && $value != '0'){
+					$this->view->assign('label_lastunivatt',$this->view->translation['ps last university attended']);
+ 					$this->view->assign('lastunivatt',$details['student'][0]['lastunivatt']);
+				}else if($column == 'ps_display_person_charge' && $value != '0'){
+					$this->view->assign('label_personincharge',$this->view->translation['ps person in charge']);
+ 					$this->view->assign('personincharge',$details['student'][0]['personincharge']);
+				}else if($column == 'ps_display_custom_field1' && $value != '0'){
+					$this->view->assign('label_custom_field1',$this->view->translation['ps custom field 1']);
+ 					$this->view->assign('custom_field1',$details['person'][0]['custom_field1']);
+				}else if($column == 'ps_display_custom_field2' && $value != '0'){
+					$this->view->assign('label_custom_field2',$this->view->translation['ps custom field 2']);
+ 					$this->view->assign('custom_field2',$details['person'][0]['custom_field2']);
+				}else if($column == 'ps_display_custom_field3' && $value != '0'){
+					$this->view->assign('label_custom_field3',$this->view->translation['ps custom field 3']);
+ 					$this->view->assign('custom_field3',$details['person'][0]['custom_field3']);
+				}else if($column == 'ps_display_marital_status' && $value != '0'){
+					$this->view->assign('label_marital_status',$this->view->translation['ps marital status']);
+ 					$this->view->assign('marital_status',$details['person'][0]['marital_status']);
+				}else if($column == 'ps_display_spouse_name' && $value != '0'){
+					$this->view->assign('label_spouse_name',$this->view->translation['ps spouse name']);
+ 					$this->view->assign('spouse_name',$details['person'][0]['spouse_name']);
+				}else if($column == 'ps_display_local_address' && $value != '0'){ 
+					$this->view->assign('label_ps_local_address',$this->view->translation['ps local address']);
+				}else if($column == 'ps_display_religious_denomin' && $value != '0'){ 
+					$this->view->assign('label_ps_religious_denomin',$this->view->translation['ps religious denomination']);
+				}else if($column == 'ps_display_nationality' && $value != '0'){ 
+					$this->view->assign('label_ps_nationality',$this->view->translation['ps nationality']);
+				}else if($column == 'ps_display_permanent_address' && $value != '0'){ 
+					$this->view->assign('label_ps_permanent_address',$this->view->translation['ps permanent address']);
+				}
+			}
+		}
+ 		
+		//TA: added 7/18/2014
+		$this->view->assign('emergcontact',$details['student'][0]['emergcontact']);
 
 		// POST GRADUATION FIELDS
 		$this->view->assign('postgeo1',$details['student'][0]['postgeo1']);

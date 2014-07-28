@@ -26,9 +26,10 @@ if ( $this->isLoggedIn() ) {
 	// INSTITUTION LINK
 	if ( $this->hasACL('edit_people')	){
 		$navMain['institution'] = array(
-		'index' => t('Institutions'),
-		'institution'	=> t('View/Edit Institution'),
-		'institutionadd' =>	t('Add Institution'),
+				//TA: added 7/25/2014 : automatic label changes
+		'index' => $this->translation['ps institution'], 
+		'institution'	=> t('View/Edit ') . $this->translation['ps institution'],
+		'institutionadd' =>	t('Add ') . $this->translation['ps institution'],
 		);
 	} else {
 		$navMain['course'] = array(
@@ -92,13 +93,13 @@ if ( $this->isLoggedIn() ) {
 
 	// REPORT LINK
 	if ( $this->hasACL('view_create_reports')) {
-
+		//TA: added 7/25/2014 : automatic label changes
 		$navMain['reports']['index']  =  t('Reports');
 		$navMain['reports']['psStudentsTrained']			= t('Student Reports');
 		$navMain['reports']['psCourseByName']				= t('Course Reports');
 		$navMain['reports']['psCohortByParticipantCount']	= t('Cohort Reports');
-		$navMain['reports']['psInstitutionInformation']		= t('Institution Reports');
-		$navMain['reports']['psTutorByName']				= t('Tutor Reports');
+		$navMain['reports']['psInstitutionInformation']		= $this->translation['ps institution']. t(' Reports');
+		$navMain['reports']['psTutorByName']				= $this->translation['ps tutor']. t(' Reports');
 		$navMain['reports']['psFacilityReport']             = t('Facility Report');
 	}
 

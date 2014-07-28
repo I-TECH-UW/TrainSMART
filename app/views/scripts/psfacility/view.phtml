@@ -18,7 +18,7 @@ print ScriptContainer::$instance->renderJSHead();
 <h1><?php tp('View Facility');?></h1>
 
 <div style="height: 600px;">
-	<form id="change" action="<?php echo $this->base_url;?>/facility/view" method="GET">
+	<form id="change" action="<?php echo $this->base_url;?>/facility/view" method="get">
 	<div class="fieldInput"><select name="id"  id="id" onchange="this.form.submit();">
 	<option value="">-- <?php tp('choose');?> --</option>
 	<?php foreach ( $this->facilities as $facility) {

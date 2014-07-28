@@ -341,7 +341,7 @@
 							<select name="title" >
 								<option value="0"><?php echo t('Select...'); ?></option>
 							<?php foreach ($this->gettitle as $fetchtitle){ ?>
-								<option value="<?php echo $fetchtitle[id]; ?>"<?php echo ($this->escape($this->selid) == $fetchtitle[id] ? " selected" : "") ?>><?php echo $fetchtitle[title_phrase]; ?></option>
+								<option value="<?php echo $fetchtitle['id']; ?>"<?php echo ($this->escape($this->selid) == $fetchtitle['id'] ? " selected" : "") ?>><?php echo $fetchtitle['title_phrase']; ?></option>
 							<?php } ?>
 							</select>
 
@@ -357,17 +357,20 @@
 							<label><?php echo t('School ID'); ?></label>
 							<input type="text" name="nationalid" value="<?php echo $this->escape($this->nationalid);?>">
 
-							<label><?php echo t('Nationality'); ?></label>
-							<select name="nationality">
-								<option value="0"><?php echo t('Select...'); ?></option>
-<?php
-	foreach ($this->lookupnationalities as $nationality){
-?>
-								<option value="<?php echo $nationality['id']; ?>"<?php echo $nationality['id'] == $this->escape($this->nationalityid) ? " selected" : ""; ?>><?php echo $nationality['nationality']; ?></option>
-<?php
-	}
-?>
-							</select>
+							
+							<!-- TA: added 07/22/2014 START -->
+							<?php
+								if($this->escape($this->label_ps_nationality)){
+									echo "<label>" . $this->escape($this->label_ps_nationality) . "</label>";
+									echo "<select name='nationality'>";
+									echo "<option value='0'>" . t('Select...') . "</option>";
+									foreach ($this->lookupnationalities as $nationality){
+									echo "<option value='" . $nationality['id'] . "' " . ($nationality['id'] == $this->escape($this->nationalityid) ? ' selected' : '') . ">" . $nationality['nationality'] . "</option>";
+									}
+									echo "</select>";
+								}
+								?>
+							<!-- TA: added 07/22/2014 END -->
 
 							<label><?php echo t('Gender'); ?></label>
 							<select name="gender">
@@ -393,79 +396,82 @@
 	}
 ?>
 							<input type="text" readonly value="<?php echo $age;?>"><br>
-
-							<div class="pad20 clear"></div>
-							<p style="float:left;font-size:14px;"><?php echo t('Local Address'); ?></p>
-
-							<div class="pad20 clear"></div><br>
-
-							<label id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></label>
-<?php
-	renderFilter($this->locations, 1, 'local-geo1', $this->escape($this->localgeo1), 'local-geo2');
-	if ( $this->setting['display_region_b'] ) {
-?>
-							<label id="district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?></label>
-<?php
-	renderFilter($this->locations, 2, 'local-geo2', $this->escape($this->localgeo2), ($this->setting['display_region_c']?'local-geo3':false));
-	}
-	if ( $this->setting['display_region_c'] ) {
-?>
-							<label id="region_c_id_lbl"><?php echo (@$this->translation['Region C (Local Region)']); ?></label>
-<?php
-	renderFilter($this->locations, 3, 'local-geo3', $this->escape($this->localgeo3), false);
-	}
-?>
-
-							<label><?php echo t('Address 1'); ?></label>
-							<input type="text" name="localaddress1" value="<?php echo $this->escape($this->address1);?>">
-
-							<label><?php echo t('Address 2'); ?></label>
-							<input type="text" name="localaddress2" value="<?php echo $this->escape($this->address2);?>" >
-
-							<label><?php echo t('City'); ?></label>
-							<input type="text" name="localcity" value="<?php echo $this->escape($this->city);?>">
-
-							<label><?php echo t('Postal code / ZIP'); ?></label>
-							<input type="text" name="localpostalcode" value="<?php echo ($this->escape($this->zip) != "0" ? $this->escape($this->zip) : "");?>">
-
-							<label style="display:block; padding-right: 25px" ><?php echo t('Residential Address?'); ?></label>
 							
-                            <input type="checkbox" name="localisresidential" id="localisresidential" value="1" <?php echo ( $this->escape($this->home_is_residential) == 1 ? 'CHECKED' :'');?>>
+							<!-- TA: added 7/22/2014 START -->
+							<?php
+								if($this->escape($this->label_marital_status)){
+									echo "<label>" . $this->escape($this->label_marital_status) . "</label>";
+									echo "<select name='marital_status' id='marital_status'>";
+									echo "<option value='na'>" . t('Select...') . "</option>";
+									echo "<option value='single' " . ($this->escape($this->marital_status) == 'single' ? ' selected' : '') . ">Single</option>";
+									echo "<option value='married' " . ($this->escape($this->marital_status) == 'married' ? ' selected' : '') . ">Married</option>";
+									echo "<option value='divorced' " . ($this->escape($this->marital_status) == 'divorced' ? ' selected' : '') . ">Divorced</option>";
+									echo "<option value='widowed' " . ($this->escape($this->marital_status) == 'widowed' ? ' selected' : '') . ">Widowed</option>";
+									echo "</select>";
+								}
+								if($this->escape($this->label_spouse_name)){
+									echo "<label>" . $this->escape($this->label_spouse_name) . "</label>";
+									echo "<input type='text' name='spouse_name' id='spouse_name' value='" . $this->escape($this->spouse_name) . "';>";
+								}
+								
+	if($this->escape($this->label_ps_local_address)){
+		echo "<div class='pad20 clear'></div>";
+		echo "<p style='float:left;font-size:14px;'>" . $this->escape($this->label_ps_local_address) . "</p>";
+		echo "<div class='pad20 clear'></div><br>";
+		echo "<label id='province_id_lbl'>" . @$this->translation['Region A (Province)'] . "</label>";
+		renderFilter($this->locations, 1, 'local-geo1', $this->escape($this->localgeo1), 'local-geo2');
+		if ( $this->setting['display_region_b'] ) {
+							echo"<label id='district_id_lbl'>" . @$this->translation['Region B (Health District)'] . "</label>";
+							renderFilter($this->locations, 2, 'local-geo2', $this->escape($this->localgeo2), ($this->setting['display_region_c']?'local-geo3':false));
+		}
+		if ( $this->setting['display_region_c'] ) {
+							echo"<label id='region_c_id_lbl'> " . @$this->translation['Region C (Local Region)'] . "</label>";
+							renderFilter($this->locations, 3, 'local-geo3', $this->escape($this->localgeo3), false);
+		}
+							echo"<label>" . t('Address 1') . "</label>";
+							echo"<input type='text' name='localaddress1' value='" . $this->escape($this->address1) . "'>";
+							echo"<label>" . t('Address 2') . "</label>";
+							echo"<input type='text' name='localaddress2' value='" . $this->escape($this->address2) . "' >";
+							echo"<label>" . t('City') . "</label>";
+							echo"<input type='text' name='localcity' value='" . $this->escape($this->city) . "'>";
+							echo"<label>" . $this->translation['ps zip code'] . "</label>";
+							echo"<input type='text' name='localpostalcode' value='" . ($this->escape($this->zip) != '0' ? $this->escape($this->zip) : '') . "'> ";
+							echo"<label style='display:block; padding-right: 25px' >" . t('Residential Address?') . "</label>";							
+                            echo"<input type='checkbox' name='localisresidential' id='localisresidential' value='1' " . ( $this->escape($this->home_is_residential) == 1 ? 'CHECKED' :'') . ">";
+     }   // end if
+                            echo "<div class='pad20 clear'></div>";
+                            echo "<div class='pad20 clear'></div><br>";
+                            
+         if($this->escape($this->label_ps_permanent_address)){
+			echo "<p style='float:left;font-size:14px;'>" . t('Next of Kin') ."/" . $this->escape($this->label_ps_permanent_address) . "</p>";
+			echo "<div class='pad20 clear'></div><br>";
+			echo "<label id='province_id_lbl'>" . @$this->translation['Region A (Province)'] . "</label>";
+			renderFilter($this->locations, 1, 'permanent-geo1', $this->escape($this->permanentgeo1), 'permanent-geo2');
+			if ( $this->setting['display_region_b'] ) {
+				echo "<label id='district_id_lbl'>" . @$this->translation['Region B (Health District)'] . "</label>";
+				renderFilter($this->locations, 2, 'permanent-geo2', $this->escape($this->permanentgeo2), ($this->setting['display_region_c']?'permanent-geo3':false));
+			}
+			if ( $this->setting['display_region_c'] ) {
+				echo "<label id='region_c_id_lbl'>" . @$this->translation['Region C (Local Region)'] . "</label>";
+				renderFilter($this->locations, 3, 'permanent-geo3', $this->escape($this->permanentgeo3), false);
+			}
+			echo "<label>" . t('Address 1') . "</label>";
+			echo "<input type='text' name='permanent-address1' value='" . $this->escape($this->permanentaddress1) . "'>";
+			echo "<label>" . t('Address 2') . "</label>";
+			echo "<input type='text' name='permanent-address2' value='" . $this->escape($this->permanentaddress2) . "'>";
+			echo"<label>" . t('City') . "</label>";
+			echo"<input type='text' name='permanent-city' value='" . $this->escape($this->permanentcity) . "'>";
+			echo"<label>" . $this->translation['ps zip code'] . "</label>";
+			echo"<input type='text' name='permanent-postalcode' value='" . $this->escape($this->permanentzip) . "'> ";				
+}
+                            ?>
+                            <!-- TA: added 7/22/2014 END -->
                             
                             <div class="pad20 clear"></div>
 							<div class="pad20 clear"></div>
-							<p style="float:left;font-size:14px;"><?php echo t('Next of Kin Address'); ?></p>
-							<div class="pad20 clear"></div><br>
-
-							<label id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></label>
-						<?php
-							renderFilter($this->locations, 1, 'permanent-geo1', $this->escape($this->permanentgeo1), 'permanent-geo2');
-							if ( $this->setting['display_region_b'] ) {
-							?>
-							<label id="district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?></label>
-							<?php
-							renderFilter($this->locations, 2, 'permanent-geo2', $this->escape($this->permanentgeo2), ($this->setting['display_region_c']?'permanent-geo3':false));
-							}
-
-							if ( $this->setting['display_region_c'] ) {
-							?>
-							<label id="region_c_id_lbl"><?php echo (@$this->translation['Region C (Local Region)']); ?></label>
-							<?php
-							renderFilter($this->locations, 3, 'permanent-geo3', $this->escape($this->permanentgeo3), false);
-							}
-						?>
-
-							<label><?php echo t('Address 1'); ?></label>
-							<input type="text" name="permanent-address1" value="<?php echo $this->escape($this->permanentaddress1);?>">
-
-							<label><?php echo t('Address 2'); ?></label>
-							<input type="text" name="permanent-address2" value="<?php echo $this->escape($this->permanentaddress2);?>" >
-
-							<label><?php echo t('City'); ?></label>
-							<input type="text" name="permanent-city" value="<?php echo $this->escape($this->permanentcity);?>" >
-
-							<label><?php echo t('Postal code / ZIP'); ?></label>
-							<input type="text" name="permanent-postalcode" value="<?php echo $this->escape($this->permanentzip);?>">
+							
+							
+							
 
 							<div class="pad20 clear"></div>
 							<p style="float:left;font-size:14px;"><?php echo t('Other Contact Information'); ?></p>
@@ -485,6 +491,11 @@
 
 							<label><?php echo t('Email 2'); ?></label>
 							<input type="text" name="email_secondary" value="<?php echo $this->escape($this->email2);?>">
+							
+							<!-- TA: add - START  -->
+							<label><?php echo t('Emergency Contact'); ?></label>
+							<input type="text" name="emergcontact" value="<?php echo $this->escape($this->emergcontact);?>">
+							<!-- TA: add - END  -->
 
 							<div class="pad20 clear"></div>
 							<p style="float:left;font-size:14px;"><?php echo t('Student Information'); ?></p>
@@ -493,17 +504,20 @@
 							<label><?php echo t('Student ID'); ?></label>
 							<input type="text" name="studentid" id="studentid" value="<?php echo $this->escape($this->studentid);?>">
 
-							<label><?php echo t('Religious Denomination'); ?></label>
-							<select name="studenttype" id="studenttype" class="comboeditable"<?php echo !$this->hascohort ? " disabled" : "";?>>
-								<option value="0"><?php echo t('Select...'); ?></option>
-<?php
-	foreach ($this->lookupstudenttypes as $studenttype){
-?>
-								<option value="<?php echo $studenttype['id']; ?>"<?php echo $this->studenttype == $studenttype['id'] ? " selected" : ""; ?>> <?php echo $studenttype['studenttype']; ?></option>
-<?php
-	}
-?>
-							</select>
+							<!-- TA: added 07/22/2014 START -->
+							<?php
+								if($this->escape($this->label_ps_religious_denomin)){
+									echo "<label>" . $this->escape($this->label_ps_religious_denomin) . "</label>";
+									echo "<select name='studenttype' id='studenttype' class='comboeditable' " . (!$this->hascohort ? ' disabled' : '') .">";
+								echo "<option value='0'>" . t('Select...') . "</option>";
+								foreach ($this->lookupstudenttypes as $studenttype){
+								echo "<option value='" . $studenttype['id'] . "' " . ($this->studenttype == $studenttype['id'] ? ' selected' : '') . ">";
+								echo $studenttype['studenttype'] . "</option>";
+								}
+								echo "</select>";
+								}
+								?>
+							<!-- TA: added 07/22/2014 END -->
 
 							<label><?php echo t('Date of Enrollment'); ?></label>
 							<input type="text" name="enrollmentdate" readonly value="<?php echo $this->escape($this->enrollmentdate);?>"<?php echo !$this->hascohort ? " disabled" : "";?>>
@@ -540,7 +554,7 @@
 ?>
 							</select>
 
-							<label><?php echo t('Program Enrolled in'); ?></label>
+							<label><?php echo $this->translation['ps program enrolled in'] ?></label>
 							<select name="cadre" id="cadre" disabled>
 								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
@@ -591,22 +605,62 @@
 							<div class="clear pad20"></div>
 
 							<div class="pad20 clear"></div>
-							<p style="float:left;"><?php echo t('Tutor advisor'); ?></p>
+							
+							<!-- TA: added 7/25/2014-->
+							<p style="float:left;"><?php echo $this->translation['ps tutor'] . ' advisor'; ?></p>
 							<div class="pad20 clear"></div>
 
-							<label><?php echo t('Tutor Advisor'); ?></label>
+							<label><?php echo $this->translation['ps tutor'] . ' advisor'; ?></label>
 							<select id="tutoradvisor" name="tutoradvisor">
 								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
 	foreach ($this->gettutors as $tutor){
 ?>
-								<option value="<?php echo $tutor[id]; ?>"<?php echo ($this->escape($this->advisor) == $tutor[id] ? " selected" : "") ?>><?php echo $tutor[first_name] . " " . $tutor[last_name]; ?></option>
+								<option value="<?php echo $tutor['id']; ?>"<?php echo ($this->escape($this->advisor) == $tutor['id'] ? " selected" : "") ?>><?php echo $tutor['first_name'] . " " . $tutor['last_name']; ?></option>
 <?php
 	}
 ?>
 							</select>
-
-
+							
+							<!-- TA: add 'Prior Education' section - START -->
+							<div class="clear pad20"></div>
+							<p style="float:left;"><?php echo t('Prior Education'); ?></p>
+							<div class="pad20 clear"></div> 
+							<?php
+								if($this->escape($this->label_hscomldate)){
+									echo "<label>" . $this->escape($this->label_hscomldate) . "</label>";
+									echo "<input type='text' class='calendarbox' name='hscomldate' id='hscomldate' value='" . $this->escape($this->hscomldate) . "';>";
+								}
+								if($this->escape($this->label_lastinstatt)){
+									echo "<label>" . $this->escape($this->label_lastinstatt) . "</label>";
+									echo "<input type='text' name='lastinstatt' id='lastinstatt' value='" . $this->escape($this->lastinstatt) . "';>";
+								}
+								if($this->escape($this->label_schoolstartdate)){
+									echo "<label>" . $this->escape($this->label_schoolstartdate) . "</label>";
+									echo "<input type='text' class='calendarbox' name='schoolstartdate' id='schoolstartdate' value='" . $this->escape($this->schoolstartdate) . "';>";
+								}
+								if($this->escape($this->label_equivalence)){
+									echo "<label>" . $this->escape($this->label_equivalence) . "</label>";
+									$val = 0;
+									$checked = '';
+									if($this->escape($this->equivalence) == 1){
+										$val = 1;
+										$checked = 'CHECKED';
+									}
+									echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type='checkbox' name='equivalence' id='equivalence' value='1' " .  $checked . ">";
+								}
+								if($this->escape($this->label_lastunivatt)){
+									echo "<label>" . $this->escape($this->label_lastunivatt) . "</label>";
+									echo "<input type='text' name='lastunivatt' id='lastunivatt' value='" . $this->escape($this->lastunivatt) . "';>";
+								}
+								if($this->escape($this->label_personincharge)){
+									echo "<label>" . $this->escape($this->label_personincharge) . "</label>";
+									echo "<input type='text' name='personincharge' id='personincharge' value='" . $this->escape($this->personincharge) . "';>";
+								}
+							?>   
+							
+							<!-- TA: add 'Prior Education' section - END -->
+							
 							<div class="clear pad20"></div>
 						 	<p style="float : left;"><?php echo t('Facility After Graduation'); ?></p>
 							<div class="clear pad20"></div>
@@ -635,7 +689,7 @@
 	}
 ?>
 			</select>
-
+						
 							<div class="pad20 clear"></div>
 							<p style="float:left;font-size:14px;"><?php echo t('Comments'); ?></p>
 							<div class="pad20 clear"></div>
@@ -643,6 +697,25 @@
 							<div class="clear"></div>
 							<textarea name="comments" id="comments" style="float:right; height:80px; margin-right:12px;" class="mainformholdertextarea"><?php echo $this->escape($this->comments);?></textarea>
 							<div class="clear"></div>
+							<br>
+							
+							<!-- TA: added 7/22/2014 START -->
+							<?php
+								if($this->escape($this->label_custom_field1)){
+									echo "<label style='text-align : left;'>" . $this->escape($this->label_custom_field1) . "</label>";
+									echo "<input type='text' name='custom_field1' id='custom_field1' value='" . $this->escape($this->custom_field1) . "';>";
+								}
+								if($this->escape($this->label_custom_field2)){
+									echo "<label style='text-align : left;'>" . $this->escape($this->label_custom_field2) . "</label>";
+									echo "<input type='text' name='custom_field2' id='custom_field2' value='" . $this->escape($this->custom_field2) . "';>";
+								}
+								if($this->escape($this->label_custom_field3)){
+									echo "<label style='text-align : left;'>" . $this->escape($this->label_custom_field3) . "</label>";
+									echo "<input type='text' name='custom_field3' id='custom_field3' value='" . $this->escape($this->custom_field3) . "';>";
+								}
+								?>
+								<!-- TA: added 7/22/2014 END -->
+								
 						</div>
 						<div></div>
 						<div class="pad20 clear"></div>
@@ -699,7 +772,7 @@
 						</div>
 					</div>
 					<div style="width :100%; ">
-						<p style="margin:15px 0 15px 0;font-weight:bold;"><?php echo t('Clinical Allocation'); ?></p>
+						<p style="margin:15px 0 15px 0;font-weight:bold;"><?php echo  $this->translation['ps clinical allocation'] ?></p>
 						<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 							<thead>
 								<tr>
@@ -732,11 +805,14 @@
 						</table>
 						<div style="text-align : right;">
 							<br>
-							<input type="submit" name="practicumpopupbutton" id="practicumpopupbutton" value="Update clinical allocation" class="tsbutton green large">
-						</div>
+							<!-- TA: added 7/25/2014 -->
+							<?php
+							echo "<input type='submit' name='practicumpopupbutton' id='practicumpopupbutton' value='Update " . $this->translation['ps clinical allocation'] . "' class='tsbutton green large'>";
+							?>
+							</div>
 					</div>
 					<div style="width :100%; ">
-						<p style="margin:15px 0 15px 0;font-weight:bold;"><?php echo t('Exams (licensure/registration)'); ?></p>
+						<p style="margin:15px 0 15px 0;font-weight:bold;"><?php echo "Exams (" . $this->translation['ps license and registration'] . ")"; ?></p>
 						<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 							<thead>
 								<tr>

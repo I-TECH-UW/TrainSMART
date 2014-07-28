@@ -88,7 +88,7 @@
 							<select name="title" >
 								<option value="0"><?php echo t('Select...'); ?></option>
 							<?php foreach ($this->gettitle as $fetchtitle){ ?>
-								<option value="<?php echo $fetchtitle[id]; ?>"<?php echo ($this->escape($this->selid) == $fetchtitle[id] ? " selected" : "") ?>><?php echo $fetchtitle[title_phrase]; ?></option>
+								<option value="<?php echo $fetchtitle['id']; ?>"<?php echo ($this->escape($this->selid) == $fetchtitle['id'] ? " selected" : "") ?>><?php echo $fetchtitle['title_phrase']; ?></option>
 							<?php } ?>
 							</select>
 
@@ -104,17 +104,20 @@
 							<label><?php echo t('School ID'); ?></label>
 							<input type="text" name="nationalid" value="<?php echo $this->escape($this->nationalid);?>">
 
-							<label><?php echo t('Nationality'); ?></label>
-							<select name="nationality">
-								<option value="0"><?php echo t('Select...'); ?></option>
-<?php
-	foreach ($this->lookupnationalities as $nationality){
-?>
-								<option value="<?php echo $nationality['id']; ?>"<?php echo $nationality['id'] == $this->escape($this->nationality) ? " selected" : ""; ?>><?php echo $nationality['nationality']; ?></option>
-<?php
-	}
-?>
-							</select>
+							<!-- TA: added 07/22/2014 START -->
+							<?php
+								if($this->escape($this->label_ps_nationality)){
+									echo "<label>" . $this->escape($this->label_ps_nationality) . "</label>";
+									echo "<select name='nationality'>";
+									echo "<option value='0'>" . t('Select...') . "</option>";
+									foreach ($this->lookupnationalities as $nationality){
+									echo "<option value='" . $nationality['id'] . "' " . ($nationality['id'] == $this->escape($this->nationalityid) ? ' selected' : '') . ">" . $nationality['nationality'] . "</option>";
+									}
+									echo "</select>";
+								}
+								?>
+							<!-- TA: added 07/22/2014 END -->
+							
 
 							<label><?php echo t('Gender'); ?></label>
 							<select name="gender">
@@ -125,31 +128,46 @@
 
 							<label><?php echo t('Date of birth'); ?></label>
 							<input type="text" class="calendarbox" name="dob" id="dob" value="<?php echo $this->escape($this->dob);?>">
-
+							
+							<!-- TA: added 7/22/2014 START -->
 							<div class="pad20 clear"></div>
-							<p style="float:left;font-size:14px;"><?php echo t('Permanent Address'); ?></p>
-							<div class="pad20 clear"></div>
-
-<?php  region_filters_dropdown_ps($this, 'permanent');  ?>
-
-							<label><?php echo t('Address 1'); ?></label>
-							<input type="text" name="address1" value="<?php echo $this->escape($this->address1);?>">
-
-							<label><?php echo t('Address 2'); ?></label>
-							<input type="text" name="address2" value="<?php echo $this->escape($this->address2);?>" >
-
-
-							<label><?php echo t('City'); ?></label>
-							<input type="text" name="city" value="<?php echo $this->escape($this->city);?>" >
-
-							<label><?php echo t('Postal code / ZIP'); ?></label>
-							<input type="text" name="postalcode" value="<?php echo $this->escape($this->postalcode);?>">
-
-							<label><?php echo t('Cellphone'); ?></label>
-							<input type="text" name="localcell" value="<?php echo $this->escape($this->cell);?>" >
-
-							<label><?php echo t('Cellphone 2'); ?></label>
-							<input type="text" name="localcell2" value="<?php echo $this->escape($this->cell2);?>" >
+							<?php
+								if($this->escape($this->label_marital_status)){
+									echo "<label>" . $this->escape($this->label_marital_status) . "</label>";
+									echo "<select name='marital_status' id='marital_status'>";
+									echo "<option value='na'>" . t('Select...') . "</option>";
+									echo "<option value='single' " . ($this->escape($this->marital_status) == 'single' ? ' selected' : '') . ">Single</option>";
+									echo "<option value='married' " . ($this->escape($this->marital_status) == 'married' ? ' selected' : '') . ">Married</option>";
+									echo "<option value='divorced' " . ($this->escape($this->marital_status) == 'divorced' ? ' selected' : '') . ">Divorced</option>";
+									echo "<option value='widowed' " . ($this->escape($this->marital_status) == 'widowed' ? ' selected' : '') . ">Widowed</option>";
+									echo "</select>";
+								}
+								if($this->escape($this->label_spouse_name)){
+									echo "<label>" . $this->escape($this->label_spouse_name) . "</label>";
+									echo "<input type='text' name='spouse_name' id='spouse_name' value='" . $this->escape($this->spouse_name) . "';>";
+								}
+								
+								echo "<div class='pad20 clear'></div>";
+		if($this->escape($this->label_ps_permanent_address)){
+				echo "<div class='pad20 clear'></div>";
+				echo "<p style='float:left;font-size:14px;'>" . $this->escape($this->label_ps_permanent_address) . "</p>";
+				echo "<div class='pad20 clear'></div><br>";
+				region_filters_dropdown_ps($this, 'permanent');
+				echo "<label>" . t('Address 1') . "</label>";
+				echo "<input type='text' name='address1' value='" . $this->escape($this->address1) . "'>";
+				echo "<label>" . t('Address 2') . "</label>";
+				echo "<input type='text' name='address2' value='" . $this->escape($this->address2) . "'>";
+				echo"<label>" . t('City') . "</label>";
+				echo"<input type='text' name='city' value='" . $this->escape($this->city) . "'>";
+				echo"<label>" . $this->escape($this->label_ps_zip_code) . "</label>";
+				echo"<input type='text' name='postalcode' value='" . $this->escape($this->postalcode) . "'> ";
+				echo "<label>" . t('Cellphone') . "</label>";
+				echo "<input type='text' name='localcell' value='" . $this->escape($this->cell) . "'>";
+				echo "<label>" . t('Cellphone 2') . "</label>";
+				echo "<input type='text' name='localcell2' value='" . $this->escape($this->cell2) . "'>";
+}
+								?>
+								<!-- TA: added 7/22/2014 END -->
 
 							<div class="pad20 clear"></div>
 							<p style="float:left;font-size:14px;"><?php echo t('Facility Information'); ?></p>
@@ -321,6 +339,42 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
 
 							<label style="text-align : left;"><?php echo t('Comments'); ?></label>
 							<textarea name="comments" ><?php echo $this->escape($this->comments);?></textarea>
+							
+							<!-- TA: added 7/22/2014 START -->
+							<div class="clear"></div><br clear="all"/>
+							<?php
+							if($this->escape($this->label_specialty)){
+								echo "<label style='text-align : left;'>" . $this->escape($this->label_specialty) . "</label>";
+								echo "<select name='specialty'>";
+								echo "<option value='0'>" . t('Select...') . "</option>";
+								foreach ($this->getspecialty as $fetchspecialty){
+									echo "<option value='" . $fetchspecialty['id'] . "'" . ($this->escape($this->spid) == $fetchspecialty['id'] ? " selected" : "") . ">" . $fetchspecialty['specialty_phrase'] . "</option>";
+								}
+								echo "</select>";
+							}
+							if($this->escape($this->label_contract_type)){
+								echo "<label style='text-align : left;'>" . $this->escape($this->label_contract_type) . "</label>";
+								echo "<select name='contract_type'>";
+								echo "<option value='0'>" . t('Select...') . "</option>";
+								foreach ($this->getcontracts as $fetchcontract){
+									echo "<option value='" . $fetchcontract['id'] . "'" . ($this->escape($this->ctid) == $fetchcontract['id'] ? " selected" : "") . ">" . $fetchcontract['contract_phrase'] . "</option>";
+								}
+								echo "</select>";
+							}
+								if($this->escape($this->label_custom_field1)){
+									echo "<label style='text-align : left;'>" . $this->escape($this->label_custom_field1) . "</label>";
+									echo "<input type='text' name='custom_field1' id='custom_field1' value='" . $this->escape($this->custom_field1) . "';>";
+								}
+								if($this->escape($this->label_custom_field2)){
+									echo "<label style='text-align : left;'>" . $this->escape($this->label_custom_field2) . "</label>";
+									echo "<input type='text' name='custom_field2' id='custom_field2' value='" . $this->escape($this->custom_field2) . "';>";
+								}
+								if($this->escape($this->label_custom_field3)){
+									echo "<label style='text-align : left;'>" . $this->escape($this->label_custom_field3) . "</label>";
+									echo "<input type='text' name='custom_field3' id='custom_field3' value='" . $this->escape($this->custom_field3) . "';>";
+								}
+								?>
+								<!-- TA: added 7/22/2014 END -->
 
 							<div class="clear"></div><br clear="all"/>
 

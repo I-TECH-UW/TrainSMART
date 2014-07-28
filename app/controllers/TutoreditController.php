@@ -114,7 +114,9 @@ die($query);
 		$this->view->assign('nationalid',$details['person'][0]['national_id']);
 		$this->view->assign('gender',$details['person'][0]['gender']);
 		$this->view->assign('cell',$details['person'][0]['phone_mobile']);
-		$this->view->assign('cell2',$details['person'][0]['phone_mobile_2']);
+		//TA: there is no 'phone_mobile_2' column in PERSON table -> link it 'phone_home' column
+		//$this->view->assign('cell2',$details['person'][0]['phone_mobile_2']);
+		$this->view->assign('cell2',$details['person'][0]['phone_home']);
 		$this->view->assign('dob',$dob);
 
 		$helper = new Helper();
@@ -176,6 +178,10 @@ die($query);
 		$this->view->assign('facilityid',$details['tutor'][0]['facilityid']);
     $facility = $helper->getFacilities();
     $this->view->assign('facilities',$facility);
+    
+    //TA: added 7/24/2014
+    $this->view->assign('spid',$details['tutor'][0]['specialty']);
+    $this->view->assign('ctid',$details['tutor'][0]['contract_type']);
 
 		//$this->view->assign('cadre',$details['tutor'][0]['cadre']);
     
@@ -192,7 +198,7 @@ die($query);
 		$this->view->assign('languagesspoken',$details['tutor'][0]['languagesspoken']);
 		$this->view->assign('positionsheld',$details['tutor'][0]['positionsheld']);
 		$this->view->assign('comments',$details['tutor'][0]['comments']);
-		$this->view->assign('nationality',$details['tutor'][0]['nationalityid']);
+		$this->view->assign('nationalityid',$details['tutor'][0]['nationalityid']);
     
 
 		# PERMANENT ADDRESS
@@ -232,6 +238,15 @@ die($query);
 		// For Title List
 		$listtitle = $Tutoredit->ListTitle();
 		$this->view->assign('gettitle',$listtitle);
+		
+		//TA: added 7/24/2014
+		// For Specialty List
+		$listsp = $Tutoredit->ListSpecialty();
+		$this->view->assign('getspecialty',$listsp);
+		// For contract type List
+		$listct = $Tutoredit->ListContractType();
+		$this->view->assign('getcontracts',$listct);
+		
 #
 #		# GETTING COHORTS
 #		$listcohort = $Tutoredit->ListCohort();
@@ -246,6 +261,43 @@ die($query);
 #		$this->view->assign('gettutors',$listtutors);
 
 		$this->view->assign('status', ValidationContainer::instance());
+		
+		//TA: added 7/22/2014 - 7/23/2014
+		$sysTable = new System();
+		$sysRows = $sysTable->fetchAll()->toArray();
+		foreach($sysRows as $row) {
+			foreach($row as $column=>$value) {
+				if($column == 'ps_display_custom_field1' && $value != '0'){
+					$this->view->assign('label_custom_field1',$this->view->translation['ps custom field 1']);
+					$this->view->assign('custom_field1',$details['person'][0]['custom_field1']);
+				}else if($column == 'ps_display_custom_field2' && $value != '0'){
+					$this->view->assign('label_custom_field2',$this->view->translation['ps custom field 2']);
+					$this->view->assign('custom_field2',$details['person'][0]['custom_field2']);
+				}else if($column == 'ps_display_custom_field3' && $value != '0'){
+					$this->view->assign('label_custom_field3',$this->view->translation['ps custom field 3']);
+					$this->view->assign('custom_field3',$details['person'][0]['custom_field3']);
+				}else if($column == 'ps_display_marital_status' && $value != '0'){
+					$this->view->assign('label_marital_status',$this->view->translation['ps marital status']);
+					$this->view->assign('marital_status',$details['person'][0]['marital_status']);
+				}else if($column == 'ps_display_spouse_name' && $value != '0'){
+					$this->view->assign('label_spouse_name',$this->view->translation['ps spouse name']);
+					$this->view->assign('spouse_name',$details['person'][0]['spouse_name']);
+				}else if($column == 'ps_display_specialty' && $value != '0'){
+					$this->view->assign('label_specialty',$this->view->translation['ps specialty']);
+					$this->view->assign('specialty',$details['tutor'][0]['specialty']);
+				}else if($column == 'ps_display_contract_type' && $value != '0'){
+					$this->view->assign('label_contract_type',$this->view->translation['ps contract type']);
+					$this->view->assign('contract_type',$details['tutor'][0]['contract_type']);
+				}else if($column == 'ps_display_nationality' && $value != '0'){ 
+					$this->view->assign('label_ps_nationality',$this->view->translation['ps nationality']);
+				}else if($column == 'ps_display_local_address' && $value != '0'){ 
+					$this->view->assign('label_ps_local_address',$this->view->translation['ps local address']);
+				}else if($column == 'ps_display_permanent_address' && $value != '0'){ 
+					$this->view->assign('label_ps_permanent_address',$this->view->translation['ps permanent address']);
+				}
+				$this->view->assign('label_ps_zip_code',$this->view->translation['ps zip code']);
+			}
+		}
 	}
 }
 ?>
