@@ -622,11 +622,13 @@
 ?>
 							</select>
 							
-							<!-- TA: add 'Prior Education' section - START -->
-							<div class="clear pad20"></div>
-							<p style="float:left;"><?php echo t('Prior Education'); ?></p>
-							<div class="pad20 clear"></div> 
+							<!-- TA: add 'Prior Education' section - START --> 
 							<?php
+							if($this->escape($this->label_hscomldate) || $this->escape($this->label_lastinstatt) || $this->escape($this->label_schoolstartdate) ||
+								$this->escape($this->label_equivalence) || $this->escape($this->label_lastunivatt) || $this->escape($this->label_personincharge)){
+								echo "<div class='clear pad20'></div>";
+								echo "<p style='float:left;'>" . t('Prior Education') . "</p>";
+								echo "<div class='pad20 clear'></div>";
 								if($this->escape($this->label_hscomldate)){
 									echo "<label>" . $this->escape($this->label_hscomldate) . "</label>";
 									echo "<input type='text' class='calendarbox' name='hscomldate' id='hscomldate' value='" . $this->escape($this->hscomldate) . "';>";
@@ -656,6 +658,7 @@
 								if($this->escape($this->label_personincharge)){
 									echo "<label>" . $this->escape($this->label_personincharge) . "</label>";
 									echo "<input type='text' name='personincharge' id='personincharge' value='" . $this->escape($this->personincharge) . "';>";
+								}
 								}
 							?>   
 							
