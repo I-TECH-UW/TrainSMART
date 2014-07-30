@@ -40,14 +40,9 @@ ALTER TABLE `_system` ADD COLUMN `ps_display_permanent_address` tinyint(1) NOT N
 ALTER TABLE `_system` ADD COLUMN `ps_display_religious_denomin` tinyint(1) NOT NULL DEFAULT '0';
 ALTER TABLE `_system` ADD COLUMN `ps_display_nationality` tinyint(1) NOT NULL DEFAULT '0';
 
-DELETE FROM translation WHERE key_phrase='ps tutor';
-DELETE FROM translation WHERE key_phrase='ps clinical allocation';
-DELETE FROM translation WHERE key_phrase='ps local address';
+UPDATE translation SET is_deleted = 0 WHERE key_phrase = 'ps clinical allocation';
+UPDATE translation SET is_deleted = 0 WHERE key_phrase = 'ps local address';
 
-INSERT INTO `translation`(`id`,`uuid`,`key_phrase`,`phrase`,`modified_by`,`created_by`,`is_deleted`,`timestamp_updated`,`timestamp_created`) VALUES (140,'cad5f2ae-eb65-11e3-ba95-00163ec54890','ps tutor','Teacher',1,null,0,'2014-07-25 13:40:02','2014-07-22 00:00:00');
-INSERT INTO `translation`(`id`,`uuid`,`key_phrase`,`phrase`,`modified_by`,`created_by`,`is_deleted`,`timestamp_updated`,`timestamp_created`) VALUES (141,'e85d3918-eb65-11e3-ba95-00163ec54890','ps zip code','Postal Code / ZIP',1,null,0,'2014-07-25 13:40:02',null);
-INSERT INTO `translation`(`id`,`uuid`,`key_phrase`,`phrase`,`modified_by`,`created_by`,`is_deleted`,`timestamp_updated`,`timestamp_created`) VALUES (143,'aaf55df6-0b88-11e4-a0e7-00163ec54890','ps clinical allocation','Clinical Allocation',1,null,0,'2014-07-25 13:40:02','2014-07-22 00:00:00');
-INSERT INTO `translation`(`id`,`uuid`,`key_phrase`,`phrase`,`modified_by`,`created_by`,`is_deleted`,`timestamp_updated`,`timestamp_created`) VALUES (144,'aaf57444-0b88-11e4-a0e7-00163ec54890','ps local address','Local Address',1,null,0,'2014-07-25 13:40:02','2014-07-22 00:00:00');
 INSERT INTO `translation`(`id`,`uuid`,`key_phrase`,`phrase`,`modified_by`,`created_by`,`is_deleted`,`timestamp_updated`,`timestamp_created`) VALUES (147,'49bce7cd-0e9e-11e4-a9c4-90b11c6d81a0','ps high school completion date','High School Completion Date',1,null,0,'2014-07-25 13:40:02','2014-07-18 00:00:00');
 INSERT INTO `translation`(`id`,`uuid`,`key_phrase`,`phrase`,`modified_by`,`created_by`,`is_deleted`,`timestamp_updated`,`timestamp_created`) VALUES (148,'a1104d8a-1105-11e4-a9c4-90b11c6d81a0','ps last school attended','Last School Attended',1,null,0,'2014-07-25 13:40:02','2014-07-21 00:00:00');
 INSERT INTO `translation`(`id`,`uuid`,`key_phrase`,`phrase`,`modified_by`,`created_by`,`is_deleted`,`timestamp_updated`,`timestamp_created`) VALUES (149,'d888fd3f-1105-11e4-a9c4-90b11c6d81a0','ps school start date','Admission to School Date',1,null,0,'2014-07-25 13:40:02','2014-07-21 00:00:00');
@@ -66,7 +61,6 @@ INSERT INTO `translation`(`id`,`uuid`,`key_phrase`,`phrase`,`modified_by`,`creat
 INSERT INTO `translation`(`id`,`uuid`,`key_phrase`,`phrase`,`modified_by`,`created_by`,`is_deleted`,`timestamp_updated`,`timestamp_created`) VALUES (163,'b0bae1cf-11b3-11e4-919a-90b11c6d81a0','ps spouse name','Spouse Name',1,null,0,'2014-07-25 13:40:02','2014-07-22 00:00:00');
 INSERT INTO `translation`(`id`,`uuid`,`key_phrase`,`phrase`,`modified_by`,`created_by`,`is_deleted`,`timestamp_updated`,`timestamp_created`) VALUES (164,'09653e93-11ca-11e4-919a-90b11c6d81a0','ps specialty','Specialty',1,null,0,'2014-07-25 13:40:02','2014-07-22 00:00:00');
 INSERT INTO `translation`(`id`,`uuid`,`key_phrase`,`phrase`,`modified_by`,`created_by`,`is_deleted`,`timestamp_updated`,`timestamp_created`) VALUES (165,'0a97a688-11ca-11e4-919a-90b11c6d81a0','ps contract type','Type Of Contract',1,null,0,'2014-07-25 13:40:02','2014-07-22 00:00:00');
-
 
 CREATE TABLE `tutor_contract_option` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
