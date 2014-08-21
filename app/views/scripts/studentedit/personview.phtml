@@ -284,7 +284,17 @@
 				<div id="subcontent">
 
 						<div class="historyDiv">
-
+						
+						<!-- TA: added 8/8/2014 START -->
+						<b>ID</b>&nbsp;<?php echo $this->escape($this->id);?><br>
+						<b>Date created</b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>
+						<b>Created by</b>&nbsp;<?php echo "{$this->creator->first_name} {$this->creator->middle_name} {$this->creator->last_name}"; ?><br>
+						<b>Date updated</b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
+						<b>Updated by</b>&nbsp;<?php echo "{$this->updater->first_name} {$this->updater->middle_name} {$this->updater->last_name}"; ?><br>
+						<b>UUID</b>&nbsp;<?php echo $this->escape($this->uuid);?><br>
+						<hr>
+						<!-- TA: added 8/8/2014 END -->
+						
 						<a href="<?php echo Settings::$COUNTRY_BASE_URL; ?>/studentedit/transcript/id/<?php echo $this->escape($this->id); ?>" target="_blank" >Student Transcript Report</a> <br/>
 
 							<a href="#" onclick="doDelete(); return false;"><?php tp('Delete this Person');?></a>
@@ -296,7 +306,6 @@
 									}
 								}
 							</script>
-
 						</div>
 
 					<div id="contentheader">
@@ -668,9 +677,10 @@
 						 	<p style="float : left;"><?php echo t('Facility After Graduation'); ?></p>
 							<div class="clear pad20"></div>
 
-<?php region_filters_dropdown_ps($this, 'post'); ?>
+<!--TA: fixed bug: 08/04/2014: Provine and District are displayed twice  -->
+<?php //region_filters_dropdown_ps($this, 'post'); //TA: also this code not working to submit info into DB ?> 
 
-							<label id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></label>
+							  <label id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></label>
 <?php renderFilter($this->locations, 1, 'postgeo1', $this->postgeo1, 'postgeo2');?>
 <?php if ( $this->setting['display_region_b'] ) { ?>
 							<label id="district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?></label>

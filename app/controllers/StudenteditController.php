@@ -158,7 +158,6 @@ class StudenteditController extends ITechController {
 			$this->view->assign('cell2',$update['phone_home']);
 			$this->view->assign('cadre',$update['cadre']);
 
-
 			$geo1 = $listgeo[0]['geog1'];
 			$geo2 = $listgeo[0]['geog2'];
 			$geo3 = $listgeo[0]['geog3'];
@@ -323,6 +322,19 @@ class StudenteditController extends ITechController {
 		$this->view->assign('nationalid',$details['person'][0]['national_id']);
 		$this->view->assign('graduated',$details['student'][0]['isgraduated']);
 		$this->view->assign('cohortid',$details['link_cohort'][0]['id_cohort']);
+		
+		//TA: added 8/8/2014 - 8/10/2014
+		$dateCreated = date("d-m-Y",strtotime($details['person'][0]['timestamp_created']));
+		$this->view->assign('dateCreated',$dateCreated);
+		$dateModified = date("d-m-Y",strtotime($details['person'][0]['timestamp_updated']));
+		$this->view->assign('dateModified',$dateModified);
+		$this->view->assign('uuid',$details['person'][0]['uuid']);		
+		require_once ('models/table/Person.php');
+		$personObj = new Person ( );
+		$created_by = $personObj->getPersonName($details['person'][0]['created_by']); 
+		$this->viewAssignEscaped('creator', $created_by);
+		$update_by = $personObj->getPersonName($details['person'][0]['modified_by']);
+		$this->viewAssignEscaped('updater', $update_by);
 
 		$this->view->assign('facilities',$helper->getFacilities());
 

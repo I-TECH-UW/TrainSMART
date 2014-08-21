@@ -122,8 +122,9 @@ class TrainingController extends ReportFilterHelpers {
 
 		if (($this->_getParam ( 'action' ) != 'add') and ! $this->hasACL ( 'training_organizer_option_all' ) and ((! $allowIds) or (array_search ( $rowRay ['training_organizer_option_id'], $allowIds ) === false))) {
 			$this->view->assign ( 'viewonly', 'disabled="disabled"' );
-			$this->view->assign ( 'pageTitle', t ( 'View' ).' '.t( 'Training' ) );
+			$this->view->assign ( 'pageTitle', t ( 'View' ).' '.t( 'Training' )); 
 		}
+		
 
 		if ($row->is_deleted) {
 			$this->_redirect ( 'training/deleted' );
@@ -525,7 +526,7 @@ class TrainingController extends ReportFilterHelpers {
 		$rowRay ['end-day'] = $parts [2];
 
 		// Drop downs
-		//$this->view->assign('dropDownTitle', DropDown::generateHtml('training_title_option','training_title_phrase',$rowRay['training_title_option_id'],($this->hasACL('training_title_option_all')?'training/insert-table':false), $this->view->viewonly,false));
+		//$this->view->assign('dropDownTitle', DropDown::generateHtml('training_title_option','training_title_phrase',$rowRay['training_title_option_id'],($this->hasACL('training_title_option_all')?'training/insert-table':false), $this->view->viewonly2,false)); 
 		$this->view->assign ( 'dropDownOrg', DropDown::generateHtml ( 'training_organizer_option', 'training_organizer_phrase', $rowRay ['training_organizer_option_id'], ($this->hasACL ( 'training_organizer_option_all' ) ? 'training/insert-table' : false), $this->view->viewonly, ($this->view->viewonly ? false : $allowIds) ) );
 		$this->view->assign ( 'dropDownLevel', DropDown::generateHtml ( 'training_level_option', 'training_level_phrase', $rowRay ['training_level_option_id'], 'training/insert-table', $this->view->viewonly ) );
 		$this->view->assign ( 'dropDownGotCir', DropDown::generateHtml ( 'training_got_curriculum_option', 'training_got_curriculum_phrase', $rowRay ['training_got_curriculum_option_id'], 'training/insert-table', $this->view->viewonly ) );
@@ -543,6 +544,7 @@ class TrainingController extends ReportFilterHelpers {
 		// add title link
 		if ($this->hasACL ( 'training_title_option_all' )) {
 			$this->view->assign ( 'titleInsertLink', " <a href=\"#\" onclick=\"addToSelect('" . str_replace ( "'", "\\" . "'", t ( 'Please enter your new' ) ) . " " . strtolower ( $this->view->translation ['Training'] . t('Name') ) . ":', 'select_training_title_option', '" . Settings::$COUNTRY_BASE_URL . "/training/insert-table/table/training_title_option/column/training_title_phrase/outputType/json'); return false;\">" . t ( 'Insert new' ) . "</a>" );
+			//$this->view->assign ( 'pageTitle', t ( 'View/Edit' ).' '.t( 'Training' )); //TA:11:
 		}
 
 		//get assigned evaluation

@@ -148,19 +148,36 @@ class UserController extends ReportFilterHelpers {
 		$acl = array ();
 		// all acls available and training_organizer_all except: 'master_approver' - this is done on the approvers page
 		//TA: added 7/22/2014 'acl_editor_tutor_specialty' and 'acl_editor_tutor_contract' to the list
-		$checkboxes = array('training_organizer_all', 'in_service', 'edit_course', 'view_course', 'edit_people', 'view_people', 'edit_facility', 'view_create_reports', 'edit_employee', 'edit_country_options', 'add_edit_users', 'training_organizer_option_all', 'training_title_option_all', 'approve_trainings', 'admin_files', 'use_offline_app', 'pre_service', 'facility_and_person_approver', 'edit_evaluations', 'duplicate_training', 'edit_training_location', 'acl_editor_training_category', 'acl_editor_people_qualifications', 'acl_editor_people_responsibility', 'acl_editor_training_organizer', 'acl_editor_people_trainer', 'acl_editor_training_topic', 'acl_editor_people_titles', 'acl_editor_training_level', 'acl_editor_people_trainer_skills', 'acl_editor_pepfar_category', 'acl_editor_people_languages', 'acl_editor_funding', 'acl_editor_people_affiliations', 'acl_editor_recommended_topic', 'acl_editor_nationalcurriculum', 'acl_editor_people_suffix', 'acl_editor_method', 'acl_editor_people_active_trainer', 'acl_editor_facility_types', 'acl_editor_ps_classes', 'acl_editor_facility_sponsors', 'acl_editor_ps_cadres', 'acl_editor_ps_degrees', 'acl_editor_ps_funding', 'acl_editor_ps_institutions', 'acl_editor_ps_languages', 'acl_editor_ps_nationalities', 'acl_editor_ps_joindropreasons', 'acl_editor_ps_sponsors', 'acl_editor_ps_tutortypes', 'acl_editor_ps_coursetypes', 'acl_editor_ps_religions', 'add_edit_users', 'acl_admin_training', 'acl_admin_people', 'acl_admin_facilities', 'acl_editor_refresher_course', 'import_training', 'import_training_location', 'import_facility', 'import_person', 'acl_editor_tutor_specialty', 'acl_editor_tutor_contract');
+		//TA:10: add to this list 'ps_edit_student', 'ps_view_student', 'ps_edit_student_grades', 'ps_view_student_grades'
+		$checkboxes = array('training_organizer_all', 'in_service', 'edit_course', 'view_course', 'edit_people', 
+				'view_people', 'edit_facility', 'view_create_reports', 'edit_employee', 'edit_country_options', 
+				'add_edit_users', 'training_organizer_option_all', 'training_title_option_all', 'approve_trainings', 
+				'admin_files', 'use_offline_app', 'pre_service', 'facility_and_person_approver', 'edit_evaluations', 
+				'duplicate_training', 'edit_training_location', 'acl_editor_training_category', 'acl_editor_people_qualifications', 
+				'acl_editor_people_responsibility', 'acl_editor_training_organizer', 'acl_editor_people_trainer', 'acl_editor_training_topic', 
+				'acl_editor_people_titles', 'acl_editor_training_level', 'acl_editor_people_trainer_skills', 'acl_editor_pepfar_category', 
+		'acl_editor_people_languages', 'acl_editor_funding', 'acl_editor_people_affiliations', 'acl_editor_recommended_topic', 'acl_editor_nationalcurriculum', 
+		'acl_editor_people_suffix', 'acl_editor_method', 'acl_editor_people_active_trainer', 'acl_editor_facility_types', 'acl_editor_ps_classes', 
+		'acl_editor_facility_sponsors', 'acl_editor_ps_cadres', 'acl_editor_ps_degrees', 'acl_editor_ps_funding', 'acl_editor_ps_institutions', 
+		'acl_editor_ps_languages', 'acl_editor_ps_nationalities', 'acl_editor_ps_joindropreasons', 'acl_editor_ps_sponsors', 'acl_editor_ps_tutortypes', 
+		'acl_editor_ps_coursetypes', 'acl_editor_ps_religions', 'add_edit_users', 'acl_admin_training', 'acl_admin_people', 'acl_admin_facilities', 
+		'acl_editor_refresher_course', 'import_training', 'import_training_location', 'import_facility', 'import_person', 'acl_editor_tutor_specialty', 
+		'acl_editor_tutor_contract'); 
 		foreach ($checkboxes as $value) {
 			$acl [$value] = ( ( $this->_getParam ( $value ) == $value || $this->_getParam($value) == 'on' ) ? $value : null);
 		}
 
+		
 		$checkboxes = array(
 			'edit_course' => 'view_course',
 			'edit_people' => 'view_people',
+			//'ps_edit_student' => 'ps_view_student', //TA:10: added 8/15/2014
+			//	'ps_edit_student_grades' => 'ps_view_student_grades', //TA:10: added 8/15/2014
 			'edit_facility' => 'view_facility');
 		foreach ($checkboxes as $key => $value) {
 			$acl [$value] = ( $this->_getParam ( $key ) == $value ? $value : null );
 		}
-
+		
 		MultiOptionList::updateOptions ( 'user_to_acl', 'acl', 'user_id', $user_id, 'acl_id', $acl );
 		MultiOptionList::updateOptions ( 'user_to_organizer_access', 'training_organizer_option', 'user_id', $user_id, 'training_organizer_option_id', $this->_getParam ( 'training_organizer_option_id' ) );
 
