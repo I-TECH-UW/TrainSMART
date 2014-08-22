@@ -323,7 +323,7 @@ class StudenteditController extends ITechController {
 		$this->view->assign('graduated',$details['student'][0]['isgraduated']);
 		$this->view->assign('cohortid',$details['link_cohort'][0]['id_cohort']);
 		
-		//TA: added 8/8/2014 - 8/10/2014
+		//TA:6: added 8/8/2014 - 8/10/2014
 		$dateCreated = date("d-m-Y",strtotime($details['person'][0]['timestamp_created']));
 		$this->view->assign('dateCreated',$dateCreated);
 		$dateModified = date("d-m-Y",strtotime($details['person'][0]['timestamp_updated']));
@@ -331,10 +331,18 @@ class StudenteditController extends ITechController {
 		$this->view->assign('uuid',$details['person'][0]['uuid']);		
 		require_once ('models/table/Person.php');
 		$personObj = new Person ( );
-		$created_by = $personObj->getPersonName($details['person'][0]['created_by']); 
-		$this->viewAssignEscaped('creator', $created_by);
-		$update_by = $personObj->getPersonName($details['person'][0]['modified_by']);
-		$this->viewAssignEscaped('updater', $update_by);
+		$created_by_id = $details['person'][0]['created_by'];
+		$created_by = "N/A";
+		if($created_by_id != null){
+			$created_by = $personObj->getPersonName($created_by_id);
+		}
+		$update_by_id = $details['person'][0]['created_by'];
+		$update_by = "N/A";
+		if($update_by_id != null){
+			$update_by = $personObj->getPersonName($update_by_id);
+		}
+ 		$this->viewAssignEscaped('creator', $created_by);
+ 		$this->viewAssignEscaped('updater', $update_by);
 
 		$this->view->assign('facilities',$helper->getFacilities());
 
