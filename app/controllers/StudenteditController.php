@@ -324,9 +324,11 @@ class StudenteditController extends ITechController {
 		$this->view->assign('cohortid',$details['link_cohort'][0]['id_cohort']);
 		
 		//TA:6: added 8/8/2014 - 8/10/2014	
-		$dateCreated = strtotime($details['person'][0]['timestamp_created']) != '' ? date("d-m-Y",strtotime($details['person'][0]['timestamp_created'])) : "N/A";
+		$dc = strtotime($details['person'][0]['timestamp_created']);	
+		$dateCreated = $dc != '' && $dc > 0 ? date("d-m-Y",$dc) : "N/A";
 		$this->view->assign('dateCreated',$dateCreated);
-		$dateModified = strtotime($details['person'][0]['timestamp_updated']) != '' ? date("d-m-Y",strtotime($details['person'][0]['timestamp_updated'])): "N/A";
+		$dm = strtotime($details['person'][0]['timestamp_updated']);
+		$dateModified = $dm != '' && $dm >0 ? date("d-m-Y",$dm): "N/A";
 		$this->view->assign('dateModified',$dateModified);
 		$this->view->assign('uuid',$details['person'][0]['uuid']);		
 		require_once ('models/table/Person.php');
