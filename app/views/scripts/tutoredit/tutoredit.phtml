@@ -57,31 +57,28 @@
 			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
 			<div id="content">
 				<?php require_once 'views/scripts/status.phtml'; ?>
+				
 				<div id="subcontent">
 
-						<div class="historyDiv">
-
-							<a href="#" onclick="doDelete(); return false;"><?php tp('Delete this Person');?></a>
-							<script language="JavaScript">
-								function doDelete() {
-									if(confirm("<?php tp('Are you sure you wish to delete this person?');?>")) {
-										window.location = '<?php echo $this->base_url;?>/person/delete/id/<?php echo $this->id;?>';
-										return false;
-									}
-								}
-							</script>
-
-						</div>
+						
 
 					<div id="contentheader">
 						<h2><?php echo t("Edit/View Tutor's Record"); ?></h2><br>
 					</div>
 					<form  action="" id="peopleadd" method="post">
+					
+					<!-- TA:6: added 8/8/2014 table for better allignment-->
+				<table style="width:100%">
+				<tr>
+				<td>
+				
 						<div class="mainformholder">
 							<div class="pad50 clear"></div>
 							<input type="hidden" name="id" value="<?php echo $this->escape($this->id);?>">
 							<input type="hidden" name="tutorid" value="<?php echo $this->escape($this->tutuotid);?>">
 
+							
+							
 							<p><?php echo t('Personal Information'); ?></p>
 
 		 					<label><?php echo t('Title'); ?></label>
@@ -262,6 +259,34 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
 
 							</div>
 						</div>
+						
+						<!-- TA:6: added 8/8/2014 START -->
+				</td>
+				<td style="width:20%" valign='top' align='left'>
+				<div class="historyDiv">
+						<b>ID</b>&nbsp;<?php echo $this->escape($this->id);?><br>
+						<b>Date created</b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>						
+						<b>Created by</b>&nbsp;<?php echo ($this->creator == "N/A" ? "N/A" : "{$this->creator->first_name} {$this->creator->middle_name} {$this->creator->last_name}") ?><br>
+						<b>Date updated</b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
+						<b>Updated by</b>&nbsp;<?php echo ($this->updater == "N/A" ? "N/A" : "{$this->updater->first_name} {$this->updater->middle_name} {$this->updater->last_name}") ?><br>
+						<b>UUID</b>&nbsp;<?php echo $this->escape($this->uuid);?><br>
+						<hr>
+						<!-- TA:6: added 8/8/2014 END -->
+
+							<a href="#" onclick="doDelete(); return false;"><?php tp('Delete this Person');?></a>
+							<script language="JavaScript">
+								function doDelete() {
+									if(confirm("<?php tp('Are you sure you wish to delete this person?');?>")) {
+										window.location = '<?php echo $this->base_url;?>/person/delete/id/<?php echo $this->id;?>';
+										return false;
+									}
+								}
+							</script>
+
+						</div>
+				</td>
+				</tr>
+				</table>
 
 					<div class="clear pad50"></div>
 					<div style="width:100%;">
@@ -390,6 +415,7 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
 
 					<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
 				</div>
+				
 			</div>
 		</div>
 	</body>

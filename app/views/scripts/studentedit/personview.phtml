@@ -283,38 +283,20 @@
 
 				<div id="subcontent">
 
-						<div class="historyDiv">
-						
-						<!-- TA:6: added 8/8/2014 START -->
-						<b>ID</b>&nbsp;<?php echo $this->escape($this->id);?><br>
-						<b>Date created</b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>						
-						<b>Created by</b>&nbsp;<?php echo ($this->creator == "N/A" ? "N/A" : "{$this->creator->first_name} {$this->creator->middle_name} {$this->creator->last_name}") ?><br>
-						<b>Date updated</b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
-						<b>Updated by</b>&nbsp;<?php echo ($this->updater == "N/A" ? "N/A" : "{$this->updater->first_name} {$this->updater->middle_name} {$this->updater->last_name}") ?><br>
-						<b>UUID</b>&nbsp;<?php echo $this->escape($this->uuid);?><br>
-						<hr>
-						<!-- TA:6: added 8/8/2014 END -->
-						
-						<a href="<?php echo Settings::$COUNTRY_BASE_URL; ?>/studentedit/transcript/id/<?php echo $this->escape($this->id); ?>" target="_blank" >Student Transcript Report</a> <br/>
-
-							<a href="#" onclick="doDelete(); return false;"><?php tp('Delete this Person');?></a>
-							<script language="JavaScript">
-								function doDelete() {
-									if(confirm("<?php tp('Are you sure you wish to delete this person?');?>")) {
-										window.location = '<?php echo $this->base_url;?>/person/delete/id/<?php echo $this->id;?>';
-										return false;
-									}
-								}
-							</script>
-						</div>
 
 					<div id="contentheader">
-						<h2><?php echo t('Edit Student Record'); ?></h2><br>
+						<h2><?php echo t('Edit Student Record'); ?></h2><br><br>
 					</div>
-					<div class="pad50 clear"></div>
+					<div class="clear pad20"></div>
 					<form  action="#" id="peopleadd" method="post">
 						<input type="hidden" name="id" value="<?php echo $this->escape($this->id); ?>">
 						<input type="hidden" name="sid" value="<?php echo $this->escape($this->sid); ?>">
+						
+						<!-- TA:6: added 8/8/2014 table for better allignment-->
+				<table style="width:100%">
+				<tr>
+				<td>
+				
 						<div class="mainformholder" style="height:100%;">
 							<label><?php echo t('Graduated?'); ?></label>
 							<select name="graduated">
@@ -336,6 +318,8 @@
 	}
 ?>
 							</select>
+							
+							
 
 							<div class="clear pad20"></div>
 							<p style=""><?php echo t('Personal Information'); ?></p><br>
@@ -730,6 +714,38 @@
 								<!-- TA: added 7/22/2014 END -->
 								
 						</div>
+						
+						<!-- TA:6: added 8/8/2014 START -->
+				</td>
+				<td style="width:20%" valign='top' align='left'>
+						<div class="historyDiv">
+						
+						<!-- TA:6: added 8/8/2014 START -->
+						<b>ID</b>&nbsp;<?php echo $this->escape($this->id);?><br>
+						<b>Date created</b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>						
+						<b>Created by</b>&nbsp;<?php echo ($this->creator == "N/A" ? "N/A" : "{$this->creator->first_name} {$this->creator->middle_name} {$this->creator->last_name}") ?><br>
+						<b>Date updated</b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
+						<b>Updated by</b>&nbsp;<?php echo ($this->updater == "N/A" ? "N/A" : "{$this->updater->first_name} {$this->updater->middle_name} {$this->updater->last_name}") ?><br>
+						<b>UUID</b>&nbsp;<?php echo $this->escape($this->uuid);?><br>
+						<hr>
+						<!-- TA:6: added 8/8/2014 END -->
+						
+						<a href="<?php echo Settings::$COUNTRY_BASE_URL; ?>/studentedit/transcript/id/<?php echo $this->escape($this->id); ?>" target="_blank" >Student Transcript Report</a> <br/>
+
+							<a href="#" onclick="doDelete(); return false;"><?php tp('Delete this Person');?></a>
+							<script language="JavaScript">
+								function doDelete() {
+									if(confirm("<?php tp('Are you sure you wish to delete this person?');?>")) {
+										window.location = '<?php echo $this->base_url;?>/person/delete/id/<?php echo $this->id;?>';
+										return false;
+									}
+								}
+							</script>
+						</div>
+						</td>
+				</tr>
+				</table>
+						
 						<div></div>
 						<div class="pad20 clear"></div>
 						<div class="mainformholder" style="height : 100px; margin-top:30px;">
