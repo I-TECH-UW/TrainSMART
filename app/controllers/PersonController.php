@@ -1173,7 +1173,9 @@ class PersonController extends ReportFilterHelpers {
 				$where []= 'p.id = ptt.person_id ';
 			}
 			if ($criteria ['person_type'] == 'is_trainer'){
-				$where []= 'p.id = trn.person_id ';
+				//$where []= 'p.id = trn.person_id '; //old code
+				//TA:14: should check if person 'active' 
+				$where []= "p.id = trn.person_id and p.active='active'";
 			}
 
 			if ($criteria ['person_type'] == 'is_unattached_person'){
@@ -1208,6 +1210,7 @@ class PersonController extends ReportFilterHelpers {
 
 			$sql .= " ORDER BY " . " `p`.`last_name` ASC, " . " `p`.`first_name` ASC";
 
+			//print($sql);
 			$rowArray = $db->fetchAll ( $sql );
 
 			if ($criteria ['outputType']) {
@@ -1222,6 +1225,7 @@ class PersonController extends ReportFilterHelpers {
 
 			$this->viewAssignEscaped ( 'results', $rowArray );
 			$this->view->assign ( 'count', count ( $rowArray ) );
+			
 		}
 
 		$this->view->assign ( 'criteria', $criteria );
