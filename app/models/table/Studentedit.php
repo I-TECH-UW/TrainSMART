@@ -474,21 +474,17 @@ class Studentedit extends ITechTable
 			$param3 = $param3[count($param3) - 1];
 		}
 		
-		//TA:7: fixed bug to edit student info (add address in DB is not NULL constrain)
-		$param4 = $param['permanent-address1'] ? $param['permanent-address1'] : 0;
-		$param5 = $param['permanent-address2'] ? $param['permanent-address2'] : 0;
-		$param6 = $param['permanent-city'] ? $param['permanent-city'] : 0;
-		$param7 = $param['permanent-postalcode'] ? $param['permanent-postalcode'] : 0;
 
+		//TA:7: fixed bug to edit student info (add address in DB is not NULL constrain)
 		if (count ($result) == 0){
 			# ADDING ADDRESS RECORD
 			$db = $this->dbfunc();
 			$address = array(
 				'id_addresstype'	=>	1,
-				'address1'			=>	$param4,
-				'address2'			=>	$param5,
-				'city'				=>	$param6,
-				'postalcode'		=>	$param7,
+				'address1'			=>	$param['permanent-address1'] ? $param['permanent-address1'] : "",
+				'address2'			=>	$param['permanent-address2'] ? $param['permanent-address2'] : "",
+				'city'				=>	$param['permanent-city'] ? $param['permanent-city'] : "",
+				'postalcode'		=>	$param['permanent-postalcode'] ? $param['permanent-postalcode'] : "",
 				'id_geog1'			=>	$param1,
 				'id_geog2'			=>	$param2,
 				'id_geog3'			=>	$param3,
