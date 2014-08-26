@@ -475,7 +475,7 @@ class Studentedit extends ITechTable
 		}
 		
 
-		//TA:7: fixed bug to edit student info (add address in DB is not NULL constrain)
+		//TA:15: fixed bug to edit student info (add address in DB is not NULL constrain)
 		if (count ($result) == 0){
 			# ADDING ADDRESS RECORD
 			$db = $this->dbfunc();

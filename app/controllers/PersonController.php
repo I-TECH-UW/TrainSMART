@@ -1210,7 +1210,7 @@ class PersonController extends ReportFilterHelpers {
 
 			$sql .= " ORDER BY " . " `p`.`last_name` ASC, " . " `p`.`first_name` ASC";
 
-			//print($sql);
+			print($sql);
 			$rowArray = $db->fetchAll ( $sql );
 
 			if ($criteria ['outputType']) {
