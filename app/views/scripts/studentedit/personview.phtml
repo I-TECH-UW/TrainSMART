@@ -207,16 +207,8 @@
 					<th><?php echo t('Instructor'); ?></th>
 					<th><?php echo t('Start date'); ?></th>
 					<th><?php echo t('End date'); ?></th>
-					<?php if($this->setting['ps_display_ca_mark']) : ?>
-					<th><?php echo t($this->translation['ps ca mark']); ?></th>
-					<?php endif; ?>
-					<?php if($this->setting['ps_display_exam_mark']) : ?>
-					<th><?php echo t($this->translation['ps exam mark']); ?></th>
-					<?php endif; ?>
 					<th><?php echo t('Grade'); ?></th>
-					<?php if($this->setting['ps_display_credits']) : ?>
-					<th><?php echo t($this->translation['ps credits']); ?></th>
-					<?php endif; ?>
+					<th><?php echo t('Credits'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -228,19 +220,10 @@
 					<td class="" style="width : 200px;"><?php echo $classes['first_name'] . " " . $classes['last_name']; ?></td>
 					<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($classes['startdate'])); ?></td>
 					<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($classes['enddate'])); ?></td>
-					<?php if($this->setting['ps_display_ca_mark']) : ?>
-						<td class="" style="width : 120px;"><input type="text" name="camark[<?php echo $classes['id'] ?>]" id="camark[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['camark'])) != "n/a" ? $classes['camark'] : ""; ?>" style="width : 100%;"></td>
-					<?php endif; ?>
-					<?php if($this->setting['ps_display_exam_mark']) : ?>
-						<td class="" style="width : 120px;"><input type="text" name="exammark[<?php echo $classes['id'] ?>]" id="exammark[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['exammark'])) != "n/a" ? $classes['exammark'] : ""; ?>" style="width : 100%;"></td>
-					<?php endif; ?>
 					<td class="" style="width : 120px;"><input type="text" name="grade[<?php echo $classes['id'] ?>]" id="grade[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['grade'])) != "n/a" ? $classes['grade'] : ""; ?>" style="width : 100%;"></td>
-					<?php if($this->setting['ps_display_credits']) : ?>
-						<td class="" style="width : 120px;"><input type="text" name="credits[<?php echo $classes['id'] ?>]" id="credits[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['credits'])) != "n/a" ? $classes['credits'] : ""; ?>" style="width : 100%;"></td>
-					<?php endif; ?>				
+					<td class="" style="width : 120px;"><input type="text" name="credits[<?php echo $classes['id'] ?>]" id="credits[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['credits'])) != "n/a" ? $classes['credits'] : ""; ?>" style="width : 100%;"></td>
 				</tr>
 <?php
-
 	}
 ?>
 			</tbody>
@@ -687,16 +670,8 @@
 									<th><?php echo t('End date'); ?></th>
 									<th><?php echo t('Instructor'); ?></th>
 									<th><?php echo t('Course type'); ?></th>
-									<?php if($this->setting['ps_display_ca_mark']) : ?>
-										<th><?php echo t($this->translation['ps ca mark']); ?></th>
- 									<?php endif; ?>
- 									<?php if($this->setting['ps_display_exam_mark']) : ?>
-										<th><?php echo t($this->translation['ps exam mark']); ?></th>
-									<?php endif; ?>
 									<th><?php echo t('Grade'); ?></th>
-									<?php if($this->setting['ps_display_credits']) : ?>
-									<th class=""><?php echo t($this->translation['ps credits']); ?></th>
-									<?php endif; ?>
+									<th class=""><?php echo t('Credits'); ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -710,19 +685,8 @@
 									<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($row['enddate'])); ?></td>
 									<td class="" style="width : 120px;"><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
 									<td class="" style="width : 120px;"><?php echo $row['coursetype']; ?></td>
-									<?php if($this->setting['ps_display_ca_mark']) : ?>
-										<td class="" style="width : 120px;"><?php echo $row['camark']; ?></td>
-									<?php endif; ?>
-									
-									<?php if($this->setting['ps_display_exam_mark']) : ?>
-										<td class="" style="width : 120px;"><?php echo $row['exammark']; ?></td>
-									<?php endif; ?>
-									
 									<td class="" style="width : 120px;"><?php echo $row['grade']; ?></td>
-									
-									<?php if($this->setting['ps_display_credits']) : ?>
-										<td class="" style="width : 120px;"><?php echo $row['credits']; ?></td>
-									<?php endif; ?>
+									<td class="" style="width : 120px;"><?php echo $row['credits']; ?></td>
 								</tr>
 <?php
 	}

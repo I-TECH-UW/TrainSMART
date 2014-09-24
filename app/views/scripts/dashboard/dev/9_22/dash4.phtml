@@ -87,16 +87,16 @@ print ScriptContainer::$instance->renderJSHead();
 
 			<!-------   /////////////////////////// get data ////////////////////// -->
 
-			<div>	
-			
-<script src="http://code.highcharts.com/highcharts.js"></script>
-<script src="http://code.highcharts.com/modules/data.js"></script>
-<script src="http://code.highcharts.com/modules/drilldown.js"></script>
+			<div>
+
+				<script src="http://code.highcharts.com/highcharts.js"></script>
+				<script src="http://code.highcharts.com/modules/data.js"></script>
+				<script src="http://code.highcharts.com/modules/drilldown.js"></script>
 
 
 
-<!-- Data from www.netmarketshare.com. Select Browsers => Desktop share by version. Download as tsv. -->
-<pre id="tsv" style="display:none">Browser Version	Total Market Share
+				<!-- Data from www.netmarketshare.com. Select Browsers => Desktop share by version. Download as tsv. -->
+				<pre id="tsv" style="display: none">Browser Version	Total Market Share
 Microsoft Internet Explorer 8.0	26.61%
 Microsoft Internet Explorer 9.0	16.96%
 Chrome 18.0	8.01%
@@ -160,20 +160,8 @@ Microsoft Internet Explorer 8.0 - Tencent Traveler Edition	0.09%</pre>
 			<!-------   /////////////////////////// make top buttons ////////////////////// -->
 
 			<div class="rightdiv" style="float: right;">
-				<a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/partner/search'; ?>"
-					class="tsbutton green large"><?php tp('Partners'); ?> &raquo;</a> <a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/index'; ?>"
-					class="tsbutton green large"><?php tp('Dash Main'); ?> &raquo;</a>
-				<a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash0'; ?>"
-					class="tsbutton green large"><?php tp('Dash 0'); ?> &raquo;</a> <a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash1'; ?>"
-					class="tsbutton green large"><?php tp('Dash 1'); ?> &raquo;</a> <a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash2'; ?>"
-					class="tsbutton green large"><?php tp('Dash 2'); ?> &raquo;</a> <a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash3'; ?>"
-					class="tsbutton green large"><?php tp('Dash 3'); ?> &raquo;</a>
+				<?php  require_once('views/scripts/dashboard/top_buttons.phtml');?>
+					
 			</div>
 
 			<div class="clear"></div>
@@ -183,119 +171,169 @@ Microsoft Internet Explorer 8.0 - Tencent Traveler Edition	0.09%</pre>
 			<!-------   /////////////////////////// make left buttons ////////////////////// -->
 
 			<div class="nav-buttons">
-				<a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/partner/search'; ?>"
-					class="tsbutton nav large"><?php tp('Partners'); ?> &raquo;</a>
-				<div class="hrNav"></div>
-				<a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/index'; ?>"
-					class="tsbutton nav large"><?php tp('Dash Main'); ?> &raquo;</a>
-				<div class="hrNav"></div>
-				<a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash0'; ?>"
-					class="tsbutton nav large"><?php tp('Dash 0'); ?> &raquo;</a>
-				<div class="hrNav"></div>
-				<a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash1'; ?>"
-					class="tsbutton nav large"><?php tp('Dash 1'); ?> &raquo;</a>
-				<div class="hrNav"></div>
-				<a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash2'; ?>"
-					class="tsbutton nav large"><?php tp('Dash 2'); ?> &raquo;</a>
-				<div class="hrNav"></div>
-				<a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash3'; ?>"
-					class="tsbutton nav large"><?php tp('Dash 3'); ?> &raquo;</a>
-				<div class="hrNav"></div>
+				<?php  require_once('views/scripts/dashboard/left_buttons.phtml');?>
+				
 			</div>
 
 			<!-------   /////////////////////////// charts ////////////////////// -->
 
+			<body class="docs slim framebox_body">
+				<div id="allCharts" class="container">
+					<div id="toprow" class="container">
+						<div id="homecontent" class="container">
+							<div id="homecontent-mid" class="row rounded">
+								<div id="homebanner" class="rounded">
+									<div class="sliderdiv">
+										2,1
 
-<body class="docs slim framebox_body">
+										<table align="center">
+											<tr valign="top">
+												<td style="width: 50%;">
+													<div id="map_div" style="width: 400px; height: 300;"></div>
+												</td>
+												<td style="width: 50%;">
+													<div id="table_div"></div>
+												</td>
+											</tr>
+											<tr>
+												<td colspan=2>
+													<div id="chart_div"
+														style="align: center; width: 700px; height: 300px;"></div>
+												</td>
+											</tr>
+										</table>
+									</div>
 
-	<div id="allCharts" class="container">
-
-		<div id="toprow" class="container">
-
-			<div id="homecontent" class="container">
-				<div id="homecontent-mid" class="row rounded">
-					<div id="homebanner" class="rounded">
-
-						<!-------   /////////////////////////// chart 1,1 ////////////////////// -->
-						<p style="padding-left: 1em"><strong>1,1</strong></p>
-					
-						<!-------   /////////////////////////// chart 1,2 ////////////////////// -->
-						<p style="padding-left: 1em"><strong>1,2</strong></p>
-						<div class="main-search">
-							
-						</div>
-						<!-------   /////////////////////////// end chart 1,2 ////////////////////// -->
-					</div>
-				</div>
-			</div>
-
-		</div>
-
-
-		<div class="clear"></div>
-		<div class="hrGrey"></div>
-		<div class="clear"></div>
-
-
-		<div id="bottomrow" class="container">
-
-
-			<div id="homecontent" class="container">
-				<div id="homecontent-mid" class="row rounded">
-					<div id="homebanner" class="rounded">
-					
-						<!-------   /////////////////////////// chart 2,1 ////////////////////// -->
-						2,1
-					
-					
-					
-					<div id="highChart_div" style="min-width: 310px; height: 400px; max-width: 400px; max-height: 400px; margin: 0 auto" data-highcharts-chart="0"><div class="highcharts-co
-
-						<!-------   /////////////////////////// chart 2,2 ////////////////////// -->
-						2,2
-						<div class="main-search">
-							
-							
-							
-
+									<div class="main-search">
+										2,2
+										<div style="float: left">
+											<div id="chart22_div"></div>
+											<button class="reset"
+												onclick="drawRegionsMap();$('#table').html('');">Reset</button>
+										</div>
+										<div class='state-data'>
+											<div id="table22" style="width: 300px; height: 300px;"></div>
+										</div>
+										<p id="output_string">...</p>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-
-
-		</div>
-
-	</div>
-
-
-
 
 				<div class="clear"></div>
 				<div class="hrGrey"></div>
 				<div class="clear"></div>
 
-				<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-	<!-------   /////////////////////////// main ////////////////////// -->				
+				<div id="bottomrow" class="container">
 
-				<script type="text/javascript">
+
+					<div id="homecontent" class="container">
+						<div id="homecontent-mid" class="row rounded">
+							<div id="homebanner" class="rounded">
+
+								<!-------   /////////////////////////// chart 2,1 ////////////////////// -->
+								2,1
+								<div id="highChart_div"
+									style="min-width: 310px; height: 400px; max-width: 400px; max-height: 400px; margin: 0 auto"
+									data-highcharts-chart="0">
+									<div
+										class="highcharts-co
+
+						<!-------   /////////////////////////// chart 2,2 ////////////////////// -->
+						2,2
+						<div 
+										class="main-search"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+
+		<div class="clear"></div>
+		<div class="hrGrey"></div>
+		<div class="clear"></div>
+
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+		<!-------   /////////////////////////// main ////////////////////// -->
+
+		<script type="text/javascript">
   google.load('visualization', '1.0', {'packages':['corechart', 'table', 'gauge', 'controls']});
   google.setOnLoadCallback(apiLoaded);
   function apiLoaded() {
-	  document.getElementById("allCharts").style.marginLeft="110px";
-   
+	  document.getElementById("allCharts").style.marginLeft="130px";
+
+	initialize();
+	drawRegionsMap();
     drawHighchart();
    
   }
 
+  <!-------   /////////////////////////// 1,1 script ////////////////////// -->
 
+  google.load('visualization', '1', {'packages': ['table', 'map', 'corechart']});
+ 
+
+  function initialize() {
+    // The URL of the spreadsheet to source data from.  // 'https://spreadsheets.google.com/pub?key=pCQbetd-CptF0r8qmCOlZGg'); 'file:///C:/Users/rossumg/_tmp/ss.xlsx');
+    var query = new google.visualization.Query('https://spreadsheets.google.com/pub?key=pCQbetd-CptF0r8qmCOlZGg');
+    query.send(draw);
+  }
+
+  function draw(response) {
+    if (response.isError()) {
+      alert('Error in query');
+    }
+
+    var ticketsData = response.getDataTable();
+    var chart = new google.visualization.ColumnChart(
+        document.getElementById('chart_div'));
+    //chart.draw(ticketsData, {'isStacked': true, 'legend': 'bottom', 'vAxis': {'title': 'Number of tickets'}});
+
+    var geoData = google.visualization.arrayToDataTable([
+      ['Lat', 'Lon', 'Name', 'Action?'],
+      [6.2711, 3.2344, 'Lagos, Nigeria', true],
+      [9.1032, 7.1050, 'Abuja Nigeria', true],
+      [4.4721, 6.5955, 'Port Harcourt Nigeria', true],
+      [6.26, 7.29, 'Enugu Nigeria', false],
+     ]);
+
+    var geoView = new google.visualization.DataView(geoData);
+    geoView.setColumns([0, 1]);
+
+    var table = new google.visualization.Table(document.getElementById('table_div'));
+    table.draw(geoData, {showRowNumber: false});
+
+    var map =
+        new google.visualization.Map(document.getElementById('map_div'));
+    map.draw(geoView, {showTip: true});
+
+    // Set a 'select' event listener for the table.
+    // When the table is selected, we set the selection on the map.
+    google.visualization.events.addListener(table, 'select',
+        function() {
+          map.setSelection(table.getSelection());
+        });
+
+    // Set a 'select' event listener for the map.
+    // When the map is selected, we set the selection on the table.
+    google.visualization.events.addListener(map, 'select',
+        function() {
+          table.setSelection(map.getSelection());
+        });
+  }
+
+
+  <!-------   /////////////////////////// 1,1 end script ////////////////////// -->
+
+
+  <!-------   /////////////////////////// 1,2 script ////////////////////// -->
+
+	<?php  require_once('views/scripts/dashboard/chart1_script.phtml');?>
+
+  <!-------   /////////////////////////// 1,2 end script ////////////////////// -->
 
   <!-------   /////////////////////////// 2,1 script ////////////////////// -->
 
@@ -419,9 +457,6 @@ Microsoft Internet Explorer 8.0 - Tencent Traveler Edition	0.09%</pre>
 
   <!-------   /////////////////////////// 2,2 script ////////////////////// -->
 
-	
-
-
   <!-------   /////////////////////////// 2,2 end script ////////////////////// -->
   
 
@@ -465,18 +500,18 @@ Microsoft Internet Explorer 8.0 - Tencent Traveler Edition	0.09%</pre>
 </script>
 
 
-				<script>
+		<script>
       
       devsite.github.Link.convertAnchors();
       
         window.prettyPrint();
-			
+        </script>
 
   <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
 
-</script>
 
-			</body>
+
+</body>
 
 </html>
 

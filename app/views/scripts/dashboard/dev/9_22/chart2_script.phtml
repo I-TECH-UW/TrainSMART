@@ -1,0 +1,121 @@
+ 
+ google.load('visualization', '1', { 'packages': ['geochart', 'table'] });
+		    google.setOnLoadCallback(drawRegionsMap2);
+		    var currentRegion;
+		    function drawRegionsMap2() {
+		        var data = google.visualization.arrayToDataTable([
+		            // Results For US States
+		            // State format must be "US-**"
+		            // US represents region, while the ** section represents the individual state 
+		          ['Country', 'Views'],
+		          ['Germany', 200],
+		          ['United States', 300],
+		          ['Brazil', 400],
+		          ['Canada', 500],
+		          ['France', 600],
+		          ['Malawi', 600],
+		          ['Nigeria', 600],
+		          ['RU', 700]
+		 
+		        ]);
+		 
+		        var chart = new google.visualization.GeoChart(
+		        document.getElementById('chart2_div'));
+		        chart.draw(data, options);
+		 
+		       var geochart = new google.visualization.GeoChart(
+		            document.getElementById('chart2_div'));
+		            var options = { 
+		                width: 556,
+		                height: 347,
+		                region: '002', // Africa
+		                colorAxis: {colors: ['red', 'blue']} // Map Colors 
+		            };
+		 
+		       google.visualization.events.addListener(geochart,'regionClick', function (eventData) {
+		            // maybe you want to change the data table here...
+		            currentRegion = eventData.region;
+		            options['region'] = eventData.region;
+		            options['resolution'] = 'provinces';
+		            
+		                // Add Results for Individual State
+		                // Format needs to match what is below so that it locates the correct position
+		                // Additional information can be added to array
+		                // Uses first value in 2nd column to determine scale for markers
+
+
+		            document.getElementById("output_string").innerHTML = eventData.region;
+		            
+		            if(currentRegion == 'US') {
+		                //If it is a US State
+		                var data = google.visualization.arrayToDataTable([
+		                   ['State', 'Views'],
+		                   ['North Carolina', 300],
+		                   ['South Carolina', 300],
+		                   ['California', 300],
+		                   ['Texas', 400],
+		                ]);   		
+		            }else if(currentRegion == 'MW') {
+		            	//If it is a MW State
+		                var data = google.visualization.arrayToDataTable([
+		                   ['State', 'Views'],
+		                   ['R1', 300],
+		                   ['R2', 300],
+		                   ['R3', 300],
+		                   ['R4', 400],
+		                ]);
+		            }else if(currentRegion == 'NG') {
+		            	//If it is a MW State
+		                var data = google.visualization.arrayToDataTable([
+		                   ['State', 'Views'],
+		                   ['R1', 300],
+		                   ['R2', 300],
+		                   ['R3', 300],
+		                   ['R4', 400],
+		                ]);
+		            }else if (currentRegion.substring(0, 3) == "NG-") {
+		                // If it is a US city
+		                options['displayMode'] = 'markers';        
+		                var data = google.visualization.arrayToDataTable([
+		                    // Add Results for Individual State
+		                    // Format needs to match what is below so that it locates the correct position
+		                    // Additional information can be added to array
+		                    // Uses first value in 2nd column to determine scale for markers
+		                    ['City', 'Views', ],
+		                    ['C1, FC', 300 ],
+		                    ['C2, AB', 400],
+		                    ['C3, AD', 400],
+		                    ['C4, AK', 400],
+		                ]);
+		            }else if (currentRegion.substring(0, 3) == "US-") {
+		                // If it is a US city
+		                options['displayMode'] = 'markers';        
+		                var data = google.visualization.arrayToDataTable([
+		                    // Add Results for Individual State
+		                    // Format needs to match what is below so that it locates the correct position
+		                    // Additional information can be added to array
+		                    // Uses first value in 2nd column to determine scale for markers
+		                    ['City', 'Views', ],
+		                    ['Charlotte, NC', 300 ],
+		                    ['Raleigh, NC', 400],
+		                    ['Monroe, NC', 400],
+		                    ['Rock-Hill, SC', 400],
+		                ]);
+		 
+		            }else {
+		                //If it is a foreign city
+		                options['displayMode']= 'markers';
+		                var data = google.visualization.arrayToDataTable([
+		                ['City', 'Views'],
+		                ['Rome, Italy', 400],
+		                ['Milan, Italy', 500],
+		                ['Naples, Italy', 276],
+		                ]);
+		            }
+		            geochart.draw(data, options);
+		            var table = new google.visualization.Table(document.getElementById('table'));
+		            table.draw(data, null);
+		        });
+		        geochart.draw(data, options);
+		    };
+		    
