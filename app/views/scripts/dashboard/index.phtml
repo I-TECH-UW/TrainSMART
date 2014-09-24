@@ -1,0 +1,478 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'] . ' | ' . t('Dashboard');?></title>
+  <link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+
+      <link rel="stylesheet" type="text/css" href="https://google-developers.appspot.---com/_static/f7a896e076/css/screen-docs.css" />
+      <link rel="stylesheet" href="//www.google.com/cse/style/look/default.css" type="text/css" />
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300,400" type="text/css">
+      <script src="https://google-developers.appspot.com/_static/f7a896e076/js/prettify-bundle.js"></script>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    <script id="jqueryui" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js" defer async></script>
+    <script src="//www.google.com/jsapi?key=AIzaSyCZfHRnq7tigC-COeQRmoa9Cxr0vbrK6xw"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script src="https://google-developers.appspot.com/_static/f7a896e076/js/framebox.js"></script>
+
+
+</head>
+<body class="yui-skin-sam">
+
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+		<div id="headerpad">&nbsp;</div>
+			<div id="subcontent">
+				<div id="contentheader" style="float:left;">
+					<h1><?php print t('Welcome to the').' '.$this->translation['Application Name'];?></h1>
+				</div>
+				<div id="contentheaderNeighbor" style="float:left;display:block;margin-left:20px;min-width: 300px;max-width:500px;">
+					<p><?php print $this->setting['employee_header'];?></p>
+				</div>
+				
+			</div>
+	
+<!-------   /////////////////////////// get data ////////////////////// -->	
+			
+<div>	
+					
+<?php
+    $idx = 0;
+    $tdata = array();
+    
+	foreach ($this->getins as $getresult){
+?>
+
+<?php 
+ $tdata[$idx] = array($getresult['col1'], $getresult['col2']);
+ $idx = $idx+1;
+?>
+
+<?php
+	}
+?>
+
+</div>
+			
+<!-------   /////////////////////////// make buttons ////////////////////// -->					
+
+			<div class="rightdiv" style="float:right;">
+					<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/partner/search'; ?>" class="tsbutton green large"><?php tp('Partners'); ?> &raquo;</a>
+					<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/employee/search'; ?>" class="tsbutton green large"><?php tp('Employees'); ?> &raquo;</a>
+					<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/site/search'; ?>" class="tsbutton green large"><?php tp('Sites'); ?> &raquo;</a>
+					<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/reports/employees'; ?>" class="tsbutton green large"><?php tp('Reports'); ?> &raquo;</a>
+			</div>
+			
+			<div class="clear"></div>
+			<div class="hrGrey"></div>
+			<div class="clear"></div>
+	
+<!-------   /////////////////////////// chart ////////////////////// -->
+
+ <body class="docs slim framebox_body">
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<div id="dashboard_div" style="border: 1px solid #ccc; margin-top: 1em">
+  <p style="padding-left: 1em"><strong>Issued per person</strong></p>
+  <table class="columns">
+    <tr>
+      <td>
+        <div id="slider_div" style="padding-left: 15px"></div>
+      </td><td>
+        <div id="categoryPicker_div"></div>
+      </td>
+    </tr><tr>
+      <td>
+        <div id="chart_div" style="padding-top: 15px"></div>
+      </td><td>
+        <div id="table_div" style="padding-top: 30px"></div>
+      </td>
+    </tr>
+
+
+  </table>
+</div>
+
+<script type="text/javascript">
+  google.load('visualization', '1.0', {'packages':['corechart', 'table', 'gauge', 'controls']});
+  google.setOnLoadCallback(apiLoaded);
+  function apiLoaded() {
+    drawMainDashboard();
+  }
+
+  var programmaticSlider;
+  var programmaticChart;
+  function drawProgrammaticExample() {
+    var dashboard = new google.visualization.Dashboard(
+        document.getElementById('programmatic_dashboard_div'));
+    programmaticSlider = new google.visualization.ControlWrapper({
+      'controlType': 'NumberRangeFilter',
+      'containerId': 'programmatic_control_div',
+      'options': {
+        'filterColumnLabel': 'Issues',
+        'ui': {'labelStacking': 'vertical'}
+      }
+    });
+    programmaticChart  = new google.visualization.ChartWrapper({
+      'chartType': 'PieChart',
+      'containerId': 'programmatic_chart_div',
+      'options': {
+        'width': 300,
+        'height': 300,
+        'legend': 'none',
+        'chartArea': {'left': 15, 'top': 15, 'right': 0, 'bottom': 0},
+        'pieSliceText': 'value'
+      }
+    });
+    
+    var data = google.visualization.arrayToDataTable([
+      ['Name', 'Issues'],
+      ['Michael' , 5],
+      ['Elisa', 7],
+      ['Robert', 3],
+      ['Jon', 2],
+      ['Jessica', 6],
+      ['Aaron', 1],
+      ['Margareth', 8]
+     ]);
+
+    dashboard.bind(programmaticSlider, programmaticChart);
+    dashboard.draw(data);
+  }
+
+  function drawStringFilter() {
+    var dashboard = new google.visualization.Dashboard(
+        document.getElementById('stringFilter_dashboard_div'));
+    var control = new google.visualization.ControlWrapper({
+      'controlType': 'StringFilter',
+      'containerId': 'stringFilter_control_div',
+      'options': {
+        'filterColumnIndex': 0
+      }
+    });
+    var chart = new google.visualization.ChartWrapper({
+      'chartType': 'Table',
+      'containerId': 'stringFilter_chart_div',
+      'options': {'height': '15em', 'width': '20em'}
+    });
+    var data = google.visualization.arrayToDataTable([
+      ['Name', 'Age'],
+      ['Michael' , 12],
+      ['Elisa', 20],
+      ['Robert', 7],
+      ['Jon', 54],
+      ['Jessica', 22],
+      ['Aaron', 3],
+      ['Margareth', 42],
+      ['Miranda', 33]
+    ]);
+
+    dashboard.bind(control, chart);
+    dashboard.draw(data);
+  }
+
+  function drawNumberRangeFilter() {
+    var dashboard = new google.visualization.Dashboard(
+        document.getElementById('numberRangeFilter_dashboard_div'));
+    var control = new google.visualization.ControlWrapper({
+      'controlType': 'NumberRangeFilter',
+      'containerId': 'numberRangeFilter_control_div',
+      'options': {
+        'filterColumnIndex': 1,
+        'minValue': 0,
+        'maxValue': 60
+      }
+    });
+    var chart = new google.visualization.ChartWrapper({
+      'chartType': 'BarChart',
+      'containerId': 'numberRangeFilter_chart_div',
+      'options': {
+        'width': 400,
+        'height': 300,
+        'hAxis': {'minValue': 0, 'maxValue': 60},
+        'chartArea': {top: 0, right: 0, bottom: 0}
+      }
+    });
+    var data = google.visualization.arrayToDataTable([
+      ['Name', 'Age'],
+      ['Michael' , 12],
+      ['Elisa', 20],
+      ['Robert', 7],
+      ['Jon', 54],
+      ['Jessica', 22],
+      ['Aaron', 3],
+      ['Margareth', 42],
+      ['Miranda', 33]
+    ]);
+    dashboard.bind(control, chart);
+    dashboard.draw(data);
+  }
+
+  function drawCategoryFilter() {
+    var dashboard = new google.visualization.Dashboard(
+        document.getElementById('categoryFilter_dashboard_div'));
+    var control = new google.visualization.ControlWrapper({
+      'controlType': 'CategoryFilter',
+      'containerId': 'categoryFilter_control_div',
+      'options': {
+        'filterColumnIndex': 0,
+        'ui': {
+          'allowTyping': false,
+          'allowMultiple': true,
+          'selectedValuesLayout': 'belowStacked'
+        }
+      },
+      'state': {'selectedValues': ['CPU', 'Memory']}
+    });
+    var chart = new google.visualization.ChartWrapper({
+      'chartType': 'Gauge',
+      'containerId': 'categoryFilter_chart_div',
+      'options': {
+        'width': 400,
+        'height': 180
+      }
+    });
+    var data = google.visualization.arrayToDataTable([
+      ['Metric', 'Value'],
+      ['CPU' , 12],
+      ['Memory', 20],
+      ['Disk', 7],
+      ['Network', 54]
+    ]);
+    dashboard.bind(control, chart);
+    dashboard.draw(data);
+  }
+
+  function drawChartRangeFilter() {
+    var dashboard = new google.visualization.Dashboard(
+        document.getElementById('chartRangeFilter_dashboard_div'));
+
+    var control = new google.visualization.ControlWrapper({
+      'controlType': 'ChartRangeFilter',
+      'containerId': 'chartRangeFilter_control_div',
+      'options': {
+        // Filter by the date axis.
+        'filterColumnIndex': 0,
+        'ui': {
+          'chartType': 'LineChart',
+          'chartOptions': {
+            'chartArea': {'width': '90%'},
+            'hAxis': {'baselineColor': 'none'}
+          },
+          // Display a single series that shows the closing value of the stock.
+          // Thus, this view has two columns: the date (axis) and the stock value (line series).
+          'chartView': {
+            'columns': [0, 3]
+          },
+          // 1 day in milliseconds = 24 * 60 * 60 * 1000 = 86,400,000
+          'minRangeSize': 86400000
+        }
+      },
+      // Initial range: 2012-02-09 to 2012-03-20.
+      'state': {'range': {'start': new Date(2012, 1, 9), 'end': new Date(2012, 2, 20)}}
+    });
+
+    var chart = new google.visualization.ChartWrapper({
+      'chartType': 'CandlestickChart',
+      'containerId': 'chartRangeFilter_chart_div',
+      'options': {
+        // Use the same chart area width as the control for axis alignment.
+        'chartArea': {'height': '80%', 'width': '90%'},
+        'hAxis': {'slantedText': false},
+        'vAxis': {'viewWindow': {'min': 0, 'max': 2000}},
+        'legend': {'position': 'none'}
+      },
+      // Convert the first column from 'date' to 'string'.
+      'view': {
+        'columns': [
+          {
+            'calc': function(dataTable, rowIndex) {
+              return dataTable.getFormattedValue(rowIndex, 0);
+            },
+            'type': 'string'
+          }, 1, 2, 3, 4]
+      }
+    });
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('date', 'Date');
+    data.addColumn('number', 'Stock low');
+    data.addColumn('number', 'Stock open');
+    data.addColumn('number', 'Stock close');
+    data.addColumn('number', 'Stock high');
+
+    // Create random stock values, just like it works in reality.
+    var open, close = 300;
+    var low, high;
+    for (var day = 1; day < 121; ++day) {
+      var change = (Math.sin(day / 2.5 + Math.PI) + Math.sin(day / 3) - Math.cos(day * 0.7)) * 150;
+      change = change >= 0 ? change + 10 : change - 10;
+      open = close;
+      close = Math.max(50, open + change);
+      low = Math.min(open, close) - (Math.cos(day * 1.7) + 1) * 15;
+      low = Math.max(0, low);
+      high = Math.max(open, close) + (Math.cos(day * 1.3) + 1) * 15;
+      var date = new Date(2012, 0 ,day);
+      data.addRow([date, Math.round(low), Math.round(open), Math.round(close), Math.round(high)]);
+    }
+
+    dashboard.bind(control, chart);
+    dashboard.draw(data);
+  }
+
+  function drawMainDashboard() {
+    var dashboard = new google.visualization.Dashboard(
+        document.getElementById('dashboard_div'));
+    var slider = new google.visualization.ControlWrapper({
+      'controlType': 'NumberRangeFilter',
+      'containerId': 'slider_div',
+      'options': {
+        'filterColumnIndex': 2,
+        'ui': {
+          'labelStacking': 'vertical',
+          'label': 'Age Filter:'
+        }
+      }
+    });
+    var categoryPicker = new google.visualization.ControlWrapper({
+      'controlType': 'CategoryFilter',
+      'containerId': 'categoryPicker_div',
+      'options': {
+        'filterColumnIndex': 1,
+        'ui': {
+          'labelStacking': 'vertical',
+          'label': 'Gender Selection:',
+          'allowTyping': false,
+          'allowMultiple': false
+        }
+      }
+    });
+    var pie = new google.visualization.ChartWrapper({
+      'chartType': 'PieChart',
+      'containerId': 'chart_div',
+      'options': {
+        'width': 300,
+        'height': 300,
+        'legend': 'none',
+        'chartArea': {'left': 15, 'top': 15, 'right': 0, 'bottom': 0},
+        'pieSliceText': 'label'
+      },
+      'view': {'columns': [0, 3]}
+    });
+    var table = new google.visualization.ChartWrapper({
+      'chartType': 'Table',
+      'containerId': 'table_div',
+      'options': {
+      }
+    });
+    var data = google.visualization.arrayToDataTable([
+      ['Name', 'Gender', 'Age', 'Issues'],
+      ['Michael' , 'Male', 12, 5],
+      ['Elisa', 'Female', 20, 7],
+      ['Robert', 'Male', 7, 3],
+      ['Jon', 'Male', 54, 2],
+      ['Jessica', 'Female', 22, 6],
+      ['Aaron', 'Male', 3, 1],
+      ['Margareth', 'Female', 42, 8],
+      ['Miranda', 'Female', 33, 6]
+    ]);
+
+	  var idx = 0;
+	  var gnrdata = new google.visualization.DataTable();
+	  gnrdata.addColumn('string', 'Name');
+	  gnrdata.addColumn('string', 'Gender');
+	  gnrdata.addColumn('number', 'Age');
+	  gnrdata.addColumn('number', 'Issues');
+	  gnrdata.addRows(150);
+    
+    <?php
+    	 foreach ($tdata as $row){
+         	//if ($row[0] == 'National Association of Child Care Workers (NACCW)'
+//|| $row[0] == 'HOWARD UNIVERSITY'){
+    ?>
+
+    <?php file_put_contents('c:\wamp\logs\php_debug.log', 'dashIndex 407>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+        var_dump($row[0]);
+        $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
+    ?>
+   
+      gnrdata.setValue(idx, 0, <?php echo '"' . $row[0] . '"' ?>);
+      gnrdata.setValue(idx, 1, <?php echo '"' . $row[0] . '"' ?>);
+      gnrdata.setValue(idx, 2, <?php echo $row[1] ?>);
+      gnrdata.setValue(idx, 3, <?php echo $row[1] ?>);
+
+      idx = idx+1;
+      
+    <?php 
+	//		}
+		 }  
+    ?>
+      
+    dashboard.bind([slider, categoryPicker], [pie, table]);
+    dashboard.draw(gnrdata);
+  }
+
+  function drawExample() {
+    var exampleDashboard = new google.visualization.Dashboard(
+        document.getElementById('example_dashboard_div'));
+    var exampleSlider = new google.visualization.ControlWrapper({
+      'controlType': 'NumberRangeFilter',
+      'containerId': 'example_slider_div',
+      'options': {
+        'filterColumnLabel': 'Issues',
+        'ui': {'labelStacking': 'vertical'}
+      }
+    });
+    var examplePie = new google.visualization.ChartWrapper({
+      'chartType': 'PieChart',
+      'containerId': 'example_chart_div',
+      'options': {
+        'width': 600,
+        'height': 300,
+        'legend': 'right',
+        'chartArea': {'left': 0, 'top': 15, 'right': 0, 'bottom': 0},
+        'pieSliceText': 'value'
+      }
+    });
+    var exampleData = google.visualization.arrayToDataTable([
+      ['Name', 'Issues'],
+      ['Michael' , 5],
+      ['Elisa', 7],
+      ['Robert', 3],
+      ['Jon', 2],
+      ['Jessica', 6],
+      ['Aaron', 1],
+      ['Margareth', 8]
+     ]);
+    exampleDashboard.bind(exampleSlider, examplePie);
+    exampleDashboard.draw(exampleData);
+  }
+</script>
+
+
+    <script>
+      
+      devsite.github.Link.convertAnchors();
+      
+        window.prettyPrint();
+			
+
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+</script>
+
+</body>
+</html>
+

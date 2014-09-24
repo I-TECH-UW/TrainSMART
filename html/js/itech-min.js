@@ -192,86 +192,82 @@ function addCheckbox(promptMsg, checkboxName, containerId, jsonUrl) {
 }
 
 // Filter hierarchical dropdowns using a naming convention of 'Parent_Child'
-  function filterSubTypeOptions(selectObjParentId, selectObjChildId) {
+function filterSubTypeOptions(selectObjParentId, selectObjChildId) {
   
-   var selectObj = document.getElementById(selectObjChildId);
-   if ( (selectObj == undefined) || (selectObj == null) )
-   	return;
-   
-   if ( selectObj ) {
-   var selectObjParent = document.getElementById(selectObjParentId);
-
-   if ( selectObj.originalOptions == undefined ) {
-     clone(selectObj);
-   }
-   
-   // allow for multiple-select
-   var curTypes = [ ];
-   for(j = 0; j < selectObjParent.options.length; j++) {
-     if(selectObjParent.options[j].selected) {
-       curTypes.push(selectObjParent.options[j].value);
-     }
-   }
-
-   //var curType = selectObjParent.options[selectObjParent.selectedIndex].value;
-   /*
-   var oldSubType = 0;
-   if(selectObj.selectedIndex != -1) {
-     oldSubType = selectObj.options[selectObj.selectedIndex].value ;
-     selectObj.selectedIndex = 0; 
-   }
-   */
-   
-   var oldSubTypes = [ ];
-   for(j = 0; j < selectObj.options.length; j++) {
-     if(selectObj.options[j].selected) {
-       oldSubTypes.push(selectObj.options[j].value);
-     }
-   }   
-     	
-    var i = 0;
-  	var tmpOpt = '';
-  	
+  var selectObj = document.getElementById(selectObjChildId);
+  if ( (selectObj == undefined) || (selectObj == null) ) return;
+  
+  if ( selectObj ) 
+  {
+    var selectObjParent = document.getElementById(selectObjParentId);
  
- 	ilength = selectObj.options.length;
-  	for(i = 1; i < ilength; i++) {
- 		selectObj.remove(1);
- 	}
- 	
- 	var prefix = '';
- 	var prefix2 = '';
- 	
-	var newi = 0;
-	
-	for (i in selectObj.originalOptions) { 
-   		tmpOpt = selectObj.originalOptions[i];
-   		
-   		for(j in curTypes) {
-   		  curType = curTypes[j];
-     		prefix = i.substring(0,curType.length + 1);
-     		prefix2 = (curType + '_');
-    		if ( prefix == prefix2 ) {
-  			newi++;
-   			appendOptionLast(selectObj, tmpOpt, i);
-   			
-   			for(k in oldSubTypes ) {
-    			if ( i == oldSubTypes[k] )
-    				//selectObj.selectedIndex = newi;
-    				selectObj.options[newi].selected = true;
-    				selectObj.disabled = false;
-      		}   			  
-   			}
-   			
-   		 
-   		}
-   		
-  	}
-   }
-  	
-   // disable if no options (other than --choose--)
-   if (newi < 1)
-    $(selectObj).attr('disabled', 'disabled');
+    if ( selectObj.originalOptions == undefined ) {
+      clone(selectObj);
+    }
+  
+    // allow for multiple-select
+    var curTypes = [];
+    for(j = 0; j < selectObjParent.options.length; j++) {
+      if(selectObjParent.options[j].selected) {
+        curTypes.push(selectObjParent.options[j].value);
+      }
+    }
+ 
+  //var curType = selectObjParent.options[selectObjParent.selectedIndex].value;
+  /*
+  var oldSubType = 0;
+  if(selectObj.selectedIndex != -1) {
+    oldSubType = selectObj.options[selectObj.selectedIndex].value ;
+    selectObj.selectedIndex = 0; 
   }
+  */
+  
+    var oldSubTypes = [ ];
+    for(j = 0; j < selectObj.options.length; j++) {
+      if(selectObj.options[j].selected) {
+        oldSubTypes.push(selectObj.options[j].value);
+      }
+    }   
+    	
+    var i = 0;
+    var tmpOpt = '';
+ 	
+    ilength = selectObj.options.length;
+ 	for(i = 1; i < ilength; i++) {
+ 	  selectObj.remove(1);
+    }
+ 
+   var prefix = '';
+   var prefix2 = '';
+   var newi = 0;
+ 
+  for (i in selectObj.originalOptions) { 
+    tmpOpt = selectObj.originalOptions[i];
+  		
+  	for(j in curTypes) {
+  	  curType = curTypes[j];
+      prefix = i.substring(0,curType.length + 1);
+      prefix2 = (curType + '_');
+   	  if ( prefix == prefix2 ) {
+        newi++;
+  	    appendOptionLast(selectObj, tmpOpt, i);
+  			
+  		for(k in oldSubTypes ) {
+   		  if ( i == oldSubTypes[k] )
+   		    //selectObj.selectedIndex = newi;
+   		    selectObj.options[newi].selected = true;
+   			selectObj.disabled = false;
+          }   			  
+        }
+      }
+    }
+  }  
+
+ // disable if no options (other than --choose--)
+  if (newi < 1)
+    $(selectObj).attr('disabled', 'disabled');
+
+} // func
   
      function clone(myObj)
 	{
@@ -305,19 +301,19 @@ function appendOptionLast(selectObj, myText, myVal)
 	  selectObj.disabled = false;
 	}
 	
-function setChildStatus(selectedIndex, districtId, provinceId)  {
-	var districtObj = YAHOO.util.Dom.get(districtId);
-	if ( districtObj ) {
+function setChildStatus(selectedIndex, childId, parentId)  {
+	var childObj = YAHOO.util.Dom.get(childId);
+	if ( childObj ) {
 		if ( selectedIndex ) {
-			districtObj.disabled = false;
-			filterSubTypeOptions(provinceId,districtId);
+			childObj.disabled = false;
+			filterSubTypeOptions(parentId,childId);
 		} else {
-			districtObj.selectedIndex = 0;
-			districtObj.disabled = true;
+			childObj.selectedIndex = 0;
+			childObj.disabled = true;
 			
 		}
 		//also filter the child of the child
-		var childFunction = "setChildStatus_" + districtId;
+		var childFunction = "setChildStatus_" + childId;
 		try {
 			eval(childFunction + "()");
 		} catch(err) {
@@ -439,3 +435,97 @@ $(window).load(function (e) {
     
   });
 })
+
+
+function filterFunderOptions(selectObjParentId, selectObjChildId) {
+  
+  var selectObj = document.getElementById(selectObjChildId);
+  if ( (selectObj == undefined) || (selectObj == null) ) return;
+  
+  if ( selectObj ) {
+	  
+    var selectObjParent = document.getElementById(selectObjParentId);
+    var index = selectObjParent.selectedIndex;
+    var selected_option_value = selectObjParent.options[index].value;
+    var selected_option_text = selectObjParent.options[index].text;
+ 
+    if ( selectObj.originalOptions == undefined ) {
+      clone(selectObj);
+    }
+
+    // allow for multiple-select
+    var curTypes = [ ];
+    for(j = 0; j < selectObjParent.options.length; j++) {
+      if(selectObjParent.options[j].selected) {
+        curTypes.push(selectObjParent.options[j].value);
+      }
+    }
+  
+    var oldSubTypes = [ ];
+    for(j = 0; j < selectObj.options.length; j++) {
+      if(selectObj.options[j].selected) {
+        oldSubTypes.push(selectObj.options[j].value);
+      }
+    }   
+    	
+    var i = 0;
+    var tmpOpt = '';
+ 	
+    ilength = selectObj.options.length;
+    for(i = 1; i < ilength; i++) {
+      selectObj.remove(1);
+    }
+ 
+    var prefix = '';
+    var prefix2 = '';
+    var newi = 0;
+     
+    for (i in selectObj.originalOptions) { 
+      tmpOpt = selectObj.originalOptions[i];   
+      
+      for(j in curTypes){
+        curType=curTypes[j];
+        prefix=i.substring(0,curType.length+1); 	  
+        prefix2=(curType+'_');
+     	 
+   	    if ( prefix == prefix2 ) {
+          newi++;
+  	      appendOptionLast(selectObj, tmpOpt, i);
+  	      
+  	      for(k in oldSubTypes){
+  	      	if(i==oldSubTypes[k])
+              selectobj.options[newi].selected=true;
+            selectObj.disabled=false;
+  	        
+  	      }  
+   	    }
+      }
+    }
+  } // if (selectObj)  
+
+ // disable if no options (other than --choose--)
+  if (newi < 1)
+    $(selectObj).attr('disabled', 'disabled');
+
+} // func
+
+function setFunderStatus(selectedIndex, childId, parentId)  {
+	var childObj = YAHOO.util.Dom.get(childId);
+	if ( childObj ) {
+		if ( selectedIndex ) {
+			childObj.disabled = false;
+			filterFunderOptions(parentId,childId);
+		} else {
+			childObj.selectedIndex = 0;
+			childObj.disabled = true;
+			
+		}
+		//also filter the child of the child
+		var childFunction = "setChildStatus_" + childId;
+		try {
+			eval(childFunction + "()");
+		} catch(err) {
+			
+		}
+	}
+}

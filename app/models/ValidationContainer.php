@@ -42,6 +42,14 @@ class ValidationContainer {
 		}
 		return true;
 	}
+	
+	public function checkPercentage($controller, $val, $textName) {		
+		if ( $val > 100 ) {
+			$this->addError($val, $textName.' ('.t(' > 100').')');
+			return false;
+		}
+		return true;
+	}
 
 	public function isValidDate($controller, $fieldname, $textName, $dateString) {
 		require_once('Zend/Date.php');

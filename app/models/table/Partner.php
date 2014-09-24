@@ -12,6 +12,15 @@ require_once ('ITechTable.php');
 class Partner extends ITechTable {
 	protected $_name = 'partner';
 	protected $_primary = 'id';
+	
+
+		public static function getAll()
+		{
+			$pTable = new Partner();
+			// $select = $pTable->select()->where("is_deleted = 0");
+			return  $pTable->fetchAll($select);
+		}
+	
 
 }
  
