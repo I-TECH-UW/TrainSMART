@@ -10,11 +10,14 @@
 ini_set('max_execution_time','300');
 ini_set('memory_limit', '1024M');
 
+ini_set('display_errors', 'On');
+error_reporting(E_ALL | E_STRICT);
+
 define('space',  " ");
 
 
 class Globals {
-	public static $BASE_PATH = '/wamp/www/trainsmart.git/';
+	public static $BASE_PATH = '/wamp/www/trainsmartSA/';
 	public static $WEB_FOLDER = 'html';
 	//orig 	
 	public static $COUNTRY = 'test';
