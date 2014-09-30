@@ -42,7 +42,7 @@ class EmployeeController extends ReportFilterHelpers {
 		}
 
 		require_once('models/table/dash-employee.php');
-		$this->view->assign('title', $this->translation['Application Name'].space.t('Employee Tracking System'));
+		$this->view->assign('title', $this->translation['Application Name'].space.t('Employee').space.t('Tracking System'));
 
 		// restricted access?? does this user only have acl to view some trainings or people
 		// they dont want this, removing 5/01/13
@@ -347,12 +347,12 @@ class EmployeeController extends ReportFilterHelpers {
 			// $status->checkRequired ( $this, 'first_name', t ( 'Frist Name' ) );
 			// $status->checkRequired ( $this, 'last_name',  t ( 'Last Name' ) );
 			
-			$status->checkRequired ( $this, 'employee_code', t ( 'Employee Code' ) );
+			$status->checkRequired ( $this, 'employee_code', t('Employee').space.t('Code'));
 			
 			$status->checkRequired ( $this, 'dob', t ( 'Date of Birth' ) );
 			
 			if($this->setting('display_employee_nationality'))
-				$status->checkRequired ( $this, 'lookup_nationalities_id', t ( 'Employee Nationality' ) );
+				$status->checkRequired ( $this, 'lookup_nationalities_id', t('Employee Nationality'));
 			
 			$status->checkRequired ( $this, 'employee_qualification_option_id', t ( 'Staff Cadre' ) );
 			
@@ -382,7 +382,7 @@ class EmployeeController extends ReportFilterHelpers {
 			if(($this->setting('display_employee_base') && !$params['employee_base_option_id']) || !$this->setting('display_employee_base')) // either one is OK, javascript disables regions if base is on & has a value choice
 				$status->checkRequired ( $this, 'province_id', t ( 'Region A (Province)' ).space.t('or').space.t('Employee Based at') );
 			if($this->setting('display_employee_base') && !$params['province_id'])
-				$status->checkRequired ( $this, 'employee_base_option_id', t ( 'Employee Based at' ).space.t('or').space.t('Region A (Province)') );
+				$status->checkRequired ( $this, 'employee_base_option_id', t('Employee Based at').space.t('or').space.t('Region A (Province)') );
 			if($this->setting('display_employee_primary_role'))
 				$status->checkRequired ( $this, 'employee_role_option_id', t ( 'Primary Role' ) );
 

@@ -63,7 +63,7 @@ YAHOO.util.Event.onDOMReady(setOrgAccessStatus);
 		<div class="fieldLabelThin"> <?php tp('In-Service');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="in_service" id="in_service" CHECKED /><label for="in_service"> <?php tp('In-service access');?></label></div></div>
 		<div class="fieldLabelThin"> <?php tp('Pre-Service');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="pre_service" id="pre_service" /><label for="pre_service"> <?php tp('Pre-service access');?></label></div></div>
 		<?php if ($this->setting['module_employee_enabled']): ?>
-		<div class="fieldLabelThin"> <?php tp('Employee Module');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="edit_employee" id="edit_employee" /><label for="edit_employee"> <?php tp('Add/Edit/Delete Employees');?></label></div></div>
+		<div class="fieldLabelThin"> <?php print(t('Employee').space.t('Module'));?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="edit_employee" id="edit_employee" /><label for="edit_employee"> <?php print(t('Add/Edit/Delete').space.t('Employees'));?></label></div></div>
 		<?php endif; ?>
 		<br/><br/>
 		<div class="fieldLabelThin"> <?php tp('Restrict Access');?></div><div class="fieldInput"><div class="float50"><label for="acl_restrict"><input type="radio" id="" name="acl_restrict" value="" CHECKED onchange="setOrgAccessStatus();"> <?php tp('All organizations data');?></label></div><label for="acl_restrict"><input type="radio" id="acl_restrict" name="acl_restrict" value="acl_restrict"  onchange="setOrgAccessStatus();"> <?php tp('Only selected organizations');?></label></div>

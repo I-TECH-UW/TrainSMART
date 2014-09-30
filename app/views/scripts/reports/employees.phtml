@@ -17,7 +17,7 @@
 		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
 		<div id="content">
 
-			<h1><?php tp('Employee Report');?></h1>
+			<h1><?php print(t('Employee').space.t('Report'));?></h1>
 			<form action="" method="get" class="form_employee">
 				<fieldset id="criteria"><legend><?php tp('Select Criteria');?></legend>
 					<div class="fieldLabel"></div><div class="fieldInput criteria-header"><div class="criteria-label" ><?php tp('show');?></div><div  class="criteria-label" style="padding-left: 20px;"><?php tp('filter');?></div></div>
@@ -142,7 +142,7 @@
 				formatter: formatViewUrl},
 				// {key:"first_name",    label: "<?php tp('First Name');?>", sortable:true, resizeable:true},
 				// {key:"last_name",     label: "<?php tp('Last Name');?>",  sortable:true, resizeable:true},
-				{key:"employee_code",     label: "<?php tp('Employee Code');?>",  sortable:true, resizeable:true},
+				{key:"employee_code",     label: "<?php print(t('Employee').space.t('Code'));?>",  sortable:true, resizeable:true},
 				// {key:"gender",        label: "<?php tp('Gender');?>",     sortable:true, resizeable:true},
 				<?php if ( $this->criteria['showProvince'] ) { ?>
 				{key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true},
@@ -211,7 +211,7 @@
 				{key:"transition_confirmed", label: "<?php tp('Transition Confirmed');?>", sortable:true, resizeable:true},
 				<?php } ?>
 				<?php /*if ( $this->criteria['show_comments'] ) {
-				{key:"employee_comments", label: "<?php tp('Employee Comments');?>", sortable:true, resizeable:true}
+				{key:"employee_comments", label: "<?php print (t('Employee Comments');?>", sortable:true, resizeable:true}
 				 #} */ ?>
 			];
 
