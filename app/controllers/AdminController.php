@@ -71,36 +71,38 @@ class AdminController extends UserController
 		// For "Labels"
 		require_once('models/table/Translation.php');
 		$labelNames = array( // input name => key_phrase
-		'label_country'   => 'Country',
-		'label_regiona'   => 'Region A (Province)',
-		'label_regionb'   => 'Region B (Health District)',
-		'label_regionc'   => 'Region C (Local Region)',
-		'label_regiond'   => 'Region D',
-		'label_regione'   => 'Region E',
-		'label_regionf'   => 'Region F',
-		'label_regiong'   => 'Region G',
-		'label_regionh'   => 'Region H',
-		'label_regioni'   => 'Region I',
-		'label_citytown'  => 'City or Town',
+		'label_country'          => 'Country',
+		'label_regiona'          => 'Region A (Province)',
+		'label_regionb'          => 'Region B (Health District)',
+		'label_regionc'          => 'Region C (Local Region)',
+		'label_regiond'          => 'Region D',
+		'label_regione'          => 'Region E',
+		'label_regionf'          => 'Region F',
+		'label_regiong'          => 'Region G',
+		'label_regionh'          => 'Region H',
+		'label_regioni'          => 'Region I',
+		'label_citytown'         => 'City or Town',
 		'label_application_name' => 'Application Name',
-		'label_training' =>         'Training',
-		'label_trainings' =>        'Trainings',
-		'label_trainer' =>          'Trainer',
-		'label_trainers' =>         'Trainers',
-		'label_training_center' =>  'Training Center',
-		'label_participant' =>      'Participant',
-		'label_participants' =>     'Participants'
+		'label_training'         => 'Training',
+		'label_trainings'        => 'Trainings',
+		'label_trainer'          => 'Trainer',
+		'label_trainers'         => 'Trainers',
+		'label_training_center'  => 'Training Center',
+		'label_participant'      => 'Participant',
+		'label_participants'     => 'Participants',
+		'label_employee'         => 'Employee',
+		'label_employees'        => 'Employees'
 		);
 
 		// _system settings
 		$checkboxFields = array( // input name => db field
-		'check_mod_eval'     => 'module_evaluation_enabled',
-		'check_mod_approvals'     => 'module_approvals_enabled',
+		'check_mod_eval'           => 'module_evaluation_enabled',
+		'check_mod_approvals'      => 'module_approvals_enabled',
 		'check_mod_historical'     => 'module_historical_data_enabled',
-		'check_mod_unknown'     => 'module_unknown_participants_enabled',
+		'check_mod_unknown'        => 'module_unknown_participants_enabled',
 		'check_mod_attendance'     => 'module_attendance_enabled',
 		'display_training_partner' => 'display_training_partner',
-		'display_mod_skillsmart' => 'display_mod_skillsmart',
+		'display_mod_skillsmart'   => 'display_mod_skillsmart',
 		'fiscal_year_start'        => 'fiscal_year_start',
 		'check_mod_employee'       => 'module_employee_enabled'
 		);
