@@ -28,11 +28,11 @@ class Peoplefind extends ITechTable
     // needed based on requested person type- student, tutor, etc.), but this is
     // so vastly superior to generating 3 queries per row of main results!
     
-    // SELECT CLAUSE
+    // SELECT CLAUSE //TA: fixed bug with fetching person's gender 7/30/2014
     switch ($param['type']){
       case "every":
         // If person was a student, then became a tutor- always show as tutor
-        $sql = 'SELECT p.id, first_name, last_name, 
+        $sql = 'SELECT p.id, first_name, last_name, gender,
           CASE
             WHEN tutor_type IS NOT NULL THEN tutor_type
             WHEN student_type IS NOT NULL THEN student_type
@@ -50,7 +50,7 @@ class Peoplefind extends ITechTable
           cohort '; // will have dup rows if student in multiple cohorts over time
         break;
       case "student":
-        $sql = 'SELECT p.id, first_name, last_name, 
+        $sql = 'SELECT p.id, first_name, last_name, gender, 
           student_type AS type,
           student_link AS link,
           student_institutionname AS institutionname,
@@ -58,7 +58,7 @@ class Peoplefind extends ITechTable
         break;
       case "key":
       case "tutor":
-        $sql = 'SELECT p.id, first_name, last_name, 
+        $sql = 'SELECT p.id, first_name, last_name, gender,
           tutor_type AS type,
           tutor_link AS link,
           tutor_institutionname AS institutionname,

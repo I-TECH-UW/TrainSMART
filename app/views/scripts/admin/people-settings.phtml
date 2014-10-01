@@ -81,11 +81,20 @@ print ScriptContainer::$instance->renderJSHead();
    	<td><input type="text" name="label_people_file_num" value="<?php echo $this->label_people_file_num; ?>"></td>
    	<td></td>
    </tr>
+   
+   <!-- TA:17: 09/10/2014 -->
+  <tr><td class="fieldTitle">Birthdate</td>
+    <td><input type="checkbox" name="check_people_birthdate" <?php if($this->check_people_birthdate) echo 'checked'; ?> id="check_people_birthdate"></td>
+   	<td></td>
+    <td></td>
+  </tr>
+  
    <tr><td class="fieldTitle">Age</td>
    	<td><input type="checkbox" name="check_people_age" <?php if($this->check_people_age) echo 'checked'; ?> id="check_people_age"></td>
    	<td></td>
    	<td></td>
    </tr>
+  
    <tr><td class="fieldTitle">Gender</td>
    	<td><input type="checkbox" name="check_people_gender" <?php if($this->check_people_gender) echo 'checked'; ?> id="check_people_gender"></td>
    	<td><input type="text" name="label_people_gender" value="<?php echo $this->label_people_gender; ?>"></td>
@@ -175,7 +184,8 @@ print ScriptContainer::$instance->renderJSHead();
  </tr>
 
  <tr><td class="fieldTitle">Comments</td>
-    <td></td>
+ <!-- TA:17: 09/09/2014 -->
+    <td><input type="checkbox" name="check_people_comments" <?php if($this->check_people_comments) echo 'checked'; ?> id="check_people_comments"></td>
     <td><input type="text" name="label_comments" value="<?php echo $this->label_comments; ?>"></td>
     <td></td>
  </tr>
@@ -244,6 +254,13 @@ print ScriptContainer::$instance->renderJSHead();
     <td></td>
     <td></td>
     <td><input type="checkbox" name="check_approval_mod" <?php if($this->check_approval_mod) echo 'checked'; ?> id="check_approval_mod"><label for="check_approval_mod">Enabled</label></td>
+  </tr>
+  
+  <!-- TA:17: 09/09/2014 -->
+  <tr><td class="fieldTitle">Facilitator Information</td>
+    <td><input type="checkbox" name="check_people_facilitator" <?php if($this->check_people_facilitator) echo 'checked'; ?> id="check_people_facilitator"></td>
+   	<td></td>
+    <td></td>
   </tr>
 
 </table>

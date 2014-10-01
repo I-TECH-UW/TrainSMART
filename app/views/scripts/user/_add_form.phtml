@@ -44,6 +44,7 @@ function setOrgAccessStatus() {
 	}
 }
 YAHOO.util.Event.onDOMReady(setOrgAccessStatus);
+
 </script>
 
 <form action="" id="userForm" method="POST">
@@ -61,7 +62,7 @@ YAHOO.util.Event.onDOMReady(setOrgAccessStatus);
 
 	<fieldset><legend><?php tp('Access Level');?></legend>
 		<div class="fieldLabelThin"> <?php tp('In-Service');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="in_service" id="in_service" CHECKED /><label for="in_service"> <?php tp('In-service access');?></label></div></div>
-		<div class="fieldLabelThin"> <?php tp('Pre-Service');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="pre_service" id="pre_service" /><label for="pre_service"> <?php tp('Pre-service access');?></label></div></div>
+		<div class="fieldLabelThin"> <?php tp('Pre-Service');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="pre_service" id="pre_service"/><label for="pre_service"> <?php tp('Pre-service access');?></label></div></div>
 		<?php if ($this->setting['module_employee_enabled']): ?>
 		<div class="fieldLabelThin"> <?php print(t('Employee').space.t('Module'));?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="edit_employee" id="edit_employee" /><label for="edit_employee"> <?php print(t('Add/Edit/Delete').space.t('Employees'));?></label></div></div>
 		<?php endif; ?>
@@ -151,6 +152,7 @@ YAHOO.util.Event.onDOMReady(setOrgAccessStatus);
 		<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="acl_editor_refresher_course"><input type="checkbox" id="acl_editor_refresher_course" name="acl_editor_refresher_course" /><label for="acl_editor_refresher_course"> <?php echo t('Edit').' '.t('Refresher Course');?></label></div></div>
 		<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="import_training"><input type="checkbox" id="import_training" name="import_training" /><label for="import_training"> <?php echo t('Import').' '.t('Training');?></label></div><label for="import_person"><input type="checkbox" id="import_person" name="import_person"> <?php echo t('Import').' '.t('Person');?></label></div>
 
+		
 		<br clear="all"/>
 		<div class="fieldLabelThin"> <?php echo t('Facilities').'&nbsp;'.t('and').'&nbsp;'.t('Preservice'); ?></div><div class="fieldInput"><div class="float50"><label for="acl_editor_facility_types"><input type="checkbox" id="acl_editor_facility_types" name="acl_editor_facility_types" /><label for="acl_editor_facility_types"> <?php echo t('Edit').' '.t('Facility Types');?></label></div><label for="acl_editor_ps_classes"><input type="checkbox" id="acl_editor_ps_classes" name="acl_editor_ps_classes"> <?php echo t('Edit').' '.t('Classes');?></label></div>
 		<div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><label for="acl_editor_facility_sponsors"><input type="checkbox" id="acl_editor_facility_sponsors" name="acl_editor_facility_sponsors" /><label for="acl_editor_facility_sponsors"> <?php echo t('Edit').' '.t('Facility Sponsors');?></label></div><label for="acl_editor_ps_cadres"><input type="checkbox" id="acl_editor_ps_cadres" name="acl_editor_ps_cadres"> <?php echo t('Edit').' '.t('Cadres');?></label></div>

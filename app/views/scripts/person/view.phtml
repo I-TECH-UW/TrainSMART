@@ -44,10 +44,14 @@ print ScriptContainer::$instance->renderJSHead();
   <div class="fieldInput"><input type="text" name="file_number"  readonly="readonly" size="32" maxlength="64" value="<?php echo $this->person['file_number'];?>"/></div>
 	<?php } ?>
 
+	 <?php if ( $this->setting['display_gender'] ) { ?>
     <div class="fieldLabel"><?php tp('Gender');?></div><div class="fieldInput">
     <label for="female"><?php tp('Female');?><input type="radio" id="female" disabled="disabled" name="gender" value="female" <?php echo ( $this->person['gender'] == 'female' ? 'CHECKED' :'');?> ></input></label>
     <label for="male"><?php tp('Male');?><input type="radio" id="male" disabled="disabled" name="gender" value="male" <?php echo ( $this->person['gender'] == 'male' ? 'CHECKED' :'');?>></input></label>
     <label for="na"><?php tp('Unknown');?><input type="radio" id="na" disabled="disabled" name="gender" value="na" <?php echo ( $this->person['gender'] == 'na' ? 'CHECKED' :'');?>></input></label></div>
+   <?php }?>
+   
+   <?php if ( $this->setting['display_people_birthdate'] ) { ?>
    <div class="clear"></div>
    <div class="fieldLabel"><?php tp('Birth date');?></div>
    <div style="float:left; ">
@@ -60,6 +64,7 @@ print ScriptContainer::$instance->renderJSHead();
   <div class="clear"></div>
   <div class="hrGrey"></div>
   <div class="clear"></div>
+  <?php }?>
 
 <div class="fieldIndentNoMargin"><?php tp('Current Contact Information');?></div>
 	<div id="facilityAutoComplete">

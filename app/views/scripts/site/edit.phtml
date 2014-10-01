@@ -21,7 +21,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 
 <div class="fieldLabel" id="facility_name_lbl"><?php tp('Site');?></div>
-	<form id="change" action="<?php echo $this->base_url;?>/site/edit" method="GET">
+	<form id="change" action="<?php echo $this->base_url;?>/site/edit" method="get">
 	<div class="fieldInput"><select name="id"  id="id" onchange="if(this.value != '') this.form.submit();">
 	<option value="">-- <?php tp('choose');?> --</option>
 	<?php foreach ( $this->facilities as $facility) {
@@ -32,7 +32,7 @@ print ScriptContainer::$instance->renderJSHead();
 	</div>
 	</form>
 
-	<form id="edit" action="" method="POST">
+	<form id="edit" action="" method="post">
 	<div class="fieldLabel" id="facility_name_lbl"><?php echo t('Site').space.('name');?></div>
 	<div class="fieldInput"><input type="text" name="facility_name"  id="facility_name" value="<?php echo $this->facility['facility_name'];?>" size="40" maxlength="128"/></div>
 	<input type="hidden" name="id" value="<?php echo $this->facility['id'];?>"></input>

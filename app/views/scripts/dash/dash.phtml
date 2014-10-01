@@ -64,10 +64,11 @@
 				<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 					<thead>
 						<tr>
-							<th><?php echo t("Training institution"); ?></th>
+							<!-- TA: added 7/25/2014 -->
+							<th><?php echo $this->translation['ps institution'] ?></th>
 							<th width="135"><?php echo t("# of students"); ?></th>
-							<th width="135"><?php echo t("# of tutors"); ?></th>
-							<th width="180"><?php echo t("Student/Tutor Ratio"); ?></th>
+							<th width="135"><?php echo t("# of ").space.$this->translation['ps tutor'];?></th>
+							<th width="180"><?php echo t("Student/").$this->translation['ps tutor'].space."Ratio"; ?></th>
 							<th width="120"><?php echo t("# of grads"); ?></th>
 							<th width="170"><?php echo t("Early terminations"); ?></th>
 						</tr>
@@ -93,7 +94,8 @@
 				<div style="line-height:50px;">&nbsp;</div>
 
 				<div class="rightdiv" style="float:right;">
-					<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/institution/institution'; ?>" class="tsbutton green large"><?php echo t('Institutions'); ?> &raquo;</a>
+					<!-- TA: added 7/25/2014 -->
+					<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/institution/institution'; ?>" class="tsbutton green large"><?php echo $this->translation['ps institution'] ?> &raquo;</a>
 					<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/cohort/cohortsearch'; ?>" class="tsbutton green large"><?php echo t('Cohorts'); ?> &raquo;</a>
 					<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/people/people'; ?>" class="tsbutton green large"><?php echo t('People'); ?> &raquo;</a>
 					<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/facility/search'; ?>" class="tsbutton green large"><?php echo t('Facilities'); ?> &raquo;</a>

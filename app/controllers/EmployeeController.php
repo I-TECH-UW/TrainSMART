@@ -349,10 +349,11 @@ class EmployeeController extends ReportFilterHelpers {
 			
 			$status->checkRequired ( $this, 'employee_code', t('Employee').space.t('Code'));
 			
-			$status->checkRequired ( $this, 'dob', t ( 'Date of Birth' ) );
+			//$status->checkRequired ( $this, 'dob', t ( 'Date of Birth' ) );//TA:18: 08/28/2014 (DOB field is not required)
 			
 			if($this->setting('display_employee_nationality'))
 				$status->checkRequired ( $this, 'lookup_nationalities_id', t('Employee Nationality'));
+			
 			
 			$status->checkRequired ( $this, 'employee_qualification_option_id', t ( 'Staff Cadre' ) );
 			
@@ -496,6 +497,24 @@ class EmployeeController extends ReportFilterHelpers {
             	//var_dump($mechanism);
             	//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
             	
+			}
+            	
+            	//get linked table data from option tables
+            	
+            	$sql = "SELECT partner_id, subpartner_id, partner_funder_option_id, mechanism_option_id, percentage
+            	FROM employee_to_partner_to_subpartner_to_funder_to_mechanism WHERE employee_id = $id and partner_id = {$params['partner_id']}";
+            	$params['funder'] = $db->fetchAll($sql);
+            	
+
+            	$helper = new Helper();
+            	$subPartner = $helper->getEmployeeSubPartner($params['partner_id']);
+            	$this->viewAssignEscaped ( 'subPartner', $subPartner );
+            	
+            	$partnerFunder = $helper->getEmployeeFunder($params['partner_id']);
+            	$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+            	
+            	$mechanism = $helper->getEmployeeMechanism($params['partner_id']);
+            	$this->viewAssignEscaped ( 'mechanism', $mechanism );
 			}
 		}
 

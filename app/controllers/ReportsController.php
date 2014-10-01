@@ -1330,6 +1330,7 @@ echo $sql . "<br>";
 		$criteria ['showCustom4'] =   ($this->getSanParam ( 'showCustom4' ));
 		$criteria ['showCreatedBy'] = ($this->getSanParam ( 'showCreatedBy' ));
 		$criteria['showCreationDate']=($this->getSanParam ( 'showCreationDate' ));
+		$criteria ['showStartDate'] =   ($this->getSanParam ( 'showStartDate')); //TA;17: 9/3/2014
 		$criteria ['showEndDate'] =   ($this->getSanParam ( 'showEndDate'));
 		$criteria ['showRespPrim'] =  ($this->getSanParam ( 'showRespPrim' ));
 		$criteria ['showRespSecond'] =($this->getSanParam ( 'showRespSecond' ));

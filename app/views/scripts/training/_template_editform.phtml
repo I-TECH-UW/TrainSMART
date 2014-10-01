@@ -196,12 +196,18 @@ YAHOO.util.Event.onDOMReady(init);
 
   </div>
 <?php endif; ?>
-  <div class="fieldIndentNoMargin">&nbsp;</div><br/>
-	<div class="fieldLabel" id="training_category_id_lbl"><?php echo (@$this->translation['Training Category']); ?></div>
-	<div class="fieldInput"  >
-    <?php print $this->dropDownCategory; ?>
-	</div>
-
+<!-- TA:17: 8/27/2014 START-->
+<?php if($this->setting['display_training_category']){
+echo "<div class='fieldIndentNoMargin'>&nbsp;</div><br/>";
+echo "<div class='fieldLabel' id='training_category_id_lbl'>" . $this->translation['Training Category'] . "</div>";
+echo "<div class='fieldInput'  >";
+echo @$this->dropDownCategory;
+echo "</div>";
+}else{
+echo "<br clear='top'/><br clear='left'/><br clear='top'/>";
+}?>
+<!-- TA:17: 8/27/2014 END -->
+	
   <div class="fieldLabel" id="training_title_lbl"><span class="required">*</span><?php echo $this->translation['Training Name']; ?></div>
   <div class="fieldInput" >
     <select id="select_training_title_option" name="training_category_and_title_option_id">
@@ -247,11 +253,11 @@ YAHOO.util.Event.onDOMReady(init);
 
     </script>
 
-
-
-  <div class="fieldLabel"><span class="required">*</span><?php echo t('Training').' '.t('start date');?></div>
+<!-- TA:17: 09/02/2014  -->
+<?php if($this->setting['display_training_start_date']){?>
+  <div class="fieldLabel"><?php echo t('Training').' '.t('start date');?></div>
   <div class="fieldInput" id="startdate">
-    <?php tp('Day');?> <input id="start-day" class="dayfield" type="text" name="start-day" maxlength="2" value="<?php echo $this->row['start-day']; ?>"  <?php echo $this->viewonly; ?>>
+    <?php tp('Day');?> <input id="start-day" class="dayfield" type="text" name="start-day" maxlength="2" value="<?php echo $this->row['start-day']; ?> " <?php echo $this->viewonly; ?>>
     / <?php tp('Month');?> <input id="start-month" class="monthfield" type="text" name="start-month" maxlength="2" value="<?php echo $this->row['start-month']; ?>"  <?php echo $this->viewonly; ?>>
     / <?php tp('Year');?> <input id="start-year" class="yearfield" type="text" name="start-year" maxlength="4" value="<?php if($this->row['start-year']) echo $this->row['start-year']; else echo date('Y'); ?>"  <?php echo $this->viewonly; ?>>
 
@@ -263,6 +269,8 @@ YAHOO.util.Event.onDOMReady(init);
   		</script>
     <?php endif; ?>
   </div><br/>
+   <?php } ?>
+   
 <?php if ( $this->setting['display_end_date'] ) { ?>
  <div class="fieldLabel"><?php echo t('Training').' '.t('end date');?></div>
  <div class="fieldInput" id="enddate">
@@ -280,7 +288,9 @@ YAHOO.util.Event.onDOMReady(init);
   </div><br/>
   <?php } ?>
 
-  <div class="fieldLabel" id="training_length_value_lbl"><span class="required">*</span><?php echo t('Training').' '.t('length');?></div>
+  <!-- TA:17: 09/03/2014 START-->
+<?php if($this->setting['display_training_length']){?>
+  <div class="fieldLabel" id="training_length_value_lbl"><?php echo t('Training').' '.t('length');?></div>
   <div class="fieldInput">
     <input type="text" id="training_length_value" name="training_length_value" size="6" value="<?php echo $this->row['training_length_value']; ?>" <?php echo $this->viewonly; ?>>
     &nbsp;
@@ -294,6 +304,7 @@ YAHOO.util.Event.onDOMReady(init);
     <label for="interval3"><?php tp('weeks');?></label>
     <span id="training_length_interval_lbl"></span>
   </div><br/>
+  <?php }?>
 
   <div class="fieldLabel" id="training_organizer_option_id_lbl"><?php echo $this->translation['Training Organizer']; ?></div>
   <div class="fieldInput">
@@ -309,6 +320,8 @@ YAHOO.util.Event.onDOMReady(init);
     ?>
   </div><br/>
 
+  <!-- TA:17: 09/03/2014 -->
+  <?php if($this->setting['display_training_level']){?>
   <div class="fieldLabel" id="training_level_option_id_lbl"><?php echo $this->translation['Training Level']; ?></div>
   <div class="fieldInput">
     <?php echo $this->dropDownLevel; ?>
@@ -319,6 +332,7 @@ YAHOO.util.Event.onDOMReady(init);
      # }
     ?>
   </div><br/>
+  <?php }?>
 
     <?php if($this->mode == 'add' && $this->setting['module_unknown_participants_enabled']) :  ?>
 	 <div class="fieldLabel" id="training_has_known_participants"><?php tp('Participants are known'); ?></div>
@@ -530,11 +544,12 @@ YAHOO.util.Event.onDOMReady(init);
   <?php endif; ?>
 
 
-
+	<?php if($this->setting['display_training_comments']){?>
   <div class="fieldLabel"><?php echo (@$this->translation['Training Comments']); ?></div>
   <div class="fieldInput">
     <textarea name="comments"><?php echo $this->row['comments']; ?></textarea>
   </div><br/>
+  <?php }?>
 
   <?php if($this->setting['display_course_objectives']) : ?>
     <div class="fieldLabel"><?php echo $this->translation['Course Objectives']; ?></div>
@@ -565,14 +580,20 @@ YAHOO.util.Event.onDOMReady(init);
   <?php endif; ?>
 
 
-  <div class="clear"></div>
-  <div class="hrGrey"></div>
-  <div class="clear"></div>
+ 
 
 <?php /************ TRAINERS ******************************************************************************/
-if ( $this->row['has_known_participants'] ) :
+if ( $this->row['has_known_participants']) : 
 ?>
 
+
+<!-- TA:17: 09/03/2014 -->
+	<?php if ( $this->setting['display_facilitator_info'] ) {?> 
+	
+	<div class="clear"></div>
+  <div class="hrGrey"></div>
+  <div class="clear"></div>
+  
   <div class="fieldIndentNoMargin"><span class="required">*</span><?php echo t('Trainer').' '.t('Information');?> <span class="total"><?php echo t('Total').' '.t('Trainers').':';?> <span id="trainer_total">0</span></span></div>
   <div class="fieldIndent2">
 
@@ -765,6 +786,8 @@ if ( $this->row['has_known_participants'] ) :
 <?php endif; ?>
 
   </div>
+  
+  <?php }?>
 
 
 <?php /************ PARTICIPANTS ******************************************************************************/ ?>
@@ -945,7 +968,8 @@ if ( $this->row['has_known_participants'] ) :
 <?php endif; ?>
 
   </div>
-  <?php if(! $this->viewonly) { ?>
+  <!-- TA:17: 09/03/2014  -->
+  <?php if(! $this->viewonly && $this->setting['display_training_score']) { ?> 
   <div class="fieldLabel"><label><?php tp('Participant Test Scores'); ?></label></div><div class="fieldInput"><a href="<?php echo $this->base_url; ?>/training/scores-import/training/<?php echo $this->row['id']; ?>"><?php tp('Import Scores'); ?></a></div>
   <?php } ?>
   <?php if($this->setting['display_training_pre_test'] || $this->setting['display_training_post_test']) : ?>
@@ -1130,9 +1154,12 @@ if ( $this->row['has_known_participants'] ) :
    </div>
    <?php endif; ?>
 
-</form></div>
+</form></div> <!-- table ends -->
+
 <div class="clear"></div>
 
+<!-- TA:17: 09/09/2014 -->
+    <?php if ( $this->hasACL ( 'admin_files' ) ) {?>
     <div class="hrGrey"></div>
     <div class="clear"></div>
     <div class="fieldIndentNoMargin"><?php tp('Attached Documents'); ?></div>
@@ -1140,6 +1167,7 @@ if ( $this->row['has_known_participants'] ) :
       <?php echo $this->editTableFiles; ?>
       <span class="caption"><?php tp('Right-click and select "Save Target As..." to download.');?></span>
     </div>
+    
     <?php if($this->filesForm) : ?>
     <div class="fieldIndentNoMargin"><?php tp('Document Upload'); ?></div>
     <div class="fieldIndent2">
@@ -1149,6 +1177,7 @@ if ( $this->row['has_known_participants'] ) :
 YAHOO.util.Event.on(window, 'load', initUploadButton);
 </script>
     <?php endif; ?>
+    <?php }?>
 
 
 </div>

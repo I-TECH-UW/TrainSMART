@@ -21,7 +21,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 
 <div class="fieldLabel" id="facility_name_lbl"><?php tp('Facility');?></div>
-	<form id="change" action="<?php echo $this->base_url;?>/facility/edit" method="GET">
+	<form id="change" action="<?php echo $this->base_url;?>/facility/edit" method="get">
 	<div class="fieldInput"><select name="id"  id="id" onchange="if(this.value != '') this.form.submit();">
 	<option value="">-- <?php tp('choose');?> --</option>
 	<?php foreach ( $this->facilities as $facility) {
@@ -33,14 +33,18 @@ print ScriptContainer::$instance->renderJSHead();
 	</div>
 	</form>
 
-	<form id="edit" action="" method="POST">
+	<form id="edit" action="" method="post">
 	<div class="fieldLabel" id="facility_name_lbl"><?php tp('Facility name');?></div>
 	<div class="fieldInput"><input type="text" name="facility_name"  id="facility_name" value="<?php echo $this->facility['facility_name'];?>" size="40" maxlength="40"/></div>
 	<input type="hidden" name="id" value="<?php echo $this->facility['id'];?>"></input>
+	
+	<!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_address']){?>
 	<div class="fieldLabel" id="facility_address1_lbl"><?php tp('Address ');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_address1" id="facility_address1" value="<?php echo $this->facility['address_1'];?>" size="40" maxlength="40"/></div>
 	<div class="fieldLabel" id="facility_address2_lbl"><?php tp('Address 2');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_address2" id="facility_address2" value="<?php echo $this->facility['address_2'];?>" size="40" maxlength="40"/></div>
+	  <?php }?>
 
 	<div class="fieldLabel" id="facility_province_id_lbl"><span class="required">*</span><?php echo (@$this->translation['Region A (Province)']); ?></div>
 	<div class="fieldInput"><?php renderFilter($this->locations, 1, 'facility_province_id', @$this->facility['province_id'], 'facility_district_id');?></div>
@@ -53,11 +57,14 @@ print ScriptContainer::$instance->renderJSHead();
   <div class="fieldInput"><?php renderFilter($this->locations, 3, 'facility_region_c_id', @$this->facility['region_c_id'], false);?></div>
   <?php } ?>
 
+  <!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_city']){?>
 	<div class="fieldLabel" id="facility_city_lbl"><?php echo (@$this->translation['City or Town']); ?></div><div id="cityAutoComplete">
 	    <div class="fieldInput"><input name="facility_city" id="facility_city" type="text" size="40" maxlength="128" value="<?php echo $this->facility['facility_city'];?>" /><input style="margin-left:10px;" type="checkbox" id="is_new_city" name="is_new_city" value="is_new_city" /><label class="label"><?php tp('New city'); ?></label><div class="clear"></div>
 	    <div id="cityContainer"  class="autocomplete"></div></div>
 	</div>
 	<?php renderCityAutocomplete('facility','cityContainer',$this->base_url.'/facility/cityList/outputType/text/',$this->setting['num_location_tiers']);?>
+	<?php }?>
 
 <?php if ($this->setting['display_facility_postal_code'] ) { ?>
 	<div class="fieldLabel" id="facility_postal_code_lbl"><?php tp('Postal code');?></div>
@@ -69,11 +76,22 @@ print ScriptContainer::$instance->renderJSHead();
 	<div class="fieldLabel" id="facility_longitude_lbl"><?php tp('Longitude');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_longitude" id="facility_longitude" value="<?php echo $this->facility['long'];?>" size="40" maxlength="11"/></div>
 <?php } ?>
+
+<!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_phone']){?>
 	<div class="fieldLabel" id="facility_phone_lbl"><?php tp('Phone');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_phone" id="facility_phone" value="<?php echo $this->facility['phone'];?>" size="40" maxlength="40"/></div>
+	  <?php }?>
+	  
+	  <!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_fax']){?>
 	<div class="fieldLabel" id="facility_fax_lbl"><?php tp('Fax');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_fax" id="facility_fax" value="<?php echo $this->facility['fax'];?>" size="40" maxlength="40"/></div>
-	<div class="fieldLabel" id="facility_type_id_lbl"><span class="required">*</span><?php tp('Facility type');?></div>
+	  <?php }?>
+	  
+	  <!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_type']){?>
+	<div class="fieldLabel" id="facility_type_id_lbl"><?php tp('Facility type');?></div>
 	<div class="fieldInput"><select id="facility_type_id" name="facility_type_id">
 		<option value="">--<?php tp('choose');?>--</option>
 		<?php
@@ -82,6 +100,8 @@ print ScriptContainer::$instance->renderJSHead();
 		}
 		?>
 	</select></div>
+	<?php }?>
+	
 <?php foreach($this->sponsor_data as $i => $sponsorRow) { ?>
 	<div class="fieldLabel" id="<?php if ($i==0) echo 'facility_sponsor_id_lbl'; ?>"><?php tp('Facility'); echo ' '; tp('sponsor');?></div>
 	  <div class="fieldInput" id="<?php if ($i==0) echo 'facility_sponsor_wrapper'; ?>">
@@ -109,8 +129,12 @@ print ScriptContainer::$instance->renderJSHead();
 	</div>
 <?php } ?>
 <?php } ?>
+
+<!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_comments']){?>
 	<div class="fieldLabel" id="facility_comments_lbl"><?php tp('Comments');?></div>
 	<div class="fieldInput"><textarea name="facility_comments" id="facility_comments" size="40" maxlength="40" ><?php echo $this->facility['facility_comments'];?></textarea></div>
+	<?php }?>
 
 
 <div class="clear" ></div>

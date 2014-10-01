@@ -111,6 +111,70 @@ class Facility extends ITechTable {
 		}
 		return true;
  	}
+ 	
+ 	/*
+ 	 * TA:17: 09/08/2014
+ 	 */
+ 	public static function saveCommodities ( $id, $commodity_array)
+ 	{
+ 		// save commodity table data)
+ 		if (empty($commodity_array))
+ 			return false;
+ 	
+ 		$stable = new ITechTable ( array ('name' => 'commodity' ) );
+ 		foreach($commodity_array as $i => $com){
+ 			try{
+ 				
+ 					$row = $stable->createRow();
+
+ 				// fill row
+ 				$row->facility_id                = $id;
+ 				$row->consumption =  $com['consumption'];
+ 				$row->stock_out    = ( $com['stock_out'] == null ||  $com['stock_out'] == '' )? "N" : "Y";
+ 				$row->name  =  $com['name']; 
+
+ 				$convert_date = explode("/", $com['date']);
+ 				if(count($convert_date) == 2){
+ 					$row->date =  date('Y-m-d', strtotime( $convert_date[0] . "/01/" . $convert_date[1]));
+ 				}else{
+ 					$row->date =  date('Y-m-d', strtotime($com['date']));
+ 				}
+ 				// save
+ 				$row->save();
+ 			}catch(Exception $e){
+ 				print $e;
+ 				return false;
+ 			}
+ 		}
+ 		return true;
+ 	}
+ 	
+ 	/*
+ 	 * TA:17: 09/08/2014
+ 	*/
+ 	public static function deleteCommodities ( $commodity_ids)
+ 	{
+ 		if ($commodity_ids === "")
+ 			return false;
+ 	
+ 		$stable = new ITechTable ( array ('name' => 'commodity' ) );
+ 			try{		
+ 				$stable->delete("id in ($commodity_ids)");
+ 			}catch(Exception $e){
+ 				print $e;
+ 				return false;
+ 			}
+ 		return true;
+ 	}
+ 	
+ 	//TA:17: added 09/19/2014
+ 	public function ListCommodityNames(){
+ 		$select = $this->dbfunc()->select()
+ 		->from('commodity_name_option');
+ 		$result = $this->dbfunc()->fetchAll($select);
+ 		return $result;
+ 	}
+ 	
 	/*
 	public static function suggestionList($match = false, $limit = 100) {
 		$rows = self::suggestionQuery ( $match, $limit );

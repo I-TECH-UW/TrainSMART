@@ -12,6 +12,8 @@
 function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
     labelSafe = labelAdd.replace(' ','');
     idContainer = labelSafe + "Table";
+    
+    
     if(document.getElementById(idContainer) == null) {
       alert(idContainer + ' id not found.');
     }
@@ -30,6 +32,8 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
         
 		   //for some reason, this function never return, so set our global table objects here
        //ITECH.curtablecontainer = this;
+        
+       
 
         // Dynamic edit links onClick event handled here
         this.onTableClick = function(type, args, me) {
@@ -39,6 +43,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
               var cellTarget = target.parentNode.parentNode;
               elRow = this.myDataTable.getTrEl(cellTarget);
               oRecord = this.myDataTable.getRecord(elRow);
+              
 
               switch(target.innerHTML) {
 
@@ -46,13 +51,15 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
 
                   // Don't confirm empty records
                   isEmpty = this.myDataTable.removeEmpty(oRecord);
-
+                
                   //if(isEmpty || confirm("Are you sure you want to delete \"" + rs[key] + "?\"")) {
                   
                   rs[key] = rs[key].replace(/<(?:.|\s)*?>/g, ""); // strip HTML tags
 
                   if(isEmpty || confirm(this.config.deleteConfirm.replace("%s", rs[key]))) {
                      this.myDataTable.deleteAjax(oRecord);
+                     $("#" + labelSafe + "_total").text(this.myDataTable.getRecordSet().getLength()-1); //TA:17: 09/05/2014
+                     $("#" + labelSafe + "_delete_data").val($("#" + labelSafe + "_delete_data").val()?$("#" + labelSafe + "_delete_data").val()+','+oRecord.getData("id"):oRecord.getData("id")); //TA:17: 09/05/2014
                   }
                   break;
 
@@ -76,20 +83,22 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
           }
 
         }
-       
+        
+        
         // Add a row to the table (Dynamic "Add..." link fires here)
         this.addRow = function() {
+    
           this.myDataTable.addRow({edit:this.config.editLinks});
 
           // Show cell editor
           numRows = this.myDataTable.getRecordSet().getLength();
           el = this.myDataTable.getTdEl({record:this.myDataTable.getRecord(--numRows), column:this.myDataTable.getColumn(0)});
-
+          
           oCellEditor = this.myDataTable.getCellEditor();
           oCellEditor.isSaving = true; // pretend to be saving so blur event doesn't hide cell editor
 
           this.myDataTable.showCellEditor(el);
-
+          
           return false;
         }
         
@@ -97,9 +106,26 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
         this.addDataRow = function(jsonData, row_name) {
           jsonData.edit = (noEdit) ? this.config.deleteOnly : this.config.editLinks;
           jsonData.row_name = row_name; // Name to display when "delete" is clicked
-          this.myDataTable.addRow(jsonData);          
+          this.myDataTable.addRow(jsonData);
+          $("#" + labelSafe + "_total").text(this.myDataTable.getRecordSet().getLength()); //TA:17: 09/05/2014
         }
-
+        
+        
+        //TA:17: 09/17/2014
+        this.addDataRowToForm = function(jsonData, row_name, form_elem_id){
+            this.addDataRow(jsonData, row_name);
+            var arr = new Array();
+            for(var i=0; i<this.myDataTable.getRecordSet().getLength(); i++){
+            	var row = this.myDataTable.getRecord(i);
+            	if(row.getData('row_name')){
+            		var data = JSON.parse(JSON.stringify(row));
+            		arr.push(data['_oData']);
+            	}
+           }
+            $('#' + form_elem_id).val('{"data":' +  JSON.stringify(arr) + '}');
+        }
+        
+        
         //
         // Setup our new DataTable object
         //
@@ -314,7 +340,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
                   this.deleteRow(oRecord);
                 }
               },
-            failure: function() { alert('Could not delete this record, sorry!'); },
+            failure: function() { alert('Could not delete this record, sorry!'); },//TA:19:TODO throws this alert
             scope: this
           };
 
@@ -324,6 +350,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
 
           queryString = "id=" + oRecord.getData("id") + "&delete=1&edittabledelete=1";
           cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/outputType/json", ajaxDelCallback, queryString);
+          //TA:19:TODO https://pepfarskillsmart.trainingdata.org/employee/outputType/json, ajaxDelCallback, id=27&delete=1&edittabledelete=1 
         }
 
         //
@@ -372,7 +399,6 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
         this.myDataTable.subscribe("editorBlurEvent", this.myDataTable.onEditorBlur);
         this.myDataTable.subscribe("editorCancelEvent", this.myDataTable.onEditorCancel);
 
-
         // Hook into custom event to customize save-flow of "radio" editor
         this.myDataTable.subscribe("editorUpdateEvent", function(oArgs) {
             if(oArgs.editor.value == "") {
@@ -414,3 +440,5 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
 
     return InlineCellEditing;
 }
+
+    

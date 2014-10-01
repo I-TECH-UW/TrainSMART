@@ -47,7 +47,8 @@ ob_end_clean();
 					<td></td>
 				</tr>
 				<tr><td class="fieldTitle">Facility Types</td>
-					<td></td>
+					<!-- TA:17: 09/03/2014 -->
+					<td><input type="checkbox" name="check_facility_type" <?php if($this->check_facility_type) echo 'checked'; ?> id="check_facility_type"></td>			
 					<td></td>
 					<td><a href="<?php echo $this->base_url;?>/admin/facilities-types" onclick="return submitAdminForm(this);">Add/Edit</a></td>
 				</tr>
@@ -71,6 +72,34 @@ ob_end_clean();
 					<td></td>
 					<td></td>
 				</tr>
+				
+				<!-- TA:17: 09/03/2014 START-->
+				<tr>
+								<td class="fieldTitle">Address</td>
+								<td><input type="checkbox" name="check_facility_address" <?php if($this->check_facility_address) echo 'checked'; ?> id="check_facility_address"></td>
+								<td></td>
+								<td></td>
+				</tr>
+				<tr>
+								<td class="fieldTitle">City</td>
+								<td><input type="checkbox" name="check_facility_city" <?php if($this->check_facility_city) echo 'checked'; ?> id="check_facility_city"></td>
+								<td></td>
+								<td></td>
+				</tr>
+				<tr>
+								<td class="fieldTitle">Phone</td>
+								<td><input type="checkbox" name="check_facility_phone" <?php if($this->check_facility_phone) echo 'checked'; ?> id="check_facility_phone"></td>
+								<td></td>
+								<td></td>
+				</tr>
+				<tr>
+								<td class="fieldTitle">Fax</td>
+								<td><input type="checkbox" name="check_facility_fax" <?php if($this->check_facility_fax) echo 'checked'; ?> id="check_facility_fax"></td>
+								<td></td>
+								<td></td>
+				</tr>
+				<!-- TA:17: 09/03/2014 END-->
+				
 				<tr><td class="fieldTitle">Latitude and Longitude</td>
 					<td><input type="checkbox" name="check_display_lat_long" <?php if($this->check_display_lat_long) echo 'checked'; ?> id="check_display_lat_long"></td>
 					<td></td>
@@ -82,7 +111,8 @@ ob_end_clean();
     			<td></td>
 				 </tr>
 				<tr><td class="fieldTitle">Comments</td>
-					<td></td>
+				<!-- TA:17: 09/03/2014 START-->
+					<td><input type="checkbox" name="check_facility_comments" <?php if($this->check_facility_comments) echo 'checked'; ?> id="check_facility_comments"></td>
 					<td><input type="text" name="label_comments" value="<?php echo $this->label_comments; ?>"></td>
 					<td></td>
 				</tr>
@@ -91,6 +121,15 @@ ob_end_clean();
 					<td></td>
 					<td><input type="checkbox" name="check_approval_mod" <?php if($this->check_approval_mod) echo 'checked'; ?> id="check_approval_mod"><label for="check_approval_mod">Enabled</label></td>
 				</tr>
+				
+				<!-- TA:17: 09/19/2014 START -->
+				<tr><td class="fieldTitle">Commodity Name</td>
+					<td></td>			
+					<td></td>
+					<td><a href="<?php echo $this->base_url;?>/admin/commodityname" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+				</tr>
+				<!-- TA:17: 09/19/2014 END -->
+				
 			</table>
 
 			<input type="hidden" name="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>">

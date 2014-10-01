@@ -21,7 +21,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 
 <div class="fieldLabel" id="facility_name_lbl"><?php tp('Facility');?></div>
-	<form id="change" action="<?php echo $this->base_url;?>/facility/edit" method="GET">
+	<form id="change" action="<?php echo $this->base_url;?>/facility/edit" method="get">
 	<div class="fieldInput"><select name="id"  id="id" onchange="if(this.value != '') this.form.submit();">
 	<option value="">-- <?php tp('choose');?> --</option>
 	<?php foreach ( $this->facilities as $facility) {
@@ -32,22 +32,29 @@ print ScriptContainer::$instance->renderJSHead();
 	</div>
 	</form>
 
-	<form id="edit" action="" method="POST">
+	<form id="edit" action="" method="post">
 	<div class="fieldLabel" id="facility_name_lbl"><?php tp('Facility name');?></div>
 	<div class="fieldInput"><input type="text" name="facility_name"  id="facility_name" value="<?php echo $this->facility['facility_name'];?>" size="40" maxlength="128"/></div>
 	<input type="hidden" name="id" value="<?php echo $this->facility['id'];?>"></input>
+	
+	<!-- TA:17: 09/03/2014 -->
+	<?php if($this->setting['display_facility_address']) { ?>
 	<div class="fieldLabel" id="facility_address1_lbl"><?php tp('Address ');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_address1" id="facility_address1" value="<?php echo $this->facility['address_1'];?>" size="40" maxlength="128"/></div>
 	<div class="fieldLabel" id="facility_address2_lbl"><?php tp('Address 2');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_address2" id="facility_address2" value="<?php echo $this->facility['address_2'];?>" size="40" maxlength="128"/></div>
-
+	<?php }?>
+	
 <?php region_filters_dropdown($this, $this->locations, $this->facility, false, false, 'facility'); ?>
 
+<!-- TA:17: 09/03/2014 -->
+	<?php if($this->setting['display_facility_city']) { ?>
 	<div class="fieldLabel" id="facility_city_lbl"><?php echo (@$this->translation['City or Town']); ?></div><div id="cityAutoComplete">
 	    <div class="fieldInput"><input name="facility_city" id="facility_city" type="text" size="40" maxlength="128" value="<?php echo $this->facility['facility_city'];?>" /><input style="margin-left:10px;" type="checkbox" id="is_new_city" name="is_new_city" value="is_new_city" /><label class="label"><?php tp('New city'); ?></label><div class="clear"></div>
 	    <div id="cityContainer"  class="autocomplete"></div></div>
 	</div>
 	<?php renderCityAutocomplete('facility','cityContainer',$this->base_url.'/facility/cityList/outputType/text/',$this->setting['num_location_tiers']);?>
+	<?php }?>
 
 <?php if ($this->setting['display_facility_postal_code'] ) { ?>
 	<div class="fieldLabel" id="facility_postal_code_lbl"><?php tp('Postal code');?></div>
@@ -59,16 +66,28 @@ print ScriptContainer::$instance->renderJSHead();
 	<div class="fieldLabel" id="facility_longitude_lbl"><?php tp('Longitude');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_longitude" id="facility_longitude" value="<?php echo $this->facility['long'];?>" size="40" maxlength="11"/></div>
 <?php } ?>
+
+<!-- TA:17: 09/03/2014 -->
+	<?php if($this->setting['display_facility_phone']) { ?>
 	<div class="fieldLabel" id="facility_phone_lbl"><?php tp('Phone');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_phone" id="facility_phone" value="<?php echo $this->facility['phone'];?>" size="40" maxlength="32"/></div>
+	  <?php }?>
+	  
+	  <!-- TA:17: 09/03/2014 -->
+	<?php if($this->setting['display_facility_fax']) { ?>
 	<div class="fieldLabel" id="facility_fax_lbl"><?php tp('Fax');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_fax" id="facility_fax" value="<?php echo $this->facility['fax'];?>" size="40" maxlength="32"/></div>
+	  <?php }?>
+	  
 <?php if ( $this->setting['display_facility_custom1'] ) { ?>
   <div id="custom1AutoComplete" >
       <div class="fieldLabel" id="custom1Input_lbl"><?php echo (@$this->translation['Facility Custom 1']); ?> </div><div class="fieldInput"><input id="facility_custom1" name="facility_custom1" type="text" size="40" maxlength="128" value="<?php echo @$this->facility['custom_1'];?>" /><div class="clear"></div><div id="custom1Container" class="autoComplete"></div></div>
   </div><br/>
-<?php } ?>  
-	<div class="fieldLabel" id="facility_type_id_lbl"><span class="required">*</span><?php tp('Facility'); echo ' '; tp('type');?></div>
+<?php } ?>
+
+<!-- TA:17: 09/03/2014 -->
+	<?php if($this->setting['display_facility_type']) { ?>
+	<div class="fieldLabel" id="facility_type_id_lbl"><?php tp('Facility'); echo ' '; tp('type');?></div>
 	<div class="fieldInput"><select id="facility_type_id" name="facility_type_id">
 		<option value="">--<?php tp('choose');?>--</option>
 		<?php
@@ -77,6 +96,8 @@ print ScriptContainer::$instance->renderJSHead();
 		}
 		?>
 	</select></div>
+	<?php }?>
+	
 <?php if($this->setting['display_facility_sponsor']) { ?>
 <?php foreach($this->sponsor_data as $i => $sponsorRow) { ?>
 	<div class="fieldLabel" id="<?php if ($i==0) echo 'facility_sponsor_id_lbl'; ?>"><?php tp('Facility'); echo ' '; tp('sponsor');?></div>
@@ -114,6 +135,100 @@ print ScriptContainer::$instance->renderJSHead();
 
 
 	<div class="clear" ></div>
+	
+	<!-- TA:17: 09/04/2014 START -->
+	<?php /************ Commodity table  ******************************************************************************/ ?>
+	<div class="clear"></div>
+  <div class="hrGrey"></div>
+  <div class="clear"></div>
+  <!-- TA:17: rows count must have this format <span id="[label]_total">-->
+  <div class="fieldIndentNoMargin"><?php tp('Commodity Information');?> <span class="total"><?php tp('Total Commodities:');?> <span id="commodity_total"><?php echo $this->escape($this->totalCommodities);?></span></span></div>
+  <div class="fieldIndent2">
+  <!-- TA:17: table div id must have this format  <div id="[label]Table">-->
+  <div name="commodityTable" id="commodityTable"></div>
+  
+  <script>
+     		
+    		// fired on "insert" button click
+        	function addCommodity(oButton) {
+        	    var oCName = YAHOO.util.Dom.get('name');
+        	    var oCDateMM = YAHOO.util.Dom.get('dateMM');
+        	    var oCDateYY = YAHOO.util.Dom.get('dateYY');
+        	    var oCCons = YAHOO.util.Dom.get('consumption');
+        	    var oCStockOut = YAHOO.util.Dom.get('stock_out');
+
+        	    if(oCName.value == ""){
+            	    alert("Commodity name cannot be empty.");
+            	    return;
+        	    }
+
+        	    if(oCStockOut.value == ""){
+            	    alert("Select 'Out of Stock' value.");
+            	    return;
+        	    }
+
+        	    if(oCDateMM.value == ""){
+            	    alert("Date: month cannot be empty.");
+            	    return;
+        	    }else if(oCDateMM.value > 12){
+        	    	alert("Date: month can be between 1 and 12.");
+            	    return;
+        	    }
+        	    if(oCDateYY.value == ""){
+            	    alert("Date: year cannot be empty.");
+            	    return;
+        	    }else if(oCDateYY.value > 99 || oCDateYY.value < 10){
+        	    	alert("Date: year can be between 10 and 99.");
+            	    return;
+        	    }
+
+            var jsonAdd = { }
+            jsonAdd.name = oCName.value;
+            var month = oCDateMM.value;
+            if(month.length == 1){month = "0" + month;}
+            jsonAdd.date = month + "/" + oCDateYY.value;
+            jsonAdd.consumption = oCCons.value;
+            jsonAdd.stock_out = oCStockOut.value;
+          	ITECH.commodityTable.addDataRowToForm(jsonAdd, oCName.value, 'new_commodity_data');
+            
+            oCName.value = "";
+            oCDateMM.value = "";
+            oCDateYY.value = "";
+            oCCons.value = "";
+            oCStockOut.value = "";
+          }
+
+    	</script>
+  
+  <?php echo $this->tableCommodities; ?><br>
+  
+  <input type="hidden" id="new_commodity_data" name="new_commodity_data"/>
+  <input type="hidden" id="commodity_delete_data" name="commodity_delete_data"/>
+  
+  Commodity name
+  <?php echo "<select id='name' name='name'>";
+								echo "<option value='0'>" . t('Select...') . "</option>";
+								foreach ($this->commodity_names as $name){
+									echo "<option value='" . $name['commodity_name'] . "'>" . $name['commodity_name'] . "</option>";
+								}
+								echo "</select>";
+  ?>
+  
+  &nbsp;&nbsp;&nbsp;&nbsp;Date
+  <input type="number" id="dateMM"  min="1" max="12" placeholder="MM" style="width:3em;"/>/
+ <input type="number" id="dateYY"  min="10" max="99" placeholder="YY" style="width:3em;"/>
+ &nbsp;&nbsp;&nbsp;&nbsp;Consumption
+  <input type="text" id="consumption" size="10"  placeholder="Consumption">
+  &nbsp;&nbsp;&nbsp;&nbsp;Out of Stock
+  <select id='stock_out'><option value='' selected='selected'></option><option value='N'>N</option><option value='Y'>Y</option></select>
+   &nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="button" name="Insert" value="<?php tp("Insert");?>" class="insert" id="commodityInsertButton" onclick="addCommodity(this);return false;">
+       &nbsp;&nbsp;&nbsp;
+        <a href="javascript:submitThenRedirect('<?php echo $this->base_url;?>/person/add/trainingredirect/<?php echo $this->row['id']; ?>');"><?php tp('Commodity Report');?></a>
+     
+  
+  </div> <!-- table ends -->
+	<!-- TA:17: 09/04/2014 END -->
 
 	<button type="button" id="submitFacility" class="submitNoArrow"><?php tp('Save changes');?></button>
 	<div style="float:right;">&nbsp;</div><?php if ($this->okToDelete) { ?><input type="button" id="deleteFacility" name="deleteFacility" value="Delete" class="submitNoArrow"  onclick="doDelete();" /><?php } ?>
