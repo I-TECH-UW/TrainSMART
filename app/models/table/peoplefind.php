@@ -8,6 +8,167 @@ class Peoplefind extends ITechTable
 	protected $_name = 'person';
 
 	public function peoplesearch($param) {
+  
+    $query = $this->buildquery($param);
+    $select = $this->dbfunc()->query($query);
+    return $select->fetchAll();
+
+  }
+  
+  
+  
+  public function buildquery($param){
+    $sql = '';
+    $where = array();
+    
+    $studentLink = Settings::$COUNTRY_BASE_URL . "/studentedit/personview/id/";
+    $tutorLink = Settings::$COUNTRY_BASE_URL . "/tutoredit/tutoredit/id/";
+    
+    // There is still room for optimization here (only include the join that is
+    // needed based on requested person type- student, tutor, etc.), but this is
+    // so vastly superior to generating 3 queries per row of main results!
+    
+    // SELECT CLAUSE
+    switch ($param['type']){
+      case "every":
+        // If person was a student, then became a tutor- always show as tutor
+        $sql = 'SELECT p.id, first_name, last_name, 
+          CASE
+            WHEN tutor_type IS NOT NULL THEN tutor_type
+            WHEN student_type IS NOT NULL THEN student_type
+            ELSE \'person\'
+          END AS type,
+          CASE 
+            WHEN tutor_id IS NOT NULL THEN tutor_link
+            WHEN student_id IS NOT NULL THEN student_link
+          END AS link,
+          CASE 
+            WHEN tutor_id IS NOT NULL THEN tutor_institutionname
+            WHEN student_id IS NOT NULL THEN student_institutionname
+            ELSE NULL
+          END AS institutionname,
+          cohort '; // will have dup rows if student in multiple cohorts over time
+        break;
+      case "student":
+        $sql = 'SELECT p.id, first_name, last_name, 
+          student_type AS type,
+          student_link AS link,
+          student_institutionname AS institutionname,
+          cohort '; // will have dup rows if student in multiple cohorts over time
+        break;
+      case "key":
+      case "tutor":
+        $sql = 'SELECT p.id, first_name, last_name, 
+          tutor_type AS type,
+          tutor_link AS link,
+          tutor_institutionname AS institutionname,
+          \'N/A\' AS cohort ';
+        break;
+    }    
+
+    // FROM CLAUSE
+    $sql .= ' FROM person p  '    ;
+    
+    // STUDENT JOIN
+    if ($param['type'] == 'student' || $param['type'] == 'every') {
+      $sql .= '
+        LEFT JOIN (
+          SELECT 
+            \'student\' AS student_type,
+            s.id AS student_id, 
+            personid AS person_id, 
+            CONCAT(\'' . $studentLink . '\', CAST(personid AS CHAR(20)) ) AS student_link,
+            CASE 
+              WHEN c.institutionid IS NOT NULL THEN i2.institutionname 
+              WHEN s.institutionid IS NOT NULL THEN i1.institutionname 
+            END AS student_institutionname,
+            CASE 
+              WHEN sc.id_cohort IS NOT NULL 
+              THEN 
+                CASE
+                  WHEN dropdate IS NOT NULL 
+                  THEN CONCAT(c.cohortname,\' (DROPPED)\') 
+                  ELSE c.cohortname
+                END
+              ELSE \'N/A\'
+            END AS cohort
+          FROM student s 
+            LEFT JOIN link_student_cohort sc
+              ON s.id = sc.id_student
+            LEFT JOIN cohort c
+              ON sc.id_cohort = c.id
+            LEFT JOIN institution i1
+              ON s.institutionid = i1.id
+            LEFT JOIN institution i2
+              ON c.institutionid = i2.id
+        ) AS s
+          ON p.id = s.person_id  
+      ';
+    }
+    
+    // TUTOR JOIN
+    if ($param['type'] == 'key' || $param['type'] == 'tutor' || $param['type'] == 'every') {
+      $sql .= '
+        -- Because of the one-to-many here, duplicate person rows can result
+        LEFT JOIN (
+          SELECT
+            CASE WHEN is_keypersonal = 0 THEN \'tutor\' ELSE \'key personal\' END AS tutor_type,
+            t.id AS tutor_id, 
+            personid AS person_id, 
+            is_keypersonal,
+            CONCAT(\'' . $tutorLink . '\', CAST(personid AS CHAR(20)) ) AS tutor_link,
+            CASE 
+              WHEN lti.id_institution IS NOT NULL THEN i2.institutionname 
+              WHEN t.institutionid IS NOT NULL THEN i1.institutionname 
+            END AS tutor_institutionname
+          FROM tutor t
+            LEFT JOIN link_tutor_institution lti
+              ON t.id = lti.id_tutor
+            LEFT JOIN institution i1
+              ON t.institutionid = i1.id
+            LEFT JOIN institution i2
+              ON lti.id_institution = i2.id
+        ) AS t
+          ON p.id = t.person_id
+      ';
+    }
+
+    // WHERE CLAUSES
+    $where[] = ' p.is_deleted = 0 ';
+    
+    switch ($param['type']){
+      case "every":
+        $where[] = ' AND (student_id IS NOT NULL OR tutor_id IS NOT NULL) ';
+      break;
+      case "student":
+        $where[] = ' AND student_id IS NOT NULL ';
+      break;
+      case "key":
+        $where[] = ' AND is_keypersonal = 1 ';
+      case "tutor":
+        $where[] = ' AND tutor_id IS NOT NULL ';
+      break;
+    }      
+    
+    $sql .= ' WHERE 1 = 1 AND ' ;
+    foreach ($where as $whereClause) {
+      $sql .= ' ' . $whereClause . ' ';
+    }
+    
+    // ORDER BY CLAUSE
+    $sql .= ' ORDER BY last_name, first_name;';
+    
+    return $sql;
+    
+  }
+  
+  
+  
+  
+  
+  
+  
+  public function peoplesearch_orig($param) {
 		$helper = new Helper();
 		$return = array();
 
@@ -83,9 +244,9 @@ class Peoplefind extends ITechTable
 					$newrow['type'] = isset($row['is_keypersonal']) && $row['is_keypersonal'] != 1 ? "tutor" : "key personal";
 					$newrow['link'] = Settings::$COUNTRY_BASE_URL . "/tutoredit/tutoredit/id/" . $row['id'];
 
-					list ($cohort,$institution) = $helper->getCohortInstitution($row['subid'],"tutor");
-					$newrow['cohort'] = $cohort;
-					$newrow['institution'] = $institution;
+					//list ($cohort,$institution) = $helper->getCohortInstitution($row['subid'],"tutor");
+					//$newrow['cohort'] = $cohort;
+					//$newrow['institution'] = $institution;
 
 					$return[] = $newrow;
 				}
@@ -94,26 +255,21 @@ class Peoplefind extends ITechTable
 		return $return;
 	}
 
-	public function buildquery($param,$output){
+	public function buildquery_orig($param,$output){
 		$where = array();
 		$joins = array();
 		$joinstudent = false;
-		$jointutor = false;
+		$jointutor = true;
 
-		switch($output){
-			case"student":
-				$joinstudent = true;
-			break;
-			case"key":
-			case"tutor":
-				$jointutor = true;
-			break;
-		}
+    $linkBase = Settings::$COUNTRY_BASE_URL . "/tutoredit/tutoredit/id/";
 
-		$helper = new Helper();
-		$ins = $helper->getUserInstitutions($helper->myid(),false);
+    if ($output == 'student') {
+      $linkBase = Settings::$COUNTRY_BASE_URL . "/studentedit/personview/id/";
+      $jointutor = false;
+    }
 
-		#var_dump ($ins);
+
+    
 
 		foreach ($param as $key=>$value){
 			if (trim ($value) != ""){
@@ -164,7 +320,7 @@ class Peoplefind extends ITechTable
 								//$where[] = "i.institutionname LIKE '%" . addslashes($value) . "%'";
 								$where[] = "i.id = " . addslashes($value) . "";
 								$jointutor = true;
-								$joins[] = "INNER JOIN link_tutor_institution lti ON lti.id_tutor = t.id";
+								$joins[] = "INNER JOIN link_tutor_institution lti ON lti.id_tutor = p.id";
 								$joins[] = "INNER JOIN institution i ON i.id = lti.id_institution";
 							}
 						}
@@ -187,7 +343,7 @@ class Peoplefind extends ITechTable
 			$query = "SELECT p.*, s.id AS subid FROM person p ";
 			$query .= " INNER JOIN student s ON s.personid = p.id AND p.is_deleted = 0 ";
 		} elseif ($jointutor){
-			$query = "SELECT p.*, t.id AS subid,t.is_keypersonal FROM person p ";
+			$query = "SELECT p.*, t.id AS subid, t.is_keypersonal, i.institutionname FROM person p ";
 			$query .= " INNER JOIN tutor t ON t.personid = p.id AND p.is_deleted = 0 ";
 			if ($param['type'] == 'key') {
 				$query .= " AND t.is_keypersonal = 1 ";
@@ -205,7 +361,6 @@ class Peoplefind extends ITechTable
 		}
 		$query .= " ORDER BY last_name, first_name";
 
-		#die ($query);
 
 		return ($query);
 	}

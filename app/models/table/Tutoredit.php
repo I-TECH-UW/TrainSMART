@@ -162,6 +162,7 @@ class Tutoredit extends ITechTable
 			'comments'			=>	$param['comments'],
 			'facilityid'		=>	$param['facilityid'],
 			'cadreid'			=>	$param['cadreid'],
+      'institutionid'    =>  $param['institutionid'],
 		);
 
 		$db->update('tutor',$tutor,"personid = '".$param['id']."'");

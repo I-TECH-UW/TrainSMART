@@ -11,17 +11,17 @@
 
 class Checkboxes {
   
-  public static function generateHtml($table, $column, &$view, $checked = array(), $where = '') {
+  public static function generateHtml($table, $column, &$view, $checked = array(), $where = false) {
     $html = '<div class="checkboxHelper" ><table cellspacing="0">';
     $rows = OptionList::suggestionList($table,$column,false,false,false,$where);
     if (! $rows )
       return '<input type="text" readonly="readonly" disabled="disabled" /> ';
      
     foreach($rows as $r) {
-      $isChecked = 
-        (isset($_GET["{$table}_id"]) && in_array($r['id'], $_GET["{$table}_id"])) || 
-        (!empty($checked) && in_array($r['id'], $checked))   
-        ? ' checked' : ''; 
+      $isChecked =  
+         (isset($_GET["{$table}_id"]) && in_array($r['id'], $_GET["{$table}_id"])) || 
+         (!empty($checked) && in_array($r['id'], $checked))   
+         ? ' checked' : ''; 
       $html .= '
       <tr class="'.$isChecked.'">
         <td valign="top"><input type="checkbox" value="'.$r['id'].'" name="'.$table.'_id[]" id="'.$table.$r['id'].'"'.$isChecked.'></td>

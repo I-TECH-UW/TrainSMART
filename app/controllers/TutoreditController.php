@@ -123,6 +123,8 @@ die($query);
 		$this->view->assign('lookupfacilities',$helper->getNationalities());
 		$this->view->assign('lookupdegrees',$helper->getDegrees());
 		$this->view->assign('tutorlanguages',$helper->getLanguages());
+    
+    
 
 		$known = array();
 		$tl = $helper->getTutorLanguages($details['tutor'][0]['id']);
@@ -167,15 +169,23 @@ die($query);
 */
 
 		# FACILITY INFORMATION GEO
-		$this->view->assign('localgeo1',$details['tutor'][0]['geog1']);
-		$this->view->assign('localgeo2',$details['tutor'][0]['geog2']);
-		$this->view->assign('localgeo3',$details['tutor'][0]['geog3']);
+		//$this->view->assign('localgeo1',$details['tutor'][0]['geog1']);
+		//$this->view->assign('localgeo2',$details['tutor'][0]['geog2']);
+		//$this->view->assign('localgeo3',$details['tutor'][0]['geog3']);
 
-		$this->view->assign('facility',$details['tutor'][0]['facility']);
-		$this->view->assign('cadre',$details['tutor'][0]['cadre']);
+		$this->view->assign('facilityid',$details['tutor'][0]['facilityid']);
+    $facility = $helper->getFacilities();
+    $this->view->assign('facilities',$facility);
+
+		//$this->view->assign('cadre',$details['tutor'][0]['cadre']);
+    
+    $this->view->assign('institutionid',$details['tutor'][0]['institutionid']);
+    $institutions = $helper->getInstitutions();
+    $this->view->assign('institutions',$institutions);
+
+    
 		$this->view->assign('tutorsince',$details['tutor'][0]['tutorsince']);
 		$this->view->assign('tutortimehere',$details['tutor'][0]['tutortimehere']);
-		$this->view->assign('cadre',$details['tutor'][0]['cadre']);
 		$this->view->assign('degree',$details['tutor'][0]['degree']);
 		$this->view->assign('degreeinst',$details['tutor'][0]['degreeinst']);
 		$this->view->assign('degreeyear',$details['tutor'][0]['degreeyear']);
@@ -183,6 +193,7 @@ die($query);
 		$this->view->assign('positionsheld',$details['tutor'][0]['positionsheld']);
 		$this->view->assign('comments',$details['tutor'][0]['comments']);
 		$this->view->assign('nationality',$details['tutor'][0]['nationalityid']);
+    
 
 		# PERMANENT ADDRESS
 		$this->view->assign('permanentgeo1',$details['permanent_address'][0]['id_geog1']);

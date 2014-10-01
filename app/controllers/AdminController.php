@@ -10,6 +10,9 @@ require_once('UserController.php');
 require_once('models/table/OptionList.php');
 require_once('models/table/Helper.php');
 require_once('EditTableController.php');
+require_once ('views/helpers/DropDown.php');
+require_once ('views/helpers/CheckBoxes.php');
+
 
 class AdminController extends UserController
 {
@@ -1846,6 +1849,29 @@ class AdminController extends UserController
 		$editTable->label   = 'Title';
 		$editTable->dependencies = array('title_option_id' => 'person');
 		$editTable->execute();
+
+	}
+	
+	//TA: added 7/24/2014
+	public function tutorspecialtyAction()
+	{
+		$editTable = new EditTableController($this);
+		$editTable->table   = 'tutor_specialty_option';
+		$editTable->fields  = array('specialty_phrase' => 'Specialty');
+		$editTable->label   = 'Specialty';
+		$editTable->dependencies = array('specialty' => 'tutor');
+		$editTable->execute();	
+	}
+	
+	//TA: added 7/24/2014
+	public function tutorcontractAction()
+	{
+		$editTable = new EditTableController($this);
+		$editTable->table   = 'tutor_contract_option';
+		$editTable->fields  = array('contract_phrase' => 'Contract Type');
+		$editTable->label   = 'Contract Type';
+		$editTable->dependencies = array('contract_type' => 'tutor');
+		$editTable->execute();
 	}
 
 	public function peopleSuffixAction()
@@ -2092,52 +2118,194 @@ class AdminController extends UserController
 		$this->view->assign("tutors", $tutors);
 		$this->view->assign("header","Classes");
 	}
-
+	
+	//TA: changed on 7/21/2014
 	public function preserviceLabelsAction(){
-		$helper = new Helper();
+	require_once('models/table/System.php');
+		$sysTable = new System();
 
-		if (isset ($_POST['action'])){
-			$helper->saveLabels($_POST);
-			$this->_redirect ( 'admin/preservice-labels' );
+		// For "Labels"
+		require_once('models/table/Translation.php');
+		$labelNames = array( // input name => key_phrase
+		'label_ps_institution'   => 'ps institution',
+		'label_ps_tutor' => 'ps tutor',
+		'label_ps_zip_code' => 'ps zip code',
+		'label_ps_clinical_allocation' => 'ps clinical allocation',
+		'label_ps_local_address' => 'ps local address',			
+		'label_ps_lic_reg' => 'ps license and registration',
+		'label_ps_permanent_address' => 'ps permanent address',
+		'label_ps_religious_denomination' => 'ps religious denomination',
+		'label_ps_program_enrolled' => 'ps program enrolled in',
+		'label_ps_nationality' => 'ps nationality',			
+		'label_inst_compl_date'   => 'ps high school completion date', 
+		'label_last_school_att' => 'ps last school attended',
+		'label_schhol_start_date' => 'ps school start date',
+		'label_equivalence' => 'ps equivalence',
+		'label_last_univ_att' => 'ps last university attended',
+		'label_person_charge' => 'ps person in charge',
+		'label_ps_custom_field1' => 'ps custom field 1',
+		'label_ps_custom_field2' => 'ps custom field 2',
+		'label_ps_custom_field3' => 'ps custom field 3',
+		'label_ps_marital_status' => 'ps marital status',
+		'label_ps_spouse_name' => 'ps spouse name',
+		'label_ps_specialty' => 'ps specialty',
+		'label_ps_contract_type' => 'ps contract type',
+		'label_ps_exam_mark' => 'ps exam mark',
+		'label_ps_ca_mark' => 'ps ca mark',
+		'label_ps_credits' => 'ps credits',
+				
+		);
+
+		// _system settings
+		$checkboxFields = array( // input name => db field _system table
+		'check_display_inst_compl_date'   => 'ps_display_inst_compl_date', 
+		'check_display_last_inst_attended' => 'ps_display_last_inst_attended',
+		'check_display_start_school_date' => 'ps_display_start_school_date',
+		'check_display_equivalence' => 'ps_display_equivalence',
+		'check_display_last_univ_attended' => 'ps_display_last_univ_attended',
+		'check_display_person_charge' => 'ps_display_person_charge',
+		'check_display_custom_field1' => 'ps_display_custom_field1',
+		'check_display_custom_field2' => 'ps_display_custom_field2',
+		'check_display_custom_field3' => 'ps_display_custom_field3',
+		'check_display_marital_status' => 'ps_display_marital_status',
+		'check_display_spouse_name' => 'ps_display_spouse_name',
+		'check_display_specialty' => 'ps_display_specialty',
+		'check_display_contract_type' => 'ps_display_contract_type',
+		'check_display_local_address' => 'ps_display_local_address',
+		'check_display_permanent_address' => 'ps_display_permanent_address',
+		'check_display_religious_denomin' => 'ps_display_religious_denomin',
+		'check_display_nationality' => 'ps_display_nationality',
+		'check_display_exam_mark' => 'ps_display_exam_mark',
+		'check_display_ca_mark' => 'ps_display_ca_mark',
+		'check_display_credits' => 'ps_display_credits',
+		);
+
+		if($this->getRequest()->isPost()) { // Update db
+			$updateData = array();
+
+			// update translation labels
+			$tranTable = new Translation();
+			foreach($labelNames as $input_key => $db_key) {
+				if ( $this->_getParam($input_key) ) {
+					try {
+						$tranTable->update(
+						array('phrase' => $this->_getParam($input_key)),
+						"key_phrase = '$db_key'"
+						);
+						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
+					} catch(Zend_Exception $e) {
+						error_log($e);
+					}
+				}
+			}
+
+			// update _system (checkboxes)
+			foreach($checkboxFields as $input_key => $db_field) {
+				$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
+				$updateData[$db_field] = $value;
+				$this->view->assign($input_key, $value);
+			}
+			$sysTable->update($updateData, '');
+
+		} else { // view
+
+			// labels
+			$t = Translation::getAll();
+			foreach($labelNames as $input_key => $db_key) {
+				$this->viewAssignEscaped($input_key, $t[$db_key]);
+			}
+
+			// checkboxes
+			$sysRows = $sysTable->fetchRow($sysTable->select()->limit(1));
+			foreach($checkboxFields as $input_key => $field_key) {
+				$this->view->assign($input_key, $sysRows->$field_key);
+			}
 		}
 
-
-		$fields = array();
-		$fields[] = 'ps institution';
-		$fields[] = 'ps license and registration';
-		$fields[] = 'ps clinical allocation';
-		$fields[] = 'ps local address';
-		$fields[] = 'ps permanent address';
-		$fields[] = 'ps zip code';
-		$fields[] = 'ps religious denomination';
-		$fields[] = 'ps program enrolled in';
-		$fields[] = 'ps tutor';
-		$fields[] = 'ps national id';
-		$fields[] = 'ps nationality';
-
-		$list = $helper->AdminLabels($fields);
-
-		$this->view->assign("fieldvalues",$list);
-		$this->view->assign("allfields",$fields);
-
-		$this->view->assign("header","Field labels");
+		// redirect to next page
+		if($this->_getParam('redirect')) {
+			header("Location: " . $this->_getParam('redirect'));
+			exit;
+		} else if($this->_getParam('saveonly')) {
+			$status = ValidationContainer::instance();
+			$status->setStatusMessage(t('Your settings have been updated.'));
+		}
+		
+		//remove later TA:
+		
+// 				$helper = new Helper();
+		
+// 				if (isset ($_POST['action'])){
+// 					$helper->saveLabels($_POST);
+// 					$this->_redirect ( 'admin/preservice-labels' );
+// 				}
+		
+// 				$fields = array();
+// 				$fields[] = 'ps institution';
+// 				$fields[] = 'ps license and registration';
+// 				$fields[] = 'ps clinical allocation';
+// 				$fields[] = 'ps local address';
+// 				$fields[] = 'ps permanent address';
+// 				$fields[] = 'ps zip code';
+// 				$fields[] = 'ps religious denomination';
+// 				$fields[] = 'ps program enrolled in';
+// 				$fields[] = 'ps tutor';
+// 				$fields[] = 'ps national id';
+// 				$fields[] = 'ps nationality';
+		
+// 				$list = $helper->AdminLabels($fields);
+		
+// 				$this->view->assign("fieldvalues",$list);
+// 				$this->view->assign("allfields",$fields);
+		
+ 				$this->view->assign("header","Field labels");
 	}
-
+	
+	//old code
+// 	public function preserviceLabelsAction(){
+// 		$helper = new Helper();
+	
+// 		if (isset ($_POST['action'])){
+// 			$helper->saveLabels($_POST);
+// 			$this->_redirect ( 'admin/preservice-labels' );
+// 		}
+	
+// 		$fields = array();
+// 		$fields[] = 'ps institution';
+// 		$fields[] = 'ps license and registration';
+// 		$fields[] = 'ps clinical allocation';
+// 		$fields[] = 'ps local address';
+// 		$fields[] = 'ps permanent address';
+// 		$fields[] = 'ps zip code';
+// 		$fields[] = 'ps religious denomination';
+// 		$fields[] = 'ps program enrolled in';
+// 		$fields[] = 'ps tutor';
+// 		$fields[] = 'ps national id';
+// 		$fields[] = 'ps nationality';
+	
+// 		$list = $helper->AdminLabels($fields);
+	
+// 		$this->view->assign("fieldvalues",$list);
+// 		$this->view->assign("allfields",$fields);
+	
+// 		$this->view->assign("header","Field labels");
+// 	}
+	
 	public function preserviceCadresAction(){
 		$helper = new Helper();
-
+	
 		if (isset ($_POST['_action'])){
 			switch ($_POST['_action']){
 				case "addnew":
-				$helper->addCadres($_POST);
-				break;
+					$helper->addCadres($_POST);
+					break;
 				case "update":
-				$helper->updateCadres($_POST);
-				break;
+					$helper->updateCadres($_POST);
+					break;
 			}
 			$this->_redirect ( 'admin/preservice-cadres' );
 		}
-
+	
 		$list = $helper->AdminCadres();
 		$this->view->assign("lookup", $list);
 		$this->view->assign("header","Cadres");
@@ -2956,7 +3124,7 @@ class AdminController extends UserController
 		$editTable->execute();
 	}
 
-	public function employeePartnerFundingAction()
+	public function employeePartnerFunderAction()
 	{
 
 		/* edit table */
@@ -2964,7 +3132,7 @@ class AdminController extends UserController
 		$editTable->table   = 'partner_funder_option';
 		$editTable->fields  = array('funder_phrase' => 'Funder');
 		$editTable->label   = 'Funder';
-		$editTable->dependencies = array('partner_funder_option_id' => 'partner_to_funder');
+		$editTable->dependencies = array('partner_funder_option_id' => 'subpartner_to_funder_to_mechanism');
 		$editTable->execute();
 	}
 
@@ -2978,6 +3146,162 @@ class AdminController extends UserController
 		$editTable->label   = 'Importance';
 		$editTable->dependencies = array('partner_importance_option_id' => 'partner');
 		$editTable->execute();
+	}
+	
+	public function employeeAgencyAction()
+	{
+	
+		/* edit table */
+		$editTable = new EditTableController($this);
+		$editTable->table   = 'agency_option';
+		$editTable->fields  = array('agency_phrase' => 'Agency');
+		$editTable->label   = 'Agency';
+		// $editTable->dependencies = array('partner_importance_option_id' => 'partner');
+		$editTable->execute();
+	}
+	
+	public function employeeMechanismAction()
+	{
+	
+		/* edit table */
+		$editTable = new EditTableController($this);
+		$editTable->table   = 'mechanism_option';
+		$editTable->fields  = array('mechanism_phrase' => 'Mechanism');
+		$editTable->label   = 'Mechanism';
+		$editTable->dependencies = array('mechanism_option_id' => 'subpartner_to_funder_to_mechanism');
+		$editTable->execute();
+	}
+	
+	//$editTable->dependencies = array('partner_importance_option_id' => 'partner');
+	
+	public function employeeSubpartnerToFunderToMechanismAction()
+	{
+	
+		/* edit table */ 
+		$editTable = new EditTableController($this);
+		$editTable->table   = 'subpartner_to_funder_to_mechanism';
+		$editTable->fields  = array('id' => 'ID', 'subpartner_id' => 'Subpartner', 'partner_funder_option_id' => 'Funder', 'mechanism_option_id' => 'Mechanism', 'funding_end_date' => 'Funding End Date');
+		$editTable->label   = 'Funding  Mechanisms';
+		$editTable->dependencies = array('id' => 'partner_to_subpartner_to_funder_to_mechanism');
+		$editTable->execute();
+		
+	}
+	
+	public function employeeBuildFundingAction()
+	{
+				
+		require_once('views/helpers/Location.php'); // funder stuff
+		require_once('models/table/Partner.php'); 
+		
+		if ( $this->getRequest()->isPost() ) {
+		  $db     = $this->dbfunc();
+		  $status = ValidationContainer::instance ();
+		  $params = $this->getAllParams();
+		
+		file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3021> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		var_dump($params);
+		$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+				
+		  // prepare date for database
+		  $params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
+		
+		  foreach ($params['funding_end_date'] as $i => $value)
+			$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
+		
+		  // test for all values
+		  if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
+			$status->addError('', t ( 'All fields' ) . space . t('are required'));
+		
+		  // test for existing record
+		  //$id = $this->_findOrCreateSaveGeneric('partner_to_funder_to_mechanism', $params);
+		  $id = false;
+		  if ($id) {
+		  	$status->addError('', t('Record exists'));
+		  }
+		
+			
+		  if ( $status->hasError() ) 
+		    $status->setStatusMessage( t('That funding mechanism could not be saved.') );
+				
+		  else {	
+	        		//save
+       		$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
+       				
+       		
+      				$data = array(
+      						'subpartner_id'  => $params['subPartner'],
+      						'partner_funder_option_id' => $params['partnerFunder'],
+      						'mechanism_option_id' => $params['mechanism'],
+      						'funding_end_date' => $params['funding_end_date'][0],
+      				);
+      		
+      		  $insert_result = $sfm->insert($data);
+      		  $status->setStatusMessage( t('The funding mechanism was saved.') );
+      		  $this->_redirect("admin/employee-build_funding");
+	        }
+		}
+		
+		$helper = new Helper();
+		
+		$subPartner = $helper->getAllSubPartners();
+		$this->viewAssignEscaped ( 'subPartner', $subPartner );
+		
+		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3068>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		//var_dump($subPartner);
+		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		
+		$partnerFunder = $helper->getAllFunders();
+		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+		
+		$mechanism = $helper->getAllMechanisms();
+		$this->viewAssignEscaped ( 'mechanism', $mechanism );	
+		
+	} //employeeBuildFundingAction
+	
+	public function employeeFunderFilterAction()
+	{
+	
+		require_once('views/helpers/location.php'); // funder stuff
+		require_once('models/table/partner.php');
+	
+		//$this->view->assign('title', $this->translation['Application Name'].space.t('Employee Tracking System'));
+		//$this->view->assign ( 'partner',    DropDown::generateHtml   ( 'partner', 'partner', $params['partner_id'], false, $this->view->viewonly, false ) );
+		$helper = new Helper();
+		/*
+			$partners = Partner::getall();
+		$partnersArray = $partners->toArray();
+		$this->viewAssignEscaped ( 'partners', $partners );
+	
+		$agencies = $helper->getPartnerToAgency();
+		$agencyNames = $helper->getAgencies();
+		$this->viewAssignEscaped ( 'agencies', $agencies );
+		*/
+	
+		$partners = Partner::getall();
+		$partnersArray = $partners->toArray();
+		$this->viewAssignEscaped ( 'partners', $partners );
+	
+		$helper = new Helper();
+		$partnerFunder = $helper->getFunder();
+		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+	
+		$mechanism = $helper->getMechanism();
+		$this->viewAssignEscaped ( 'mechanism', $mechanism );
+	
+		file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3110>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		var_dump($mechanism);
+		$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+	
+		//$this->viewAssignEscaped ( 'agencyNames', $agencyNames );
+	
+		//$checkedArray = array(7 => 7,8 => 8,10 => 10,12 => 12,15 => 15,	);
+		//$checkedArray = array();
+		//$this->view->assign ( 'agenciesNames', Checkboxes::generateHtml('agency_option', 'agency_phrase', $this->view->viewonly, $agencyNames ) );
+		//$this->view->assign ( 'agenciesNames', Checkboxes::generateHtml('agency_option', 'agency_phrase', $this->view->viewonly, $checkedArray, 'id in (7,8)') );
+		//$this->view->assign ( 'agenciesNames', Checkboxes::generateHtml('agency_option', 'agency_phrase', $this->view->viewonly, $checkedArray, '') );
+	
+		echo('stop');
+	
 	}
 
 	public function hasEditorACL(){
@@ -3031,7 +3355,9 @@ class AdminController extends UserController
 			'employee-transition'         => 'edit_employee',
 			'employee-relationship'       => 'edit_employee',
 			'employee-referral'           => 'edit_employee',
-			'employee-training-provided'  => 'edit_employee'
+			'employee-training-provided'  => 'edit_employee',
+			'tutorspecialty'                => 'acl_editor_tutor_specialty', //TA: added 7/22/2014
+			'tutorcontract'                => 'acl_editor_tutor_contract', //TA: added 7/24/2014
 			);
 
 

@@ -145,12 +145,12 @@ class MultiOptionList extends ITechTable
      }
      
 		if ( $valuesFromPost && is_array($extra_col) ) {
-        foreach($extra_col as $colkey => $col) {
-				  foreach($valuesFromPost as $key => $id) {
+          foreach($extra_col as $colkey => $col) {
+		    foreach($valuesFromPost as $key => $id) {
 	          if ( $id !== '' )
 	            $extra[$id][$col] = (isset($extra_values[$colkey][$key])) ? $extra_values[$colkey][$key] : 0;
 	        }
-        }
+          }
 		}
 		
 		foreach($optionRowsArray as $option_row) {

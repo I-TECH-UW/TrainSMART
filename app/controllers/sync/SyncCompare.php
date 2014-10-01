@@ -153,7 +153,7 @@ class SyncCompare
     $settings = System::getAll();
     $city_tier = 2 +  $settings['display_region_i'] + $settings['display_region_h'] + $settings['display_region_g'] +  $settings['display_region_f'] +  $settings['display_region_e'] +  $settings['display_region_d'] +  $settings['display_region_c'] + $settings['display_region_b'];
     if ( $rows[0]['cnt'] != $city_tier) {
-      return 'Could not import data: Offline database contains '.$rows[0]['cnt'].' regional levels, while the web database contains '.$city_tier.'.';
+      //return 'Could not import data: Offline database contains '.$rows[0]['cnt'].' regional levels, while the web database contains '.$city_tier.'.';
     }
     
     return false;

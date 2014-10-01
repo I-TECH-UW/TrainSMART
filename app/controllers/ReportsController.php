@@ -10666,9 +10666,9 @@ die (__LINE__ . " - " . $sql);
 		require_once ('views/helpers/TrainingViewHelper.php');
 
 		$criteria = $this->getAllParams();
+		
 		if ($criteria['go'])
 		{
-
 			$where = array();
 #todo is_Deleted not implemented
 			$criteria['last_selected_rgn'] = regionFiltersGetLastID('', $criteria); // prefix, $criteria
@@ -10680,26 +10680,27 @@ die (__LINE__ . " - " . $sql);
 					,qual.qualification_phrase as staff_cadre
 					,facility.facility_name
 					,category.category_phrase as staff_category
-					,subp.partner as 'sub_partner'
+					-- ,subp.partner as 'sub_partner'
 					,CASE WHEN annual_cost REGEXP '[^!0-9,\.][0-9\.,]+' THEN SUBSTRING(annual_cost, 2) ELSE annual_cost END AS 'annual_cost_to_compare'
 					,eto.transition_phrase
 					,CASE WHEN employee.transition_confirmed = 1 THEN 'yes' WHEN employee.transition_confirmed = 0 THEN 'no' ELSE employee.transition_confirmed END AS 'transition_confirmed'
 					,fto.facility_type_phrase
 					,ero.role_phrase
 					,pio.importance_phrase
-					,funders.funder_end_date
+					,funders.funding_end_date
 					,employee.comments as comments
 					FROM employee LEFT JOIN ($locationsubquery) as l ON l.id = employee.location_id
 					LEFT JOIN employee_qualification_option qual ON qual.id = employee.employee_qualification_option_id
 					LEFT JOIN partner on partner.id = partner_id
-					LEFT JOIN partner subp on subp.id = subpartner_id
+					-- LEFT JOIN partner subp on subp.id = subpartner_id
 					LEFT JOIN facility ON site_id = facility.id
 					LEFT JOIN facility_type_option fto          ON fto.id = facility.type_option_id
 					LEFT JOIN employee_category_option category ON category.id = employee.employee_category_option_id
 					LEFT JOIN employee_transition_option eto    ON eto.id = employee.employee_transition_option_id
 					LEFT JOIN employee_role_option ero          ON ero.id = employee.employee_role_option_id
 					LEFT JOIN partner_importance_option pio     ON pio.id = partner.partner_importance_option_id
-					LEFT JOIN partner_to_funder funders         ON funders.partner_id = partner.id
+					-- LEFT JOIN partner_to_funder funders         ON funders.partner_id = partner.id
+					LEFT JOIN partner_to_subpartner_to_funder_to_mechanism funders ON partner.id = funders.partner_id
 					"; //annual cost regex logic is: 'if non-number followed by numbers, ex: $1234, then select substring(1) of ($1234), result: 1234'
 
 			// restricted access?? only show partners by organizers that we have the ACL to view
@@ -10710,7 +10711,7 @@ die (__LINE__ . " - " . $sql);
 			if ($site_orgs)                                    $where[] = "partner.organizer_option_id in ($site_orgs) ";
 
 			// criteria
-			if ($criteria['partner_id'])                       $where[] = 'partner.id = '.$criteria['partner_id'];
+			if ($criteria['partner_id'])                       $where[] = 'employee.partner_id = '.$criteria['partner_id'];
 
 			if ($criteria['last_selected_rgn'])                $where[] = 'province_name is not null'; // bugfix - location subquery is not working like a inner join or whereclause, not sure why
 
@@ -10732,15 +10733,16 @@ die (__LINE__ . " - " . $sql);
 
 			if ($criteria['partner_importance_option_id'])     $where[] = 'partner.partner_importance_option_id = ' .$criteria['partner_importance_option_id'];
 
-			if ($criteria['start_date'])                       $where[] = 'funder_end_date >= \''.$this->_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
-			if ($criteria['end_date'])                         $where[] = 'funder_end_date <= \''.$this->_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
+			if ($criteria['start_date'])                       $where[] = 'funding_end_date >= \''.$this->_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
+			if ($criteria['end_date'])                         $where[] = 'funding_end_date <= \''.$this->_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
 
 			if ($criteria['employee_transition_option_id'])    $where[] = 'employee.employee_transition_option_id = ' .$criteria['employee_transition_option_id'];
 
 			if ($criteria['transition_confirmed'])             $where[] = 'employee.transition_confirmed = 1';
 
-			if ( count ($where) )
+			if ( count ($where) ){
 				$sql .= ' WHERE ' . implode(' AND ', $where);
+			}
 
 			$sql .= ' GROUP BY employee.id ';
 
@@ -10813,9 +10815,9 @@ die (__LINE__ . " - " . $sql);
 					,COUNT(distinct e.id) AS pcnt
 					$selCategories
 					FROM partner LEFT JOIN ($locationsubquery) as l ON l.id = partner.location_id
-					LEFT JOIN partner_to_funder funders ON partner.id = funders.partner_id
+					LEFT JOIN partner_to_subpartner_to_funder_to_mechanism funders ON partner.id = funders.partner_id
 					LEFT JOIN partner_funder_option funderopt ON funders.partner_funder_option_id = funderopt.id
-					LEFT JOIN partner_to_subpartner subpartners ON subpartners.partner_id = partner.id
+					-- LEFT JOIN partner_to_subpartner subpartners ON subpartners.partner_id = partner.id
 					LEFT JOIN employee e on e.partner_id = partner.id
 					LEFT JOIN facility ON e.site_id = facility.id";
 #todo is_deleted not implemented
@@ -10849,13 +10851,13 @@ die (__LINE__ . " - " . $sql);
 			if ($criteria['cost_max'])                        $where[] = 'e.annual_cost_to_compare <=' .$criteria['cost_max'];
 
 			#TODO: marking EMPLOYEE ROLE, TRANSITION CONFIRMED, START_DATE, END_DATE as TO BE REMOVED at clients request. these are disabled in the view
-			if ($criteria['employee_role_option_id'])         $where[] = 'funder_end_date >= \''.$this->_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
+			if ($criteria['employee_role_option_id'])         $where[] = 'funding_end_date >= \''.$this->_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
 
 			if ($criteria['partner_importance_option_id'])    $where[] = 'partner_importance_option_id = ' .$criteria['partner_importance_option_id'];
 
-			if ($criteria['start_date'])                      $where[] = 'funder_end_date >= \''.$this->_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
+			if ($criteria['start_date'])                      $where[] = 'funding_end_date >= \''.$this->_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
 
-			if ($criteria['end_date'])                        $where[] = 'funder_end_date <= \''.$this->_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
+			if ($criteria['end_date'])                        $where[] = 'funding_end_date <= \''.$this->_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
 
 			if ($criteria['employee_transition_option_id'])   $where[] = 'employee_transition_option_id = ' .$criteria['employee_transition_option_id'];
 
@@ -10895,4 +10897,122 @@ die (__LINE__ . " - " . $sql);
 		$this->view->assign ( 'roles',         DropDown::generateHtml ( 'employee_role_option', 'role_phrase', $criteria['employee_role_option_id'], false, $this->view->viewonly, false ) );
 		$this->view->assign ( 'transitions',   DropDown::generateHtml ( 'employee_transition_option', 'transition_phrase', $criteria['employee_transition_option_id'], false, $this->view->viewonly, false ) );
 	}
+
+
+  public function mechanismsAction() {
+	require_once ('models/table/Helper.php');
+	require_once ('views/helpers/FormHelper.php');
+	require_once ('views/helpers/DropDown.php');
+	require_once ('views/helpers/Location.php');
+	require_once ('views/helpers/CheckBoxes.php');
+	require_once ('views/helpers/TrainingViewHelper.php');
+
+	$criteria = $this->getAllParams();
+	
+	// file_put_contents('c:\wamp\logs\php_debug.log', 'repCont 10911>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	// var_dump($criteria);
+	// $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+	if ($criteria['go'])
+	{
+
+		$where = array();
+		
+		switch ($criteria['report']) {
+			case "defined":
+				
+				$sql = "
+select sfm.id, subp.partner as subpartner, funder_phrase, mechanism_phrase, sfm.funding_end_date
+from subpartner_to_funder_to_mechanism sfm
+left join partner subp on subp.id = sfm.subpartner_id
+left join partner_funder_option pf on pf.id = sfm.partner_funder_option_id
+left join mechanism_option m on m.id = sfm.mechanism_option_id
+";
+				break;
+				
+			case "definedByPartner":
+				
+				$sql = "
+select psfm.id, p.partner, subp.partner as subpartner, funder_phrase, mechanism_phrase, psfm.funding_end_date
+from partner_to_subpartner_to_funder_to_mechanism psfm
+left join partner p on p.id = psfm.partner_id
+left join partner subp on subp.id = psfm.subpartner_id
+left join partner_funder_option pf on pf.id = psfm.partner_funder_option_id
+left join mechanism_option m on m.id = psfm.mechanism_option_id
+";
+				break;
+				
+			case "definedByEmployee":
+				
+				$sql = "
+select epsfm.id, e.employee_code, p.partner, subp.partner as subpartner, funder_phrase, mechanism_phrase, epsfm.percentage
+from employee_to_partner_to_subpartner_to_funder_to_mechanism epsfm
+left join employee e on e.id = epsfm.employee_id
+left join partner p on p.id = epsfm.partner_id
+left join partner subp on subp.id = epsfm.subpartner_id
+left join partner_funder_option pf on pf.id = epsfm.partner_funder_option_id
+left join mechanism_option m on m.id = epsfm.mechanism_option_id
+";
+				break;
+		}
+		
+		
+				// criteria
+		if ($criteria['partner_id'] && $criteria['report'] != 'defined' ) $where[] = 'p.id = '.$criteria['partner_id'];
+		if ($criteria['subpartner_id'])                   $where[] = 'subp.id = '.$criteria['subpartner_id'];
+
+		if ($criteria['start_date'])                      $where[] = 'funding_end_date >= \''.$this->_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
+
+		if ($criteria['end_date'])                        $where[] = 'funding_end_date <= \''.$this->_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
+
+
+		
+		switch ($criteria['report']) {
+			case "defined":
+				if ( count ($where) ){
+					$sql .= ' WHERE ' . implode(' AND ', $where);
+					$sql .= ' AND sfm.is_deleted = false ';
+				}
+				else  $sql .= ' WHERE sfm.is_deleted = false ';
+				$sql .= ' order by subp.partner, funder_phrase, mechanism_phrase ';
+				break;
+			case "definedByPartner":
+				if ( count ($where) ){
+					$sql .= ' WHERE ' . implode(' AND ', $where);
+					$sql .= ' AND psfm.is_deleted = false ';
+				}
+				else  $sql .= ' WHERE psfm.is_deleted = false ';
+				$sql .= ' order by p.partner, subp.partner, funder_phrase, mechanism_phrase ';
+				break;
+			case "definedByEmployee":
+				if ( count ($where) ){
+					$sql .= ' WHERE ' . implode(' AND ', $where);
+					$sql .= ' AND epsfm.is_deleted = false ';
+				}
+				else  $sql .= ' WHERE epsfm.is_deleted = false ';
+				$sql .= ' order by e.employee_code, p.partner, subp.partner, funder_phrase, mechanism_phrase ';
+				break;
+		}
+
+		$db = $this->dbfunc();
+		$rowArray = $db->fetchAll( $sql );
+		$this->viewAssignEscaped ('results', $rowArray );
+		$this->view->assign ('count', count($rowArray) );
+
+		if ($criteria ['outputType']) {
+			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
+		}
+	}
+
+    $sql = '';
+	// assign form drop downs
+	$this->view->assign ( 'status',   $status );
+	$this->view->assign ( 'criteria', $criteria );
+	$this->view->assign ( 'pageTitle', t('Reports'));
+	$this->view->assign ( 'report', $criteria['report']);
+	
+	$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false ) ); //table, col, selected_value
+	$this->view->assign ( 'subpartners', DropDown::generateHtml ( 'partner', 'partner', $criteria['subpartner_id'], false, $this->view->viewonly, false, true, array('name' => 'subpartner_id'), true ) );
+	
+  }
 }
