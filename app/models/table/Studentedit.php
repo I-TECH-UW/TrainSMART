@@ -231,8 +231,15 @@ class Studentedit extends ITechTable
 			'phone_work'		=>	$param['localphone'],
 			'national_id'		=>	$param['nationalid'],
 			'phone_mobile'		=>	$param['localcell'],
-			'phone_mobile_2'	=>	$param['localcell2'],
-			'national_id'		=>	$param['nationalid']
+			//TA: there is no 'phone_mobile_2' column in PERSON table -> link it 'phone_home' column 
+			//'phone_mobile_2'	=>	$param['localcell2'],
+			'phone_home'	=>	$param['localcell2'],
+			'national_id'		=>	$param['nationalid'],
+			'custom_field1'	=>	$param['custom_field1'], //TA: added 7/22/2014
+			'custom_field2'	=>	$param['custom_field2'], //TA: added 7/22/2014
+			'custom_field3'	=>	$param['custom_field3'], //TA: added 7/22/2014
+			'marital_status'	=>	$param['marital_status'], //TA: added 7/22/2014
+			'spouse_name'	=>	$param['spouse_name'], //TA: added 7/22/2014
 
 			//'home_location_id'=>"$param[city]"
 		);
@@ -401,6 +408,10 @@ class Studentedit extends ITechTable
 			$param6 = explode("_", $param6);
 			$param6 = $param6[count($param6) - 1];
 		}
+		
+		//TA: added 7/17/2014
+		$hscomldate=date("Y-m-d", strtotime($param['hscomldate']));
+		$schoolstartdate=date("Y-m-d", strtotime($param['schoolstartdate']));
 
 		$student = array(//'nationalid'=>"$param[nationalid]",
 			//'nationality'=>"$param[nationality]",
@@ -422,6 +433,13 @@ class Studentedit extends ITechTable
 			'postgeo3'			=>	$param6,
 			'postaddress1'		=>	$param['postaddress1'],
 			'postfacilityname'	=>	$param['postfacilityname'],
+			'hscomldate'	=>	$hscomldate, //TA: added 7/17/2014
+			'lastinstatt'	=>	$param['lastinstatt'], //TA: added 7/17/2014
+			'schoolstartdate' => $schoolstartdate, //TA: added 7/17/2014
+			'equivalence'	=>	$param['equivalence'], //TA: added 7/17/2014
+			'lastunivatt'	=>	$param['lastunivatt'], //TA: added 7/17/2014
+			'personincharge'	=>	$param['personincharge'], //TA: added 7/17/2014
+			'emergcontact'	=>	$param['emergcontact'], //TA: added 7/18/2014
 		);
 
 		$db->update('student',$student,"personid = '".$param['id']."'");
@@ -455,16 +473,18 @@ class Studentedit extends ITechTable
 			$param3 = explode("_", $param3);
 			$param3 = $param3[count($param3) - 1];
 		}
+		
 
+		//TA:15: fixed bug to edit student info (add address in DB is not NULL constrain)
 		if (count ($result) == 0){
 			# ADDING ADDRESS RECORD
 			$db = $this->dbfunc();
 			$address = array(
 				'id_addresstype'	=>	1,
-				'address1'			=>	$param['permanent-address1'],
-				'address2'			=>	$param['permanent-address2'],
-				'city'				=>	$param['permanent-city'],
-				'postalcode'		=>	$param['permanent-postalcode'],
+				'address1'			=>	$param['permanent-address1'] ? $param['permanent-address1'] : "",
+				'address2'			=>	$param['permanent-address2'] ? $param['permanent-address2'] : "",
+				'city'				=>	$param['permanent-city'] ? $param['permanent-city'] : "",
+				'postalcode'		=>	$param['permanent-postalcode'] ? $param['permanent-postalcode'] : "",
 				'id_geog1'			=>	$param1,
 				'id_geog2'			=>	$param2,
 				'id_geog3'			=>	$param3,

@@ -352,6 +352,21 @@ class EvaluationController extends ITechController {
 			$trainings [$k] ['input_checkbox'] = '<input type="checkbox" name="training_ids[]" value="' . $r ['training_id'] . '" '.(array_search($r['training_id'],$assigned) !== false? ' checked="checked" ': '').' >';
 		}
 		$this->view->assign ( 'trainings', $trainings );
+		
+		//TA:17: 09/02/2014
+		require_once 'models/table/System.php';
+		$sysTable = new System();
+		$sysRows = $sysTable->fetchAll()->toArray();
+		foreach($sysRows as $row) {
+			foreach($row as $column=>$value) {
+				if($column == 'display_training_category' && $value != '0'){
+					$this->view->assign( 'display_training_category', 'display_training_category' );
+				}
+				if($column == 'display_training_start_date' && $value != '0'){
+					$this->view->assign( 'display_training_start_date', 'display_training_start_date' );
+				}
+			}
+		}
 
 		$request = $this->getRequest ();
 		if ($request->isPost ()) {

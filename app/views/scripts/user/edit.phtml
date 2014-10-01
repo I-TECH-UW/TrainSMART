@@ -33,9 +33,25 @@
 
 					<fieldset><legend><?php tp('Access Level');?></legend>
 						<div class="fieldLabelThin"> <?php tp('In-Service');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="in_service" id="in_service" <?php if ( array_search('in_service',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="in_service"> <?php tp('In-service access');?></label></div></div>
-						<div class="fieldLabelThin"> <?php tp('Pre-Service');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="pre_service" id="pre_service" <?php if ( array_search('pre_service',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="pre_service"> <?php tp('Pre-service access');?></label></div></div>
+						<div class="fieldLabelThin"> <?php tp('Pre-Service');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="pre_service" id="pre_service" <?php if ( array_search('pre_service',$this->user['acls']) !== false ) echo 'CHECKED'; ?> onchange="preserviceACL();"><label for="pre_service"> <?php tp('Pre-service access');?></label></div></div>
+						
+						<!-- TA:10 added 8/11/2014 START Implement later -->
+	<!--<fieldset id="ps_acl" ><legend><?php //tp('Pre-service access configuration');?></legend>
+						<div class="fieldLabelThin"> <?php //tp('Student info');?></div>
+						<div class="fieldInput">
+							<div class="float50"><label for="ps_edit_student"><input type="radio" id="ps_edit_student" name="ps_edit_student" value="ps_edit_student" <?php //if ( array_search('ps_edit_student',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php //tp('Add/Edit/Delete');?></label></div>
+							<label for="ps_view_student"><input type="radio" id="ps_view_student" name="ps_edit_student" value="ps_view_student" <?php //if ( array_search('ps_view_student',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php //tp('View only');?></label>
+						</div>
+						<div class="fieldLabelThin"> <?php //tp('Student grades');?></div>
+						<div class="fieldInput">
+							<div class="float50"><label for="ps_edit_student_grades"><input type="radio" id="ps_edit_student_grades" name="ps_edit_student_grades" value="ps_edit_student_grades" <?php //if ( array_search('ps_edit_student_grades',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php //tp('Add/Edit/Delete');?></label></div>
+							<label for="ps_view_student_grades"><input type="radio" id="ps_view_student_grades" name="ps_edit_student_grades" value="ps_view_student_grades" <?php //if ( array_search('ps_view_student_grades',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php //tp('View only');?></label>
+						</div>
+					</fieldset>-->
+					<!-- TA:10: added 8/11/2014 END -->
+					
 						<?php if ($this->setting['module_employee_enabled']): ?>
-						<div class="fieldLabelThin"> <?php tp('Employee Module');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="edit_employee" id="edit_employee" <?php if ( array_search('edit_employee', $this->user['acls']) !== false) echo 'CHECKED'; ?> /><label for="edit_employee"> <?php tp('Add/Edit/Delete Employees');?></label></div></div>
+						<div class="fieldLabelThin"> <?php print(t('Employee').space.t('Module'));?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="edit_employee" id="edit_employee" <?php if ( array_search('edit_employee', $this->user['acls']) !== false) echo 'CHECKED'; ?> /><label for="edit_employee"> <?php print(t('Add/Edit/Delete').space.t('Employees'));?></label></div></div>
 						<?php endif; ?>
 						<br/><br/>
 						<div class="fieldLabelThin"> <?php tp('Restrict Access');?></div><div class="fieldInput"><div class="float50"><label for="acl_orgAll"><input type="radio" id="acl_orgAll" name="acl_restrict" value="" onchange="setOrgAccessStatus();" <?php if ( array_search('training_organizer_option_all',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('All organizations data');?></label></div><label for="acl_restrict"><input type="radio" id="acl_restrict" name="acl_restrict" value="acl_restrict" <?php if ( array_search('training_organizer_option_all',$this->user['acls']) === false ) echo 'CHECKED'; ?> onchange="setOrgAccessStatus();"> <?php tp('Only selected organizations');?></label></div>
@@ -296,6 +312,16 @@
 			$(".institutioncheck").prop('disabled',false);
 		}
 	}
+
+
+	//TA:10 added 8/11/2014
+	function preserviceACL(){
+	if ($('#pre_service').attr('checked') == 'checked')
+		$('#ps_acl').slideDown();
+	else
+		$('#ps_acl').slideUp();
+	
+}
 
 </script>
 

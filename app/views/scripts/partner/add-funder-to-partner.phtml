@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php tp('Add Partner Funder');?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+  
+  		<?php require_once 'views/scripts/status.phtml' ?>
+
+		<h1><?php echo t('Add Partner Funder');?></h1>
+		
+		
+		 <form action="" method="post" class="form_employee">
+
+<?php
+// suppress warning in labelAndField
+$this->required_fields = array();
+
+
+// examples:
+// labelAndField($this, t('Input 1'), $myDropDown, 'input_1');
+// labelAndField($this, t('Input 2'), 'text', 'field2', $values['field2']);
+//echo labelAndField ( $this, t ( 'Partner' ), $this->partner, 'partner_id' );
+
+?>
+<fieldset>
+<div id="funwrapper">
+<?php 
+  // funder_filter_dropdown is cascading fields 
+  //funder_filter_dropdown($this, $this->partners, $this->partnerFunder, $this->mechanism);
+  // build_funding_dropdown builds cascading with all options
+  
+//file_put_contents('c:\wamp\logs\php_debug.log', 'add-funder 40>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+//var_dump($this->partner[0]['id']);
+//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+ $this->viewonly = true;
+ echo labelAndField($this, t('Partner').space.t('ID'),  'text', 'id', $this->partner[0]['id']);
+ $this->viewonly = false;
+ partner_sfm_dropdown(0, $this, $this->subPartner, $this->partnerFunder, $this->mechanism, $this->employee[0]['id'], $this->partner[0]['id']);
+ echo labelAndField($this, t('Funding End Date'), 'date','funding_end_date', $this->funding_end_date);
+  
+?>
+
+</div>
+</fieldset>
+
+				<script type="text/javascript">
+
+					$(document).ready(function () {
+
+						itech_save_confirm_on_leave();
+						
+						$('.datepicker').each(function () {
+							$(this).removeAttr('id').datepicker({ //bugfix, datepicker doesnt work with multiple id="" field, these are cloned so remove id attribute
+								changeMonth: true,
+								changeYear: true,
+								showOn: false,
+								dateFormat: "dd/mm/yy"
+							})
+						});
+						$('.calendarbtn').click(openNearestDatePicker);
+						
+					});
+				</script>
+  	<div class="clear"></div>
+				<input type="hidden" name="limit" id="limit" value="1" />
+				<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Save');?>" />
+			<div class="clear"></div>
+</form>			
+</div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title><?php echo $this->translation['Application Name'] . " | " . $this->pageTitle; ?></title>
+	<?php
+	require_once ('views/helpers/Location.php');
+	require_once ('views/helpers/ScriptContainer.php');
+	require_once ('views/helpers/FormHelper.php');
+	print ScriptContainer::$instance->renderCSSHead ();
+	print ScriptContainer::$instance->renderJSHead ();
+	?>
+
+</head>
+<body class="yui-skin-sam">
+
+	<div id="pageHolder">
+
+		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+		<div id="content">
+
+			<?php require_once 'views/scripts/status.phtml' ?>
+
+			<h1><?php $this->mode == 'add' ? print(t('Add').space.t('Employee')) : tp('gnrtest'); ?></h1>
+			
+ <form action="" method="post" class="form_employee">
+
+<?php
+// suppress warning in labelAndField
+$this->required_fields = array();
+
+
+// examples:
+// labelAndField($this, t('Input 1'), $myDropDown, 'input_1');
+// labelAndField($this, t('Input 2'), 'text', 'field2', $values['field2']);
+//echo labelAndField ( $this, t ( 'Partner' ), $this->partner, 'partner_id' );
+
+?>
+<fieldset>
+<div id="funwrapper">
+<?php 
+  // funder_filter_dropdown is cascading fields 
+  //funder_filter_dropdown($this, $this->partners, $this->partnerFunder, $this->mechanism);
+  // build_funding_dropdown builds cascading with all options
+  gnrtest_dropdown($this, $this->subPartner, $this->partnerFunder, $this->mechanism);
+  
+?>
+
+</div>
+</fieldset>
+
+				<script type="text/javascript">
+
+					$(document).ready(function () {
+
+						itech_save_confirm_on_leave();
+						
+						$('.datepicker').each(function () {
+							$(this).removeAttr('id').datepicker({ //bugfix, datepicker doesnt work with multiple id="" field, these are cloned so remove id attribute
+								changeMonth: true,
+								changeYear: true,
+								showOn: false,
+								dateFormat: "dd/mm/yy"
+							})
+						});
+						$('.calendarbtn').click(openNearestDatePicker);
+						
+					});
+				</script>
+
+				<div class="clear"></div>
+				<input type="hidden" name="limit" id="limit" value="1" />
+				<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Save');?>" />
+			</form>
+			<div class="clear"></div>
+		</div>
+	</body>
+</html>

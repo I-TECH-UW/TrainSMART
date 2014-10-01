@@ -61,9 +61,11 @@ if ( $this->mode == 'count' ) {
 
 <?php region_filters_dropdown($this, $this->locations, $this->criteria, true, true);  ?>
 
-<?php
+<!-- TA:17: 09/02/2014-->
+<?php 
+if($this->setting['display_training_category']){
    echo DropDown::render_report_filter('training_category', 'showCategory', @$this->translation['Training Category'], $this->category, 'training_category_phrase', @$this->criteria['training_category_id'], $this->criteria['showCategory']);
-
+}
 ?>
 
 	<div class="fieldLabel" id="training_title_option_id_lbl"><?php echo (@$this->translation['Training Name']); ?></div>
@@ -140,7 +142,10 @@ if ( $this->mode == 'count' ) {
       echo DropDown::render_report_filter('training_topic', 'showTopic', @$this->translation['Training Topic'], $this->topics, 'training_topic_phrase', @$this->criteria['training_topic_id'], $this->criteria['showTopic'],false, true);
    }
 
+   //TA:17: 09/02/2014
+   if($this->setting['display_training_start_date']){
    echo DropDown::render_report_filter('training_level', 'showLevel', @$this->translation['Training Level'], $this->levels, 'training_level_phrase', @$this->criteria['training_level_id'], $this->criteria['showLevel']);
+   }
    echo DropDown::render_report_filter('training_pepfar', 'showPepfar', @$this->translation['PEPFAR Category'], $this->pepfars, 'pepfar_category_phrase', @$this->criteria['training_pepfar_id'], $this->criteria['showPepfar']);
 
    if ( $this->setting['display_training_method'] && $this->mode != 'search') {
@@ -259,6 +264,9 @@ if ( $this->mode == 'count' ) {
    </div></div>
   <?php } ?>
   </div>
+  
+  <!-- TA:17: 09/03/2014-->
+<?php if($this->setting['display_training_start_date']){ ?>
 	<div class="clear"></div><br/><br/>
 <div class="fieldLabel"><?php tp('Start date');?></div>
 <div class="fieldInput" id="startdate">
@@ -271,6 +279,7 @@ if ( $this->mode == 'count' ) {
 		    });
 		</script>
 	</div>
+	<?php }?>
 <div class="fieldLabel" style="padding-top:1em;"><?php tp('End date');?></div>
 <div class="fieldInput" id="enddate" style="margin-top:1em;">
     <?php tp('Day');?> <input id="end-day" class="dayfield" type="text" name="end-day" maxlength="2" value="<?php echo $this->criteria['end-day']; ?>"  />

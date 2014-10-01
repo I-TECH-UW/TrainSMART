@@ -73,6 +73,14 @@ if (($this->hasACL('pre_service')) || ($this->hasACL('admin_preservice'))){
 		'search'            => t('Edit Users')
 		),
 	);
+	
+	//TA:17: 09/02/2014
+	if ( !$this->setting['display_training_category'] ) {
+		unset($navAdmin['training']['category']);
+	}
+	if ( !$this->setting['display_training_level'] ) {
+		unset($navAdmin['training']['level']);
+	}
 } else {
 	$navAdmin = array( // directory => array of pages (index for root)
 		'country' => array( // file => label

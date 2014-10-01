@@ -129,6 +129,8 @@
 							?>
 							<div class="clear pad20">&nbsp;</div>
 
+							<!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_type']){?>
 							<div class="fieldquestion"><?php echo t('Facility Type'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="showfacilitytype" id="showfacilitytype" value="1"<?php echo $_GET['showfacilitytype'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="facilitytype" id="facilitytype" style="" size="10">
@@ -139,6 +141,7 @@
 ?>
 							</select></div>
 							<div class="clear pad20">&nbsp;</div>
+							<?php }?>
 
 							<div class="fieldquestion"><?php echo t('Facility sponsors'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="showinstitutionsponsors" id="showinstitutionsponsors" value="1"<?php echo $_GET['showinstitutionsponsors'] ? " checked" : "" ?>></div>

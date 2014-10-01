@@ -42,7 +42,7 @@ class EmployeeController extends ReportFilterHelpers {
 		}
 
 		require_once('models/table/dash-employee.php');
-		$this->view->assign('title', $this->translation['Application Name'].space.t('Employee Tracking System'));
+		$this->view->assign('title', $this->translation['Application Name'].space.t('Employee').space.t('Tracking System'));
 
 		// restricted access?? does this user only have acl to view some trainings or people
 		// they dont want this, removing 5/01/13
@@ -347,12 +347,14 @@ class EmployeeController extends ReportFilterHelpers {
 			// $status->checkRequired ( $this, 'first_name', t ( 'Frist Name' ) );
 			// $status->checkRequired ( $this, 'last_name',  t ( 'Last Name' ) );
 			
-			$status->checkRequired ( $this, 'employee_code', t ( 'Employee Code' ) );
+			$status->checkRequired ( $this, 'employee_code', t('Employee').space.t('Code'));
 			
-			$status->checkRequired ( $this, 'dob', t ( 'Date of Birth' ) );
+			//$status->checkRequired ( $this, 'dob', t ( 'Date of Birth' ) );//TA:18: 08/28/2014 (DOB field is not required)
 			
 			if($this->setting('display_employee_nationality'))
-				$status->checkRequired ( $this, 'lookup_nationalities_id', t ( 'Employee Nationality' ) );
+				$status->checkRequired ( $this, 'lookup_nationalities_id', t('Employee Nationality'));
+			
+			
 			
 			$status->checkRequired ( $this, 'employee_qualification_option_id', t ( 'Staff Cadre' ) );
 			
@@ -382,7 +384,7 @@ class EmployeeController extends ReportFilterHelpers {
 			if(($this->setting('display_employee_base') && !$params['employee_base_option_id']) || !$this->setting('display_employee_base')) // either one is OK, javascript disables regions if base is on & has a value choice
 				$status->checkRequired ( $this, 'province_id', t ( 'Region A (Province)' ).space.t('or').space.t('Employee Based at') );
 			if($this->setting('display_employee_base') && !$params['province_id'])
-				$status->checkRequired ( $this, 'employee_base_option_id', t ( 'Employee Based at' ).space.t('or').space.t('Region A (Province)') );
+				$status->checkRequired ( $this, 'employee_base_option_id', t('Employee Based at').space.t('or').space.t('Region A (Province)') );
 			if($this->setting('display_employee_primary_role'))
 				$status->checkRequired ( $this, 'employee_role_option_id', t ( 'Primary Role' ) );
 
@@ -496,6 +498,24 @@ class EmployeeController extends ReportFilterHelpers {
             	//var_dump($mechanism);
             	//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
             	
+			}
+            	
+            	//get linked table data from option tables
+            	
+            	$sql = "SELECT partner_id, subpartner_id, partner_funder_option_id, mechanism_option_id, percentage
+            	FROM employee_to_partner_to_subpartner_to_funder_to_mechanism WHERE employee_id = $id and partner_id = {$params['partner_id']}";
+            	$params['funder'] = $db->fetchAll($sql);
+            	
+
+            	$helper = new Helper();
+            	$subPartner = $helper->getEmployeeSubPartner($params['partner_id']);
+            	$this->viewAssignEscaped ( 'subPartner', $subPartner );
+            	
+            	$partnerFunder = $helper->getEmployeeFunder($params['partner_id']);
+            	$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+            	
+            	$mechanism = $helper->getEmployeeMechanism($params['partner_id']);
+            	$this->viewAssignEscaped ( 'mechanism', $mechanism );
 			}
 		}
 

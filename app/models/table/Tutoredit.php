@@ -69,6 +69,24 @@ class Tutoredit extends ITechTable
 		//echo $select->__toString();
 		return $result;
 	}
+	
+	//TA: added 7/24/2014
+	public function ListSpecialty(){
+		$select = $this->dbfunc()->select()
+		->from('tutor_specialty_option');
+		$result = $this->dbfunc()->fetchAll($select);
+		//echo $select->__toString();
+		return $result;
+	}
+	
+	//TA: added 7/24/2014
+	public function ListContractType(){
+		$select = $this->dbfunc()->select()
+		->from('tutor_contract_option');
+		$result = $this->dbfunc()->fetchAll($select);
+		//echo $select->__toString();
+		return $result;
+	}
 
 	public function ListCadre(){
 		$select = $this->dbfunc()->select()
@@ -127,8 +145,16 @@ class Tutoredit extends ITechTable
 			'phone_work'		=>	$param['localphone'],
 			'national_id'		=>	$param['nationalid'],
 			'phone_mobile'		=>	$param['localcell'],
-			'phone_mobile_2'	=>	$param['localcell2'],
-			'national_id'		=>	$param['nationalid']
+			//TA: there is no 'phone_mobile_2' column in PERSON table -> link it 'phone_home' column 
+			//'phone_mobile_2'	=>	$param['localcell2'],
+			'phone_home'	=>	$param['localcell2'],
+			'national_id'		=>	$param['nationalid'],
+				
+				'custom_field1'	=>	$param['custom_field1'], //TA: added 7/22/2014
+				'custom_field2'	=>	$param['custom_field2'], //TA: added 7/22/2014
+				'custom_field3'	=>	$param['custom_field3'], //TA: added 7/22/2014
+				'marital_status'	=>	$param['marital_status'], //TA: added 7/22/2014
+				'spouse_name'	=>	$param['spouse_name'], //TA: added 7/22/2014
 
 			//'home_location_id'=>"$param[city]"
 		);
@@ -163,6 +189,8 @@ class Tutoredit extends ITechTable
 			'facilityid'		=>	$param['facilityid'],
 			'cadreid'			=>	$param['cadreid'],
       'institutionid'    =>  $param['institutionid'],
+				'specialty'    =>  $param['specialty'], //TA: added 7/22/2014
+				'contract_type'    =>  $param['contract_type'], //TA: added 7/22/2014
 		);
 
 		$db->update('tutor',$tutor,"personid = '".$param['id']."'");

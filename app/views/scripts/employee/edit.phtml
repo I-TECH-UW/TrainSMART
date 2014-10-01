@@ -20,7 +20,7 @@
 
 			<?php require_once 'views/scripts/status.phtml' ?>
 
-			<h1><?php $this->mode == 'add' ? tp('Add Employee') : tp('Edit Employee'); ?></h1>
+			<h1><?php $this->mode == 'add' ? print(t('Add').space.t('Employee')) : print(t('Edit').space.t('Employee')); ?></h1>
 			<form action="" method="post" class="form_employee">
 				<legend></legend>
 
@@ -52,12 +52,12 @@
 						echo labelAndField($this, t('Last Name'),    'text', 'last_name',   $this->employee['last_name'] );
 						*/
 						$this->viewonly = true;
-						echo labelAndField($this, t('Employee ID'),    'text', 'employee_id',   $this->employee['id'] );
+						echo labelAndField($this, t('Employee').space.t('ID'),    'text', 'employee_id',   $this->employee['id'] );
 						$this->viewonly = false;
-						echo labelAndField($this, t('Employee Code'),    'text', 'employee_code',   $this->employee['employee_code'] );
+						echo labelAndField($this, t('Employee').space.t('Code'),    'text', 'employee_code',   $this->employee['employee_code'] );
 						
 						if($this->setting['display_employee_dob'])
-						echo labelAndField($this, t('Date of Birth').space.('(dd/mm/yyyy)'),'date', 'dob',         $this->employee['dob'] );
+						echo labelAndField($this, t('Employee Date of Birth').space.('(dd/mm/yyyy)'),'date', 'dob',         $this->employee['dob'] );
 						
 						// if($this->setting['display_employee_nationality'])
 						// echo labelAndField($this, t('Employee Nationality'), $this->nationality, 'select_lookup_nationalities');
@@ -78,7 +78,7 @@
 						}
 
 						if ($this->mode != 'add' && $this->employee['partner_employee_number'])
-						echo labelAndField($this, t('Employee Number'),       'text', 'partner_employee_number', $this->employee['partner_employee_number']);
+						echo labelAndField($this, t('Employee').space.t('Number'),       'text', 'partner_employee_number', $this->employee['partner_employee_number']);
 						
 						if($this->setting['display_employee_partner'])	
 						echo labelAndField($this, t('Partner'),     $this->partners, 'partner_id');

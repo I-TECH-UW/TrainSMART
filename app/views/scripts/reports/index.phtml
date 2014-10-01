@@ -124,9 +124,9 @@
 
 	if ($this->hasACL('edit_employee') && $this->setting['module_employee_enabled']) {
 ?>
-				<h2><?php echo t('Employee Tracking Module'); ?></h2>
+				<h2><?php echo t('Employee'), space, t('Tracking Module'); ?></h2>
 				<div class="clear"></div>
-				<div class="fieldLabel" id="training_lbl"><?php tp('Employee Tracking Reports');?></div>
+				<div class="fieldLabel" id="training_lbl"><?php print(t('Employee').space.t('Tracking Reports'));?></div>
 				<select id="employee_reports" name="employee_reports" onchange="gotoPage('employee_reports');">
 					<option value="">--<?php tp('choose');?>--</option>
 					<option value="/reports/employees"			><?php tp('Employees');?></option>

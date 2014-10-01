@@ -143,7 +143,9 @@ ob_end_clean();
 							<tr><td class="fieldTitle">Training Center</td><td></td><td><input type="text" name="label_training_center" value="<?php echo $this->label_training_center; ?>"></td> <td></td></tr>
 							<tr><td class="fieldTitle">Participant</td>    <td></td><td><input type="text" name="label_participant"     value="<?php echo $this->label_participant; ?>"></td>     <td></td></tr>
 							<tr><td class="fieldTitle">Participants</td>   <td></td><td><input type="text" name="label_participants"    value="<?php echo $this->label_participants; ?>"></td>    <td></td></tr>
-
+							<tr><td class="fieldTitle">Employee</td>    <td></td><td><input type="text" name="label_employee"     value="<?php echo $this->label_employee; ?>"></td>     <td></td></tr>
+							<tr><td class="fieldTitle">Employees</td>   <td></td><td><input type="text" name="label_employees"    value="<?php echo $this->label_employees; ?>"></td>    <td></td></tr>
+							
 
 							</table>
 											</fieldset>
@@ -193,11 +195,19 @@ ob_end_clean();
 													<div style="clear : both;"></div>
 												</div>
 							<div>
-								<div class="fieldInput"><div class="fieldLabel">Employee Tracking</div>
+								<div class="fieldInput"><div class="fieldLabel"><?php tp('Employee');?> Tracking</div>
 									<input type="checkbox" name="check_mod_employee" id="check_mod_employee" <?php if($this->check_mod_employee == 1) echo 'checked'; ?>><label for="check_mod_employee">Enable</label>
 								</div>
 								<div style="clear : both;"></div>
 							</div>
+							<!-- TA:17: 09/11/2014 -->
+							<div>
+								<div class="fieldInput"><div class="fieldLabel">Reports</div>
+									<input type="checkbox" name="check_country_reports" id="check_country_reports" <?php if($this->check_country_reports == 1) echo 'checked'; ?>><label for="check_country_reports">Enable</label>
+								</div>
+								<div style="clear : both;"></div>
+							</div>
+							
 											</fieldset>
 
 											<fieldset class="settings"><legend>Languages</legend><br/>

@@ -17,7 +17,7 @@
 		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
 		<div id="content">
 
-			<h1><?php tp('Search Employees');?></h1>
+			<h1><?php print(t('Search').space.t('Employees'));?></h1>
 			<form action="" method="get" class="form_employee">
 				<fieldset><legend><?php tp('Select Criteria');?></legend>
 
@@ -27,7 +27,7 @@
 						// echo labelAndField($this, t('First Name'), 'text', 'first_name', $this->criteria['first_name']);
 						// echo labelAndField($this, t('Last Name'), 'text', 'last_name', $this->criteria['last_name']);
 						
-						echo labelAndField($this, t('Employee Code'), 'text', 'employee_code', $this->criteria['employee_code']);
+						echo labelAndField($this, t('Employee').space.t('Code'), 'text', 'employee_code', $this->criteria['employee_code']);
 						
 						echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, false );
 						
@@ -112,7 +112,7 @@
 				formatter: formatViewUrl},
 				// {key:"first_name",    label: "<?php tp('First Name');?>", sortable:true, resizeable:true},
 				// {key:"last_name",     label: "<?php tp('Last Name');?>", sortable:true, resizeable:true},
-				{key:"employee_code",    label: "<?php tp('Employee Code');?>", sortable:true, resizeable:true},
+				{key:"employee_code",    label: "<?php print(t('Employee').space.t('Code'));?>", sortable:true, resizeable:true},
 				// {key:"gender",        label: "<?php tp('Gender');?>",     sortable:true, resizeable:true},
 				{key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true},
 				<?php if ( $this->setting['display_region_b'] ) { ?>

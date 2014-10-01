@@ -61,9 +61,17 @@ print ScriptContainer::$instance->renderJSHead();
 		var trainingColumnDefs = [
       {key:"input_checkbox", label: "<?php tp('Assign'); ?>", sortable:false, resizable:false},
       {key:"training_id", label: "ID", sortable:false, resizeable:true, formatter: formatTrainingViewUrl},
-      {key:"training_category_phrase", label: "<?php echo (@$this->translation['Training Category']); ?>", sortable:true, resizeable:true},
+      
+      //TA:17: 08/28/2014 
+      <?php if($this->setting['display_training_category']){
+      	echo "{key:'training_category_phrase', label: '" . @$this->translation["Training Category"] . "', sortable:true, resizeable:true},";
+	   }?>
+	   
       {key:"training_title", label: "<?php echo (@$this->translation['Training Name']); ?>", sortable:true, resizeable:true},
+      //TA:17: 9/2/2014 
+      <?php if($this->setting['display_training_start_date']){?>
       {key:"training_start_date", label: "<?php tp('Start Date'); ?>", sortable:true, resizeable:true},
+      <?php }?>
       {key:"training_organizer_phrase", label: "<?php echo (@$this->translation['Training Organizer']); ?>", sortable:true, resizeable:true},
       {key:"training_location_name", label: "<?php tp('Location'); ?>", sortable:true, resizeable:true}
 		  ];

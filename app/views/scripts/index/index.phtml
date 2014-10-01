@@ -112,6 +112,8 @@
 
 			<div class="clear"></div>
 
+			<!-- TA:17: 09/09/2014 -->
+    <?php if ( $this->hasACL ( 'admin_files' ) ) {?>
 			    <div class="hrGrey"></div>
 			    <div class="clear"></div>
 			    <div class="fieldIndentNoMargin"><?php tp('Attached Documents'); ?></div>
@@ -128,6 +130,7 @@
 			YAHOO.util.Event.on(window, 'load', initUploadButton);
 			</script>
 			    <?php endif; ?>
+			    <?php } ?>
 
 
 	<?php } else { ?>

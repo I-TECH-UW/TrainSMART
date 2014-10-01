@@ -7,6 +7,8 @@
 		size="40" maxlength="128" />
 </div>
 
+<!-- TA:17: 09/03/2014 START-->
+<?php if($this->setting['display_facility_address']){?>
 <div class="fieldLabelThin" id="facility_address1_lbl"><?php tp('Address 1');?></div>
 <div class="fieldInput">
 	<input type="text" name="facility_address1" id="facility_address1"
@@ -17,6 +19,7 @@
 	<input type="text" name="facility_address2" id="facility_address2"
 		value="" size="40" maxlength="128" />
 </div>
+<?php } ?>
 
 <div class="fieldLabelThin" id="facility_province_id_lbl">
 	<span class="required">*</span><?php echo (@$this->translation['Region A (Province)']); ?></div>
@@ -62,6 +65,9 @@
 	<span class="required">*</span><?php echo (@$this->translation['Region I']); ?></div>
 <div class="fieldInput"><?php renderFilter($this->locations, 9, 'facility_region_i_id', false, false);?></div>
 <?php } ?>
+
+<!-- TA:17: 09/03/2014 -->
+<?php if($this->setting['display_facility_city']){?>
 <div class="fieldLabelThin" id="facility_city_lbl"><?php echo (@$this->translation['City or Town']); ?></div>
 <div id="cityAutoComplete">
 	<div class="fieldInput">
@@ -75,6 +81,7 @@
 
 </div>
 <?php renderCityAutocomplete('facility','facilityCityContainer',$this->base_url.'/facility/cityList/outputType/text/', $this->setting['num_location_tiers']);?>
+<?php }?>
 
 <?php if ($this->setting['display_facility_postal_code'] ) { ?>
 <div class="fieldLabelThin" id="facility_postal_code_lbl"><?php tp('Postal code');?></div>
@@ -95,17 +102,23 @@
 		value="" size="40" maxlength="11" />
 </div>
 <?php } ?>
+
+<!-- TA:17: 09/03/2014 START -->
+<?php if ($this->setting['display_facility_phone'] ) { ?>
 <div class="fieldLabelThin" id="facility_phone_lbl"><?php tp('Phone'); ?></div>
 <div class="fieldInput">
 	<input type="text" name="facility_phone" id="facility_phone" value=""
 		size="40" maxlength="32" />
 </div>
+<?php } ?>
+<?php if ($this->setting['display_facility_fax'] ) { ?>
 <div class="fieldLabelThin" id="facility_fax_lbl"><?php tp('Fax');?></div>
 <div class="fieldInput">
 	<input type="text" name="facility_fax" id="facility_fax" value=""
 		size="40" maxlength="32" />
 </div>
-
+<?php } ?>
+<!-- TA:17: 09/03/2014 END -->
 
 <?php if ($this->setting['display_facility_custom1'] ) { ?>
 <div class="fieldLabelThin" id="facility_custom1_lbl"><?php tp('Facility Custom 1');?></div>
@@ -116,9 +129,8 @@
 <?php } ?>
 
 
-
-<div class="fieldLabelThin" id="facility_type_id_lbl">
-	<span class="required">*</span><?php tp('Facility'); echo ' '; tp('type');?></div>
+<?php if($this->setting['display_facility_type']) { ?>
+<div class="fieldLabelThin" id="facility_type_id_lbl"><?php tp('Facility'); echo ' '; tp('type');?></div>
 <div class="fieldInput">
 	<select id="facility_type_id" name="facility_type_id">
 		<option value="">--<?php tp('choose');?>--</option>
@@ -129,6 +141,7 @@
 		?>
 	</select>
 </div>
+<?php }?>
 <?php if($this->setting['display_facility_sponsor']) { ?>
 <div class="fieldLabelThin" id="facility_sponsor_id_lbl"><?php tp('Facility'); echo ' '; tp('sponsor');?></div>
 <div class="fieldInput" id="facility_sponsor_wrapper">

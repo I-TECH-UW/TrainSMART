@@ -19,7 +19,7 @@
 			<div id="content">
 
 				<h1><?php tp('Professionals Reports');?></h1>
-				<form action="" method="GET">
+				<form action="" method="get">
 					<fieldset><legend><?php tp('Select Criteria');?></legend>
 						<div class="fieldLabel" id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></div>
 						<div class="fieldInput"><?php renderFilter($this->locations, 1, 'province_id', $this->criteria['province_id'], 'district_id');?></div>
