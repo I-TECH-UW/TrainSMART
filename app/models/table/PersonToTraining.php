@@ -35,7 +35,8 @@ class PersonToTraining extends ITechTable
         ->joinLeft(array('award'   => 'person_to_training_award_option'),        "award.id   = award_id"                  ,  array('award_phrase' => 'award_phrase'))
         ->joinLeft(array('budget'  => 'person_to_training_budget_option'),       "budget.id  = budget_code_option_id"     ,  array('budget_code_phrase' => 'budget_code_phrase'))
         ->joinLeft(array('viewloc' => 'person_to_training_viewing_loc_option'),  "viewloc.id = viewing_location_option_id",  array('location_phrase' => 'location_phrase'))
-        ->where("ptt.training_id = $training_id")
+       // ->where("ptt.training_id = $training_id")
+        ->where("ptt.training_id = $training_id and p.is_deleted=0") //TA:21: 09/29/2014
         ->group("ptt.id")
         ->order("last_name");
 

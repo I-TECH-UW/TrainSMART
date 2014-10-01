@@ -45,7 +45,8 @@ ob_end_clean();
 
 							<tr>
 								<td class="fieldTitle">Training category</td>
-								<td></td>
+								<!-- TA:17: 8/28/2014 -->
+								<td><input type="checkbox" name="check_training_category" <?php if($this->check_training_category) echo 'checked'; ?> id="check_training_category"></td>
 								<td><input type="text" name="label_training_category" value="<?php echo $this->label_training_category; ?>"></td>
 								<td><a href="<?php echo $this->base_url;?>/admin/training-category" onclick="return submitAdminForm(this);">Add/Edit</a></td>
 							</tr>
@@ -63,17 +64,35 @@ ob_end_clean();
 								<td><input type="text" name="label_training_org" value="<?php echo $this->label_training_org; ?>"></td>
 								<td><a href="<?php echo $this->base_url;?>/admin/training-organizer" onclick="return submitAdminForm(this);">Add/Edit</a></td>
 							</tr>
-
+							
+							<!-- TA:17: 09/02/2014 START -->
+							<tr>
+								<td class="fieldTitle">Start Date</td>
+								<td><input type="checkbox" name="check_training_start_date" <?php if($this->check_training_start_date) echo 'checked'; ?> id="check_training_start_date"></td>
+								<td></td>
+								<td></td>
+							</tr>
+					<!-- TA:17: 09/02/2014 END -->
+					
 							<tr>
 								<td class="fieldTitle">End Date</td>
 								<td><input type="checkbox" name="check_training_end_date" <?php if($this->check_training_end_date) echo 'checked'; ?> id="check_training_end_date"></td>
 								<td></td>
 								<td></td>
 							</tr>
+							
+							<!-- TA:17: 09/03/2014 START -->
+							<tr>
+								<td class="fieldTitle">Training length</td>
+								<td><input type="checkbox" name="check_training_length" <?php if($this->check_training_length) echo 'checked'; ?> id="check_training_length"></td>
+								<td></td>
+								<td></td>
+							</tr>
+					<!-- TA:17: 09/03/2014 END -->
 
 							<tr>
 								<td class="fieldTitle">Training level</td>
-								<td></td>
+								<td><input type="checkbox" name="check_training_level" <?php if($this->check_training_level) echo 'checked'; ?> id="check_training_level"></td>
 								<td><input type="text" name="label_training_level" value="<?php echo $this->label_training_level; ?>"></td>
 								<td><a href="<?php echo $this->base_url;?>/admin/training-level" onclick="return submitAdminForm(this);">Add/Edit</a></td>
 							</tr>
@@ -155,7 +174,7 @@ ob_end_clean();
 
 							<tr>
 								<td class="fieldTitle">Comments</td>
-								<td></td>
+								<td><input type="checkbox" name="check_training_comments" <?php if($this->check_training_comments) echo 'checked'; ?> id="check_training_comments"></td>
 								<td><input type="text" name="label_training_comments" value="<?php echo $this->label_training_comments; ?>"></td>
 								<td></td>
 							</tr>
@@ -244,6 +263,22 @@ ob_end_clean();
 								<td><input type="text" name="label_budget_code" value="<?php echo $this->label_budget_code; ?>"></td>
 								<td><a href="<?php echo $this->base_url;?>/admin/training-budget-code" onclick="return submitAdminForm(this);">Add/Edit</a></td>
 							</tr>
+							
+							<!-- TA:17: 09/02/2014 START -->
+							<tr>
+								<td class="fieldTitle">Trainer Information</td>
+								<td><input type="checkbox" name="check_facilitator_info" <?php if($this->check_facilitator_info) echo 'checked'; ?> id="check_facilitator_info"></td>
+								<td></td>
+								<td></td>
+							</tr>
+							
+							<tr>
+								<td class="fieldTitle">Training score</td>
+								<td><input type="checkbox" name="check_training_score" <?php if($this->check_training_score) echo 'checked'; ?> id="check_training_score"></td>
+								<td></td>
+								<td></td>
+							</tr>
+					<!-- TA:17: 09/02/2014 END -->
 
 					</tbody>
 

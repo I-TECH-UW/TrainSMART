@@ -1036,8 +1036,8 @@ class PersonController extends ReportFilterHelpers {
 		//facilities list
 		//$rowArray = OptionList::suggestionList('facility',array('facility_name','id'),false,9999);
 		$rowArray = Facility::selectAllFacilities ( $this->setting('num_location_tiers') );
-
-		$this->viewAssignEscaped ( 'facilities', $rowArray );
+		
+		$this->viewAssignEscaped ( 'facilities', $rowArray ); 
 		if ($this->hasACL( 'edit_facility' )){
 			$this->view->assign( 'insertFacilityLink', '<a href="#" id="show">'. str_replace(' ','&nbsp;',t('Insert new facility')) .'</a>' );
 		}
@@ -1173,7 +1173,9 @@ class PersonController extends ReportFilterHelpers {
 				$where []= 'p.id = ptt.person_id ';
 			}
 			if ($criteria ['person_type'] == 'is_trainer'){
-				$where []= 'p.id = trn.person_id ';
+				//$where []= 'p.id = trn.person_id '; //old code
+				//TA:14: should check if person 'active' 
+				$where []= "p.id = trn.person_id and p.active='active'";
 			}
 
 			if ($criteria ['person_type'] == 'is_unattached_person'){
@@ -1208,6 +1210,7 @@ class PersonController extends ReportFilterHelpers {
 
 			$sql .= " ORDER BY " . " `p`.`last_name` ASC, " . " `p`.`first_name` ASC";
 
+			print($sql);
 			$rowArray = $db->fetchAll ( $sql );
 
 			if ($criteria ['outputType']) {
@@ -1222,6 +1225,7 @@ class PersonController extends ReportFilterHelpers {
 
 			$this->viewAssignEscaped ( 'results', $rowArray );
 			$this->view->assign ( 'count', count ( $rowArray ) );
+			
 		}
 
 		$this->view->assign ( 'criteria', $criteria );
@@ -1681,6 +1685,22 @@ class PersonController extends ReportFilterHelpers {
 			$trainings [$k] ['input_checkbox'] = '<input type="checkbox" name="training_ids[]" value="' . $r ['training_id'] . '">';
 		}
 		$this->view->assign ( 'trainings', $trainings );
+		
+		//TA:17: 08/28/2014
+		require_once 'models/table/System.php';
+		$sysTable = new System();
+		$sysRows = $sysTable->fetchAll()->toArray();
+		foreach($sysRows as $row) {
+			foreach($row as $column=>$value) {
+				if($column == 'display_training_category' && $value != '0'){
+					$this->view->assign( 'display_training_category', 'display_training_category' );
+				}
+				if($column == 'display_training_start_date' && $value != '0'){
+					$this->view->assign( 'display_training_start_date', 'display_training_start_date' );
+				}
+			}
+		}
+		
 
 		$request = $this->getRequest ();
 		// save

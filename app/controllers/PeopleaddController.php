@@ -18,6 +18,8 @@ class PeopleaddController extends ITechController {
 			$this->doNoAccessError ();
 
 	}
+	
+
 	public function peopleaddAction(){
 		$params = $this->getAllParams();
 		$status = ValidationContainer::instance();

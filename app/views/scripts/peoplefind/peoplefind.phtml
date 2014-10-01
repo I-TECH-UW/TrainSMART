@@ -87,7 +87,8 @@
 						?>
 					</select>
 
-					<label><?php echo t('Institution'); ?></label>
+					<!-- TA: added 7/30/2014 -->
+					<label><?php echo $this->translation['ps institution'] ?></label>
 					<select id="inst" name="inst">
 						<option value="0"><?php echo t('Select...'); ?></option>
 						<?php
@@ -116,7 +117,8 @@
                     <p style="padding : 0px; margin : 0px; background-color : #FFFFFF;">&nbsp;</p>
 
                     <label>&nbsp;</label>
-                    <input type="radio" name="type" value="tutor" style="margin-left : 30px;"<?php echo $this->escape($_REQUEST['type']) == "tutor" ? " checked" : ""; ?>> <?php echo t('Tutor'); ?>
+                    <!-- TA: added 7/30/2014 -->
+                    <input type="radio" name="type" value="tutor" style="margin-left : 30px;"<?php echo $this->escape($_REQUEST['type']) == "tutor" ? " checked" : ""; ?>> <?php echo $this->translation['ps tutor'] ?>
                     <p style="padding : 0px; margin : 0px; background-color : #FFFFFF;">&nbsp;</p>
 
                     <label>&nbsp;</label>
@@ -139,7 +141,8 @@
 							<th><?php echo t('ID'); ?></th>
 							<th><?php echo t('Name'); ?></th>
 							<th><?php echo t('Gender'); ?></th>
-							<th><?php echo t('Institution'); ?></th>
+							<!-- TA: added 07/30/2014 -->
+							<th><?php echo $this->translation['ps institution'] ?></th>
 							<th><?php echo t('Cohort'); ?></th>
 						</tr>
 					</thead>

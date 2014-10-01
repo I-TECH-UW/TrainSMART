@@ -124,6 +124,7 @@
 					<div class="pad20 clear"></div><br>
 
                     <label id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></label>
+                    selgeo3: <?php $this->escape($this->selgeo3);?>
 			<?php renderFilter($this->locations, 1, 'province_id', $this->escape($this->selgeo1), 'district_id');?>
           <?php if ( $this->setting['display_region_b'] ) { ?>
             <label id="district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?></label>
@@ -281,7 +282,6 @@
 
                 <table><tr><td style="margin-top:-50px;font-weight:bold;">Facility After Graduation</td></tr>
                 <tr><td>&nbsp;</td></tr></table>
-
 
                 	  <label id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></label>
 			<?php renderFilter($this->locations, 1, 'province_id', $this->criteria['province_id'], 'district_id');?>

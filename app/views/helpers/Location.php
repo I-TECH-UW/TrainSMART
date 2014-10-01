@@ -707,7 +707,7 @@ function gnrtest_epsfm_dropdown(&$view, &$employee, &$partner, &$subPartner, &$p
 	$class = $is_multiple ? 'autoHeight' : '';
 	?>
 
-		<div class="fieldLabel" id="employee_lbl"><?php echo 'Employee'; ?></div>
+		<div class="fieldLabel" id="employee_lbl"><?php echo t('Employee'); ?></div>
 		<div class="fieldInput">
 		
 		<?php gnrtestrenderFunder($employee, 'employee', false, 'partner', $is_multiple); ?></div>

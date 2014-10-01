@@ -71,38 +71,41 @@ class AdminController extends UserController
 		// For "Labels"
 		require_once('models/table/Translation.php');
 		$labelNames = array( // input name => key_phrase
-		'label_country'   => 'Country',
-		'label_regiona'   => 'Region A (Province)',
-		'label_regionb'   => 'Region B (Health District)',
-		'label_regionc'   => 'Region C (Local Region)',
-		'label_regiond'   => 'Region D',
-		'label_regione'   => 'Region E',
-		'label_regionf'   => 'Region F',
-		'label_regiong'   => 'Region G',
-		'label_regionh'   => 'Region H',
-		'label_regioni'   => 'Region I',
-		'label_citytown'  => 'City or Town',
+		'label_country'          => 'Country',
+		'label_regiona'          => 'Region A (Province)',
+		'label_regionb'          => 'Region B (Health District)',
+		'label_regionc'          => 'Region C (Local Region)',
+		'label_regiond'          => 'Region D',
+		'label_regione'          => 'Region E',
+		'label_regionf'          => 'Region F',
+		'label_regiong'          => 'Region G',
+		'label_regionh'          => 'Region H',
+		'label_regioni'          => 'Region I',
+		'label_citytown'         => 'City or Town',
 		'label_application_name' => 'Application Name',
-		'label_training' =>         'Training',
-		'label_trainings' =>        'Trainings',
-		'label_trainer' =>          'Trainer',
-		'label_trainers' =>         'Trainers',
-		'label_training_center' =>  'Training Center',
-		'label_participant' =>      'Participant',
-		'label_participants' =>     'Participants'
+		'label_training'         => 'Training',
+		'label_trainings'        => 'Trainings',
+		'label_trainer'          => 'Trainer',
+		'label_trainers'         => 'Trainers',
+		'label_training_center'  => 'Training Center',
+		'label_participant'      => 'Participant',
+		'label_participants'     => 'Participants',
+		'label_employee'         => 'Employee',
+		'label_employees'        => 'Employees'
 		);
 
 		// _system settings
 		$checkboxFields = array( // input name => db field
-		'check_mod_eval'     => 'module_evaluation_enabled',
-		'check_mod_approvals'     => 'module_approvals_enabled',
+		'check_mod_eval'           => 'module_evaluation_enabled',
+		'check_mod_approvals'      => 'module_approvals_enabled',
 		'check_mod_historical'     => 'module_historical_data_enabled',
-		'check_mod_unknown'     => 'module_unknown_participants_enabled',
+		'check_mod_unknown'        => 'module_unknown_participants_enabled',
 		'check_mod_attendance'     => 'module_attendance_enabled',
 		'display_training_partner' => 'display_training_partner',
-		'display_mod_skillsmart' => 'display_mod_skillsmart',
+		'display_mod_skillsmart'   => 'display_mod_skillsmart',
 		'fiscal_year_start'        => 'fiscal_year_start',
-		'check_mod_employee'       => 'module_employee_enabled'
+		'check_mod_employee'       => 'module_employee_enabled',
+				'check_country_reports' => 'display_country_reports',//TA:17: 9/11/2014
 		);
 
 
@@ -461,7 +464,14 @@ class AdminController extends UserController
 		'check_training_funding_options' => 'display_funding_options',
 		'check_training_funding_amounts'     => 'display_funding_amounts',
 		'check_display_viewing_location'     => 'display_viewing_location',
-		'check_display_budget_code'          => 'display_budget_code'
+		'check_display_budget_code'          => 'display_budget_code',
+		'check_training_category'          => 'display_training_category', //TA:17: 8/27/2014
+		'check_training_start_date'          => 'display_training_start_date', //TA:17: 9/02/2014
+		'check_training_length'          => 'display_training_length', //TA:17: 9/03/2014
+		'check_training_level'          => 'display_training_level', //TA:17: 9/03/2014
+		'check_training_comments'          => 'display_training_comments', //TA:17: 9/03/2014
+		'check_facilitator_info' => 'display_facilitator_info',//TA:17: 9/03/2014
+		'check_training_score' => 'display_training_score',//TA:17: 9/03/2014
 		);
 
 		if($this->getRequest()->isPost()) { // Update db
@@ -813,7 +823,13 @@ class AdminController extends UserController
 		'check_display_lat_long' => 'display_facility_lat_long',
 		'check_display_postal'   => 'display_facility_postal_code',
 		'check_display_sponsor'  => 'display_facility_sponsor',
-		'check_facility_custom1'  => 'display_facility_custom1'		
+		'check_facility_custom1'  => 'display_facility_custom1',
+			'check_facility_address' => 'display_facility_address', //TA:17: 9/03/2014
+			'check_facility_phone' => 'display_facility_phone', //TA:17: 9/03/2014
+			'check_facility_fax' => 'display_facility_fax', //TA:17: 9/03/2014
+			'check_facility_comments' => 'display_facility_comments', //TA:17: 9/03/2014
+			'check_facility_type' => 'display_facility_type', //TA:17: 9/03/2014
+			'check_facility_city' => 'display_facility_city', //TA:17: 9/04/2014
 		);
 
 		if($this->getRequest()->isPost()) { // Update db
@@ -932,7 +948,10 @@ class AdminController extends UserController
 		'check_external_classes'  => 'display_external_classes',
 		'check_primary_responsibility'  => 'display_primary_responsibility',
 		'check_secondary_responsibility'  => 'display_secondary_responsibility',
-		'check_approval_mod'              => 'module_person_approval'
+		'check_approval_mod'              => 'module_person_approval',
+		'check_people_comments'	=> 'display_people_comments', //TA:17: 09/09/2014
+		'check_people_facilitator' => 'display_people_facilitator', //TA:17: 09/09/2014
+		'check_people_birthdate' => 'display_people_birthdate', //TA:17: 09/10/2014
 		);
 
 		if($this->getRequest()->isPost()) { // Update db
@@ -1642,9 +1661,21 @@ class AdminController extends UserController
 			$db->query ("UPDATE person_history SET person_id = $mergeToID WHERE person_id = $mergeFromID");
 
 			$table = 'person_to_training';
-			$affectedIDs = implode( $db->fetchCol ( 'SELECT id FROM person_to_training WHERE person_id = ?', $mergeFromID ) );
-			$db->query ("UPDATE person_to_training SET person_id = $mergeToID WHERE person_id = $mergeFromID");
-
+			$affectedIDs = implode( $db->fetchCol ( 'SELECT id FROM person_to_training WHERE person_id = ?', $mergeFromID ) );			
+			//TA:21: 09/30/2014
+			$from_person_training = $db->fetchCol ( 'SELECT training_id FROM person_to_training WHERE person_id=?', $mergeFromID);
+			$to_person_training = $db->fetchCol ( 'SELECT training_id FROM person_to_training WHERE person_id=?', $mergeToID);
+			$arr = array();
+			for($i=0; $i<count($from_person_training); $i++){
+				if(!in_array($from_person_training[$i], $to_person_training)){
+					array_push($arr, $from_person_training[$i]);
+				}
+			}
+			for($i=0; $i<count($arr); $i++){// training ids list to update
+				$db->query ("UPDATE person_to_training SET person_id = $mergeToID WHERE person_id = $mergeFromID and training_id=$arr[$i]");
+			}
+			///
+			
 			$table = 'person_to_training_topic_option';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT id FROM person_to_training_topic_option WHERE person_id = ?', $mergeFromID ) );
 			$db->query ("UPDATE person_to_training_topic_option SET person_id = $mergeToID WHERE person_id = $mergeFromID");
@@ -1655,7 +1686,9 @@ class AdminController extends UserController
 
 			$table = 'trainer';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT uuid FROM trainer WHERE person_id = ?', $mergeFromID ) );
-			$db->query ("UPDATE trainer SET person_id = $mergeToID WHERE person_id = $mergeFromID");
+			if(!$db->fetchCol ( 'SELECT person_id FROM trainer WHERE person_id=?', $mergeToID)){ //TA:21: 09/26/2014
+				$db->query ("UPDATE trainer SET person_id = $mergeToID WHERE person_id = $mergeFromID");
+			}
 
 			$table = 'trainer_history';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT vid FROM trainer_history WHERE person_id = ?', $mergeFromID ) );
@@ -1848,6 +1881,40 @@ class AdminController extends UserController
 		$editTable->fields  = array('title_phrase' => 'Title');
 		$editTable->label   = 'Title';
 		$editTable->dependencies = array('title_option_id' => 'person');
+		$editTable->execute();
+
+	}
+	
+	//TA: added 7/24/2014
+	public function tutorspecialtyAction()
+	{
+		$editTable = new EditTableController($this);
+		$editTable->table   = 'tutor_specialty_option';
+		$editTable->fields  = array('specialty_phrase' => 'Specialty');
+		$editTable->label   = 'Specialty';
+		$editTable->dependencies = array('specialty' => 'tutor');
+		$editTable->execute();	
+	}
+	
+	//TA: added 7/24/2014
+	public function tutorcontractAction()
+	{
+		$editTable = new EditTableController($this);
+		$editTable->table   = 'tutor_contract_option';
+		$editTable->fields  = array('contract_phrase' => 'Contract Type');
+		$editTable->label   = 'Contract Type';
+		$editTable->dependencies = array('contract_type' => 'tutor');
+		$editTable->execute();
+	}
+	
+	//TA:17: added 9/19/2014
+	public function commoditynameAction()
+	{
+		$editTable = new EditTableController($this);
+		$editTable->table   = 'commodity_name_option';
+		$editTable->fields  = array('commodity_name' => 'Commodity Name');
+		$editTable->label   = 'Commodity Name';
+		$editTable->dependencies = array('name' => 'commodity');
 		$editTable->execute();
 	}
 
@@ -2095,52 +2162,194 @@ class AdminController extends UserController
 		$this->view->assign("tutors", $tutors);
 		$this->view->assign("header","Classes");
 	}
-
+	
+	//TA: changed on 7/21/2014
 	public function preserviceLabelsAction(){
-		$helper = new Helper();
+	require_once('models/table/System.php');
+		$sysTable = new System();
 
-		if (isset ($_POST['action'])){
-			$helper->saveLabels($_POST);
-			$this->_redirect ( 'admin/preservice-labels' );
+		// For "Labels"
+		require_once('models/table/Translation.php');
+		$labelNames = array( // input name => key_phrase
+		'label_ps_institution'   => 'ps institution',
+		'label_ps_tutor' => 'ps tutor',
+		'label_ps_zip_code' => 'ps zip code',
+		'label_ps_clinical_allocation' => 'ps clinical allocation',
+		'label_ps_local_address' => 'ps local address',			
+		'label_ps_lic_reg' => 'ps license and registration',
+		'label_ps_permanent_address' => 'ps permanent address',
+		'label_ps_religious_denomination' => 'ps religious denomination',
+		'label_ps_program_enrolled' => 'ps program enrolled in',
+		'label_ps_nationality' => 'ps nationality',			
+		'label_inst_compl_date'   => 'ps high school completion date', 
+		'label_last_school_att' => 'ps last school attended',
+		'label_schhol_start_date' => 'ps school start date',
+		'label_equivalence' => 'ps equivalence',
+		'label_last_univ_att' => 'ps last university attended',
+		'label_person_charge' => 'ps person in charge',
+		'label_ps_custom_field1' => 'ps custom field 1',
+		'label_ps_custom_field2' => 'ps custom field 2',
+		'label_ps_custom_field3' => 'ps custom field 3',
+		'label_ps_marital_status' => 'ps marital status',
+		'label_ps_spouse_name' => 'ps spouse name',
+		'label_ps_specialty' => 'ps specialty',
+		'label_ps_contract_type' => 'ps contract type',
+		'label_ps_exam_mark' => 'ps exam mark',
+		'label_ps_ca_mark' => 'ps ca mark',
+		'label_ps_credits' => 'ps credits',
+				
+		);
+
+		// _system settings
+		$checkboxFields = array( // input name => db field _system table
+		'check_display_inst_compl_date'   => 'ps_display_inst_compl_date', 
+		'check_display_last_inst_attended' => 'ps_display_last_inst_attended',
+		'check_display_start_school_date' => 'ps_display_start_school_date',
+		'check_display_equivalence' => 'ps_display_equivalence',
+		'check_display_last_univ_attended' => 'ps_display_last_univ_attended',
+		'check_display_person_charge' => 'ps_display_person_charge',
+		'check_display_custom_field1' => 'ps_display_custom_field1',
+		'check_display_custom_field2' => 'ps_display_custom_field2',
+		'check_display_custom_field3' => 'ps_display_custom_field3',
+		'check_display_marital_status' => 'ps_display_marital_status',
+		'check_display_spouse_name' => 'ps_display_spouse_name',
+		'check_display_specialty' => 'ps_display_specialty',
+		'check_display_contract_type' => 'ps_display_contract_type',
+		'check_display_local_address' => 'ps_display_local_address',
+		'check_display_permanent_address' => 'ps_display_permanent_address',
+		'check_display_religious_denomin' => 'ps_display_religious_denomin',
+		'check_display_nationality' => 'ps_display_nationality',
+		'check_display_exam_mark' => 'ps_display_exam_mark',
+		'check_display_ca_mark' => 'ps_display_ca_mark',
+		'check_display_credits' => 'ps_display_credits',
+		);
+
+		if($this->getRequest()->isPost()) { // Update db
+			$updateData = array();
+
+			// update translation labels
+			$tranTable = new Translation();
+			foreach($labelNames as $input_key => $db_key) {
+				if ( $this->_getParam($input_key) ) {
+					try {
+						$tranTable->update(
+						array('phrase' => $this->_getParam($input_key)),
+						"key_phrase = '$db_key'"
+						);
+						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
+					} catch(Zend_Exception $e) {
+						error_log($e);
+					}
+				}
+			}
+
+			// update _system (checkboxes)
+			foreach($checkboxFields as $input_key => $db_field) {
+				$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
+				$updateData[$db_field] = $value;
+				$this->view->assign($input_key, $value);
+			}
+			$sysTable->update($updateData, '');
+
+		} else { // view
+
+			// labels
+			$t = Translation::getAll();
+			foreach($labelNames as $input_key => $db_key) {
+				$this->viewAssignEscaped($input_key, $t[$db_key]);
+			}
+
+			// checkboxes
+			$sysRows = $sysTable->fetchRow($sysTable->select()->limit(1));
+			foreach($checkboxFields as $input_key => $field_key) {
+				$this->view->assign($input_key, $sysRows->$field_key);
+			}
 		}
 
-
-		$fields = array();
-		$fields[] = 'ps institution';
-		$fields[] = 'ps license and registration';
-		$fields[] = 'ps clinical allocation';
-		$fields[] = 'ps local address';
-		$fields[] = 'ps permanent address';
-		$fields[] = 'ps zip code';
-		$fields[] = 'ps religious denomination';
-		$fields[] = 'ps program enrolled in';
-		$fields[] = 'ps tutor';
-		$fields[] = 'ps national id';
-		$fields[] = 'ps nationality';
-
-		$list = $helper->AdminLabels($fields);
-
-		$this->view->assign("fieldvalues",$list);
-		$this->view->assign("allfields",$fields);
-
-		$this->view->assign("header","Field labels");
+		// redirect to next page
+		if($this->_getParam('redirect')) {
+			header("Location: " . $this->_getParam('redirect'));
+			exit;
+		} else if($this->_getParam('saveonly')) {
+			$status = ValidationContainer::instance();
+			$status->setStatusMessage(t('Your settings have been updated.'));
+		}
+		
+		//remove later TA:
+		
+// 				$helper = new Helper();
+		
+// 				if (isset ($_POST['action'])){
+// 					$helper->saveLabels($_POST);
+// 					$this->_redirect ( 'admin/preservice-labels' );
+// 				}
+		
+// 				$fields = array();
+// 				$fields[] = 'ps institution';
+// 				$fields[] = 'ps license and registration';
+// 				$fields[] = 'ps clinical allocation';
+// 				$fields[] = 'ps local address';
+// 				$fields[] = 'ps permanent address';
+// 				$fields[] = 'ps zip code';
+// 				$fields[] = 'ps religious denomination';
+// 				$fields[] = 'ps program enrolled in';
+// 				$fields[] = 'ps tutor';
+// 				$fields[] = 'ps national id';
+// 				$fields[] = 'ps nationality';
+		
+// 				$list = $helper->AdminLabels($fields);
+		
+// 				$this->view->assign("fieldvalues",$list);
+// 				$this->view->assign("allfields",$fields);
+		
+ 				$this->view->assign("header","Field labels");
 	}
-
+	
+	//old code
+// 	public function preserviceLabelsAction(){
+// 		$helper = new Helper();
+	
+// 		if (isset ($_POST['action'])){
+// 			$helper->saveLabels($_POST);
+// 			$this->_redirect ( 'admin/preservice-labels' );
+// 		}
+	
+// 		$fields = array();
+// 		$fields[] = 'ps institution';
+// 		$fields[] = 'ps license and registration';
+// 		$fields[] = 'ps clinical allocation';
+// 		$fields[] = 'ps local address';
+// 		$fields[] = 'ps permanent address';
+// 		$fields[] = 'ps zip code';
+// 		$fields[] = 'ps religious denomination';
+// 		$fields[] = 'ps program enrolled in';
+// 		$fields[] = 'ps tutor';
+// 		$fields[] = 'ps national id';
+// 		$fields[] = 'ps nationality';
+	
+// 		$list = $helper->AdminLabels($fields);
+	
+// 		$this->view->assign("fieldvalues",$list);
+// 		$this->view->assign("allfields",$fields);
+	
+// 		$this->view->assign("header","Field labels");
+// 	}
+	
 	public function preserviceCadresAction(){
 		$helper = new Helper();
-
+	
 		if (isset ($_POST['_action'])){
 			switch ($_POST['_action']){
 				case "addnew":
-				$helper->addCadres($_POST);
-				break;
+					$helper->addCadres($_POST);
+					break;
 				case "update":
-				$helper->updateCadres($_POST);
-				break;
+					$helper->updateCadres($_POST);
+					break;
 			}
 			$this->_redirect ( 'admin/preservice-cadres' );
 		}
-
+	
 		$list = $helper->AdminCadres();
 		$this->view->assign("lookup", $list);
 		$this->view->assign("header","Cadres");
@@ -3448,7 +3657,10 @@ class AdminController extends UserController
 			'employee-transition'         => 'edit_employee',
 			'employee-relationship'       => 'edit_employee',
 			'employee-referral'           => 'edit_employee',
-			'employee-training-provided'  => 'edit_employee'
+			'employee-training-provided'  => 'edit_employee',
+			'tutorspecialty'                => 'acl_editor_tutor_specialty', //TA: added 7/22/2014
+			'tutorcontract'                => 'acl_editor_tutor_contract', //TA: added 7/24/2014
+			'commodityname'                => 'acl_editor_commodityname', //TA:17: added 9/19/2014
 			);
 
 

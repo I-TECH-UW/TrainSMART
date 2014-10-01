@@ -63,6 +63,9 @@ if ($this->mode == 'search' ) {
 </select>
 	    </div></div>
 	</div>
+	
+	<!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_type']){?>
 	<div class="fieldLabel" id="type_id_lbl"><?php tp('Facility Type');?></div>
     <div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showType"  <?php echo $checkVisible;?>  <?php  if ($this->criteria['showType'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showType" <?php echo $checkVisible;?>></label>
 	<div  class="leftBorder">
@@ -74,6 +77,8 @@ if ($this->mode == 'search' ) {
 		}
 		?>
 	</select></div></div>
+	<?php }?>
+	
 	<div class="fieldLabel" id="sponsor_id_lbl"><?php tp('Facility Sponsor');?></div>
     <div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showSponsor"  <?php echo $checkVisible;?>  <?php  if ($this->criteria['showSponsor'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showSponsor" <?php echo $checkVisible;?>></label>
 	<div  class="leftBorder">
@@ -126,6 +131,9 @@ if ($this->mode == 'search' ) {
 		?>
 	</select></div></div>
 <?php } ?>
+
+<!-- TA:17: 09/03/2014  -->
+	<?php if ( $this->setting['display_training_level'] ) { ?>
 	<div class="fieldLabel" id="training_level_id_lbl"><?php echo (@$this->translation['Training Level']); ?></div>
 	<div class="fieldInput"><div  class="leftBorderPad" ><input type="checkbox" name="showLevel" <?php echo $checkVisible;?> <?php  if ($this->criteria['showLevel'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showLevel" <?php echo $checkVisible;?>></label>
   	<div  class="leftBorder" >
@@ -137,6 +145,8 @@ if ($this->mode == 'search' ) {
 		}
 		?>
 	</select></div></div>
+	<?php }?>
+	
 	<div class="fieldLabel" id="training_pepfar_id_lbl"><?php print $this->translation['PEPFAR Category'];?></div>
 	<div class="fieldInput"><div  class="leftBorderPad" ><input type="checkbox" name="showPepfar"  <?php echo $checkVisible;?> <?php  if ($this->criteria['showPepfar'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showPepfar" <?php echo $checkVisible;?>></label>
 

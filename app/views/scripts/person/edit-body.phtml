@@ -303,7 +303,6 @@ YAHOO.util.Event.onDOMReady(function() {
 
 
 
-
 <div id="pageHolder">
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
@@ -432,12 +431,17 @@ YAHOO.util.Event.onDOMReady(function() {
 <?php } ?>
 
 <br/>
+
+<?php if ($this->setting['display_gender']) {?>
 <div class="fieldLabel" id="gender_lbl"><span class="required">*</span><?php tp('Gender');?></div>
 <div class="fieldInput">
     <label for="female"><?php tp('Female');?><input type="radio" id="female" name="gender" value="female" <?php echo ( $this->person['gender'] == 'female' ? 'checked="checked"' :'');?> ></input></label>
     <label for="male"><?php tp('Male');?><input type="radio" id="male" name="gender" value="male" <?php echo ( $this->person['gender'] == 'male' ? 'checked="checked"' :'');?>></input></label>
      <label for="na"><?php tp('Unknown');?><input type="radio" id="na" name="gender" value="na" <?php echo ( $this->person['gender'] == 'na' ? 'checked="checked"' :'');?>></input></label>
 </div>
+<?php }?>
+
+<?php if ( $this->setting['display_people_birthdate'] ) { ?>
 <div class="clear"></div>
 <div class="fieldLabel"><?php tp('Birth date');?></div>
     <div class="fieldInput">
@@ -445,6 +449,7 @@ YAHOO.util.Event.onDOMReady(function() {
 	/ <?php tp('Month');?> <input id="birth-month" onchange="updateAge()" class="monthfield" type="text" value="<?php echo $this->person['birthdate-month'];?>" name="birth-month" />
 	/ <?php tp('Year');?> <input id="birth-year" onchange="updateAge()" class="yearfield" type="text" value="<?php echo $this->person['birthdate-year'];?>" name="birth-year" />
 </div>
+<?php }?>
 <?php if ( $this->setting['display_people_age'] ) : ?>
 	<div class="clear"></div>
 	<div class="fieldLabel"><?php tp('Age');?></div>

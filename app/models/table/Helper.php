@@ -1821,6 +1821,8 @@ class Helper extends ITechTable
 			$query = "
 				SELECT c.*, p.first_name, p.last_name, lct.coursetype,
 					CASE WHEN sc.linkclasscohortid IS NULL THEN 0 ELSE sc.linkclasscohortid END linkid,
+					CASE WHEN sc.classid IS NULL OR LENGTH(camark) = 0 OR camark IS NULL THEN 'N/A' ELSE camark END camark,
+					CASE WHEN sc.classid IS NULL OR LENGTH(exammark) = 0 OR exammark IS NULL THEN 'N/A' ELSE exammark END exammark,
 					CASE WHEN sc.classid IS NULL OR LENGTH(grade) = 0 OR grade IS NULL THEN 'N/A' ELSE grade END grade,
 					CASE WHEN sc.classid IS NULL OR LENGTH(credits) = 0 OR credits IS NULL THEN 'N/A' ELSE credits END credits
 
@@ -1830,7 +1832,7 @@ class Helper extends ITechTable
 				LEFT JOIN person p ON t.personid = p.id
 				LEFT JOIN lookup_coursetype lct ON lct.id = c.coursetypeid
 				LEFT JOIN (
-					SELECT classid, linkclasscohortid, grade, credits
+					SELECT classid, linkclasscohortid, camark, exammark, grade, credits
 					FROM   link_student_classes 
 					WHERE	studentid = " . $sid . "
 					AND		classid IN (SELECT classid FROM link_cohorts_classes WHERE cohortid = " . $cid . ")
@@ -1961,6 +1963,8 @@ class Helper extends ITechTable
 					'studentid'		=> $sid, 
 					'classid'		=> $cid,
 					'cohortid'		=> $param['cohortid'],
+					'camark'		=> $param['camark'][$cid],
+					'exammark'		=> $param['exammark'][$cid],
 					'grade'			=> $param['grade'][$cid],
 					'credits'	=> $param['credits'][$cid]
 				);
@@ -1968,6 +1972,8 @@ class Helper extends ITechTable
 			} else {
 				$row = $result[0];
 				$insert = array(
+					'camark'		=> $param['camark'][$cid],
+					'exammark'		=> $param['exammark'][$cid],
 					'grade'			=> $param['grade'][$cid],
 					'credits'	=> $param['credits'][$cid]
 				);

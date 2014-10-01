@@ -80,6 +80,7 @@ class FacilityController extends ReportFilterHelpers {
 			} else {
 				$this->view->assign ( 'status', $status );
 			}
+			
 		}
 		
 		// locations
@@ -87,6 +88,7 @@ class FacilityController extends ReportFilterHelpers {
 		$this->viewAssignEscaped ( 'facility_types', OptionList::suggestionList ( 'facility_type_option', 'facility_type_phrase', false, false ) );
 		$this->viewAssignEscaped ( 'facility_sponsors', OptionList::suggestionList ( 'facility_sponsor_option', 'facility_sponsor_phrase', false, false ) );
 	}
+	
 	protected function validateAndSave($facilityRow, $checkName = true) {
 		$status = ValidationContainer::instance ();
 		
@@ -100,7 +102,7 @@ class FacilityController extends ReportFilterHelpers {
 		}
 		
 		// validate fields
-		$status->checkRequired ( $this, 'facility_type_id', t ( 'Facility type' ) );
+		//$status->checkRequired ( $this, 'facility_type_id', t ( 'Facility type' ) ); //TA:17: 09/03/2014
 		$status->checkRequired ( $this, 'facility_province_id', $this->tr ( 'Region A (Province)' ) );
 		if ($this->setting ( 'display_region_b' ))
 			$status->checkRequired ( $this, 'facility_district_id', $this->tr ( 'Region B (Health District)' ) );
@@ -223,6 +225,25 @@ class FacilityController extends ReportFilterHelpers {
 						$status->setStatusMessage ( t ( 'There was an error saving sponsor data though.' ) );
 						return false;
 					}
+					
+					//TA:17: 09/08/2014
+					$new_commodity_data = $this->_getParam ( 'new_commodity_data' );
+					if($new_commodity_data){
+						$data_to_add = json_decode($new_commodity_data, true);
+						if (! Facility::saveCommodities ( $obj_id, $data_to_add['data'])) {
+							$status->setStatusMessage ( t ( 'There was an error saving commodity data though.' ) );
+							return false;
+						}
+					}
+					$delete_commodity_data = $this->_getParam ( 'commodity_delete_data' );
+					if($delete_commodity_data){	
+						if (! Facility::deleteCommodities ( $delete_commodity_data)) {
+							$status->setStatusMessage ( t ( 'There was an error saving commodity data though.' ) );
+							return false;
+						}
+					}
+					
+					
 					$status->setStatusMessage ( t ( 'The facility was saved.' ) );
 					$status->setRedirect ( '/facility/view/id/' . $obj_id );
 					return $obj_id;
@@ -330,7 +351,42 @@ class FacilityController extends ReportFilterHelpers {
 		$this->viewAssignEscaped ( 'sponsor_data', count ( $sponsorRows ) ? $sponsorRows->toArray () : array (
 				array () 
 		) ); // sponsor rows or an empty row for the template to work
+		
+		//TA:17: 09/04/2013 
+		require_once('views/helpers/EditTableHelper.php');
+		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+		//$rows = $db->fetchAll ("SELECT id, name, DATE_FORMAT(date, '%m/%y') as date, consumption, stock_out FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp group by name");
+		// display the 2 most recent commodities based on name
+		$rows = $db->fetchAll ("select id, name, DATE_FORMAT(date, '%m/%y') as date, consumption, stock_out, created_by, modified_by from " .
+ 		"(SELECT * FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp group by name " .
+		"union " .
+ 		"SELECT * FROM (SELECT *  from commodity where facility_id= ". $id . " and id not in " .
+ 		"(SELECT id FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp2 group by name) " .
+ 		"order by id desc) as temp group by name) as temp3 order by name");
+		$noDelete = array();
+		$customColDefs = array();
+		foreach ($rows as $i => $row){ // lets add some data to the resultset to show in the EditTable
+			if($row['created_by'] === '0' || $row['modified_by'] === '0'){
+				$noDelete[] = $row['id'];  // add to nodelete array
+			}
+		}
+ 		$fieldDefs = array('name' => t('Name'), 'date' => t('Date (MM/YY)'), 'consumption' => 'Consumption', 'stock_out' => 'Out of Stock (Y/N)');
+// 		$customColDefs['consumption'] = "editor:'textbox'";
+// 		$elements = array(array('text' => 'N', 'value' => 'N'), array('text' => 'Y', 'value' => 'Y'));
+// 		$elements = json_encode($elements); // yui data table will enjoy spending time with a json encoded array
+// 		$customColDefs['stock_out'] = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";
+		//use "commodity" here, but in phtml use in javascript ITECH.commodityTable.addRow(...) and html <div id="commodityTable"></div>
+		$html = EditTableHelper::generateHtml('commodity', $rows, $fieldDefs, $customColDefs, $noDelete, true);
+		$this->view->assign ( 'tableCommodities', $html );
+		$this->view->assign ( 'totalCommodities',  sizeof($rows));
+		
+		$this->view->assign('commodity_names',$facility->ListCommodityNames());
+		//TA:17: 09/12/2013
+		
+		
+		
 	}
+	
 	public function deleteAction() {
 		if (! $this->hasACL ( 'edit_people' )) {
 			$this->doNoAccessError ();
@@ -547,6 +603,7 @@ class FacilityController extends ReportFilterHelpers {
 		// sponsor types
 		$sponsorsArray = OptionList::suggestionList ( 'facility_sponsor_option', 'facility_sponsor_phrase', false, false );
 		$this->viewAssignEscaped ( 'facility_sponsors', $sponsorsArray );
+		
 	}
 	public function viewAction() {
 		require_once ('models/table/OptionList.php');
@@ -600,6 +657,7 @@ class FacilityController extends ReportFilterHelpers {
 		$facilityArray = array_merge ( $facilityArray, $region_ids );
 		
 		$this->viewAssignEscaped ( 'facility', $facilityArray );
+		
 	}
 	function addlocationAction() {
 		require_once 'views/helpers/DropDown.php';

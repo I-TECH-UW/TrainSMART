@@ -67,7 +67,7 @@ ob_end_clean();
 					<td><input type="text" name="label_funder" value="<?php echo $this->label_funder; ?>"></td>
 					<td><a href="<?php echo $this->base_url;?>/admin/employee-partner-funding" onclick="return submitAdminForm(this);"><?php tp('Add/Edit');?></a></td></tr>
 
-					<tr><td class="fieldTitle">Employee Base</td>
+					<tr><td class="fieldTitle"><?php tp('Employee');?> Base</td>
 					<td><input type="checkbox" name="check_base" <?php if($this->check_base) echo 'checked'; ?> id="check_base"></td>
 					<td><input type="text" name="label_base" value="<?php echo $this->label_base; ?>"></td>
 					<td><a href="<?php echo $this->base_url;?>/admin/employee-base" onclick="return submitAdminForm(this);"><?php tp('Add/Edit');?></a></td></td></tr>

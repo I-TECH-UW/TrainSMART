@@ -140,7 +140,9 @@
 									}
 									if (isset($this->setting['display_mod_skillsmart']) && ($this->setting['display_mod_skillsmart'] == 1)){
 										// ALSO DISPLAY SKILLSMART SPECIFIC COLUMNS
+										if($this->setting['display_gender']){//TA:17: 09/09/2014
 										$thisrow[] = addslashes($row['gender']);
+										}
 										$thisrow[] = addslashes($row['birthdate']);
 										$thisrow[] = addslashes($row['qualification_phrase']);
 										$thisrow[] = addslashes($row['province_name']);
@@ -169,7 +171,9 @@
 										}
 									} else {
 										// ONLY DISPLAY NON-SKILLSMART COLUMNS
+										if($this->setting['display_gender']){//TA:17: 09/09/2014
 										$thisrow[] = addslashes($row['gender']);
+										}
 										$thisrow[] = addslashes($row['birthdate']);
 										$thisrow[] = trim(addslashes($row['qualification_phrase'])); // bugfix.
 										$thisrow[] = addslashes($row['province_name']);
@@ -198,7 +202,9 @@
 						<?php if ( $this->setting['display_middle_name'] && $this->setting['display_middle_name_last'] ) { ?>
 							{key:"middle_name", label: "<?php echo (@$this->translation['Middle Name']); ?>", sortable:true, resizeable:true},
 						<?php }?>
+						<?php if($this->setting['display_gender']){?> //TA:17: 09/09/2014
 						{key:"gender", label: "<?php tp('Gender');?>", sortable:true, resizeable:true},
+						<?php }?>
 						{key:"birthdate", label: "<?php tp('Birthdate');?>", sortable:true, resizeable:true},
 						{key:"qualification_phrase", label: "<?php tp('Qualification');?>", sortable:true, resizeable:true},
 						{key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true}

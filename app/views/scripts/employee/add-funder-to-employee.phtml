@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title><?php echo $this->translation['Application Name'];?> | <?php tp('Add Employee Funder');?></title>
+  <title><?php echo $this->translation['Application Name'];?> | <?php print(t('Add').space.t('Employee').space.t('Funder'));?></title>
 <?php
 require_once('views/helpers/ScriptContainer.php');
 print ScriptContainer::$instance->renderCSSHead();
@@ -16,7 +16,7 @@ print ScriptContainer::$instance->renderJSHead();
   
   		<?php require_once 'views/scripts/status.phtml' ?>
 
-		<h1><?php echo t('Add Employee Funder');?></h1>
+		<h1><?php echo t('Add').space.t('Employee').space.t('Funder');?></h1>
 		
 		
 		 <form action="" method="post" class="form_employee">
