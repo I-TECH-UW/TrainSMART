@@ -223,9 +223,10 @@ if ($this->setting['display_mod_skillsmart']) {
 		<?php echo DropDown::render('highest_edu_level_option_id', $this->translation['Highest Education Level'], $this->educationlevels, 'education_level_phrase', 'id', $this->person['highest_edu_level_option_id']); ?><br/>
   <?php }?>
 
-
+  <!-- TA:17: 09/09/2014 -->
+<?php if($this->setting['display_people_comments']){?>
 <div class="fieldLabel" ><?php tp('Qualification Comments');?></div><div class="fieldInput"><textarea name="comments" rows="5" cols="100"><?php echo $this->person['comments'];?></textarea></div><br/>
-
+<?php }?>
 
 <script type="text/javascript">
   function toggleDiv(divId,placeholderId) {
@@ -243,6 +244,9 @@ if ($this->setting['display_mod_skillsmart']) {
   }
 </script>
 
+      
+      <!-- TA:17: 09/10/2014 -->
+      <?php if($this->setting['display_people_facilitator']) {?>
  <div class="clear"></div>
   <div class="hrGrey"></div>
   <div class="clear"></div>
@@ -278,6 +282,8 @@ if ($this->setting['display_mod_skillsmart']) {
   </select>
   </div>
   <?php } ?>
+  
+     
 
 <div class="clear" ></div>
 
@@ -308,6 +314,7 @@ if ($this->setting['display_mod_skillsmart']) {
         echo '<div class="float50"><input type="checkbox" name="trainer_language_id[]" id="trainer_language_'.$lang['id'].'"  value="'.$lang['id'].'" '.(@$lang['trainer_id']? 'CHECKED':'').' /><label for="trainer_language_'.$lang['id'].'">'.$lang['language_phrase'].'</label></div>';
       }
     ?></div></div>
+    
 
 <?php if ($this->hasTrainerHistory) { ?>
   <div class="clear" ></div>
@@ -339,7 +346,12 @@ if ($this->setting['display_mod_skillsmart']) {
   <?php }?>
 
 <?php }?>
+
+
   <div class="clear"></div>
     <div class="hrGrey"></div>
     <div class="clear"></div>
 </div>
+<?php }?><!-- TA:17: 09/10/2014 END -->
+
+

@@ -217,7 +217,7 @@ class EmployeeController extends ReportFilterHelpers {
 			
 			$status->checkRequired ( $this, 'employee_code', t ( 'Employee Code' ) );
 			
-			$status->checkRequired ( $this, 'dob', t ( 'Date of Birth' ) );
+			//$status->checkRequired ( $this, 'dob', t ( 'Date of Birth' ) );//TA:18: 08/28/2014 (DOB field is not required)
 			
 			if($this->setting('display_employee_nationality'))
 				$status->checkRequired ( $this, 'lookup_nationalities_id', t ( 'Employee Nationality' ) );

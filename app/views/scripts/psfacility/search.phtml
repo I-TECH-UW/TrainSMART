@@ -41,6 +41,9 @@ print ScriptContainer::$instance->renderJSHead();
   <div class="fieldLabel" id="region_c_id_lbl"><?php echo (@$this->translation['Region C (Local Region)']); ?></div>
   <div class="fieldInput"><?php renderFilter($this->locations, 3, 'region_c_id', $this->criteria['region_c_id'], false);?></div>
   <?php } ?>
+  
+  <!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_type']){?>
 	<div class="fieldLabel" id="type_id_lbl"><?php tp('Facility Type');?></div>
 	<div class="fieldInput">
 	<select id="type_id" name="type_id" >
@@ -51,6 +54,8 @@ print ScriptContainer::$instance->renderJSHead();
 		}
 		?>
 	</select></div>
+	<?php }?>
+	
 	<div class="fieldLabel" id="sponsor_id_lbl"><?php tp('Facility Sponsor');?></div>
 	<div class="fieldInput">
 	<select id="sponsor_id" name="sponsor_id" >
@@ -105,7 +110,9 @@ print ScriptContainer::$instance->renderJSHead();
 <?php if ( $this->setting['display_region_c'] ) { ?>
         {key:"region_c_name", label: "<?php echo (@$this->translation['Region C (Local Region)']); ?>", sortable:true, resizeable:true},
 <?php } ?>
+<?php if($this->setting['display_facility_type']){?> //TA:17: 09/04/2014
 		    {key:"facility_type_phrase", label: "<?php tp('Type');?>", sortable:true, resizeable:true},
+		    <?php }?>
 		    {key:"facility_sponsor_phrase", label: "<?php tp('Sponsor');?>", sortable:true, resizeable:true}
 		];
 

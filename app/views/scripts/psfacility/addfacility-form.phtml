@@ -3,10 +3,13 @@
 <div class="fieldLabelThin" id="facility_name_lbl"><span class="required">*</span><?php echo ('Facility').space.t('Name');?></div>
 	<div class="fieldInput"><input type="text" name="facility_name"  id="facility_name" value="" size="40" maxlength="128"/></div>
 
+	<!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_address']){?>
 	<div class="fieldLabelThin" id="facility_address1_lbl"><?php tp('Address 1');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_address1" id="facility_address1" value="" size="40" maxlength="128"/></div>
 	<div class="fieldLabelThin" id="facility_address2_lbl"><?php tp('Address 2');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_address2" id="facility_address2" value="" size="40" maxlength="128"/></div>
+<?php }?>
 
   <div class="fieldLabelThin" id="facility_province_id_lbl"><span class="required">*</span><?php echo (@$this->translation['Region A (Province)']); ?></div>
   <div class="fieldInput"><?php renderFilter($this->locations, 1, 'facility_province_id', false, 'facility_district_id');?></div>
@@ -19,12 +22,16 @@
     <div class="fieldLabelThin" id="facility_region_c_id_lbl"><span class="required">*</span><?php echo (@$this->translation['Region C (Local Region)']); ?></div>
     <div class="fieldInput"><?php renderFilter($this->locations, 3, 'facility_region_c_id', false, false);?></div>
   <?php } ?>
+  
+  <!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_city']){?>
   <div class="fieldLabelThin" id="facility_city_lbl"><?php echo (@$this->translation['City or Town']); ?></div><div id="cityAutoComplete">
       <div class="fieldInput"><input name="facility_city" id="facility_city" type="text" size="40" maxlength="128" value="" /><input style="margin-left:10px;" type="checkbox" id="is_new_city" name="is_new_city" value="is_new_city" /><label class="label"><?php tp('New city'); ?></label><div class="clear"></div>
       <div id="facilityCityContainer"  class="autocomplete"></div></div>
 
   	</div>
 <?php renderCityAutocomplete('facility','facilityCityContainer',$this->base_url.'/facility/cityList/outputType/text/', $this->setting['num_location_tiers']);?>
+<?php }?>
 
 <?php if ($this->setting['display_facility_postal_code'] ) { ?>
 	<div class="fieldLabelThin" id="facility_postal_code_lbl"><?php tp('Postal code');?></div>
@@ -36,11 +43,22 @@
 	<div class="fieldLabelThin" id="facility_longitude_lbl"><?php tp('Longitude');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_longitude" id="facility_longitude" value="" size="40" maxlength="11"/></div>
 <?php } ?>
+
+<!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_phone']){?>
 	<div class="fieldLabelThin" id="facility_phone_lbl"><?php tp('Phone'); ?></div>
 	  <div class="fieldInput"><input type="text" name="facility_phone" id="facility_phone" value="" size="40" maxlength="32"/></div>
+	  <?php }?>
+	  
+	  <!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_fax']){?>
 	<div class="fieldLabelThin" id="facility_fax_lbl"><?php tp('Fax');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_fax" id="facility_fax" value="" size="40" maxlength="32"/></div>
-	<div class="fieldLabelThin" id="facility_type_id_lbl"><span class="required">*</span><?php tp('Facility'); echo ' '; tp('type');?></div>
+	  <?php }?>
+	  
+	  <!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_type']){?>
+	<div class="fieldLabelThin" id="facility_type_id_lbl"><?php tp('Facility'); echo ' '; tp('type');?></div>
 	<div class="fieldInput"><select id="facility_type_id" name="facility_type_id">
 		<option value="">--<?php tp('choose');?>--</option>
 		<?php
@@ -49,6 +67,8 @@
 		}
 		?>
 	</select></div>
+	<?php }?>
+	
 	<div class="fieldLabelThin" id="facility_sponsor_id_lbl"><?php tp('Facility'); echo ' '; tp('sponsor');?></div>
 	<div class="fieldInput" id="facility_sponsor_wrapper">
 		<select id="facility_sponsor_id" name="facility_sponsor_id[]">
@@ -74,9 +94,11 @@
 	</div>
 <?php } ?>
 
-
+<!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_comments']){?>
 	<div class="fieldLabelThin" id="facility_comments_lbl"><?php tp('Facility Comments');?></div>
 	<div class="fieldInput"><textarea name="facility_comments" id="facility_comments" cols="40" rows="5"></textarea></div>
+	<?php }?>
 
 <script type="text/javascript">
 // on load

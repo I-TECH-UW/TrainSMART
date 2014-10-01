@@ -102,7 +102,8 @@ class AdminController extends UserController
 		'display_training_partner' => 'display_training_partner',
 		'display_mod_skillsmart' => 'display_mod_skillsmart',
 		'fiscal_year_start'        => 'fiscal_year_start',
-		'check_mod_employee'       => 'module_employee_enabled'
+		'check_mod_employee'       => 'module_employee_enabled',
+				'check_country_reports' => 'display_country_reports',//TA:17: 9/11/2014
 		);
 
 
@@ -461,7 +462,14 @@ class AdminController extends UserController
 		'check_training_funding_options' => 'display_funding_options',
 		'check_training_funding_amounts'     => 'display_funding_amounts',
 		'check_display_viewing_location'     => 'display_viewing_location',
-		'check_display_budget_code'          => 'display_budget_code'
+		'check_display_budget_code'          => 'display_budget_code',
+		'check_training_category'          => 'display_training_category', //TA:17: 8/27/2014
+		'check_training_start_date'          => 'display_training_start_date', //TA:17: 9/02/2014
+		'check_training_length'          => 'display_training_length', //TA:17: 9/03/2014
+		'check_training_level'          => 'display_training_level', //TA:17: 9/03/2014
+		'check_training_comments'          => 'display_training_comments', //TA:17: 9/03/2014
+		'check_facilitator_info' => 'display_facilitator_info',//TA:17: 9/03/2014
+		'check_training_score' => 'display_training_score',//TA:17: 9/03/2014
 		);
 
 		if($this->getRequest()->isPost()) { // Update db
@@ -813,7 +821,13 @@ class AdminController extends UserController
 		'check_display_lat_long' => 'display_facility_lat_long',
 		'check_display_postal'   => 'display_facility_postal_code',
 		'check_display_sponsor'  => 'display_facility_sponsor',
-		'check_facility_custom1'  => 'display_facility_custom1'		
+		'check_facility_custom1'  => 'display_facility_custom1',
+			'check_facility_address' => 'display_facility_address', //TA:17: 9/03/2014
+			'check_facility_phone' => 'display_facility_phone', //TA:17: 9/03/2014
+			'check_facility_fax' => 'display_facility_fax', //TA:17: 9/03/2014
+			'check_facility_comments' => 'display_facility_comments', //TA:17: 9/03/2014
+			'check_facility_type' => 'display_facility_type', //TA:17: 9/03/2014
+			'check_facility_city' => 'display_facility_city', //TA:17: 9/04/2014
 		);
 
 		if($this->getRequest()->isPost()) { // Update db
@@ -932,7 +946,10 @@ class AdminController extends UserController
 		'check_external_classes'  => 'display_external_classes',
 		'check_primary_responsibility'  => 'display_primary_responsibility',
 		'check_secondary_responsibility'  => 'display_secondary_responsibility',
-		'check_approval_mod'              => 'module_person_approval'
+		'check_approval_mod'              => 'module_person_approval',
+		'check_people_comments'	=> 'display_people_comments', //TA:17: 09/09/2014
+		'check_people_facilitator' => 'display_people_facilitator', //TA:17: 09/09/2014
+		'check_people_birthdate' => 'display_people_birthdate', //TA:17: 09/10/2014
 		);
 
 		if($this->getRequest()->isPost()) { // Update db
@@ -1642,9 +1659,21 @@ class AdminController extends UserController
 			$db->query ("UPDATE person_history SET person_id = $mergeToID WHERE person_id = $mergeFromID");
 
 			$table = 'person_to_training';
-			$affectedIDs = implode( $db->fetchCol ( 'SELECT id FROM person_to_training WHERE person_id = ?', $mergeFromID ) );
-			$db->query ("UPDATE person_to_training SET person_id = $mergeToID WHERE person_id = $mergeFromID");
-
+			$affectedIDs = implode( $db->fetchCol ( 'SELECT id FROM person_to_training WHERE person_id = ?', $mergeFromID ) );			
+			//TA:21: 09/30/2014
+			$from_person_training = $db->fetchCol ( 'SELECT training_id FROM person_to_training WHERE person_id=?', $mergeFromID);
+			$to_person_training = $db->fetchCol ( 'SELECT training_id FROM person_to_training WHERE person_id=?', $mergeToID);
+			$arr = array();
+			for($i=0; $i<count($from_person_training); $i++){
+				if(!in_array($from_person_training[$i], $to_person_training)){
+					array_push($arr, $from_person_training[$i]);
+				}
+			}
+			for($i=0; $i<count($arr); $i++){// training ids list to update
+				$db->query ("UPDATE person_to_training SET person_id = $mergeToID WHERE person_id = $mergeFromID and training_id=$arr[$i]");
+			}
+			///
+			
 			$table = 'person_to_training_topic_option';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT id FROM person_to_training_topic_option WHERE person_id = ?', $mergeFromID ) );
 			$db->query ("UPDATE person_to_training_topic_option SET person_id = $mergeToID WHERE person_id = $mergeFromID");
@@ -1655,7 +1684,9 @@ class AdminController extends UserController
 
 			$table = 'trainer';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT uuid FROM trainer WHERE person_id = ?', $mergeFromID ) );
-			$db->query ("UPDATE trainer SET person_id = $mergeToID WHERE person_id = $mergeFromID");
+			if(!$db->fetchCol ( 'SELECT person_id FROM trainer WHERE person_id=?', $mergeToID)){ //TA:21: 09/26/2014
+				$db->query ("UPDATE trainer SET person_id = $mergeToID WHERE person_id = $mergeFromID");
+			}
 
 			$table = 'trainer_history';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT vid FROM trainer_history WHERE person_id = ?', $mergeFromID ) );
@@ -1871,6 +1902,17 @@ class AdminController extends UserController
 		$editTable->fields  = array('contract_phrase' => 'Contract Type');
 		$editTable->label   = 'Contract Type';
 		$editTable->dependencies = array('contract_type' => 'tutor');
+		$editTable->execute();
+	}
+	
+	//TA:17: added 9/19/2014
+	public function commoditynameAction()
+	{
+		$editTable = new EditTableController($this);
+		$editTable->table   = 'commodity_name_option';
+		$editTable->fields  = array('commodity_name' => 'Commodity Name');
+		$editTable->label   = 'Commodity Name';
+		$editTable->dependencies = array('name' => 'commodity');
 		$editTable->execute();
 	}
 
@@ -3352,6 +3394,7 @@ class AdminController extends UserController
 			'employee-training-provided'  => 'edit_employee',
 			'tutorspecialty'                => 'acl_editor_tutor_specialty', //TA: added 7/22/2014
 			'tutorcontract'                => 'acl_editor_tutor_contract', //TA: added 7/24/2014
+			'commodityname'                => 'acl_editor_commodityname', //TA:17: added 9/19/2014
 			);
 
 

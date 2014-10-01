@@ -34,6 +34,8 @@ print ScriptContainer::$instance->renderJSHead();
 
 		<?php echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, false ); ?>
 
+		 <!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_type']){?>
 		<div class="fieldLabel" id="type_id_lbl"><?php echo t('Facility').space.t('Type');?></div>
 		<div class="fieldInput">
 		<select id="type_id" name="type_id" >
@@ -44,6 +46,7 @@ print ScriptContainer::$instance->renderJSHead();
 		}
 		?>
 		</select></div>
+		<?php }?>
 		<div class="fieldLabel" id="sponsor_id_lbl"><?php echo t('Facility').space.t('Sponsor');?></div>
 		<div class="fieldInput">
 		<select id="sponsor_id" name="sponsor_id" >
@@ -135,7 +138,9 @@ var facilitiesColumnDefs = [
 			<?php if ( $this->setting['display_region_i'] ) { ?>
 				{key:"region_i_name", label: "<?php echo (@$this->translation['Region I']); ?>", sortable:true, resizeable:true},
 			<?php } ?>
+			<?php if($this->setting['display_facility_type']){?> //TA:17: 09/04/2014
 		    {key:"facility_type_phrase", label: "<?php tp('Type');?>", sortable:true, resizeable:true},
+		    <?php }?>
 		    {key:"facility_sponsor_phrase", label: "<?php tp('Sponsor');?>", sortable:true, resizeable:true}
 ];
 

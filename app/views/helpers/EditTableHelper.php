@@ -65,7 +65,8 @@ class EditTableHelper {
 
 		return $js;
 	}
-
+	
+	
 	// Generate HTML & JavaScript for our EditTable
 	public static function generateHtmlTraining($label, array $rowRay, array $colDefs, array $colStatic = array(), $linkInfo = '', $editLinkInfo = '', array $customColDefs = array()) {
 		// Format column defs

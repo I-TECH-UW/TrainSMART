@@ -32,13 +32,22 @@ print ScriptContainer::$instance->renderJSHead();
 
 <?php if ($this->facility['id']) { ?>
 	<input type="hidden" name="id" value="<?php echo $this->facility['id'];?>"></input>
+	
+	<!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_address']){?>
 	<div class="fieldLabel" id="facility_address1_lbl"><?php tp('Address 1');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_address1" id="facility_address1" readonly="readonly"  value="<?php echo $this->facility['address_1'];?>" size="40" maxlength="40"/></div>
 	<div class="fieldLabel" id="facility_address2_lbl"><?php tp('Address 2');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_address2" id="facility_address2" readonly="readonly"  value="<?php echo $this->facility['address_2'];?>" size="40" maxlength="40"/></div>
+	<?php }?>
+	
+	<!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_city']){?>
 	<div class="fieldLabel" id="facility_city_lbl"><?php echo (@$this->translation['City or Town']); ?></div>
 	    <div class="fieldInput"><input name="facility_city" id="facility_city" type="text" size="40" readonly="readonly"  maxlength="128" value="<?php echo $this->facility['facility_city'];?>" />
 	</div>
+	<?php }?>
+	
 	<div class="fieldLabel" id="facility_district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?></div>
 	<div class="fieldInput"><input type="text" readonly="readonly" id="facility_district_id" name="facility_district_id" value="<?php
 		foreach ( $this->districts as $vals ) {
@@ -54,16 +63,29 @@ print ScriptContainer::$instance->renderJSHead();
 		?>" /></div>
 	<div class="fieldLabel" id="facility_postal_code_lbl"><?php tp('Postal Code');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_postal_code" readonly="readonly"  id="facility_postal_code" value="<?php echo $this->facility['postal_code'];?>" size="40" maxlength="40"/></div>
+	
+	<!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_phone']){?>
 	<div class="fieldLabel" id="facility_phone_lbl"><?php tp('Phone');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_phone" readonly="readonly"  id="facility_phone" value="<?php echo $this->facility['phone'];?>" size="40" maxlength="40"/></div>
+	<?php }?>
+	
+	<!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_fax']){?>
 	<div class="fieldLabel" id="facility_fax_lbl"><?php tp('Fax');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_fax"  readonly="readonly" id="facility_fax" value="<?php echo $this->facility['fax'];?>" size="40" maxlength="40"/></div>
+	  <?php }?>
+	  
+	  <!-- TA:17: 09/04/2014 START-->
+<?php if($this->setting['display_facility_type']){?>
 	<div class="fieldLabel" id="facility_type_id_lbl"><?php tp('Facility type');?></div>
 	<div class="fieldInput"><input type="text" readonly="readonly" id="facility_type_id" name="facility_type_id" value="<?php
 		foreach ( $this->facility_types as $vals ) {
 			if ((@$this->facility['type_option_id']) == $vals['id']) echo $vals['facility_type_phrase'];
 		}
 		?>" /></div>
+		<?php }?>
+		
 	<div class="fieldLabel" id="facility_sponsor_id_lbl"><?php tp('Facility sponsor');?></div>
 	<div class="fieldInput">
 	<input type="text" readonly="readonly" id="facility_sponsor_id" name="facility_sponsor_id" value="<?php

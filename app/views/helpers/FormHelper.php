@@ -41,7 +41,8 @@ function labelAndField($view, $label, $content, $id = '', $val = '')
 		$content = '<input type="text" class="datepicker" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/> '.$cal;
 	else if ($content == 'textarea')
 		$content = '<textarea id="'.$id.'" name="'.$id.'" '.$readonly.'>'.$val.'</textarea>';
-
+	else if ($content == '%') //TA:20: 08/29/2014 
+		$content = '<input type="number" min="0" max="100" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/>';
 	$o = <<< EOF
 	<div class="$class $id">$required$label</div>
 	<div class="fieldInput">$reportcheck$content$cal1</div>

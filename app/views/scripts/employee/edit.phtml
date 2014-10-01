@@ -83,7 +83,7 @@
 							
 							employee_funder_dropdown($this, $this->subPartner, $this->partnerFunder, $this->mechanism, $row['subpartner_id'], $row['partner_funder_option_id'], $row['mechanism_option_id']);
 							
-        					echo labelAndField($this, t('Percentage'), 'text','percentage[]', $row['percentage']);
+        					echo labelAndField($this, t('Percentage'), '%','percentage[]', $row['percentage']);
 							
 						}
 						echo '<button id="funder_add">'.t('Add a new').space.t('Funder').'</button><br />';
