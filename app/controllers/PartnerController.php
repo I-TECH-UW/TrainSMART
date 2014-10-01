@@ -54,6 +54,147 @@ class PartnerController extends ReportFilterHelpers {
 		$this->view->assign ( 'status', $status );
 
 	}
+	
+	public function deleteFunderAction() {
+		if (! $this->hasACL ( 'edit_employee' )) {
+			$this->doNoAccessError ();
+		}
+	
+		require_once('models/table/Partner.php');
+		require_once('views/helpers/Location.php'); // funder stuff
+	
+		$db     = $this->dbfunc();
+		$status = ValidationContainer::instance ();
+		$params = $this->getAllParams();
+			
+		if ($params['id']) {
+			$recArr = explode('_', $params['id']); 
+			
+			//file_put_contents('c:\wamp\logs\php_debug.log', 'partCont 75>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+			//var_dump($recArr);
+
+			//find in epsfm, should not find to delete
+			$sql = 'SELECT * FROM employee_to_partner_to_subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
+			$where = "partner_id = $recArr[0] and subpartner_id = $recArr[1] and partner_funder_option_id = $recArr[2] and mechanism_option_id = $recArr[3] and is_deleted = false";
+			$sql .= $where;
+			
+			$row = $db->fetchRow( $sql );
+			if ($row){
+				$status->setStatusMessage ( t('That record is in use.') );
+				//file_put_contents('c:\wamp\logs\php_debug.log', 'That record is in use.'.PHP_EOL, FILE_APPEND | LOCK_EX);
+			}
+			else { // not in use
+				
+			  //find in psfm, should find to delete
+			  $sql = 'SELECT * FROM partner_to_subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
+			  $where = "partner_id = $recArr[0] and subpartner_id = $recArr[1] and partner_funder_option_id = $recArr[2] and mechanism_option_id = $recArr[3] and is_deleted = false";
+			  $sql .= $where;
+			
+			  $row = $db->fetchRow( $sql );
+			  if (! $row){
+				$status->setStatusMessage ( t('Cannot find that record in the database.') );
+			    //file_put_contents('c:\wamp\logs\php_debug.log', 'That record could not be found.'.PHP_EOL, FILE_APPEND | LOCK_EX);
+			  }
+			  
+			  else { // found, safe to delete
+			  	
+			  	//file_put_contents('c:\wamp\logs\php_debug.log', 'Ready to delete '.$row['id'].PHP_EOL, FILE_APPEND | LOCK_EX);
+                $update_result = $db->update('partner_to_subpartner_to_funder_to_mechanism', array('is_deleted' => 1), 'id = '.$row['id']);
+                //var_dump($update_result);
+				
+				if($update_result){
+					$status->setStatusMessage ( t ( 'That mechanism was deleted.' ) );
+			    		//file_put_contents('c:\wamp\logs\php_debug.log', 'That record was deleted.'.PHP_EOL, FILE_APPEND | LOCK_EX);
+				}
+				else{
+					$status->setStatusMessage ( t ( 'That mechanism was not deleted.' ) );
+			    		//file_put_contents('c:\wamp\logs\php_debug.log', 'That record was not deleted.'.PHP_EOL, FILE_APPEND | LOCK_EX);
+				}
+			  }
+			}			
+			 	
+			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		}
+		$this->_redirect("partner/edit/id/" . $recArr[0]);
+	}
+	
+	
+	public function addFunderToPartnerAction() {
+		if (! $this->hasACL ( 'edit_employee' )) {
+			$this->doNoAccessError ();
+		}
+	
+		require_once('models/table/Partner.php');
+		require_once('views/helpers/Location.php'); // funder stuff
+	
+		$db     = $this->dbfunc();
+		$status = ValidationContainer::instance ();
+		$params = $this->getAllParams();
+		$id     = $params['id'];
+			
+		if ($id) {
+			$helper = new Helper();
+			
+			if ( $this->getRequest()->isPost() ) {
+
+		      $params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
+		      foreach ($params['funding_end_date'] as $i => $value) $params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
+		  
+				// test for all values
+				if(!($params['subPartner0'] && $params['partnerFunder0'] && $params['mechanism0'] && $params['funding_end_date'][0]))
+					$status->addError('', t ( 'All fields' ) . space . t('are required'));
+				
+				if ( $status->hasError() )
+					$status->setStatusMessage( t('That funding mechanism could not be saved.') );
+			
+				else {
+					//save
+					$psfm = new ITechTable(array('name' => 'partner_to_subpartner_to_funder_to_mechanism'));
+					$sfmArr = explode('_', $params[mechanism0]); // eg: 13_3_106
+					$sfm_id = $helper->getSfmId($sfmArr);
+					$data = array(
+							'subpartner_to_funder_to_mechanism_id' => $sfm_id['id'],
+							'partner_id' => $params['id'],
+							'subpartner_id'  => $sfmArr[0],
+							'partner_funder_option_id' => $sfmArr[1],
+							'mechanism_option_id' => $sfmArr[2],
+							'funding_end_date' => $params['funding_end_date'][0],
+					);
+					
+					//file_put_contents('c:\wamp\logs\php_debug.log', 'partCont isPost 115> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+					//var_dump($data);
+					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+			
+					$insert_result = $psfm->insert($data);
+					$status->setStatusMessage( t('The funding mechanism was saved.') );
+					//$this->_redirect("admin/employee-build_funding");
+					//$this->_redirect("partner/edit/" . $params['id']);
+				}
+			}
+			
+			//exclude current funders
+			$partner = $helper->getPartner($id);
+			$this->viewAssignEscaped ( 'partner', $partner );
+			
+			$subPartner = $helper->getSfmSubPartnerExclude($id);
+			$this->viewAssignEscaped ( 'subPartner', $subPartner );
+			
+			$partnerFunder = $helper->getSfmFunderExclude($id);
+			$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+			
+			$mechanism = $helper->getSfmMechanismExclude($id);
+			$this->viewAssignEscaped ( 'mechanism', $mechanism );
+			
+			//file_put_contents('c:\wamp\logs\php_debug.log', 'partCont 140>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+			//var_dump($subPartner);
+			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+			
+		} // if ($id)
+	
+		//validate
+		$this->view->assign ( 'status', $status );
+	
+	}
 
 	public function addAction() {
 		$this->view->assign ( 'mode', 'add' );
@@ -78,7 +219,6 @@ class PartnerController extends ReportFilterHelpers {
 			$validID = $db->fetchCol("SELECT partner.id FROM partner WHERE partner.id = $id AND partner.organizer_option_id in ($org_allowed_ids) $siteOrgsClause");
 			if(empty($validID))
 				$this->doNoAccessError ();
-		
 		}
 
 		if ( $this->getRequest()->isPost() )
@@ -104,7 +244,16 @@ class PartnerController extends ReportFilterHelpers {
 			#$status->checkRequired ( $this, 'hr_contact_fax',                     t ( 'HR Contact Office Fax' ) );
 			$status->checkRequired ( $this, 'hr_contact_email',                   t ( 'HR Contact Email' ) );
 			
+			
+			
 			$params['subPartner'] = $this->_array_me($params['subPartner']);
+			
+			$params['subpartner_id'] = $this->_array_me($params['subpartner_id']);
+			foreach ($params['subpartner_id'] as $i => $value) { // strip empty values (it breaks MultiOptionList apparently)
+				if (empty($value))
+					unset($params['subpartner_id'][$i]);
+			}
+				
 			$params['partnerFunder'] = $this->_array_me($params['partnerFunder']);
 			$params['mechanism'] = $this->_array_me($params['mechanism']);
 			
@@ -117,12 +266,8 @@ class PartnerController extends ReportFilterHelpers {
 			
 			$params['transition_confirmed'] = $params['transition_confirmed'] == 'on' ? 1 : 0;
 			$params['agreement_end_date'] = $this->_euro_date_to_sql($params['agreement_end_date']);
-			$params['subpartner_id'] = $this->_array_me($params['subpartner_id']);
-			foreach ($params['subpartner_id'] as $i => $value) { // strip empty values (it breaks MultiOptionList apparently)
-				if (empty($value))
-					unset($params['subpartner_id'][$i]);
-			}
-
+			
+			
 			//location save stuff
 			$params['location_id'] = regionFiltersGetLastID(null, $params); // formprefix, criteria
 			if ( $params['city'] ) {
@@ -135,18 +280,26 @@ class PartnerController extends ReportFilterHelpers {
 				if(!$id) {
 					$status->setStatusMessage( t('That partner could not be saved.') );
 				} else {
+					
+					// check for dependencies in epsfm
+					// $psfm = new ITechTable(array('name' => 'partner_to_subpartner_to_funder_to_mechanism'));
+					// $where = "partner_id = $id";
+					// $select_result = $psfm->select($where, false);
+					// if ($select_result)
+					//  	break;
 
 					// delete all
-					$psfm = new ITechTable(array('name' => 'partner_to_subpartner_to_funder_to_mechanism'));
-					$where = "partner_id = $id";
-					$delete_result = $psfm->delete($where, false);
+					//$psfm = new ITechTable(array('name' => 'partner_to_subpartner_to_funder_to_mechanism'));
+					//$where = "partner_id = $id";
+					//$delete_result = $psfm->delete($where, false);
 						
 					
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'partCont 180>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-					//var_dump($params);
+					//file_put_contents('c:\wamp\logs\php_debug.log', 'partCont 245>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+				    //var_dump($params);
 					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 					
 					// insert from view
+					/*
 					foreach($params['subPartner'] as $i => $val){
 						
 						if($id && $params['subPartner'][$i] && $params['partnerFunder'][$i] && $params['mechanism'][$i] && $params['funding_end_date'][$i]) {
@@ -162,10 +315,11 @@ class PartnerController extends ReportFilterHelpers {
 							$insert_result = $psfm->insert($data);
 						}
 					}
+					*/
 					
 					
-					$db->query("DELETE FROM partner_to_subpartner WHERE partner_id = $id"); // updateOptions is not clearing the old options, I dont know why... todo
-					MultiOptionList::updateOptions ( 'partner_to_subpartner', 'partner', 'partner_id', $id, 'subpartner_id', $params['subpartner_id'] );
+					//$db->query("DELETE FROM partner_to_subpartner WHERE partner_id = $id"); // updateOptions is not clearing the old options, I dont know why... todo
+					//MultiOptionList::updateOptions ( 'partner_to_subpartner', 'partner', 'partner_id', $id, 'subpartner_id', $params['subpartner_id'] );
 					
 					$status->setStatusMessage( t('The partner was saved.') );
 					$this->_redirect("partner/edit/id/$id");
@@ -197,31 +351,29 @@ class PartnerController extends ReportFilterHelpers {
 				$params = array_merge($params, $region_ids);
 
 				//get linked table data from option tables
-				$sql = "SELECT subpartner_id, partner_funder_option_id, mechanism_option_id, funding_end_date 
-				        FROM partner_to_subpartner_to_funder_to_mechanism WHERE partner_id = $id";
+				$sql = "SELECT subpartner_to_funder_to_mechanism_id, partner_id, subpartner_id, partner_funder_option_id, mechanism_option_id, funding_end_date 
+				        FROM partner_to_subpartner_to_funder_to_mechanism WHERE is_deleted = false and partner_id = $id";
 				$params['funder'] = $db->fetchAll($sql);
 
 				
-				
-				//$sql = "SELECT subpartner_id FROM partner_to_subpartner WHERE partner_id = $id";
-				//$params['subpartners'] = $db->fetchCol($sql);
-				
-				
 				$helper = new Helper();
-				$subPartner = $helper->getSubPartner();
+				
+				$subPartner = $helper->getPartnerSubpartner($id); 
 				$this->viewAssignEscaped ( 'subPartner', $subPartner );
 				
-				$partnerFunder = $helper->getFunder();
+				$partnerFunder = $helper->getPartnerFunder($id);
 				$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
 				
-				$mechanism = $helper->getMechanism();
+				$mechanism = $helper->getPartnerMechanism($id);
 				$this->viewAssignEscaped ( 'mechanism', $mechanism );
+				
 			}
 		}
 
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'partCont 262>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		//file_put_contents('c:\wamp\logs\php_debug.log', 'partCont 373>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 		//var_dump($subPartner); 		
-		//var_dump($partnerFunder);		var_dump($mechanism);
+		//var_dump($partnerFunder);		
+		//var_dump($mechanism);
 		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 		
 		
@@ -266,16 +418,17 @@ class PartnerController extends ReportFilterHelpers {
 			list($a, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
 			list($locationFlds, $locationsubquery) = Location::subquery($this->setting('num_location_tiers'), $location_tier, $location_id, true);
 			$sql = "SELECT DISTINCT
-					partner.id,partner.partner,partner.location_id,".implode(',',$locationFlds)."
-					,GROUP_CONCAT(subp.partner) as subPartner
-					,GROUP_CONCAT(funderopt.funder_phrase) as partnerFunder
-					,GROUP_CONCAT(mechanismopt.mechanism_phrase) as mechanism
-					,GROUP_CONCAT(funders.funding_end_date) as funding_end_date
-					FROM partner LEFT JOIN ($locationsubquery) as l  ON l.id = partner.location_id
-					LEFT JOIN partner_to_subpartner_to_funder_to_mechanism funders  ON partner.id = funders.partner_id
-					LEFT JOIN partner_funder_option funderopt   ON funders.partner_funder_option_id = funderopt.id
-					LEFT JOIN mechanism_option mechanismopt		ON funders.mechanism_option_id = mechanismopt.id
-					LEFT JOIN partner subp                      ON subp.id = funders.subpartner_id 
+					partner.id, partner.partner, partner.location_id, ".implode(',',$locationFlds)."
+					,GROUP_CONCAT(sub.partner) as subPartner
+					,GROUP_CONCAT(pfo.funder_phrase) as partnerFunder
+					,GROUP_CONCAT(mo.mechanism_phrase) as mechanism
+					,GROUP_CONCAT(psfm.funding_end_date) as funding_end_date
+					FROM partner 
+					LEFT JOIN ($locationsubquery) as l  ON l.id = partner.location_id
+					LEFT JOIN partner_to_subpartner_to_funder_to_mechanism psfm  ON partner.id = psfm.partner_id
+					LEFT JOIN partner_funder_option pfo         ON psfm.partner_funder_option_id = pfo.id
+					LEFT JOIN mechanism_option mo        		ON psfm.mechanism_option_id = mo.id
+					LEFT JOIN partner sub                       ON sub.id = psfm.subpartner_id 
 					LEFT JOIN location parent_loc               ON parent_loc.id = partner.location_id";
 
 			// restricted access?? only show partners by organizers that we have the ACL to view
@@ -299,8 +452,10 @@ class PartnerController extends ReportFilterHelpers {
 			if ($criteria['partner_id'])        $where[] = 'partner.id = '.$criteria['partner_id'];
 			if ($criteria['start_date'])        $where[] = 'funding_end_date >= \''.$this->_euro_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
 			if ($criteria['end_date'])          $where[] = 'funding_end_date <= \''.$this->_euro_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
-			if ( count ($where) )
-				$sql .= ' WHERE ' . implode(' AND ', $where);
+			if ( count ($where))
+  			  $sql .= ' WHERE ' . implode(' AND ', $where);
+			
+			    
 			$sql .= ' GROUP BY partner.id ';
 
 			$db = $this->dbfunc();

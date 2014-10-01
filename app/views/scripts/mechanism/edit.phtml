@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title><?php echo $this->translation['Application Name'] . " | " . $this->pageTitle; ?></title>
+	<?php
+	require_once('views/helpers/Location.php');
+	require_once('views/helpers/ScriptContainer.php');
+	require_once('views/helpers/TrainingViewHelper.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+	?>
+
+</head>
+<body class="yui-skin-sam">
+
+	<div id="pageHolder">
+
+		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+		<div id="content">
+
+			<?php require_once 'views/scripts/status.phtml' ?>
+
+			<h1><?php $this->mode == 'add' ? tp('Add Mechanism') : tp('Delete Mechanism'); ?></h1>
+			<form action="" method="post" id="employeeMechanismEdit" class="form_employee">
+				<?php if (0): ?>
+				<div class="historyDiv">
+					<a href="<?php echo $this->base_url; ?>/mechanism/delete/id/<?php echo $this->subpartner_to_funder_to_mechanism['id']; ?>"><?php echo t('Delete this').space.t('Mechanism'); ?></a>
+				</div>
+				<?php
+					endif; // fi historyDiv
+
+					require_once ('views/helpers/DropDown.php');
+					$this->required_fields = array();
+				
+					//build_funding_dropdown($this, $this->subPartner, $this->partnerFunder, $this->mechanism);
+					
+					foreach ($this->sfm as $i => $row) {
+					
+						//file_put_contents('c:\wamp\logs\php_debug.log', 'mechEdit 39>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+						//var_dump($row);
+						//var_dump($row['subpartner_id']);var_dump($row['partner_funder_option_id']); var_dump($row['mechanism_option_id']);
+						//var_dump($this->subPartner[$i]['partner']);
+						//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+							
+						
+						partner_sfm_dropdown($i, $this, $this->subPartner, $this->partnerFunder, $this->mechanism, '', '', $row['subpartner_id'], $row['partner_funder_option_id'], $row['mechanism_option_id'], false,  false, ' disabled ');
+							
+						echo labelAndField($this, t('Funding End Date'), 'date','funding_end_date[]', formhelperdate($row['funding_end_date']));
+					}
+					
+					//file_put_contents('c:\wamp\logs\php_debug.log', 'partEdit 63>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+					//var_dump($this->partner['funder']);
+					//var_dump($this->subPartner);
+					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+				?>
+
+				<script type="text/javascript">
+
+				$(document).ready(function () {
+
+					itech_save_confirm_on_leave();
+					
+					$('.datepicker').each(function () {
+						$(this).removeAttr('id').datepicker({ //bugfix, datepicker doesnt work with multiple id="" field, these are cloned so remove id attribute
+							changeMonth: true,
+							changeYear: true,
+							showOn: false,
+							dateFormat: "dd/mm/yy"
+						})
+					});
+					$('.calendarbtn').click(openNearestDatePicker);
+					
+				});
+				</script>
+
+			
+				
+			</form>
+			<div class="clear"></div>
+		</div>
+	</body>
+</html>

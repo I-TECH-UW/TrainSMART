@@ -15,7 +15,7 @@ require_once ('views/helpers/TrainingViewHelper.php');
 require_once ('models/table/Helper.php');
 require_once ('models/table/Partner.php');
 
-class EmployeeController extends ReportFilterHelpers {
+class DashboardController extends ReportFilterHelpers {
 
 	public function init() {	}
 
@@ -25,14 +25,14 @@ class EmployeeController extends ReportFilterHelpers {
 		if (! $this->isLoggedIn ())
 			$this->doNoAccessError ();
 
-		if (! $this->setting('module_employee_enabled')){
-			$_SESSION['status'] = t('The employee module is not enabled on this site.');
-			$this->_redirect('select/select');
-		}
+		//if (! $this->setting('module_employee_enabled')){
+			//$_SESSION['status'] = t('The employee module is not enabled on this site.');
+			//$this->_redirect('select/select');
+		//}
 
-		if (! $this->hasACL ( 'edit_employee' )) {
-			$this->doNoAccessError ();
-		}
+		//if (! $this->hasACL ( 'edit_employee' )) {
+			//$this->doNoAccessError ();
+		//}
 	}
 
 	public function indexAction() {
@@ -68,6 +68,178 @@ class EmployeeController extends ReportFilterHelpers {
 			$this->view->assign ( 'filesForm', FileUpload::displayUploadForm ( $PARENT_COMPONENT, 1, FileUpload::$FILETYPES ) );
 		}
 		/****************************************************************************************************************/
+	}
+	
+	public function dash0Action() {
+	
+		//if (! $this->hasACL ( 'edit_employee' )) {
+			//$this->doNoAccessError ();
+		//}
+	
+		require_once('models/table/dash-employee.php');
+		$this->view->assign('title', $this->translation['Application Name'].space.t('Employee Tracking System'));
+	
+		// restricted access?? does this user only have acl to view some trainings or people
+		// they dont want this, removing 5/01/13
+		$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'?
+		$allowedWhereClause = $org_allowed_ids ? " partner.organizer_option_id in ($org_allowed_ids) " : "";
+		// restricted access?? only show organizers that belong to this site if its a multi org site
+		$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
+		$allowedWhereClause .= $site_orgs ? " AND partner.organizer_option_id in ($site_orgs) " : "";
+	
+		$partners = new DashviewEmployee();
+		$details = $partners->fetchdetails($allowedWhereClause);
+		$this->view->assign('getins',$details);
+	
+		/****************************************************************************************************************/
+		/* Attached Files */
+		require_once('views/helpers/FileUpload.php');
+	
+		$PARENT_COMPONENT = 'employee';
+	
+		FileUpload::displayFiles ( $this, $PARENT_COMPONENT, 1, $this->hasACL ( 'admin_files' ) );
+		// File upload form
+		if ( $this->hasACL ( 'admin_files' ) ) {
+			$this->view->assign ( 'filesForm', FileUpload::displayUploadForm ( $PARENT_COMPONENT, 1, FileUpload::$FILETYPES ) );
+		}
+		/****************************************************************************************************************/
+	}
+	
+	public function dash1Action() {
+	
+		//if (! $this->hasACL ( 'edit_employee' )) {
+			//$this->doNoAccessError ();
+		//}
+	
+		require_once('models/table/dash-employee.php');
+		$this->view->assign('title', $this->translation['Application Name'].space.t('Employee Tracking System'));
+	
+		// restricted access?? does this user only have acl to view some trainings or people
+		// they dont want this, removing 5/01/13
+		$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'?
+		$allowedWhereClause = $org_allowed_ids ? " partner.organizer_option_id in ($org_allowed_ids) " : "";
+		// restricted access?? only show organizers that belong to this site if its a multi org site
+		$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
+		$allowedWhereClause .= $site_orgs ? " AND partner.organizer_option_id in ($site_orgs) " : "";
+	
+		$partners = new DashviewEmployee();
+		$details = $partners->fetchdetails($allowedWhereClause);
+		$this->view->assign('getins',$details);
+	
+		/****************************************************************************************************************/
+		/* Attached Files */
+		require_once('views/helpers/FileUpload.php');
+	
+		$PARENT_COMPONENT = 'employee';
+	
+		FileUpload::displayFiles ( $this, $PARENT_COMPONENT, 1, $this->hasACL ( 'admin_files' ) );
+		// File upload form
+		if ( $this->hasACL ( 'admin_files' ) ) {
+			$this->view->assign ( 'filesForm', FileUpload::displayUploadForm ( $PARENT_COMPONENT, 1, FileUpload::$FILETYPES ) );
+		}
+		/****************************************************************************************************************/
+	}
+	
+	public function dash2Action() {
+	
+		//if (! $this->hasACL ( 'edit_employee' )) {
+			//$this->doNoAccessError ();
+		//}
+	
+		require_once('models/table/dash-employee.php');
+		$this->view->assign('title', $this->translation['Application Name'].space.t('Employee Tracking System'));
+	
+		// restricted access?? does this user only have acl to view some trainings or people
+		// they dont want this, removing 5/01/13
+		$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'?
+		$allowedWhereClause = $org_allowed_ids ? " partner.organizer_option_id in ($org_allowed_ids) " : "";
+		// restricted access?? only show organizers that belong to this site if its a multi org site
+		$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
+		$allowedWhereClause .= $site_orgs ? " AND partner.organizer_option_id in ($site_orgs) " : "";
+	
+		$partners = new DashviewEmployee();
+		$details = $partners->fetchdetails($allowedWhereClause);
+		$this->view->assign('getins',$details);
+	
+		/****************************************************************************************************************/
+		/* Attached Files */
+		require_once('views/helpers/FileUpload.php');
+	
+		$PARENT_COMPONENT = 'employee';
+	
+		FileUpload::displayFiles ( $this, $PARENT_COMPONENT, 1, $this->hasACL ( 'admin_files' ) );
+		// File upload form
+		if ( $this->hasACL ( 'admin_files' ) ) {
+			$this->view->assign ( 'filesForm', FileUpload::displayUploadForm ( $PARENT_COMPONENT, 1, FileUpload::$FILETYPES ) );
+		}
+		/****************************************************************************************************************/
+	}
+	
+	public function dash3Action() {
+	
+		//if (! $this->hasACL ( 'edit_employee' )) {
+			//$this->doNoAccessError ();
+		//}
+	
+		require_once('models/table/Dashboard-CHAI.php');
+		//$this->view->assign('title', $this->translation['Application Name'].space.t('Employee Tracking System'));
+	
+		// restricted access?? does this user only have acl to view some trainings or people
+		// they dont want this, removing 5/01/13
+		$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'?
+		$allowedWhereClause = $org_allowed_ids ? " partner.organizer_option_id in ($org_allowed_ids) " : "";
+		// restricted access?? only show organizers that belong to this site if its a multi org site
+		$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
+		$allowedWhereClause .= $site_orgs ? " AND partner.organizer_option_id in ($site_orgs) " : "";
+	
+		$partners = new DashboardCHAI();
+		$details = $partners->fetchdetails($allowedWhereClause);
+		$this->view->assign('getins',$details);
+		
+		file_put_contents('c:\wamp\logs\php_debug.log', 'dashIndex 407>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		var_dump($details);
+		$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+	
+	
+	}
+	
+	public function dash4Action() {
+	
+		//if (! $this->hasACL ( 'edit_employee' )) {
+			//$this->doNoAccessError ();
+		//}
+	
+		require_once('models/table/dash-employee.php');
+		$this->view->assign('title', $this->translation['Application Name'].space.t('Employee Tracking System'));
+	
+		// restricted access?? does this user only have acl to view some trainings or people
+		// they dont want this, removing 5/01/13
+		$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'?
+		$allowedWhereClause = $org_allowed_ids ? " partner.organizer_option_id in ($org_allowed_ids) " : "";
+		// restricted access?? only show organizers that belong to this site if its a multi org site
+		$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
+		$allowedWhereClause .= $site_orgs ? " AND partner.organizer_option_id in ($site_orgs) " : "";
+	
+		$partners = new DashviewEmployee();
+		$details = $partners->fetchdetails($allowedWhereClause);
+		$this->view->assign('getins',$details);
+	
+		/****************************************************************************************************************/
+		/* Attached Files */
+		require_once('views/helpers/FileUpload.php');
+	
+		$PARENT_COMPONENT = 'employee';
+	
+		FileUpload::displayFiles ( $this, $PARENT_COMPONENT, 1, $this->hasACL ( 'admin_files' ) );
+		// File upload form
+		if ( $this->hasACL ( 'admin_files' ) ) {
+			$this->view->assign ( 'filesForm', FileUpload::displayUploadForm ( $PARENT_COMPONENT, 1, FileUpload::$FILETYPES ) );
+		}
+		/****************************************************************************************************************/
+	}
+	
+	public function reportsAction() {
+		
 	}
 
 	/**
@@ -674,6 +846,127 @@ LEFT JOIN 	partner subp on subp.id = funders.subpartner_id
 		$this->viewAssignEscaped ( 'sites', $helper->getFacilities() );
 		$this->view->assign ( 'categories',  DropDown::generateHtml ( 'employee_category_option', 'category_phrase', $criteria['employee_category_option_id'], false, $this->view->viewonly, false ) );
 	}
+
+
+
+public function loginAction() {
+	require_once ('Zend/Auth/Adapter/DbTable.php');
+
+	$request = $this->getRequest ();
+	$validateOnly = $request->isXmlHttpRequest ();
+
+	$userObj = new User ( );
+	$userRow = $userObj->createRow ();
+
+	if ($validateOnly)
+		$this->setNoRenderer ();
+
+	$status = ValidationContainer::instance ();
+
+	if ($request->isPost ()) {
+		// if a user's already logged in, send them to their account home page
+		$auth = Zend_Auth::getInstance ();
+
+		if ($auth->hasIdentity ()){
+			#				$this->_redirect ( 'select/select' );
+		}
+
+		$request = $this->getRequest ();
+
+
+
+		// determine the page the user was originally trying to request
+		$redirect = $this->_getParam ( 'redirect' );
+
+		//if (strlen($redirect) == 0)
+		//    $redirect = $request->getServer('REQUEST_URI');
+		if (strlen ( $redirect ) == 0){
+			if($this->hasACL('pre_service')){
+				#					$redirect = 'select/select';
+			}
+		}
+
+		// initialize errors
+		$status = ValidationContainer::instance ();
+
+		// process login if request method is post
+		if ($request->isPost ()) {
+
+			// fetch login details from form and validate them
+			$username = $this->getSanParam ( 'username' );
+			$password = $this->_getParam ( 'password' );
+			if (! $status->checkRequired ( $this, 'username', t ( 'Login' ) ) or (! $this->_getParam ( 'send_email' ) and ! $status->checkRequired ( $this, 'password', t ( 'Password' ) )))
+				$status->setStatusMessage ( t ( 'The system could not log you in.' ) );
+
+			if (! $status->hasError ()) {
+
+				// setup the authentication adapter
+				$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+				$adapter = new Zend_Auth_Adapter_DbTable ( $db, 'user', 'username', 'password', 'md5(?)' );
+				$adapter->setIdentity ( $username );
+				$adapter->setCredential ( $password );
+
+				// try and authenticate the user
+				$result = $auth->authenticate ( $adapter );
+
+				if ($result->isValid ()) {
+					$user = new User ( );
+					$userRow = $user->find ( $adapter->getResultRowObject ()->id )->current ();
+
+					if($user->hasPS($userRow->id)){
+						$redirect = $redirect ? $redirect : "dashboard/dash0";
+					}
+
+					if ( $userRow->is_blocked ) {
+						$status->setStatusMessage( t('That user account has been disabled.'));
+						$auth->clearIdentity ();
+					} else {
+						// create identity data and write it to session
+						$identity = $user->createAuthIdentity ( $userRow );
+						$auth->getStorage ()->write ( $identity );
+
+						// record login attempt
+						$user->recordLogin ( $userRow );
+
+						// send user to page they originally request
+						$this->_redirect ( $redirect );
+
+					}
+
+				} else {
+
+					$auth->clearIdentity ();
+					switch ($result->getCode ()) {
+
+						case Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND :
+							$status->setStatusMessage ( t ( 'That username or password is invalid.' ) );
+
+							break;
+
+						case Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID :
+							$status->setStatusMessage ( t ( 'That username or password is invalid.' ) );
+
+							break;
+
+						default :
+							throw new exception ( 'login failure' );
+							break;
+					}
+				}
+
+			}
+		}
+
+	}
+
+	if ($validateOnly) {
+		$this->sendData ( $status );
+	} else {
+		$this->view->assign ( 'status', $status );
+	}
+
+}
+
 }
 
 ?>

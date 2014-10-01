@@ -38,7 +38,7 @@ function labelAndField($view, $label, $content, $id = '', $val = '')
 	if ($content == 'text')
 		$content = '<input type="text" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/>';
 	else if ($content == 'date')
-		$content = '<input type="text" class="datepicker" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/> '.$cal;
+		$content = '<input type="text" class="datepicker id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/> '.$cal;
 	else if ($content == 'textarea')
 		$content = '<textarea id="'.$id.'" name="'.$id.'" '.$readonly.'>'.$val.'</textarea>';
 

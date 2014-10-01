@@ -82,9 +82,9 @@ class DropDown {
 		$html .= "\t<option value=\"\">&mdash; " . t ( 'select' ) . " &mdash;</option>\n";
 		// }
 	
-		file_put_contents('c:\wamp\logs\php_debug.log', 'dd 85>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		var_dump($mechanism);
-		$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		//file_put_contents('c:\wamp\logs\php_debug.log', 'dd 85>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		//var_dump($mechanism);
+		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 		
 		foreach ( $rows as $r ) {
 			if (($allowIds === false) or (array_search ( $r->id, $allowIds ) !== false)) {

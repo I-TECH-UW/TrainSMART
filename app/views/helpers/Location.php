@@ -501,7 +501,7 @@ function make_page_select2()
 //var_dump($partnerFunder);
 //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 
-function build_funding_dropdown(&$view, &$subPartner, &$partnerFunder, &$mechanism, $val_partner = null, $val_partnerFunder = null, $val_mechanism = null, $is_multiple = false, $required = false) {
+function build_funding_dropdown(&$view, &$subPartner, &$partnerFunder, &$mechanism, $val_partner = null, $val_subpartner = null, $val_partnerFunder = null, $val_mechanism = null, $is_multiple = false, $required = false) {
 
 	$required = $required ? '<span class="required">*</span>' : '';
 	$class = $is_multiple ? 'autoHeight' : '';
@@ -514,7 +514,7 @@ function build_funding_dropdown(&$view, &$subPartner, &$partnerFunder, &$mechani
 		<?php //echo '</div>'; ?>
 
 	
-		<div class="fieldLabel" id="partnerFunder_lbl"><?php echo 'Funder'; ?></div>
+		<div class="fieldLabel" id="partnerFunder_lbl"><?php echo t('Funder'); ?></div>
 		<div  class="fieldInput">
 		<?php 
 
@@ -537,29 +537,30 @@ function build_funding_dropdown(&$view, &$subPartner, &$partnerFunder, &$mechani
 
 function partner_funder_dropdown(&$view, &$subPartner, &$partnerFunder, &$mechanism, $val_subPartner = null, $val_partnerFunder = null, $val_mechanism = null, $is_multiple = false, $required = false) {
 	
-	$required = $required ? '<span class="required">*</span>' : '';
+    $readonly = $view->viewonly ? ' readonly="readonly"' : '';	
+    $required = $required ? '<span class="required">*</span>' : '';
 	$class = $is_multiple ? 'autoHeight' : '';
 	?>
 
-		<div class="fieldLabel subPartner_lbl"><?php echo 'Subpartner'; ?></div>
+		<div class="fieldLabel subPartner_lbl"><?php echo t('Partner'); ?></div>
 		<div class="fieldInput">
 	
-		<?php renderFunder($subPartner, 'subPartner[]', $val_subPartner, 'partnerFunder', $is_multiple); ?></div>
+		<?php renderFunder($subPartner, 'subPartner[]', $val_subPartner, 'partnerFunder', $is_multiple, $readonly); ?></div>
 		<?php //echo '</div>'; ?>
 
 	
-		<div class="fieldLabel partnerFunder_lbl"><?php echo 'Funder'; ?></div>
+		<div class="fieldLabel partnerFunder_lbl"><?php echo t('Funder'); ?></div>
 		<div  class="fieldInput">
 		<?php 
 
-		renderFunder($partnerFunder, 'partnerFunder[]', $val_partnerFunder, 'mechanism', $is_multiple); ?></div>
+		renderFunder($partnerFunder, 'partnerFunder[]', $val_partnerFunder, 'mechanism', $is_multiple, $readonly); ?></div>
 		<?php //echo '</div>'; ?>
 		
 		<div class="fieldLabel mechanism_lbl"><?php echo 'Mechanism'; ?></div>
 		<div  class="fieldInput">
 		<?php 
 
-		renderFunder($mechanism, 'mechanism[]', $val_mechanism, false, $is_multiple); ?></div>
+		renderFunder($mechanism, 'mechanism[]', $val_mechanism, false, $is_multiple, $readonly); ?></div>
 		<?php //echo '</div>'; ?>
 			
 		<?php 
@@ -573,14 +574,14 @@ function employee_funder_dropdown(&$view, &$subPartner, &$partnerFunder, &$mecha
 	$class = $is_multiple ? 'autoHeight' : '';
 	?>
 
-		<div class="fieldLabel subPartner_lbl"><?php echo 'Subpartner'; ?></div>
+		<div class="fieldLabel subPartner_lbl"><?php echo t('Partner'); ?></div>
 		<div class="fieldInput">
 	
 		<?php renderFunder($subPartner, 'subPartner[]', $val_subPartner, 'partnerFunder', $is_multiple); ?></div>
 		<?php //echo '</div>'; ?>
 
 	
-		<div class="fieldLabel partnerFunder_lbl"><?php echo 'Funder'; ?></div>
+		<div class="fieldLabel partnerFunder_lbl"><?php echo t('Funder'); ?></div>
 		<div  class="fieldInput">
 		<?php 
 
@@ -599,10 +600,248 @@ function employee_funder_dropdown(&$view, &$subPartner, &$partnerFunder, &$mecha
 	// done
 }
 
-function renderFunder(&$widget_array, $widget_id, $default_val_id = false, $child_widget_id = false, $is_multiple = false ) {
+function partner_sfm_dropdown($fieldIndex, &$view, &$subPartner, &$partnerFunder, &$mechanism, 
+  $val_employee = null, $val_partner = null, $val_subPartner = null, $val_partnerFunder = null, $val_mechanism = null, 
+  $is_multiple = false, $required = false, $disabled = '') {
+
+  $required = $required ? '<span class="required">*</span>' : '';
+  $class = $is_multiple ? 'autoHeight' : '';
+  ?>
+
+  <?php 
+  		//file_put_contents('c:\wamp\logs\php_debug.log', 'Loc 611>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		//var_dump($val_employee);var_dump($val_partner);var_dump($val_subPartner);var_dump($val_partnerFunder);var_dump($val_mechanism);
+		//var_dump($subPartner);
+		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		?>
+  
+  
+		<div class="fieldLabel" id="subPartner_lbl"><?php echo t('Partner'); ?></div>
+		<div class="fieldInput">
+	
+		<?php partnerRenderFunder($subPartner, 'subPartner' . strval($fieldIndex), $val_subPartner, 'partnerFunder' . strval($fieldIndex), $is_multiple, $required, $disabled); ?>
+		 
+		<a href="
+		<?php echo $view->base_url; ?>
+		
+		<?php 
+		      if(!$val_employee && !$val_partner && !$val_subPartner && !$val_partnerFunder && !$val_mechanism) //empty
+		      ;
+		      else if($val_employee && $val_partner && $val_subPartner && $val_partnerFunder && $val_mechanism) { //employee
+			    echo '/employee/delete_funder/id/' . $val_employee . '_' . $val_partner. '_' . $val_subPartner . '_' . $val_partnerFunder . '_' . $val_mechanism; 
+			  }
+		      else if(!$val_employee && $val_partner && $val_subPartner && $val_partnerFunder && $val_mechanism) { //partner
+		      	echo '/partner/delete_funder/id/' . $val_partner . '_' . $val_subPartner . '_' . $val_partnerFunder . '_' . $val_mechanism; 
+		      }	
+		      else if (!$val_employee && !$val_partner  && $val_subPartner && $val_partnerFunder && $val_mechanism) { //mechanism
+		      	echo '/mechanism/delete_funder/id/' . $val_subPartner . '_' . $val_partnerFunder . '_' . $val_mechanism;
+		      }
+		?>
+		" >
+
+		<?php 
+		  if($val_subPartner && $val_partnerFunder && $val_mechanism) { // not empty
+		    echo t('Delete Funder'); 
+		  }
+		?>
+		
+		</a></div>
+		<?php //echo '</div>'; ?>
+
+	
+		<div class="fieldLabel" id="partnerFunder_lbl"><?php echo t('Funder'); ?></div>
+		<div  class="fieldInput">
+		<?php 
+
+		partnerRenderFunder($partnerFunder, 'partnerFunder' . strval($fieldIndex), $val_partnerFunder, 'mechanism' . strval($fieldIndex), $is_multiple, $required, $disabled); ?></div>
+		<?php //echo '</div>'; ?>
+		
+		<div class="fieldLabel" id="mechanism_lbl"><?php echo 'Mechanism'; ?></div>
+		<div  class="fieldInput">
+		<?php 
+
+		partnerRenderFunder($mechanism, 'mechanism' . strval($fieldIndex), $val_mechanism, false, $is_multiple, $required, $disabled); ?></div>
+		<?php //echo '</div>'; ?>
+			
+		<?php 
+
+	// done
+}
+
+function employee_psfm_dropdown($fieldIndex, &$view, &$partner, &$subPartner, &$partnerFunder, &$mechanism, $val_employee, $val_partner, $val_subPartner = null, $val_partnerFunder = null, $val_mechanism = null, $is_multiple = false, $required = false, $disabled = '') {
+
+	$required = $required ? '<span class="required">*</span>' : '';
+	$class = $is_multiple ? 'autoHeight' : '';
+	?>
+	
+		<div class="fieldLabel" id="subPartner_lbl"><?php echo t('Partner'); ?></div>
+		<div  class="fieldInput"> 
+		<?php 
+		
+		partnerRenderFunder($subPartner, 'subPartner', $val_subPartner, 'partnerFunder', $is_multiple); ?></div>
+		<?php //echo '</div>'; ?>
+
+	
+		<div class="fieldLabel" id="partnerFunder_lbl"><?php echo t('Funder'); ?></div>
+		<div  class="fieldInput">
+		<?php 
+
+		partnerRenderFunder($partnerFunder, 'partnerFunder', $val_partnerFunder, 'mechanism', $is_multiple); ?></div>
+		<?php //echo '</div>'; ?>
+		
+		<div class="fieldLabel" id="mechanism_lbl"><?php echo 'Mechanism'; ?></div>
+		<div  class="fieldInput">
+		<?php 
+
+		partnerRenderFunder($mechanism, 'mechanism', $val_mechanism, false, $is_multiple); ?></div>
+		<?php //echo '</div>'; ?>
+			
+		<?php 
+
+	// done
+}
+
+function gnrtest_epsfm_dropdown(&$view, &$employee, &$partner, &$subPartner, &$partnerFunder, &$mechanism, $val_employee = null, $val_partner = null, $val_subPartner = null, $val_partnerFunder = null, $val_mechanism = null, $is_multiple = false, $required = false) {
+
+	$required = $required ? '<span class="required">*</span>' : '';
+	$class = $is_multiple ? 'autoHeight' : '';
+	?>
+
+		<div class="fieldLabel" id="employee_lbl"><?php echo 'Employee'; ?></div>
+		<div class="fieldInput">
+		
+		<?php gnrtestrenderFunder($employee, 'employee', false, 'partner', $is_multiple); ?></div>
+		<?php //echo '</div>'; ?>
+		
+		<div class="fieldLabel" id="partner_lbl"><?php echo 'Partner'; ?></div>
+		<div class="fieldInput">
+		
+		<?php gnrtestrenderFunder($partner, 'partner', $val_employee, 'subPartner', $is_multiple); ?></div>
+		<?php //echo '</div>'; ?>
+		
+		<div class="fieldLabel" id="subPartner_lbl"><?php echo t('Partner'); ?></div>
+		<div  class="fieldInput">
+		 
+		<?php gnrtestrenderFunder($subPartner, 'subPartner', $val_subPartner, 'partnerFunder', $is_multiple); ?></div>
+		<?php //echo '</div>'; ?>
+
+	
+		<div class="fieldLabel" id="partnerFunder_lbl"><?php echo t('Funder'); ?></div>
+		<div  class="fieldInput">
+		
+		<?php gnrtestrenderFunder($partnerFunder, 'partnerFunder', $val_partnerFunder, 'mechanism', $is_multiple); ?></div>
+		<?php //echo '</div>'; ?>
+		
+		<div class="fieldLabel" id="mechanism_lbl"><?php echo 'Mechanism'; ?></div>
+		<div  class="fieldInput">
+		
+		<?php gnrtestrenderFunder($mechanism, 'mechanism', $val_mechanism, false, $is_multiple); ?></div>
+		<?php //echo '</div>'; ?>
+			
+		<?php 
+
+	// done
+}
+
+
+function partnerRenderFunder(&$widget_array, $widget_id, $default_val_id = false, $child_widget_id = false, $is_multiple = false, $required = false, $disabled = '') {
 
 	?>
-  <select id="<?php echo $widget_id;?>" name="<?php echo $widget_id;?><?php if ($is_multiple) echo '[]';?>" <?php if ( $is_multiple) echo 'multiple="multiple" size="10"';?>
+  <select <?php echo $disabled;?> id="<?php echo $widget_id;?>" name="<?php echo $widget_id ;?>" <?php echo ' autocomplete="off" '?><?php if ($child_widget_id) { ?>onchange="setFunderStatus_<?php echo str_replace('-', '_', $widget_id); ?>()" <?php }?> >
+    <option value="">--<?php tp('choose');?>--</option>
+   
+    <?php
+
+      foreach ( $widget_array as $val ) {
+
+//file_put_contents('c:\wamp\logs\php_debug.log', 'Location 742>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+//var_dump($widget_array);//var_dump($val);//var_dump($default_val_id); var_dump($val['id']);
+//var_dump($is_multiple);var_dump($required);var_dump($disabled);
+
+//echo ( ' e=' . $val['employee_id']);
+//echo ( ' p=' . $val['partner_id']);
+//echo ( ' s=' . $val['subpartner_id']); 
+//echo ( ' pf=' . $val['partner_funder_option_id']);
+//echo ( ' m=' . $val['mechanism_option_id']); 
+//echo ( ' id=' . $val['id']);
+//echo ( ' did=' . $default_val_id);
+
+//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+        	  $selected = '';
+        	  if ( $default_val_id == $val['id']) {
+        	     $selected = 'selected="selected"';
+           	  }
+           	  
+           	  if ($val['employee_id'] && !$val[partner_id] && !$val['subpartner_id'] && !$val[partner_funder_option_id] && !$val[mechanism_option_id]) {
+           	  	echo ('<option value="' . $val['id'] . '" ' . $selected . '>' . $val['employee_code'] . '</option>');
+           	  }
+           	  else if ($val['employee_id'] && $val[partner_id] && !$val['subpartner_id'] && !$val[partner_funder_option_id] && !$val[mechanism_option_id]) {
+           	  	echo ('<option value="' . $val['employee_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['partner'] . '</option>');
+           	  }
+          	  else if ($val['employee_id'] && $val[partner_id] && $val['subpartner_id'] && !$val[partner_funder_option_id] && !$val[mechanism_option_id]) {	 
+                echo ('<option value="' . $val['employee_id'] . "_" . $val['partner_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['partner'] . '</option>');
+              }
+           	  else if ($val['employee_id'] && $val[partner_id] && $val['subpartner_id'] && $val[partner_funder_option_id] && !$val[mechanism_option_id]) {
+           	  	echo ('<option value="' . $val['employee_id'] . "_" . $val['partner_id'] . "_" . $val['subpartner_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['funder_phrase'] . '</option>');
+           	  }
+           	  else if ($val['employee_id'] && $val[partner_id] && $val['subpartner_id'] && $val[partner_funder_option_id] && $val[mechanism_option_id]) {
+           	  	echo ('<option value="' . $val['employee_id'] . "_" . $val['partner_id'] . "_" . $val['subpartner_id'] . "_" . $val['partner_funder_option_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['mechanism_phrase'] . '</option>');
+           	  }
+           	  	
+           	  else if ($val[partner_id] && !$val['subpartner_id'] && !$val[partner_funder_option_id] && !$val[mechanism_option_id]) {
+           	  	echo ('<option value="' . $val['id'] . '" ' . $selected . '>' . $val['partner'] . '</option>');
+           	  }
+           	  else if ($val[partner_id] && $val['subpartner_id'] && !$val[partner_funder_option_id] && !$val[mechanism_option_id]) {
+           	  	echo ('<option value="' . $val['partner_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['partner'] . '</option>');
+           	  }
+           	  else if ($val[partner_id] && $val['subpartner_id'] && $val[partner_funder_option_id] && !$val[mechanism_option_id]) {
+           	  	echo ('<option value="' . $val['partner_id'] . "_" . $val['subpartner_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['funder_phrase'] . '</option>');
+           	  }
+           	  else if ($val[partner_id] && $val['subpartner_id'] && $val[partner_funder_option_id] && $val[mechanism_option_id]) {
+           	  	echo ('<option value="' . $val['partner_id'] . "_" . $val['subpartner_id'] . "_" . $val['partner_funder_option_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['mechanism_phrase'] . '</option>');
+           	  }
+           	  
+           	  else if ($val['subpartner_id'] && !$val[partner_funder_option_id] && !$val[mechanism_option_id]) {
+           	  	echo ('<option value="' . $val['id'] . '" ' . $selected . ' >' . $val['partner'] . '</option>');
+           	  }
+           	  else if ($val['subpartner_id'] && $val[partner_funder_option_id] && !$val[mechanism_option_id]) {
+           	  	echo ('<option value="' . $val['subpartner_id'] . "_" . $val['id'] . '" ' . $selected . ' >' . $val['funder_phrase'] . '</option>');
+           	  }
+           	  else if ($val['subpartner_id'] && $val[partner_funder_option_id] && $val[mechanism_option_id]) {
+           	  	echo ('<option value="' . $val['subpartner_id'] . "_" . $val['partner_funder_option_id'] . "_" .$val['id'] . '" ' . $selected . ' >' . $val['mechanism_phrase'] . '</option>');
+           	  }
+           
+           	  
+//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+      }
+    ?>
+  </select>
+  <?php
+if ( $child_widget_id ) {?>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+
+function setFunderStatus_<?php echo str_replace('-', '_', $widget_id);?>() {
+	var widgetObj = YAHOO.util.Dom.get('<?php echo $widget_id;?>');
+	setFunderStatus(widgetObj.selectedIndex,'<?php echo $child_widget_id;?>','<?php echo $widget_id;?>');
+}
+
+YAHOO.util.Event.onDOMReady(function () {
+	// set orig selected values
+	//var widgetObj = YAHOO.util.Dom.get('<?php echo $widget_id;?>');
+	//setFunderStatus(widgetObj.selectedIndex,'<?php echo $child_widget_id;?>','<?php echo $widget_id;?>');
+});
+
+//--><!]]>
+</script>
+<?php }
+}
+
+
+function renderFunder(&$widget_array, $widget_id, $default_val_id = false, $child_widget_id = false, $is_multiple = false, $readonly = '' ) {
+
+	?>
+  <select id="<?php echo $widget_id;?>" name="<?php echo $widget_id;?><?php if ($is_multiple) echo '[]';?>" <?php echo $readonly;?><?php if ( $is_multiple) echo 'multiple="multiple" size="10"';?>
   <?php if ($child_widget_id) { ?>onchange="setStatus_<?php echo str_replace('-', '_', $widget_id);?>();" <?php }?>>
     <option value="">--<?php tp('choose');?>--</option>
    
@@ -636,3 +875,4 @@ if ( $child_widget_id ) {?>
 </script>
 <?php }
 }
+

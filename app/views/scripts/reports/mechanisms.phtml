@@ -7,6 +7,8 @@
 	require_once('views/helpers/ScriptContainer.php');
 	print ScriptContainer::$instance->renderCSSHead();
 	print ScriptContainer::$instance->renderJSHead();
+	
+	$report = 'defined';
 	?>
 
 </head>
@@ -17,17 +19,17 @@
 		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
 		<div id="content">
 
-			<h1><?php tp('Mechanism Report');?></h1>
+			<h1><?php tp('Mechanism Reports');?></h1>
+
 			<form action="" method="get" class="form_employee">
 			
 			<div id="content">
 				<div id="subcontent">
 					<div class="fieldLabel" id="report_lbl">Select Mechanism Report</div>
 					<select id="report" name="report" >
-						<option value="">--choose--</option>
-						<option value="defined"             >Mechanisms Defined</option>
-						<option value="definedByPartner"            >Mechanisms Defined by Partner</option>
-						<option value="definedByEmployee"   selected        >Mechanisms Defined by Employee</option>
+						<option value="defined" <?php if ( @$this->report == 'defined' ) echo 'SELECTED';?> >Mechanisms Defined</option>
+						<option value="definedByPartner" <?php if ( @$this->report == 'definedByPartner' ) echo 'SELECTED';?> >Mechanisms Defined by Partner</option>
+						<option value="definedByEmployee" <?php if ( @$this->report == 'definedByEmployee' ) echo 'SELECTED';?> >Mechanisms Defined by Employee</option>
 					</select><br/><br/>
 			
 			
@@ -96,11 +98,11 @@
 			var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
 				if ( (sData == null) || (sData.length == 0) )
 					sData = '&nbsp;&nbsp;&nbsp;';
-				elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/partner/edit/id/" + oRecord.getData("id") + "' >" + sData + "</a>";
+				elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/mechanism/edit/id/" + oRecord.getData("id") + "' >" + sData + "</a>";
 			}
 
 			var partnersColumnDefs = [
-				{key:"id", label: "<?php tp("ID");?>", sortable:true, resizable:false <?php //,formatter: formatViewUrl?>}
+				{key:"id", label: "<?php tp("ID");?>", sortable:true, resizable:false <?php if ( @$this->report == 'defined' ) echo ', formatter: formatViewUrl';?>}
 				,{key:"employee_code",       label: "<?php tp('Employee');?>",         sortable:true, resizeable:true}
 				,{key:"partner",       label: "<?php tp('Partner');?>",         sortable:true, resizeable:true}
 				,{key:"subpartner",       label: "<?php tp('Subpartner');?>",         sortable:true, resizeable:true}
