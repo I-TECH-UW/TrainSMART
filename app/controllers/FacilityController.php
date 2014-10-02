@@ -227,7 +227,7 @@ class FacilityController extends ReportFilterHelpers {
 					}
 					
 					//TA:17: 09/08/2014
-					$new_commodity_data = $this->_getParam ( 'new_commodity_data' );
+					$new_commodity_data = $this->_getParam ( 'commodity_new_data' );
 					if($new_commodity_data){
 						$data_to_add = json_decode($new_commodity_data, true);
 						if (! Facility::saveCommodities ( $obj_id, $data_to_add['data'])) {

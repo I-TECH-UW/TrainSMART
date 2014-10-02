@@ -189,7 +189,7 @@ print ScriptContainer::$instance->renderJSHead();
             jsonAdd.date = month + "/" + oCDateYY.value;
             jsonAdd.consumption = oCCons.value;
             jsonAdd.stock_out = oCStockOut.value;
-          	ITECH.commodityTable.addDataRowToForm(jsonAdd, oCName.value, 'new_commodity_data');
+          	ITECH.commodityTable.addDataRow(jsonAdd, oCName.value);
             
             oCName.value = "";
             oCDateMM.value = "";
@@ -202,7 +202,7 @@ print ScriptContainer::$instance->renderJSHead();
   
   <?php echo $this->tableCommodities; ?><br>
   
-  <input type="hidden" id="new_commodity_data" name="new_commodity_data"/>
+  <input type="hidden" id="commodity_new_data" name="commodity_new_data"/>
   <input type="hidden" id="commodity_delete_data" name="commodity_delete_data"/>
   
   Commodity name
