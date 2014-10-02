@@ -17,7 +17,7 @@
 		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
 		<div id="content">
 
-			<h1><?php tp('Employee Report');?></h1>
+			<h1><?php print(t('Employee').space.t('Report'));?></h1>
 			<form action="" method="get" class="form_employee">
 				<fieldset id="criteria"><legend><?php tp('Select Criteria');?></legend>
 					<div class="fieldLabel"></div><div class="fieldInput criteria-header"><div class="criteria-label" ><?php tp('show');?></div><div  class="criteria-label" style="padding-left: 20px;"><?php tp('filter');?></div></div>
@@ -29,10 +29,14 @@
 						$this->calendar_fields = array('start_date','end_date');
 						$this->is_report = true;
 
+// 						file_put_contents('c:\wamp\logs\php_debug.log', 'emp 32>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 						var_dump($this->partners);
+// 						$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+						
 						if ( $this->setting['display_employee_partner'] )
 							echo labelAndField($this, t('Partner'), $this->partners, 'partner');
-						if ( $this->setting['display_employee_sub_partner'] )
-							echo labelAndField($this, t('Sub Partner'), $this->partners, 'sub_partner');
+						//if ( $this->setting['display_employee_sub_partner'] )
+							//echo labelAndField($this, t('Sub Partner'), $this->partners, 'sub_partner');
 						echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, true );
 						if ( $this->setting['display_employee_site_name'] )
 							echo labelAndField($this, t('Site').space.t('Name'), renderFacilityDropDown($this->facilities, $this->criteria['facilityInput']), 'site');
@@ -95,7 +99,7 @@
 						// $data[] = $row['first_name'];
 						// $data[] = $row['last_name'];
 						$data[] = $row['employee_code'];
-						$data[] = $row['gender'];
+						//$data[] = $row['gender'];
 						if ($this->criteria['showProvince'])              $data[] = $row['province_name'];
 						if ($this->criteria['showDistrict'])              $data[] = $row['district_name'];
 						if ($this->criteria['showRegionC'])               $data[] = $row['region_c_name'];
@@ -138,8 +142,8 @@
 				formatter: formatViewUrl},
 				// {key:"first_name",    label: "<?php tp('First Name');?>", sortable:true, resizeable:true},
 				// {key:"last_name",     label: "<?php tp('Last Name');?>",  sortable:true, resizeable:true},
-				{key:"employee_code",     label: "<?php tp('Employee Code');?>",  sortable:true, resizeable:true},
-				{key:"gender",        label: "<?php tp('Gender');?>",     sortable:true, resizeable:true},
+				{key:"employee_code",     label: "<?php print(t('Employee').space.t('Code'));?>",  sortable:true, resizeable:true},
+				// {key:"gender",        label: "<?php tp('Gender');?>",     sortable:true, resizeable:true},
 				<?php if ( $this->criteria['showProvince'] ) { ?>
 				{key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true},
 				<?php } ?>
@@ -207,7 +211,7 @@
 				{key:"transition_confirmed", label: "<?php tp('Transition Confirmed');?>", sortable:true, resizeable:true},
 				<?php } ?>
 				<?php /*if ( $this->criteria['show_comments'] ) {
-				{key:"employee_comments", label: "<?php tp('Employee Comments');?>", sortable:true, resizeable:true}
+				{key:"employee_comments", label: "<?php print (t('Employee Comments');?>", sortable:true, resizeable:true}
 				 #} */ ?>
 			];
 

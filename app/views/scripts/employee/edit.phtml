@@ -20,13 +20,14 @@
 
 			<?php require_once 'views/scripts/status.phtml' ?>
 
-			<h1><?php $this->mode == 'add' ? tp('Add Employee') : tp('Edit Employee'); ?></h1>
+			<h1><?php $this->mode == 'add' ? print(t('Add').space.t('Employee')) : print(t('Edit').space.t('Employee')); ?></h1>
 			<form action="" method="post" class="form_employee">
 				<legend></legend>
 
 					<?php if ($this->employee['id']): ?>
 						<div class="historyDiv">
 							<a href="<?php echo $this->base_url; ?>/employee/delete/id/<?php echo $this->employee['id']; ?>"><?php echo t('Delete this').space.t('Employee'); ?></a>
+							<a href="<?php echo $this->base_url; ?>/employee/add_funder_to_employee/id/<?php echo $this->employee['id']; ?>"><?php echo t('Add Funder'); ?></a>
 						</div>
 					<?php
 						endif; // fi historyDiv
@@ -34,6 +35,7 @@
 						// form fields
 						//if (! $this->hasACL('edit_employee')) $this->read_only = true; // readonly
 						// gnr:Jan.9.14 SA Emergency $this->required_fields = array('first_name', 'last_name','dob','select_lookup_nationalities', 'partner_id', 'subpartner_id', 'based_at', 'select_employee_qualification_option','salary','benefits','additional_expenses','stipend','employee_transition_option_id', 'select_employee_role_option', 'race', 'gender', 'disability_option_id', 'disability_comments', 'funded_hours_per_week', 'agreement_end_date');
+						
 						$this->required_fields = array('employee_code', 'partner_id', 'based_at', 'select_employee_qualification_option','salary','benefits','additional_expenses','stipend','employee_transition_option_id', 'select_employee_role_option', 'disability_option_id', 'disability_comments', 'funded_hours_per_week', 'agreement_end_date');
 
 						#if ($this->mode != 'add' && $this->employee['id'])
@@ -49,11 +51,13 @@
 						echo labelAndField($this, t('Middle Name'),  'text', 'middle_name', $this->employee['middle_name'] );
 						echo labelAndField($this, t('Last Name'),    'text', 'last_name',   $this->employee['last_name'] );
 						*/
-						
-						echo labelAndField($this, t('Employee Code'),    'text', 'employee_code',   $this->employee['employee_code'] );
+						$this->viewonly = true;
+						echo labelAndField($this, t('Employee').space.t('ID'),    'text', 'employee_id',   $this->employee['id'] );
+						$this->viewonly = false;
+						echo labelAndField($this, t('Employee').space.t('Code'),    'text', 'employee_code',   $this->employee['employee_code'] );
 						
 						if($this->setting['display_employee_dob'])
-						echo labelAndField($this, t('Date of Birth').space.('(dd/mm/yyyy)'),'date', 'dob',         $this->employee['dob'] );
+						echo labelAndField($this, t('Employee Date of Birth').space.('(dd/mm/yyyy)'),'date', 'dob',         $this->employee['dob'] );
 						
 						// if($this->setting['display_employee_nationality'])
 						// echo labelAndField($this, t('Employee Nationality'), $this->nationality, 'select_lookup_nationalities');
@@ -66,13 +70,15 @@
 						//if($this->setting['display_employee_race'])
 						//echo labelAndField($this, t('Race'),         $this->race, 'race');
 						//echo genderDropdown($this,t('Gender'),       'gender', $this->employee['gender']);
-						
+						if($this->setting['display_employee_disability']) {
+						$this->readonly = true;
 						echo confirmDropdown($this, t('Disability'), 'disability_option_id', $this->employee['disability_option_id']);
 						echo labelAndField($this, t('Nature of Disability'), 'text', 'disability_comments', $this->employee['disability_comments']);
 						echo '<div class="clear"></div><br /><br />'.PHP_EOL;
+						}
 
 						if ($this->mode != 'add' && $this->employee['partner_employee_number'])
-						echo labelAndField($this, t('Employee Number'),       'text', 'partner_employee_number', $this->employee['partner_employee_number']);
+						echo labelAndField($this, t('Employee').space.t('Number'),       'text', 'partner_employee_number', $this->employee['partner_employee_number']);
 						
 						if($this->setting['display_employee_partner'])	
 						echo labelAndField($this, t('Partner'),     $this->partners, 'partner_id');
@@ -80,13 +86,19 @@
 						foreach ($this->employee['funder'] as $i => $row) 
 						{	
 							
+							//employee_funder_dropdown($this, $this->subPartner, $this->partnerFunder, $this->mechanism, $row['subpartner_id'], $row['partner_funder_option_id'], $row['mechanism_option_id']);
 							
-							employee_funder_dropdown($this, $this->subPartner, $this->partnerFunder, $this->mechanism, $row['subpartner_id'], $row['partner_funder_option_id'], $row['mechanism_option_id']);
+							//file_put_contents('c:\wamp\logs\php_debug.log', 'empEdit 85>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+							//var_dump($row);
+							//var_dump($this->partnerFunder);
+							//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 							
-        					echo labelAndField($this, t('Percentage'), '%','percentage[]', $row['percentage']);
+							partner_sfm_dropdown($i, $this, $this->subPartner, $this->partnerFunder, $this->mechanism, $row['employee_id'], $row['partner_id'], $row['subpartner_id'], $row['partner_funder_option_id'], $row['mechanism_option_id'], false,  false, ' disabled ');
+							
+        					echo labelAndField($this, t('Percentage'), 'text','percentage[]', $row['percentage']);
 							
 						}
-						echo '<button id="funder_add">'.t('Add a new').space.t('Funder').'</button><br />';
+						//echo '<button id="funder_add">'.t('Add a new').space.t('Funder').'</button><br />';
 							
 						
 						//if($this->setting['display_employee_sub_partner'])
@@ -156,8 +168,8 @@
 						echo labelAndField($this, t('Stipend'),  'text', 'stipend',  $this->employee['stipend']);
 						if($this->setting['display_employee_annual_cost'])
 						echo labelAndField($this, t('(R)Annual Cost'), 'text', 'annual_cost', $this->employee['annual_cost']);
-						if($this->setting['display_employee_external_funding'])
-						echo labelAndField($this, t('Percentage not paid by').space.t('Partner'), 'text', 'external_funding_percent', $this->employee['external_funding_percent']);
+						//if($this->setting['display_employee_external_funding'])
+						//echo labelAndField($this, t('Percentage not paid by').space.t('Partner'), 'text', 'external_funding_percent', $this->employee['external_funding_percent']);
 
 						echo '<div class="clear"></div><br /><br />';
 
@@ -239,7 +251,7 @@
 							$('.datepicker').datepicker({
 									changeMonth: true,
 									changeYear: true,
-									yearRange: "-90:+0",
+									yearRange: "-90:+50",
 									dateFormat: "dd/mm/yy"
 								});
 							$('.calendarbtn').click(openNearestDatePicker);

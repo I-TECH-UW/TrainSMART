@@ -42,7 +42,7 @@ class EmployeeController extends ReportFilterHelpers {
 		}
 
 		require_once('models/table/dash-employee.php');
-		$this->view->assign('title', $this->translation['Application Name'].space.t('Employee Tracking System'));
+		$this->view->assign('title', $this->translation['Application Name'].space.t('Employee').space.t('Tracking System'));
 
 		// restricted access?? does this user only have acl to view some trainings or people
 		// they dont want this, removing 5/01/13
@@ -145,6 +145,90 @@ class EmployeeController extends ReportFilterHelpers {
 		$rows = $db->fetchAll($sql);
 		return $rows ? $rows : array();
 	}
+	
+	public function addFunderToEmployeeAction() {
+		if (! $this->hasACL ( 'edit_employee' )) {
+			$this->doNoAccessError ();
+		}
+	
+		require_once('models/table/Partner.php');
+		require_once('views/helpers/Location.php'); // funder stuff
+	
+		$db     = $this->dbfunc();
+		$status = ValidationContainer::instance ();
+		$params = $this->getAllParams();
+		$id     = $params['id'];
+			
+		if ($id) {
+			$helper = new Helper();
+				
+			if ( $this->getRequest()->isPost() ) {
+	
+				//$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
+				//foreach ($params['funding_end_date'] as $i => $value) $params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
+	
+				//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont isPost 172> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+				//var_dump($params);
+				//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);			
+				
+				// test for all values
+				if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['percentage']))
+					$status->addError('', t ( 'All fields' ) . space . t('are required'));
+	
+				if ( $status->hasError() )
+					$status->setStatusMessage( t('That funding mechanism could not be saved.') );
+					
+				else {
+					//save
+					$epsfm = new ITechTable(array('name' => 'employee_to_partner_to_subpartner_to_funder_to_mechanism'));
+					$psfmArr = explode('_', $params[mechanism]); // eg: 13_13_3_106
+					$psfm_id = $helper->getPsfmId($psfmArr);
+					$data = array(
+							'partner_to_subpartner_to_funder_to_mechanism_id' => $psfm_id['id'],
+							'employee_id' => $params['id'],
+							'partner_id' => $psfmArr[0],
+							'subpartner_id'  => $psfmArr[1],
+							'partner_funder_option_id' => $psfmArr[2],
+							'mechanism_option_id' => $psfmArr[3],
+							'percentage' => $params['percentage'],
+					);
+						
+					//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont isPost 192> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+					//var_dump($data);
+					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+						
+					$insert_result = $epsfm->insert($data);
+					$status->setStatusMessage( t('The funding mechanism was saved.') );
+					//$this->_redirect("admin/employee-build_funding");
+					//$this->_redirect("partner/edit/" . $params['id']);
+				}
+			}
+				
+			//exclude current funders
+			$employee = $helper->getEmployee($id);
+			$this->viewAssignEscaped ( 'employee', $employee );
+			
+			$partner = $helper->getPsfmPartnerExclude($id);
+			$this->viewAssignEscaped ( 'partner', $partner );
+				
+			$subPartner = $helper->getPsfmSubPartnerExclude($id, $employee[0]['partner_id']);
+			$this->viewAssignEscaped ( 'subPartner', $subPartner );
+				
+			$partnerFunder = $helper->getPsfmFunderExclude($id, $employee[0]['partner_id']);
+			$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+				
+			$mechanism = $helper->getPsfmMechanismExclude($id, $employee[0]['partner_id']);
+			$this->viewAssignEscaped ( 'mechanism', $mechanism );
+				
+			//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont 219>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+			//var_dump($subPartner);
+			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+				
+		} // if ($id)
+	
+		//validate
+		$this->view->assign ( 'status', $status );
+	}
 
 	public function addAction() {
 		$this->view->assign('mode', 'add');
@@ -177,6 +261,54 @@ class EmployeeController extends ReportFilterHelpers {
 		$this->view->assign ( 'status', $status );
 
 	}
+	
+	public function deleteFunderAction() {
+		if (! $this->hasACL ( 'edit_employee' )) {
+			$this->doNoAccessError ();
+		}
+	
+		require_once('models/table/Partner.php');
+		require_once('views/helpers/Location.php'); // funder stuff
+	
+		$db     = $this->dbfunc();
+		$status = ValidationContainer::instance ();
+		$params = $this->getAllParams();
+			
+		if ($params['id']) {
+			$recArr = explode('_', $params['id']);
+			
+				//find in epsfm, should find to delete
+				$sql = 'SELECT * FROM employee_to_partner_to_subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
+				$where = "employee_id = $recArr[0] and  partner_id = $recArr[1] and subpartner_id = $recArr[2] and partner_funder_option_id = $recArr[3] and mechanism_option_id = $recArr[4] and is_deleted = false";
+				$sql .= $where;
+					
+				$row = $db->fetchRow( $sql );
+				if (! $row){
+					$status->setStatusMessage ( t('Cannot find that record in the database.') );
+					//file_put_contents('c:\wamp\logs\php_debug.log', 'That record could not be found.'.PHP_EOL, FILE_APPEND | LOCK_EX);
+				}
+					
+				else { // found, safe to delete
+	
+					//file_put_contents('c:\wamp\logs\php_debug.log', 'Ready to delete '.$row['id'].PHP_EOL, FILE_APPEND | LOCK_EX);
+					$update_result = $db->update('employee_to_partner_to_subpartner_to_funder_to_mechanism', array('is_deleted' => 1), 'id = '.$row['id']);
+					var_dump($update_result);
+	
+					if($update_result){
+						$status->setStatusMessage ( t ( 'That mechanism was deleted.' ) );
+						//file_put_contents('c:\wamp\logs\php_debug.log', 'That record was deleted.'.PHP_EOL, FILE_APPEND | LOCK_EX);
+					}
+					else{
+						$status->setStatusMessage ( t ( 'That mechanism was not deleted.' ) );
+						//file_put_contents('c:\wamp\logs\php_debug.log', 'That record was not deleted.'.PHP_EOL, FILE_APPEND | LOCK_EX);
+					}
+				}
+				
+			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		}
+		$this->_redirect("employee/edit/id/" . $row['employee_id']);
+	}
+	
 
 	public function editAction() {
 		if (! $this->hasACL ( 'edit_employee' )) {
@@ -215,12 +347,14 @@ class EmployeeController extends ReportFilterHelpers {
 			// $status->checkRequired ( $this, 'first_name', t ( 'Frist Name' ) );
 			// $status->checkRequired ( $this, 'last_name',  t ( 'Last Name' ) );
 			
-			$status->checkRequired ( $this, 'employee_code', t ( 'Employee Code' ) );
+			$status->checkRequired ( $this, 'employee_code', t('Employee').space.t('Code'));
 			
 			//$status->checkRequired ( $this, 'dob', t ( 'Date of Birth' ) );//TA:18: 08/28/2014 (DOB field is not required)
 			
 			if($this->setting('display_employee_nationality'))
-				$status->checkRequired ( $this, 'lookup_nationalities_id', t ( 'Employee Nationality' ) );
+				$status->checkRequired ( $this, 'lookup_nationalities_id', t('Employee Nationality'));
+			
+			
 			
 			$status->checkRequired ( $this, 'employee_qualification_option_id', t ( 'Staff Cadre' ) );
 			
@@ -250,7 +384,7 @@ class EmployeeController extends ReportFilterHelpers {
 			if(($this->setting('display_employee_base') && !$params['employee_base_option_id']) || !$this->setting('display_employee_base')) // either one is OK, javascript disables regions if base is on & has a value choice
 				$status->checkRequired ( $this, 'province_id', t ( 'Region A (Province)' ).space.t('or').space.t('Employee Based at') );
 			if($this->setting('display_employee_base') && !$params['province_id'])
-				$status->checkRequired ( $this, 'employee_base_option_id', t ( 'Employee Based at' ).space.t('or').space.t('Region A (Province)') );
+				$status->checkRequired ( $this, 'employee_base_option_id', t('Employee Based at').space.t('or').space.t('Region A (Province)') );
 			if($this->setting('display_employee_primary_role'))
 				$status->checkRequired ( $this, 'employee_role_option_id', t ( 'Primary Role' ) );
 
@@ -340,6 +474,31 @@ class EmployeeController extends ReportFilterHelpers {
             	$region_ids = Location::regionsToHash($region_ids);
             	$params = array_merge($params, $region_ids);
             	#$params['roles'] = $db->fetchCol("SELECT employee_role_option_id FROM employee_to_role WHERE employee_id = $id");
+            	
+            	//get linked table data from option tables
+            	$sql = "SELECT partner_to_subpartner_to_funder_to_mechanism_id, employee_id, partner_id, subpartner_id, partner_funder_option_id, mechanism_option_id, percentage
+            	FROM employee_to_partner_to_subpartner_to_funder_to_mechanism WHERE is_deleted = false and employee_id = $id";
+            	$params['funder'] = $db->fetchAll($sql);
+            	
+ 
+            	
+            	$helper = new Helper();
+            	
+            	$subPartner = $helper->getEmployeeSubPartner($id);
+            	$this->viewAssignEscaped ( 'subPartner', $subPartner );
+            	
+            	$partnerFunder = $helper->getEmployeeFunder($id);
+            	$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+            	
+            	$mechanism = $helper->getEmployeeMechanism($id);
+            	$this->viewAssignEscaped ( 'mechanism', $mechanism );
+            	
+            	//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont 511>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+            	//var_dump($params['funder']);
+            	//var_dump($mechanism);
+            	//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+            	
+			}
             	
             	//get linked table data from option tables
             	
@@ -490,7 +649,7 @@ LEFT JOIN 	partner subp on subp.id = funders.subpartner_id
 
 			// if ($criteria['first_name'])                        $where[] = "employee.first_name   = '{$criteria['first_name']}'";
 			// if ($criteria['last_name'])                         $where[] = "employee.last_name    = '{$criteria['last_name']}'";
-			if ($criteria['employee_code'])                        $where[] = "employee.employee_code    = '{$criteria['employee_code']}'";
+			if ($criteria['employee_code'])                        $where[] = "employee.employee_code    like '%{$criteria['employee_code']}%'";
 			
 			if ($criteria['partner_id'])                        $where[] = 'employee.partner_id   = '.$criteria['partner_id']; //todo
 			
@@ -528,7 +687,7 @@ LEFT JOIN 	partner subp on subp.id = funders.subpartner_id
 		$this->view->assign('status', $status);
 		$this->viewAssignEscaped ( 'criteria', $criteria );
 		$this->viewAssignEscaped ( 'locations', $locations );
-		//$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false ) );
+		$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false ) );
 		
 		//$this->view->assign ( 'subpartners', DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false, false, array('name' => 'subpartner_id'), true ) );
 		$this->view->assign ( 'cadres',      DropDown::generateHtml ( 'employee_qualification_option', 'qualification_phrase', $criteria['employee_qualification_option_id'], false, $this->view->viewonly, false ) );

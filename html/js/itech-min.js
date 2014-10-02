@@ -437,13 +437,13 @@ $(window).load(function (e) {
 })
 
 
-function filterAgencyOptions(selectObjParentId, selectObjChildId) {
+function filterFunderOptions(selectObjParentId, selectObjChildId) {
   
   var selectObj = document.getElementById(selectObjChildId);
   if ( (selectObj == undefined) || (selectObj == null) ) return;
   
-  if ( selectObj ) 
-  {
+  if ( selectObj ) {
+	  
     var selectObjParent = document.getElementById(selectObjParentId);
     var index = selectObjParent.selectedIndex;
     var selected_option_value = selectObjParent.options[index].value;
@@ -481,16 +481,27 @@ function filterAgencyOptions(selectObjParentId, selectObjChildId) {
     var newi = 0;
      
     for (i in selectObj.originalOptions) { 
-      tmpOpt = selectObj.originalOptions[i];      
-      prefix = i.substring(0, i.search("_"));
-      prefix2 = (selected_option_value);
-    	
-   	  if ( prefix == prefix2 ) {
-        newi++;
-  	    appendOptionLast(selectObj, tmpOpt, i);	  
+      tmpOpt = selectObj.originalOptions[i];   
+      
+      for(j in curTypes){
+        curType=curTypes[j];
+        prefix=i.substring(0,curType.length+1); 	  
+        prefix2=(curType+'_');
+     	 
+   	    if ( prefix == prefix2 ) {
+          newi++;
+  	      appendOptionLast(selectObj, tmpOpt, i);
+  	      
+  	      for(k in oldSubTypes){
+  	      	if(i==oldSubTypes[k])
+              selectobj.options[newi].selected=true;
+            selectObj.disabled=false;
+  	        
+  	      }  
+   	    }
       }
     }
-  }  
+  } // if (selectObj)  
 
  // disable if no options (other than --choose--)
   if (newi < 1)
@@ -498,12 +509,12 @@ function filterAgencyOptions(selectObjParentId, selectObjChildId) {
 
 } // func
 
-function setAgencyStatus(selectedIndex, childId, parentId)  {
+function setFunderStatus(selectedIndex, childId, parentId)  {
 	var childObj = YAHOO.util.Dom.get(childId);
 	if ( childObj ) {
 		if ( selectedIndex ) {
 			childObj.disabled = false;
-			filterAgencyOptions(parentId,childId);
+			filterFunderOptions(parentId,childId);
 		} else {
 			childObj.selectedIndex = 0;
 			childObj.disabled = true;

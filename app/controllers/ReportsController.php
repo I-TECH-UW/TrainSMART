@@ -10667,9 +10667,9 @@ die (__LINE__ . " - " . $sql);
 		require_once ('views/helpers/TrainingViewHelper.php');
 
 		$criteria = $this->getAllParams();
+		
 		if ($criteria['go'])
 		{
-
 			$where = array();
 #todo is_Deleted not implemented
 			$criteria['last_selected_rgn'] = regionFiltersGetLastID('', $criteria); // prefix, $criteria
@@ -10681,7 +10681,7 @@ die (__LINE__ . " - " . $sql);
 					,qual.qualification_phrase as staff_cadre
 					,facility.facility_name
 					,category.category_phrase as staff_category
-					,subp.partner as 'sub_partner'
+					-- ,subp.partner as 'sub_partner'
 					,CASE WHEN annual_cost REGEXP '[^!0-9,\.][0-9\.,]+' THEN SUBSTRING(annual_cost, 2) ELSE annual_cost END AS 'annual_cost_to_compare'
 					,eto.transition_phrase
 					,CASE WHEN employee.transition_confirmed = 1 THEN 'yes' WHEN employee.transition_confirmed = 0 THEN 'no' ELSE employee.transition_confirmed END AS 'transition_confirmed'
@@ -10693,7 +10693,7 @@ die (__LINE__ . " - " . $sql);
 					FROM employee LEFT JOIN ($locationsubquery) as l ON l.id = employee.location_id
 					LEFT JOIN employee_qualification_option qual ON qual.id = employee.employee_qualification_option_id
 					LEFT JOIN partner on partner.id = partner_id
-					LEFT JOIN partner subp on subp.id = subpartner_id
+					-- LEFT JOIN partner subp on subp.id = subpartner_id
 					LEFT JOIN facility ON site_id = facility.id
 					LEFT JOIN facility_type_option fto          ON fto.id = facility.type_option_id
 					LEFT JOIN employee_category_option category ON category.id = employee.employee_category_option_id
@@ -10712,7 +10712,7 @@ die (__LINE__ . " - " . $sql);
 			if ($site_orgs)                                    $where[] = "partner.organizer_option_id in ($site_orgs) ";
 
 			// criteria
-			if ($criteria['partner_id'])                       $where[] = 'partner.id = '.$criteria['partner_id'];
+			if ($criteria['partner_id'])                       $where[] = 'employee.partner_id = '.$criteria['partner_id'];
 
 			if ($criteria['last_selected_rgn'])                $where[] = 'province_name is not null'; // bugfix - location subquery is not working like a inner join or whereclause, not sure why
 
@@ -10741,8 +10741,9 @@ die (__LINE__ . " - " . $sql);
 
 			if ($criteria['transition_confirmed'])             $where[] = 'employee.transition_confirmed = 1';
 
-			if ( count ($where) )
+			if ( count ($where) ){
 				$sql .= ' WHERE ' . implode(' AND ', $where);
+			}
 
 			$sql .= ' GROUP BY employee.id ';
 
@@ -10909,9 +10910,9 @@ die (__LINE__ . " - " . $sql);
 
 	$criteria = $this->getAllParams();
 	
-	file_put_contents('c:\wamp\logs\php_debug.log', 'repCont 10911>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	var_dump($criteria);
-	$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+	// file_put_contents('c:\wamp\logs\php_debug.log', 'repCont 10911>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	// var_dump($criteria);
+	// $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 
 	if ($criteria['go'])
 	{
@@ -10965,17 +10966,31 @@ left join mechanism_option m on m.id = epsfm.mechanism_option_id
 
 		if ($criteria['end_date'])                        $where[] = 'funding_end_date <= \''.$this->_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
 
-		if ( count ($where) )
-			$sql .= ' WHERE ' . implode(' AND ', $where);
+
 		
 		switch ($criteria['report']) {
 			case "defined":
+				if ( count ($where) ){
+					$sql .= ' WHERE ' . implode(' AND ', $where);
+					$sql .= ' AND sfm.is_deleted = false ';
+				}
+				else  $sql .= ' WHERE sfm.is_deleted = false ';
 				$sql .= ' order by subp.partner, funder_phrase, mechanism_phrase ';
 				break;
 			case "definedByPartner":
+				if ( count ($where) ){
+					$sql .= ' WHERE ' . implode(' AND ', $where);
+					$sql .= ' AND psfm.is_deleted = false ';
+				}
+				else  $sql .= ' WHERE psfm.is_deleted = false ';
 				$sql .= ' order by p.partner, subp.partner, funder_phrase, mechanism_phrase ';
 				break;
 			case "definedByEmployee":
+				if ( count ($where) ){
+					$sql .= ' WHERE ' . implode(' AND ', $where);
+					$sql .= ' AND epsfm.is_deleted = false ';
+				}
+				else  $sql .= ' WHERE epsfm.is_deleted = false ';
 				$sql .= ' order by e.employee_code, p.partner, subp.partner, funder_phrase, mechanism_phrase ';
 				break;
 		}

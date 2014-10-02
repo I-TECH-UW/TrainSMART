@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title><?php echo $this->translation['Application Name'];?> | <?php tp('Delete Employee');?></title>
+  <title><?php echo $this->translation['Application Name'];?> | <?php print(t('Delete').space.t('Employee'));?></title>
 <?php
 require_once('views/helpers/ScriptContainer.php');
 print ScriptContainer::$instance->renderCSSHead();
@@ -14,7 +14,7 @@ print ScriptContainer::$instance->renderJSHead();
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
 
-		<h1><?php tp('Delete Employee');?></h1>
+		<h1><?php print(t('Delete').space.t('Employee'));?></h1>
 		<div class="clear" ></div>
   </div>
   <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>

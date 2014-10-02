@@ -114,7 +114,7 @@
 			var partnersColumnDefs = [
 				{key:"id", label: "<?php tp("ID");?>", sortable:true, resizable:false,formatter: formatViewUrl}
 				,{key:"partner",       label: "<?php tp('Partner');?>",         sortable:true, resizeable:true}
-				,{key:"pcnt",          label: "<?php tp('Employee Count');?>",  sortable:true, resizeable:true}
+				,{key:"pcnt",          label: "<?php print(t('Employee').space.t('Count'));?>",  sortable:true, resizeable:true}
 				,{key:"facilities",    label: "<?php tp('Sites');?>",           sortable:true, resizeable:true}
 				<?php if($this->criteria['show_comments']) { ?>
 				,{key:"comments",      label: "<?php tp('Partner Comments');?>",sortable:true, resizeable:true}

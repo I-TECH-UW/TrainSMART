@@ -88,9 +88,10 @@
 						if($this->setting['display_region_g']) $data[] = $row['region_g_name'];
 						if($this->setting['display_region_h']) $data[] = $row['region_h_name'];
 						if($this->setting['display_region_i']) $data[] = $row['region_i_name'];
-						if($this->setting['display_employee_sub_partner']) $data[] = $row['subpartners'];
+						if($this->setting['display_employee_sub_partner']) $data[] = $row['subPartner'];
 						if($this->setting['display_employee_funder']) {
-							$data[] = $row['funder'];
+							$data[] = $row['partnerFunder'];
+							$data[] = $row['mechanism'];
 							$data[] = formhelperdate($row['funding_end_date']);
 						}
 						echo '"' .implode('","', $data). '"';
@@ -140,7 +141,8 @@
 			{key:"subpartners", label: "<?php tp('Sub Partner');?>", sortable:true, resizeable:true},
 			<?php } ?>
 			<?php if ( $this->setting['display_employee_funder'] ) { ?>
-			{key:"funder", label: "<?php tp('Funder');?>", sortable:true, resizeable:true},
+			{key:"partnerFunder", label: "<?php tp('Funder');?>", sortable:true, resizeable:true},
+			{key:"mechanism", label: "<?php tp('Mechanism');?>", sortable:true, resizeable:true},
 			{key:"funding_end_date", label: "<?php tp('Funder End Date');?>", sortable:true, resizeable:true}
 			<?php } ?>
 											];

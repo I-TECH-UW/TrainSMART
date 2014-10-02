@@ -25,6 +25,7 @@
 				<?php if ($this->partner['id']): ?>
 				<div class="historyDiv">
 					<a href="<?php echo $this->base_url; ?>/partner/delete/id/<?php echo $this->partner['id']; ?>"><?php echo t('Delete this').space.t('Partner'); ?></a>
+					<a href="<?php echo $this->base_url; ?>/partner/add_funder_to_partner/id/<?php echo $this->partner['id']; ?>"><?php echo t('Add Funder'); ?></a>
 				</div>
 				<?php
 					endif; // fi historyDiv
@@ -32,9 +33,13 @@
 					require_once ('views/helpers/DropDown.php');
 					$this->required_fields = array('partner', 'address1', 'city', 'province_id', 'phone', 'fax', 'funder', 'mechanism', 'funding_end_date[]', 'employee_transition_option_id', 'agreement_end_date', 'partner_importance_option_id', 'incoming_partner', 'comments', 'subpartner_id[]', 'hr_contact_name','hr_contact_phone','hr_contact_email');
 					$this->partner['agreement_end_date'] = formhelperdate( $this->partner['agreement_end_date'] );
-					if ($this->mode != 'add')
-					echo labelAndField($this, t('Partner').space.t('ID'),  'text', 'id',      $this->partner['id']);
+					//$this->viewonly = true;
+					if ($this->mode != 'add') {
+					  echo labelAndField($this, t('Partner').space.t('ID'),  'text', 'id',      $this->partner['id']);
+					}
 					echo labelAndField($this, t('Partner').space.t('Name'),'text', 'partner', $this->partner['partner']);
+					
+					
 					
 					/*
 					if ($this->setting['display_partner_type'])
@@ -62,23 +67,24 @@
 					
 					//file_put_contents('c:\wamp\logs\php_debug.log', 'partEdit 63>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 					//var_dump($this->partner['funder']);
+					//var_dump($this->subPartner);
 					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 					
 					if ($this->setting['display_employee_funder']) {
+
+
 						foreach ($this->partner['funder'] as $i => $row) {
-								
-							//file_put_contents('c:\wamp\logs\php_debug.log', 'partEdit 63>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-							//var_dump($row['subpartner_id']);
-							//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);						
-								
-							partner_funder_dropdown($this, $this->subPartner, $this->partnerFunder, $this->mechanism, $row['subpartner_id'], $row['partner_funder_option_id'], $row['mechanism_option_id']);
-								
+							
+							partner_sfm_dropdown($i, $this, $this->subPartner, $this->partnerFunder, $this->mechanism, '', $row['partner_id'], $row['subpartner_id'], $row['partner_funder_option_id'], $row['mechanism_option_id'], false,  false, ' disabled ');
+							
 							if ($this->setting['display_employee_funding_end_date'])
 								echo labelAndField($this, t('Funding End Date'), 'date','funding_end_date[]', formhelperdate($row['funding_end_date']));
 						}
-						echo '<button id="funder_add">'.t('Add a new').space.t('Funder').'</button><br />';
+						
+						//echo '<button id="funder_add">'.t('Add a new').space.t('Funder').'</button><br />';
 					}
 
+					//$this->viewonly = false;
 					$organizers = $this->organizers;
 				    $organizers .= hasACLEdit('acl_editor_training_organizer', 'admin/training-organizer', $this); // give them an insert and edit link if they have rights to this stuff
 				    $organizers .= $this->hasACL('acl_editor_training_organizer') ? "<a href=\"#\" onclick=\"addToSelect('" . str_replace ( "'", "\\" . "'", t ( 'Please enter your new' ) ) . " " . strtolower ( t('Organizer') ) . ":', 'select_training_organizer_option', '" . Settings::$COUNTRY_BASE_URL . "/training/insert-table/table/training_organizer_option/column/training_organizer_phrase/outputType/json'); return false;\">" . t ( 'Insert new' ) . "</a>" : ""; // copied from training edit form

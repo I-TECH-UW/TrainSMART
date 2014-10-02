@@ -261,68 +261,373 @@ class Helper extends ITechTable
 		return $result;
 	}
 	
+	###################################
+	#                                 #
+	#   MECHANISM SPECIFIC FUNCTIONS  #
+	#                                 #
+	###################################
+	public function getSfmId($sfmArr) {
+		$select = $this->dbfunc()->select()
+		->from(array("sfm" => "subpartner_to_funder_to_mechanism"), array('id'))
+		->where("subpartner_id = ?", $sfmArr[0])
+		->where("partner_funder_option_id = ?", $sfmArr[1])
+		->where("mechanism_option_id = ?", $sfmArr[2])
+		->where("sfm.is_deleted = false");
+		$result = $this->dbfunc()->fetchRow($select);
+		return $result;
+	}
+	
+	public function getPsfmId($psfmArr) {
+		$select = $this->dbfunc()->select()
+		->from(array("psfm" => "partner_to_subpartner_to_funder_to_mechanism"), array('id'))
+		->where("partner_id = ?", $psfmArr[0])
+		->where("subpartner_id = ?", $psfmArr[1])
+		->where("partner_funder_option_id = ?", $psfmArr[2])
+		->where("mechanism_option_id = ?", $psfmArr[3])
+		->where("psfm.is_deleted = false");
+		$result = $this->dbfunc()->fetchRow($select);
+		return $result;
+	}
+	
+	public function getPartner($pid) {
+		$select = $this->dbfunc()->select()
+		->from(array("p" => "partner"))
+		->where("id = ?", $pid);
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getSubpartner($pid) {
+		return ( $this->getPartner($pid) );
+	}
+	
+	public function getFunder($pid) {
+		$select = $this->dbfunc()->select()
+		->from(array("po" => "partner_funder_option"))
+		->where("id = ?", $pid);
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getMechanism($pid) {
+		$select = $this->dbfunc()->select()
+		->from(array("mo" => "mechanism_option"))
+		->where("id = ?", $pid);
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	# getPartnerSubpartner($pid)....
+	public function getPartnerSubpartner($pid) {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array('psfm' => 'partner_to_subpartner_to_funder_to_mechanism'), array('partner_id', 'subpartner_id'))
+		->join(array("p" => "partner"), "psfm.subpartner_id = p.id")
+		->where("psfm.partner_id = ?", $pid)
+		->where("psfm.is_deleted = false")
+		->order('psfm.subpartner_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getPartnerFunder($pid) {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array("psfm" => "partner_to_subpartner_to_funder_to_mechanism"), array('partner_id', 'subpartner_id', 'partner_funder_option_id'))
+		->join(array("f" => "partner_funder_option"), "f.id = psfm.partner_funder_option_id")
+		->where("partner_id = ?", $pid)
+		->where("psfm.is_deleted = false")
+		->order('psfm.subpartner_id', 'psfm.partner_funder_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getPartnerMechanism($pid) {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array("psfm" => "partner_to_subpartner_to_funder_to_mechanism"), array('partner_id', 'subpartner_id', 'partner_funder_option_id', 'mechanism_option_id'))
+		->join(array("m" => "mechanism_option"), "m.id = psfm.mechanism_option_id")
+		->where("partner_id = ?", $pid)
+		->where("psfm.is_deleted = false")
+		->order('psfm.subpartner_id', 'psfm.partner_funder_option_id', 'psfm.mechanism_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+
 	public function getEmployeeSubpartner($pid) {
 		$select = $this->dbfunc()->select()->distinct()
-		->from(array('psfm' => 'partner_to_subpartner_to_funder_to_mechanism'), array('subpartner_id'))
-		->join(array("p" => "partner"), "subpartner_id = p.id")
-		->where("partner_id = ?", $pid)
-		->order('psfm.subpartner_id');
+		->from(array('epsfm' => 'employee_to_partner_to_subpartner_to_funder_to_mechanism'), array('employee_id', 'partner_id', 'subpartner_id'))
+		->join(array("p" => "partner"), "p.id = epsfm.subpartner_id")
+		->where("employee_id = ?", $pid)
+		->where("epsfm.is_deleted = false")
+		->order('epsfm.subpartner_id');
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
 	
 	public function getEmployeeFunder($pid) {
 		$select = $this->dbfunc()->select()->distinct()
-		->from(array("psfm" => "partner_to_subpartner_to_funder_to_mechanism"), array('partner_funder_option_id'))
-		->join(array("f" => "partner_funder_option"), "f.id = psfm.partner_funder_option_id")
-		->where("partner_id = ?", $pid)
-		->order('psfm.subpartner_id', 'psfm.partner_funder_option_id');
+		->from(array("epsfm" => "employee_to_partner_to_subpartner_to_funder_to_mechanism"), array('employee_id', 'partner_id', 'subpartner_id', 'partner_funder_option_id'))
+		->join(array("f" => "partner_funder_option"), "f.id = epsfm.partner_funder_option_id")
+		->where("employee_id = ?", $pid)
+		->where("epsfm.is_deleted = false")
+		->order('epsfm.subpartner_id', 'epsfm.partner_funder_option_id');
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
 	
 	public function getEmployeeMechanism($pid) {
 		$select = $this->dbfunc()->select()->distinct()
-		->from(array("psfm" => "partner_to_subpartner_to_funder_to_mechanism"), array('mechanism_option_id'))
-		->join(array("m" => "mechanism_option"), "m.id = psfm.mechanism_option_id")
-		->where("partner_id = ?", $pid)
-		->order('psfm.subpartner_id', 'psfm.partner_funder_option_id', 'psfm.mechanism_option_id');
+		->from(array("epsfm" => "employee_to_partner_to_subpartner_to_funder_to_mechanism"), array('employee_id', 'partner_id', 'subpartner_id', 'partner_funder_option_id', 'mechanism_option_id'))
+		->join(array("m" => "mechanism_option"), "m.id = epsfm.mechanism_option_id")
+		->where("employee_id = ?", $pid)
+		->where("epsfm.is_deleted = false")
+		->order('epsfm.subpartner_id', 'epsfm.partner_funder_option_id', 'epsfm.mechanism_option_id');
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
 	
-	public function getSubpartner() {
+	public function getSfmSubPartner() {
 		$select = $this->dbfunc()->select()->distinct()
-		->from(array('sfm' => 'subpartner_to_funder_to_mechanism'), array('subpartner_id'))
+		->from(array('sfm' => 'subpartner_to_funder_to_mechanism'), array('subpartner_id' ))
 		->join(array("p" => "partner"), "subpartner_id = p.id")
+		->where("sfm.is_deleted = false")
 		->order('sfm.subpartner_id');
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
 	
-	public function getFunder() {
+	public function getSfmFunder() {
 		$select = $this->dbfunc()->select()->distinct()
-		->from(array("sfm" => "subpartner_to_funder_to_mechanism"), array('partner_funder_option_id'))
+		->from(array("sfm" => "subpartner_to_funder_to_mechanism"), array('subpartner_id', 'partner_funder_option_id'))
 		->join(array("f" => "partner_funder_option"), "f.id = sfm.partner_funder_option_id")
-		->order('sfm.subpartner_id', 'sfm.partner_funder_option_id');
+		->where("sfm.is_deleted = false")
+		->order('sfm.partner_funder_option_id');
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
 	
-	public function getMechanism() {
+	public function getSfmMechanism() {
 		$select = $this->dbfunc()->select()->distinct()
-		->from(array("sfm" => "subpartner_to_funder_to_mechanism"), array('mechanism_option_id'))
+		->from(array("sfm" => "subpartner_to_funder_to_mechanism"), array('subpartner_id', 'partner_funder_option_id', 'mechanism_option_id'))
 		->join(array("m" => "mechanism_option"), "m.id = sfm.mechanism_option_id")
-		->order('sfm.subpartner_id', 'sfm.partner_funder_option_id', 'sfm.mechanism_option_id');
+		->where("sfm.is_deleted = false")
+		->order('sfm.mechanism_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+
+	public function getSfmSubPartnerExclude($pid) {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array('sfm' => 'subpartner_to_funder_to_mechanism'), array('subpartner_id' ))
+		->join(array("p" => "partner"), "subpartner_id = p.id")
+		
+		->where("sfm.id not in (select subpartner_to_funder_to_mechanism_id 
+                 from partner_to_subpartner_to_funder_to_mechanism psfm
+                 where psfm.is_deleted = false and psfm.partner_id = ?)", $pid)
+		
+        ->where("sfm.is_deleted = false")
+		->order('sfm.subpartner_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getSfmFunderExclude($pid) {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array("sfm" => "subpartner_to_funder_to_mechanism"), array('subpartner_id', 'partner_funder_option_id'))
+		->join(array("f" => "partner_funder_option"), "f.id = sfm.partner_funder_option_id")
+		
+		->where("sfm.id not in (select subpartner_to_funder_to_mechanism_id
+                 from partner_to_subpartner_to_funder_to_mechanism psfm
+                 where psfm.is_deleted = false and psfm.partner_id = ?)", $pid)
+		
+        ->where("sfm.is_deleted = false")
+		->order('sfm.partner_funder_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getSfmMechanismExclude($pid) {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array("sfm" => "subpartner_to_funder_to_mechanism"), array('subpartner_id', 'partner_funder_option_id', 'mechanism_option_id'))
+		->join(array("m" => "mechanism_option"), "m.id = sfm.mechanism_option_id")
+		
+		->where("sfm.id not in (select subpartner_to_funder_to_mechanism_id
+                 from partner_to_subpartner_to_funder_to_mechanism psfm
+                 where psfm.is_deleted = false and psfm.partner_id = ?)", $pid)
+		
+        ->where("sfm.is_deleted = false")
+		->order('sfm.mechanism_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	//gnr psfm start
+	public function getEmployee($pid) {
+		$select = $this->dbfunc()->select()
+		->from(array("e" => "employee"))
+		->where("id = ?", $pid);
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getPsfmPartnerExclude($pid) {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array('psfm' => 'partner_to_subpartner_to_funder_to_mechanism'), array('partner_id' ))
+		->join(array("p" => "partner"), "partner_id = p.id")
+		->where("psfm.id not in (select partner_to_subpartner_to_funder_to_mechanism_id
+                 from employee_to_partner_to_subpartner_to_funder_to_mechanism epsfm
+                 where epsfm.is_deleted = false and epsfm.employee_id = ?)", $pid)
+        ->where("psfm.is_deleted = false")
+        ->order('psfm.partner_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	
+	public function getPsfmSubPartnerExclude($eid, $pid) {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array('psfm' => 'partner_to_subpartner_to_funder_to_mechanism'), array('partner_id', 'subpartner_id' ))
+		->join(array("p" => "partner"), "subpartner_id = p.id")	
+		->where("psfm.id not in (select partner_to_subpartner_to_funder_to_mechanism_id
+                 from employee_to_partner_to_subpartner_to_funder_to_mechanism epsfm
+                 where epsfm.is_deleted = false and epsfm.employee_id = ?)", $eid)
+	    ->where("psfm.is_deleted = false")
+	    ->where("psfm.partner_id = ?", $pid)
+	    ->order('psfm.subpartner_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getPsfmFunderExclude($eid, $pid) {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array("psfm" => "partner_to_subpartner_to_funder_to_mechanism"), array('partner_id', 'subpartner_id', 'partner_funder_option_id'))
+		->join(array("f" => "partner_funder_option"), "f.id = psfm.partner_funder_option_id")
+		->where("psfm.id not in (select partner_to_subpartner_to_funder_to_mechanism_id
+                 from employee_to_partner_to_subpartner_to_funder_to_mechanism epsfm
+                 where epsfm.is_deleted = false and epsfm.employee_id = ?)", $eid)
+        ->where("psfm.is_deleted = false")
+        ->where("psfm.partner_id = ?", $pid)
+        ->order('psfm.partner_funder_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getPsfmMechanismExclude($eid, $pid) {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array("psfm" => "partner_to_subpartner_to_funder_to_mechanism"), array('partner_id', 'subpartner_id', 'partner_funder_option_id', 'mechanism_option_id'))
+		->join(array("m" => "mechanism_option"), "m.id = psfm.mechanism_option_id")
+		->where("psfm.id not in (select partner_to_subpartner_to_funder_to_mechanism_id
+                 from employee_to_partner_to_subpartner_to_funder_to_mechanism epsfm
+                 where epsfm.is_deleted = false and epsfm.employee_id = ?)", $eid)
+	    ->where("psfm.is_deleted = false")
+	    ->where("psfm.partner_id = ?", $pid)
+	    ->order('psfm.mechanism_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	//gnr psfm end
+	
+	
+	public function getPsfmPartner($pid) {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array('psfm' => 'partner_to_subpartner_to_funder_to_mechanism') , array(partner_id))
+		->join(array("p" => "partner"), "partner_id = p.id")
+		->where("psfm.partner_id = ?", $pid)
+		->where("psfm.is_deleted = false")
+		->order('psfm.partner_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getPsfmSubPartner() {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array('psfm' => 'partner_to_subpartner_to_funder_to_mechanism'), array('partner_id', 'subpartner_id'))
+		->join(array("p" => "partner"), "subpartner_id = p.id")
+		->where("psfm.is_deleted = false")
+		->order('psfm.subpartner_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getPsfmFunder() {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array("psfm" => "partner_to_subpartner_to_funder_to_mechanism"), array('partner_id', 'subpartner_id', 'partner_funder_option_id'))
+		->join(array("f" => "partner_funder_option"), "f.id = psfm.partner_funder_option_id")
+		->where("psfm.is_deleted = false")
+		->order('psfm.subpartner_id', 'psfm.partner_funder_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getPsfmMechanism() {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array("psfm" => "partner_to_subpartner_to_funder_to_mechanism"), array('partner_id', 'subpartner_id', 'partner_funder_option_id', 'mechanism_option_id'))
+		->join(array("m" => "mechanism_option"), "m.id = psfm.mechanism_option_id")
+		->where("psfm.is_deleted = false")
+		->order('psfm.subpartner_id', 'psfm.partner_funder_option_id', 'psfm.mechanism_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+
+	public function getEpsfmEmployee() {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array('epsfm' => 'employee_to_partner_to_subpartner_to_funder_to_mechanism'), array('employee_id'))
+		->join(array("e" => "employee"), "employee_id = e.id")
+		->where("epsfm.is_deleted = false")
+		->order('epsfm.employee_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getEpsfmPartner() {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array('epsfm' => 'employee_to_partner_to_subpartner_to_funder_to_mechanism'), array('employee_id', 'partner_id'))
+		->join(array("p" => "partner"), "partner_id = p.id")
+		->where("epsfm.is_deleted = false")
+		->order('epsfm.employee_id', 'epsfm.partner_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getEpsfmSubPartner() {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array('epsfm' => 'employee_to_partner_to_subpartner_to_funder_to_mechanism'), array('employee_id', 'partner_id', 'subpartner_id'))
+		->join(array("p" => "partner"), "subpartner_id = p.id")
+		->where("epsfm.is_deleted = false")
+		->order('epsfm.employee_id', 'epsfm.subpartner_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getEpsfmFunder() {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array("epsfm" => "employee_to_partner_to_subpartner_to_funder_to_mechanism"), array('employee_id', 'partner_id', 'subpartner_id', 'partner_funder_option_id'))
+		->join(array("f" => "partner_funder_option"), "f.id = epsfm.partner_funder_option_id")
+		->where("epsfm.is_deleted = false")
+		->order('epsfm.employee_id', 'epsfm.subpartner_id', 'epsfm.partner_funder_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getEpsfmMechanism() {
+		$select = $this->dbfunc()->select()->distinct()
+		->from(array("epsfm" => "employee_to_partner_to_subpartner_to_funder_to_mechanism"), array('employee_id', 'partner_id', 'subpartner_id', 'partner_funder_option_id', 'mechanism_option_id'))
+		->join(array("m" => "mechanism_option"), "m.id = epsfm.mechanism_option_id")
+		->where("epsfm.is_deleted = false")
+		->order('epsfm.employee_id', 'epsfm.subpartner_id', 'epsfm.partner_funder_option_id', 'epsfm.mechanism_option_id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getAllPartners() {
+		$select = $this->dbfunc()->select()
+		->from(array("p" => "partner"));
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
 	
 	public function getAllSubPartners() {
-		$select = $this->dbfunc()->select()
-		->from(array("p" => "partner"));
-		$result = $this->dbfunc()->fetchAll($select);
-		return $result;
+		return( $this->getAllPartners() );
 	}
 	
 	public function getAllFunders() {
@@ -339,32 +644,27 @@ class Helper extends ITechTable
 		return $result;
 	}
 	
-	
-/*
- * from("facility_type_option",array('id','facilitytypename' => 'facility_type_phrase'))
-	$select = $this->dbfunc()->select()
-	->from("link_student_cohort")
-	->join(array("c" => "cohort"),
-			"id_cohort = c.id")
-			->where("dropdate = '0000-00-00' OR dropdate = c.graddate")
-			->where('id_cohort = ?', $cid);
-			*/
-	
-
-	public function getPartnerToFunder() {
+	public function getAllSfms() {
 		$select = $this->dbfunc()->select()
-		->from("partner_to_funder")
-		->join(array("a" => "partner_funder_option"), "partner_funder_option_id = a.id")
-		->order('partner_id', 'partner_funder_option_id');
+		->from(array("sfm" => "subpartner_to_funder_to_mechanism"));
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
 	
-	
-	public function getpartnerFunderMechanisms() {
+	public function getSfm($pid) {
 		$select = $this->dbfunc()->select()
-		->from("partnerfunder_to_mechanism")
-		->order('id');
+		->from(array("sfm" => "subpartner_to_funder_to_mechanism"))
+		->where("sfm.id = ?", $pid)
+	    ->where("sfm.is_deleted = false");
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	public function getOneSfmSubPartner($pid) {
+		$select = $this->dbfunc()->select()
+		->from(array("sfm" => "subpartner_to_funder_to_mechanism"), array( 'id', 'subpartner_id' ))
+		->where("sfm.id = ?", $pid)
+		->where("sfm.is_deleted = false");
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
@@ -1521,6 +1821,8 @@ class Helper extends ITechTable
 			$query = "
 				SELECT c.*, p.first_name, p.last_name, lct.coursetype,
 					CASE WHEN sc.linkclasscohortid IS NULL THEN 0 ELSE sc.linkclasscohortid END linkid,
+					CASE WHEN sc.classid IS NULL OR LENGTH(camark) = 0 OR camark IS NULL THEN 'N/A' ELSE camark END camark,
+					CASE WHEN sc.classid IS NULL OR LENGTH(exammark) = 0 OR exammark IS NULL THEN 'N/A' ELSE exammark END exammark,
 					CASE WHEN sc.classid IS NULL OR LENGTH(grade) = 0 OR grade IS NULL THEN 'N/A' ELSE grade END grade,
 					CASE WHEN sc.classid IS NULL OR LENGTH(credits) = 0 OR credits IS NULL THEN 'N/A' ELSE credits END credits
 
@@ -1530,7 +1832,7 @@ class Helper extends ITechTable
 				LEFT JOIN person p ON t.personid = p.id
 				LEFT JOIN lookup_coursetype lct ON lct.id = c.coursetypeid
 				LEFT JOIN (
-					SELECT classid, linkclasscohortid, grade, credits
+					SELECT classid, linkclasscohortid, camark, exammark, grade, credits
 					FROM   link_student_classes 
 					WHERE	studentid = " . $sid . "
 					AND		classid IN (SELECT classid FROM link_cohorts_classes WHERE cohortid = " . $cid . ")
@@ -1661,6 +1963,8 @@ class Helper extends ITechTable
 					'studentid'		=> $sid, 
 					'classid'		=> $cid,
 					'cohortid'		=> $param['cohortid'],
+					'camark'		=> $param['camark'][$cid],
+					'exammark'		=> $param['exammark'][$cid],
 					'grade'			=> $param['grade'][$cid],
 					'credits'	=> $param['credits'][$cid]
 				);
@@ -1668,6 +1972,8 @@ class Helper extends ITechTable
 			} else {
 				$row = $result[0];
 				$insert = array(
+					'camark'		=> $param['camark'][$cid],
+					'exammark'		=> $param['exammark'][$cid],
 					'grade'			=> $param['grade'][$cid],
 					'credits'	=> $param['credits'][$cid]
 				);

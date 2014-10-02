@@ -197,15 +197,11 @@ die($query);
     //TA: added 7/24/2014
     $this->view->assign('spid',$details['tutor'][0]['specialty']);
     $this->view->assign('ctid',$details['tutor'][0]['contract_type']);
-
 		//$this->view->assign('cadre',$details['tutor'][0]['cadre']);
     
     $this->view->assign('institutionid',$details['tutor'][0]['institutionid']);
     $institutions = $helper->getInstitutions();
-    $this->view->assign('institutions',$institutions);
-
-    
-		$this->view->assign('tutorsince',$details['tutor'][0]['tutorsince']);
+    $this->view->assign('institutions',$institutions);		$this->view->assign('tutorsince',$details['tutor'][0]['tutorsince']);
 		$this->view->assign('tutortimehere',$details['tutor'][0]['tutortimehere']);
 		$this->view->assign('degree',$details['tutor'][0]['degree']);
 		$this->view->assign('degreeinst',$details['tutor'][0]['degreeinst']);
@@ -214,6 +210,8 @@ die($query);
 		$this->view->assign('positionsheld',$details['tutor'][0]['positionsheld']);
 		$this->view->assign('comments',$details['tutor'][0]['comments']);
 		$this->view->assign('nationalityid',$details['tutor'][0]['nationalityid']);
+    
+    
     
 
 		# PERMANENT ADDRESS
@@ -310,7 +308,7 @@ die($query);
 					$this->view->assign('label_ps_local_address',$this->view->translation['ps local address']);
 				}else if($column == 'ps_display_permanent_address' && $value != '0'){ 
 					$this->view->assign('label_ps_permanent_address',$this->view->translation['ps permanent address']);
-				}
+	}
 				$this->view->assign('label_ps_zip_code',$this->view->translation['ps zip code']);
 			}
 		}

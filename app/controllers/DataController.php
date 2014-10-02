@@ -203,15 +203,23 @@ class DataController extends ITechController {
   
   public function personsAction() {
     try {
-      
+    	
+    ini_set('memory_limit', -1);
+    	
     require_once('models/table/Person.php');
     $personTable = new Person();   
     $select = $personTable->select()
         ->from('person', array('*'))
+        //->where('first_name', '=', 'Emily')
         ->setIntegrityCheck(false);      
     $rowRay = $personTable->fetchAll($select);
     $rowRay = @$rowRay->toArray();
-
+    
+    if (sizeof($rowRay) > 10000  && $this->getSanParam('outputType') != 'csv'){
+    	$error = 'Data is too large to display, try Export';
+    	throw new Exception($error);
+    }
+    
    //sort by id
    $sorted = array();
    foreach($rowRay as $row) {
@@ -219,19 +227,20 @@ class DataController extends ITechController {
    	unset($row['title_option_id']);
     $sorted[$row['id']] = $row;
    }
-   
+
    /*
    $sorted = $personTable->_fill_lookup($sorted, 'location_city', 'home_city_id', 'city_name');
    $sorted = $personTable->_fill_lookup($sorted, 'location_district', 'home_district_id', 'district_name');
    $sorted = $personTable->_fill_lookup($sorted, 'location_province', 'home_province_id', 'province_name');
    */
    $locations = Location::getAll();
+   
    foreach($sorted as $id => $row) {
    	$city_info = Location::getCityInfo($row['home_location_id'], $this->setting('num_location_tiers'), $locations);
     if ( count($city_info) ) {
-     	if ( $city_info[0] ) $sorted[$id]['city_name'] = $city_info[0];
+      if ( $city_info[0] ) $sorted[$id]['city_name'] = $city_info[0];
       if ( $city_info[1] ) $sorted[$id]['province_name'] = $locations[$city_info[1]]['name'];
-     	if ( $city_info[2] ) $sorted[$id]['district_name'] = $locations[$city_info[2]]['name'];
+      if ( $city_info[2] ) $sorted[$id]['district_name'] = $locations[$city_info[2]]['name'];
       if ( $city_info[3] ) $sorted[$id]['region_c_name'] = $locations[$city_info[3]]['name'];
       if ( $city_info[4] ) $sorted[$id]['region_d_name'] = $locations[$city_info[4]]['name'];
       if ( $city_info[5] ) $sorted[$id]['region_e_name'] = $locations[$city_info[5]]['name'];
@@ -243,21 +252,22 @@ class DataController extends ITechController {
     unset($sorted[$id]['home_location_id']);
    }
    
-   $sorted = $personTable->_fill_lookup($sorted, 'person_qualification_option', 'primary_qualification_option_id', 'qualification_phrase');
-   $sorted = $personTable->_fill_lookup($sorted, 'person_primary_responsibility_option', 'primary_responsibility_option_id', 'responsibility_phrase');
-   $sorted = $personTable->_fill_lookup($sorted, 'person_secondary_responsibility_option', 'secondary_responsibility_option_id', 'responsibility_phrase');
-   $sorted = $personTable->_fill_lookup($sorted, 'person_custom_1_option', 'person_custom_1_option_id', 'custom1_phrase');
-   $sorted = $personTable->_fill_lookup($sorted, 'person_custom_2_option', 'person_custom_2_option_id', 'custom2_phrase');
-   $sorted = $personTable->_fill_lookup($sorted, 'facility', 'facility_id', 'facility_name');
+  $sorted = $personTable->_fill_lookup($sorted, 'person_qualification_option', 'primary_qualification_option_id', 'qualification_phrase');
+  $sorted = $personTable->_fill_lookup($sorted, 'person_primary_responsibility_option', 'primary_responsibility_option_id', 'responsibility_phrase');
+  $sorted = $personTable->_fill_lookup($sorted, 'person_secondary_responsibility_option', 'secondary_responsibility_option_id', 'responsibility_phrase');
+  $sorted = $personTable->_fill_lookup($sorted, 'person_custom_1_option', 'person_custom_1_option_id', 'custom1_phrase');
+  $sorted = $personTable->_fill_lookup($sorted, 'person_custom_2_option', 'person_custom_2_option_id', 'custom2_phrase');
+  $sorted = $personTable->_fill_lookup($sorted, 'facility', 'facility_id', 'facility_name');
    
-     
    //fill participants
-   $select = $personTable->select()->from('person', array('id'))->setIntegrityCheck(false)
-   ->join(array('pt'=>'person_to_training'), "pt.person_id = person.id", array('training_id'))
-   ->join(array('t'=>'training'), "pt.training_id = t.id", array())
-   ->join(array('tt'=>'training_title_option'), "t.training_title_option_id = tt.id", array('training_title_phrase'));
-   $rows = $personTable->fetchAll($select);
+  $select = $personTable->select()->from('person', array('id'))->setIntegrityCheck(false)
+  ->join(array('pt'=>'person_to_training'), "pt.person_id = person.id", array('training_id'))
+  ->join(array('t'=>'training'), "pt.training_id = t.id", array())
+  ->join(array('tt'=>'training_title_option'), "t.training_title_option_id = tt.id", array('training_title_phrase'));
    
+   
+   $rows = $personTable->fetchAll($select);
+ 
    foreach($rows as $row) {
     $pid = $row->id;
     $ra = $row->toArray();
@@ -265,15 +275,14 @@ class DataController extends ITechController {
     $sorted[$pid]['courses'][] = $ra;
    }
    
-    
    //fill trainers
    
-   $select = $personTable->select()->from('trainer', array('person_id'))->setIntegrityCheck(false)
-   ->join(array('pt'=>'training_to_trainer'), "pt.trainer_id = trainer.person_id", array('training_id'))
-   ->join(array('t'=>'training'), "pt.training_id = t.id", array())
-   ->join(array('tt'=>'training_title_option'), "t.training_title_option_id = tt.id", array('training_title_phrase'));
-   $rows = $personTable->fetchAll($select);
-   
+  $select = $personTable->select()->from('trainer', array('person_id'))->setIntegrityCheck(false)
+  ->join(array('pt'=>'training_to_trainer'), "pt.trainer_id = trainer.person_id", array('training_id'))
+  ->join(array('t'=>'training'), "pt.training_id = t.id", array())
+  ->join(array('tt'=>'training_title_option'), "t.training_title_option_id = tt.id", array('training_title_phrase'));
+  $rows = $personTable->fetchAll($select);
+  
    foreach($rows as $row) {
     $pid = $row->person_id;
     $ra = $row->toArray();
@@ -288,8 +297,7 @@ class DataController extends ITechController {
   
     } catch (Exception $e) {
       echo $e->getMessage()."<br>".PHP_EOL;
-  }
- 
+      }
   
   }
 	

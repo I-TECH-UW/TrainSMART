@@ -71,36 +71,38 @@ class AdminController extends UserController
 		// For "Labels"
 		require_once('models/table/Translation.php');
 		$labelNames = array( // input name => key_phrase
-		'label_country'   => 'Country',
-		'label_regiona'   => 'Region A (Province)',
-		'label_regionb'   => 'Region B (Health District)',
-		'label_regionc'   => 'Region C (Local Region)',
-		'label_regiond'   => 'Region D',
-		'label_regione'   => 'Region E',
-		'label_regionf'   => 'Region F',
-		'label_regiong'   => 'Region G',
-		'label_regionh'   => 'Region H',
-		'label_regioni'   => 'Region I',
-		'label_citytown'  => 'City or Town',
+		'label_country'          => 'Country',
+		'label_regiona'          => 'Region A (Province)',
+		'label_regionb'          => 'Region B (Health District)',
+		'label_regionc'          => 'Region C (Local Region)',
+		'label_regiond'          => 'Region D',
+		'label_regione'          => 'Region E',
+		'label_regionf'          => 'Region F',
+		'label_regiong'          => 'Region G',
+		'label_regionh'          => 'Region H',
+		'label_regioni'          => 'Region I',
+		'label_citytown'         => 'City or Town',
 		'label_application_name' => 'Application Name',
-		'label_training' =>         'Training',
-		'label_trainings' =>        'Trainings',
-		'label_trainer' =>          'Trainer',
-		'label_trainers' =>         'Trainers',
-		'label_training_center' =>  'Training Center',
-		'label_participant' =>      'Participant',
-		'label_participants' =>     'Participants'
+		'label_training'         => 'Training',
+		'label_trainings'        => 'Trainings',
+		'label_trainer'          => 'Trainer',
+		'label_trainers'         => 'Trainers',
+		'label_training_center'  => 'Training Center',
+		'label_participant'      => 'Participant',
+		'label_participants'     => 'Participants',
+		'label_employee'         => 'Employee',
+		'label_employees'        => 'Employees'
 		);
 
 		// _system settings
 		$checkboxFields = array( // input name => db field
-		'check_mod_eval'     => 'module_evaluation_enabled',
-		'check_mod_approvals'     => 'module_approvals_enabled',
+		'check_mod_eval'           => 'module_evaluation_enabled',
+		'check_mod_approvals'      => 'module_approvals_enabled',
 		'check_mod_historical'     => 'module_historical_data_enabled',
-		'check_mod_unknown'     => 'module_unknown_participants_enabled',
+		'check_mod_unknown'        => 'module_unknown_participants_enabled',
 		'check_mod_attendance'     => 'module_attendance_enabled',
 		'display_training_partner' => 'display_training_partner',
-		'display_mod_skillsmart' => 'display_mod_skillsmart',
+		'display_mod_skillsmart'   => 'display_mod_skillsmart',
 		'fiscal_year_start'        => 'fiscal_year_start',
 		'check_mod_employee'       => 'module_employee_enabled',
 				'check_country_reports' => 'display_country_reports',//TA:17: 9/11/2014
@@ -2192,6 +2194,10 @@ class AdminController extends UserController
 		'label_ps_spouse_name' => 'ps spouse name',
 		'label_ps_specialty' => 'ps specialty',
 		'label_ps_contract_type' => 'ps contract type',
+		'label_ps_exam_mark' => 'ps exam mark',
+		'label_ps_ca_mark' => 'ps ca mark',
+		'label_ps_credits' => 'ps credits',
+				
 		);
 
 		// _system settings
@@ -2209,11 +2215,13 @@ class AdminController extends UserController
 		'check_display_spouse_name' => 'ps_display_spouse_name',
 		'check_display_specialty' => 'ps_display_specialty',
 		'check_display_contract_type' => 'ps_display_contract_type',
-				
 		'check_display_local_address' => 'ps_display_local_address',
 		'check_display_permanent_address' => 'ps_display_permanent_address',
 		'check_display_religious_denomin' => 'ps_display_religious_denomin',
 		'check_display_nationality' => 'ps_display_nationality',
+		'check_display_exam_mark' => 'ps_display_exam_mark',
+		'check_display_ca_mark' => 'ps_display_ca_mark',
+		'check_display_credits' => 'ps_display_credits',
 		);
 
 		if($this->getRequest()->isPost()) { // Update db
@@ -2916,6 +2924,7 @@ class AdminController extends UserController
 			'label_disability_comments'      => 'Disability Comments',
 			'label_nationality'              => 'Employee Nationality',
 			'label_race'                     => 'Race',
+			'label_date_of_birth'            => 'Date of Birth',
 			'label_registration_number'      => 'Registration Number',
 			'label_salary'                   => 'Salary',
 			'label_benefits'                 => 'Benefits',
@@ -2954,6 +2963,7 @@ class AdminController extends UserController
 			'check_disability'               => 'display_employee_disability',
 			'check_nationality'              => 'display_employee_nationality',
 			'check_race'                     => 'display_employee_race',
+			'check_date_of_birth'            => 'display_employee_dob',
 			'check_registration_number'      => 'display_employee_registration_number',
 			'check_salary'                   => 'display_employee_salary',
 			'check_benefits'                 => 'display_employee_benefits',
@@ -3234,9 +3244,82 @@ class AdminController extends UserController
 		  $status = ValidationContainer::instance ();
 		  $params = $this->getAllParams();
 		
-		file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3021> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		var_dump($params);
-		$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3036> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		//var_dump($params);
+		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+				
+		  // prepare date for database
+		  $params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
+		
+		  foreach ($params['funding_end_date'] as $i => $value)
+			$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
+
+		  // test for all values
+		  if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
+			$status->addError('', t ( 'All fields' ) . space . t('are required'));
+		  else {
+		    // test for existing record
+		    $recArr = array(0 => $params['subPartner'],  1 => $params['partnerFunder'], 2 => $params['mechanism'],);
+		    
+		    $sql = 'SELECT * FROM subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
+		    $where = "subpartner_id = $recArr[0] and partner_funder_option_id = $recArr[1] and mechanism_option_id = $recArr[2] and is_deleted = false";
+		    $sql .= $where;
+		    	
+		    $row = $db->fetchRow( $sql );
+		    if ($row){
+		    	$status->addError('', t('Record exists'));
+		    }
+          
+		    if ( $status->hasError() ) 
+		      $status->setStatusMessage( t('That funding mechanism could not be saved.') );
+		    else {	//save
+       	  	$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
+       	  	
+      	  			$data = array(
+      	  					'subpartner_id'  => $params['subPartner'],
+      	  					'partner_funder_option_id' => $params['partnerFunder'],
+      	  					'mechanism_option_id' => $params['mechanism'],
+      	  					'funding_end_date' => $params['funding_end_date'][0],
+      	  			);
+      	  	
+      	  	  $insert_result = $sfm->insert($data);
+      	  	  $status->setStatusMessage( t('The funding mechanism was saved.') );
+      	  	  $this->_redirect("admin/employee-build_funding");
+	        }
+		  }
+		}
+		
+		$helper = new Helper();
+		
+		$subPartner = $helper->getAllSubPartners();
+		$this->viewAssignEscaped ( 'subPartner', $subPartner );
+		
+		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3068>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		//var_dump($subPartner);
+		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		
+		$partnerFunder = $helper->getAllFunders();
+		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+		
+		$mechanism = $helper->getAllMechanisms();
+		$this->viewAssignEscaped ( 'mechanism', $mechanism );	
+		
+	} //employeeBuildFundingAction
+	
+	public function employeeFunderFilterAction()
+	{
+	
+		require_once('views/helpers/Location.php'); // funder stuff
+		require_once('models/table/Partner.php'); 
+		
+		if ( $this->getRequest()->isPost() ) {
+		  $db     = $this->dbfunc();
+		  $status = ValidationContainer::instance ();
+		  $params = $this->getAllParams();
+		
+		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3007> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		//var_dump($params);
+		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 				
 		  // prepare date for database
 		  $params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
@@ -3282,63 +3365,246 @@ class AdminController extends UserController
 		$subPartner = $helper->getAllSubPartners();
 		$this->viewAssignEscaped ( 'subPartner', $subPartner );
 		
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3068>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($subPartner);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+
 		
-		$partnerFunder = $helper->getAllFunders();
-		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-		
-		$mechanism = $helper->getAllMechanisms();
-		$this->viewAssignEscaped ( 'mechanism', $mechanism );	
-		
-	} //employeeBuildFundingAction
-	
-	public function employeeFunderFilterAction()
-	{
-	
-		require_once('views/helpers/location.php'); // funder stuff
-		require_once('models/table/partner.php');
-	
-		//$this->view->assign('title', $this->translation['Application Name'].space.t('Employee Tracking System'));
-		//$this->view->assign ( 'partner',    DropDown::generateHtml   ( 'partner', 'partner', $params['partner_id'], false, $this->view->viewonly, false ) );
-		$helper = new Helper();
-		/*
-			$partners = Partner::getall();
-		$partnersArray = $partners->toArray();
-		$this->viewAssignEscaped ( 'partners', $partners );
-	
-		$agencies = $helper->getPartnerToAgency();
-		$agencyNames = $helper->getAgencies();
-		$this->viewAssignEscaped ( 'agencies', $agencies );
-		*/
-	
-		$partners = Partner::getall();
-		$partnersArray = $partners->toArray();
-		$this->viewAssignEscaped ( 'partners', $partners );
-	
-		$helper = new Helper();
 		$partnerFunder = $helper->getFunder();
 		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-	
+
 		$mechanism = $helper->getMechanism();
-		$this->viewAssignEscaped ( 'mechanism', $mechanism );
-	
-		file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3110>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		var_dump($mechanism);
-		$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-	
-		//$this->viewAssignEscaped ( 'agencyNames', $agencyNames );
-	
-		//$checkedArray = array(7 => 7,8 => 8,10 => 10,12 => 12,15 => 15,	);
-		//$checkedArray = array();
-		//$this->view->assign ( 'agenciesNames', Checkboxes::generateHtml('agency_option', 'agency_phrase', $this->view->viewonly, $agencyNames ) );
-		//$this->view->assign ( 'agenciesNames', Checkboxes::generateHtml('agency_option', 'agency_phrase', $this->view->viewonly, $checkedArray, 'id in (7,8)') );
-		//$this->view->assign ( 'agenciesNames', Checkboxes::generateHtml('agency_option', 'agency_phrase', $this->view->viewonly, $checkedArray, '') );
-	
-		echo('stop');
+		$this->viewAssignEscaped ( 'mechanism', $mechanism );	
+		
+		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3163>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		//var_dump($mechanism);
+		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	
 	}
+	
+	public function employeeSfmFilterAction()
+	{
+	
+		require_once('views/helpers/Location.php'); // funder stuff
+		require_once('models/table/Partner.php');
+	
+		if ( $this->getRequest()->isPost() ) {
+			$db     = $this->dbfunc();
+			$status = ValidationContainer::instance ();
+			$params = $this->getAllParams();
+	
+			//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3007> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+			//var_dump($params);
+			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+	
+			// prepare date for database
+			$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
+	
+			foreach ($params['funding_end_date'] as $i => $value)
+				$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
+	
+			// test for all values
+			if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
+				$status->addError('', t ( 'All fields' ) . space . t('are required'));
+	
+			// test for existing record
+			//$id = $this->_findOrCreateSaveGeneric('partner_to_funder_to_mechanism', $params);
+			$id = false;
+			if ($id) {
+				$status->addError('', t('Record exists'));
+			}
+	
+				
+			if ( $status->hasError() )
+				$status->setStatusMessage( t('That funding mechanism could not be saved.') );
+	
+			else {
+				//save
+				$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
+				 
+				 
+				$data = array(
+						'subpartner_id'  => $params['subPartner'],
+						'partner_funder_option_id' => $params['partnerFunder'],
+						'mechanism_option_id' => $params['mechanism'],
+						'funding_end_date' => $params['funding_end_date'][0],
+				);
+	
+				$insert_result = $sfm->insert($data);
+				$status->setStatusMessage( t('The funding mechanism was saved.') );
+				$this->_redirect("admin/employee-build_funding");
+			}
+		}
+	
+		$helper = new Helper();
+	
+		$subPartner = $helper->getSfmSubPartner();
+		$this->viewAssignEscaped ( 'subPartner', $subPartner );
+	
+		$partnerFunder = $helper->getSfmFunder();
+		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+	
+		$mechanism = $helper->getSfmMechanism();
+		$this->viewAssignEscaped ( 'mechanism', $mechanism );
+	
+		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3234>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		//var_dump($mechanism);
+		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+	
+	}
+	
+	public function employeePsfmFilterAction()
+	{
+	
+		require_once('views/helpers/Location.php'); // funder stuff
+		require_once('models/table/Partner.php');
+	
+		if ( $this->getRequest()->isPost() ) {
+			$db     = $this->dbfunc();
+			$status = ValidationContainer::instance ();
+			$params = $this->getAllParams();
+	
+			//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3007> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+			//var_dump($params);
+			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+	
+			// prepare date for database
+			$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
+	
+			foreach ($params['funding_end_date'] as $i => $value)
+				$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
+	
+			// test for all values
+			if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
+				$status->addError('', t ( 'All fields' ) . space . t('are required'));
+	
+			// test for existing record
+			//$id = $this->_findOrCreateSaveGeneric('partner_to_funder_to_mechanism', $params);
+			$id = false;
+			if ($id) {
+				$status->addError('', t('Record exists'));
+			}
+	
+				
+			if ( $status->hasError() )
+				$status->setStatusMessage( t('That funding mechanism could not be saved.') );
+	
+			else {
+				//save
+				$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
+				 
+				 
+				$data = array(
+						'subpartner_id'  => $params['subPartner'],
+						'partner_funder_option_id' => $params['partnerFunder'],
+						'mechanism_option_id' => $params['mechanism'],
+						'funding_end_date' => $params['funding_end_date'][0],
+				);
+	
+				$insert_result = $sfm->insert($data);
+				$status->setStatusMessage( t('The funding mechanism was saved.') );
+				$this->_redirect("admin/employee-build_funding");
+			}
+		}
+	
+		$helper = new Helper();
+		
+		$partner = $helper->getPsfmPartner(); 
+		$this->viewAssignEscaped ( 'partner', $partner );
+	
+		$subPartner = $helper->getPsfmSubPartner();
+		$this->viewAssignEscaped ( 'subPartner', $subPartner );
+	
+		$partnerFunder = $helper->getPsfmFunder();
+		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+		
+
+		$mechanism = $helper->getPsfmMechanism();
+		$this->viewAssignEscaped ( 'mechanism', $mechanism );
+	
+		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3310>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		//var_dump($mechanism);
+		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		
+	
+	}
+	
+	public function employeeEpsfmFilterAction()
+	{
+	
+		require_once('views/helpers/Location.php'); // funder stuff
+		require_once('models/table/Partner.php');
+	
+		if ( $this->getRequest()->isPost() ) {
+			$db     = $this->dbfunc();
+			$status = ValidationContainer::instance ();
+			$params = $this->getAllParams();
+	
+			//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3007> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+			//var_dump($params);
+			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+	
+			// prepare date for database
+			$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
+	
+			foreach ($params['funding_end_date'] as $i => $value)
+				$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
+	
+			// test for all values
+			if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
+				$status->addError('', t ( 'All fields' ) . space . t('are required'));
+	
+			// test for existing record
+			//$id = $this->_findOrCreateSaveGeneric('partner_to_funder_to_mechanism', $params);
+			$id = false;
+			if ($id) {
+				$status->addError('', t('Record exists'));
+			}
+	
+	
+			if ( $status->hasError() )
+				$status->setStatusMessage( t('That funding mechanism could not be saved.') );
+	
+			else {
+				//save
+				$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
+					
+					
+				$data = array(
+						'subpartner_id'  => $params['subPartner'],
+						'partner_funder_option_id' => $params['partnerFunder'],
+						'mechanism_option_id' => $params['mechanism'],
+						'funding_end_date' => $params['funding_end_date'][0],
+				);
+	
+				$insert_result = $sfm->insert($data);
+				$status->setStatusMessage( t('The funding mechanism was saved.') );
+				$this->_redirect("admin/employee-build_funding");
+			}
+		}
+	
+		$helper = new Helper();
+	
+		$employee = $helper->getEpsfmEmployee();
+		$this->viewAssignEscaped ( 'employee', $employee );
+		
+		$partner = $helper->getEpsfmPartner();
+		$this->viewAssignEscaped ( 'partner', $partner );
+	
+		$subPartner = $helper->getEpsfmSubPartner();
+		$this->viewAssignEscaped ( 'subPartner', $subPartner );
+	
+		$partnerFunder = $helper->getEpsfmFunder();
+		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+	
+	
+		$mechanism = $helper->getEpsfmMechanism();
+		$this->viewAssignEscaped ( 'mechanism', $mechanism );
+	
+		// file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3388>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		// var_dump($mechanism);
+		// $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+	
+	
+	}
+	
 
 	public function hasEditorACL(){
 		// return hasACL() based on admin page viewing
