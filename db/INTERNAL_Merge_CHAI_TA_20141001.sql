@@ -18,8 +18,9 @@ ALTER TABLE `_system` ADD COLUMN `display_facility_city` tinyint(1) NOT NULL DEF
 ALTER TABLE `_system` ADD COLUMN `display_facility_type` tinyint(1) NOT NULL DEFAULT '0';
 ALTER TABLE `_system` ADD COLUMN `display_people_birthdate` tinyint(1) NOT NULL DEFAULT '0';
 ALTER TABLE `_system` ADD COLUMN `display_people_comments` tinyint(1) NOT NULL DEFAULT '0';
-ALTER TABLE `_system` ADD COLUMN `display_people_ facilitator` tinyint(1) NOT NULL DEFAULT '0';
+ALTER TABLE `_system` ADD COLUMN `display_people_facilitator` tinyint(1) NOT NULL DEFAULT '0';
 ALTER TABLE `_system` ADD COLUMN `display_country_reports` tinyint(1) NOT NULL DEFAULT '0';
+ALTER TABLE `_system` ADD COLUMN `display_facility_commodity` tinyint(1) NOT NULL DEFAULT '0';
 
 ALTER TABLE `training` modify COLUMN `training_start_date` date default NULL;
 ALTER TABLE `training` modify COLUMN `training_length_interval` enum('hour','week','day') default NULL;
@@ -34,7 +35,7 @@ CREATE TABLE `commodity` (
   `stock_out` char(1) NOT NULL DEFAULT 'N',
   `facility_id` int(11) DEFAULT NULL,
   `created_by` int(11) DEFAULT '0',
-  `timestamo_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `timestamp_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `modified_by` int(11) DEFAULT NULL,
   `timestamp_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -52,11 +53,10 @@ CREATE TABLE `commodity_name_option` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
-/*
-2014-10-02 
-Tamara Astakhova
-For Request: CHAI project
-*/
+INSERT INTO `translation`(`key_phrase`,`phrase`,`modified_by`,`created_by`,`is_deleted`) VALUES ('Facility Commodity Column Table Commodity Name','Commodity Name',1,null,0);
+INSERT INTO `translation`(`key_phrase`,`phrase`,`modified_by`,`created_by`,`is_deleted`) VALUES ('Facility Commodity Column Table Date','Date',1,null,0);
+INSERT INTO `translation`(`key_phrase`,`phrase`,`modified_by`,`created_by`,`is_deleted`) VALUES ('Facility Commodity Column Table Consumption','Consumption',1,null,0);
+INSERT INTO `translation`(`key_phrase`,`phrase`,`modified_by`,`created_by`,`is_deleted`) VALUES ('Facility Commodity Column Table Out of Stock','Out of Stock',1,null,0);
 
 
 
