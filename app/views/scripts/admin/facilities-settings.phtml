@@ -123,12 +123,44 @@ ob_end_clean();
 				</tr>
 				
 				<!-- TA:17: 09/19/2014 START -->
-				<tr><td class="fieldTitle">Commodity Name</td>
+				<tr><td class="fieldTitle">Commodity Names</td>
 					<td></td>			
 					<td></td>
 					<td><a href="<?php echo $this->base_url;?>/admin/commodityname" onclick="return submitAdminForm(this);">Add/Edit</a></td>
 				</tr>
 				<!-- TA:17: 09/19/2014 END -->
+				
+				<!-- TA:17: 10/02/2014 START -->
+				<tr><td class="fieldTitle">Commodity Table</td>
+					<td><input type="checkbox" name="check_facility_commodity" <?php if($this->check_facility_commodity) echo 'checked'; ?> id="check_facility_commodity"></td>			
+					<td></td>
+					<td></td>
+				</tr>
+				
+				<tr><td class="fieldTitle">Commodity Table Column: Commodity Name</td>
+					<td></td>			
+					<td><input type="text" name="label_facility_commodity_table_col_name" value="<?php echo $this->label_facility_commodity_table_col_name; ?>"></td>
+					<td></td>
+				</tr>
+				
+				<tr><td class="fieldTitle">Commodity Table Column: Date</td>
+					<td></td>			
+					<td><input type="text" name="label_facility_commodity_table_col_date" value="<?php echo $this->label_facility_commodity_table_col_date; ?>"></td>
+					<td></td>
+				</tr>
+				
+				<tr><td class="fieldTitle">Commodity Table Column: Consumption</td>
+					<td></td>			
+					<td><input type="text" name="label_facility_commodity_table_col_consumption" value="<?php echo $this->label_facility_commodity_table_col_consumption; ?>"></td>
+					<td></td>
+				</tr>
+				
+				<tr><td class="fieldTitle">Commodity Table Column: Out of Stock</td>
+					<td></td>			
+					<td><input type="text" name="label_facility_commodity_table_col_outofstock" value="<?php echo $this->label_facility_commodity_table_col_outofstock; ?>"></td>
+					<td></td>
+				</tr>
+				<!-- TA:17:10/02/2014 END -->
 				
 			</table>
 

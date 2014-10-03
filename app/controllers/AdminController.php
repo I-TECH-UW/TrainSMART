@@ -814,6 +814,12 @@ class AdminController extends UserController
 		'label_comments'         => 'Facility Comments',
 		'label_sponsor_date'     => 'Sponsor Date',
 		'label_facility_custom1'    => 'Facility Custom 1',
+				//TA:17: 10/02/2014
+		'label_facility_commodity_table_col_name'         => 'Facility Commodity Column Table Commodity Name', 
+		'label_facility_commodity_table_col_date'         => 'Facility Commodity Column Table Date',
+		'label_facility_commodity_table_col_consumption'         => 'Facility Commodity Column Table Consumption',
+		'label_facility_commodity_table_col_outofstock'         => 'Facility Commodity Column Table Out of Stock',
+				///
 		);
 	$checkboxFields = array(
 		'check_approval_mod'     => 'module_facility_approval',
@@ -830,6 +836,7 @@ class AdminController extends UserController
 			'check_facility_comments' => 'display_facility_comments', //TA:17: 9/03/2014
 			'check_facility_type' => 'display_facility_type', //TA:17: 9/03/2014
 			'check_facility_city' => 'display_facility_city', //TA:17: 9/04/2014
+			'check_facility_commodity' => 'display_facility_commodity', //TA:17: 10/02/2014
 		);
 
 		if($this->getRequest()->isPost()) { // Update db

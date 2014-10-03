@@ -149,7 +149,7 @@ class UserController extends ReportFilterHelpers {
 		// all acls available and training_organizer_all except: 'master_approver' - this is done on the approvers page
 		//TA: added 7/22/2014 'acl_editor_tutor_specialty' and 'acl_editor_tutor_contract' to the list
 		//TA:10: add to this list 'ps_edit_student', 'ps_view_student', 'ps_edit_student_grades', 'ps_view_student_grades'
-		//TA;17: 09/19/2014 add 'acl_editor_commodityname'
+		//TA:17: 09/19/2014 add 'acl_editor_commodityname'
 		$checkboxes = array('training_organizer_all', 'in_service', 'edit_course', 'view_course', 'edit_people', 
 				'view_people', 'edit_facility', 'view_create_reports', 'edit_employee', 'edit_country_options', 
 				'add_edit_users', 'training_organizer_option_all', 'training_title_option_all', 'approve_trainings', 
