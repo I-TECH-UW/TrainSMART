@@ -530,7 +530,7 @@ class EmployeeController extends ReportFilterHelpers {
 		$this->view->assign('validCHWids', $validCHWids);
 		$this->view->assign('expandCHWFields', !(array_search($params['employee_qualification_option_id'],$validCHWids) === false)); // i.e $validCHWids.contains($employee[qualification])
 		$this->view->assign('status', $status);
-		$this->view->assign ( 'pageTitle', $this->view->mode == 'add' ? t ( 'Add Employee' ) : t( 'Edit Employee' ) );
+		$this->view->assign ( 'pageTitle', $this->view->mode == 'add' ? t ('Add').space.t('Employee' ) : t( 'Edit').space.t('Employee' ) );
 		$this->viewAssignEscaped ( 'locations', Location::getAll () );
 		$titlesArray = OptionList::suggestionList ( 'person_title_option', 'title_phrase', false, 9999);
 		$this->view->assign ( 'titles',      DropDown::render('title_option_id', $this->translation['Title'], $titlesArray, 'title_phrase', 'id', $params['title_option_id'] ) );
