@@ -499,24 +499,6 @@ class EmployeeController extends ReportFilterHelpers {
             	//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
             	
 			}
-            	
-            	//get linked table data from option tables
-            	
-            	$sql = "SELECT partner_id, subpartner_id, partner_funder_option_id, mechanism_option_id, percentage
-            	FROM employee_to_partner_to_subpartner_to_funder_to_mechanism WHERE employee_id = $id and partner_id = {$params['partner_id']}";
-            	$params['funder'] = $db->fetchAll($sql);
-            	
-
-            	$helper = new Helper();
-            	$subPartner = $helper->getEmployeeSubPartner($params['partner_id']);
-            	$this->viewAssignEscaped ( 'subPartner', $subPartner );
-            	
-            	$partnerFunder = $helper->getEmployeeFunder($params['partner_id']);
-            	$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-            	
-            	$mechanism = $helper->getEmployeeMechanism($params['partner_id']);
-            	$this->viewAssignEscaped ( 'mechanism', $mechanism );
-			}
 		}
 
 		
@@ -548,7 +530,7 @@ class EmployeeController extends ReportFilterHelpers {
 		$this->view->assign('validCHWids', $validCHWids);
 		$this->view->assign('expandCHWFields', !(array_search($params['employee_qualification_option_id'],$validCHWids) === false)); // i.e $validCHWids.contains($employee[qualification])
 		$this->view->assign('status', $status);
-		$this->view->assign ( 'pageTitle', $this->view->mode == 'add' ? t ( 'Add Employee' ) : t( 'Edit Employee' ) );
+		$this->view->assign ( 'pageTitle', $this->view->mode == 'add' ? t ('Add').space.t('Employee' ) : t( 'Edit').space.t('Employee' ) );
 		$this->viewAssignEscaped ( 'locations', Location::getAll () );
 		$titlesArray = OptionList::suggestionList ( 'person_title_option', 'title_phrase', false, 9999);
 		$this->view->assign ( 'titles',      DropDown::render('title_option_id', $this->translation['Title'], $titlesArray, 'title_phrase', 'id', $params['title_option_id'] ) );

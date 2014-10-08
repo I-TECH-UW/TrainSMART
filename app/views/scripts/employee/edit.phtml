@@ -95,8 +95,16 @@
 							
 							partner_sfm_dropdown($i, $this, $this->subPartner, $this->partnerFunder, $this->mechanism, $row['employee_id'], $row['partner_id'], $row['subpartner_id'], $row['partner_funder_option_id'], $row['mechanism_option_id'], false,  false, ' disabled ');
 							
+							// BS:2:20141003:Add hours and cost per employee per mechanism
         					echo labelAndField($this, t('Percentage'), 'text','percentage[]', $row['percentage']);
-							
+        					$this->viewonly = true;
+        					$HOURS_FOR_FULL_WORK_WEEK = 40.0; // TODO: Does this need a home in the database, or is it defined somewhere else?
+        					$percent = $row['percentage']/100.0;
+        					echo labelAndField($this, t('Hours per Mechanism'),  'text', 'hours_per_mechanism',  $percent * $HOURS_FOR_FULL_WORK_WEEK);
+        					$employee_mechanism_cost = sprintf('%0.2f', $percent * $this->employee['annual_cost']);
+        					echo labelAndField($this, t('Annual Cost to Mechanism'),  'text', 'employee_cost_per_mechanism',  $employee_mechanism_cost.space.$this->translation['Employee Local Currency'], 2);
+        					$this->viewonly = false;
+        					 
 						}
 						//echo '<button id="funder_add">'.t('Add a new').space.t('Funder').'</button><br />';
 							
@@ -131,7 +139,7 @@
 						if($this->setting['display_employee_full_time'])
 						echo labelAndField($this, t('Full Time'),      $this->fulltime);
 						echo labelAndField($this, t('Funded hours per week'),  'text', 'funded_hours_per_week',  $this->employee['funded_hours_per_week']);
-
+												
 						// fields for only community health workers and community based workers
 						echo '<div class="clear"></div><br /><br />';
 

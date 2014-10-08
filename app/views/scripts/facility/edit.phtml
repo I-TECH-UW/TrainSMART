@@ -137,7 +137,8 @@ print ScriptContainer::$instance->renderJSHead();
 	<div class="clear" ></div>
 	
 	<!-- TA:17: 09/04/2014 START -->
-	<?php /************ Commodity table  ******************************************************************************/ ?>
+	<?php if ( @$this->setting['display_facility_commodity'] ) { 
+	/************ Commodity table  ******************************************************************************/ ?>
 	<div class="clear"></div>
   <div class="hrGrey"></div>
   <div class="clear"></div>
@@ -189,7 +190,7 @@ print ScriptContainer::$instance->renderJSHead();
             jsonAdd.date = month + "/" + oCDateYY.value;
             jsonAdd.consumption = oCCons.value;
             jsonAdd.stock_out = oCStockOut.value;
-          	ITECH.commodityTable.addDataRowToForm(jsonAdd, oCName.value, 'new_commodity_data');
+          	ITECH.commodityTable.addDataRow(jsonAdd, oCName.value);
             
             oCName.value = "";
             oCDateMM.value = "";
@@ -202,10 +203,10 @@ print ScriptContainer::$instance->renderJSHead();
   
   <?php echo $this->tableCommodities; ?><br>
   
-  <input type="hidden" id="new_commodity_data" name="new_commodity_data"/>
+  <input type="hidden" id="commodity_new_data" name="commodity_new_data"/>
   <input type="hidden" id="commodity_delete_data" name="commodity_delete_data"/>
   
-  Commodity name
+  <?php echo (@$this->translation['Facility Commodity Column Table Commodity Name']);?>
   <?php echo "<select id='name' name='name'>";
 								echo "<option value='0'>" . t('Select...') . "</option>";
 								foreach ($this->commodity_names as $name){
@@ -214,20 +215,21 @@ print ScriptContainer::$instance->renderJSHead();
 								echo "</select>";
   ?>
   
-  &nbsp;&nbsp;&nbsp;&nbsp;Date
+  &nbsp;&nbsp;&nbsp;&nbsp;<?php echo (@$this->translation['Facility Commodity Column Table Date']);?>
   <input type="number" id="dateMM"  min="1" max="12" placeholder="MM" style="width:3em;"/>/
  <input type="number" id="dateYY"  min="10" max="99" placeholder="YY" style="width:3em;"/>
- &nbsp;&nbsp;&nbsp;&nbsp;Consumption
+ &nbsp;&nbsp;&nbsp;&nbsp;<?php echo (@$this->translation['Facility Commodity Column Table Consumption']);?>
   <input type="text" id="consumption" size="10"  placeholder="Consumption">
-  &nbsp;&nbsp;&nbsp;&nbsp;Out of Stock
+  &nbsp;&nbsp;&nbsp;&nbsp;<?php echo (@$this->translation['Facility Commodity Column Table Out of Stock']);?>
   <select id='stock_out'><option value='' selected='selected'></option><option value='N'>N</option><option value='Y'>Y</option></select>
    &nbsp;&nbsp;&nbsp;&nbsp;
         <input type="button" name="Insert" value="<?php tp("Insert");?>" class="insert" id="commodityInsertButton" onclick="addCommodity(this);return false;">
        &nbsp;&nbsp;&nbsp;
         <a href="javascript:submitThenRedirect('<?php echo $this->base_url;?>/person/add/trainingredirect/<?php echo $this->row['id']; ?>');"><?php tp('Commodity Report');?></a>
      
-  
+
   </div> <!-- table ends -->
+   <?php } ?> 
 	<!-- TA:17: 09/04/2014 END -->
 
 	<button type="button" id="submitFacility" class="submitNoArrow"><?php tp('Save changes');?></button>

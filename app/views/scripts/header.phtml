@@ -137,9 +137,9 @@ if ( $this->isLoggedIn() ) {
     $navMain['partner'] = array( 'index' => t('Partners') );
     $navMain['partner']['add']     = t('Add').space.('Partner');
     $navMain['partner']['search']  = t('View/Edit').space.('Partner');
-    $navMain['employee'] = array( 'index' => t('Employees') );
-    $navMain['employee']['add']    = t('Add').space.('Employee');
-    $navMain['employee']['search'] = t('View/Edit').space.('Employee');
+    $navMain['employee'] = array( 'index' => t('Employees') );// BS:1:10/06/2014 translate employee/employees
+    $navMain['employee']['add']    = t('Add').space.t('Employee'); 
+    $navMain['employee']['search'] = t('View/Edit').space.t('Employee');
     #$navMain['site'] = array( 'index' => t('Sites') );
     #$navMain['site']['search']     = t('View/Edit').space.('Site');
     #$navMain['site']['add']        = t('Add').space.('Site');

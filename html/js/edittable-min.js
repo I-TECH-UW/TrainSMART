@@ -108,23 +108,22 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
           jsonData.row_name = row_name; // Name to display when "delete" is clicked
           this.myDataTable.addRow(jsonData);
           $("#" + labelSafe + "_total").text(this.myDataTable.getRecordSet().getLength()); //TA:17: 09/05/2014
+          
+          //TA:17: 09/17/2014
+          var arr = new Array();
+          for(var i=0; i<this.myDataTable.getRecordSet().getLength(); i++){
+          	var row = this.myDataTable.getRecord(i);
+          	if(row.getData('row_name')){
+          		var data = JSON.parse(JSON.stringify(row));
+          		arr.push(data['_oData']);
+          	}
+         }
+          $('#' + labelSafe + '_new_data').val('{"data":' +  JSON.stringify(arr) + '}');
+          ////
+          
         }
         
-        
-        //TA:17: 09/17/2014
-        this.addDataRowToForm = function(jsonData, row_name, form_elem_id){
-            this.addDataRow(jsonData, row_name);
-            var arr = new Array();
-            for(var i=0; i<this.myDataTable.getRecordSet().getLength(); i++){
-            	var row = this.myDataTable.getRecord(i);
-            	if(row.getData('row_name')){
-            		var data = JSON.parse(JSON.stringify(row));
-            		arr.push(data['_oData']);
-            	}
-           }
-            $('#' + form_elem_id).val('{"data":' +  JSON.stringify(arr) + '}');
-        }
-        
+    
         
         //
         // Setup our new DataTable object
