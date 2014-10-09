@@ -6,7 +6,7 @@ For Request: Employee Funding Mechanisms
 
 
 
-
+alter table employee add column employee_code varchar(32) default null;
 alter table employee add unique key employee_code_key (employee_code);
 
 CREATE TABLE `employee_to_partner_to_subpartner_to_funder_to_mechanism` (
