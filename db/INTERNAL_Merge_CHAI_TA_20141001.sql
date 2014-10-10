@@ -19,7 +19,7 @@ ALTER TABLE `_system` ADD COLUMN `display_facility_type` tinyint(1) NOT NULL DEF
 ALTER TABLE `_system` ADD COLUMN `display_people_birthdate` tinyint(1) NOT NULL DEFAULT '0';
 ALTER TABLE `_system` ADD COLUMN `display_people_comments` tinyint(1) NOT NULL DEFAULT '0';
 ALTER TABLE `_system` ADD COLUMN `display_people_facilitator` tinyint(1) NOT NULL DEFAULT '0';
-ALTER TABLE `_system` ADD COLUMN `display_country_reports` tinyint(1) NOT NULL DEFAULT '0';
+ALTER TABLE `_system` ADD COLUMN `display_country_reports` tinyint(1) NOT NULL DEFAULT '1';
 ALTER TABLE `_system` ADD COLUMN `display_facility_commodity` tinyint(1) NOT NULL DEFAULT '0';
 
 ALTER TABLE `training` modify COLUMN `training_start_date` date default NULL;
