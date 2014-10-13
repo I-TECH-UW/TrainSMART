@@ -95,14 +95,21 @@
 							
 							partner_sfm_dropdown($i, $this, $this->subPartner, $this->partnerFunder, $this->mechanism, $row['employee_id'], $row['partner_id'], $row['subpartner_id'], $row['partner_funder_option_id'], $row['mechanism_option_id'], false,  false, ' disabled ');
 							
-							// BS:2:20141003:Add hours and cost per employee per mechanism
         					echo labelAndField($this, t('Percentage'), 'text','percentage[]', $row['percentage']);
+							// BS:8,9:20141003:Add hours and cost per employee per mechanism
         					$this->viewonly = true;
-        					$HOURS_FOR_FULL_WORK_WEEK = 40.0; // TODO: Does this need a home in the database, or is it defined somewhere else?
         					$percent = $row['percentage']/100.0;
-        					echo labelAndField($this, t('Hours per Mechanism'),  'text', 'hours_per_mechanism',  $percent * $HOURS_FOR_FULL_WORK_WEEK);
-        					$employee_mechanism_cost = sprintf('%0.2f', $percent * $this->employee['annual_cost']);
-        					echo labelAndField($this, t('Annual Cost to Mechanism'),  'text', 'employee_cost_per_mechanism',  $employee_mechanism_cost.space.$this->translation['Employee Local Currency'], 2);
+        					if($this->setting['display_hours_per_mechanism'])
+        					{
+        					    $HOURS_FOR_FULL_WORK_WEEK = 40.0; // TODO: Does this need a home in the database, or is it defined somewhere else?
+            					echo labelAndField($this, t('Hours per Mechanism'),  'text', 'hours_per_mechanism',  $percent * $HOURS_FOR_FULL_WORK_WEEK);
+        					}
+
+        					if($this->setting['display_annual_cost_to_mechanism'])
+        					{
+        					   $employee_mechanism_cost = sprintf('%0.2f', $percent * $this->employee['annual_cost']);
+        					   echo labelAndField($this, t('Annual Cost to Mechanism'),  'text', 'employee_cost_per_mechanism',  $employee_mechanism_cost.space.$this->translation['Employee Local Currency'], 2);
+        					}
         					$this->viewonly = false;
         					 
 						}

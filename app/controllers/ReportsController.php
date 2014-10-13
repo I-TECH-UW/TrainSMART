@@ -10668,6 +10668,8 @@ die (__LINE__ . " - " . $sql);
 
 		$criteria = $this->getAllParams();
 		
+		$HOURS_FOR_FULL_WORK_WEEK = 40.0;
+		
 		if ($criteria['go'])
 		{
 			$where = array();
@@ -10689,6 +10691,7 @@ die (__LINE__ . " - " . $sql);
 					,ero.role_phrase
 					,pio.importance_phrase
 					,funders.funding_end_date
+					,employee_to_partner_to_subpartner_to_funder_to_mechanism.percentage as percentage
 					,employee.comments as comments
 					FROM employee LEFT JOIN ($locationsubquery) as l ON l.id = employee.location_id
 					LEFT JOIN employee_qualification_option qual ON qual.id = employee.employee_qualification_option_id
@@ -10702,6 +10705,7 @@ die (__LINE__ . " - " . $sql);
 					LEFT JOIN partner_importance_option pio     ON pio.id = partner.partner_importance_option_id
 					-- LEFT JOIN partner_to_funder funders         ON funders.partner_id = partner.id
 					LEFT JOIN partner_to_subpartner_to_funder_to_mechanism funders ON partner.id = funders.partner_id
+					LEFT JOIN employee_to_partner_to_subpartner_to_funder_to_mechanism ON employee.id = employee_to_partner_to_subpartner_to_funder_to_mechanism.employee_id
 					"; //annual cost regex logic is: 'if non-number followed by numbers, ex: $1234, then select substring(1) of ($1234), result: 1234'
 
 			// restricted access?? only show partners by organizers that we have the ACL to view
@@ -10741,6 +10745,18 @@ die (__LINE__ . " - " . $sql);
 
 			if ($criteria['transition_confirmed'])             $where[] = 'employee.transition_confirmed = 1';
 
+			// BS:8,9:20141013 add employee per-mechanism hours and costs
+			if ($criteria['hours_per_mechanism_min'] || $criteria['hours_per_mechanism_max'] || $criteria['employee_cost_per_mechanism_min'] || $criteria['employee_cost_per_mechanism_max']) 
+			{
+			    $where[] = 'percentage > 0';
+			}
+			
+			if ($criteria['hours_per_mechanism_min'])          $where[] = 'percentage >= '.($criteria['hours_per_mechanism_min']/$HOURS_FOR_FULL_WORK_WEEK) * 100;
+			if ($criteria['hours_per_mechanism_max'])          $where[] = 'employee_to_partner_to_subpartner_to_funder_to_mechanism.percentage <= '.($criteria['hours_per_mechanism_max']/$HOURS_FOR_FULL_WORK_WEEK) * 100;
+			
+			if ($criteria['employee_cost_per_mechanism_min'])  $where[] = 'employee_to_partner_to_subpartner_to_funder_to_mechanism.percentage >= ('.$criteria['employee_cost_per_mechanism_min'].'/employee.annual_cost) * 100';
+			if ($criteria['employee_cost_per_mechanism_max'])  $where[] = 'employee_to_partner_to_subpartner_to_funder_to_mechanism.percentage <= ('.$criteria['employee_cost_per_mechanism_max'].'/employee.annual_cost) * 100';
+			
 			if ( count ($where) ){
 				$sql .= ' WHERE ' . implode(' AND ', $where);
 			}

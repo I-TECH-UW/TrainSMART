@@ -2937,7 +2937,9 @@ class AdminController extends UserController
 			'label_benefits'                 => 'Benefits',
 			'label_additional_expenses'      => 'Additional Expenses',
 			'label_stipend'                  => 'Stipend',
-			'label_currency'                 => 'Employee Local Currency'
+			'label_currency'                 => 'Employee Local Currency',
+		    'label_hours_per_mechanism'      => 'Hours per Mechanism',
+		    'label_annual_cost_to_mechanism' => 'Annual Cost to Mechanism',
 			);
 		$checkboxFields = array(
 			'check_partner'                  => 'display_employee_partner',
@@ -2975,7 +2977,9 @@ class AdminController extends UserController
 			'check_salary'                   => 'display_employee_salary',
 			'check_benefits'                 => 'display_employee_benefits',
 			'check_additional_expenses'      => 'display_employee_additional_expenses',
-			'check_stipend'                  => 'display_employee_stipend'
+			'check_stipend'                  => 'display_employee_stipend',
+		    'check_hours_per_mechanism'      => 'display_hours_per_mechanism',
+		    'check_annual_cost_to_mechanism' => 'display_annual_cost_to_mechanism',
 			);
 
 		if($this->getRequest()->isPost()) { // Update db

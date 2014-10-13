@@ -231,7 +231,17 @@ ob_end_clean();
 					<td><input type="checkbox" name="check_stipend" <?php if($this->check_stipend) echo 'checked'; ?> id="check_stipend"></td>
 					<td><input type="text" name="label_stipend" value="<?php echo $this->label_stipend; ?>"></td>
 					<td></td></tr>
-
+					
+					<tr><td class="fieldTitle">Hours per Mechanism</td>
+					<td><input type="checkbox" name="check_hours_per_mechanism" <?php if($this->check_hours_per_mechanism) echo 'checked'; ?> id="check_hours_per_mechanism"></td>
+					<td><input type="text" name="label_hours_per_mechanism" value="<?php echo $this->label_hours_per_mechanism; ?>"></td>
+					<td></td></tr>
+					
+					<tr><td class="fieldTitle">Annual Cost to Mechanism</td>
+					<td><input type="checkbox" name="check_annual_cost_to_mechanism" <?php if($this->check_annual_cost_to_mechanism) echo 'checked'; ?> id="check_annual_cost_to_mechanism"></td>
+					<td><input type="text" name="label_annual_cost_to_mechanism" value="<?php echo $this->label_annual_cost_to_mechanism; ?>"></td>
+					<td></td></tr>
+					
 					<tr><td class="fieldTitle">Landing Page Comments</td>
 					<td><input type="checkbox" name="check_employee_header" <?php if($this->check_employee_header) echo 'checked'; ?> id="check_employee_header"></td>
 					<td><input type="text" name="employee_header" value="<?php echo $this->employee_header; ?>"></td>

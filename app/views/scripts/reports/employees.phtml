@@ -58,8 +58,21 @@
 						if($this->setting['display_employee_intended_transition'])
 							echo labelAndField($this, t('Intended Transition'), $this->transitions, 'intended_transition');
 						if($this->setting['display_employee_transition_confirmed'])
-							echo confirmDropdown($this, t('Transition Confirmed'), 'transition_confirmed', $this->criteria['transition_confirmed']);
-						#echo labelAndField($this, t('Employee Comments'), '', 'comments'); //empty field ('')
+						echo confirmDropdown($this, t('Transition Confirmed'), 'transition_confirmed', $this->criteria['transition_confirmed']);
+						
+						// BS:8,9:20141010:Add hours and cost per employee per mechanism
+    					if($this->setting['display_hours_per_mechanism'])
+    					{
+    					    echo labelTwoFields($this, t('Hours per Mechanism'), t('to'), 'hours_per_mechanism_min', 'hours_per_mechanism_max', $this->criteria['hours_per_mechanism_min'], $this->criteria['hours_per_mechanism_max']);
+    					}
+    					if($this->setting['display_annual_cost_to_mechanism'])
+    					{
+							echo labelTwoFields($this, t('Annual Cost to Mechanism').space.'('.$this->translation['Employee Local Currency'].')', 
+							    t('to'), 'employee_cost_per_mechanism_min', 'employee_cost_per_mechanism_max', 
+							    $this->criteria['employee_cost_per_mechanism_min'], $this->criteria['employee_cost_per_mechanism_max']);
+    					}
+						#echo labelAndField($this, t('Annual Cost to Mechanism'),  'text', 'employee_cost_per_mechanism',  $employee_mechanism_cost.space.$this->translation['Employee Local Currency'], 2);
+											#echo labelAndField($this, t('Employee Comments'), '', 'comments'); //empty field ('')
 
 					?>
 					</div>
@@ -80,11 +93,15 @@
 			<div class="hrGrey"></div>
 			<div class="fieldIndentNoMargin"><?php tp('Employees');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
 			<div id="employees"></div>
+			
+			<?php // BS:8:20141013 
+					$HOURS_FOR_FULL_WORK_WEEK = 40.0; ?>
 			<script type="text/javascript">
 			var employeesData = [
 			<?php
 			$cnt = 0;
 			$isFirstRow = true;
+			
 			foreach($this->results as $row) {
 
 				if ( ( $cnt < 100 ) or ( isset($_REQUEST['limit']) AND !$_REQUEST['limit'] ) ) {
@@ -92,7 +109,8 @@
 						echo ',';
 					}
 					$isFirstRow = false;
-
+					$percent = $row['percentage']/100.0;
+						
 					echo '[';
 						echo $row['id'].',';
 						$data = array();
@@ -123,6 +141,9 @@
 						if ($this->criteria['show_staff_category'])       $data[] = $row['staff_category'];
 						if ($this->criteria['show_intended_transition'])  $data[] = $row['transition_phrase'];
 						if ($this->criteria['show_transition_confirmed']) $data[] = $row['transition_confirmed'];
+						
+						if ($this->criteria['show_hours_per_mechanism_min'])         $data[] = sprintf('%0.2f', $percent * $HOURS_FOR_FULL_WORK_WEEK);
+						if ($this->criteria['show_employee_cost_per_mechanism_min']) $data[] = sprintf('%0.2f', $percent * $row['annual_cost']).space.$this->translation['Employee Local Currency'];
 #						if ($this->criteria['show_comments'])             $data[] = $row['comments'];
 						echo '"'.implode('","', $data).'"';
 					echo ']';
@@ -210,6 +231,14 @@
 				<?php if ( $this->criteria['show_transition_confirmed'] ) { ?>
 				{key:"transition_confirmed", label: "<?php tp('Transition Confirmed');?>", sortable:true, resizeable:true},
 				<?php } ?>
+				
+				<?php if ( $this->criteria['show_hours_per_mechanism_min'] ) { ?>
+				{key:"hours_per_mechanism", label: "<?php tp('Hours per Mechanism');?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->criteria['show_employee_cost_per_mechanism_min'] ) { ?>
+				{key:"annual_cost_to_mechanism", label: "<?php tp('Annual Cost to Mechanism');?>", sortable:true, resizeable:true},
+				<?php } ?>
+				
 				<?php /*if ( $this->criteria['show_comments'] ) {
 				{key:"employee_comments", label: "<?php print (t('Employee Comments');?>", sortable:true, resizeable:true}
 				 #} */ ?>

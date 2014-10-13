@@ -1325,6 +1325,8 @@ table {
 .form_employee #hours_min, .form_employee #hours_max,
 .form_employee #cost_min,  .form_employee #cost_max,
 .form_employee #start_date,.form_employee #end_date,
+.form_employee #hours_per_mechanism_min,.form_employee #hours_per_mechanism_max,
+.form_employee #employee_cost_per_mechanism_min,.form_employee #employee_cost_per_mechanism_max,
 .datepicker,.datepicker {
 	max-width: 100px;
 	min-width: 100px;
