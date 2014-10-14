@@ -73,7 +73,7 @@
 						</div>
 						<div class="fieldLabelThin"> <?php tp('Training Location');?></div>
 						<div class="fieldInput">
-							<div class="float50"><label for="edit_training_location"><input type="checkbox" id="edit_training_location" name="edit_training_location" value="edit_training_location" <?php if ( array_search('edit_training_location',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit');?></label></div>
+							<div class="float50"><label for="edit_training_location"><input type="radio" id="edit_training_location" name="edit_training_location" value="edit_training_location" <?php if ( array_search('edit_training_location',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit');?></label></div>
 							<label for="view_facility"><input type="radio" id="view_facility" name="edit_training_location" value="view_facility" <?php if ( array_search('view_facility',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>
 						</div>
 						<div><div class="fieldLabelThin"> <?php tp('Files');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" id="admin_files" name="admin_files" <?php if ( array_search('admin_files',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="admin_files"> <?php tp('Upload and delete');?></label></div></div></div>
