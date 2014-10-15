@@ -55,4 +55,4 @@ jQuery.fn.filterFacilityByText = function(textbox, selectSingleMatch) {
             $(select).get(0).scrollTop = 0;
         });            
     });
-}
+};

@@ -5,39 +5,47 @@ require_once('Helper.php');
 class DashboardCHAI extends Dashboard
 {
 	protected $_primary = 'id';
-	protected $_name = 'partner';
+	// protected $_name = 'location';
 
-	public function fetchdetails($where = null) {
-		$output = array();
-
+	public function fetchdetails($tableName = null, $where = null) {
+		
+	    $output = array();
 		$helper = new Helper();
 
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 		$select = $db->select()
-			->from($this->_name);
+			->from($tableName);
 		if ($where) // comma seperated string for sql
 			$select = $select->where($where);
 
 		$result = $db->fetchAll($select);
 
-		$employees  = $this->fetchEmployeeCounts();
-
-		foreach ($result as $row){
-			$output[] = array(
-				"col1" => $row['partner'],
-				"col2" => $employees[$row['id']] ? $employees[$row['id']] : 0,
-				"link" => Settings::$COUNTRY_BASE_URL . "/partner/edit/id/" . $row['id'],
-				"type" => 1
-			);
-			// foreach ($cohorts as $cohort){
-			// 	$output[] = array(
-			// 		"col1" => $cohort['name'],
-			// 		"col2" => $cohort['count'],
-			// 		"link" => Settings::$COUNTRY_BASE_URL . "/employee/edit/id/" . $employee['id'],
-			// 		"type" => 2
-			// 	);
-			// }
+		switch ($tableName) {
+		    case 'location':
+		      foreach ($result as $row){
+		 	    $output[] = array(
+		 	      "col1" => $row['id'],
+		 	  	  "col2" => $row['location_name'],
+		 	  	  "col3" => $row['tier'],
+		 	  	  "link" => Settings::$COUNTRY_BASE_URL . "/dashboard/dash3/id/" . $row['id'],
+		 	  	  "type" => 1
+		 	    );
+		      }
+		    break;
+		    case 'facility':
+		        foreach ($result as $row){
+		            $output[] = array(
+		                "col1" => $row['id'],
+		                "col2" => $row['facility_name'],
+		                "col3" => $row['location_id'],
+		                "link" => Settings::$COUNTRY_BASE_URL . "/dashboard/something/id/" . $row['id'],
+		                "type" => 1
+		            );
+		        }
+		        break;		    
+		    
 		}
+		
 		return $output;
 	}
 

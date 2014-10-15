@@ -11,7 +11,16 @@
 <script type="text/javascript">
 	$(document).ready(function () {
 		var sels = $('#facwrapper select').not('#facilityInput'); // all selects
-    $('#facilityInput').filterByText(sels, true);                 // filter by value on change
+
+<?php
+if ( $this->setting['num_location_tiers'] > 2 ) {
+    $selectFunction = 'filterByText';
+} else { 
+    $selectFunction = 'filterFacilityByText';
+}
+?>
+
+$('#facilityInput').<?php echo $selectFunction; ?>(sels, true);
 	});
 </script>
 
