@@ -33,7 +33,7 @@
 						endif; // fi historyDiv
 
 						// form fields
-						//if (! $this->hasACL('edit_employee')) $this->read_only = true; // readonly
+						//if (! $this->hasACL('employees_module')) $this->read_only = true; // readonly
 						// gnr:Jan.9.14 SA Emergency $this->required_fields = array('first_name', 'last_name','dob','select_lookup_nationalities', 'partner_id', 'subpartner_id', 'based_at', 'select_employee_qualification_option','salary','benefits','additional_expenses','stipend','employee_transition_option_id', 'select_employee_role_option', 'race', 'gender', 'disability_option_id', 'disability_comments', 'funded_hours_per_week', 'agreement_end_date');
 						
 						$this->required_fields = array('employee_code', 'partner_id', 'based_at', 'select_employee_qualification_option','salary','benefits','additional_expenses','stipend','employee_transition_option_id', 'select_employee_role_option', 'disability_option_id', 'disability_comments', 'funded_hours_per_week', 'agreement_end_date');

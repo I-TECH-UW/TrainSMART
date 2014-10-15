@@ -30,14 +30,14 @@ class EmployeeController extends ReportFilterHelpers {
 			$this->_redirect('select/select');
 		}
 
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 	}
 
 	public function indexAction() {
 
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 
@@ -78,7 +78,7 @@ class EmployeeController extends ReportFilterHelpers {
 	public function coursesAction()
 	{
 		try {
-			if (! $this->hasACL ( 'edit_employee' )) {
+			if (! $this->hasACL ( 'employees_module' )) {
 				if($this->_getParam('outputType') == 'json') {
 					$this->sendData(array('msg'=>'Not Authorized'));
 					exit();
@@ -147,7 +147,7 @@ class EmployeeController extends ReportFilterHelpers {
 	}
 	
 	public function addFunderToEmployeeAction() {
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 	
@@ -237,7 +237,7 @@ class EmployeeController extends ReportFilterHelpers {
 	}
 
 	public function deleteAction() {
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 
@@ -263,7 +263,7 @@ class EmployeeController extends ReportFilterHelpers {
 	}
 	
 	public function deleteFunderAction() {
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 	
@@ -311,7 +311,7 @@ class EmployeeController extends ReportFilterHelpers {
 	
 
 	public function editAction() {
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 
@@ -574,7 +574,7 @@ class EmployeeController extends ReportFilterHelpers {
 	public function searchAction()
 	{
 		$this->view->assign('pageTitle', 'Search Employees');
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 

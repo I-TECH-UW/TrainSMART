@@ -150,11 +150,12 @@ class UserController extends ReportFilterHelpers {
 		//TA: added 7/22/2014 'acl_editor_tutor_specialty' and 'acl_editor_tutor_contract' to the list
 		//TA:10: add to this list 'ps_edit_student', 'ps_view_student', 'ps_edit_student_grades', 'ps_view_student_grades'
 		//TA:17: 09/19/2014 add 'acl_editor_commodityname'
+		//BS:#3,#4: add edit_partners, edit_mechanisms 20141014
 		$checkboxes = array('training_organizer_all', 'in_service', 'edit_course', 'view_course', 'edit_people', 
-				'view_people', 'edit_facility', 'view_create_reports', 'edit_employee', 'edit_country_options', 
+				'view_people', 'edit_facility', 'view_create_reports', 'employees_module', 'edit_country_options', 
 				'add_edit_users', 'training_organizer_option_all', 'training_title_option_all', 'approve_trainings', 
 				'admin_files', 'use_offline_app', 'pre_service', 'facility_and_person_approver', 'edit_evaluations', 
-				'duplicate_training', 'edit_training_location', 'acl_editor_training_category', 'acl_editor_people_qualifications', 
+				'duplicate_training', 'acl_editor_training_category', 'acl_editor_people_qualifications', 
 				'acl_editor_people_responsibility', 'acl_editor_training_organizer', 'acl_editor_people_trainer', 'acl_editor_training_topic', 
 				'acl_editor_people_titles', 'acl_editor_training_level', 'acl_editor_people_trainer_skills', 'acl_editor_pepfar_category', 
 		'acl_editor_people_languages', 'acl_editor_funding', 'acl_editor_people_affiliations', 'acl_editor_recommended_topic', 'acl_editor_nationalcurriculum', 
@@ -163,18 +164,24 @@ class UserController extends ReportFilterHelpers {
 		'acl_editor_ps_languages', 'acl_editor_ps_nationalities', 'acl_editor_ps_joindropreasons', 'acl_editor_ps_sponsors', 'acl_editor_ps_tutortypes', 
 		'acl_editor_ps_coursetypes', 'acl_editor_ps_religions', 'add_edit_users', 'acl_admin_training', 'acl_admin_people', 'acl_admin_facilities', 
 		'acl_editor_refresher_course', 'import_training', 'import_training_location', 'import_facility', 'import_person', 'acl_editor_tutor_specialty', 
-		'acl_editor_tutor_contract', 'acl_editor_commodityname'); 
+		'acl_editor_tutor_contract', 'acl_editor_commodityname', 'edit_employee', 'edit_partners', 'edit_mechanisms', 'edit_training_location'); 
 		foreach ($checkboxes as $value) {
 			$acl [$value] = ( ( $this->_getParam ( $value ) == $value || $this->_getParam($value) == 'on' ) ? $value : null);
 		}
 
 		
 		$checkboxes = array(
-			'edit_course' => 'view_course',
-			'edit_people' => 'view_people',
 			//'ps_edit_student' => 'ps_view_student', //TA:10: added 8/15/2014
 			//	'ps_edit_student_grades' => 'ps_view_student_grades', //TA:10: added 8/15/2014
-			'edit_facility' => 'view_facility');
+			'edit_course'            => 'view_course',
+			'edit_people'            => 'view_people',
+		    'edit_facility'          => 'view_facility',
+		    // BS:#3,#4:20141015
+		    'edit_employee'          => 'view_employee',
+		    'edit_partners'          => 'view_partners',
+		    'edit_mechanisms'        => 'view_mechanisms',
+		    'edit_training_location' => 'view_training_location',
+		);
 		foreach ($checkboxes as $key => $value) {
 			$acl [$value] = ( $this->_getParam ( $key ) == $value ? $value : null );
 		}

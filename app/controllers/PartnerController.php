@@ -30,7 +30,7 @@ class PartnerController extends ReportFilterHelpers {
 	}
 
 	public function deleteAction() {
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 
@@ -56,7 +56,7 @@ class PartnerController extends ReportFilterHelpers {
 	}
 	
 	public function deleteFunderAction() {
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 	
@@ -120,7 +120,7 @@ class PartnerController extends ReportFilterHelpers {
 	
 	
 	public function addFunderToPartnerAction() {
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 	
@@ -202,7 +202,7 @@ class PartnerController extends ReportFilterHelpers {
 	}
 
 	public function editAction() {
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 
@@ -405,7 +405,7 @@ class PartnerController extends ReportFilterHelpers {
 
 	public function searchAction()
 	{
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 

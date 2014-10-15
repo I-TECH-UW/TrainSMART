@@ -30,7 +30,7 @@ class MechanismController extends ReportFilterHelpers {
 	}
 	
 	public function deleteFunderAction() {
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 	
@@ -201,7 +201,7 @@ class MechanismController extends ReportFilterHelpers {
 
 	public function searchAction()
 	{
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 

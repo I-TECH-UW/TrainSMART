@@ -17,7 +17,7 @@ class IndexController extends ITechController {
 
 	public function indexAction() {
 
-		if($this->hasACL('edit_employee') && $this->setting('module_employee_enabled')){
+		if($this->hasACL('employees_module') && $this->setting('module_employee_enabled')){
 			if($this->hasACL('in_service') == false && $this->hasACL('pre_service') == false) {
 				$this->_redirect('employee');
 				exit();
