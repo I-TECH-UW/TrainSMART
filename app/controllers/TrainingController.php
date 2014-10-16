@@ -1311,10 +1311,6 @@ class TrainingController extends ReportFilterHelpers {
 										$errs[] = t("Could not add person to training. Gender is undefined.").space.t('Training')." #$training_id: " . $rows[$i][1] . " " . $rows[$i][2] . " " . $rows[$i][3];
 										continue;
 									}
-									if(!trim($rows[$i][5])){
-										$errs[] = t("Could not add person to training. Cadre is undefined.").space.t('Training')." #$training_id: " . $rows[$i][1] . " " . $rows[$i][2] . " " . $rows[$i][3];
-										continue;
-									}
 									
 									$values_person = array();
 									
@@ -1327,7 +1323,13 @@ class TrainingController extends ReportFilterHelpers {
 									$values_person['first_name'] = trim($rows[$i][1]);
 									$values_person['last_name'] = trim($rows[$i][3]);
 									$values_person['gender'] = trim($rows[$i][4]);
-									$values_person['primary_qualification_option_id'] = $this->_importHelperFindOrCreate('person_qualification_option',   'qualification_phrase',   trim($rows[$i][5]));
+									$values_person['primary_qualification_option_id'] = '0';
+									if(trim($rows[$i][5])){
+										$cadre_id = $db->fetchOne ( "SELECT id FROM person_qualification_option WHERE qualification_phrase = '" . trim($rows[$i][5]) . "' LIMIT 1" );
+										if($cadre_id){
+											$values_person['primary_qualification_option_id'] = $cadre_id;
+										}
+									}
 									
 									//if facility id not found then allow to add person with empty facility id
 									$facility_name = trim($rows[$i][6]);
