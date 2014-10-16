@@ -453,6 +453,16 @@ protected function sendData($data) {
 
  		return $this->view->assign($spec,$value);
  	}
+ 	
+ 	/*
+ 	 * TA:17: 10/08/2014
+ 	 */
+ 	protected function _excel_parser($filepath){
+ 		//http://www.phpkode.com/scripts/item/simple-xlsx/
+ 		require_once "libs/simplexlsx.class.php";
+ 		$xlsx = new SimpleXLSX( $filepath);
+ 		return $xlsx->rows(); //take all rows
+ 	}
 
   protected function _csv_get_row($filepath, $reset = FALSE) {
     ini_set('auto_detect_line_endings',true);

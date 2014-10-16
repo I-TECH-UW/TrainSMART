@@ -14,9 +14,9 @@ print ScriptContainer::$instance->renderJSHead();
     <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
     <div id="content">
       <h1><?php echo $this->pageTitle; ?></h1>
-      <p><?php tp('Select the file that contains the data (Excel Comma Seperated Values database - CSV) you want to import.'); ?></p>
+      <p><?php tp('Select the file that contains the data in MS Excel format (*.xlsx) you want to import.'); ?></p>
       <p>&nbsp;</p>
-      <p><a href="<?php echo $this->base_url; ?>/training/import/download/template/outputType/csv"><?php tp('Get sample template'); ?></a></p><!--todo doesnt work -->
+      <p><a href="<?php echo $this->base_url; ?>/training/import/download/template/outputType/ImportTrainingTemplate.xlsx"><?php tp('Get sample template'); ?></a></p>
       <p>&nbsp;</p>
       <form id="uploadFileForm" enctype="multipart/form-data" method="post">
       <div class="fieldIndent">
