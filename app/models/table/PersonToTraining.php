@@ -23,7 +23,8 @@ class PersonToTraining extends ITechTable
         ->from(array('ptt' => $tableObj->_name), array('id', 'person_id', 'duration_days', 'award_id', 'score_percent_change' => new Zend_Db_Expr('ROUND((spost.score_value - spre.score_value) / spre.score_value * 100)')))
         ->setIntegrityCheck(false)
         ->join(array('p' => 'person'), "p.id = ptt.person_id",array('first_name','middle_name', 'last_name','birthdate'))
-        ->join(array('f' => 'facility'), "p.facility_id = f.id",array('facility_name', 'location_id'))
+        //->join(array('f' => 'facility'), "p.facility_id = f.id",array('facility_name', 'location_id')) //TA:17: 10/15/2014 - commented: display only persons with known facility id
+        ->joinLeft(array('f' => 'facility'), "p.facility_id = f.id",array('facility_name', 'location_id')) //TA:17: 10/15/2014 
         ->joinLeft(array('pq' => 'person_qualification_option'), "p.primary_qualification_option_id = pq.id",array('qualification' => 'qualification_phrase'))
         ->joinLeft(array('pq2' => 'person_qualification_option'), "pq.parent_id = pq2.id",array('primary_qualification' => 'qualification_phrase'))
     //    ->joinLeft(array('pr' => 'person_responsibility_option'), "p.primary_responsibility_option_id = pr.id",array('primary_responsibility'=>'responsibility_phrase'))
@@ -39,7 +40,6 @@ class PersonToTraining extends ITechTable
         ->where("ptt.training_id = $training_id and p.is_deleted=0") //TA:21: 09/29/2014
         ->group("ptt.id")
         ->order("last_name");
-
     return $tableObj->fetchAll($select);
   }
 
