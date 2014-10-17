@@ -24,9 +24,11 @@ class DashboardCHAI extends Dashboard
 		    case 'location':
 		      foreach ($result as $row){
 		 	    $output[] = array(
-		 	      "col1" => $row['id'],
-		 	  	  "col2" => $row['location_name'],
-		 	  	  "col3" => $row['tier'],
+		 	      "id" => $row['id'],
+		 	  	  "name" => $row['location_name'],
+		 	  	  "tier" => $row['tier'],
+		 	      "parent_id" => $row['parent_id'],
+		 	      "consumption" => 100,
 		 	  	  "link" => Settings::$COUNTRY_BASE_URL . "/dashboard/dash3/id/" . $row['id'],
 		 	  	  "type" => 1
 		 	    );
@@ -35,9 +37,10 @@ class DashboardCHAI extends Dashboard
 		    case 'facility':
 		        foreach ($result as $row){
 		            $output[] = array(
-		                "col1" => $row['id'],
-		                "col2" => $row['facility_name'],
-		                "col3" => $row['location_id'],
+		                "id" => $row['id'],
+		                "name" => $row['facility_name'],
+		                "location_id" => $row['location_id'],
+		                "consumption" => 100,
 		                "link" => Settings::$COUNTRY_BASE_URL . "/dashboard/something/id/" . $row['id'],
 		                "type" => 1
 		            );

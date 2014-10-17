@@ -178,7 +178,7 @@ class DashboardController extends ReportFilterHelpers {
 	public function dash3Action() {
 	
 		require_once('models/table/Dashboard-CHAI.php');
-		$this->view->assign('title', $this->translation['Application Name'].space.t('CHAI').space.t('Dashboard'));
+		$this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
 		
 		$id = $this->getSanParam ( 'id' );
 	
@@ -188,7 +188,7 @@ class DashboardController extends ReportFilterHelpers {
 		$details = $location_data->fetchdetails('location', $whereClause);
 		$this->view->assign('location_data',$details);
 		
-		if ($details[0]["col3"] == "") { // if tier = "" then facility
+		if ($details[0][tier] == "") { // if tier = "" then facility
 		  $facility_data = new DashboardCHAI();
 		  $whereClause = 'location_id = ' . $id;
 		  $details = $facility_data->fetchdetails('facility', $whereClause);
@@ -196,11 +196,12 @@ class DashboardController extends ReportFilterHelpers {
 		}
 		
 		
-		file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 193>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		var_dump('id=' . $id);
+		//file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 199>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		//var_dump('id=' . $id);
 		//var_dump('tier=' . $details[0]["col3"]);
-		var_dump('details=',  $details[0]);
-		$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		//var_dump('details0=',  $details[0]);
+		//var_dump('details1=',  $details[1]);
+		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	
 	}
 	

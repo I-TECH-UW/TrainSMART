@@ -93,30 +93,10 @@ print ScriptContainer::$instance->renderJSHead();
 				<script src="http://code.highcharts.com/modules/data.js"></script>
 				<script src="http://code.highcharts.com/modules/drilldown.js"></script>
 
-
-<?php 
-$col1 = 'Name0'; $col2 = 'V0'; $col3 = '26.61'; 
-$outline = "Name0\tV0\t26.61%";
-//echo $line;
-?>
+				
+				<?php  require_once('views/scripts/dashboard/load_data.phtml');?>
 
 
-<!-- Data from www.netmarketshare.com. Select Browsers => Desktop share by version. Download as tsv. -->
-<pre id="tsv" style="display:none">Browser Version	Total Market Share
-<?php //echo $col1 . "\t" . $col2 . "\t" . $col3; ?>
-Microsoft Internet Explorer 8.0 26.61%
-Microsoft Internet Explorer 9.0 16.96%
-
-</pre>
-
-
-
-<?php  //file_put_contents('c:\wamp\logs\php_debug.log', 'dash3 160 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-       //var_dump($this->location_data,"END");
-       //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
-?>
-
-</div>
 
 			<!-------   /////////////////////////// make top buttons ////////////////////// -->
 
@@ -142,24 +122,11 @@ Microsoft Internet Explorer 9.0 16.96%
 			<body class="docs slim framebox_body">
 
 				<div id="allCharts" class="container">
-					<div id="toprow" class="container">
-						<div id="homecontent" class="container">
-							<div id="homecontent-mid" class="row rounded">
-								<div id="homebanner" class="rounded">
-								<div class="sliderdiv">
-									<div id="chart11_div" style="width: 500px; height: 300px;"></div>
-									</div>
-									<div class="main-search">
-										<div id="chart12_div" style="width: 500px; height: 300px;"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-
-
+				<div id="toprow" class="container">
+					
+					<div id="highChart_div" 
+					style="min-width: 310px; height: 400px; max-width: 800px; max-height: 400px; margin: 0 auto" 
+					data-highcharts-chart="0"	/div>
 
 				<div class="clear"></div>
 				<div class="hrGrey"></div>
@@ -175,8 +142,19 @@ Microsoft Internet Explorer 9.0 16.96%
 
 								<!-------   /////////////////////////// chart 2,1 ////////////////////// -->
 								2,1
-								<div id="highChart_div" style="min-width: 310px; height: 400px; max-width: 400px; max-height: 400px; margin: 0 auto" data-highcharts-chart="0"><div class="highcharts-co
 								
+						<div id="homecontent" class="container">
+							<div id="homecontent-mid" class="row rounded">
+								<div id="homebanner" class="rounded">
+								<div class="sliderdiv">
+									<div id="chart11_div" style="width: 500px; height: 300px;"></div>
+									</div>
+									<div class="main-search">
+										<div id="chart12_div" style="width: 500px; height: 300px;"></div>
+									</div>
+								</div>
+							</div>
+						</div>
 								
 								<!-------   /////////////////////////// chart 2,2 ////////////////////// -->
 								2,2
@@ -194,24 +172,26 @@ Microsoft Internet Explorer 9.0 16.96%
 		<div class="clear"></div>
 		<div class="hrGrey"></div>
 		<div class="clear"></div>
-
+		
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-		<!-------   /////////////////////////// main ////////////////////// -->
+		<!-------   /////////////////////////// main gnr ////////////////////// -->
 
 		<script type="text/javascript">
-
-		<?php  require_once('views/scripts/dashboard/c3.js');?>
 		
   google.load('visualization', '1.0', {'packages':['corechart', 'table', 'gauge', 'controls']});
   google.setOnLoadCallback(apiLoaded);
   function apiLoaded() {
 	  document.getElementById("allCharts").style.marginLeft="130px";
 
-	drawChart11();
-	drawChart12();
-	drawHighchart();
-    generateBarChart();
+	//drawChart11();
+	//drawChart12();
+		
+	var currentLevel;
+	currentLevel = <?php echo '\'' . $this->location_data[0][name] . '\''; ?>;
+	  
+	drawHighchart(currentLevel);
+    //generateBarChart();
    
   }
 
@@ -260,12 +240,12 @@ Microsoft Internet Explorer 9.0 16.96%
   
 
 
-  <!-------   /////////////////////////// 2,1 script ////////////////////// -->
+  <!-------   /////////////////////////// 2,1 script gnr  ////////////////////// -->
 
-	function drawHighchart() {
+	function drawHighchart(currentLevel) {
 
 	    Highcharts.data({
-	        csv: document.getElementById('tsv').innerHTML,
+	        csv: document.getElementById('ttsv').innerHTML,
 	        itemDelimiter: '\t',
 	        parsed: function (columns) {
 
@@ -365,7 +345,7 @@ Microsoft Internet Explorer 9.0 16.96%
 	                },
 
 	                series: [{
-	                    name: 'Level',
+	                    name: currentLevel,
 	                    colorByPoint: true,
 	                    data: brandsData
 	                }],
@@ -393,16 +373,14 @@ Microsoft Internet Explorer 9.0 16.96%
 </script>
 
 
-		<script>
-      
-      devsite.github.Link.convertAnchors();
-      
-        window.prettyPrint();
-			
+<script>
+  devsite.github.Link.convertAnchors();
+  window.prettyPrint();
+</script>	
 
   <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
 
-</script>
+
 
 </body>
 
