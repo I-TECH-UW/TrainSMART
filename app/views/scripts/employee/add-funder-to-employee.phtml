@@ -49,32 +49,14 @@ $this->required_fields = array();
  $this->viewonly = false;
  employee_psfm_dropdown(0, $this, $this->partner, $this->subPartner, $this->partnerFunder, $this->mechanism, $this->employee[0]['id'], $this->employee[0]['partner_id']);
  echo labelAndField($this, t('Percentage'), 'text','percentage', $this->percentage);
-  
+ 
 ?>
 
 </div>
 </fieldset>
-
-				<script type="text/javascript">
-
-					$(document).ready(function () {
-
-						itech_save_confirm_on_leave();
-						
-						$('.datepicker').each(function () {
-							$(this).removeAttr('id').datepicker({ //bugfix, datepicker doesnt work with multiple id="" field, these are cloned so remove id attribute
-								changeMonth: true,
-								changeYear: true,
-								showOn: false,
-								dateFormat: "dd/mm/yy"
-							})
-						});
-						$('.calendarbtn').click(openNearestDatePicker);
-						
-					});
-				</script>
   	<div class="clear"></div>
-				<input type="hidden" name="limit" id="limit" value="1" />
+    <input type="hidden" name="redirect" id="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/employee/edit/id/' . $this->employee[0]['id'] ?>" />
+  	<input type="hidden" name="limit" id="limit" value="1" />
 				<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Save');?>" />
 			<div class="clear"></div>
 </form>			

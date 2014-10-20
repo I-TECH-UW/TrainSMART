@@ -163,7 +163,11 @@ class EmployeeController extends ReportFilterHelpers {
 			$helper = new Helper();
 				
 			if ( $this->getRequest()->isPost() ) {
-	
+
+			    if (!$this->hasACL("edit_employee"))
+			    {
+			        $this->doNoAccessError();
+			    }
 				//$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
 				//foreach ($params['funding_end_date'] as $i => $value) $params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
 	
@@ -199,8 +203,10 @@ class EmployeeController extends ReportFilterHelpers {
 						
 					$insert_result = $epsfm->insert($data);
 					$status->setStatusMessage( t('The funding mechanism was saved.') );
-					//$this->_redirect("admin/employee-build_funding");
-					//$this->_redirect("partner/edit/" . $params['id']);
+					if ($params['redirect'])
+					{
+					   $this->_redirect($params['redirect']);
+					}
 				}
 			}
 				
