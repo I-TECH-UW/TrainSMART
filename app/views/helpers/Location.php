@@ -630,23 +630,36 @@ function partner_sfm_dropdown($fieldIndex, &$view, &$subPartner, &$partnerFunder
 		<?php echo $view->base_url; ?>
 		
 		<?php 
+		      $showDeleteLink = false;
 		      if(!$val_employee && !$val_partner && !$val_subPartner && !$val_partnerFunder && !$val_mechanism) //empty
 		      ;
 		      else if($val_employee && $val_partner && $val_subPartner && $val_partnerFunder && $val_mechanism) { //employee
-			    echo '/employee/delete_funder/id/' . $val_employee . '_' . $val_partner. '_' . $val_subPartner . '_' . $val_partnerFunder . '_' . $val_mechanism; 
+		          if ($view->hasACL("edit_employee"))
+		          {
+		              $showDeleteLink = true;
+		              echo '/employee/delete_funder/id/' . $val_employee . '_' . $val_partner. '_' . $val_subPartner . '_' . $val_partnerFunder . '_' . $val_mechanism;
+		          } 
 			  }
 		      else if(!$val_employee && $val_partner && $val_subPartner && $val_partnerFunder && $val_mechanism) { //partner
-		      	echo '/partner/delete_funder/id/' . $val_partner . '_' . $val_subPartner . '_' . $val_partnerFunder . '_' . $val_mechanism; 
+		      	  if ($view->hasACL("edit_partners"))
+		      	  {
+		              $showDeleteLink = true;
+		      	      echo '/partner/delete_funder/id/' . $val_partner . '_' . $val_subPartner . '_' . $val_partnerFunder . '_' . $val_mechanism;
+		      	  } 
 		      }	
 		      else if (!$val_employee && !$val_partner  && $val_subPartner && $val_partnerFunder && $val_mechanism) { //mechanism
-		      	echo '/mechanism/delete_funder/id/' . $val_subPartner . '_' . $val_partnerFunder . '_' . $val_mechanism;
+		          if ($view->hasACL("edit_mechanisms"))
+		          { 
+		              $showDeleteLink = true;
+		              echo '/mechanism/delete_funder/id/' . $val_subPartner . '_' . $val_partnerFunder . '_' . $val_mechanism;
+		          }
 		      }
 		?>
 		" >
 
 		<?php 
-		  if($val_subPartner && $val_partnerFunder && $val_mechanism) { // not empty
-		    echo t('Delete Funder'); 
+		  if($val_subPartner && $val_partnerFunder && $val_mechanism && $showDeleteLink) { // not empty
+		      		    echo t('Delete Funder'); 
 		  }
 		?>
 		

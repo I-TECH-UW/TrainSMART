@@ -22,7 +22,7 @@
 
 			<h1><?php $this->mode == 'add' ? tp('Add Partner') : tp('Edit Partner'); ?></h1>
 			<form action="" method="post" id="employeePartnerEdit" class="form_employee">
-				<?php if ($this->partner['id']): ?>
+				<?php if (($this->partner['id']) && ($this->hasACL("edit_partner"))): ?>
 				<div class="historyDiv">
 					<a href="<?php echo $this->base_url; ?>/partner/delete/id/<?php echo $this->partner['id']; ?>"><?php echo t('Delete this').space.t('Partner'); ?></a>
 					<a href="<?php echo $this->base_url; ?>/partner/add_funder_to_partner/id/<?php echo $this->partner['id']; ?>"><?php echo t('Add Funder'); ?></a>
@@ -33,7 +33,6 @@
 					require_once ('views/helpers/DropDown.php');
 					$this->required_fields = array('partner', 'address1', 'city', 'province_id', 'phone', 'fax', 'funder', 'mechanism', 'funding_end_date[]', 'employee_transition_option_id', 'agreement_end_date', 'partner_importance_option_id', 'incoming_partner', 'comments', 'subpartner_id[]', 'hr_contact_name','hr_contact_phone','hr_contact_email');
 					$this->partner['agreement_end_date'] = formhelperdate( $this->partner['agreement_end_date'] );
-					//$this->viewonly = true;
 					if ($this->mode != 'add') {
 					  echo labelAndField($this, t('Partner').space.t('ID'),  'text', 'id',      $this->partner['id']);
 					}
