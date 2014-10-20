@@ -333,130 +333,138 @@ class EmployeeController extends ReportFilterHelpers {
 
 		if ( $this->getRequest()->isPost() )
 		{
-			//validate then save
-			$params['location_id'] = regionFiltersGetLastID( '', $params );
-			$params['dob']                      = $this->_euro_date_to_sql( $params['dob'] );
-			$params['agreement_end_date']       = $this->_euro_date_to_sql( $params['agreement_end_date'] );
-			$params['transition_date']          = $this->_euro_date_to_sql( $params['transition_date'] );
-			$params['transition_complete_date'] = $this->_euro_date_to_sql( $params['transition_complete_date'] );
-			$params['site_id']                  = $params['facilityInput'];
-			$params['option_nationality_id']    = $params['lookup_nationalities_id'];
-			$params['facility_type_option_id']  = $params['employee_site_type_option_id'];
-			$params['race_option_id']           = $params['person_race_option_id'];
-
-			// $status->checkRequired ( $this, 'first_name', t ( 'Frist Name' ) );
-			// $status->checkRequired ( $this, 'last_name',  t ( 'Last Name' ) );
-			
-			$status->checkRequired ( $this, 'employee_code', t('Employee').space.t('Code'));
-			
-			//$status->checkRequired ( $this, 'dob', t ( 'Date of Birth' ) );//TA:18: 08/28/2014 (DOB field is not required)
-			
-			if($this->setting('display_employee_nationality'))
-				$status->checkRequired ( $this, 'lookup_nationalities_id', t('Employee Nationality'));
-			
-			
-			
-			$status->checkRequired ( $this, 'employee_qualification_option_id', t ( 'Staff Cadre' ) );
-			
-			if($this->setting('display_gender'))
-				$status->checkRequired ( $this, 'gender', t('Gender') );
-			if($this->setting('display_employee_race'))
-				$status->checkRequired ( $this, 'person_race_option_id', t('Race') );
-			if($this->setting('display_employee_disability')) {
-				$status->checkRequired ( $this, 'disability_option_id', t('Disability') );
-				if ($params['disability_option_id'] == 1)
-					$status->checkRequired ( $this, 'disability_comments', t('Nature of Disability') );
-			}
-			if($this->setting('display_employee_salary'))
-				$status->checkRequired ( $this, 'salary', t('Salary') );
-			if($this->setting('display_employee_benefits'))
-				$status->checkRequired ( $this, 'benefits', t('Benefits') );
-			if($this->setting('display_employee_additional_expenses'))
-				$status->checkRequired ( $this, 'additional_expenses', t('Additional Expenses') );
-			if($this->setting('display_employee_stipend'))
-				$status->checkRequired ( $this, 'stipend', t('Stipend') );
-			if ( $this->setting('display_employee_partner') )
-				$status->checkRequired ( $this, 'partner_id', t ( 'Partner' ) );
-			//if($this->setting('display_employee_sub_partner'))
-				//$status->checkRequired ( $this, 'subpartner_id', t ( 'Sub Partner' ) );
-			if($this->setting('display_employee_intended_transition'))
-				$status->checkRequired ( $this, 'employee_transition_option_id', t ( 'Intended Transition' ) );
-			if(($this->setting('display_employee_base') && !$params['employee_base_option_id']) || !$this->setting('display_employee_base')) // either one is OK, javascript disables regions if base is on & has a value choice
-				$status->checkRequired ( $this, 'province_id', t ( 'Region A (Province)' ).space.t('or').space.t('Employee Based at') );
-			if($this->setting('display_employee_base') && !$params['province_id'])
-				$status->checkRequired ( $this, 'employee_base_option_id', t('Employee Based at').space.t('or').space.t('Region A (Province)') );
-			if($this->setting('display_employee_primary_role'))
-				$status->checkRequired ( $this, 'employee_role_option_id', t ( 'Primary Role' ) );
-
-			$status->checkRequired ( $this, 'funded_hours_per_week', t ( 'Funded hours per week' ) );
-			if($this->setting['display_employee_contract_end_date'])
-				$status->checkRequired ( $this, 'agreement_end_date', t ( 'Contract End Date' ) );
-			
-
-			$params['subPartner'] = $this->_array_me($params['subPartner']);
-			$params['partnerFunder'] = $this->_array_me($params['partnerFunder']);
-			$params['mechanism'] = $this->_array_me($params['mechanism']);
-			
-			$total_percent = 0;
-			foreach($params['percentage'] as $i => $val){
-				$total_percent = $total_percent + $params['percentage'][$i];
-			}
-			if ($total_percent > 100) $status->setStatusMessage ( t(' Warn: Total Funded Percentage > 100 ') );
-		
-			// set partner specific unique employee number. (auto-increment ID for each employee, starting at 1, per-partner)
-			if($id) { // reset if change partner_id
-				$oldPartnerId = $db->fetchOne("SELECT partner_id FROM employee WHERE id = ?", $id);
-				if ($params['partner_id'] != $oldPartnerId || $params['partner_id'] == "")
-					$params['partner_employee_number'] = null;
-			}
-			if ($params['partner_id'] && $params['partner_employee_number'] == "") { // generate a new id
-				$max = $db->fetchOne("SELECT MAX(partner_employee_number) FROM employee WHERE partner_id = ?", $params['partner_id']);
-				$params['partner_employee_number'] = $max ? $max + 1 : 1; // max+1 or default to 1
-			}
-			
-			// save
-			if (! $status->hasError() ) {
-				$id = $this->_findOrCreateSaveGeneric('employee', $params);
-				
-				if(!$id) {
-					$status->setStatusMessage( t('That person could not be saved.') );
-				} else {
-
-					# converted to optionlist, link table not needed TODO. marking for removal.
-					#MultiOptionList::updateOptions ( 'employee_to_role', 'employee_role_option', 'employee_id', $id, 'employee_role_option_id', $params['employee_role_option_id'] );
-					
-					// delete all
-					$epsfm = new ITechTable(array('name' => 'employee_to_partner_to_subpartner_to_funder_to_mechanism'));
-					$where = "employee_id = $id";
-		
-					$delete_result = $epsfm->delete($where, false);
-					
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont 300>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-					//var_dump($params['subPartner']);
-					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-					
-					// insert from view
-					foreach($params['subPartner'] as $i => $val){
-						
-						if($id && $partner_id && $params['subPartner'][$i] &&$params['partnerFunder'][$i] && $params['mechanism'][$i] && $params['percentage'][$i]) {
-						  $data = array(
-								'employee_id' => $id,
-								'partner_id'  => $partner_id,
-						  		'subpartner_id'=> $params['subPartner'][$i],
-								'partner_funder_option_id' => $params['partnerFunder'][$i],
-								'mechanism_option_id' => $params['mechanism'][$i],
-								'percentage' => $params['percentage'][$i],
-						  );
-							
-						  $insert_result = $epsfm->insert($data);
-						}
-					}
-					
-					$status->setStatusMessage( t('The person was saved.') );
-					$this->_redirect("employee/edit/id/$id");
-				}
-			} 
+		    if (!$this->hasACL('edit_employee'))
+		    {
+		        $this->doNoAccessError();
+		    }
+            else 
+            {		    
+    			//validate then save
+    			$params['location_id'] = regionFiltersGetLastID( '', $params );
+    			$params['dob']                      = $this->_euro_date_to_sql( $params['dob'] );
+    			$params['agreement_end_date']       = $this->_euro_date_to_sql( $params['agreement_end_date'] );
+    			$params['transition_date']          = $this->_euro_date_to_sql( $params['transition_date'] );
+    			$params['transition_complete_date'] = $this->_euro_date_to_sql( $params['transition_complete_date'] );
+    			$params['site_id']                  = $params['facilityInput'];
+    			$params['option_nationality_id']    = $params['lookup_nationalities_id'];
+    			$params['facility_type_option_id']  = $params['employee_site_type_option_id'];
+    			$params['race_option_id']           = $params['person_race_option_id'];
+    
+    			// $status->checkRequired ( $this, 'first_name', t ( 'Frist Name' ) );
+    			// $status->checkRequired ( $this, 'last_name',  t ( 'Last Name' ) );
+    			
+    			$status->checkRequired ( $this, 'employee_code', t('Employee').space.t('Code'));
+    			
+    			//$status->checkRequired ( $this, 'dob', t ( 'Date of Birth' ) );//TA:18: 08/28/2014 (DOB field is not required)
+    			
+    			if($this->setting('display_employee_nationality'))
+    				$status->checkRequired ( $this, 'lookup_nationalities_id', t('Employee Nationality'));
+    			
+    			
+    			
+    			$status->checkRequired ( $this, 'employee_qualification_option_id', t ( 'Staff Cadre' ) );
+    			
+    			if($this->setting('display_gender'))
+    				$status->checkRequired ( $this, 'gender', t('Gender') );
+    			if($this->setting('display_employee_race'))
+    				$status->checkRequired ( $this, 'person_race_option_id', t('Race') );
+    			if($this->setting('display_employee_disability')) {
+    				$status->checkRequired ( $this, 'disability_option_id', t('Disability') );
+    				if ($params['disability_option_id'] == 1)
+    					$status->checkRequired ( $this, 'disability_comments', t('Nature of Disability') );
+    			}
+    			if($this->setting('display_employee_salary'))
+    				$status->checkRequired ( $this, 'salary', t('Salary') );
+    			if($this->setting('display_employee_benefits'))
+    				$status->checkRequired ( $this, 'benefits', t('Benefits') );
+    			if($this->setting('display_employee_additional_expenses'))
+    				$status->checkRequired ( $this, 'additional_expenses', t('Additional Expenses') );
+    			if($this->setting('display_employee_stipend'))
+    				$status->checkRequired ( $this, 'stipend', t('Stipend') );
+    			if ( $this->setting('display_employee_partner') )
+    				$status->checkRequired ( $this, 'partner_id', t ( 'Partner' ) );
+    			//if($this->setting('display_employee_sub_partner'))
+    				//$status->checkRequired ( $this, 'subpartner_id', t ( 'Sub Partner' ) );
+    			if($this->setting('display_employee_intended_transition'))
+    				$status->checkRequired ( $this, 'employee_transition_option_id', t ( 'Intended Transition' ) );
+    			if(($this->setting('display_employee_base') && !$params['employee_base_option_id']) || !$this->setting('display_employee_base')) // either one is OK, javascript disables regions if base is on & has a value choice
+    				$status->checkRequired ( $this, 'province_id', t ( 'Region A (Province)' ).space.t('or').space.t('Employee Based at') );
+    			if($this->setting('display_employee_base') && !$params['province_id'])
+    				$status->checkRequired ( $this, 'employee_base_option_id', t('Employee Based at').space.t('or').space.t('Region A (Province)') );
+    			if($this->setting('display_employee_primary_role'))
+    				$status->checkRequired ( $this, 'employee_role_option_id', t ( 'Primary Role' ) );
+    
+    			$status->checkRequired ( $this, 'funded_hours_per_week', t ( 'Funded hours per week' ) );
+    			if($this->setting['display_employee_contract_end_date'])
+    				$status->checkRequired ( $this, 'agreement_end_date', t ( 'Contract End Date' ) );
+    			
+    
+    			$params['subPartner'] = $this->_array_me($params['subPartner']);
+    			$params['partnerFunder'] = $this->_array_me($params['partnerFunder']);
+    			$params['mechanism'] = $this->_array_me($params['mechanism']);
+    			
+    			$total_percent = 0;
+    			foreach($params['percentage'] as $i => $val){
+    				$total_percent = $total_percent + $params['percentage'][$i];
+    			}
+    			if ($total_percent > 100) $status->setStatusMessage ( t(' Warn: Total Funded Percentage > 100 ') );
+    		
+    			// set partner specific unique employee number. (auto-increment ID for each employee, starting at 1, per-partner)
+    			if($id) { // reset if change partner_id
+    				$oldPartnerId = $db->fetchOne("SELECT partner_id FROM employee WHERE id = ?", $id);
+    				if ($params['partner_id'] != $oldPartnerId || $params['partner_id'] == "")
+    					$params['partner_employee_number'] = null;
+    			}
+    			if ($params['partner_id'] && $params['partner_employee_number'] == "") { // generate a new id
+    				$max = $db->fetchOne("SELECT MAX(partner_employee_number) FROM employee WHERE partner_id = ?", $params['partner_id']);
+    				$params['partner_employee_number'] = $max ? $max + 1 : 1; // max+1 or default to 1
+    			}
+    			
+    			// save
+    			if (! $status->hasError() ) {
+    				$id = $this->_findOrCreateSaveGeneric('employee', $params);
+    				
+    				if(!$id) {
+    					$status->setStatusMessage( t('That person could not be saved.') );
+    				} else {
+    
+    					# converted to optionlist, link table not needed TODO. marking for removal.
+    					#MultiOptionList::updateOptions ( 'employee_to_role', 'employee_role_option', 'employee_id', $id, 'employee_role_option_id', $params['employee_role_option_id'] );
+    					
+    					// delete all
+    					$epsfm = new ITechTable(array('name' => 'employee_to_partner_to_subpartner_to_funder_to_mechanism'));
+    					$where = "employee_id = $id";
+    		
+    					$delete_result = $epsfm->delete($where, false);
+    					
+    					//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont 300>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+    					//var_dump($params['subPartner']);
+    					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+    					
+    					// insert from view
+    					foreach($params['subPartner'] as $i => $val){
+    						
+    						if($id && $partner_id && $params['subPartner'][$i] &&$params['partnerFunder'][$i] && $params['mechanism'][$i] && $params['percentage'][$i]) {
+    						  $data = array(
+    								'employee_id' => $id,
+    								'partner_id'  => $partner_id,
+    						  		'subpartner_id'=> $params['subPartner'][$i],
+    								'partner_funder_option_id' => $params['partnerFunder'][$i],
+    								'mechanism_option_id' => $params['mechanism'][$i],
+    								'percentage' => $params['percentage'][$i],
+    						  );
+    							
+    						  $insert_result = $epsfm->insert($data);
+    						}
+    					}
+    					
+    					$status->setStatusMessage( t('The person was saved.') );
+    					$this->_redirect("employee/edit/id/$id");
+    				}
+    			} 
+    		}
 		}
+		
 		
 		if ( $id && !$status->hasError() )  // read data from db
 		{
@@ -535,7 +543,7 @@ class EmployeeController extends ReportFilterHelpers {
 		$titlesArray = OptionList::suggestionList ( 'person_title_option', 'title_phrase', false, 9999);
 		$this->view->assign ( 'titles',      DropDown::render('title_option_id', $this->translation['Title'], $titlesArray, 'title_phrase', 'id', $params['title_option_id'] ) );
 		
-		$this->view->assign ( 'partners',    DropDown::generateHtml   ( 'partner', 'partner', $params['partner_id'], false, $this->view->viewonly, false ) );
+		$this->view->assign ( 'partners',    DropDown::generateHtml   ( 'partner', 'partner', $params['partner_id'], false, !$this->hasACL("edit_employee"), false ) );
 		
 		//$this->view->assign ( 'funder_mechanisms', DropDown::generateHtml( $params['funder_mechanism'], 'funder_mechanism_option', $params['funder_mechanism'], false, $this->view->viewonly, false ) );
 		/*
@@ -551,24 +559,24 @@ class EmployeeController extends ReportFilterHelpers {
 		*/
 		
 		//$this->view->assign ( 'subpartners', DropDown::generateHtml   ( 'partner', 'partner', $params['subpartner_id'], false, $this->view->viewonly, false, false, array('name' => 'subpartner_id'), true ) );
-		$this->view->assign ( 'bases',       DropDown::generateHtml   ( 'employee_base_option', 'base_phrase', $params['employee_base_option_id']) );
-		$this->view->assign ( 'site_types',  DropDown::generateHtml   ( 'employee_site_type_option', 'site_type_phrase', $params['facility_type_option_id']) );
-		$this->view->assign ( 'cadres',      DropDown::generateHtml   ( 'employee_qualification_option', 'qualification_phrase', $params['employee_qualification_option_id']) );
-		$this->view->assign ( 'categories',  DropDown::generateHtml   ( 'employee_category_option', 'category_phrase', $params['employee_category_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'fulltime',    DropDown::generateHtml   ( 'employee_fulltime_option', 'fulltime_phrase', $params['employee_fulltime_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'roles',       DropDown::generateHtml   ( 'employee_role_option', 'role_phrase', $params['employee_role_option_id'], false, $this->view->viewonly, false ) );
+		$this->view->assign ( 'bases',       DropDown::generateHtml   ( 'employee_base_option', 'base_phrase', $params['employee_base_option_id'], false, !$this->hasACL("edit_employee")) );
+		$this->view->assign ( 'site_types',  DropDown::generateHtml   ( 'employee_site_type_option', 'site_type_phrase', $params['facility_type_option_id'], false, !$this->hasACL("edit_employee")) );
+		$this->view->assign ( 'cadres',      DropDown::generateHtml   ( 'employee_qualification_option', 'qualification_phrase', $params['employee_qualification_option_id'], false, !$this->hasACL("edit_employee")) );
+		$this->view->assign ( 'categories',  DropDown::generateHtml   ( 'employee_category_option', 'category_phrase', $params['employee_category_option_id'], false, !$this->hasACL("edit_employee"), false ) );
+		$this->view->assign ( 'fulltime',    DropDown::generateHtml   ( 'employee_fulltime_option', 'fulltime_phrase', $params['employee_fulltime_option_id'], false, !$this->hasACL("edit_employee"), false ) );
+		$this->view->assign ( 'roles',       DropDown::generateHtml   ( 'employee_role_option', 'role_phrase', $params['employee_role_option_id'], false, !$this->hasACL("edit_employee"), false ) );
 		#$this->view->assign ( 'roles',       CheckBoxes::generateHtml ( 'employee_role_option', 'role_phrase', $this->view, $params['roles'] ) );
-		$this->view->assign ( 'transitions', DropDown::generateHtml   ( 'employee_transition_option', 'transition_phrase', $params['employee_transition_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'transitions_complete', DropDown::generateHtml ( 'employee_transition_option', 'transition_phrase', $params['employee_transition_complete_option_id'], false, $this->view->viewonly, false, false, array('name' => 'employee_transition_complete_option_id'), true ) );
+		$this->view->assign ( 'transitions', DropDown::generateHtml   ( 'employee_transition_option', 'transition_phrase', $params['employee_transition_option_id'], false, !$this->hasACL("edit_employee"), false ) );
+		$this->view->assign ( 'transitions_complete', DropDown::generateHtml ( 'employee_transition_option', 'transition_phrase', $params['employee_transition_complete_option_id'], false, !$this->hasACL("edit_employee"), false, false, array('name' => 'employee_transition_complete_option_id'), true ) );
 		$helper = new Helper();
 		$this->viewAssignEscaped ( 'facilities', $helper->getFacilities() );
-		$this->view->assign ( 'relationships', DropDown::generateHtml ( 'employee_relationship_option', 'relationship_phrase', $params['employee_relationship_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'referrals',     DropDown::generateHtml ( 'employee_referral_option', 'referral_phrase', $params['employee_referral_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'provided',      DropDown::generateHtml ( 'employee_training_provided_option', 'training_provided_phrase', $params['employee_training_provided_option_id'], false, $this->view->viewonly, false ) );
+		$this->view->assign ( 'relationships', DropDown::generateHtml ( 'employee_relationship_option', 'relationship_phrase', $params['employee_relationship_option_id'], false, !$this->hasACL("edit_employee"), false ) );
+		$this->view->assign ( 'referrals',     DropDown::generateHtml ( 'employee_referral_option', 'referral_phrase', $params['employee_referral_option_id'], false, !$this->hasACL("edit_employee"), false ) );
+		$this->view->assign ( 'provided',      DropDown::generateHtml ( 'employee_training_provided_option', 'training_provided_phrase', $params['employee_training_provided_option_id'], false, !$this->hasACL("edit_employee"), false ) );
 		$employees = OptionList::suggestionList ( 'employee', array ('first_name' ,'CONCAT(first_name, CONCAT(" ", last_name)) as name' ), false, 99999 );
 		$this->view->assign ( 'supervisors',   DropDown::render('supervisor_id', $this->translation['Supervisor'], $employees, 'name', 'id', $params['supervisor_id'] ) );
-		$this->view->assign ( 'nationality',   DropDown::generateHtml ( 'lookup_nationalities', 'nationality', $params['lookup_nationalities_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'race',          DropDown::generateHtml ( 'person_race_option', 'race_phrase', $params['race_option_id'], false, $this->view->viewonly, false ) );
+		$this->view->assign ( 'nationality',   DropDown::generateHtml ( 'lookup_nationalities', 'nationality', $params['lookup_nationalities_id'], false, !$this->hasACL("edit_employee"), false ) );
+		$this->view->assign ( 'race',          DropDown::generateHtml ( 'person_race_option', 'race_phrase', $params['race_option_id'], false, !$this->hasACL("edit_employee"), false ) );
 	}
 
 	public function searchAction()

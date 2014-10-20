@@ -24,7 +24,7 @@
 			<form action="" method="post" class="form_employee">
 				<legend></legend>
 
-					<?php if ($this->employee['id']): ?>
+					<?php if ($this->employee['id'] && $this->hasACL('edit_employee')): ?>
 						<div class="historyDiv">
 							<a href="<?php echo $this->base_url; ?>/employee/delete/id/<?php echo $this->employee['id']; ?>"><?php echo t('Delete this').space.t('Employee'); ?></a>
 							<a href="<?php echo $this->base_url; ?>/employee/add_funder_to_employee/id/<?php echo $this->employee['id']; ?>"><?php echo t('Add Funder'); ?></a>
@@ -40,7 +40,10 @@
 
 						#if ($this->mode != 'add' && $this->employee['id'])
 						#echo labelAndField($this, 'Person ID',       'text', 'id', $this->employee['id']);
-
+						if (! $this->hasACL('edit_employee')) 
+						{
+						    $this->viewonly = true;
+						}
 						echo labelAndField($this, t('Staff Cadre'),    $this->cadres, 'select_employee_qualification_option');
 						if($this->setting['display_employee_primary_role'])
 						echo labelAndField($this, t('Primary Role'),   $this->roles,   'select_employee_role_option');
@@ -53,7 +56,10 @@
 						*/
 						$this->viewonly = true;
 						echo labelAndField($this, t('Employee').space.t('ID'),    'text', 'employee_id',   $this->employee['id'] );
-						$this->viewonly = false;
+						if ($this->hasACL('edit_employee'))
+						{
+						    $this->viewonly = false;
+						}
 						echo labelAndField($this, t('Employee').space.t('Code'),    'text', 'employee_code',   $this->employee['employee_code'] );
 						
 						if($this->setting['display_employee_dob'])
@@ -70,11 +76,16 @@
 						//if($this->setting['display_employee_race'])
 						//echo labelAndField($this, t('Race'),         $this->race, 'race');
 						//echo genderDropdown($this,t('Gender'),       'gender', $this->employee['gender']);
-						if($this->setting['display_employee_disability']) {
-						$this->readonly = true;
-						echo confirmDropdown($this, t('Disability'), 'disability_option_id', $this->employee['disability_option_id']);
-						echo labelAndField($this, t('Nature of Disability'), 'text', 'disability_comments', $this->employee['disability_comments']);
-						echo '<div class="clear"></div><br /><br />'.PHP_EOL;
+						if($this->setting['display_employee_disability']) 
+						{
+    						$this->viewonly = true;
+    						echo confirmDropdown($this, t('Disability'), 'disability_option_id', $this->employee['disability_option_id']);
+    						echo labelAndField($this, t('Nature of Disability'), 'text', 'disability_comments', $this->employee['disability_comments']);
+    						echo '<div class="clear"></div><br /><br />'.PHP_EOL;
+						    if ($this->hasACL('edit_employee'))
+						    {
+						        $this->viewonly = false;
+						    }
 						}
 
 						if ($this->mode != 'add' && $this->employee['partner_employee_number'])
@@ -96,7 +107,7 @@
 							partner_sfm_dropdown($i, $this, $this->subPartner, $this->partnerFunder, $this->mechanism, $row['employee_id'], $row['partner_id'], $row['subpartner_id'], $row['partner_funder_option_id'], $row['mechanism_option_id'], false,  false, ' disabled ');
 							
         					echo labelAndField($this, t('Percentage'), 'text','percentage[]', $row['percentage']);
-							// BS:8,9:20141003:Add hours and cost per employee per mechanism
+							// BS:#8,#9:20141003:Add hours and cost per employee per mechanism
         					$this->viewonly = true;
         					$percent = $row['percentage']/100.0;
         					if($this->setting['display_hours_per_mechanism'])
@@ -110,8 +121,11 @@
         					   $employee_mechanism_cost = sprintf('%0.2f', $percent * $this->employee['annual_cost']);
         					   echo labelAndField($this, t('Annual Cost to Mechanism'),  'text', 'employee_cost_per_mechanism',  $employee_mechanism_cost.space.$this->translation['Employee Local Currency'], 2);
         					}
-        					$this->viewonly = false;
-        					 
+						    if ($this->hasACL('edit_employee'))
+						    {
+						        $this->viewonly = false;
+						    }
+        					        					 
 						}
 						//echo '<button id="funder_add">'.t('Add a new').space.t('Funder').'</button><br />';
 							
@@ -122,7 +136,7 @@
 						echo labelAndField($this, t('Employee Based at'), $this->bases, 'based_at');
 						region_filters_dropdown( $this, $this->locations, $this->employee, false, false, '', true );
 						if($this->setting['display_employee_site_name']) {
-							$facDropDown = renderFacilityDropDown($this->facilities, $this->employee['site_id']);
+							$facDropDown = renderFacilityDropDown($this->facilities, $this->employee['site_id'], $this->viewonly);
 							if ($this->hasACL ( 'edit_facility' )) {
 								$facDropDown .= '<a href="'.$this->base_url.'/site/add">'.t('Insert a New').space.t('Site').'</a> ';
 								$facDropDown .= '<a href="'.$this->base_url.'/site/search">'.t('View/Edit').space.t('Site').'</a>'; // need to put the links inside of the div so they dont wrap to the next line
