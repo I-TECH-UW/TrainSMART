@@ -1,0 +1,22 @@
+
+<!-- Data => gnr -->
+<pre id="ttsv" style="display:none">Location Version	Share
+
+<?php
+	foreach ($this->location_data as $row){
+?>
+
+<?php echo $row[name]; ?> <?php echo $row[consumption]; ?>	<?php echo $row[consumption]; ?>%
+
+<?php
+	}
+?>
+
+</pre>
+
+<?php  file_put_contents('c:\wamp\logs\php_debug.log', 'dash3 137 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+       //var_dump("location_data=", $this->location_data,"END");
+       var_dump("facility_data=",$this->facility_data,"END");
+       $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
+?>
+

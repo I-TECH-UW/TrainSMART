@@ -177,29 +177,31 @@ class DashboardController extends ReportFilterHelpers {
 	
 	public function dash3Action() {
 	
-		//if (! $this->hasACL ( 'employees_module' )) {
-			//$this->doNoAccessError ();
-		//}
-	
 		require_once('models/table/Dashboard-CHAI.php');
-		//$this->view->assign('title', $this->translation['Application Name'].space.t('Employee').space.t('Tracking System'));
-	
-		// restricted access?? does this user only have acl to view some trainings or people
-		// they dont want this, removing 5/01/13
-		$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'?
-		$allowedWhereClause = $org_allowed_ids ? " partner.organizer_option_id in ($org_allowed_ids) " : "";
-		// restricted access?? only show organizers that belong to this site if its a multi org site
-		$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
-		$allowedWhereClause .= $site_orgs ? " AND partner.organizer_option_id in ($site_orgs) " : "";
-	
-		$partners = new DashboardCHAI();
-		$details = $partners->fetchdetails($allowedWhereClause);
-		$this->view->assign('getins',$details);
+		$this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
 		
-		file_put_contents('c:\wamp\logs\php_debug.log', 'dashIndex 407>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		var_dump($details);
-		$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		$id = $this->getSanParam ( 'id' );
 	
+		$whereClause = ($id ==  "") ? 'tier = 1' : 'parent_id = ' . $id ;
+	
+		$location_data = new DashboardCHAI();
+		$details = $location_data->fetchdetails('location', $whereClause);
+		$this->view->assign('location_data',$details);
+		
+		if ($details[0][tier] == "") { // if tier = "" then facility
+		  $facility_data = new DashboardCHAI();
+		  $whereClause = 'location_id = ' . $id;
+		  $details = $facility_data->fetchdetails('facility', $whereClause);
+		  $this->view->assign('facility_data',$details);
+		}
+		
+		
+		//file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 199>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		//var_dump('id=' . $id);
+		//var_dump('tier=' . $details[0]["col3"]);
+		//var_dump('details0=',  $details[0]);
+		//var_dump('details1=',  $details[1]);
+		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	
 	}
 	

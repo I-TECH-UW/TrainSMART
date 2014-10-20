@@ -775,6 +775,7 @@ class TrainingController extends ReportFilterHelpers {
 
 		if ($training_id) {
 			$persons = PersonToTraining::getParticipants ( $training_id )->toArray ();
+			print_r($persons);
 			foreach ( $persons as $pid => $p ) {
 				$region_ids = Location::getCityInfo ( $p ['location_id'], $this->setting ( 'num_location_tiers' ) ); // todo expensive call, getcityinfo loads all locations each time??
 				$persons [$pid] ['province_name'] = ($region_ids[1] ? $locations [$region_ids['1']] ['name'] : 'unknown');
@@ -1231,126 +1232,169 @@ class TrainingController extends ReportFilterHelpers {
 	}
 
 	/**
+	 * TA:17: 10/13/2014
 	* Import a training
 	*/
+	
 	public function importAction() {
-
-		//ini_set('max_execution_time','300');
 		$errs = array();
 		$this->view->assign('pageTitle', t( 'Import a training' ));
-
+		
 		// template redirect
 		if ( $this->getSanParam('download') )
 			return $this->importTrainingTemplateAction();
-
+		
 		if( ! $this->hasACL('import_training') )
 			$this->doNoAccessError ();
-
-		//CSV STUFF
+		
 		$filename = ($_FILES['upload']['tmp_name']);
 		if ( $filename ){
+			
 			require_once('models/table/TrainingLocation.php');
 			require_once('models/table/Person.php');
 			require_once('models/table/TrainingToTrainer.php');
 			require_once('models/table/PersonToTraining.php');
-
+			
 			$trainingObj = new Training ();
 			$personToTraining = new PersonToTraining();
 			
-			$date_submission = false;
-			$quarter = false;
-			$name_partner = false;
-			$state_training = false;
-			$venue_training = false;
-			$date_training = false;
-			$start_date_training = false;
-			$end_date_training = false;
+			$rows = $this->_excel_parser($filename);
 			
-			$data_values = false;
+			$values = array();
 			
-			while ($row = $this->_csv_get_row($filename) ){
-				$row_name = '';
- 				$values = array();
-				if (! is_array($row) )
-					continue;
- 				if (! empty($row) ) { 
- 					$countValidFields = 0;
- 					 //read pre-header of file
- 					foreach ( $row as $i => $v ) {
-							if ($date_submission === false && strpos ( $v, 'Date of submission' ) !== false) {
-								$row_name === ''? $row_name = 'Date of submission':'';
-								$date_submission = true;
-							} else if ($row_name === 'Date of submission' && $date_submission === true && $v !== '') {
-								$date_submission = $v;
-								break;
-							}							
-							if ($quarter === false && strpos ( $v, 'Quarter' ) !== false) {
-								$row_name === ''? $row_name = 'Quarter':'';
-								$quarter = true;
-							} else if ($row_name === 'Quarter' && $quarter === true && $v !== '') {
-								$quarter = $v;
-								break;
-							}							
-							if ($name_partner === false && strpos ( $v, 'Name of Partner' ) !== false) {
-								$row_name === ''? $row_name = 'Name of Partner':'';
-								$name_partner = true;
-							} else if ($row_name === 'Name of Partner' && $name_partner === true && $v !== '') {
-								$name_partner = $v;
-								break;
-							}							
-							if ($state_training === false && strpos ( $v, 'State' ) !== false) {
-								$row_name === ''? $row_name = 'State':'';
-								$state_training = true;
-							} else if ($row_name === 'State' && $state_training === true && $v !== '') {
-								$state_training = $v;
-								break;
-							}							
-							if ($venue_training === false && strpos ( $v, 'Venue of training' ) !== false) {
-								$row_name === ''? $row_name = 'Venue of training':'';
-								$venue_training = true;
-							} else if ($row_name === 'Venue of training' && $venue_training === true && $v !== '') {
-								$venue_training = $v;
-								break;
-							}							
-							if ($date_training === false && strpos ( $v, 'Date of Training' ) !== false) {
-								$row_name === ''? $row_name = 'Date of Training':'';
-								$date_training = true;
-							} else if ($date_training === true) {
-								if (strpos ( $v, 'Start Date' ) !== false) {
-									$start_date_training = true;
-								} else if ($row_name === 'Date of Training' && $start_date_training === true && $v !== '') {
-									$start_date_training = $v;
-								} else if (strpos ( $v, 'End Date' ) !== false) {
-									$end_date_training = true;
-								} else if ($row_name === 'Date of Training' && $end_date_training === true && $v !== '') {
-									$end_date_training = $v;
-									break;
-								}
-							}							
-							if ($data_values === false && strpos ( $v, 'S/N' ) !== false) {
-								$data_values = true;
-								if (! isset($cols) ) {
-									$cols = $row;	// first row is headers (fieldnames)
-									//continue;
-								}
-								//break;
-							}else if($data_values === true){ //read data table
-//  						print "Date of submission:" . $date_submission . "<br>";
-//  						print "Quarter:" . $quarter . "<br>";
-//  						print "Name of Partner:" . $name_partner . "<br>";
-//  						print "State:" . $state_training . "<br>";
-//  						print "Venue of training:" . $venue_training . "<br>";
-//  						print "Start Date:" . $start_date_training . "<br>";
-//  						print "End Date:" . $end_date_training . "<br>";
- 						
- 						
- 					
- 					}
-						}
-
-				
- 				}
+			//get training info
+			$values['training_organizer_phrase'] = $rows[0][2];
+			$values['training_start_date'] = $rows[1][3];
+			$values['training_end_date'] = $rows[2][3];
+			$values['training_title_option_id'] = '';
+			for($i=4; $i<15; $i++){
+				if(! empty($rows[$i][3])){
+					$values['training_title_option_id'] = $rows[$i][2];
+					break;
+				}
 			}
+			
+			try{
+				if (isset($values['training_title_option_id'])){$values['training_title_option_id']= $this->_importHelperFindOrCreate('training_title_option','training_title_phrase',$values['training_title_option_id']); }
+				if ($values['training_start_date']){$values['training_start_date'] = $this->_date_to_sql($values['training_start_date']); }
+				if ($values['training_end_date']) {$values['training_end_date'] = $this->_date_to_sql($values['training_end_date']); }
+				if (isset($values['training_organizer_phrase'])){$values['training_organizer_option_id']= $this->_importHelperFindOrCreate('training_organizer_option','training_organizer_phrase',$values['training_organizer_phrase']); }
+				//default values
+				$values['has_known_participants'] = '1';
+				$values['comments'] = '';
+				$values['got_comments'] = '';
+				$values['objectives'] = '';
+				$values['is_approved'] = '1';
+				$values['is_tot'] = '0';
+				$values['is_refresher'] = '1';
+
+				$tableObj = $trainingObj->createRow();
+				$tableObj = ITechController::fillFromArray($tableObj, $values);
+				$training_id = $tableObj->save();
+				if ($training_id > 0) {
+					$db = $this->dbfunc();
+					$personObj = new Person (); //in case if we will need to add new persons
+					for($i=17; $i< sizeof($rows); $i++){
+							if(!empty($rows[$i][1]) || !empty($rows[$i][2])  || !empty($rows[$i][3]) ){
+								//first, middle, last
+								$trainer_id = Person::tryFind(trim($rows[$i][1]), trim($rows[$i][2]), trim($rows[$i][3]));
+								if ( !$trainer_id ) { //add new person to Person
+									if(!trim($rows[$i][1])){
+										$errs[] = t("Could not add person to training. First name is undefined.").space.t('Training')." #$training_id: " . $rows[$i][1] . " " . $rows[$i][2] . " " . $rows[$i][3];
+										continue;
+									}
+									if(!trim($rows[$i][3])){
+										$errs[] = t("Could not add person to training. Last name is undefined.").space.t('Training')." #$training_id: " . $rows[$i][1] . " " . $rows[$i][2] . " " . $rows[$i][3];
+										continue;
+									}
+									if(!trim($rows[$i][4])){
+										$errs[] = t("Could not add person to training. Gender is undefined.").space.t('Training')." #$training_id: " . $rows[$i][1] . " " . $rows[$i][2] . " " . $rows[$i][3];
+										continue;
+									}
+									
+									$values_person = array();
+									
+									//optional fields
+									$values_person['phone_home'] = trim($rows[$i][9]);
+									$values_person['email'] = trim($rows[$i][10]);
+									$values_person['middle_name'] = trim($rows[$i][2]);
+									
+									//required fields
+									$values_person['first_name'] = trim($rows[$i][1]);
+									$values_person['last_name'] = trim($rows[$i][3]);
+									$values_person['gender'] = trim($rows[$i][4]);
+									$values_person['primary_qualification_option_id'] = '0';
+									if(trim($rows[$i][5])){
+										$cadre_id = $db->fetchOne ( "SELECT id FROM person_qualification_option WHERE qualification_phrase = '" . trim($rows[$i][5]) . "' LIMIT 1" );
+										if($cadre_id){
+											$values_person['primary_qualification_option_id'] = $cadre_id;
+										}
+									}
+									
+									//if facility id not found then allow to add person with empty facility id
+									$facility_name = trim($rows[$i][6]);
+									$lga_name = trim($rows[$i][7]);
+									$state_name = trim($rows[$i][8]); 
+									$values_person['facility_id'] = '0';
+									
+									if ($facility_name) { 
+										//find facility id only if state id and lga id are defined
+ 										if (!empty ( $state_name )){
+ 											$state_id = $db->fetchOne ( "SELECT id FROM location WHERE location_name = '" . $state_name . "' LIMIT 1" );
+											if($state_id != null && !empty ( $lga_name )){
+												$lga_id = $db->fetchOne (  "SELECT id FROM location WHERE location_name = '" . $lga_name . "' AND parent_id = $state_id  LIMIT 1" );
+												if($lga_id != null && !empty ( $facility_name )){
+													$values_person['facility_id'] = $db->fetchOne (  "SELECT id FROM facility WHERE facility_name = '" . $facility_name . "' AND location_id = $lga_id  LIMIT 1" );
+												}
+											}
+ 										}
+									}
+									
+									$mes_facility = '';
+									if($facility_name) $mes_facility .= $facility_name;
+									if($lga_name){
+										if($mes_facility) $mes_facility .= ", ";
+										$mes_facility .= $lga_name;
+									}
+									if($state_name){
+										if($mes_facility) $mes_facility .= ", ";
+										$mes_facility .= $state_name;
+									}
+									$mes_person = '';
+									if($rows[$i][1]) $mes_person .= $rows[$i][1];
+									if($rows[$i][2]){
+										if($mes_person) $mes_person .= ", ";
+										$mes_person .= $rows[$i][2];
+									}
+									if($rows[$i][3]){
+										if($mes_person) $mes_person .= ", ";
+										$mes_person .= $rows[$i][3];
+									}
+									
+									if($values_person['facility_id'] == '0'){				
+										$errs [] = "Error locating facility: '" . $mes_facility . "', Person: '" . $mes_person . "' will have no assigned facility.";
+									}
+									
+									$personrow = $personObj->createRow();
+									$personrow = ITechController::fillFromArray($personrow, $values_person);
+									$trainer_id = $personrow->save();
+									if(!$trainer_id){
+										$errs[] = t("Could not add person to training.").space.t('Training')." #$training_id, Person: '" . $mes_person . "'";
+										continue;
+ 									}
+								}
+								//	this not working 
+								//TrainingToTrainer::addTrainerToTraining($trainer_id, $training_id, 0); 
+								$personToTraining->addPersonToTraining($trainer_id, $training_id);
+							
+						}
+					}
+				}
+			} catch (Exception $e) {
+				$errored = 1;
+				$errs[]  = nl2br($e->getMessage()).' '.t ( 'ERROR: The training data could not be saved.').space.($training_id ? t('Training').space."#$training_id".space.t('Warning: Some data imported.').space.t('Check Funding, PEPFAR, Topic, Refresher options and Participants and Trainers Data; or delete the training and try again.') : '') ;
+			}
+			
 			// done processing rows
 			$_POST['redirect'] = null;
 			$status = ValidationContainer::instance();
@@ -1358,16 +1402,18 @@ class TrainingController extends ReportFilterHelpers {
 				$stat = t ('Your changes have been saved.');
 			else
 				$stat = t ('Error importing data. Some data may have been imported and some may not have.');
-
+			
 			foreach ($success as $errmsg)
 				$stat .= '<br>'.$errmsg;
 			foreach($errs as $errmsg)
 				$stat .= '<br>'.'Error: '.htmlspecialchars($errmsg, ENT_QUOTES);
-
-	 		$status->setStatusMessage($stat);
+			
+			$stat .='<br><a href='. Settings::$COUNTRY_BASE_URL . '/training/view/id/' . $training_id . '>View new training</a>';
+			
+			$status->setStatusMessage($stat);
 			$this->view->assign('status',$status);
-		}
-		// done with import
+			
+		}	
 	}
 	
 	public function importActionOld() {
@@ -1385,8 +1431,7 @@ class TrainingController extends ReportFilterHelpers {
 	
 		//CSV STUFF
 		$filename = ($_FILES['upload']['tmp_name']);
-		if ( $filename )
-		{
+		if ( $filename ){
 			require_once('models/table/TrainingLocation.php');
 			require_once('models/table/Person.php');
 			require_once('models/table/TrainingToTrainer.php');
@@ -1635,27 +1680,27 @@ class TrainingController extends ReportFilterHelpers {
 	
 									#echo '<br>'.PHP_EOL.'trainer [t|p]'.$imode.' row @ training id #training_id: '.print_r($tRow,true)."<Br>".PHP_EOL;
 									if( is_array($tRow) ) {
-										// accept formats: (middle name always optional)
-										// first last, first last
-										// first last \n first last
-										// id, first, mid, last \n #first, mid, last
-										if(count($tRow) == 4 && is_numeric($tRow[0])) { // some handling if it has a middle name or ID # attached or exported from training search
-											list($trainer_id, $trainer_first, $trainer_middle, $trainer_last) = $tRow;
-										}
-										else if(count($tRow) == 3 && $this->setting('display_middle_name') == 0 && is_numeric($tRow[0])) {
-											list($trainer_id, $trainer_first, $trainer_last) = $tRow;
-										}
-										else
-											list($trainer_first, $trainer_middle, $trainer_last) = $tRow;   // expects comma seperated list of names...
+									// accept formats: (middle name always optional)
+									// first last, first last
+									// first last \n first last
+									// id, first, mid, last \n #first, mid, last
+									if(count($tRow) == 4 && is_numeric($tRow[0])) { // some handling if it has a middle name or ID # attached or exported from training search
+										list($trainer_id, $trainer_first, $trainer_middle, $trainer_last) = $tRow;
+									}
+									else if(count($tRow) == 3 && $this->setting('display_middle_name') == 0 && is_numeric($tRow[0])) {
+									list($trainer_id, $trainer_first, $trainer_last) = $tRow;
+									}
+									else
+										list($trainer_first, $trainer_middle, $trainer_last) = $tRow;   // expects comma seperated list of names...
 									} else {
-										list($trainer_first, $trainer_middle, $trainer_last) = explode(' ', $tRow);
+									list($trainer_first, $trainer_middle, $trainer_last) = explode(' ', $tRow);
 									}
 									if ($trainer_middle && ! $trainer_last) {
-										$trainer_last = $trainer_middle;
+									$trainer_last = $trainer_middle;
 										$trainer_middle = '';
 									}
 									#echo "trainer_first, trainer_middle, trainer_last = $trainer_first, $trainer_middle, $trainer_last";
-										
+	
 									//trim values in case
 									$trainer_first  = trim($trainer_first);
 									$trainer_middle = trim($trainer_middle);
@@ -1672,61 +1717,40 @@ class TrainingController extends ReportFilterHelpers {
 									// add them to training
 									if ($imode == 0) TrainingToTrainer::addTrainerToTraining($trainer_id, $training_id, 0); // todo days
 									elseif ($imode == 1) $personToTraining->addPersonToTraining($trainer_id, $training_id);
-									}
-									}
-									}
+								}
+								}
+								}
 								} catch (Exception $e) {
 								$errored = 1;
 								$errs[]  = nl2br($e->getMessage()).' '.t ( 'ERROR: The training data could not be saved.').space.($training_id ? t('Training').space."#$training_id".space.t('Warning: Some data imported.').space.t('Check Funding, PEPFAR, Topic, Refresher options and Participants and Trainers Data; or delete the training and try again.') : '') ;
 								}
 								if(! $row_id)
 									$errored = 1;
-					}
-					}
-					// done processing rows
-					$_POST['redirect'] = null;
-					$status = ValidationContainer::instance();
-					if( empty($errored) && empty($errs) )
-						$stat = t ('Your changes have been saved.');
-					else
-						$stat = t ('Error importing data. Some data may have been imported and some may not have.');
+								}
+								}
+								// done processing rows
+								$_POST['redirect'] = null;
+								$status = ValidationContainer::instance();
+										if( empty($errored) && empty($errs) )
+											$stat = t ('Your changes have been saved.');
+											else
+												$stat = t ('Error importing data. Some data may have been imported and some may not have.');
 	
 					foreach ($success as $errmsg)
-						$stat .= '<br>'.$errmsg;
-					foreach($errs as $errmsg)
-						$stat .= '<br>'.'Error: '.htmlspecialchars($errmsg, ENT_QUOTES);
+														$stat .= '<br>'.$errmsg;
+														foreach($errs as $errmsg)
+								$stat .= '<br>'.'Error: '.htmlspecialchars($errmsg, ENT_QUOTES);
 	
-		 		$status->setStatusMessage($stat);
-		 		$this->view->assign('status',$status);
-			}
-			// done with import
+								$status->setStatusMessage($stat);
+								$this->view->assign('status',$status);
 		}
-
-	/**
-	* TA:17: 09/21/2014
-	* A template for importing a training
-	*/
-	public function importTrainingTemplateAction() {
-		$sorted = array (
-			array (
-				'S/N' => '',
-				'Trainee First Name' => '',
-				'Trainee Last Name' => '',
-				'Trainee Middle Name' => '',
-				'Gender (Male/ Female)' => '',
-				'Cadre (e.g Nurse,Doctor,Midwife,CHO,CHEW)' => '',
-				'Health Facility Name' => '',
-					// ......
-			));
-		//done, output a csv
-		if( $this->getSanParam('outputType') == 'csv' )
-			$this->sendData ( $this->reportHeaders ( false, $sorted ) );
+			// done with import
 	}
-	
+
 	/**
 	 * A template for importing a training
 	 */
-	public function importTrainingTemplateActionOld() {
+	public function importTrainingTemplateAction() {
 		$sorted = array (
 				array (
 						'training_title_phrase' => '',
@@ -1777,8 +1801,16 @@ class TrainingController extends ReportFilterHelpers {
 				'trainers' => '',
 				'unknown participants' => ''));
 		//done, output a csv
-		if( $this->getSanParam('outputType') == 'csv' )
+		if( $this->getSanParam('outputType') == 'csv' ){
 			$this->sendData ( $this->reportHeaders ( false, $sorted ) );
+		}else if($this->getSanParam('outputType') == 'ImportTrainingTemplate.xlsx'){//TA:17: 10/14/2014
+ 			header('Content-Type: application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+ 			header('Content-Disposition: attachment; filename="ImportTrainingTemplate.xlsx"');
+ 			header("Content-Type: application/force-download");
+ 			readfile(Globals::$BASE_PATH . '/html/templates/ImportTrainingTemplate.xlsx');
+  			$this->view->layout()->disableLayout();
+         	$this->_helper->viewRenderer->setNoRender(true);
+		}
 	}
 
 	/**
