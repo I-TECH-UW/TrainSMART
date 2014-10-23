@@ -124,17 +124,15 @@ print ScriptContainer::$instance->renderJSHead();
 				<div id="allCharts" class="container">
 				<div id="toprow" class="container">
 					
-					<div id="highChart_div" 
-					style="min-width: 310px; height: 400px; max-width: 800px; max-height: 400px; margin: 0 auto" 
+					<div id="highChart_div"
+					style="min-width: 310px; height: 600px; max-width: 800px; max-height: 600px; margin: 0 auto float: left;" 
 					data-highcharts-chart="0"	/div>
 
 				<div class="clear"></div>
 				<div class="hrGrey"></div>
 				<div class="clear"></div>
 
-
 				<div id="bottomrow" class="container">
-
 
 					<div id="homecontent" class="container">
 						<div id="homecontent-mid" class="row rounded">
@@ -147,7 +145,7 @@ print ScriptContainer::$instance->renderJSHead();
 							<div id="homecontent-mid" class="row rounded">
 								<div id="homebanner" class="rounded">
 								<div class="sliderdiv">
-									<div id="chart11_div" style="width: 500px; height: 300px;"></div>
+									<div id="chart11_div" style="width: 800px; height: 300px;"></div>
 									</div>
 									<div class="main-search">
 										<div id="chart12_div" style="width: 500px; height: 300px;"></div>
@@ -189,7 +187,13 @@ print ScriptContainer::$instance->renderJSHead();
 		
 	var currentLevel;
 	currentLevel = <?php echo '\'' . $this->location_data[0][name] . '\''; ?>;
-	  
+
+<?php  //file_put_contents('c:\wamp\logs\php_debug.log', 'dash3 193 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	   //var_dump("location_data=", $this->location_data[0],"END");
+	   //var_dump("facility_data=",$this->facility_data[0],"END");
+	   //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
+?>
+		 
 	drawHighchart(currentLevel);
     //generateBarChart();
    
@@ -245,7 +249,7 @@ print ScriptContainer::$instance->renderJSHead();
 	function drawHighchart(currentLevel) {
 
 	    Highcharts.data({
-	        csv: document.getElementById('ttsv').innerHTML,
+	        csv: document.getElementById('chart_data').innerHTML,
 	        itemDelimiter: '\t',
 	        parsed: function (columns) {
 
@@ -269,14 +273,11 @@ print ScriptContainer::$instance->renderJSHead();
 	                if (i > 0) {
 
 	                    // Remove special edition notes
-	                    name = name.split(' -')[0];
+	                    name = name.split(' ');
 
 	                    // Split into brand and version
-	                    version = name.match(/([0-9]+[\.0-9x]*)/);
-	                    if (version) {
-	                        version = version[0];
-	                    }
-	                    brand = name.replace(version, '');
+	                    brand = name[0];
+	                    version = name[1];
 
 	                    // Create the main data
 	                    if (!brands[brand]) {
@@ -290,7 +291,7 @@ print ScriptContainer::$instance->renderJSHead();
 	                        if (!versions[brand]) {
 	                            versions[brand] = [];
 	                        }
-	                        versions[brand].push(['v' + version, columns[1][i]]);
+	                        versions[brand].push([version, columns[1][i]]);
 	                    }
 	                }
 	            });
@@ -310,7 +311,7 @@ print ScriptContainer::$instance->renderJSHead();
 	                });
 	            });
 
-	            // Create the chart
+	            // Create the chart, column or bar
 	            $(document.getElementById('highChart_div')).highcharts({
 	                chart: {
 	                    type: 'column'
@@ -334,14 +335,14 @@ print ScriptContainer::$instance->renderJSHead();
 	                        borderWidth: 0,
 	                        dataLabels: {
 	                            enabled: true,
-	                            format: '{point.y:.1f}%'
+	                            format: '{point.y:.0f}'
 	                        }
 	                    }
 	                },
 
 	                tooltip: {
 	                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-	                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+	                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.0f}</b> of total<br/>'
 	                },
 
 	                series: [{

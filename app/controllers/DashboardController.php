@@ -181,28 +181,42 @@ class DashboardController extends ReportFilterHelpers {
 		$this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
 		
 		$id = $this->getSanParam ( 'id' );
-	
+		
 		$whereClause = ($id ==  "") ? 'tier = 1' : 'parent_id = ' . $id ;
 	
-		$location_data = new DashboardCHAI();
-		$details = $location_data->fetchdetails('location', $whereClause);
-		$this->view->assign('location_data',$details);
+		$geo_data = new DashboardCHAI();
+		$details = $geo_data->fetchdetails('geo', $id, $whereClause);
+		$this->view->assign('geo_data',$details);
 		
-		if ($details[0][tier] == "") { // if tier = "" then facility
+		//file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 190>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		//var_dump('id=', $id);
+		//var_dump('count(details)=', count($details));
+		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		
+		
+		$whereClause = ($id ==  "") ? 'l3.tier = 1' : 'l2.parent_id = ' . $id ;
+		$groupClause = ($id == "") ? 'L2_id' : 'L1_id';
+		$orderClause = ($id == "") ? 'L3_location_name' : 'L2_location_name';
+		
+		$location_data = new DashboardCHAI();
+		$details = $location_data->fetchdetails('location', $id, $whereClause, $groupClause, $orderClause);
+		$this->view->assign('chart_data',$details);
+		
+
+		
+		if (count($details) == 0) { // count is 0 then facility
+		  $whereClause = 'l1.parent_id = ' . $id;
+		  $groupClause = 'F_id';
+		  $orderClause = 'L1_location_name';
 		  $facility_data = new DashboardCHAI();
-		  $whereClause = 'location_id = ' . $id;
-		  $details = $facility_data->fetchdetails('facility', $whereClause);
-		  $this->view->assign('facility_data',$details);
+		  $details = $facility_data->fetchdetails('facility', $id, $whereClause, $groupClause, $orderClause);
+		  $this->view->assign('chart_data',$details);
+		  $this->view->assign('geo_data',array()); // at bottom
 		}
 		
 		
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 199>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump('id=' . $id);
-		//var_dump('tier=' . $details[0]["col3"]);
-		//var_dump('details0=',  $details[0]);
-		//var_dump('details1=',  $details[1]);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-	
+		
+
 	}
 	
 	public function dash4Action() {
