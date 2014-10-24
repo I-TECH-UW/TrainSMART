@@ -61,6 +61,72 @@ class AdminController extends UserController
 		$sysTable = new System();
 		return $sysTable->putSetting($field, $value);
 	}
+	
+	/*
+	 * TA:17:11: 10/22/2014
+	*/
+	public function countryMonthlyEmailReportsAction(){
+		
+		require_once('models/table/System.php');
+		$sysTable = new System();
+		
+		// _system settings
+		$checkboxFields = array( 
+				'display_email_report_1'           => 'display_email_report_1',
+				'display_email_report_2'      => 'display_email_report_2',
+				'display_email_report_3'     => 'display_email_report_3',
+		);
+		
+		// For "Labels"
+		require_once('models/table/Translation.php');
+		$labelNames = array( // input name => key_phrase
+				'label_email_report_1'          => 'Label Email Report Level 1',
+				'label_email_report_2'          => 'Label Email Report Level 2',
+				'label_email_report_3'          => 'Label Email Report Level 3',
+				'email_report_federal'          => 'Emails Report Level 1',
+				'email_report_state'          => 'Emails Report Level 2',
+				'email_report_lga'          => 'Emails Report Level 3',
+		);
+		
+		if($this->getRequest()->isPost()) { // Update db
+			// update translation labels
+			$tranTable = new Translation();
+			foreach($labelNames as $input_key => $db_key) {
+			
+				if ( $this->_getParam($input_key) ) {
+					try {
+						$tranTable->update(
+								array('phrase' => $this->_getParam($input_key)),
+								"key_phrase = '$db_key'"
+						);
+						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
+					} catch(Zend_Exception $e) {
+						error_log($e);
+					}
+				}
+			}
+			
+		// update _system (checkboxes)
+			foreach($checkboxFields as $input_key => $db_field) {
+				$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
+				$updateData[$db_field] = $value;
+				$this->view->assign($input_key, $value);
+				$sysTable->update($updateData, '');
+			}
+		}else{//view
+			// labels
+			$t = Translation::getAll();
+			foreach($labelNames as $input_key => $db_key) {
+				$this->viewAssignEscaped($input_key, $t[$db_key]);
+			}
+				
+		// checkboxes
+			$sysRows = $sysTable->fetchRow($sysTable->select()->limit(1));
+			foreach($checkboxFields as $input_key => $field_key) {
+				$this->view->assign($input_key, $sysRows->$field_key);
+			}
+		}
+	}
 
 	public function countrySettingsAction()
 	{
@@ -266,30 +332,6 @@ class AdminController extends UserController
 		}
 		// assign form data
 		$this->view->assign('sites', $sitesArray ? $sitesArray->toArray() : array());
-	}
-	
-	/*
-	 * TA:17:11: 10/22/2014
-	 */
-	public function countryMonthlyEmailReportsAction()
-	{
-		/*$db = $this->dbfunc();
-		$sites = new ITechTable(array('name' => 'datashare_sites'));
-		$sitesArray = $sites->fetchAll();
-	
-		// form post - update data
-		if ($this->getRequest()->isPost()) {
-			// determine site
-			$parts = explode('.', $_SERVER['SERVER_NAME']); // same style as globals.php
-			$this_site = $GLOBALS->$COUNTRY ? $GLOBALS->$COUNTRY : $parts[0];
-				
-			$newPass = $this->getSanParam('site_pass');
-			if ($newPass and $this->hasACL('edit_country_options')) { // new password for site - the theory behind pw is sites will only be able to add your site as a child or sibling site if they know your password
-				$sites->update(array('site_password' => $newPass), array('db_name' => $this_site)); // $data, $where
-			}
-		}
-		// assign form data
-		$this->view->assign('sites', $sitesArray ? $sitesArray->toArray() : array());*/
 	}
 
 	/*
