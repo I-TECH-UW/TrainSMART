@@ -1330,7 +1330,7 @@ echo $sql . "<br>";
 		$criteria ['showCustom4'] =   ($this->getSanParam ( 'showCustom4' ));
 		$criteria ['showCreatedBy'] = ($this->getSanParam ( 'showCreatedBy' ));
 		$criteria['showCreationDate']=($this->getSanParam ( 'showCreationDate' ));
-		$criteria ['showStartDate'] =   ($this->getSanParam ( 'showStartDate')); //TA;17: 9/3/2014
+		$criteria ['showStartDate'] =   ($this->getSanParam ( 'showStartDate')); //TA:17: 9/3/2014
 		$criteria ['showEndDate'] =   ($this->getSanParam ( 'showEndDate'));
 		$criteria ['showRespPrim'] =  ($this->getSanParam ( 'showRespPrim' ));
 		$criteria ['showRespSecond'] =($this->getSanParam ( 'showRespSecond' ));
@@ -3457,10 +3457,81 @@ echo $sql . "<br>";
 		$this->viewAssignEscaped ( 'facilities', $facilitiesArray );
 
 	}
+	
+
+	/*
+	 * TA:17:10: 10/21/2014
+	 */
+	public function commodityReport() {
+		
+		if($this->getSanParam ( 'go' )){
+			$criteria = array ();
+ 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+ 			$facility_id = $this->getSanParam('id');
+ 			$sql = "select id, name, DATE_FORMAT(date, '%m/%y') as date, consumption, stock_out from commodity where facility_id=" . $facility_id;
+ 			$commodity_name_option_id = $this->getSanParam('commodity_name_option_id');
+ 			if($commodity_name_option_id){
+ 				$sql = $sql . " and name in (select commodity_name from commodity_name_option where id=" . $commodity_name_option_id . ")";
+ 			}
+ 			$dateYYstart = $this->getSanParam ( 'dateYYstart' );
+ 			$dateMMstart = $this->getSanParam ( 'dateMMstart' );
+ 			if($dateYYstart){
+ 				if(!$dateMMstart)
+ 					$dateMMstart = "01";
+ 				$sql = $sql . " and date > '" . $dateYYstart . "-" . $dateMMstart . "-01'";
+ 			}
+ 			$dateYYend = $this->getSanParam ( 'dateYYend' );
+ 			$dateMMend = $this->getSanParam ( 'dateMMend' );
+ 			if($dateYYend){
+ 				if(!$dateMMend)
+ 					$dateMMend = "01";
+ 				$sql = $sql . " and date < '" . $dateYYend . "-" . $dateMMend . "-01'";
+ 			}
+            $rowArray = $db->fetchAll ( $sql );
+      
+            $criteria ['go'] = $this->getSanParam ( 'go' );
+            $this->view->assign ( 'count', count ( $rowArray ) );
+            $criteria['commodity_name_option_id'] = $this->getSanParam('commodity_name_option_id');
+            $this->view->assign ( 'criteria', $criteria );
+          
+            $sql = "SELECT facility_name, location_id from facility where id=" .$facility_id; 
+            $facility_name = $db->fetchAll ( $sql );
+			$updatedRegions = Location::getCityandParentNames($facility_name[0]['location_id'], Location::getAll(), $this->setting('num_location_tiers'));
+            
+			for($i=0; $i<count($rowArray); $i++){
+				$rowArray[$i]['province_name'] = $updatedRegions['province_name'];
+				$rowArray[$i]['district_name'] = $updatedRegions['district_name'];
+				$rowArray[$i]['facility_name'] = $facility_name[0]['facility_name'];
+            }
+            $this->viewAssignEscaped ( 'results', $rowArray );
+          
+            $this->view->assign ( 'commodity_name_id', $commodity_name_option_id);
+            $this->view->assign ( 'dateMMstart', $dateMMstart);
+            $this->view->assign ( 'dateYYstart', $dateYYstart);
+            $this->view->assign ( 'dateMMend', $dateMMend);
+            $this->view->assign ( 'dateYYend', $dateYYend);
+            
+            if ($this->_getParam ( 'outputType' )){
+            	$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
+            }
+            
+		}
+		
+		$commodity_names = OptionList::suggestionList ( 'commodity_name_option', 'commodity_name', false, false, false );
+		$this->viewAssignEscaped ( 'commodity_names', $commodity_names );
+	}
 
 	public function participantsByTrainingAction() {
 		$this->view->assign ( 'mode', 'count' );
 		return $this->peopleReport ();
+	}
+	
+	/*
+	 * TA:17:10: 10/21/2014
+	 */
+	public function commodityByFacilityAction() {
+		$this->view->assign ( 'mode', 'count' );
+		return $this->commodityReport ();
 	}
 
 	public function participantsScoresAction() {

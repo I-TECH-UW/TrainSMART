@@ -267,6 +267,30 @@ class AdminController extends UserController
 		// assign form data
 		$this->view->assign('sites', $sitesArray ? $sitesArray->toArray() : array());
 	}
+	
+	/*
+	 * TA:17:11: 10/22/2014
+	 */
+	public function countryMonthlyEmailReportsAction()
+	{
+		/*$db = $this->dbfunc();
+		$sites = new ITechTable(array('name' => 'datashare_sites'));
+		$sitesArray = $sites->fetchAll();
+	
+		// form post - update data
+		if ($this->getRequest()->isPost()) {
+			// determine site
+			$parts = explode('.', $_SERVER['SERVER_NAME']); // same style as globals.php
+			$this_site = $GLOBALS->$COUNTRY ? $GLOBALS->$COUNTRY : $parts[0];
+				
+			$newPass = $this->getSanParam('site_pass');
+			if ($newPass and $this->hasACL('edit_country_options')) { // new password for site - the theory behind pw is sites will only be able to add your site as a child or sibling site if they know your password
+				$sites->update(array('site_password' => $newPass), array('db_name' => $this_site)); // $data, $where
+			}
+		}
+		// assign form data
+		$this->view->assign('sites', $sitesArray ? $sitesArray->toArray() : array());*/
+	}
 
 	/*
 	public function countryLabelsAction()

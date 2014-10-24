@@ -225,7 +225,7 @@ print ScriptContainer::$instance->renderJSHead();
    &nbsp;&nbsp;&nbsp;&nbsp;
         <input type="button" name="Insert" value="<?php tp("Insert");?>" class="insert" id="commodityInsertButton" onclick="addCommodity(this);return false;">
        &nbsp;&nbsp;&nbsp;
-        <a href="javascript:submitThenRedirect('<?php echo $this->base_url;?>/person/add/trainingredirect/<?php echo $this->row['id']; ?>');"><?php tp('Commodity Report');?></a>
+        <a href='<?php echo $this->base_url;?>/reports/commodityByFacility/id/<?php echo $this->facility['id'];?>'><?php tp('Commodity Report');?></a>
      
 
   </div> <!-- table ends -->
