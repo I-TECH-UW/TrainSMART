@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php if(isset($pageTitle)) echo $this->pageTitle; ?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body  class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php require_once('views/scripts/header.phtml'); ?></div>
+  <div id="content" class="adminDiv">
+    
+    <form method="post" name="adminForm" id="adminForm" action="" enctype="multipart/form-data">
+    
+    <div id="navAdmin"><?php require_once('views/scripts/nav-admin.phtml');?></div>
+    
+    <div id="contentAdmin">
+    <h1>Monthly Email Reports</h1>
+    <br/>
+    
+    <table>
+    <tr><td><input type="checkbox" name="check_people_active" <?php if($this->check_people_active) echo 'checked'; ?> id="check_people_active"></td>
+    <
+    </tr>
+    </table>
+ 
+</div>
+
+</form>
+
+    
+    <div class="clear"></div>
+      
+  </div>
+<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+</body>
+</html>
