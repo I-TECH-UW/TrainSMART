@@ -1153,6 +1153,42 @@ table {
 
 }
 
+.dbbutton {
+
+	display: inline-block; 
+
+   border-top: 1px solid #c2f598;
+   background: #93d465;
+   background: -webkit-gradient(linear, left top, left bottom, from(#699c3e), to(#93d465));
+   background: -webkit-linear-gradient(top, #699c3e, #93d465);
+   background: -moz-linear-gradient(top, #699c3e, #93d465);
+   background: -ms-linear-gradient(top, #699c3e, #93d465);
+   background: -o-linear-gradient(top, #699c3e, #93d465);
+   padding: 10px 20px;
+   -webkit-border-radius: 10px;
+   -moz-border-radius: 10px;
+   border-radius: 10px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 15px;
+   /* font-family: Helvetica, Arial, Sans-Serif; */
+   text-decoration: none;
+   vertical-align: middle;
+   }
+.dbbutton:hover {
+   border-top-color: #416e26;
+   background: #416e26;
+   color: #ccc;
+   }
+.dbbutton:active {
+   border-top-color: #385c1b;
+   background: #1b435e;
+   }
+
+
 .nav.tsbutton, .nav.tsbutton:visited { 
 
 	background-color: #91bd09; 
