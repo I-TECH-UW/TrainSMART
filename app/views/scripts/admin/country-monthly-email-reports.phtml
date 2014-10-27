@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php if(isset($pageTitle)) echo $this->pageTitle; ?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body  class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php require_once('views/scripts/header.phtml'); ?></div>
+  <div id="content" class="adminDiv">
+    
+    <form method="post" name="adminForm" id="adminForm" action="" enctype="multipart/form-data">
+    
+    <div id="navAdmin"><?php require_once('views/scripts/nav-admin.phtml');?></div>
+    
+    <div id="contentAdmin">
+    <h1>Monthly Email Reports</h1>
+    <br/>
+    
+    <table>
+    <!-- Federal level users  -->
+    <tr><td><input type="checkbox" name="display_email_report_1" <?php if($this->display_email_report_1) echo 'checked'; ?> id="display_email_report_1">
+    Turn on Level 1 of Reports</td>
+    <td>Label <input type="text" name="label_email_report_1" value="<?php echo $this->label_email_report_1; ?>"></td>
+    </tr>
+    <tr><td colspan=2 style='padding-top:5px;'>Federal Level Users:<br></td></tr>
+    <tr><td colspan=2 style='padding-left:30px; padding-top:5px;'><i style='font-size:11px;'>Enter Emails of Federal Level Recipients, separated by a comma</i><br>
+    <textarea rows="5" cols="60" name='email_report_federal'><?php echo $this->email_report_federal; ?></textarea></td></tr>
+    <tr><td style='padding-top:30px;'></td></tr>
+    
+    <!-- State level users  -->
+    <tr><td><input type="checkbox" name="display_email_report_2" <?php if($this->display_email_report_2) echo 'checked'; ?> id="display_email_report_2">
+    Turn on Level 2 of Reports</td>
+    <td>Label <input type="text" name="label_email_report_2" value="<?php echo $this->label_email_report_2; ?>"></td>
+    </tr>
+    <tr><td colspan=2 style='padding-top:5px;'>State Level Users:<br></td></tr>
+    <tr><td colspan=2 style='padding-left:30px; padding-top:5px;'><i style='font-size:11px;'>Enter Emails of State Level Recipients, separated by a comma</i><br>
+    <textarea rows="5" cols="60" name='email_report_state'><?php echo $this->email_report_state; ?></textarea></td></tr>
+    <tr><td style='padding-top:20px;'></td></tr>
+    
+    <!-- LGA level users  -->
+    <tr><td><input type="checkbox" name="display_email_report_3" <?php if($this->display_email_report_3) echo 'checked'; ?> id="display_email_report_3">
+    Turn on Level 3 of Reports</td>
+    <td>Label <input type="text" name="label_email_report_3" value="<?php echo $this->label_email_report_3; ?>"></td>
+    </tr>
+    <tr><td colspan=2 style='padding-top:5px;'>LGA Level Users:<br></td></tr>
+    <tr><td colspan=2 style='padding-left:30px; padding-top:5px;'><i style='font-size:11px;'>Enter Emails of LGA Level Recipients, separated by a comma</i><br>
+    <textarea rows="5" cols="60" name='email_report_lga'><?php echo $this->email_report_lga; ?></textarea></td></tr>
+    <tr><td style='padding-top:20px;'></td></tr>
+    
+    </table>
+    
+    <input type="hidden" name="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>">
+													<input type="submit" value="Save & Continue" class="submitArrow">
+													<input type="submit" value="Save" name="saveonly" class="submitNoArrow" style="margin-right:1em;">
+ 
+</div>
+
+</form>
+
+    
+    <div class="clear"></div>
+      
+  </div>
+<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+</body>
+</html>

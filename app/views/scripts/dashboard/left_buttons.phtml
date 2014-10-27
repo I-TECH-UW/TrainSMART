@@ -1,29 +1,20 @@
-
+<?php  //file_put_contents('c:\wamp\logs\php_debug.log', 'left_buttons  >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	   //var_dump('$id=', $this->geo_data[0] ,'END'); 
+	   //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
+?>
+<script>
+function goBack() { window.history.back() }
+</script>
+               
                 <a	
-                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/partner/search'; ?>"
-					class="tsbutton nav large"><?php tp('Partners'); ?> &raquo;</a>
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash3'; ?>"
+					class="dbbutton"><?php tp('Nigeria'); ?></a>
 				<div class="hrNav"></div>
-				<a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash0'; ?>"
-					class="tsbutton nav large"><?php tp('Dash 0'); ?> &raquo;</a>
-				<div class="hrNav"></div>
-				<a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash1'; ?>"
-					class="tsbutton nav large"><?php tp('Dash 1'); ?> &raquo;</a>
-				<div class="hrNav"></div>
-				<a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash2'; ?>"
-					class="tsbutton nav large"><?php tp('Dash 2'); ?> &raquo;</a>
-				<div class="hrNav"></div>
-				<a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash3'; ?>"
-					class="tsbutton nav large"><?php tp('Dash 3'); ?> &raquo;</a>
-				<div class="hrNav"></div>
-				<a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash4'; ?>"
-					class="tsbutton nav large"><?php tp('Dash 4'); ?> &raquo;</a>
+				<a	
+                    onclick="goBack()"
+					class="dbbutton"><?php tp('  Back  '); ?></a>
 				<div class="hrNav"></div>
 				<a
 					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/reports'; ?>"
-					class="tsbutton nav large"><?php tp('Reports'); ?> &raquo;</a>
+					class="dbbutton"><?php tp('Reports'); ?></a>
 				<div class="hrNav"></div>
