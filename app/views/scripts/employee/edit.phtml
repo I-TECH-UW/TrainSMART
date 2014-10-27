@@ -93,7 +93,7 @@
 						
 						if($this->setting['display_employee_partner'])	
 						echo labelAndField($this, t('Partner'),     $this->partners, 'partner_id');
-						
+						/*
 						foreach ($this->employee['funder'] as $i => $row) 
 						{	
 							
@@ -128,7 +128,9 @@
         					        					 
 						}
 						//echo '<button id="funder_add">'.t('Add a new').space.t('Funder').'</button><br />';
-							
+						
+						*/
+						
 						
 						//if($this->setting['display_employee_sub_partner'])
 						//echo labelAndField($this, t('Sub Partner'), $this->subpartners, 'subpartner_id');
@@ -157,10 +159,23 @@
 						echo labelAndField($this, t('Staff Category'), $this->categories);
 						if($this->setting['display_employee_registration_number'])
 						echo labelAndField($this, t('Registration Number'),    'text', 'registration_number',    $this->employee['registration_number']);
-						if($this->setting['display_employee_full_time'])
-						echo labelAndField($this, t('Full Time'),      $this->fulltime);
-						echo labelAndField($this, t('Funded hours per week'),  'text', 'funded_hours_per_week',  $this->employee['funded_hours_per_week']);
-												
+						
+						if($this->setting['display_employee_contract_end_date'])
+						    echo labelAndField($this, t('Contract End Date'),      'date', 'agreement_end_date', $this->employee['agreement_end_date']);
+						if($this->setting['display_employee_intended_transition'])
+						    echo labelAndField($this, t('Intended Transition'), $this->transitions, 'employee_transition_option_id');
+						echo labelAndField($this, t('Other Transition'),  'text', 'transition_other',  $this->employee['transition_other']); // hidden field
+						if($this->setting['display_employee_transition_confirmed'])
+						    echo confirmDropdown($this, t('Transition Confirmed'), 'transition_confirmed', $this->employee['transition_confirmed']);
+						echo labelAndField($this, t('Intended Transition Date'), 'date','transition_date', $this->employee['transition_date']);
+						if($this->setting['display_employee_complete_transition'])
+						    echo labelAndField($this, t('Actual Transition Outcome'), $this->transitions_complete, 'employee_transition_complete_option_id');
+						echo labelAndField($this, t('Other Transition'), 'text', 'transition_complete_other', $this->employee['transition_complete_other']); // hidden field
+						
+						if($this->setting['display_employee_actual_transition_date'])
+						    echo labelAndField($this, t('Actual Transition Date'), 'date','transition_complete_date', $this->employee['transition_complete_date']);
+						
+						
 						// fields for only community health workers and community based workers
 						echo '<div class="clear"></div><br /><br />';
 
@@ -186,7 +201,10 @@
 							if ($this->translation['Employee Local Currency'] && $this->translation['Employee Local Currency'] != 'Employee Local Currency')
 								echo "<br>".t('Currency:').space.$this->translation['Employee Local Currency'].'<br clear="all"/>'; #TODO rework
 						}
-
+						if($this->setting['display_employee_full_time'])
+						    echo labelAndField($this, t('Full Time'),      $this->fulltime);
+						echo labelAndField($this, t('Funded hours per week'),  'text', 'funded_hours_per_week',  $this->employee['funded_hours_per_week']);
+						
 						if($this->setting['display_employee_salary'])
 						echo labelAndField($this, t('Salary'),   'text', 'salary',   $this->employee['salary']);
 						if($this->setting['display_employee_benefits'])
@@ -202,20 +220,6 @@
 
 						echo '<div class="clear"></div><br /><br />';
 
-						if($this->setting['display_employee_contract_end_date'])
-						echo labelAndField($this, t('Contract End Date'),      'date', 'agreement_end_date', $this->employee['agreement_end_date']);
-						if($this->setting['display_employee_intended_transition'])
-						echo labelAndField($this, t('Intended Transition'), $this->transitions, 'employee_transition_option_id');
-						echo labelAndField($this, t('Other Transition'),  'text', 'transition_other',  $this->employee['transition_other']); // hidden field
-						if($this->setting['display_employee_transition_confirmed'])
-						echo confirmDropdown($this, t('Transition Confirmed'), 'transition_confirmed', $this->employee['transition_confirmed']);
-						echo labelAndField($this, t('Intended Transition Date'), 'date','transition_date', $this->employee['transition_date']);
-						if($this->setting['display_employee_complete_transition'])
-						echo labelAndField($this, t('Actual Transition Outcome'), $this->transitions_complete, 'employee_transition_complete_option_id');
-						echo labelAndField($this, t('Other Transition'), 'text', 'transition_complete_other', $this->employee['transition_complete_other']); // hidden field
-
-						if($this->setting['display_employee_actual_transition_date'])
-						echo labelAndField($this, t('Actual Transition Date'), 'date','transition_complete_date', $this->employee['transition_complete_date']);
 						#echo labelAndField($this, t('Employee Comments'), 'textarea', 'comments',       $this->employee['comments']);
 
 						/////////////////////////// data table - course history - and UI javascript ///////////////////////////
@@ -387,7 +391,8 @@
 
 					<div class="clear"></div>
 					<input type="hidden" name="limit" id="limit" value="1" />
-					<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Save');?>" />
+                    <input type="submit" name="save" value="<?php tp('Save & Continue'); ?>" class="submitArrow" />
+					<input type="submit" class="submitNoArrow" name="saveonly" value="<?php tp('Save');?>" />
 			</form>
 			<div class="clear"></div>
 		</div>

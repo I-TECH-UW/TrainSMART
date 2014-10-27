@@ -465,7 +465,14 @@ class EmployeeController extends ReportFilterHelpers {
     					}
     					
     					$status->setStatusMessage( t('The person was saved.') );
-    					$this->_redirect("employee/edit/id/$id");
+    					if (array_key_exists('save', $params))
+    					{
+    					   $this->_redirect("employee/add_funder_to_employee/id/$id");
+    					}
+    					else 
+    					{
+    					    $this->_redirect("employee/edit/id/$id");
+    					}
     				}
     			} 
     		}
@@ -494,7 +501,6 @@ class EmployeeController extends ReportFilterHelpers {
             	FROM employee_to_partner_to_subpartner_to_funder_to_mechanism WHERE is_deleted = false and employee_id = $id";
             	$params['funder'] = $db->fetchAll($sql);
             	
- 
             	
             	$helper = new Helper();
             	
