@@ -1,12 +1,15 @@
-/** edittable.js / Created by Fuse IQ for ITech / jonah.ellison@fuseiq.com
- *
+/* edittable.js / Created by Fuse IQ for ITech / jonah.ellison@fuseiq.com */
+
+/** 
  * Purpose: Creates an YUI DataTable that allows for inline editing and dynamically adding/deleting rows
  *
  * Instructions: Must have a div container with an id of labelAdd + "Table", e.g, <div id="personTable"></div>
  *
- * @tableData: JSON DataSource instance (YAHOO.util.DataSource)
- * @columnDefs: Array of object literal Column definitions
  * @labelAdd: Text of add link (e.g., "Add person").  idContainer generated using @labelAdd and appending "Table"
+ * @tableData: JSON DataSource instance (YAHOO.util.DataSource)
+ * @columnDefs: Array of column names, keyed the same as the datasource columns
+ * @noDelete: list of ids that are not allowed deletion
+ * @noEdit: is this table read-only?
  */
 
 function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
