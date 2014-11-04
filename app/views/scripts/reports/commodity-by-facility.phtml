@@ -59,7 +59,7 @@ if ( $this->mode == 'count' )
 
 	<div class="clear"></div>
 	<input type="hidden" name="limit" id="limit" value="1" />
-	<input type="submit" class="submitNoArrow" name="clean" value="Clean" onclick='cleanForm();'/>
+	<input type="submit" class="submitNoArrow" name="clear" value="Clear" onclick='clearForm();'/>
    	<input type="submit" class="submitNoArrow" name="go" value="Preview" />
    </fieldset>
    </form>
@@ -80,7 +80,7 @@ foreach($this->results as $row) {
 		echo ',';
 	$isFirstRow = false;
 	echo '[';
-	echo '"' . $row['name'].'"';
+	echo '"' . $row['commodity_name'].'"';
 	echo ',"'.$row['province_name'].'"';
 	echo ',"'.$row['district_name'] .'"';	
 	echo ',"'. $row['facility_name'] .'"';
@@ -111,7 +111,7 @@ var commodityColumnDefs = [
 
 	makeDataTable("commodity", null, commodityData, commodityColumnDefs);
 
-	function cleanForm(){
+	function clearForm(){
 		$( "#commodity_name_option_id" ).val("");
 		$( "#dateMMstart" ).val("");
 		$( "#dateYYstart" ).val("");
@@ -123,7 +123,10 @@ var commodityColumnDefs = [
 [<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a>
 <?php } ?>
 <?php } ?>
+<!-- TA:17:12: 10/04/2014  -->
+<br><a href='<?php echo Settings::$COUNTRY_BASE_URL?>/facility/edit/id/<?php echo $this->facility_id;?>'>Go back to Facility Edit Page</a>
   </div>
+  
   <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
 
 

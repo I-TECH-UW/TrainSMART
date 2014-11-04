@@ -386,9 +386,7 @@ class FacilityController extends ReportFilterHelpers {
 		$this->view->assign ( 'totalCommodities',  sizeof($rows));
 		
 		$this->view->assign('commodity_names',$facility->ListCommodityNames());
-		//TA:17: 09/12/2013
-		
-		
+		//TA:17: 09/12/2013		
 		
 	}
 	

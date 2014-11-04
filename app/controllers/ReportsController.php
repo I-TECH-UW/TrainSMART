@@ -3468,10 +3468,13 @@ echo $sql . "<br>";
 			$criteria = array ();
  			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
  			$facility_id = $this->getSanParam('id');
- 			$sql = "select id, name, DATE_FORMAT(date, '%m/%y') as date, consumption, stock_out from commodity where facility_id=" . $facility_id;
+ 			$sql = "SELECT commodity.id, commodity_name_option.commodity_name as commodity_name, DATE_FORMAT(commodity.date, '%m/%y') as date,
+			commodity.consumption, commodity.stock_out from commodity 
+			INNER JOIN commodity_name_option
+				ON commodity_name_option.id=commodity.name where commodity.facility_id=" . $facility_id;
  			$commodity_name_option_id = $this->getSanParam('commodity_name_option_id');
  			if($commodity_name_option_id){
- 				$sql = $sql . " and name in (select commodity_name from commodity_name_option where id=" . $commodity_name_option_id . ")";
+ 				$sql = $sql . " and name =" . $commodity_name_option_id;
  			}
  			$dateYYstart = $this->getSanParam ( 'dateYYstart' );
  			$dateMMstart = $this->getSanParam ( 'dateMMstart' );
@@ -3487,6 +3490,7 @@ echo $sql . "<br>";
  					$dateMMend = "01";
  				$sql = $sql . " and date < '" . $dateYYend . "-" . $dateMMend . "-01'";
  			}
+ 			
             $rowArray = $db->fetchAll ( $sql );
       
             $criteria ['go'] = $this->getSanParam ( 'go' );
@@ -3519,6 +3523,7 @@ echo $sql . "<br>";
 		
 		$commodity_names = OptionList::suggestionList ( 'commodity_name_option', 'commodity_name', false, false, false );
 		$this->viewAssignEscaped ( 'commodity_names', $commodity_names );
+		$this->viewAssignEscaped ( 'facility_id', $facility_id );
 	}
 
 	public function participantsByTrainingAction() {

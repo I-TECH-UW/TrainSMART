@@ -184,7 +184,8 @@ print ScriptContainer::$instance->renderJSHead();
         	    }
 
             var jsonAdd = { }
-            jsonAdd.name = oCName.value;
+            jsonAdd.id = oCName.value;
+            jsonAdd.name = $('#name option:selected').text();
             var month = oCDateMM.value;
             if(month.length == 1){month = "0" + month;}
             jsonAdd.date = month + "/" + oCDateYY.value;
@@ -210,7 +211,7 @@ print ScriptContainer::$instance->renderJSHead();
   <?php echo "<select id='name' name='name'>";
 								echo "<option value='0'>" . t('Select...') . "</option>";
 								foreach ($this->commodity_names as $name){
-									echo "<option value='" . $name['commodity_name'] . "'>" . $name['commodity_name'] . "</option>";
+									echo "<option value='" . $name['id'] . "'>" . $name['commodity_name'] . "</option>";
 								}
 								echo "</select>";
   ?>

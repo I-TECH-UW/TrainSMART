@@ -131,7 +131,7 @@ class Facility extends ITechTable {
  				$row->facility_id                = $id;
  				$row->consumption =  $com['consumption'];
  				$row->stock_out    = ( $com['stock_out'] == null ||  $com['stock_out'] == '' )? "N" : "Y";
- 				$row->name  =  $com['name']; 
+ 				$row->name  =  $com['id']; 
 
  				$convert_date = explode("/", $com['date']);
  				if(count($convert_date) == 2){

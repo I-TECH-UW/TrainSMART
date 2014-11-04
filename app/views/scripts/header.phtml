@@ -52,7 +52,7 @@ if ( $this->isLoggedIn() ) {
 			} else if ($this->hasACL('view_people')) {
 				$navMain['facility']['search']  = t('View facility');
 			}
-			if (   $this->hasACL('edit_people') ) {
+			if (   $this->hasACL('edit_people') && $this->hasACL('add_new_facility')) { //TA:17:12: 10/04/2014
 				$navMain['facility']['add']  = t('Add Facility');
 			}
 
