@@ -156,7 +156,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
     } else { // view
     
       $selectFields = array_keys($this->fields);
-    
+      
       if($this->allowDefault) {
         $selectFields[] = 'is_default';
       }
@@ -233,7 +233,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
         <input type="hidden" name="table_dependent" value="'.implode(',',$this->dependencies).'">
         <input type="submit" name="mergesubmit" value="Merge Selected" class="submitArrow">';
         $html .= $mergehtml;  
-      }     
+      }  
       
       if($html) {
         $html .= '<div class="clear"></div><br>';

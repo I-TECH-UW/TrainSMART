@@ -61,6 +61,72 @@ class AdminController extends UserController
 		$sysTable = new System();
 		return $sysTable->putSetting($field, $value);
 	}
+	
+	/*
+	 * TA:17:11: 10/22/2014
+	*/
+	public function countryMonthlyEmailReportsAction(){
+		
+		require_once('models/table/System.php');
+		$sysTable = new System();
+		
+		// _system settings
+		$checkboxFields = array( 
+				'display_email_report_1'           => 'display_email_report_1',
+				'display_email_report_2'      => 'display_email_report_2',
+				'display_email_report_3'     => 'display_email_report_3',
+		);
+		
+		// For "Labels"
+		require_once('models/table/Translation.php');
+		$labelNames = array( // input name => key_phrase
+				'label_email_report_1'          => 'Label Email Report Level 1',
+				'label_email_report_2'          => 'Label Email Report Level 2',
+				'label_email_report_3'          => 'Label Email Report Level 3',
+				'email_report_federal'          => 'Emails Report Level 1',
+				'email_report_state'          => 'Emails Report Level 2',
+				'email_report_lga'          => 'Emails Report Level 3',
+		);
+		
+		if($this->getRequest()->isPost()) { // Update db
+			// update translation labels
+			$tranTable = new Translation();
+			foreach($labelNames as $input_key => $db_key) {
+			
+				if ( $this->_getParam($input_key) ) {
+					try {
+						$tranTable->update(
+								array('phrase' => $this->_getParam($input_key)),
+								"key_phrase = '$db_key'"
+						);
+						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
+					} catch(Zend_Exception $e) {
+						error_log($e);
+					}
+				}
+			}
+			
+		// update _system (checkboxes)
+			foreach($checkboxFields as $input_key => $db_field) {
+				$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
+				$updateData[$db_field] = $value;
+				$this->view->assign($input_key, $value);
+				$sysTable->update($updateData, '');
+			}
+		}else{//view
+			// labels
+			$t = Translation::getAll();
+			foreach($labelNames as $input_key => $db_key) {
+				$this->viewAssignEscaped($input_key, $t[$db_key]);
+			}
+				
+		// checkboxes
+			$sysRows = $sysTable->fetchRow($sysTable->select()->limit(1));
+			foreach($checkboxFields as $input_key => $field_key) {
+				$this->view->assign($input_key, $sysRows->$field_key);
+			}
+		}
+	}
 
 	public function countrySettingsAction()
 	{
@@ -1914,14 +1980,43 @@ class AdminController extends UserController
 		$editTable->execute();
 	}
 	
-	//TA:17: added 9/19/2014
-	public function commoditynameAction()
+	//TA:17:12: added 9/19/2014
+	public function commoditynameAction(){
+		require_once('views/helpers/EditTableHelper.php');
+		
+		$editTable = new EditTableController($this);
+		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+		//id, commodity_name, type_id, commodity_type
+		$editTable->fields  = array('commodity_name' => 'Commodity Name', 'commodity_type_id' => 'Commodity Type ID');
+		$elements = array();
+		$noDelete = array();
+		$rows = $db->fetchAll ("SELECT id, commodity_type FROM commodity_type_option order by commodity_type");
+		$editTable->table   = 'commodity_name_option';
+		foreach ($rows as $i => $row){ // lets add some data to the resultset to show in the EditTable
+			array_push($elements, array('text' => $row['commodity_type'], 'value' => $row['id']));
+			$noDelete[] = $row['id'];
+		}
+		$elements = json_encode($elements); // yui data table will enjoy spending time with a json encoded array
+		$editTable->customColDef = array('commodity_type_id' => "editor:'dropdown', editorOptions: {dropdownOptions: $elements }");
+		$editTable->label   = 'New Commodity Name';
+		$editTable->dependencies = array('name' => 'commodity');
+		$editTable->execute();
+
+		$fieldDefs = array('id' => t('Commodity Type ID'), 'commodity_type' => t('Commodity Type'));
+		$html = EditTableHelper::generateHtml("Commodity", $rows, $fieldDefs, array(), $noDelete, true); 
+		$this->view->assign('extraHtml2', "<br><br><br>" . $html . "<br><a href='./commoditytype/'>Edit Commodity Types</a>");
+
+	}
+		
+		
+	//TA:17:12: added 10/03/2014
+	public function commoditytypeAction()
 	{
 		$editTable = new EditTableController($this);
-		$editTable->table   = 'commodity_name_option';
-		$editTable->fields  = array('commodity_name' => 'Commodity Name');
-		$editTable->label   = 'Commodity Name';
-		$editTable->dependencies = array('name' => 'commodity');
+		$editTable->table   = 'commodity_type_option';
+		$editTable->fields  = array('commodity_type' => 'Commodity Type');
+		$editTable->label   = 'Commodity Type';
+		$editTable->dependencies = array('commodity_type_id' => 'commodity_name_option');
 		$editTable->execute();
 	}
 
@@ -3672,6 +3767,7 @@ class AdminController extends UserController
 			'tutorspecialty'                => 'acl_editor_tutor_specialty', //TA: added 7/22/2014
 			'tutorcontract'                => 'acl_editor_tutor_contract', //TA: added 7/24/2014
 			'commodityname'                => 'acl_editor_commodityname', //TA:17: added 9/19/2014
+			'commoditytype'                => 'acl_editor_commoditytype', //TA:17:12: added 10/03/2014
 			);
 
 

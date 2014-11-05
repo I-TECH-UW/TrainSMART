@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php tp('Commodity Report');?></title>
+<?php
+require_once('views/helpers/Location.php');
+require_once('views/helpers/ScriptContainer.php');
+require_once('views/helpers/DropDown.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+
+$checkLabel = t('show');
+if ( $this->mode == 'count' )
+	$checkLabel = t('group');
+
+?>
+
+</head>
+<body class="yui-skin-sam" >
+
+<div id="pageHolder">
+
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
+  
+  <h1><?php tp('Commodity Reports');?></h1>
+
+	   <form id="commodityreport" action="" method="get">
+   <fieldset id="criteria"><legend><?php tp('Select Criteria');?></legend>
+
+      	<div class="fieldLabel" ></div>
+    	
+	
+	<div class="fieldLabel" id="respsec_lbl"><?php echo (@$this->translation['Facility Commodity Column Table Commodity Name']);?> </div>
+	<div class="fieldInput">
+  	<div  class="leftBorder"><select id="commodity_name_option_id" name="commodity_name_option_id">
+		<option value="">--<?php tp('All');?>--</option>
+		<?php
+			foreach ( $this->commodity_names as $vals ) {
+				echo '<option value="'.$vals['id'].'" '.((@$this->criteria['commodity_name_option_id']) == $vals['id'] ? 'SELECTED':'').' >'.$vals['commodity_name'].'</option>';
+		}
+		?>
+	</select></div></div>
+	
+	<div class="fieldLabel" id="training_creation_dates_lbl"><?php tp('Dates'); ?></div>
+	<div class="fieldInput">
+	<label for="showCreationDate" ></label>
+	<div  class="leftBorder">
+	<input type="number" id="dateMMstart"  name="dateMMstart" min="1" max="12" placeholder="MM" style="width:3em;" value="<?php echo $this->dateMMstart?>"/>/
+ 	<input type="number" id="dateYYstart"  name="dateYYstart" min="10" max="99" placeholder="YY" style="width:3em;" value="<?php echo $this->dateYYstart?>"/>
+ 	&nbsp;&nbsp;<label class="label"><?php tp('to'); ?></label>&nbsp;&nbsp;
+ 	<input type="number" id="dateMMend"  name="dateMMend" min="1" max="12" placeholder="MM" style="width:3em;" value="<?php echo $this->dateMMend?>"/>/
+ <input type="number" id="dateYYend"  name="dateYYend" min="10" max="99" placeholder="YY" style="width:3em;" value="<?php echo $this->dateYYend?>"/>
+ 	</div>
+	
+	</div>
+
+
+
+	<div class="clear"></div>
+	<input type="hidden" name="limit" id="limit" value="1" />
+	<input type="submit" class="submitNoArrow" name="clear" value="Clear" onclick='clearForm();'/>
+   	<input type="submit" class="submitNoArrow" name="go" value="Preview" />
+   </fieldset>
+   </form>
+<?php if ( $this->criteria['go'] ) { ?>
+<div class="hrGrey"></div>
+    <div class="fieldIndentNoMargin">Total commodities <span class="total"><?php echo $this->count;?></span><?php echo $this->printAndExport();?></div>
+
+    <div id="commodity"  class="itechTable"></div>
+  
+    <script type="text/javascript">
+
+var commodityData = [
+<?php $isFirstRow = true;
+$cnt = 0;
+foreach($this->results as $row) {
+	if ( (!@$_REQUEST['limit'])  or ($cnt < 100) ) {
+	if (!$isFirstRow )
+		echo ',';
+	$isFirstRow = false;
+	echo '[';
+	echo '"' . $row['commodity_name'].'"';
+	echo ',"'.$row['province_name'].'"';
+	echo ',"'.$row['district_name'] .'"';	
+	echo ',"'. $row['facility_name'] .'"';
+	echo ',"'.$row['consumption'].'"';
+	echo ',"'.$row['stock_out'].'"';
+	echo ',"'.$row['date'].'"';
+	
+	echo "]";
+	$cnt++;
+	}
+}
+   ?>
+   ];
+
+
+
+var commodityColumnDefs = [
+{key:"commodity_name", label: "<?php echo (@$this->translation['Facility Commodity Column Table Commodity Name']);?>", sortable:true, resizeable:true}
+,{key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true}
+,{key:"district_name", label: "<?php echo (@$this->translation['Region B (Health District)']); ?>", sortable:true, resizeable:true}
+,{key:"facility_name", label: "<?php tp('Facility');?>", sortable:true, resizeable:true}
+,{key:"consumption", label: "<?php echo (@$this->translation['Facility Commodity Column Table Consumption']); ?>", sortable:true, resizeable:true}
+,{key:"outOfStock", label: "<?php echo (@$this->translation['Facility Commodity Column Table Out of Stock']) . " (Y/N)"; ?>", sortable:true, resizeable:true}
+,{key:"date", label: "<?php echo (@$this->translation['Facility Commodity Column Table Date']) . " (MM/YY)"; ?>", sortable:true, resizeable:true}
+];
+
+
+
+	makeDataTable("commodity", null, commodityData, commodityColumnDefs);
+
+	function clearForm(){
+		$( "#commodity_name_option_id" ).val("");
+		$( "#dateMMstart" ).val("");
+		$( "#dateYYstart" ).val("");
+		$( "#dateMMend" ).val("");
+		$( "#dateYYend" ).val("");
+	}
+</script>
+<?php if ($cnt < count($this->results)) { ?>
+[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a>
+<?php } ?>
+<?php } ?>
+<!-- TA:17:12: 10/04/2014  -->
+<br><a href='<?php echo Settings::$COUNTRY_BASE_URL?>/facility/edit/id/<?php echo $this->facility_id;?>'>Go back to Facility Edit Page</a>
+  </div>
+  
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+</div>
+
+
+
+</body>
+</html>
