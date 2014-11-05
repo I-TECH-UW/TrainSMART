@@ -1173,7 +1173,8 @@ table {
    box-shadow: rgba(0,0,0,1) 0 1px 0;
    text-shadow: rgba(0,0,0,.4) 0 1px 0;
    color: white;
-   font-size: 15px;
+   font-size: 13px;
+   font-weight: bold;
    /* font-family: Helvetica, Arial, Sans-Serif; */
    text-decoration: none;
    vertical-align: middle;
@@ -1192,7 +1193,7 @@ table {
 .nav.tsbutton, .nav.tsbutton:visited { 
 
 	background-color: #91bd09; 
-	width:100px;
+	width:70px;
 
 }
 

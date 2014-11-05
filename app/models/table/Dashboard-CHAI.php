@@ -6,9 +6,11 @@ class DashboardCHAI extends Dashboard
 {
 	protected $_primary = 'id';
 
-	public function fetchdetails($dataName = null, $id, $where = null, $group = null, $order = null) {
+	public function fetchConsumptionDetails($dataName = null, $id, $where = null, $group = null, $useName = null) {
 	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 	    $output = array();
+	    
+	    $subSelect = new Zend_Db_Expr("(select facility_id, max(date) as C_maxDate from commodity group by facility_id)");
 
 		switch ($dataName) {
 		    case 'geo':
@@ -50,9 +52,10 @@ class DashboardCHAI extends Dashboard
 		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
 		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
 		        ->joinLeft(array("c" => "commodity"), 'f.id = c.facility_id')
+		        ->joinInner(array('mc' => $subSelect), 'f.id = mc.facility_id and c.date = C_maxDate')
 		        ->where($where)
 		        ->group($group)
-                ->order($order);
+                ->order(array('L3_location_name', 'L2_location_name', 'L1_location_name', 'F_facility_name'));
 		        
 		        $result = $db->fetchAll($select);
 		        
@@ -62,7 +65,7 @@ class DashboardCHAI extends Dashboard
 		        
 		 	    $output[] = array(
 		 	        "id" => $row[$group],
-		 	        "name" => $row[$order],
+		 	        "name" => $row[$useName],
 		 	        "tier" => $row['tier'],
 		 	        "parent_id" => $row['L2_parent_id'],
 		 	        "child_name" => $_child_name,
@@ -71,10 +74,10 @@ class DashboardCHAI extends Dashboard
 		 	        "type" => 1
 		 	     );
 		 	    
-		 	    file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 73 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		 	    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 73 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 		 	    //var_dump('$row[tier]=', $row[tier],"END");
-		 	    var_dump('id=', $id);
-		 	    $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		 	    //var_dump('id=', $id);
+		 	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 		 	    	
 		 	    
 		      }
@@ -96,16 +99,17 @@ class DashboardCHAI extends Dashboard
 		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
 		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
 		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
-		        ->joinLeft(array("c" => "commodity"), 'f.id = c.facility_id')
+		        ->joinLeft(array('c' => "commodity"), 'f.id = c.facility_id')
+		        ->joinInner(array('mc' => $subSelect), 'f.id = mc.facility_id and c.date = C_maxDate')
 		        ->where($where)
-                ->order($order);
+                ->order(array('L3_location_name', 'L2_location_name', 'L1_location_name', 'F_facility_name'));
 		        
 		        $result = $db->fetchAll($select);
 		        
 		      foreach ($result as $row){
 		 	    $output[] = array(
 		 	        "id" => $row[$group],
-		 	        "name" => $row[$order],
+		 	        "name" => $row[$useName],
 		 	        "tier" => $row['tier'],
 		 	        "parent_id" => $row['L3_parent_id'],
 		 	        "child_name" => $row['F_facility_name'],
@@ -113,24 +117,48 @@ class DashboardCHAI extends Dashboard
 		 	        "link" => Settings::$COUNTRY_BASE_URL . "/dashboard/dash3/id/" . $row['l2.parent_id'],
 		 	        "type" => 1
 		 	     );
-		 	    
-		 	    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 68 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		 	    //var_dump("$row=", $row,"END");
-		 	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-		 	    	
-		 	    
 		      }
 		        break;		    
-		    
 		}
-		
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 92 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump("$output=", $output,"END");
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-			
-		
 		return $output;
 	}
-
+	
+	public function fetchAMCDetails($where = null) {
+	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+	    $output = array();
+	    
+	    $orderClause = new Zend_Db_Expr("`c`.`date` desc limit 12");
+	    
+	    $select = $db->select()
+	    ->from(array('cv' => 'commodity_view_extended_pivot_non_null'),
+	        array(
+	            'monthname(cv.date) as month',
+	            'sum(cv.implant_consumption) as implant_consumption',
+	            'sum(cv.injectable_consumption) as injectable_consumption'))
+	            ->group(array('monthname(cv.date)'))
+	            ->order(array('cv.date'));
+	    
+	    
+	    /*
+	    select monthname(date) as month, sum(implant_consumption) as implant_consumption, sum(injectable_consumption) as injectable_consumption
+	    from commodity_view_extended_pivot_non_null
+	    group by monthname(date)
+	    order by date;
+	    */
+	    
+	            
+	    $result = $db->fetchAll($select);
+	    
+	    foreach ($result as $row){
+	    
+	        $output[] = array(
+	            "month" => $row['month'],
+	            "implant_consumption" => $row['implant_consumption'],
+	            "injectable_consumption" => $row['injectable_consumption']
+	        );
+	    }
+	
+	    return $output;
+	}
 }
 ?>
