@@ -1982,30 +1982,13 @@ class AdminController extends UserController
 	
 	//TA:17:12: added 9/19/2014
 	public function commoditynameAction(){
-		require_once('views/helpers/EditTableHelper.php');
 		
 		$editTable = new EditTableController($this);
-		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
-		//id, commodity_name, type_id, commodity_type
-		$editTable->fields  = array('commodity_name' => 'Commodity Name', 'commodity_type_id' => 'Commodity Type ID');
-		$elements = array();
-		$noDelete = array();
-		$rows = $db->fetchAll ("SELECT id, commodity_type FROM commodity_type_option order by commodity_type");
+		$editTable->fields  = array('commodity_name' => 'Commodity Name');
 		$editTable->table   = 'commodity_name_option';
-		foreach ($rows as $i => $row){ // lets add some data to the resultset to show in the EditTable
-			array_push($elements, array('text' => $row['commodity_type'], 'value' => $row['id']));
-			$noDelete[] = $row['id'];
-		}
-		$elements = json_encode($elements); // yui data table will enjoy spending time with a json encoded array
-		$editTable->customColDef = array('commodity_type_id' => "editor:'dropdown', editorOptions: {dropdownOptions: $elements }");
-		$editTable->label   = 'New Commodity Name';
-		$editTable->dependencies = array('name' => 'commodity');
+		$editTable->label   = 'Commodity Name';
+		$editTable->dependencies = array('name_id' => 'commodity');
 		$editTable->execute();
-
-		$fieldDefs = array('id' => t('Commodity Type ID'), 'commodity_type' => t('Commodity Type'));
-		$html = EditTableHelper::generateHtml("Commodity", $rows, $fieldDefs, array(), $noDelete, true); 
-		$this->view->assign('extraHtml2', "<br><br><br>" . $html . "<br><a href='./commoditytype/'>Edit Commodity Types</a>");
-
 	}
 		
 		
@@ -2016,7 +1999,7 @@ class AdminController extends UserController
 		$editTable->table   = 'commodity_type_option';
 		$editTable->fields  = array('commodity_type' => 'Commodity Type');
 		$editTable->label   = 'Commodity Type';
-		$editTable->dependencies = array('commodity_type_id' => 'commodity_name_option');
+		$editTable->dependencies = array('type_id' => 'commodity');
 		$editTable->execute();
 	}
 
