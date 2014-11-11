@@ -357,13 +357,20 @@ class FacilityController extends ReportFilterHelpers {
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		//$rows = $db->fetchAll ("SELECT id, name, DATE_FORMAT(date, '%m/%y') as date, consumption, stock_out FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp group by name");
 		// display the 2 most recent commodities based on name
+// 		$rows = $db->fetchAll ("select temp3.id, commodity_name_option.commodity_name as name, DATE_FORMAT(date, '%m/%y') as date, consumption, stock_out, temp3.created_by, temp3.modified_by from " .
+//  		"(SELECT * FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp group by name " .
+// 		"union " .
+//  		"SELECT * FROM (SELECT *  from commodity where facility_id= ". $id . " and id not in " .
+//  		"(SELECT id FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp2 group by name) " .
+//  		"order by id desc) as temp group by name) as temp3 INNER JOIN commodity_name_option
+// 				ON commodity_name_option.id=temp3.name order by temp3.name");
 		$rows = $db->fetchAll ("select temp3.id, commodity_name_option.commodity_name as name, DATE_FORMAT(date, '%m/%y') as date, consumption, stock_out, temp3.created_by, temp3.modified_by from " .
- 		"(SELECT * FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp group by name " .
-		"union " .
- 		"SELECT * FROM (SELECT *  from commodity where facility_id= ". $id . " and id not in " .
- 		"(SELECT id FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp2 group by name) " .
- 		"order by id desc) as temp group by name) as temp3 INNER JOIN commodity_name_option
-				ON commodity_name_option.id=temp3.name order by temp3.name");
+				"(SELECT * FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp group by name_id " .
+				"union " .
+				"SELECT * FROM (SELECT *  from commodity where facility_id= ". $id . " and id not in " .
+				"(SELECT id FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp2 group by name_id) " .
+				"order by id desc) as temp group by name_id) as temp3 INNER JOIN commodity_name_option
+				ON commodity_name_option.id=temp3.name_id order by temp3.name_id");
 		$noDelete = array();
 		$customColDefs = array();
 		foreach ($rows as $i => $row){ // lets add some data to the resultset to show in the EditTable

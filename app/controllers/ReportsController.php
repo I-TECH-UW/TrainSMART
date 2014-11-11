@@ -3471,10 +3471,10 @@ echo $sql . "<br>";
  			$sql = "SELECT commodity.id, commodity_name_option.commodity_name as commodity_name, DATE_FORMAT(commodity.date, '%m/%y') as date,
 			commodity.consumption, commodity.stock_out from commodity 
 			INNER JOIN commodity_name_option
-				ON commodity_name_option.id=commodity.name where commodity.facility_id=" . $facility_id;
+				ON commodity_name_option.id=commodity.name_id where commodity.facility_id=" . $facility_id;
  			$commodity_name_option_id = $this->getSanParam('commodity_name_option_id');
  			if($commodity_name_option_id){
- 				$sql = $sql . " and name =" . $commodity_name_option_id;
+ 				$sql = $sql . " and name_id =" . $commodity_name_option_id;
  			}
  			$dateYYstart = $this->getSanParam ( 'dateYYstart' );
  			$dateMMstart = $this->getSanParam ( 'dateMMstart' );
