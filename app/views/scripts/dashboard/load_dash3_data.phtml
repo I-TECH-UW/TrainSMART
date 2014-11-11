@@ -1,0 +1,23 @@
+<!-- latest consumption data => -->
+<pre id="latest_consumption_data" style="display:none">Id Version	Share
+
+<?php
+	foreach ($this->latest_consumption_data as $row){
+?>
+<?php echo str_replace(' ', '', $row[name]); ?> <?php echo str_replace(' ','',$row[child_name]); ?>	<?php echo $row[consumption]; ?>%
+<?php
+	}
+?>
+
+</pre>
+
+<!--  average monthly consumption data is created in the chart script -->
+
+
+<?php  //file_put_contents('c:\wamp\logs\php_debug.log', 'load_data 19 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+       //var_dump("latest_consumption_data=", $this->latest_consumption_data,"END");
+       //var_dump("facility_data=",$this->facility_data,"END");
+       //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
+?>
+
+

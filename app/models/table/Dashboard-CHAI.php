@@ -160,5 +160,163 @@ class DashboardCHAI extends Dashboard
 	
 	    return $output;
 	}
+	
+	public function fetchHCWTDetails($where = null) {
+	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+	    $output = array();
+	     
+	    $select = $db->select()
+	    ->from(array('hv' => 'hcwt_view_extended_pivot_non_null'),
+	        array(
+	            'year(hv.date) as year',
+	            'sum(hv.fp_trained) as fp_trained',
+                'sum(hv.larc_trained) as larc_trained'))
+                ->group(array('year(hv.date)'))
+		        ->order(array('hv.date'));
+		    
+		    /*
+select year(date) as year, sum(fp_trained) as fp_trained, sum(larc_trained) as larc_trained
+from hcwt_view_extended_pivot_non_null 
+group by year(date)
+order by date;
+
+		    */
+		            
+		    $result = $db->fetchAll($select);
+		    
+		    foreach ($result as $row){
+		    
+		        $output[] = array(
+		            "year" => $row['year'],
+		            "fp_trained" => $row['fp_trained'],
+		            "larc_trained" => $row['larc_trained']
+		        );
+		    }
+		
+		    return $output;
+		}
+		
+		
+		
+    public function fetchPercentFacHWTrainedDetails($where = null, $group = null) {
+	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+	    $output = array();
+	    
+	    $subSelect = new Zend_Db_Expr("(select count(*) as cnt
+  from facility f
+  left join location l1 ON f.location_id = l1.id
+  left join location l2 ON l1.parent_id = l2.id
+  left join location l3 ON l2.parent_id = l3.id
+  where l2.location_name = outer_state
+  group by l2.location_name)");
+
+		
+		        $select = $db->select()
+		        ->from(array('pt' => 'person_to_training'), 
+		          array(
+		          'l2.location_name as outer_state', 
+		          "count(*) / $subSelect as percentage" ))
+		         
+		        ->joinLeft(array('p' => "person"), 'pt.person_id = p.id')
+		        ->joinLeft(array('f' => "facility"), 'p.facility_id = f.id')
+		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+		        
+		        ->joinLeft(array("t" => "training"), 'pt.training_id = t.id')
+		        ->joinInner(array('tto' => training_title_option), 't.training_title_option_id = tto.id')
+		        ->where($where)
+		        ->group(array('outer_state'))
+                ->order(array('percentage'));
+		        
+		        $result = $db->fetchAll($select);
+
+		      $cnt = 0;
+		      $length = sizeof($result);
+		      
+		      foreach ($result as $row){
+		        $cnt += 1;
+		        $color = ($cnt <  6) ? 'red' : 'blue' ;
+
+		        if ($cnt < 6 or $cnt > $length - 5) 
+		        {   $output[] = array(
+		 	        "state" => $row['outer_state'],
+		 	        "percentage" => $row['percentage'],
+		 	        "color" => $color,
+		 	      );
+		        }
+		      }
+		      
+		      $subSelect = new Zend_Db_Expr("(select count(*) from facility)");
+		      
+		      
+		      $select = $db->select()
+		      ->from(array('pt' => 'person_to_training'),
+		          array(
+		              "count(*) / $subSelect as percentage" ))
+		               
+		              ->joinLeft(array('p' => "person"), 'pt.person_id = p.id')
+		                  ->joinLeft(array('f' => "facility"), 'p.facility_id = f.id')
+		                      ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+		                      ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+		                      ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+		      
+		                  ->joinLeft(array("t" => "training"), 'pt.training_id = t.id')
+		                  ->joinInner(array('tto' => training_title_option), 't.training_title_option_id = tto.id')
+		                  ->where($where);
+		      
+		              $result = $db->fetchAll($select);
+		      
+		      foreach ($result as $row){
+		        $output[] = array(
+		          "state" => 'National',
+		          "percentage" => $row['percentage'],
+		          "color" => 'black',
+		          );
+		      }   
+		
+		file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 243 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		var_dump($output,"END");
+		//var_dump('id=', $id);
+		$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+		return $output;
+	}
+				    
+				    /*
+	select 
+l2.location_name as outer_state,
+
+count(*) /
+(select count(*) as cnt
+  from facility f
+  left join location l1 ON f.location_id = l1.id
+  left join location l2 ON l1.parent_id = l2.id
+  left join location l3 ON l2.parent_id = l3.id
+  where l2.location_name = outer_state
+  group by l2.location_name ) as percentage,
+
+tto.training_title_phrase as title_phrase
+-- pt.timestamp_created as date
+from person_to_training pt
+left join person p on pt.person_id = p.id
+left join facility f on p.facility_id = f.id
+left join location l1 ON f.location_id = l1.id
+left join location l2 ON l1.parent_id = l2.id
+left join location l3 ON l2.parent_id = l3.id
+left join training t on pt.training_id = t.id
+left join training_title_option tto on t.training_title_option_id = tto.id
+where 1=1
+and t.training_title_option_id in (5) 
+and pt.award_id in (1,2)
+group by outer_state, title_phrase
+-- group by f.facility_name
+order by percentage 
+;
+
+
+
+
+				    */
 }
 ?>
