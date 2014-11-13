@@ -42,15 +42,71 @@ $this->required_fields = array();
 //file_put_contents('c:\wamp\logs\php_debug.log', 'add-funder-to-employee 40>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 //var_dump($this->employee[0]);
 //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-
+/*
  $this->viewonly = true;
  echo labelAndField($this, t('Employee').space.t('ID'),  'text', 'id', $this->employee[0]['id']);
  echo labelAndField($this, t('Partner').space.t('ID'),  'text', 'pid', $this->employee[0]['partner_id']);
  $this->viewonly = false;
  employee_psfm_dropdown(0, $this, $this->partner, $this->subPartner, $this->partnerFunder, $this->mechanism, $this->employee[0]['id'], $this->employee[0]['partner_id']);
  echo labelAndField($this, t('Percentage'), 'text','percentage', $this->percentage);
- 
+ */
 ?>
+ <input type="hidden" id="employeeFunding_delete_data" name="employeeFunding_delete_data"/>
+ <input type="hidden" id="employeeFunding_new_data" name="employeeFunding_new_data"/>
+ <?php 
+ echo $this->tableEmployeeFunding;?>
+<br />
+  <script>
+	// fired on "insert" button click
+	function addMechanism(oButton) {
+	    var oMechanism = YAHOO.util.Dom.get('new_mechanism');
+	    var oPercent = YAHOO.util.Dom.get('percentage');
+
+	    if(oMechanism.value == ""){
+    	    alert("Mechanism cannot be empty.");
+    	    return;
+	    }
+
+	    if(oPercent.value == ""){
+    	    alert("Percentage cannot be empty.");
+    	    return;
+	    }
+	    else if(isNaN(oPercent.value) || (oPercent.value < 1) || (oPercent.value > 100)) {
+		    alert("Percentage must be a number from 1 to 100.");
+		    return;
+	    }
+
+        var jsonAdd = { }
+        jsonAdd.mechanism = oMechanism.selectedOptions[0].label;
+        jsonAdd.combined_id = oMechanism.value;
+        jsonAdd.percentage = oPercent.value;
+        var percent = jsonAdd.percentage / 100.0;
+        
+        jsonAdd.hours = percent * <?php echo $this->employee[0]['funded_hours_per_week']?>;
+        jsonAdd.cost = percent * <?php echo $this->employee[0]['annual_cost']?>;
+      	ITECH.employeeFundingTable.addDataRow(jsonAdd, oMechanism.value);
+                
+        oMechanism.value = "";
+        oPercent.value = "";
+      }
+  </script>
+  
+<div><label class="label">Mechanism</label>
+  <select id="new_mechanism" name="new_mechanism">
+  <option value="">--choose--</option>
+  <?php 
+  foreach ($this->mechanismList as $i => $row)
+  {
+    echo '<option value='.$row['combined_id'].'>'.$row['mechanism_phrase'].'</option>';
+  }
+  ?>
+  </select>
+  <span>
+    <label class="label">Percentage</label>
+    <input type="text" id="percentage" name="percentage" value="" />
+  </span>
+  <input type="submit" name="associateMechanism" value="<?php tp("Add");?>" class="insert" id="mechanismInsertButton" onclick="addMechanism(this);return false;"/>
+</div>
 
 </div>
 </fieldset>

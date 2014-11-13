@@ -153,7 +153,8 @@ class EmployeeController extends ReportFilterHelpers {
 	
 		require_once('models/table/Partner.php');
 		require_once('views/helpers/Location.php'); // funder stuff
-	
+		require_once('models/table/Employee.php');
+	   
 		$db     = $this->dbfunc();
 		$status = ValidationContainer::instance ();
 		$params = $this->getAllParams();
@@ -166,43 +167,32 @@ class EmployeeController extends ReportFilterHelpers {
 
 			    if (!$this->hasACL("edit_employee"))
 			    {
+    				if($this->_getParam('outputType') == 'json') {
+					   $this->sendData(array('msg'=>'Not Authorized'));
+					   exit();
+					   return;
+				    }
 			        $this->doNoAccessError();
 			    }
-				//$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-				//foreach ($params['funding_end_date'] as $i => $value) $params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
-	
-				//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont isPost 172> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-				//var_dump($params);
-				//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);			
-				
-				// test for all values
-				if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['percentage']))
-					$status->addError('', t ( 'All fields' ) . space . t('are required'));
-	
+			    			    
+			    if ($params['employeeFunding_delete_data'])
+			    {
+			        Employee::disassociateMechanismFromEmployee($params['employeeFunding_delete_data']);
+			    }
+			    
+			    if ($params['employeeFunding_new_data'])
+			    {
+			        $data_to_add = json_decode($params['employeeFunding_new_data'], true);
+			        if (!Employee::saveMechanismAssociation($id, $data_to_add['data']))
+			        {
+			            $status->setStatusMessage(t('Error saving mechanism association.'));
+			            return false;
+			        }
+			    }
 				if ( $status->hasError() )
 					$status->setStatusMessage( t('That funding mechanism could not be saved.') );
 					
 				else {
-					//save
-					$epsfm = new ITechTable(array('name' => 'employee_to_partner_to_subpartner_to_funder_to_mechanism'));
-					$psfmArr = explode('_', $params[mechanism]); // eg: 13_13_3_106
-					$psfm_id = $helper->getPsfmId($psfmArr);
-					$data = array(
-							'partner_to_subpartner_to_funder_to_mechanism_id' => $psfm_id['id'],
-							'employee_id' => $params['id'],
-							'partner_id' => $psfmArr[0],
-							'subpartner_id'  => $psfmArr[1],
-							'partner_funder_option_id' => $psfmArr[2],
-							'mechanism_option_id' => $psfmArr[3],
-							'percentage' => $params['percentage'],
-					);
-						
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont isPost 192> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-					//var_dump($data);
-					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-						
-					$insert_result = $epsfm->insert($data);
-					$status->setStatusMessage( t('The funding mechanism was saved.') );
 					if ($params['redirect'])
 					{
 					   $this->_redirect($params['redirect']);
@@ -214,22 +204,64 @@ class EmployeeController extends ReportFilterHelpers {
 			$employee = $helper->getEmployee($id);
 			$this->viewAssignEscaped ( 'employee', $employee );
 			
-			$partner = $helper->getPsfmPartnerExclude($id);
-			$this->viewAssignEscaped ( 'partner', $partner );
-				
-			$subPartner = $helper->getPsfmSubPartnerExclude($id, $employee[0]['partner_id']);
-			$this->viewAssignEscaped ( 'subPartner', $subPartner );
-				
-			$partnerFunder = $helper->getPsfmFunderExclude($id, $employee[0]['partner_id']);
-			$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-				
-			$mechanism = $helper->getPsfmMechanismExclude($id, $employee[0]['partner_id']);
-			$this->viewAssignEscaped ( 'mechanism', $mechanism );
-				
-			//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont 219>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-			//var_dump($subPartner);
-			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-				
+			require_once 'views/helpers/EditTableHelper.php';
+			
+			$tableValues = array();
+			$columnNames = array('mechanism' => t('Mechanism'),
+			    'percentage' => t('Percent'),
+			);
+			$partner_id = $employee[0]['partner_id'];
+			
+			$sql = "SELECT distinct mechanism_option.id, mechanism_phrase, partner_to_subpartner_to_funder_to_mechanism.id as psfmid
+			FROM partner_to_subpartner_to_funder_to_mechanism, mechanism_option 
+			WHERE partner_id = $partner_id and mechanism_option_id = mechanism_option.id and mechanism_option.is_deleted = '0' and partner_to_subpartner_to_funder_to_mechanism.is_deleted = 0";
+			$mechanisms = $db->fetchAll($sql);
+						
+			foreach ($mechanisms as $i => &$mech)
+			{
+			    $mech['combined_id'] = $mech['id'].'_'.$mech['psfmid'];
+			}
+			
+            $this->view->assign("mechanismList", $mechanisms);
+            
+			$sql = "SELECT annual_cost from employee where id = $id";
+			$annual_cost = $db->fetchOne($sql); 
+			 
+			if ($this->setting('display_hours_per_mechanism'))
+			{
+			    $columnNames['hours'] = t('Hours');
+			}
+			if ($this->setting('display_annual_cost_to_mechanism'))
+			{
+			    $columnNames['cost'] = t('Annual Cost');
+			}
+			$sql = "SELECT employee_to_partner_to_subpartner_to_funder_to_mechanism.id as epsfmid, percentage, mechanism_phrase
+			FROM employee_to_partner_to_subpartner_to_funder_to_mechanism, mechanism_option  
+			WHERE employee_to_partner_to_subpartner_to_funder_to_mechanism.is_deleted = 0 and mechanism_option_id = mechanism_option.id and employee_id = $id";
+			
+			$funders = $db->fetchAll($sql);
+
+			foreach ($funders as $i => $row)
+			{
+			    $tableValues[$i] = array('mechanism' => $row['mechanism_phrase'], 'percentage' => $row['percentage'], 'id' => $row['epsfmid']);
+			    $percent = $row['percentage']/100.0;
+			    if($this->setting('display_hours_per_mechanism'))
+			    {
+			        $tableValues[$i]['hours'] = $percent * $employee[0]['funded_hours_per_week'];
+			    }
+			    if($this->setting('display_annual_cost_to_mechanism'))
+			    {
+			        $employee_mechanism_cost = sprintf('%0.2f', $percent * $employee[0]['annual_cost']);
+			        $tableValues[$i]['cost'] = $employee_mechanism_cost;
+			    }
+			}
+			
+			
+			
+			$editTable = EditTableHelper::generateHtml('employeeFunding', $tableValues, $columnNames, array(), array(), true);
+			$this->view->assign ( 'tableEmployeeFunding', $editTable );
+			
+			
 		} // if ($id)
 	
 		//validate
@@ -433,37 +465,6 @@ class EmployeeController extends ReportFilterHelpers {
     				if(!$id) {
     					$status->setStatusMessage( t('That person could not be saved.') );
     				} else {
-    
-    					# converted to optionlist, link table not needed TODO. marking for removal.
-    					#MultiOptionList::updateOptions ( 'employee_to_role', 'employee_role_option', 'employee_id', $id, 'employee_role_option_id', $params['employee_role_option_id'] );
-    					
-    					// delete all
-    					$epsfm = new ITechTable(array('name' => 'employee_to_partner_to_subpartner_to_funder_to_mechanism'));
-    					$where = "employee_id = $id";
-    		
-    					$delete_result = $epsfm->delete($where, false);
-    					
-    					//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont 300>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-    					//var_dump($params['subPartner']);
-    					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-    					
-    					// insert from view
-    					foreach($params['subPartner'] as $i => $val){
-    						
-    						if($id && $partner_id && $params['subPartner'][$i] &&$params['partnerFunder'][$i] && $params['mechanism'][$i] && $params['percentage'][$i]) {
-    						  $data = array(
-    								'employee_id' => $id,
-    								'partner_id'  => $partner_id,
-    						  		'subpartner_id'=> $params['subPartner'][$i],
-    								'partner_funder_option_id' => $params['partnerFunder'][$i],
-    								'mechanism_option_id' => $params['mechanism'][$i],
-    								'percentage' => $params['percentage'][$i],
-    						  );
-    							
-    						  $insert_result = $epsfm->insert($data);
-    						}
-    					}
-    					
     					$status->setStatusMessage( t('The person was saved.') );
     					if (array_key_exists('save', $params))
     					{
