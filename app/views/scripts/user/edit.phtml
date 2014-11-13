@@ -69,9 +69,15 @@
 						<div class="fieldLabelThin"> <?php tp('Facilities');?></div>
 						<div class="fieldInput">
 							<div class="float50"><label for="edit_facility"><input type="radio" id="edit_facility" name="edit_facility" value="edit_facility" <?php if ( array_search('edit_facility',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit/Delete');?></label></div>
-							<label for="view_facility"><input type="radio" id="view_facility" name="edit_facility" value="view_facility" <?php if ( array_search('view_facility',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>
+							<label for="view_facility"><input type="radio" id="view_facility" name="edit_facility" value="view_facility" <?php if ( array_search('view_facility',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>	
 						</div>
-						<!-- BS::Fix Checkbox/radio button mashup:20141014 -->
+						
+						<!-- TA:17:12: 10/04/2014 -->
+						<div class="fieldLabelThin"></div><div class="fieldInput float50">
+						<input type="checkbox" id="add_new_facility" name="add_new_facility" <?php if ( array_search('add_new_facility',$this->user['acls']) !== false ) echo 'CHECKED'; ?>>
+						<label for="add_new_facility"> <?php tp('Add New');?></label></div>
+						<!-- TA:17:12: 10/04/2014 -->
+						
 						<div class="fieldLabelThin"> <?php tp('Training Location');?></div>
 						<div class="fieldInput">
 							<div class="float50"><label for="edit_training_location"><input type="radio" id="edit_training_location" name="edit_training_location" value="edit_training_location" <?php if ( array_search('edit_training_location',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit');?></label></div>

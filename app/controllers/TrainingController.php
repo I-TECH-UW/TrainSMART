@@ -775,7 +775,7 @@ class TrainingController extends ReportFilterHelpers {
 
 		if ($training_id) {
 			$persons = PersonToTraining::getParticipants ( $training_id )->toArray ();
-			print_r($persons);
+
 			foreach ( $persons as $pid => $p ) {
 				$region_ids = Location::getCityInfo ( $p ['location_id'], $this->setting ( 'num_location_tiers' ) ); // todo expensive call, getcityinfo loads all locations each time??
 				$persons [$pid] ['province_name'] = ($region_ids[1] ? $locations [$region_ids['1']] ['name'] : 'unknown');

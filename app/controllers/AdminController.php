@@ -1980,14 +1980,26 @@ class AdminController extends UserController
 		$editTable->execute();
 	}
 	
-	//TA:17: added 9/19/2014
-	public function commoditynameAction()
+	//TA:17:12: added 9/19/2014
+	public function commoditynameAction(){
+		
+		$editTable = new EditTableController($this);
+		$editTable->fields  = array('commodity_name' => 'Commodity Name');
+		$editTable->table   = 'commodity_name_option';
+		$editTable->label   = 'Commodity Name';
+		$editTable->dependencies = array('name_id' => 'commodity');
+		$editTable->execute();
+	}
+		
+		
+	//TA:17:12: added 10/03/2014
+	public function commoditytypeAction()
 	{
 		$editTable = new EditTableController($this);
-		$editTable->table   = 'commodity_name_option';
-		$editTable->fields  = array('commodity_name' => 'Commodity Name');
-		$editTable->label   = 'Commodity Name';
-		$editTable->dependencies = array('name' => 'commodity');
+		$editTable->table   = 'commodity_type_option';
+		$editTable->fields  = array('commodity_type' => 'Commodity Type');
+		$editTable->label   = 'Commodity Type';
+		$editTable->dependencies = array('type_id' => 'commodity');
 		$editTable->execute();
 	}
 
@@ -3738,6 +3750,7 @@ class AdminController extends UserController
 			'tutorspecialty'                => 'acl_editor_tutor_specialty', //TA: added 7/22/2014
 			'tutorcontract'                => 'acl_editor_tutor_contract', //TA: added 7/24/2014
 			'commodityname'                => 'acl_editor_commodityname', //TA:17: added 9/19/2014
+			'commoditytype'                => 'acl_editor_commoditytype', //TA:17:12: added 10/03/2014
 			);
 
 
