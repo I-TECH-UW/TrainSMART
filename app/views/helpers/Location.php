@@ -235,7 +235,7 @@ function regionFiltersGetLastID($prefix, $criteria)
 	return array_pop($o);
 }
 
-/*
+/**
  * region filters (Dropdown style)
  *
  * @param $is_multiple = multiple select box
@@ -304,7 +304,7 @@ function region_filters_dropdown(&$view, &$locations, &$criteria, $is_multiple =
 }
 
 
-/*
+/**
  * region filters (Dropdown style)
  *
  * @param $is_multiple = multiple select box
@@ -363,7 +363,7 @@ function region_filters_dropdown_ps(&$view, $prefix = '') {
 // done
 }
 
-/*
+/**
  * region filters (Dropdown style)
  *
  * @param $is_multiple = multiple select box
@@ -686,7 +686,27 @@ function partner_sfm_dropdown($fieldIndex, &$view, &$subPartner, &$partnerFunder
 	// done
 }
 
-function employee_psfm_dropdown($fieldIndex, &$view, &$partner, &$subPartner, &$partnerFunder, &$mechanism, $val_employee, $val_partner, $val_subPartner = null, $val_partnerFunder = null, $val_mechanism = null, $is_multiple = false, $required = false, $disabled = '') {
+/**
+ * Outputs four dropdown select boxes in-line 
+ * 
+ * @param unknown $fieldIndex               - unused
+ * @param unknown &$view                    - the Zend view object
+ * @param unknown &$partner                 - 
+ * @param unknown &$subPartner              - 
+ * @param unknown &$partnerFunder           - 
+ * @param unknown &$mechanism               - 
+ * @param unknown $val_employee             - 
+ * @param unknown $val_partner              - 
+ * @param string $val_subPartner    = null  - 
+ * @param string $val_partnerFunder = null  - 
+ * @param string $val_mechanism     = null  - 
+ * @param string $is_multiple       = false - 
+ * @param string $required          = false - 
+ * @param string $disabled          = ''    - 
+ */
+
+function employee_psfm_dropdown($fieldIndex, &$view, &$partner, &$subPartner, &$partnerFunder, &$mechanism, $val_employee, $val_partner, $val_subPartner = null,
+     $val_partnerFunder = null, $val_mechanism = null, $is_multiple = false, $required = false, $disabled = '') {
 
 	$required = $required ? '<span class="required">*</span>' : '';
 	$class = $is_multiple ? 'autoHeight' : '';
@@ -761,6 +781,17 @@ function gnrtest_epsfm_dropdown(&$view, &$employee, &$partner, &$subPartner, &$p
 	// done
 }
 
+/**
+ * Output a dropdown select box in-line with employee option ids constructed from keys in $widget_array
+ * 
+ * @param array &$widget_array            - array of options for dropdown
+ * @param unknown $widget_id              - html id
+ * @param string $default_val_id  = false - id of the value selected by default
+ * @param string $child_widget_id = false - id of a dependent child object which is enabled/disabled by this selection
+ * @param boolean $is_multiple    = false - is multiple selection?
+ * @param boolean $required       = false - is a required element?
+ * @param string $disabled        = ''    - is read-only? 
+ */
 
 function partnerRenderFunder(&$widget_array, $widget_id, $default_val_id = false, $child_widget_id = false, $is_multiple = false, $required = false, $disabled = '') {
 

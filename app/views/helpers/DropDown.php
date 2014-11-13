@@ -250,18 +250,22 @@ class DropDown {
 	}
 
 	/**
-	 * A more generic helper function for rendering HTML for a very simple dropdown widget
-	 * Called from a view script.
+	 * A generic helper function for rendering HTML for a very simple dropdown widget
+	 * able to be called from a view script.
 	 *
-	 * @select_name string = the widget id
-	 * @select_title = the title text
-	 * @vals option values
-	 * @name_key the array key for the option name
-	 * @val_key the array key for the value
-	 * @selected - the selected option
-	 *
+	 * @param string  $select_name      - the widget id
+	 * @param string  $select_title     - the title text
+	 * @param array   $vals             - option values
+	 * @param string  $name_key         - the array key for the option name
+	 * @param string  $val_key          - the array key for the value
+	 * @param string  $selected = false - the selected option
+	 * @param string  $onchange = false - a javascript function name to call when changed
+	 * @param boolean $required = false - is this dropdown required input?
+	 * @param boolean $enabled  = true  - is this dropdown enabled?
+	 * @param boolean $isDiv    = true  - is this dropdown in a div tag?
+	 * @return string - html for a dropdown 
 	 */
-	public static function render($select_name, $select_title, $vals, $name_key, $val_key, $selected = false, $onchange = false, $required = false, $enabled = true) {
+	public static function render($select_name, $select_title, $vals, $name_key, $val_key, $selected = false, $onchange = false, $required = false, $enabled = true, $isDiv = true) {
 
 		$html = '<div class="fieldLabel"  id="' . $select_name . '_lbl">';
 		if ($required)
@@ -274,7 +278,7 @@ class DropDown {
 		}
 
 		$html .= '</select></div>';
-		return $html;
+	    return $html;
 	}
 
 	function render_report_filter($id, $show_id, $label, $options, $value_key, $selected_id, $show_selected, $set_default = false, $fixedWidth = false, $multiple = false) {

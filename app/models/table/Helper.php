@@ -468,6 +468,12 @@ class Helper extends ITechTable
 		return $result;
 	}
 	
+	/**
+	 * get rows of the partner table that aren't already associated via mechanism with the employee id 
+	 * @param integer $pid - employee id
+	 * @return array of database rows
+	 */
+	
 	public function getPsfmPartnerExclude($pid) {
 		$select = $this->dbfunc()->select()->distinct()
 		->from(array('psfm' => 'partner_to_subpartner_to_funder_to_mechanism'), array('partner_id' ))
@@ -481,7 +487,13 @@ class Helper extends ITechTable
 		return $result;
 	}
 	
-	
+	/**
+	 * get entries from partner table based on subpartner id and not already associated via mechanism with employee id 
+	 * 
+	 * @param integer $eid - employee id
+	 * @param integer $pid - partner id
+	 * @return array of database rows
+	 */
 	public function getPsfmSubPartnerExclude($eid, $pid) {
 		$select = $this->dbfunc()->select()->distinct()
 		->from(array('psfm' => 'partner_to_subpartner_to_funder_to_mechanism'), array('partner_id', 'subpartner_id' ))
@@ -496,6 +508,13 @@ class Helper extends ITechTable
 		return $result;
 	}
 	
+    /**
+     * get rows from partner_funder_option table based on partner id and not already associated via mechanism with employee id
+     * 
+	 * @param integer $eid - employee id
+	 * @param integer $pid - partner id
+     * @return array of database rows
+     */	
 	public function getPsfmFunderExclude($eid, $pid) {
 		$select = $this->dbfunc()->select()->distinct()
 		->from(array("psfm" => "partner_to_subpartner_to_funder_to_mechanism"), array('partner_id', 'subpartner_id', 'partner_funder_option_id'))
@@ -510,6 +529,13 @@ class Helper extends ITechTable
 		return $result;
 	}
 	
+	/**
+     * get rows from mechanism_option table based on partner id and not already associated via mechanism with employee id
+	 * 
+	 * @param integer $eid - employee id
+	 * @param integer $pid - partner id
+	 * @return array of database rows
+	 */
 	public function getPsfmMechanismExclude($eid, $pid) {
 		$select = $this->dbfunc()->select()->distinct()
 		->from(array("psfm" => "partner_to_subpartner_to_funder_to_mechanism"), array('partner_id', 'subpartner_id', 'partner_funder_option_id', 'mechanism_option_id'))
