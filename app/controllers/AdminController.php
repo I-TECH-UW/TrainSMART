@@ -157,7 +157,8 @@ class AdminController extends UserController
 		'label_participant'      => 'Participant',
 		'label_participants'     => 'Participants',
 		'label_employee'         => 'Employee',
-		'label_employees'        => 'Employees'
+		'label_employees'        => 'Employees',
+		'label_employer'         => 'Employer',
 		);
 
 		// _system settings
