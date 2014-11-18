@@ -388,10 +388,67 @@
 
 						});
 					</script>
+                     <input type="hidden" id="employeeFunding_delete_data" name="employeeFunding_delete_data"/>
+                     <input type="hidden" id="employeeFunding_new_data" name="employeeFunding_new_data"/>
+                     <?php 
+                     echo $this->tableEmployeeFunding;
+                     ?>
+                    <br />
+                      <script>
+                    	// fired on "insert" button click
+                    	function addMechanism(oButton) {
+                    	    var oMechanism = YAHOO.util.Dom.get('new_mechanism');
+                    	    var oPercent = YAHOO.util.Dom.get('percentage');
+                    
+                    	    if(oMechanism.value == ""){
+                        	    alert("Mechanism cannot be empty.");
+                        	    return;
+                    	    }
+                    
+                    	    if(oPercent.value == ""){
+                        	    alert("Percentage cannot be empty.");
+                        	    return;
+                    	    }
+                    	    else if(isNaN(oPercent.value) || (oPercent.value < 1) || (oPercent.value > 100)) {
+                    		    alert("Percentage must be a number from 1 to 100.");
+                    		    return;
+                    	    }
+                    
+                            var jsonAdd = { }
+                            jsonAdd.mechanism = oMechanism.selectedOptions[0].label;
+                            jsonAdd.combined_id = oMechanism.value;
+                            jsonAdd.percentage = oPercent.value;
+                            var percent = jsonAdd.percentage / 100.0;
+                            
+                            jsonAdd.hours = percent * <?php echo $this->employee['funded_hours_per_week']?>;
+                            jsonAdd.cost = percent * <?php echo $this->employee['annual_cost']?>;
+                          	ITECH.employeeFundingTable.addDataRow(jsonAdd, oMechanism.value);
+                                    
+                            oMechanism.value = "";
+                            oPercent.value = "";
+                          }
+                      </script>
+                      
+                    <div><label class="label">Mechanism</label>
+                      <select id="new_mechanism" name="new_mechanism">
+                      <option value="">--choose--</option>
+                      <?php 
+                      foreach ($this->mechanismList as $i => $row)
+                      {
+                        echo '<option value='.$row['combined_id'].'>'.$row['mechanism_phrase'].'</option>';
+                      }
+                      ?>
+                      </select>
+                      <span>
+                        <label class="label">Percentage</label>
+                        <input type="text" id="percentage" name="percentage" value="" />
+                      </span>
+                      <input type="submit" name="associateMechanism" value="<?php tp("Add");?>" class="insert" id="mechanismInsertButton" onclick="addMechanism(this);return false;"/>
+                    </div>
 
 					<div class="clear"></div>
 					<input type="hidden" name="limit" id="limit" value="1" />
-                    <input type="submit" name="save" value="<?php tp('Save & Continue'); ?>" class="submitArrow" />
+
 					<input type="submit" class="submitNoArrow" name="saveonly" value="<?php tp('Save');?>" />
 			</form>
 			<div class="clear"></div>
