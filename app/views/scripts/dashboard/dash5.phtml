@@ -207,7 +207,7 @@ print ScriptContainer::$instance->renderJSHead();
   function drawChart11() {
 	  
       var chart11Data = google.visualization.arrayToDataTable([
-['Month', 'Injectables', 'Implants'],
+['Month', 'Injectable', 'Implantable'],
 
 <?php
 	foreach ($this->AMC_data as $row){
@@ -222,7 +222,7 @@ print ScriptContainer::$instance->renderJSHead();
         title: 'National Average Monthly Consumption'
       };
 
-      var chart11 = new google.visualization.LineChart(document.getElementById('chart11_div'));
+      var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
 
       chart11.draw(chart11Data, chart11Options);
     }
