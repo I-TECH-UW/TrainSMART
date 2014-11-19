@@ -313,7 +313,7 @@ class DataController extends ITechController {
   		$sorted = $personTable->_fill_lookup($sorted, 'person_attend_reason_option', 'attend_reason_option_id', 'attend_reason_phrase');
   		$sorted = $personTable->_fill_lookup($sorted, 'person_education_level_option', 'highest_edu_level_option_id', 'education_level_phrase');
   		
-  		//replace labels 
+  		//replace labels    
   		foreach($sorted as $id => $row) {
   			$sorted[$id]['Facility Name'] = $sorted[$id]['facility_name'];
   			unset($sorted[$id]['facility_name']);
