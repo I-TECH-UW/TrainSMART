@@ -94,7 +94,7 @@ print ScriptContainer::$instance->renderJSHead();
 				<script src="http://code.highcharts.com/modules/drilldown.js"></script>
 
 				
-				<?php  require_once('views/scripts/dashboard/load_data.phtml');?>
+				<?php  // require_once('views/scripts/dashboard/load_data.phtml');?>
 
 
 
@@ -124,9 +124,7 @@ print ScriptContainer::$instance->renderJSHead();
 				<div id="allCharts" class="container">
 				<div id="toprow" class="container">
 					
-					<div id="highChart_div"
-					style="width: 600px;; height: 300px; margin: 0 auto float: left;" 
-					data-highcharts-chart="0"	/div> </div>
+					
 					
 					
 					<div id="chart11_div" style="width: 700px; height: 300px;"></div>
@@ -195,7 +193,7 @@ print ScriptContainer::$instance->renderJSHead();
 	   //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
 ?>
 		 
-	drawHighchart(currentLevel);
+	//drawHighchart(currentLevel);
 	drawChart11();
 	//drawChart12();
     //generateBarChart();
@@ -205,21 +203,24 @@ print ScriptContainer::$instance->renderJSHead();
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
   
   function drawChart11() {
-	  
+
       var chart11Data = google.visualization.arrayToDataTable([
-['Month', 'Injectable', 'Implantable'],
+
+['Year', 'FP', 'LARC'],
 
 <?php
-	foreach ($this->AMC_data as $row){
+	foreach ($this->HCWT_data as $row){
 ?>
-[<?php echo  " '$row[month]',$row[injectable_consumption],$row[implant_consumption] "; ?>],
+[<?php echo  " '$row[year]',$row[fp_trained],$row[larc_trained] "; ?>],
 <?php
 	}
 ?>
-      ]);
 
+      ]);
+	  
       var chart11Options = {
-        title: 'National Average Monthly Consumption'
+        title: 'Number of Health Workers Trained',
+        hAxis: {title: 'Year', titleTextStyle: {color: 'red'}},
       };
 
       var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));

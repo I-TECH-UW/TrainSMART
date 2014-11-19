@@ -1,12 +1,22 @@
-/**
+/*
  * edittable-training.js / Created by Fuse IQ for ITech /
  * jonah.ellison@fuseiq.com
- * 
+ */
+
+/** 
  * Purpose: Creates an YUI DataTable that allows for inline editing and
  * dynamically adding/deleting rows
  * 
+ * Instructions: Must have a div container with an id of labelAdd + "Table", e.g, <div id="personTable"></div>
+ * 
  * For adding/editing training sessions
- */
+ * @labelAdd: Text of add link (e.g., "Add person").  idContainer generated using @labelAdd and appending "Table"
+ * @tableData: JSON DataSource instance (YAHOO.util.DataSource)
+ * @columnDefs: Array of column names, keyed the same as the datasource columns
+ * @jsonUrl: don't know
+ * @linkInfo: don't know
+ * @editLinkAdd: link to edit row entry
+*/
 
 function makeEditTableTraining(labelAdd, tableData, columnDefs, jsonUrl, linkInfo, editLinkAdd) {
 	labelSafe = labelAdd.replace(' ', '');

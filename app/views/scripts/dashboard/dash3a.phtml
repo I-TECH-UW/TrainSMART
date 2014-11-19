@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<style>
+#homecontent {
+	background: url("images/content-bg.png") repeat-x scroll 0 0 #FAFAFA;
+	position: relative;
+}
+
+#homecontent-mid {
+	background: url("images/bg-stage.png") repeat-y scroll right top #FFFFFF;
+	border: 1px solid #BDBCBD;
+	min-height: 100%;
+	outline: medium none;
+	top: -40px;
+}
+
+#homebanner {
+	background: url("images/bg-stage-shade.png") repeat-x scroll 0 0
+		transparent;
+	padding-right: 20px;
+	position: relative;
+}
+
+.rounded {
+	border-radius: 10px 10px 10px 10px;
+}
+
+.sliderdiv {
+	background: none repeat scroll 0 0 FFFFFF;
+	float: left;
+}
+
+.main-search {
+	background: none repeat scroll 0 0 #FFFFFF;
+	float: left;
+	overflow: hidden;
+}
+
+.nav-buttons {
+	background: none repeat scroll 0 0 #FFFFFF;
+	float: left;
+	overflow: hidden;
+}
+
+</style>
+
+<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700"
+	rel="stylesheet" type="text/css">
+
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+
+<link rel="stylesheet" type="text/css"	href="https://google-developers.appspot.---com/_static/f7a896e076/css/screen-docs.css" />
+<link rel="stylesheet"	href="//www.google.com/cse/style/look/default.css" type="text/css" />
+<link rel="stylesheet"	href="//fonts.googleapis.com/css?family=Open+Sans:300,400"
+	type="text/css">
+<script	src="https://google-developers.appspot.com/_static/f7a896e076/js/prettify-bundle.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script id="jqueryui"	src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"	defer async></script>
+<script	src="//www.google.com/jsapi?key=AIzaSyCZfHRnq7tigC-COeQRmoa9Cxr0vbrK6xw"></script>
+<!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+<script	src="https://google-developers.appspot.com/_static/f7a896e076/js/framebox.js"></script>
+
+</head>
+<body class="yui-skin-sam">
+
+	<div id="pageHolder">
+
+		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+		<div id="content">
+
+
+			<!-------   /////////////////////////// make top buttons ////////////////////// -->
+
+			<div class="rightdiv" style="float: right;">
+				<?php  require_once('views/scripts/dashboard/top_buttons.phtml');?>
+					
+			</div>
+
+			<div class="clear"></div>
+			<div class="hrGrey"></div>
+			<div class="clear"></div>
+
+			<!-------   /////////////////////////// make left buttons ////////////////////// -->
+
+			<div class="nav-buttons">
+				<?php  require_once('views/scripts/dashboard/left_buttons.phtml');?>
+				
+			</div>
+
+			<!-------   /////////////////////////// charts ////////////////////// -->
+
+
+			<body class="docs slim framebox_body">
+
+				<div id="allCharts" class="container">
+				<div id="toprow" class="container">
+					
+					 <div id="drillChart" 
+					 style="min-width: 310px; height: 600px; max-width: 1000px; max-height: 600px; margin: 0 auto float: left;" ></div>
+					
+
+				<div class="clear"></div>
+				<div class="hrGrey"></div>
+				<div class="clear"></div>
+
+				<div id="bottomrow" class="container">
+
+					<div id="homecontent" class="container">
+						<div id="homecontent-mid" class="row rounded">
+							<div id="homebanner" class="rounded">
+
+								<!-------   /////////////////////////// chart 2,1 ////////////////////// -->
+								2,1
+								
+						<div id="homecontent" class="container">
+							<div id="homecontent-mid" class="row rounded">
+								<div id="homebanner" class="rounded">
+								<div class="sliderdiv">
+									<div id="chart11_div" style="width: 800px; height: 300px;"></div>
+									</div>
+									<div class="main-search">
+										<div id="chart12_div" style="width: 500px; height: 300px;"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+								
+								<!-------   /////////////////////////// chart 2,2 ////////////////////// -->
+								2,2
+								
+								<div class="main-search"></div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+
+
+		<div class="clear"></div>
+		<div class="hrGrey"></div>
+		<div class="clear"></div>
+		
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+		<!-------   /////////////////////////// main gnr ////////////////////// -->
+
+		<script type="text/javascript">
+		
+  google.load('visualization', '1.0', {'packages':['corechart', 'table', 'gauge', 'controls']});
+  google.setOnLoadCallback(apiLoaded);
+  function apiLoaded() {
+	  document.getElementById("allCharts").style.marginLeft="130px";
+
+
+
+	//drawChart11();
+	//drawChart12();
+		
+	var currentLevel;
+	currentLevel = <?php echo '\'' . $this->location_data[0][name] . '\''; ?>;
+
+<?php  //file_put_contents('c:\wamp\logs\php_debug.log', 'dash3 193 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	   //var_dump("location_data=", $this->location_data[0],"END");
+	   //var_dump("facility_data=",$this->facility_data[0],"END");
+	   //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
+?>
+		 
+	
+    //generateBarChart();
+    drawChartDrill();
+   
+  }
+
+  <!-------   /////////////////////////// script 1,1 ////////////////////// -->
+  
+  function drawChart11() {
+      var data = google.visualization.arrayToDataTable([
+        ['Year', 'Recieved', 'Dispensed'],
+        ['2004',  1000,      400],
+        ['2005',  1170,      460],
+        ['2006',  660,       1120],
+        ['2007',  1030,      540]
+      ]);
+
+      var options = {
+        title: 'Status'
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart11_div'));
+
+      chart.draw(data, options);
+    }
+
+ <!-------   /////////////////////////// script 1,2 ////////////////////// -->
+  
+  function drawChart12() {
+	 var data = google.visualization.arrayToDataTable([
+	   ['Method', 'LARC', 'Male Condom', 'Female Condom', 'IUD', { role: 'annotation' } ],
+	   ['2011', 10, 24, 20, 5, ''],
+	   ['2012', 16, 22, 23, 9, ''],
+	   ['2013', 28, 19, 29, 13, '']
+	 ]);
+
+	 var options = {
+		        width: 600,
+		        height: 400,
+		        legend: { position: 'top', maxLines: 3 },
+		        bar: { groupWidth: '75%' },
+		        isStacked: true
+		      };
+
+      var chart = new google.visualization.BarChart(document.getElementById('chart12_div'));
+
+      chart.draw(data, options);
+    }
+  
+
+
+  <!-------   /////////////////////////// 2,1 script gnr  ////////////////////// -->
+
+  function drawChartDrill () {
+	   
+
+	    var latest_consumption_data = google.visualization.arrayToDataTable([
+
+['Category', 'Name', 'Value'],
+
+<?php
+	foreach ($this->latest_consumption_data as $row){
+?>
+['<?php echo str_replace("'",'', str_replace(' ', '', $row[name]))  ?>',' <?php echo str_replace("'",'',str_replace(' ','',$row[child_name])); ?>', <?php echo $row[consumption]; ?>],
+<?php
+	}
+?>
+
+]);
+	
+	  
+	    var aggregateData = google.visualization.data.group(latest_consumption_data, [0], [{
+	        type: 'number',
+	        label: 'Consumption',
+	        column: 2,
+	        aggregation: google.visualization.data.sum
+	    }]);
+
+	    var topLevel = true;
+
+	    
+	    var chart = new google.visualization.ColumnChart(document.getElementById('drillChart'));
+	    
+    
+	    var options = {
+	        height: 400,
+	        width: 1000,
+	        animation:{duration: 600, easing: 'out',},
+	    };
+
+	    function draw (category) {
+	        if (topLevel) {
+	            // rename the title
+	            options.title = 'Latest Consumption Data';
+	            // draw the chart using the aggregate data
+	            chart.draw(aggregateData, options);
+	        }
+	        else {
+	            var view = new google.visualization.DataView(latest_consumption_data);
+	            // use columns "Name" and "Value"
+	            view.setColumns([1, 2]);
+	            // filter the data based on the category
+	            view.setRows(latest_consumption_data.getFilteredRows([{column: 0, value: category}]));
+	            // rename the title
+	            options.title = 'Category: ' + category;
+	            // draw the chart using the view
+	            chart.draw(view, options);
+	        }
+	    }
+	    
+	    google.visualization.events.addListener(chart, 'select', function () {
+	        if (topLevel) {
+	            var selection = chart.getSelection();
+	            // drill down if the selection isn't empty
+	            if (selection.length) {
+	                var category = aggregateData.getValue(selection[0].row, 0);
+	                topLevel = false;
+	                draw(category);
+	            }
+	        }
+	        else {
+	            // go back to the top
+	            topLevel = true;
+	            draw();
+	        }
+	    });
+
+	    draw();
+	}
+
+  <!-------   /////////////////////////// 2,1 end script ////////////////////// -->
+
+
+  <!-------   /////////////////////////// 2,2 script ////////////////////// -->
+
+	
+
+
+  <!-------   /////////////////////////// 2,2 end script ////////////////////// -->
+  
+
+  
+
+</script>
+
+
+<script>
+  devsite.github.Link.convertAnchors();
+  window.prettyPrint();
+</script>	
+
+  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+
+
+
+</body>
+
+</html>
+

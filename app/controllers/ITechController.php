@@ -30,7 +30,7 @@ class ITechController extends Zend_Controller_Action
     public static function translations() {
     	return self::$_translations;
     }
-    /* __construct
+    /** __construct
      *
      * create the filters needed for this controller.
      *
@@ -130,7 +130,7 @@ class ITechController extends Zend_Controller_Action
      	Zend_Controller_Front::getInstance()->setParam('noViewRenderer',1);
  	}
 
-   /* send
+   /** send
      *
      * Takes the output processor and generates the proper output. Hands the
      * output off to the response object for processing.
@@ -482,7 +482,7 @@ protected function sendData($data) {
     return fgetcsv($this->_csvHandle, 10000, ',');
   }
 
-  /*
+  /**
    * string or comma seperated list to array
    */
   protected function _array_me(&$var)
@@ -498,7 +498,7 @@ protected function sendData($data) {
     return array($var);
   }
 
-  /*
+  /**
    * map array to hash
    */
   protected function _map_me(&$var, $keyCol = 0, $valCol = 1)
@@ -510,9 +510,11 @@ protected function sendData($data) {
     return $output;
   }
 
-  // lazy date parsing
-  // accepts (euro: d-m-y, us: m/d/y, sql: yyyy-mm-dd)
-  // returns yyyy-mm-dd
+  /**
+   *  lazy date parsing
+   *  accepts (euro: d-m-y, us: m/d/y, sql: yyyy-mm-dd)
+   *  returns yyyy-mm-dd 
+   */
   protected function _date_to_sql ($val)
   {
       $val = trim($val);
@@ -534,9 +536,11 @@ protected function sendData($data) {
       return $val;
   }
 
-  // lazy date parsing *d-m-y only version*
-  // accepts (euro: d-m-y, euro: d/m/y, sql: yyyy-mm-dd)
-  // returns yyyy-mm-dd
+  /**
+   * lazy date parsing *d-m-y only version*
+   * accepts (euro: d-m-y, euro: d/m/y, sql: yyyy-mm-dd)
+   * returns yyyy-mm-dd
+   */ 
   protected function _euro_date_to_sql ($val)
   {
       $val = trim($val);
@@ -563,8 +567,10 @@ protected function sendData($data) {
     return ereg_replace("[^0-9]", "", $str);
   }
 
-  // is an array array empty
-  // hack to work with getSanParam on select_name[] fields, if empty the array will contain multiple ""
+  /**
+   * is an array array empty
+   * hack to work with getSanParam on select_name[] fields, if empty the array will contain multiple ""
+   */
   protected function _is_empty_input_array($arr)
   {
     if (!is_array($arr))
@@ -581,9 +587,11 @@ protected function sendData($data) {
     return ! $foundSomething;
   }
 
-  // array_empty_string_to_zero
-  // hack to work with getSanParam on select_name[] fields, if empty the array will contain multiple ""
-  // sets "" in arrays to 0. removes dupes.
+  /**
+   * array_empty_string_to_zero
+   * hack to work with getSanParam on select_name[] fields, if empty the array will contain multiple ""
+   * sets "" in arrays to 0. removes dupes.
+   */
   protected function _array_empty_to_zero($arr)
   {
     if (!is_array($arr))
@@ -600,8 +608,10 @@ protected function sendData($data) {
     return count($arr) ? $arr : array();
   }
 
-  // _array_no_empties
-  // remove all empty strings from an input array
+  /**
+   * _array_no_empties
+   * remove all empty strings from an input array
+   */ 
   protected function _array_no_empties($arr)
   {
     if (!is_array($arr))
@@ -613,15 +623,19 @@ protected function sendData($data) {
     return $arr;
   }
 
-  // return either just a number or comma seperated list if $val is array or not, also strips empty "" array values from implode
+  /**
+   *  return either just a number or comma seperated list if $val is array or not, also strips empty "" array values from implode
+   */
   protected function _sql_implode($val)
   {
     return (is_array($val) ? implode(',', $this->_array_no_empties( $val )) : $val);
   }
 
-  // return either just a number or comma seperated list if $val is array or not
-  // used to support: array <select> inputs, whether they are ints or 1_2_34 values
-  // !!! not used.  - an attempt at combining, pop_all (if necessary), has_real_values(), empty "" values to 0, and array_unique in one function. works good.
+  /**
+   * return either just a number or comma seperated list if $val is array or not
+   * used to support: array <select> inputs, whether they are ints or 1_2_34 values
+   * !!! not used.  - an attempt at combining, pop_all (if necessary), has_real_values(), empty "" values to 0, and array_unique in one function. works good.
+   */
   protected function _trainsmart_implode($arr)
   {
     $arr = $this->_pop_all($arr);                         // get last id eg, 1_2_34 returns 34
@@ -636,8 +650,11 @@ protected function sendData($data) {
     }
   }
 
-  // user has passed an 123_55_89  style value or array of these values
-  // return value: only the last value after the last _
+  /**
+   * user has passed an 123_55_89  style value or array of these values
+   * return value: only the last value after the last _ 
+   */
+ 
   protected function _pop_all($arr)
   {
     if (!$arr && $arr !== '0')
@@ -654,7 +671,9 @@ protected function sendData($data) {
     }
   }
 
-  // create option phrase and return option ID
+  /** 
+   * create option phrase and return option ID
+   */
   protected function _importHelperFindOrCreate($table, $col, $val)
   {
   	require_once('models/table/MultiOptionList.php');
@@ -680,9 +699,11 @@ protected function sendData($data) {
 
   }
 
-  // create option phrase and return option ID
-  // second 2 to last params only required if multi option table to save option ids to training
-  // last param is extra data, ie # days for pepfar trainings, funding amount for funding
+  /**
+   * create option phrase and return option ID
+   * second 2 to last params only required if multi option table to save option ids to training
+   * last param is extra data, ie # days for pepfar trainings, funding amount for funding
+   */
   protected function _importHelperFindOrCreateMOLT($table, $col, $val, $multiAssignTable = null, $training_id = null, $extra = null)
   {
   	require_once('models/table/MultiOptionList.php');
@@ -738,7 +759,7 @@ protected function sendData($data) {
 	return true;
   }
 
-  /*
+  /**
    * find or create a row, then save it with values from $valueArray
    *
    * basically an extension of existing fuctions like fillFromArray

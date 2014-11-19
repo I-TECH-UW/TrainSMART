@@ -30,7 +30,7 @@ class PartnerController extends ReportFilterHelpers {
 	}
 
 	public function deleteAction() {
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 
@@ -56,7 +56,7 @@ class PartnerController extends ReportFilterHelpers {
 	}
 	
 	public function deleteFunderAction() {
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 	
@@ -120,7 +120,7 @@ class PartnerController extends ReportFilterHelpers {
 	
 	
 	public function addFunderToPartnerAction() {
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 	
@@ -202,7 +202,7 @@ class PartnerController extends ReportFilterHelpers {
 	}
 
 	public function editAction() {
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 
@@ -223,110 +223,117 @@ class PartnerController extends ReportFilterHelpers {
 
 		if ( $this->getRequest()->isPost() )
 		{
-			//validate then save
-			$status->checkRequired ( $this, 'partner', t ( 'Partner' ) );
-			//if ($this->setting('display_partner_type'))
-				//$status->checkRequired ( $this, 'partner_type_option_id',         t ( 'Type of Partner' ) );
-			$status->checkRequired ( $this, 'address1',                           t ( 'Address 1' ) );
-			$status->checkRequired ( $this, 'city',                               t ( 'City' ) );
-			$status->checkRequired ( $this, 'province_id',                        t ( 'Region A (Province)' ) );
-			if ($this->setting('display_employee_funder')) {}
-			#if ($this->setting('display_employee_intended_transition'))
-			#	$status->checkRequired ( $this, 'employee_transition_option_id',  t ( 'Intended Transition' ) );
-			#$status->checkRequired ( $this, 'comments',                          t ( 'Partner Comments' ) );
-			#$status->checkRequired ( $this, 'subpartner_id[]',                   t ( 'Sub Partner' ) );
-			if ($this->setting('display_employee_agreement_end_date'))
-				$status->checkRequired ( $this, 'agreement_end_date',             t ( 'Agreement End Date' ) );
-			if ($this->setting('display_employee_importance'))
-				$status->checkRequired ( $this, 'partner_importance_option_id',   t ( 'Importance' ) );
-			$status->checkRequired ( $this, 'hr_contact_name',                    t ( 'HR Contact Person Name' ) );
-			$status->checkRequired ( $this, 'hr_contact_phone',                   t ( 'HR Contact Office Phone' ) );
-			#$status->checkRequired ( $this, 'hr_contact_fax',                     t ( 'HR Contact Office Fax' ) );
-			$status->checkRequired ( $this, 'hr_contact_email',                   t ( 'HR Contact Email' ) );
-			
-			
-			
-			$params['subPartner'] = $this->_array_me($params['subPartner']);
-			
-			$params['subpartner_id'] = $this->_array_me($params['subpartner_id']);
-			foreach ($params['subpartner_id'] as $i => $value) { // strip empty values (it breaks MultiOptionList apparently)
-				if (empty($value))
-					unset($params['subpartner_id'][$i]);
-			}
-				
-			$params['partnerFunder'] = $this->_array_me($params['partnerFunder']);
-			$params['mechanism'] = $this->_array_me($params['mechanism']);
-			
-    		$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-			
-			foreach ($params['funding_end_date'] as $i => $value) 
-			  $params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
-			
-			
-			
-			$params['transition_confirmed'] = $params['transition_confirmed'] == 'on' ? 1 : 0;
-			$params['agreement_end_date'] = $this->_euro_date_to_sql($params['agreement_end_date']);
-			
-			
-			//location save stuff
-			$params['location_id'] = regionFiltersGetLastID(null, $params); // formprefix, criteria
-			if ( $params['city'] ) {
-				$params['location_id'] = Location::insertIfNotFound ( $params['city'], $params['location_id'], $this->setting ( 'num_location_tiers' ) );
-			}
-
-			if (! $status->hasError() ) {
-				$id = $this->_findOrCreateSaveGeneric('partner', $params);
-
-				if(!$id) {
-					$status->setStatusMessage( t('That partner could not be saved.') );
-				} else {
-					
-					// check for dependencies in epsfm
-					// $psfm = new ITechTable(array('name' => 'partner_to_subpartner_to_funder_to_mechanism'));
-					// $where = "partner_id = $id";
-					// $select_result = $psfm->select($where, false);
-					// if ($select_result)
-					//  	break;
-
-					// delete all
-					//$psfm = new ITechTable(array('name' => 'partner_to_subpartner_to_funder_to_mechanism'));
-					//$where = "partner_id = $id";
-					//$delete_result = $psfm->delete($where, false);
-						
-					
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'partCont 245>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-				    //var_dump($params);
-					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-					
-					// insert from view
-					/*
-					foreach($params['subPartner'] as $i => $val){
-						
-						if($id && $params['subPartner'][$i] && $params['partnerFunder'][$i] && $params['mechanism'][$i] && $params['funding_end_date'][$i]) {
-											
-							$data = array(
-									'partner_id'  => $id,
-									'subpartner_id' => $params['subPartner'][$i],
-									'partner_funder_option_id' => $params['partnerFunder'][$i],
-									'mechanism_option_id' => $params['mechanism'][$i],
-									'funding_end_date' => $params['funding_end_date'][$i],
-							);
-							
-							$insert_result = $psfm->insert($data);
-						}
-					}
-					*/
-					
-					
-					//$db->query("DELETE FROM partner_to_subpartner WHERE partner_id = $id"); // updateOptions is not clearing the old options, I dont know why... todo
-					//MultiOptionList::updateOptions ( 'partner_to_subpartner', 'partner', 'partner_id', $id, 'subpartner_id', $params['subpartner_id'] );
-					
-					$status->setStatusMessage( t('The partner was saved.') );
-					$this->_redirect("partner/edit/id/$id");
-				}
-			}
+		    if (!$this->hasACL("edit_partner"))
+		    {
+		        $this->doNoAccessError();
+		    }
+		    else 
+		    {
+    			//validate then save
+    			$status->checkRequired ( $this, 'partner', t ( 'Partner' ) );
+    			//if ($this->setting('display_partner_type'))
+    				//$status->checkRequired ( $this, 'partner_type_option_id',         t ( 'Type of Partner' ) );
+    			$status->checkRequired ( $this, 'address1',                           t ( 'Address 1' ) );
+    			$status->checkRequired ( $this, 'city',                               t ( 'City' ) );
+    			$status->checkRequired ( $this, 'province_id',                        t ( 'Region A (Province)' ) );
+    			if ($this->setting('display_employee_funder')) {}
+    			#if ($this->setting('display_employee_intended_transition'))
+    			#	$status->checkRequired ( $this, 'employee_transition_option_id',  t ( 'Intended Transition' ) );
+    			#$status->checkRequired ( $this, 'comments',                          t ( 'Partner Comments' ) );
+    			#$status->checkRequired ( $this, 'subpartner_id[]',                   t ( 'Sub Partner' ) );
+    			if ($this->setting('display_employee_agreement_end_date'))
+    				$status->checkRequired ( $this, 'agreement_end_date',             t ( 'Agreement End Date' ) );
+    			if ($this->setting('display_employee_importance'))
+    				$status->checkRequired ( $this, 'partner_importance_option_id',   t ( 'Importance' ) );
+    			$status->checkRequired ( $this, 'hr_contact_name',                    t ( 'HR Contact Person Name' ) );
+    			$status->checkRequired ( $this, 'hr_contact_phone',                   t ( 'HR Contact Office Phone' ) );
+    			#$status->checkRequired ( $this, 'hr_contact_fax',                     t ( 'HR Contact Office Fax' ) );
+    			$status->checkRequired ( $this, 'hr_contact_email',                   t ( 'HR Contact Email' ) );
+    			
+    			
+    			
+    			$params['subPartner'] = $this->_array_me($params['subPartner']);
+    			
+    			$params['subpartner_id'] = $this->_array_me($params['subpartner_id']);
+    			foreach ($params['subpartner_id'] as $i => $value) { // strip empty values (it breaks MultiOptionList apparently)
+    				if (empty($value))
+    					unset($params['subpartner_id'][$i]);
+    			}
+    				
+    			$params['partnerFunder'] = $this->_array_me($params['partnerFunder']);
+    			$params['mechanism'] = $this->_array_me($params['mechanism']);
+    			
+        		$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
+    			
+    			foreach ($params['funding_end_date'] as $i => $value) 
+    			  $params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
+    			
+    			
+    			
+    			$params['transition_confirmed'] = $params['transition_confirmed'] == 'on' ? 1 : 0;
+    			$params['agreement_end_date'] = $this->_euro_date_to_sql($params['agreement_end_date']);
+    			
+    			
+    			//location save stuff
+    			$params['location_id'] = regionFiltersGetLastID(null, $params); // formprefix, criteria
+    			if ( $params['city'] ) {
+    				$params['location_id'] = Location::insertIfNotFound ( $params['city'], $params['location_id'], $this->setting ( 'num_location_tiers' ) );
+    			}
+    
+    			if (! $status->hasError() ) {
+    				$id = $this->_findOrCreateSaveGeneric('partner', $params);
+    
+    				if(!$id) {
+    					$status->setStatusMessage( t('That partner could not be saved.') );
+    				} else {
+    					
+    					// check for dependencies in epsfm
+    					// $psfm = new ITechTable(array('name' => 'partner_to_subpartner_to_funder_to_mechanism'));
+    					// $where = "partner_id = $id";
+    					// $select_result = $psfm->select($where, false);
+    					// if ($select_result)
+    					//  	break;
+    
+    					// delete all
+    					//$psfm = new ITechTable(array('name' => 'partner_to_subpartner_to_funder_to_mechanism'));
+    					//$where = "partner_id = $id";
+    					//$delete_result = $psfm->delete($where, false);
+    						
+    					
+    					//file_put_contents('c:\wamp\logs\php_debug.log', 'partCont 245>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+    				    //var_dump($params);
+    					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+    					
+    					// insert from view
+    					/*
+    					foreach($params['subPartner'] as $i => $val){
+    						
+    						if($id && $params['subPartner'][$i] && $params['partnerFunder'][$i] && $params['mechanism'][$i] && $params['funding_end_date'][$i]) {
+    											
+    							$data = array(
+    									'partner_id'  => $id,
+    									'subpartner_id' => $params['subPartner'][$i],
+    									'partner_funder_option_id' => $params['partnerFunder'][$i],
+    									'mechanism_option_id' => $params['mechanism'][$i],
+    									'funding_end_date' => $params['funding_end_date'][$i],
+    							);
+    							
+    							$insert_result = $psfm->insert($data);
+    						}
+    					}
+    					*/
+    					
+    					
+    					//$db->query("DELETE FROM partner_to_subpartner WHERE partner_id = $id"); // updateOptions is not clearing the old options, I dont know why... todo
+    					//MultiOptionList::updateOptions ( 'partner_to_subpartner', 'partner', 'partner_id', $id, 'subpartner_id', $params['subpartner_id'] );
+    					
+    					$status->setStatusMessage( t('The partner was saved.') );
+    					$this->_redirect("partner/edit/id/$id");
+    				}
+    			}		
+		    }
 		}
-
+		
 		if ($id && ! $status->hasError()) { // read data from db
 
 			// restricted access?? only show partners by organizers that we have the ACL to view
@@ -386,7 +393,10 @@ class PartnerController extends ReportFilterHelpers {
 		if (empty($params['mechanism_option_id']))
 			$params['mechanism_option_id'] = array(array());
 		
-
+        if (!$this->hasACL("edit_partners"))
+        {
+            $this->view->viewonly = true;
+        }
 		// assign form drop downs
 		$this->view->assign( 'status', $status );
 		$this->view->assign ( 'pageTitle', $this->view->mode == 'add' ? t ( 'Add Partner' ) : t( 'View Partner' ) );
@@ -405,7 +415,7 @@ class PartnerController extends ReportFilterHelpers {
 
 	public function searchAction()
 	{
-		if (! $this->hasACL ( 'edit_employee' )) {
+		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
 

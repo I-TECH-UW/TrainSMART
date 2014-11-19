@@ -123,19 +123,9 @@ print ScriptContainer::$instance->renderJSHead();
 
 				<div id="allCharts" class="container">
 				<div id="toprow" class="container">
-					
-					<div id="highChart_div"
-					style="width: 600px;; height: 300px; margin: 0 auto float: left;" 
-					data-highcharts-chart="0"	/div> </div>
-					
-					
-					<div id="chart11_div" style="width: 700px; height: 300px;"></div>
-					
-					
-					
-					
-					</div>
-
+				   <div id="drillChart" style="width: 700px; height: 300px;"></div>
+				   
+				   <div id="chart12_div" style="width: 700px; height: 300px;"></div>
 				<div class="clear"></div>
 				<div class="hrGrey"></div>
 				<div class="clear"></div>
@@ -149,10 +139,12 @@ print ScriptContainer::$instance->renderJSHead();
 							<div id="homecontent-mid" class="row rounded">
 								<div id="homebanner" class="rounded">
 								<div class="sliderdiv">
-									<div id="chart13_div" style="width: 800px; height: 300px;"></div>
-									</div>
+
+								
+								</div>
 									<div class="main-search">
-										<div id="chart13_div" style="width: 500px; height: 300px;"></div>
+
+									
 									</div>
 								</div>
 							</div>
@@ -195,18 +187,93 @@ print ScriptContainer::$instance->renderJSHead();
 	   //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
 ?>
 		 
-	drawHighchart(currentLevel);
-	drawChart11();
-	//drawChart12();
+	//drawHighchart(currentLevel);
+	drawChartDrill();
+	drawChart12();
     //generateBarChart();
    
   }
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
-  
-  function drawChart11() {
+
+  function drawChartDrill () {
+	   
+
+	    var latest_consumption_data = google.visualization.arrayToDataTable([
+
+['Category', 'Name', 'Value'],
+
+<?php
+	foreach ($this->latest_consumption_data as $row){
+?>
+['<?php echo str_replace("'",'', str_replace(' ', '', $row[name]))  ?>',' <?php echo str_replace("'",'',str_replace(' ','',$row[child_name])); ?>', <?php echo $row[consumption]; ?>],
+<?php
+	}
+?>
+
+]);
+	
 	  
-      var chart11Data = google.visualization.arrayToDataTable([
+	    var aggregateData = google.visualization.data.group(latest_consumption_data, [0], [{
+	        type: 'number',
+	        label: 'Consumption',
+	        column: 2,
+	        aggregation: google.visualization.data.sum
+	    }]);
+
+	    var topLevel = true;
+
+	    
+	    var chart = new google.visualization.ColumnChart(document.getElementById('drillChart'));
+	    
+
+	    var options = {
+	       animation:{duration: 500, easing: 'out',},
+	    };
+
+	    function draw (category) {
+	        if (topLevel) {
+	            // rename the title
+	            options.title = 'Latest Consumption Data';
+	            // draw the chart using the aggregate data
+	            chart.draw(aggregateData, options);
+	        }
+	        else {
+	            var view = new google.visualization.DataView(latest_consumption_data);
+	            // use columns "Name" and "Value"
+	            view.setColumns([1, 2]);
+	            // filter the data based on the category
+	            view.setRows(latest_consumption_data.getFilteredRows([{column: 0, value: category}]));
+	            // rename the title
+	            options.title = 'Category: ' + category;
+	            // draw the chart using the view
+	            chart.draw(view, options);
+	        }
+	    }
+	    
+	    google.visualization.events.addListener(chart, 'select', function () {
+	        if (topLevel) {
+	            var selection = chart.getSelection();
+	            // drill down if the selection isn't empty
+	            if (selection.length) {
+	                var category = aggregateData.getValue(selection[0].row, 0);
+	                topLevel = false;
+	                draw(category);
+	            }
+	        }
+	        else {
+	            // go back to the top
+	            topLevel = true;
+	            draw();
+	        }
+	    });
+
+	    draw();
+	}
+  
+  function drawChart12() {
+	  
+      var chart12Data = google.visualization.arrayToDataTable([
 ['Month', 'Injectable', 'Implantable'],
 
 <?php
@@ -218,13 +285,13 @@ print ScriptContainer::$instance->renderJSHead();
 ?>
       ]);
 
-      var chart11Options = {
+      var chart12Options = {
         title: 'National Average Monthly Consumption'
       };
 
-      var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
+      var chart12 = new google.visualization.LineChart(document.getElementById('chart12_div'));
 
-      chart11.draw(chart11Data, chart11Options);
+      chart12.draw(chart12Data, chart12Options);
     }
 
 
@@ -280,7 +347,7 @@ print ScriptContainer::$instance->renderJSHead();
 
  <!-------   /////////////////////////// script 1,2 ////////////////////// -->
   
-  function drawChart12() {
+  function drawChart14() {
 	 var data = google.visualization.arrayToDataTable([
 	   ['Method', 'LARC', 'Male Condom', 'Female Condom', 'IUD', { role: 'annotation' } ],
 	   ['2011', 10, 24, 20, 5, ''],

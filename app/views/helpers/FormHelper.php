@@ -1,28 +1,37 @@
 <?php
-// simple form functions
-// params:
-//		$view = $this
-//		$label = label text
-//		$content = 'text' or 'textarea' or any html blob
-//		$val = value to display for <input> tags
-// They also work off things like the $view's $this->viewonly variable (readonly)
-// to handle displaying extra data or disabling fields.
-// 		currently checking: $view->viewonly, $view->required_fields, $view->is_report, $view->thin_labels
-//
-// they also print a checkbox if $view->is_report is 1
-// is_report checkboxes check $view->criteria[] for report check values.
-//
-// examples:
-// labelAndField($this, t('Input 1'), $myDropDown, 'input_1');
-// labelAndField($this, t('Input 2'), 'text', 'field2', $values['field2']);
+/**
+ * simple form functions
+ * params:
+ *		$view = $this
+ *		$label = label text
+ *		$content = 'text' or 'textarea' or any html blob
+ *		$val = value to display for <input> tags
+ * They also work off things like the $view's $this->viewonly variable (readonly)
+ * to handle displaying extra data or disabling fields.
+ * 		currently checking: $view->viewonly, $view->required_fields, $view->is_report, $view->thin_labels
+ *
+ * they also print a checkbox if $view->is_report is 1
+ * is_report checkboxes check $view->criteria[] for report check values.
+ *
+ * examples:
+ * labelAndField($this, t('Input 1'), $myDropDown, 'input_1');
+ * labelAndField($this, t('Input 2'), 'text', 'field2', $values['field2']);
+ */
 
+/**
+ * @param  view   $view       - the view object
+ * @param  string $label      - label text
+ * @param  string $content    - 'text' or 'textarea' or any html blob
+ * @param  string $id    = '' - html element id
+ * @param  string $val   = '' - value to display for input tags
+ * @return html string
+ */
 
-/*   labelAndField
-
-	returns:
-	<div class="$class $id">$required$label</div>
-	<div class="fieldInput">$reportcheck$content$cal1</div
+/* returns:
+ * @return string <div class="$class $id">$required$label</div>
+ *	<div class="fieldInput">$reportcheck$content$cal1</div>
 */
+
 function labelAndField($view, $label, $content, $id = '', $val = '')
 {
 	$class = $view->thin_labels ? 'fieldLabelThin' : 'fieldLabel';
@@ -51,12 +60,18 @@ EOF;
 	return $o;
 }
 
-/*   labelAndField
+/**
+ * @param  view   $view       - the view object
+ * @param  string $label      - label text
+ * @param  string $id    = '' - html element id
+ * @param  string $val   = '' - value to display for input tags
+ * @return html string
+ */
 
-	returns:
-	<div class="$class $id">$required$label</div>
-	<div class="fieldInput">$reportcheck<input type="checkbox" id="$id" name="$id" $checked $readonly /></div>
-*/
+/* returns:
+ * 	<div class="$class $id">$required$label</div>" 
+ *	<div class="fieldInput">$reportcheck<input type="checkbox" id="$id" name="$id" $checked $readonly /></div>
+ */
 function labelAndCheckBox($view, $label, $id = '', $val = '')
 {
 	$readonly = $view->viewonly ? 'readonly="readonly"' : '';
@@ -72,20 +87,29 @@ EOF;
 	return $o;
 
 }
-/* labelTwoFields
 
-	returns:
-	<div class="$class $id">$required$label</div>
-	<div class="fieldInput">$reportcheck
-		<input type="text" id="$id1" name="$id1" value="$val1" $readonly/> $cal1
-		<span class="$id2">
-
-			<label class="label"> $label2 </label>
-			<input type="text" id="$id2" name="$id2" value="$val2" $readonly/> $cal2
-		</span>
-	</div>
-*/
-function labelTwoFields($view, $label, $label2, $id1, $id2, $val1 = '', $val2 = '') {
+/**
+ * @param  view    $view        - the view object
+ * @param  string  $label1      - label text
+ * @param  string  $label2      - label text
+ * @param  string  $id1         - html element id
+ * @param  string  $id2         - html element id
+ * @param  string  $val1 = ''   - value to display for input tags
+ * @param  string  $val2 = ''   - value to display for input tags
+ * @return html string
+ */
+ 
+/*  returns:
+ * 	<div class="$class $id">$required$label1</div>
+ *	<div class="fieldInput">$reportcheck
+ *		<input type="text" id="$id1" name="$id1" value="$val1" $readonly/> $cal1
+ *		<span class="$id2">
+ *			<label class="label"> $label2 </label>
+ *			<input type="text" id="$id2" name="$id2" value="$val2" $readonly/> $cal2
+ *		</span>
+ *	</div>
+ */
+function labelTwoFields($view, $label1, $label2, $id1, $id2, $val1 = '', $val2 = '') {
 	$readonly = $view->viewonly ? 'readonly="readonly"' : '';
 	$class = $view->thin_labels ? 'fieldLabelThin' : 'fieldLabel';
 	$required = ( array_search($id1,$view->required_fields) !== false ) ? '<span class="required">*</span>' : '';
@@ -99,7 +123,7 @@ function labelTwoFields($view, $label, $label2, $id1, $id2, $val1 = '', $val2 = 
 	$reportcheck = $view->is_report ? '<div class="leftBorderPad"><input type="checkbox" name="show_'.$id1.'"'. (($view->criteria['show_'.$id1]) ? 'CHECKED' : '').'/></div></div><div class="leftBorder">' : '';
 
 	$o = <<< EOF
-	<div class="$class $id">$required$label</div>
+	<div class="$class $id">$required$label1</div>
 	<div class="fieldInput">$reportcheck
 		<input type="text" id="$id1" name="$id1" value="$val1" $class1 $readonly/> $cal1
 		<span class="$id2">
@@ -114,10 +138,16 @@ EOF;
 
 }
 
-/* label
+/**
+ * @param  view    $view            - the view object
+ * @param  string  $label           - label text
+ * @param  string  $float50 = false - html element id
+ * @return html string
+ */
 
+/* 
 	returns:
-	<div class=\"$class\">$label</div>";
+	<div class=\"$class\">$label</div>;
 */
 
 function label($view, $label, $float50 = false) {
@@ -130,15 +160,13 @@ function label($view, $label, $float50 = false) {
 	return "<div class=\"$class\">$label</div>";
 }
 
-/* formhelperdate
-	mysql timestamp -> m/d/Y output
-
-	returns:
-	m/d/Y date or empty string
-
-	params: $value array or string
-	        $formatAsDMY show day of month first (euro style)
-*/
+/**
+ * mysql timestamp -> m/d/Y output
+ * 
+ * @param  array or string    $value 
+ * @param  string  $formatAsDMY = true - show day of month first (euro style)
+ * @return string - date or empty string
+ */
 
 function formhelperdate($value, $formatAsDMY = true)
 {
@@ -162,6 +190,13 @@ function formhelperdate($value, $formatAsDMY = true)
 	return date($fmt, strtotime($value));
 }
 
+/**
+ * @param  view    $view    - the view object
+ * @param  string  $label   - label text
+ * @param  string  $id      - html element id
+ * @param  string  $val     - value to display for input tags
+ * @return html string
+ */
 
 function genderDropdown($view, $label, $id, $val)
 {
@@ -184,6 +219,14 @@ function genderDropdown($view, $label, $id, $val)
 	</select></div>';//</div>
 	return $o;
 }
+
+/**
+ * @param  view    $view    - the view object
+ * @param  string  $label   - label text
+ * @param  string  $id      - html element id
+ * @param  string  $val     - value to display for input tags
+ * @return html string
+ */
 
 function confirmDropdown($view, $label, $id, $val)
 {

@@ -4,7 +4,9 @@
 *
 *  Built for itechweb
 *  Fuse IQ -- jonah.ellison@fuseiq.com
-*
+*/
+
+/**
 * Creates an editable YUI DataTable
 *
 */
@@ -14,8 +16,19 @@ class EditTableHelper {
 	public function __construct($label, array $rowRay, array $colDefs) {
 		return $this->generateHtml($label, $rowRay, $colDefs);
 	}
-
-	// Generate HTML & JavaScript for our EditTable
+	
+	/**
+	 * Generate HTML & JavaScript for our EditTable
+	 *
+	 * @param  string  $label                   - label for the table
+	 * @param  array   $rowRay                  - array of column-indexed arrays of data from the database
+	 * @param  array   $colDefs                 - array of column-indexed table headings for column names
+	 * @param  array   $customColDefs = array() - column formatting and settings for the table display
+	 * @param  array   $noDelete      = array() - array of ids that are not allowed to be deleted (default is to allow deletion)
+	 * @param  boolean $noEdit        = false   - is this table read-only?
+	 * @return string containing HTML & JavaScript table
+	 */
+	
 	public static function generateHtml($label, array $rowRay, array $colDefs, array $customColDefs = array(), array $noDelete = array(), $noEdit = false) {
 		
 		// Format column defs
@@ -66,8 +79,20 @@ class EditTableHelper {
 		return $js;
 	}
 	
-	
-	// Generate HTML & JavaScript for our EditTable
+	/**
+	 * Generate HTML & JavaScript for our EditTableTraining
+	 *
+	 * uses edittable-training.js
+	 * TODO: this function documentation needs more work
+	 * @param  string          $label         - label for the table
+	 * @param  array           $rowRay        - array of column-indexed arrays of data from the database
+	 * @param  array           $colDefs       - array of column-indexed table headings for column names
+	 * @param  array = array() $colStatic     - column names, with one maybe removed TODO: why?
+	 * @param  array = ''      $linkInfo      - link to ???
+	 * @param  array = ''      $editLinkInfo  - link to edit row entry
+	 * @param  array = array() $customColDefs - allows specification of attributes per column
+	 * @return string containing HTML & JavaScript table
+	 */
 	public static function generateHtmlTraining($label, array $rowRay, array $colDefs, array $colStatic = array(), $linkInfo = '', $editLinkInfo = '', array $customColDefs = array()) {
 		// Format column defs
 
