@@ -1,389 +1,161 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<style>
-#homecontent {
-	background: url("images/content-bg.png") repeat-x scroll 0 0 #FAFAFA;
-	position: relative;
-}
+	<head>
+  <title><?php echo $this->translation['Application Name'];?></title>
+		<?php
+		require_once('views/helpers/ScriptContainer.php');
+		print ScriptContainer::$instance->renderCSSHead();
+		print ScriptContainer::$instance->renderJSHead();
+		?>
 
-#homecontent-mid {
-	background: url("images/bg-stage.png") repeat-y scroll right top #FFFFFF;
-	border: 1px solid #BDBCBD;
-	min-height: 100%;
-	outline: medium none;
-	top: -40px;
-}
+	</head>
+	<body class="yui-skin-sam">
 
-#homebanner {
-	background: url("images/bg-stage-shade.png") repeat-x scroll 0 0
-		transparent;
-	padding-right: 20px;
-	position: relative;
-}
+		<div id="pageHolder">
 
-.rounded {
-	border-radius: 10px 10px 10px 10px;
-}
+  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+  <div id="content">
 
-.sliderdiv {
-	background: none repeat scroll 0 0 FFFFFF;
-	float: left;
-}
+    <h1><?php print t('Welcome to').' '.$this->translation['Application Name'];?></h1>
+	<h2><?php tp('Training System Monitoring and Reporting Tool');?></h2><br/>
+  	<?php if ($this->isLoggedIn()) { ?>
+				<?php if (isset($this->unique_participants)) { ?>
+ <div class="fieldIndentNoMargin"><?php tp('Data Summary');?></div>
+	<div class="fieldIndent2">
+		<div id="trainingStats"></div>
+	</div>
 
-.main-search {
-	background: none repeat scroll 0 0 #FFFFFF;
-	float: left;
-	overflow: hidden;
-}
+	<script type="text/javascript">
+ var statsData = [
+		['<?php tp('Participants');?>&nbsp;(<?php echo $this->unique_participants.' '.t('unique');?>)','<?php echo $this->attendees;?>','<?php echo $this->attendees_ytd;?>'],
+		['<?php tp('Trainers');?>&nbsp;(<?php echo $this->unique_trainers.' '.t('unique');?>)','<?php echo $this->trainers;?>','<?php echo $this->trainers_ytd;?>'],
+		['<?php tp('Trainings');?>','<?php echo $this->trainings;?>','<?php echo $this->trainings_ytd;?>']
 
-.nav-buttons {
-	background: none repeat scroll 0 0 #FFFFFF;
-	float: left;
-	overflow: hidden;
-}
+   ];
 
-</style>
+		var statsColumnDefs = [
+		    {key:"name", label: "<?php echo $this->min_date;?>&nbsp;to&nbsp;<?php echo $this->max_date;?>", sortable:false, resizeable:true},
+		    {key:"total", label: "<?php tp('Total');?>", sortable:false, resizeable:true},
+			{key:"ytd", label: "<?php tp('Fiscal Year');?> (since&nbsp;<?php echo $this->ytdStart;?>)", sortable:false, resizeable:true}
+		];
 
-<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700"
-	rel="stylesheet" type="text/css">
+		makeDataTable("trainingStats", null, statsData, statsColumnDefs);
+	</script>
+				<?php } ?>
+				<div class="clear"></div>
 
 <?php
-require_once('views/helpers/ScriptContainer.php');
-print ScriptContainer::$instance->renderCSSHead();
-print ScriptContainer::$instance->renderJSHead();
+	if (isset($this->setting['display_mod_skillsmart']) && ($this->setting['display_mod_skillsmart'] == 1)){
 ?>
-
-
-      <link rel="stylesheet" type="text/css"
-	href="https://google-developers.appspot.---com/_static/f7a896e076/css/screen-docs.css" />
-<link rel="stylesheet"
-	href="//www.google.com/cse/style/look/default.css" type="text/css" />
-<link rel="stylesheet"
-	href="//fonts.googleapis.com/css?family=Open+Sans:300,400"
-	type="text/css">
-<script
-	src="https://google-developers.appspot.com/_static/f7a896e076/js/prettify-bundle.js"></script>
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-<script id="jqueryui"
-	src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"
-	defer async></script>
-<script
-	src="//www.google.com/jsapi?key=AIzaSyCZfHRnq7tigC-COeQRmoa9Cxr0vbrK6xw"></script>
-<!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-<script
-	src="https://google-developers.appspot.com/_static/f7a896e076/js/framebox.js"></script>
-
-</head>
-<body class="yui-skin-sam">
-
-	<div id="pageHolder">
-
-		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
-		<div id="content">
-
-			<!-------   /////////////////////////// get data ////////////////////// -->
-
-			<div>
-
-				<script src="http://code.highcharts.com/highcharts.js"></script>
-				<script src="http://code.highcharts.com/modules/data.js"></script>
-				<script src="http://code.highcharts.com/modules/drilldown.js"></script>
-
-				
-				<?php  require_once('views/scripts/dashboard/load_data.phtml');?>
-
-
-
-			<!-------   /////////////////////////// make top buttons ////////////////////// -->
-
-			<div class="rightdiv" style="float: right;">
-				<?php  require_once('views/scripts/dashboard/top_buttons.phtml');?>
-					
-			</div>
-
-			<div class="clear"></div>
-			<div class="hrGrey"></div>
-			<div class="clear"></div>
-
-			<!-------   /////////////////////////// make left buttons ////////////////////// -->
-
-			<div class="nav-buttons">
-				<?php  require_once('views/scripts/dashboard/left_buttons.phtml');?>
-				
-			</div>
-
-			<!-------   /////////////////////////// charts ////////////////////// -->
-
-
-			<body class="docs slim framebox_body">
-
-				<div id="allCharts" class="container">
-				<div id="toprow" class="container">
-					
-					<div id="highChart_div"
-					style="min-width: 310px; height: 600px; max-width: 800px; max-height: 600px; margin: 0 auto float: left;" 
-					data-highcharts-chart="0"	/div>
-
-				<div class="clear"></div>
-				<div class="hrGrey"></div>
-				<div class="clear"></div>
-
-				<div id="bottomrow" class="container">
-
-					<div id="homecontent" class="container">
-						<div id="homecontent-mid" class="row rounded">
-							<div id="homebanner" class="rounded">
-
-								<!-------   /////////////////////////// chart 2,1 ////////////////////// -->
-								2,1
-								
-						<div id="homecontent" class="container">
-							<div id="homecontent-mid" class="row rounded">
-								<div id="homebanner" class="rounded">
-								<div class="sliderdiv">
-									<div id="chart11_div" style="width: 800px; height: 300px;"></div>
-									</div>
-									<div class="main-search">
-										<div id="chart12_div" style="width: 500px; height: 300px;"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-								
-								<!-------   /////////////////////////// chart 2,2 ////////////////////// -->
-								2,2
-								
-								<div class="main-search"></div>
-
-								</div>
-							</div>
-						</div>
-					</div>
+				<div class="fieldIndent2">
+					<div id="workerStats"></div>
 				</div>
-		</div>
+				<script type="text/javascript">
+					var workerData = [
+					<?php
+					foreach ($this->rowy as $row) {
+						if($row['qualification_phrase'] == "Nurse") {
+							echo '[\''.$row['qualification_phrase'].' (Nurse Initiating ART: '.$this->NIMART.')\',\''.$row['CNT'].'\'],';
+						}
+						else {
+							echo '[\''.$row['qualification_phrase'].'\',\''.$row['CNT'].'\'],';
+						}
+					}
+					?>
+					];
 
+					var workerColumnDefs = [
+					{key:"qualification_phrase", label: "Occupational category", sortable:false, resizeable:true},
+					{key:"CNT", label: "Count", sortable:false, resizeable:true}
+					];
 
-		<div class="clear"></div>
-		<div class="hrGrey"></div>
-		<div class="clear"></div>
-		
-		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
-		<!-------   /////////////////////////// main gnr ////////////////////// -->
-
-		<script type="text/javascript">
-		
-  google.load('visualization', '1.0', {'packages':['corechart', 'table', 'gauge', 'controls']});
-  google.setOnLoadCallback(apiLoaded);
-  function apiLoaded() {
-	  document.getElementById("allCharts").style.marginLeft="130px";
-
-	//drawChart11();
-	//drawChart12();
-		
-	var currentLevel;
-	currentLevel = <?php echo '\'' . $this->location_data[0][name] . '\''; ?>;
-
-<?php  //file_put_contents('c:\wamp\logs\php_debug.log', 'dash3 193 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	   //var_dump("location_data=", $this->location_data[0],"END");
-	   //var_dump("facility_data=",$this->facility_data[0],"END");
-	   //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
+					makeDataTable("workerStats", null, workerData, workerColumnDefs);
+				</script>
+				<div class="clear"></div>
+<?php
+	}
 ?>
-		 
-	drawHighchart(currentLevel);
-    //generateBarChart();
-   
-  }
-
-  <!-------   /////////////////////////// script 1,1 ////////////////////// -->
-  
-  function drawChart11() {
-      var data = google.visualization.arrayToDataTable([
-        ['Year', 'Recieved', 'Dispensed'],
-        ['2004',  1000,      400],
-        ['2005',  1170,      460],
-        ['2006',  660,       1120],
-        ['2007',  1030,      540]
-      ]);
-
-      var options = {
-        title: 'Status'
-      };
-
-      var chart = new google.visualization.LineChart(document.getElementById('chart11_div'));
-
-      chart.draw(data, options);
-    }
-
- <!-------   /////////////////////////// script 1,2 ////////////////////// -->
-  
-  function drawChart12() {
-	 var data = google.visualization.arrayToDataTable([
-	   ['Method', 'LARC', 'Male Condom', 'Female Condom', 'IUD', { role: 'annotation' } ],
-	   ['2011', 10, 24, 20, 5, ''],
-	   ['2012', 16, 22, 23, 9, ''],
-	   ['2013', 28, 19, 29, 13, '']
-	 ]);
-
-	 var options = {
-		        width: 600,
-		        height: 400,
-		        legend: { position: 'top', maxLines: 3 },
-		        bar: { groupWidth: '75%' },
-		        isStacked: true
-		      };
-
-      var chart = new google.visualization.BarChart(document.getElementById('chart12_div'));
-
-      chart.draw(data, options);
-    }
-  
 
 
-  <!-------   /////////////////////////// 2,1 script gnr  ////////////////////// -->
+			<div class="fieldIndentNoMargin"><?php echo t('Future').' '.t('Trainings');?>: <span class="total"><?php tp('Total');?>: <span id="trainingfuture_total">0</span></span>      </div>
 
-	function drawHighchart(currentLevel) {
+			<div class="fieldIndent2">
 
-	    Highcharts.data({
-	        csv: document.getElementById('latest_consumption_data').innerHTML,
-	        itemDelimiter: '\t',
-	        parsed: function (columns) {
+			<a href="<?php print Settings::$COUNTRY_BASE_URL;?>/calendar"><?php tp('View Printable Calendar');?></a><br /><br />
 
-	            var brands = {},
-	                brandsData = [],
-	                versions = {},
-	                drilldownSeries = [];
-
-	            // Parse percentage strings
-	            columns[1] = $.map(columns[1], function (value) {
-	                if (value.indexOf('%') === value.length - 1) {
-	                    value = parseFloat(value);
-	                }
-	                return value;
-	            });
-
-	            $.each(columns[0], function (i, name) {
-	                var brand,
-	                    version;
-
-	                if (i > 0) {
-
-	                    // Remove special edition notes
-	                    name = name.split(' ');
-
-	                    // Split into brand and version
-	                    brand = name[0];
-	                    version = name[1];
-
-	                    // Create the main data
-	                    if (!brands[brand]) {
-	                        brands[brand] = columns[1][i];
-	                    } else {
-	                        brands[brand] += columns[1][i];
-	                    }
-
-	                    // Create the version data
-	                    if (version !== null) {
-	                        if (!versions[brand]) {
-	                            versions[brand] = [];
-	                        }
-	                        versions[brand].push([version, columns[1][i]]);
-	                    }
-	                }
-	            });
-
-	            $.each(brands, function (name, y) {
-	                brandsData.push({
-	                    name: name,
-	                    y: y,
-	                    drilldown: versions[name] ? name : null
-	                });
-	            });
-	            $.each(versions, function (key, value) {
-	                drilldownSeries.push({
-	                    name: key,
-	                    id: key,
-	                    data: value
-	                });
-	            });
-
-	            // Create the chart, column or bar
-	            $(document.getElementById('highChart_div')).highcharts({
-	                chart: {
-	                    type: 'column'
-	                },
-	                title: {
-	                    text: 'Consumption'
-	                },
-	                xAxis: {
-	                    type: 'category'
-	                },
-	                yAxis: {
-	                    title: {
-	                        text:  'Total Consumption'
-	                    }
-	                },
-	                legend: {
-	                    enabled: false
-	                },
-	                plotOptions: {
-	                    series: {
-	                        borderWidth: 0,
-	                        dataLabels: {
-	                            enabled: true,
-	                            format: '{point.y:.0f}'
-	                        }
-	                    }
-	                },
-
-	                tooltip: {
-	                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-	                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.0f}</b> of total<br/>'
-	                },
-
-	                series: [{
-	                    name: currentLevel,
-	                    colorByPoint: true,
-	                    data: brandsData
-	                }],
-	                drilldown: {
-	                    series: drilldownSeries
-	                }
-	            });
-	        }
-	    });
-	};
-
-  <!-------   /////////////////////////// 2,1 end script ////////////////////// -->
+			<?php if($this->tableTrainingFuture) : ?>
+				<div id="trainingfutureTable"></div>
+				  <?php echo $this->tableTrainingFuture; ?>
+			<?php endif; ?>
+			</div>
 
 
-  <!-------   /////////////////////////// 2,2 script ////////////////////// -->
+			<!-- show incomplete trainings -->
+			<?php if($this->tableTrainingPast) : ?>
 
-	
+			<div class="fieldIndentNoMargin"><?php echo t('Incomplete').' '.t('Trainings').' '.t('that already occurred');?>: <span class="total"><?php tp('Total');?>: <span id="trainingpast_total">0</span></span></div>
+			<div class="fieldIndent2">
+			<div id="trainingpastTable"></div>
+			  <?php echo $this->tableTrainingPast; ?>
+			</div>
+			<?php endif; ?>
+
+			<!-- show unapproved trainings -->
+			<?php if($this->tableUnapproved) : ?>
+
+			<div class="fieldIndentNoMargin"><?php tp('To be Approved');?></div>
+			<div class="fieldIndent2">
+			<div id="unapprovedTable"></div>
+			  <?php echo $this->tableUnapproved; ?>
+			</div>
+			<?php endif; ?>
+
+			<div class="clear"></div>
+
+			<!-- TA:17: 09/09/2014 -->
+    <?php if ( $this->hasACL ( 'admin_files' ) ) {?>
+			    <div class="hrGrey"></div>
+			    <div class="clear"></div>
+			    <div class="fieldIndentNoMargin"><?php tp('Attached Documents'); ?></div>
+			    <div class="fieldIndent2">
+			      <?php echo $this->editTableFiles; ?>
+			      <span class="caption"><?php tp('Right-click and select "Save Target As..." to download.');?></span>
+			    </div>
+			    <?php if($this->filesForm) : ?>
+			    <div class="fieldIndentNoMargin"><?php tp('Document Upload'); ?></div>
+			    <div class="fieldIndent2">
+			      <?php echo $this->filesForm; ?>
+			    </div>
+			<script type="text/javascript">
+			YAHOO.util.Event.on(window, 'load', initUploadButton);
+			</script>
+			    <?php endif; ?>
+			    <?php } ?>
 
 
-  <!-------   /////////////////////////// 2,2 end script ////////////////////// -->
-  
+	<?php } else { ?>
+	<div style="height: 300px;"><br/><br/>
+	<div class="fieldLabel" for="spacer"></div>
+		<div class="fieldInput"><?php tp('Please login below');?>:</div>
 
-  
+    <form action="<?php echo $this->base_url;?>/user/login" id="userForm" method="post">
+   		<div class="fieldLabel" id="username_lbl"><?php tp('User name');?></div>
+	  <div class="fieldInput"><input type="text" name="username" size="32" maxlength="32"  tabindex=1  value=""/></div>
+   		<div class="fieldLabel" id="password_lbl"><?php tp('Password');?></div>
+	  <div class="fieldInput"><input type="password" name="password" size="32" maxlength="32" tabindex=2  value=""/></div>
+		<div class="fieldLabel" for="spacer"></div>
+		<div class="fieldInput"><a href="<?php echo $this->base_url;?>/user/forgotPassword" tabindex=4 ><?php tp('Forgot your password?');?></a></div>
+      <input type="submit" value="Sign In" tabindex=3  title="log in now" class="submitArrow"/>
 
-</script>
+  	</form>
+  	</div>
+	<?php } ?>
 
-
-<script>
-  devsite.github.Link.convertAnchors();
-  window.prettyPrint();
-</script>	
-
+  </div>
   <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
 
 
+		</div>
 
-</body>
-
+	</body>
 </html>
-

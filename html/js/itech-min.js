@@ -301,12 +301,16 @@ function appendOptionLast(selectObj, myText, myVal)
 	  selectObj.disabled = false;
 	}
 	
-function setChildStatus(selectedIndex, childId, parentId)  {
+function setChildStatus(selectedIndex, childId, parentId, readonly)  {
 	var childObj = YAHOO.util.Dom.get(childId);
 	if ( childObj ) {
-		if ( selectedIndex ) {
-			childObj.disabled = false;
+		if ( selectedIndex) {
 			filterSubTypeOptions(parentId,childId);
+			if (readonly === 1) {
+				childObj.disabled = true;
+			} else {
+				childObj.disabled = false;
+			}
 		} else {
 			childObj.selectedIndex = 0;
 			childObj.disabled = true;

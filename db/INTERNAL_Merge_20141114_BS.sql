@@ -1,0 +1,1 @@
+INSERT INTO `translation` (`key_phrase`, `phrase`, `modified_by`, `is_deleted`) VALUES ('Employer', 'Employer', '1', '0');

@@ -14,11 +14,10 @@ class IndexController extends ITechController {
 	}
 
 	public function init() {	}
-	
-/*
+
 	public function indexAction() {
 
-		if($this->hasACL('edit_employee') && $this->setting('module_employee_enabled')){
+		if($this->hasACL('employees_module') && $this->setting('module_employee_enabled')){
 			if($this->hasACL('in_service') == false && $this->hasACL('pre_service') == false) {
 				$this->_redirect('employee');
 				exit();
@@ -196,10 +195,9 @@ class IndexController extends ITechController {
 			$this->view->assign ( 'trainings_ytd', $rowArray ['trainings'] );
 
 		}
-		
 
-    
-    // Attached Files 
+    /****************************************************************************************************************/
+    /* Attached Files */
     require_once 'views/helpers/FileUpload.php';
 
     $PARENT_COMPONENT = 'home';
@@ -209,11 +207,8 @@ class IndexController extends ITechController {
      if ( $this->hasACL ( 'admin_files' ) ) {
         $this->view->assign ( 'filesForm', FileUpload::displayUploadForm ( $PARENT_COMPONENT, 1, FileUpload::$FILETYPES ) );
      }
-    
-
-    }
-*/
-	
+    /****************************************************************************************************************/
+	}
 
 	public function testAction() {
 	}
@@ -265,47 +260,6 @@ class IndexController extends ITechController {
 		$response->setHeader ( 'Content-type', 'application/javascript' ); // should fix inspector warnings (was text/html)
 
 	}
-	
-	
-	public function indexAction() {
-	
-	    require_once('models/table/Dashboard-CHAI.php');
-	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
-	
-	    $id = $this->getSanParam ( 'id' );
-	
-	    $whereClause = ($id ==  "") ? 'tier = 1' : 'parent_id = ' . $id ;
-	
-	    $geo_data = new DashboardCHAI();
-	    $details = $geo_data->fetchConsumptionDetails('geo', $id, $whereClause);
-	    $this->view->assign('geo_data',$details);
-	
-	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 190>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump('id=', $id);
-	    //var_dump('count(details)=', count($details));
-	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-	
-	    $whereClause = ($id ==  "") ? 'l3.tier = 1' : 'l2.parent_id = ' . $id ;
-	    $groupClause = ($id == "") ? 'L2_id' : 'L1_id';
-	    $useName = ($id == "") ? 'L3_location_name' : 'L2_location_name';
-	
-	
-	    $location_data = new DashboardCHAI();
-	    $details = $location_data->fetchConsumptionDetails('location', $id, $whereClause, $groupClause, $useName);
-	    $this->view->assign('latest_consumption_data',$details);
-	
-	    if (count($details) == 0) { // count is 0 then facility
-	        $whereClause = 'l1.parent_id = ' . $id;
-	        $groupClause = 'F_id';
-	        $useName = 'L1_location_name';
-	
-	        $facility_data = new DashboardCHAI();
-	        $details = $facility_data->fetchConsumptionDetails('facility', $id, $whereClause, $groupClause, $useName);
-	        $this->view->assign('latest_consumption_data',$details);
-	        $this->view->assign('geo_data',array()); // at bottom
-	    }
-	
-	}
-	
+
 }
 ?>

@@ -51,7 +51,7 @@
 					<!-- TA:10: added 8/11/2014 END -->
 					
 						<?php if ($this->setting['module_employee_enabled']): ?>
-						<div class="fieldLabelThin"> <?php print(t('Employee').space.t('Module'));?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="edit_employee" id="edit_employee" <?php if ( array_search('edit_employee', $this->user['acls']) !== false) echo 'CHECKED'; ?> /><label for="edit_employee"> <?php print(t('Add/Edit/Delete').space.t('Employees'));?></label></div></div>
+						<div class="fieldLabelThin"> <?php print(t('Employee').space.t('Module'));?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="employees_module" id="employees_module" <?php if ( array_search('employees_module', $this->user['acls']) !== false) echo 'CHECKED'; ?> /><label for=employees_module> <?php print(t('Employees').space.t('Access'));?></label></div></div>
 						<?php endif; ?>
 						<br/><br/>
 						<div class="fieldLabelThin"> <?php tp('Restrict Access');?></div><div class="fieldInput"><div class="float50"><label for="acl_orgAll"><input type="radio" id="acl_orgAll" name="acl_restrict" value="" onchange="setOrgAccessStatus();" <?php if ( array_search('training_organizer_option_all',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('All organizations data');?></label></div><label for="acl_restrict"><input type="radio" id="acl_restrict" name="acl_restrict" value="acl_restrict" <?php if ( array_search('training_organizer_option_all',$this->user['acls']) === false ) echo 'CHECKED'; ?> onchange="setOrgAccessStatus();"> <?php tp('Only selected organizations');?></label></div>
@@ -81,8 +81,28 @@
 						<div class="fieldLabelThin"> <?php tp('Training Location');?></div>
 						<div class="fieldInput">
 							<div class="float50"><label for="edit_training_location"><input type="radio" id="edit_training_location" name="edit_training_location" value="edit_training_location" <?php if ( array_search('edit_training_location',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit');?></label></div>
-							<label for="view_facility"><input type="radio" id="view_facility" name="edit_training_location" value="view_facility" <?php if ( array_search('view_facility',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>
+							<label for="view_training_location"><input type="radio" id="view_training_location" name="edit_training_location" value="view_training_location" <?php if ( array_search('view_training_location',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>
 						</div>
+ 						
+ 						<!--  BS:#3,#4:Delete partner/employee links access control:20141014 -->
+						<div class="fieldLabelThin"> <?php tp('Partners');?></div>
+						<div class="fieldInput">
+							<div class="float50"><label for="edit_partners"><input type="radio" id="edit_partners" name="edit_partners" value="edit_partners" <?php if ( array_search('edit_partners',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit/Delete');?></label></div>
+							<label for="view_partners"><input type="radio" id="view_partners" name="edit_partners" value="view_partners" <?php if ( array_search('view_partners',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>
+						</div>
+						<div class="fieldLabelThin"> <?php tp('Mechanisms');?></div>
+						<div class="fieldInput">
+							<div class="float50"><label for="edit_mechanisms"><input type="radio" id="edit_mechanisms" name="edit_mechanisms" value="edit_mechanisms" <?php if ( array_search('edit_mechanisms',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit/Delete');?></label></div>
+							<label for="view_mechanisms"><input type="radio" id="view_mechanisms" name="edit_mechanisms" value="view_mechanisms" <?php if ( array_search('view_mechanisms',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>
+						</div>
+    					<?php if ($this->setting['module_employee_enabled']): ?>					
+						<div class="fieldLabelThin"> <?php tp('Employees');?></div>
+						<div class="fieldInput">
+							<div class="float50"><label for="edit_employee"><input type="radio" id="edit_employee" name="edit_employee" value="edit_employee" <?php if ( array_search('edit_employee',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit/Delete');?></label></div>
+							<label for="view_employee"><input type="radio" id="view_employee" name="edit_employee" value="view_employee" <?php if ( array_search('view_employee',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>
+						</div>
+						<?php endif; ?>
+						
 						<div><div class="fieldLabelThin"> <?php tp('Files');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" id="admin_files" name="admin_files" <?php if ( array_search('admin_files',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="admin_files"> <?php tp('Upload and delete');?></label></div></div></div>
 						<div style="width:100%;height:auto;display:block;;">
 						<div class="fieldLabelThin"> <?php tp('Approval');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" id="approve_trainings" name="approve_trainings" <?php if ( array_search('approve_trainings',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label for="approve_trainings"> <?php tp('Approve trainings');?></label></div></div>
