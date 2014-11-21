@@ -56,12 +56,12 @@ if ( $this->isLoggedIn() ) {
 				$navMain['facility']['add']  = t('Add Facility');
 			}
 
-			if (   $this->hasACL('edit_course') ) {
+			if (   $this->hasACL('edit_course')  && $this->setting['display_training_location']) { //TA:17:14:
      	$navMain['facility']['searchLocation']  = t('View/Edit').' '.t('Training').' '.t('Location');
 			} else if ($this->hasACL('view_course')) {
      	$navMain['facility']['searchLocation']  = t('View').' '.t('Training').' '.t('Location');
 			}
-			if (   $this->hasACL('edit_course')) {
+			if (   $this->hasACL('edit_course') && $this->setting['display_training_location']) { //TA:17:14:)
       	$navMain['facility']['addLocation']  = t('Add').' '.t('Training').' '.t('Location');
 			}
 		}

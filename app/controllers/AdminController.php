@@ -539,6 +539,7 @@ class AdminController extends UserController
 		'check_training_comments'          => 'display_training_comments', //TA:17: 9/03/2014
 		'check_facilitator_info' => 'display_facilitator_info',//TA:17: 9/03/2014
 		'check_training_score' => 'display_training_score',//TA:17: 9/03/2014
+		'check_training_location'          => 'display_training_location', //TA:17:14 11/20/2014
 		);
 
 		if($this->getRequest()->isPost()) { // Update db

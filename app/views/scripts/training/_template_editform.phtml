@@ -313,6 +313,9 @@ echo "<br clear='top'/><br clear='left'/><br clear='top'/>";
     <?php echo $this->dropDownOrg; ?>
     <?php echo hasACLEdit('acl_editor_training_organizer', 'admin/training-organizer', $this); ?>
   </div><br/>
+  
+  <!-- TA:17:14: -->
+  <?php if($this->setting['display_training_location']){?>
   <div class="fieldLabel"><?php echo t('Training').' '.t('Location');?></div>
   <div class="fieldInput">
     <?php
@@ -321,6 +324,7 @@ echo "<br clear='top'/><br clear='left'/><br clear='top'/>";
         echo $this->insertLocationLink;
     ?>
   </div><br/>
+  <?php }?>
 
   <!-- TA:17: 09/03/2014 -->
   <?php if($this->setting['display_training_level']){?>

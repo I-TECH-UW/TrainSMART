@@ -577,7 +577,8 @@ class FacilityController extends ReportFilterHelpers {
 			}
 			
 			if ($criteria ['facility_name']) {
-				$where [] = " facility_name = '" . mysql_escape_string ( $criteria ['facility_name'] ) . "'";
+				//$where [] = " facility_name = '" . mysql_escape_string ( $criteria ['facility_name'] ) . "'";//TA:17:14:
+				$where[] = " facility_name like '%{$criteria['facility_name']}%'"; //TA:17:14:
 			}
 			
 			if ($criteria ['facility_name_text']) {
@@ -606,6 +607,7 @@ class FacilityController extends ReportFilterHelpers {
 		// facility name
 		$nameArray = OptionList::suggestionListValues ( 'facility', 'facility_name', false, false, false );
 		$this->viewAssignEscaped ( 'facility_names', $nameArray );
+		
 		// locations
 		$this->viewAssignEscaped ( 'locations', Location::getAll () );
 		// facility types
@@ -614,6 +616,8 @@ class FacilityController extends ReportFilterHelpers {
 		// sponsor types
 		$sponsorsArray = OptionList::suggestionList ( 'facility_sponsor_option', 'facility_sponsor_phrase', false, false );
 		$this->viewAssignEscaped ( 'facility_sponsors', $sponsorsArray );
+		
+		$this->view->assign ( 'facility_name_sel', $criteria ['facility_name'] ); //TA:17:14:
 		
 	}
 	public function viewAction() {
