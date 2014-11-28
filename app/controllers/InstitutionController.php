@@ -75,7 +75,12 @@ class InstitutionController extends ITechController
 	}
 
 	public function institutioneditAction(){
-
+	    if(! $this->hasACL('edit_studenttutorinst')){
+	       $instid = $this->getSanParam('id');
+	       $this->_redirect("institution/institutionview/id/" . $instid);
+	    }
+	    
+	    
 		require_once ('models/table/Tutoredit.php');
 
 		$this->viewAssignEscaped ('locations', Location::getAll() );
@@ -179,6 +184,112 @@ class InstitutionController extends ITechController
 		$this->view->assign('students',$studentcount);
 	}
 
+	public function institutionviewAction(){
+	
+	    require_once ('models/table/Tutoredit.php');
+	
+	    $this->viewAssignEscaped ('locations', Location::getAll() );
+	
+	    if(isset($_POST['update'])){
+	        $instituteupdate = new Institution();
+	        $details=$instituteupdate->Updateinstitute($_POST);
+	    }
+	
+	    # GETTING ID IF NOT ALREADY SET
+	    $request = $this->getRequest();
+	    if (!isset ($instituteid)){
+	    $instituteid = $request->getParam('id');
+	}
+	
+	# CREATING INSTITUTION OBJECT
+	$ins = new Institution();
+	
+	# PULLING STAFF LISTING FOR THIS INSTITUTION
+	$staff = $ins->listStaff($instituteid);
+	
+	$this->view->assign('fetchins',$staff);
+	
+	# CREATING HELPER
+	$helper = new Helper();
+	
+	# DISPLAYING
+	$institutedit = new Institution();
+	$details=$institutedit->Editinstitute($instituteid);
+	
+	$this->view->assign('insid',$institudeid);
+	
+	
+	# PRESENTING MULTI-SELECT OPTIONS
+	$this->view->assign('instypes',$helper->getInstitutionTypes());
+	
+	$this->view->assign('cadres',$helper->getCadres());
+	$cadselect = $helper->getInstitutionCadres($request->getParam('id'));
+	$_cs = array();
+	foreach ($cadselect as $cad){
+	$_cs[] = $cad['id_cadre'];
+	}
+	$this->view->assign('cadresselected',$_cs);
+	$this->view->assign('id',$instituteid);
+	$this->view->assign('name',$details['institutionname']);
+		$this->view->assign('address1',$details['address1']);
+			$this->view->assign('address2',$details['address2']);
+			$this->view->assign('city',$details['city']);
+			$this->view->assign('geo1',$details['geography1']);
+			$this->view->assign('geo2',$details['geography2']);
+			$this->view->assign('geo3',$details['geography3']);
+			$this->view->assign('zip',$details['postalcode']);
+			$this->view->assign('phone',$details['phone']);
+			$this->view->assign('fax',$details['fax']);
+			$this->view->assign('degree',$details['degrees']);
+			$this->view->assign('type',$details['type']);
+			$this->view->assign('hasdormitories',$details['hasdormitories']);
+		$this->view->assign('dormcount',$details['dormcount']);
+		$this->view->assign('tutorhousing',$details['tutorhousing']);
+		$this->view->assign('tutorhouses',$details['tutorhouses']);
+		$this->view->assign('sponsor',$details['sponsor']);
+			$this->view->assign('computers',$details['computercount']);
+		$this->view->assign('tutorhouses',$details['tutorhouses']);
+		$this->view->assign('studbeds',$details['bedcount']);
+			$this->view->assign('comments',$details['comments']);
+			$this->view->assign('year',$details['yearfounded']);
+	
+			$degreeselect = $helper->getInstitutionDegrees($request->getParam('id'));
+	
+			$_ds = array();
+			foreach ($degreeselect as $deg){
+	$_ds[] = $deg['id'];
+	}
+	$this->view->assign('degree',$_ds);
+	
+	$sponsors = $helper->getSponsors();
+	$this->view->assign('lookupsponsors',$sponsors);
+	
+	
+	if (($details['tutorcount'] != 0) && (is_numeric($details['tutorcount'])) && ($details['studentcount'] != 0) && (is_numeric($details['studentcount']))){
+	    $this->view->assign('tutorratio',"1 : " . round(($details['studentcount'] / $details['tutorcount']),2));
+	} else {
+			$this->view->assign('tutorratio',"N/A");
+	}
+	
+	
+	# GETTING LOOKUPS
+	$this->view->assign('lookupdegrees',$helper->getDegrees());
+	
+	#		$degrees = $helper->getInstitutionDegrees($instituteid);
+	#		$_deg = array();
+	#		foreach ($degrees as $degree){
+	#			$_deg[] = $degree['id'];
+	#		}
+	#		$this->view->assign('degreesselected',$_deg);
+	
+	$studentcount = $institutedit->getStudentCount($instituteid);
+	$tutorcount = $institutedit->getTutorCount($instituteid);
+	
+	$this->view->assign('tutor',$tutorcount);
+	$this->view->assign('students',$studentcount);
+	}
+	
+	
 	public function institutionsearchAction(){
 
 		$ins = new Institution();

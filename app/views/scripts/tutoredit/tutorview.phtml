@@ -63,7 +63,7 @@
 						
 
 					<div id="contentheader">
-						<h2><?php echo t("Edit/View Tutor's Record"); ?></h2><br>
+						<h2><?php echo t("View Tutor's Record"); ?></h2><br>
 					</div>
 					<form  action="" id="peopleadd" method="post">
 					
@@ -74,15 +74,15 @@
 				
 						<div class="mainformholder">
 							<div class="pad50 clear"></div>
-							<input type="hidden" name="id" value="<?php echo $this->escape($this->id);?>">
-							<input type="hidden" name="tutorid" value="<?php echo $this->escape($this->tutuotid);?>">
+							<input readonly type="hidden" name="id" value="<?php echo $this->escape($this->id);?>">
+							<input readonly type="hidden" name="tutorid" value="<?php echo $this->escape($this->tutuotid);?>">
 
 							
 							
 							<p><?php echo t('Personal Information'); ?></p>
 
 		 					<label><?php echo t('Title'); ?></label>
-							<select name="title" >
+							<select name="title" disabled = true >
 								<option value="0"><?php echo t('Select...'); ?></option>
 							<?php foreach ($this->gettitle as $fetchtitle){ ?>
 								<option value="<?php echo $fetchtitle['id']; ?>"<?php echo ($this->escape($this->selid) == $fetchtitle['id'] ? " selected" : "") ?>><?php echo $fetchtitle['title_phrase']; ?></option>
@@ -90,22 +90,22 @@
 							</select>
 
 							<label><?php echo t('First name'); ?></label>
-							<input type="text" name="firstname" value="<?php echo $this->escape($this->firstname);?>">
+							<input readonly type="text" name="firstname" value="<?php echo $this->escape($this->firstname);?>">
 
 							<label><?php echo t('Middle name'); ?></label>
-							 <input type="text" name="middlename" value="<?php echo $this->escape($this->middlename);?>">
+							 <input readonly type="text" name="middlename" value="<?php echo $this->escape($this->middlename);?>">
 
 							<label><?php echo t('Last name'); ?></label>
-							<input type="text" name="lastname" value="<?php echo $this->escape($this->lastname);?>">
+							<input readonly type="text" name="lastname" value="<?php echo $this->escape($this->lastname);?>">
 
 							<label><?php echo t('School ID'); ?></label>
-							<input type="text" name="nationalid" value="<?php echo $this->escape($this->nationalid);?>">
+							<input readonly type="text" name="nationalid" value="<?php echo $this->escape($this->nationalid);?>">
 
 							<!-- TA: added 07/22/2014 START -->
 							<?php
 								if($this->escape($this->label_ps_nationality)){
 									echo "<label>" . $this->escape($this->label_ps_nationality) . "</label>";
-									echo "<select name='nationality'>";
+									echo "<select name='nationality' disabled=true>";
 									echo "<option value='0'>" . t('Select...') . "</option>";
 									foreach ($this->lookupnationalities as $nationality){
 									echo "<option value='" . $nationality['id'] . "' " . ($nationality['id'] == $this->escape($this->nationalityid) ? ' selected' : '') . ">" . $nationality['nationality'] . "</option>";
@@ -117,21 +117,21 @@
 							
 
 							<label><?php echo t('Gender'); ?></label>
-							<select name="gender">
+							<select name="gender" disabled = true>
 								<option value="na"><?php echo t('Select...'); ?></option>
 								<option value="male"<?php echo ($this->escape($this->gender) == "male" ? " selected" : "");?>><?php echo t('Male'); ?></option>
 								<option value="female"<?php echo ($this->escape($this->gender) == "female" ? " selected" : "");?>><?php echo t('Female'); ?></option>
 							</select>
 
 							<label><?php echo t('Date of birth'); ?></label>
-							<input type="text" class="calendarbox" name="dob" id="dob" value="<?php echo $this->escape($this->dob);?>">
+							<input readonly type="text" class="calendarbox" name="dob" id="dob" value="<?php echo $this->escape($this->dob);?>">
 							
 							<!-- TA: added 7/22/2014 START -->
 							<div class="pad20 clear"></div>
 							<?php
 								if($this->escape($this->label_marital_status)){
 									echo "<label>" . $this->escape($this->label_marital_status) . "</label>";
-									echo "<select name='marital_status' id='marital_status'>";
+									echo "<select name='marital_status' id='marital_status' disabled=true>";
 									echo "<option value='na'>" . t('Select...') . "</option>";
 									echo "<option value='single' " . ($this->escape($this->marital_status) == 'single' ? ' selected' : '') . ">Single</option>";
 									echo "<option value='married' " . ($this->escape($this->marital_status) == 'married' ? ' selected' : '') . ">Married</option>";
@@ -141,7 +141,7 @@
 								}
 								if($this->escape($this->label_spouse_name)){
 									echo "<label>" . $this->escape($this->label_spouse_name) . "</label>";
-									echo "<input type='text' name='spouse_name' id='spouse_name' value='" . $this->escape($this->spouse_name) . "';>";
+									echo "<input readonly type='text' name='spouse_name' id='spouse_name' value='" . $this->escape($this->spouse_name) . "';>";
 								}
 								
 								echo "<div class='pad20 clear'></div>";
@@ -151,17 +151,17 @@
 				echo "<div class='pad20 clear'></div><br>";
 				region_filters_dropdown_ps($this, 'permanent');
 				echo "<label>" . t('Address 1') . "</label>";
-				echo "<input type='text' name='address1' value='" . $this->escape($this->address1) . "'>";
+				echo "<input readonly type='text' name='address1' value='" . $this->escape($this->address1) . "'>";
 				echo "<label>" . t('Address 2') . "</label>";
-				echo "<input type='text' name='address2' value='" . $this->escape($this->address2) . "'>";
+				echo "<input readonly type='text' name='address2' value='" . $this->escape($this->address2) . "'>";
 				echo"<label>" . t('City') . "</label>";
-				echo"<input type='text' name='city' value='" . $this->escape($this->city) . "'>";
+				echo"<input readonly type='text' name='city' value='" . $this->escape($this->city) . "'>";
 				echo"<label>" . $this->escape($this->label_ps_zip_code) . "</label>";
-				echo"<input type='text' name='postalcode' value='" . $this->escape($this->postalcode) . "'> ";
+				echo"<input readonly type='text' name='postalcode' value='" . $this->escape($this->postalcode) . "'> ";
 				echo "<label>" . t('Cellphone') . "</label>";
-				echo "<input type='text' name='localcell' value='" . $this->escape($this->cell) . "'>";
+				echo "<input readonly type='text' name='localcell' value='" . $this->escape($this->cell) . "'>";
 				echo "<label>" . t('Cellphone 2') . "</label>";
-				echo "<input type='text' name='localcell2' value='" . $this->escape($this->cell2) . "'>";
+				echo "<input readonly type='text' name='localcell2' value='" . $this->escape($this->cell2) . "'>";
 }
 								?>
 								<!-- TA: added 7/22/2014 END -->
@@ -170,10 +170,10 @@
 							<p style="float:left;font-size:14px;"><?php echo t('Facility Information'); ?></p>
 							<div class="pad20 clear"></div>
 
-<?php  region_filters_dropdown_ps($this, 'local');  ?>
+<?php  region_filters_dropdown_ps($this, 'local', true);  ?>
 
               <label><?php echo t('Facility'); ?></label>
-              <select id="facilityid" name="facilityid">
+              <select id="facilityid" name="facilityid" disabled = true>
                 <option value="0"><?php echo t('Select...'); ?></option>
                 <?php
                   foreach ($this->facilities as $facility){
@@ -183,7 +183,7 @@
               </select>
 
               <label><?php echo t('Instituion'); ?></label>
-              <select id="institutionid" name="institutionid">
+              <select id="institutionid" name="institutionid" disabled = true>
                 <option value="0"><?php echo t('Select...'); ?></option>
                 <?php
                   foreach ($this->institutions as $institution){
@@ -194,7 +194,7 @@
 
   
 							<label><?php echo t('Tutor Since'); ?></label>
-							<select name="tutorsince">
+							<select name="tutorsince" disabled = true>
 								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
 for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
@@ -209,7 +209,7 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
 	foreach ($this->lookuptutortypes as $tutortype){
 ?>
 							<div style="height : 20px; overflow : hidden;">
-								<input type="checkbox" style="margin : 3px;" name="tutortype[]" id="tutortype[]" value="<?php echo $tutortype['id']; ?>"<?php echo (in_array($tutortype['id'],$this->tutortypes) ? " checked" : "") ?>> <?php echo $tutortype['typename']; ?><br>
+								<input type="checkbox" style="margin : 3px;" name="tutortype[]" id="tutortype[]" value="<?php echo $tutortype['id']; ?>"<?php echo (in_array($tutortype['id'],$this->tutortypes) ? " disabled checked" : " disabled") ?>> <?php echo $tutortype['typename']; ?><br>
 							</div>
 <?php
 	}
@@ -218,7 +218,7 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
               
 
 							<label><?php echo t('Tutor at this Inst. Since'); ?></label>
-							<select name="tutortimehere">
+							<select name="tutortimehere" disabled = true>
 								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
 for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
@@ -228,10 +228,10 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
 							</select>
 
 							<label><?php echo t('Degree Institution'); ?></label>
-							<input type="text" name="degreeinst" value="<?php echo $this->escape($this->degreeinst);?>">
+							<input readonly type="text" name="degreeinst" value="<?php echo $this->escape($this->degreeinst);?>">
 
 							<label><?php echo t('Degree'); ?></label>
-							<select name="degree" class="comboeditable">
+							<select name="degree" class="comboeditable" disabled = true>
 								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
 	foreach ($this->lookupdegrees as $degree){
@@ -243,7 +243,7 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
 							</select>
 
 							<label><?php echo t('Year'); ?></label>
-							<input type="text" name="degreeyear" value="<?php echo $this->escape($this->degreeyear);?>">
+							<input readonly type="text" name="degreeyear" value="<?php echo $this->escape($this->degreeyear);?>">
 
 							<label><?php echo t('Languages Spoken'); ?></label>
 							<div style="overflow : auto; float : left; width : 250px; height : 100px; border : 1px solid #CCCCCC; border-radius : 3px; margin-left : 25px; -moz-border-radius : 3px; -webkit-border-radius : 3px; border : 1px solid #85B1DE; background-image : url(/html/images/trainsmart-gradient.gif); background-repeat : repeat-x; margin-bottom : 10px;">
@@ -251,7 +251,7 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
 	foreach ($this->tutorlanguages as $language){
 ?>
 							<div style="height : 20px; overflow : hidden;">
-								<input type="checkbox" style="margin : 3px;" name="languagesspoken[]" id="languagesspoken[]" value="<?php echo $language['id']; ?>"<?php echo (in_array($language['id'],$this->knownlanguages) ? " checked" : "") ?>> <?php echo $language['language']; ?><br>
+								<input readonly type="checkbox" style="margin : 3px;" name="languagesspoken[]" id="languagesspoken[]" value="<?php echo $language['id']; ?>"<?php echo (in_array($language['id'],$this->knownlanguages) ? " checked" : "") ?>> <?php echo $language['language']; ?><br>
 							</div>
 <?php
 	}
@@ -359,12 +359,12 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
 							<p><?php echo t('Other'); ?></p>
 
 							<label style="text-align : left;"><?php echo t('Positions held (committees, etc.)'); ?></label>
-							<textarea name="position" ><?php echo $this->escape($this->positionsheld);?></textarea>
+							<textarea disabled = true name="position" ><?php echo $this->escape($this->positionsheld);?></textarea>
 
 							<div class="clear"></div><br clear="all"/>
 
 							<label style="text-align : left;"><?php echo t('Comments'); ?></label>
-							<textarea name="comments" ><?php echo $this->escape($this->comments);?></textarea>
+							<textarea disabled = true name="comments" ><?php echo $this->escape($this->comments);?></textarea>
 							
 							<!-- TA: added 7/22/2014 START -->
 							<div class="clear"></div><br clear="all"/>
@@ -406,7 +406,6 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
 
 							<div class="rightdiv">
 								<div class="pad20"></div>
-								<input type="submit" name="update" value="<?php echo t('Update Tutor'); ?> &raquo;" class="tsbutton green large">
 							</div>
 							<div class="clear"></div>
 					</div>
