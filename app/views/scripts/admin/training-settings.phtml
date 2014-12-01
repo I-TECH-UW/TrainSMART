@@ -65,6 +65,15 @@ ob_end_clean();
 								<td><a href="<?php echo $this->base_url;?>/admin/training-organizer" onclick="return submitAdminForm(this);">Add/Edit</a></td>
 							</tr>
 							
+							<!-- TA:17:14: START -->
+							<tr>
+								<td class="fieldTitle">Training Location</td>
+								<td><input type="checkbox" name="check_training_location" <?php if($this->check_training_location) echo 'checked'; ?> id="check_training_location"></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<!-- TA:17:14: END -->
+							
 							<!-- TA:17: 09/02/2014 START -->
 							<tr>
 								<td class="fieldTitle">Start Date</td>

@@ -23,14 +23,11 @@ print ScriptContainer::$instance->renderJSHead();
 		<fieldset><legend><?php tp('Select Criteria');?></legend>
 
 		<div class="fieldLabel"><?php echo t('Facility').space.t('Name');?></div>
-		<div class="fieldInput"><select id="facility_name" name="facility_name">
-			<option value="">--<?php tp('All');?>--</option>
-			<?php
-				foreach ( $this->facility_names as $vals ) {
-					echo '<option value="'.htmlspecialchars($vals['facility_name']).'" '.((@$this->criteria['facility_name']) == $vals['facility_name']? 'SELECTED':'').' >'.$vals['facility_name'].'</option>';
-			}
-			?>
-		</select></div>
+		<div class="fieldInput">
+		<!-- TA:17:14: Replace drop down to text field searchable like 'text' it will be in SQL  "like %text% "-->	
+		<input type="text" id="facility_name" name="facility_name" value=<?php echo $this->facility_name_sel; ?>>
+		
+		</div>
 
 		<?php echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, false ); ?>
 

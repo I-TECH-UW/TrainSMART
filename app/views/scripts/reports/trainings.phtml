@@ -109,7 +109,8 @@
 
 												</script>
 
-
+												<!-- TA:17:14 -->
+												<?php if($this->setting['display_training_location']){?>
 												<div class="fieldLabel" id="training_location_id_lbl"><?php echo t('Training').' '.t('location');?></div>
 												<div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showLocation"  <?php  if ($this->criteria['showLocation']) echo 'checked="checked"';?> /></div><label for="showLocation" ></label>
 
@@ -118,6 +119,8 @@
 			training_location_dropdown( $this->tlocations, @$this->criteria['training_location_id'], 'name="training_location_id" id="select_training_location"');
 		?>
 											</div></div>
+											<?php }?>
+											
 											<?php
 											echo DropDown::render_report_filter('training_organizer','showOrganizer',(@$this->translation['Training Organizer']),$this->organizers,'training_organizer_phrase',$this->criteria['training_organizer_id'],$this->criteria['showOrganizer'],false,false,($this->expand_lists?true:false));
 											?>

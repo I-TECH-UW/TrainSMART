@@ -116,9 +116,17 @@ class Cohortedit extends ITechTable
 
 		$helper = new Helper();
 		$institutions = $helper->getUserInstitutions($helper->myid(),false);
+		
 		if ((is_array($institutions)) && (count($institutions) > 0)){
 			$insids = implode(",", $institutions);
 			$where[] = "c.institutionid IN (" . $insids . ")";
+		}
+		
+		$cadres = $helper->getUserPrograms($helper->myid(),false);
+		
+		if ((is_array($cadres)) && (count($cadres) > 0)){
+		    $insids = implode(",", $cadres);
+		    $where[] = "c.cadreid IN (" . $insids . ")";
 		}
  
 		foreach ($param as $key =>$value){

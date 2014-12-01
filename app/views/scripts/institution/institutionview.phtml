@@ -1,0 +1,291 @@
+<html>
+	<head>
+		<title><?php echo $this->escape($this->title);?></title>
+		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+	<?php
+	require_once('views/helpers/Location.php');
+ require_once('views/helpers/ScriptContainer.php');
+ print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead(); ?>
+ 
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				$( ".calendarbox" ).datepicker({
+					changeMonth: true,
+					changeYear: true
+				});
+				/* Add a click handler to the rows - this could be used as a callback */
+				$(".tablegrid tbody").click(function(event) {
+					$(oTable.fnSettings().aoData).each(function (){
+						$(this.nTr).removeClass('row_selected');
+					});
+					$(event.target.parentNode).addClass('row_selected');
+				});
+	 
+				/* Add a click handler for the delete row */
+				$('#delete').click( function() {
+					var anSelected = fnGetSelected( oTable );
+					oTable.fnDeleteRow( anSelected[0] );
+				} );
+	 
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+				$("#peopleadd").validate();
+
+				// INITIATE DORMS AND HOUSING
+				setselector('dorm',<?php echo($this->hasdormitories); ?>);
+				setselector('housing',<?php echo($this->tutorhousing); ?>);
+			} );
+
+			/* Get the rows which are currently selected */
+			function fnGetSelected( oTableLocal ){
+				var aReturn = new Array();
+				var aTrs = oTableLocal.fnGetNodes();
+				 
+				for ( var i=0 ; i<aTrs.length ; i++ ){
+					if ( $(aTrs[i]).hasClass('row_selected') ){
+						aReturn.push( aTrs[i] );
+					}
+				}
+				return aReturn;
+			}
+			
+			function setselector(tp,sel){
+				switch (tp){
+					case "dorm":
+						if ((sel * 1) != 0){
+							$("#dormcount").removeAttr("readonly");
+							$("#studbeds").removeAttr("readonly");
+						} else {
+							$("#dormcount").val("0");
+							$("#dormcount").attr("readonly",true);
+							$("#studbeds").val("0");
+							$("#studbeds").attr("readonly",true);
+						}
+					break;
+					case "housing":
+						if ((sel * 1) != 0){
+							$("#tutorhouses").removeAttr("readonly");
+						} else {
+							$("#tutorhouses").val("0");
+							$("#tutorhouses").attr("readonly",true);
+						}
+					break;
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+			<div id="content">
+				<div id="subcontent">
+					<div id="contentheader">
+						<h2><?php echo t('View Institution Record'); ?></h2>
+					</div>
+	
+					<div class="pad50 clear"></div>
+
+					<form action="" id="peopleadd" method="post" name="inspost" class="formvalidate">
+					
+					<input type="hidden" name="editid" id="editid" value="<?php echo $this->escape($this->id);?>">
+					<div class="mainformholder">
+	
+						<p style=""><?php echo t('Enter details'); ?></p><br>
+	
+						<label><?php echo t('Institution id'); ?></label>
+						<input readonly type="text" name="instutiton" value="<?php echo $this->escape($this->id);?>">	
+						
+						<label><?php echo t('Institution Name'); ?></label>
+						<input readonly type="text" name="instutitonname" value="<?php echo $this->escape($this->name);?>" class="required">
+						
+						<label><?php echo t('Address 1'); ?></label>
+						<input readonly type="text" name="address1" value="<?php echo $this->escape($this->address1);?>">
+						
+						<label><?php echo t('Address 2	'); ?></label>
+						<input readonly type="text" name="address2" value="<?php echo $this->escape($this->address2);?>">
+		
+						<label><?php echo t('City'); ?></label>
+						<input readonly type="text" name="city" value="<?php echo $this->escape($this->city);?>">
+		
+		
+						<label id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></label>
+						<?php renderFilter($this->locations, 1, 'province_id', $this->escape($this->geo1), 'district_id','', 'true');?>
+						<?php if ( $this->setting['display_region_b'] ) { ?>
+						<label id="district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?></label>
+						<?php renderFilter($this->locations, 2, 'district_id', $this->escape($this->geo2), ($this->setting['display_region_c']?'region_c_id':false),'','true');?>
+						<?php } ?>
+						<?php if ( $this->setting['display_region_c'] ) { ?>
+						<label id="region_c_id_lbl"><?php echo (@$this->translation['Region C (Local Region)']); ?></label>
+						<?php renderFilter($this->locations, 3, 'region_c_id', $this->escape($this->geo3), false,'','true');?>
+						<?php } ?>
+						
+
+		
+						<label><?php echo t('Postal Code'); ?></label>
+						<input readonly type="text" name="postalcode" value="<?php echo $this->escape($this->zip);?>">
+						
+						<label><?php echo t('Phone'); ?></label>
+						<input readonly type="text" name="phone" value="<?php echo $this->escape($this->phone);?>">
+						
+						<label><?php echo t('Fax'); ?></label>
+						<input readonly type="text" name="fax" value="<?php echo $this->escape($this->fax);?>">
+						
+						
+<?php
+/*
+					<label>Institution Type</label>
+					<input type="text" name="instype" value="<?php echo $this->escape($this->type);?>">
+*/
+?>
+						<label><?php echo t('Institution Type'); ?></label>
+						<select name="instype" id="instype" class="comboeditable" disabled = 'true'>
+							<option value="0"><?php echo t('Select...'); ?></option>
+<?php
+	foreach ($this->instypes as $instype){
+?>
+							<option value="<?php echo $instype['id']; ?>"<?php echo $this->type == $instype['id'] ? " selected" : ""; ?>> <?php echo $instype['typename']; ?></option>
+<?php
+	}
+?>
+						</select>
+						
+						<label><?php echo t('Sponsor'); ?></label>
+						<select name="sponser" id="sponser" class="comboeditable" disabled = 'true'>
+							<option value="0"><?php echo t('Select...'); ?></option>
+<?php
+	foreach ($this->lookupsponsors as $sponsor){
+?>
+							<option value="<?php echo $sponsor['id']; ?>"<?php echo $this->sponsor == $sponsor['id'] ? " selected" : ""; ?>> <?php echo $sponsor['sponsorname']; ?></option>
+<?php
+	}
+?>
+						</select>
+						
+						<label><?php echo t('Cadres Trained'); ?></label>
+						<div style="overflow : auto; float : left; width : 250px; height : 100px; border : 1px solid #CCCCCC; border-radius : 3px; margin-left : 25px; -moz-border-radius : 3px; -webkit-border-radius : 3px; border : 1px solid #85B1DE; background-image : url(/html/images/trainsmart-gradient.gif); background-repeat : repeat-x; margin-bottom : 10px;;">
+<?php
+	foreach ($this->cadres as $cadre){
+		if (trim($cadre['cadrename']) != ""){
+?>
+							<div style="height : 20px; overflow : hidden;">
+								<input readonly type="checkbox" style="margin : 3px;" name="cadre[]" id="cadre[]" value="<?php echo $cadre['id']; ?>"<?php echo in_array($cadre['id'],$this->cadresselected) ? " disabled checked" : " disabled"; ?>> <?php echo $cadre['cadrename']; ?><br>
+							</div>
+<?php
+		}
+	}
+?>
+						</div>
+
+	
+						<label><?php echo t('Qualification Attained'); ?></label>
+						<div style="overflow : auto; float : left; width : 250px; height : 100px; border : 1px solid #CCCCCC; border-radius : 3px; margin-left : 25px; -moz-border-radius : 3px; -webkit-border-radius : 3px; border : 1px solid #85B1DE; background-image : url(/html/images/trainsmart-gradient.gif); background-repeat : repeat-x; margin-bottom : 10px;">
+<?php
+
+	foreach ($this->lookupdegrees as $degree){
+?>
+							<div style="height : 20px; overflow : hidden;">
+								<input readonly type="checkbox" style="margin : 3px;" name="degreetypeid[]" id="degreetypeid[]" value="<?php echo $degree['id']; ?>"<?php echo in_array($degree['id'],$this->degree) ? " disabled checked" : " disabled"; ?>> <?php echo $degree['degree']; ?><br>
+							</div>
+<?php
+	}
+?>
+						</div>
+	
+	
+						<label><?php echo t('# of Computers'); ?></label>
+						<input readonly type="text" name="computer" value="<?php echo $this->escape($this->computers);?>">
+						
+						<label><?php echo t('# of Tutors'); ?></label>
+						<input readonly type="text" name="tutor" readonly value="<?php echo $this->escape($this->tutor);?>">
+						
+						<label><?php echo t('# of Students'); ?></label>
+						<input readonly type="text" name="students" readonly value="<?php echo $this->escape($this->students);?>">
+						
+						<label><?php echo t('Tutor to Student Ratio'); ?></label>
+						<input readonly type="text" name="tutorratio" value="<?php echo $this->escape($this->tutorratio);?>" readonly>
+		
+						<label><?php echo t('Dormitories?(y/n)'); ?></label>
+						<select name="hasdormitories" id="hasdormitories" onchange="setselector('dorm',this.value)" disabled = 'true'>
+							<option value="0">No</option>
+							<option value="1"<?php echo $this->escape($this->hasdormitories) ? " selected" : "" ?>>Yes</option>
+						</select>
+	
+						<label><?php echo t('# Dormitories'); ?></label>
+						<input readonly type="text" name="dormcount" id="dormcount" value="<?php echo $this->escape($this->dormcount);?>">
+						
+						<label><?php echo t('# of beds (students)'); ?></label>
+						<input readonly type="text" name="studbeds" id="studbeds" value="<?php echo $this->escape($this->studbeds);?>">
+						
+						<label><?php echo t('Tutor housing?(y/n)'); ?></label>
+						<select name="tutorhousing" id="tutorhousing" onchange="setselector('housing',this.value)" disabled = 'true'>
+							<option value="0">No</option>
+							<option value="1"<?php echo $this->escape($this->tutorhousing) ? " selected" : "" ?>>Yes</option>
+						</select>
+	
+						<label><?php echo t('# Tutor houses'); ?></label>
+						<input readonly type="text" id="tutorhouses" name="tutorhouses" value="<?php echo $this->escape($this->tutorhouses);?>">
+						
+						<label><?php echo t('Year Founded'); ?></label>
+						<input readonly type="text" name="yearfound" value="<?php echo $this->escape($this->year);?>">
+						
+						<label style="margin:20px 0 0 0;"><?php echo t('Comments'); ?></label>
+						<textarea name="comments" rows="3" cols="32" disabled = true style="margin:-40px 0 0 340px;"><?php echo $this->escape($this->comments);?></textarea>
+						<div class="clear pad50"></div>
+						<div style="text-align : right;">
+							<input type="button" value="<?php echo t('Back'); ?>" class="tsbutton green large" onclick="location='<?php echo Settings::$COUNTRY_BASE_URL ?>/institution/index'" >
+							</div>
+						</div>
+						<div class="clear pad50"></div>
+				</div>
+				<div>
+					</form>
+					<div class="clear pad50"></div>
+					<p style="" ><?php echo t('Principal/Key Staff Members'); ?></p>
+	
+	
+					<div style="width :100%;">
+						<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+							<thead>
+								<tr>
+									<th><?php echo t('Name'); ?></th>
+									<th><?php echo t('Title'); ?></th>
+									<th><?php echo t('Phone'); ?></th>
+									<th><?php echo t('Email'); ?></th>
+								</tr>
+							</thead>
+							<tbody>
+					
+<?php
+	foreach ($this->fetchins as $staff){
+?>
+								<tr class="GradeA" onclick="location = '../../../tutoredit/tutoredit/id/<?php echo $staff['id']; ?>'">
+									<td><?php echo $staff['first_name'] . " " . $staff['last_name']; ?></td>
+									<td class=""><?php echo $staff['title_phrase']; ?></td>
+									<td class=""><?php echo $staff['phone_work']; ?></td>
+									<td class=""><?php echo $staff['email']; ?></td>
+								</tr>
+<?php
+	}
+?>
+							</tbody>
+						</table >
+					</div>
+
+					<div style="text-align : right;">
+
+					</div>
+					<div class="clear pad50"></div>
+
+
+				</div>
+			</div>
+		</div>
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+	</div>
+	</body>
+</html>

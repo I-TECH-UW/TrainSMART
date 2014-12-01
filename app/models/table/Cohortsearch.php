@@ -14,7 +14,7 @@ class CohortSearch extends ITechTable{
 #		$edate = $param['graddate'];
 		$startdate	=	isset($param['startdate']) && trim($param['startdate'] != "") ? date("Y-m-d",strtotime($param['startdate'])) : "";
 		$endate		=	isset($param['graddate']) && trim($param['graddate'] != "") ? date("Y-m-d",strtotime($param['graddate'])) : "";
-
+		
 		$select = $this->dbfunc()->select()
 			->from($this->_name);
 		if (trim($startdate) != ""){

@@ -12,7 +12,7 @@ require_once('views/helpers/TrainingViewHelper.php');
 ?>
 <style>
 
-<?php if($this->viewonly) : ?>
+<?php if($this->viewonly) : ?>  
   .required { display:none; }
 <?php endif; ?>
 
@@ -210,7 +210,8 @@ echo "<br clear='top'/><br clear='left'/><br clear='top'/>";
 	
   <div class="fieldLabel" id="training_title_lbl"><span class="required">*</span><?php echo $this->translation['Training Name']; ?></div>
   <div class="fieldInput" >
-    <select id="select_training_title_option" name="training_category_and_title_option_id">
+  
+        <select id="select_training_title_option" name="training_category_and_title_option_id">
     <option value="">&mdash; <?php tp('select');?> &mdash;</option>
 		<?php
       $lastId = NULL;
@@ -227,6 +228,7 @@ echo "<br clear='top'/><br clear='left'/><br clear='top'/>";
       }
 		?>
 		</select><?php print $this->titleInsertLink; ?>    <?php echo hasACLEdit('acl_editor_training_title', 'admin/training-title', $this); ?>
+  
   </div>
 
     <script>
@@ -311,6 +313,9 @@ echo "<br clear='top'/><br clear='left'/><br clear='top'/>";
     <?php echo $this->dropDownOrg; ?>
     <?php echo hasACLEdit('acl_editor_training_organizer', 'admin/training-organizer', $this); ?>
   </div><br/>
+  
+  <!-- TA:17:14: -->
+  <?php if($this->setting['display_training_location']){?>
   <div class="fieldLabel"><?php echo t('Training').' '.t('Location');?></div>
   <div class="fieldInput">
     <?php
@@ -319,6 +324,7 @@ echo "<br clear='top'/><br clear='left'/><br clear='top'/>";
         echo $this->insertLocationLink;
     ?>
   </div><br/>
+  <?php }?>
 
   <!-- TA:17: 09/03/2014 -->
   <?php if($this->setting['display_training_level']){?>
@@ -802,11 +808,11 @@ if ( $this->row['has_known_participants']) :
 
 <?php if(!$this->viewonly) : ?>
       <br/>
-      <input type="text" id="person_first_name" size="15"  value="<?php echo $this->translation['First Name'];?>" onfocus="firstNameOnFocus(this)" onblur="firstNameOnBlur(this)">
+      <input type="text" id="person_first_name" size="15"  placeholder="<?php echo $this->translation['First Name'];?>" onfocus="firstNameOnFocus(this)" onblur="firstNameOnBlur(this)">
   <?php if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) { ?>
-      <input type="text" id="person_middle_name" size="15"  value="<?php echo $this->translation['Middle Name'];?>" onfocus="middleNameOnFocus(this)" onblur="middleNameOnBlur(this)">
+      <input type="text" id="person_middle_name" size="15"  placeholder="<?php echo $this->translation['Middle Name'];?>" onfocus="middleNameOnFocus(this)" onblur="middleNameOnBlur(this)">
    <?php } ?>
-     <input type="text" id="person_last_name" size="15"  value="<?php echo $this->translation['Last Name'];?>" onfocus="lastNameOnFocus(this)" onblur="lastNameOnBlur(this)">
+     <input type="text" id="person_last_name" size="15"  placeholder="<?php echo $this->translation['Last Name'];?>" onfocus="lastNameOnFocus(this)" onblur="lastNameOnBlur(this)">
   <?php if ( $this->setting['display_middle_name'] && $this->setting['display_middle_name_last'] ) { ?>
       <input type="text" id="person_middle_name" size="15"  value="<?php echo $this->translation['Middle Name'];?>" onfocus="middleNameOnFocus(this)" onblur="middleNameOnBlur(this)">
    <?php } ?>

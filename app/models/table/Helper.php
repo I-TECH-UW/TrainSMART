@@ -166,6 +166,112 @@ class Helper extends ITechTable
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
+	
+    public function getUserPrograms($uid, $full = true)
+    {
+        if ($full) {
+            $select = $this->dbfunc()
+                ->select()
+                ->from("link_user_cadres")
+                ->where('userid = ?', $uid);
+            $result = $this->dbfunc()->fetchAll($select);
+        } else {
+            $select = $this->dbfunc()
+                ->select()
+                ->from("link_user_cadres")
+                ->where('userid = ?', $uid);
+            $result = $this->dbfunc()->fetchAll($select);
+            $trimmed = array();
+            foreach ($result as $row) {
+                $trimmed[] = $row['cadreid'];
+            }
+            $result = $trimmed;
+        }
+        return $result;
+    }
+    
+    public function getUserAllowedInstitutionNames($uid) {
+    
+        $select = $this->dbfunc()
+        ->select()
+        ->from("link_user_institution")
+        ->where('userid = ' . $uid);
+    
+        $result = $this->dbfunc()->fetchAll($select);
+    
+        if (count($result) == 0)    {
+            $select = $this->dbfunc()
+            ->select(array('ins.institutionname'))
+            ->from(array('ins' => "institution"));
+            //->joinLeft(array('lui' => "link_user_institution"), 'lui.institutionid = ins.id');
+        }   else    {
+            $select = $this->dbfunc()
+            ->select(array('ins.institutionname'))
+            ->from(array('ins' => "institution"))
+            ->join(array('lui' => "link_user_institution"), 'lui.institutionid = ins.id')
+            ->where('lui.userid = ' . $uid);
+        }
+    
+        $result = $this->dbfunc()->fetchAll($select);
+        return $result;
+    }
+    
+    public function getUserAllowedCadreNames($uid)
+    {
+        // RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
+        $select = $this->dbfunc()
+        ->select()
+        ->from("link_user_cadres")
+        ->where('userid = ' . $uid);
+    
+        $result = $this->dbfunc()->fetchAll($select);
+    
+        if (count($result) == 0)    {
+            $select = $this->dbfunc()
+            ->select(array('cad.cadrename'))
+            ->from(array('cad' => "cadres"));
+            //->joinLeft(array('luc' => "link_user_cadres"), 'luc.cadreid = cad.id');
+        }   else    {
+            $select = $this->dbfunc()
+            ->select(array('cad.cadrename'))
+            ->from(array('cad' => "cadres"))
+            ->join(array('luc' => "link_user_cadres"), 'luc.cadreid = cad.id')
+            ->where('luc.userid = ' . $uid);
+        }
+    
+        $result = $this->dbfunc()->fetchAll($select);
+        return $result;
+    }
+
+    public function getPrograms($all = true)
+    {
+        if (! $all) {
+            $institutions = $this->getUserPrograms($this->myid(), false);
+            if ((is_array($programs)) && (count($programs) > 0)) {
+                $insids = implode(",", $programs);
+                $select = $this->dbfunc()
+                    ->select()
+                    ->from("cadres")
+                    ->where("id IN (" . $insids . ")")
+                    ->order('cadrename');
+            } else {
+                $select = $this->dbfunc()
+                    ->select()
+                    ->from("cadres")
+                    ->order('cadrename');
+            }
+        } else {
+            $select = $this->dbfunc()
+                ->select()
+                ->from("cadres")
+                ->order('cadrename');
+        }
+        
+        $result = $this->dbfunc()->fetchAll($select);
+        return $result;
+    }
+
+
 
 	public function getInstitutionTypes() {
 		$select = $this->dbfunc()->select()
@@ -241,7 +347,7 @@ class Helper extends ITechTable
 		$select = $this->dbfunc()->select()
 			->from("lookup_facilitytype")
 			->order('facilitytypename');
-		$result = $this->dbfunc()->fetchAll($select);
+		$result = $this->dgbfunc()->fetchAll($select);
 		return $result;
 	}
 */
@@ -774,6 +880,33 @@ class Helper extends ITechTable
 			->order('cadrename');
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
+	}
+	
+	public function getUserAllowedCadres($uid){
+	    
+	    $select = $this->dbfunc()->select()
+	    ->from("link_user_cadres")
+	    ->where('userid = ' . $uid);
+	    
+	    $result = $this->dbfunc()->fetchAll($select);
+	    
+	    if (count($result)== 0) {
+	        $select = $this->dbfunc()->select(
+	        array('cad.cadrename'))
+	        ->from(array('cad' => 'cadres'))
+	        ->joinLeft(array('luc' => "link_user_cadres"), 'luc.cadreid = cad.id')
+	        ->where('luc.userid = ' . $uid);
+	    }
+	    else {
+	        $select = $this->dbfunc()->select(
+	        array('cad.cadrename'))
+	        ->from(array('cad' => 'cadres'))
+	        ->join(array('luc' => "link_user_cadres"), 'luc.cadreid = cad.id')
+	        ->where('luc.userid = ' . $uid);
+	    }
+	    
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return $result;
 	}
 
 	public function getTutorCadres($tid){
@@ -2848,6 +2981,40 @@ class Helper extends ITechTable
 		}
 		return $ret;
 	}
+
+
+    public function saveUserPrograms($uid, $ins)
+    {
+        $db = $this->dbfunc();
+        if (count($ins) == 0) {
+            $query = "DELETE FROM link_user_cadres WHERE userid = " . $uid;
+            $this->dbfunc()->query($query);
+        } else {
+            $parsed = array();
+            foreach ($ins as $k => $v) {
+                if (trim($v) != "") {
+                    $query = "SELECT * FROM link_user_cadres WHERE
+						`userid` = '" . addslashes($uid) . "' AND
+						`cadreid` = '" . addslashes($v) . "'";
+                    $result = $db->query($query);
+                    $rows = $result->fetchAll();
+                    if (count($rows) == 0) {
+                        $query = "INSERT INTO link_user_cadres SET
+							`userid` = '" . addslashes($uid) . "',
+							`cadreid` = '" . addslashes($v) . "'";
+                        $db->query($query);
+                    }
+                    $parsed[] = $v;
+                }
+            }
+            
+            // Deactivating any remaining items if they are no longer checked
+            $query = "DELETE FROM link_user_cadres WHERE
+				`userid` = '" . addslashes($uid) . "' AND
+				`cadreid` NOT IN (" . implode(",", $parsed) . ")";
+            $db->query($query);
+        }
+    }
 }
 
 

@@ -302,7 +302,7 @@
 
 
 					<div id="contentheader">
-						<h2><?php echo t('View Student Record'); ?></h2><br><br>
+						<h2><?php echo t('Edit Student Record'); ?></h2><br><br>
 					</div>
 					<div class="clear pad20"></div>
 					<form  action="#" id="peopleadd" method="post">
@@ -316,7 +316,7 @@
 				
 						<div class="mainformholder" style="height:100%;">
 							<label><?php echo t('Graduated?'); ?></label>
-							<select name="graduated" disabled = true>
+							<select name="graduated">
 								<option value="0"<?php echo ($this->escape($this->graduated) == 0 ? " selected" : "") ?>>No</option>
 								<option value="1"<?php echo ($this->escape($this->graduated) == 1 ? " selected" : "") ?>>Yes</option>
 							</select>
@@ -348,7 +348,7 @@
 							
 
 		 					<label><?php echo t('Title'); ?></label>
-							<select disabled = true name="title" >
+							<select name="title" >
 								<option value="0"><?php echo t('Select...'); ?></option>
 							<?php foreach ($this->gettitle as $fetchtitle){ ?>
 								<option value="<?php echo $fetchtitle['id']; ?>"<?php echo ($this->escape($this->selid) == $fetchtitle['id'] ? " selected" : "") ?>><?php echo $fetchtitle['title_phrase']; ?></option>
@@ -356,23 +356,23 @@
 							</select>
 
 							<label><?php echo t('First name'); ?></label>
-							<input readonly type="text" name="firstname" value="<?php echo $this->escape($this->firstname);?>">
+							<input type="text" name="firstname" value="<?php echo $this->escape($this->firstname);?>">
 
 							<label><?php echo t('Middle name'); ?></label>
-							 <input readonly type="text" name="middlename" value="<?php echo $this->escape($this->middlename);?>">
+							 <input type="text" name="middlename" value="<?php echo $this->escape($this->middlename);?>">
 
 							<label><?php echo t('Last name'); ?></label>
-							<input readonly type="text" name="lastname" value="<?php echo $this->escape($this->lastname);?>">
+							<input type="text" name="lastname" value="<?php echo $this->escape($this->lastname);?>">
 
 							<label><?php echo t('School ID'); ?></label>
-							<input readonly type="text" name="nationalid" value="<?php echo $this->escape($this->nationalid);?>">
+							<input type="text" name="nationalid" value="<?php echo $this->escape($this->nationalid);?>">
 
 							
 							<!-- TA: added 07/22/2014 START -->
 							<?php
 								if($this->escape($this->label_ps_nationality)){
 									echo "<label>" . $this->escape($this->label_ps_nationality) . "</label>";
-									echo "<select name='nationality' disabled=true >";
+									echo "<select name='nationality'>";
 									echo "<option value='0'>" . t('Select...') . "</option>";
 									foreach ($this->lookupnationalities as $nationality){
 									echo "<option value='" . $nationality['id'] . "' " . ($nationality['id'] == $this->escape($this->nationalityid) ? ' selected' : '') . ">" . $nationality['nationality'] . "</option>";
@@ -383,14 +383,14 @@
 							<!-- TA: added 07/22/2014 END -->
 
 							<label><?php echo t('Gender'); ?></label>
-							<select name="gender" disabled=true >
-								<option disabled = true value="na"><?php echo t('Select...'); ?></option>
-								<option disabled = true value="male"<?php echo ($this->escape($this->gender) == "male" ? " selected" : "");?>>Male</option>
-								<option disabled = true value="female"<?php echo ($this->escape($this->gender) == "female" ? " selected" : "");?>>Female</option>
+							<select name="gender">
+								<option value="na"><?php echo t('Select...'); ?></option>
+								<option value="male"<?php echo ($this->escape($this->gender) == "male" ? " selected" : "");?>>Male</option>
+								<option value="female"<?php echo ($this->escape($this->gender) == "female" ? " selected" : "");?>>Female</option>
 							</select>
 
 							<label><?php echo t('Date of birth'); ?></label>
-							<input readonly type="text" name="dob" id="dob" value="<?php echo ($this->escape($this->dob) != "31-12-1969" ? $this->escape($this->dob) : "");?>">
+							<input type="text" class="calendarbox" name="dob" id="dob" value="<?php echo ($this->escape($this->dob) != "31-12-1969" ? $this->escape($this->dob) : "");?>">
 
 							<label><?php echo t('Age'); ?></label>
 <?php
@@ -405,13 +405,13 @@
 		$age = "";
 	}
 ?>
-							<input readonly type="text" readonly value="<?php echo $age;?>"><br>
+							<input type="text" readonly value="<?php echo $age;?>"><br>
 							
 							<!-- TA: added 7/22/2014 START -->
 							<?php
 								if($this->escape($this->label_marital_status)){
 									echo "<label>" . $this->escape($this->label_marital_status) . "</label>";
-									echo "<select name='marital_status' id='marital_status' disabled=true> ";
+									echo "<select name='marital_status' id='marital_status'>";
 									echo "<option value='na'>" . t('Select...') . "</option>";
 									echo "<option value='single' " . ($this->escape($this->marital_status) == 'single' ? ' selected' : '') . ">Single</option>";
 									echo "<option value='married' " . ($this->escape($this->marital_status) == 'married' ? ' selected' : '') . ">Married</option>";
@@ -436,7 +436,7 @@
 		}
 		if ( $this->setting['display_region_c'] ) {
 							echo"<label id='region_c_id_lbl'> " . @$this->translation['Region C (Local Region)'] . "</label>";
-							renderFilter($this->locations, 3, 'local-geo3', $this->escape($this->localgeo3), false, '', false);
+							renderFilter($this->locations, 3, 'local-geo3', $this->escape($this->localgeo3), false);
 		}
 							echo"<label>" . t('Address 1') . "</label>";
 							echo"<input type='text' name='localaddress1' value='" . $this->escape($this->address1) . "'>";
@@ -488,23 +488,23 @@
 							<div class="pad20 clear"></div><br>
 
 							<label><?php echo t('Phone'); ?></label>
-							<input readonly type="text" name="localphone" value="<?php echo $this->escape($this->phone);?>">
+							<input type="text" name="localphone" value="<?php echo $this->escape($this->phone);?>">
 
 							<label><?php echo t('Cellphone'); ?></label>
-							<input readonly type="text" name="localcell" value="<?php echo $this->escape($this->cell);?>" >
+							<input type="text" name="localcell" value="<?php echo $this->escape($this->cell);?>" >
 
 							<label><?php echo t('Cellphone 2'); ?></label>
-							<input readonly type="text" name="localcell2" value="<?php echo $this->escape($this->cell2);?>" >
+							<input type="text" name="localcell2" value="<?php echo $this->escape($this->cell2);?>" >
 
 							<label><?php echo t('Email'); ?></label>
-							<input readonly type="text" name="email" value="<?php echo $this->escape($this->email);?>">
+							<input type="text" name="email" value="<?php echo $this->escape($this->email);?>">
 
 							<label><?php echo t('Email 2'); ?></label>
-							<input readonly type="text" name="email_secondary" value="<?php echo $this->escape($this->email2);?>">
+							<input type="text" name="email_secondary" value="<?php echo $this->escape($this->email2);?>">
 							
 							<!-- TA: add - START  -->
 							<label><?php echo t('Emergency Contact'); ?></label>
-							<input readonly type="text" name="emergcontact" value="<?php echo $this->escape($this->emergcontact);?>">
+							<input type="text" name="emergcontact" value="<?php echo $this->escape($this->emergcontact);?>">
 							<!-- TA: add - END  -->
 
 							<div class="pad20 clear"></div>
@@ -512,13 +512,13 @@
 							<div class="pad20 clear"></div><br>
 
 							<label><?php echo t('Student ID'); ?></label>
-							<input readonly type="text" name="studentid" id="studentid" value="<?php echo $this->escape($this->studentid);?>">
+							<input type="text" name="studentid" id="studentid" value="<?php echo $this->escape($this->studentid);?>">
 
 							<!-- TA: added 07/22/2014 START -->
 							<?php
 								if($this->escape($this->label_ps_religious_denomin)){
 									echo "<label>" . $this->escape($this->label_ps_religious_denomin) . "</label>";
-									echo "<select name='studenttype' disabled = true id='studenttype' class='comboeditable' " . (!$this->hascohort ? ' disabled' : '') .">";
+									echo "<select name='studenttype' id='studenttype' class='comboeditable' " . (!$this->hascohort ? ' disabled' : '') .">";
 								echo "<option value='0'>" . t('Select...') . "</option>";
 								foreach ($this->lookupstudenttypes as $studenttype){
 								echo "<option value='" . $studenttype['id'] . "' " . ($this->studenttype == $studenttype['id'] ? ' selected' : '') . ">";
@@ -534,7 +534,7 @@
 
 							<label><?php echo t('Reason for Enrollment'); ?></label>
 <!--							<input type="text" name="enrollmentreason" value="<?php echo $this->escape($this->enrollmentreason);?>"> -->
-							<select disabled = true name="enrollmentreason" id="enrollmentreason" class="comboeditable"<?php echo !$this->hascohort ? " disabled" : "";?>>
+							<select name="enrollmentreason" id="enrollmentreason" class="comboeditable"<?php echo !$this->hascohort ? " disabled" : "";?>>
 								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
 	foreach ($this->joinreasons as $joinreason){
@@ -546,12 +546,14 @@
 							</select>
 
 							<label><?php echo t('Date of Separation'); ?></label>
-							<input readonly type="text" name="separationdate" id="separationdate" value="<?php echo $this->escape($this->separationdate);?>"<?php echo (($this->separationdate != "") && ($this->separationdate != "0000-00-00") ? " READONLY" : "");?><?php echo !$this->hascohort ? " disabled" : "";?>>
+							<input type="text" name="separationdate" id="separationdate" class="calendarbox" value="<?php echo $this->escape($this->separationdate);?>"<?php echo (($this->separationdate != "") && ($this->separationdate != "0000-00-00") ? " READONLY" : "");?><?php echo !$this->hascohort ? " disabled" : "";?>>
+							<label><?php echo t('Clear date'); ?></label>
+							<input type="button" value="Remove separation date" style="padding : 2px; position : relative; left : 24px; margin-bottom : 10px;" onclick="document.getElementById('separationdate').value = '';document.getElementById('separationreason').selectedIndex = 0;">
 
 							<label><?php echo t('Reason for Separation'); ?></label>
 <!--							<input type="text" name="separationreason"
 							value="<?php echo $this->escape($this->separationreason);?>"> -->
-							<select disabled = true name="separationreason" id="separationreason" class="comboeditable"<?php echo !$this->hascohort ? " disabled" : "";?>>
+							<select name="separationreason" id="separationreason" class="comboeditable"<?php echo !$this->hascohort ? " disabled" : "";?>>
 								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
 	foreach ($this->dropreasons as $dropreason){
@@ -620,11 +622,11 @@
 
 							<label><?php echo $this->translation['ps tutor'] . ' advisor'; ?></label>
 							<select id="tutoradvisor" name="tutoradvisor">
-								<option disabled = true value="0"><?php echo t('Select...'); ?></option>
+								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
 	foreach ($this->gettutors as $tutor){
 ?>
-								<option disabled = true value="<?php echo $tutor['id']; ?>"<?php echo ($this->escape($this->advisor) == $tutor['id'] ? " selected" : "") ?>><?php echo $tutor['first_name'] . " " . $tutor['last_name']; ?></option>
+								<option value="<?php echo $tutor['id']; ?>"<?php echo ($this->escape($this->advisor) == $tutor['id'] ? " selected" : "") ?>><?php echo $tutor['first_name'] . " " . $tutor['last_name']; ?></option>
 <?php
 	}
 ?>
@@ -639,15 +641,15 @@
 								echo "<div class='pad20 clear'></div>";
 								if($this->escape($this->label_hscomldate)){
 									echo "<label>" . $this->escape($this->label_hscomldate) . "</label>";
-									echo "<input readonly type='text' class='calendarbox' name='hscomldate' id='hscomldate' value='" . $this->escape($this->hscomldate) . "';>";
+									echo "<input type='text' class='calendarbox' name='hscomldate' id='hscomldate' value='" . $this->escape($this->hscomldate) . "';>";
 								}
 								if($this->escape($this->label_lastinstatt)){
 									echo "<label>" . $this->escape($this->label_lastinstatt) . "</label>";
-									echo "<input readonly type='text' name='lastinstatt' id='lastinstatt' value='" . $this->escape($this->lastinstatt) . "';>";
+									echo "<input type='text' name='lastinstatt' id='lastinstatt' value='" . $this->escape($this->lastinstatt) . "';>";
 								}
 								if($this->escape($this->label_schoolstartdate)){
 									echo "<label>" . $this->escape($this->label_schoolstartdate) . "</label>";
-									echo "<input readonly type='text' class='calendarbox' name='schoolstartdate' id='schoolstartdate' value='" . $this->escape($this->schoolstartdate) . "';>";
+									echo "<input type='text' class='calendarbox' name='schoolstartdate' id='schoolstartdate' value='" . $this->escape($this->schoolstartdate) . "';>";
 								}
 								if($this->escape($this->label_equivalence)){
 									echo "<label>" . $this->escape($this->label_equivalence) . "</label>";
@@ -657,15 +659,15 @@
 										$val = 1;
 										$checked = 'CHECKED';
 									}
-									echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input readonly type='checkbox' name='equivalence' id='equivalence' value='1' " .  $checked . ">";
+									echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type='checkbox' name='equivalence' id='equivalence' value='1' " .  $checked . ">";
 								}
 								if($this->escape($this->label_lastunivatt)){
 									echo "<label>" . $this->escape($this->label_lastunivatt) . "</label>";
-									echo "<input readonly type='text' name='lastunivatt' id='lastunivatt' value='" . $this->escape($this->lastunivatt) . "';>";
+									echo "<input type='text' name='lastunivatt' id='lastunivatt' value='" . $this->escape($this->lastunivatt) . "';>";
 								}
 								if($this->escape($this->label_personincharge)){
 									echo "<label>" . $this->escape($this->label_personincharge) . "</label>";
-									echo "<input readonly type='text' name='personincharge' id='personincharge' value='" . $this->escape($this->personincharge) . "';>";
+									echo "<input type='text' name='personincharge' id='personincharge' value='" . $this->escape($this->personincharge) . "';>";
 								}
 								}
 							?>   
@@ -680,18 +682,18 @@
 <?php //region_filters_dropdown_ps($this, 'post'); //TA: also this code not working to submit info into DB ?> 
 
 							  <label id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></label>
-<?php renderFilter($this->locations, 1, 'postgeo1', $this->postgeo1, 'postgeo2','',true);?>
+<?php renderFilter($this->locations, 1, 'postgeo1', $this->postgeo1, 'postgeo2');?>
 <?php if ( $this->setting['display_region_b'] ) { ?>
 							<label id="district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?></label>
-<?php renderFilter($this->locations, 2, 'postgeo2', $this->postgeo2, ($this->setting['display_region_c']?'postgeo3':false),'',true);?>
+<?php renderFilter($this->locations, 2, 'postgeo2', $this->postgeo2, ($this->setting['display_region_c']?'postgeo3':false));?>
 <?php } ?>
 <?php if ( $this->setting['display_region_c'] ) { ?>
 							<label id="region_c_id_lbl"><?php echo (@$this->translation['Region C (Local Region)']); ?></label>
-<?php renderFilter($this->locations, 3, 'postgeo3', $this->postgeo3, false,'',true);?>
+<?php renderFilter($this->locations, 3, 'postgeo3', $this->postgeo3, false);?>
 <?php } ?>
 
 							<label>Facility Name</label>
-			<select disabled = true name="postfacilityname" id="postfacilityname" class="text ui-widget-content ui-corner-all" />
+			<select name="postfacilityname" id="postfacilityname" class="text ui-widget-content ui-corner-all" />
 				<option value="0"><?php echo t('Select'); ?></option>
 <?php
 	foreach ($this->facilities as $facility){
@@ -707,7 +709,7 @@
 							<div class="pad20 clear"></div>
 
 							<div class="clear"></div>
-							<textarea disabled = true name="comments" id="comments" style="float:right; height:80px; margin-right:12px;" class="mainformholdertextarea"><?php echo $this->escape($this->comments);?></textarea>
+							<textarea name="comments" id="comments" style="float:right; height:80px; margin-right:12px;" class="mainformholdertextarea"><?php echo $this->escape($this->comments);?></textarea>
 							<div class="clear"></div>
 							<br>
 							
@@ -768,7 +770,7 @@
 						<div class="pad20 clear"></div>
 						<div class="mainformholder" style="height : 100px; margin-top:30px;">
 							<div  style="float : right; margin-right:12px;" >
-								
+								<input type="submit" name="personupdate" value="Update &raquo;" class="tsbutton green large">
 								<a href="../../../people/people"> <input type="button"  value="Back" class="tsbutton green large"></a>
 							</div>
 							<div class="clear pad20"></div>
@@ -834,6 +836,9 @@
 						</table>
 						<div style="text-align : right;">
 							<br>
+							 <?php if ( $this->hasACL( 'acl_delete_ps_grades' )){?> 
+							<input type="submit" name="classpopupbutton" id="classpopupbutton" value="Update classes" class="tsbutton green large">
+							<?php }?>
 						</div>
 					</div>
 					<div style="width :100%; ">
@@ -871,6 +876,9 @@
 						<div style="text-align : right;">
 							<br>
 							<!-- TA: added 7/25/2014 -->
+							<?php
+							echo "<input type='submit' name='practicumpopupbutton' id='practicumpopupbutton' value='Update " . $this->translation['ps clinical allocation'] . "' class='tsbutton green large'>";
+							?>
 							</div>
 					</div>
 					<div style="width :100%; ">
@@ -899,7 +907,7 @@
 						</table>
 						<div style="text-align : right;">
 							<br>
-
+							<input type="submit" name="licensepopupbutton" id="licensepopupbutton" value="<?php echo t('Update exams'); ?>" class="tsbutton green large">
 						</div>
 					</div>
 					<div class="clear" style=""></div>

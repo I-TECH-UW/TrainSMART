@@ -313,51 +313,51 @@ function region_filters_dropdown(&$view, &$locations, &$criteria, $is_multiple =
  * this is just a helper function to render the same drop downs used in 4 pages.
  * ex: region_filters_dropdown_ps($this, 'local');
  */
-function region_filters_dropdown_ps(&$view, $prefix = '') {
+function region_filters_dropdown_ps(&$view, $prefix = '', $readonly = false) {
   if ($prefix) $prefix2 = $prefix . '_';
 	?>
 
 	<label id="<?php echo ($prefix?$prefix.'_' : ''); ?>province_id_lbl"><?php echo (@$view->translation['Region A (Province)']); ?></label>
-	<?php renderFilter($view->locations, 1, $prefix2.'geo1', $view->escape($view->{$prefix.'geo1'}), ($view->setting['display_region_b']?$prefix2.'geo2':false));
+	<?php renderFilter($view->locations, 1, $prefix2.'geo1', $view->escape($view->{$prefix.'geo1'}), ($view->setting['display_region_b']?$prefix2.'geo2':false),'',$readonly);
 
 	if ( $view->setting['display_region_b'] ) {
 		echo "\t <label id=\"".($prefix?$prefix.'_' : '')."district_id_lbl\">" . @$view->translation['Region B (Health District)'] . '</label>';
-		renderFilter($view->locations, 2, $prefix2.'geo2', $view->escape( $view->{$prefix.'geo2'} ), ($view->setting['display_region_b']?$prefix2.'geo3':false));
+		renderFilter($view->locations, 2, $prefix2.'geo2', $view->escape( $view->{$prefix.'geo2'} ), ($view->setting['display_region_b']?$prefix2.'geo3':false),'',$readonly);
 	}
 
 	if ( $view->setting['display_region_c'] ) {
 		echo "\t <label id=\"".($prefix?$prefix.'_' : '')."region_c_id_lbl\">" . @$view->translation['Region C (Local Region)'] . '</label>';
-		renderFilter($view->locations, 3, $prefix2.'geo3', $view->escape( $view->{$prefix.'geo3'} ), ($view->setting['display_region_c']?$prefix2.'geo4':false));
+		renderFilter($view->locations, 3, $prefix2.'geo3', $view->escape( $view->{$prefix.'geo3'} ), ($view->setting['display_region_c']?$prefix2.'geo4':false),'',$readonly);
 	}
 
 	if ( $view->setting['display_region_d'] ) {
 		echo "\t <label id=\"".($prefix?$prefix.'_' : '')."region_d_id_lbl\">" . @$view->translation['Region D'] . '</label>';
-		renderFilter($view->locations, 4, $prefix2.'geo4', $view->escape( $view->{$prefix.'geo4'} ), ($view->setting['display_region_d']?$prefix2.'geo5':false));
+		renderFilter($view->locations, 4, $prefix2.'geo4', $view->escape( $view->{$prefix.'geo4'} ), ($view->setting['display_region_d']?$prefix2.'geo5':false),'',$readonly);
 	}
 
 	if ( $view->setting['display_region_e'] ) {
 		echo "\t <label id=\"".($prefix?$prefix.'_' : '')."region_e_id_lbl\">" . @$view->translation['Region E'] . '</label>';
-		renderFilter($view->locations, 5, $prefix2.'geo5', $view->escape( $view->{$prefix.'geo5'} ), ($view->setting['display_region_e']?$prefix2.'geo6':false));
+		renderFilter($view->locations, 5, $prefix2.'geo5', $view->escape( $view->{$prefix.'geo5'} ), ($view->setting['display_region_e']?$prefix2.'geo6':false),'',$readonly);
 	}
 
 	if ( $view->setting['display_region_f'] ) {
 		echo "\t <label id=\"".($prefix?$prefix.'_' : '')."region_f_id_lbl\">" . @$view->translation['Region F'] . '</label>';
-		renderFilter($view->locations, 6, $prefix2.'geo6', $view->escape( $view->{$prefix.'geo6'} ), ($view->setting['display_region_f']?$prefix2.'geo7':false));
+		renderFilter($view->locations, 6, $prefix2.'geo6', $view->escape( $view->{$prefix.'geo6'} ), ($view->setting['display_region_f']?$prefix2.'geo7':false),'',$readonly);
 	}
 
 	if ( $view->setting['display_region_g'] ) {
 		echo "\t <label id=\"".($prefix?$prefix.'_' : '')."region_g_id_lbl\">" . @$view->translation['Region G'] . '</label>';
-		renderFilter($view->locations, 7, $prefix2.'geo7', $view->escape( $view->{$prefix.'geo7'} ), ($view->setting['display_region_g']?$prefix2.'geo8':false));
+		renderFilter($view->locations, 7, $prefix2.'geo7', $view->escape( $view->{$prefix.'geo7'} ), ($view->setting['display_region_g']?$prefix2.'geo8':false),'',$readonly);
 	}
 
 	if ( $view->setting['display_region_h'] ) {
 		echo "\t <label id=\"".($prefix?$prefix.'_' : '')."region_h_id_lbl\">" . @$view->translation['Region H'] . '</label>';
-		renderFilter($view->locations, 8, $prefix2.'geo8', $view->escape( $view->{$prefix.'geo8'} ), ($view->setting['display_region_h']?$prefix2.'geo9':false));
+		renderFilter($view->locations, 8, $prefix2.'geo8', $view->escape( $view->{$prefix.'geo8'} ), ($view->setting['display_region_h']?$prefix2.'geo9':false),'',$readonly);
 	}
 
 	if ( $view->setting['display_region_i'] ) {
 		echo "\t <label id=\"".($prefix?$prefix.'_' : '')."region_i_id_lbl\">" . @$view->translation['Region I'] . '</label>';
-		renderFilter($view->locations, 9, $prefix2.'geo9', $view->escape( $view->{$prefix.'geo9'} ), false);
+		renderFilter($view->locations, 9, $prefix2.'geo9', $view->escape( $view->{$prefix.'geo9'} ), false,'',$readonly);
 	}
 
 // done

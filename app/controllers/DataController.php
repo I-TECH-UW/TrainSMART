@@ -202,105 +202,278 @@ class DataController extends ITechController {
   }
   
   public function personsAction() {
-    try {
-    	
-    ini_set('memory_limit', -1);
-    	
-    require_once('models/table/Person.php');
-    $personTable = new Person();   
-    $select = $personTable->select()
-        ->from('person', array('*'))
-        //->where('first_name', '=', 'Emily')
-        ->setIntegrityCheck(false);      
-    $rowRay = $personTable->fetchAll($select);
-    $rowRay = @$rowRay->toArray();
-    
-    if (sizeof($rowRay) > 10000  && $this->getSanParam('outputType') != 'csv'){
-    	$error = 'Data is too large to display, try Export';
-    	throw new Exception($error);
-    }
-    
-   //sort by id
-   $sorted = array();
-   foreach($rowRay as $row) {
-   	unset($row['suffix_option_id']);
-   	unset($row['title_option_id']);
-    $sorted[$row['id']] = $row;
-   }
+  	try {
+  		
+  		//TA:17:12-1
+  		$settings = System::getAll();
+  		$translation = Translation::getAll();
+  	//	print_r($translation); exit;
 
-   /*
-   $sorted = $personTable->_fill_lookup($sorted, 'location_city', 'home_city_id', 'city_name');
-   $sorted = $personTable->_fill_lookup($sorted, 'location_district', 'home_district_id', 'district_name');
-   $sorted = $personTable->_fill_lookup($sorted, 'location_province', 'home_province_id', 'province_name');
-   */
-   $locations = Location::getAll();
-   
-   foreach($sorted as $id => $row) {
-   	$city_info = Location::getCityInfo($row['home_location_id'], $this->setting('num_location_tiers'), $locations);
-    if ( count($city_info) ) {
-      if ( $city_info[0] ) $sorted[$id]['city_name'] = $city_info[0];
-      if ( $city_info[1] ) $sorted[$id]['province_name'] = $locations[$city_info[1]]['name'];
-      if ( $city_info[2] ) $sorted[$id]['district_name'] = $locations[$city_info[2]]['name'];
-      if ( $city_info[3] ) $sorted[$id]['region_c_name'] = $locations[$city_info[3]]['name'];
-      if ( $city_info[4] ) $sorted[$id]['region_d_name'] = $locations[$city_info[4]]['name'];
-      if ( $city_info[5] ) $sorted[$id]['region_e_name'] = $locations[$city_info[5]]['name'];
-      if ( $city_info[6] ) $sorted[$id]['region_f_name'] = $locations[$city_info[6]]['name'];
-      if ( $city_info[7] ) $sorted[$id]['region_g_name'] = $locations[$city_info[7]]['name'];
-      if ( $city_info[8] ) $sorted[$id]['region_h_name'] = $locations[$city_info[8]]['name'];
-      if ( $city_info[9] ) $sorted[$id]['region_i_name'] = $locations[$city_info[9]]['name'];
-    }
-    unset($sorted[$id]['home_location_id']);
-   }
-   
-  $sorted = $personTable->_fill_lookup($sorted, 'person_qualification_option', 'primary_qualification_option_id', 'qualification_phrase');
-  $sorted = $personTable->_fill_lookup($sorted, 'person_primary_responsibility_option', 'primary_responsibility_option_id', 'responsibility_phrase');
-  $sorted = $personTable->_fill_lookup($sorted, 'person_secondary_responsibility_option', 'secondary_responsibility_option_id', 'responsibility_phrase');
-  $sorted = $personTable->_fill_lookup($sorted, 'person_custom_1_option', 'person_custom_1_option_id', 'custom1_phrase');
-  $sorted = $personTable->_fill_lookup($sorted, 'person_custom_2_option', 'person_custom_2_option_id', 'custom2_phrase');
-  $sorted = $personTable->_fill_lookup($sorted, 'facility', 'facility_id', 'facility_name');
-   
-   //fill participants
-  $select = $personTable->select()->from('person', array('id'))->setIntegrityCheck(false)
-  ->join(array('pt'=>'person_to_training'), "pt.person_id = person.id", array('training_id'))
-  ->join(array('t'=>'training'), "pt.training_id = t.id", array())
-  ->join(array('tt'=>'training_title_option'), "t.training_title_option_id = tt.id", array('training_title_phrase'));
-   
-   
-   $rows = $personTable->fetchAll($select);
- 
-   foreach($rows as $row) {
-    $pid = $row->id;
-    $ra = $row->toArray();
-    unset($ra['id']);
-    $sorted[$pid]['courses'][] = $ra;
-   }
-   
-   //fill trainers
-   
-  $select = $personTable->select()->from('trainer', array('person_id'))->setIntegrityCheck(false)
-  ->join(array('pt'=>'training_to_trainer'), "pt.trainer_id = trainer.person_id", array('training_id'))
-  ->join(array('t'=>'training'), "pt.training_id = t.id", array())
-  ->join(array('tt'=>'training_title_option'), "t.training_title_option_id = tt.id", array('training_title_phrase'));
-  $rows = $personTable->fetchAll($select);
+  		ini_set('memory_limit', -1);
+  			
+  		require_once('models/table/Person.php');
+  		$personTable = new Person();
+  		$select = $personTable->select()
+  		->from('person', array('*'))
+  		//->where('first_name', '=', 'Emily')
+  		->setIntegrityCheck(false);
+  		$rowRay = $personTable->fetchAll($select);
+  		$rowRay = @$rowRay->toArray();
+  		
+  		//print_r($rowRay); exit; // fot debug
   
-   foreach($rows as $row) {
-    $pid = $row->person_id;
-    $ra = $row->toArray();
-    unset($ra['person_id']);
-    $sorted[$pid]['trained'][] = $ra;
-   }
-   
-   if ($this->getSanParam('outputType') == 'csv') 
-    $this->sendData ( $this->reportHeaders ( false, $sorted ) );
+  		if (sizeof($rowRay) > 10000  && $this->getSanParam('outputType') != 'csv'){
+  			$error = 'Data is too large to display, try Export';
+  			throw new Exception($error);
+  		}
   
-   $this->view->assign('data', $sorted);
+  		//sort by id
+  		$sorted = array();
+  		foreach($rowRay as $row) {
+  			
+  			//unset($row['suffix_option_id']);
+  			//unset($row['title_option_id']);
+  			//$sorted[$row['id']] = $row;
+  			
+  			//TA:
+  			$new_row = array();
+  			$new_row['ID'] = $row['id'];
+  			if($settings['display_people_active']){$new_row[$translation['Is Active']] = $row['active'];}
+  			if($settings['display_people_title']){$new_row['title_option_id'] = $row['title_option_id'];}
+  			if($settings['display_people_suffix']){$new_row['suffix_option_id'] = $row['suffix_option_id'];}
+  			$new_row[$translation['First Name']] = $row['first_name'];
+  			if($settings['display_middle_name']){$new_row[$translation['Middle Name']] = $row['middle_name'];}
+  			$new_row[$translation['Last Name']] = $row['last_name'];
+  			if($settings['display_gender']){$new_row[$translation['Gender']] = $row['gender'];}
+  			if($settings['display_people_birthdate']){$new_row['Birthdate'] = $row['birthdate'];}
+  			if($settings['display_people_home_address']){
+  				$new_row[$translation['Address 1']] = $row['home_address_1'];
+  				$new_row[$translation['Address 2']] = $row['home_address_2'];
+  			}
+  			if($settings['display_people_home_phone']){$new_row[$translation['Home phone']] = $row['phone_home'];}
+  			if($settings['display_people_fax']){$new_row['Fax'] = $row['fax'];}
+  			$new_row['Email'] = $row['email'];
+  			
+  			if($settings['display_national_id']){$new_row[$translation['National ID']] = $row['national_id'];}
+  			if($settings['display_people_file_num']){$new_row[$translation['File Number']] = $row['file_number'];}
+  			if($settings['display_highest_ed_level']){$new_row['highest_edu_level_option_id'] = $row['highest_edu_level_option_id'];}
+  			
+   			$new_row['primary_qualification_option_id'] = $row['primary_qualification_option_id'];
+  			$new_row['primary_responsibility_option_id'] = $row['primary_responsibility_option_id'];
+  			$new_row['secondary_responsibility_option_id'] = $row['secondary_responsibility_option_id'];
+  			$new_row['facility_id'] = $row['facility_id'];
+  			
+  			if($settings['display_people_custom1']){$new_row['person_custom_1_option_id'] = $row['person_custom_1_option_id'];}
+  			if($settings['display_people_custom2']){$new_row['person_custom_2_option_id'] = $row['person_custom_2_option_id'];}
+  		
+  			if($settings['display_attend_reason']){$new_row['attend_reason_option_id'] = $row['attend_reason_option_id'];}
+  			if($settings['display_responsibility_me']){$new_row[$translation['M&E Responsibility']] = $row['me_responsibility'];}
+  			if($settings['display_primary_responsibility']){$new_row['primary_responsibility_option_id'] = $row['primary_responsibility_option_id'];}
+  			if($settings['display_secondary_responsibility']){$new_row['secondary_responsibility_option_id'] = $row['secondary_responsibility_option_id'];}
+  			if($settings['display_people_custom3']){$new_row[$translation['People Custom 3']] = $row['custom_3'];} //?
+  			if($settings['display_people_custom4']){$new_row[$translation['People Custom 4']] = $row['custom_4'];}//?
+  			if($settings['display_people_custom5']){$new_row[$translation['People Custom 5']] = $row['custom_5'];}//?
+  			if($settings['display_people_comments']){$new_row[$translation['Comments']] = $row['comments'];}
+  			$sorted[$row['id']] = $new_row;
+  		}
   
-    } catch (Exception $e) {
-      echo $e->getMessage()."<br>".PHP_EOL;
-      }
+  		/*
+  		 $sorted = $personTable->_fill_lookup($sorted, 'location_city', 'home_city_id', 'city_name');
+  		$sorted = $personTable->_fill_lookup($sorted, 'location_district', 'home_district_id', 'district_name');
+  		$sorted = $personTable->_fill_lookup($sorted, 'location_province', 'home_province_id', 'province_name');
+  		*/
+  		$locations = Location::getAll();
+  			
+  		foreach($sorted as $id => $row) {
+  			$city_info = Location::getCityInfo($row['home_location_id'], $this->setting('num_location_tiers'), $locations);
+  			if ( count($city_info) ) {
+  				if ( $city_info[0] ) $sorted[$id]['city_name'] = $city_info[0];
+  				if ( $city_info[1] ) $sorted[$id]['province_name'] = $locations[$city_info[1]]['name'];
+  				if ( $city_info[2] ) $sorted[$id]['district_name'] = $locations[$city_info[2]]['name'];
+  				if ( $city_info[3] ) $sorted[$id]['region_c_name'] = $locations[$city_info[3]]['name'];
+  				if ( $city_info[4] ) $sorted[$id]['region_d_name'] = $locations[$city_info[4]]['name'];
+  				if ( $city_info[5] ) $sorted[$id]['region_e_name'] = $locations[$city_info[5]]['name'];
+  				if ( $city_info[6] ) $sorted[$id]['region_f_name'] = $locations[$city_info[6]]['name'];
+  				if ( $city_info[7] ) $sorted[$id]['region_g_name'] = $locations[$city_info[7]]['name'];
+  				if ( $city_info[8] ) $sorted[$id]['region_h_name'] = $locations[$city_info[8]]['name'];
+  				if ( $city_info[9] ) $sorted[$id]['region_i_name'] = $locations[$city_info[9]]['name'];
+  			}
+  			unset($sorted[$id]['home_location_id']);
+  		}
+  			
+  		$sorted = $personTable->_fill_lookup($sorted, 'person_qualification_option', 'primary_qualification_option_id', 'qualification_phrase');
+  		$sorted = $personTable->_fill_lookup($sorted, 'person_primary_responsibility_option', 'primary_responsibility_option_id', 'responsibility_phrase');
+  		$sorted = $personTable->_fill_lookup($sorted, 'person_secondary_responsibility_option', 'secondary_responsibility_option_id', 'responsibility_phrase');
+  		$sorted = $personTable->_fill_lookup($sorted, 'person_custom_1_option', 'person_custom_1_option_id', 'custom1_phrase');
+  		$sorted = $personTable->_fill_lookup($sorted, 'person_custom_2_option', 'person_custom_2_option_id', 'custom2_phrase');
+  		$sorted = $personTable->_fill_lookup($sorted, 'facility', 'facility_id', 'facility_name');
+  		//Find string on option table: [option table name], [id in sorrrted arr], [column in option table]
+  		$sorted = $personTable->_fill_lookup($sorted, 'person_title_option', 'title_option_id', 'title_phrase');
+  		$sorted = $personTable->_fill_lookup($sorted, 'person_suffix_option', 'suffix_option_id', 'suffix_phrase');
+  		$sorted = $personTable->_fill_lookup($sorted, 'person_attend_reason_option', 'attend_reason_option_id', 'attend_reason_phrase');
+  		$sorted = $personTable->_fill_lookup($sorted, 'person_education_level_option', 'highest_edu_level_option_id', 'education_level_phrase');
+  		
+  		//replace labels    
+  		foreach($sorted as $id => $row) {
+  			$sorted[$id]['Facility Name'] = $sorted[$id]['facility_name'];
+  			unset($sorted[$id]['facility_name']);
+  			$sorted[$id]['Qualification'] = $sorted[$id]['qualification_phrase'];
+  			unset($sorted[$id]['qualification_phrase']);
+  			$sorted[$id][$translation['Highest Education Level']] = $sorted[$id]['education_level_phrase'];
+  			unset($sorted[$id]['education_level_phrase']);
+  			$sorted[$id][$translation['Reason Attending']] = $sorted[$id]['attend_reason_phrase'];
+  			unset($sorted[$id]['attend_reason_phrase']);
+  			$sorted[$id][$translation['Suffix']] = $sorted[$id]['suffix_phrase'];
+  			unset($sorted[$id]['suffix_phrase']);
+  			$sorted[$id][$translation['Title']] = $sorted[$id]['title_phrase'];
+  			unset($sorted[$id]['title_phrase']);
+  		}
+  			
+  		//fill participants
+  		$select = $personTable->select()->from('person', array('id'))->setIntegrityCheck(false)
+  		->join(array('pt'=>'person_to_training'), "pt.person_id = person.id", array('training_id'))
+  		->join(array('t'=>'training'), "pt.training_id = t.id", array())
+  		->join(array('tt'=>'training_title_option'), "t.training_title_option_id = tt.id", array('training_title_phrase'));
+  			
+  			
+  		$rows = $personTable->fetchAll($select);
+  
+  		foreach($rows as $row) {
+  			$pid = $row->id;
+  			$ra = $row->toArray();
+  			unset($ra['id']);
+  			$sorted[$pid]['courses'][] = $ra;
+  		}
+  			
+  		//fill trainers
+  			
+  		$select = $personTable->select()->from('trainer', array('person_id'))->setIntegrityCheck(false)
+  		->join(array('pt'=>'training_to_trainer'), "pt.trainer_id = trainer.person_id", array('training_id'))
+  		->join(array('t'=>'training'), "pt.training_id = t.id", array())
+  		->join(array('tt'=>'training_title_option'), "t.training_title_option_id = tt.id", array('training_title_phrase'));
+  		$rows = $personTable->fetchAll($select);
+  
+  		foreach($rows as $row) {
+  			$pid = $row->person_id;
+  			$ra = $row->toArray();
+  			unset($ra['person_id']);
+  			$sorted[$pid]['trained'][] = $ra;
+  		}
+  			
+  		if ($this->getSanParam('outputType') == 'csv')
+  			$this->sendData ( $this->reportHeaders ( false, $sorted ) );
+  
+  		$this->view->assign('data', $sorted);
+  
+  	} catch (Exception $e) {
+  		echo $e->getMessage()."<br>".PHP_EOL;
+  	}
   
   }
-	
-}
+  
+  }
+ 
+  //old code
+// public function personsAction() {
+// 	try {
+			
+// 		ini_set('memory_limit', -1);
+			
+// 		require_once('models/table/Person.php');
+// 		$personTable = new Person();
+// 		$select = $personTable->select()
+// 		->from('person', array('*'))
+// 		//->where('first_name', '=', 'Emily')
+// 		->setIntegrityCheck(false);
+// 		$rowRay = $personTable->fetchAll($select);
+// 		$rowRay = @$rowRay->toArray();
+
+// 		if (sizeof($rowRay) > 10000  && $this->getSanParam('outputType') != 'csv'){
+// 			$error = 'Data is too large to display, try Export';
+// 			throw new Exception($error);
+// 		}
+
+// 		//sort by id
+// 		$sorted = array();
+// 		foreach($rowRay as $row) {
+// 			unset($row['suffix_option_id']);
+// 			unset($row['title_option_id']);
+// 			$sorted[$row['id']] = $row;
+// 		}
+
+// 		/*
+// 		 $sorted = $personTable->_fill_lookup($sorted, 'location_city', 'home_city_id', 'city_name');
+// 		$sorted = $personTable->_fill_lookup($sorted, 'location_district', 'home_district_id', 'district_name');
+// 		$sorted = $personTable->_fill_lookup($sorted, 'location_province', 'home_province_id', 'province_name');
+// 		*/
+// 		$locations = Location::getAll();
+			
+// 		foreach($sorted as $id => $row) {
+// 			$city_info = Location::getCityInfo($row['home_location_id'], $this->setting('num_location_tiers'), $locations);
+// 			if ( count($city_info) ) {
+// 				if ( $city_info[0] ) $sorted[$id]['city_name'] = $city_info[0];
+// 				if ( $city_info[1] ) $sorted[$id]['province_name'] = $locations[$city_info[1]]['name'];
+// 				if ( $city_info[2] ) $sorted[$id]['district_name'] = $locations[$city_info[2]]['name'];
+// 				if ( $city_info[3] ) $sorted[$id]['region_c_name'] = $locations[$city_info[3]]['name'];
+// 				if ( $city_info[4] ) $sorted[$id]['region_d_name'] = $locations[$city_info[4]]['name'];
+// 				if ( $city_info[5] ) $sorted[$id]['region_e_name'] = $locations[$city_info[5]]['name'];
+// 				if ( $city_info[6] ) $sorted[$id]['region_f_name'] = $locations[$city_info[6]]['name'];
+// 				if ( $city_info[7] ) $sorted[$id]['region_g_name'] = $locations[$city_info[7]]['name'];
+// 				if ( $city_info[8] ) $sorted[$id]['region_h_name'] = $locations[$city_info[8]]['name'];
+// 				if ( $city_info[9] ) $sorted[$id]['region_i_name'] = $locations[$city_info[9]]['name'];
+// 			}
+// 			unset($sorted[$id]['home_location_id']);
+// 		}
+			
+// 		$sorted = $personTable->_fill_lookup($sorted, 'person_qualification_option', 'primary_qualification_option_id', 'qualification_phrase');
+// 		$sorted = $personTable->_fill_lookup($sorted, 'person_primary_responsibility_option', 'primary_responsibility_option_id', 'responsibility_phrase');
+// 		$sorted = $personTable->_fill_lookup($sorted, 'person_secondary_responsibility_option', 'secondary_responsibility_option_id', 'responsibility_phrase');
+// 		$sorted = $personTable->_fill_lookup($sorted, 'person_custom_1_option', 'person_custom_1_option_id', 'custom1_phrase');
+// 		$sorted = $personTable->_fill_lookup($sorted, 'person_custom_2_option', 'person_custom_2_option_id', 'custom2_phrase');
+// 		$sorted = $personTable->_fill_lookup($sorted, 'facility', 'facility_id', 'facility_name');
+			
+// 		//fill participants
+// 		$select = $personTable->select()->from('person', array('id'))->setIntegrityCheck(false)
+// 		->join(array('pt'=>'person_to_training'), "pt.person_id = person.id", array('training_id'))
+// 		->join(array('t'=>'training'), "pt.training_id = t.id", array())
+// 		->join(array('tt'=>'training_title_option'), "t.training_title_option_id = tt.id", array('training_title_phrase'));
+			
+			
+// 		$rows = $personTable->fetchAll($select);
+
+// 		foreach($rows as $row) {
+// 			$pid = $row->id;
+// 			$ra = $row->toArray();
+// 			unset($ra['id']);
+// 			$sorted[$pid]['courses'][] = $ra;
+// 		}
+			
+// 		//fill trainers
+			
+// 		$select = $personTable->select()->from('trainer', array('person_id'))->setIntegrityCheck(false)
+// 		->join(array('pt'=>'training_to_trainer'), "pt.trainer_id = trainer.person_id", array('training_id'))
+// 		->join(array('t'=>'training'), "pt.training_id = t.id", array())
+// 		->join(array('tt'=>'training_title_option'), "t.training_title_option_id = tt.id", array('training_title_phrase'));
+// 		$rows = $personTable->fetchAll($select);
+
+// 		foreach($rows as $row) {
+// 			$pid = $row->person_id;
+// 			$ra = $row->toArray();
+// 			unset($ra['person_id']);
+// 			$sorted[$pid]['trained'][] = $ra;
+// 		}
+			
+// 		if ($this->getSanParam('outputType') == 'csv')
+// 			$this->sendData ( $this->reportHeaders ( false, $sorted ) );
+
+// 		$this->view->assign('data', $sorted);
+
+// 	} catch (Exception $e) {
+// 		echo $e->getMessage()."<br>".PHP_EOL;
+// 	}
+
+// }
+
+// }
 
 ?>
