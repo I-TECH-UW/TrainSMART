@@ -145,6 +145,7 @@ print ScriptContainer::$instance->renderJSHead();
   function drawChart11() {
       var chart11_data = google.visualization.arrayToDataTable([
         [' ', 'Implanon', 'Jadelle', 'Condoms'],
+
         <?php
     	  		foreach ($this->latest_consumption_data as $row){
     	  	?>
@@ -152,11 +153,21 @@ print ScriptContainer::$instance->renderJSHead();
     	  	<?php
     	  		}
     	  	?>
+        
       ]);
 
+      var calc_height = 500;
+      
+      if (chart11_data.Nf.length * 22 > 500){
+          calc_height =  chart11_data.Nf.length * 22;
+      }
+      
+      
       var chart11_options = {
-    		  title: 'Latest Consumption',
+    		  title: calc_height,
     		  bar: {groupWidth: "90%"},
+    		  width: 800,
+    		  height: calc_height,
       };
 
       //var chart11 = new google.charts.Bar(document.getElementById('chart11_div'));
