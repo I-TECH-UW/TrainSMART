@@ -126,7 +126,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "file", source: "vagrant-bootstrap-files/vagrant-trainsmart-httpd.conf", destination: "/home/vagrant/vagrant-trainsmart-httpd.conf"
   config.vm.provision "file", source: "vagrant-bootstrap-files/data.sql", destination: "/home/vagrant/data.sql"
   config.vm.provision "file", source: "vagrant-bootstrap-files/zend-debugger.ini", destination: "/home/vagrant/php-debugger.ini"
-  config.vm.provision "file", source: "vagrant-bootstrap-files/ZendDebugger-5.2.so", destination: "/home/vagrant/ZendDebugger-5.2.so"
+  config.vm.provision "file", source: "vagrant-bootstrap-files/ZendDebugger-php5.2.so", destination: "/home/vagrant/ZendDebugger.so"
   config.vm.provision :shell, path: "vagrant-bootstrap-files/bootstrap-php5.2-zend-debugger.sh"
   config.vm.network "forwarded_port", host: 80, guest: 80
 end

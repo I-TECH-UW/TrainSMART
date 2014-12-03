@@ -12,7 +12,7 @@ yum install nano mysql-server git-core yum-versionlock -y
 yum --enablerepo=webtatic install php-common-5.2.17 php-cli-5.2.17 php-5.2.17 php-mysql-5.2.17 php-pdo-5.2.17 php-devel-5.2.17 -y
 
 # install the zend debugger for php 5.2 from http://www.zend.com/en/download/534?start=true
-mv /home/vagrant/ZendDebugger-5.2.so /usr/lib64/php/modules/ZendDebugger.so
+mv /home/vagrant/ZendDebugger.so /usr/lib64/php/modules/ZendDebugger.so
 ln -s /lib64/libssl.so.0.9.8e /lib64/libssl.so.0.9.8
 ln -s /lib64/libcrypto.so.0.9.8e /lib64/libcrypto.so.0.9.8
 /sbin/ldconfig
