@@ -339,9 +339,12 @@ ob_end_clean();
 	foreach ($this->lookup as $lookup){
 
 ?>
-
+                                <?php if (! $this->hasACL( 'edit_studenttutorinst' )){?> 
+								<tr class="GradeA" style="cursor : pointer;" onclick="viewitem('<?php echo $lookup['id']; ?>','<?php echo ($lookup['cadrename']); ?>','<?php echo addslashes(date("m/d/Y", strtotime($lookup['startdate']))); ?>','<?php echo addslashes(date("m/d/Y", strtotime($lookup['enddate']))); ?>','<?php echo addslashes($lookup['instructorid']); ?>','<?php echo addslashes($lookup['coursetypeid']); ?>','<?php echo addslashes($lookup['coursetopic']); ?>');">
+								<?php } else {?>
 								<tr class="GradeA" style="cursor : pointer;" onclick="edititem('<?php echo $lookup['id']; ?>','<?php echo ($lookup['cadrename']); ?>','<?php echo addslashes(date("m/d/Y", strtotime($lookup['startdate']))); ?>','<?php echo addslashes(date("m/d/Y", strtotime($lookup['enddate']))); ?>','<?php echo addslashes($lookup['instructorid']); ?>','<?php echo addslashes($lookup['coursetypeid']); ?>','<?php echo addslashes($lookup['coursetopic']); ?>');">
-
+								<?php }?>
+								
 									<td><?php echo $lookup['id']; ?></td>
 
 									<td class=""><?php echo $lookup['cadrename']; ?></td>
@@ -361,9 +364,9 @@ ob_end_clean();
 						<div style="text-align : right;">
 
 							<br>
-
+                            <?php if ($this->hasACL( 'edit_studenttutorinst' )){?> 
 							<input type="submit" name="update" id="update" value="Add cadre" class="tsbutton green large">
-
+                            <?php }?>
 						</div>
 
 					</div>

@@ -132,13 +132,18 @@ class UserController extends ReportFilterHelpers {
 				$this->view->assign ('showinstitutions',true);
 				$this->view->assign ('institutions',$helper->getInstitutions());
 
+ 				$this->view->assign('showprograms', true);
+                $this->view->assign('programs', $helper->getPrograms());
+
 				// Getting current credentials
 				$auth = Zend_Auth::getInstance ();
 				$identity = $auth->getIdentity ();
 
 				$this->view->assign ('userinstitutions',$helper->getUserInstitutions($user_id));
+                $this->view->assign('userprograms', $helper->getUserPrograms($user_id));
 			} else {
 				$this->view->assign ('showinstitutions',false);
+          		$this->view->assign('showprograms', false);
 			}
 		}
 	}
@@ -153,7 +158,7 @@ class UserController extends ReportFilterHelpers {
 		//TA:17:12: 10/03/2014 add 'acl_editor_commoditytype'
 		//TA:17:12: 10/04/2014 add 'add_new_facility'
 		//BS:#3,#4: add edit_partners, edit_mechanisms 20141014
-
+		//RR:11/17/2014 add 'edit_studenttutorinst', 'acl_delete_ps_cohort', 'view_studenttutorinst', 'acl_delete_ps_student', 'acl_delete_ps_grades'
 		$checkboxes = array('training_organizer_all', 'in_service', 'edit_course', 'view_course', 'edit_people', 
 				'view_people', 'edit_facility', 'view_create_reports', 'employees_module', 'edit_country_options', 
 				'add_edit_users', 'training_organizer_option_all', 'training_title_option_all', 'approve_trainings', 
@@ -168,7 +173,8 @@ class UserController extends ReportFilterHelpers {
 		        'acl_editor_ps_coursetypes', 'acl_editor_ps_religions', 'add_edit_users', 'acl_admin_training', 'acl_admin_people', 'acl_admin_facilities', 
 		        'acl_editor_refresher_course', 'import_training', 'import_training_location', 'import_facility', 'import_person', 'acl_editor_tutor_specialty', 
 		        'acl_editor_tutor_contract', 'acl_editor_commodityname', 'acl_editor_commoditytype', 'add_new_facility',
-		        'edit_employee', 'edit_partners', 'edit_mechanisms', 'edit_training_location'
+		        'edit_employee', 'edit_partners', 'edit_mechanisms', 'edit_training_location','edit_studenttutorinst', 'acl_delete_ps_cohort', 'acl_delete_ps_grades', 'view_studenttutorinst',
+				'acl_delete_ps_student', 
 		); 
 		foreach ($checkboxes as $value) {
 			$acl [$value] = ( ( $this->_getParam ( $value ) == $value || $this->_getParam($value) == 'on' ) ? $value : null);
@@ -204,8 +210,12 @@ class UserController extends ReportFilterHelpers {
 			$helper = new Helper();
 			//$helper->saveUserInstitutions($identity->id, is_array($this->_getParam ('institutionselect')) ? $this->_getParam ('institutionselect') : array());
 			$helper->saveUserInstitutions($user_id, is_array($this->_getParam ('institutionselect')) ? $this->_getParam ('institutionselect') : array());
+			$helper->saveUserPrograms($user_id, is_array($this->_getParam('programselect')) ? $this->_getParam('programselect') : array());
 		}
 	}
+	
+
+	
 
 	public function logoutAction() {
 		require_once ('Zend/Auth.php');
@@ -381,19 +391,23 @@ class UserController extends ReportFilterHelpers {
 		$this->viewAssignEscaped ( 'training_organizer', $training_organizer_array );
 		$this->viewAssignEscaped ( 'user', $userArray );
 
-		if ($this->hasACL ( 'pre_service' )) {
-			$helper = new Helper();
-			$this->view->assign ('showinstitutions',true);
-			$this->view->assign ('institutions',$helper->getInstitutions());
-
-			// Getting current credentials
-			$auth = Zend_Auth::getInstance ();
-			$identity = $auth->getIdentity ();
-
-			$this->view->assign ('userinstitutions',$helper->getUserInstitutions($user_id));
-		} else {
-			$this->view->assign ('showinstitutions',false);
-		}
+        if ($this->hasACL('pre_service')) {
+            $helper = new Helper();
+            $this->view->assign('showinstitutions', true);
+            $this->view->assign('institutions', $helper->getInstitutions());
+            $this->view->assign('showprograms', true);
+            $this->view->assign('programs', $helper->getprograms());
+            
+            // Getting current credentials
+            $auth = Zend_Auth::getInstance();
+            $identity = $auth->getIdentity();
+            
+            $this->view->assign('userinstitutions', $helper->getUserInstitutions($user_id, false));
+            $this->view->assign('userprograms', $helper->getUserprograms($user_id, false));
+        } else {
+            $this->view->assign('showprograms', false);
+            $this->view->assign('showinstitutions', false);
+        }
 
 	}
 
@@ -667,3 +681,4 @@ class UserController extends ReportFilterHelpers {
 	}
 
 }
+

@@ -24,7 +24,7 @@ if ( $this->isLoggedIn() ) {
 	}
 
 	// INSTITUTION LINK
-	if ( $this->hasACL('edit_people')	){
+	if ( $this->hasACL('edit_people') && $this->hasACL('edit_studenttutorinst')){
 		$navMain['institution'] = array(
 				//TA: added 7/25/2014 : automatic label changes
 		'index' => $this->translation['ps institution'], 
@@ -32,9 +32,9 @@ if ( $this->isLoggedIn() ) {
 		'institutionadd' =>	t('Add ') . $this->translation['ps institution'],
 		);
 	} else {
-		$navMain['course'] = array(
-		'index' => t('Course'),
-		'search'	=> t('View person'),
+		$navMain['institution'] = array(
+		'index' => $this->translation['ps institution'],
+		'institution'	=> t('View institution'),
 		);
 	}
 
@@ -53,7 +53,7 @@ if ( $this->isLoggedIn() ) {
 	}
 
 	// PEOPLE LINK
-	if ( $this->hasACL('edit_people')	){
+	if ( $this->hasACL('edit_people') && $this->hasACL('edit_studenttutorinst')){
 		$navMain['people'] = array(
 		'index' => t('People'),
 		'people' => t('View/Edit Person'),
@@ -62,6 +62,7 @@ if ( $this->isLoggedIn() ) {
 	} else {
 		$navMain['people'] = array(
 		'index' => t('People'),
+		'people' => t('View Person'),
 		);
 	}
 

@@ -20,6 +20,7 @@ class CohortController extends ITechController {
 		
 		if (! $this->isLoggedIn ())
 			$this->doNoAccessError ();
+	
 
 		if (empty($this->view->title))
 			$this->view->assign('title', $this->view->translation['Application Name']);
@@ -353,6 +354,17 @@ class CohortController extends ITechController {
 	
 	
 	public function cohortAction(){
+	    if (! $this->isLoggedIn ())
+	        $this->doNoAccessError ();
+	     
+	    if (! $user_id = $this->isLoggedIn()) {
+	        $this->doNoAccessError();
+	    }
+	     
+	    if ($this->view->mode == 'edit') {
+	        $user_id = $this->getSanParam('id');
+	    }
+
 /*
 		$cohort = new Cohortedit();
 		$cohorts = $cohort->Cohortsearch($_POST);
@@ -362,12 +374,23 @@ class CohortController extends ITechController {
 		$this->view->assign('action','../cohort/cohortsearch');
 
 		$helper = new Helper();
-		$this->view->assign('lookup_institutions', $helper->getInstitutions(false));
-		$this->view->assign('lookup_cadres', $helper->getCadres());
+		$this->view->assign('lookup_institutions', $helper->getUserAllowedInstitutionNames($user_id));
+		$this->view->assign('lookup_cadres', $helper->getUserAllowedCadreNames($user_id));
 	}
 	
 	public function cohortsearchAction(){
-		$cohorts = array();
+	    if (! $this->isLoggedIn ())
+	        $this->doNoAccessError ();
+	    
+	    if (! $user_id = $this->isLoggedIn()) {
+	        $this->doNoAccessError();
+	    }
+	    
+	    if ($this->view->mode == 'edit') {
+	        $user_id = $this->getSanParam('id');
+	    }
+	    
+	    $cohorts = array();
 		#print_r ($_POST);
 		
 		$converted = false;
@@ -385,12 +408,12 @@ class CohortController extends ITechController {
 			}
 		}
 		#print_r ($cohorts);
-		
 		$this->view->assign('cohort',$cohorts);
 
 		$helper = new Helper();
-		$this->view->assign('lookup_institutions',$helper->getInstitutions(false));
-		$this->view->assign('lookup_cadres', $helper->getCadres());
+		$this->view->assign('lookup_institutions',$helper->getUserAllowedInstitutionNames($user_id));
+		$this->view->assign('lookup_cadres', $helper->getUserAllowedCadreNames($user_id));
+		
 	}
 
 }
