@@ -17,7 +17,7 @@ ln -s /lib64/libssl.so.0.9.8e /lib64/libssl.so.0.9.8
 ln -s /lib64/libcrypto.so.0.9.8e /lib64/libcrypto.so.0.9.8
 /sbin/ldconfig
 
-mv /home/vagrant/php_debugger.ini /etc/php.d/php_debugger.ini
+mv /home/vagrant/php-debugger.ini /etc/php.d/php-debugger.ini
 
 # set up apache to point to shared /vagrant folder and start it
 mv /home/vagrant/vagrant-trainsmart-httpd.conf /etc/httpd/conf.d/vagrant-trainsmart-httpd.conf
