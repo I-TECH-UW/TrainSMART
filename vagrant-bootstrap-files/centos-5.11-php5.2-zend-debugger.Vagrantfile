@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# CentOS x86_64 5.11 PHP 5.2.17 with Zend Debugger
+
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
@@ -125,8 +127,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # bootstrap.sh when we're root
   config.vm.provision "file", source: "vagrant-bootstrap-files/vagrant-trainsmart-httpd.conf", destination: "/home/vagrant/vagrant-trainsmart-httpd.conf"
   config.vm.provision "file", source: "vagrant-bootstrap-files/data.sql", destination: "/home/vagrant/data.sql"
+  config.vm.provision "file", source: "vagrant-bootstrap-files/grant-privileges.sql", destination: "/home/vagrant/grant-privileges.sql"
   config.vm.provision "file", source: "vagrant-bootstrap-files/zend-debugger.ini", destination: "/home/vagrant/php-debugger.ini"
   config.vm.provision "file", source: "vagrant-bootstrap-files/ZendDebugger-php5.2.so", destination: "/home/vagrant/ZendDebugger.so"
   config.vm.provision :shell, path: "vagrant-bootstrap-files/bootstrap-php5.2-zend-debugger.sh"
   config.vm.network "forwarded_port", host: 80, guest: 80
+  config.vm.network "forwarded_port", host: 3306, guest: 3306  
 end

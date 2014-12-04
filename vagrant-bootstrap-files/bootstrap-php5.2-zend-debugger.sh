@@ -24,11 +24,13 @@ mv /home/vagrant/vagrant-trainsmart-httpd.conf /etc/httpd/conf.d/vagrant-trainsm
 chkconfig httpd on
 service httpd start
 
-# start up mysql, import data
+# start up mysql, import data, grant remote access
 chkconfig mysqld on
 service mysqld start
+mysql -u root </home/vagrant/grant-privileges.sql
 mysql -u root </home/vagrant/data.sql
 rm /home/vagrant/data.sql
+service mysqld restart
 
 # let's make it so we can look at the log files without being root
 chmod -R a+rX /var/log
