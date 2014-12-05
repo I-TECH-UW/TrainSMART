@@ -3,3 +3,5 @@ sites/settings.php
 /.project
 *.log
 /nbproject/
+/.idea
+/.vagrant
