@@ -57,7 +57,7 @@ if ( $child_widget_id ) {?>
 
 function setChildStatus_<?php echo str_replace('-', '_', $widget_id);?>() {
 	var widgetObj = YAHOO.util.Dom.get('<?php echo $widget_id;?>');
-	setChildStatus(widgetObj.selectedIndex,'<?php echo $child_widget_id;?>','<?php echo $widget_id;?>', <?php echo $readonly?>);
+	setChildStatus(widgetObj.selectedIndex,'<?php echo $child_widget_id;?>','<?php echo $widget_id;?>', <?php echo $readonly ? $readonly : "0"?>);
 }
 
 YAHOO.util.Event.onDOMReady(function () {
