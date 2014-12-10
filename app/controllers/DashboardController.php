@@ -625,8 +625,6 @@ class DashboardController extends ReportFilterHelpers {
 	    $title_data = new DashboardCHAI();
 	    $details = $title_data->fetchTitleData();
 	    $this->view->assign('title_data', $details[month_name].', '. $details[year]);
-	    
-	    
 	
 	}
 	
