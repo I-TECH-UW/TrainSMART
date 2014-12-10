@@ -3,8 +3,8 @@
 -- Host: localhost    Database: itechweb_empty
 -- ------------------------------------------------------
 -- Server version	5.0.95
-CREATE DATABASE  IF NOT EXISTS `itechweb_empty` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `itechweb_empty`;
+CREATE DATABASE  IF NOT EXISTS `itechweb_clean` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `itechweb_clean`;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
