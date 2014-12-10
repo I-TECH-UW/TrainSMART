@@ -146,10 +146,50 @@ class EmployeeController extends ReportFilterHelpers {
 		return $rows ? $rows : array();
 	}
 	
-	public function generateMechanismTable($employee_id){
+	public function generateMechanismList($employee_id) {
+	    $db = $this->dbfunc();
 	    if (!$employee_id) {
+    	    // generate a list of all mechanisms
+    
+	       $sql = "SELECT mechanism_option.id, mechanism_phrase, partner_to_subpartner_to_funder_to_mechanism.id as psfmid
+	               from mechanism_option, partner_to_subpartner_to_funder_to_mechanism 
+	               where mechanism_option.is_deleted = '0' and partner_to_subpartner_to_funder_to_mechanism.is_deleted = '0'
+	               order by mechanism_phrase";
+	       $mechanisms = $db->fetchAll($sql);
+	    }
+	    else {
+	        $helper = new Helper();
+	        
+	        $employee = $helper->getEmployee($employee_id);
+	        require_once 'views/helpers/EditTableHelper.php';
+	        $partner_id = $employee[0]['partner_id'];
+	        $sql = "SELECT mechanism_option.id, mechanism_phrase, partner_to_subpartner_to_funder_to_mechanism.id as psfmid
+	               from mechanism_option, partner_to_subpartner_to_funder_to_mechanism
+	               where partner_id = $partner_id and mechanism_option.is_deleted = '0' and partner_to_subpartner_to_funder_to_mechanism.is_deleted = '0'
+	               order by mechanism_phrase";
+	        $mechanisms = $db->fetchAll($sql);
+	    }
+	    foreach ($mechanisms as $i => &$mech)
+	    {
+	        $mech['combined_id'] = $mech['id'].'_'.$mech['psfmid'];
+	    }
+	    return $mechanisms;
+	}
+	
+	public function generateMechanismTable($employee_id){
+	    if (!$this->view['mechanismList']) 
+	    {
+	       $mechanisms = $this->generateMechanismList($employee_id);
+	       $this->view->assign("mechanismList", $mechanisms);
+	    }
+	    else {
+	        $mechanisms = $this->view['mechanismList'];
+	    }
+	    if (!$employee_id)
+	    {
 	        return;
 	    }
+	    
 		$db     = $this->dbfunc();
 	    $helper = new Helper();
 	         
@@ -163,18 +203,6 @@ class EmployeeController extends ReportFilterHelpers {
 	        'percentage' => t('Percent'),
 	    );
 	    $partner_id = $employee[0]['partner_id'];
-	    	
-	    $sql = "SELECT distinct mechanism_option.id, mechanism_phrase, partner_to_subpartner_to_funder_to_mechanism.id as psfmid
-	    FROM partner_to_subpartner_to_funder_to_mechanism, mechanism_option
-	    WHERE partner_id = $partner_id and mechanism_option_id = mechanism_option.id and mechanism_option.is_deleted = '0' and partner_to_subpartner_to_funder_to_mechanism.is_deleted = 0";
-	    $mechanisms = $db->fetchAll($sql);
-	    
-	    foreach ($mechanisms as $i => &$mech)
-	    {
-	        $mech['combined_id'] = $mech['id'].'_'.$mech['psfmid'];
-	    }
-	    	
-	    $this->view->assign("mechanismList", $mechanisms);
 	    
 	    $sql = "SELECT annual_cost from employee where id = $employee_id";
 	    $annual_cost = $db->fetchOne($sql);

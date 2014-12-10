@@ -57,7 +57,7 @@ if ( $child_widget_id ) {?>
 
 function setChildStatus_<?php echo str_replace('-', '_', $widget_id);?>() {
 	var widgetObj = YAHOO.util.Dom.get('<?php echo $widget_id;?>');
-	setChildStatus(widgetObj.selectedIndex,'<?php echo $child_widget_id;?>','<?php echo $widget_id;?>', <?php echo $readonly?>);
+	setChildStatus(widgetObj.selectedIndex,'<?php echo $child_widget_id;?>','<?php echo $widget_id;?>', <?php echo $readonly ? $readonly : "0"?>);
 }
 
 YAHOO.util.Event.onDOMReady(function () {
@@ -605,6 +605,23 @@ function employee_funder_dropdown(&$view, &$subPartner, &$partnerFunder, &$mecha
 	// done
 }
 
+/**
+ * 
+ * @param unknown $fieldIndex
+ * @param unknown $view
+ * @param unknown $subPartner
+ * @param unknown $partnerFunder
+ * @param unknown $mechanism
+ * @param string $val_employee
+ * @param string $val_partner
+ * @param string $val_subPartner
+ * @param string $val_partnerFunder
+ * @param string $val_mechanism
+ * @param string $is_multiple
+ * @param string $required
+ * @param string $disabled
+ */
+
 function partner_sfm_dropdown($fieldIndex, &$view, &$subPartner, &$partnerFunder, &$mechanism, 
   $val_employee = null, $val_partner = null, $val_subPartner = null, $val_partnerFunder = null, $val_mechanism = null, 
   $is_multiple = false, $required = false, $disabled = '') {
@@ -690,11 +707,11 @@ function partner_sfm_dropdown($fieldIndex, &$view, &$subPartner, &$partnerFunder
  * Outputs four dropdown select boxes in-line 
  * 
  * @param unknown $fieldIndex               - unused
- * @param unknown &$view                    - the Zend view object
- * @param unknown &$partner                 - 
- * @param unknown &$subPartner              - 
- * @param unknown &$partnerFunder           - 
- * @param unknown &$mechanism               - 
+ * @param unknown $view                     - the Zend view object
+ * @param unknown $partner                  - 
+ * @param unknown $subPartner               - 
+ * @param unknown $partnerFunder            - 
+ * @param unknown $mechanism                - 
  * @param unknown $val_employee             - 
  * @param unknown $val_partner              - 
  * @param string $val_subPartner    = null  - 
@@ -782,87 +799,96 @@ function gnrtest_epsfm_dropdown(&$view, &$employee, &$partner, &$subPartner, &$p
 }
 
 /**
- * Output a dropdown select box in-line with employee option ids constructed from keys in $widget_array
+ * Output a dropdown select box in-line with option ids constructed from keys in $widget_array
  * 
- * @param array &$widget_array            - array of options for dropdown
- * @param unknown $widget_id              - html id
- * @param string $default_val_id  = false - id of the value selected by default
- * @param string $child_widget_id = false - id of a dependent child object which is enabled/disabled by this selection
- * @param boolean $is_multiple    = false - is multiple selection?
- * @param boolean $required       = false - is a required element?
- * @param string $disabled        = ''    - is read-only? 
+ * @param array   $widget_array            - array of options for dropdown
+ * @param string  $widget_id               - html id
+ * @param string  $default_val_id  = false - id of the value selected by default
+ * @param string  $child_widget_id = false - id of a dependent child object which is enabled/disabled by this selection
+ * @param boolean $is_multiple     = false - is multiple selection?
+ * @param boolean $required        = false - is a required element?
+ * @param string  $disabled        = ''    - is read-only? 
  */
 
 function partnerRenderFunder(&$widget_array, $widget_id, $default_val_id = false, $child_widget_id = false, $is_multiple = false, $required = false, $disabled = '') {
 
-	?>
+?>
   <select <?php echo $disabled;?> id="<?php echo $widget_id;?>" name="<?php echo $widget_id ;?>" <?php echo ' autocomplete="off" '?><?php if ($child_widget_id) { ?>onchange="setFunderStatus_<?php echo str_replace('-', '_', $widget_id); ?>()" <?php }?> >
     <option value="">--<?php tp('choose');?>--</option>
-   
-    <?php
+<?php
 
-      foreach ( $widget_array as $val ) {
+    foreach ( $widget_array as $val ) {
 
-//file_put_contents('c:\wamp\logs\php_debug.log', 'Location 742>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-//var_dump($widget_array);//var_dump($val);//var_dump($default_val_id); var_dump($val['id']);
-//var_dump($is_multiple);var_dump($required);var_dump($disabled);
+        $selected = '';
+        if ( $default_val_id == $val['id']) {
+           $selected = 'selected="selected"';
+        }
 
-//echo ( ' e=' . $val['employee_id']);
-//echo ( ' p=' . $val['partner_id']);
-//echo ( ' s=' . $val['subpartner_id']); 
-//echo ( ' pf=' . $val['partner_funder_option_id']);
-//echo ( ' m=' . $val['mechanism_option_id']); 
-//echo ( ' id=' . $val['id']);
-//echo ( ' did=' . $default_val_id);
+        if ($val['employee_id']) {
+            if ($val['partner_id']) {
+                if ($val['subpartner_id']) {
+                    if ($val['partner_funder_option_id']) {
+                        if ($val['mechanism_option_id']) {
+                            echo ('<option value="' . $val['employee_id'] . "_" . $val['partner_id'] . "_" . $val['subpartner_id'] . "_" . $val['partner_funder_option_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['mechanism_phrase'] . '</option>');
+                        }
+                        else {
+                            echo ('<option value="' . $val['employee_id'] . "_" . $val['partner_id'] . "_" . $val['subpartner_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['funder_phrase'] . '</option>');
+                        }
+                    }
+                    else if (!$val['partner_funder_option_id'] && !$val['mechanism_option_id']) {	 
+                          echo ('<option value="' . $val['employee_id'] . "_" . $val['partner_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['partner'] . '</option>');
+                    }
+                }
+                else if (!$val['subpartner_id'] && !$val['partner_funder_option_id'] && !$val['mechanism_option_id']) {
+                    echo ('<option value="' . $val['employee_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['partner'] . '</option>');
+                }
+            }
+            else if (!$val['partner_id'] && !$val['subpartner_id'] && !$val['partner_funder_option_id'] && !$val['mechanism_option_id']) {
+                echo ('<option value="' . $val['id'] . '" ' . $selected . '>' . $val['employee_code'] . '</option>');
+            }
+        }
+        else {
+            
+            if ($val['partner_id']) {
+                if ($val['subpartner_id']) {
+                    if ($val['partner_funder_option_id']) {
+                        if ($val['mechanism_option_id']) {
+                            echo ('<option value="' . $val['partner_id'] . "_" .
+                                $val['subpartner_id'] . "_" . $val['partner_funder_option_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['mechanism_phrase'] . '</option>');
+                        }
+                        else {
+                            echo ('<option value="' . $val['partner_id'] . "_" . $val['subpartner_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['funder_phrase'] . '</option>');
+                        }
+                    }
+                    else if (!$val['partner_funder_option_id'] && !$val['mechanism_option_id']) {
+                          echo ('<option value="' . $val['partner_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['partner'] . '</option>');
+                    }
+                }
+                else if (!$val['subpartner_id'] && !$val['partner_funder_option_id'] && !$val['mechanism_option_id']) {
+                      echo ('<option value="' . $val['id'] . '" ' . $selected . '>' . $val['partner'] . '</option>');
+                }
+            }
+            else {
+                if ($val['subpartner_id']) {
+                    if ($val['partner_funder_option_id']) {
+                        if ($val['mechanism_option_id']) {
+                            echo ('<option value="' . $val['subpartner_id'] . "_" . $val['partner_funder_option_id'] . "_" .$val['id'] . '" ' . $selected . ' >' . $val['mechanism_phrase'] . '</option>');
+                        }
+                        else {
+                            echo ('<option value="' . $val['subpartner_id'] . "_" . $val['id'] . '" ' . $selected . ' >' . $val['funder_phrase'] . '</option>');
+                        }
+                    }
+                    else if (!$val['partner_funder_option_id'] && !$val['mechanism_option_id']) {
+                        echo ('<option value="' . $val['id'] . '" ' . $selected . ' >' . $val['partner'] . '</option>');
+                    }
+                    
+                }
+            }
+        }
+        
 
-//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-        	  $selected = '';
-        	  if ( $default_val_id == $val['id']) {
-        	     $selected = 'selected="selected"';
-           	  }
            	  
-           	  if ($val['employee_id'] && !$val[partner_id] && !$val['subpartner_id'] && !$val[partner_funder_option_id] && !$val[mechanism_option_id]) {
-           	  	echo ('<option value="' . $val['id'] . '" ' . $selected . '>' . $val['employee_code'] . '</option>');
-           	  }
-           	  else if ($val['employee_id'] && $val[partner_id] && !$val['subpartner_id'] && !$val[partner_funder_option_id] && !$val[mechanism_option_id]) {
-           	  	echo ('<option value="' . $val['employee_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['partner'] . '</option>');
-           	  }
-          	  else if ($val['employee_id'] && $val[partner_id] && $val['subpartner_id'] && !$val[partner_funder_option_id] && !$val[mechanism_option_id]) {	 
-                echo ('<option value="' . $val['employee_id'] . "_" . $val['partner_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['partner'] . '</option>');
-              }
-           	  else if ($val['employee_id'] && $val[partner_id] && $val['subpartner_id'] && $val[partner_funder_option_id] && !$val[mechanism_option_id]) {
-           	  	echo ('<option value="' . $val['employee_id'] . "_" . $val['partner_id'] . "_" . $val['subpartner_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['funder_phrase'] . '</option>');
-           	  }
-           	  else if ($val['employee_id'] && $val[partner_id] && $val['subpartner_id'] && $val[partner_funder_option_id] && $val[mechanism_option_id]) {
-           	  	echo ('<option value="' . $val['employee_id'] . "_" . $val['partner_id'] . "_" . $val['subpartner_id'] . "_" . $val['partner_funder_option_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['mechanism_phrase'] . '</option>');
-           	  }
-           	  	
-           	  else if ($val[partner_id] && !$val['subpartner_id'] && !$val[partner_funder_option_id] && !$val[mechanism_option_id]) {
-           	  	echo ('<option value="' . $val['id'] . '" ' . $selected . '>' . $val['partner'] . '</option>');
-           	  }
-           	  else if ($val[partner_id] && $val['subpartner_id'] && !$val[partner_funder_option_id] && !$val[mechanism_option_id]) {
-           	  	echo ('<option value="' . $val['partner_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['partner'] . '</option>');
-           	  }
-           	  else if ($val[partner_id] && $val['subpartner_id'] && $val[partner_funder_option_id] && !$val[mechanism_option_id]) {
-           	  	echo ('<option value="' . $val['partner_id'] . "_" . $val['subpartner_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['funder_phrase'] . '</option>');
-           	  }
-           	  else if ($val[partner_id] && $val['subpartner_id'] && $val[partner_funder_option_id] && $val[mechanism_option_id]) {
-           	  	echo ('<option value="' . $val['partner_id'] . "_" . $val['subpartner_id'] . "_" . $val['partner_funder_option_id'] . "_" . $val['id'] . '" ' . $selected . '>' . $val['mechanism_phrase'] . '</option>');
-           	  }
-           	  
-           	  else if ($val['subpartner_id'] && !$val[partner_funder_option_id] && !$val[mechanism_option_id]) {
-           	  	echo ('<option value="' . $val['id'] . '" ' . $selected . ' >' . $val['partner'] . '</option>');
-           	  }
-           	  else if ($val['subpartner_id'] && $val[partner_funder_option_id] && !$val[mechanism_option_id]) {
-           	  	echo ('<option value="' . $val['subpartner_id'] . "_" . $val['id'] . '" ' . $selected . ' >' . $val['funder_phrase'] . '</option>');
-           	  }
-           	  else if ($val['subpartner_id'] && $val[partner_funder_option_id] && $val[mechanism_option_id]) {
-           	  	echo ('<option value="' . $val['subpartner_id'] . "_" . $val['partner_funder_option_id'] . "_" .$val['id'] . '" ' . $selected . ' >' . $val['mechanism_phrase'] . '</option>');
-           	  }
-           
-           	  
-//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-      }
+    }
     ?>
   </select>
   <?php
