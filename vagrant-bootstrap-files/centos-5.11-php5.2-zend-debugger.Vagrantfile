@@ -13,7 +13,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "chef/centos-5.11"
-  config.vm.network "forwarded_port", host: 80, guest: 80
+  config.vm.hostname = "php52-zend"
+    
+  # forward http
+  config.vm.network "forwarded_port", host: 8080, guest: 80
+  
+  # forward mysql
   config.vm.network "forwarded_port", host: 3306, guest: 3306  
 
   # we'll put all the custom files in the vagrant user's home directory as we 
