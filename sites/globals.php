@@ -16,23 +16,11 @@ define('space',  " ");
 class Globals {
 	public static $BASE_PATH = '/vagrant/';
 	public static $WEB_FOLDER = 'html';
-	//orig 	
 	public static $COUNTRY = 'test';
-	//public static $COUNTRY = 'abri';
 
 	public function __construct() {
 
 		require_once('settings.php');
-/* orig
-		error_reporting( E_ALL ^ E_NOTICE); // E_ALL | E_NOTICE// & E_STRICT); // todo ... set back to normal
-		// | E_STRICT
-		//);
-		$parts = array('jhpiego','ethiopia','trainingdata','org');
-		$countryLoaded = false;
-		if ( $_SERVER['HTTP_HOST'] == 'jhpiego.ethiopia.trainingdata.org')
-			Settings::$DB_DATABASE = 'itechweb_jpeigo_ethiopa';
-			*/
-
 		// PATH_SEPARATOR =  ; for windows, : for *nix
 		$iReturn = ini_set( 'include_path',
 					(Globals::$BASE_PATH).PATH_SEPARATOR.
