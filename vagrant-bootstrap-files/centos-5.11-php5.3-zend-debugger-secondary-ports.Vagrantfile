@@ -19,7 +19,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "forwarded_port", host: 2223, guest: 22, id: "ssh"
   
   # forward http
-  config.vm.network "forwarded_port", host: 8081, guest: 80
+  config.vm.network "forwarded_port", host: 8889, guest: 80
   
   # forward mysql
   config.vm.network "forwarded_port", host: 3307, guest: 3306  
