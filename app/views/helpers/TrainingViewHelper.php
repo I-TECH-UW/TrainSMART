@@ -26,12 +26,7 @@ function implode_criteria_to_url (&$criteria)
 	return $o;
 }
 
-/**
- * get a list of ids from a result set, and return them in url form ids/1,2,3,4&
- * @param $results
- * @return string
- */
-function implode_ids (&$results)
+function implode_ids (&$results) // get a list of ids from a result set, and return them in url form ids/1,2,3,4&
 {
 	if ( empty($results) )
 		return '';
@@ -47,11 +42,7 @@ function implode_ids (&$results)
 		return '';
 }
 
-/**
- * what organizers' trainings can we see (by user)
- * @param $itechthis
- * @return array|bool
- */
+// what organizers' trainings can we see (by user)
 function allowed_organizer_access (&$itechthis)
 {
 	require_once('models/table/MultiOptionList.php');
@@ -60,8 +51,7 @@ function allowed_organizer_access (&$itechthis)
 	if (! $itechthis->hasACL ( 'training_organizer_option_all' )) {
 		$allowIds = array ();
 		$user_id = $itechthis->isLoggedIn ();
-		$training_organizer_array = MultiOptionList::choicesList ( 'user_to_organizer_access', 'user_id', $user_id,
-            'training_organizer_option', 'training_organizer_phrase', false, false );
+		$training_organizer_array = MultiOptionList::choicesList ( 'user_to_organizer_access', 'user_id', $user_id, 'training_organizer_option', 'training_organizer_phrase', false, false );
 		foreach ( $training_organizer_array as $orgOption ) {
 			if ($orgOption ['user_id'])
 				$allowIds [] = $orgOption ['id'];
@@ -71,23 +61,14 @@ function allowed_organizer_access (&$itechthis)
 	return $allowIds;
 }
 
-/**
- * get allowed_organizer_access() as array then return as a comma seperated list
- * @param $itechthis
- * @return bool|string
- */
+// get allowed_organizer_access() as array then return as a comma seperated list
 function allowed_org_access_full_list (&$itechthis) {
 	$orgs = allowed_organizer_access($itechthis);
 	return $orgs ? implode(',', $orgs) : false;
 }
 
 
-
-/**
- * return a comma seperated list of organizers allowed in this site (site rollup feature)
- * @param $itechthis
- * @return bool|string
- */
+// return a comma seperated list of organizers allowed in this site (site rollup feature)
 function allowed_organizer_in_this_site(&$itechthis)
 {
 	// determine site

@@ -14,7 +14,7 @@ define('space',  " ");
 
 
 class Globals {
-	public static $BASE_PATH = '/wamp/www/trainsmart.git/';
+	public static $BASE_PATH = '/vagrant/';
 	public static $WEB_FOLDER = 'html';
 	//orig 	
 	public static $COUNTRY = 'test';
