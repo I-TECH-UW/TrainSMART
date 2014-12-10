@@ -96,13 +96,15 @@ print ScriptContainer::$instance->renderJSHead();
 			<!-------   /////////////////////////// make top buttons ////////////////////// -->
 
 			<div class="rightdiv" style="float: right;">
-				<?php  //require_once('views/scripts/dashboard/top_buttons.phtml');?>
+				<?php  require_once('views/scripts/dashboard/top_buttons.phtml');?>
 					
 			</div>
 
 			<div class="clear"></div>
 			<div class="hrGrey"></div>
 			<div class="clear"></div>
+			
+
 
 			<!-------   /////////////////////////// make left buttons ////////////////////// -->
 
@@ -112,55 +114,51 @@ print ScriptContainer::$instance->renderJSHead();
 			</div>
 
 			<!-------   /////////////////////////// charts ////////////////////// -->
-
+            
 
 			<body class="docs slim framebox_body">
 
 				<div id="allCharts" class="container">
-				<div id="toprow" class="container">
-					
-					
-					
-					
-					<div id="chart11_div" style="width: 700px; height: 300px;"></div>
-					
-					<div id="chart12_div" style="width: 700px; height: 300px;"></div>
-					
-					
-					
-					
-					</div>
-
-				<div class="clear"></div>
-				<div class="hrGrey"></div>
-				<div class="clear"></div>
-
 				
-
-								<!-------   /////////////////////////// chart 2,1 ////////////////////// -->
+				<label><?php echo t('National Contraceptive Prevalence Rate'); ?></label>
+			    <input readonly type="text" name="national_contraceptive_prevalence_rate" value="50">
+				
+				<div id="toprow" class="container">
+						<div id="homecontent" class="container">
+							<div id="homecontent-mid" class="row rounded">
+								<div id="homebanner" class="rounded">
 								
+								
+			                    
+								<div class="sliderdiv">
+									<div id="chart11_div" style="width: 500px; height: 300px;"></div>
+									</div>
+									<div class="main-search">
+										<div id="chart12_div" style="width: 500px; height: 300px;"></div>
+									</div>
+								</div>
+							</div>
+						</div>			
+					</div>
+								<!-------   /////////////////////////// chart 2,1 ////////////////////// -->
 					<div id="bottomrow" class="container">
 						<div id="homecontent" class="container">
 							<div id="homecontent-mid" class="row rounded">
 								<div id="homebanner" class="rounded">
 								<div class="sliderdiv">
-									<div id="chart13_div" style="width: 800px; height: 300px;"></div>
+									<div id="chart13_div" style="width: 500px; height: 300px;"></div>
+									
 									</div>
 									<div class="main-search">
-										<div id="chart13_div" style="width: 500px; height: 300px;"></div>
+										<div id="chart14_div" style="width: 500px; height: 300px;"></div>
 									</div>
 								</div>
 							</div>
 						</div>
-								
 								<!-------   /////////////////////////// chart 2,2 ////////////////////// -->
-								
-								
 								<div class="main-search"></div>
-
 					</div>
 				</div>
-		
 	</div>
 
 		<div class="clear"></div>
@@ -181,6 +179,8 @@ print ScriptContainer::$instance->renderJSHead();
 
 	drawChart11();
 	drawChart12();
+	drawChart13();
+	drawChart14();
 		
 	var currentLevel;
 	currentLevel = <?php echo '\'' . $this->location_data[0][name] . '\''; ?>;
@@ -195,70 +195,117 @@ print ScriptContainer::$instance->renderJSHead();
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
   
+
+
   function drawChart11() {
 	  // Create and populate the data table.
 	  var chart11Data = google.visualization.arrayToDataTable([
 
 
-['State', 'Percentage', { role: 'style' }],
+['', ''],
 
-<?php
-	foreach ($this->larc_data as $row){
-?>
-['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>,'<?php echo $row[color]; ?>'],
-<?php
-	}
-?>
+['Female Condoms', 40000],
+['Male Condoms', 98000],
+['Injectables', 44000],
+['Implants', 21000],
+['IUDs', 10000],
+['Oral Pills', 79000],
+['Sterilization', 6000],
 
-]);		                                                     	  
 
+]);		    
+
+	  <?php echo  " var title_data = 'Average Monthly Consumption (AMC) by Method as of $this->title_data ' " ?>;
+	  
 	  var chart11Options = {
-		      title: '% of Facilities with HW trained in FP',
-		      vAxis: {title: 'State'},
-		      hAxis: {title: 'Percentage'},
-		      is3D:true
+			  
+			  title: title_data,
+			  titleTextStyle: { fontSize: 15 },
+		      is3D:true,
+		      legend: 'none',
+		      
 		};
 
-
-	            var chart11 = new google.visualization.BarChart(document.getElementById('chart11_div'));
-	            
+	  var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
 	  chart11.draw(chart11Data, chart11Options);
 	}
 
+  function drawChart12() {
+      var chart12Data = google.visualization.arrayToDataTable([
+        [' ', '% of Facilities with trained HWs', '% of facilities with (FP/LARC) trained HWS providing (FP/LARC)', '$ of facilities with trained HWs (FP/LARC) that are stocked out of (FP/LARC)'],
 
- 
+    	  [ 'FP', .8,.52,.12 ],
+    	  [ 'LARC', .33,.58,.13 ],
+    	  	    	
+    	  	        
+      ]);
 
+      var chart12Options = {
+    		  title: 'Integrated Indicators',
+    		  titleTextStyle: { fontSize: 15 },
+    		  bar: {groupWidth: "80%"},
+    		  vAxis: {format: '#%'},
+    		  
+      };
 
- <!-------   /////////////////////////// script 1,2 ////////////////////// -->
+      //var chart12 = new google.charts.Bar(document.getElementById('chart11_div'));
+      var chart12 = new google.visualization.ColumnChart(document.getElementById('chart12_div'));
+
+      chart12.draw(chart12Data, chart12Options);
+    }
+
+  function drawChart13() {
+	  
+      var chart13Data = google.visualization.arrayToDataTable([
+['Month', 'FP', 'LARC'],
+
+[ 'April',.21,.52 ],
+[ 'May',.23,.60 ],
+[ 'June',.30,.65 ],
+[ 'July',.35,.67 ],
+[ 'August',.38,.70 ],
+[ 'September',.40,.73 ],
+[ 'October',.44,.74 ],
+
+      ]);
+
+      var chart13Options = {
+        title: '% of Facilities Providing FP and LARC Over Time',
+        titleTextStyle: { fontSize: 15 },
+        vAxis: {format:'#%'},
+      };
+
+      var chart13 = new google.visualization.LineChart(document.getElementById('chart13_div'));
+
+      chart13.draw(chart13Data, chart13Options);
+    }
   
- function drawChart12() {
-	  // Create and populate the data table.
-	  var chart12Data = google.visualization.arrayToDataTable([
+  function drawChart14() {
+	  
+      var chart14Data = google.visualization.arrayToDataTable([
+['Month', 'Implants', 'Commodities for 7 days'],
 
-['State', 'Percentage', { role: 'style' }],
-	                                                           
-<?php
-		foreach ($this->fp_data as $row){
-	?>
-	['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>, <?php echo "'$row[color]'"; ?>],
-	<?php
-		}
-	?>
+[ 'April',.12,.18 ],
+[ 'May',.15,.32 ],
+[ 'June',.18,.36 ],
+[ 'July',.20,.20 ],
+[ 'August',.17,.02 ],
+[ 'September',.20,.28 ],
+[ 'October',.30,.13 ],
+      ]);
 
-]);
+      <?php echo  " var title_data = 'Stock outs by Method as of $this->title_data ' " ?>;
+      var chart14Options = {
+        title: title_data,
+        titleTextStyle: { fontSize: 15 },
+        vAxis: {format:'#%'},
+      };
 
-	  var chart12Options = {
-		      title: '% of Facilities with HW trained in LARC',
-		      vAxis: {title: 'State'},
-		      hAxis: {title: 'Percentage'},
-		      is3D:true
-		};
+      var chart14 = new google.visualization.LineChart(document.getElementById('chart14_div'));
 
+      chart14.draw(chart14Data, chart14Options);
 
-	            var chart12 = new google.visualization.BarChart(document.getElementById('chart12_div'));
-	            
-	  chart12.draw(chart12Data, chart12Options);
-	}
+    }
 
   <!-------   /////////////////////////// 2,1 script gnr  ////////////////////// -->
 

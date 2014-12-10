@@ -86,90 +86,37 @@ print ScriptContainer::$instance->renderJSHead();
 		<div id="content">
 
 			<!-------   /////////////////////////// get data ////////////////////// -->
-
-			<div>
-
-				<?php  //require_once('views/scripts/dashboard/load_data.phtml');?>
-
-
-
+			<div> <?php  //require_once('views/scripts/dashboard/load_data.phtml');?>
+			
 			<!-------   /////////////////////////// make top buttons ////////////////////// -->
-
 			<div class="rightdiv" style="float: right;">
-				<?php  //require_once('views/scripts/dashboard/top_buttons.phtml');?>
-					
+				<?php  require_once('views/scripts/dashboard/top_buttons.phtml');?>
 			</div>
-
 			<div class="clear"></div>
 			<div class="hrGrey"></div>
-			<div class="clear"></div>
-
 			<!-------   /////////////////////////// make left buttons ////////////////////// -->
-
 			<div class="nav-buttons">
 				<?php  require_once('views/scripts/dashboard/left_buttons.phtml');?>
-				
 			</div>
-
 			<!-------   /////////////////////////// charts ////////////////////// -->
-
-
-			<body class="docs slim framebox_body">
-
+			<body">
 				<div id="allCharts" class="container">
-				<div id="toprow" class="container">
-					
-					
-					
-					
-					<div id="chart11_div" style="width: 700px; height: 300px;"></div>
-					
-					<div id="chart12_div" style="width: 700px; height: 300px;"></div>
-					
-					
-					
-					
-					</div>
-
-				<div class="clear"></div>
-				<div class="hrGrey"></div>
-				<div class="clear"></div>
-
 				
-
-								<!-------   /////////////////////////// chart 2,1 ////////////////////// -->
-								
-					<div id="bottomrow" class="container">
-						<div id="homecontent" class="container">
-							<div id="homecontent-mid" class="row rounded">
-								<div id="homebanner" class="rounded">
-								<div class="sliderdiv">
-									<div id="chart13_div" style="width: 800px; height: 300px;"></div>
-									</div>
-									<div class="main-search">
-										<div id="chart13_div" style="width: 500px; height: 300px;"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-								
-								<!-------   /////////////////////////// chart 2,2 ////////////////////// -->
-								
-								
-								<div class="main-search"></div>
-
-					</div>
+				
+				<div id="chart11_div" style="width: 800px; height: 500px;"></div>
+				<div id="toolbar_div"></div>
+				
+				
 				</div>
-		
-	</div>
-
+				</body>
+			</div>	
 		<div class="clear"></div>
 		<div class="hrGrey"></div>
 		<div class="clear"></div>
 		
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-		<!-------   /////////////////////////// main gnr ////////////////////// -->
+		<!-------   /////////////////////////// main ////////////////////// -->
 
 		<script type="text/javascript">
 		
@@ -180,7 +127,10 @@ print ScriptContainer::$instance->renderJSHead();
 	  document.getElementById("allCharts").style.marginLeft="130px";
 
 	drawChart11();
-	drawChart12();
+	drawToolbar();
+	//drawChart12();
+	//drawChart13();
+	//drawChart14();
 		
 	var currentLevel;
 	currentLevel = <?php echo '\'' . $this->location_data[0][name] . '\''; ?>;
@@ -194,72 +144,96 @@ print ScriptContainer::$instance->renderJSHead();
   }
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
-  
+
   function drawChart11() {
+      var chart11_data = google.visualization.arrayToDataTable([
+        [' ', 'Implanon', 'Jadelle', 'Condoms'],
+
+        <?php
+    	  		foreach ($this->latest_consumption_data as $row){
+    	  	?>
+    	  	[<?php echo  " '$row[location_name]',$row[implanon_consumption],$row[jadelle_consumption],$row[condom_consumption] "; ?>],
+    	  	<?php
+    	  		}
+    	  	?>
+        
+      ]);
+
+      var calc_height = 500;
+      
+      if (chart11_data.Nf.length * 22 > 500){
+          calc_height =  chart11_data.Nf.length * 22;
+      }
+
+    
+    <?php echo  " var title_data = 'Consumption as of $this->title_data ' " ?>;
+      
+      var chart11_options = {
+    		  title: title_data,
+    		  bar: {groupWidth: "90%"},
+    		  width: 800,
+    		  height: calc_height,
+      };
+
+      //var chart11 = new google.charts.Bar(document.getElementById('chart11_div'));
+      var chart11 = new google.visualization.BarChart(document.getElementById('chart11_div'));
+
+      chart11.draw(chart11_data, chart11_options);
+    }
+
+  function drawToolbar() {
+      var components = [
+          {type: 'igoogle', datasource: 'https://spreadsheets.google.com/tq?key=pCQbetd-CptHnwJEfo8tALA',
+           gadget: 'https://www.google.com/ig/modules/pie-chart.xml',
+           userprefs: {'3d': 1}},
+          {type: 'html', datasource: 'https://spreadsheets.google.com/tq?key=pCQbetd-CptHnwJEfo8tALA'},
+          {type: 'csv', datasource: 'chart11Action/id/123'},
+          {type: 'htmlcode', datasource: 'https://spreadsheets.google.com/tq?key=pCQbetd-CptHnwJEfo8tALA',
+           gadget: 'https://www.google.com/ig/modules/pie-chart.xml',
+           userprefs: {'3d': 1},
+           style: 'width: 800px; height: 700px; border: 3px solid purple;'}
+      ];
+
+      var container = document.getElementById('toolbar_div');
+      google.visualization.drawToolbar(container, components);
+    };
+  
+  
+
+  function drawChart12() {
 	  // Create and populate the data table.
 	  var chart11Data = google.visualization.arrayToDataTable([
 
-
 ['State', 'Percentage', { role: 'style' }],
-
-<?php
-	foreach ($this->larc_data as $row){
-?>
-['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>,'<?php echo $row[color]; ?>'],
-<?php
-	}
-?>
-
-]);		                                                     	  
+	                                                           
+	['Ogun', 0.0006, 'red'],
+		['Katsina', 0.0007, 'red'],
+		['Kaduna', 0.0007, 'red'],
+		['Benue', 0.0007, 'red'],
+		['Kano', 0.0008, 'red'],
+		['Taraba', 0.0010, 'blue'],
+		['Niger', 0.0011, 'blue'],
+		['Rivers', 0.0012, 'blue'],
+		['Abia', 0.0013, 'blue'],
+		['Borno', 0.0015, 'blue'],
+		['National', 0.0004, 'black'],
+	
+]);
 
 	  var chart11Options = {
-		      title: '% of Facilities with HW trained in FP',
+		      title: '% of Facilities that are stocked out FP commodities',
 		      vAxis: {title: 'State'},
 		      hAxis: {title: 'Percentage'},
 		      is3D:true
 		};
 
 
-	            var chart11 = new google.visualization.BarChart(document.getElementById('chart11_div'));
+	            var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
 	            
 	  chart11.draw(chart11Data, chart11Options);
 	}
 
-
  
-
-
- <!-------   /////////////////////////// script 1,2 ////////////////////// -->
-  
- function drawChart12() {
-	  // Create and populate the data table.
-	  var chart12Data = google.visualization.arrayToDataTable([
-
-['State', 'Percentage', { role: 'style' }],
-	                                                           
-<?php
-		foreach ($this->fp_data as $row){
-	?>
-	['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>, <?php echo "'$row[color]'"; ?>],
-	<?php
-		}
-	?>
-
-]);
-
-	  var chart12Options = {
-		      title: '% of Facilities with HW trained in LARC',
-		      vAxis: {title: 'State'},
-		      hAxis: {title: 'Percentage'},
-		      is3D:true
-		};
-
-
-	            var chart12 = new google.visualization.BarChart(document.getElementById('chart12_div'));
-	            
-	  chart12.draw(chart12Data, chart12Options);
-	}
-
   <!-------   /////////////////////////// 2,1 script gnr  ////////////////////// -->
 
 	

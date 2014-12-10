@@ -161,10 +161,12 @@ print ScriptContainer::$instance->renderJSHead();
       if (chart11_data.Nf.length * 22 > 500){
           calc_height =  chart11_data.Nf.length * 22;
       }
-      
+
+    
+    <?php echo  " var title_data = 'Consumption as of $this->title_data ' " ?>;
       
       var chart11_options = {
-    		  title: calc_height,
+    		  title: title_data,
     		  bar: {groupWidth: "90%"},
     		  width: 800,
     		  height: calc_height,

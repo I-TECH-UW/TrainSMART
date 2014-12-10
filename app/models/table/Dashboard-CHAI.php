@@ -139,6 +139,23 @@ class DashboardCHAI extends Dashboard
 	    return $result['tier'];
 	}
 	
+	public function fetchTitleData() {
+	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+	    $output = array();
+	     
+	    $select = $db->select()
+	    ->from(array('l' => 'lc_view'),
+	        array( 
+	            'monthName(l.C_date) as month_name',
+	            'year(l.C_date) as year'
+	        ));
+	     
+	    $result = $db->fetchRow($select);
+	     
+	    return $result;
+	    
+	}
+	
 	public function fetchCLNDetails($dataName = null, $id = null, $where = null, $group = null, $useName = null) {
 	    
 	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
@@ -338,8 +355,6 @@ class DashboardCHAI extends Dashboard
 	            	            "type" => 1
 	            	        );
 	            	    }
-	            	    	           
-	            
 	            break;
 	    }
 	    return $output;
@@ -644,15 +659,35 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 		            ->order(array('id'));
 		
 		    $result = $db->fetchAll($select);
-		
-		    foreach ($result as $row){
-		      $output[] = array(
-		      "state" => $row['data0'],
-		      "percentage" => $row['data1'],
-		      "color" => $row['data2'],
-		      );
-		    }
-		
+		    
+            switch ($chart) {
+                case 'percent_facilities_hw_trained_larc':
+                case 'percent_facilities_hw_trained_fp':
+                case 'percent_facilities_providing_larc':
+                case 'percent_facilities_providing_fp':
+                    
+                    foreach ($result as $row) {
+                        $output[] = array(
+                            "state" => $row['data0'],
+                            "percentage" => $row['data1'],
+                            "color" => $row['data2']
+                        );
+                    }
+                    break;
+                    
+                case 'average_monthly_consumption':
+                
+                    foreach ($result as $row) {
+                        $output[] = array(
+                            "month" => $row['data0'],
+                            "injectable_consumption" => $row['data1'],
+                            "implant_consumption" => $row['data2']
+                        );
+                    }
+                    break;
+            }
+            
+            
 		    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 243 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 		    //var_dump($output,"END");
 		    //var_dump('id=', $id);
@@ -683,17 +718,39 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 		    $dateTime = date("Y-m-d H:i:s");
 		    $dashboard_refresh = new ITechTable(array('name' => 'dashboard_refresh'));
 		    
-		    foreach($details as $row){
-		        $data = array(
-		            'datetime'  => $dateTime,
-		            'chart'  => $chart,
-		            'data0'  => $row['state'],
-		            'data1'  => $row['percentage'],
-		            'data2'  => $row['color'],
-		        );
-		        
-		        $insert_result = $dashboard_refresh->insert($data);
-		        
+		    switch ($chart) {
+		        case 'percent_facilities_hw_trained_larc':
+		        case 'percent_facilities_hw_trained_fp':
+		        case 'percent_facilities_providing_larc':
+		        case 'percent_facilities_providing_fp':
+		  		    
+        		    foreach($details as $row){
+        		        $data = array(
+        		            'datetime'  => $dateTime,
+        		            'chart'  => $chart,
+        		            'data0'  => $row['state'],
+        		            'data1'  => $row['percentage'],
+        		            'data2'  => $row['color'],
+        		        );
+        		        
+        		        $insert_result = $dashboard_refresh->insert($data);
+        		    }
+		          break;
+		          
+		        case 'average_monthly_consumption':
+		            
+		            foreach($details as $row){
+		                $data = array(
+		                    'datetime'  => $dateTime,
+		                    'chart'  => $chart,
+		                    'data0'  => $row['month'],
+		                    'data1'  => $row['injectable_consumption'],
+		                    'data2'  => $row['implant_consumption'],
+		                );
+		            
+		                $insert_result = $dashboard_refresh->insert($data);
+		            }
+		            break;
 		    }
 		    
 		    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 697>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
