@@ -240,7 +240,8 @@ if(isset(Settings::$CSS)) {
 	}
 
 ?>" id="headerImg" alt="banner" /></a>
-<div style="color:#99CC7E; float:left; padding-top:20px; vertical-align:middle;"><span style="font-size:4em;"><?php echo $this->translation['Application Name'];?></span><br/><span style="margin-left:120px;"><?php echo $this->setting['country'];?></span></div>
+<!-- TA:17:15 changes css -->
+<div id="headerTitle"><span id="headerTitle2"><?php echo $this->translation['Application Name'];?></span><br/><span style="margin-left:120px;"><?php echo $this->setting['country'];?></span></div>
 <div style="float:right;">
 	<div id="headerLinks">
 		<?php print t('Welcome');?>, <?php echo $firstName;?> <span class="pipe">|</span> <?php echo  $loginoutLink;?>&nbsp;
