@@ -14,8 +14,12 @@ class EditTable extends ITechTable
 {
 	
 	/**
-	 * $cols can be a single string or an array of strings where the first array item is the column to match on
-	 */
+     * @param $table - table name
+     * @param $cols  - can be a single string or an array of strings where the first array item is the column to match on
+     * @param $where - where string or false
+     * @param $limit - number of records to return or false
+     * @return array
+     */
 	public static function getRowsSingle($table, $cols, $where = false, $limit = false) {
         	
       $topicTable = new EditTable(array('name' => $table));
@@ -48,9 +52,10 @@ class EditTable extends ITechTable
      	
      	if ( $limit )
     		$select->limit($limit,0);
-    	
+
      	try {
         $rows = $topicTable->fetchAll($select);
+
       } catch(Zend_Exception $e) {        
         error_log($e);
       }
@@ -100,9 +105,13 @@ class EditTable extends ITechTable
   }
   
   
-	/**
-	 * Merge SQL
-	 */
+    /**
+     * Merge SQL
+     * @param $table
+     * @param $table_dependent
+     * @param array $ids
+     * @param $id_primary
+     */
 	public static function merge($table, $table_dependent, array $ids, $id_primary) { 
     $topicTable = new EditTable(array('name' => $table));    
     $dependTable = new EditTable(array('name' => $table_dependent));

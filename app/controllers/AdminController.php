@@ -3303,7 +3303,7 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'mechanism_option';
-		$editTable->fields  = array('mechanism_phrase' => 'Mechanism');
+		$editTable->fields  = array('mechanism_phrase' => 'Mechanism', 'owner_id' => 'Owner', 'funder_id' => 'Funder', 'external_id' => "Mechanism Identifier");
 		$editTable->label   = 'Mechanism';
 		$editTable->dependencies = array('mechanism_option_id' => 'subpartner_to_funder_to_mechanism');
 		$editTable->execute();

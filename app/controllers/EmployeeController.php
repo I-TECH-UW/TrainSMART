@@ -177,19 +177,15 @@ class EmployeeController extends ReportFilterHelpers {
 	}
 	
 	public function generateMechanismTable($employee_id){
-	    if (!$this->view['mechanismList']) 
-	    {
-	       $mechanisms = $this->generateMechanismList($employee_id);
-	       $this->view->assign("mechanismList", $mechanisms);
-	    }
-	    else {
-	        $mechanisms = $this->view['mechanismList'];
-	    }
-	    if (!$employee_id)
+		if (!array_key_exists('mechanismList', $this->view))
+		{
+			$this->view->assign('mechanismList', $this->generateMechanismList($employee_id));
+		}
+		if (!$employee_id)
 	    {
 	        return;
 	    }
-	    
+
 		$db     = $this->dbfunc();
 	    $helper = new Helper();
 	         
@@ -644,7 +640,8 @@ class EmployeeController extends ReportFilterHelpers {
 		$this->view->assign ( 'supervisors',   DropDown::render('supervisor_id', $this->translation['Supervisor'], $employees, 'name', 'id', $params['supervisor_id'] ) );
 		$this->view->assign ( 'nationality',   DropDown::generateHtml ( 'lookup_nationalities', 'nationality', $params['lookup_nationalities_id'], false, !$this->hasACL("edit_employee"), false ) );
 		$this->view->assign ( 'race',          DropDown::generateHtml ( 'person_race_option', 'race_phrase', $params['race_option_id'], false, !$this->hasACL("edit_employee"), false ) );
-		
+
+//		$this->view->assign('mechanismList', $this->generateMechanismList($employee_id));
 		$this->view->assign ( 'tableEmployeeFunding', $this->generateMechanismTable($id) );
 		
 	}
