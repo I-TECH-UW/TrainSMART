@@ -62,7 +62,7 @@ class DropDown {
 		} else if (is_array ( $table ) or is_object ( $table )) {
 			$rows = $table;
 			//$info = ($rows->getTable()->info ());
-			$table = $info ['name'];
+			$table = null;
 		}
 	
 		$name = $table . '_id' . $multiple;
@@ -176,7 +176,7 @@ class DropDown {
 		} else if (is_array ( $table ) or is_object ( $table )) {
 			$rows = $table;
 			//$info = ($rows->getTable()->info ());
-			$table = $info ['name'];
+			$table = null; 
 		}
 
 		$name = $table . '_id' . $multiple;
