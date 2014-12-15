@@ -3323,76 +3323,78 @@ class AdminController extends UserController
 		$editTable->execute();
 		
 	}
-	
-	public function employeeBuildFundingAction()
-	{
 
-		require_once('models/table/Partner.php'); 
-		
-		if ( $this->getRequest()->isPost() ) {
-		  $db     = $this->dbfunc();
-		  $status = ValidationContainer::instance ();
-		  $params = $this->getAllParams();
-		
-		  // prepare date for database
-		  $params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-		
-		  foreach ($params['funding_end_date'] as $i => $value)
-			$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
+    public function employeeBuildFundingAction()
+    {
+        require_once('models/table/Partner.php');
 
-		  // test for all values
-		  if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
-			$status->addError('', t ( 'All fields' ) . space . t('are required'));
-		  else {
-		    // test for existing record
-		    $recArr = array(0 => $params['subPartner'],  1 => $params['partnerFunder'], 2 => $params['mechanism'],);
-		    
-		    $sql = 'SELECT * FROM subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
-		    $where = "subpartner_id = $recArr[0] and partner_funder_option_id = $recArr[1] and mechanism_option_id = $recArr[2] and is_deleted = false";
-		    $sql .= $where;
-		    	
-		    $row = $db->fetchRow( $sql );
-		    if ($row){
-		    	$status->addError('', t('Record exists'));
-		    }
-          
-		    if ( $status->hasError() ) 
-		      $status->setStatusMessage( t('That funding mechanism could not be saved.') );
-		    else {	//save
-       	  	$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
-       	  	
-			$data = array(
-					'subpartner_id'  => $params['subPartner'],
-					'partner_funder_option_id' => $params['partnerFunder'],
-					'mechanism_option_id' => $params['mechanism'],
-					'funding_end_date' => $params['funding_end_date'][0],
-			);
-      	  	
-			$insert_result = $sfm->insert($data);
-			if ($insert_result) {
-			  $status->setStatusMessage(t('The funding mechanism was saved.'));
-			}
-			else {
-			  $status->setStatusMessage(t('Storing the funding mechanism failed.'));
-			}
-      	  	  $this->_redirect("admin/employee-build_funding");
-	        }
-		  }
-		}
-		$this->viewAssignEscaped('required_fields', array('subPartner', 'partnerFunder', 'mechanism', 'funding_end_date[]'));
+        if ( $this->getRequest()->isPost() ) {
+            $db = $this->dbfunc();
+            $status = ValidationContainer::instance();
+            $params = $this->getAllParams();
 
-		$helper = new Helper();
+            // prepare date for database
+            $params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
 
-		$subPartner = $helper->getAllSubPartners();
-		$this->viewAssignEscaped ( 'subPartner', $subPartner );
+            foreach ($params['funding_end_date'] as $i => $value) {
+                $params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
+            }
 
-		$partnerFunder = $helper->getAllFunders();
-		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-		
-		$mechanism = $helper->getAllMechanisms();
-		$this->viewAssignEscaped ( 'mechanism', $mechanism );	
-		
-	} //employeeBuildFundingAction
+            // test for all values
+            if (!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0])) {
+                $status->addError('', t('All fields') . space . t('are required'));
+            }
+            else {
+                // test for existing record
+                $recArr = array(0 => $params['subPartner'],  1 => $params['partnerFunder'], 2 => $params['mechanism'],);
+
+                $sql = 'SELECT * FROM subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
+                $where = "subpartner_id = $recArr[0] and partner_funder_option_id = $recArr[1] and mechanism_option_id = $recArr[2] and is_deleted = false";
+                $sql .= $where;
+
+                $row = $db->fetchRow( $sql );
+                if ($row){
+                    $status->addError('', t('Record exists'));
+                }
+
+                if ( $status->hasError() ) {
+                    $status->setStatusMessage(t('That funding mechanism could not be saved.'));
+                }
+                else {	//save
+                    $sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
+
+                    $data = array(
+                            'subpartner_id'  => $params['subPartner'],
+                            'partner_funder_option_id' => $params['partnerFunder'],
+                            'mechanism_option_id' => $params['mechanism'],
+                            'funding_end_date' => $params['funding_end_date'][0],
+                    );
+
+                    $insert_result = $sfm->insert($data);
+                    if ($insert_result) {
+                      $status->setStatusMessage(t('The funding mechanism was saved.'));
+                    }
+                    else {
+                      $status->setStatusMessage(t('Storing the funding mechanism failed.'));
+                    }
+                    $this->_redirect("admin/employee-build_funding");
+                }
+            }
+        }
+        $this->viewAssignEscaped('required_fields', array('subPartner', 'partnerFunder', 'mechanism', 'funding_end_date[]'));
+
+        $helper = new Helper();
+
+        $subPartner = $helper->getAllSubPartners();
+        $this->viewAssignEscaped ( 'subPartner', $subPartner );
+
+        $partnerFunder = $helper->getAllFunders();
+        $this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+
+        $mechanism = $helper->getAllMechanisms();
+        $this->viewAssignEscaped ( 'mechanism', $mechanism );
+
+    } //employeeBuildFundingAction
 	
 	public function employeeFunderFilterAction()
 	{
