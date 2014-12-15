@@ -25,22 +25,16 @@
  <form action="" method="post" class="form_employee">
 
 <?php
-// suppress warning in labelAndField
-$this->required_fields = array();
-
-
-// examples:
-// labelAndField($this, t('Input 1'), $myDropDown, 'input_1');
-// labelAndField($this, t('Input 2'), 'text', 'field2', $values['field2']);
-//echo labelAndField ( $this, t ( 'Partner' ), $this->partner, 'partner_id' );
+require_once("views/helpers/DropDown.php");
 
 ?>
 <fieldset>
 <div id="funwrapper">
-<?php 
-  build_funding_dropdown($this, $this->subPartner, $this->partnerFunder, $this->mechanism);
+<?php
+  echo DropDown::render('subPartner', t('Subpartner'), $this->subPartner, 'partner', 'id', false, 'setStatus_subPartner();', true) . "\n";
+  echo DropDown::render('partnerFunder', t('Funder'), $this->partnerFunder, 'funder_phrase', 'id', false, 'setStatus_partnerFunder();', true) . "\n";
+  echo DropDown::render('mechanism', t('Mechanism'), $this->mechanism, 'mechanism_phrase', 'id', false, 'setStatus_mechanism();', true) . "\n";
   echo labelAndField($this, t('Funding End Date'), 'date','funding_end_date[]', '');
-  
 ?>
 
 </div>

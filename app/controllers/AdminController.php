@@ -3326,8 +3326,7 @@ class AdminController extends UserController
 	
 	public function employeeBuildFundingAction()
 	{
-				
-		require_once('views/helpers/Location.php'); // funder stuff
+
 		require_once('models/table/Partner.php'); 
 		
 		if ( $this->getRequest()->isPost() ) {
@@ -3335,10 +3334,6 @@ class AdminController extends UserController
 		  $status = ValidationContainer::instance ();
 		  $params = $this->getAllParams();
 		
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3036> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($params);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-				
 		  // prepare date for database
 		  $params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
 		
@@ -3366,29 +3361,31 @@ class AdminController extends UserController
 		    else {	//save
        	  	$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
        	  	
-      	  			$data = array(
-      	  					'subpartner_id'  => $params['subPartner'],
-      	  					'partner_funder_option_id' => $params['partnerFunder'],
-      	  					'mechanism_option_id' => $params['mechanism'],
-      	  					'funding_end_date' => $params['funding_end_date'][0],
-      	  			);
+			$data = array(
+					'subpartner_id'  => $params['subPartner'],
+					'partner_funder_option_id' => $params['partnerFunder'],
+					'mechanism_option_id' => $params['mechanism'],
+					'funding_end_date' => $params['funding_end_date'][0],
+			);
       	  	
-      	  	  $insert_result = $sfm->insert($data);
-      	  	  $status->setStatusMessage( t('The funding mechanism was saved.') );
+			$insert_result = $sfm->insert($data);
+			if ($insert_result) {
+			  $status->setStatusMessage(t('The funding mechanism was saved.'));
+			}
+			else {
+			  $status->setStatusMessage(t('Storing the funding mechanism failed.'));
+			}
       	  	  $this->_redirect("admin/employee-build_funding");
 	        }
 		  }
 		}
-		
+		$this->viewAssignEscaped('required_fields', array('subPartner', 'partnerFunder', 'mechanism', 'funding_end_date[]'));
+
 		$helper = new Helper();
-		
+
 		$subPartner = $helper->getAllSubPartners();
 		$this->viewAssignEscaped ( 'subPartner', $subPartner );
-		
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3068>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($subPartner);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-		
+
 		$partnerFunder = $helper->getAllFunders();
 		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
 		

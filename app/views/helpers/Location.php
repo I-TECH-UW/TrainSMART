@@ -471,51 +471,6 @@ function training_location_dropdown_as_a_return_value(&$tlocations, $selectedVal
   return "<select $selectContainerAttrs>$options</select>";
 }
 
-
-/**
- * build_funding_dropdown outputs funding data selections with all options available
- *
- * many arguments are passed on to renderFunder in various permutations
- *
- * @param array $view                         - the view object reference
- * @param array $subPartner                   - subpartner array reference
- * @param array $partnerFunder                - partnerFunder array reference
- * @param array $mechanism                    - mechanism array reference
- * @param int|null $val_partner       = null  - default partner id to select
- * @param int|null $val_subpartner    = null  - default subpartner id to select
- * @param int|null $val_partnerFunder = null  - default funder to select
- * @param int|null $val_mechanism     = null  - default mechanism to select
- * @param bool $is_multiple           = false - are these fields multiple-selection?
- * @param bool $required              = false - are these fields required?
- */
-function build_funding_dropdown(&$view, &$subPartner, &$partnerFunder, &$mechanism, $val_partner = null, $val_subpartner = null, $val_partnerFunder = null, $val_mechanism = null, $is_multiple = false, $required = false) {
-
-	$required = $required ? '<span class="required">*</span>' : '';
-	$class = $is_multiple ? 'autoHeight' : '';
-	?>
-
-		<div class="fieldLabel" id="partner_lbl"><?php echo 'Subpartner'; ?></div>
-		<div class="fieldInput">
-		<?php renderFunder($subPartner, 'subPartner', 'partner', $val_partner, 'partnerFunder', $is_multiple); ?>
-        </div>
-	
-		<div class="fieldLabel" id="partnerFunder_lbl"><?php echo t('Funder'); ?>
-        </div>
-
-		<div  class="fieldInput">
-		<?php renderFunder($partnerFunder, 'partnerFunder', 'funder_phrase', $val_partnerFunder, 'mechanism', $is_multiple); ?>
-        </div>
-
-		<div class="fieldLabel" id="mechanism_lbl"><?php echo 'Mechanism'; ?></div>
-		<div  class="fieldInput">
-		<?php renderFunder($mechanism, 'mechanism', 'mechanism_phrase', $val_mechanism, false, $is_multiple); ?>
-        </div>
-
-		<?php 
-
-}
-
-
 /**
  * 
  * @param unknown $fieldIndex
@@ -761,45 +716,3 @@ YAHOO.util.Event.onDOMReady(function () {
 </script>
 <?php }
 }
-
-/**
- * outputs dropdown box selection with options from $widget_array
- *
- * TODO: investigate using helpers/DropDown.php
- * @param array      $widget_array            - array reference from table data
- * @param string     $widget_id               - html id for widget
- * @param int|string $option_value_index      - index in $widget_array that contains option value
- * @param bool       $default_val_id  = false - the option to have selected by default
- * @param bool       $child_widget_id = false - outputs javascript at the end for a reason I don't know yet TODO: find reason
- * @param bool       $is_multiple     = false - whether this selection allows multiple options
- * @param string     $readonly        = ''    - whether this selection can be edited
- */
-function renderFunder($widget_array, $widget_id, $option_value_index, $default_val_id = false, $child_widget_id = false, $is_multiple = false, $readonly = '' ) {
-
-	?>
-  <select id="<?php echo $widget_id;?>" name="<?php echo $widget_id;?><?php if ($is_multiple) echo '[]';?>" <?php echo $readonly;?><?php if ( $is_multiple) echo 'multiple="multiple" size="10"';?>
-  <?php if ($child_widget_id) { ?>onchange="setStatus_<?php echo str_replace('-', '_', $widget_id);?>();" <?php }?>>
-    <option value="">--<?php tp('choose');?>--</option>
-   
-    <?php
-
-      foreach ( $widget_array as $val ) {
-        $selected = '';
-        if ( $default_val_id == $val['id']) {
-            $selected = 'selected="selected"';
-        }
-        echo ('<option value="' . $val['id'] . '" ' . $selected . '>' . $val[$option_value_index] . '</option>');
-      }
-    ?>
-  </select>
-  <?php
-if ( $child_widget_id ) {?>
-<script type="text/javascript">
-<!--//--><![CDATA[//><!--
-
-
-//--><!]]>
-</script>
-<?php }
-}
-
