@@ -179,7 +179,7 @@ function renderFacilityDropDown($facilities, $selected_index, $readonly)
   }
   $dupe = '';
   // lets build a visible <select> and also a display:none <select> with all locations
-  $output .= '<select id="facilityInput" name="facilityInput"';
+  $output = '<select id="facilityInput" name="facilityInput"';
   if ($readonly) 
   {
       $output .= ' disabled="disabled"';
@@ -782,7 +782,7 @@ function renderFunder($widget_array, $widget_id, $option_value_index, $default_v
     <option value="">--<?php tp('choose');?>--</option>
    
     <?php
-    
+
       foreach ( $widget_array as $val ) {
         $selected = '';
         if ( $default_val_id == $val['id']) {
