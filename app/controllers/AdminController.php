@@ -3345,16 +3345,19 @@ class AdminController extends UserController
                 $status->addError('', t('All fields') . space . t('are required'));
             }
             else {
+
                 // test for existing record
-                $recArr = array(0 => $params['subPartner'],  1 => $params['partnerFunder'], 2 => $params['mechanism'],);
+                foreach ($params['subPartner'] as $i => $value) {
 
-                $sql = 'SELECT * FROM subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
-                $where = "subpartner_id = $recArr[0] and partner_funder_option_id = $recArr[1] and mechanism_option_id = $recArr[2] and is_deleted = false";
-                $sql .= $where;
+                    $sql = 'SELECT * FROM subpartner_to_funder_to_mechanism  WHERE ';
+                    $where = "subpartner_id = $value and partner_funder_option_id = {$params['partnerFunder']} and mechanism_option_id = {$params['mechanism']} and is_deleted = false";
+                    $sql .= $where;
 
-                $row = $db->fetchRow( $sql );
-                if ($row){
-                    $status->addError('', t('Record exists'));
+                    $row = $db->fetchRow($sql);
+                    if ($row) {
+                        $status->addError('', t('Record exists'));
+                        break;
+                    }
                 }
 
                 if ( $status->hasError() ) {
@@ -3364,18 +3367,25 @@ class AdminController extends UserController
                     $sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
 
                     $data = array(
-                            'subpartner_id'  => $params['subPartner'],
                             'partner_funder_option_id' => $params['partnerFunder'],
                             'mechanism_option_id' => $params['mechanism'],
                             'funding_end_date' => $params['funding_end_date'][0],
                     );
 
-                    $insert_result = $sfm->insert($data);
-                    if ($insert_result) {
-                      $status->setStatusMessage(t('The funding mechanism was saved.'));
+                    foreach ($params['subPartner'] as $i => $value) {
+                        $data['subpartner_id'] = $value;
+                        $insert_result = $sfm->insert($data);
+                        if (!$insert_result) {
+                            $status->addError(t('Subpartner'), 'Unable to store in database.');
+                            break;
+                        }
+                    }
+
+                    if ($status->hasError()) {
+                        $status->setStatusMessage(t('Storing the funding mechanism failed.'));
                     }
                     else {
-                      $status->setStatusMessage(t('Storing the funding mechanism failed.'));
+                        $status->setStatusMessage(t('The funding mechanism was saved.'));
                     }
                     $this->_redirect("admin/employee-build_funding");
                 }
