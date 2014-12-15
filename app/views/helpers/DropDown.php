@@ -280,7 +280,9 @@ class DropDown {
 		$html .= '</div><div class="fieldInput"><select id="' . $select_name . '" name="' . $select_name . ($is_multiple ? '[]':'') . '" ' .
 			($onchange ? "onchange='$onchange'" : '') . ' ' . (!$enabled ? "disabled='disabled'" : '') .
 			($is_multiple ? " multiple=\"multiple\" size=\"$multiple_size\"" : '') . '>';
-		$html .= '<option value="">--' . (t ( 'choose' )) . '--</option>';
+        if (!$is_multiple) {
+            $html .= '<option value="">--' . (t('choose')) . '--</option>';
+        }
 		foreach ( $vals as $val ) {
 			$html .= '<option value="' . $val [$val_key] . '" ' . ($selected == $val [$val_key] ? 'selected="selected"' : '') . '>' . $val [$name_key] . '</option>' . "\n";
 		}
