@@ -179,6 +179,16 @@ class TrainingController extends ReportFilterHelpers {
 					$status->addError ( 'post', $this->view->translation ['Post Test Score'] . ' ' . t ( 'must be between 1-100.' ) );
 				}
 			}
+			
+	
+			//TA:17:16: 12/15/2014 add end date as rerquired
+			if ( $this->getSanParam ( 'training_category_and_title_option_id' ) == "" ){
+				$status->addError( 'select_training_title_option', t('Training Name is required.') );
+			}
+			if ( $this->getSanParam ( 'training_location_id' ) == "" ){
+				$status->addError( 'select_training_location', t('Location is required.') );
+			}
+	
 
 			//TA:17: 9/2/2014 Start date is not required
 			//if ( $this->getSanParam('start-year') == ""  || $this->getSanParam('start-month') == "" || $this->getSanParam('start-day') == "" )
@@ -187,6 +197,10 @@ class TrainingController extends ReportFilterHelpers {
 			if ($training_start_date !== '--' and $training_start_date !== '0000-00-00')
 			$status->isValidDate ( $this, 'start-day', t ( 'Training' ).' '.t( 'start' ), $training_start_date );
 			if ($this->setting ( 'display_end_date' )) {
+				//TA:17:16: 12/12/2014 add end date as rerquired
+				if ( $this->getSanParam('end-year') == ""  || $this->getSanParam('end-month') == "" || $this->getSanParam('end-day') == "" )
+					$status->addError( 'end-day', t('End date is required.') );
+				
 				$training_end_date = (@$this->getSanParam ( 'end-year' )) . '-' . (@$this->getSanParam ( 'end-month' )) . '-' . (@$this->getSanParam ( 'end-day' ));
 				if ($training_end_date !== '--' and $training_end_date !== '0000-00-00') {
 					$status->isValidDate ( $this, 'end-day', t ( 'Training' ).' '.t( 'end' ), $training_end_date );
@@ -313,17 +327,18 @@ class TrainingController extends ReportFilterHelpers {
 			}
 
 			if ($status->hasError () && ! $row->is_deleted) {
-				$status->setStatusMessage ( t ( 'This' ).' '.t( 'Training' ).' '.t( 'session could not be saved.' ) );
+				$status->setStatusMessage ( t ( 'This' ).' '.t( 'Training' ).' '.t( 'session could not be saved.+++' ) );
 			} else {
 				$row = self::fillFromArray ( $row, $this->_getAllParams () );
 
 				// format: categoryid_titleid
 				$ct_ids = $this->getSanParam ( 'training_category_and_title_option_id' );
-
+				
 				// remove category id and underscore (unless dynamic title insert, which is numeric)
 				$training_title_option_id = (! is_numeric ( $ct_ids )) ? substr ( $ct_ids, strpos ( $ct_ids, '_' ) + 1 ) : $ct_ids;
 				$row->training_title_option_id = $training_title_option_id;
-
+				
+				
 				$row->training_start_date = (@$this->getSanParam ( 'start-year' )) . '-' . (@$this->getSanParam ( 'start-month' )) . '-' . (@$this->getSanParam ( 'start-day' ));
 				if ($this->setting ( 'display_end_date' )) {
 					$row->training_end_date = (@$this->getSanParam ( 'end-year' )) . '-' . (@$this->getSanParam ( 'end-month' )) . '-' . (@$this->getSanParam ( 'end-day' ));

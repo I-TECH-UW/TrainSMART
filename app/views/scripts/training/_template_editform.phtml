@@ -274,7 +274,7 @@ echo "<br clear='top'/><br clear='left'/><br clear='top'/>";
    <?php } ?>
    
 <?php if ( $this->setting['display_end_date'] ) { ?>
- <div class="fieldLabel"><?php echo t('Training').' '.t('end date');?></div>
+ <div class="fieldLabel"><span class="required">*</span><?php echo t('Training').' '.t('end date');?></div>
  <div class="fieldInput" id="enddate">
     <?php tp('Day');?> <input id="end-day" class="dayfield" type="text" name="end-day" maxlength="2" value="<?php echo $this->row['end-day']; ?>"  <?php echo $this->viewonly; ?>>
     / <?php tp('Month');?> <input id="end-month" class="monthfield" type="text" name="end-month" maxlength="2" value="<?php echo $this->row['end-month']; ?>"  <?php echo $this->viewonly; ?>>
@@ -316,7 +316,7 @@ echo "<br clear='top'/><br clear='left'/><br clear='top'/>";
   
   <!-- TA:17:14: -->
   <?php if($this->setting['display_training_location']){?>
-  <div class="fieldLabel"><?php echo t('Training').' '.t('Location');?></div>
+  <div class="fieldLabel"><span class="required">*</span><?php echo t('Training').' '.t('Location');?></div>
   <div class="fieldInput">
     <?php
       training_location_dropdown ($this->tlocations, $this->row['training_location_id'], 'name="training_location_id" id="select_training_location" '.$this->viewonly);

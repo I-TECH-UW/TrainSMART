@@ -433,11 +433,13 @@ YAHOO.util.Event.onDOMReady(function() {
 <br/>
 
 <?php if ($this->setting['display_gender']) {?>
-<div class="fieldLabel" id="gender_lbl"><span class="required">*</span><?php tp('Gender');?></div>
+<div class="fieldLabel" id="gender_lbl"><?php tp('Gender');?></div>
 <div class="fieldInput">
     <label for="female"><?php tp('Female');?><input type="radio" id="female" name="gender" value="female" <?php echo ( $this->person['gender'] == 'female' ? 'checked="checked"' :'');?> ></input></label>
     <label for="male"><?php tp('Male');?><input type="radio" id="male" name="gender" value="male" <?php echo ( $this->person['gender'] == 'male' ? 'checked="checked"' :'');?>></input></label>
-     <label for="na"><?php tp('Unknown');?><input type="radio" id="na" name="gender" value="na" <?php echo ( $this->person['gender'] == 'na' ? 'checked="checked"' :'');?>></input></label>
+     <label for="na"><?php tp('Unknown');?><input type="radio" id="na" name="gender" value="na" 
+     <?php echo ( ($this->person['gender'] != 'female' && $this->person['gender'] != 'male') || $this->person['gender'] == 'na' ? 'checked="checked"' :'');?>></input></label>
+     <!-- TA:17:16: automatically check gender UKNOWN if no female or male -->
 </div>
 <?php }?>
 

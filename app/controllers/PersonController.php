@@ -408,8 +408,8 @@ class PersonController extends ReportFilterHelpers {
 			$status->checkRequired ( $this, 'first_name', $this->tr ( 'First Name' ) );
 			$status->checkRequired ( $this, 'last_name', $this->tr ( 'Last Name' ) );
 			$status->checkRequired ( $this, 'primary_qualification_option_id', t ( 'Professional qualification' ) );
-			if ($this->setting('display_gender') != '0')
-				$status->checkRequired ( $this, 'gender', t ( 'Gender' ) );
+// 			if ($this->setting('display_gender') != '0') //TA:17:16:
+// 				$status->checkRequired ( $this, 'gender', t ( 'Gender' ) );
 
 			if ($this->setting('display_mod_skillsmart')){
 				//$status->checkRequired ( $this, 'occupational_category_id', t ( 'Occupational category' ) );
