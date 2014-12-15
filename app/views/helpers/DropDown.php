@@ -176,7 +176,7 @@ class DropDown {
 		} else if (is_array ( $table ) or is_object ( $table )) {
 			$rows = $table;
 			//$info = ($rows->getTable()->info ());
-			$table = null; 
+			$table = null;
 		}
 
 		$name = $table . '_id' . $multiple;
@@ -258,11 +258,11 @@ class DropDown {
 	 * A generic helper function for rendering HTML for a dropdown widget
 	 * able to be called from a view script.
 	 *
-	 * @param string       $select_name           - the widget id
+	 * @param string       $select_name           - the widget's html id
 	 * @param string       $select_title          - the title text
 	 * @param array        $vals                  - option values
 	 * @param string       $name_key              - the array key for the option name
-	 * @param string       $val_key               - the array key for the value
+	 * @param string       $val_key               - the array key for the option value (usually an id)
 	 * @param string|bool  $selected      = false - the selected option
 	 * @param string|bool  $onchange      = false - a javascript function name to call when changed
 	 * @param bool         $required      = false - is this dropdown required input?
@@ -277,7 +277,7 @@ class DropDown {
 		if ($required)
 			$html .= '<span class="required">*</span>';
 		$html .= $select_title;
-		$html .= '</div><div class="fieldInput"><select id="' . $select_name . '" name="' . $select_name . '" ' .
+		$html .= '</div><div class="fieldInput"><select id="' . $select_name . '" name="' . $select_name . ($is_multiple ? '[]':'') . '" ' .
 			($onchange ? "onchange='$onchange'" : '') . ' ' . (!$enabled ? "disabled='disabled'" : '') .
 			($is_multiple ? " multiple=\"multiple\" size=\"$multiple_size\"" : '') . '>';
 		$html .= '<option value="">--' . (t ( 'choose' )) . '--</option>';
