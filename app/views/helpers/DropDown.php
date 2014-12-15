@@ -12,9 +12,19 @@
 class DropDown {
 	
 	/**
-	 * $table - a string for the table name, or an array of rows to be used as the option values
-	 * $id      - option value to select as default
-	 * $jsonUrl - do not begin or end with slash or add output type
+	 * @param $table - a string for the table name, or an array of rows to be used as the option values
+	 * @param $column
+	 * @param bool $id - option value to select as default
+	 * @param bool $jsonUrl - do not begin or end with slash or add output type
+	 * @param bool $disabled
+	 * @param bool $allowIds
+	 * @param bool $multiple
+	 * @param array $attributes
+	 * @param bool $set_default
+	 * @param bool $multiple_choice
+	 * @param int $size
+	 * @param string $mechanism
+	 * @return string
 	 */
 	public static function generateFunderMechanism(
 			$table, 
@@ -78,14 +88,8 @@ class DropDown {
 	
 		$html .= ' >';
 	
-		// if (!$multiple_choice) {
 		$html .= "\t<option value=\"\">&mdash; " . t ( 'select' ) . " &mdash;</option>\n";
-		// }
-	
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'dd 85>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($mechanism);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-		
+
 		foreach ( $rows as $r ) {
 			if (($allowIds === false) or (array_search ( $r->id, $allowIds ) !== false)) {
 				$isSelected = '';
@@ -109,10 +113,6 @@ class DropDown {
 			$label = $fieldlabel [0];
 			if(isset($fieldlabel[1])){ $label .= ' ' . $fieldlabel [1]; }
 	
-	
-			//$label = substr($column, strpos($column, '_'));
-			//$label = str_replace('phrase', '', $label);
-			//$label = trim(str_replace('_', ' ', $label));
 			if (trim ( $label )) {
 				switch ($label) { // modify so label translates nicely, if needed
 					case 'training got' :
@@ -138,9 +138,18 @@ class DropDown {
 	}
 
 	/**
-	 * $table - a string for the table name, or an array of rows to be used as the option values
-	 * $id      - option value to select as default
-	 * $jsonUrl - do not begin or end with slash or add output type
+	 * @param $table - a string for the table name, or an array of rows to be used as the option values
+	 * @param $column
+	 * @param bool $id - option value to select as default
+	 * @param bool $jsonUrl - do not begin or end with slash or add output type
+	 * @param bool $disabled
+	 * @param bool $allowIds
+	 * @param bool $multiple
+	 * @param array $attributes
+	 * @param bool $set_default
+	 * @param bool $multiple_choice
+	 * @param int $size
+	 * @return string
 	 */
 	public static function generateHtml($table, $column, $id = false, $jsonUrl = false, $disabled = false, $allowIds = false, 
 			$multiple = false, $attributes = array(), $set_default = true, $multiple_choice = false, $size = 0) {
@@ -193,10 +202,9 @@ class DropDown {
 
 		$html .= ' >';
 
-		// if (!$multiple_choice) {
-			 $html .= "\t<option value=\"\">&mdash; " . t ( 'select' ) . " &mdash;</option>\n";
-		// }
-		
+
+		 $html .= "\t<option value=\"\">&mdash; " . t ( 'select' ) . " &mdash;</option>\n";
+
 			 
 		foreach ( $rows as $r ) {
 			if (($allowIds === false) or (array_search ( $r->id, $allowIds ) !== false)) {
@@ -222,9 +230,6 @@ class DropDown {
 			if(isset($fieldlabel[1])){ $label .= ' ' . $fieldlabel [1]; }
 
 
-			//$label = substr($column, strpos($column, '_'));
-			//$label = str_replace('phrase', '', $label);
-			//$label = trim(str_replace('_', ' ', $label));
 			if (trim ( $label )) {
 				switch ($label) { // modify so label translates nicely, if needed
 					case 'training got' :
@@ -250,28 +255,31 @@ class DropDown {
 	}
 
 	/**
-	 * A generic helper function for rendering HTML for a very simple dropdown widget
+	 * A generic helper function for rendering HTML for a dropdown widget
 	 * able to be called from a view script.
 	 *
-	 * @param string  $select_name      - the widget id
-	 * @param string  $select_title     - the title text
-	 * @param array   $vals             - option values
-	 * @param string  $name_key         - the array key for the option name
-	 * @param string  $val_key          - the array key for the value
-	 * @param string  $selected = false - the selected option
-	 * @param string  $onchange = false - a javascript function name to call when changed
-	 * @param boolean $required = false - is this dropdown required input?
-	 * @param boolean $enabled  = true  - is this dropdown enabled?
-	 * @param boolean $isDiv    = true  - is this dropdown in a div tag?
-	 * @return string - html for a dropdown 
+	 * @param string       $select_name           - the widget id
+	 * @param string       $select_title          - the title text
+	 * @param array        $vals                  - option values
+	 * @param string       $name_key              - the array key for the option name
+	 * @param string       $val_key               - the array key for the value
+	 * @param string|bool  $selected      = false - the selected option
+	 * @param string|bool  $onchange      = false - a javascript function name to call when changed
+	 * @param bool         $required      = false - is this dropdown required input?
+	 * @param bool         $enabled       = true  - is this dropdown enabled?
+	 * @param bool         $is_multiple   = false - is this dropdown multiple selection?
+	 * @param int          $multiple_size = 10    - size of optional multiple selection
+	 * @return string                             - html for a dropdown
 	 */
-	public static function render($select_name, $select_title, $vals, $name_key, $val_key, $selected = false, $onchange = false, $required = false, $enabled = true, $isDiv = true) {
+	public static function render($select_name, $select_title, $vals, $name_key, $val_key, $selected = false, $onchange = false, $required = false, $enabled = true, $is_multiple = false, $multiple_size=10) {
 
 		$html = '<div class="fieldLabel"  id="' . $select_name . '_lbl">';
 		if ($required)
 			$html .= '<span class="required">*</span>';
 		$html .= $select_title;
-		$html .= '</div><div class="fieldInput"><select id="' . $select_name . '" name="' . $select_name . '"  ' . ($onchange ? "onchange='$onchange'" : '') . ' ' . (!$enabled ? "disabled='disabled'" : '') . '>';
+		$html .= '</div><div class="fieldInput"><select id="' . $select_name . '" name="' . $select_name . '" ' .
+			($onchange ? "onchange='$onchange'" : '') . ' ' . (!$enabled ? "disabled='disabled'" : '') .
+			($is_multiple ? " multiple=\"multiple\" size=\"$multiple_size\"" : '') . '>';
 		$html .= '<option value="">--' . (t ( 'choose' )) . '--</option>';
 		foreach ( $vals as $val ) {
 			$html .= '<option value="' . $val [$val_key] . '" ' . ($selected == $val [$val_key] ? 'selected="selected"' : '') . '>' . $val [$name_key] . '</option>' . "\n";
@@ -280,6 +288,20 @@ class DropDown {
 		$html .= '</select></div>';
 	    return $html;
 	}
+
+	/**
+	 * @param $id
+	 * @param $show_id
+	 * @param $label
+	 * @param $options
+	 * @param $value_key
+	 * @param $selected_id
+	 * @param $show_selected
+	 * @param bool $set_default
+	 * @param bool $fixedWidth
+	 * @param bool $multiple
+	 * @return string
+	 */
 
 	function render_report_filter($id, $show_id, $label, $options, $value_key, $selected_id, $show_selected, $set_default = false, $fixedWidth = false, $multiple = false) {
 		$html = "<div class='fieldLabel' id='" . $id . "_lbl'>$label</div>\n";
@@ -305,6 +327,11 @@ class DropDown {
 		return $html;
 	}
 
+	/**
+	 * @param $name
+	 * @param $selectedVal
+	 * @return string
+	 */
 	public static function qualificationsDropDown($name, $selectedVal)
 	{
 		$o = array();
