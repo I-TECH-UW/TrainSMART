@@ -38,9 +38,6 @@ $this->required_fields = array();
 <fieldset>
 <div id="funwrapper">
 <?php 
-  // funder_filter_dropdown is cascading fields 
-  //funder_filter_dropdown($this, $this->partners, $this->partnerFunder, $this->mechanism);
-  // build_funding_dropdown builds cascading with all options
   build_funding_dropdown($this, $this->subPartner, $this->partnerFunder, $this->mechanism);
   echo labelAndField($this, t('Funding End Date'), 'date','funding_end_date[]', '');
   
