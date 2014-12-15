@@ -234,7 +234,6 @@ function renderFacilityDropDown($facilities, $selected_index, $readonly)
   $output .= '<script type="text/JavaScript">'.$js.'</script>';
   return $output;
 
-
 }
 
 /**
@@ -587,21 +586,20 @@ function partner_sfm_dropdown($fieldIndex, &$view, &$subPartner, &$partnerFunder
 
 		<div class="fieldLabel" id="partnerFunder_lbl"><?php echo t('Funder'); ?></div>
 		<div  class="fieldInput">
-		<?php 
-
-		partnerRenderFunder($partnerFunder, 'partnerFunder' . strval($fieldIndex), $val_partnerFunder, 'mechanism' . strval($fieldIndex), $is_multiple, $required, $disabled); ?></div>
+		<?php partnerRenderFunder($partnerFunder, 'partnerFunder' . strval($fieldIndex), $val_partnerFunder, 'mechanism' . strval($fieldIndex), $is_multiple, $required, $disabled); ?>
+        </div>
 
 		<div class="fieldLabel" id="mechanism_lbl"><?php echo 'Mechanism'; ?></div>
 		<div  class="fieldInput">
-		<?php 
-
-		partnerRenderFunder($mechanism, 'mechanism' . strval($fieldIndex), $val_mechanism, false, $is_multiple, $required, $disabled); ?></div>
+		<?php partnerRenderFunder($mechanism, 'mechanism' . strval($fieldIndex), $val_mechanism, false, $is_multiple, $required, $disabled); ?>
+        </div>
 
 		<?php 
 
 }
 
 /**
+ * TODO: This function calls a non-existent function gnrtestrenderFunder so doesn't work - find out what it was supposed to do
  * @param $view
  * @param $employee
  * @param $partner
@@ -629,23 +627,23 @@ function gnrtest_epsfm_dropdown(&$view, &$employee, &$partner, &$subPartner, &$p
 
 		<div class="fieldLabel" id="partner_lbl"><?php echo 'Partner'; ?></div>
 		<div class="fieldInput">
-		
-		<?php gnrtestrenderFunder($partner, 'partner', $val_employee, 'subPartner', $is_multiple); ?></div>
+		<?php gnrtestrenderFunder($partner, 'partner', $val_employee, 'subPartner', $is_multiple); ?>
+        </div>
 
 		<div class="fieldLabel" id="subPartner_lbl"><?php echo t('Partner'); ?></div>
 		<div  class="fieldInput">
-		 
-		<?php gnrtestrenderFunder($subPartner, 'subPartner', $val_subPartner, 'partnerFunder', $is_multiple); ?></div>
+		<?php gnrtestrenderFunder($subPartner, 'subPartner', $val_subPartner, 'partnerFunder', $is_multiple); ?>
+        </div>
 
 		<div class="fieldLabel" id="partnerFunder_lbl"><?php echo t('Funder'); ?></div>
 		<div  class="fieldInput">
-		
-		<?php gnrtestrenderFunder($partnerFunder, 'partnerFunder', $val_partnerFunder, 'mechanism', $is_multiple); ?></div>
+        <?php gnrtestrenderFunder($partnerFunder, 'partnerFunder', $val_partnerFunder, 'mechanism', $is_multiple); ?>
+        </div>
 
 		<div class="fieldLabel" id="mechanism_lbl"><?php echo 'Mechanism'; ?></div>
 		<div  class="fieldInput">
-		
-		<?php gnrtestrenderFunder($mechanism, 'mechanism', $val_mechanism, false, $is_multiple); ?></div>
+		<?php gnrtestrenderFunder($mechanism, 'mechanism', $val_mechanism, false, $is_multiple); ?>
+        </div>
 
 		<?php 
 
@@ -765,18 +763,18 @@ YAHOO.util.Event.onDOMReady(function () {
 }
 
 /**
- * outputs dropdown box with data from $widget_array
+ * outputs dropdown box selection with options from $widget_array
  *
- * TODO: use helpers/DropDown.php
- * @param array      $widget_array            - array reference
+ * TODO: investigate using helpers/DropDown.php
+ * @param array      $widget_array            - array reference from table data
  * @param string     $widget_id               - html id for widget
  * @param int|string $option_value_index      - index in $widget_array that contains option value
  * @param bool       $default_val_id  = false - the option to have selected by default
- * @param bool       $child_widget_id = false - outputs javascript at the end for a reason I don't know yet
+ * @param bool       $child_widget_id = false - outputs javascript at the end for a reason I don't know yet TODO: find reason
  * @param bool       $is_multiple     = false - whether this selection allows multiple options
  * @param string     $readonly        = ''    - whether this selection can be edited
  */
-function renderFunder(&$widget_array, $widget_id, $option_value_index, $default_val_id = false, $child_widget_id = false, $is_multiple = false, $readonly = '' ) {
+function renderFunder($widget_array, $widget_id, $option_value_index, $default_val_id = false, $child_widget_id = false, $is_multiple = false, $readonly = '' ) {
 
 	?>
   <select id="<?php echo $widget_id;?>" name="<?php echo $widget_id;?><?php if ($is_multiple) echo '[]';?>" <?php echo $readonly;?><?php if ( $is_multiple) echo 'multiple="multiple" size="10"';?>
