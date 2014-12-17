@@ -89,10 +89,6 @@ print ScriptContainer::$instance->renderJSHead();
 
 			<div>
 
-				<script src="http://code.highcharts.com/highcharts.js"></script>
-				<script src="http://code.highcharts.com/modules/data.js"></script>
-				<script src="http://code.highcharts.com/modules/drilldown.js"></script>
-
 				
 				<?php  // require_once('views/scripts/dashboard/load_data.phtml');?>
 
@@ -101,13 +97,11 @@ print ScriptContainer::$instance->renderJSHead();
 			<!-------   /////////////////////////// make top buttons ////////////////////// -->
 
 			<div class="rightdiv" style="float: right;">
-				<?php  //require_once('views/scripts/dashboard/top_buttons.phtml');?>
+				<?php //require_once('views/scripts/dashboard/top_buttons.phtml');?>
 					
 			</div>
 
-			<div class="clear"></div>
-			<div class="hrGrey"></div>
-			<div class="clear"></div>
+
 
 			<!-------   /////////////////////////// make left buttons ////////////////////// -->
 
@@ -122,15 +116,27 @@ print ScriptContainer::$instance->renderJSHead();
 			<body class="docs slim framebox_body">
 
 				<div id="allCharts" class="container">
+				
+				<div class="hrNav"></div>
+				<div class="hrNav"></div>
+				
 				<div id="toprow" class="container">
-					
-					
-					
-					
-					<div id="chart11_div" style="width: 700px; height: 300px;"></div>
-					
-					
-					
+						<div id="homecontent" class="container">
+							<div id="homecontent-mid" class="row rounded">
+								<div id="homebanner" class="rounded">
+								
+								
+			                    
+								<div class="sliderdiv">
+									<div id="chart11_div" style="width: 500px; height: 300px;"></div>
+									</div>
+									<div class="main-search">
+										<div id="chart12_div" style="width: 500px; height: 300px;"></div>
+									</div>
+								</div>
+							</div>
+						</div>			
+					</div>
 					
 					</div>
 
@@ -220,7 +226,8 @@ print ScriptContainer::$instance->renderJSHead();
 	  
       var chart11Options = {
         title: 'Number of Health Workers Trained',
-        hAxis: {title: 'Year', titleTextStyle: {color: 'red'}},
+        titleTextStyle: { fontSize: 15 },
+        
       };
 
       var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));

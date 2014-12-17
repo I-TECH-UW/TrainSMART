@@ -1,48 +1,108 @@
-<?php  //file_put_contents('c:\wamp\logs\php_debug.log', 'left_buttons  >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	   //var_dump('$id=', $this->geo_data[0] ,'END'); 
-	   //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
-?>
-<script>
-function goBack() { window.history.back() }
-</script>
-               
-                <a	
-                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash9b'; ?>"
-					class="dbbutton"><?php tp('Nigeria'); ?></a>
-				<div class="hrNav"></div>
-				<a	
-                    onclick="goBack()"
-					class="dbbutton"><?php tp('  Back  '); ?></a>
-				<div class="hrNav"></div>
-				
-				                <a	
-                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash10'; ?>"
-					class="dbbutton"><?php tp('Consumed'); ?></a>
+<div class="hrNav"></div>
+<div class="hrNav"></div>
+					                   <a	
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/index/index'; ?>"
+					id=home name=home class="dbbutton dbbutton_leftmenu"><?php tp('Home'); ?></a>
+    				<div class="hrNav"></div>
+    				
+				                       <a	
+					id=coverage coverage class="dbbutton dbbutton_leftmenu"><?php tp('Coverage'); ?></a>
 					<div class="hrNav"></div>
-				
-								<a	
-                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash5a'; ?>"
-					class="dbbutton"><?php tp('AMC'); ?></a>
-				<div class="hrNav"></div>
-								<a	
+					
+					<p0>
+					
+					<!-- 
+									   <a	
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash5b'; ?>"
+					id=btn1a class="dbbutton dbbutton_leftsubmenu"><?php tp('AMC'); ?></a>
+    				<div class="hrNav"></div>
+    				-->
+					                   <a	
                     href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash6'; ?>"
-					class="dbbutton"><?php tp('HW Trained'); ?></a>
-				<div class="hrNav"></div>
-								<a	
+					id=btn1b class="dbbutton dbbutton_leftsubmenu"><?php tp('HWTrained'); ?></a>
+    				<div class="hrNav"></div>
+    				                    <a	
                     href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash7'; ?>"
-					class="dbbutton"><?php tp('Fac Trained'); ?></a>
-				<div class="hrNav"></div>
-								<a	
+					id=btn2 class="dbbutton dbbutton_leftsubmenu"><?php tp('FacTrained'); ?></a>
+    				<div class="hrNav"></div>
+    				    				<a	
                     href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash8'; ?>"
-					class="dbbutton"><?php tp('Providing FP'); ?></a>
-				<div class="hrNav"></div>
-								<a	
-                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash9'; ?>"
-					class="dbbutton"><?php tp('StockOut'); ?></a>
-				<div class="hrNav"></div>
-				
-				
-				<a
-					href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/reports'; ?>"
-					class="dbbutton"><?php tp('Reports'); ?></a>
-				<div class="hrNav"></div>
+					id=btn3 class="dbbutton dbbutton_leftsubmenu"><?php tp('FacProviding'); ?></a>
+    				<div class="hrNav"></div>
+    				    				<a	
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash993'; ?>"
+					id=btn4 class="dbbutton dbbutton_leftsubmenu"><?php tp('FacHWProviding'); ?></a>
+    				<div class="hrNav"></div>
+    				    				<a	
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash994'; ?>"
+					id=btn5a class="dbbutton dbbutton_leftsubmenu"><?php tp('Over Time'); ?></a>
+    				<div class="hrNav"></div>
+    				
+    				</p0>
+    				
+    				<a
+    				
+					id=consumption name=consumption class="dbbutton dbbutton_leftmenu"><?php tp('Consumption'); ?></a>
+					<div class="hrNav"></div>
+					
+					<p1>
+					                   <a	
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash996'; ?>"
+					id=btn5b class="dbbutton dbbutton_leftsubmenu"><?php tp('FemaleCondoms'); ?></a>
+    				<div class="hrNav"></div>
+    				                    <a	
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash997'; ?>"
+					id=btn6 class="dbbutton dbbutton_leftsubmenu"><?php tp('MaleCondoms'); ?></a>
+    				<div class="hrNav"></div>
+    				    				<a	
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash998'; ?>"
+					id=btn7 class="dbbutton dbbutton_leftsubmenu"><?php tp('Injectables'); ?></a>
+    				<div class="hrNav"></div>
+    				    				<a	
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash995'; ?>"
+					id=btn8 class="dbbutton dbbutton_leftsubmenu"><?php tp('Implants'); ?></a>
+    				<div class="hrNav"></div>
+    				    				<a	
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash995'; ?>"
+					id=btn9 class="dbbutton dbbutton_leftsubmenu"><?php tp('IUCDs'); ?></a>
+    				<div class="hrNav"></div>
+    				                    <a	
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash995'; ?>"
+					id=btn10 class="dbbutton dbbutton_leftsubmenu"><?php tp('Oral Pills'); ?></a>
+    				<div class="hrNav"></div>
+    				    				<a	
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash995'; ?>"
+					id=btn11 class="dbbutton dbbutton_leftsubmenu"><?php tp('Sterilization'); ?></a>
+    				<div class="hrNav"></div>
+    				  
+    				<a	
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash10'; ?>"
+					id=btn11a class="dbbutton dbbutton_leftsubmenu"><?php tp('All'); ?></a>
+    				<div class="hrNav"></div>
+    				
+    				
+    				</p1>
+    				
+    				    				<a	
+					id=stockout name=stockout class="dbbutton dbbutton_leftmenu"><?php tp('Stock Out'); ?></a>
+					<div class="hrNav"></div>
+					
+					<p2>
+					                   <a	
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash999'; ?>"
+					id=btn12 class="dbbutton dbbutton_leftsubmenu"><?php tp('HWStockOut'); ?></a>
+    				<div class="hrNav"></div>
+    				                    <a	
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash9991'; ?>"
+					id=btn13 class="dbbutton dbbutton_leftsubmenu"><?php tp('ProvStockOut'); ?></a>
+    				<div class="hrNav"></div>
+    				    				<a	
+                    href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash9992'; ?>"
+					id=btn14 class="dbbutton dbbutton_leftsubmenu"><?php tp('Over Time'); ?></a>
+    				<div class="hrNav"></div>
+    				
+    				</p2>
+    				
+<!-- <a id=geography name=geography class="dbbutton dbbutton_leftmenu"><?php tp('Geography'); ?></a> -->					
+
+

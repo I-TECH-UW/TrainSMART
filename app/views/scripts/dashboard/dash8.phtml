@@ -100,9 +100,7 @@ print ScriptContainer::$instance->renderJSHead();
 					
 			</div>
 
-			<div class="clear"></div>
-			<div class="hrGrey"></div>
-			<div class="clear"></div>
+
 
 			<!-------   /////////////////////////// make left buttons ////////////////////// -->
 
@@ -117,49 +115,44 @@ print ScriptContainer::$instance->renderJSHead();
 			<body class="docs slim framebox_body">
 
 				<div id="allCharts" class="container">
-				<div id="toprow" class="container">
-					
-					
-					
-					
-					<div id="chart11_div" style="width: 700px; height: 300px;"></div>
-					
-					<div id="chart12_div" style="width: 700px; height: 300px;"></div>
-					
-					
-					
-					
-					
-					
-					</div>
-
-				<div class="clear"></div>
-				<div class="hrGrey"></div>
-				<div class="clear"></div>
-
 				
-
-								<!-------   /////////////////////////// chart 2,1 ////////////////////// -->
+				<div class="hrNav"></div>
+				<div class="hrNav"></div>
+				
+				<div id="toprow" class="container">
+						<div id="homecontent" class="container">
+							<div id="homecontent-mid" class="row rounded">
+								<div id="homebanner" class="rounded">
 								
+								
+			                    
+								<div class="sliderdiv">
+									<div id="chart11_div" style="width: 500px; height: 300px;"></div>
+									</div>
+									<div class="main-search">
+										<div id="chart12_div" style="width: 500px; height: 300px;"></div>
+									</div>
+								</div>
+							</div>
+						</div>			
+					</div>
+								<!-------   /////////////////////////// chart 2,1 ////////////////////// -->
 					<div id="bottomrow" class="container">
 						<div id="homecontent" class="container">
 							<div id="homecontent-mid" class="row rounded">
 								<div id="homebanner" class="rounded">
 								<div class="sliderdiv">
-									<div id="chart13_div" style="width: 800px; height: 300px;"></div>
+									<div id="chart13_div" style="width: 500px; height: 300px;"></div>
+									
 									</div>
 									<div class="main-search">
-										<div id="chart13_div" style="width: 500px; height: 300px;"></div>
+										<div id="chart14_div" style="width: 500px; height: 300px;"></div>
 									</div>
 								</div>
 							</div>
 						</div>
-								
 								<!-------   /////////////////////////// chart 2,2 ////////////////////// -->
-								
-								
 								<div class="main-search"></div>
-
 					</div>
 				</div>
 		
@@ -181,8 +174,8 @@ print ScriptContainer::$instance->renderJSHead();
   function apiLoaded() {
 	  document.getElementById("allCharts").style.marginLeft="130px";
 
-	drawChart11();
-	drawChart12();
+	drawChart13();
+	drawChart14();
 	//drawChart13();
 		
 	var currentLevel;
@@ -198,15 +191,15 @@ print ScriptContainer::$instance->renderJSHead();
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
   
-  function drawChart11() {
+  function drawChart13() {
 	  // Create and populate the data table.
-	  var chart11Data = google.visualization.arrayToDataTable([
+	  var chart13Data = google.visualization.arrayToDataTable([
 
 
 ['State', 'Percentage', { role: 'style' }],
 
 <?php
-	foreach ($this->larc_data as $row){
+	foreach ($this->larc_data13 as $row){
 ?>
 ['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>,'<?php echo $row[color]; ?>'],
 <?php
@@ -215,33 +208,30 @@ print ScriptContainer::$instance->renderJSHead();
 
 ]);		                                                     	  
 
-	  var chart11Options = {
-		      title: 'Percent of Facilities with at least one HW trained in FP',
-		      vAxis: {title: 'State'},
+	  var chart13Options = {
+		      title: 'Percent of Facilities Providing FP',
+		      titleTextStyle: { fontSize: 15 },
+		     
 		      hAxis: {title: 'Percentage'},
+		      hAxis: {format: '##.##%'},
+		      legend: 'none',
 		      is3D:true
 		};
 
 
-	            var chart11 = new google.visualization.BarChart(document.getElementById('chart11_div'));
+	  var chart13 = new google.visualization.BarChart(document.getElementById('chart11_div'));
 	            
-	  chart11.draw(chart11Data, chart11Options);
+	  chart13.draw(chart13Data, chart13Options);
 	}
-
-
- 
-
-
- <!-------   /////////////////////////// script 1,2 ////////////////////// -->
   
- function drawChart12() {
+ function drawChart14() {
 	  // Create and populate the data table.
-	  var chart12Data = google.visualization.arrayToDataTable([
+	  var chart14Data = google.visualization.arrayToDataTable([
 
 ['State', 'Percentage', { role: 'style' }],
 	                                                           
 <?php
-		foreach ($this->fp_data as $row){
+		foreach ($this->fp_data14 as $row){
 	?>
 	['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>, <?php echo "'$row[color]'"; ?>],
 	<?php
@@ -250,37 +240,21 @@ print ScriptContainer::$instance->renderJSHead();
 
 ]);
 
-	  var chart12Options = {
-		      title: 'Percent of Facilities with at least one HW trained in LARC',
-		      vAxis: {title: 'State'},
+	  var chart14Options = {
+		      title: 'Percent of Facilities Providing LARC',
+		      titleTextStyle: { fontSize: 15 },
+		     
 		      hAxis: {title: 'Percentage'},
+		      hAxis: {format: '##.##%'},
+		      legend: 'none',
 		      is3D:true
 		};
 
 
-	            var chart12 = new google.visualization.BarChart(document.getElementById('chart12_div'));
+	  var chart14 = new google.visualization.BarChart(document.getElementById('chart13_div'));
 	            
-	  chart12.draw(chart12Data, chart12Options);
+	  chart14.draw(chart14Data, chart14Options);
 	}
-
-
-
-  <!-------   /////////////////////////// 2,1 script gnr  ////////////////////// -->
-
-	
-
-  <!-------   /////////////////////////// 2,1 end script ////////////////////// -->
-
-
-  <!-------   /////////////////////////// 2,2 script ////////////////////// -->
-
-	
-
-
-  <!-------   /////////////////////////// 2,2 end script ////////////////////// -->
-  
-
-  
 
 </script>
 

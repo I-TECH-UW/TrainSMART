@@ -74,40 +74,35 @@ class DashboardController extends ReportFilterHelpers {
 	    
 	}
 	
-	public function dash0Action() {
-	
-		//if (! $this->hasACL ( 'employees_module' )) {
-			//$this->doNoAccessError ();
-		//}
-	
-		require_once('models/table/dash-employee.php');
-		$this->view->assign('title', $this->translation['Application Name'].space.t('Employee').space.t('Tracking System'));
-	
-		// restricted access?? does this user only have acl to view some trainings or people
-		// they dont want this, removing 5/01/13
-		$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'?
-		$allowedWhereClause = $org_allowed_ids ? " partner.organizer_option_id in ($org_allowed_ids) " : "";
-		// restricted access?? only show organizers that belong to this site if its a multi org site
-		$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
-		$allowedWhereClause .= $site_orgs ? " AND partner.organizer_option_id in ($site_orgs) " : "";
-	
-		$partners = new DashviewEmployee();
-		$details = $partners->fetchdetails($allowedWhereClause);
-		$this->view->assign('getins',$details);
-	
-		/****************************************************************************************************************/
-		/* Attached Files */
-		require_once('views/helpers/FileUpload.php');
-	
-		$PARENT_COMPONENT = 'employee';
-	
-		FileUpload::displayFiles ( $this, $PARENT_COMPONENT, 1, $this->hasACL ( 'admin_files' ) );
-		// File upload form
-		if ( $this->hasACL ( 'admin_files' ) ) {
-			$this->view->assign ( 'filesForm', FileUpload::displayUploadForm ( $PARENT_COMPONENT, 1, FileUpload::$FILETYPES ) );
-		}
-		/****************************************************************************************************************/
+	public function dash0Action() {	}
+	public function dash990Action() { }
+	public function dash991Action() { }
+	public function dash992Action() { }
+	public function dash993Action() { }
+	public function dash994Action() { }
+	public function dash995Action() { }
+	public function dash996Action() { 
+	    
+	    if(isset($_POST["province_id"])||isset($_POST["district_id"])||isset($_POST["region_c_id"])){
+	        file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	        var_dump('isset true', $_POST["province_id"], "END");
+	        var_dump('isset true', $_POST["district_id"], "END");
+	        var_dump('isset true', $_POST["region_c_id"], "END");
+	        $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+	    }
+	    
+	    
+	    
+	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	}
+	public function dash997Action() { }
+	public function dash998Action() { }
+	public function dash999Action() { }
+	public function dash9991Action() { }
+	public function dash9992Action() { }
+	public function dash9993Action() { }
+	
+
 	
 	public function dash1Action() {
 	
@@ -489,31 +484,35 @@ class DashboardController extends ReportFilterHelpers {
 	
 	    require_once('models/table/Dashboard-CHAI.php');
 	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
-	
-	    $id = $this->getSanParam ( 'id' );
-	
-	    $whereClause = ($id ==  "") ? 'tier = 1' : 'parent_id = ' . $id ;
-	
-	    $geo_data = new DashboardCHAI();
-	    $details = $geo_data->fetchConsumptionDetails('geo', $id, $whereClause);
-	    $this->view->assign('geo_data',$details);
-	     
-	    $whereClause =  'cto.id in (6) and c.consumption <> 0';
-	
-	    $larc_data = new DashboardCHAI();
-	    $details = $larc_data->fetchPercentProvidingDetails($whereClause);
-	    $this->view->assign('larc_data',$details);
-	     
-	    $whereClause =  'cto.id in (5) and c.consumption <> 0';
-	     
-	    $fp_data = new DashboardCHAI();
-	    $details = $fp_data->fetchPercentProvidingDetails($whereClause);
-	    $this->view->assign('fp_data',$details);
 	    
-	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump('id=', $id);
-	    //var_dump('details=', $details);
-	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+	    $fp_data = new DashboardCHAI();
+	    $details = $fp_data->fetchDashboardData('percent_facilities_providing_larc');
+	    
+	    if(count($details) > 0){
+	    
+	        $this->view->assign('larc_data13',$details);
+	        
+	        $fp_data = new DashboardCHAI();
+	        $details = $fp_data->fetchDashboardData('percent_facilities_providing_fp');
+	        $this->view->assign('fp_data14',$details);
+	         
+	    } else {
+	        
+    	    $whereClause =  'cto.id in (6) and c.consumption <> 0';
+    	
+    	    $larc_data = new DashboardCHAI();
+    	    $details = $larc_data->fetchPercentProvidingDetails($whereClause);
+    	    $larc_data->insertDashboardData($details, 'percent_facilities_providing_larc');
+    	    $this->view->assign('larc_data13',$details);
+    	     
+    	    $whereClause =  'cto.id in (5) and c.consumption <> 0';
+    	     
+    	    $fp_data = new DashboardCHAI();
+    	    $details = $fp_data->fetchPercentProvidingDetails($whereClause);
+    	    $fp_data->insertDashboardData($details, 'percent_facilities_providing_fp');
+    	    $this->view->assign('fp_data14',$details);
+	    }
+	    
 	}
 	
 	public function dash9Action() {
@@ -624,7 +623,7 @@ class DashboardController extends ReportFilterHelpers {
 	    
 	    $title_data = new DashboardCHAI();
 	    $details = $title_data->fetchTitleData();
-	    $this->view->assign('title_data', $details[month_name].', '. $details[year]);
+	    $this->view->assign('title_data', $details[month_name].' '. $details[year]);
 	
 	}
 	

@@ -286,7 +286,8 @@ print ScriptContainer::$instance->renderJSHead();
       ]);
 
       var chart12Options = {
-        title: 'National Average Monthly Consumption'
+        title: 'National Average Monthly Consumption',
+        titleTextStyle: { fontSize: 15 },
       };
 
       var chart12 = new google.visualization.LineChart(document.getElementById('chart12_div'));

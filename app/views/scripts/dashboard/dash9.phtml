@@ -202,15 +202,16 @@ print ScriptContainer::$instance->renderJSHead();
 
 	  var chart11Options = {
 		      title: '% of Facilities that are stocked out FP commodities',
-		      vAxis: {title: 'State'},
-		      hAxis: {title: 'Percentage'},
+		      titleTextStyle: { fontSize: 15 },
+		     
+		      vAxis: {format: '##.##%'},
+		      legend: 'none',
 		      is3D:true
 		};
 
-
-	            var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
-	            
+	  var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
 	  chart11.draw(chart11Data, chart11Options);
+	  
 	}
 
   function drawChart12() {

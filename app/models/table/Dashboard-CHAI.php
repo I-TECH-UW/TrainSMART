@@ -557,7 +557,7 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
     $db = Zend_Db_Table_Abstract::getDefaultAdapter();
     $output = array();
      
-    $subSelect = new Zend_Db_Expr("(select count(*) as cnt
+    $subSelect = new Zend_Db_Expr("(select count(*) * 100 as cnt
   from facility f
   left join location l1 ON f.location_id = l1.id
   left join location l2 ON l1.parent_id = l2.id
@@ -603,10 +603,9 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 	
 	                $subSelect = new Zend_Db_Expr("(select count(*) from facility)");
 	
-	
 	                $select = $db->select()
 	                ->from(array('c' => 'commodity'),
-	                   array("count(*) / $subSelect as percentage" ))
+	                   array("count(*) / $subSelect / 100 as percentage" ))
 		       
 	                ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
 	                ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')

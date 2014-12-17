@@ -100,9 +100,7 @@ print ScriptContainer::$instance->renderJSHead();
 					
 			</div>
 
-			<div class="clear"></div>
-			<div class="hrGrey"></div>
-			<div class="clear"></div>
+
 
 			<!-------   /////////////////////////// make left buttons ////////////////////// -->
 
@@ -117,18 +115,26 @@ print ScriptContainer::$instance->renderJSHead();
 			<body class="docs slim framebox_body">
 
 				<div id="allCharts" class="container">
+				
+				<div class="hrNav"></div>
+				<div class="hrNav"></div>
+				
 				<div id="toprow" class="container">
-					
-					
-					
-					
-					<div id="chart11_div" style="width: 700px; height: 300px;"></div>
-					
-					<div id="chart12_div" style="width: 700px; height: 300px;"></div>
-					
-					
-					
-					
+						<div id="homecontent" class="container">
+							<div id="homecontent-mid" class="row rounded">
+								<div id="homebanner" class="rounded">
+								
+								
+			                    
+								<div class="sliderdiv">
+									<div id="chart11_div" style="width: 700px; height: 300px;"></div>
+									</div>
+									<div class="main-search">
+										<div id="chart12_div" style="width: 700px; height: 300px;"></div>
+									</div>
+								</div>
+							</div>
+						</div>			
 					</div>
 
 				<div class="clear"></div>
@@ -213,9 +219,11 @@ print ScriptContainer::$instance->renderJSHead();
 ]);		                                                     	  
 
 	  var chart11Options = {
-		      title: '% of Facilities with HW trained in FP',
-		      vAxis: {title: 'State'},
+		      title: 'Percent of Facilities with HW trained in FP',
+		      titleTextStyle: { fontSize: 15 },
+		      
 		      hAxis: {title: 'Percentage'},
+		      hAxis: {format: '##.##%'},
 		      is3D:true
 		};
 
@@ -224,10 +232,6 @@ print ScriptContainer::$instance->renderJSHead();
 	            
 	  chart11.draw(chart11Data, chart11Options);
 	}
-
-
- 
-
 
  <!-------   /////////////////////////// script 1,2 ////////////////////// -->
   
@@ -248,9 +252,11 @@ print ScriptContainer::$instance->renderJSHead();
 ]);
 
 	  var chart12Options = {
-		      title: '% of Facilities with HW trained in LARC',
-		      vAxis: {title: 'State'},
+		      title: 'Percent of Facilities with HW trained in LARC',
+		      titleTextStyle: { fontSize: 15 },
+		      
 		      hAxis: {title: 'Percentage'},
+		      hAxis: {format: '##.##%'},
 		      is3D:true
 		};
 

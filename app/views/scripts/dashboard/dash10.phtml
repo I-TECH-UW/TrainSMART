@@ -90,7 +90,7 @@ print ScriptContainer::$instance->renderJSHead();
 			
 			<!-------   /////////////////////////// make top buttons ////////////////////// -->
 			<div class="rightdiv" style="float: right;">
-				<?php  require_once('views/scripts/dashboard/top_buttons.phtml');?>
+				<?php  require_once('views/scripts/dashboard/geo_buttons.phtml');?>
 			</div>
 			<div class="clear"></div>
 			<div class="hrGrey"></div>
@@ -167,6 +167,7 @@ print ScriptContainer::$instance->renderJSHead();
       
       var chart11_options = {
     		  title: title_data,
+    		  titleTextStyle: { fontSize: 15 },
     		  bar: {groupWidth: "90%"},
     		  width: 800,
     		  height: calc_height,

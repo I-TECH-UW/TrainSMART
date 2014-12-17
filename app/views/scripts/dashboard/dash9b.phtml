@@ -96,16 +96,10 @@ print ScriptContainer::$instance->renderJSHead();
 			<!-------   /////////////////////////// make top buttons ////////////////////// -->
 
 			<div class="rightdiv" style="float: right;">
-				<?php  require_once('views/scripts/dashboard/top_buttons.phtml');?>
+				<?php  // require_once('views/scripts/dashboard/top_buttons.phtml');?>
 					
 			</div>
-
-			<div class="clear"></div>
-			<div class="hrGrey"></div>
-			<div class="clear"></div>
 			
-
-
 			<!-------   /////////////////////////// make left buttons ////////////////////// -->
 
 			<div class="nav-buttons">
@@ -114,42 +108,44 @@ print ScriptContainer::$instance->renderJSHead();
 			</div>
 
 			<!-------   /////////////////////////// charts ////////////////////// -->
-            
 
 			<body class="docs slim framebox_body">
 
 				<div id="allCharts" class="container">
 				
-				<label><?php echo t('National Contraceptive Prevalence Rate'); ?></label>
-			    <input readonly type="text" name="national_contraceptive_prevalence_rate" value="50">
+				<div align="right"><font size="4"><label><?php echo 'National Contraceptive Prevalence Rate 15%'; ?></label></font></div>
+				<div class="hrNav"></div>
 				
-				<div id="toprow" class="container">
+				
+				    <div id="toprow" class="container">
 						<div id="homecontent" class="container">
 							<div id="homecontent-mid" class="row rounded">
 								<div id="homebanner" class="rounded">
-								
-								
-			                    
 								<div class="sliderdiv">
+								    <div class="hrNav"></div>
 									<div id="chart11_div" style="width: 500px; height: 300px;"></div>
 									</div>
 									<div class="main-search">
+									    <div class="hrNav"></div>
 										<div id="chart12_div" style="width: 500px; height: 300px;"></div>
 									</div>
 								</div>
 							</div>
 						</div>			
 					</div>
-								<!-------   /////////////////////////// chart 2,1 ////////////////////// -->
+					
+					<!-------   /////////////////////////// chart 2,1 ////////////////////// -->
+					
 					<div id="bottomrow" class="container">
 						<div id="homecontent" class="container">
 							<div id="homecontent-mid" class="row rounded">
 								<div id="homebanner" class="rounded">
 								<div class="sliderdiv">
+					                <div class="hrNav"></div>
 									<div id="chart13_div" style="width: 500px; height: 300px;"></div>
-									
 									</div>
 									<div class="main-search">
+									    <div class="hrNav"></div>									
 										<div id="chart14_div" style="width: 500px; height: 300px;"></div>
 									</div>
 								</div>
@@ -161,8 +157,7 @@ print ScriptContainer::$instance->renderJSHead();
 				</div>
 	</div>
 
-		<div class="clear"></div>
-		<div class="hrGrey"></div>
+		<div class="hrNav"></div>
 		<div class="clear"></div>
 		
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -215,12 +210,12 @@ print ScriptContainer::$instance->renderJSHead();
 
 ]);		    
 
-	  <?php echo  " var title_data = 'Average Monthly Consumption (AMC) by Method as of $this->title_data ' " ?>;
+	  <?php echo  " var title_data = 'Monthly consumption by method $this->title_data ' " ?>;
 	  
 	  var chart11Options = {
 			  
 			  title: title_data,
-			  titleTextStyle: { fontSize: 15 },
+			  titleTextStyle: { fontSize: 16 },
 		      is3D:true,
 		      legend: 'none',
 		      
@@ -232,7 +227,7 @@ print ScriptContainer::$instance->renderJSHead();
 
   function drawChart12() {
       var chart12Data = google.visualization.arrayToDataTable([
-        [' ', '% of Facilities with trained HWs', '% of facilities with (FP/LARC) trained HWS providing (FP/LARC)', '$ of facilities with trained HWs (FP/LARC) that are stocked out of (FP/LARC)'],
+        [' ', '% of Facilities with trained HWs', '% of facilities with (FP/LARC) trained HWS providing (FP/LARC)', '% of facilities with trained HWs (FP/LARC) that are stocked out of (FP/LARC)'],
 
     	  [ 'FP', .8,.52,.12 ],
     	  [ 'LARC', .33,.58,.13 ],
@@ -240,9 +235,11 @@ print ScriptContainer::$instance->renderJSHead();
     	  	        
       ]);
 
+      <?php echo  " var title_data = 'Coverage summary, $this->title_data ' " ?>;
+
       var chart12Options = {
-    		  title: 'Integrated Indicators',
-    		  titleTextStyle: { fontSize: 15 },
+    		  title: title_data,
+    		  titleTextStyle: { fontSize: 16 },
     		  bar: {groupWidth: "80%"},
     		  vAxis: {format: '#%'},
     		  
@@ -269,9 +266,11 @@ print ScriptContainer::$instance->renderJSHead();
 
       ]);
 
+      <?php echo  " var title_data = 'Percent of facilities providing FP and LARC, April to October 2014 ' " ?>;
+
       var chart13Options = {
-        title: '% of Facilities Providing FP and LARC Over Time',
-        titleTextStyle: { fontSize: 15 },
+        title: title_data,
+        titleTextStyle: { fontSize: 16 },
         vAxis: {format:'#%'},
       };
 
@@ -294,10 +293,11 @@ print ScriptContainer::$instance->renderJSHead();
 [ 'October',.30,.13 ],
       ]);
 
-      <?php echo  " var title_data = 'Stock outs by Method as of $this->title_data ' " ?>;
+      <?php echo  " var title_data = 'Percent of facilities stocked out of FP commodities, April to October 2014' " ?>;
+      
       var chart14Options = {
         title: title_data,
-        titleTextStyle: { fontSize: 15 },
+        titleTextStyle: { fontSize: 16 },
         vAxis: {format:'#%'},
       };
 

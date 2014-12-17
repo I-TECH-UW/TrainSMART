@@ -1,14 +1,28 @@
-<?php
-    $idx = 0;
-	foreach ($this->geo_data as $getresult){
-	    $id = $getresult[id];
-?>
-           	<a	href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash10/id/' . $id; ?>"
-					class="dbbutton"><?php echo $getresult[name]; ?></a> 
+<form name="dashboardForm" id="dashboardForm" method="post"> 
+
 <?php 
- $idx = $idx+1;
+require_once('views/helpers/Location.php');
+require_once('views/helpers/ScriptContainer.php');
+
+$current_view = '/'.$path[1].'/'. $path[2]; 
 ?>
 
-<?php
-	}
+<?php  //file_put_contents('c:\wamp\logs\php_debug.log', 'top_buttons 1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();   
+	   //var_dump("current_view=", $current_view, "END");
+	   //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
 ?>
+
+<?php region_filters_dropdown_db($this, $this->locations, $this->criteria, true, true); ?>
+
+<a id=geography name=geography class="dbbutton dbbutton_leftmenu"><?php tp('Geography'); ?></a>
+
+<input type="submit" value="Filter" class="dbbutton dbbutton_leftmenu">
+
+
+ </form>
+
+
+					
+
+
+
