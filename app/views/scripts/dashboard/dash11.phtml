@@ -96,7 +96,7 @@ print ScriptContainer::$instance->renderJSHead();
 			<!-------   /////////////////////////// make top buttons ////////////////////// -->
 
 			<div class="rightdiv" style="float: right;">
-				<?php  //require_once('views/scripts/dashboard/top_buttons.phtml');?>
+				<?php  require_once('views/scripts/dashboard/top_buttons.phtml');?>
 					
 			</div>
 
@@ -118,49 +118,38 @@ print ScriptContainer::$instance->renderJSHead();
 
 				<div id="allCharts" class="container">
 				<div id="toprow" class="container">
-					
-					
-					
-					
-					<div id="chart11_div" style="width: 700px; height: 300px;"></div>
-					
-					<div id="chart12_div" style="width: 700px; height: 300px;"></div>
-					
-					
-					
-					
+						<div id="homecontent" class="container">
+							<div id="homecontent-mid" class="row rounded">
+								<div id="homebanner" class="rounded">
+								<div class="sliderdiv">
+									<div id="chart11_div" style="width: 500px; height: 300px;"></div>
+									</div>
+									<div class="main-search">
+										<div id="chart12_div" style="width: 500px; height: 300px;"></div>
+									</div>
+								</div>
+							</div>
+						</div>			
 					</div>
-
-				<div class="clear"></div>
-				<div class="hrGrey"></div>
-				<div class="clear"></div>
-
-				
-
 								<!-------   /////////////////////////// chart 2,1 ////////////////////// -->
-								
 					<div id="bottomrow" class="container">
 						<div id="homecontent" class="container">
 							<div id="homecontent-mid" class="row rounded">
 								<div id="homebanner" class="rounded">
 								<div class="sliderdiv">
-									<div id="chart13_div" style="width: 800px; height: 300px;"></div>
+									<div id="chart13_div" style="width: 500px; height: 300px;"></div>
+									
 									</div>
 									<div class="main-search">
-										<div id="chart13_div" style="width: 500px; height: 300px;"></div>
+										<div id="chart14_div" style="width: 500px; height: 300px;"></div>
 									</div>
 								</div>
 							</div>
 						</div>
-								
 								<!-------   /////////////////////////// chart 2,2 ////////////////////// -->
-								
-								
 								<div class="main-search"></div>
-
 					</div>
 				</div>
-		
 	</div>
 
 		<div class="clear"></div>
@@ -181,6 +170,8 @@ print ScriptContainer::$instance->renderJSHead();
 
 	drawChart11();
 	drawChart12();
+	drawChart13();
+	drawChart14();
 		
 	var currentLevel;
 	currentLevel = <?php echo '\'' . $this->location_data[0][name] . '\''; ?>;
@@ -195,6 +186,8 @@ print ScriptContainer::$instance->renderJSHead();
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
   
+
+
   function drawChart11() {
 	  // Create and populate the data table.
 	  var chart11Data = google.visualization.arrayToDataTable([
@@ -203,7 +196,7 @@ print ScriptContainer::$instance->renderJSHead();
 ['State', 'Percentage', { role: 'style' }],
 
 <?php
-	foreach ($this->larc_data as $row){
+	foreach ($this->larc_data11 as $row){
 ?>
 ['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>,'<?php echo $row[color]; ?>'],
 <?php
@@ -225,20 +218,14 @@ print ScriptContainer::$instance->renderJSHead();
 	  chart11.draw(chart11Data, chart11Options);
 	}
 
-
- 
-
-
- <!-------   /////////////////////////// script 1,2 ////////////////////// -->
-  
- function drawChart12() {
+  function drawChart12() {
 	  // Create and populate the data table.
 	  var chart12Data = google.visualization.arrayToDataTable([
 
 ['State', 'Percentage', { role: 'style' }],
 	                                                           
 <?php
-		foreach ($this->fp_data as $row){
+		foreach ($this->fp_data12 as $row){
 	?>
 	['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>, <?php echo "'$row[color]'"; ?>],
 	<?php
@@ -258,6 +245,65 @@ print ScriptContainer::$instance->renderJSHead();
 	            var chart12 = new google.visualization.BarChart(document.getElementById('chart12_div'));
 	            
 	  chart12.draw(chart12Data, chart12Options);
+	}
+
+  function drawChart13() {
+	  // Create and populate the data table.
+	  var chart13Data = google.visualization.arrayToDataTable([
+
+
+['State', 'Percentage', { role: 'style' }],
+
+<?php
+	foreach ($this->larc_data13 as $row){
+?>
+['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>,'<?php echo $row[color]; ?>'],
+<?php
+	}
+?>
+
+]);		                                                     	  
+
+	  var chart13Options = {
+		      title: '% of Facilities Providing FP',
+		      vAxis: {title: 'State'},
+		      hAxis: {title: 'Percentage'},
+		      is3D:true
+		};
+
+
+	            var chart13 = new google.visualization.BarChart(document.getElementById('chart13_div'));
+	            
+	  chart13.draw(chart13Data, chart13Options);
+	}
+  
+ function drawChart14() {
+	  // Create and populate the data table.
+	  var chart14Data = google.visualization.arrayToDataTable([
+
+['State', 'Percentage', { role: 'style' }],
+	                                                           
+<?php
+		foreach ($this->fp_data14 as $row){
+	?>
+	['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>, <?php echo "'$row[color]'"; ?>],
+	<?php
+		}
+	?>
+
+]);
+
+	  var chart14Options = {
+		      title: '% of Facilities Providing LARC',
+		      vAxis: {title: 'State'},
+		      hAxis: {title: 'Percentage'},
+		      is3D:true
+		};
+
+
+	            var chart14 = new google.visualization.BarChart(document.getElementById('chart14_div'));
+	            
+	  chart14.draw(chart14Data, chart14Options);
 	}
 
   <!-------   /////////////////////////// 2,1 script gnr  ////////////////////// -->

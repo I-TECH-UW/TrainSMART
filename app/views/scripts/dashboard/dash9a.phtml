@@ -103,6 +103,8 @@ print ScriptContainer::$instance->renderJSHead();
 			<div class="clear"></div>
 			<div class="hrGrey"></div>
 			<div class="clear"></div>
+			
+
 
 			<!-------   /////////////////////////// make left buttons ////////////////////// -->
 
@@ -112,15 +114,22 @@ print ScriptContainer::$instance->renderJSHead();
 			</div>
 
 			<!-------   /////////////////////////// charts ////////////////////// -->
-
+            
 
 			<body class="docs slim framebox_body">
 
 				<div id="allCharts" class="container">
+				
+				<label><?php echo t('National Contraceptive Prevalence Rate'); ?></label>
+			    <input readonly type="text" name="national_contraceptive_prevalence_rate" value="50">
+				
 				<div id="toprow" class="container">
 						<div id="homecontent" class="container">
 							<div id="homecontent-mid" class="row rounded">
 								<div id="homebanner" class="rounded">
+								
+								
+			                    
 								<div class="sliderdiv">
 									<div id="chart11_div" style="width: 500px; height: 300px;"></div>
 									</div>

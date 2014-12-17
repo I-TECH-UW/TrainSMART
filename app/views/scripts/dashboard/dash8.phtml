@@ -96,7 +96,7 @@ print ScriptContainer::$instance->renderJSHead();
 			<!-------   /////////////////////////// make top buttons ////////////////////// -->
 
 			<div class="rightdiv" style="float: right;">
-				<?php  require_once('views/scripts/dashboard/top_buttons.phtml');?>
+				<?php  //require_once('views/scripts/dashboard/top_buttons.phtml');?>
 					
 			</div>
 
@@ -216,7 +216,7 @@ print ScriptContainer::$instance->renderJSHead();
 ]);		                                                     	  
 
 	  var chart11Options = {
-		      title: '% of Facilities Providing FP',
+		      title: 'Percent of Facilities with at least one HW trained in FP',
 		      vAxis: {title: 'State'},
 		      hAxis: {title: 'Percentage'},
 		      is3D:true
@@ -251,7 +251,7 @@ print ScriptContainer::$instance->renderJSHead();
 ]);
 
 	  var chart12Options = {
-		      title: '% of Facilities Providing LARC',
+		      title: 'Percent of Facilities with at least one HW trained in LARC',
 		      vAxis: {title: 'State'},
 		      hAxis: {title: 'Percentage'},
 		      is3D:true

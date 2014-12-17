@@ -70,6 +70,10 @@ class DashboardController extends ReportFilterHelpers {
 		/****************************************************************************************************************/
 	}
 	
+	public function tryAction() {
+	    
+	}
+	
 	public function dash0Action() {
 	
 		//if (! $this->hasACL ( 'employees_module' )) {
@@ -390,6 +394,31 @@ class DashboardController extends ReportFilterHelpers {
 	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	}
 	
+	public function dash5bAction() {
+	    
+	    require_once('models/table/Dashboard-CHAI.php');
+	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
+	    
+	    $fp_data = new DashboardCHAI();
+	    $details = $fp_data->fetchDashboardData('average_monthly_consumption');
+	     
+	    if(count($details) > 0){
+	        $this->view->assign('AMC_data',$details);
+	    }
+	    else {
+	
+	       $amc_data = new DashboardCHAI();
+	       $details = $amc_data->fetchAMCDetails();
+	       $amc_data->insertDashboardData($details, 'average_monthly_consumption');
+	       $this->view->assign('AMC_data',$details);
+	    }
+	
+	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	    //var_dump('id=', $id);
+	    //var_dump('details=', $details);
+	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+	}
+	
 	public function dash6Action() {
 	
 	    //if (! $this->hasACL ( 'edit_employee' )) {
@@ -525,37 +554,63 @@ class DashboardController extends ReportFilterHelpers {
 	    require_once('models/table/Dashboard-CHAI.php');
 	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
 	
-	    $id = $this->getSanParam ( 'id' );
-	
-	    $whereClause = ($id ==  "") ? 'tier = 1' : 'parent_id = ' . $id ;
-	
-	    $geo_data = new DashboardCHAI();
-	    $details = $geo_data->fetchConsumptionDetails('geo', $id, $whereClause);
-	    $this->view->assign('geo_data',$details);
-	
-	    $whereClause =  't.training_title_option_id = 3 and pt.award_id in (1,2)';
-	
-	    $larc_data = new DashboardCHAI();
-	    $details = $larc_data->fetchPercentFacHWTrainedDetails($whereClause);
-	    $this->view->assign('larc_data11',$details);
-	    
-	    $whereClause =  't.training_title_option_id = 5 and pt.award_id in (1,2)';
-	    
 	    $fp_data = new DashboardCHAI();
-	    $details = $fp_data->fetchPercentFacHWTrainedDetails($whereClause);
-	    $this->view->assign('fp_data12',$details);
+	    $details = $fp_data->fetchDashboardData('percent_facilities_hw_trained_larc');
 	    
-	    $whereClause =  'cto.id in (6) and c.consumption <> 0';
+	    if(count($details) > 0){
+	       
+	        $this->view->assign('larc_data11',$details);
+	         
+	        $fp_data = new DashboardCHAI();
+	        $details = $fp_data->fetchDashboardData('percent_facilities_hw_trained_fp');
+	        $this->view->assign('fp_data12',$details);
+	         
+	        $fp_data = new DashboardCHAI();
+	        $details = $fp_data->fetchDashboardData('percent_facilities_providing_larc');
+	        $this->view->assign('larc_data13',$details);
+	         
+	        $fp_data = new DashboardCHAI();
+	        $details = $fp_data->fetchDashboardData('percent_facilities_providing_fp');
+	        $this->view->assign('fp_data14',$details);
 	    
-	    $larc_data = new DashboardCHAI();
-	    $details = $larc_data->fetchPercentProvidingDetails($whereClause);
-	    $this->view->assign('larc_data13',$details);
-	    
-	    $whereClause =  'cto.id in (5) and c.consumption <> 0';
-	    
-	    $fp_data = new DashboardCHAI();
-	    $details = $fp_data->fetchPercentProvidingDetails($whereClause);
-	    $this->view->assign('fp_data14',$details);
+	    } else {
+
+	        $id = $this->getSanParam ( 'id' );
+    	
+    	    $whereClause = ($id ==  "") ? 'tier = 1' : 'parent_id = ' . $id ;
+    	
+    	    //$geo_data = new DashboardCHAI();
+    	    //$details = $geo_data->fetchConsumptionDetails('geo', $id, $whereClause);
+    	    //$this->view->assign('geo_data',$details);
+    	
+    	    $whereClause =  't.training_title_option_id = 3 and pt.award_id in (1,2)';
+    	
+    	    $larc_data = new DashboardCHAI();
+    	    $details = $larc_data->fetchPercentFacHWTrainedDetails($whereClause);
+    	    $larc_data->insertDashboardData($details, 'percent_facilities_hw_trained_larc');
+    	    $this->view->assign('larc_data11',$details);
+    	    
+    	    $whereClause =  't.training_title_option_id = 5 and pt.award_id in (1,2)';
+    	    
+    	    $fp_data = new DashboardCHAI();
+    	    $details = $fp_data->fetchPercentFacHWTrainedDetails($whereClause);
+    	    $fp_data->insertDashboardData($details, 'percent_facilities_hw_trained_fp');
+    	    $this->view->assign('fp_data12',$details);
+    	    
+    	    $whereClause =  'cto.id in (6) and c.consumption <> 0';
+    	    
+    	    $larc_data = new DashboardCHAI();
+    	    $details = $larc_data->fetchPercentProvidingDetails($whereClause);
+    	    $larc_data->insertDashboardData($details, 'percent_facilities_providing_larc');
+    	    $this->view->assign('larc_data13',$details);
+    	    
+    	    $whereClause =  'cto.id in (5) and c.consumption <> 0';
+    	    
+    	    $fp_data = new DashboardCHAI();
+    	    $details = $fp_data->fetchPercentProvidingDetails($whereClause);
+    	    $fp_data->insertDashboardData($details, 'percent_facilities_providing_fp');
+    	    $this->view->assign('fp_data14',$details);
+	    }
 	
 	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	    //var_dump('id=', $id);
@@ -563,15 +618,30 @@ class DashboardController extends ReportFilterHelpers {
 	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	}
 	
+	public function dash9bAction() {
+	    require_once('models/table/Dashboard-CHAI.php');
+	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
+	    
+	    $title_data = new DashboardCHAI();
+	    $details = $title_data->fetchTitleData();
+	    $this->view->assign('title_data', $details[month_name].', '. $details[year]);
+	
+	}
+	
+	   
+	
 	public function dash10Action() {
 	
 	    require_once('models/table/Dashboard-CHAI.php');
 	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
 	
 	    $id = $this->getSanParam ( 'id' );
+	    
+	    $tier_data = new DashboardCHAI();
+	    $tier = ($id != "") ? $tier = $tier_data->fetchTier( $id): "";
 	
 	    $whereClause = ($id ==  "") ? 'tier = 1' : 'parent_id = ' . $id ;
-	
+	    
 	    $geo_data = new DashboardCHAI();
 	    $details = $geo_data->fetchConsumptionDetails('geo', $id, $whereClause);
 	    $this->view->assign('geo_data',$details);
@@ -579,9 +649,9 @@ class DashboardController extends ReportFilterHelpers {
 	    $whereClause = ($id ==  "") ? 'l3.tier = 1' : 'l2.parent_id = ' . $id ;
 	    
 	    $groupClause = ($id == "") ? 
-	      new Zend_Db_Expr("L2_id, CNO_id") 
+	      new Zend_Db_Expr("L1_id, CNO_id") 
 	    : 
-	      new Zend_Db_Expr("L1_id, CNO_id");
+	      new Zend_Db_Expr("L2_id, CNO_id");
 	    
 	    $useName = ($id == "") ? 'L3_location_name' : 'L2_location_name';
 	    
@@ -589,16 +659,10 @@ class DashboardController extends ReportFilterHelpers {
 	    $details = $location_data->fetchCLNDetails('location', $id, $whereClause, $groupClause, $useName);
 	    
 	    $this->view->assign('latest_consumption_data',$details);
-	
+	    
+	    if ($id != '') $tier = $tier_data->fetchTier( $id);
+	    
 	    if (count($details) == 0) { 
-	        
-	        $tier_data = new DashboardCHAI();
-	        $tier = $tier_data->fetchTier( $id);
-	        
-	        //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 595>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	        //var_dump('id=', $id); var_dump('tier=', $tier);
-	        //var_dump('details=', $details);
-	        //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	        
 	        if ($tier == 3){
 	            //use facility
@@ -621,8 +685,111 @@ class DashboardController extends ReportFilterHelpers {
 	        
 	    }
 	    
-
+	    $title_data = new DashboardCHAI();
+	    $details = $title_data->fetchTitleData();
+	    
+	     
+	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 654>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	    //var_dump('id=', $id); var_dump('tier=', $tier);
+	    //var_dump('details=', $details);
+	    //var_dump('title=', $details[C_date]);
+	    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	    
+	    $this->view->assign('title_data', $details[month_name].', '. $details[year]);
+	}
 	
+	public function dash10aAction() {
+	
+	    require_once('models/table/Dashboard-CHAI.php');
+	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
+	
+	    $id = $this->getSanParam ( 'id' );
+	     
+	    $tier_data = new DashboardCHAI();
+	    $tier = ($id != "") ? $tier = $tier_data->fetchTier( $id): "";
+	
+	    $whereClause = ($id ==  "") ? 'tier = 1' : 'parent_id = ' . $id ;
+	     
+	    $geo_data = new DashboardCHAI();
+	    $details = $geo_data->fetchConsumptionDetails('geo', $id, $whereClause);
+	    $this->view->assign('geo_data',$details);
+	
+	    $whereClause = ($id ==  "") ? 'l3.tier = 1' : 'l2.parent_id = ' . $id ;
+	     
+	    $groupClause = ($id == "") ?
+	    new Zend_Db_Expr("L1_id, CNO_id")
+	    :
+	    new Zend_Db_Expr("L2_id, CNO_id");
+	     
+	    $useName = ($id == "") ? 'L3_location_name' : 'L2_location_name';
+	     
+	    $location_data = new DashboardCHAI();
+	    $details = $location_data->fetchCLNDetails('location', $id, $whereClause, $groupClause, $useName);
+	     
+	    $this->view->assign('latest_consumption_data',$details);
+	     
+	    if ($id != '') $tier = $tier_data->fetchTier( $id);
+	     
+	    if (count($details) == 0) {
+	         
+	        if ($tier == 3){
+	            //use facility
+	            $whereClause = 'f.location_id = ' . $id;
+	            $groupClause = new Zend_Db_Expr("F_id, CNO_id");
+	            //$groupClause = 'F_facility_name';
+	            $useName = 'F_facility_name';
+	        }
+	        else {
+	            $whereClause = 'l1.parent_id = ' . $id;
+	            $groupClause = new Zend_Db_Expr("F_id, CNO_id");
+	            //$groupClause = 'L1_location_name';
+	            $useName = 'L1_location_name';
+	            //$this->view->assign('geo_data',array()); // at bottom
+	        }
+	         
+	        $facility_data = new DashboardCHAI();
+	        $details = $facility_data->fetchCLNDetails('facility', $id, $whereClause, $groupClause, $useName);
+	        $this->view->assign('latest_consumption_data',$details);
+	         
+	    }
+	     
+	    $title_data = new DashboardCHAI();
+	    $details = $title_data->fetchTitleData();
+	     
+	
+	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 654>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	    //var_dump('id=', $id); var_dump('tier=', $tier);
+	    //var_dump('details=', $details);
+	    //var_dump('title=', $details[C_date]);
+	    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	     
+	    $this->view->assign('title_data', $details[month_name].', '. $details[year]);
+	}
+	
+	public function dash11Action() {
+	    //if (! $this->hasACL ( 'edit_employee' )) {
+	    //$this->doNoAccessError ();
+	    //}
+	    
+	    require_once('models/table/Dashboard-CHAI.php');
+	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
+	    
+	    $fp_data = new DashboardCHAI();
+	    $details = $fp_data->fetchDashboardData('percent_facilities_hw_trained_larc');
+	    $this->view->assign('larc_data11',$details);
+	    
+	    $fp_data = new DashboardCHAI();
+	    $details = $fp_data->fetchDashboardData('percent_facilities_hw_trained_fp');
+	    $this->view->assign('fp_data12',$details);
+	    
+	    $fp_data = new DashboardCHAI();
+	    $details = $fp_data->fetchDashboardData('percent_facilities_providing_larc');
+	    $this->view->assign('larc_data13',$details);
+	    
+	    $fp_data = new DashboardCHAI();
+	    $details = $fp_data->fetchDashboardData('percent_facilities_providing_fp');
+	    $this->view->assign('fp_data14',$details);
+	  
 	}
 	
 	

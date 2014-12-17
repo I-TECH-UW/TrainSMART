@@ -101,7 +101,7 @@ print ScriptContainer::$instance->renderJSHead();
 			<!-------   /////////////////////////// make top buttons ////////////////////// -->
 
 			<div class="rightdiv" style="float: right;">
-				<?php  require_once('views/scripts/dashboard/top_buttons.phtml');?>
+				<?php  //require_once('views/scripts/dashboard/top_buttons.phtml');?>
 					
 			</div>
 
@@ -122,39 +122,41 @@ print ScriptContainer::$instance->renderJSHead();
 			<body class="docs slim framebox_body">
 
 				<div id="allCharts" class="container">
-				<div id="toprow" class="container">
-				   <div id="drillChart" style="width: 700px; height: 300px;"></div>
-				   
-				   <div id="chart12_div" style="width: 700px; height: 300px;"></div>
-				<div class="clear"></div>
-				<div class="hrGrey"></div>
-				<div class="clear"></div>
-
 				
-
-								<!-------   /////////////////////////// chart 2,1 ////////////////////// -->
+				<div id="toprow" class="container">
+						<div id="homecontent" class="container">
+							<div id="homecontent-mid" class="row rounded">
+								<div id="homebanner" class="rounded">
 								
+								
+			                    
+								<div class="sliderdiv">
+									<div id="chart11_div" style="width: 500px; height: 300px;"></div>
+									</div>
+									<div class="main-search">
+										<div id="chart12_div" style="width: 500px; height: 300px;"></div>
+									</div>
+								</div>
+							</div>
+						</div>			
+					</div>
+								<!-------   /////////////////////////// chart 2,1 ////////////////////// -->
 					<div id="bottomrow" class="container">
 						<div id="homecontent" class="container">
 							<div id="homecontent-mid" class="row rounded">
 								<div id="homebanner" class="rounded">
 								<div class="sliderdiv">
-
-								
-								</div>
-									<div class="main-search">
-
+									<div id="chart13_div" style="width: 500px; height: 300px;"></div>
 									
+									</div>
+									<div class="main-search">
+										<div id="chart14_div" style="width: 500px; height: 300px;"></div>
 									</div>
 								</div>
 							</div>
 						</div>
-								
 								<!-------   /////////////////////////// chart 2,2 ////////////////////// -->
-								
-								
 								<div class="main-search"></div>
-
 					</div>
 				</div>
 		
@@ -188,8 +190,8 @@ print ScriptContainer::$instance->renderJSHead();
 ?>
 		 
 	//drawHighchart(currentLevel);
-	drawChartDrill();
-	drawChart12();
+	//drawChartDrill();
+	drawChart11();
     //generateBarChart();
    
   }
@@ -271,9 +273,9 @@ print ScriptContainer::$instance->renderJSHead();
 	    draw();
 	}
   
-  function drawChart12() {
+  function drawChart11() {
 	  
-      var chart12Data = google.visualization.arrayToDataTable([
+      var chart11Data = google.visualization.arrayToDataTable([
 ['Month', 'Injectable', 'Implantable'],
 
 <?php
@@ -285,13 +287,13 @@ print ScriptContainer::$instance->renderJSHead();
 ?>
       ]);
 
-      var chart12Options = {
+      var chart11Options = {
         title: 'National Average Monthly Consumption'
       };
 
-      var chart12 = new google.visualization.LineChart(document.getElementById('chart12_div'));
+      var chart11 = new google.visualization.LineChart(document.getElementById('chart11_div'));
 
-      chart12.draw(chart12Data, chart12Options);
+      chart11.draw(chart11Data, chart11Options);
     }
 
 

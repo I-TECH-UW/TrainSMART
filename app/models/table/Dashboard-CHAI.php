@@ -139,6 +139,23 @@ class DashboardCHAI extends Dashboard
 	    return $result['tier'];
 	}
 	
+	public function fetchTitleData() {
+	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+	    $output = array();
+	     
+	    $select = $db->select()
+	    ->from(array('l' => 'lc_view'),
+	        array( 
+	            'monthName(l.C_date) as month_name',
+	            'year(l.C_date) as year'
+	        ));
+	     
+	    $result = $db->fetchRow($select);
+	     
+	    return $result;
+	    
+	}
+	
 	public function fetchCLNDetails($dataName = null, $id = null, $where = null, $group = null, $useName = null) {
 	    
 	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
@@ -168,9 +185,8 @@ class DashboardCHAI extends Dashboard
 	            break;
 	        case 'location':
 	            
-	            //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 159>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+                //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 171>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	            //var_dump('all=', $dataName, $id, $where, $group, $useName, "END");
-	            //var_dump('where=', $where, "END");	            //var_dump('group=', $group, "END");	            //var_dump('details=', $details);
 	            //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	            
 	    	    $create_view = $db->select()
@@ -178,6 +194,7 @@ class DashboardCHAI extends Dashboard
 	           array(
 	            'f.id as F_id',
 	            'f.facility_name as F_facility_name',
+	            //"replace(f.facility_name, '\'', '\\\'') as F_facility_name',",
 	            'f.location_id as F_location_id',
 	            'l1.id as L1_id',
 	            'l1.location_name as L1_location_name',
@@ -248,16 +265,16 @@ class DashboardCHAI extends Dashboard
 	            
 	        case 'facility':
 	            
-	            file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 231>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	            var_dump('all=', $dataName, $id, $where, $group, $useName, "END");
-	            //var_dump('id=', $id);	            //var_dump('details=', $details);
-	            $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	            //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 231>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	            //var_dump('all=', $dataName, $id, $where, $group, $useName, "END");
+	            //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	            
 	            $create_view = $db->select()
 	            ->from(array('f' => 'facility'),
 	                array(
 	                    'f.id as F_id',
 	                    'f.facility_name as F_facility_name',
+	                    //"replace(f.facility_name, '\'', '\\\'') as F_facility_name',",
 	                    'f.location_id as F_location_id',
 	                    'l1.id as L1_id',
 	                    'l1.location_name as L1_location_name',
@@ -338,8 +355,6 @@ class DashboardCHAI extends Dashboard
 	            	            "type" => 1
 	            	        );
 	            	    }
-	            	    	           
-	            
 	            break;
 	    }
 	    return $output;
@@ -618,7 +633,132 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 	
 			return $output;
 		}
+		
+		public function fetchDashboardData($chart = null) {
+		    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+		    $output = array();
+		    /*
+		    select * from dashboard_refresh
+		    where chart = 'percent_facilities_hw_trained_larc'
+		    and datetime = (select max(datetime) from dashboard_refresh where chart = 'percent_facilities_hw_trained_larc')
+		    ;
+		    */
+		     
+		    $where = "chart = '$chart' and datetime = (select max(datetime) from dashboard_refresh where chart = '$chart')";
+		    $subSelect = new Zend_Db_Expr("(select max(datetime) from dashboard_refresh where chart = $chart)");
+		
+		    $select = $db->select()
+		    ->from(array('dr' => 'dashboard_refresh'),
+		        array(
+		            'id',
+		            'datetime',
+		            'chart',
+		            'data0','data1','data2','data3','data4','data4',
+		        ))
+		            ->where($where)
+		            ->order(array('id'));
+		
+		    $result = $db->fetchAll($select);
+		    
+            switch ($chart) {
+                case 'percent_facilities_hw_trained_larc':
+                case 'percent_facilities_hw_trained_fp':
+                case 'percent_facilities_providing_larc':
+                case 'percent_facilities_providing_fp':
+                    
+                    foreach ($result as $row) {
+                        $output[] = array(
+                            "state" => $row['data0'],
+                            "percentage" => $row['data1'],
+                            "color" => $row['data2']
+                        );
+                    }
+                    break;
+                    
+                case 'average_monthly_consumption':
+                
+                    foreach ($result as $row) {
+                        $output[] = array(
+                            "month" => $row['data0'],
+                            "injectable_consumption" => $row['data1'],
+                            "implant_consumption" => $row['data2']
+                        );
+                    }
+                    break;
+            }
+            
+            
+		    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 243 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		    //var_dump($output,"END");
+		    //var_dump('id=', $id);
+		    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		
+		    return $output;
+		}
 	
+		public function insertDashboardData($details, $chart) {
+		    //current_datetime = now()
+		    //INSERT INTO `itechweb_chainigeria`.`dashboard_refresh`
+		    //( `datetime`, `chart`, `data0`, `data1`, `data2`)
+		    //VALUES (current_datetime, 'percent_facilities_hw_trained_larc', 'Plateau', '0.0025', 'red');
+		    
+		    /*save
+		    $sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
+		     
+		    $data = array(
+		        'subpartner_id'  => $params['subPartner'],
+		        'partner_funder_option_id' => $params['partnerFunder'],
+		        'mechanism_option_id' => $params['mechanism'],
+		        'funding_end_date' => $params['funding_end_date'][0],
+		    );
+		    
+		    $insert_result = $sfm->insert($data);
+		    */
+		    
+		    $dateTime = date("Y-m-d H:i:s");
+		    $dashboard_refresh = new ITechTable(array('name' => 'dashboard_refresh'));
+		    
+		    switch ($chart) {
+		        case 'percent_facilities_hw_trained_larc':
+		        case 'percent_facilities_hw_trained_fp':
+		        case 'percent_facilities_providing_larc':
+		        case 'percent_facilities_providing_fp':
+		  		    
+        		    foreach($details as $row){
+        		        $data = array(
+        		            'datetime'  => $dateTime,
+        		            'chart'  => $chart,
+        		            'data0'  => $row['state'],
+        		            'data1'  => $row['percentage'],
+        		            'data2'  => $row['color'],
+        		        );
+        		        
+        		        $insert_result = $dashboard_refresh->insert($data);
+        		    }
+		          break;
+		          
+		        case 'average_monthly_consumption':
+		            
+		            foreach($details as $row){
+		                $data = array(
+		                    'datetime'  => $dateTime,
+		                    'chart'  => $chart,
+		                    'data0'  => $row['month'],
+		                    'data1'  => $row['injectable_consumption'],
+		                    'data2'  => $row['implant_consumption'],
+		                );
+		            
+		                $insert_result = $dashboard_refresh->insert($data);
+		            }
+		            break;
+		    }
+		    
+		    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 697>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		    //var_dump('id=', $id);
+		    //var_dump('dateTime=', $dateTime);
+		    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		    
+		}
 	
 }
 ?>
