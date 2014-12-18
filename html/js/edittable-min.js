@@ -342,7 +342,9 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
                   this.deleteRow(oRecord);
                 }
               },
-            failure: function() { alert('Could not delete this record, sorry!'); },//TA:19:TODO throws this alert
+            failure: function() {
+                alert('Could not delete this record, sorry!'); //TA:19:TODO throws this alert
+            },
             scope: this
           };
 

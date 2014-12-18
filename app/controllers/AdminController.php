@@ -3307,40 +3307,68 @@ class AdminController extends UserController
             if ($params['outputType'] == 'json') {
                 $id = $this->getSanParam('id');
 
-                $update_data = array();
-                // this is a graceless and plodding approach
-                if (isset($params['funder_phrase'])) {
-                    $update_data['funder_id'] = $this->getSanParam('funder_phrase');
-                }
-                elseif (isset($params['mechanism_phrase'])) {
-                    $update_data['mechanism_phrase'] = $this->getSanParam('mechanism_phrase');
-                }
-                elseif(isset($params['training_organizer_phrase'])) {
-                    $update_data['owner_id'] = $this->getSanParam('training_organizer_phrase');
-                }
-                elseif(isset($params['external_id'])) {
-                    $update_data['external_id'] = $this->getSanParam('external_id');
-                }
-
                 $ret = array();
-                if (count($update_data) > 0) {
-                    $rv = $db->update('mechanism_option', $update_data, "id = $id");
-                    if ($rv != 1) {
-                        $ret['errored'] = true;
-                        $ret['msg'] = t("Database update error.");
+                if (!$id)
+                {
+                    $ret['error'] = "No record id %s found.";
+                }
+                elseif ($id == 'undefined') {
+
+                    // This is a create - mechanism add
+                    $data = array('mechanism_phrase' => $this->getSanParam('mechanism_phrase'));
+                    if ($data['mechanism_phrase']) {
+                        $rv = $db->insert("mechanism_option", $data);
+                        if (!$rv) {
+                            $ret['error'] = "Could not insert %s";
+                        } else {
+                            $ret['insert'] = $db->lastInsertId();
+                        }
+                    } else {
+                        $ret['error'] = "Could not create %s";
                     }
-                    else {
+                }
+                elseif ($this->getSanParam('delete') == 1) {
+
+                    // delete
+                    $rv = $db->delete('mechanism_option', "id = $id");
+                    if (!$rv) {
+                        $ret['error'] = "Could not delete %s";
+                    } else {
                         $ret['msg'] = 'ok';
                     }
                 }
                 else {
-                    $ret['errored'] = true;
-                    $ret['msg'] = t("Database update error.");
+
+                    // update
+                    $update_data = array();
+
+                    // this is a graceless and plodding approach
+                    if (isset($params['funder_phrase'])) {
+                        $update_data['funder_id'] = $this->getSanParam('funder_phrase');
+                    } elseif (isset($params['mechanism_phrase'])) {
+                        $update_data['mechanism_phrase'] = $this->getSanParam('mechanism_phrase');
+                    } elseif (isset($params['training_organizer_phrase'])) {
+                        $update_data['owner_id'] = $this->getSanParam('training_organizer_phrase');
+                    } elseif (isset($params['external_id'])) {
+                        $update_data['external_id'] = $this->getSanParam('external_id');
+                    }
+
+                    if (count($update_data) > 0) {
+                        $rv = $db->update('mechanism_option', $update_data, "id = $id");
+                        if ($rv != 1) {
+                            $ret['error'] = "Multiple %s records updated";
+                        } else {
+                            $ret['msg'] = 'ok';
+                        }
+                    } else {
+                        $ret['error'] = "Could not update %s";
+                    }
                 }
                 $this->sendData($ret);
             }
         }
 
+        // and read
         $sql = 'SELECT training_organizer_phrase as text, id as value from training_organizer_option';
         $partners = json_encode($db->fetchAll($sql));
 
