@@ -564,15 +564,10 @@ class EmployeeController extends ReportFilterHelpers {
             	$mechanism = $helper->getEmployeeMechanism($id);
             	$this->viewAssignEscaped ( 'mechanism', $mechanism );
             	
-            	//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont 511>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-            	//var_dump($params['funder']);
-            	//var_dump($mechanism);
-            	//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-            	
+
 			}
 		}
 
-		
 		// make sure form data is valid for display
 		if (empty($params['funder']))
 			$params['funder'] = array(array());
@@ -641,8 +636,8 @@ class EmployeeController extends ReportFilterHelpers {
 		$this->view->assign ( 'nationality',   DropDown::generateHtml ( 'lookup_nationalities', 'nationality', $params['lookup_nationalities_id'], false, !$this->hasACL("edit_employee"), false ) );
 		$this->view->assign ( 'race',          DropDown::generateHtml ( 'person_race_option', 'race_phrase', $params['race_option_id'], false, !$this->hasACL("edit_employee"), false ) );
 
-//		$this->view->assign('mechanismList', $this->generateMechanismList($employee_id));
-		$this->view->assign ( 'tableEmployeeFunding', $this->generateMechanismTable($id) );
+		$this->view->assign('mechanismList', $this->generateMechanismList($id));
+		$this->view->assign ('tableEmployeeFunding', $this->generateMechanismTable($id) );
 		
 	}
 
