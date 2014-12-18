@@ -3299,14 +3299,82 @@ class AdminController extends UserController
 	
 	public function employeeMechanismAction()
 	{
-	
-		/* edit table */
-		$editTable = new EditTableController($this);
-		$editTable->table   = 'mechanism_option';
-		$editTable->fields  = array('mechanism_phrase' => 'Mechanism', 'owner_id' => 'Owner', 'funder_id' => 'Funder', 'external_id' => "Mechanism Identifier");
-		$editTable->label   = 'Mechanism';
-		$editTable->dependencies = array('mechanism_option_id' => 'subpartner_to_funder_to_mechanism');
-		$editTable->execute();
+        $db = $this->dbfunc();
+
+        if ($this->getRequest()->isPost()) {
+            $params = $this->getAllParams();
+
+            if ($params['outputType'] == 'json') {
+                $id = $this->getSanParam('id');
+
+                $update_data = array();
+                // this is a graceless and plodding approach
+                if (isset($params['funder_phrase'])) {
+                    $update_data['funder_id'] = $this->getSanParam('funder_phrase');
+                }
+                elseif (isset($params['mechanism_phrase'])) {
+                    $update_data['mechanism_phrase'] = $this->getSanParam('mechanism_phrase');
+                }
+                elseif(isset($params['training_organizer_phrase'])) {
+                    $update_data['owner_id'] = $this->getSanParam('training_organizer_phrase');
+                }
+                elseif(isset($params['external_id'])) {
+                    $update_data['external_id'] = $this->getSanParam('external_id');
+                }
+
+                $ret = array();
+                if (count($update_data) > 0) {
+                    $rv = $db->update('mechanism_option', $update_data, "id = $id");
+                    if ($rv != 1) {
+                        $ret['errored'] = true;
+                        $ret['msg'] = t("Database update error.");
+                    }
+                    else {
+                        $ret['msg'] = 'ok';
+                    }
+                }
+                else {
+                    $ret['errored'] = true;
+                    $ret['msg'] = t("Database update error.");
+                }
+                $this->sendData($ret);
+            }
+        }
+
+        $sql = 'SELECT training_organizer_phrase as text, id as value from training_organizer_option';
+        $partners = json_encode($db->fetchAll($sql));
+
+        $sql = 'SELECT funder_phrase as text, id as value from partner_funder_option';
+        $funders = json_encode($db->fetchAll($sql));
+
+        $sql = 'SELECT
+            partner_funder_option.funder_phrase,
+            mechanism_option.mechanism_phrase,
+            training_organizer_option.training_organizer_phrase,
+            mechanism_option.owner_id,
+            mechanism_option.funder_id,
+            mechanism_option.id,
+            mechanism_option.external_id
+            FROM
+            mechanism_option
+            INNER JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id
+            INNER JOIN training_organizer_option ON mechanism_option.owner_id = training_organizer_option.id
+            ';
+        $tableRows = $db->fetchAll($sql);
+
+        require_once 'views/helpers/EditTableHelper.php';
+
+        $customColDefs = array(
+            'mechanism_phrase'          => "sortable:true",
+            'training_organizer_phrase' => "sortable:true, editor:'dropdown', editorOptions: {dropdownOptions:$partners}",
+            'funder_phrase'             => "sortable:true, editor:'dropdown', editorOptions: {dropdownOptions:$funders}",
+            'external_id'               => "sortable:true"
+        );
+
+        $this->view->assign('pageTitle', t('Mechanism'));
+        $columnNames = array('mechanism_phrase' => t('Mechanism'), 'training_organizer_phrase' => t('Partner'), 'funder_phrase' => t('Funder'), 'external_id' => t('Mechanism')." ID");
+        $this->view->assign('editTable', EditTableHelper::generateHtml('mechanism', $tableRows, $columnNames, $customColDefs, array()));
+
 	}
 	
 	//$editTable->dependencies = array('partner_importance_option_id' => 'partner');
