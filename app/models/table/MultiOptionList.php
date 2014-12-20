@@ -30,7 +30,15 @@ class MultiOptionList extends ITechTable
 	/**
 	 * Returns an array of options and wether or not they are selected for this user.
 	 * Used for rendering sets of checkboxes.
-	 */
+     * @param $intersection_table
+     * @param $owner_col
+     * @param $owner_id
+     * @param $option_table
+     * @param bool $option_cols
+     * @param bool $join_cols
+     * @param bool $remove_unknown
+     * @return array
+     */
 	public static function choicesList($intersection_table, $owner_col, $owner_id, $option_table, $option_cols = false, $join_cols = false, $remove_unknown = true) {
     	//do something like this:
     	/*
