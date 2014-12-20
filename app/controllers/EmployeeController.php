@@ -149,13 +149,16 @@ class EmployeeController extends ReportFilterHelpers {
 	public function generateMechanismList($employee_id) {
 	    $db = $this->dbfunc();
 	    if (!$employee_id) {
-    	    // generate a list of all mechanisms
-    
-	       $sql = "SELECT mechanism_option.id, mechanism_phrase, partner_to_subpartner_to_funder_to_mechanism.id as psfmid
-	               from mechanism_option, partner_to_subpartner_to_funder_to_mechanism 
-	               where mechanism_option.is_deleted = '0' and partner_to_subpartner_to_funder_to_mechanism.is_deleted = '0'
-	               order by mechanism_phrase";
-	       $mechanisms = $db->fetchAll($sql);
+            // generate a list of all mechanisms
+
+            $sql = "SELECT mechanism_option.id, mechanism_phrase, partner_to_subpartner_to_funder_to_mechanism.id as psfmid
+                   from mechanism_option, partner_to_subpartner_to_funder_to_mechanism
+                   where mechanism_option.is_deleted = '0' and partner_to_subpartner_to_funder_to_mechanism.is_deleted = '0'
+                   order by mechanism_phrase";
+
+            $sql = "SELECT mechanism_option.id, mechanism_phrase from mechanism_option where ";
+
+            $mechanisms = $db->fetchAll($sql);
 	    }
 	    else {
 	        $helper = new Helper();
@@ -378,28 +381,96 @@ class EmployeeController extends ReportFilterHelpers {
 		}
 		$this->_redirect("employee/edit/id/" . $row['employee_id']);
 	}
-	
+
+
+    /**
+     * get the mechanism data available to the logged in user based on $employee_id
+     * @param int $employee_id - the employee ID we want to edit
+     * @return array
+     */
+    public function getAvailableMechanisms($employee_id) {
+        $db = $this->dbfunc();
+        if ($employee_id) {
+            // get the mechanisms owned by this employee's employer
+            $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase FROM (mechanism_option, employee) ' .
+                'INNER JOIN training_organizer_option ON mechanism_option.owner_id = training_organizer_option.id ' .
+                'INNER JOIN partner ON partner.organizer_option_id = training_organizer_option.id AND employee.partner_id = partner.id ' .
+                "WHERE employee.id = $employee_id AND mechanism_option.is_deleted = 0 AND training_organizer_option.is_deleted = 0 AND employee.is_deleted = 0 AND partner.is_deleted = 0";
+            $partnerMechanisms = $db->fetchAll($sql);
+        } else {
+            if ($this->hasACL('training_organizer_option_all')) {
+                // get all mechanisms
+                $sql = 'SELECT id, mechanism_phrase FROM mechanism_option WHERE mechanism_option.is_deleted = 0';
+                $partnerMechanisms = $db->fetchAll($sql);
+            } else {
+                // get all mechanisms that the logged in user has access to
+                $user_id = $this->isLoggedIn();
+
+                $sql = "SELECT training_organizer_option_id FROM user_to_organizer_access WHERE user_id = $user_id";
+
+                $editableOrganizers = $db->fetchAll($sql);
+
+                if (!length($editableOrganizers)) {
+                    $this->doNoAccessError();
+                }
+
+                // get the mechanisms owned by the partners the logged in user can edit
+                $sql = 'SELECT id, mechanism_phrase FROM mechanism_option WHERE owner_id in (' . implode(',', $editableOrganizers) . ')';
+                $partnerMechanisms = $db->fetchAll($sql);
+            }
+        }
+        return $partnerMechanisms;
+    }
 
 	public function editAction() {
 		if (! $this->hasACL ( 'employees_module' )) {
-			$this->doNoAccessError ();
+            $this->doNoAccessError ();
 		}
 
-		$db = $this->dbfunc();
-		$status = ValidationContainer::instance ();
-		$params = $this->getAllParams();
-		$id = $params['id'];
-		$partner_id = $params['partner_id'];
+        $params = $this->getAllParams();
+        $id = $params['id'];
 
-		// restricted access?? only show partners by organizers that we have the ACL to view
-		$org_allowed_ids = allowed_org_access_full_list($this);               // doesnt have acl 'training_organizer_option_all'
-		if ($org_allowed_ids && $this->view->mode != 'add' && $id != "") {    // doesnt have acl & is edit mode.
-			if ($partnerID = $db->fetchOne("SELECT partner_id FROM employee WHERE employee.id = ?", $id)) {
-				$validID = $db->fetchCol("SELECT partner.id FROM partner WHERE partner.id = ? AND partner.organizer_option_id in ($org_allowed_ids)", $partnerID); // check for both
-				if(empty($validID))
-					$this->doNoAccessError ();
-			}
-		}
+        if ($id == '' && $this->view->mode != 'add') {
+            $this->doNoAccessError ();
+        }
+
+        $status = ValidationContainer::instance();
+        $db = $this->dbfunc();
+
+        $availableMechanisms = $this->getAvailableMechanisms($id);
+
+        if ($id) {
+
+            // See if the currently logged in user has access to this employee's data
+            $sql = "SELECT * from employee WHERE id = $id";
+            $employeeData = $db->fetchRow($sql);
+
+            $sql = "SELECT partner.organizer_option_id FROM partner WHERE partner.id = {$employeeData['partner_id']}";
+            $organizerID = $db->fetchOne($sql);
+
+            if (!$this->hasACL('training_organizer_option_all')) {
+                $user_id = $this->isLoggedIn();
+
+                $sql = "SELECT training_organizer_option_id FROM user_to_organizer_access WHERE user_id = $user_id";
+
+                $editableOrganizers = $db->fetchAll($sql);
+
+                if (!length($editableOrganizers)) {
+                    $this->doNoAccessError();
+                }
+
+                if (!array_search($organizerID, $editableOrganizers)) {
+
+                    // get the subpartners for the mechanisms this partner owns
+                    $sql = 'SELECT subpartner_id FROM subpartner_to_funder_to_mechanism WHERE mechanism_option_id in (' . implode(',', $availableMechanisms) . ')';
+                    $subPartnersOnOwnedMechanisms = $db->fetchAll($sql);
+
+                    if (!array_search($employeeData['partner_id'], $subPartnersOnOwnedMechanisms)) {
+                        $this->doNoAccessError();
+                    }
+                }
+            }
+        }
 
 		if ( $this->getRequest()->isPost() )
 		{
@@ -408,8 +479,9 @@ class EmployeeController extends ReportFilterHelpers {
 		        $this->doNoAccessError();
 		    }
             else 
-            {		    
-    			//validate then save
+            {
+
+                //validate then save
     			$params['location_id'] = regionFiltersGetLastID( '', $params );
     			$params['dob']                      = $this->_euro_date_to_sql( $params['dob'] );
     			$params['agreement_end_date']       = $this->_euro_date_to_sql( $params['agreement_end_date'] );
@@ -525,9 +597,8 @@ class EmployeeController extends ReportFilterHelpers {
     					}
     				}
     			}
-    			 
     		}
-		}
+		} // if isPost()
 		
 		
 		if ( $id && !$status->hasError() )  // read data from db
@@ -563,7 +634,6 @@ class EmployeeController extends ReportFilterHelpers {
             	
             	$mechanism = $helper->getEmployeeMechanism($id);
             	$this->viewAssignEscaped ( 'mechanism', $mechanism );
-            	
 
 			}
 		}
