@@ -330,18 +330,19 @@ class EmployeeController extends ReportFilterHelpers {
 				}
 			}
 
+			$sql .= " ORDER BY mechanism_phrase ASC";
 			$partnerMechanisms = $db->fetchAll($sql);
         } else {
             if ($this->hasACL('training_organizer_option_all')) {
                 // get all mechanisms
-                $sql = 'SELECT id, mechanism_phrase FROM mechanism_option WHERE mechanism_option.is_deleted = 0';
+                $sql = 'SELECT id, mechanism_phrase FROM mechanism_option WHERE mechanism_option.is_deleted = 0 ORDER BY mechanism_phrase ASC';
                 $partnerMechanisms = $db->fetchAll($sql);
             } else {
                 // get all mechanisms that the logged in user has access to
 				$orgs = $this->getAvailableOrganizers();
 				if (count($orgs)) {
 					// get the mechanisms owned by the partners the logged in user can edit
-					$sql = 'SELECT id, mechanism_phrase FROM mechanism_option WHERE owner_id in (' . implode(',', $orgs) . ')';
+					$sql = 'SELECT id, mechanism_phrase FROM mechanism_option WHERE owner_id in (' . implode(',', $orgs) . ') ORDER BY mechanism_phrase ASC';
 					$partnerMechanisms = $db->fetchAll($sql);
 				}
 				else {
@@ -352,54 +353,9 @@ class EmployeeController extends ReportFilterHelpers {
         return $partnerMechanisms;
     }
 
-	public function generateMechanismList($employee_id) {
-		$db = $this->dbfunc();
-		if (!$employee_id) {
-			// generate a list of all mechanisms
-
-			$sql = "SELECT mechanism_option.id, mechanism_phrase, partner_to_subpartner_to_funder_to_mechanism.id as psfmid
-                   from mechanism_option, partner_to_subpartner_to_funder_to_mechanism
-                   where mechanism_option.is_deleted = '0' and partner_to_subpartner_to_funder_to_mechanism.is_deleted = '0'
-                   order by mechanism_phrase";
-
-			$sql = "SELECT mechanism_option.id, mechanism_phrase from mechanism_option where ";
-
-			$mechanisms = $db->fetchAll($sql);
-		}
-		else {
-			$helper = new Helper();
-
-			$employee = $helper->getEmployee($employee_id);
-			require_once 'views/helpers/EditTableHelper.php';
-			$partner_id = $employee[0]['partner_id'];
-			$sql = "SELECT mechanism_option.id, mechanism_phrase, partner_to_subpartner_to_funder_to_mechanism.id as psfmid
-	               from mechanism_option, partner_to_subpartner_to_funder_to_mechanism
-	               where partner_id = $partner_id and mechanism_option.is_deleted = '0' and partner_to_subpartner_to_funder_to_mechanism.is_deleted = '0'
-	               order by mechanism_phrase";
-			$mechanisms = $db->fetchAll($sql);
-		}
-		foreach ($mechanisms as $i => &$mech)
-		{
-			$mech['combined_id'] = $mech['id'].'_'.$mech['psfmid'];
-		}
-		return $mechanisms;
-	}
-
 	public function generateMechanismTable($employee_id){
-		if (!array_key_exists('mechanismList', $this->view))
-		{
-			$this->view->assign('mechanismList', $this->generateMechanismList($employee_id));
-		}
-		if (!$employee_id)
-		{
-			return;
-		}
 
 		$db     = $this->dbfunc();
-		$helper = new Helper();
-
-		//exclude current funders
-		$employee = $helper->getEmployee($employee_id);
 
 		require_once 'views/helpers/EditTableHelper.php';
 
@@ -407,10 +363,6 @@ class EmployeeController extends ReportFilterHelpers {
 		$columnNames = array('mechanism' => t('Mechanism'),
 			'percentage' => t('Percent'),
 		);
-		$partner_id = $employee[0]['partner_id'];
-
-		$sql = "SELECT annual_cost from employee where id = $employee_id";
-		$annual_cost = $db->fetchOne($sql);
 
 		if ($this->setting('display_hours_per_mechanism'))
 		{
@@ -420,27 +372,31 @@ class EmployeeController extends ReportFilterHelpers {
 		{
 			$columnNames['cost'] = t('Annual Cost');
 		}
-		$sql = "SELECT employee_to_partner_to_subpartner_to_funder_to_mechanism.id as epsfmid, percentage, mechanism_phrase
-	    FROM employee_to_partner_to_subpartner_to_funder_to_mechanism, mechanism_option
-	    WHERE employee_to_partner_to_subpartner_to_funder_to_mechanism.is_deleted = 0 and mechanism_option_id = mechanism_option.id and employee_id = $employee_id";
 
-		$funders = $db->fetchAll($sql);
+		if ($employee_id) {
 
-		foreach ($funders as $i => $row)
-		{
-			$tableValues[$i] = array('mechanism' => $row['mechanism_phrase'], 'percentage' => $row['percentage'], 'id' => $row['epsfmid']);
-			$percent = $row['percentage']/100.0;
-			if($this->setting('display_hours_per_mechanism'))
-			{
-				$tableValues[$i]['hours'] = $percent * $employee[0]['funded_hours_per_week'];
-			}
-			if($this->setting('display_annual_cost_to_mechanism'))
-			{
-				$employee_mechanism_cost = sprintf('%0.2f', $percent * $employee[0]['annual_cost']);
-				$tableValues[$i]['cost'] = $employee_mechanism_cost;
+			$sql = "SELECT annual_cost, funded_hours_per_week from employee where id = $employee_id";
+
+			$employee_data = $db->fetchRow($sql);
+
+			$sql = "SELECT employee_to_partner_to_subpartner_to_funder_to_mechanism.id as epsfmid, percentage, mechanism_phrase " .
+				"FROM employee_to_partner_to_subpartner_to_funder_to_mechanism, mechanism_option " .
+	    		"WHERE employee_to_partner_to_subpartner_to_funder_to_mechanism.is_deleted = 0 and mechanism_option_id = mechanism_option.id and employee_id = $employee_id";
+
+			$funders = $db->fetchAll($sql);
+
+			foreach ($funders as $i => $row) {
+				$tableValues[$i] = array('mechanism' => $row['mechanism_phrase'], 'percentage' => $row['percentage'], 'id' => $row['epsfmid']);
+				$percent = $row['percentage'] / 100.0;
+				if ($this->setting('display_hours_per_mechanism')) {
+					$tableValues[$i]['hours'] = $percent * $employee_data['funded_hours_per_week'];
+				}
+				if ($this->setting('display_annual_cost_to_mechanism')) {
+					$employee_mechanism_cost = sprintf('%0.2f', $percent * $employee_data['annual_cost']);
+					$tableValues[$i]['cost'] = $employee_mechanism_cost;
+				}
 			}
 		}
-
 		return(EditTableHelper::generateHtml('employeeFunding', $tableValues, $columnNames, array(), array(), true));
 
 	}
@@ -724,7 +680,7 @@ class EmployeeController extends ReportFilterHelpers {
 		$this->view->assign ( 'nationality',   DropDown::generateHtml ( 'lookup_nationalities', 'nationality', $params['lookup_nationalities_id'], false, !$this->hasACL("edit_employee"), false ) );
 		$this->view->assign ( 'race',          DropDown::generateHtml ( 'person_race_option', 'race_phrase', $params['race_option_id'], false, !$this->hasACL("edit_employee"), false ) );
 
-		$this->view->assign('mechanismList', $this->generateMechanismList($id));
+		$this->view->assign('mechanismList', $availableMechanisms);
 		$this->view->assign ('tableEmployeeFunding', $this->generateMechanismTable($id) );
 		
 	}
