@@ -382,6 +382,23 @@ class EmployeeController extends ReportFilterHelpers {
 		$this->_redirect("employee/edit/id/" . $row['employee_id']);
 	}
 
+	/**
+	 * returns an array of organizer ids that the logged in user can edit
+	 * @return mixed
+	 */
+	public function getAvailableOrganizers() {
+		$db = $this->dbfunc();
+		$user_id = $this->isLoggedIn();
+		if ($this->hasACL('training_organizer_option_all')) {
+			$sql = "SELECT id from training_organizer_option where is_deleted = 0";
+		} else {
+			$sql = "SELECT training_organizer_option_id FROM user_to_organizer_access WHERE user_id = $user_id";
+		}
+
+		$editableOrganizers = $db->fetchCol($sql);
+
+		return $editableOrganizers;
+	}
 
     /**
      * get the mechanism data available to the logged in user based on $employee_id
@@ -391,12 +408,21 @@ class EmployeeController extends ReportFilterHelpers {
     public function getAvailableMechanisms($employee_id) {
         $db = $this->dbfunc();
         if ($employee_id) {
+
             // get the mechanisms owned by this employee's employer
             $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase FROM (mechanism_option, employee) ' .
                 'INNER JOIN training_organizer_option ON mechanism_option.owner_id = training_organizer_option.id ' .
                 'INNER JOIN partner ON partner.organizer_option_id = training_organizer_option.id AND employee.partner_id = partner.id ' .
                 "WHERE employee.id = $employee_id AND mechanism_option.is_deleted = 0 AND training_organizer_option.is_deleted = 0";
-            $partnerMechanisms = $db->fetchAll($sql);
+
+			if (!$this->hasACL('training_organizer_option_all')) {
+				$orgs = $this->getAvailableOrganizers();
+				if (count($orgs)) {
+					$sql .= " AND mechanism.owner_id in (" . implode(',', $orgs) . ")";
+				}
+			}
+
+			$partnerMechanisms = $db->fetchAll($sql);
         } else {
             if ($this->hasACL('training_organizer_option_all')) {
                 // get all mechanisms
@@ -404,19 +430,12 @@ class EmployeeController extends ReportFilterHelpers {
                 $partnerMechanisms = $db->fetchAll($sql);
             } else {
                 // get all mechanisms that the logged in user has access to
-                $user_id = $this->isLoggedIn();
-
-                $sql = "SELECT training_organizer_option_id FROM user_to_organizer_access WHERE user_id = $user_id";
-
-                $editableOrganizers = $db->fetchAll($sql);
-
-                if (!length($editableOrganizers)) {
-                    $this->doNoAccessError();
-                }
-
-                // get the mechanisms owned by the partners the logged in user can edit
-                $sql = 'SELECT id, mechanism_phrase FROM mechanism_option WHERE owner_id in (' . implode(',', $editableOrganizers) . ')';
-                $partnerMechanisms = $db->fetchAll($sql);
+				$orgs = $this->getAvailableOrganizers();
+				if (count($orgs)) {
+					// get the mechanisms owned by the partners the logged in user can edit
+					$sql = 'SELECT id, mechanism_phrase FROM mechanism_option WHERE owner_id in (' . implode(',', $orgs) . ')';
+					$partnerMechanisms = $db->fetchAll($sql);
+				}
             }
         }
         return $partnerMechanisms;
@@ -449,17 +468,11 @@ class EmployeeController extends ReportFilterHelpers {
             $organizerID = $db->fetchOne($sql);
 
             if (!$this->hasACL('training_organizer_option_all')) {
-                $user_id = $this->isLoggedIn();
-
-                $sql = "SELECT training_organizer_option_id FROM user_to_organizer_access WHERE user_id = $user_id";
-
-                $editableOrganizers = $db->fetchAll($sql);
-
-                if (!count($editableOrganizers)) {
-                    $this->doNoAccessError();
-                }
-
-                if (!array_search($organizerID, $editableOrganizers)) {
+				$orgs = $this->getAvailableOrganizers();
+				if (!count($orgs)) {
+					$this->doNoAccessError();
+				}
+                if (!array_search($organizerID, $orgs)) {
 
                     // get the subpartners for the mechanisms this partner owns
                     $sql = 'SELECT subpartner_id FROM subpartner_to_funder_to_mechanism WHERE mechanism_option_id in (' . implode(',', $availableMechanisms) . ')';
