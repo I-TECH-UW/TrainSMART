@@ -395,7 +395,7 @@ class EmployeeController extends ReportFilterHelpers {
             $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase FROM (mechanism_option, employee) ' .
                 'INNER JOIN training_organizer_option ON mechanism_option.owner_id = training_organizer_option.id ' .
                 'INNER JOIN partner ON partner.organizer_option_id = training_organizer_option.id AND employee.partner_id = partner.id ' .
-                "WHERE employee.id = $employee_id AND mechanism_option.is_deleted = 0 AND training_organizer_option.is_deleted = 0 AND employee.is_deleted = 0 AND partner.is_deleted = 0";
+                "WHERE employee.id = $employee_id AND mechanism_option.is_deleted = 0 AND training_organizer_option.is_deleted = 0";
             $partnerMechanisms = $db->fetchAll($sql);
         } else {
             if ($this->hasACL('training_organizer_option_all')) {
@@ -455,7 +455,7 @@ class EmployeeController extends ReportFilterHelpers {
 
                 $editableOrganizers = $db->fetchAll($sql);
 
-                if (!length($editableOrganizers)) {
+                if (!count($editableOrganizers)) {
                     $this->doNoAccessError();
                 }
 
