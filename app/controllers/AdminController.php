@@ -3369,12 +3369,14 @@ class AdminController extends UserController
         }
 
         // and read
-        $sql = 'SELECT partner as text, id as value from partner';
+        $sql = 'SELECT partner as text, id as value from partner ORDER BY partner ASC';
         $partners = json_encode($db->fetchAll($sql));
 
         $sql = 'SELECT funder_phrase as text, id as value from partner_funder_option';
         $funders = json_encode($db->fetchAll($sql));
 
+        // fill in null values in the partner column so the edittable visibly updates when a user selects a
+        // value for a field that came in null - probably a YUI DataTable beta quirk
         $sql = 'SELECT
             partner_funder_option.funder_phrase,
             mechanism_option.mechanism_phrase,
@@ -3382,11 +3384,11 @@ class AdminController extends UserController
             mechanism_option.funder_id,
             mechanism_option.id,
             mechanism_option.external_id,
-            partner.partner
+            IFNULL(partner.partner, "0") as partner
             FROM
             mechanism_option
             INNER JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id
-            INNER JOIN partner ON mechanism_option.owner_id = partner.id
+            LEFT JOIN partner ON mechanism_option.owner_id = partner.id
             ORDER BY mechanism_phrase ASC
             ';
         $tableRows = $db->fetchAll($sql);
