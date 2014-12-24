@@ -3347,8 +3347,8 @@ class AdminController extends UserController
                         $update_data['funder_id'] = $this->getSanParam('funder_phrase');
                     } elseif (isset($params['mechanism_phrase'])) {
                         $update_data['mechanism_phrase'] = $this->getSanParam('mechanism_phrase');
-                    } elseif (isset($params['training_organizer_phrase'])) {
-                        $update_data['owner_id'] = $this->getSanParam('training_organizer_phrase');
+                    } elseif (isset($params['partner'])) {
+                        $update_data['owner_id'] = $this->getSanParam('partner');
                     } elseif (isset($params['external_id'])) {
                         $update_data['external_id'] = $this->getSanParam('external_id');
                     }
@@ -3369,7 +3369,7 @@ class AdminController extends UserController
         }
 
         // and read
-        $sql = 'SELECT training_organizer_phrase as text, id as value from training_organizer_option';
+        $sql = 'SELECT partner as text, id as value from partner';
         $partners = json_encode($db->fetchAll($sql));
 
         $sql = 'SELECT funder_phrase as text, id as value from partner_funder_option';
@@ -3378,29 +3378,30 @@ class AdminController extends UserController
         $sql = 'SELECT
             partner_funder_option.funder_phrase,
             mechanism_option.mechanism_phrase,
-            training_organizer_option.training_organizer_phrase,
             mechanism_option.owner_id,
             mechanism_option.funder_id,
             mechanism_option.id,
-            mechanism_option.external_id
+            mechanism_option.external_id,
+            partner.partner
             FROM
             mechanism_option
             INNER JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id
-            INNER JOIN training_organizer_option ON mechanism_option.owner_id = training_organizer_option.id
+            INNER JOIN partner ON mechanism_option.owner_id = partner.id
+            ORDER BY mechanism_phrase ASC
             ';
         $tableRows = $db->fetchAll($sql);
 
         require_once 'views/helpers/EditTableHelper.php';
 
         $customColDefs = array(
-            'mechanism_phrase'          => "sortable:true",
-            'training_organizer_phrase' => "sortable:true, editor:'dropdown', editorOptions: {dropdownOptions:$partners}",
-            'funder_phrase'             => "sortable:true, editor:'dropdown', editorOptions: {dropdownOptions:$funders}",
-            'external_id'               => "sortable:true"
+            'mechanism_phrase' => "sortable:true",
+            'partner'          => "sortable:true, editor:'dropdown', editorOptions: {dropdownOptions:$partners}",
+            'funder_phrase'    => "sortable:true, editor:'dropdown', editorOptions: {dropdownOptions:$funders}",
+            'external_id'      => "sortable:true"
         );
 
         $this->view->assign('pageTitle', t('Mechanism'));
-        $columnNames = array('mechanism_phrase' => t('Mechanism'), 'training_organizer_phrase' => t('Partner'), 'funder_phrase' => t('Funder'), 'external_id' => t('Mechanism')." ID");
+        $columnNames = array('mechanism_phrase' => t('Mechanism'), 'partner' => t('Partner'), 'funder_phrase' => t('Funder'), 'external_id' => t('Mechanism')." ID");
         $this->view->assign('editTable', EditTableHelper::generateHtml('mechanism', $tableRows, $columnNames, $customColDefs, array()));
 
 	}

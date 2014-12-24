@@ -298,7 +298,7 @@ class EmployeeController extends ReportFilterHelpers {
 		$db = $this->dbfunc();
 		$user_id = $this->isLoggedIn();
 		if ($this->hasACL('training_organizer_option_all')) {
-			$sql = "SELECT id from training_organizer_option where is_deleted = 0";
+			$sql = 'SELECT id from training_organizer_option where is_deleted = 0';
 		} else {
 			$sql = "SELECT training_organizer_option_id FROM user_to_organizer_access WHERE user_id = $user_id";
 		}
@@ -307,6 +307,27 @@ class EmployeeController extends ReportFilterHelpers {
 
 		return $editableOrganizers;
 	}
+
+    /**
+     * returns an array of partner ids that the logged in user can edit
+     * @return array
+     */
+    public function getAvailablePartners() {
+        $db = $this->dbfunc();
+        $user_id = $this->isLogged();
+        if ($this->hasACL('training_organizer_option_all')) {
+            $sql = 'SELECT id from partner where is_deleted = 0';
+        } else {
+            $sql = 'SELECT partner.id FROM partner ' .
+                'INNER JOIN training_organizer_option ON partner.organizer_option_id = training_organizer_option.id ' .
+                'INNER JOIN user_to_organizer_access ON ' .
+                'user_to_organizer_access.training_organizer_option_id = training_organizer_option.id ' .
+                "WHERE user_id = $user_id";
+        }
+        $editablePartners = $db->fetchCol($sql);
+
+        return $editablePartners;
+    }
 
     /**
      * get the mechanism data available to the logged in user based on $employee_id
@@ -318,15 +339,15 @@ class EmployeeController extends ReportFilterHelpers {
         if ($employee_id) {
 
             // get the mechanisms owned by this employee's employer
-            $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase FROM (mechanism_option, employee) ' .
-                'INNER JOIN training_organizer_option ON mechanism_option.owner_id = training_organizer_option.id ' .
-                'INNER JOIN partner ON partner.organizer_option_id = training_organizer_option.id AND employee.partner_id = partner.id ' .
-                "WHERE employee.id = $employee_id AND mechanism_option.is_deleted = 0 AND training_organizer_option.is_deleted = 0";
+            $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase FROM mechanism_option ' .
+                'INNER JOIN partner ON mechanism_option.owner_id = partner.id ' .
+                "INNER JOIN employee ON employee.partner_id = partner.id AND employee.id = $employee_id";
+
 
 			if (!$this->hasACL('training_organizer_option_all')) {
-				$orgs = $this->getAvailableOrganizers();
-				if (count($orgs)) {
-					$sql .= " AND mechanism.owner_id in (" . implode(',', $orgs) . ")";
+				$partners = $this->getAvailablePartners();
+				if (count($partners)) {
+					$sql .= " AND mechanism.owner_id in (" . implode(',', $partners) . ")";
 				}
 			}
 
@@ -339,10 +360,10 @@ class EmployeeController extends ReportFilterHelpers {
                 $partnerMechanisms = $db->fetchAll($sql);
             } else {
                 // get all mechanisms that the logged in user has access to
-				$orgs = $this->getAvailableOrganizers();
-				if (count($orgs)) {
+                $partners = $this->getAvailablePartners();
+				if (count($partners)) {
 					// get the mechanisms owned by the partners the logged in user can edit
-					$sql = 'SELECT id, mechanism_phrase FROM mechanism_option WHERE owner_id in (' . implode(',', $orgs) . ') ORDER BY mechanism_phrase ASC';
+					$sql = 'SELECT id, mechanism_phrase FROM mechanism_option WHERE owner_id in (' . implode(',', $partners) . ') ORDER BY mechanism_phrase ASC';
 					$partnerMechanisms = $db->fetchAll($sql);
 				}
 				else {
