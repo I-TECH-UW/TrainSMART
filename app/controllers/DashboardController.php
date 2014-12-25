@@ -81,20 +81,181 @@ class DashboardController extends ReportFilterHelpers {
 	public function dash993Action() { }
 	public function dash994Action() { }
 	public function dash995Action() { }
+	
 	public function dash996Action() { 
-	    
-	    if(isset($_POST["province_id"])||isset($_POST["district_id"])||isset($_POST["region_c_id"])){
-	        file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	        var_dump('isset true', $_POST["province_id"], "END");
-	        var_dump('isset true', $_POST["district_id"], "END");
-	        var_dump('isset true', $_POST["region_c_id"], "END");
-	        $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+	  require_once('models/table/Dashboard-CHAI.php');
+	  file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	  
+	  $method = $this->getSanParam ( 'method' );
+      $request = $this->getRequest ();
+      // if ($request->isPost () || $method == 0) {
+      if ( true ) {    
+
+        $cln_data = new DashboardCHAI();
+        $amc_data = new DashboardCHAI();
+        $where = ' 1=1 ';
+       
+	    if(isset($_POST["region_c_id"])){ // CHAINigeria LGA
+	        $where = $where.' and f.location_id in (';
+	        foreach ($_POST['region_c_id'] as $i => $value){
+	            $geo = explode('_',$value);
+	            $where = $where.$geo[2].', ';
+	            
+	        }
+	        $where = $where.') ';
+	        $group = new Zend_Db_Expr('L1_location_name, CNO_id');
+	        $useName = 'L1_location_name';
+	        
+	    } else if(isset($_POST['district_id'])){ // CHAINigeria state
+	        $where = $where.' and l2.id in (';
+	        foreach ($_POST['district_id'] as $i => $value){
+	            $geo = explode('_',$value);
+	            $where = $where.$geo[1].', ';
+	           
+	        }
+	        $where = $where.') ';
+	        $group = new Zend_Db_Expr('L2_location_name, CNO_id');
+	        $useName = 'L2_location_name';
+	        
+	    } else if(isset($_POST['province_id'])){ //province_id is a Trainsmart internal name, represents hightest CHAINigeria level = GPZ 
+	        $where = $where.' and l2.parent_id in (';
+	        foreach ($_POST['province_id'] as $i => $value){
+	            $geo = explode('_',$value);
+	            $where = $where.$geo[0].', ';
+	           
+	        }
+	        $where = $where.') ';
+	        $group = new Zend_Db_Expr('L3_location_name, CNO_id');
+	        $useName = 'L3_location_name';
+	    } else { // no geo selection
+	       $group = 'CNO_id';
+	       $useName = 'L1_location_name';
+	       $location = 'National';
 	    }
+	   
+	    $where = str_replace(', )', ')', $where);
+	    $whereClause = new Zend_Db_Expr($where);
 	    
+	    $amc_details = $amc_data->fetchAMCDetails($whereClause);
 	    
+	    if( $method != 0 ) $where = $where.' and cno.id = '.$method;
 	    
+	    $cln_details = $cln_data->fetchCLNDetails('location', $id, $where, $group, $useName);
+	     
+	    $total = 0;
+	    
+	    foreach($cln_details as $i => $row ){
+	        
+	        if ( $location != 'National' ) {
+	            switch($useName){
+	                case 'L1_location_name' :
+	                    $location = $row['L1_location_name'];
+	                    break;
+	                case 'L2_location_name' :
+	                    $location = $row['L2_location_name'];
+	                    break;
+	                case 'L3_location_name' :
+	                    $location = $row['L3_location_name'];
+	                    break;
+	            }
+	        }
+	        
+	        $locationNames = $locationNames ? $locationNames.', '.$location : $locationNames.$location;
+	         
+	        switch($method){
+	            case 1 :
+	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption1'] );
+	                break;
+	            case 2 :
+	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption2'] );
+	                break;
+	            case 3 :
+	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption3'] );
+	                break;
+	            case 4 :
+	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption4'] );
+	                break;
+	            case 5 :
+	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption5'] );
+	                break;
+	            case 6 :
+	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption6'] );
+	                break;
+	            case 7 :
+	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption7'] );
+	                break;
+	            case 8 :
+	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption8'] );
+	                break;
+	            case '' :
+	                //bad
+	                break;
+	        }
+	        
+	        $total = $total + $consumption_by_geo[$i]['consumption'];
+	        
+	    } // foreach cln
+	    
+	    foreach($amc_details as $i => $row ){
+	        
+	        switch($method){
+	            case 1 :
+	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption1'] );
+	                break;
+	            case 2 :
+	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption2'] );
+	                break;
+	            case 3 :
+	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption3'] );
+	                break;
+	            case 4 :
+	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption4'] );
+	                break;
+	            case 5 :
+	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption5'] );
+	                break;
+	            case 6 :
+	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption6'] );
+	                break;
+	            case 7 :
+	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption7'] );
+	                break;
+	            case 8 :
+	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption8'] );
+	                break;
+	            case '' :
+	                //bad
+	                break;
+	        }
+	         
+	    } // foreach amc
+	    
+	    $total_consumption[] =array('location' => $locationNames, 'consumption' => $total );
+	    
+	    $title_method = new DashboardCHAI();
+	    $title_method = $title_method->fetchTitleMethod($method);
+	    
+	    $title_date = new DashboardCHAI();
+	    $title_date = $title_date->fetchTitleDate();
+	    
+	    var_dump('locationNames', $locationNames, "END");
+	    
+	    //var_dump('consumption_by_geo', $consumption_by_geo, "END");
+	    var_dump('total_consumption', $total_consumption, "END");
+	    //var_dump('average_monthly_consumption_by_geo', $average_monthly_consumption_by_geo, "END");
+	    
+	    $this->view->assign('title_date',  $title_method[commodity_name].', '. $title_date[month_name].', '. $title_date[year]);
+	   
+	    $this->view->assign('consumption_by_geo', $consumption_by_geo);
+	    $this->view->assign('total_consumption', $total_consumption);
+	    $this->view->assign('average_monthly_consumption_by_geo', $average_monthly_consumption_by_geo);
+	   
+  }  // if
+
+        $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
-	}
+}
+	
 	public function dash997Action() { }
 	public function dash998Action() { }
 	public function dash999Action() { }
@@ -197,7 +358,7 @@ class DashboardController extends ReportFilterHelpers {
 		$useName = ($id == "") ? 'L3_location_name' : 'L2_location_name';
 		
 		
-		$location_data = new DashboardCHAI();
+		$locconsumption_by_geoardCHAI();
 		$details = $location_data->fetchConsumptionDetails('location', $id, $whereClause, $groupClause, $useName);
 		$this->view->assign('latest_consumption_data',$details);
 		

@@ -96,14 +96,14 @@ print ScriptContainer::$instance->renderJSHead();
 			<!-------   /////////////////////////// make top buttons ////////////////////// -->
 
 			<div class="rightdiv" style="float: right;">
-				<?php  // require_once('views/scripts/dashboard/top_buttons.phtml');?>
+				<?php  //require_once('views/scripts/dashboard/top_buttons.phtml');?>
 					
 			</div>
 			
 			<!-------   /////////////////////////// make left buttons ////////////////////// -->
 
 			<div class="nav-buttons">
-				<?php  require_once('views/scripts/dashboard/left_buttons.phtml');?>
+				<?php  //require_once('views/scripts/dashboard/left_buttons.phtml');?>
 				
 			</div>
 
@@ -172,10 +172,10 @@ print ScriptContainer::$instance->renderJSHead();
   function apiLoaded() {
 	  document.getElementById("allCharts").style.marginLeft="130px";
 
-	drawChart11();
-	drawChart12();
-	drawChart13();
-	drawChart14();
+	//drawChart11();
+	//drawChart12();
+	//drawChart13();
+	//drawChart14();
 		
 	var currentLevel;
 	currentLevel = <?php echo '\'' . $this->location_data[0][name] . '\''; ?>;
@@ -210,12 +210,12 @@ print ScriptContainer::$instance->renderJSHead();
 
 ]);		    
 
-	  <?php echo  " var title_data = 'Monthly consumption by method $this->title_data ' " ?>;
+	  <?php echo  " var title_data = 'Average Monthly Consumption (AMC) by Method as of $this->title_data ' " ?>;
 	  
 	  var chart11Options = {
 			  
 			  title: title_data,
-			  titleTextStyle: { fontSize: 16 },
+			  titleTextStyle: { fontSize: 15 },
 		      is3D:true,
 		      legend: 'none',
 		      
@@ -227,7 +227,7 @@ print ScriptContainer::$instance->renderJSHead();
 
   function drawChart12() {
       var chart12Data = google.visualization.arrayToDataTable([
-        [' ', '% of Facilities with trained HWs', '% of facilities with (FP/LARC) trained HWS providing (FP/LARC)', '% of facilities with trained HWs (FP/LARC) that are stocked out of (FP/LARC)'],
+        [' ', '% of Facilities with trained HWs', '% of facilities with (FP/LARC) trained HWS providing (FP/LARC)', '$ of facilities with trained HWs (FP/LARC) that are stocked out of (FP/LARC)'],
 
     	  [ 'FP', .8,.52,.12 ],
     	  [ 'LARC', .33,.58,.13 ],
@@ -235,11 +235,9 @@ print ScriptContainer::$instance->renderJSHead();
     	  	        
       ]);
 
-      <?php echo  " var title_data = 'Coverage summary, $this->title_data ' " ?>;
-
       var chart12Options = {
-    		  title: title_data,
-    		  titleTextStyle: { fontSize: 16 },
+    		  title: 'Integrated Indicators',
+    		  titleTextStyle: { fontSize: 15 },
     		  bar: {groupWidth: "80%"},
     		  vAxis: {format: '#%'},
     		  
@@ -266,11 +264,9 @@ print ScriptContainer::$instance->renderJSHead();
 
       ]);
 
-      <?php echo  " var title_data = 'Percent of facilities providing FP and LARC, April to October 2014 ' " ?>;
-
       var chart13Options = {
-        title: title_data,
-        titleTextStyle: { fontSize: 16 },
+        title: '% of Facilities Providing FP and LARC Over Time',
+        titleTextStyle: { fontSize: 15 },
         vAxis: {format:'#%'},
       };
 
@@ -293,11 +289,10 @@ print ScriptContainer::$instance->renderJSHead();
 [ 'October',.30,.13 ],
       ]);
 
-      <?php echo  " var title_data = 'Percent of facilities stocked out of FP commodities, April to October 2014' " ?>;
-      
+      <?php echo  " var title_data = 'Stock outs by Method as of $this->title_data ' " ?>;
       var chart14Options = {
         title: title_data,
-        titleTextStyle: { fontSize: 16 },
+        titleTextStyle: { fontSize: 15 },
         vAxis: {format:'#%'},
       };
 

@@ -123,6 +123,7 @@ print ScriptContainer::$instance->renderJSHead();
 								<div id="homebanner" class="rounded">
 								<div class="sliderdiv">
 								    <div class="hrNav"></div>
+								    <a><img src="http://localhost/trainsmart.git/html/images/992.png" id="headerImg" alt="banner" /></a>
 									<div id="chart11_div" style="width: 500px; height: 300px;"></div>
 									</div>
 									<div class="main-search">
@@ -172,10 +173,10 @@ print ScriptContainer::$instance->renderJSHead();
   function apiLoaded() {
 	  document.getElementById("allCharts").style.marginLeft="130px";
 
-	drawChart11();
-	drawChart12();
-	drawChart13();
-	drawChart14();
+	//drawChart11();
+	//drawChart12();
+	//drawChart13();
+	//drawChart14();
 		
 	var currentLevel;
 	currentLevel = <?php echo '\'' . $this->location_data[0][name] . '\''; ?>;
@@ -210,7 +211,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 ]);		    
 
-	  <?php echo  " var title_data = 'Monthly consumption by method $this->title_data ' " ?>;
+	  <?php echo  " var title_data = 'Monthly Consumption by Method $this->title_data ' " ?>;
 	  
 	  var chart11Options = {
 			  
@@ -227,7 +228,7 @@ print ScriptContainer::$instance->renderJSHead();
 
   function drawChart12() {
       var chart12Data = google.visualization.arrayToDataTable([
-        [' ', '% of Facilities with trained HWs', '% of facilities with (FP/LARC) trained HWS providing (FP/LARC)', '% of facilities with trained HWs (FP/LARC) that are stocked out of (FP/LARC)'],
+        [' ', '% of Facilities with trained HWs', '% of facilities with (FP/LARC) trained HWS providing (FP/LARC)', '$ of facilities with trained HWs (FP/LARC) that are stocked out of (FP/LARC)'],
 
     	  [ 'FP', .8,.52,.12 ],
     	  [ 'LARC', .33,.58,.13 ],
@@ -235,7 +236,7 @@ print ScriptContainer::$instance->renderJSHead();
     	  	        
       ]);
 
-      <?php echo  " var title_data = 'Coverage summary, $this->title_data ' " ?>;
+      <?php echo  " var title_data = 'Coverage Summary, $this->title_data ' " ?>;
 
       var chart12Options = {
     		  title: title_data,
@@ -266,7 +267,7 @@ print ScriptContainer::$instance->renderJSHead();
 
       ]);
 
-      <?php echo  " var title_data = 'Percent of facilities providing FP and LARC, April to October 2014 ' " ?>;
+      <?php echo  " var title_data = 'Percent of Facilities Providing FP and LARC, $this->title_data ' " ?>;
 
       var chart13Options = {
         title: title_data,
@@ -293,7 +294,7 @@ print ScriptContainer::$instance->renderJSHead();
 [ 'October',.30,.13 ],
       ]);
 
-      <?php echo  " var title_data = 'Percent of facilities stocked out of FP commodities, April to October 2014' " ?>;
+      <?php echo  " var title_data = 'Stock outs, $this->title_data ' " ?>;
       
       var chart14Options = {
         title: title_data,

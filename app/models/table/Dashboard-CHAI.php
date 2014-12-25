@@ -156,6 +156,38 @@ class DashboardCHAI extends Dashboard
 	    
 	}
 	
+	public function fetchTitleDate() {
+	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+	    $output = array();
+	
+	    $select = $db->select()
+	    ->from(array('l' => 'lc_view'),
+	        array(
+	            'monthName(l.C_date) as month_name',
+	            'year(l.C_date) as year'
+	        ));
+	
+	    $result = $db->fetchRow($select);
+	
+	    return $result;
+	     
+	}
+	
+	public function fetchTitleMethod($method) {
+	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+	    $output = array();
+	
+	    $select = $db->select()
+	    ->from(array('cno' => 'commodity_name_option'),
+	           array( 'commodity_name' ))
+	    ->where("id = $method");
+	
+	    $result = $db->fetchRow($select);
+	
+	    return $result;
+	     
+	}
+	
 	public function fetchCLNDetails($dataName = null, $id = null, $where = null, $group = null, $useName = null) {
 	    
 	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
@@ -230,6 +262,8 @@ class DashboardCHAI extends Dashboard
 	    }
 	    catch (Exception $e) {
 	        //echo $e->getMessage();
+	        //var_dump('error', $e->getMessage());
+	        
 	    }
 
 	    $select = $db->select()
@@ -238,9 +272,14 @@ class DashboardCHAI extends Dashboard
 	            'L1_location_name',
 	            'L2_location_name',
 	            'L3_location_name',
-	        'ifnull(sum(cv.implanon_consumption),0) as implanon_consumption',
-	        'ifnull(sum(cv.jadelle_consumption),0) as jadelle_consumption',
-	        'ifnull(sum(cv.condom_consumption),0) as condom_consumption', ))
+	            'ifnull(sum(cv.consumption1),0) as consumption1',
+	            'ifnull(sum(cv.consumption2),0) as consumption2',
+	            'ifnull(sum(cv.consumption3),0) as consumption3',
+	            'ifnull(sum(cv.consumption4),0) as consumption4',
+	            'ifnull(sum(cv.consumption5),0) as consumption5',
+	            'ifnull(sum(cv.consumption6),0) as consumption6',
+	            'ifnull(sum(cv.consumption7),0) as consumption7',
+	            'ifnull(sum(cv.consumption8),0) as consumption8', ))
 	    	->group(array($useName))
 	    	->order(array('L3_location_name', 'L2_location_name', 'L1_location_name'));
 	    
@@ -255,9 +294,14 @@ class DashboardCHAI extends Dashboard
 	           // "location_name" => str_replace(' ', '', $row[$useName]),
 	           // "location_name" => substr($row[$useName], 0, 16),
 	            "location_name" => $row[$useName],
-	            "implanon_consumption" => $row['implanon_consumption'],
-	            "jadelle_consumption" => $row['jadelle_consumption'],
-	            "condom_consumption" => $row['condom_consumption'],
+	            "consumption1" => $row['consumption1'],
+	            "consumption2" => $row['consumption2'],
+	            "consumption3" => $row['consumption3'],
+	            "consumption4" => $row['consumption4'],
+	            "consumption5" => $row['consumption5'],
+	            "consumption6" => $row['consumption6'],
+	            "consumption7" => $row['consumption7'],
+	            "consumption8" => $row['consumption8'],
 	            "type" => 1
 	        );
 	    }
@@ -321,9 +365,15 @@ class DashboardCHAI extends Dashboard
 	                               'L1_location_name',
 	                               'L2_location_name',
 	                               'L3_location_name',
-	                               'implanon_consumption',
-	                               'jadelle_consumption',
-	                               'condom_consumption', ));
+	                               'consumption1',
+	                               'consumption2',
+	                               'consumption3',
+	                               'consumption4', 
+	                               'consumption5',
+	                               'consumption6',
+	                               'consumption7',
+	                               'consumption8',
+	                           ));
 	                   }
 	                   else {
 	            	    $select = $db->select()
@@ -333,9 +383,14 @@ class DashboardCHAI extends Dashboard
 	            	            'L1_location_name',
 	            	            'L2_location_name',
 	            	            'L3_location_name',
-	            	        'ifnull(sum(cv.implanon_consumption),0) as implanon_consumption',
-	            	        'ifnull(sum(cv.jadelle_consumption),0) as jadelle_consumption',
-	            	        'ifnull(sum(cv.condom_consumption),0) as condom_consumption', ))
+                        'ifnull(sum(cv.consumption1),0) as consumption1',
+                        'ifnull(sum(cv.consumption1),0) as consumption2',
+                        'ifnull(sum(cv.consumption2),0) as consumption3',
+                        'ifnull(sum(cv.consumption3),0) as consumption4',
+                        'ifnull(sum(cv.consumption4),0) as consumption5',
+                        'ifnull(sum(cv.consumption5),0) as consumption6',
+                        'ifnull(sum(cv.consumption6),0) as consumption7',
+                        'ifnull(sum(cv.consumption7),0) as consumption8',  ))
 	            	    	->group(array('L1_location_name'))
 	            	    	->order(array('L3_location_name', 'L2_location_name', 'L1_location_name'));
 	                   }
@@ -349,9 +404,14 @@ class DashboardCHAI extends Dashboard
 	            	            "L2_location_name" => $row['L2_location_name'],
 	            	            "L3_location_name" => $row['L3_location_name'],
 	            	            "location_name" => $row[$useName], 0, 16,
-	            	            "implanon_consumption" => $row['implanon_consumption'],
-	            	            "jadelle_consumption" => $row['jadelle_consumption'],
-	            	            "condom_consumption" => $row['condom_consumption'],
+	            	    "consumption1" => $row['consumption1'],
+                        "consumption2" => $row['consumption2'],
+                        "consumption3" => $row['consumption3'],
+                        "consumption4" => $row['consumption4'],
+                        "consumption5" => $row['consumption5'],
+                        "consumption6" => $row['consumption6'],
+                        "consumption7" => $row['consumption7'],
+                        "consumption8" => $row['consumption8'],
 	            	            "type" => 1
 	            	        );
 	            	    }
@@ -362,6 +422,52 @@ class DashboardCHAI extends Dashboard
 	
 	public function fetchAMCDetails($where = null) {
 	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+	    
+	    $create_view = $db->select()
+	    ->from(array('c' => 'commodity'),
+	        array(
+	            'cno.id as CNO_id',
+	            'cto.id as CTO_id',
+	            'c.date as date',
+	            'f.id as F_id',
+	            'f.facility_name as F_facility_name',
+	            'f.location_id as F_location_id',
+	            'l1.id as L1_id',
+	            'l1.location_name as L1_location_name',
+	            'l2.id as L2_id',
+	            'l2.location_name as L2_location_name',
+	            'l2.parent_id as L2_parent_id',
+	            'l3.location_name as L3_location_name',
+	            'ifnull(sum(c.consumption),0) as C_consumption' )) 
+        	    ->joinLeft(array('f' => "facility"), 'f.id = c.facility_id')
+        	    ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+	    	    ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+	    	    ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+	    	    ->joinLeft(array("cno" => "commodity_name_option"), 'c.name_id = cno.id')
+	    	    ->joinLeft(array("cto" => "commodity_type_option"), 'c.type_id = cto.id')
+	    	    ->where($where)
+	    	    ->group(array('c.id', 'c.date'))
+	    	    ->order(array('L3_location_name', 'L2_location_name', 'L1_location_name', 'F_facility_name'));
+	    	    
+	    	   $sql = $create_view->__toString();
+	    	   $sql = str_replace('`C_consumption`,', '`C_consumption`', $sql);
+	    	   $sql = str_replace('`f`.*,', '', $sql);
+	    	   $sql = str_replace('`l1`.*,', '', $sql);
+	    	   $sql = str_replace('`l2`.*,', '', $sql);
+	    	   $sql = str_replace('`l3`.*,', '', $sql);
+	    	   $sql = str_replace('`cno`.*,', '', $sql);
+	    	   $sql = str_replace('`cto`.*', '', $sql);
+	    	    
+	    	    try{
+	    	        $sql='create or replace view amc_view as ('.$sql.')';
+	    	        $db->fetchOne( $sql );
+	    	    }
+	    	    catch (Exception $e) {
+	    	        //echo $e->getMessage();
+	    	        //var_dump('error', $e->getMessage());
+	    	        
+	    	    }
+	    
 	    $output = array();
 	    
 	    $orderClause = new Zend_Db_Expr("`c`.`date` desc limit 12");
@@ -370,8 +476,15 @@ class DashboardCHAI extends Dashboard
 	    ->from(array('cv' => 'amc_view_extended_pivot_non_null'),
 	        array(
 	            'monthname(cv.date) as month',
-	            'sum(cv.implant_consumption) as implant_consumption',
-	            'sum(cv.injectable_consumption) as injectable_consumption'))
+	            'sum(cv.consumption1) as consumption1',
+	            'sum(cv.consumption2) as consumption2',
+	            'sum(cv.consumption3) as consumption3',
+	            'sum(cv.consumption4) as consumption4',
+	            'sum(cv.consumption5) as consumption5',
+	            'sum(cv.consumption6) as consumption6',
+	            'sum(cv.consumption7) as consumption7',
+	            'sum(cv.consumption8) as consumption8'))
+	            
 	            ->group(array('monthname(cv.date)'))
 	            ->order(array('cv.date'));
 	    
@@ -390,8 +503,14 @@ class DashboardCHAI extends Dashboard
 	    
 	        $output[] = array(
 	            "month" => $row['month'],
-	            "implant_consumption" => $row['implant_consumption'],
-	            "injectable_consumption" => $row['injectable_consumption']
+	            "consumption1" => $row['consumption1'],
+	            "consumption2" => $row['consumption2'],
+	            "consumption3" => $row['consumption3'],
+	            "consumption4" => $row['consumption4'],
+	            "consumption5" => $row['consumption5'],
+	            "consumption6" => $row['consumption6'],
+	            "consumption7" => $row['consumption7'],
+	            "consumption8" => $row['consumption8']
 	        );
 	    }
 	

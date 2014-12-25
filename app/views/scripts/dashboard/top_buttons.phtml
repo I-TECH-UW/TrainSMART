@@ -12,11 +12,10 @@ $current_view = '/'.$path[1].'/'. $path[2];
 	   //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
 ?>
 
-<?php region_filters_dropdown_db($this, $this->locations, $this->criteria, true, true); ?>
-
-<a id=geography name=geography class="dbbutton dbbutton_leftmenu"><?php tp('Geography'); ?></a>
-
-<input type="submit" value="Filter" class="dbbutton dbbutton_leftmenu">
+<p3>
+    <?php region_filters_dropdown_db($this, $this->locations, $this->criteria, true, true); ?>
+    <input type="submit" value="Filter" class="dbbutton dbbutton_leftmenu">
+</p3>
 
 
  </form>

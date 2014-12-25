@@ -1,0 +1,134 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+
+$(document).ready(function(){
+	updateDisplay(); 
+});
+
+  $("#home").click(function(){updateDisplay();});
+
+  $("#btn1b").click(function(){updateDisplay();});
+  $("#btn2").click(function(){updateDisplay();});
+  $("#btn3").click(function(){updateDisplay();});
+  $("#btn4").click(function(){updateDisplay();});
+  $("#btn5a").click(function(){updateDisplay();});
+
+  $("#btn5b").click(function(){updateDisplay();});
+  $("#btn6").click(function(){updateDisplay();});
+  $("#btn7").click(function(){updateDisplay();});
+  $("#btn8").click(function(){updateDisplay();});
+  $("#btn9").click(function(){updateDisplay();});
+  $("#btn10").click(function(){updateDisplay();});
+  $("#btn11a").click(function(){updateDisplay();});
+
+  $("#btn12").click(function(){updateDisplay();});
+  $("#btn13").click(function(){updateDisplay();});
+  $("#btn14").click(function(){updateDisplay();});
+
+  $("#coverage").click(function(){
+    if (getCookie("p0") == "hidden") {
+      setCookie("p0", "show", 30);
+    } else {
+      setCookie("p0", "hidden", 30);
+    }
+    updateDisplay();
+   });
+
+  $("#consumption").click(function(){
+	      if (getCookie("p1") == "hidden") {
+	  	      setCookie("p1", "show", 30);
+	  	    } else {
+	  	      setCookie("p1", "hidden", 30);
+	  	    }
+	    updateDisplay();
+	   });
+
+  $("#stockout").click(function(){
+	      if (getCookie("p2") == "hidden") {
+	  	      setCookie("p2", "show", 30);
+	  	    } else {
+	  	      setCookie("p2", "hidden", 30);
+	  	    }
+	    updateDisplay();
+	   });
+
+  $("#geography").click(function(){
+      if (getCookie("p3") == "hidden") {
+  	      setCookie("p3", "show", 30);
+  	    } else {
+  	      setCookie("p3", "hidden", 30);
+  	    }
+    updateDisplay();
+   });
+
+
+
+function updateDisplay() {
+
+	var p0status = getCookie("p0");
+	var p1status = getCookie("p1");
+	var p2status = getCookie("p2");
+	var p3status = getCookie("p3");
+
+	<!-- alert("> " + p0status + p1status + p2status); -->
+
+	if (p0status == "show") {
+        $("p0").show();
+      } else {
+        $("p0").hide();
+      }
+	if (p1status == "show") {
+        $("p1").show();
+      } else {
+        $("p1").hide();
+      }
+	if (p2status == "show") {
+        $("p2").show();
+      } else {
+        $("p2").hide();
+      }
+	if (p3status == "show") {
+        $("p3").show();
+      } else {
+        $("p3").hide();
+      }
+    
+
+}
+
+function setCookie(pN,pvalue,exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires=" + d.toGMTString();
+    document.cookie = pN+"="+pvalue+"; "+expires;
+}
+
+function getCookie(cpN) {
+    var pN = cpN + "=";
+    var ca = document.cookie.split(';');
+    <!-- alert("gc> " + ca); -->
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(pN) != -1) {
+            return c.substring(pN.length, c.length);
+        }
+    }
+    return "hidden";
+}
+
+function checkCookie(pnum) {
+    var pN=getCookie(pnum);
+   
+    if (pN == "undefined" || pN == "" || pN == "hidden") {
+        <!-- $(pN).hide(); -->
+        return ("hidden");
+    } else {
+    	<!-- $(pN).show(); -->
+    	return ("show");
+    }
+}
+
+</script>
+

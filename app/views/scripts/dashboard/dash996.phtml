@@ -3,45 +3,38 @@
 <head>
 <style>
 #homecontent {
-	background: url("images/content-bg.png") repeat-x scroll 0 0 #FAFAFA;
 	position: relative;
 }
 
 #homecontent-mid {
-	background: url("images/bg-stage.png") repeat-y scroll right top #FFFFFF;
-	border: 1px solid #BDBCBD;
 	min-height: 100%;
 	outline: medium none;
 	top: -40px;
 }
 
 #homebanner {
-	background: url("images/bg-stage-shade.png") repeat-x scroll 0 0
-		transparent;
 	padding-right: 20px;
 	position: relative;
 }
 
 .rounded {
-	border-radius: 10px 10px 10px 10px;
+	border-radius: 10px 10px 10px 10px; 
 }
 
 .sliderdiv {
-	background: none repeat scroll 0 0 FFFFFF;
 	float: left;
 }
 
 .main-search {
-	background: none repeat scroll 0 0 #FFFFFF;
 	float: left;
 	overflow: hidden;
 }
 
 .nav-buttons {
-	background: none repeat scroll 0 0 #FFFFFF;
 	float: left;
 	overflow: hidden;
 }
+
 
 </style>
 
@@ -88,32 +81,32 @@ print ScriptContainer::$instance->renderJSHead();
 			<!-------   /////////////////////////// get data ////////////////////// -->
 
 			<div>
-
 				<?php  //require_once('views/scripts/dashboard/load_data.phtml');?>
-
-
+			</div>
 
 			<!-------   /////////////////////////// make top buttons ////////////////////// -->
 
 			<div class="rightdiv" style="float: right;">
-				<?php  // require_once('views/scripts/dashboard/top_buttons.phtml');?>
-					
+				<?php require_once('views/scripts/dashboard/top_buttons.phtml');?>
 			</div>
-			
-			<!-------   /////////////////////////// make left buttons ////////////////////// -->
+			<div class="hrNav"></div>
 
+			<!-------   /////////////////////////// make left buttons ////////////////////// -->
 			<div class="nav-buttons">
 				<?php  require_once('views/scripts/dashboard/left_buttons.phtml');?>
-				
 			</div>
-
+			<!-------   /////////////////////////// load scripts ////////////////////// -->
+            <div class="nav-buttons">
+				<?php require_once('views/scripts/dashboard/displayScripts.phtml');?>
+			</div>
+			
 			<!-------   /////////////////////////// charts ////////////////////// -->
 
 			<body class="docs slim framebox_body">
 
 				<div id="allCharts" class="container">
 				
-				<div align="right"><font size="4"><label><?php echo 'National Contraceptive Prevalence Rate 15%'; ?></label></font></div>
+				<div class="hrNav"></div>
 				<div class="hrNav"></div>
 				
 				
@@ -154,7 +147,10 @@ print ScriptContainer::$instance->renderJSHead();
 								<!-------   /////////////////////////// chart 2,2 ////////////////////// -->
 								<div class="main-search"></div>
 					</div>
+					
 				</div>
+				
+				
 	</div>
 
 		<div class="hrNav"></div>
@@ -175,13 +171,13 @@ print ScriptContainer::$instance->renderJSHead();
 	drawChart11();
 	drawChart12();
 	drawChart13();
-	drawChart14();
+	//drawChart14();
 		
 	var currentLevel;
 	currentLevel = <?php echo '\'' . $this->location_data[0][name] . '\''; ?>;
 
 <?php  //file_put_contents('c:\wamp\logs\php_debug.log', 'dash3 193 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	   //var_dump("location_data=", $this->location_data[0],"END");
+	   //var_dump("latest_consumption_data=", $this->latest_consumption_data,"END");
 	   //var_dump("facility_data=",$this->facility_data[0],"END");
 	   //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
 ?>
@@ -196,25 +192,24 @@ print ScriptContainer::$instance->renderJSHead();
 	  // Create and populate the data table.
 	  var chart11Data = google.visualization.arrayToDataTable([
 
-
 ['', ''],
 
-['Female Condoms', 40000],
-['Male Condoms', 98000],
-['Injectables', 44000],
-['Implants', 21000],
-['IUDs', 10000],
-['Oral Pills', 79000],
-['Sterilization', 6000],
 
+<?php
+  		foreach ($this->total_consumption as $row){
+  	?>
+  	[<?php echo  " '$row[location]',$row[consumption] "; ?>],
+  	<?php
+  		}
+  	?>
 
 ]);		    
 
-	  <?php echo  " var title_data = 'Monthly consumption by method $this->title_data ' " ?>;
+	  <?php echo  " var title_date = 'Monthly consumption of $title->method $this->title_date ' " ?>;
 	  
 	  var chart11Options = {
 			  
-			  title: title_data,
+			  title: title_date,
 			  titleTextStyle: { fontSize: 16 },
 		      is3D:true,
 		      legend: 'none',
@@ -227,21 +222,27 @@ print ScriptContainer::$instance->renderJSHead();
 
   function drawChart12() {
       var chart12Data = google.visualization.arrayToDataTable([
-        [' ', '% of Facilities with trained HWs', '% of facilities with (FP/LARC) trained HWS providing (FP/LARC)', '% of facilities with trained HWs (FP/LARC) that are stocked out of (FP/LARC)'],
+['', ''],
 
-    	  [ 'FP', .8,.52,.12 ],
-    	  [ 'LARC', .33,.58,.13 ],
-    	  	    	
-    	  	        
-      ]);
 
-      <?php echo  " var title_data = 'Coverage summary, $this->title_data ' " ?>;
+<?php
+  		foreach ($this->consumption_by_geo as $row){
+  	?>
+  	[<?php echo  " '$row[location]',$row[consumption] "; ?>],
+  	<?php
+  		}
+  	?>
+
+]);		    
+
+	  <?php echo  " var title_date = 'Monthly consumption of $title->method $this->title_date ' " ?>;
 
       var chart12Options = {
-    		  title: title_data,
+    	      
+    		  title: title_date,
     		  titleTextStyle: { fontSize: 16 },
-    		  bar: {groupWidth: "80%"},
-    		  vAxis: {format: '#%'},
+    		  is3D:true,
+		      legend: 'none',
     		  
       };
 
@@ -254,24 +255,25 @@ print ScriptContainer::$instance->renderJSHead();
   function drawChart13() {
 	  
       var chart13Data = google.visualization.arrayToDataTable([
-['Month', 'FP', 'LARC'],
+['Month', ''],
 
-[ 'April',.21,.52 ],
-[ 'May',.23,.60 ],
-[ 'June',.30,.65 ],
-[ 'July',.35,.67 ],
-[ 'August',.38,.70 ],
-[ 'September',.40,.73 ],
-[ 'October',.44,.74 ],
+<?php
+  		foreach ($this->average_monthly_consumption_by_geo as $row){
+  	?>
+  	[<?php echo  " '$row[month]',$row[consumption] "; ?>],
+  	<?php
+  		}
+  	?>
 
-      ]);
+]);		    
 
-      <?php echo  " var title_data = 'Percent of facilities providing FP and LARC, April to October 2014 ' " ?>;
+	  <?php echo  " var title_date = 'Consumption of $title->method $this->title_date ' " ?>;
 
       var chart13Options = {
-        title: title_data,
+        title: title_date,
         titleTextStyle: { fontSize: 16 },
-        vAxis: {format:'#%'},
+        legend: 'none',
+       
       };
 
       var chart13 = new google.visualization.LineChart(document.getElementById('chart13_div'));
@@ -284,16 +286,17 @@ print ScriptContainer::$instance->renderJSHead();
       var chart14Data = google.visualization.arrayToDataTable([
 ['Month', 'Implants', 'Commodities for 7 days'],
 
-[ 'April',.12,.18 ],
-[ 'May',.15,.32 ],
-[ 'June',.18,.36 ],
-[ 'July',.20,.20 ],
-[ 'August',.17,.02 ],
-[ 'September',.20,.28 ],
-[ 'October',.30,.13 ],
-      ]);
+<?php
+  		foreach ($this->average_monthly_consumption_by_geo as $row){
+  	?>
+  	[<?php echo  " '$row[location]',$row[consumption] "; ?>],
+  	<?php
+  		}
+  	?>
 
-      <?php echo  " var title_data = 'Percent of facilities stocked out of FP commodities, April to October 2014' " ?>;
+]);		    
+
+	  <?php echo  " var title_date = 'Consumption of $title->method $this->title_date ' " ?>;
       
       var chart14Options = {
         title: title_data,

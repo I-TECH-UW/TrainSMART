@@ -1,0 +1,14 @@
+<?php
+    $idx = 0;
+	foreach ($this->geo_data as $getresult){
+	    $id = $getresult[id];
+?>
+           	<a	href="<?php  echo Settings::$COUNTRY_BASE_URL.'/dashboard/dash10/id/' . $id; ?>"
+					class="dbbutton"><?php echo $getresult[name]; ?></a> 
+<?php 
+ $idx = $idx+1;
+?>
+
+<?php
+	}
+?>
