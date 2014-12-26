@@ -336,23 +336,29 @@ class EmployeeController extends ReportFilterHelpers {
      */
     public function getAvailableMechanisms($employee_id) {
         $db = $this->dbfunc();
+        $partnerMechanisms = array();
         if ($employee_id) {
 
             // get the mechanisms owned by this employee's employer
-            $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase FROM mechanism_option ' .
-                'INNER JOIN partner ON mechanism_option.owner_id = partner.id ' .
-                "INNER JOIN employee ON employee.partner_id = partner.id AND employee.id = $employee_id";
+            $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase ' .
+                'FROM mechanism_option,	employee, link_subpartner_mechanism ' .
+                'WHERE (' .
+                '(link_subpartner_mechanism.partner_id = employee.partner_id AND link_subpartner_mechanism.mechanism_option_id = mechanism_option.id) ' .
+                'OR (employee.partner_id = mechanism_option.owner_id) ' .
+                ') ' .
+                "AND employee.id = $employee_id ";
 
+            if (!$this->hasACL('training_organizer_option_all')) {
+                $partners = $this->getAvailablePartners();
+                if (count($partners)) {
+                    $sql .= "AND mechanism.owner_id in (" . implode(',', $partners) . ") ";
+                }
+            }
 
-			if (!$this->hasACL('training_organizer_option_all')) {
-				$partners = $this->getAvailablePartners();
-				if (count($partners)) {
-					$sql .= " AND mechanism.owner_id in (" . implode(',', $partners) . ")";
-				}
-			}
+            $sql .= 'GROUP BY mechanism_option.id ORDER BY mechanism_phrase ASC';
 
-			$sql .= " ORDER BY mechanism_phrase ASC";
-			$partnerMechanisms = $db->fetchAll($sql);
+            $partnerMechanisms = $db->fetchAll($sql);
+
         } else {
             if ($this->hasACL('training_organizer_option_all')) {
                 // get all mechanisms
@@ -363,12 +369,17 @@ class EmployeeController extends ReportFilterHelpers {
                 $partners = $this->getAvailablePartners();
 				if (count($partners)) {
 					// get the mechanisms owned by the partners the logged in user can edit
-					$sql = 'SELECT id, mechanism_phrase FROM mechanism_option WHERE owner_id in (' . implode(',', $partners) . ') ORDER BY mechanism_phrase ASC';
-					$partnerMechanisms = $db->fetchAll($sql);
-				}
-				else {
-					$partnerMechanisms = array();
-				}
+                    $partnerList = implode(',', $partners);
+
+                    $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase ' .
+                        'FROM mechanism_option, link_subpartner_mechanism ' .
+                        'WHERE ( ' .
+                        "(link_subpartner_mechanism.partner_id in $partnerList AND link_subpartner_mechanism.mechanism_option_id = mechanism_option.id) " .
+                        "OR (owner_id in ($partnerList) " .
+                        ') ' .
+                        'GROUP BY mechanism_option.id ORDER BY mechanism_phrase ASC';
+                    $partnerMechanisms = $db->fetchAll($sql);
+                }
             }
         }
         return $partnerMechanisms;
@@ -381,7 +392,7 @@ class EmployeeController extends ReportFilterHelpers {
 		require_once 'views/helpers/EditTableHelper.php';
 
 		$tableValues = array();
-		$columnNames = array('mechanism' => t('Mechanism'),
+		$columnNames = array('mechanism_phrase' => t('Mechanism'),
 			'percentage' => t('Percent'),
 		);
 
@@ -400,23 +411,24 @@ class EmployeeController extends ReportFilterHelpers {
 
 			$employee_data = $db->fetchRow($sql);
 
-			$sql = "SELECT employee_to_partner_to_subpartner_to_funder_to_mechanism.id as epsfmid, percentage, mechanism_phrase " .
-				"FROM employee_to_partner_to_subpartner_to_funder_to_mechanism, mechanism_option " .
-	    		"WHERE employee_to_partner_to_subpartner_to_funder_to_mechanism.is_deleted = 0 and mechanism_option_id = mechanism_option.id and employee_id = $employee_id";
+            $sql = "SELECT mechanism_option_id from link_employee_mechanism where employee_id = $employee_id";
 
-			$funders = $db->fetchAll($sql);
+            $sql = "SELECT link_employee_mechanism.id, link_employee_mechanism.percentage, mechanism_option.mechanism_phrase " .
+                "FROM link_employee_mechanism INNER JOIN mechanism_option ON link_employee_mechanism.mechanism_option_id = mechanism_option.id " .
+                "WHERE employee_id = $employee_id";
 
-			foreach ($funders as $i => $row) {
-				$tableValues[$i] = array('mechanism' => $row['mechanism_phrase'], 'percentage' => $row['percentage'], 'id' => $row['epsfmid']);
-				$percent = $row['percentage'] / 100.0;
-				if ($this->setting('display_hours_per_mechanism')) {
-					$tableValues[$i]['hours'] = $percent * $employee_data['funded_hours_per_week'];
-				}
-				if ($this->setting('display_annual_cost_to_mechanism')) {
-					$employee_mechanism_cost = sprintf('%0.2f', $percent * $employee_data['annual_cost']);
-					$tableValues[$i]['cost'] = $employee_mechanism_cost;
-				}
-			}
+            $tableValues = $db->fetchAll($sql);
+
+            foreach ($tableValues as $i => &$mechanism) {
+                $percent = $mechanism['percentage'] / 100.0;
+                if ($this->setting('display_hours_per_mechanism')) {
+                    $mechanism['hours'] = $percent * $employee_data['funded_hours_per_week'];
+                }
+                if ($this->setting('display_annual_cost_to_mechanism')) {
+                    $employee_mechanism_cost = sprintf('%0.2f', $percent * $employee_data['annual_cost']);
+                    $mechanism['cost'] = $employee_mechanism_cost;
+                }
+            }
 		}
 		return(EditTableHelper::generateHtml('employeeFunding', $tableValues, $columnNames, array(), array(), true));
 
