@@ -813,7 +813,7 @@ LEFT JOIN 	partner subp on subp.id = funders.subpartner_id
 		}
 		// assign form drop downs
 		$helper = new Helper();
-		$this->view->assign('status', $status);
+
 		$this->viewAssignEscaped ( 'criteria', $criteria );
 		$this->viewAssignEscaped ( 'locations', $locations );
 		$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false ) );
