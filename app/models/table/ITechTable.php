@@ -112,9 +112,12 @@ class ITechTable extends Zend_Db_Table_Abstract
 		return parent::update($data,$where);
 	}
 
-	/**
-   * Override to use is_deleted field
-   */
+    /**
+     * Override Zend_Db_Table_Abstract::delete to use is_deleted field, if present
+     * @param string|bool $where - where clause for deletion
+     * @param bool        $force - delete row from database even if table has an is_deleted field, rather than mark deleted
+     * @return int
+     */
 	public function delete($where=false, $force = false) {
 		$info = $this->info();
 		if ( $force or (array_search('is_deleted',$info['cols']) == false) )
