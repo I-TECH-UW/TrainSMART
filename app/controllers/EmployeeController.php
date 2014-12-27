@@ -340,7 +340,7 @@ class EmployeeController extends ReportFilterHelpers {
         if ($employee_id) {
 
             // get the mechanisms owned by this employee's employer
-            $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase ' .
+            $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase, mechanism_option.owner_id ' .
                 'FROM mechanism_option,	employee, link_subpartner_mechanism ' .
                 'WHERE (' .
                 '(link_subpartner_mechanism.partner_id = employee.partner_id AND link_subpartner_mechanism.mechanism_option_id = mechanism_option.id) ' .
@@ -362,7 +362,7 @@ class EmployeeController extends ReportFilterHelpers {
         } else {
             if ($this->hasACL('training_organizer_option_all')) {
                 // get all mechanisms
-                $sql = 'SELECT id, mechanism_phrase FROM mechanism_option WHERE mechanism_option.is_deleted = 0 ORDER BY mechanism_phrase ASC';
+                $sql = 'SELECT id, mechanism_phrase, owner_id FROM mechanism_option WHERE mechanism_option.is_deleted = 0 ORDER BY mechanism_phrase ASC';
                 $partnerMechanisms = $db->fetchAll($sql);
             } else {
                 // get all mechanisms that the logged in user has access to
@@ -371,7 +371,7 @@ class EmployeeController extends ReportFilterHelpers {
 					// get the mechanisms owned by the partners the logged in user can edit
                     $partnerList = implode(',', $partners);
 
-                    $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase ' .
+                    $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase, mechanism_option.owner_id ' .
                         'FROM mechanism_option, link_subpartner_mechanism ' .
                         'WHERE ( ' .
                         "(link_subpartner_mechanism.partner_id in $partnerList AND link_subpartner_mechanism.mechanism_option_id = mechanism_option.id) " .
@@ -458,21 +458,29 @@ class EmployeeController extends ReportFilterHelpers {
             $sql = "SELECT * from employee WHERE id = $id";
             $employeeData = $db->fetchRow($sql);
 
-            $sql = "SELECT partner.organizer_option_id FROM partner WHERE partner.id = {$employeeData['partner_id']}";
-            $organizerID = $db->fetchOne($sql);
-
             if (!$this->hasACL('training_organizer_option_all')) {
 				$orgs = $this->getAvailableOrganizers();
 				if (!count($orgs)) {
 					$this->doNoAccessError();
 				}
-                if (!array_search($organizerID, $orgs)) {
 
-                    // get the subpartners for the mechanisms this partner owns
-                    $sql = 'SELECT subpartner_id FROM subpartner_to_funder_to_mechanism WHERE mechanism_option_id in (' . implode(',', $availableMechanisms) . ')';
-                    $subPartnersOnOwnedMechanisms = $db->fetchAll($sql);
+                $partners = $this->getAvailablePartners();
+                if (!array_search($employeeData['partner_id'], $partners)) {
 
-                    if (!array_search($employeeData['partner_id'], $subPartnersOnOwnedMechanisms)) {
+                    // employee not employed by a partner that the logged in user has access to,
+                    // see if they're employed by a subpartner on a mechanism that an accessible partner owns
+                    $mechIDs = '';
+                    foreach ($availableMechanisms as $mech) {
+                        $mechIDs .= ", {$mech['id']}";
+                    }
+
+                    if (!$mechIDs) {
+                        $this->doNoAccessError();
+                    }
+
+                    $sql = "SELECT partner_id from link_subpartner_mechanism WHERE mechanism_option_id in ($mechIDs)";
+                    $subpartners = $db->fetchCol($sql);
+                    if (!array_search($employeeData['partner_id'], $subpartners)) {
                         $this->doNoAccessError();
                     }
                 }
