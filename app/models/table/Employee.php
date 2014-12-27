@@ -15,13 +15,13 @@ class Employee extends ITechTable {
 	
 	public static function disassociateMechanismFromEmployee($association_ids)
 	{
-	    if ($association_ids === "")
+	    if (!$association_ids)
 		  return false;
 	    
 	    $table = new ITechTable ( array ('name' => 'link_employee_mechanism' ) );
-	    try{
+	    try {
 	        $table->delete("id in ($association_ids)");
-	    }catch(Exception $e){
+	    } catch(Exception $e) {
 	        error_log($e);
 	        return false;
 	    }
@@ -36,12 +36,12 @@ class Employee extends ITechTable {
 
 
         $linkTable = new ITechTable ( array ('name' => 'link_employee_mechanism' ) );
-	    foreach($mechanism_association as $mech){
-	        try{
+	    foreach($mechanism_association as $mech) {
+	        try {
                 $row = $linkTable->createRow(array('employee_id' => $id, 'mechanism_option_id' => $mech['id'], 'percentage' => $mech['percentage']));
                 $row->save();
 
-	        }catch(Exception $e){
+	        } catch(Exception $e) {
 	            error_log($e);
 	            return false;
 	        }

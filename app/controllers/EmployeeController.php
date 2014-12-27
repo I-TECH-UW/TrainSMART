@@ -221,7 +221,7 @@ class EmployeeController extends ReportFilterHelpers {
 		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
-
+        // TODO: delete references to employee in other tables?
 		require_once('models/table/Employee.php');
 		$status = ValidationContainer::instance ();
 		$id = $this->getSanParam ( 'id' );
@@ -247,7 +247,8 @@ class EmployeeController extends ReportFilterHelpers {
 		if (! $this->hasACL ( 'employees_module' )) {
 			$this->doNoAccessError ();
 		}
-	
+        // TODO: is this used now?
+/*
 		require_once('models/table/Partner.php');
 		require_once('views/helpers/Location.php'); // funder stuff
 	
@@ -288,6 +289,7 @@ class EmployeeController extends ReportFilterHelpers {
 			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 		}
 		$this->_redirect("employee/edit/id/" . $row['employee_id']);
+*/
 	}
 
 	/**
@@ -555,7 +557,7 @@ class EmployeeController extends ReportFilterHelpers {
     			if($this->setting['display_employee_contract_end_date'])
     				$status->checkRequired ( $this, 'agreement_end_date', t ( 'Contract End Date' ) );
     			
-    
+                // TODO: used?
     			$params['subPartner'] = $this->_array_me($params['subPartner']);
     			$params['partnerFunder'] = $this->_array_me($params['partnerFunder']);
     			$params['mechanism'] = $this->_array_me($params['mechanism']);
@@ -582,34 +584,27 @@ class EmployeeController extends ReportFilterHelpers {
     			if (! $status->hasError() ) {
     			    require_once('models/table/Employee.php');
     				$id = $this->_findOrCreateSaveGeneric('employee', $params);
-    				if ($params['employeeFunding_delete_data'])
-    				{
-    				    if (!Employee::disassociateMechanismFromEmployee($params['employeeFunding_delete_data'])) {
-    				        $status->setStatusMessage(t('Error saving mechanism association.'));
-    				    }
-    				}
-    				
-    				if ($params['employeeFunding_new_data'])
-    				{
-    				    $data_to_add = json_decode($params['employeeFunding_new_data'], true);
-    				    if (!Employee::saveMechanismAssociation($id, $data_to_add['data']))
-    				    {
-    				        $status->setStatusMessage(t('Error saving mechanism association.'));
-    				    }
-    				}
-    				
+
     				if(!$id) {
     					$status->setStatusMessage( t('That person could not be saved.') );
     				} else {
+                        if ($params['employeeFunding_delete_data'])
+                        {
+                            if (!Employee::disassociateMechanismFromEmployee($params['employeeFunding_delete_data'])) {
+                                $status->setStatusMessage(t('Error saving mechanism association.'));
+                            }
+                        }
+
+                        if ($params['employeeFunding_new_data'])
+                        {
+                            $data_to_add = json_decode($params['employeeFunding_new_data'], true);
+                            if (!Employee::saveMechanismAssociation($id, $data_to_add['data']))
+                            {
+                                $status->setStatusMessage(t('Error saving mechanism association.'));
+                            }
+                        }
     					$status->setStatusMessage( t('The person was saved.') );
-    					if (array_key_exists('save', $params))
-    					{
-    					   $this->_redirect("employee/add_funder_to_employee/id/$id");
-    					}
-    					else 
-    					{
-    					    $this->_redirect("employee/edit/id/$id");
-    					}
+                        $this->_redirect("employee/edit/id/$id");
     				}
     			}
     		}
@@ -631,39 +626,10 @@ class EmployeeController extends ReportFilterHelpers {
             	$region_ids = Location::getCityInfo($params['location_id'], $this->setting('num_location_tiers'));
             	$region_ids = Location::regionsToHash($region_ids);
             	$params = array_merge($params, $region_ids);
-            	#$params['roles'] = $db->fetchCol("SELECT employee_role_option_id FROM employee_to_role WHERE employee_id = $id");
-            	
-            	//get linked table data from option tables
-            	$sql = "SELECT partner_to_subpartner_to_funder_to_mechanism_id, employee_id, partner_id, subpartner_id, partner_funder_option_id, mechanism_option_id, percentage
-            	FROM employee_to_partner_to_subpartner_to_funder_to_mechanism WHERE is_deleted = false and employee_id = $id";
-            	$params['funder'] = $db->fetchAll($sql);
-            	
-            	
-            	$helper = new Helper();
-            	
-            	$subPartner = $helper->getEmployeeSubPartner($id);
-            	$this->viewAssignEscaped ( 'subPartner', $subPartner );
-            	
-            	$partnerFunder = $helper->getEmployeeFunder($id);
-            	$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-            	
-            	$mechanism = $helper->getEmployeeMechanism($id);
-            	$this->viewAssignEscaped ( 'mechanism', $mechanism );
 
 			}
 		}
 
-		// make sure form data is valid for display
-		if (empty($params['funder']))
-			$params['funder'] = array(array());
-		
-		if (empty($params['subpartner']))
-			$params['subpartner'] = array(array());
-		if (empty($params['funder']))
-			$params['funder'] = array(array());
-		if (empty($params['mechanism_option_id']))
-			$params['mechanism_option_id'] = array(array());
-		
 
 		// assign form drop downs
 		$params['dob']                          = formhelperdate($params['dob']);
@@ -743,6 +709,7 @@ class EmployeeController extends ReportFilterHelpers {
 			list($a, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
 			list($locationFlds, $locationsubquery) = Location::subquery($this->setting('num_location_tiers'), $location_tier, $location_id, true);
 
+            // TODO: Update for new tables
 			$sql = "SELECT DISTINCT
     employee.id,
     employee.employee_code,
