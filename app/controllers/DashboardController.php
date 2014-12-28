@@ -84,45 +84,70 @@ class DashboardController extends ReportFilterHelpers {
 	
 	public function dash996Action() { 
 	  require_once('models/table/Dashboard-CHAI.php');
-	  file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	  
+	  // file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	   
 	  $method = $this->getSanParam ( 'method' );
-      $request = $this->getRequest ();
-      // if ($request->isPost () || $method == 0) {
-      if ( true ) {    
+	  $request = $this->getRequest ();
+	  
+	  $title_method = new DashboardCHAI();
+	  $title_method = $title_method->fetchTitleMethod($method);
+	   
+	  $title_date = new DashboardCHAI();
+	  $title_date = $title_date->fetchTitleDate();
 
-        $cln_data = new DashboardCHAI();
-        $amc_data = new DashboardCHAI();
+	  $this->view->assign('title_date',  $title_method[commodity_name].', '. $title_date[month_name].', '. $title_date[year]);
+	  
+	  $cln_data = new DashboardCHAI();
+	  $amc_data = new DashboardCHAI();
+	  $tot_data = new DashboardCHAI();
+	  
+	  // geo selection includes "--choose--" or no selection
+	  if( ( isset($_POST["region_c_id"] ) && $_POST["region_c_id"][0] == "" ) || 
+	      ( isset($_POST["district_id"] ) && $_POST["district_id"][0] == "" ) || 
+	      ( isset($_POST["province_id"] ) && $_POST["province_id"][0] == "" ) ||
+	      (!isset($_POST["region_c_id"] ) && !isset($_POST["district_id"] ) && !isset($_POST["province_id"] ) ) ){
+          //get national numbers from refresh
+          $cln_details = $cln_data->fetchDashboardData('national_consumption'.strval($method));
+          $amc_details = $amc_data->fetchDashboardData('national_average_monthly_consumption'.strval($method));
+          $tot_details = $tot_data->fetchDashboardData('national_total_consumption'.strval($method)); 
+	  }
+	  
+      if (count($cln_details) > 0 && count($tot_details) > 0 && count($amc_details) > 0  ) { //got all
+          
+          $this->view->assign('consumption_by_geo', $cln_details);
+          $this->view->assign('total_consumption', $tot_details);
+          $this->view->assign('average_monthly_consumption_by_geo', $amc_details);
+	  
+      } else {    
+
         $where = ' 1=1 ';
        
-	    if(isset($_POST["region_c_id"])){ // CHAINigeria LGA
+	    if( isset($_POST["region_c_id"]) ){ // CHAINigeria LGA
 	        $where = $where.' and f.location_id in (';
 	        foreach ($_POST['region_c_id'] as $i => $value){
 	            $geo = explode('_',$value);
 	            $where = $where.$geo[2].', ';
-	            
 	        }
 	        $where = $where.') ';
 	        $group = new Zend_Db_Expr('L1_location_name, CNO_id');
 	        $useName = 'L1_location_name';
 	        
-	    } else if(isset($_POST['district_id'])){ // CHAINigeria state
+	    } else if( isset($_POST['district_id']) ){ // CHAINigeria state
 	        $where = $where.' and l2.id in (';
 	        foreach ($_POST['district_id'] as $i => $value){
 	            $geo = explode('_',$value);
 	            $where = $where.$geo[1].', ';
-	           
 	        }
 	        $where = $where.') ';
 	        $group = new Zend_Db_Expr('L2_location_name, CNO_id');
 	        $useName = 'L2_location_name';
 	        
-	    } else if(isset($_POST['province_id'])){ //province_id is a Trainsmart internal name, represents hightest CHAINigeria level = GPZ 
+	    } else if( isset($_POST['province_id']) ){ //province_id is a Trainsmart internal name, represents hightest CHAINigeria level = GPZ 
 	        $where = $where.' and l2.parent_id in (';
 	        foreach ($_POST['province_id'] as $i => $value){
 	            $geo = explode('_',$value);
 	            $where = $where.$geo[0].', ';
-	           
 	        }
 	        $where = $where.') ';
 	        $group = new Zend_Db_Expr('L3_location_name, CNO_id');
@@ -230,31 +255,38 @@ class DashboardController extends ReportFilterHelpers {
 	         
 	    } // foreach amc
 	    
-	    $total_consumption[] =array('location' => $locationNames, 'consumption' => $total );
+	    if (is_null($consumption_by_geo)) {
+	        $consumption_by_geo[] = array('location' => 'No Data', 'consumption' => 0 );
+	    }
 	    
-	    $title_method = new DashboardCHAI();
-	    $title_method = $title_method->fetchTitleMethod($method);
+	    if ($total == 0) {
+	        $total_consumption[] = array('location' => 'No Data', 'consumption' => 0 );
+	    } else {
+	        $total_consumption[] = array('location' => $locationNames, 'consumption' => $total );
+	    }
 	    
-	    $title_date = new DashboardCHAI();
-	    $title_date = $title_date->fetchTitleDate();
+	    //file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	    //var_dump('$where= ', $where, 'END');
+	    //var_dump('$geo= ', $geo, 'END');
+	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	    
-	    var_dump('locationNames', $locationNames, "END");
-	    
-	    //var_dump('consumption_by_geo', $consumption_by_geo, "END");
-	    var_dump('total_consumption', $total_consumption, "END");
-	    //var_dump('average_monthly_consumption_by_geo', $average_monthly_consumption_by_geo, "END");
-	    
-	    $this->view->assign('title_date',  $title_method[commodity_name].', '. $title_date[month_name].', '. $title_date[year]);
-	   
 	    $this->view->assign('consumption_by_geo', $consumption_by_geo);
 	    $this->view->assign('total_consumption', $total_consumption);
 	    $this->view->assign('average_monthly_consumption_by_geo', $average_monthly_consumption_by_geo);
+	    
+	    if ($location == 'National') {
+	        $cln_details = $cln_data->insertDashboardData($consumption_by_geo, 'national_consumption'.strval($method));
+	        $amc_details = $amc_data->insertDashboardData($total_consumption, 'national_total_consumption'.strval($method));
+	        $tot_details = $tot_data->insertDashboardData($average_monthly_consumption_by_geo, 'national_average_monthly_consumption'.strval($method));
+	    }
+	
+	}  // else
 	   
-  }  // if
-
-        $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-	    $this->viewAssignEscaped ('locations', Location::getAll() );
-}
+    // $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+	$this->viewAssignEscaped ('locations', Location::getAll() );
+	
+} // dash996Action
 	
 	public function dash997Action() { }
 	public function dash998Action() { }

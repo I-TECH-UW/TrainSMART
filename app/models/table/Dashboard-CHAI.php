@@ -156,21 +156,18 @@ class DashboardCHAI extends Dashboard
 	    
 	}
 	
+
+	
 	public function fetchTitleDate() {
 	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
-	    $output = array();
 	
 	    $select = $db->select()
-	    ->from(array('l' => 'lc_view'),
-	        array(
-	            'monthName(l.C_date) as month_name',
-	            'year(l.C_date) as year'
-	        ));
+	    ->from(array('c' => 'commodity'),
+	        array(new Zend_Db_Expr('monthName(max(c.date)) as month_name, year(max(c.date)) as year' )));
 	
 	    $result = $db->fetchRow($select);
-	
+
 	    return $result;
-	     
 	}
 	
 	public function fetchTitleMethod($method) {
@@ -793,6 +790,57 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
                     }
                     break;
                     
+		          case 'national_consumption1':
+		          case 'national_consumption2':
+		          case 'national_consumption3':
+		          case 'national_consumption4':
+		          case 'national_consumption5':
+		          case 'national_consumption6':
+                  case 'national_consumption7':
+		          case 'national_consumption8':
+                
+                    foreach($result as $row){
+                        $output[] = array(
+                            "location" => $row['data0'],
+                            "consumption" => $row['data1'],
+                        );
+                    }
+                    break;
+                
+ 		          case 'national_average_monthly_consumption1':
+		          case 'national_average_monthly_consumption2':
+		          case 'national_average_monthly_consumption3':
+		          case 'national_average_monthly_consumption4':
+		          case 'national_average_monthly_consumption5':
+		          case 'national_average_monthly_consumption6':
+		          case 'national_average_monthly_consumption7':
+		          case 'national_average_monthly_consumption8':	
+                
+                    foreach($result as $row){
+                        $output[] = array(
+                            "month" => $row['data0'],
+                            "consumption" => $row['data1'],
+                        );
+                    }
+                    break;
+                
+		          case 'national_total_consumption1':
+		          case 'national_total_consumption2':
+		          case 'national_total_consumption3':
+		          case 'national_total_consumption4':
+		          case 'national_total_consumption5':
+		          case 'national_total_consumption6':
+		          case 'national_total_consumption7':
+		          case 'national_total_consumption8':		 
+                
+                    foreach($result as $row){
+                        $output[] = array(
+                            "location" => $row['data0'],
+                            "consumption" => $row['data1'],
+                        );
+                    }
+                    break;
+                    
                 case 'average_monthly_consumption':
                 
                     foreach ($result as $row) {
@@ -855,6 +903,69 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
         		    }
 		          break;
 		          
+		          case 'national_consumption1':
+		          case 'national_consumption2':
+		          case 'national_consumption3':
+		          case 'national_consumption4':
+		          case 'national_consumption5':
+		          case 'national_consumption6':
+                  case 'national_consumption7':
+		          case 'national_consumption8':
+		              
+		              foreach($details as $row){
+		                  $data = array(
+		                      'datetime'  => $dateTime,
+		                      'chart'  => $chart,
+		                      'data0'  => $row['location'],
+		                      'data1'  => $row['consumption'],
+		                  );
+		          
+		                  $insert_result = $dashboard_refresh->insert($data);
+		              }
+		              break;
+		              
+		          case 'national_average_monthly_consumption1':
+		          case 'national_average_monthly_consumption2':
+		          case 'national_average_monthly_consumption3':
+		          case 'national_average_monthly_consumption4':
+		          case 'national_average_monthly_consumption5':
+		          case 'national_average_monthly_consumption6':
+		          case 'national_average_monthly_consumption7':
+		          case 'national_average_monthly_consumption8':		              
+		          
+		              foreach($details as $row){
+		                  $data = array(
+		                      'datetime'  => $dateTime,
+		                      'chart'  => $chart,
+		                      'data0'  => $row['month'],
+		                      'data1'  => $row['consumption'],
+		                  );
+		          
+		                  $insert_result = $dashboard_refresh->insert($data);
+		              }
+		              break;
+		              
+		          case 'national_total_consumption1':
+		          case 'national_total_consumption2':
+		          case 'national_total_consumption3':
+		          case 'national_total_consumption4':
+		          case 'national_total_consumption5':
+		          case 'national_total_consumption6':
+		          case 'national_total_consumption7':
+		          case 'national_total_consumption8':		              
+		          
+		              foreach($details as $row){
+		                  $data = array(
+		                      'datetime'  => $dateTime,
+		                      'chart'  => $chart,
+		                      'data0'  => $row['location'],
+		                      'data1'  => $row['consumption'],
+		                  );
+		          
+		                  $insert_result = $dashboard_refresh->insert($data);
+		              }
+		              break;
+		          
 		        case 'average_monthly_consumption':
 		            
 		            foreach($details as $row){
@@ -869,6 +980,7 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 		                $insert_result = $dashboard_refresh->insert($data);
 		            }
 		            break;
+
 		    }
 		    
 		    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 697>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();

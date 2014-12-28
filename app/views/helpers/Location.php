@@ -50,6 +50,7 @@ function renderFilter(&$locations, $tier, $widget_id, $default_val_id = false, $
       }
     ?>
   </select>
+   
   <?php
 if ( $child_widget_id ) {?>
 <script type="text/javascript">
