@@ -203,7 +203,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
 
         // Perform AJAX saving here (we are overriding YUI's DataTable method)
         this.myDataTable.onEventSaveCellEditor = function(oArgs) {
-            oCellEditor = this.getCellEditor();
+            var oCellEditor = this.getCellEditor();
 
             // override date behavior so we don't output default javascript date format
             if (oCellEditor.column.editor === "date") {
@@ -228,7 +228,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
             elSaving.innerHTML = tr("Saving...");
 
             var nodes = oCellEditor.container.getElementsByTagName('input'); // disable all inputs
-            for(i in nodes) {
+            for(var i in nodes) {
                 nodes[i].disabled = true;
             }
             var nodes = oCellEditor.container.getElementsByTagName('button'); // disable OK button
@@ -253,8 +253,8 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
                         if (status.insert != null && status.insert == -2) {
                             if (confirm(status.error)) { // undelete
                                 elSaving.innerHTML = '<span class="errorText">' + tr('Undeleting...') + '</span>';
-                                queryString = "id=" + oCellEditor.record.getData("id") + "&" + oCellEditor.column.key + "=" + encodeURIComponent(newData) + "&undelete=1";
-                                cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/outputType/json", ajaxCallback, queryString);
+                                var queryString = "id=" + oCellEditor.record.getData("id") + "&" + oCellEditor.column.key + "=" + encodeURIComponent(newData) + "&undelete=1";
+                                var cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/outputType/json", ajaxCallback, queryString);
                             } else {
                                 this.cancelCellEditor();
                             }
@@ -307,8 +307,8 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
                     this.saveCellEditor();
 
                     if (this.config.autoNextOnSubmit) { // move to next cell
-                        nextCol = oCellEditor.column.getKeyIndex() + 1;
-                        el = dt.getTdEl({record: oCellEditor.record, column: dt.getColumn(nextCol)});
+                        var nextCol = oCellEditor.column.getKeyIndex() + 1;
+                        var el = dt.getTdEl({record: oCellEditor.record, column: dt.getColumn(nextCol)});
                         dt.showCellEditor(el);
                     }
                     return true;
@@ -323,8 +323,8 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
                 scope: this
             }
 
-            queryString = "id=" + oCellEditor.record.getData("id") + "&" + oCellEditor.column.key + "=" + encodeURIComponent(newData);
-            cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/outputType/json", ajaxCallback, queryString);
+            var queryString = "id=" + oCellEditor.record.getData("id") + "&" + oCellEditor.column.key + "=" + encodeURIComponent(newData);
+            var cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/outputType/json", ajaxCallback, queryString);
         }
 
         // Delete and Ajax update
