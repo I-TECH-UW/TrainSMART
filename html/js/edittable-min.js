@@ -203,132 +203,128 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
 
         // Perform AJAX saving here (we are overriding YUI's DataTable method)
         this.myDataTable.onEventSaveCellEditor = function(oArgs) {
-          oCellEditor = this.getCellEditor();
+            oCellEditor = this.getCellEditor();
 
-          var newData = oCellEditor.value;
-          var oldData = oCellEditor.record.getData(oCellEditor.column.key);
-          if(newData == oldData || (!newData && !oldData)) { // no need to save
-            dt.cancelCellEditor();
-            return true;
-          }
+            // override date behavior so we don't output default javascript date format
+            if (oCellEditor.column.editor === "date") {
+                oCellEditor.value = oCellEditor.value.getFullYear() + '-' + (oCellEditor.value.getMonth() + 1) + '-' + oCellEditor.value.getDate();
+            }
 
-          oCellEditor.isSaving = true;
+            var newData = oCellEditor.value;
+            var oldData = oCellEditor.record.getData(oCellEditor.column.key);
+            if(newData == oldData || (!newData && !oldData)) { // no need to save
+                dt.cancelCellEditor();
+                return true;
+            }
 
-          // Inform user we are attempting to save
-          var elSaving = document.getElementById("editTableSaving");
-          if(elSaving == null) { // dynamically create
-            elSaving = oCellEditor.container.appendChild(document.createElement('div'));
-            elSaving.id = "editTableSaving";
-          }
-          elSaving.innerHTML = tr("Saving...");
+            oCellEditor.isSaving = true;
 
-          var nodes = oCellEditor.container.getElementsByTagName('input'); // disable all inputs
-          for(i in nodes) {
-            nodes[i].disabled = true;
-          }
-          var nodes = oCellEditor.container.getElementsByTagName('button'); // disable OK button
-          nodes[0].disabled = true;
+            // Inform user we are attempting to save
+            var elSaving = document.getElementById("editTableSaving");
+            if(elSaving == null) { // dynamically create
+                elSaving = oCellEditor.container.appendChild(document.createElement('div'));
+                elSaving.id = "editTableSaving";
+            }
+            elSaving.innerHTML = tr("Saving...");
 
-
-          //
-          // Send AJAX save request
-          //
-
-          var ajaxCallback = {
-            success: function(o) {
-
-              // SUCCESS
-              var status = YAHOO.lang.JSON.parse(o.responseText); //, true);
-
-              // error handling
-              if(status.error != null) {
-                status.error = status.error.replace('%s', newData);
-
-                // user trying to add a value that is flagged as deleted in the database
-                if(status.insert != null && status.insert == -2) {
-                  if(confirm(status.error)) { // undelete
-                    elSaving.innerHTML = '<span class="errorText">' + tr('Undeleting...') + '</span>';
-                    queryString = "id=" + oCellEditor.record.getData("id") + "&" + oCellEditor.column.key + "=" + encodeURIComponent(newData) + "&undelete=1";
-                    cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/outputType/json", ajaxCallback, queryString);
-                  } else {
-                    this.cancelCellEditor();
-                  }
-                } else {
-                  elSaving.innerHTML = '<span class="errorText">' + status.error + '</span>';
-                }
-
-                nodes = oCellEditor.container.getElementsByTagName('*');
-                for(i in nodes) {
-                  nodes[i].disabled = false;
-                  if(nodes[i].type == 'text') {
-                    nodes[i].focus();
-                  }
-                }
-                return;
-              } else if(status.insert != null && status.insert > 0) {
-                oCellEditor.record.setData("id", status.insert);
-              }
-
-              if(status.undelete != null) { // use original value from database
-                oCellEditor.value = status.undelete;
-              }
+            var nodes = oCellEditor.container.getElementsByTagName('input'); // disable all inputs
+            for(i in nodes) {
+                nodes[i].disabled = true;
+            }
+            var nodes = oCellEditor.container.getElementsByTagName('button'); // disable OK button
+            nodes[0].disabled = true;
 
 
-              //
-              // Perform update animation
-              //
-              var elCell = oCellEditor.cell;
+            //
+            // Send AJAX save request
+            //
 
-              // Grab the row el and the 2 colors
-              var elRow = this.getTrEl(elCell);
-              var origColor = YAHOO.util.Dom.getStyle(elRow, "backgroundColor");
-              var pulseColor = '#51965b';
+            var ajaxCallback = {
+                success: function (o) {
+
+                    // SUCCESS
+                    var status = YAHOO.lang.JSON.parse(o.responseText); //, true);
+
+                    // error handling
+                    if (status.error != null) {
+                        status.error = status.error.replace('%s', newData);
+
+                        // user trying to add a value that is flagged as deleted in the database
+                        if (status.insert != null && status.insert == -2) {
+                            if (confirm(status.error)) { // undelete
+                                elSaving.innerHTML = '<span class="errorText">' + tr('Undeleting...') + '</span>';
+                                queryString = "id=" + oCellEditor.record.getData("id") + "&" + oCellEditor.column.key + "=" + encodeURIComponent(newData) + "&undelete=1";
+                                cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/outputType/json", ajaxCallback, queryString);
+                            } else {
+                                this.cancelCellEditor();
+                            }
+                        } else {
+                            elSaving.innerHTML = '<span class="errorText">' + status.error + '</span>';
+                        }
+
+                        nodes = oCellEditor.container.getElementsByTagName('*');
+                        for (i in nodes) {
+                            nodes[i].disabled = false;
+                            if (nodes[i].type == 'text') {
+                                nodes[i].focus();
+                            }
+                        }
+                        return;
+                    } else if (status.insert != null && status.insert > 0) {
+                        oCellEditor.record.setData("id", status.insert);
+                    }
+
+                    if (status.undelete != null) { // use original value from database
+                        oCellEditor.value = status.undelete;
+                    }
+
+                    //
+                    // Perform update animation
+                    //
+                    var elCell = oCellEditor.cell;
+
+                    // Grab the row el and the 2 colors
+                    var elRow = this.getTrEl(elCell);
+                    var origColor = YAHOO.util.Dom.getStyle(elRow, "backgroundColor");
+                    var pulseColor = '#51965b';
 
 
-              // Create a temp anim instance that nulls out when anim is complete
-              var rowColorAnim = new YAHOO.util.ColorAnim(elCell, {
-                      backgroundColor:{to:origColor, from:pulseColor}, duration:2});
+                    // Create a temp anim instance that nulls out when anim is complete
+                    var rowColorAnim = new YAHOO.util.ColorAnim(elCell, {
+                        backgroundColor: {to: origColor, from: pulseColor}, duration: 2
+                    });
 
-              var onComplete = function() {
-                  rowColorAnim = null;
-                  YAHOO.util.Dom.setStyle(elRow.cells, "backgroundColor", "");
-              }
-              rowColorAnim.onComplete.subscribe(onComplete);
-              rowColorAnim.animate();
-
-
-              oCellEditor.isSaving = false;
-              // Update table display and close cell editor
-              this.saveCellEditor();
-
-              if(this.config.autoNextOnSubmit) { // move to next cell
-                nextCol = oCellEditor.column.getKeyIndex() + 1;
-                el = dt.getTdEl({record:oCellEditor.record, column:dt.getColumn(nextCol)});
-                dt.showCellEditor(el);
-              }
+                    var onComplete = function () {
+                        rowColorAnim = null;
+                        YAHOO.util.Dom.setStyle(elRow.cells, "backgroundColor", "");
+                    }
+                    rowColorAnim.onComplete.subscribe(onComplete);
+                    rowColorAnim.animate();
 
 
+                    oCellEditor.isSaving = false;
+                    // Update table display and close cell editor
+                    this.saveCellEditor();
 
-              return true;
+                    if (this.config.autoNextOnSubmit) { // move to next cell
+                        nextCol = oCellEditor.column.getKeyIndex() + 1;
+                        el = dt.getTdEl({record: oCellEditor.record, column: dt.getColumn(nextCol)});
+                        dt.showCellEditor(el);
+                    }
+                    return true;
+                },
+                failure: function () {
+                    // FAILURE
+                    // display error message
+                    elSaving.innerHTML = "Couldn't save, sorry!";
+                    oCellEditor.isSaving = false;
+                    return false;
+                },
+                scope: this
+            }
 
-
-            },
-            failure: function() {
-              // FAILURE
-              // display error message
-              elSaving.innerHTML = "Couldn't save, sorry!";
-              oCellEditor.isSaving = false;
-              return false;
-
-            },
-            scope: this
-          }
-
-          queryString = "id=" + oCellEditor.record.getData("id") + "&" + oCellEditor.column.key + "=" + encodeURIComponent(newData);
-
-          cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/outputType/json", ajaxCallback, queryString);
-
-
+            queryString = "id=" + oCellEditor.record.getData("id") + "&" + oCellEditor.column.key + "=" + encodeURIComponent(newData);
+            cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/outputType/json", ajaxCallback, queryString);
         }
 
         // Delete and Ajax update

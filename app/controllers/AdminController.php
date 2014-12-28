@@ -3351,14 +3351,19 @@ class AdminController extends UserController
                         $update_data['owner_id'] = $this->getSanParam('partner');
                     } elseif (isset($params['external_id'])) {
                         $update_data['external_id'] = $this->getSanParam('external_id');
+                    } elseif (isset($params['end_date'])) {
+                        $update_data['end_date'] = $this->getSanParam('end_date');
                     }
 
                     if (count($update_data) > 0) {
                         $rv = $db->update('mechanism_option', $update_data, "id = $id");
-                        if ($rv != 1) {
-                            $ret['error'] = "Multiple %s records updated";
-                        } else {
+                        if ($rv == 1) {
                             $ret['msg'] = 'ok';
+                        } elseif ($rv < 1) {
+                            $ret['error'] = "Could not update %s";
+                        }
+                        else {
+                            $ret['error'] = "Multiple records updated with %s";
                         }
                     } else {
                         $ret['error'] = "Could not update %s";
@@ -3384,6 +3389,7 @@ class AdminController extends UserController
             mechanism_option.funder_id,
             mechanism_option.id,
             mechanism_option.external_id,
+            mechanism_option.end_date,
             IFNULL(partner.partner, "0") as partner
             FROM
             mechanism_option
@@ -3399,11 +3405,14 @@ class AdminController extends UserController
             'mechanism_phrase' => "sortable:true",
             'partner'          => "sortable:true, editor:'dropdown', editorOptions: {dropdownOptions:$partners}",
             'funder_phrase'    => "sortable:true, editor:'dropdown', editorOptions: {dropdownOptions:$funders}",
-            'external_id'      => "sortable:true"
+            'external_id'      => "sortable:true",
+            // formatDate is defined in the view file
+            'end_date'         => "sortable:true, formatter:formatDate, editor:'date'"
         );
 
         $this->view->assign('pageTitle', t('Mechanism'));
-        $columnNames = array('mechanism_phrase' => t('Mechanism'), 'partner' => t('Partner'), 'funder_phrase' => t('Funder'), 'external_id' => t('Mechanism')." ID");
+        $columnNames = array('mechanism_phrase' => t('Mechanism'), 'partner' => t('Partner'),
+            'funder_phrase' => t('Funder'), 'external_id' => t('Mechanism')." ID", 'end_date' => t('Funding End Date'));
         $this->view->assign('editTable', EditTableHelper::generateHtml('mechanism', $tableRows, $columnNames, $customColDefs, array()));
 
 	}
