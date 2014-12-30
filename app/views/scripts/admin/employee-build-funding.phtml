@@ -29,10 +29,9 @@
             <div id="funwrapper">
 
                 <?php
-                    echo DropDown::render('subPartner', t('Subpartner'), $this->subPartner, 'partner', 'id', false, false, true, true, true) . "\n";
-                    echo DropDown::render('partnerFunder', t('Funder'), $this->partnerFunder, 'funder_phrase', 'id', false, false, true) . "\n";
                     echo DropDown::render('mechanism', t('Mechanism'), $this->mechanism, 'mechanism_phrase', 'id', false, false, true) . "\n";
-                    echo labelAndField($this, t('Funding End Date'), 'date','funding_end_date[]', '');
+                    echo DropDown::render('subPartner', t('Subpartner'), $this->subPartner, 'partner', 'id', false, false, true, true, true) . "\n";
+                    echo labelAndField($this, t('Funding End Date'), 'date','end_date', '');
                 ?>
 
             </div>
