@@ -3416,8 +3416,8 @@ class AdminController extends UserController
         $this->view->assign('editTable', EditTableHelper::generateHtml('mechanism', $tableRows, $columnNames, $customColDefs, array()));
 
 	}
-	
-	public function employeeSubpartnerToMechanismAction()
+
+	public function employeeMechanismToSubpartnerAction()
     {
         $db = $this->dbfunc();
 
