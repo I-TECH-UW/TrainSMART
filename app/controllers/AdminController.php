@@ -3411,13 +3411,68 @@ class AdminController extends UserController
         );
 
         $this->view->assign('pageTitle', t('Mechanism'));
-        $columnNames = array('mechanism_phrase' => t('Mechanism'), 'partner' => t('Partner'),
+        $columnNames = array('mechanism_phrase' => t('Mechanism'), 'partner' => t('Prime').space.t('Partner'),
             'funder_phrase' => t('Funder'), 'external_id' => t('Mechanism')." ID", 'end_date' => t('Funding End Date'));
         $this->view->assign('editTable', EditTableHelper::generateHtml('mechanism', $tableRows, $columnNames, $customColDefs, array()));
 
 	}
 	
-	//$editTable->dependencies = array('partner_importance_option_id' => 'partner');
+	public function employeeSubpartnerToMechanismAction()
+    {
+        $db = $this->dbfunc();
+
+        if ($this->getRequest()->isPost()) {
+            $params = $this->getAllParams();
+
+            if ($params['outputType'] == 'json') {
+                $id = $this->getSanParam('id');
+                $ret = array();
+
+                if (!$id) {
+                    $ret['error'] = "No record id %s found.";
+                }
+                elseif ($this->getSanParam('delete') == 1) {
+                    $rv = $db->delete('link_subpartner_mechanism', "id = $id");
+                    if (!$rv) {
+                        $ret['error'] = "Could not delete %s";
+                    } else {
+                        $ret['msg'] = 'ok';
+                    }
+                }
+                $this->sendData($ret);
+            }
+        }
+
+        // fill in null values in the partner column so the edittable visibly updates when a user selects a
+        // value for a field that came in null - probably a YUI DataTable beta quirk
+        $sql = 'SELECT
+            link_mechanism_subpartner.id,
+            mechanism_option.mechanism_phrase,
+            partner.partner,
+            link_mechanism_subpartner.end_date
+            FROM
+            link_mechanism_subpartner
+            INNER JOIN mechanism_option ON link_mechanism_subpartner.mechanism_option_id = mechanism_option.id
+            INNER JOIN partner ON link_mechanism_subpartner.partner_id = partner.id
+            ORDER BY mechanism_phrase ASC;
+            ';
+        $tableRows = $db->fetchAll($sql);
+
+        require_once 'views/helpers/EditTableHelper.php';
+
+        $customColDefs = array(
+            'mechanism_phrase' => "sortable:true",
+            'partner'          => "sortable:true",
+            // formatDate is defined in the view file
+            'end_date'         => "sortable:true, formatter:formatDate"
+        );
+
+        $this->view->assign('pageTitle', t('Sub-Partner').space.t('Mechanism'));
+        $columnNames = array('mechanism_phrase' => t('Mechanism'), 'partner' => t('Sub-Partner'),
+            'end_date' => t('Funding End Date'));
+        $this->view->assign('editTable', EditTableHelper::generateHtml('SubPartner', $tableRows, $columnNames, $customColDefs, array(), true));
+
+    }
 	
 	public function employeeSubpartnerToFunderToMechanismAction()
 	{
@@ -3431,6 +3486,7 @@ class AdminController extends UserController
 		$editTable->execute();
 		
 	}
+
 
     public function employeeBuildFundingAction()
     {

@@ -1,0 +1,14 @@
+<?php
+$this->extraHtml .= '
+<script type="text/javascript">
+
+var formatDate = function(elCell, oRecord, oColumn, sData) {
+    // TODO: this yields european dates only, needs localization support
+    var end_date = oRecord.getData("end_date").split("-");
+    var eurodate = end_date[2] + "/" + end_date[1] + "/" + end_date[0];
+    elCell.innerHTML = eurodate;
+};
+</script>
+';
+?>
+<?php require '_template_edittable.phtml'; ?>
