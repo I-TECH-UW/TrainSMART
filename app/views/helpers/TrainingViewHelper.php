@@ -93,6 +93,7 @@ function allowed_org_access_full_list (&$itechthis) {
 
 
 /**
+ * TODO: find out if this is used for any sites at all - it goes as far back as our code history does.
  * return a comma separated list of organizers allowed in this site (site rollup feature)
  * @param $itechthis
  * @return bool|string
