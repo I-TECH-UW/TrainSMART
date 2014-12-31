@@ -341,23 +341,22 @@ class EmployeeController extends ReportFilterHelpers {
         $partnerMechanisms = array();
         if ($employee_id) {
 
-            // get the mechanisms owned by this employee's employer
-            $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase, mechanism_option.owner_id ' .
-                'FROM mechanism_option,	employee, link_mechanism_subpartner ' .
-                'WHERE (' .
-                '(link_mechanism_subpartner.partner_id = employee.partner_id AND link_mechanism_subpartner.mechanism_option_id = mechanism_option.id) ' .
-                'OR (employee.partner_id = mechanism_option.owner_id) ' .
-                ') ' .
-                "AND employee.id = $employee_id ";
+            // get the mechanisms accessible by this employee's employer
+            $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase, mechanism_option.owner_id
+                    FROM mechanism_option
+                    INNER JOIN link_mechanism_partner ON link_mechanism_partner.mechanism_option_id = mechanism_option.id
+                    INNER JOIN employee ON employee.partner_id = link_mechanism_partner.partner_id
+                    WHERE employee.id = ' . $employee_id . ' ';
+
 
             if (!$this->hasACL('training_organizer_option_all')) {
                 $partners = $this->getAvailablePartners();
                 if (count($partners)) {
-                    $sql .= "AND mechanism.owner_id in (" . implode(',', $partners) . ") ";
+                    $sql .= " AND mechanism.owner_id in (" . implode(',', $partners) . ") ";
                 }
             }
 
-            $sql .= 'GROUP BY mechanism_option.id ORDER BY mechanism_phrase ASC';
+            $sql .= ' GROUP BY mechanism_option.id ORDER BY owner_id ASC, mechanism_phrase ASC';
 
             $partnerMechanisms = $db->fetchAll($sql);
 
@@ -373,13 +372,12 @@ class EmployeeController extends ReportFilterHelpers {
 					// get the mechanisms owned by the partners the logged in user can edit
                     $partnerList = implode(',', $partners);
 
-                    $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase, mechanism_option.owner_id ' .
-                        'FROM mechanism_option, link_mechanism_subpartner ' .
-                        'WHERE ( ' .
-                        "(link_mechanism_subpartner.partner_id in $partnerList AND link_mechanism_subpartner.mechanism_option_id = mechanism_option.id) " .
-                        "OR (owner_id in ($partnerList) " .
-                        ') ' .
-                        'GROUP BY mechanism_option.id ORDER BY mechanism_phrase ASC';
+                    $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase, mechanism_option.owner_id
+                        FROM mechanism_option
+                        INNER JOIN link_mechanism_partner ON link_mechanism_partner.mechanism_option_id = mechanism_option.id ' .
+                        "WHERE partner_id in ($partnerList) " .
+                        'GROUP BY mechanism_option.id ORDER BY owner_id ASC, mechanism_phrase ASC';
+
                     $partnerMechanisms = $db->fetchAll($sql);
                 }
             }
@@ -413,11 +411,9 @@ class EmployeeController extends ReportFilterHelpers {
 
 			$employee_data = $db->fetchRow($sql);
 
-            $sql = "SELECT mechanism_option_id from link_mechanism_employee where employee_id = $employee_id";
-
             $sql = "SELECT link_mechanism_employee.id, link_mechanism_employee.percentage, mechanism_option.mechanism_phrase " .
                 "FROM link_mechanism_employee INNER JOIN mechanism_option ON link_mechanism_employee.mechanism_option_id = mechanism_option.id " .
-                "WHERE employee_id = $employee_id";
+                "WHERE employee_id = $employee_id ORDER BY link_mechanism_employee.percentage DESC";
 
             $tableValues = $db->fetchAll($sql);
 
@@ -480,7 +476,7 @@ class EmployeeController extends ReportFilterHelpers {
                         $this->doNoAccessError();
                     }
 
-                    $sql = "SELECT partner_id from link_mechanism_subpartner WHERE mechanism_option_id in ($mechIDs)";
+                    $sql = "SELECT partner_id from link_mechanism_partner WHERE mechanism_option_id in ($mechIDs)";
                     $subpartners = $db->fetchCol($sql);
                     if (!array_search($employeeData['partner_id'], $subpartners)) {
                         $this->doNoAccessError();
@@ -604,7 +600,6 @@ class EmployeeController extends ReportFilterHelpers {
                             }
                         }
     					$status->setStatusMessage( t('The person was saved.') );
-                        $this->_redirect("employee/edit/id/$id");
     				}
     			}
     		}

@@ -18,7 +18,7 @@ class Employee extends ITechTable {
 	    if (!$association_ids)
 		  return false;
 	    
-	    $table = new ITechTable ( array ('name' => 'link_employee_mechanism' ) );
+	    $table = new ITechTable ( array ('name' => 'link_mechanism_employee' ) );
 	    try {
 	        $table->delete("id in ($association_ids)");
 	    } catch(Exception $e) {
@@ -34,8 +34,7 @@ class Employee extends ITechTable {
 	    if (empty($mechanism_association))
 	        return false;
 
-
-        $linkTable = new ITechTable ( array ('name' => 'link_employee_mechanism' ) );
+        $linkTable = new ITechTable ( array ('name' => 'link_mechanism_employee' ) );
 	    foreach($mechanism_association as $mech) {
 	        try {
                 $row = $linkTable->createRow(array('employee_id' => $id, 'mechanism_option_id' => $mech['id'], 'percentage' => $mech['percentage']));

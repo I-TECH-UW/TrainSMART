@@ -12,11 +12,15 @@
 
 </head>
 <body class="yui-skin-sam"  >
+<script id="mechanismData" type="application/json">
+    <?php echo json_encode($this->mechanismList); ?>
+</script>
 
 	<div id="pageHolder">
 
 		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
 		<div id="content">
+
 
 			<?php require_once 'views/scripts/status.phtml' ?>
 
@@ -430,15 +434,7 @@
                       </script>
                       
                     <div><label class="label">Mechanism</label>
-                      <select id="new_mechanism" name="new_mechanism">
-                      <option value="">--choose--</option>
-                      <?php 
-                      foreach ($this->mechanismList as $i => $row)
-                      {
-                        echo '<option value='.$row['id'].'>'.$row['mechanism_phrase'].'</option>';
-                      }
-                      ?>
-                      </select>
+                      <select id="new_mechanism" name="new_mechanism"></select>
                       <span>
                         <label class="label">Percentage</label>
                         <input type="text" id="percentage" name="percentage" value="" />
@@ -450,7 +446,19 @@
 					<input type="hidden" name="limit" id="limit" value="1" />
 
 					<input type="submit" class="submitNoArrow" name="saveonly" value="<?php tp('Save');?>" />
-			</form>
+                <script type="application/javascript">
+                    $(document).ready(function() {
+                        var mechList = JSON.parse($("#mechanismData").html());
+                        var optList = '<option value="">--choose--</option>';
+                        var partnerID = $('#select_partner').val();
+                        $.each(mechList, function(key, val) {
+                            optList += '<option value="' + val['id'] + '">' + val['mechanism_phrase'] + '</option>';
+                        });
+                        $('#new_mechanism').html(optList);
+                    });
+                </script>
+
+            </form>
 			<div class="clear"></div>
 		</div>
 	</body>

@@ -7,7 +7,7 @@ CREATE TABLE `link_mechanism_employee` (
   PRIMARY KEY (`id`)
 );
   
-CREATE TABLE `link_mechanism_subpartner` (
+CREATE TABLE `link_mechanism_partner` (
   `id` int(11) NOT NULL auto_increment,
   `mechanism_option_id` int(11) NOT NULL DEFAULT 0,
   `partner_id` int(11) NOT NULL DEFAULT 0,
@@ -15,7 +15,9 @@ CREATE TABLE `link_mechanism_subpartner` (
   PRIMARY KEY (`id`)
 );
 
-INSERT INTO link_mechanism_employee (mechanism_option_id, employee_id, percentage) SELECT mechanism_option_id, employee_id, percentage FROM employee_to_partner_to_subpartner_to_funder_to_mechanism;
+INSERT INTO link_mechanism_employee (mechanism_option_id, employee_id, percentage) SELECT DISTINCT mechanism_option_id, employee_id, percentage FROM employee_to_partner_to_subpartner_to_funder_to_mechanism;
 
-INSERT INTO link_mechanism_subpartner (mechanism_option_id, partner_id, end_date) SELECT mechanism_option_id, subpartner_id, funding_end_date FROM subpartner_to_funder_to_mechanism INNER JOIN mechanism_option ON subpartner_to_funder_to_mechanism.mechanism_option_id = mechanism_option.id WHERE mechanism_option.owner_id != subpartner_to_funder_to_mechanism.subpartner_id;
+INSERT INTO link_mechanism_partner (mechanism_option_id, partner_id, end_date) SELECT DISTINCT mechanism_option_id, subpartner_id, funding_end_date FROM subpartner_to_funder_to_mechanism INNER JOIN mechanism_option ON subpartner_to_funder_to_mechanism.mechanism_option_id = mechanism_option.id WHERE mechanism_option.owner_id != subpartner_to_funder_to_mechanism.subpartner_id;
 
+INSERT INTO link_mechanism_partner (mechanism_option_id, partner_id, end_date) SELECT DISTINCT id, owner_id, end_date FROM mechanism_option
+# Note: need partners for all mechanisms

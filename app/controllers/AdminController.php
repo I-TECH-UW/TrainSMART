@@ -3432,7 +3432,7 @@ class AdminController extends UserController
                     $ret['error'] = "No record id %s found.";
                 }
                 elseif ($this->getSanParam('delete') == 1) {
-                    $rv = $db->delete('link_subpartner_mechanism', "id = $id");
+                    $rv = $db->delete('link_mechanism_partner', "id = $id");
                     if (!$rv) {
                         $ret['error'] = "Could not delete %s";
                     } else {
@@ -3446,14 +3446,14 @@ class AdminController extends UserController
         // fill in null values in the partner column so the edittable visibly updates when a user selects a
         // value for a field that came in null - probably a YUI DataTable beta quirk
         $sql = 'SELECT
-            link_mechanism_subpartner.id,
+            link_mechanism_partner.id,
             mechanism_option.mechanism_phrase,
             partner.partner,
-            link_mechanism_subpartner.end_date
+            link_mechanism_partner.end_date
             FROM
-            link_mechanism_subpartner
-            INNER JOIN mechanism_option ON link_mechanism_subpartner.mechanism_option_id = mechanism_option.id
-            INNER JOIN partner ON link_mechanism_subpartner.partner_id = partner.id
+            link_mechanism_partner
+            INNER JOIN mechanism_option ON link_mechanism_partner.mechanism_option_id = mechanism_option.id
+            INNER JOIN partner ON link_mechanism_partner.partner_id = partner.id
             ORDER BY mechanism_phrase ASC;
             ';
         $tableRows = $db->fetchAll($sql);
@@ -3503,7 +3503,8 @@ class AdminController extends UserController
             else {
                 // prepare date for database
                 $params['end_date'] = $this->_euro_date_to_sql($params['end_date']);
-                $subpartnerMechanismTable = new ITechTable(array('name' => 'link_subpartner_mechanism'));
+
+                $subpartnerMechanismTable = new ITechTable(array('name' => 'link_partner_mechanism'));
 
                 foreach ($params['subPartner'] as $value) {
 
