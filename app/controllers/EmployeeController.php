@@ -340,60 +340,52 @@ class EmployeeController extends ReportFilterHelpers {
      */
     public function getAvailableMechanisms($employee_id) {
         $db = $this->dbfunc();
-        $partnerMechanisms = array();
-        if ($employee_id) {
 
-            // get the mechanisms accessible by this employee's employer
-            $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase, mechanism_option.owner_id
-                    FROM mechanism_option
-                    INNER JOIN link_mechanism_partner ON link_mechanism_partner.mechanism_option_id = mechanism_option.id
-                    INNER JOIN employee ON employee.partner_id = link_mechanism_partner.partner_id
-                    WHERE employee.id = ' . $employee_id . ' ';
+        $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase, mechanism_option.owner_id
+                FROM mechanism_option
+                WHERE is_deleted = 0';
 
-
-            if (!$this->hasACL('training_organizer_option_all')) {
-                $partners = $this->getAvailablePartners();
-                if (count($partners)) {
-                    $sql .= " AND mechanism.owner_id in (" . implode(',', $partners) . ") ";
-                }
-            }
-
-            $sql .= ' GROUP BY mechanism_option.id ORDER BY owner_id ASC, mechanism_phrase ASC';
-
-            $partnerMechanisms = $db->fetchAll($sql);
-
-        } else {
-            if ($this->hasACL('training_organizer_option_all')) {
-                // get all mechanisms
-                $sql = 'SELECT id, mechanism_phrase, owner_id FROM mechanism_option WHERE mechanism_option.is_deleted = 0 ORDER BY mechanism_phrase ASC';
-                $partnerMechanisms = $db->fetchAll($sql);
-            } else {
-                // get all mechanisms that the logged in user has access to
-                $partners = $this->getAvailablePartners();
-				if (count($partners)) {
-					// get the mechanisms owned by the partners the logged in user can edit
-                    $partnerList = implode(',', $partners);
-
-                    $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase, mechanism_option.owner_id
-                        FROM mechanism_option
-                        INNER JOIN link_mechanism_partner ON link_mechanism_partner.mechanism_option_id = mechanism_option.id ' .
-                        "WHERE partner_id in ($partnerList) " .
-                        'GROUP BY mechanism_option.id ORDER BY owner_id ASC, mechanism_phrase ASC';
-
-                    $partnerMechanisms = $db->fetchAll($sql);
-                }
+        if (!$this->hasACL('training_organizer_option_all')) {
+            $partners = $this->getAvailablePartners();
+            if (count($partners)) {
+                $sql .= " AND mechanism.owner_id in (" . implode(',', $partners) . ") ";
             }
         }
+
+        $sql .= ' GROUP BY mechanism_option.id ORDER BY owner_id ASC, mechanism_phrase ASC';
+
+        $partnerMechanisms = $db->fetchAll($sql);
+
+        foreach ($partnerMechanisms as &$mech) {
+            $sql = "SELECT partner_id from link_mechanism_partner where mechanism_option_id = {$mech['id']}";
+            $mech['partners'] = $db->fetchCol($sql);
+        }
+
         return $partnerMechanisms;
     }
 
-	public function generateMechanismTable($employee_id){
+    public function getEmployeeMechanisms($employee_id) {
+        if (!$employee_id) {
+            return array();
+        }
+        $db = $this->dbfunc();
+        $sql = "SELECT link_mechanism_employee.id, link_mechanism_employee.percentage,
+                link_mechanism_employee.mechanism_option_id, mechanism_option.mechanism_phrase
+                FROM link_mechanism_employee INNER JOIN mechanism_option ON link_mechanism_employee.mechanism_option_id = mechanism_option.id
+                WHERE employee_id = $employee_id ORDER BY link_mechanism_employee.percentage DESC";
 
-		$db     = $this->dbfunc();
+        $employeeMechanisms = $db->fetchAll($sql);
+        foreach ($employeeMechanisms as &$mech) {
+            $sql = "SELECT partner_id from link_mechanism_partner where mechanism_option_id = {$mech['id']}";
+            $mech['partners'] = $db->fetchCol($sql);
+        }
+        return $employeeMechanisms;
+    }
 
-		require_once 'views/helpers/EditTableHelper.php';
+	public function generateMechanismTable($employee_id, $employeeMechanisms){
+        require_once 'views/helpers/EditTableHelper.php';
+        $db     = $this->dbfunc();
 
-		$tableValues = array();
 		$columnNames = array('mechanism_phrase' => t('Mechanism'),
 			'percentage' => t('Percent'),
 		);
@@ -413,13 +405,7 @@ class EmployeeController extends ReportFilterHelpers {
 
 			$employee_data = $db->fetchRow($sql);
 
-            $sql = "SELECT link_mechanism_employee.id, link_mechanism_employee.percentage, mechanism_option.mechanism_phrase " .
-                "FROM link_mechanism_employee INNER JOIN mechanism_option ON link_mechanism_employee.mechanism_option_id = mechanism_option.id " .
-                "WHERE employee_id = $employee_id ORDER BY link_mechanism_employee.percentage DESC";
-
-            $tableValues = $db->fetchAll($sql);
-
-            foreach ($tableValues as $i => &$mechanism) {
+            foreach ($employeeMechanisms as &$mechanism) {
                 $percent = $mechanism['percentage'] / 100.0;
                 if ($this->setting('display_hours_per_mechanism')) {
                     $mechanism['hours'] = $percent * $employee_data['funded_hours_per_week'];
@@ -430,10 +416,8 @@ class EmployeeController extends ReportFilterHelpers {
                 }
             }
 		}
-		return(EditTableHelper::generateHtml('employeeFunding', $tableValues, $columnNames, array(), array(), true));
-
+		return(EditTableHelper::generateHtml('employeeFunding', $employeeMechanisms, $columnNames, array(), array(), true));
 	}
-
 
 	public function editAction() {
 		if (! $this->hasACL ( 'employees_module' )) {
@@ -450,7 +434,14 @@ class EmployeeController extends ReportFilterHelpers {
         $status = ValidationContainer::instance();
         $db = $this->dbfunc();
 
-        $availableMechanisms = $this->getAvailableMechanisms($id);
+        $mechanisms = $this->getAvailableMechanisms($id);
+        $employeeMechanisms = $this->getEmployeeMechanisms($id);
+
+        $mechanismData = array('available' => $mechanisms);
+        $mechanismData['employee_mechanism_ids'] = array();
+        foreach($employeeMechanisms as $mech) {
+            array_push($mechanismData['employee_mechanism_ids'], $mech['mechanism_option_id']);
+        }
 
         if ($id) {
 
@@ -469,18 +460,15 @@ class EmployeeController extends ReportFilterHelpers {
 
                     // employee not employed by a partner that the logged in user has access to,
                     // see if they're employed by a subpartner on a mechanism that an accessible partner owns
-                    $mechIDs = '';
-                    foreach ($availableMechanisms as $mech) {
-                        $mechIDs .= ", {$mech['id']}";
-                    }
 
-                    if (!$mechIDs) {
-                        $this->doNoAccessError();
+                    $foundPartner = false;
+                    foreach ($employeeMechanisms as $mech) {
+                        if (array_search($employeeData['partner_id'], $mech["partners"])) {
+                            $foundPartner = true;
+                            break;
+                        }
                     }
-
-                    $sql = "SELECT partner_id from link_mechanism_partner WHERE mechanism_option_id in ($mechIDs)";
-                    $subpartners = $db->fetchCol($sql);
-                    if (!array_search($employeeData['partner_id'], $subpartners)) {
+                    if (!$foundPartner) {
                         $this->doNoAccessError();
                     }
                 }
@@ -516,8 +504,6 @@ class EmployeeController extends ReportFilterHelpers {
     			
     			if($this->setting('display_employee_nationality'))
     				$status->checkRequired ( $this, 'lookup_nationalities_id', t('Employee Nationality'));
-    			
-    			
     			
     			$status->checkRequired ( $this, 'employee_qualification_option_id', t ( 'Staff Cadre' ) );
     			
@@ -576,8 +562,7 @@ class EmployeeController extends ReportFilterHelpers {
     				$max = $db->fetchOne("SELECT MAX(partner_employee_number) FROM employee WHERE partner_id = ?", $params['partner_id']);
     				$params['partner_employee_number'] = $max ? $max + 1 : 1; // max+1 or default to 1
     			}
-    			
-    			 
+
     			// save
     			if (! $status->hasError() ) {
     			    require_once('models/table/Employee.php');
@@ -606,8 +591,7 @@ class EmployeeController extends ReportFilterHelpers {
     			}
     		}
 		} // if isPost()
-		
-		
+
 		if ( $id && !$status->hasError() )  // read data from db
 		{
 			$sql = 'SELECT * FROM employee WHERE employee.id = '.$id;
@@ -626,7 +610,6 @@ class EmployeeController extends ReportFilterHelpers {
 
 			}
 		}
-
 
 		// assign form drop downs
 		$params['dob']                          = formhelperdate($params['dob']);
@@ -684,8 +667,8 @@ class EmployeeController extends ReportFilterHelpers {
 		$this->view->assign ( 'nationality',   DropDown::generateHtml ( 'lookup_nationalities', 'nationality', $params['lookup_nationalities_id'], false, !$this->hasACL("edit_employee"), false ) );
 		$this->view->assign ( 'race',          DropDown::generateHtml ( 'person_race_option', 'race_phrase', $params['race_option_id'], false, !$this->hasACL("edit_employee"), false ) );
 
-		$this->view->assign('mechanismList', $availableMechanisms);
-		$this->view->assign ('tableEmployeeFunding', $this->generateMechanismTable($id) );
+		$this->view->assign('mechanismData', $mechanismData);
+		$this->view->assign ('tableEmployeeFunding', $this->generateMechanismTable($id, $employeeMechanisms) );
 		
 	}
 

@@ -13,7 +13,7 @@
 </head>
 <body class="yui-skin-sam"  >
 <script id="mechanismData" type="application/json">
-    <?php echo json_encode($this->mechanismList); ?>
+    <?php echo json_encode($this->mechanismData); ?>
 </script>
 
 	<div id="pageHolder">
@@ -448,13 +448,22 @@
 					<input type="submit" class="submitNoArrow" name="saveonly" value="<?php tp('Save');?>" />
                 <script type="application/javascript">
                     $(document).ready(function() {
-                        var mechList = JSON.parse($("#mechanismData").html());
-                        var optList = '<option value="">--choose--</option>';
-                        var partnerID = $('#select_partner').val();
-                        $.each(mechList, function(key, val) {
-                            optList += '<option value="' + val['id'] + '">' + val['mechanism_phrase'] + '</option>';
-                        });
-                        $('#new_mechanism').html(optList);
+                        var mechData = JSON.parse($("#mechanismData").html());
+                        var availableMechanisms = function() {
+                            var optList = '<option value="">--choose--</option>';
+                            var partnerID = $('#select_partner').val();
+                            var numMechs = mechData['available'].length;
+                            var mech;
+                            for (var i = 0; i < numMechs; i++) {
+                                mech = mechData['available'][i];
+                                if ((mech['partners'].indexOf(partnerID) > -1) && (mechData['employee_mechanism_ids'].indexOf(mech['id']) < 0)) {
+                                    optList += '<option value="' + mech['id'] + '">' + mech['mechanism_phrase'] + '</option>';
+                                }
+                            }
+                            $('#new_mechanism').html(optList);
+                        }
+                        $('#select_partner').on('change', availableMechanisms);
+                        availableMechanisms();
                     });
                 </script>
 
