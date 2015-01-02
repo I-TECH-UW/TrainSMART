@@ -3504,7 +3504,7 @@ class AdminController extends UserController
                 // prepare date for database
                 $params['end_date'] = $this->_euro_date_to_sql($params['end_date']);
 
-                $subpartnerMechanismTable = new ITechTable(array('name' => 'link_partner_mechanism'));
+                $subpartnerMechanismTable = new ITechTable(array('name' => 'link_mechanism_partner'));
 
                 foreach ($params['subPartner'] as $value) {
 
