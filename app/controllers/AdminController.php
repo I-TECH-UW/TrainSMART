@@ -3515,14 +3515,14 @@ class AdminController extends UserController
                     $row = $subpartnerMechanismTable->fetchRow($query);
                     if ($row) {
                         $data = array('end_date' => $params['end_date']);
-                        $subpartnerMechanismTable->update($data, "WHERE id = {$row['id']}");
+                        $subpartnerMechanismTable->update($data, "id = $row->id");
 
                     }
                     else {
                         $data = array(
                             'partner_id' => $value,
                             'mechanism_option_id' => $params['mechanism'],
-                            'end_date' => $params['funding_end_date'][0]
+                            'end_date' => $params['end_date']
                         );
                         $result = $subpartnerMechanismTable->insert($data);
 
@@ -3536,6 +3536,7 @@ class AdminController extends UserController
                 if ( $status->hasError() ) {
                     $status->setStatusMessage(t('That funding mechanism could not be saved.'));
                 } else {
+                    $status->setStatusMessage(t('Mechanism data saved.'));
                     $this->_redirect("admin/employee-build_funding");
                 }
             }
