@@ -352,7 +352,7 @@
 							var passport = $('#other_id');
 							if (! select.length)
 								return;
-							if (location.hostname != "pepfarskillsmart.trainingdata.org") /*south africa*/
+                            if (location.hostname.indexOf("pepfarskillsmart.trainingdata.org") !== -1) /*south africa*/
 								return;
 							select.change(function (e) {
 								if (id_fld.length) {

@@ -417,7 +417,7 @@ function itech_save_confirm_on_leave ()
 
 /* SAONLY - south africa only - disable all sub regions if val() = *Multiple Regions* */
 $(window).load(function (e) {
-  if (location.hostname != "pepfarskillsmart.trainingdata.org" && location.hostname != 'localhost') /*south africa*/
+  if ((location.hostname.indexOf("pepfarskillsmart.trainingdata.org") !== -1) && location.hostname != 'localhost') /*south africa*/
     return;
   rgnsels = $('#province_id,#district_id,#region_c_id,#region_d_id,#region_e_id,#region_f_id,#region_g_id,#region_h_id,#region_i_id');
   rgnsels.change(function (e) { /* southafrica, hardcoded, they dont want site_enabled if multiple regions selected */
