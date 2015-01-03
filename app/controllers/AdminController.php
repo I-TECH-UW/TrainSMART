@@ -3454,6 +3454,7 @@ class AdminController extends UserController
             link_mechanism_partner
             INNER JOIN mechanism_option ON link_mechanism_partner.mechanism_option_id = mechanism_option.id
             INNER JOIN partner ON link_mechanism_partner.partner_id = partner.id
+            WHERE mechanism_option.owner_id != link_mechanism_partner.partner_id
             ORDER BY mechanism_phrase ASC;
             ';
         $tableRows = $db->fetchAll($sql);
@@ -3470,7 +3471,8 @@ class AdminController extends UserController
         $this->view->assign('pageTitle', t('Sub-Partner').space.t('Mechanism'));
         $columnNames = array('mechanism_phrase' => t('Mechanism'), 'partner' => t('Sub-Partner'),
             'end_date' => t('Funding End Date'));
-        $this->view->assign('editTable', EditTableHelper::generateHtml('SubPartner', $tableRows, $columnNames, $customColDefs, array(), true));
+        $this->view->assign('editTable', EditTableHelper::generateHtml('SubPartner', $tableRows, $columnNames,
+            $customColDefs, array(), true));
 
     }
 	
