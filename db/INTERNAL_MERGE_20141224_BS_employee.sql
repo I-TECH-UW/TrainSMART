@@ -20,4 +20,4 @@ INSERT INTO link_mechanism_employee (mechanism_option_id, employee_id, percentag
 INSERT INTO link_mechanism_partner (mechanism_option_id, partner_id, end_date) SELECT DISTINCT mechanism_option_id, subpartner_id, funding_end_date FROM subpartner_to_funder_to_mechanism INNER JOIN mechanism_option ON subpartner_to_funder_to_mechanism.mechanism_option_id = mechanism_option.id WHERE mechanism_option.owner_id != subpartner_to_funder_to_mechanism.subpartner_id;
 
 INSERT INTO link_mechanism_partner (mechanism_option_id, partner_id, end_date) SELECT DISTINCT id, owner_id, end_date FROM mechanism_option
-# Note: need partners for all mechanisms
+/* Note: need partners for all mechanisms */
