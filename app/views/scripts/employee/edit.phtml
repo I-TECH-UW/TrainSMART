@@ -28,10 +28,9 @@
 			<form action="" method="post" class="form_employee">
 				<legend></legend>
 
-					<?php if ($this->employee['id'] && $this->hasACL('edit_employee')): ?>
+					<?php if ($this->employee['id'] && $this->hasACL('edit_employee') && $this->hasACL('delete_employee')): ?>
 						<div class="historyDiv">
 							<a href="<?php echo $this->base_url; ?>/employee/delete/id/<?php echo $this->employee['id']; ?>"><?php echo t('Delete this').space.t('Employee'); ?></a>
-							<a href="<?php echo $this->base_url; ?>/employee/add_funder_to_employee/id/<?php echo $this->employee['id']; ?>"><?php echo t('Add Funder'); ?></a>
 						</div>
 					<?php
 						endif; // fi historyDiv

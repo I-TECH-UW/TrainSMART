@@ -22,7 +22,7 @@
 
 			<h1><?php $this->mode == 'add' ? tp('Add Partner') : tp('Edit Partner'); ?></h1>
 			<form action="" method="post" id="employeePartnerEdit" class="form_employee">
-				<?php if (($this->partner['id']) && ($this->hasACL("edit_partners"))): ?>
+				<?php if (($this->partner['id']) && ($this->hasACL("edit_partners")) && ($this->hasACL("delete_partners"))): ?>
 				<div class="historyDiv">
 					<a href="<?php echo $this->base_url; ?>/partner/delete/id/<?php echo $this->partner['id']; ?>"><?php echo t('Delete this').space.t('Partner'); ?></a>
 				</div>
