@@ -423,12 +423,14 @@
                             jsonAdd.percentage = oPercent.value;
                             var percent = jsonAdd.percentage / 100.0;
                             
-                            jsonAdd.hours = percent * <?php echo $this->employee['funded_hours_per_week']?>;
-                            jsonAdd.cost = percent * <?php echo $this->employee['annual_cost']?>;
+                            jsonAdd.hours = (percent * <?php echo $this->employee['funded_hours_per_week']?>).toFixed(2);
+                            jsonAdd.cost = (percent * <?php echo $this->employee['annual_cost']?>).toFixed(2);
                           	ITECH.employeeFundingTable.addDataRow(jsonAdd, oMechanism.value);
                                     
                             oMechanism.value = "";
                             oPercent.value = "";
+                            window.mechData['employee_mechanism_ids'].push(jsonAdd.id);
+                            availableMechanisms();
                           }
                       </script>
                       
@@ -438,32 +440,41 @@
                         <label class="label">Percentage</label>
                         <input type="text" id="percentage" name="percentage" value="" />
                       </span>
-                      <input type="submit" name="associateMechanism" value="<?php tp("Add");?>" class="insert" id="mechanismInsertButton" onclick="addMechanism(this);return false;"/>
+                      <input type="button" name="associateMechanism" value="<?php tp("Add");?>" class="insert" id="mechanismInsertButton" onclick="addMechanism(this);"/>
                     </div>
 
 					<div class="clear"></div>
 					<input type="hidden" name="limit" id="limit" value="1" />
 
 					<input type="submit" class="submitNoArrow" name="saveonly" value="<?php tp('Save');?>" />
+
+
+            </form>
+			<div class="clear"></div>
                 <script type="application/javascript">
                     $(document).ready(function() {
-                        var mechData = JSON.parse($("#mechanismData").html());
-                        var availableMechanisms = function() {
-                            var optList = '<option value="">--choose--</option>';
-                            var partnerID = $('#select_partner').val();
-                            var numMechs = mechData['available'].length;
-                            var mech;
-                            for (var i = 0; i < numMechs; i++) {
-                                mech = mechData['available'][i];
-                                if ((mech['partners'].indexOf(partnerID) > -1) && (mechData['employee_mechanism_ids'].indexOf(mech['id']) < 0)) {
-                                    optList += '<option value="' + mech['id'] + '">' + mech['mechanism_phrase'] + '</option>';
-                                }
-                            }
-                            $('#new_mechanism').html(optList);
-                        }
+                        window.mechData = JSON.parse($("#mechanismData").html());
                         $('#select_partner').on('change', availableMechanisms);
                         availableMechanisms();
                     });
+            </script>
+
+            <script type="application/javascript">
+                var availableMechanisms = function() {
+                    var optList = '<option value="">--choose--</option>';
+                    var partnerID = $('#select_partner').val();
+                    var mechData = window.mechData;
+                    var numMechs = mechData['available'].length;
+                    var mech;
+                    var newMechs = $('#employeeFunding_new_data').val();
+                    for (var i = 0; i < numMechs; i++) {
+                        mech = mechData['available'][i];
+                        if ((mech['partners'].indexOf(partnerID) > -1) && (mechData['employee_mechanism_ids'].indexOf(mech['id']) < 0)) {
+                            optList += '<option value="' + mech['id'] + '">' + mech['mechanism_phrase'] + '</option>';
+                        }
+                    }
+                    $('#new_mechanism').html(optList);
+                }
                 </script>
 
             </form>
