@@ -1,17 +1,70 @@
-<?php
-$this->extraHtml .= '
-<script type="text/javascript">
+<?php 
 
-var formatDate = function(elCell, oRecord, oColumn, sData) {
-    // TODO: this yields european dates only, needs localization support
-    var end = oRecord.getData("end_date");
-    if (!end) {
-        end = "0000-00-00";
-    }
-    var end_date = end.split("-");
-    elCell.innerHTML = end_date[2] + "/" + end_date[1] + "/" + end_date[0];
-};
-</script>
-';
+// template for page that contains an EditTable
+
+// need $pageTitle and $nextUri variables from these includes
+ 
+
+ob_start();
+require_once('views/scripts/header.phtml');
+$header = ob_get_contents();
+ob_end_clean(); 
+
+ob_start();
+require_once('views/scripts/nav-admin.phtml');
+$nav = ob_get_contents();
+ob_end_clean(); 
+
 ?>
-<?php require '_template_edittable.phtml'; ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+	<script type='text/javascript'>
+		function submitAdminForm () { return true;} // Added because was missing. Referenced by lots of onlick properties.
+	</script>
+
+</head>
+<body  class="yui-skin-sam">
+<div id="pageHolder">
+  <div id="header"><?php echo $header; ?></div>
+  <div id="content" class="adminDiv">
+      <form method="post" name="adminForm" id="adminForm" action="" enctype="multipart/form-data">
+
+      <div id="navAdmin"><?php echo $nav;?></div>
+
+      <div id="contentAdmin">
+          <h1><?php echo $this->pageTitle; ?></h1>
+          <div style="font-style:italic;">Add/edit <?php echo $this->pageTitle;?> <?php if(substr($pageTitle,-1) != 's') echo 'options'; ?></div>
+          <br/>
+      <script type="text/javascript">
+
+          var formatDate = function(elCell, oRecord, oColumn, sData) {
+              // TODO: this yields european dates only, needs localization support
+              var end = oRecord.getData("end_date");
+              if (!end) {
+                  end = "0000-00-00";
+              }
+              var end_date = end.split("-");
+              elCell.innerHTML = end_date[2] + "/" + end_date[1] + "/" + end_date[0];
+          };
+      </script>
+      <?php echo $this->editTable; ?>
+      </div>
+      </form>
+  </div>
+    
+  <div class="clear"></div>
+	    
+  </div>
+<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+
+</body>
+</html>
