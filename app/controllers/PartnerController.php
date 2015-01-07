@@ -111,7 +111,7 @@ class PartnerController extends ReportFilterHelpers {
 			    		//file_put_contents('c:\wamp\logs\php_debug.log', 'That record was not deleted.'.PHP_EOL, FILE_APPEND | LOCK_EX);
 				}
 			  }
-			}			
+			}
 			 	
 			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 		}
@@ -223,7 +223,7 @@ class PartnerController extends ReportFilterHelpers {
 
 		if ( $this->getRequest()->isPost() )
 		{
-		    if (!$this->hasACL("edit_partner"))
+		    if (!$this->hasACL("edit_partners"))
 		    {
 		        $this->doNoAccessError();
 		    }
@@ -341,7 +341,7 @@ class PartnerController extends ReportFilterHelpers {
 			$orgWhere = ($org_allowed_ids) ? " AND partner.organizer_option_id in ($org_allowed_ids) " : "";
 			// restricted access?? only show organizers that belong to this site if its a multi org site
 			$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
-			$allowedWhereClause .= $site_orgs ? " AND partner.organizer_option_id in ($site_orgs) " : "";
+			$allowedWhereClause = $site_orgs ? " AND partner.organizer_option_id in ($site_orgs) " : "";
 
 			// continue reading data
 			$sql = 'SELECT * FROM partner WHERE id = '.$id.space.$orgWhere;
