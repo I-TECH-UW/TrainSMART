@@ -4,9 +4,12 @@ $this->extraHtml .= '
 
 var formatDate = function(elCell, oRecord, oColumn, sData) {
     // TODO: this yields european dates only, needs localization support
-    var end_date = oRecord.getData("end_date").split("-");
-    var eurodate = end_date[2] + "/" + end_date[1] + "/" + end_date[0];
-    elCell.innerHTML = eurodate;
+    var end = oRecord.getData("end_date");
+    if (!end) {
+        end = "0000-00-00";
+    }
+    var end_date = end.split("-");
+    elCell.innerHTML = end_date[2] + "/" + end_date[1] + "/" + end_date[0];
 };
 </script>
 ';
