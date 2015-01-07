@@ -96,47 +96,8 @@
 						
 						if($this->setting['display_employee_partner'])	
 						echo labelAndField($this, t('Employer'),     $this->partners, 'partner_id');
-						/*
-						foreach ($this->employee['funder'] as $i => $row) 
-						{	
-							
-							//employee_funder_dropdown($this, $this->subPartner, $this->partnerFunder, $this->mechanism, $row['subpartner_id'], $row['partner_funder_option_id'], $row['mechanism_option_id']);
-							
-							//file_put_contents('c:\wamp\logs\php_debug.log', 'empEdit 85>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-							//var_dump($row);
-							//var_dump($this->partnerFunder);
-							//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-							
-							partner_sfm_dropdown($i, $this, $this->subPartner, $this->partnerFunder, $this->mechanism, $row['employee_id'], $row['partner_id'], $row['subpartner_id'], $row['partner_funder_option_id'], $row['mechanism_option_id'], false,  false, ' disabled ');
-							
-        					echo labelAndField($this, t('Percentage'), 'text','percentage[]', $row['percentage']);
-							// BS:#8,#9:20141003:Add hours and cost per employee per mechanism
-        					$this->viewonly = true;
-        					$percent = $row['percentage']/100.0;
-        					if($this->setting['display_hours_per_mechanism'])
-        					{
-        					    $HOURS_FOR_FULL_WORK_WEEK = 40.0; // TODO: Does this need a home in the database, or is it defined somewhere else?
-            					echo labelAndField($this, t('Hours per Mechanism'),  'text', 'hours_per_mechanism',  $percent * $HOURS_FOR_FULL_WORK_WEEK);
-        					}
 
-        					if($this->setting['display_annual_cost_to_mechanism'])
-        					{
-        					   $employee_mechanism_cost = sprintf('%0.2f', $percent * $this->employee['annual_cost']);
-        					   echo labelAndField($this, t('Annual Cost to Mechanism'),  'text', 'employee_cost_per_mechanism',  $employee_mechanism_cost.space.$this->translation['Employee Local Currency'], 2);
-        					}
-						    if ($this->hasACL('edit_employee'))
-						    {
-						        $this->viewonly = false;
-						    }
-        					        					 
-						}
-						//echo '<button id="funder_add">'.t('Add a new').space.t('Funder').'</button><br />';
 						
-						*/
-						
-						
-						//if($this->setting['display_employee_sub_partner'])
-						//echo labelAndField($this, t('Sub Partner'), $this->subpartners, 'subpartner_id');
 						if($this->setting['display_employee_base'])
 						echo labelAndField($this, t('Employee Based at'), $this->bases, 'based_at');
 						region_filters_dropdown( $this, $this->locations, $this->employee, false, false, '', true );
@@ -150,14 +111,7 @@
 						}
 						if($this->setting['display_employee_site_type'])
 						echo labelAndField($this,t('Site').space.t('Type'),   $this->site_types);
-						#echo labelAndField($this, t('Address 1').space.t('(Work Address)'),    'text', 'address1',        $this->employee['address1']);
-						#echo labelAndField($this, t('Address 2').space.t('(Work Address)'),    'text', 'address2',        $this->employee['address2']);
-						#echo labelAndField($this, t('Mobile Phone'), 'text', 'primary_phone',   $this->employee['primary_phone']);
-						#echo labelAndField($this, t('Second Phone'), 'text', 'secondary_phone', $this->employee['secondary_phone']);
-						#echo labelAndField($this, t('Email'),        'text', 'email',           $this->employee['email']);
 
-						//echo '<div class="clear"></div><br /><br />'.PHP_EOL;
-						//echo '<div class="clear"></div><br /><br />'.PHP_EOL;
 						if($this->setting['display_employee_staff_category'])
 						echo labelAndField($this, t('Staff Category'), $this->categories);
 						if($this->setting['display_employee_registration_number'])
@@ -466,7 +420,6 @@
                     var mechData = window.mechData;
                     var numMechs = mechData['available'].length;
                     var mech;
-                    var newMechs = $('#employeeFunding_new_data').val();
                     for (var i = 0; i < numMechs; i++) {
                         mech = mechData['available'][i];
                         if ((mech['partners'].indexOf(partnerID) > -1) && (mechData['employee_mechanism_ids'].indexOf(mech['id']) < 0)) {
@@ -475,7 +428,7 @@
                     }
                     $('#new_mechanism').html(optList);
                 }
-                </script>
+            </script>
 
             </form>
 			<div class="clear"></div>
