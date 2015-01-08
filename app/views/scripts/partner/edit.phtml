@@ -14,17 +14,6 @@
 <body class="yui-skin-sam">
 
 	<div id="pageHolder">
-        <script type="text/javascript">
-
-            var formatEuroDate = function(elCell, oRecord, oColumn, sData) {
-                var end = oRecord.getData("end_date");
-                if (!end) {
-                    end = "0000-00-00";
-                }
-                var end_date = end.split("-");
-                elCell.innerHTML = end_date[2] + "/" + end_date[1] + "/" + end_date[0];
-            };
-        </script>
 
 		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
 		<div id="content">
@@ -41,8 +30,8 @@
 					endif; // fi historyDiv
 
 					require_once ('views/helpers/DropDown.php');
-					$this->required_fields = array('partner', 'address1', 'city', 'province_id', 'phone', 'fax', 'funder', 'mechanism', 'funding_end_date[]', 'employee_transition_option_id', 'agreement_end_date', 'partner_importance_option_id', 'incoming_partner', 'comments', 'subpartner_id[]', 'hr_contact_name','hr_contact_phone','hr_contact_email');
-					$this->partner['agreement_end_date'] = formhelperdate( $this->partner['agreement_end_date'] );
+					$this->required_fields = array('partner', 'address1', 'city', 'province_id', 'hr_contact_name','hr_contact_phone','hr_contact_email');
+
 					if ($this->mode != 'add') {
 					  echo labelAndField($this, t('Partner').space.t('ID'),  'text', 'id',      $this->partner['id']);
 					}
@@ -61,22 +50,6 @@
 					echo labelAndField($this, t('HR Contact Office Phone'),             'text', 'hr_contact_phone', $this->partner['hr_contact_phone']);
 					echo labelAndField($this, t('HR Contact Office Fax'),               'text', 'hr_contact_fax',   $this->partner['hr_contact_fax']);
 					echo labelAndField($this, t('HR Contact Email'),                    'text', 'hr_contact_email', $this->partner['hr_contact_email']);
-					#echo labelAndField($this, t('Phone'),     'text', 'phone',     $this->partner['phone']);
-					#echo labelAndField($this, t('Fax'),       'text', 'fax',       $this->partner['fax']);
-
-
-
-					#if ($this->setting['display_employee_intended_transition'])
-					#	echo labelAndField($this, t('Intended Transition'), $this->transitions, 'employee_transition_option_id');
-					if ($this->setting['display_employee_agreement_end_date'])
-						echo labelAndField($this, t('Agreement End Date'), 'date', 'agreement_end_date', $this->partner['agreement_end_date']);
-					if ($this->setting['display_employee_importance'])
-						echo labelAndField($this, t('Importance'), $this->importance, 'partner_importance_option_id');
-					if ($this->setting['display_employee_incoming_partner'])
-						echo labelAndField($this, t('Incoming Partner(s)'), $this->incomingPartners, 'incoming_partner');
-					if ($this->setting['display_employee_transition_confirmed'])
-					echo labelAndCheckBox($this, t('Transition Confirmed'), 'transition_confirmed', $this->partner['transition_confirmed'], false, $this->viewonly);
-#					echo labelAndField($this, t('Partner Comments'), 'textarea', 'comments', $this->partner['comments']);
 
 				?>
 
@@ -85,6 +58,18 @@
 					$(document).ready(function () {
 
 						itech_save_confirm_on_leave();
+						<?php if ($this->setting['display_employee_funder']) { ?>
+
+						/* Init the table */
+						oTable = $('.tablegrid').dataTable({
+							"bJQueryUI": true,
+							"bPaginate": false,
+							"bSort": true,
+							"bInfo": false,
+							"bFilter": false
+						});
+
+						<?php } ?>
 
 					});
 				</script>
@@ -92,18 +77,59 @@
 
                 <?php
                 if ($this->setting['display_employee_funder']) {
-                    if ($this->primeMechanisms) {
-                        echo "<h1>Prime" . space . t('Mechanisms') . ":</h1>";
-                        echo $this->primeMechanisms;
-                        echo "<br/>";
-                    }
+					if (count($this->primeMechanisms)) { ?>
+						<h1>Prime <?php tp('Mechanisms'); ?>:</h1>
+						<div style="width:100%;">
 
-                    if ($this->secondaryMechanisms) {
-                        echo "<h1>Subpartner on" . space . t('Mechanisms') . ":</h1>";
-                        echo $this->secondaryMechanisms;
-                    }
-                }
-                ?>
+							<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id=""
+								   style="width:100%">
+								<thead>
+								<tr>
+									<th><?php tp('Mechanism'); ?></th>
+									<th width="135"><?php tp('Funder'); ?></th>
+									<th width="135"><?php tp('Funding End Date'); ?></th>
+								</tr>
+								</thead>
+								<tbody>
+								<?php foreach ($this->primeMechanisms as $mech) { ?>
+									<tr>
+										<td><?php echo $mech['mechanism_phrase']; ?></td>
+										<td><?php echo $mech['funder_phrase']; ?></td>
+										<td><?php echo $mech['end_date']; ?></td>
+									</tr>
+								<?php } ?>
+								</tbody>
+							</table>
+						</div>
+						<br/>
+					<?php }
+					if (count($this->secondaryMechanisms)) {	?>
+						<h1>Sub-Partner on <?php tp('Mechanisms'); ?>:</h1>
+						<div style="width:100%;">
+
+							<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id=""
+								   style="width:100%">
+								<thead>
+								<tr>
+									<th><?php tp('Mechanism'); ?></th>
+									<th width="135"><?php tp('Funder'); ?></th>
+									<th width="135"><?php tp('Funding End Date'); ?></th>
+								</tr>
+								</thead>
+								<tbody>
+								<?php foreach ($this->secondaryMechanisms as $mech) { ?>
+									<tr>
+										<td><?php echo $mech['mechanism_phrase']; ?></td>
+										<td><?php echo $mech['funder_phrase']; ?></td>
+										<td><?php echo $mech['end_date']; ?></td>
+									</tr>
+								<?php } ?>
+								</tbody>
+							</table>
+						</div>
+					<?php }
+				} ?>
+
 				<div class="clear"></div>
 				<input type="hidden" name="limit" id="limit" value="1" />
 				<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Save');?>" />

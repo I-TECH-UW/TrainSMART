@@ -30,7 +30,7 @@ class PartnerController extends ReportFilterHelpers {
 	}
 
 	public function deleteAction() {
-		if (! $this->hasACL ( 'employees_module' )) {
+		if (! $this->hasACL ( 'employees_module' ) || !($this->hasACL("delete_partners"))) {
 			$this->doNoAccessError ();
 		}
 
@@ -54,147 +54,7 @@ class PartnerController extends ReportFilterHelpers {
 		$this->view->assign ( 'status', $status );
 
 	}
-	
-	public function deleteFunderAction() {
-		if (! $this->hasACL ( 'employees_module' )) {
-			$this->doNoAccessError ();
-		}
-	
-		require_once('models/table/Partner.php');
-		require_once('views/helpers/Location.php'); // funder stuff
-	
-		$db     = $this->dbfunc();
-		$status = ValidationContainer::instance ();
-		$params = $this->getAllParams();
-			
-		if ($params['id']) {
-			$recArr = explode('_', $params['id']); 
-			
-			//file_put_contents('c:\wamp\logs\php_debug.log', 'partCont 75>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-			//var_dump($recArr);
 
-			//find in epsfm, should not find to delete
-			$sql = 'SELECT * FROM employee_to_partner_to_subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
-			$where = "partner_id = $recArr[0] and subpartner_id = $recArr[1] and partner_funder_option_id = $recArr[2] and mechanism_option_id = $recArr[3] and is_deleted = false";
-			$sql .= $where;
-			
-			$row = $db->fetchRow( $sql );
-			if ($row){
-				$status->setStatusMessage ( t('That record is in use.') );
-				//file_put_contents('c:\wamp\logs\php_debug.log', 'That record is in use.'.PHP_EOL, FILE_APPEND | LOCK_EX);
-			}
-			else { // not in use
-				
-			  //find in psfm, should find to delete
-			  $sql = 'SELECT * FROM partner_to_subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
-			  $where = "partner_id = $recArr[0] and subpartner_id = $recArr[1] and partner_funder_option_id = $recArr[2] and mechanism_option_id = $recArr[3] and is_deleted = false";
-			  $sql .= $where;
-			
-			  $row = $db->fetchRow( $sql );
-			  if (! $row){
-				$status->setStatusMessage ( t('Cannot find that record in the database.') );
-			    //file_put_contents('c:\wamp\logs\php_debug.log', 'That record could not be found.'.PHP_EOL, FILE_APPEND | LOCK_EX);
-			  }
-			  
-			  else { // found, safe to delete
-			  	
-			  	//file_put_contents('c:\wamp\logs\php_debug.log', 'Ready to delete '.$row['id'].PHP_EOL, FILE_APPEND | LOCK_EX);
-                $update_result = $db->update('partner_to_subpartner_to_funder_to_mechanism', array('is_deleted' => 1), 'id = '.$row['id']);
-                //var_dump($update_result);
-				
-				if($update_result){
-					$status->setStatusMessage ( t ( 'That mechanism was deleted.' ) );
-			    		//file_put_contents('c:\wamp\logs\php_debug.log', 'That record was deleted.'.PHP_EOL, FILE_APPEND | LOCK_EX);
-				}
-				else{
-					$status->setStatusMessage ( t ( 'That mechanism was not deleted.' ) );
-			    		//file_put_contents('c:\wamp\logs\php_debug.log', 'That record was not deleted.'.PHP_EOL, FILE_APPEND | LOCK_EX);
-				}
-			  }
-			}
-			 	
-			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-		}
-		$this->_redirect("partner/edit/id/" . $recArr[0]);
-	}
-	
-	
-	public function addFunderToPartnerAction() {
-		if (! $this->hasACL ( 'employees_module' )) {
-			$this->doNoAccessError ();
-		}
-	
-		require_once('models/table/Partner.php');
-		require_once('views/helpers/Location.php'); // funder stuff
-	
-		$db     = $this->dbfunc();
-		$status = ValidationContainer::instance ();
-		$params = $this->getAllParams();
-		$id     = $params['id'];
-			
-		if ($id) {
-			$helper = new Helper();
-			
-			if ( $this->getRequest()->isPost() ) {
-
-		      $params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-		      foreach ($params['funding_end_date'] as $i => $value) $params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
-		  
-				// test for all values
-				if(!($params['subPartner0'] && $params['partnerFunder0'] && $params['mechanism0'] && $params['funding_end_date'][0]))
-					$status->addError('', t ( 'All fields' ) . space . t('are required'));
-				
-				if ( $status->hasError() )
-					$status->setStatusMessage( t('That funding mechanism could not be saved.') );
-			
-				else {
-					//save
-					$psfm = new ITechTable(array('name' => 'partner_to_subpartner_to_funder_to_mechanism'));
-					$sfmArr = explode('_', $params[mechanism0]); // eg: 13_3_106
-					$sfm_id = $helper->getSfmId($sfmArr);
-					$data = array(
-							'subpartner_to_funder_to_mechanism_id' => $sfm_id['id'],
-							'partner_id' => $params['id'],
-							'subpartner_id'  => $sfmArr[0],
-							'partner_funder_option_id' => $sfmArr[1],
-							'mechanism_option_id' => $sfmArr[2],
-							'funding_end_date' => $params['funding_end_date'][0],
-					);
-					
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'partCont isPost 115> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-					//var_dump($data);
-					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-			
-					$insert_result = $psfm->insert($data);
-					$status->setStatusMessage( t('The funding mechanism was saved.') );
-					//$this->_redirect("admin/employee-build_funding");
-					//$this->_redirect("partner/edit/" . $params['id']);
-				}
-			}
-			
-			//exclude current funders
-			$partner = $helper->getPartner($id);
-			$this->viewAssignEscaped ( 'partner', $partner );
-			
-			$subPartner = $helper->getSfmSubPartnerExclude($id);
-			$this->viewAssignEscaped ( 'subPartner', $subPartner );
-			
-			$partnerFunder = $helper->getSfmFunderExclude($id);
-			$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-			
-			$mechanism = $helper->getSfmMechanismExclude($id);
-			$this->viewAssignEscaped ( 'mechanism', $mechanism );
-			
-			//file_put_contents('c:\wamp\logs\php_debug.log', 'partCont 140>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-			//var_dump($subPartner);
-			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-			
-		} // if ($id)
-	
-		//validate
-		$this->view->assign ( 'status', $status );
-	
-	}
 
 	public function addAction() {
 		$this->view->assign ( 'mode', 'add' );
@@ -230,40 +90,13 @@ class PartnerController extends ReportFilterHelpers {
 		    else {
                 //validate then save
                 $status->checkRequired($this, 'partner', t('Partner'));
-                //if ($this->setting('display_partner_type'))
-                //$status->checkRequired ( $this, 'partner_type_option_id',         t ( 'Type of Partner' ) );
                 $status->checkRequired($this, 'address1', t('Address 1'));
                 $status->checkRequired($this, 'city', t('City'));
                 $status->checkRequired($this, 'province_id', t('Region A (Province)'));
-                if ($this->setting('display_employee_agreement_end_date'))
-                    $status->checkRequired($this, 'agreement_end_date', t('Agreement End Date'));
-                if ($this->setting('display_employee_importance'))
-                    $status->checkRequired($this, 'partner_importance_option_id', t('Importance'));
                 $status->checkRequired($this, 'hr_contact_name', t('HR Contact Person Name'));
                 $status->checkRequired($this, 'hr_contact_phone', t('HR Contact Office Phone'));
-                #$status->checkRequired ( $this, 'hr_contact_fax',                     t ( 'HR Contact Office Fax' ) );
                 $status->checkRequired($this, 'hr_contact_email', t('HR Contact Email'));
 
-                $params['subPartner'] = $this->_array_me($params['subPartner']);
-
-                $params['subpartner_id'] = $this->_array_me($params['subpartner_id']);
-                foreach ($params['subpartner_id'] as $i => $value) { // strip empty values (it breaks MultiOptionList apparently)
-                    if (empty($value))
-                        unset($params['subpartner_id'][$i]);
-                }
-
-                $params['partnerFunder'] = $this->_array_me($params['partnerFunder']);
-                $params['mechanism'] = $this->_array_me($params['mechanism']);
-
-                $params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-
-                foreach ($params['funding_end_date'] as $i => $value) {
-
-                    $params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
-                }
-
-    			$params['transition_confirmed'] = $params['transition_confirmed'] == 'on' ? 1 : 0;
-    			$params['agreement_end_date'] = $this->_euro_date_to_sql($params['agreement_end_date']);
 
     			//location save stuff
     			$params['location_id'] = regionFiltersGetLastID(null, $params); // formprefix, criteria
@@ -314,22 +147,9 @@ class PartnerController extends ReportFilterHelpers {
                         FROM mechanism_option
                         INNER JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id
                         WHERE mechanism_option.owner_id = $id";
-                $rows = $db->fetchAll($sql);
+                $primeMechanisms = $db->fetchAll($sql);
 
-                // pull out an array of all of the ids - PHP 5.5 does this with array_column($users, 'id')
-                $ids = array_map(create_function('$ar', 'return $ar["id"];'), $rows);
-
-                $columnCustomizations = array(
-                    'mechanism_phrase' => 'sortable:true',
-                    'funder_phrase'    => 'sortable:true',
-                    'end_date'         => 'sortable:true, formatter:formatEuroDate',
-                );
-                $columnNames = array('mechanism_phrase' => t('Mechanism'), 'funder_phrase' => t('Funder'), 'end_date' => t('Funding End Date'));
-                $table = '';
-                if (count($rows)) {
-                    $table = EditTableHelper::generateHtml('primeMechanism', $rows, $columnNames, $columnCustomizations, $ids, true);
-                }
-                $this->view->assign('primeMechanisms', $table);
+                $this->view->assign('primeMechanisms', $primeMechanisms);
 
                 $sql = "SELECT link_mechanism_partner.id, mechanism_option.mechanism_phrase, partner_funder_option.funder_phrase, link_mechanism_partner.end_date
                         FROM link_mechanism_partner
@@ -337,33 +157,11 @@ class PartnerController extends ReportFilterHelpers {
                         INNER JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id
                         WHERE owner_id != $id AND partner_id = $id";
 
-                $rows = $db->fetchAll($sql);
-                $ids = array_map(create_function('$ar', 'return $ar["id"];'), $rows);
-
-                $columnCustomizations = array(
-                    'mechanism_phrase' => 'sortable:true',
-                    'funder_phrase'    => 'sortable:true',
-                    'end_date'         => 'sortable:true, formatter:formatEuroDate',
-                );
-                $columnNames = array('mechanism_phrase' => t('Mechanism'), 'funder_phrase' => t('Funder'), 'end_date' => t('Funding End Date'));
-                $table = '';
-                if (count($rows)) {
-                    $table = EditTableHelper::generateHtml('secondaryMechanism', $rows, $columnNames, $columnCustomizations, $ids, true);
-                }
-                $this->view->assign('secondaryMechanisms', $table);
-
-				
+                $secondaryMechanisms = $db->fetchAll($sql);
+                $this->view->assign('secondaryMechanisms', $secondaryMechanisms);
 			}
 		}
 
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'partCont 373>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($subPartner); 		
-		//var_dump($partnerFunder);		
-		//var_dump($mechanism);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-		
-		
-		
 		// make sure form data is valid for display
 		if (empty($params['subpartner']))
 			$params['subpartner'] = array(array());
@@ -430,12 +228,8 @@ class PartnerController extends ReportFilterHelpers {
 				$where[] = " partner.organizer_option_id in ($site_orgs) ";
 
 			if ($locationWhere = $this->getLocationCriteriaWhereClause($criteria, '', '')) {
-				#$where[] = $locationWhere;
 				$where[] = "($locationWhere OR parent_loc.parent_id = $location_id)"; #todo the subquery and parent_id is not working
 			}
-
-#			if ($location_id && $alsoCheckMultiRegions = Location::southAfrica_get_multi_region($location_id)) //#SAONLY - check if they are using the *Multiple Regions* items
-#				$where[] = " partner.location_id in ($alsoCheckMultiRegions)";
 
 			if ($criteria['subpartner_id'])     $where[] = 'subpartners.subpartner_id = '.$criteria['subpartner_id'];
 			if ($criteria['partner_id'])        $where[] = 'partner.id = '.$criteria['partner_id'];
