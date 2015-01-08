@@ -33,16 +33,17 @@ print ScriptContainer::$instance->renderJSHead();
 </head>
 <body  class="yui-skin-sam">
 <div id="pageHolder">
-  <div id="header"><?php echo $header; ?></div>
-  <div id="content" class="adminDiv">
-      <form method="post" name="adminForm" id="adminForm" action="" enctype="multipart/form-data">
+    <div id="header"><?php echo $header; ?></div>
+    <div id="content" class="adminDiv">
 
-      <div id="navAdmin"><?php echo $nav;?></div>
+        <form method="post" name="adminForm" id="adminForm" action="" enctype="multipart/form-data">
 
-      <div id="contentAdmin">
-          <h1><?php echo $this->pageTitle; ?></h1>
-          <div style="font-style:italic;">Add/edit <?php echo $this->pageTitle;?> <?php if(substr($pageTitle,-1) != 's') echo 'options'; ?></div>
-          <br/>
+            <div id="navAdmin"><?php echo $nav;?></div>
+
+            <div id="contentAdmin">
+                <h1><?php echo $this->pageTitle; ?></h1>
+                <div style="font-style:italic;">Add/edit <?php echo $this->pageTitle;?> <?php if(substr($pageTitle,-1) != 's') echo 'options'; ?></div>
+                <br/>
       <script type="text/javascript">
 
           var formatDate = function(elCell, oRecord, oColumn, sData) {
@@ -55,14 +56,17 @@ print ScriptContainer::$instance->renderJSHead();
               elCell.innerHTML = end_date[2] + "/" + end_date[1] + "/" + end_date[0];
           };
       </script>
+
       <?php echo $this->editTable; ?>
-      </div>
-      </form>
-  </div>
-    
-  <div class="clear"></div>
-	    
-  </div>
+                <div class="clear"></div>
+                <br/>
+
+                <input type="hidden" name="redirect" id="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>" />
+        </form>
+    </div>
+    <div class="clear"></div>
+
+</div>
 <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
 </div>
 
