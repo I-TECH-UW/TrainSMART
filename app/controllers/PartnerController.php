@@ -151,10 +151,11 @@ class PartnerController extends ReportFilterHelpers {
 
                 $this->view->assign('primeMechanisms', $primeMechanisms);
 
-                $sql = "SELECT link_mechanism_partner.id, mechanism_option.mechanism_phrase, partner_funder_option.funder_phrase, link_mechanism_partner.end_date
-                        FROM link_mechanism_partner
-                        INNER JOIN mechanism_option ON link_mechanism_partner.mechanism_option_id = mechanism_option.id
-                        INNER JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id
+                $sql = "SELECT link_mechanism_partner.id, mechanism_option.mechanism_phrase, link_mechanism_partner.end_date, partner.partner
+						FROM
+						link_mechanism_partner
+						INNER JOIN mechanism_option ON link_mechanism_partner.mechanism_option_id = mechanism_option.id
+						LEFT JOIN partner ON mechanism_option.owner_id = partner.id
                         WHERE owner_id != $id AND partner_id = $id";
 
                 $secondaryMechanisms = $db->fetchAll($sql);
@@ -162,14 +163,6 @@ class PartnerController extends ReportFilterHelpers {
 			}
 		}
 
-		// make sure form data is valid for display
-		if (empty($params['subpartner']))
-			$params['subpartner'] = array(array());
-		if (empty($params['funder']))
-			$params['funder'] = array(array());
-		if (empty($params['mechanism_option_id']))
-			$params['mechanism_option_id'] = array(array());
-		
         if (!$this->hasACL("edit_partners"))
         {
             $this->view->viewonly = true;

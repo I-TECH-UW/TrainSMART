@@ -112,7 +112,7 @@
 								<thead>
 								<tr>
 									<th><?php tp('Mechanism'); ?></th>
-									<th width="135"><?php tp('Funder'); ?></th>
+									<th width="135"><?php tp('Prime Partner'); ?></th>
 									<th width="135"><?php tp('Funding End Date'); ?></th>
 								</tr>
 								</thead>
@@ -120,7 +120,7 @@
 								<?php foreach ($this->secondaryMechanisms as $mech) { ?>
 									<tr>
 										<td><?php echo $mech['mechanism_phrase']; ?></td>
-										<td><?php echo $mech['funder_phrase']; ?></td>
+										<td><?php echo $mech['partner']; ?></td>
 										<td><?php echo $mech['end_date']; ?></td>
 									</tr>
 								<?php } ?>
