@@ -70,8 +70,142 @@ class DashboardController extends ReportFilterHelpers {
 		/****************************************************************************************************************/
 	}
 	
-	public function tryAction() {
+	public function tryAction() {}
+	public function try1Action() {
+	    // include auto-loader class
+	    require_once 'Zend/Loader/Autoloader.php';
 	    
+	    $loader = Zend_Loader_Autoloader::getInstance();
+	    
+	    try {
+	        $pdf = new Zend_Pdf();
+	        $page = new Zend_Pdf_Page(Zend_Pdf_Page::SIZE_LETTER);
+	    
+	        // write image to page
+	        
+	        $imagePath = 'c:\users\rossumg\_tmp\pdf\image.png';
+	        
+	        list($width, $height, $type, $attr) = getimagesize($imagePath);
+	        $image = Zend_Pdf_Image::imageWithPath($imagePath);
+	        $page->drawImage($image, 50, 500, 50+$width, 500+$height);
+	        
+	        // add page to document
+	        $pdf->pages[] = $page;
+	    
+	        // save as file
+	        $filename = '\test_image'.date("His").'.pdf';
+	        $pdf->save('c:\users\rossumg\_tmp\pdf'.$filename);
+	        echo 'SUCCESS: Document saved!';
+	    } catch (Zend_Pdf_Exception $e) {
+	        die ('PDF error: ' . $e->getMessage());
+	    } catch (Exception $e) {
+	        die ('Application error: ' . $e->getMessage());
+	    }
+	}
+	
+
+	
+	public function try2Action() {
+	    // include auto-loader class
+	    require_once 'Zend/Loader/Autoloader.php';
+	    
+	    //if (isset($_POST["submit"])) {
+	    if (true) {
+	        $target_dir = 'c:/users/rossumg/_tmp/uploads/';
+	        
+	        file_put_contents('c:\wamp\logs\php_debug.log', 'try2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	        var_dump('$_POST= ', $_POST, 'END');
+	        var_dump('$_FILES= ', $_FILES, 'END');
+	        $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	        
+	        $target_file = $target_dir . basename(@$_FILES["fileToUpload"]["name"]);
+	        $uploadOk = 1;
+	        // $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+	        
+	        // Check if image file is a actual image or fake image
+	        if(isset($_POST["submit"])) {
+	            $check = getimagesize(@$_FILES["fileToUpload"]["tmp_name"]);
+	            if($check !== false) {
+	                echo "File is an image - " . $check["mime"] . ".";
+	                $uploadOk = 1;
+	            } else {
+	                echo "File is not an image.";
+	                $uploadOk = 0;
+	            }
+	        }
+	        // Check if file already exists
+	        //if (file_exists($target_file)) {
+	          //  echo "Sorry, file already exists.";
+	            //$uploadOk = 0;
+	        //}
+	        // Check file size
+	        if ($_FILES["fileToUpload"]["size"] > 500000) {
+	            echo "Sorry, your file is too large.";
+	            $uploadOk = 0;
+	        }
+	        // Allow certain file formats
+	        //if($imageFileType != "pdf"  && $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
+                if(false) {
+	                echo "Sorry, only PDF, JPG, JPEG, PNG & GIF files are allowed.";
+	                $uploadOk = 0;
+	            }
+	            // Check if $uploadOk is set to 0 by an error
+	            if ($uploadOk == 0) {
+	                echo "Sorry, your file was not uploaded.";
+	                // if everything is ok, try to upload file
+	            } else {
+	                if (move_uploaded_file(@$_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+	                    echo "The file ". basename( @$_FILES["fileToUpload"]["name"]). " has been uploaded.";
+	                } else {
+	                    echo "Sorry, there was an error uploading your file.";
+	                }
+	            }
+	    //} else {
+	     
+	    $loader = Zend_Loader_Autoloader::getInstance();
+	     
+	    try {
+	        $pdf = new Zend_Pdf();
+	        $page = new Zend_Pdf_Page(Zend_Pdf_Page::SIZE_LETTER);
+	        
+	        // write image to page
+	        //$imagePath = 'c:\users\rossumg\_tmp\pdf\test_image.png';
+	        //$fh = fopen('C:\Users\rossumg\Downloads\download', 'a');
+	        //fclose($fh);
+	        /*
+	        $filename = 'C:\Users\rossumg\Downloads\download';
+	        file_put_contents('c:\wamp\logs\php_debug.log', 'try2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	        $stat = stat($filename);
+	        var_dump('$stat= ', $stat, 'END');
+	        $is_uploaded = is_uploaded_file($filename);
+	        var_dump('$is_uploaded= ', $is_uploaded, 'END');
+	         
+	        $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	        */
+	        
+            copy('C:\Users\rossumg\_tmp\uploads\download', 'C:\Users\rossumg\_tmp\uploads\image.png');	        
+            //rename('C:\Users\rossumg\uploads\download', 'C:\Users\rossumg\_tmp\uploads\image.png');
+	        
+	        $imagePath = 'c:\users\rossumg\_tmp\uploads\image.png';
+	        
+	        list($width, $height, $type, $attr) = getimagesize($imagePath);
+	        $image = Zend_Pdf_Image::imageWithPath($imagePath);
+	        $page->drawImage($image, 50, 500, 50+$width, 500+$height);
+	         
+	        // add page to document
+	        $pdf->pages[] = $page;
+	         
+	        // save as file
+	        $filename = '\image'.date("His").'.pdf';
+	        $pdf->save('c:\users\rossumg\_tmp\pdf'.$filename);
+	        echo 'SUCCESS: Document saved!';
+	    } catch (Zend_Pdf_Exception $e) {
+	        //die ('PDF error: ' . $e->getMessage());
+	    } catch (Exception $e) {
+	        die ('Application error: ' . $e->getMessage());
+	    }
+	    
+	     }
 	}
 	
 	public function dash0Action() {	}
@@ -810,14 +944,105 @@ class DashboardController extends ReportFilterHelpers {
 	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	}
 	
-	public function dash9bAction() {
-	    require_once('models/table/Dashboard-CHAI.php');
-	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
-	    
-	    $title_data = new DashboardCHAI();
-	    $details = $title_data->fetchTitleData();
-	    $this->view->assign('title_data', $details[month_name].' '. $details[year]);
 	
+	public function dash9bAction() {
+	  require_once('models/table/Dashboard-CHAI.php');
+	  
+	  // file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	   
+	  // $method = $this->getSanParam ( 'method' );
+	  $method = '1,2,3,4,5,6,7,8';
+	  $request = $this->getRequest ();
+	  
+	  // array of method names...
+	  //$title_method = new DashboardCHAI();
+	  //$title_method = $title_method->fetchTitleMethod($method);
+	   
+	  $title_date = new DashboardCHAI();
+	  $title_date = $title_date->fetchTitleDate();
+
+	  $this->view->assign('title_date', $title_date[month_name].', '. $title_date[year]);
+	  
+	  $cm_data = new DashboardCHAI();
+	  //$amc_data = new DashboardCHAI();
+	  //$tot_data = new DashboardCHAI();
+	  
+	  // geo selection includes "--choose--" or no selection
+	  if( ( isset($_POST["region_c_id"] ) && $_POST["region_c_id"][0] == "" ) || 
+	      ( isset($_POST["district_id"] ) && $_POST["district_id"][0] == "" ) || 
+	      ( isset($_POST["province_id"] ) && $_POST["province_id"][0] == "" ) ||
+	      (!isset($_POST["region_c_id"] ) && !isset($_POST["district_id"] ) && !isset($_POST["province_id"] ) ) ){
+          //get national numbers from refresh
+          //$cln_details = $cln_data->fetchDashboardData('national_consumption'.strval($method));
+          //$amc_details = $amc_data->fetchDashboardData('national_average_monthly_consumption'.strval($method));
+          //$tot_details = $tot_data->fetchDashboardData('national_total_consumption'.strval($method)); 
+	  }
+	  
+      if (count($cm_details) > 0 && count($tot_details) > 0 && count($amc_details) > 0  ) { //got all
+          
+          $this->view->assign('consumption_by_method', $cm_details);
+          $this->view->assign('total_consumption', $tot_details);
+          $this->view->assign('average_monthly_consumption_by_geo', $amc_details);
+	  
+      } else {    
+
+        $where = ' 1=1 ';
+       
+	    if( isset($_POST["region_c_id"]) ){ // CHAINigeria LGA
+	        $where = $where.' and f.location_id in (';
+	        foreach ($_POST['region_c_id'] as $i => $value){
+	            $geo = explode('_',$value);
+	            $where = $where.$geo[2].', ';
+	        }
+	        $where = $where.') ';
+	        $group = new Zend_Db_Expr('L1_location_name, CNO_id');
+	        $useName = 'L1_location_name';
+	        
+	    } else if( isset($_POST['district_id']) ){ // CHAINigeria state
+	        $where = $where.' and l2.id in (';
+	        foreach ($_POST['district_id'] as $i => $value){
+	            $geo = explode('_',$value);
+	            $where = $where.$geo[1].', ';
+	        }
+	        $where = $where.') ';
+	        $group = new Zend_Db_Expr('L2_location_name, CNO_id');
+	        $useName = 'L2_location_name';
+	        
+	    } else if( isset($_POST['province_id']) ){ //province_id is a Trainsmart internal name, represents hightest CHAINigeria level = GPZ 
+	        $where = $where.' and l2.parent_id in (';
+	        foreach ($_POST['province_id'] as $i => $value){
+	            $geo = explode('_',$value);
+	            $where = $where.$geo[0].', ';
+	        }
+	        $where = $where.') ';
+	        $group = new Zend_Db_Expr('L3_location_name, CNO_id');
+	        $useName = 'L3_location_name';
+	    } else { // no geo selection
+	       $group = 'CNO_id';
+	       $useName = 'L1_location_name';
+	       $location = 'National';
+	    }
+	   
+	    $where = str_replace(', )', ')', $where);
+	    $whereClause = new Zend_Db_Expr($where);
+	    
+	    //$amc_details = $amc_data->fetchAMCDetails($whereClause);
+	    
+	    if( $method != 0 ) $where = $where.' and cno.id in ( '.$method. ' )';
+	    
+	    //$cln_details = $cln_data->fetchCLNDetails('location', $id, $where, $group, $useName);
+	    $cm_details = $cm_data->fetchCMDetails($where, $group, $useName);
+	    
+	    foreach($cm_details as $i => $row ){
+	        $consumption_by_method[] =array('method' => $row['CNO_commodity_name'], 'consumption' => $row['C_consumption'] );
+	    }
+
+	    $this->view->assign('consumption_by_method', $consumption_by_method);
+
+	
+	}  // else
+	   
+	$this->viewAssignEscaped ('locations', Location::getAll() );
 	}
 	
 	   

@@ -96,7 +96,7 @@ print ScriptContainer::$instance->renderJSHead();
 			<!-------   /////////////////////////// make top buttons ////////////////////// -->
 
 			<div class="rightdiv" style="float: right;">
-				<?php  // require_once('views/scripts/dashboard/top_buttons.phtml');?>
+				<?php  require_once('views/scripts/dashboard/top_buttons.phtml');?>
 					
 			</div>
 			
@@ -105,6 +105,11 @@ print ScriptContainer::$instance->renderJSHead();
 			<div class="nav-buttons">
 				<?php  require_once('views/scripts/dashboard/left_buttons.phtml');?>
 				
+			</div>
+			
+			<!-------   /////////////////////////// load scripts ////////////////////// -->
+            <div class="nav-buttons">
+				<?php require_once('views/scripts/dashboard/displayScripts.phtml');?>
 			</div>
 
 			<!-------   /////////////////////////// charts ////////////////////// -->
@@ -192,29 +197,28 @@ print ScriptContainer::$instance->renderJSHead();
   
 
 
-  function drawChart11() {
+function drawChart11() {
 	  // Create and populate the data table.
 	  var chart11Data = google.visualization.arrayToDataTable([
 
-
 ['', ''],
 
-['Female Condoms', 40000],
-['Male Condoms', 98000],
-['Injectables', 44000],
-['Implants', 21000],
-['IUDs', 10000],
-['Oral Pills', 79000],
-['Sterilization', 6000],
 
+<?php
+  		foreach ($this->consumption_by_method as $row){
+  	?>
+  	[<?php echo  " '$row[method]',$row[consumption] "; ?>],
+  	<?php
+  		}
+  	?>
 
 ]);		    
 
-	  <?php echo  " var title_data = 'Monthly consumption by method $this->title_data ' " ?>;
+	  <?php echo  " var title_date = 'Monthly consumption by method $this->title_date ' " ?>;
 	  
 	  var chart11Options = {
 			  
-			  title: title_data,
+			  title: title_date,
 			  titleTextStyle: { fontSize: 16 },
 		      is3D:true,
 		      legend: 'none',
@@ -223,7 +227,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 	  var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
 	  chart11.draw(chart11Data, chart11Options);
-	}
+}
 
   function drawChart12() {
       var chart12Data = google.visualization.arrayToDataTable([

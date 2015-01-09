@@ -177,7 +177,7 @@ class DashboardCHAI extends Dashboard
 	    $select = $db->select()
 	    ->from(array('cno' => 'commodity_name_option'),
 	           array( 'commodity_name' ))
-	    ->where("id = $method");
+	    ->where("external_id = $method");
 	
 	    $result = $db->fetchRow($select);
 	
@@ -232,6 +232,7 @@ class DashboardCHAI extends Dashboard
 	            'l2.parent_id as L2_parent_id',
 	            'l3.location_name as L3_location_name',
 	            'cno.id as CNO_id',
+	            'cno.commodity_name as CNO_commodity_name',
 	            'c.date as C_date',
 	         	'ifnull(sum(c.consumption),0) as C_consumption' ))
 	         	->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
@@ -989,6 +990,86 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 		    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 		    
 		}
-	
+
+
+
+public function fetchCMDetails($where = null, $group = null, $useName = null) {
+
+    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+    $output = array();
+
+
+    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 171>'.PHP_EOL, FILE_APPEND | LOCK_EX);ob_start();
+    //var_dump('all=', $where, $group, $useName, "END");
+    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+    $create_view = $db->select()
+    ->from(array('f' => 'facility'),
+        array(
+            'f.id as F_id',
+            'f.facility_name as F_facility_name',
+            //"replace(f.facility_name, '\'', '\\\'') as F_facility_name',",
+            'f.location_id as F_location_id',
+            'l1.id as L1_id',
+            'l1.location_name as L1_location_name',
+            'l2.id as L2_id',
+            'l2.location_name as L2_location_name',
+            'l2.parent_id as L2_parent_id',
+            'l3.location_name as L3_location_name',
+            'cno.id as CNO_id',
+            'cno.commodity_name as CNO_commodity_name',
+            'c.date as C_date',
+            'ifnull(sum(c.consumption),0) as C_consumption' ))
+         	->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+    	    ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+    	    ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+    	    ->joinLeft(array("c" => "commodity"), 'f.id = c.facility_id')
+    	    ->joinLeft(array("cno" => "commodity_name_option"), 'c.name_id = cno.id')
+    	    ->joinInner(array('mc' => 'lc_view_subselect'), 'f.id = mc.facility_id and month(c.date) = C_monthDate')
+    	    ->where($where)
+    	    ->group(array($group))
+    	    ->order(array('CNO_id'));
+    
+    $sql = $create_view->__toString();
+    $sql = str_replace('`C_consumption`,', '`C_consumption`', $sql);
+    $sql = str_replace('`l1`.*,', '', $sql);
+    $sql = str_replace('`l2`.*,', '', $sql);
+    $sql = str_replace('`l3`.*,', '', $sql);
+    $sql = str_replace('`c`.*,', '', $sql);
+    $sql = str_replace('`cno`.*,', '', $sql);
+    $sql = str_replace('`mc`.*', '', $sql);
+    
+    try{
+        $sql='create or replace view lc_view as ('.$sql.')';
+        $db->fetchOne( $sql );
+    }
+    catch (Exception $e) {
+        //echo $e->getMessage();
+        //var_dump('error', $e->getMessage());
+        
+    }
+
+    $select = $db->select()
+    ->from(array('cv' => 'lc_view'),
+        array(
+            'CNO_commodity_name',
+            'ifnull(C_consumption,0) as C_consumption' ))
+    	->order(array('CNO_commodity_name'));
+    
+    $result = $db->fetchAll($select);
+    
+    foreach ($result as $row){
+    
+        $output[] = array(
+            "CNO_commodity_name" => $row['CNO_commodity_name'],
+            "C_consumption" => $row['C_consumption'],
+        );
+    }
+    
+    return $output;
 }
+
+}
+
+
 ?>

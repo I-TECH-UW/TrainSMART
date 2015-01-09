@@ -20,7 +20,8 @@ function buildId($tier, &$locations, $id) {
 }
 
 function renderFilter(&$locations, $tier, $widget_id, $default_val_id = false, $child_widget_id = false, $is_multiple = false, $readonly = false) {
-  if ( $default_val_id === false) {
+    $also_match_id = "";
+    if ( $default_val_id === false) {
     foreach ( $locations as $val ) {
         if ( ($val['tier'] == $tier) && $val['is_default'])
           $default_val_id = $val['id'];
