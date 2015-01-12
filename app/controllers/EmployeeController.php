@@ -145,71 +145,6 @@ class EmployeeController extends ReportFilterHelpers {
 		$rows = $db->fetchAll($sql);
 		return $rows ? $rows : array();
 	}
-	
-
-	public function addFunderToEmployeeAction() {
-		if (! $this->hasACL ( 'employees_module' )) {
-			$this->doNoAccessError ();
-		}
-	
-		require_once('models/table/Partner.php');
-		require_once('views/helpers/Location.php'); // funder stuff
-		require_once('models/table/Employee.php');
-	   
-		$db     = $this->dbfunc();
-		$status = ValidationContainer::instance ();
-		$params = $this->getAllParams();
-		$id     = $params['id'];
-			
-		if ($id) {
-			$helper = new Helper();
-				
-			if ( $this->getRequest()->isPost() ) {
-
-			    if (!$this->hasACL("edit_employee"))
-			    {
-    				if($this->_getParam('outputType') == 'json') {
-					   $this->sendData(array('msg'=>'Not Authorized'));
-					   exit();
-				    }
-			        $this->doNoAccessError();
-			    }
-			    			    
-			    if ($params['employeeFunding_delete_data'])
-			    {
-			        Employee::disassociateMechanismFromEmployee($params['employeeFunding_delete_data']);
-			    }
-			    
-			    if ($params['employeeFunding_new_data'])
-			    {
-			        $data_to_add = json_decode($params['employeeFunding_new_data'], true);
-			        if (!Employee::saveMechanismAssociation($id, $data_to_add['data']))
-			        {
-			            $status->setStatusMessage(t('Error saving mechanism association.'));
-			            return false;
-			        }
-			    }
-				if ( $status->hasError() )
-					$status->setStatusMessage( t('That funding mechanism could not be saved.') );
-					
-				else {
-					if ($params['redirect'])
-					{
-					   $this->_redirect($params['redirect']);
-					}
-				}
-			}
-				
-			//exclude current funders
-			$employee = $helper->getEmployee($id);
-			$this->viewAssignEscaped ( 'employee', $employee );
-			$this->view->assign ( 'tableEmployeeFunding', $this->generateMechanismTable($id) );
-			
-		} // if ($id)
-	
-		//validate
-		$this->view->assign ( 'status', $status );
-	}
 
 	public function addAction() {
 		$this->view->assign('mode', 'add');
@@ -244,73 +179,6 @@ class EmployeeController extends ReportFilterHelpers {
 		$this->view->assign ( 'status', $status );
 
 	}
-	
-	public function deleteFunderAction() {
-		if (! $this->hasACL ( 'employees_module' )) {
-			$this->doNoAccessError ();
-		}
-        // TODO: is this used now?
-/*
-		require_once('models/table/Partner.php');
-		require_once('views/helpers/Location.php'); // funder stuff
-	
-		$db     = $this->dbfunc();
-		$status = ValidationContainer::instance ();
-		$params = $this->getAllParams();
-			
-		if ($params['id']) {
-			$recArr = explode('_', $params['id']);
-			
-				//find in epsfm, should find to delete
-				$sql = 'SELECT * FROM employee_to_partner_to_subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
-				$where = "employee_id = $recArr[0] and  partner_id = $recArr[1] and subpartner_id = $recArr[2] and partner_funder_option_id = $recArr[3] and mechanism_option_id = $recArr[4] and is_deleted = false";
-				$sql .= $where;
-					
-				$row = $db->fetchRow( $sql );
-				if (! $row){
-					$status->setStatusMessage ( t('Cannot find that record in the database.') );
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'That record could not be found.'.PHP_EOL, FILE_APPEND | LOCK_EX);
-				}
-					
-				else { // found, safe to delete
-	
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'Ready to delete '.$row['id'].PHP_EOL, FILE_APPEND | LOCK_EX);
-					$update_result = $db->update('employee_to_partner_to_subpartner_to_funder_to_mechanism', array('is_deleted' => 1), 'id = '.$row['id']);
-					var_dump($update_result);
-	
-					if($update_result){
-						$status->setStatusMessage ( t ( 'That mechanism was deleted.' ) );
-						//file_put_contents('c:\wamp\logs\php_debug.log', 'That record was deleted.'.PHP_EOL, FILE_APPEND | LOCK_EX);
-					}
-					else{
-						$status->setStatusMessage ( t ( 'That mechanism was not deleted.' ) );
-						//file_put_contents('c:\wamp\logs\php_debug.log', 'That record was not deleted.'.PHP_EOL, FILE_APPEND | LOCK_EX);
-					}
-				}
-				
-			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-		}
-		$this->_redirect("employee/edit/id/" . $row['employee_id']);
-*/
-	}
-
-	/**
-	 * returns an array of organizer ids that the logged in user can edit
-	 * @return array
-	 */
-	public function getAvailableOrganizers() {
-		$db = $this->dbfunc();
-		$user_id = $this->isLoggedIn();
-		if ($this->hasACL('training_organizer_option_all')) {
-			$sql = 'SELECT id from training_organizer_option where is_deleted = 0';
-		} else {
-			$sql = "SELECT training_organizer_option_id FROM user_to_organizer_access WHERE user_id = $user_id";
-		}
-
-		$editableOrganizers = $db->fetchCol($sql);
-
-		return $editableOrganizers;
-	}
 
     /**
      * returns an array of partner ids that the logged in user can edit
@@ -318,7 +186,7 @@ class EmployeeController extends ReportFilterHelpers {
      */
     public function getAvailablePartners() {
         $db = $this->dbfunc();
-        $user_id = $this->isLogged();
+        $user_id = $this->isLoggedIn();
         if ($this->hasACL('training_organizer_option_all')) {
             $sql = 'SELECT id from partner where is_deleted = 0';
         } else {
@@ -348,7 +216,7 @@ class EmployeeController extends ReportFilterHelpers {
         if (!$this->hasACL('training_organizer_option_all')) {
             $partners = $this->getAvailablePartners();
             if (count($partners)) {
-                $sql .= " AND mechanism.owner_id in (" . implode(',', $partners) . ") ";
+                $sql .= " AND mechanism_option.owner_id in (" . implode(',', $partners) . ") ";
             }
         }
 
@@ -435,20 +303,19 @@ class EmployeeController extends ReportFilterHelpers {
      */
     private function userHasAccess($partner_id, $employeeMechanisms, $extraMechanismIDs = array()) {
         if (!$this->hasACL('training_organizer_option_all')) {
-            $orgs = $this->getAvailableOrganizers();
-            if (!count($orgs)) {
-                return false;
-            }
 
             $partners = $this->getAvailablePartners();
-            if (!array_search($partner_id, $partners)) {
+			if (!count($partners)) {
+				return false;
+			}
+            if (array_search($partner_id, $partners) === false) {
 
                 // employee not employed by a partner that the logged in user has access to,
                 // see if they're employed by a subpartner on a mechanism that an accessible partner owns
 
                 $foundPartner = false;
                 foreach ($employeeMechanisms as $mech) {
-                    if (array_search($partner_id, $mech["partners"])) {
+                    if (array_search($partner_id, $mech["partners"]) !== false) {
                         $foundPartner = true;
                         break;
                     }
@@ -459,7 +326,7 @@ class EmployeeController extends ReportFilterHelpers {
                     foreach ($extraMechanismIDs as $extraID) {
                         $sql = "SELECT partner_id from link_mechanism_partner where mechanism_option_id = $extraID";
                         $partners = $db->fetchCol($sql);
-                        if (array_search($partner_id, $partners)) {
+                        if (array_search($partner_id, $partners) !== false) {
                             $foundPartner = true;
                             break;
                         }
@@ -467,8 +334,10 @@ class EmployeeController extends ReportFilterHelpers {
                 }
                 return $foundPartner;
             }
+			else {
+				return true;
+			}
         }
-
         return false;
     }
 
