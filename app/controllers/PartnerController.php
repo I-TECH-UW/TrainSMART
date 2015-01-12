@@ -202,24 +202,25 @@ class PartnerController extends ReportFilterHelpers {
 					,GROUP_CONCAT(sub.partner) as subPartner
 					,GROUP_CONCAT(pfo.funder_phrase) as partnerFunder
 					,GROUP_CONCAT(mo.mechanism_phrase) as mechanism
-					,GROUP_CONCAT(psfm.funding_end_date) as funding_end_date
+					,GROUP_CONCAT(mo.end_date) as funding_end_date
 					FROM partner 
 					LEFT JOIN ($locationsubquery) as l  ON l.id = partner.location_id
-					LEFT JOIN partner_to_subpartner_to_funder_to_mechanism psfm  ON partner.id = psfm.partner_id
-					LEFT JOIN partner_funder_option pfo         ON psfm.partner_funder_option_id = pfo.id
-					LEFT JOIN mechanism_option mo        		ON psfm.mechanism_option_id = mo.id
-					LEFT JOIN partner sub                       ON sub.id = psfm.subpartner_id 
+					LEFT JOIN link_mechanism_partner    ON partner.id = link_mechanism_partner.partner_id
+					LEFT JOIN mechanism_option mo        		ON link_mechanism_partner.mechanism_option_id = mo.id
+					LEFT JOIN partner_funder_option pfo         ON mo.funder_id = pfo.id
+					LEFT JOIN partner sub                       ON sub.id = link_mechanism_partner.partner_id
 					LEFT JOIN location parent_loc               ON parent_loc.id = partner.location_id";
 
 			// restricted access?? only show partners by organizers that we have the ACL to view
 			$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'
-			if($org_allowed_ids)
+			if($org_allowed_ids) {
 				$where[] = " partner.organizer_option_id in ($org_allowed_ids) ";
+			}
 			// restricted access?? only show organizers that belong to this site if its a multi org site
 			$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
-			if ($site_orgs)
+			if ($site_orgs) {
 				$where[] = " partner.organizer_option_id in ($site_orgs) ";
-
+			}
 			if ($locationWhere = $this->getLocationCriteriaWhereClause($criteria, '', '')) {
 				$where[] = "($locationWhere OR parent_loc.parent_id = $location_id)"; #todo the subquery and parent_id is not working
 			}
@@ -228,9 +229,9 @@ class PartnerController extends ReportFilterHelpers {
 			if ($criteria['partner_id'])        $where[] = 'partner.id = '.$criteria['partner_id'];
 			if ($criteria['start_date'])        $where[] = 'funding_end_date >= \''.$this->_euro_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
 			if ($criteria['end_date'])          $where[] = 'funding_end_date <= \''.$this->_euro_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
-			if ( count ($where))
-  			  $sql .= ' WHERE ' . implode(' AND ', $where);
-			
+			if ( count ($where)) {
+				$sql .= ' WHERE ' . implode(' AND ', $where);
+			}
 			    
 			$sql .= ' GROUP BY partner.id ';
 
@@ -267,11 +268,9 @@ class PartnerController extends ReportFilterHelpers {
 			}
 		}
 		// assign form drop downs
-		$this->view->assign('status', $status);
 		$this->viewAssignEscaped ( 'criteria', $criteria );
 		$this->viewAssignEscaped ( 'locations', $locations );
 		$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'subpartners', DropDown::generateHtml ( 'partner', 'partner', $criteria['subpartner_id'], false, $this->view->viewonly, false, true, array('name' => 'subpartner_id'), true ) );
 	}
 }
 
