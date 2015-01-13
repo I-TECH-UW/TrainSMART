@@ -160,7 +160,7 @@ class ReportFilterHelpers extends ITechController {
 		$db = $this->dbfunc();
 		$user_id = $this->isLoggedIn();
 		if ($this->hasACL('training_organizer_option_all')) {
-			$sql = 'SELECT id from partner where is_deleted = 0';
+			$sql = 'SELECT id from partner';
 		} else {
 			$sql = 'SELECT partner.id FROM partner ' .
 				'INNER JOIN training_organizer_option ON partner.organizer_option_id = training_organizer_option.id ' .
