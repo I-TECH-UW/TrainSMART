@@ -138,17 +138,17 @@ class DropDown {
 	}
 
 	/**
-	 * @param $table - a string for the table name, or an array of rows to be used as the option values
-	 * @param $column
-	 * @param bool $id - option value to select as default
-	 * @param bool $jsonUrl - do not begin or end with slash or add output type
-	 * @param bool $disabled
-	 * @param bool $allowIds
-	 * @param bool $multiple
-	 * @param array $attributes
-	 * @param bool $set_default
-	 * @param bool $multiple_choice
-	 * @param int $size
+	 * @param string     $table - a string for the table name, or an array of rows to be used as the option values
+	 * @param string     $column
+	 * @param bool       $id - option value to select as default
+	 * @param bool       $jsonUrl - do not begin or end with slash or add output type
+	 * @param bool       $disabled
+	 * @param bool|array $allowIds - an array of ids that are acceptable options for the dropdown (false allows all options)
+	 * @param bool       $multiple
+	 * @param array      $attributes
+	 * @param bool       $set_default
+	 * @param bool       $multiple_choice
+	 * @param int        $size
 	 * @return string
 	 */
 	public static function generateHtml($table, $column, $id = false, $jsonUrl = false, $disabled = false, $allowIds = false, 
