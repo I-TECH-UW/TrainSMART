@@ -194,25 +194,15 @@
 
 							itech_save_confirm_on_leave();
 
-							$('#funder_add').click( function (e) { /* button - add a new funder */
-								e.preventDefault();
-								var btn = $(this);
-								var target = null;
-
-								$(".subPartner_lbl:first").add(".partnerFunder_lbl:first").add(".mechanism_lbl:first").add(".percentage\\[\\]:first").each(function () { // class="fieldlabel funder[]", then 'funding_end_date[]' (we'll use these as a template)
-									btn.before( $(this).clone() );
-									var template = $(this).next().clone();
-									template.find('input,select').val('');							
-									btn.before( template );
-								});
-
-								$(target).removeClass('hasDatepicker').removeAttr('id').datepicker({ // rebind datepicker and calender
-									changeMonth: true,
-									changeYear: true
-								});
-								$('.calendarbtn').unbind('click').click(openNearestDatePicker);
-								return false;
+							/* Init the table */
+							oTable = $('.tablegrid').dataTable({
+								"bJQueryUI": true,
+								"bPaginate": false,
+								"bSort": true,
+								"bInfo": false,
+								"bFilter": false
 							});
+
 
 							$('#select_employee_qualification_option').change( function () { /* watch Cadre field and show/hide CHW divs on CHW fields */
 
@@ -345,6 +335,45 @@
 
 						});
 					</script>
+
+
+
+				<h1><?php tp('Mechanisms'); ?>:</h1>
+				<div style="width:100%;">
+
+					<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id=""
+						   style="width:100%">
+						<thead>
+						<tr>
+							<th><?php tp('Mechanism'); ?></th>
+							<th><?php tp('Percent'); ?></th>
+							<?php if ($this->setting['display_hours_per_mechanism']){ ?>
+								<th><?php tp('Hours'); ?></th>
+							<?php }
+							if ($this->setting['display_annual_cost_to_mechanism'])	{ ?>
+								<th><?php tp('Annual Cost'); ?></th>
+							<?php } ?>
+							<th><?php tp("Delete?"); ?></th>
+						</tr>
+						</thead>
+						<tbody>
+						<?php foreach ($this->employeeMechanisms as $mech) { ?>
+							<tr>
+								<td><?php echo $mech['mechanism_phrase']; ?></td>
+								<td><?php echo $mech['percentage']; ?></td>
+							<?php if ($this->setting['display_hours_per_mechanism']){ ?>
+								<td><?php echo ($mech['percentage']/100.0 * $this->employee['funded_hours_per_week']) ; ?></td>
+							<?php }
+							if ($this->setting['display_annual_cost_to_mechanism'])	{ ?>
+								<td><?php echo sprintf('%0.2f', $mech['percentage']/100.0 * $this->employee['annual_cost']); ?></td>
+							<?php } ?>
+								<td><input type="checkbox" onclick="deleteToggle(this);"/></td>
+							</tr>
+						<?php } ?>
+						</tbody>
+					</table>
+				</div>
+
                      <input type="hidden" id="employeeFunding_delete_data" name="employeeFunding_delete_data"/>
                      <input type="hidden" id="employeeFunding_new_data" name="employeeFunding_new_data"/>
                      <?php 

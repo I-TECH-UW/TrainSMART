@@ -224,7 +224,6 @@ class EmployeeController extends ReportFilterHelpers {
                 link_mechanism_employee.mechanism_option_id, mechanism_option.mechanism_phrase
                 FROM link_mechanism_employee INNER JOIN mechanism_option ON link_mechanism_employee.mechanism_option_id = mechanism_option.id
                 WHERE employee_id = $employee_id ORDER BY link_mechanism_employee.percentage DESC";
-
         $employeeMechanisms = $db->fetchAll($sql);
         foreach ($employeeMechanisms as &$mech) {
             $sql = "SELECT partner_id from link_mechanism_partner where mechanism_option_id = {$mech['id']}";
@@ -563,6 +562,7 @@ class EmployeeController extends ReportFilterHelpers {
 		$this->view->assign ( 'race',          DropDown::generateHtml ( 'person_race_option', 'race_phrase', $params['race_option_id'], false, !$this->hasACL("edit_employee"), false ) );
 
 		$this->view->assign('mechanismData', $mechanismData);
+		$this->view->assign('employeeMechanisms', $employeeMechanisms);
 		$this->view->assign ('tableEmployeeFunding', $this->generateMechanismTable($id, $employeeMechanisms) );
 		
 	}
