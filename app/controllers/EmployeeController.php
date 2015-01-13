@@ -527,7 +527,7 @@ class EmployeeController extends ReportFilterHelpers {
 		$titlesArray = OptionList::suggestionList ( 'person_title_option', 'title_phrase', false, 9999);
 		$this->view->assign ( 'titles',      DropDown::render('title_option_id', $this->translation['Title'], $titlesArray, 'title_phrase', 'id', $params['title_option_id'] ) );
 		
-		$this->view->assign ( 'partners',    DropDown::generateHtml   ( 'partner', 'partner', $params['partner_id'], false, !$this->hasACL("edit_employee"), false, false, array("onchange" => "availableMechanisms();") ) );
+		$this->view->assign ( 'partners',    DropDown::generateHtml   ( 'partner', 'partner', $params['partner_id'], false, !$this->hasACL("edit_employee"), $this->getAvailablePartners(), false, array("onchange" => "availableMechanisms();") ) );
 		
 		//$this->view->assign ( 'funder_mechanisms', DropDown::generateHtml( $params['funder_mechanism'], 'funder_mechanism_option', $params['funder_mechanism'], false, $this->view->viewonly, false ) );
 		/*
@@ -665,9 +665,8 @@ LEFT JOIN   partner subpartner on subpartner.id = link_mechanism_partner.partner
 
 		$this->viewAssignEscaped ( 'criteria', $criteria );
 		$this->viewAssignEscaped ( 'locations', $locations );
-		$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false ) );
+		$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, $this->getAvailablePartners() ) );
 		
-		//$this->view->assign ( 'subpartners', DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false, false, array('name' => 'subpartner_id'), true ) );
 		$this->view->assign ( 'cadres',      DropDown::generateHtml ( 'employee_qualification_option', 'qualification_phrase', $criteria['employee_qualification_option_id'], false, $this->view->viewonly, false ) );
 		$this->viewAssignEscaped ( 'sites', $helper->getFacilities() );
 		$this->view->assign ( 'categories',  DropDown::generateHtml ( 'employee_category_option', 'category_phrase', $criteria['employee_category_option_id'], false, $this->view->viewonly, false ) );
