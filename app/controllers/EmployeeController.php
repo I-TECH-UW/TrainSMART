@@ -528,19 +528,6 @@ class EmployeeController extends ReportFilterHelpers {
 		
 		$this->view->assign ( 'partners',    DropDown::generateHtml   ( 'partner', 'partner', $params['partner_id'], false, !$this->hasACL("edit_employee"), $this->getAvailablePartners(), false, array("onchange" => "availableMechanisms();") ) );
 		
-		//$this->view->assign ( 'funder_mechanisms', DropDown::generateHtml( $params['funder_mechanism'], 'funder_mechanism_option', $params['funder_mechanism'], false, $this->view->viewonly, false ) );
-		/*
-		$this->view->assign ( 'funders',
-		DropDown::generateHtml (
-		'partner_funder_option',
-		'funder_phrase',
-		$params['partner_funder_option_id'],
-		false,
-		$this->viewonly,
-		false
-		));
-		*/
-		
 		//$this->view->assign ( 'subpartners', DropDown::generateHtml   ( 'partner', 'partner', $params['subpartner_id'], false, $this->view->viewonly, false, false, array('name' => 'subpartner_id'), true ) );
 		$this->view->assign ( 'bases',       DropDown::generateHtml   ( 'employee_base_option', 'base_phrase', $params['employee_base_option_id'], false, !$this->hasACL("edit_employee")) );
 		$this->view->assign ( 'site_types',  DropDown::generateHtml   ( 'employee_site_type_option', 'site_type_phrase', $params['facility_type_option_id'], false, !$this->hasACL("edit_employee")) );

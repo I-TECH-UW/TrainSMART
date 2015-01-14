@@ -356,9 +356,9 @@
 							<th><?php tp("Delete?"); ?></th>
 						</tr>
 						</thead>
-						<tbody>
+						<tbody id="employee_mechanism_table">
 						<?php foreach ($this->employeeMechanisms as $mech) { ?>
-							<tr>
+							<tr id="<?php echo $mech['id']; ?>">
 								<td><?php echo $mech['mechanism_phrase']; ?></td>
 								<td><?php echo $mech['percentage']; ?></td>
 							<?php if ($this->setting['display_hours_per_mechanism']){ ?>
@@ -374,6 +374,26 @@
 					</table>
 				</div>
 
+                <script>
+                    function deleteToggle(element) {
+                        // get our jQuery version of the element
+                        var el = $(element);
+                        var siblings = el.parent().siblings('td');
+                        if (element.checked) {
+                            siblings.css({"text-decoration" : "line-through", "color" : "red", "font-style" : "italic"});
+                            var dis = $("#disassociateMechanisms");
+
+                            // append the id set in the tr tag that identifies the mechanism association
+                            dis.val(dis.val() + el.parent().parent().attr("id") + ",");
+                        }
+                        else {
+                            siblings.css({"text-decoration" : "", "color" : "", "font-style" : ""});
+                        }
+                    }
+                </script>
+
+                <input type="hidden" id="disassociateMechanisms" name="disassociateMechanisms"/>
+                <input type="hidden" id="associateMechanisms" name="associateMechanisms"/>
                      <input type="hidden" id="employeeFunding_delete_data" name="employeeFunding_delete_data"/>
                      <input type="hidden" id="employeeFunding_new_data" name="employeeFunding_new_data"/>
                      <?php 
@@ -434,12 +454,12 @@
 
             </form>
 			<div class="clear"></div>
-                <script type="application/javascript">
-                    $(document).ready(function() {
-                        window.mechData = JSON.parse($("#mechanismData").html());
-                        $('#select_partner').on('change', availableMechanisms);
-                        availableMechanisms();
-                    });
+            <script type="application/javascript">
+                $(document).ready(function() {
+                    window.mechData = JSON.parse($("#mechanismData").html());
+                    $('#select_partner').on('change', availableMechanisms);
+                    availableMechanisms();
+                });
             </script>
 
             <script type="application/javascript">
@@ -459,7 +479,6 @@
                 }
             </script>
 
-            </form>
 			<div class="clear"></div>
 		</div>
 	</body>
