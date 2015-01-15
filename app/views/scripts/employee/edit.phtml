@@ -376,24 +376,107 @@
 
                 <script>
                     function deleteToggle(element) {
-                        // get our jQuery version of the element
+                        // get jQuery version of the element
                         var el = $(element);
                         var siblings = el.parent().siblings('td');
+                        var idList = $("#disassociateMechanisms").data("ids");
+
+                        // get the mechanism association id in the tr element
+                        var id = el.parent().parent().attr("id");
+
+                        var mechID = el.parent().siblings().first().data('mechID');
+
                         if (element.checked) {
                             siblings.css({"text-decoration" : "line-through", "color" : "red", "font-style" : "italic"});
-                            var dis = $("#disassociateMechanisms");
+                            if (typeof id != 'undefined') {
+                                idList.push(id);
+                            }
+                            else {
+                                // since there's no tr id,
+                                // this should be a new mechanism that's been deleted before it was saved
 
-                            // append the id set in the tr tag that identifies the mechanism association
-                            dis.val(dis.val() + el.parent().parent().attr("id") + ",");
+                                // TODO: remove debug
+                                var d = $("#associateMechanisms").data();
+                                $("#associateMechanisms").removeData(mechID);
+                                // TODO: remove debug
+                                d = $("#associateMechanisms").data();
+                            }
+                            window.mechData['employee_mechanism_ids'].splice($.inArray(mechID, window.mechData['employee_mechanism_ids']), 1);
                         }
                         else {
-                            siblings.css({"text-decoration" : "", "color" : "", "font-style" : ""});
+
+                            if (typeof id != 'undefined') {
+                                siblings.css({"text-decoration" : "", "color" : "", "font-style" : ""});
+                                // use jQuery's inArray because IE <9 doesn't support indexOf in arrays
+                                idList.splice($.inArray(id, idList), 1);
+                            }
+                            else {
+                                // since there's no tr id,
+                                // this should be a new mechanism that's been deleted and now un-checked again
+                                // before it was saved
+                                siblings.css({"text-decoration" : "", "color" : "green", "font-style" : ""});
+
+                                var percent = el.parent().siblings().first().next().text();
+                                // TODO: remove debug
+                                var d = $("#associateMechanisms").data();
+
+                                // javascript (ES5) interprets mechID as a string if used like this: { mechID : percent}
+                                // so this is a workaround
+                                var tempObj = {};
+                                tempObj[mechID] = percent;
+                                $("#associateMechanisms").data(tempObj);
+
+                                // TODO: remove debug
+                                d = $("#associateMechanisms").data();
+
+
+                            }
+                            window.mechData['employee_mechanism_ids'].push(mechID);
                         }
+                        availableMechanisms();
+                        return true;
+                    }
+                    function processMechanismAssociations() {
+                        $("#associateMechanisms").val($("#associateMechanisms").data());
+                        $("#disassociateMechanisms").val($("#disassociateMechanisms").data("ids").join(','));
+                        return true;
+                    }
+                    function addMechanism() {
+                        var tbody = $("#employee_mechanism_table");
+                        var percent = $("#percentage").val();
+                        var fpercent = percent / 100.0;
+                        var selectedMechanism = $("#new_mechanism option:selected");
+                        var mechID = selectedMechanism.val();
+
+                        var newRow = $("<tr><td>" + selectedMechanism.text() + "</td><td>" + percent +
+                            "</td><td>" + (fpercent * <?php echo $this->employee['funded_hours_per_week']?>).toFixed(2) +
+                            "</td><td>" + (fpercent * <?php echo $this->employee['annual_cost']?>).toFixed(2) +
+                            '</td><td><input type="checkbox" onclick="deleteToggle(this);"/></td></tr>');
+                        newRow.children().css({"color": "green", "font-weight": "bold"});
+
+                        var d = newRow.children().first();
+                        d = d.data();
+                        newRow.children().first().data("mechID", mechID);
+                        d = newRow.children().first().data();
+                        tbody.append(newRow);
+
+                        // javascript (ES5) interprets mechID as a string if used like this: { mechID : percent}
+                        // so this is a workaround
+                        var tempObj = {};
+                        tempObj[mechID] = percent;
+                        $("#associateMechanisms").data(tempObj);
+                        window.mechData['employee_mechanism_ids'].push(mechID);
+
+                        availableMechanisms();
+
+                        return true;
                     }
                 </script>
 
                 <input type="hidden" id="disassociateMechanisms" name="disassociateMechanisms"/>
                 <input type="hidden" id="associateMechanisms" name="associateMechanisms"/>
+                <input type="hidden" id="mechanismPercentages" name="mechanismPercentages"/>
+
                      <input type="hidden" id="employeeFunding_delete_data" name="employeeFunding_delete_data"/>
                      <input type="hidden" id="employeeFunding_new_data" name="employeeFunding_new_data"/>
                      <?php 
@@ -402,7 +485,7 @@
                     <br />
                       <script>
                     	// fired on "insert" button click
-                    	function addMechanism(oButton) {
+                    	function addMechanism2(oButton) {
                     	    var oMechanism = YAHOO.util.Dom.get('new_mechanism');
                     	    var oPercent = YAHOO.util.Dom.get('percentage');
                     
@@ -443,13 +526,13 @@
                         <label class="label">Percentage</label>
                         <input type="text" id="percentage" name="percentage" value="" />
                       </span>
-                      <input type="button" name="associateMechanism" value="<?php tp("Add");?>" class="insert" id="mechanismInsertButton" onclick="addMechanism(this);"/>
+                      <input type="button" name="associateMechanism" value="<?php tp("Add");?>" class="insert" id="mechanismInsertButton" onclick="addMechanism();"/>
                     </div>
 
 					<div class="clear"></div>
 					<input type="hidden" name="limit" id="limit" value="1" />
 
-					<input type="submit" class="submitNoArrow" name="saveonly" value="<?php tp('Save');?>" />
+					<input type="submit" class="submitNoArrow" name="saveonly" onclick="processMechanismAssociations();" value="<?php tp('Save');?>" />
 
 
             </form>
@@ -459,6 +542,8 @@
                     window.mechData = JSON.parse($("#mechanismData").html());
                     $('#select_partner').on('change', availableMechanisms);
                     availableMechanisms();
+                    $("#disassociateMechanisms").data("ids", []);
+                    $("#associateMechanisms").data("ids", []);
                 });
             </script>
 
