@@ -232,43 +232,6 @@ class EmployeeController extends ReportFilterHelpers {
         return $employeeMechanisms;
     }
 
-	public function generateMechanismTable($employee_id, $employeeMechanisms){
-        require_once 'views/helpers/EditTableHelper.php';
-        $db     = $this->dbfunc();
-
-		$columnNames = array('mechanism_phrase' => t('Mechanism'),
-			'percentage' => t('Percent'),
-		);
-
-		if ($this->setting('display_hours_per_mechanism'))
-		{
-			$columnNames['hours'] = t('Hours');
-		}
-		if ($this->setting('display_annual_cost_to_mechanism'))
-		{
-			$columnNames['cost'] = t('Annual Cost');
-		}
-
-		if ($employee_id) {
-
-			$sql = "SELECT annual_cost, funded_hours_per_week from employee where id = $employee_id";
-
-			$employee_data = $db->fetchRow($sql);
-
-            foreach ($employeeMechanisms as &$mechanism) {
-                $percent = $mechanism['percentage'] / 100.0;
-                if ($this->setting('display_hours_per_mechanism')) {
-                    $mechanism['hours'] = $percent * $employee_data['funded_hours_per_week'];
-                }
-                if ($this->setting('display_annual_cost_to_mechanism')) {
-                    $employee_mechanism_cost = sprintf('%0.2f', $percent * $employee_data['annual_cost']);
-                    $mechanism['cost'] = $employee_mechanism_cost;
-                }
-            }
-		}
-		return(EditTableHelper::generateHtml('employeeFunding', $employeeMechanisms, $columnNames, array(), array(), true));
-	}
-
     /**
      * return whether the logged-in user has access to this employee's information, depends on the user having
      * access to one of the partners on a mechanism associated with the employee
@@ -445,17 +408,16 @@ class EmployeeController extends ReportFilterHelpers {
     				if(!$id) {
     					$status->setStatusMessage( t('That person could not be saved.') );
     				} else {
-                        if ($params['employeeFunding_delete_data'])
+                        if ($params['disassociateMechanisms'])
                         {
-                            if (!Employee::disassociateMechanismFromEmployee($params['employeeFunding_delete_data'])) {
-                                $status->setStatusMessage(t('Error saving mechanism association.'));
+                            if (!Employee::disassociateMechanismsFromEmployee($id, $params['disassociateMechanisms'])) {
+                                $status->setStatusMessage(t('Error removing mechanism association.'));
                             }
                         }
 
-                        if ($params['employeeFunding_new_data'])
+                        if ($params['associateMechanisms'])
                         {
-                            $data_to_add = json_decode($params['employeeFunding_new_data'], true);
-                            if (!Employee::saveMechanismAssociation($id, $data_to_add['data']))
+                            if (!Employee::saveMechanismAssociations($id, $params['associateMechanisms'], $params['mechanismPercentages']))
                             {
                                 $status->setStatusMessage(t('Error saving mechanism association.'));
                             }
@@ -550,8 +512,6 @@ class EmployeeController extends ReportFilterHelpers {
 
 		$this->view->assign('mechanismData', $mechanismData);
 		$this->view->assign('employeeMechanisms', $employeeMechanisms);
-		$this->view->assign ('tableEmployeeFunding', $this->generateMechanismTable($id, $employeeMechanisms) );
-		
 	}
 
 	public function searchAction()

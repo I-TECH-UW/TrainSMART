@@ -9,7 +9,9 @@
 	print ScriptContainer::$instance->renderCSSHead();
 	print ScriptContainer::$instance->renderJSHead();
 	?>
-
+    <style>
+        .dataTables_wrapper {min-height:24px;}
+    </style>
 </head>
 <body class="yui-skin-sam"  >
 <script id="mechanismData" type="application/json">
@@ -336,10 +338,7 @@
 						});
 					</script>
 
-
-
 				<h1><?php tp('Mechanisms'); ?>:</h1>
-				<div style="width:100%;">
 
 					<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id=""
 						   style="width:100%">
@@ -372,7 +371,7 @@
 						<?php } ?>
 						</tbody>
 					</table>
-				</div>
+
 
                 <script>
                     function deleteToggle(element) {
@@ -395,15 +394,12 @@
                                 // since there's no tr id,
                                 // this should be a new mechanism that's been deleted before it was saved
 
-                                $("#associateMechanisms").removeData(mechID);
-
                                 var mechIndex = $.inArray(mechID, $("#associateMechanisms").data('ids'));
-                                // TODO: remove debug
                                 var d = $("#associateMechanisms").data();
-                                $("#associateMechanisms").data('ids', $("#associateMechanisms").data('ids').splice(mechIndex, 1));
-                                $("#mechanismPercentages").data('ids', $("#mechanismPercentages").data('ids').splice(mechIndex, 1));
-
-
+                                $("#associateMechanisms").data('ids').splice(mechIndex, 1);
+                                d = $("#mechanismPercentages").data();
+                                $("#mechanismPercentages").data('percents').splice(mechIndex, 1);
+                                el.parent().parent().remove();
                             }
                             window.mechData['employee_mechanism_ids'].splice($.inArray(mechID, window.mechData['employee_mechanism_ids']), 1);
 
@@ -437,7 +433,14 @@
                     }
                     function addMechanism() {
                         var tbody = $("#employee_mechanism_table");
+                        $(".dataTables_empty").remove();
                         var percent = $("#percentage").val();
+
+                        if (isNaN(percent) || (percent < 1) || (percent > 100)) {
+                            alert("Invalid value for percentage");
+                            return false;
+                        }
+
                         var fpercent = percent / 100.0;
                         var selectedMechanism = $("#new_mechanism option:selected");
                         var mechID = selectedMechanism.val();
@@ -454,7 +457,9 @@
                         d = newRow.children().first().data();
                         tbody.append(newRow);
 
+                        d = $("#associateMechanisms").data();
                         $("#associateMechanisms").data("ids").push(mechID);
+                        d = $("#mechanismPercentages").data();
                         $("#mechanismPercentages").data("percents").push(percent);
                         window.mechData['employee_mechanism_ids'].push(mechID);
 
@@ -474,50 +479,10 @@
                 <input type="hidden" id="associateMechanisms" name="associateMechanisms"/>
                 <input type="hidden" id="mechanismPercentages" name="mechanismPercentages"/>
 
-                     <input type="hidden" id="employeeFunding_delete_data" name="employeeFunding_delete_data"/>
-                     <input type="hidden" id="employeeFunding_new_data" name="employeeFunding_new_data"/>
-                     <?php 
-                     echo $this->tableEmployeeFunding;
-                     ?>
-                    <br />
-                      <script>
-                    	// fired on "insert" button click
-                    	function addMechanism2(oButton) {
-                    	    var oMechanism = YAHOO.util.Dom.get('new_mechanism');
-                    	    var oPercent = YAHOO.util.Dom.get('percentage');
-                    
-                    	    if(oMechanism.value == ""){
-                        	    alert("Mechanism cannot be empty.");
-                        	    return;
-                    	    }
-                    
-                    	    if(oPercent.value == ""){
-                        	    alert("Percentage cannot be empty.");
-                        	    return;
-                    	    }
-                    	    else if(isNaN(oPercent.value) || (oPercent.value < 1) || (oPercent.value > 100)) {
-                    		    alert("Percentage must be a number from 1 to 100.");
-                    		    return;
-                    	    }
-                    
-                            var jsonAdd = { }
-                            jsonAdd.mechanism_phrase = oMechanism.selectedOptions[0].label;
-                            jsonAdd.id = oMechanism.value;
-                            jsonAdd.percentage = oPercent.value;
-                            var percent = jsonAdd.percentage / 100.0;
-                            
-                            jsonAdd.hours = (percent * <?php echo $this->employee['funded_hours_per_week']?>).toFixed(2);
-                            jsonAdd.cost = (percent * <?php echo $this->employee['annual_cost']?>).toFixed(2);
-                          	ITECH.employeeFundingTable.addDataRow(jsonAdd, oMechanism.value);
-                                    
-                            oMechanism.value = "";
-                            oPercent.value = "";
-                            window.mechData['employee_mechanism_ids'].push(jsonAdd.id);
-                            availableMechanisms();
-                          }
-                      </script>
-                      
-                    <div><label class="label">Mechanism</label>
+                <br/>
+                <div class="clear"></div>
+                    <div>
+                        <label class="label">Add Mechanism</label>
                       <select id="new_mechanism" name="new_mechanism"></select>
                       <span>
                         <label class="label">Percentage</label>
