@@ -96,11 +96,9 @@ function upload($DATA_URL, $USERNAME, $PASSWORD, $db) {
 	// read web service 
 	print "Load data: " . $DATA_URL . "\n\n";
 	$data_json = getWebServiceResult($DATA_URL, $USERNAME, $PASSWORD);
-	print $data_json; exit;
 // 	$data_json = file_get_contents ( 'DHIS2-data-json' ); // REMOVE: for test only
 	                                                    
 	$data_json_arr = json_decode($data_json, true);
-	print_r($data_json_arr); exit;
 	
 	$date = $data_json_arr ["metaData"] ["pe"] [0];
 	$date_year = substr ( $date, 0, 4 );
