@@ -395,13 +395,18 @@
                                 // since there's no tr id,
                                 // this should be a new mechanism that's been deleted before it was saved
 
+                                $("#associateMechanisms").removeData(mechID);
+
+                                var mechIndex = $.inArray(mechID, $("#associateMechanisms").data('ids'));
                                 // TODO: remove debug
                                 var d = $("#associateMechanisms").data();
-                                $("#associateMechanisms").removeData(mechID);
-                                // TODO: remove debug
-                                d = $("#associateMechanisms").data();
+                                $("#associateMechanisms").data('ids', $("#associateMechanisms").data('ids').splice(mechIndex, 1));
+                                $("#mechanismPercentages").data('ids', $("#mechanismPercentages").data('ids').splice(mechIndex, 1));
+
+
                             }
                             window.mechData['employee_mechanism_ids'].splice($.inArray(mechID, window.mechData['employee_mechanism_ids']), 1);
+
                         }
                         else {
 
@@ -417,28 +422,17 @@
                                 siblings.css({"text-decoration" : "", "color" : "green", "font-style" : ""});
 
                                 var percent = el.parent().siblings().first().next().text();
-                                // TODO: remove debug
-                                var d = $("#associateMechanisms").data();
-
-                                // javascript (ES5) interprets mechID as a string if used like this: { mechID : percent}
-                                // so this is a workaround
-                                var tempObj = {};
-                                tempObj[mechID] = percent;
-                                $("#associateMechanisms").data(tempObj);
 
                                 // TODO: remove debug
                                 d = $("#associateMechanisms").data();
-
+                                $("#associateMechanisms").data("ids").push(mechID);
+                                d = $("#mechanismPercentages").data();
+                                $("#mechanismPercentages").data("percents").push(percent);
 
                             }
                             window.mechData['employee_mechanism_ids'].push(mechID);
                         }
                         availableMechanisms();
-                        return true;
-                    }
-                    function processMechanismAssociations() {
-                        $("#associateMechanisms").val($("#associateMechanisms").data());
-                        $("#disassociateMechanisms").val($("#disassociateMechanisms").data("ids").join(','));
                         return true;
                     }
                     function addMechanism() {
@@ -460,15 +454,18 @@
                         d = newRow.children().first().data();
                         tbody.append(newRow);
 
-                        // javascript (ES5) interprets mechID as a string if used like this: { mechID : percent}
-                        // so this is a workaround
-                        var tempObj = {};
-                        tempObj[mechID] = percent;
-                        $("#associateMechanisms").data(tempObj);
+                        $("#associateMechanisms").data("ids").push(mechID);
+                        $("#mechanismPercentages").data("percents").push(percent);
                         window.mechData['employee_mechanism_ids'].push(mechID);
 
                         availableMechanisms();
 
+                        return true;
+                    }
+                    function processMechanismAssociations() {
+                        $("#associateMechanisms").val($("#associateMechanisms").data("ids").join(','));
+                        $("#mechanismPercentages").val($("#mechanismPercentages").data("percents").join(','));
+                        $("#disassociateMechanisms").val($("#disassociateMechanisms").data("ids").join(','));
                         return true;
                     }
                 </script>
@@ -544,6 +541,8 @@
                     availableMechanisms();
                     $("#disassociateMechanisms").data("ids", []);
                     $("#associateMechanisms").data("ids", []);
+                    $("#mechanismPercentages").data("percents", []);
+
                 });
             </script>
 
