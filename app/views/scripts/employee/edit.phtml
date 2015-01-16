@@ -373,8 +373,8 @@
                                 $("#associateMechanisms").data('ids').splice(mechIndex, 1);
                                 $("#mechanismPercentages").data('percents').splice(mechIndex, 1);
                                 el.parent().parent().remove();
-                                window.mechData['employee_mechanism_ids'].splice($.inArray(mechID, window.mechData['employee_mechanism_ids']), 1);
                             }
+                            window.mechData['employee_mechanism_ids'].splice($.inArray(mechID, window.mechData['employee_mechanism_ids']), 1);
 
                         }
                         else {
@@ -406,9 +406,16 @@
                         var selectedMechanism = $("#new_mechanism option:selected");
                         var mechID = selectedMechanism.val();
 
-                        var newRow = $("<tr><td>" + selectedMechanism.text() + "</td><td>" + percent +
-                            "</td><td>" + (fpercent * <?php echo $this->employee['funded_hours_per_week']?>).toFixed(2) +
-                            "</td><td>" + (fpercent * <?php echo $this->employee['annual_cost']?>).toFixed(2) +
+                        var hours = parseInt($('#funded_hours_per_week').val());
+                        var cost = parseInt($('#annual_cost').val());
+
+                        if (isNaN(hours) || isNaN(cost)) {
+                            return false;
+                        }
+
+                        // TODO: update table hours and cost if annual cost or hours per week change
+                        var newRow = $('<tr><td>' + selectedMechanism.text() + '</td><td>' + percent +
+                            '</td><td>' + (fpercent * hours).toFixed(2) + '</td><td>' + (fpercent * cost).toFixed(2) +
                             '</td><td><input type="checkbox" onclick="deleteToggle(this);"/></td></tr>');
                         newRow.children().css({"color": "green", "font-weight": "bold"});
 

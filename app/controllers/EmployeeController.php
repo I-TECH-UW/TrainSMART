@@ -423,6 +423,7 @@ class EmployeeController extends ReportFilterHelpers {
                             }
                         }
     					$status->setStatusMessage( t('The person was saved.') );
+                        $this->_redirect("employee/edit/id/$id");
     				}
     			}
     		} // else we have edit_employee acl
