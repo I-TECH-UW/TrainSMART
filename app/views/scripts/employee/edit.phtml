@@ -37,28 +37,17 @@
 					<?php
 						endif; // fi historyDiv
 
-						// form fields
-						//if (! $this->hasACL('employees_module')) $this->read_only = true; // readonly
-						// gnr:Jan.9.14 SA Emergency $this->required_fields = array('first_name', 'last_name','dob','select_lookup_nationalities', 'partner_id', 'subpartner_id', 'based_at', 'select_employee_qualification_option','salary','benefits','additional_expenses','stipend','employee_transition_option_id', 'select_employee_role_option', 'race', 'gender', 'disability_option_id', 'disability_comments', 'funded_hours_per_week', 'agreement_end_date');
-						
+
 						$this->required_fields = array('employee_code', 'partner_id', 'based_at', 'select_employee_qualification_option','salary','benefits','additional_expenses','stipend','employee_transition_option_id', 'select_employee_role_option', 'disability_option_id', 'disability_comments', 'funded_hours_per_week', 'agreement_end_date');
 
-						#if ($this->mode != 'add' && $this->employee['id'])
-						#echo labelAndField($this, 'Person ID',       'text', 'id', $this->employee['id']);
-						if (! $this->hasACL('edit_employee')) 
+						if (! $this->hasACL('edit_employee'))
 						{
 						    $this->viewonly = true;
 						}
 						echo labelAndField($this, t('Staff Cadre'),    $this->cadres, 'select_employee_qualification_option');
 						if($this->setting['display_employee_primary_role'])
 						echo labelAndField($this, t('Primary Role'),   $this->roles,   'select_employee_role_option');
-						/*
-						echo labelAndField($this, t('Title'),        $this->titles);
-						echo labelAndField($this, t('First Name'),   'text', 'first_name',  $this->employee['first_name'] );
-						if($this->setting['display_middle_name'])
-						echo labelAndField($this, t('Middle Name'),  'text', 'middle_name', $this->employee['middle_name'] );
-						echo labelAndField($this, t('Last Name'),    'text', 'last_name',   $this->employee['last_name'] );
-						*/
+
 						$this->viewonly = true;
 						echo labelAndField($this, t('Employee').space.t('ID'),    'text', 'employee_id',   $this->employee['id'] );
 						if ($this->hasACL('edit_employee'))
@@ -70,18 +59,7 @@
 						if($this->setting['display_employee_dob'])
 						echo labelAndField($this, t('Employee Date of Birth').space.('(dd/mm/yyyy)'),'date', 'dob',         $this->employee['dob'] );
 						
-						// if($this->setting['display_employee_nationality'])
-						// echo labelAndField($this, t('Employee Nationality'), $this->nationality, 'select_lookup_nationalities');
-						
-						// echo labelAndField($this, t('National ID'),  'text', 'national_id', $this->employee['national_id'] );
-						
-						// if($this->setting['display_employee_other_id'])
-						// echo labelAndField($this, t('Other ID'),     'text', 'other_id',    $this->employee['other_id'] );
-						
-						//if($this->setting['display_employee_race'])
-						//echo labelAndField($this, t('Race'),         $this->race, 'race');
-						//echo genderDropdown($this,t('Gender'),       'gender', $this->employee['gender']);
-						if($this->setting['display_employee_disability']) 
+						if($this->setting['display_employee_disability'])
 						{
     						$this->viewonly = true;
     						echo confirmDropdown($this, t('Disability'), 'disability_option_id', $this->employee['disability_option_id']);
@@ -174,12 +152,9 @@
 						echo labelAndField($this, t('Stipend'),  'text', 'stipend',  $this->employee['stipend']);
 						if($this->setting['display_employee_annual_cost'])
 						echo labelAndField($this, t('(R)Annual Cost'), 'text', 'annual_cost', $this->employee['annual_cost']);
-						//if($this->setting['display_employee_external_funding'])
-						//echo labelAndField($this, t('Percentage not paid by').space.t('Partner'), 'text', 'external_funding_percent', $this->employee['external_funding_percent']);
 
 						echo '<div class="clear"></div><br /><br />';
 
-						#echo labelAndField($this, t('Employee Comments'), 'textarea', 'comments',       $this->employee['comments']);
 
 						/////////////////////////// data table - course history - and UI javascript ///////////////////////////
 					?>
@@ -395,36 +370,18 @@
                                 // this should be a new mechanism that's been deleted before it was saved
 
                                 var mechIndex = $.inArray(mechID, $("#associateMechanisms").data('ids'));
-                                var d = $("#associateMechanisms").data();
                                 $("#associateMechanisms").data('ids').splice(mechIndex, 1);
-                                d = $("#mechanismPercentages").data();
                                 $("#mechanismPercentages").data('percents').splice(mechIndex, 1);
                                 el.parent().parent().remove();
+                                window.mechData['employee_mechanism_ids'].splice($.inArray(mechID, window.mechData['employee_mechanism_ids']), 1);
                             }
-                            window.mechData['employee_mechanism_ids'].splice($.inArray(mechID, window.mechData['employee_mechanism_ids']), 1);
 
                         }
                         else {
-
                             if (typeof id != 'undefined') {
                                 siblings.css({"text-decoration" : "", "color" : "", "font-style" : ""});
                                 // use jQuery's inArray because IE <9 doesn't support indexOf in arrays
                                 idList.splice($.inArray(id, idList), 1);
-                            }
-                            else {
-                                // since there's no tr id,
-                                // this should be a new mechanism that's been deleted and now un-checked again
-                                // before it was saved
-                                siblings.css({"text-decoration" : "", "color" : "green", "font-style" : ""});
-
-                                var percent = el.parent().siblings().first().next().text();
-
-                                // TODO: remove debug
-                                d = $("#associateMechanisms").data();
-                                $("#associateMechanisms").data("ids").push(mechID);
-                                d = $("#mechanismPercentages").data();
-                                $("#mechanismPercentages").data("percents").push(percent);
-
                             }
                             window.mechData['employee_mechanism_ids'].push(mechID);
                         }
@@ -451,15 +408,10 @@
                             '</td><td><input type="checkbox" onclick="deleteToggle(this);"/></td></tr>');
                         newRow.children().css({"color": "green", "font-weight": "bold"});
 
-                        var d = newRow.children().first();
-                        d = d.data();
                         newRow.children().first().data("mechID", mechID);
-                        d = newRow.children().first().data();
                         tbody.append(newRow);
 
-                        d = $("#associateMechanisms").data();
                         $("#associateMechanisms").data("ids").push(mechID);
-                        d = $("#mechanismPercentages").data();
                         $("#mechanismPercentages").data("percents").push(percent);
                         window.mechData['employee_mechanism_ids'].push(mechID);
 
@@ -520,7 +472,9 @@
                     var mech;
                     for (var i = 0; i < numMechs; i++) {
                         mech = mechData['available'][i];
-                        if ((mech['partners'].indexOf(partnerID) > -1) && (mechData['employee_mechanism_ids'].indexOf(mech['id']) < 0)) {
+                        if (($.inArray(partnerID, mech['partners']) > -1) &&
+                            ($.inArray(mech['id'], mechData['employee_mechanism_ids']) < 0)) {
+
                             optList += '<option value="' + mech['id'] + '">' + mech['mechanism_phrase'] + '</option>';
                         }
                     }
