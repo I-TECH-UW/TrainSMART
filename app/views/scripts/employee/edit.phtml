@@ -151,7 +151,7 @@
 						if($this->setting['display_employee_stipend'])
 						echo labelAndField($this, t('Stipend'),  'text', 'stipend',  $this->employee['stipend']);
 						if($this->setting['display_employee_annual_cost'])
-						echo labelAndField($this, t('(R)Annual Cost'), 'text', 'annual_cost', $this->employee['annual_cost']);
+						echo labelAndField($this, t('Annual Cost'), 'text', 'annual_cost', $this->employee['annual_cost']);
 
 						echo '<div class="clear"></div><br /><br />';
 
@@ -391,10 +391,14 @@
                     function addMechanism() {
                         var tbody = $("#employee_mechanism_table");
                         $(".dataTables_empty").remove();
-                        var percent = $("#percentage").val();
+                        var percentTag = $("#percentage");
+                        var percent = percentTag.val();
 
                         if (isNaN(percent) || (percent < 1) || (percent > 100)) {
                             alert("Invalid value for percentage");
+                            return false;
+                        }
+                        if ($("#new_mechanism").val() === "") {
                             return false;
                         }
 
@@ -415,6 +419,7 @@
                         $("#mechanismPercentages").data("percents").push(percent);
                         window.mechData['employee_mechanism_ids'].push(mechID);
 
+                        percentTag.val("");
                         availableMechanisms();
 
                         return true;
