@@ -219,8 +219,6 @@ class DashboardController extends ReportFilterHelpers {
 	public function dash996Action() { 
 	  require_once('models/table/Dashboard-CHAI.php');
 	  
-	  // file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	   
 	  $method = $this->getSanParam ( 'method' );
 	  $request = $this->getRequest ();
 	  
@@ -242,9 +240,9 @@ class DashboardController extends ReportFilterHelpers {
 	      ( isset($_POST["province_id"] ) && $_POST["province_id"][0] == "" ) ||
 	      (!isset($_POST["region_c_id"] ) && !isset($_POST["district_id"] ) && !isset($_POST["province_id"] ) ) ){
           //get national numbers from refresh
-          $cln_details = $cln_data->fetchDashboardData('national_consumption'.strval($method));
-          $amc_details = $amc_data->fetchDashboardData('national_average_monthly_consumption'.strval($method));
-          $tot_details = $tot_data->fetchDashboardData('national_total_consumption'.strval($method)); 
+          $cln_details = $cln_data->fetchDashboardData('national_consumption'.$method);
+          $amc_details = $amc_data->fetchDashboardData('national_average_monthly_consumption'.$method);
+          $tot_details = $tot_data->fetchDashboardData('national_total_consumption'.$method); 
 	  }
 	  
       if (count($cln_details) > 0 && count($tot_details) > 0 && count($amc_details) > 0  ) { //got all
@@ -264,7 +262,7 @@ class DashboardController extends ReportFilterHelpers {
 	            $where = $where.$geo[2].', ';
 	        }
 	        $where = $where.') ';
-	        $group = new Zend_Db_Expr('L1_location_name, CNO_id');
+	        $group = new Zend_Db_Expr('L1_location_name, CNO_external_id');
 	        $useName = 'L1_location_name';
 	        
 	    } else if( isset($_POST['district_id']) ){ // CHAINigeria state
@@ -274,7 +272,7 @@ class DashboardController extends ReportFilterHelpers {
 	            $where = $where.$geo[1].', ';
 	        }
 	        $where = $where.') ';
-	        $group = new Zend_Db_Expr('L2_location_name, CNO_id');
+	        $group = new Zend_Db_Expr('L2_location_name, CNO_external_id');
 	        $useName = 'L2_location_name';
 	        
 	    } else if( isset($_POST['province_id']) ){ //province_id is a Trainsmart internal name, represents hightest CHAINigeria level = GPZ 
@@ -284,22 +282,31 @@ class DashboardController extends ReportFilterHelpers {
 	            $where = $where.$geo[0].', ';
 	        }
 	        $where = $where.') ';
-	        $group = new Zend_Db_Expr('L3_location_name, CNO_id');
+	        $group = new Zend_Db_Expr('L3_location_name, CNO_external_id');
 	        $useName = 'L3_location_name';
 	    } else { // no geo selection
-	       $group = 'CNO_id';
+	       $group = 'CNO_external_id';
 	       $useName = 'L1_location_name';
 	       $location = 'National';
 	    }
 	   
 	    $where = str_replace(', )', ')', $where);
 	    $whereClause = new Zend_Db_Expr($where);
-	    
+	    	    
 	    $amc_details = $amc_data->fetchAMCDetails($whereClause);
 	    
-	    if( $method != 0 ) $where = $where.' and cno.id = '.$method;
+	    //file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	    //var_dump('amc_details= ', $amc_details, 'END');
+	    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	    
+	    // $method is external_id and must be single quoted, likely meant to be int but had to convert table id to external_id
+	    if( "'$method'" != '' ) $where = $where.' and cno.external_id in ( '."'$method'".' )';
 	    
 	    $cln_details = $cln_data->fetchCLNDetails('location', $id, $where, $group, $useName);
+	    
+	    //file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	    //var_dump('$cln_details= ', $cln_details, 'END');
+	    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	     
 	    $total = 0;
 	    
@@ -322,29 +329,26 @@ class DashboardController extends ReportFilterHelpers {
 	        $locationNames = $locationNames ? $locationNames.', '.$location : $locationNames.$location;
 	         
 	        switch($method){
-	            case 1 :
+	            case 'w92UxLIRNTl' :
 	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption1'] );
 	                break;
-	            case 2 :
+	            case 'H8A8xQ9gJ5b' :
 	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption2'] );
 	                break;
-	            case 3 :
+	            case 'ibHR9NQ0bKL' :
 	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption3'] );
 	                break;
-	            case 4 :
+	            case 'DiXDJRmPwfh' :
 	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption4'] );
 	                break;
-	            case 5 :
+	            case 'yJSLjbC9Gnr' :
 	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption5'] );
 	                break;
-	            case 6 :
+	            case 'vDnxlrIQWUo' :
 	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption6'] );
 	                break;
-	            case 7 :
+	            case 'krVqq8Vk5Kw' :
 	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption7'] );
-	                break;
-	            case 8 :
-	                $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption8'] );
 	                break;
 	            case '' :
 	                //bad
@@ -358,29 +362,26 @@ class DashboardController extends ReportFilterHelpers {
 	    foreach($amc_details as $i => $row ){
 	        
 	        switch($method){
-	            case 1 :
+	            case 'w92UxLIRNTl' :
 	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption1'] );
 	                break;
-	            case 2 :
+	            case 'H8A8xQ9gJ5b' :
 	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption2'] );
 	                break;
-	            case 3 :
+	            case 'ibHR9NQ0bKL' :
 	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption3'] );
 	                break;
-	            case 4 :
+	            case 'DiXDJRmPwfh' :
 	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption4'] );
 	                break;
-	            case 5 :
+	            case 'yJSLjbC9Gnr' :
 	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption5'] );
 	                break;
-	            case 6 :
+	            case 'vDnxlrIQWUo' :
 	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption6'] );
 	                break;
-	            case 7 :
+	            case 'krVqq8Vk5Kw' :
 	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption7'] );
-	                break;
-	            case 8 :
-	                $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption8'] );
 	                break;
 	            case '' :
 	                //bad
@@ -399,25 +400,18 @@ class DashboardController extends ReportFilterHelpers {
 	        $total_consumption[] = array('location' => $locationNames, 'consumption' => $total );
 	    }
 	    
-	    //file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump('$where= ', $where, 'END');
-	    //var_dump('$geo= ', $geo, 'END');
-	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-	    
 	    $this->view->assign('consumption_by_geo', $consumption_by_geo);
 	    $this->view->assign('total_consumption', $total_consumption);
 	    $this->view->assign('average_monthly_consumption_by_geo', $average_monthly_consumption_by_geo);
 	    
 	    if ($location == 'National') {
-	        $cln_details = $cln_data->insertDashboardData($consumption_by_geo, 'national_consumption'.strval($method));
-	        $amc_details = $amc_data->insertDashboardData($total_consumption, 'national_total_consumption'.strval($method));
-	        $tot_details = $tot_data->insertDashboardData($average_monthly_consumption_by_geo, 'national_average_monthly_consumption'.strval($method));
+	        $cln_details = $cln_data->insertDashboardData($consumption_by_geo, 'national_consumption'.$method);
+	        $amc_details = $amc_data->insertDashboardData($total_consumption, 'national_total_consumption'.$method);
+	        $tot_details = $tot_data->insertDashboardData($average_monthly_consumption_by_geo, 'national_average_monthly_consumption'.$method);
 	    }
 	
 	}  // else
-	   
-    // $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-    
+
 	$this->viewAssignEscaped ('locations', Location::getAll() );
 	
 } // dash996Action
@@ -825,14 +819,14 @@ class DashboardController extends ReportFilterHelpers {
 	         
 	    } else {
 	        
-    	    $whereClause =  'cto.id in (6) and c.consumption <> 0';
+	        $whereClause =  "cno.external_id in ('DiXDJRmPwfh') and c.consumption <> 0";
     	
     	    $larc_data = new DashboardCHAI();
     	    $details = $larc_data->fetchPercentProvidingDetails($whereClause);
     	    $larc_data->insertDashboardData($details, 'percent_facilities_providing_larc');
     	    $this->view->assign('larc_data13',$details);
     	     
-    	    $whereClause =  'cto.id in (5) and c.consumption <> 0';
+    	    $whereClause =  "cno.external_id in ('ibHR9NQ0bKL') and c.consumption <> 0";
     	     
     	    $fp_data = new DashboardCHAI();
     	    $details = $fp_data->fetchPercentProvidingDetails($whereClause);
@@ -946,104 +940,193 @@ class DashboardController extends ReportFilterHelpers {
 	
 	
 	public function dash9bAction() {
-	  require_once('models/table/Dashboard-CHAI.php');
-	  
-	  // file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	   
-	  // $method = $this->getSanParam ( 'method' );
-	  $method = '1,2,3,4,5,6,7,8';
-	  $request = $this->getRequest ();
-	  
-	  // array of method names...
-	  //$title_method = new DashboardCHAI();
-	  //$title_method = $title_method->fetchTitleMethod($method);
-	   
-	  $title_date = new DashboardCHAI();
-	  $title_date = $title_date->fetchTitleDate();
-
-	  $this->view->assign('title_date', $title_date[month_name].', '. $title_date[year]);
-	  
-	  $cm_data = new DashboardCHAI();
-	  //$amc_data = new DashboardCHAI();
-	  //$tot_data = new DashboardCHAI();
-	  
-	  // geo selection includes "--choose--" or no selection
-	  if( ( isset($_POST["region_c_id"] ) && $_POST["region_c_id"][0] == "" ) || 
-	      ( isset($_POST["district_id"] ) && $_POST["district_id"][0] == "" ) || 
-	      ( isset($_POST["province_id"] ) && $_POST["province_id"][0] == "" ) ||
-	      (!isset($_POST["region_c_id"] ) && !isset($_POST["district_id"] ) && !isset($_POST["province_id"] ) ) ){
-          //get national numbers from refresh
-          //$cln_details = $cln_data->fetchDashboardData('national_consumption'.strval($method));
-          //$amc_details = $amc_data->fetchDashboardData('national_average_monthly_consumption'.strval($method));
-          //$tot_details = $tot_data->fetchDashboardData('national_total_consumption'.strval($method)); 
-	  }
-	  
-      if (count($cm_details) > 0 && count($tot_details) > 0 && count($amc_details) > 0  ) { //got all
-          
-          $this->view->assign('consumption_by_method', $cm_details);
-          $this->view->assign('total_consumption', $tot_details);
-          $this->view->assign('average_monthly_consumption_by_geo', $amc_details);
-	  
-      } else {    
-
-        $where = ' 1=1 ';
-       
-	    if( isset($_POST["region_c_id"]) ){ // CHAINigeria LGA
-	        $where = $where.' and f.location_id in (';
-	        foreach ($_POST['region_c_id'] as $i => $value){
-	            $geo = explode('_',$value);
-	            $where = $where.$geo[2].', ';
-	        }
-	        $where = $where.') ';
-	        $group = new Zend_Db_Expr('L1_location_name, CNO_id');
-	        $useName = 'L1_location_name';
-	        
-	    } else if( isset($_POST['district_id']) ){ // CHAINigeria state
-	        $where = $where.' and l2.id in (';
-	        foreach ($_POST['district_id'] as $i => $value){
-	            $geo = explode('_',$value);
-	            $where = $where.$geo[1].', ';
-	        }
-	        $where = $where.') ';
-	        $group = new Zend_Db_Expr('L2_location_name, CNO_id');
-	        $useName = 'L2_location_name';
-	        
-	    } else if( isset($_POST['province_id']) ){ //province_id is a Trainsmart internal name, represents hightest CHAINigeria level = GPZ 
-	        $where = $where.' and l2.parent_id in (';
-	        foreach ($_POST['province_id'] as $i => $value){
-	            $geo = explode('_',$value);
-	            $where = $where.$geo[0].', ';
-	        }
-	        $where = $where.') ';
-	        $group = new Zend_Db_Expr('L3_location_name, CNO_id');
-	        $useName = 'L3_location_name';
-	    } else { // no geo selection
-	       $group = 'CNO_id';
-	       $useName = 'L1_location_name';
-	       $location = 'National';
+	    require_once('models/table/Dashboard-CHAI.php');
+	     
+	    // enclosing single quotes added later
+	    $method = "w92UxLIRNTl','H8A8xQ9gJ5b','ibHR9NQ0bKL','DiXDJRmPwfh','yJSLjbC9Gnr','vDnxlrIQWUo','krVqq8Vk5Kw";
+	    $request = $this->getRequest ();
+	     
+	    //$title_method = new DashboardCHAI();
+	    //$title_method = $title_method->fetchTitleMethod($method);
+	    
+	    $title_date = new DashboardCHAI();
+	    $title_date = $title_date->fetchTitleDate();
+	    
+	    $this->view->assign('title_date',  $title_method[commodity_name].', '. $title_date[month_name].', '. $title_date[year]);
+	     
+	    $cln_data = new DashboardCHAI();
+	    $pfp_data = new DashboardCHAI();
+	    $pfso_data = new DashboardCHAI();
+	     
+	    // geo selection includes "--choose--" or no selection
+	    if( ( isset($_POST["region_c_id"] ) && $_POST["region_c_id"][0] == "" ) ||
+	        ( isset($_POST["district_id"] ) && $_POST["district_id"][0] == "" ) ||
+	        ( isset($_POST["province_id"] ) && $_POST["province_id"][0] == "" ) ||
+	        (!isset($_POST["region_c_id"] ) && !isset($_POST["district_id"] ) && !isset($_POST["province_id"] ) ) ){
+	        //get national numbers from refresh
+	        $cln_details = $cln_data->fetchDashboardData('national_consumption_by_method');
+	        $pfp_details = $pfp_data->fetchDashboardData('national_percent_facilities_providing');
+	        $pfso_details = $pfso_data->fetchDashboardData('national_percent_facilities_stock_out');
 	    }
-	   
-	    $where = str_replace(', )', ')', $where);
-	    $whereClause = new Zend_Db_Expr($where);
+	     
+	    if (count($cln_details) > 0 && count($pfp_details) > 0 && count($pfso_details) > 0 ) { //got all
 	    
-	    //$amc_details = $amc_data->fetchAMCDetails($whereClause);
+	        $this->view->assign('national_consumption_by_method', $cln_details);
+	        $this->view->assign('national_percent_facilities_providing', $pfp_details);
+	        $this->view->assign('national_percent_facilities_stock_out', $pfso_details);
+	         
+	    } else {
 	    
-	    if( $method != 0 ) $where = $where.' and cno.id in ( '.$method. ' )';
+	        $where = ' 1=1 ';
+	         
+	        if( isset($_POST["region_c_id"]) ){ // CHAINigeria LGA
+	            $where = $where.' and f.location_id in (';
+	            foreach ($_POST['region_c_id'] as $i => $value){
+	                $geo = explode('_',$value);
+	                $where = $where.$geo[2].', ';
+	            }
+	            $where = $where.') ';
+	            $group = new Zend_Db_Expr('L1_location_name, CNO_external_id');
+	            $useName = 'L1_location_name';
+	             
+	        } else if( isset($_POST['district_id']) ){ // CHAINigeria state
+	            $where = $where.' and l2.id in (';
+	            foreach ($_POST['district_id'] as $i => $value){
+	                $geo = explode('_',$value);
+	                $where = $where.$geo[1].', ';
+	            }
+	            $where = $where.') ';
+	            $group = new Zend_Db_Expr('L2_location_name, CNO_external_id');
+	            $useName = 'L2_location_name';
+	             
+	        } else if( isset($_POST['province_id']) ){ //province_id is a Trainsmart internal name, represents hightest CHAINigeria level = GPZ
+	            $where = $where.' and l2.parent_id in (';
+	            foreach ($_POST['province_id'] as $i => $value){
+	                $geo = explode('_',$value);
+	                $where = $where.$geo[0].', ';
+	            }
+	            $where = $where.') ';
+	            $group = new Zend_Db_Expr('L3_location_name, CNO_external_id');
+	            $useName = 'L3_location_name';
+	        } else { // no geo selection
+	            $group = 'CNO_external_id';
+	            $useName = 'C_date';
+	            $location = 'National';
+	        }
 	    
-	    //$cln_details = $cln_data->fetchCLNDetails('location', $id, $where, $group, $useName);
-	    $cm_details = $cm_data->fetchCMDetails($where, $group, $useName);
+	        $where = str_replace(', )', ')', $where);
+	        $whereClause = new Zend_Db_Expr($where);
 	    
-	    foreach($cm_details as $i => $row ){
-	        $consumption_by_method[] =array('method' => $row['CNO_commodity_name'], 'consumption' => $row['C_consumption'] );
-	    }
+	        //$amc_details = $amc_data->fetchAMCDetails($whereClause);
+	         
+	        //file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	        //var_dump('amc_details= ', $amc_details, 'END');
+	        //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	         
+	        // $method is external_id and must be single quoted, likely meant to be int but had to convert table id to external_id
+	        if( "'$method'" != '' ) $where = $where.' and cno.external_id in ( '."'$method'".' )';
+	         
+	        $cln_details = $cln_data->fetchCLNDetails('location', $id, $where, $group, $useName);
+	        
+	        $where = " 1=1 and cno.external_id in ( 'DiXDJRmPwfh', 'ibHR9NQ0bKL')";
+	        $pfp_details = $pfp_data->fetchPFPDetails( $where );
+	        
+	        $where = " 1=1 and cno.external_id in ( 'DiXDJRmPwfh' ) and stock_out = 'Y' ";
+	        $pfso_details = $pfso_data->fetchPFSODetails( $where );
+	         
+	        file_put_contents('c:\wamp\logs\php_debug.log', 'dash9bAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	        var_dump('$pfso_details= ', $pfso_details, 'END');
+	        //var_dump('$method= ', $method, 'END');
+	        $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
-	    $this->view->assign('consumption_by_method', $consumption_by_method);
+	        $total = 0;
+	        
+	        foreach($pfp_details as $i => $row ){
+	            $national_percent_facilities_providing[] =array('month' => $row['month'], 'year' => $row['year'], 'fp_percent' => $row['fp_percent'], 'larc_percent' => $row['larc_percent'] );
+	        }
+	        
+	        foreach($pfso_details as $i => $row ){
+	            $national_percent_facilities_stock_out[] =array('month' => $row['month'], 'year' => $row['year'], 'percent' => $row['percent'] );
+	        }
+	         
+	         
+	        foreach($cln_details as $i => $row ){
+	             
+	            if ( $location != 'National' ) {
+	                switch($useName){
+	                    case 'L1_location_name' :
+	                        $location = $row['L1_location_name'];
+	                        break;
+	                    case 'L2_location_name' :
+	                        $location = $row['L2_location_name'];
+	                        break;
+	                    case 'L3_location_name' :
+	                        $location = $row['L3_location_name'];
+	                        break;
+	                }
+	            }
+	             
+	            $locationNames = $locationNames ? $locationNames.', '.$location : $locationNames.$location;
+	    
+	            // remove single quotes and explode method
+	            $bad_chars = array("'");
+	            $method = str_replace($bad_chars, "", $method);
+	            $methods =  array( explode(',', $method) );
+	            
+	            // lookup commodity_names
+	            $title_method = new DashboardCHAI(); 
+	            $CNO[] = array ($title_method->fetchTitleMethod($methods[0][0]));
+                $CNO[] = array ($title_method->fetchTitleMethod($methods[0][1]));
+                $CNO[] = array ($title_method->fetchTitleMethod($methods[0][2]));
+                $CNO[] = array ($title_method->fetchTitleMethod($methods[0][3]));
+                $CNO[] = array ($title_method->fetchTitleMethod($methods[0][4]));
+                $CNO[] = array ($title_method->fetchTitleMethod($methods[0][5]));
+                $CNO[] = array ($title_method->fetchTitleMethod($methods[0][6]));
+	             
+                $national_consumption_by_method[] =array('method' => $CNO[0][0]['commodity_name'], 'consumption' => $row['consumption1'] );
+                $national_consumption_by_method[] =array('method' => $CNO[1][0]['commodity_name'], 'consumption' => $row['consumption2'] );
+                $national_consumption_by_method[] =array('method' => $CNO[2][0]['commodity_name'], 'consumption' => $row['consumption3'] );
+                $national_consumption_by_method[] =array('method' => $CNO[3][0]['commodity_name'], 'consumption' => $row['consumption4'] );
+                $national_consumption_by_method[] =array('method' => $CNO[4][0]['commodity_name'], 'consumption' => $row['consumption5'] );
+                $national_consumption_by_method[] =array('method' => $CNO[5][0]['commodity_name'], 'consumption' => $row['consumption6'] );
+                $national_consumption_by_method[] =array('method' => $CNO[6][0]['commodity_name'], 'consumption' => $row['consumption7'] );
 
-	
-	}  // else
-	   
-	$this->viewAssignEscaped ('locations', Location::getAll() );
-	}
+                //file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+                //var_dump('$methods= ', $methods, 'END');
+                //var_dump('$CNO= ', $CNO, 'END');
+                //var_dump('$consumption_by_method= ', $consumption_by_method, 'END');
+                //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+                	             
+	            $total = $total + $consumption_by_geo[$i]['consumption'];
+	             
+	        } // foreach cln
+	         
+	        if (is_null($national_consumption_by_method)) {
+	            $consumption_by_geo[] = array('location' => 'No Data', 'consumption' => 0 );
+	        }
+	         
+	        if ($total == 0) {
+	            $total_consumption[] = array('location' => 'No Data', 'consumption' => 0 );
+	        } else {
+	            $total_consumption[] = array('location' => $locationNames, 'consumption' => $total );
+	        }
+	         
+	        $this->view->assign('national_consumption_by_method', $national_consumption_by_method);
+	        $this->view->assign('national_percent_facilities_providing', $national_percent_facilities_providing);
+	        $this->view->assign('national_percent_facilities_stock_out', $national_percent_facilities_stock_out);
+	         
+	        if ($location == 'National') {
+	            $cln_details = $cln_data->insertDashboardData($national_consumption_by_method, 'national_consumption_by_method');
+	            $pfp_details = $pfp_data->insertDashboardData($national_percent_facilities_providing, 'national_percent_facilities_providing');
+	            $pfso_details = $pfso_data->insertDashboardData($national_percent_facilities_stock_out, 'national_percent_facilities_stock_out');
+	        }
+	    
+	    }  // else
+	    
+	    $this->viewAssignEscaped ('locations', Location::getAll() );
+	     
+
+	} // dash9bAction
 	
 	   
 	

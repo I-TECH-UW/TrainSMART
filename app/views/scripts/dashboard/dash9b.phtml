@@ -118,7 +118,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 				<div id="allCharts" class="container">
 				
-				<div align="right"><font size="4"><label><?php echo 'National Contraceptive Prevalence Rate 15%'; ?></label></font></div>
+				<div align="right"><font size="4"><label><?php echo 'National Contraceptive Prevalence Rate 15% Target 36%'; ?></label></font></div>
 				<div class="hrNav"></div>
 				
 				
@@ -205,7 +205,7 @@ function drawChart11() {
 
 
 <?php
-  		foreach ($this->consumption_by_method as $row){
+  		foreach ($this->national_consumption_by_method as $row){
   	?>
   	[<?php echo  " '$row[method]',$row[consumption] "; ?>],
   	<?php
@@ -260,17 +260,17 @@ function drawChart11() {
       var chart13Data = google.visualization.arrayToDataTable([
 ['Month', 'FP', 'LARC'],
 
-[ 'April',.21,.52 ],
-[ 'May',.23,.60 ],
-[ 'June',.30,.65 ],
-[ 'July',.35,.67 ],
-[ 'August',.38,.70 ],
-[ 'September',.40,.73 ],
-[ 'October',.44,.74 ],
+<?php
+  		foreach ($this->national_percent_facilities_providing as $row){
+  	?>
+  	[<?php echo  " '$row[month]',$row[fp_percent],$row[larc_percent] "; ?>],
+  	<?php
+  		}
+  	?>
 
-      ]);
+]);		
 
-      <?php echo  " var title_data = 'Percent of facilities providing FP and LARC, April to October 2014 ' " ?>;
+      <?php echo  " var title_data = 'Percent of facilities providing FP and LARC, ' " ?>;
 
       var chart13Options = {
         title: title_data,
@@ -286,18 +286,19 @@ function drawChart11() {
   function drawChart14() {
 	  
       var chart14Data = google.visualization.arrayToDataTable([
-['Month', 'Implants', 'Commodities for 7 days'],
+['Month', 'Implants'],
 
-[ 'April',.12,.18 ],
-[ 'May',.15,.32 ],
-[ 'June',.18,.36 ],
-[ 'July',.20,.20 ],
-[ 'August',.17,.02 ],
-[ 'September',.20,.28 ],
-[ 'October',.30,.13 ],
-      ]);
+<?php
+  		foreach ($this->national_percent_facilities_stock_out as $row){
+  	?>
+  	[<?php echo  " '$row[month]',$row[percent] "; ?>],
+  	<?php
+  		}
+  	?>
 
-      <?php echo  " var title_data = 'Percent of facilities stocked out of FP commodities, April to October 2014' " ?>;
+]);
+
+      <?php echo  " var title_data = 'Percent of facilities stocked out of FP commodities, ' " ?>;
       
       var chart14Options = {
         title: title_data,

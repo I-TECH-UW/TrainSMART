@@ -173,11 +173,12 @@ class DashboardCHAI extends Dashboard
 	public function fetchTitleMethod($method) {
 	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 	    $output = array();
-	
+	    
+	    $method = "'".$method."'";
 	    $select = $db->select()
 	    ->from(array('cno' => 'commodity_name_option'),
 	           array( 'commodity_name' ))
-	    ->where("external_id = $method");
+	    ->where("external_id =  $method ");
 	
 	    $result = $db->fetchRow($select);
 	
@@ -186,6 +187,10 @@ class DashboardCHAI extends Dashboard
 	}
 	
 	public function fetchCLNDetails($dataName = null, $id = null, $where = null, $group = null, $useName = null) {
+	    
+	    //file_put_contents('c:\wamp\logs\php_debug.log', 'fetchCLNDetails >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	    //var_dump('all= ', $dataName, $where, $group, $useName, 'END');
+	    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	    
 	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 	    $output = array();
@@ -232,6 +237,7 @@ class DashboardCHAI extends Dashboard
 	            'l2.parent_id as L2_parent_id',
 	            'l3.location_name as L3_location_name',
 	            'cno.id as CNO_id',
+	            'cno.external_id as CNO_external_id',
 	            'cno.commodity_name as CNO_commodity_name',
 	            'c.date as C_date',
 	         	'ifnull(sum(c.consumption),0) as C_consumption' ))
@@ -240,7 +246,7 @@ class DashboardCHAI extends Dashboard
 	    	    ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
 	    	    ->joinLeft(array("c" => "commodity"), 'f.id = c.facility_id')
 	    	    ->joinLeft(array("cno" => "commodity_name_option"), 'c.name_id = cno.id')
-	    	    ->joinInner(array('mc' => 'lc_view_subselect'), 'f.id = mc.facility_id and month(c.date) = C_monthDate')
+	    	    ->joinInner(array('mc' => 'lc_view_subselect'), 'f.id = mc.C_facility_id and month(c.date) = month(mc.C_date) and year(c.date) = year(mc.C_date)')
 	    	    ->where($where)
 	    	    ->group(array($group))
 	    	    ->order(array('L3_location_name', 'L2_location_name', 'L1_location_name', 'F_facility_name'));
@@ -276,8 +282,7 @@ class DashboardCHAI extends Dashboard
 	            'ifnull(sum(cv.consumption4),0) as consumption4',
 	            'ifnull(sum(cv.consumption5),0) as consumption5',
 	            'ifnull(sum(cv.consumption6),0) as consumption6',
-	            'ifnull(sum(cv.consumption7),0) as consumption7',
-	            'ifnull(sum(cv.consumption8),0) as consumption8', ))
+	            'ifnull(sum(cv.consumption7),0) as consumption7', ))
 	    	->group(array($useName))
 	    	->order(array('L3_location_name', 'L2_location_name', 'L1_location_name'));
 	    
@@ -299,7 +304,6 @@ class DashboardCHAI extends Dashboard
 	            "consumption5" => $row['consumption5'],
 	            "consumption6" => $row['consumption6'],
 	            "consumption7" => $row['consumption7'],
-	            "consumption8" => $row['consumption8'],
 	            "type" => 1
 	        );
 	    }
@@ -370,7 +374,6 @@ class DashboardCHAI extends Dashboard
 	                               'consumption5',
 	                               'consumption6',
 	                               'consumption7',
-	                               'consumption8',
 	                           ));
 	                   }
 	                   else {
@@ -387,8 +390,7 @@ class DashboardCHAI extends Dashboard
                         'ifnull(sum(cv.consumption3),0) as consumption4',
                         'ifnull(sum(cv.consumption4),0) as consumption5',
                         'ifnull(sum(cv.consumption5),0) as consumption6',
-                        'ifnull(sum(cv.consumption6),0) as consumption7',
-                        'ifnull(sum(cv.consumption7),0) as consumption8',  ))
+                        'ifnull(sum(cv.consumption6),0) as consumption7', ))
 	            	    	->group(array('L1_location_name'))
 	            	    	->order(array('L3_location_name', 'L2_location_name', 'L1_location_name'));
 	                   }
@@ -409,7 +411,6 @@ class DashboardCHAI extends Dashboard
                         "consumption5" => $row['consumption5'],
                         "consumption6" => $row['consumption6'],
                         "consumption7" => $row['consumption7'],
-                        "consumption8" => $row['consumption8'],
 	            	            "type" => 1
 	            	        );
 	            	    }
@@ -425,6 +426,7 @@ class DashboardCHAI extends Dashboard
 	    ->from(array('c' => 'commodity'),
 	        array(
 	            'cno.id as CNO_id',
+	            'cno.external_id as CNO_external_id',
 	            'cto.id as CTO_id',
 	            'c.date as date',
 	            'f.id as F_id',
@@ -444,7 +446,7 @@ class DashboardCHAI extends Dashboard
 	    	    ->joinLeft(array("cno" => "commodity_name_option"), 'c.name_id = cno.id')
 	    	    ->joinLeft(array("cto" => "commodity_type_option"), 'c.type_id = cto.id')
 	    	    ->where($where)
-	    	    ->group(array('c.id', 'c.date'))
+	    	    ->group(array('CNO_external_id', 'c.date'))
 	    	    ->order(array('L3_location_name', 'L2_location_name', 'L1_location_name', 'F_facility_name'));
 	    	    
 	    	   $sql = $create_view->__toString();
@@ -474,17 +476,15 @@ class DashboardCHAI extends Dashboard
 	    ->from(array('cv' => 'amc_view_extended_pivot_non_null'),
 	        array(
 	            'monthname(cv.date) as month',
-	            'sum(cv.consumption1) as consumption1',
-	            'sum(cv.consumption2) as consumption2',
-	            'sum(cv.consumption3) as consumption3',
-	            'sum(cv.consumption4) as consumption4',
-	            'sum(cv.consumption5) as consumption5',
-	            'sum(cv.consumption6) as consumption6',
-	            'sum(cv.consumption7) as consumption7',
-	            'sum(cv.consumption8) as consumption8'))
-	            
-	            ->group(array('monthname(cv.date)'))
-	            ->order(array('cv.date'));
+	            'cv.consumption1 as consumption1',
+	            'cv.consumption2 as consumption2',
+	            'cv.consumption3 as consumption3',
+	            'cv.consumption4 as consumption4',
+	            'cv.consumption5 as consumption5',
+	            'cv.consumption6 as consumption6',
+	            'cv.consumption7 as consumption7'))	            
+	            ->order(array('cv.date desc'))
+	            ->limit('12');
 	    
 	    
 	    /*
@@ -507,12 +507,11 @@ class DashboardCHAI extends Dashboard
 	            "consumption4" => $row['consumption4'],
 	            "consumption5" => $row['consumption5'],
 	            "consumption6" => $row['consumption6'],
-	            "consumption7" => $row['consumption7'],
-	            "consumption8" => $row['consumption8']
+	            "consumption7" => $row['consumption7']
 	        );
 	    }
 	
-	    return $output;
+	    return array_reverse($output, true);
 	}
 	
 	public function fetchHCWTDetails($where = null) {
@@ -670,6 +669,181 @@ order by percentage
 
 				    */
 	
+public function fetchPFPDetails($where = null) {
+    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+    $output = array();
+    
+    /*
+     * 
+     * 
+    
+    select 
+  c.date,
+  monthName(c.date) C_month,
+  year(c.date) C_year,
+  cno.commodity_name,
+  cno.external_id,
+  count(distinct(c.facility_id)) numer,
+  (select sum(cnt) from facilities_reporting_by_state_view) denom,
+  count(facility_id) / (select sum(cnt) from facilities_reporting_by_state_view) * 100 percentage
+from commodity  c
+join commodity_name_option cno on c.name_id = cno.id
+where 1=1 
+and cno.external_id in ( 'DiXDJRmPwfh', 'ibHR9NQ0bKL')
+group by c.date, cno.external_id
+order by c.date, cno.external_id
+;
+
+     *
+     *
+     */
+    
+    $create_view = $db->select()
+    ->from(array('c' => 'commodity'),
+        array(
+            'c.date as C_date',
+            'monthname(c.date) as C_monthName',
+            'year(c.date) as C_year',
+            'cno.commodity_name as CNO_commodity_name',
+            'cno.external_id as CNO_external_id',
+            'count(distinct(c.facility_id)) as numer',
+            '(select sum(cnt) from facilities_reporting_by_state_view) as denom',
+            'count(facility_id) / (select sum(cnt) from facilities_reporting_by_state_view) as percent'))
+            ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
+            ->where($where)
+            ->group(array('C_date', 'CNO_external_id'))
+            ->order(array('C_date', 'CNO_external_id'));
+    
+    $sql = $create_view->__toString();
+    $sql = str_replace('`c`.*,', '', $sql);
+    $sql = str_replace('`cno`.*,', '', $sql);
+    
+    try{
+        $sql='create or replace view pfp_view as ('.$sql.')';
+        $db->fetchOne( $sql );
+    }
+    catch (Exception $e) {
+        //echo $e->getMessage();
+        //var_dump('error', $e->getMessage());
+    }
+    
+    $select = $db->select()
+    ->from(array('cv' => 'pfp_view_extended_pivot_non_null'),
+        array(
+            'C_monthName',
+            'C_year',
+            'fp_percent',
+            'larc_percent'))
+            // ->group(array($useName))
+            ->order(array('C_date'));
+    
+    $result = $db->fetchAll($select);
+                
+    foreach ($result as $row){
+        $output[] = array(
+            "month" => $row['C_monthName'],
+            "year" => $row['C_year'],
+            "fp_percent" => $row['fp_percent'],
+            "larc_percent" => $row['larc_percent'],
+        );
+    }
+    
+    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI fetchpfpdetails >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+    //var_dump($output,"END");
+    //var_dump('id=', $id);
+    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    return $output;
+    
+    
+}	
+
+public function fetchPFSODetails($where = null) {
+    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+    $output = array();
+
+    /*
+     *
+     *
+
+     select
+     c.date,
+     monthName(c.date) C_month,
+     year(c.date) C_year,
+     cno.commodity_name,
+     cno.external_id,
+     count(distinct(c.facility_id)) numer,
+     (select sum(cnt) from facilities_reporting_by_state_view) denom,
+     count(facility_id) / (select sum(cnt) from facilities_reporting_by_state_view) * 100 percentage
+     from commodity  c
+     join commodity_name_option cno on c.name_id = cno.id
+     where 1=1
+     and cno.external_id in ( 'DiXDJRmPwfh')
+     and stock_out = 'Y'
+     group by c.date, cno.external_id
+     order by c.date, cno.external_id
+     ;
+
+     *
+     *
+    */
+
+    $create_view = $db->select()
+    ->from(array('c' => 'commodity'),
+        array(
+            'c.date as C_date',
+            'monthname(c.date) as C_monthName',
+            'year(c.date) as C_year',
+            'cno.commodity_name as CNO_commodity_name',
+            'cno.external_id as CNO_external_id',
+            'count(distinct(c.facility_id)) as numer',
+            '(select sum(cnt) from facilities_reporting_by_state_view) as denom',
+            'count(facility_id) / (select sum(cnt) from facilities_reporting_by_state_view) as percent'))
+            ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
+            ->where($where)
+            ->group(array('C_date', 'CNO_external_id'))
+            ->order(array('C_date', 'CNO_external_id'));
+    
+    $sql = $create_view->__toString();
+    $sql = str_replace('`c`.*,', '', $sql);
+    $sql = str_replace('`cno`.*,', '', $sql);
+    
+    try{
+        $sql='create or replace view pfso_view as ('.$sql.')';
+        $db->fetchOne( $sql );
+    }
+    catch (Exception $e) {
+        //echo $e->getMessage();
+        //var_dump('error', $e->getMessage());
+    }
+    
+    $select = $db->select()
+    ->from(array('cv' => 'pfso_view_extended_pivot_non_null'),
+        array(
+            'C_monthName',
+            'C_year',
+            'percent4' ))
+            ->order(array('C_date'));
+    
+    $result = $db->fetchAll($select);
+                
+    foreach ($result as $row){
+        $output[] = array(
+            "month" => $row['C_monthName'],
+            "year" => $row['C_year'],
+            "percent" => $row['percent4'], // implant
+        );
+    }
+    
+    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI fetchpfpdetails >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+    //var_dump($output,"END");
+    //var_dump('id=', $id);
+    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    return $output;
+    
+}	
+	
 public function fetchPercentProvidingDetails($where = null, $group = null) {
     $db = Zend_Db_Table_Abstract::getDefaultAdapter();
     $output = array();
@@ -759,7 +933,10 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 		    and datetime = (select max(datetime) from dashboard_refresh where chart = 'percent_facilities_hw_trained_larc')
 		    ;
 		    */
-		     
+
+		    $bad_chars = array("'", ",");
+		    $chart = str_replace($bad_chars, "", $chart);
+		    
 		    $where = "chart = '$chart' and datetime = (select max(datetime) from dashboard_refresh where chart = '$chart')";
 		    $subSelect = new Zend_Db_Expr("(select max(datetime) from dashboard_refresh where chart = $chart)");
 		
@@ -791,14 +968,13 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
                     }
                     break;
                     
-		          case 'national_consumption1':
-		          case 'national_consumption2':
-		          case 'national_consumption3':
-		          case 'national_consumption4':
-		          case 'national_consumption5':
-		          case 'national_consumption6':
-                  case 'national_consumption7':
-		          case 'national_consumption8':
+                  case 'national_consumptionw92UxLIRNTl':
+                  case 'national_consumptionH8A8xQ9gJ5b':
+                  case 'national_consumptionibHR9NQ0bKL':
+                  case 'national_consumptionDiXDJRmPwfh':
+                  case 'national_consumptionyJSLjbC9Gnr':
+                  case 'national_consumptionvDnxlrIQWUo':
+                  case 'national_consumptionkrVqq8Vk5Kw':
                 
                     foreach($result as $row){
                         $output[] = array(
@@ -808,14 +984,13 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
                     }
                     break;
                 
- 		          case 'national_average_monthly_consumption1':
-		          case 'national_average_monthly_consumption2':
-		          case 'national_average_monthly_consumption3':
-		          case 'national_average_monthly_consumption4':
-		          case 'national_average_monthly_consumption5':
-		          case 'national_average_monthly_consumption6':
-		          case 'national_average_monthly_consumption7':
-		          case 'national_average_monthly_consumption8':	
+                  case 'national_average_monthly_consumptionw92UxLIRNTl':
+                  case 'national_average_monthly_consumptionH8A8xQ9gJ5b':
+                  case 'national_average_monthly_consumptionibHR9NQ0bKL':
+                  case 'national_average_monthly_consumptionDiXDJRmPwfh':
+                  case 'national_average_monthly_consumptionyJSLjbC9Gnr':
+                  case 'national_average_monthly_consumptionvDnxlrIQWUo':
+                  case 'national_average_monthly_consumptionkrVqq8Vk5Kw':
                 
                     foreach($result as $row){
                         $output[] = array(
@@ -825,14 +1000,13 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
                     }
                     break;
                 
-		          case 'national_total_consumption1':
-		          case 'national_total_consumption2':
-		          case 'national_total_consumption3':
-		          case 'national_total_consumption4':
-		          case 'national_total_consumption5':
-		          case 'national_total_consumption6':
-		          case 'national_total_consumption7':
-		          case 'national_total_consumption8':		 
+                  case 'national_total_consumptionw92UxLIRNTl':
+                  case 'national_total_consumptionH8A8xQ9gJ5b':
+                  case 'national_total_consumptionibHR9NQ0bKL':
+                  case 'national_total_consumptionDiXDJRmPwfh':
+                  case 'national_total_consumptionyJSLjbC9Gnr':
+                  case 'national_total_consumptionvDnxlrIQWUo':
+                  case 'national_total_consumptionkrVqq8Vk5Kw':
                 
                     foreach($result as $row){
                         $output[] = array(
@@ -849,6 +1023,37 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
                             "month" => $row['data0'],
                             "injectable_consumption" => $row['data1'],
                             "implant_consumption" => $row['data2']
+                        );
+                    }
+                    break;
+                    
+                case 'national_consumption_by_method':
+                    
+                     foreach ($result as $row) {
+                         $output[] = array(
+                             "method" => $row['data0'],
+                             "consumption" => $row['data1']
+                         );
+                     }
+                     break;
+                     
+                case 'national_percent_facilities_providing':
+                
+                    foreach ($result as $row) {
+                        $output[] = array(
+                            "month" => $row['data0'],
+                            "fp_percent" => $row['data1'],
+                            "larc_percent" => $row['data2']
+                        );
+                    }
+                    break;
+                    
+                case 'national_percent_facilities_stock_out':
+                
+                    foreach ($result as $row) {
+                        $output[] = array(
+                            "month" => $row['data0'],
+                            "percent" => $row['data1']
                         );
                     }
                     break;
@@ -882,6 +1087,9 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 		    $insert_result = $sfm->insert($data);
 		    */
 		    
+		    $bad_chars = array("'", ",");
+		    $chart = str_replace($bad_chars, "", $chart);
+		    
 		    $dateTime = date("Y-m-d H:i:s");
 		    $dashboard_refresh = new ITechTable(array('name' => 'dashboard_refresh'));
 		    
@@ -904,14 +1112,13 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
         		    }
 		          break;
 		          
-		          case 'national_consumption1':
-		          case 'national_consumption2':
-		          case 'national_consumption3':
-		          case 'national_consumption4':
-		          case 'national_consumption5':
-		          case 'national_consumption6':
-                  case 'national_consumption7':
-		          case 'national_consumption8':
+                  case 'national_consumptionw92UxLIRNTl':
+                  case 'national_consumptionH8A8xQ9gJ5b':
+                  case 'national_consumptionibHR9NQ0bKL':
+                  case 'national_consumptionDiXDJRmPwfh':
+                  case 'national_consumptionyJSLjbC9Gnr':
+                  case 'national_consumptionvDnxlrIQWUo':
+                  case 'national_consumptionkrVqq8Vk5Kw':
 		              
 		              foreach($details as $row){
 		                  $data = array(
@@ -925,14 +1132,13 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 		              }
 		              break;
 		              
-		          case 'national_average_monthly_consumption1':
-		          case 'national_average_monthly_consumption2':
-		          case 'national_average_monthly_consumption3':
-		          case 'national_average_monthly_consumption4':
-		          case 'national_average_monthly_consumption5':
-		          case 'national_average_monthly_consumption6':
-		          case 'national_average_monthly_consumption7':
-		          case 'national_average_monthly_consumption8':		              
+                  case 'national_average_monthly_consumptionw92UxLIRNTl':
+                  case 'national_average_monthly_consumptionH8A8xQ9gJ5b':
+                  case 'national_average_monthly_consumptionibHR9NQ0bKL':
+                  case 'national_average_monthly_consumptionDiXDJRmPwfh':
+                  case 'national_average_monthly_consumptionyJSLjbC9Gnr':
+                  case 'national_average_monthly_consumptionvDnxlrIQWUo':
+                  case 'national_average_monthly_consumptionkrVqq8Vk5Kw':
 		          
 		              foreach($details as $row){
 		                  $data = array(
@@ -946,14 +1152,13 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 		              }
 		              break;
 		              
-		          case 'national_total_consumption1':
-		          case 'national_total_consumption2':
-		          case 'national_total_consumption3':
-		          case 'national_total_consumption4':
-		          case 'national_total_consumption5':
-		          case 'national_total_consumption6':
-		          case 'national_total_consumption7':
-		          case 'national_total_consumption8':		              
+                  case 'national_total_consumptionw92UxLIRNTl':
+                  case 'national_total_consumptionH8A8xQ9gJ5b':
+                  case 'national_total_consumptionibHR9NQ0bKL':
+                  case 'national_total_consumptionDiXDJRmPwfh':
+                  case 'national_total_consumptionyJSLjbC9Gnr':
+                  case 'national_total_consumptionvDnxlrIQWUo':
+                  case 'national_total_consumptionkrVqq8Vk5Kw':
 		          
 		              foreach($details as $row){
 		                  $data = array(
@@ -976,6 +1181,48 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 		                    'data0'  => $row['month'],
 		                    'data1'  => $row['injectable_consumption'],
 		                    'data2'  => $row['implant_consumption'],
+		                );
+		            
+		                $insert_result = $dashboard_refresh->insert($data);
+		            }
+		            break;
+		            
+		        case 'national_consumption_by_method':
+		        
+		            foreach($details as $row){
+		                $data = array(
+		                    'datetime'  => $dateTime,
+		                    'chart'  => $chart,
+		                    'data0'  => $row['method'],
+		                    'data1'  => $row['consumption'],
+		                );
+		        
+		                $insert_result = $dashboard_refresh->insert($data);
+		            }
+		            break;
+		            
+		        case 'national_percent_facilities_providing':
+		        
+		            foreach($details as $row){
+		                $data = array(
+		                    'datetime'  => $dateTime,
+		                    'chart'  => $chart,
+		                    'data0'  => $row['month'],
+		                    'data1'  => $row['fp_percent'],
+		                    'data2'  => $row['larc_percent'],
+		                );
+		        
+		                $insert_result = $dashboard_refresh->insert($data);
+		            }
+		            break;
+		        case 'national_percent_facilities_stock_out':
+		        
+		            foreach($details as $row){
+		                $data = array(
+		                    'datetime'  => $dateTime,
+		                    'chart'  => $chart,
+		                    'data0'  => $row['month'],
+		                    'data1'  => $row['percent'],
 		                );
 		            
 		                $insert_result = $dashboard_refresh->insert($data);
