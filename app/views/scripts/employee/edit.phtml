@@ -172,7 +172,7 @@
 							itech_save_confirm_on_leave();
 
 							/* Init the table */
-							oTable = $('.tablegrid').dataTable({
+							var oTable = $('.tablegrid').dataTable({
 								"bJQueryUI": true,
 								"bPaginate": false,
 								"bSort": true,
@@ -246,7 +246,7 @@
 								var total = 0;
 								$('.dec_warning').remove();
 								flds.each( function (i, val) {
-									new_val = $(this).val().match(/^\D*([\d\.,]+)\s*$/); //optionally $, then 1234 w/ optional decimal, optional space then end
+									var new_val = $(this).val().match(/^\D*([\d\.,]+)\s*$/); //optionally $, then 1234 w/ optional decimal, optional space then end
 									new_val = (new_val && new_val[1]) ? parseInt(new_val[1]) : 0;
 									total += new_val;
 
@@ -359,6 +359,9 @@
                         var id = el.parent().parent().attr("id");
 
                         var mechID = el.parent().siblings().first().data('mechID');
+                        if ((typeof mechID === 'undefined') && (typeof id != 'undefined')) {
+                            mechID = window.mechData['employee_association_ids'][id];
+                        }
 
                         if (element.checked) {
                             siblings.css({"text-decoration" : "line-through", "color" : "red", "font-style" : "italic"});

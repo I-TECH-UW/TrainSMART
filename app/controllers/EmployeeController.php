@@ -440,9 +440,10 @@ class EmployeeController extends ReportFilterHelpers {
         $mechanisms = $this->getAvailableMechanisms($id);
         $mechanismData = array('available' => $mechanisms);
         $mechanismData['employee_mechanism_ids'] = array();
-
+        $mechanismData['employee_association_ids'] = array();
         foreach($employeeMechanisms as $mech) {
             array_push($mechanismData['employee_mechanism_ids'], $mech['mechanism_option_id']);
+            $mechanismData['employee_association_ids'][$mech['id']] = $mech['mechanism_option_id'];
         }
 
         if ( $id && !$status->hasError() )  // read data from db
