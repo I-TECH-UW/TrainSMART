@@ -185,6 +185,120 @@ class DashboardCHAI extends Dashboard
 	    return $result;
 	     
 	}
+
+	public function fetchCSDetails($date) {
+	
+	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+	    $output = array();
+	
+	    // get last date where data were uploaded from DHIS2
+	    if($date === null || empty($date)){
+	        $result = $db->fetchAll("select max(date) as date from facility_report_rate");
+	        $date = $result[0]['date'];
+	    }
+	
+	    $output['last_date'] = $date;
+	
+	    $select = $db->select()
+	    -> from(array('facility_report_rate' => 'facility_report_rate'),
+	        array('count(*) as count'));
+	
+	            $result = $db->fetchAll($select);
+	            $output['total_facility_count'] = $result[0]['count'];
+	
+	            $select = $db->select()
+	            -> from(array('facility_report_rate' => 'facility_report_rate'),
+	            array('count(*) as count'))
+	            ->where("date='" . $date . "'");
+	
+	            $result = $db->fetchAll($select);
+	            $output['total_facility_count_month'] = $result[0]['count'];
+	
+	            $select = $db->select()
+	                -> from(array('facility' => 'facility'), array('count(distinct facility.id) as count'))
+           ->joinLeft(array('facility_report_rate' => "facility_report_rate"), 'facility.external_id = facility_report_rate.facility_external_id')
+	                    ->joinLeft(array('person' => "person"), 'facility.id = person.facility_id')
+	                        ->joinLeft(array('person_to_training' => "person_to_training"), 'person.id = person_to_training.person_id')
+           ->joinLeft(array('training' => "training"), 'training.id = person_to_training.training_id')
+	               ->where('training.training_title_option_id = 1');
+	
+     $result = $db->fetchAll($select);
+	     $output['larc_facility_count'] = $result[0]['count'];
+	
+	         $select = $db->select()
+     -> from(array('facility' => 'facility'), array('count(distinct facility.id) as count'))
+           ->joinLeft(array('facility_report_rate' => "facility_report_rate"), 'facility.external_id = facility_report_rate.facility_external_id')
+           ->joinLeft(array('person' => "person"), 'facility.id = person.facility_id')
+           ->joinLeft(array('person_to_training' => "person_to_training"), 'person.id = person_to_training.person_id')
+           ->joinLeft(array('training' => "training"), 'training.id = person_to_training.training_id')
+	               ->where('training.training_title_option_id = 2');
+	
+     $result = $db->fetchAll($select);
+	     $output['fp_facility_count'] = $result[0]['count'];
+	
+	
+	
+	     $select = $db->select()
+	     -> from(array('facility' => 'facility'), array('count(distinct facility.id) as count'))
+	         ->joinLeft(array('facility_report_rate' => "facility_report_rate"), 'facility.external_id = facility_report_rate.facility_external_id')
+	         ->joinLeft(array('person' => "person"), 'facility.id = person.facility_id')
+	         ->joinLeft(array('person_to_training' => "person_to_training"), 'person.id = person_to_training.person_id')
+	         ->joinLeft(array('training' => "training"), 'training.id = person_to_training.training_id')
+	         ->joinLeft(array('commodity' => "commodity"), 'facility.id = commodity.facility_id')
+	         ->joinLeft(array('commodity_name_option' => "commodity_name_option"), 'commodity.name_id = commodity_name_option.id')
+	         ->where('training.training_title_option_id = 1')
+             ->where("commodity_name_option.external_id='DiXDJRmPwfh'");
+	
+     $result = $db->fetchAll($select);
+	 $output['larc_consumption_facility_count'] = $result[0]['count'];
+	
+     $select = $db->select()
+     -> from(array('facility' => 'facility'), array('count(distinct facility.id) as count'))
+	         ->joinLeft(array('facility_report_rate' => "facility_report_rate"), 'facility.external_id = facility_report_rate.facility_external_id')
+	         ->joinLeft(array('person' => "person"), 'facility.id = person.facility_id')
+             ->joinLeft(array('person_to_training' => "person_to_training"), 'person.id = person_to_training.person_id')
+	         ->joinLeft(array('training' => "training"), 'training.id = person_to_training.training_id')
+	         ->joinLeft(array('commodity' => "commodity"), 'facility.id = commodity.facility_id')
+	         ->joinLeft(array('commodity_name_option' => "commodity_name_option"), 'commodity.name_id = commodity_name_option.id')
+	         ->where('training.training_title_option_id = 2')
+	         ->where("commodity_name_option.external_id='ibHR9NQ0bKL'");
+	
+	 $result = $db->fetchAll($select);
+	 $output['fp_consumption_facility_count'] = $result[0]['count'];
+	
+	 $select = $db->select()
+	 -> from(array('facility' => 'facility'), array('count(distinct facility.id) as count'))
+	 ->joinLeft(array('facility_report_rate' => "facility_report_rate"), 'facility.external_id = facility_report_rate.facility_external_id')
+	 ->joinLeft(array('person' => "person"), 'facility.id = person.facility_id')
+	 ->joinLeft(array('person_to_training' => "person_to_training"), 'person.id = person_to_training.person_id')
+	 ->joinLeft(array('training' => "training"), 'training.id = person_to_training.training_id')
+	 ->joinLeft(array('commodity' => "commodity"), 'facility.id = commodity.facility_id')
+	 ->joinLeft(array('commodity_name_option' => "commodity_name_option"), 'commodity.name_id = commodity_name_option.id')
+	 ->where('training.training_title_option_id = 1')
+	 ->where("commodity_name_option.external_id='DiXDJRmPwfh'")
+     ->where("stock_out='Y'");
+	
+	 $result = $db->fetchAll($select);
+     $output['larc_stock_out_facility_count'] = $result[0]['count'];
+	
+	 $select = $db->select()
+     -> from(array('facility' => 'facility'), array('count(distinct facility.id) as count'))
+	 ->joinLeft(array('facility_report_rate' => "facility_report_rate"), 'facility.external_id = facility_report_rate.facility_external_id')
+	 ->joinLeft(array('person' => "person"), 'facility.id = person.facility_id')
+	 ->joinLeft(array('person_to_training' => "person_to_training"), 'person.id = person_to_training.person_id')
+	 ->joinLeft(array('training' => "training"), 'training.id = person_to_training.training_id')
+	 ->joinLeft(array('commodity' => "commodity"), 'facility.id = commodity.facility_id')
+	 ->joinLeft(array('commodity_name_option' => "commodity_name_option"), 'commodity.name_id = commodity_name_option.id')
+	 ->where('training.training_title_option_id = 2')
+	 ->where("commodity_name_option.external_id='JyiR2cQ6DZT'");
+	
+	 $result = $db->fetchAll($select);
+	 $output['fp_stock_out_facility_count'] = $result[0]['count'];
+	
+	return $output;
+	
+    }
+	
 	
 	public function fetchCLNDetails($dataName = null, $id = null, $where = null, $group = null, $useName = null) {
 	    
@@ -500,6 +614,7 @@ class DashboardCHAI extends Dashboard
 	    foreach ($result as $row){
 	    
 	        $output[] = array(
+	            "commodity_name" => $row['commodity_name'],
 	            "month" => $row['month'],
 	            "consumption1" => $row['consumption1'],
 	            "consumption2" => $row['consumption2'],
@@ -669,6 +784,138 @@ order by percentage
 
 				    */
 	
+public function fetchPFTPDetails($where = null) {
+    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+    $output = array();
+    
+    /*
+     * fetch numer from pfp_view, 
+     *   select C_date, numer from pfp_view where CNO_external_id = 'DiXDJRmPwfh' order by C_date desc limit 12; -- implant
+     *   
+     * 0) fetch denom from sql below, 
+     * 1) fetch total from begin-of-time to 1 year ago, 
+     * 2) fetch previous year by month, 
+     * 3) fill missing months with zero, 
+     * 4) calc running total, 
+     * 5) use as denom
+      
+SELECT
+ t.training_end_date, count(1)
+FROM `person_to_training` AS `pt`
+ LEFT JOIN `person` AS `p` ON pt.person_id = p.id
+ LEFT JOIN `facility` AS `f` ON p.facility_id = f.id
+ LEFT JOIN `training` AS `t` ON pt.training_id = t.id
+ INNER JOIN `training_title_option` AS `tto` ON t.training_title_option_id = tto.id
+WHERE 1=1
+and (t.training_title_option_id = 1 ) -- LARC
+-- and (t.training_title_option_id = 1 ) -- FP Tech
+
+-- and (t.training_end_date <= date_sub(now(), interval 365 day))
+and (t.training_end_date between date_sub(now(), interval 365 day) and now() )
+
+GROUP BY t.training_end_date
+order by t.training_end_date desc
+;
+     */
+    
+    //providing, numer
+    $select = $db->select()
+    ->from(array('cv' => 'pfp_view'),
+        array(
+            'C_date',
+            'numer' ))
+            ->order(array('C_date desc'))
+            ->limit('12');
+        
+        $numer = $db->fetchAll($select);
+    
+    // fetch total from begin-of-time to 1 year ago
+    $select = $db->select()
+    ->from(array('pt' => 'person_to_training'),
+        array(
+            'sum(1) as start_denom_total' ))
+            ->joinLeft(array('p' => "person"), 'pt.person_id = p.id')
+            ->joinLeft(array('f' => "facility"), 'p.facility_id = f.id')
+            ->joinLeft(array("t" => "training"), 'pt.training_id = t.id')
+            ->joinInner(array('tto' => training_title_option), 't.training_title_option_id = tto.id')
+            ->where($where)
+            ->where('t.training_end_date <= date_sub(now(), interval 365 day)')
+            ->order(array('t.training_end_date desc'));
+    
+            $sql = $select->__toString();
+            $sql = str_replace('`p`.*,', '', $sql);
+            $sql = str_replace('`f`.*,', '', $sql);
+            $sql = str_replace('`t`.*,', '', $sql);
+            $sql = str_replace('`tto`.*,', '', $sql);
+    
+            $start_denom_total = $db->fetchOne( $sql );
+            
+    //fetch previous year            
+    $select = $db->select()
+    ->from(array('pt' => 'person_to_training'),
+        array(
+            't.training_end_date',
+            'count(1) as added' ))
+            ->joinLeft(array('p' => "person"), 'pt.person_id = p.id')
+            ->joinLeft(array('f' => "facility"), 'p.facility_id = f.id')
+            ->joinLeft(array("t" => "training"), 'pt.training_id = t.id')
+            ->joinInner(array('tto' => training_title_option), 't.training_title_option_id = tto.id')
+            ->where($where)
+            ->where('t.training_end_date between date_sub(now(), interval 365 day) and now() ')
+            ->group('t.training_end_date')
+            ->order(array('t.training_end_date asc'));
+    
+    $sql = $select->__toString();
+    $sql = str_replace('`p`.*,', '', $sql);
+    $sql = str_replace('`f`.*,', '', $sql);
+    $sql = str_replace('`t`.*,', '', $sql);
+    $sql = str_replace('`tto`.*,', '', $sql);
+        
+    $prev_year_raw = $db->fetchAll( $sql );
+    
+    // fill missing months with zero,
+    foreach ($numer as $nrow){
+        $found = false;
+        foreach ($prev_year_raw as $prow){
+            if($prow['training_end_date'] == $nrow['C_date']){
+                $found = true;
+            }
+        }
+        if($found == false){
+            $new_rows[] = array($nrow['C_date'], '0');
+        }
+    }
+    
+    foreach ($prev_year_raw as $row){
+        $prev_year[] = array('training_end_date' => $row['training_end_date'], 'added' => $row['added']);
+    }
+    $prev_year = array_merge($prev_year, $new_rows);
+    
+    // calc running total and use as denom
+    
+    foreach ($numer as $nrow){
+        $denom = $start_denom_total;
+        foreach ($prev_year as $prow){
+            
+            if($nrow['C_date'] >= $prow['training_end_date']){
+                $denom = $denom + $prow['added'];
+            }
+        }
+        $tmp[] = array($nrow['C_date'], $nrow['numer'], $denom);
+        $output[] = array($nrow['C_date'], $nrow['numer']/$denom);
+    }
+    
+    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI PFTP >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+    //var_dump('$numer= ', $numer,"END");
+    //var_dump('$tmp= ', $tmp,"END");
+    //var_dump('$output= ', $output,"END");
+    //var_dump('$new_rows= ', $new_rows,"END");
+    //var_dump('$start_denom_total= ', $start_denom_total,"END");            
+    //var_dump('$prev_year= ', $prev_year,"END");
+    //var_dump('$month= ', $month,"END");
+    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+}	
+	
 public function fetchPFPDetails($where = null) {
     $db = Zend_Db_Table_Abstract::getDefaultAdapter();
     $output = array();
@@ -690,7 +937,7 @@ from commodity  c
 join commodity_name_option cno on c.name_id = cno.id
 where 1=1 
 and cno.external_id in ( 'DiXDJRmPwfh', 'ibHR9NQ0bKL')
-group by c.date, cno.external_id
+group by c.date
 order by c.date, cno.external_id
 ;
 
@@ -712,7 +959,7 @@ order by c.date, cno.external_id
             ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
             ->where($where)
             ->group(array('C_date', 'CNO_external_id'))
-            ->order(array('C_date', 'CNO_external_id'));
+            ->order(array('C_date') );
     
     $sql = $create_view->__toString();
     $sql = str_replace('`c`.*,', '', $sql);
@@ -735,7 +982,8 @@ order by c.date, cno.external_id
             'fp_percent',
             'larc_percent'))
             // ->group(array($useName))
-            ->order(array('C_date'));
+            ->order(array('C_date desc'))
+            ->limit('12');
     
     $result = $db->fetchAll($select);
                 
@@ -778,8 +1026,7 @@ public function fetchPFSODetails($where = null) {
      from commodity  c
      join commodity_name_option cno on c.name_id = cno.id
      where 1=1
-     and cno.external_id in ( 'DiXDJRmPwfh')
-     and stock_out = 'Y'
+     and (cno.external_id in ( 'DiXDJRmPwfh') and stock_out = 'Y') or  (cno.external_id in ( 'JyiR2cQ6DZT'))
      group by c.date, cno.external_id
      order by c.date, cno.external_id
      ;
@@ -822,8 +1069,10 @@ public function fetchPFSODetails($where = null) {
         array(
             'C_monthName',
             'C_year',
-            'percent4' ))
-            ->order(array('C_date'));
+            'percent4',
+            'percent8' ))
+            ->order(array('C_date desc'))
+            ->limit('12');
     
     $result = $db->fetchAll($select);
                 
@@ -831,7 +1080,8 @@ public function fetchPFSODetails($where = null) {
         $output[] = array(
             "month" => $row['C_monthName'],
             "year" => $row['C_year'],
-            "percent" => $row['percent4'], // implant
+            "implant_percent" => $row['percent4'], // implant
+            "seven_days_percent" => $row['percent8'], // stock out 7 days
         );
     }
     
@@ -924,6 +1174,43 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 			return $output;
 		}
 		
+		/*
+		 * TA:17:17: 01/15/2015
+		 * get trained persons details
+		 DB query to take number of HW trained in “LARC’ in 2014
+		
+		 select count(distinct person_to_training.person_id) from person_to_training
+		 left join training on training.id = person_to_training.training_id
+		 where training.training_title_option_id=1 and training.training_end_date like '2014%';
+		 */
+		public function fetchTPDetails($yaer, $year_amount) {
+		    $db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+		    $output = array ();
+		     
+		    for($i = $year_amount; $i > 0; $i--) {
+		        $data = array ();
+		
+		        $select = $db->select ()->from ( array ('person_to_training' => 'person_to_training' ), array ('count(person_to_training.person_id) as count' ) )
+		        ->joinLeft ( array ('training' => "training" ), 'training.id = person_to_training.training_id' )
+		        ->where ( 'training.training_title_option_id=1' )->where ( "training.training_end_date like '" . $yaer . "%'" );
+		        $result = $db->fetchAll ( $select );
+		        $data ['tp_larc'] = $result [0] ['count'];
+		
+		        $select = $db->select ()->from ( array ('person_to_training' => 'person_to_training' ), array ('count(person_to_training.person_id) as count' ) )
+		        ->joinLeft ( array ('training' => "training" ), 'training.id = person_to_training.training_id' )
+		        ->where ( 'training.training_title_option_id=2' )->where ( "training.training_end_date like '" . $yaer . "%'" );
+		        $result = $db->fetchAll ( $select );
+		        $data ['tp_fp'] = $result [0] ['count'];
+		
+		        $output [$yaer] = $data;
+		
+		        $yaer --;
+		    }
+		    ksort($output);
+		    return $output;
+		}
+		
+		
 		public function fetchDashboardData($chart = null) {
 		    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		    $output = array();
@@ -946,7 +1233,7 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 		            'id',
 		            'datetime',
 		            'chart',
-		            'data0','data1','data2','data3','data4','data4',
+		            'data0','data1','data2','data3','data4','data5','data6','data7','data8','data9',
 		        ))
 		            ->where($where)
 		            ->order(array('id'));
@@ -1053,10 +1340,42 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
                     foreach ($result as $row) {
                         $output[] = array(
                             "month" => $row['data0'],
-                            "percent" => $row['data1']
+                            "implant_percent" => $row['data1'],
+                            "seven_days_percent" => $row['data2']
                         );
                     }
                     break;
+                    
+                case 'national_average_monthly_consumption_all':
+                
+                    foreach ($result as $row) {
+                        $output[] = array(
+                            "month" => $row['data0'],
+                            "consumption1" => $row['data1'],
+                            "consumption2" => $row['data2'],
+                            "consumption3" => $row['data3'],
+                            "consumption4" => $row['data4'],
+                            "consumption5" => $row['data5'],
+                            "consumption6" => $row['data6'],
+                            "consumption7" => $row['data7'],
+                            
+                        );
+                    }
+                    break;
+                case 'national_coverage_summary':
+                   
+                    if (count($result == 1)) {
+                            $output["last_date"] =                       $result[0]['data0'];
+                            $output["total_facility_count"] =            $result[0]['data1'];
+                            $output["total_facility_count_month"] =      $result[0]['data2'];
+                            $output["larc_facility_count"] =             $result[0]['data3'];
+                            $output["fp_facility_count"] =               $result[0]['data4'];
+                            $output["larc_consumption_facility_count"] = $result[0]['data5'];
+                            $output["fp_consumption_facility_count"] =   $result[0]['data6'];
+                            $output["larc_stock_out_facility_count"] =   $result[0]['data7'];
+                            $output["fp_stock_out_facility_count"] =     $result[0]['data8'];
+                   }
+                   break;
             }
             
             
@@ -1222,11 +1541,52 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 		                    'datetime'  => $dateTime,
 		                    'chart'  => $chart,
 		                    'data0'  => $row['month'],
-		                    'data1'  => $row['percent'],
+		                    'data1'  => $row['implant_percent'],
+		                    'data2'  => $row['seven_days_percent'],
 		                );
 		            
 		                $insert_result = $dashboard_refresh->insert($data);
 		            }
+		            break;
+		            
+		        case 'national_average_monthly_consumption_all':
+		        
+		            foreach($details as $row){
+		                $data = array(
+		                    'datetime'  => $dateTime,
+		                    'chart'  => $chart,
+		                    'data0'  => $row['month'],
+		                    'data1'  => $row['consumption1'],
+		                    'data2'  => $row['consumption2'],
+		                    'data3'  => $row['consumption3'],
+		                    'data4'  => $row['consumption4'],
+		                    'data5'  => $row['consumption5'],
+		                    'data6'  => $row['consumption6'],
+		                    'data7'  => $row['consumption7'],
+		                    
+		                );
+		        
+		                $insert_result = $dashboard_refresh->insert($data);
+		            }
+		            break;
+		            
+		        case 'national_coverage_summary':
+		        
+		                $data = array(
+		                    'datetime'  => $dateTime,
+		                    'chart'  => $chart,
+		                    'data0'  => $details['last_date'],
+		                    'data1'  => $details['total_facility_count'],
+		                    'data2'  => $details['total_facility_count_month'],
+		                    'data3'  => $details['larc_facility_count'],
+		                    'data4'  => $details['fp_facility_count'],
+		                    'data5'  => $details['larc_consumption_facility_count'],
+		                    'data6'  => $details['fp_consumption_facility_count'],
+		                    'data7'  => $details['larc_stock_out_facility_count'],
+		                    'data8'  => $details['fp_stock_out_facility_count'],
+		                );
+		        
+		                $insert_result = $dashboard_refresh->insert($data);
 		            break;
 
 		    }

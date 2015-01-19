@@ -180,85 +180,15 @@ print ScriptContainer::$instance->renderJSHead();
 	drawChart11();
 	drawChart12();
 	drawChart13();
-	drawChart14();
+	//drawChart14();
 		
-	var currentLevel;
-	currentLevel = <?php echo '\'' . $this->location_data[0][name] . '\''; ?>;
-
-<?php  //file_put_contents('c:\wamp\logs\php_debug.log', 'dash3 193 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	   //var_dump("location_data=", $this->location_data[0],"END");
-	   //var_dump("facility_data=",$this->facility_data[0],"END");
-	   //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
-?>
-		 
   }
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
-  
 
-
-function drawChart11() {
-	  // Create and populate the data table.
-	  var chart11Data = google.visualization.arrayToDataTable([
-
-['', ''],
-
-
-<?php
-  		foreach ($this->national_consumption_by_method as $row){
-  	?>
-  	[<?php echo  " '$row[method]',$row[consumption] "; ?>],
-  	<?php
-  		}
-  	?>
-
-]);		    
-
-	  <?php echo  " var title_date = 'Monthly consumption by method $this->title_date ' " ?>;
+  function drawChart11() {
 	  
-	  var chart11Options = {
-			  
-			  title: title_date,
-			  titleTextStyle: { fontSize: 16 },
-		      is3D:true,
-		      legend: 'none',
-		      
-		};
-
-	  var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
-	  chart11.draw(chart11Data, chart11Options);
-}
-
-  function drawChart12() {
-      var chart12Data = google.visualization.arrayToDataTable([
-        [' ', '% of Facilities with trained HWs', '% of facilities with (FP/LARC) trained HWS providing (FP/LARC)', '% of facilities with trained HWs (FP/LARC) that are stocked out of (FP/LARC)'],
-
-         [ 'FP', <?php echo $this->cs_fp_facility_count?> , <?php echo $this->cs_fp_consumption_facility_count?>,<?php echo $this->cs_fp_stock_out_facility_count?> ],
-         [ 'LARC', <?php echo $this->cs_larc_facility_count?>,<?php echo $this->cs_larc_consumption_facility_count?>,<?php echo $this->cs_larc_stock_out_facility_count?> ],
-                     
-                      
-      ]);
-
-      <?php echo  " var title_data = 'Coverage summary, $this->cs_date' " ?>;
-
-      var chart12Options = {
-                title: title_data,
-                titleTextStyle: { fontSize: 16 },
-                bar: {groupWidth: "80%"},
-                vAxis: {format: '#%'},
-                
-      };
-
-      //var chart12 = new google.charts.Bar(document.getElementById('chart11_div'));
-      var chart12 = new google.visualization.ColumnChart(document.getElementById('chart12_div'));
-
-      chart12.draw(chart12Data, chart12Options);
-    }
-
-
-  function drawChart13() {
-	  
-      var chart13Data = google.visualization.arrayToDataTable([
+      var chart11Data = google.visualization.arrayToDataTable([
 ['Month', 'FP', 'LARC'],
 
 <?php
@@ -273,62 +203,81 @@ function drawChart11() {
 
       <?php echo  " var title_data = 'Percent of facilities providing FP and LARC, ' " ?>;
 
-      var chart13Options = {
+      var chart11Options = {
         title: title_data,
         titleTextStyle: { fontSize: 16 },
         vAxis: {format:'#%'},
       };
 
-      var chart13 = new google.visualization.LineChart(document.getElementById('chart13_div'));
+      var chart11 = new google.visualization.LineChart(document.getElementById('chart11_div'));
 
-      chart13.draw(chart13Data, chart13Options);
+      chart11.draw(chart11Data, chart11Options);
     }
   
-  function drawChart14() {
-	  
-      var chart14Data = google.visualization.arrayToDataTable([
-['Month', '7 Consecutive Days', 'Implants'],
+  function drawChart12() {
+	  // Create and populate the data table.
+	  var chart12Data = google.visualization.arrayToDataTable([
+
+
+['State', 'Percentage', { role: 'style' }],
 
 <?php
-  		foreach ($this->national_percent_facilities_stock_out as $row){
-  	?>
-  	[<?php echo  " '$row[month]',$row[seven_days_percent],$row[implant_percent] "; ?>],
-  	<?php
-  		}
-  	?>
+	foreach ($this->larc_data as $row){
+?>
+['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>,'<?php echo $row[color]; ?>'],
+<?php
+	}
+?>
+
+]);		                                                     	  
+
+	  var chart12Options = {
+		      title: 'Percent of Facilities Providing FP',
+		      titleTextStyle: { fontSize: 15 },
+		     
+		      hAxis: {title: 'Percentage'},
+		      hAxis: {format: '##.##%'},
+		      legend: 'none',
+		      is3D:true
+		};
+
+
+	  var chart12 = new google.visualization.BarChart(document.getElementById('chart12_div'));
+	            
+	  chart12.draw(chart12Data, chart12Options);
+	}
+  
+ function drawChart13() {
+
+	 var chart13Data = google.visualization.arrayToDataTable([
+['State', 'Percentage', { role: 'style' }],
+	                                                           
+<?php
+		foreach ($this->fp_data as $row){
+	?>
+	['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>, <?php echo "'$row[color]'"; ?>],
+	<?php
+		}
+	?>
 
 ]);
 
-      <?php echo  " var title_data = 'Percent of facilities stocked out of FP commodities, ' " ?>;
-      
-      var chart14Options = {
-        title: title_data,
-        titleTextStyle: { fontSize: 16 },
-        vAxis: {format:'#%'},
-      };
-
-      var chart14 = new google.visualization.LineChart(document.getElementById('chart14_div'));
-
-      chart14.draw(chart14Data, chart14Options);
-
-    }
-
-  <!-------   /////////////////////////// 2,1 script gnr  ////////////////////// -->
-
-	
-
-  <!-------   /////////////////////////// 2,1 end script ////////////////////// -->
+	  var chart13Options = {
+		      title: 'Percent of Facilities Providing LARC',
+		      titleTextStyle: { fontSize: 15 },
+		     
+		      hAxis: {title: 'Percentage'},
+		      hAxis: {format: '##.##%'},
+		      legend: 'none',
+		      is3D:true
+		};
 
 
-  <!-------   /////////////////////////// 2,2 script ////////////////////// -->
-
-	
-
-
-  <!-------   /////////////////////////// 2,2 end script ////////////////////// -->
-  
-
-  
+	  var chart13 = new google.visualization.BarChart(document.getElementById('chart13_div'));
+	            
+	  chart13.draw(chart13Data, chart13Options);
+	}
+    
 
 </script>
 
