@@ -77,9 +77,6 @@ class DashboardCHAI extends Dashboard
 		 	        "type" => 1
 		 	     );
 		 	    
-
-		 	    	
-		 	    
 		      }
 		    break;
 		    case 'facility':
@@ -636,11 +633,12 @@ class DashboardCHAI extends Dashboard
 	    $select = $db->select()
 	    ->from(array('hv' => 'hcwt_view_extended_pivot_non_null'),
 	        array(
-	            'year(hv.date) as year',
-	            'sum(hv.fp_trained) as fp_trained',
-                'sum(hv.larc_trained) as larc_trained'))
-                ->group(array('year(hv.date)'))
-		        ->order(array('hv.date'));
+	            'month(hv.date) as month',
+	            'hv.fp_trained as fp_trained',
+                'hv.larc_trained as larc_trained'))
+                ->group(array('month(hv.date)'))
+		        ->order(array('hv.date desc'))
+		        ->limit(array('12') );
 		    
 		    /*
 select year(date) as year, sum(fp_trained) as fp_trained, sum(larc_trained) as larc_trained
@@ -655,7 +653,7 @@ order by date;
 		    foreach ($result as $row){
 		    
 		        $output[] = array(
-		            "year" => $row['year'],
+		            "month" => $row['month'],
 		            "fp_trained" => $row['fp_trained'],
 		            "larc_trained" => $row['larc_trained']
 		        );
@@ -665,24 +663,53 @@ order by date;
 		}
 		
 		
-		
-    public function fetchPercentFacHWTrainedDetails($where = null, $group = null) {
+    public function fetchPercentFacHWTrainedDetails($trainingWhere = null, $geoWhere = null, $group = null, $useName = null ) {
 	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 	    $output = array();
+	    
+	    //$subSelect = new Zend_Db_Expr("(select count(*) from facility)");  // todo facility report rate
+	    $subSelect = new Zend_Db_Expr("(select sum(cnt) from facilities_reporting_by_state_view)");
+	    
+	    
+	    $select = $db->select()
+	    ->from(array('pt' => 'person_to_training'),
+	        array(
+	            "count(*) / $subSelect as percentage" ))
+	             
+	            ->joinLeft(array('p' => "person"), 'pt.person_id = p.id')
+	            ->joinLeft(array('f' => "facility"), 'p.facility_id = f.id')
+	            ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+	            ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+	            ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+	    
+	            ->joinLeft(array("t" => "training"), 'pt.training_id = t.id')
+	            ->joinInner(array('tto' => training_title_option), 't.training_title_option_id = tto.id')
+	            ->where($trainingWhere);
+	    
+	    $result = $db->fetchAll($select);
+	    
+	    foreach ($result as $row){
+	        $output[] = array(
+	            "state" => 'National',
+	            "percentage" => $row['percentage'],
+	            "color" => 'black',
+	        );
+	    }
 	    
 	    $subSelect = new Zend_Db_Expr("(select count(*) as cnt
   from facility f
   left join location l1 ON f.location_id = l1.id
   left join location l2 ON l1.parent_id = l2.id
   left join location l3 ON l2.parent_id = l3.id
-  where l2.location_name = outer_state
-  group by l2.location_name)");
-
+  where $geoWhere  )");
+	     
 		
 		        $select = $db->select()
 		        ->from(array('pt' => 'person_to_training'), 
 		          array(
-		          'l2.location_name as outer_state', 
+		          'l1.location_name as L1_location_name', 
+		          'l2.location_name as L2_location_name',
+		          'l3.location_name as L3_location_name',
 		          "count(*) / $subSelect as percentage" ))
 		         
 		        ->joinLeft(array('p' => "person"), 'pt.person_id = p.id')
@@ -693,8 +720,9 @@ order by date;
 		        
 		        ->joinLeft(array("t" => "training"), 'pt.training_id = t.id')
 		        ->joinInner(array('tto' => training_title_option), 't.training_title_option_id = tto.id')
-		        ->where($where)
-		        ->group(array('outer_state'))
+		        ->where($geoWhere)
+		        ->where($trainingWhere)
+		        ->group(array($useName))
                 ->order(array('percentage'));
 		        
 		        $result = $db->fetchAll($select);
@@ -703,45 +731,16 @@ order by date;
 		      $length = sizeof($result);
 		      
 		      foreach ($result as $row){
-		        $cnt += 1;
-		        $color = ($cnt <  6) ? 'red' : 'blue' ;
+		        $color = 'blue' ;
 
-		        if ($cnt < 6 or $cnt > $length - 5) 
-		        {   $output[] = array(
-		 	        "state" => $row['outer_state'],
-		 	        "percentage" => $row['percentage'],
-		 	        "color" => $color,
+		        $output[] = array(
+		 	    "state" => $row[$useName],
+		 	    "percentage" => $row['percentage'],
+		 	    "color" => $color,
 		 	      );
-		        }
 		      }
 		      
-		      $subSelect = new Zend_Db_Expr("(select count(*) from facility)");
-		      
-		      
-		      $select = $db->select()
-		      ->from(array('pt' => 'person_to_training'),
-		          array(
-		              "count(*) / $subSelect as percentage" ))
-		               
-		              ->joinLeft(array('p' => "person"), 'pt.person_id = p.id')
-		                  ->joinLeft(array('f' => "facility"), 'p.facility_id = f.id')
-		                      ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
-		                      ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
-		                      ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
-		      
-		                  ->joinLeft(array("t" => "training"), 'pt.training_id = t.id')
-		                  ->joinInner(array('tto' => training_title_option), 't.training_title_option_id = tto.id')
-		                  ->where($where);
-		      
-		              $result = $db->fetchAll($select);
-		      
-		      foreach ($result as $row){
-		        $output[] = array(
-		          "state" => 'National',
-		          "percentage" => $row['percentage'],
-		          "color" => 'black',
-		          );
-		      }   
+
 		
 		//file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 243 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 		//var_dump($output,"END");
@@ -808,7 +807,7 @@ FROM `person_to_training` AS `pt`
  INNER JOIN `training_title_option` AS `tto` ON t.training_title_option_id = tto.id
 WHERE 1=1
 and (t.training_title_option_id = 1 ) -- LARC
--- and (t.training_title_option_id = 1 ) -- FP Tech
+-- and (t.training_title_option_id = 2 ) -- FP Tech
 
 -- and (t.training_end_date <= date_sub(now(), interval 365 day))
 and (t.training_end_date between date_sub(now(), interval 365 day) and now() )
@@ -891,8 +890,15 @@ order by t.training_end_date desc
     }
     $prev_year = array_merge($prev_year, $new_rows);
     
-    // calc running total and use as denom
+    // fetch number of facilities reporting for use in tt calc, select sum(cnt) from facilities_reporting_by_state_view;
+    $select = $db->select()
+    ->from(array('fr' => 'facilities_reporting_by_state_view'),
+        array(
+            'sum(cnt) as facilities_reporting' ));
     
+    $facilities_reporting = $db->fetchOne( $select );
+    
+    // calc running total and use as denom
     foreach ($numer as $nrow){
         $denom = $start_denom_total;
         foreach ($prev_year as $prow){
@@ -902,19 +908,31 @@ order by t.training_end_date desc
             }
         }
         $tmp[] = array($nrow['C_date'], $nrow['numer'], $denom);
-        $output[] = array($nrow['C_date'], $nrow['numer']/$denom);
+        
+        $date = strtotime($nrow['C_date']);
+        $monthName = date('F', $date);
+        $year = date('Y', $date);
+        
+        //$output[] = array($nrow['C_date'], $nrow['numer']/$denom);
+        $output[] = array('month' => $monthName, 'year' => $year, 'tp_percent' => $nrow['numer']/$denom, 'tt_percent' => $denom/$facilities_reporting);
     }
+   
     
     //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI PFTP >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
     //var_dump('$numer= ', $numer,"END");
     //var_dump('$tmp= ', $tmp,"END");
+    //var_dump('$facilities_reporting= ', $facilities_reporting,"END");
     //var_dump('$output= ', $output,"END");
     //var_dump('$new_rows= ', $new_rows,"END");
-    //var_dump('$start_denom_total= ', $start_denom_total,"END");            
     //var_dump('$prev_year= ', $prev_year,"END");
+    //var_dump('$start_denom_total= ', $start_denom_total,"END");
     //var_dump('$month= ', $month,"END");
     //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    return $output;
 }	
+
+
 	
 public function fetchPFPDetails($where = null) {
     $db = Zend_Db_Table_Abstract::getDefaultAdapter();
@@ -1094,23 +1112,49 @@ public function fetchPFSODetails($where = null) {
     
 }	
 	
-public function fetchPercentProvidingDetails($where = null, $group = null) {
+public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null, $group = null, $useName = null) {
     $db = Zend_Db_Table_Abstract::getDefaultAdapter();
     $output = array();
+    
+    //$subSelect = new Zend_Db_Expr("(select count(*) from facility)");  // todo facility report rate
+    $subSelect = new Zend_Db_Expr("(select sum(cnt) from facilities_reporting_by_state_view)"); 
+    
+    $select = $db->select()
+    ->from(array('c' => 'commodity'),
+        array("count(*) / $subSelect / 100 as percentage" ))
+         
+        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
+        ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')
+        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+        ->where($cnoWhere);
+    
+    $result = $db->fetchAll($select);
+    
+    foreach ($result as $row){
+        $output[] = array(
+            "state" => 'National',
+            "percentage" => $row['percentage'],
+            "color" => 'black',
+        );
+    }
      
     $subSelect = new Zend_Db_Expr("(select count(*) * 100 as cnt
   from facility f
   left join location l1 ON f.location_id = l1.id
   left join location l2 ON l1.parent_id = l2.id
   left join location l3 ON l2.parent_id = l3.id
-  where l2.location_name = outer_state
-  group by l2.location_name)");
+  where $geoWhere )");
 	
 	
 	    $select = $db->select()
 	    ->from(array('c' => 'commodity'),
 	        array(
-	            'l2.location_name as outer_state',
+	            'l1.location_name as L1_location_name',
+	            'l2.location_name as L2_location_name',
+	            'l3.location_name as L3_location_name',
 	            "count(*) / $subSelect as percentage" ))
 
 	            ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
@@ -1119,52 +1163,22 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 	            ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
 	            ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
 	            ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
-	            ->where($where)
-	            ->group(array('outer_state'))
+	            ->where($geoWhere)
+	            ->where($cnoWhere)
+	            ->group(array( $useName ))
 	            ->order(array('percentage'));
 	
 	                $result = $db->fetchAll($select);
 	
-	                $cnt = 0;
-	                $length = sizeof($result);
-	
 	                foreach ($result as $row){
-	                $cnt += 1;
-	                $color = ($cnt <  6) ? 'red' : 'blue' ;
+	                    $color = 'blue' ;
 	
-	                    if ($cnt < 6 or $cnt > $length - 5)
-	                    {   $output[] = array(
-	                        "state" => $row['outer_state'],
-	                        "percentage" => $row['percentage'],
-	                            "color" => $color,
-	                        
+	                    $output[] = array(
+	                       "state" => $row[$useName],
+	                       "percentage" => $row['percentage'],
+	                       "color" => $color,
 	                        );
-	                    }
 	                }
-	
-	                $subSelect = new Zend_Db_Expr("(select count(*) from facility)");
-	
-	                $select = $db->select()
-	                ->from(array('c' => 'commodity'),
-	                   array("count(*) / $subSelect / 100 as percentage" ))
-		       
-	                ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
-	                ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')
-	                ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
-	                ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
-	                ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
-	                ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
-	                ->where($where);
-	
-		          $result = $db->fetchAll($select);
-	
-			      foreach ($result as $row){
-			      $output[] = array(
-			      "state" => 'National',
-		          "percentage" => $row['percentage'],
-			          "color" => 'black',
-		            );
-			      }
 	
 			//file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 243 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 			//var_dump($output,"END");

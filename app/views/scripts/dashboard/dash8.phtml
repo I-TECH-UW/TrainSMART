@@ -96,16 +96,15 @@ print ScriptContainer::$instance->renderJSHead();
 			<!-------   /////////////////////////// make top buttons ////////////////////// -->
 
 			<div class="rightdiv" style="float: right;">
-				<?php  //require_once('views/scripts/dashboard/top_buttons.phtml');?>
+				<?php  require_once('views/scripts/dashboard/top_buttons.phtml');?>
 					
 			</div>
-
-
 
 			<!-------   /////////////////////////// make left buttons ////////////////////// -->
 
 			<div class="nav-buttons">
 				<?php  require_once('views/scripts/dashboard/left_buttons.phtml');?>
+				<?php  require_once('views/scripts/dashboard/geo_button.phtml');?>
 				
 			</div>
 			
@@ -120,22 +119,15 @@ print ScriptContainer::$instance->renderJSHead();
 			<body class="docs slim framebox_body">
 
 				<div id="allCharts" class="container">
-				
-				<div class="hrNav"></div>
-				<div class="hrNav"></div>
-				
 				<div id="toprow" class="container">
 						<div id="homecontent" class="container">
 							<div id="homecontent-mid" class="row rounded">
 								<div id="homebanner" class="rounded">
-								
-								
-			                    
 								<div class="sliderdiv">
-									<div id="chart11_div" style="width: 500px; height: 300px;"></div>
+									<div id="chart11_div" style="width: 700px; height: 300px;"></div>
 									</div>
 									<div class="main-search">
-										<div id="chart12_div" style="width: 500px; height: 300px;"></div>
+										<div id="chart12_div" style="width: 700px; height: 300px;"></div>
 									</div>
 								</div>
 							</div>
@@ -169,7 +161,7 @@ print ScriptContainer::$instance->renderJSHead();
 		
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-		<!-------   /////////////////////////// main gnr ////////////////////// -->
+		<!-------   /////////////////////////// main  ////////////////////// -->
 
 		<script type="text/javascript">
 		
@@ -179,8 +171,8 @@ print ScriptContainer::$instance->renderJSHead();
   function apiLoaded() {
 	  document.getElementById("allCharts").style.marginLeft="130px";
 
-	drawChart13();
-	drawChart14();
+	drawChart11();
+	drawChart12();
 	//drawChart13();
 		
 	var currentLevel;
@@ -196,15 +188,15 @@ print ScriptContainer::$instance->renderJSHead();
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
   
-  function drawChart13() {
+  function drawChart11() {
 	  // Create and populate the data table.
-	  var chart13Data = google.visualization.arrayToDataTable([
+	  var chart11Data = google.visualization.arrayToDataTable([
 
 
 ['State', 'Percentage', { role: 'style' }],
 
 <?php
-	foreach ($this->larc_data13 as $row){
+	foreach ($this->larc_data as $row){
 ?>
 ['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>,'<?php echo $row[color]; ?>'],
 <?php
@@ -213,7 +205,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 ]);		                                                     	  
 
-	  var chart13Options = {
+	  var chart11Options = {
 		      title: 'Percent of Facilities Providing FP',
 		      titleTextStyle: { fontSize: 15 },
 		     
@@ -224,19 +216,18 @@ print ScriptContainer::$instance->renderJSHead();
 		};
 
 
-	  var chart13 = new google.visualization.BarChart(document.getElementById('chart11_div'));
+	  var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
 	            
-	  chart13.draw(chart13Data, chart13Options);
+	  chart11.draw(chart11Data, chart11Options);
 	}
   
- function drawChart14() {
-	  // Create and populate the data table.
-	  var chart14Data = google.visualization.arrayToDataTable([
+ function drawChart12() {
+	  var chart12Data = google.visualization.arrayToDataTable([
 
 ['State', 'Percentage', { role: 'style' }],
 	                                                           
 <?php
-		foreach ($this->fp_data14 as $row){
+		foreach ($this->fp_data as $row){
 	?>
 	['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>, <?php echo "'$row[color]'"; ?>],
 	<?php
@@ -245,7 +236,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 ]);
 
-	  var chart14Options = {
+	  var chart12Options = {
 		      title: 'Percent of Facilities Providing LARC',
 		      titleTextStyle: { fontSize: 15 },
 		     
@@ -256,9 +247,9 @@ print ScriptContainer::$instance->renderJSHead();
 		};
 
 
-	  var chart14 = new google.visualization.BarChart(document.getElementById('chart13_div'));
+	  var chart12 = new google.visualization.ColumnChart(document.getElementById('chart12_div'));
 	            
-	  chart14.draw(chart14Data, chart14Options);
+	  chart12.draw(chart12Data, chart12Options);
 	}
 
 </script>
