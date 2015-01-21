@@ -117,11 +117,6 @@ print ScriptContainer::$instance->renderJSHead();
 			<body class="docs slim framebox_body">
 
 				<div id="allCharts" class="container">
-				
-				<div align="right"><font size="4"><label><?php echo 'National Contraceptive Prevalence Rate 15% Target 36%'; ?></label></font></div>
-				<div class="hrNav"></div>
-				
-				
 				    <div id="toprow" class="container">
 						<div id="homecontent" class="container">
 							<div id="homecontent-mid" class="row rounded">
@@ -178,9 +173,9 @@ print ScriptContainer::$instance->renderJSHead();
 	  document.getElementById("allCharts").style.marginLeft="130px";
 
 	drawChart11();
-	drawChart12();
-	drawChart13();
-	drawChart14();
+	//drawChart12();
+	//drawChart13();
+	//drawChart14();
 		
 	var currentLevel;
 	currentLevel = <?php echo '\'' . $this->location_data[0][name] . '\''; ?>;
@@ -197,37 +192,34 @@ print ScriptContainer::$instance->renderJSHead();
   
 
 
-function drawChart11() {
-	  // Create and populate the data table.
-	  var chart11Data = google.visualization.arrayToDataTable([
-
-['', ''],
-
+  function drawChart11() {
+	  
+      var chart11Data = google.visualization.arrayToDataTable([
+['Month', '7 Consecutive Days', 'Implants'],
 
 <?php
-  		foreach ($this->national_consumption_by_method as $row){
+  		foreach ($this->national_percent_facilities_stock_out as $row){
   	?>
-  	[<?php echo  " '$row[method]',$row[consumption] "; ?>],
+  	[<?php echo  " '$row[month]',$row[seven_days_percent],$row[implant_percent] "; ?>],
   	<?php
   		}
   	?>
 
-]);		    
+]);
 
-	  <?php echo  " var title_date = 'Monthly consumption by method $this->title_date ' " ?>;
-	  
-	  var chart11Options = {
-			  
-			  title: title_date,
-			  titleTextStyle: { fontSize: 16 },
-		      is3D:true,
-		      legend: 'none',
-		      
-		};
+      <?php echo  " var title_data = 'Percent of facilities stocked out of FP commodities, ' " ?>;
+      
+      var chart11Options = {
+        title: title_data,
+        titleTextStyle: { fontSize: 16 },
+        vAxis: {format:'#%'},
+      };
 
-	  var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
-	  chart11.draw(chart11Data, chart11Options);
-}
+      var chart11 = new google.visualization.LineChart(document.getElementById('chart11_div'));
+
+      chart11.draw(chart11Data, chart11Options);
+
+    }
 
   function drawChart12() {
       var chart12Data = google.visualization.arrayToDataTable([
