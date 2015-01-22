@@ -1473,9 +1473,10 @@ public function dash996allAction() {
 	            $total_consumption[] = array('location' => $locationNames, 'consumption' => $total );
 	        }
 	        
-	        $cs_data = new DashboardCHAI();
+	        //TA:17:17 Coverage Summary chart
+	        $csum_data = new DashboardCHAI();
 	        // specify date by "2014-12-01" or leave empty to get data for the last month
-	        $cs_details = $cs_data->fetchCSDetails(null);
+	        $cs_details = $csum_data->fetchCSDetails(null);
 	        $this->view->assign('cs_fp_facility_count', round($cs_details['fp_facility_count']/$cs_details['total_facility_count_month'], 2));
 	        $this->view->assign('cs_larc_facility_count', round($cs_details['larc_facility_count']/$cs_details['total_facility_count_month'], 2));
 	        $this->view->assign('cs_fp_consumption_facility_count', round($cs_details['fp_consumption_facility_count']/$cs_details['total_facility_count'], 2));
@@ -1483,6 +1484,7 @@ public function dash996allAction() {
 	        $this->view->assign('cs_larc_stock_out_facility_count', round($cs_details['larc_stock_out_facility_count']/$cs_details['total_facility_count'], 2));
 	        $this->view->assign('cs_fp_stock_out_facility_count', round($cs_details['fp_stock_out_facility_count']/$cs_details['total_facility_count'], 2));
 	        $this->view->assign('cs_date', date_format(date_create($cs_details['last_date']), 'F Y'));
+	        ///
 	        
 	        file_put_contents('c:\wamp\logs\php_debug.log', 'dash9bAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	        var_dump('$cs_details= ', $cs_details, 'END');

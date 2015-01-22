@@ -229,31 +229,28 @@ function drawChart11() {
 	  chart11.draw(chart11Data, chart11Options);
 }
 
+//TA:17:18  01/21/2015 Coverage Summary chart
   function drawChart12() {
       var chart12Data = google.visualization.arrayToDataTable([
-        [' ', '% of Facilities with trained HWs', '% of facilities with (FP/LARC) trained HWS providing (FP/LARC)', '% of facilities with trained HWs (FP/LARC) that are stocked out of (FP/LARC)'],
-
-         [ 'FP', <?php echo $this->cs_fp_facility_count?> , <?php echo $this->cs_fp_consumption_facility_count?>,<?php echo $this->cs_fp_stock_out_facility_count?> ],
-         [ 'LARC', <?php echo $this->cs_larc_facility_count?>,<?php echo $this->cs_larc_consumption_facility_count?>,<?php echo $this->cs_larc_stock_out_facility_count?> ],
-                     
-                      
+        [' ', '% of Facilities with trained HWs', '% of facilities with\n(FP/LARC) trained HWS providing\n(FP/LARC)', '% of facilities with trained HWs\n(FP/LARC) that are stocked out of\n(FP/LARC)'],
+        [ 'FP', <?php echo $this->cs_fp_facility_count*100?> , <?php echo $this->cs_fp_consumption_facility_count*100?>,<?php echo $this->cs_fp_stock_out_facility_count*100?> ],
+        [ 'LARC', <?php echo $this->cs_larc_facility_count*100?>,<?php echo $this->cs_larc_consumption_facility_count*100?>,<?php echo $this->cs_larc_stock_out_facility_count*100?> ],	        
       ]);
 
-      <?php echo  " var title_data = 'Coverage summary, $this->cs_date' " ?>;
+      <?php echo  " var title_data = 'Coverage summary, $this->cs_date ' " ?>;
 
       var chart12Options = {
-                title: title_data,
-                titleTextStyle: { fontSize: 16 },
-                bar: {groupWidth: "80%"},
-                vAxis: {format: '#%'},
-                
+    		  title: title_data,
+    		  titleTextStyle: { fontSize: 16 },
+    		  bar: {groupWidth: "80%"},
+    		  vAxis: {format: '#\'%\''}, //new
+    		  chartArea: {width: '50%', left: 80},//new
       };
 
-      //var chart12 = new google.charts.Bar(document.getElementById('chart11_div'));
       var chart12 = new google.visualization.ColumnChart(document.getElementById('chart12_div'));
 
       chart12.draw(chart12Data, chart12Options);
-    }
+  }
 
 
   function drawChart13() {

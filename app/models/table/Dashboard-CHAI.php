@@ -183,6 +183,7 @@ class DashboardCHAI extends Dashboard
 	     
 	}
 
+	//TA:17:17 Coverage Summary chart
 	public function fetchCSDetails($date) {
 	
 	    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
