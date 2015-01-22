@@ -189,7 +189,6 @@
 
 							itech_save_confirm_on_leave();
 
-
 							/* Init the table */
 							var oTable = $('#employee_mechanism_table').dataTable({
 								"bJQueryUI": true,
@@ -510,7 +509,6 @@
                         var newRow = $(oTable.fnSettings().aoData[newRowIDs[0]].nTr);
                         newRow.addClass('newMechanism');
                         newRow.children().first().data("mechID", mechID);
-
 
                         $("#associateMechanisms").data("ids").push(mechID);
                         $("#mechanismPercentages").data("percents").push(percent);

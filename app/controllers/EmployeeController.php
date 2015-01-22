@@ -189,12 +189,15 @@ class EmployeeController extends ReportFilterHelpers {
 
         $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase, mechanism_option.owner_id
                 FROM mechanism_option
+                LEFT JOIN link_mechanism_partner ON mechanism_option.id = link_mechanism_partner.mechanism_option_id
                 WHERE is_deleted = 0';
 
         if (!$this->hasACL('training_organizer_option_all')) {
             $partners = $this->getAvailablePartners();
             if (count($partners)) {
-                $sql .= " AND mechanism_option.owner_id in (" . implode(',', $partners) . ") ";
+                $plist = implode(',', $partners);
+                $sql .= " AND (link_mechanism_partner.partner_id in ($plist) OR
+                mechanism_option.owner_id in ($plist))";
             }
         }
 
