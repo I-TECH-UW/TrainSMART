@@ -1030,7 +1030,6 @@ public function dash996allAction() {
 	    
 	        $this->view->assign('larc_data', $larc_details);
 	        $this->view->assign('fp_data', $fp_details);
-	         
 	    } else {
 	    
 	        $where = ' 1=1 ';
@@ -1088,7 +1087,10 @@ public function dash996allAction() {
 	    $this->view->assign('fp_data',$fp_details);
 	    
 	    } //else
-	    
+	    	
+
+	    $this->view->assign('date', date('F Y')); //TA:17:17
+	    	
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	
 
