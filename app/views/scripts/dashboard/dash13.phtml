@@ -199,42 +199,38 @@ print ScriptContainer::$instance->renderJSHead();
   }
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
-  
+
+//TA:17:17 Coverage Fac HW Providing FP chart
   function drawChart11() {
 	  // Create and populate the data table.
 	  var chart11Data = google.visualization.arrayToDataTable([
-
-
 ['Location', 'Percent', { role: 'style' }],
 
 <?php
 	foreach ($this->fp_data as $row){
 ?>
-['<?php echo str_replace("'",'', str_replace(' ', '', $row[location]))  ?>', <?php echo $row[percent]; ?>,'<?php echo $row[color]; ?>'],
+['<?php echo str_replace("'",'', str_replace(' ', '', $row[location]))  ?>', <?php echo round($row[percent],2)*100; ?>,'<?php echo $row[color]; ?>'],
 <?php
 	}
 ?>
 
 ]);		                                                     	  
 
+	 <?php echo  " var title_data = 'Percent of facilities with a trained HW providing FP as of $this->date ' " ?>;
 	  var chart11Options = {
-		      title: 'Percent of Facilities with a trained HW providing FP',
+			  title: title_data,
 		      titleTextStyle: { fontSize: 15 },
-		      
-		      hAxis: {title: 'Percentage'},
-		      hAxis: {format: '##.##%'},
-		      vAxis: {format:'##.##%'},
+		      vAxis: {format: '#\'%\''},
+		      legend: 'none',
 		      is3D:true
 		};
-
-
-	            var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
-	            
-	  chart11.draw(chart11Data, chart11Options);
+		var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));     
+	    chart11.draw(chart11Data, chart11Options);
 	}
 
  <!-------   /////////////////////////// script 1,2 ////////////////////// -->
-  
+
+//TA:17:17 Coverage Fac HW Providing FP chart
  function drawChart12() {
 	  // Create and populate the data table.
 	  var chart12Data = google.visualization.arrayToDataTable([
@@ -244,26 +240,22 @@ print ScriptContainer::$instance->renderJSHead();
 <?php
 		foreach ($this->larc_data as $row){
 	?>
-['<?php echo str_replace("'",'', str_replace(' ', '', $row[location]))  ?>', <?php echo $row[percent]; ?>,'<?php echo $row[color]; ?>'],
+['<?php echo str_replace("'",'', str_replace(' ', '', $row[location]))  ?>', <?php echo round($row[percent],2)*100; ?>,'<?php echo $row[color]; ?>'],
 	<?php
 		}
 	?>
 
 ]);
 
+	  <?php echo  " var title_data = 'Percent of facilities with a trained HW providing LARC as of $this->date ' " ?>;
 	  var chart12Options = {
-		      title: 'Percent of Facilities with a trained HW providing LARC',
+			  title: title_data,
 		      titleTextStyle: { fontSize: 15 },
-		      
-		      hAxis: {title: 'Percentage'},
-		      hAxis: {format: '##.##%'},
-		      vAxis: {format:'##.##%'},
+		      vAxis: {format: '#\'%\''},
+		      legend: 'none',
 		      is3D:true
 		};
-
-
-	            var chart12 = new google.visualization.ColumnChart(document.getElementById('chart12_div'));
-	            
+	  var chart12 = new google.visualization.ColumnChart(document.getElementById('chart12_div'));         
 	  chart12.draw(chart12Data, chart12Options);
 	}
 
