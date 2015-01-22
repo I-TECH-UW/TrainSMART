@@ -149,6 +149,12 @@ class PartnerController extends ReportFilterHelpers {
                         WHERE mechanism_option.owner_id = $id";
                 $primeMechanisms = $db->fetchAll($sql);
 
+                foreach($primeMechanisms as &$mech) {
+                    $sql = "SELECT partner.partner FROM partner INNER JOIN link_mechanism_partner on link_mechanism_partner.partner_id = partner.id
+                            WHERE link_mechanism_partner.mechanism_option_id = {$mech['id']} AND link_mechanism_partner.partner_id != $id";
+
+                    $mech['subpartners'] = $db->fetchCol($sql);
+                }
                 $this->view->assign('primeMechanisms', $primeMechanisms);
 
                 $sql = "SELECT link_mechanism_partner.id, mechanism_option.mechanism_phrase, link_mechanism_partner.end_date, partner.partner

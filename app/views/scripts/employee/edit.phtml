@@ -12,6 +12,18 @@
     <style>
         .dataTables_wrapper {min-height:24px;}
         table.display td {border:1px solid #D3D3D3;}
+        table.dataTable tr.odd {
+            background-color: #CFFFCF;
+        }
+        table.dataTable tr.odd td.sorting_1 {
+            background-color: #ACCCAC;
+        }
+        h2.mechanismsHeader {
+            font-size: 14px;
+            color: #51965B;
+            margin-bottom: 0.5em;
+        }
+
         .newMechanism {color:#749a02; font-weight:bold;}
         .toDeleteMechanism {text-decoration:line-through; color:#ff0202; font-style:italic;}
         .mechanismTableFooter {background-color: #cccccc;}
@@ -326,7 +338,7 @@
 						});
 					</script>
 
-				<h1><?php tp('Mechanisms'); ?>:</h1>
+				<h2 class="mechanismsHeader"><?php tp('Mechanisms'); ?>:</h2>
 
 					<table cellpadding="0" cellspacing="0" border="1" class="display tablegrid" id="employee_mechanism_table"
 						   style="width:100%">
