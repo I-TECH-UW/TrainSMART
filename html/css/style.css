@@ -1241,7 +1241,9 @@ table {
 	height:10px;
 }
 
-
+.dbbutton_leftsubmenu_large {
+	height:20px;
+}
 
 
 .nav.tsbutton, .nav.tsbutton:visited { 
