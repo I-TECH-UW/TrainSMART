@@ -1185,6 +1185,7 @@ public function dash996allAction() {
 	         
 	    } //else
 	     
+	    $this->view->assign('date', date('F Y')); //TA:17:17
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	    
 	}

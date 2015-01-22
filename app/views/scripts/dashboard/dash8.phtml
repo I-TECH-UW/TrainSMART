@@ -187,7 +187,8 @@ print ScriptContainer::$instance->renderJSHead();
   }
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
-  
+
+//TA:17:17 Coverage Fac Providing FP chart
   function drawChart11() {
 	  // Create and populate the data table.
 	  var chart11Data = google.visualization.arrayToDataTable([
@@ -198,21 +199,20 @@ print ScriptContainer::$instance->renderJSHead();
 <?php
 	foreach ($this->larc_data as $row){
 ?>
-['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>,'<?php echo $row[color]; ?>'],
+['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo round($row[percentage],2)*100; ?>,'<?php echo $row[color]; ?>'],
 <?php
 	}
 ?>
 
 ]);		                                                     	  
 
+	  <?php echo  " var title_data = 'Percent of Facilities Providing FP as of $this->date ' " ?>;
 	  var chart11Options = {
-		      title: 'Percent of Facilities Providing FP',
+		      title: title_data,
 		      titleTextStyle: { fontSize: 15 },
-		     
-		      hAxis: {title: 'Percentage'},
-		      hAxis: {format: '##.##%'},
-		      vAxis: {format:'##.##%'},
+		      vAxis: {format: '#\'%\''},
 		      legend: 'none',
+		      chartArea: {height: '50%', top: 55},
 		      is3D:true
 		};
 
@@ -221,7 +221,8 @@ print ScriptContainer::$instance->renderJSHead();
 	            
 	  chart11.draw(chart11Data, chart11Options);
 	}
-  
+
+//TA:17:17 Coverage Fac Providing LARC chart
  function drawChart12() {
 	  var chart12Data = google.visualization.arrayToDataTable([
 
@@ -230,21 +231,20 @@ print ScriptContainer::$instance->renderJSHead();
 <?php
 		foreach ($this->fp_data as $row){
 	?>
-	['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>, <?php echo "'$row[color]'"; ?>],
+	['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo round($row[percentage],2)*100; ?>, <?php echo "'$row[color]'"; ?>],
 	<?php
 		}
 	?>
 
 ]);
 
+	  <?php echo  " var title_data = 'Percent of Facilities Providing LARC as of $this->date ' " ?>;
 	  var chart12Options = {
-		      title: 'Percent of Facilities Providing LARC',
+			  title: title_data,
 		      titleTextStyle: { fontSize: 15 },
-		     
-		      hAxis: {title: 'Percentage'},
-		      hAxis: {format: '##.##%'},
-		      vAxis: {format:'##.##%'},
+		      vAxis: {format: '#\'%\''},
 		      legend: 'none',
+		      chartArea: {height: '50%', top: 55},
 		      is3D:true
 		};
 
