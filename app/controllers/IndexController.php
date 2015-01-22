@@ -28,7 +28,7 @@ class IndexController extends ITechController {
 	    $title_date = new DashboardCHAI();
 	    $title_date = $title_date->fetchTitleDate();
 	    
-	    $this->view->assign('title_date',  $title_method[commodity_name].', '. $title_date[month_name].', '. $title_date[year]);
+	    $this->view->assign('title_date',  $title_method[commodity_name].', '. $title_date[month_name].' '. $title_date[year]);
 	     
 	    $cln_data = new DashboardCHAI();
 	    $pfp_data = new DashboardCHAI();

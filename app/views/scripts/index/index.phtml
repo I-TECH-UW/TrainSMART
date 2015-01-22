@@ -196,7 +196,7 @@ print ScriptContainer::$instance->renderJSHead();
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
   
 
-
+//TA:17:17 landing page chart: Monthly Consumption by method
 function drawChart11() {
 	  // Create and populate the data table.
 	  var chart11Data = google.visualization.arrayToDataTable([
@@ -214,7 +214,7 @@ function drawChart11() {
 
 ]);		    
 
-	  <?php echo  " var title_date = 'Monthly consumption by method $this->title_date ' " ?>;
+	  <?php echo  " var title_date = 'Monthly Consumption by Method $this->title_date ' " ?>;
 	  
 	  var chart11Options = {
 			  
@@ -252,56 +252,74 @@ function drawChart11() {
       chart12.draw(chart12Data, chart12Options);
   }
 
-
+//TA:17:17 Landing page charts: Percent of facilities providing FP andLARC
   function drawChart13() {
 	  
       var chart13Data = google.visualization.arrayToDataTable([
 ['Month', 'FP', 'LARC'],
 
 <?php
-  		foreach ($this->national_percent_facilities_providing as $row){
+$start_date = '';
+$end_date = '';
+for($i=0; $i<count($this->national_percent_facilities_providing); $i++){
+	$row = $this->national_percent_facilities_providing[$i];
+	if($i == 0)
+		$start_date = $row[month] . " " . $row[year];
+	if($i == count($this->national_percent_facilities_providing)-1)
+		$end_date = $row[month] . " " . $row[year];
+  	//	foreach ($this->national_percent_facilities_providing as $row){
   	?>
-  	[<?php echo  " '$row[month]',$row[fp_percent],$row[larc_percent] "; ?>],
+  	[<?php echo  " '$row[month]'," . round($row[fp_percent],2)*100 . "," . round($row[larc_percent],2)*100 ?>],
   	<?php
   		}
   	?>
 
 ]);		
 
-      <?php echo  " var title_data = 'Percent of facilities providing FP and LARC, ' " ?>;
+      <?php echo  " var title_data = 'Percent of Facilities Providing FP and LARC, " . $start_date . " to " . $end_date ."' " ?>;
 
       var chart13Options = {
         title: title_data,
         titleTextStyle: { fontSize: 16 },
-        vAxis: {format:'#%'},
+        vAxis: {format: '#\'%\''},
       };
 
       var chart13 = new google.visualization.LineChart(document.getElementById('chart13_div'));
 
       chart13.draw(chart13Data, chart13Options);
     }
-  
+
+//TA:17:17 Landing page charts: Percent of facilities stocked out of FP commodities
   function drawChart14() {
 	  
       var chart14Data = google.visualization.arrayToDataTable([
 ['Month', '7 Consecutive Days', 'Implants'],
 
 <?php
-  		foreach ($this->national_percent_facilities_stock_out as $row){
+$start_date = '';
+$end_date = '';
+for($i=0; $i<count($this->national_percent_facilities_stock_out); $i++){
+	$row = $this->national_percent_facilities_stock_out[$i];
+	if($i == 0)
+		$start_date = $row[month] . " " . $row[year];
+	if($i == count($this->national_percent_facilities_stock_out)-1)
+		$end_date = $row[month] . " " . $row[year];
+	//foreach ($this->national_percent_facilities_stock_out as $row){
   	?>
-  	[<?php echo  " '$row[month]',$row[seven_days_percent],$row[implant_percent] "; ?>],
+  	[<?php echo  " '$row[month]'," . round($row[seven_days_percent],2)*100 . "," . round($row[implant_percent],2)*100 ?>],
   	<?php
   		}
   	?>
 
 ]);
 
-      <?php echo  " var title_data = 'Percent of facilities stocked out of FP commodities, ' " ?>;
+     <?php echo  " var title_data = 'Stock Outs, " . $start_date . " to " . $end_date ."' " ?>;
       
       var chart14Options = {
         title: title_data,
         titleTextStyle: { fontSize: 16 },
-        vAxis: {format:'#%'},
+        vAxis: {format: '#\'%\''},
+        chartArea: {width: '50%', left: 80},//new
       };
 
       var chart14 = new google.visualization.LineChart(document.getElementById('chart14_div'));
