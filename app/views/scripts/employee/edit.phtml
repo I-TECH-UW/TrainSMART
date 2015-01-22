@@ -564,7 +564,8 @@
                     var mech;
                     for (var i = 0; i < numMechs; i++) {
                         mech = mechData['available'][i];
-                        if (($.inArray(partnerID, mech['partners']) > -1) &&
+                        if ((partnerID === mech['owner_id'] ||
+                            ($.inArray(partnerID, mech['partners']) > -1)) &&
                             ($.inArray(mech['id'], mechData['employee_mechanism_ids']) < 0)) {
 
                             optList += '<option value="' + mech['id'] + '">' + mech['mechanism_phrase'] + '</option>';
