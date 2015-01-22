@@ -182,55 +182,73 @@ print ScriptContainer::$instance->renderJSHead();
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
 
+//TA:17:17 Coverage Over time LARC chart
   function drawChart11() {
 	  
       var chart11Data = google.visualization.arrayToDataTable([
 ['Month', '% trained providing LARC', '% providing LARC', '% trained in LARC'],
 
 <?php
-  		foreach ($this->national_larc_coverage as $row){
+	$start_date = '';
+	$end_date = '';
+	for($i=0; $i<count($this->national_larc_coverage); $i++){
+		$row = $this->national_larc_coverage[$i];
+		if($i == 0)
+			$start_date = $row[month] . " " . $row[year];
+		if($i == count($this->national_larc_coverage)-1)
+			$end_date = $row[month] . " " . $row[year];
+  		//foreach ($this->national_larc_coverage as $row){
   	?>
-  	[<?php echo  " '$row[month]',$row[tp_percent],$row[larc_percent],$row[tt_percent] "; ?>],
+  	[<?php echo  " '$row[month]'," . round($row[tp_percent],2)*100 . "," . round($row[larc_percent],2)*100 . "," . round($row[tt_percent],2)*100 ?>],
   	<?php
   		}
   	?>
 
 ]);		
 
-      <?php echo  " var title_data = 'LARC Coverage ' " ?>;
+      <?php echo  " var title_data = 'LARC Coverage, " . $start_date . " to " . $end_date ."' " ?>;
 
       var chart11Options = {
         title: title_data,
         titleTextStyle: { fontSize: 16 },
-        vAxis: {format:'#%'},
+        vAxis: {format: '#\'%\''},
       };
 
       var chart11 = new google.visualization.LineChart(document.getElementById('chart11_div'));
 
       chart11.draw(chart11Data, chart11Options);
     }
-  
+
+//TA:17:17 Coverage Over time FP chart
   function drawChart12() {
 	  
       var chart12Data = google.visualization.arrayToDataTable([
 ['Month', '% trained providing FP', '% providing FP', '% trained in FP'],
 
 <?php
-  		foreach ($this->national_fp_coverage as $row){
+$start_date = '';
+	$end_date = '';
+	for($i=0; $i<count($this->national_fp_coverage); $i++){
+		$row = $this->national_fp_coverage[$i];
+		if($i == 0)
+			$start_date = $row[month] . " " . $row[year];
+		if($i == count($this->national_fp_coverage)-1)
+			$end_date = $row[month] . " " . $row[year];
+  		//foreach ($this->national_larc_coverage as $row){
   	?>
-  	[<?php echo  " '$row[month]',$row[tp_percent],$row[fp_percent],$row[tt_percent] "; ?>],
+  	[<?php echo  " '$row[month]'," . round($row[tp_percent],2)*100 . "," . round($row[fp_percent],2)*100 . "," . round($row[tt_percent],2)*100 ?>],
   	<?php
   		}
   	?>
 
 ]);		
 
-      <?php echo  " var title_data = 'FP Coverage ' " ?>;
+      <?php echo  " var title_data = 'FP Coverage, " . $start_date . " to " . $end_date ."' " ?>;
 
       var chart12Options = {
         title: title_data,
         titleTextStyle: { fontSize: 16 },
-        vAxis: {format:'#%'},
+        vAxis: {format: '#\'%\''},
       };
 
       var chart12 = new google.visualization.LineChart(document.getElementById('chart12_div'));

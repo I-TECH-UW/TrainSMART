@@ -1692,8 +1692,9 @@ public function dash996allAction() {
 	    $pftp_details = $pftp_data->fetchPFTPDetails( $where );
 	     
 	    // pivot
+	    //TA:17:17 add year to the result
 	    foreach ($pftp_details as $i => $row){
-	        $national_larc_coverage[] = array('month' => $pftp_details[$i]['month'], 'tp_percent' => $pftp_details[$i]['tp_percent'], 'larc_percent' => $pfp_details[$i]['larc_percent'], 'tt_percent' => $pftp_details[$i]['tt_percent']);
+	        $national_larc_coverage[] = array('month' => $pftp_details[$i]['month'], 'year' => $pftp_details[$i]['year'], 'tp_percent' => $pftp_details[$i]['tp_percent'], 'larc_percent' => $pfp_details[$i]['larc_percent'], 'tt_percent' => $pftp_details[$i]['tt_percent']);
 	    }
 	     
 	    $where = " 1=1 and cno.external_id in ( 'ibHR9NQ0bKL')";
@@ -1703,8 +1704,9 @@ public function dash996allAction() {
 	    $pftp_details = $pftp_data->fetchPFTPDetails( $where );
 	
 	    // pivot
+	    //TA:17:17 add year to the result
 	    foreach ($pftp_details as $i => $row){
-	        $national_fp_coverage[] = array('month' => $pftp_details[$i]['month'], 'tp_percent' => $pftp_details[$i]['tp_percent'], 'fp_percent' => $pfp_details[$i]['fp_percent'], 'tt_percent' => $pftp_details[$i]['tt_percent']);
+	        $national_fp_coverage[] = array('month' => $pftp_details[$i]['month'], 'year' => $pftp_details[$i]['year'], 'tp_percent' => $pftp_details[$i]['tp_percent'], 'fp_percent' => $pfp_details[$i]['fp_percent'], 'tt_percent' => $pftp_details[$i]['tt_percent']);
 	    }
 	
 	     
