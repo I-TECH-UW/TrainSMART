@@ -228,7 +228,14 @@ class DashboardController extends ReportFilterHelpers {
 	  $title_date = new DashboardCHAI();
 	  $title_date = $title_date->fetchTitleDate();
 
-	  $this->view->assign('title_date',  $title_method[commodity_name].', '. $title_date[month_name].', '. $title_date[year]);
+	  //TA:17:17 format consumption name
+	  $consumption_name = $title_method[commodity_name];
+	  if($title_method[commodity_name] === "IUCD inserted"){
+	  	 $consumption_name = "IUCD inserted";
+	  }else{
+	  	$consumption_name = strtolower($title_method[commodity_name]);
+	  }
+	  $this->view->assign('title_date',  $consumption_name .', '. $title_date[month_name].' '. $title_date[year]);
 	  
 	  $cln_data = new DashboardCHAI();
 	  $amc_data = new DashboardCHAI();
