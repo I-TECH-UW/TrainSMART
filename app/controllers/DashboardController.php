@@ -1910,7 +1910,200 @@ public function dash996allAction() {
 	
 	} // dash14Action
 		
+	public function dash15Action() {
+	    require_once('models/table/Dashboard-CHAI.php');
+	    $larc_data = new DashboardCHAI();
+	    $fp_data = new DashboardCHAI();
 	
+	    require_once('models/table/Dashboard-CHAI.php');
+	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
+	
+	    $id = $this->getSanParam ( 'id' );
+	
+	    $whereClause = ($id ==  "") ? 'tier = 1' : 'parent_id = ' . $id ;
+	
+	    $geo_data = new DashboardCHAI();
+	    $details = $geo_data->fetchConsumptionDetails('geo', $id, $whereClause);
+	    $this->view->assign('geo_data',$details);
+	
+	    // geo selection includes "--choose--" or no selection
+	    if( ( isset($_POST["region_c_id"] ) && $_POST["region_c_id"][0] == "" ) ||
+	        ( isset($_POST["district_id"] ) && $_POST["district_id"][0] == "" ) ||
+	        ( isset($_POST["province_id"] ) && $_POST["province_id"][0] == "" ) ||
+	        (!isset($_POST["region_c_id"] ) && !isset($_POST["district_id"] ) && !isset($_POST["province_id"] ) ) ){
+	        //get national numbers from refresh
+	        $larc_details = $larc_data->fetchDashboardData('national_percent_facilities_trained_providing_larc');
+	        $fp_details = $fp_data->fetchDashboardData('national_percent_facilities_trained_providing_fp');
+	    }
+	
+	    if (count($larc_details) > 0 && count($fp_details) > 0 ) { //got all
+	
+	        $this->view->assign('larc_data', $larc_details);
+	        $this->view->assign('fp_data', $fp_details);
+	
+	    } else {
+	
+	        $where = ' 1=1 ';
+	
+	        if( isset($_POST["region_c_id"]) ){ // CHAINigeria LGA
+	            $where = $where.' and f.location_id in (';
+	            foreach ($_POST['region_c_id'] as $i => $value){
+	                $geo = explode('_',$value);
+	                $where = $where.$geo[2].', ';
+	            }
+	            $where = $where.') ';
+	            $group = new Zend_Db_Expr('L1_location_name, CNO_external_id');
+	            $useName = 'L1_location_name';
+	
+	        } else if( isset($_POST['district_id']) ){ // CHAINigeria state
+	            $where = $where.' and l2.id in (';
+	            foreach ($_POST['district_id'] as $i => $value){
+	                $geo = explode('_',$value);
+	                $where = $where.$geo[1].', ';
+	            }
+	            $where = $where.') ';
+	            $group = new Zend_Db_Expr('L2_location_name, CNO_external_id');
+	            $useName = 'L2_location_name';
+	
+	        } else if( isset($_POST['province_id']) ){ //province_id is a Trainsmart internal name, represents hightest CHAINigeria level = GPZ
+	            $where = $where.' and l2.parent_id in (';
+	            foreach ($_POST['province_id'] as $i => $value){
+	                $geo = explode('_',$value);
+	                $where = $where.$geo[0].', ';
+	            }
+	            $where = $where.') ';
+	            $group = new Zend_Db_Expr('L3_location_name, CNO_external_id');
+	            $useName = 'L3_location_name';
+	        } else { // no geo selection
+	            $group = 'CNO_external_id';
+	            $useName = 'L3_location_name';
+	            $location = 'National';
+	        }
+	
+	        $geoWhere = str_replace(', )', ')', $where);
+	 /*       
+	        $trainingWhere = ' t.training_title_option_id = 1 ';
+	        $cnoWhere = " cno.external_id in ('DiXDJRmPwfh') and c.consumption <> 0 ";
+	        $larc_details = $larc_data->fetchPercentFacHWTrainedStockOutDetails($trainingWhere, $cnoWhere, $geoWhere, $group, $useName);
+	        $this->view->assign('larc_data',$larc_details);
+	*/
+	        $trainingWhere =  ' t.training_title_option_id = 2 ';
+	        $cnoWhere = " cno.external_id in ('ibHR9NQ0bKL') and c.consumption <> 0 ";
+	        $fp_details = $fp_data->fetchPercentFacHWTrainedStockOutDetails($trainingWhere, $cnoWhere, $geoWhere, $group, $useName);
+	        $this->view->assign('fp_data',$fp_details);
+	
+	         
+	        //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	        //var_dump('$trainingWhere=', $trainingWhere);
+	        //var_dump('$geoWhere=', $geoWhere);
+	        //var_dump('$group=', $group);
+	        //var_dump('$useName=', $useName);
+	        //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	
+	
+	    } //else
+	
+	    $this->viewAssignEscaped ('locations', Location::getAll() );
+	
+	
+	} //dashAction15
+	
+	public function dash16Action() {
+	    require_once('models/table/Dashboard-CHAI.php');
+	    $larc_data = new DashboardCHAI();
+	    $fp_data = new DashboardCHAI();
+	
+	    require_once('models/table/Dashboard-CHAI.php');
+	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
+	
+	    $id = $this->getSanParam ( 'id' );
+	
+	    $whereClause = ($id ==  "") ? 'tier = 1' : 'parent_id = ' . $id ;
+	
+	    $geo_data = new DashboardCHAI();
+	    $details = $geo_data->fetchConsumptionDetails('geo', $id, $whereClause);
+	    $this->view->assign('geo_data',$details);
+	
+	    // geo selection includes "--choose--" or no selection
+	    if( ( isset($_POST["region_c_id"] ) && $_POST["region_c_id"][0] == "" ) ||
+	        ( isset($_POST["district_id"] ) && $_POST["district_id"][0] == "" ) ||
+	        ( isset($_POST["province_id"] ) && $_POST["province_id"][0] == "" ) ||
+	        (!isset($_POST["region_c_id"] ) && !isset($_POST["district_id"] ) && !isset($_POST["province_id"] ) ) ){
+	        //get national numbers from refresh
+	        $larc_details = $larc_data->fetchDashboardData('national_percent_facilities_trained_providing_stockout_larc');
+	        $fp_details = $fp_data->fetchDashboardData('national_percent_facilities_trained_providing_stockout_fp');
+	    }
+	
+	    if (count($larc_details) > 0 && count($fp_details) > 0 ) { //got all
+	
+	        $this->view->assign('larc_data', $larc_details);
+	        $this->view->assign('fp_data', $fp_details);
+	
+	    } else {
+	
+	        $where = ' 1=1 ';
+	
+	        if( isset($_POST["region_c_id"]) ){ // CHAINigeria LGA
+	            $where = $where.' and f.location_id in (';
+	            foreach ($_POST['region_c_id'] as $i => $value){
+	                $geo = explode('_',$value);
+	                $where = $where.$geo[2].', ';
+	            }
+	            $where = $where.') ';
+	            $group = new Zend_Db_Expr('L1_location_name, CNO_external_id');
+	            $useName = 'L1_location_name';
+	
+	        } else if( isset($_POST['district_id']) ){ // CHAINigeria state
+	            $where = $where.' and l2.id in (';
+	            foreach ($_POST['district_id'] as $i => $value){
+	                $geo = explode('_',$value);
+	                $where = $where.$geo[1].', ';
+	            }
+	            $where = $where.') ';
+	            $group = new Zend_Db_Expr('L2_location_name, CNO_external_id');
+	            $useName = 'L2_location_name';
+	
+	        } else if( isset($_POST['province_id']) ){ //province_id is a Trainsmart internal name, represents hightest CHAINigeria level = GPZ
+	            $where = $where.' and l2.parent_id in (';
+	            foreach ($_POST['province_id'] as $i => $value){
+	                $geo = explode('_',$value);
+	                $where = $where.$geo[0].', ';
+	            }
+	            $where = $where.') ';
+	            $group = new Zend_Db_Expr('L3_location_name, CNO_external_id');
+	            $useName = 'L3_location_name';
+	        } else { // no geo selection
+	            $group = 'CNO_external_id';
+	            $useName = 'L3_location_name';
+	            $location = 'National';
+	        }
+	
+	        $geoWhere = str_replace(', )', ')', $where);
+	        
+	        $cnoStockOutWhere =  " cno.external_id in ('DiXDJRmPwfh') and c.stock_out = 'Y' and c.date = (select max(date) from commodity) ";
+	        $cnoConsumptionWhere = " cno.external_id in ('DiXDJRmPwfh') and c.consumption > 0 and c.date between date_sub(now(), interval 182 day) and now() ";
+	         $larc_details = $larc_data->fetchPercentFacHWProvidingStockOutDetails($cnoConsumptionWhere, $cnoStockOutWhere, $geoWhere, $group, $useName);
+	         $this->view->assign('larc_data',$larc_details);
+	        
+	        $cnoStockOutWhere =  " cno.external_id in ('ibHR9NQ0bKL') and c.stock_out = 'Y' and c.date = (select max(date) from commodity) ";
+	        $cnoConsumptionWhere = " cno.external_id in ('ibHR9NQ0bKL') and c.consumption > 0 and c.date between date_sub(now(), interval 182 day) and now() ";
+	        $fp_details = $fp_data->fetchPercentFacHWProvidingStockOutDetails($cnoConsumptionWhere, $cnoStockOutWhere, $geoWhere, $group, $useName);
+	        $this->view->assign('fp_data',$fp_details);
+	
+	        //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	        //var_dump('$trainingWhere=', $trainingWhere);
+	        //var_dump('$geoWhere=', $geoWhere);
+	        //var_dump('$group=', $group);
+	        //var_dump('$useName=', $useName);
+	        //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	
+	
+	    } //else
+	
+	    $this->viewAssignEscaped ('locations', Location::getAll() );
+	
+	
+	} //dashAction16
 	
 	public function reportsAction() {
 		

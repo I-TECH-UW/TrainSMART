@@ -661,6 +661,250 @@ order by date;
 		
 		    return $output;
 		}
+		
+		public function fetchPercentFacHWProvidingStockOutDetails($cnoConsumptionWhere = null, $cnoStockOutWhere = null, $geoWhere = null, $group = null, $useName = null ) {
+		    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+		    $numer = array();
+		    
+		    // provided last 6 months in stock_out
+		    
+		    $stock_out_sql = $db->select()
+		    ->from(array('c' => 'commodity'),
+		        array("frr.facility_external_id as fei" ))
+		        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
+		        ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')
+		        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
+		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+		        ->where($cnoStockOutWhere)  // s.b.  cno.external_id in ('ibHR9NQ0bKL') and c.stock_out = 'Y' and c.date = (select max(date) from commodity)
+ 		        ->where($geoWhere);
+
+		    $sql = $stock_out_sql->__toString();
+		    $sql = str_replace('`frr`.`facility_external_id` AS `fei`,','`frr`.`facility_external_id` AS `fei`', $sql);
+		    $sql = str_replace('`frr`.*,', '', $sql);
+		    $sql = str_replace('`cno`.*,', '', $sql);
+		    $sql = str_replace('`cto`.*,', '', $sql);
+		    $sql = str_replace('`f`.*,', '', $sql);
+		    $sql = str_replace('`frr`.*,', '', $sql);
+		    $sql = str_replace('`l1`.*,', '', $sql);
+		    $sql = str_replace('`l2`.*,', '', $sql);
+		    $sql = str_replace('`l3`.*', '', $sql);
+		    
+		    $six_month_sql = $db->select()
+		    ->from(array('c' => 'commodity'),
+		        array(
+		            'l1.location_name as L1_location_name', 
+		            'l2.location_name as L2_location_name', 
+		            'l3.location_name as L3_location_name', 
+ 		            'frr.facility_external_id as fei' ))
+		        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
+		        ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')
+		        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
+		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+		        ->where($cnoConsumptionWhere) // s.b. cno.external_id in ('ibHR9NQ0bKL') and c.consumption > 0 and c.date between date_sub(now(), interval 182 day) and now()
+		        ->where(" f.external_id in ( $sql ) " )
+		        // ->where($geoWhere)
+		        ->group(array( $useName ));
+		    
+		    $sql = $six_month_sql->__toString();
+		    $sql = str_replace('`frr`.`facility_external_id` AS `fei`,','`frr`.`facility_external_id` AS `fei`', $sql);
+		    $sql = str_replace('`frr`.*,', '', $sql);
+		    $sql = str_replace('`cno`.*,', '', $sql);
+		    $sql = str_replace('`cto`.*,', '', $sql);
+		    $sql = str_replace('`f`.*,', '', $sql);
+		    $sql = str_replace('`frr`.*,', '', $sql);
+		    $sql = str_replace('`l1`.*,', '', $sql);
+		    $sql = str_replace('`l2`.*,', '', $sql);
+		    $sql = str_replace('`l3`.*', '', $sql);
+		    
+		   $final_count_select = 'select L1_location_name, L2_location_name, L3_location_name, count(distinct(fei)) as cnt from ( ' . 
+		  		   $sql . ')t group by ' . $useName;
+		    
+		    $result = $db->fetchAll($final_count_select);
+		
+		    foreach ($result as $row){
+		        $numer[] = array(
+		            "location" => $row[$useName],
+		            "cnt" => $row['cnt'],
+		            "color" => 'blue',
+		        );
+		    }
+		    
+		    $select = $db->select()
+		    ->from(array('c' => 'commodity'),
+		        array(
+		            'l1.location_name as L1_location_name',
+		            'l2.location_name as L2_location_name',
+		            'l3.location_name as L3_location_name',
+		            'count(distinct(c.facility_id)) as cnt' ))
+		        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
+		        ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')
+		        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+		        ->where($cnoConsumptionWhere)
+		        ->where($geoWhere)
+		        ->group(array( $useName ));
+		
+		    $result = $db->fetchAll($select);
+		
+		    foreach ($result as $row){
+		        $denom[] = array(
+		            "location" => $row[$useName],
+		            "cnt" => $row['cnt'],
+		            "color" => 'blue',
+		        );
+		    }
+		     
+		    foreach($denom as $i => $row){
+		         
+		        $output[] = array('location' => $row['location'], 'percent' => $numer[$i]['cnt']/ $row['cnt'], 'color' => $row['color']);
+		
+		    }
+		    
+		    file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI fetchPercentFacHWProvidingStockOutDetails  >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		    var_dump('$numer= ', $numer, 'END');
+		    var_dump('$denom= ', $denom, 'END');
+		    var_dump('$output= ', $output, 'END');
+		    //var_dump('$ouput= ', $output, 'END');
+		    $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+		
+		    return $output;
+		}
+		
+		public function fetchPercentFacHWTrainedStockOutDetails($trainingWhere = null, $cnoWhere = null, $geoWhere = null, $group = null, $useName = null ) {
+		    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+		    $trained = array();
+		    
+		    $select = $db->select()
+		    ->from(array('pt' => 'person_to_training'),
+		        array( "count(*) as cnt" ))
+		        ->joinLeft(array('p' => "person"), 'pt.person_id = p.id')
+		        ->joinLeft(array('f' => "facility"), 'p.facility_id = f.id')
+		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+		        ->joinLeft(array("t" => "training"), 'pt.training_id = t.id')
+		        ->joinInner(array('tto' => training_title_option), 't.training_title_option_id = tto.id')
+		        ->where($trainingWhere);
+		     
+		    $result = $db->fetchAll($select);
+		    
+		    foreach ($result as $row){
+		        $trained[] = array(
+		            "location" => 'National',
+		            "cnt" => $row['cnt'],
+		            "color" => 'black',
+		        );
+		    }
+		    
+		    $select = $db->select()
+		    ->from(array('pt' => 'person_to_training'),
+		        array( 'l1.location_name as L1_location_name',
+		            'l2.location_name as L2_location_name',
+		            'l3.location_name as L3_location_name', 'count(*) as cnt' ))
+		            ->joinLeft(array('p' => "person"), 'pt.person_id = p.id')
+		            ->joinLeft(array('f' => "facility"), 'p.facility_id = f.id')
+		            ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+		            ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+		            ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+		            ->joinLeft(array("t" => "training"), 'pt.training_id = t.id')
+		            ->joinInner(array('tto' => training_title_option), 't.training_title_option_id = tto.id')
+		            ->where($geoWhere)
+		            ->where($trainingWhere)
+		            ->group(array($useName))
+		            ->order(array($useName));
+		    
+		    $result = $db->fetchAll($select);
+		
+		    foreach ($result as $row){
+		        $color = 'blue' ;
+		    
+		        $trained[] = array(
+		            "location" => $row[$useName],
+		            "cnt" => $row['cnt'],
+		            "color" => $color,
+		        );
+		    }
+		    
+		    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 243 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		    //var_dump($output,"END");
+		    //var_dump('id=', $id);
+		    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+		    
+		    $providing = array();
+		    
+		    $select = $db->select()
+		    ->from(array('c' => 'commodity'),
+		        array("count(distinct(c.facility_id)) as cnt" ))
+		        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
+		        ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')
+		        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+		        ->where($cnoWhere);
+		    
+		    $result = $db->fetchAll($select);
+		    
+		    foreach ($result as $row){
+		        $providing[] = array(
+		            "location" => 'National',
+		            "cnt" => $row['cnt'],
+		            "color" => 'black',
+		        );
+		    }
+		    
+		    $select = $db->select()
+		    ->from(array('c' => 'commodity'),
+		        array(
+		            'l1.location_name as L1_location_name',
+		            'l2.location_name as L2_location_name',
+		            'l3.location_name as L3_location_name', 'count(distinct(c.facility_id)) as cnt' ))
+		            ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
+		            ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')
+		            ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+		            ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+		            ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+		            ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+		            ->where($geoWhere)
+		            ->where($cnoWhere)
+		            ->group(array( $useName ))
+		            ->order(array( $useName ));
+		     
+		    $result = $db->fetchAll($select);
+		     
+		    foreach ($result as $row){
+		        $color = 'blue' ;
+		         
+		        $providing[] = array(
+		            "location" => $row[$useName],
+		            "cnt" => $row['cnt'],
+		            "color" => $color,
+		        );
+		    }
+		     
+		    foreach($providing as $i => $row){
+		         
+		        $output[] = array('location' => $row['location'], 'percent' => $trained[$i]['cnt']/ $row['cnt'], 'color' => $row['color']);
+		    
+		    }
+
+			    
+			    		file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI fetchPercentFacHWTrainedProvidingDetails  >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+			    		var_dump('$trained= ', $trained, 'END');
+			    		var_dump('$stockout= ', $stockout, 'END');
+			    		//var_dump('$ouput= ', $output, 'END');
+			    		$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);	    
+				    
+				    return $output;
+				}
 
 		public function fetchPercentFacHWTrainedProvidingDetails($trainingWhere = null, $cnoWhere = null, $geoWhere = null, $group = null, $useName = null ) {
 		    $db = Zend_Db_Table_Abstract::getDefaultAdapter();

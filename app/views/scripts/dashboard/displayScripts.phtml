@@ -53,14 +53,7 @@ $(document).ready(function(){
 	    updateDisplay();
 	   });
 
-  $("#geography").click(function(){
-      if (getCookie("p3") == "hidden") {
-  	      setCookie("p3", "show", 30);
-  	    } else {
-  	      setCookie("p3", "hidden", 30);
-  	    }
-    updateDisplay();
-   });
+  
 
 
 
@@ -69,7 +62,7 @@ function updateDisplay() {
 	var p0status = getCookie("p0");
 	var p1status = getCookie("p1");
 	var p2status = getCookie("p2");
-	var p3status = getCookie("p3");
+
 
 	<!-- alert("> " + p0status + p1status + p2status); -->
 
@@ -88,11 +81,7 @@ function updateDisplay() {
       } else {
         $("p2").hide();
       }
-	if (p3status == "show") {
-        $("p3").show();
-      } else {
-        $("p3").hide();
-      }
+
     
 
 }

@@ -87,7 +87,7 @@ print ScriptContainer::$instance->renderJSHead();
 			<!-------   /////////////////////////// make top buttons ////////////////////// -->
 
 			<div class="rightdiv" style="float: right;">
-				<?php require_once('views/scripts/dashboard/top_buttons.phtml');?>
+				<?php //require_once('views/scripts/dashboard/top_buttons.phtml');?>
 			</div>
 			<div class="hrNav"></div>
 
@@ -116,7 +116,7 @@ print ScriptContainer::$instance->renderJSHead();
 								<div id="homebanner" class="rounded">
 								<div class="sliderdiv">
 								    <div class="hrNav"></div>
-									<div id="chart13_div" style="width: 1000px; height: 800px;"></div>
+									<div id="chart11_div" style="width: 1000px; height: 800px;"></div>
 									</div>
 									<div class="main-search">
 									    <div class="hrNav"></div>
@@ -135,7 +135,7 @@ print ScriptContainer::$instance->renderJSHead();
 								<div id="homebanner" class="rounded">
 								<div class="sliderdiv">
 					                <div class="hrNav"></div>
-									<div id="chart11_div" style="width: 1000px; height: 800px;"></div>
+									<div id="chart13_div" style="width: 1000px; height: 800px;"></div>
 									</div>
 									<div class="main-search">
 									    <div class="hrNav"></div>									
@@ -168,9 +168,9 @@ print ScriptContainer::$instance->renderJSHead();
   function apiLoaded() {
 	  document.getElementById("allCharts").style.marginLeft="130px";
 
-	//drawChart11();
+	drawChart11();
 	//drawChart12();
-	drawChart13();
+	//drawChart13();
 	//drawChart14();
 		
 	var currentLevel;
@@ -189,36 +189,33 @@ print ScriptContainer::$instance->renderJSHead();
 
 
   function drawChart11() {
-	  // Create and populate the data table.
-	  var chart11Data = google.visualization.arrayToDataTable([
-
-['', ''],
-
+	  
+      var chart11Data = google.visualization.arrayToDataTable([
+['Month', 'Condoms distributed (sachet) - female', 'Condoms distributed (sachet) - male', 'Family Planning Injections', 'Implant', 'IUCD inserted', 'Oral pill cycle (packets)', 'Sterilization Total'],
 
 <?php
-  		foreach ($this->total_consumption as $row){
+  		foreach ($this->average_monthly_consumption_by_geo as $row){
   	?>
-  	[<?php echo  " '$row[location]',$row[consumption] "; ?>],
+  	[<?php echo  " '$row[month]',$row[consumption1],$row[consumption2],$row[consumption3],$row[consumption4],$row[consumption5],$row[consumption6],$row[consumption7] "; ?>],
   	<?php
   		}
   	?>
 
 ]);		    
 
-	  <?php echo  " var title_date = 'Monthly consumption of $title->method $this->title_date ' " ?>;
-	  
-	  var chart11Options = {
-			  
-			  title: title_date,
-			  titleTextStyle: { fontSize: 16 },
-		      is3D:true,
-		      legend: 'none',
-		      
-		};
+	  <?php echo  " var title_date = 'Commodity Consumption $title->method $this->title_date ' " ?>;
 
-	  var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
-	  chart11.draw(chart11Data, chart11Options);
-	}
+      var chart11Options = {
+        title: title_date,
+        titleTextStyle: { fontSize: 16 },
+        
+       
+      };
+
+      var chart11 = new google.visualization.LineChart(document.getElementById('chart11_div'));
+
+      chart11.draw(chart11Data, chart11Options);
+    }
 
   function drawChart12() {
       var chart12Data = google.visualization.arrayToDataTable([
