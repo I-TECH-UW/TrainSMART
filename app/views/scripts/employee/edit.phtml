@@ -387,7 +387,13 @@
 
 
                 <script>
-                    var calculateMechanismTable = function(data) {
+					/**
+					 * calculate values for mechanism table hours and cost based on mechanism percentages
+					 * and employee funded hours and annual cost
+					 * Sets page global variable window.ITECH.totalPercent to use for validating added mechanisms
+					 * @returns {boolean}
+					 */
+                    var calculateMechanismTable = function() {
                         var hours = parseInt($('#funded_hours_per_week').val());
                         var cost = parseInt($('#annual_cost').val());
 
@@ -398,58 +404,66 @@
                         // calculate from existing table cells, this is called when hours or cost change
                         // so all hours and cost need to be re-calculated
 
-                        var rows = $("#employee_mechanism_table > tbody > tr");
-                        var len = rows.length;
+                        var $rows = $("#employee_mechanism_table > tbody > tr");
+                        var len = $rows.length;
                         var percentAccumulate = 0;
                         for (var i=0; i<len; i++) {
-                            var pcent = parseInt($(rows[i]).children().first().next().text());
-                            var node = $(rows[i]).children().first().next();
-                            var pcent = parseInt(node.text());
-                            if (!isNaN(pcent) && (!node.hasClass('toDeleteMechanism')))
+                            var pcent = parseInt($($rows[i]).children().first().next().text());
+                            var $node = $($rows[i]).children().first().next();
+                            var pcent = parseInt($node.text());
+                            if (!isNaN(pcent) && (!$node.hasClass('toDeleteMechanism')))
                             {
                                 percentAccumulate += pcent;
-                                node = node.next();
-                                node.text(((pcent/100.0) * hours).toFixed(1));
-                                node = node.next();
-                                node.text(((pcent/100.0) * cost).toFixed(2));
+                                $node = $node.next();
+                                $node.text(((pcent/100.0) * hours).toFixed(1));
+                                $node = $node.next();
+                                $node.text(((pcent/100.0) * cost).toFixed(2));
                             }
                         }
 
                         // update the footer with totals
-                        var footerChildren = $("#employee_mechanism_table > tfoot > tr:first-child").children();
+                        var $footerChildren = $("#employee_mechanism_table > tfoot > tr:first-child").children();
                         var fpercent = percentAccumulate / 100.0;
-                        var totalPercent = footerChildren.first().next();
-                        totalPercent.text(percentAccumulate);
-                        var totalHours = totalPercent.next();
-                        totalHours.text((fpercent * hours).toFixed(1));
-                        var totalCost = totalHours.next();
-                        totalCost.text((fpercent * cost).toFixed(2));
+                        var $totalPercent = $footerChildren.first().next();
+                        $totalPercent.text(percentAccumulate);
+                        var $totalHours = $totalPercent.next();
+                        $totalHours.text((fpercent * hours).toFixed(1));
+                        var $totalCost = $totalHours.next();
+                        $totalCost.text((fpercent * cost).toFixed(2));
                         if (percentAccumulate > 100) {
                             $("#mechanismTableFooterPercent").attr('class', "totalMechanismPercentageNo");
                         }
                         else {
                             $("#mechanismTableFooterPercent").attr('class', "totalMechanismPercentageYes");
                         }
-                    }
+						window.ITECH.totalPercent = percentAccumulate;
 
+					};
+
+
+					/**
+					 * handles the action when the delete checkbox is pressed
+					 * @param element - the checkbox element clicked on by the user
+					 * @returns {boolean}
+					 */
                     function deleteToggle(element) {
                         // get jQuery version of the element
-                        var el = $(element);
-                        var siblings = el.parent().siblings('td');
+                        var $element = $(element);
+                        var $siblings = $element.parent().siblings('td');
                         var idList = $("#disassociateMechanisms").data("ids");
 
                         // get the mechanism association id in the tr element
-                        var id = el.parent().parent().attr("id");
+                        var id = $element.parent().parent().attr("id");
 
-                        var mechID = el.parent().siblings().first().data('mechID');
+                        var mechID = $element.parent().siblings().first().data('mechID');
                         if ((typeof mechID === 'undefined') && (typeof id != 'undefined')) {
-                            mechID = window.mechData['employee_association_ids'][id];
+                            mechID = window.ITECH.mechData['employee_association_ids'][id];
                         }
 
                         if (element.checked) {
                             if (typeof id != 'undefined') {
                                 idList.push(id);
-                                siblings.addClass('toDeleteMechanism');
+                                $siblings.addClass('toDeleteMechanism');
                             }
                             else {
                                 // since there's no tr id,
@@ -458,33 +472,37 @@
                                 var mechIndex = $.inArray(mechID, $("#associateMechanisms").data('ids'));
                                 $("#associateMechanisms").data('ids').splice(mechIndex, 1);
                                 $("#mechanismPercentages").data('percents').splice(mechIndex, 1);
-                                $('#employee_mechanism_table').dataTable().fnDeleteRow(el.parent().parent()[0]);
+                                $('#employee_mechanism_table').dataTable().fnDeleteRow($element.parent().parent()[0]);
                             }
-                            window.mechData['employee_mechanism_ids'].splice($.inArray(mechID, window.mechData['employee_mechanism_ids']), 1);
+                            window.ITECH.mechData['employee_mechanism_ids'].splice($.inArray(mechID, window.ITECH.mechData['employee_mechanism_ids']), 1);
 
                         }
                         else {
                             if (typeof id != 'undefined') {
                                 //siblings.css({"text-decoration" : "", "color" : "", "font-style" : ""});
-                                siblings.removeClass('toDeleteMechanism');
+                                $siblings.removeClass('toDeleteMechanism');
                                 // use jQuery's inArray because IE <9 doesn't support indexOf in arrays
                                 idList.splice($.inArray(id, idList), 1);
-                                el.parent().parent().removeData('toDelete');
+                                $element.parent().parent().removeData('toDelete');
                             }
-                            window.mechData['employee_mechanism_ids'].push(mechID);
+                            window.ITECH.mechData['employee_mechanism_ids'].push(mechID);
                         }
                         calculateMechanismTable();
                         availableMechanisms();
 
                         return true;
                     }
-                    function addMechanism() {
-                        var tbody = $("#employee_mechanism_table_body");
-                        $(".dataTables_empty").remove();
-                        var percentTag = $("#percentage");
-                        var percent = percentTag.val();
 
-                        if (isNaN(percent) || (percent < 1) || (percent > 100)) {
+					/**
+					 * add new mechanism and percentage to mechanism table
+					 * @returns {boolean}
+					 */
+                    function addMechanism() {
+                        $(".dataTables_empty").remove();
+                        var $percentBox = $("#percentage");
+                        var percent = parseInt($percentBox.val());
+
+                        if (isNaN(percent) || (percent < 1) || (percent + window.ITECH.totalPercent > 100)) {
                             alert("Invalid value for percentage");
                             return false;
                         }
@@ -493,8 +511,8 @@
                         }
 
                         var fpercent = percent / 100.0;
-                        var selectedMechanism = $("#new_mechanism option:selected");
-                        var mechID = selectedMechanism.val();
+                        var $selectedMechanism = $("#new_mechanism option:selected");
+                        var mechID = $selectedMechanism.val();
 
                         var hours = parseInt($('#funded_hours_per_week').val());
                         var cost = parseInt($('#annual_cost').val());
@@ -503,23 +521,27 @@
                             return false;
                         }
 
-                        var oTable = $('#employee_mechanism_table').dataTable();
-                        var newRowIDs = oTable.fnAddData([selectedMechanism.text(), percent,
+                        var $oTable = $('#employee_mechanism_table').dataTable();
+                        var newRowIDs = $oTable.fnAddData([$selectedMechanism.text(), percent,
                             (fpercent * hours).toFixed(1), (fpercent * cost).toFixed(2), '<input type="checkbox" onclick="deleteToggle(this);"/>']);
-                        var newRow = $(oTable.fnSettings().aoData[newRowIDs[0]].nTr);
+                        var newRow = $($oTable.fnSettings().aoData[newRowIDs[0]].nTr);
                         newRow.addClass('newMechanism');
                         newRow.children().first().data("mechID", mechID);
 
                         $("#associateMechanisms").data("ids").push(mechID);
                         $("#mechanismPercentages").data("percents").push(percent);
-                        window.mechData['employee_mechanism_ids'].push(mechID);
+                        window.ITECH.mechData['employee_mechanism_ids'].push(mechID);
 
-                        percentTag.val("");
+						$percentBox.val("");
                         calculateMechanismTable();
                         availableMechanisms();
 
                         return true;
                     }
+					/**
+					 * prepare stored data from mechanism table changes for submission to backend
+					 * @returns {boolean}
+					 */
                     function processMechanismAssociations() {
                         $("#associateMechanisms").val($("#associateMechanisms").data("ids").join(','));
                         $("#mechanismPercentages").val($("#mechanismPercentages").data("percents").join(','));
@@ -554,7 +576,8 @@
 			<div class="clear"></div>
             <script type="application/javascript">
                 $(document).ready(function() {
-                    window.mechData = JSON.parse($("#mechanismData").html());
+                    window.ITECH.mechData = JSON.parse($("#mechanismData").html());
+					window.ITECH.totalPercent = 0;
                     $('#select_partner').on('change', availableMechanisms);
                     availableMechanisms();
                     calculateMechanismTable();
@@ -569,7 +592,7 @@
                 var availableMechanisms = function() {
                     var optList = '<option value="">--choose--</option>';
                     var partnerID = $('#select_partner').val();
-                    var mechData = window.mechData;
+                    var mechData = window.ITECH.mechData;
                     var numMechs = mechData['available'].length;
                     var mech;
                     for (var i = 0; i < numMechs; i++) {
