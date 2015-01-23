@@ -410,6 +410,8 @@ function updateFacilities($hierarchy, $db_facility_info, $names, $db, $date, $db
 		// remove 'Local Government Area' from LGA names
 		/*or do this: UPDATE location SET location_name = REPLACE(location_name, 'Local Government Area', '') where tier=3 and location_name like '%Local Government Area';*/
 		$lga_name = trim(str_replace("Local Government Area","",$lga_name));
+		// remove ' from names for LGA like "Jama'are"
+		$lga_name = trim(str_replace("'","",$lga_name));
 		if($DEBUG_MODE)
 			print "\nProcessing facility " . $count . ": " . $facility_name . "/" . $state_name . "/" . $lga_name . " (" . $facility_external_id . "=>" . $location_path .")\n";
 		$facility_name = trim($facility_name);		
