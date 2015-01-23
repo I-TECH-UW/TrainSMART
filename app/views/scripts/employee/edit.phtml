@@ -494,7 +494,7 @@
                     }
 
 					/**
-					 * add new mechanism and percentage to mechanism table
+					 * add new mechanism and percentage to mechanism table and store data for saving on form submission
 					 * @returns {boolean}
 					 */
                     function addMechanism() {
@@ -502,10 +502,14 @@
                         var $percentBox = $("#percentage");
                         var percent = parseInt($percentBox.val());
 
-                        if (isNaN(percent) || (percent < 1) || (percent + window.ITECH.totalPercent > 100)) {
+                        if (isNaN(percent) || (percent < 1)) {
                             alert("Invalid value for percentage");
                             return false;
                         }
+						if ((percent + window.ITECH.totalPercent) > 100) {
+							alert("Total percentage must be 100 or less.");
+							return false;
+						}
                         if ($("#new_mechanism").val() === "") {
                             return false;
                         }
