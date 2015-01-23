@@ -1759,8 +1759,8 @@ public function dash996allAction() {
 	        ( isset($_POST["province_id"] ) && $_POST["province_id"][0] == "" ) ||
 	        (!isset($_POST["region_c_id"] ) && !isset($_POST["district_id"] ) && !isset($_POST["province_id"] ) ) ){
 	        //get national numbers from refresh
-	        $larc_details = $larc_data->fetchDashboardData('national_percent_facilities_trained_providing_larc');
-	        $fp_details = $fp_data->fetchDashboardData('national_percent_facilities_trained_providing_fp');
+	        $larc_details = $larc_data->fetchDashboardData('PercentFacHWTrainedProvidingLarc');
+	        $fp_details = $fp_data->fetchDashboardData('PercentFacHWTrainedProvidingFP');
 	    }
 	     
 	    if (count($larc_details) > 0 && count($fp_details) > 0 ) { //got all
@@ -1819,6 +1819,10 @@ public function dash996allAction() {
 	        $fp_details = $fp_data->fetchPercentFacHWTrainedProvidingDetails($trainingWhere, $cnoWhere, $geoWhere, $group, $useName);
 	        $this->view->assign('fp_data',$fp_details);
 	
+	        if ($location == 'National') {
+	            $larc_details = $larc_data->insertDashboardData($larc_details, 'PercentFacHWTrainedProvidingLarc');
+	            $fp_details = $fp_data->insertDashboardData($fp_details, 'PercentFacHWTrainedProvidingFP');
+	        }
 	        
 	        //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	        //var_dump('$trainingWhere=', $trainingWhere);
@@ -1947,8 +1951,8 @@ public function dash996allAction() {
 	        ( isset($_POST["province_id"] ) && $_POST["province_id"][0] == "" ) ||
 	        (!isset($_POST["region_c_id"] ) && !isset($_POST["district_id"] ) && !isset($_POST["province_id"] ) ) ){
 	        //get national numbers from refresh
-	        $larc_details = $larc_data->fetchDashboardData('national_percent_facilities_trained_providing_larc');
-	        $fp_details = $fp_data->fetchDashboardData('national_percent_facilities_trained_providing_fp');
+	        $larc_details = $larc_data->fetchDashboardData('PercentFacHWTrainedStockOutLarc');
+	        $fp_details = $fp_data->fetchDashboardData('PercentFacHWTrainedStockOutFP');
 	    }
 	
 	    if (count($larc_details) > 0 && count($fp_details) > 0 ) { //got all
@@ -1996,18 +2000,23 @@ public function dash996allAction() {
 	        }
 	
 	        $geoWhere = str_replace(', )', ')', $where);
-	 /*       
-	        $trainingWhere = ' t.training_title_option_id = 1 ';
-	        $cnoWhere = " cno.external_id in ('DiXDJRmPwfh') and c.consumption <> 0 ";
-	        $larc_details = $larc_data->fetchPercentFacHWTrainedStockOutDetails($trainingWhere, $cnoWhere, $geoWhere, $group, $useName);
-	        $this->view->assign('larc_data',$larc_details);
-	*/
-	        $trainingWhere =  ' t.training_title_option_id = 2 ';
-	        $cnoWhere = " cno.external_id in ('ibHR9NQ0bKL') and c.consumption <> 0 ";
-	        $fp_details = $fp_data->fetchPercentFacHWTrainedStockOutDetails($trainingWhere, $cnoWhere, $geoWhere, $group, $useName);
+	        $cnoStockOutWhere =  " cno.external_id in ('DiXDJRmPwfh') and c.stock_out = 'Y' and c.date = (select max(date) from commodity) ";
+	        $trainingWhere = " t.training_title_option_id = 1 ";
+	        $sixMonthWhere = " cno.external_id in ('w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') "; 
+	         $larc_details = $larc_data->fetchPercentFacHWTrainedStockOutDetails($trainingWhere, $cnoStockOutWhere, $sixMonthWhere, $geoWhere, $group, $useName);
+	         $this->view->assign('larc_data',$larc_details);
+	        
+	        $cnoStockOutWhere =  " cno.external_id in ('JyiR2cQ6DZT') and c.date = (select max(date) from commodity) ";
+	        $trainingWhere = " t.training_title_option_id = 2 ";
+	        $sixMonthWhere = " cno.external_id = 'DiXDJRmPwfh' ";
+	        $fp_details = $fp_data->fetchPercentFacHWTrainedStockOutDetails($trainingWhere, $cnoStockOutWhere, $sixMonthWhere, $geoWhere, $group, $useName);
 	        $this->view->assign('fp_data',$fp_details);
-	
-	         
+	        
+	        if ($location == 'National') {
+	            $larc_details = $larc_data->insertDashboardData($larc_details, 'PercentFacHWTrainedStockOutLarc'); 
+	            $fp_details = $fp_data->insertDashboardData($fp_details, 'PercentFacHWTrainedStockOutFP');
+	        }
+	        
 	        //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	        //var_dump('$trainingWhere=', $trainingWhere);
 	        //var_dump('$geoWhere=', $geoWhere);
@@ -2045,8 +2054,8 @@ public function dash996allAction() {
 	        ( isset($_POST["province_id"] ) && $_POST["province_id"][0] == "" ) ||
 	        (!isset($_POST["region_c_id"] ) && !isset($_POST["district_id"] ) && !isset($_POST["province_id"] ) ) ){
 	        //get national numbers from refresh
-	        $larc_details = $larc_data->fetchDashboardData('national_percent_facilities_trained_providing_stockout_larc');
-	        $fp_details = $fp_data->fetchDashboardData('national_percent_facilities_trained_providing_stockout_fp');
+	        $larc_details = $larc_data->fetchDashboardData('PercentFacHWProvidingStockOutLarc');
+	        $fp_details = $fp_data->fetchDashboardData('PercentFacHWProvidingStockOutFP');
 	    }
 	
 	    if (count($larc_details) > 0 && count($fp_details) > 0 ) { //got all
@@ -2104,6 +2113,11 @@ public function dash996allAction() {
 	        $cnoConsumptionWhere = " cno.external_id in ('ibHR9NQ0bKL') and c.consumption > 0 and c.date between date_sub(now(), interval 182 day) and now() ";
 	        $fp_details = $fp_data->fetchPercentFacHWProvidingStockOutDetails($cnoConsumptionWhere, $cnoStockOutWhere, $geoWhere, $group, $useName);
 	        $this->view->assign('fp_data',$fp_details);
+	        
+	        if ($location == 'National') {
+	            $larc_details = $larc_data->insertDashboardData($larc_details, 'PercentFacHWProvidingStockOutLarc');
+	            $fp_details = $fp_data->insertDashboardData($fp_details, 'PercentFacHWProvidingStockOutFP');
+	        }
 	
 	        //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	        //var_dump('$trainingWhere=', $trainingWhere);
