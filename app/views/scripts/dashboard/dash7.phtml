@@ -198,31 +198,28 @@ print ScriptContainer::$instance->renderJSHead();
   }
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
-  
+
+  //TA:17:17 Coverage Fac Trained Fp chart
   function drawChart11() {
 	  // Create and populate the data table.
 	  var chart11Data = google.visualization.arrayToDataTable([
-
-
-['State', 'Percentage', { role: 'style' }],
+			['State', 'Percentage', { role: 'style' }],
 
 <?php
-	foreach ($this->larc_data as $row){
+	foreach ($this->fp_data as $row){
 ?>
-['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>,'<?php echo $row[color]; ?>'],
+['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo round($row[percentage],2)*100; ?>,'<?php echo $row[color]; ?>'],
 <?php
 	}
 ?>
-
 ]);		                                                     	  
-
+	  <?php echo  " var title_data = 'Percent of facilities with an FP trained HW as of $this->date ' " ?>;
 	  var chart11Options = {
-		      title: 'Percent of Facilities with HW trained in FP',
+		      title: title_data,
 		      titleTextStyle: { fontSize: 15 },
-		      
-		      hAxis: {title: 'Percentage'},
-		      hAxis: {format: '##.##%'},
-		      vAxis: {format:'##.##%'},
+		      vAxis: {format: '#\'%\''},
+		      legend: {position: 'none'},
+		      chartArea: {height: '50%', top: 55},
 		      is3D:true
 		};
 
@@ -233,7 +230,8 @@ print ScriptContainer::$instance->renderJSHead();
 	}
 
  <!-------   /////////////////////////// script 1,2 ////////////////////// -->
-  
+
+//TA:17:17 Coverage Fac Trained LARC chart
  function drawChart12() {
 	  // Create and populate the data table.
 	  var chart12Data = google.visualization.arrayToDataTable([
@@ -241,22 +239,21 @@ print ScriptContainer::$instance->renderJSHead();
 ['State', 'Percentage', { role: 'style' }],
 	                                                           
 <?php
-		foreach ($this->fp_data as $row){
+		foreach ($this->larc_data as $row){
 	?>
-	['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo $row[percentage]; ?>, <?php echo "'$row[color]'"; ?>],
+	['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo round($row[percentage],2)*100; ?>, <?php echo "'$row[color]'"; ?>],
 	<?php
 		}
 	?>
 
 ]);
-
+	  <?php echo  " var title_data = 'Percent of facilities with a LARC trained HW as of $this->date ' " ?>;
 	  var chart12Options = {
-		      title: 'Percent of Facilities with HW trained in LARC',
+		      title: title_data,
 		      titleTextStyle: { fontSize: 15 },
-		      
-		      hAxis: {title: 'Percentage'},
-		      hAxis: {format: '##.##%'},
-		      vAxis: {format:'##.##%'},
+		      vAxis: {format: '#\'%\''},
+		      legend: {position: 'none'},
+		      chartArea: {height: '50%', top: 55},
 		      is3D:true
 		};
 

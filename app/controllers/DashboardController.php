@@ -228,7 +228,14 @@ class DashboardController extends ReportFilterHelpers {
 	  $title_date = new DashboardCHAI();
 	  $title_date = $title_date->fetchTitleDate();
 
-	  $this->view->assign('title_date',  $title_method[commodity_name].', '. $title_date[month_name].', '. $title_date[year]);
+	  //TA:17:17 format consumption name
+	  $consumption_name = $title_method[commodity_name];
+	  if($title_method[commodity_name] === "IUCD inserted"){
+	  	 $consumption_name = "IUCD inserted";
+	  }else{
+	  	$consumption_name = strtolower($title_method[commodity_name]);
+	  }
+	  $this->view->assign('title_date',  $consumption_name .', '. $title_date[month_name].' '. $title_date[year]);
 	  
 	  $cln_data = new DashboardCHAI();
 	  $amc_data = new DashboardCHAI();
@@ -1030,7 +1037,6 @@ public function dash996allAction() {
 	    
 	        $this->view->assign('larc_data', $larc_details);
 	        $this->view->assign('fp_data', $fp_details);
-	         
 	    } else {
 	    
 	        $where = ' 1=1 ';
@@ -1088,7 +1094,10 @@ public function dash996allAction() {
 	    $this->view->assign('fp_data',$fp_details);
 	    
 	    } //else
-	    
+	    	
+
+	    $this->view->assign('date', date('F Y')); //TA:17:17
+	    	
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	
 
@@ -1183,6 +1192,7 @@ public function dash996allAction() {
 	         
 	    } //else
 	     
+	    $this->view->assign('date', date('F Y')); //TA:17:17
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	    
 	}
@@ -1473,9 +1483,10 @@ public function dash996allAction() {
 	            $total_consumption[] = array('location' => $locationNames, 'consumption' => $total );
 	        }
 	        
-	        $cs_data = new DashboardCHAI();
+	        //TA:17:17 Coverage Summary chart
+	        $csum_data = new DashboardCHAI();
 	        // specify date by "2014-12-01" or leave empty to get data for the last month
-	        $cs_details = $cs_data->fetchCSDetails(null);
+	        $cs_details = $csum_data->fetchCSDetails(null);
 	        $this->view->assign('cs_fp_facility_count', round($cs_details['fp_facility_count']/$cs_details['total_facility_count_month'], 2));
 	        $this->view->assign('cs_larc_facility_count', round($cs_details['larc_facility_count']/$cs_details['total_facility_count_month'], 2));
 	        $this->view->assign('cs_fp_consumption_facility_count', round($cs_details['fp_consumption_facility_count']/$cs_details['total_facility_count'], 2));
@@ -1483,6 +1494,7 @@ public function dash996allAction() {
 	        $this->view->assign('cs_larc_stock_out_facility_count', round($cs_details['larc_stock_out_facility_count']/$cs_details['total_facility_count'], 2));
 	        $this->view->assign('cs_fp_stock_out_facility_count', round($cs_details['fp_stock_out_facility_count']/$cs_details['total_facility_count'], 2));
 	        $this->view->assign('cs_date', date_format(date_create($cs_details['last_date']), 'F Y'));
+	        ///
 	        
 	        file_put_contents('c:\wamp\logs\php_debug.log', 'dash9bAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	        var_dump('$cs_details= ', $cs_details, 'END');
@@ -1687,8 +1699,9 @@ public function dash996allAction() {
 	    $pftp_details = $pftp_data->fetchPFTPDetails( $where );
 	     
 	    // pivot
+	    //TA:17:17 add year to the result
 	    foreach ($pftp_details as $i => $row){
-	        $national_larc_coverage[] = array('month' => $pftp_details[$i]['month'], 'tp_percent' => $pftp_details[$i]['tp_percent'], 'larc_percent' => $pfp_details[$i]['larc_percent'], 'tt_percent' => $pftp_details[$i]['tt_percent']);
+	        $national_larc_coverage[] = array('month' => $pftp_details[$i]['month'], 'year' => $pftp_details[$i]['year'], 'tp_percent' => $pftp_details[$i]['tp_percent'], 'larc_percent' => $pfp_details[$i]['larc_percent'], 'tt_percent' => $pftp_details[$i]['tt_percent']);
 	    }
 	     
 	    $where = " 1=1 and cno.external_id in ( 'ibHR9NQ0bKL')";
@@ -1698,8 +1711,9 @@ public function dash996allAction() {
 	    $pftp_details = $pftp_data->fetchPFTPDetails( $where );
 	
 	    // pivot
+	    //TA:17:17 add year to the result
 	    foreach ($pftp_details as $i => $row){
-	        $national_fp_coverage[] = array('month' => $pftp_details[$i]['month'], 'tp_percent' => $pftp_details[$i]['tp_percent'], 'fp_percent' => $pfp_details[$i]['fp_percent'], 'tt_percent' => $pftp_details[$i]['tt_percent']);
+	        $national_fp_coverage[] = array('month' => $pftp_details[$i]['month'], 'year' => $pftp_details[$i]['year'], 'tp_percent' => $pftp_details[$i]['tp_percent'], 'fp_percent' => $pfp_details[$i]['fp_percent'], 'tt_percent' => $pftp_details[$i]['tt_percent']);
 	    }
 	
 	     
@@ -1816,6 +1830,7 @@ public function dash996allAction() {
 	
 	    } //else
 	
+	    $this->view->assign('date', date('F Y')); //TA:17:17
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	     
 	     

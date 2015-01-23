@@ -249,6 +249,7 @@ print ScriptContainer::$instance->renderJSHead();
       chart12.draw(chart12Data, chart12Options);
     }
 
+  
   function drawChart13() {
 	  
       var chart13Data = google.visualization.arrayToDataTable([
@@ -269,8 +270,7 @@ print ScriptContainer::$instance->renderJSHead();
       var chart13Options = {
         title: title_date,
         titleTextStyle: { fontSize: 16 },
-        
-       
+        vAxis: {logScale:true},  //TA:17:17 Commodity Consumption All chart
       };
 
       var chart13 = new google.visualization.LineChart(document.getElementById('chart13_div'));
