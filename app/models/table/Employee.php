@@ -22,7 +22,7 @@ class Employee extends ITechTable {
     public static function disassociateMechanismsFromEmployee($employee_id, $association_ids)
 	{
 	    if ((!$association_ids) || (!$employee_id) ||
-            (!preg_match('/^\d+[,\d+]+$/', $association_ids))) {
+            (!preg_match('/^\d+[,\d+]*$/', $association_ids))) {
             return false;
         }
 	    
@@ -47,8 +47,8 @@ class Employee extends ITechTable {
 	public static function saveMechanismAssociations ( $employee_id, $mechanism_ids, $mechanism_percentages)
 	{
 	    if ((!$mechanism_ids) || (!$employee_id) ||
-            (!preg_match('/^\d+[,\d+]+$/', $mechanism_ids)) ||
-            (!preg_match('/^\d+[,\d+]+$/', $mechanism_percentages))) {
+            (!preg_match('/^\d+[,\d+]*$/', $mechanism_ids)) ||
+            (!preg_match('/^\d+[,\d+]*$/', $mechanism_percentages))) {
             return false;
         }
 
