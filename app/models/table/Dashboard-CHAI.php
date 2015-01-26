@@ -1575,30 +1575,34 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
 		 left join training on training.id = person_to_training.training_id
 		 where training.training_title_option_id=1 and training.training_end_date like '2014%';
 		 */
-		public function fetchTPDetails($yaer, $year_amount) {
+		public function fetchTPDetails($year, $year_amount) {
 		    $db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 		    $output = array ();
-		     
+		
 		    for($i = $year_amount; $i > 0; $i--) {
 		        $data = array ();
-		
+				
 		        $select = $db->select ()->from ( array ('person_to_training' => 'person_to_training' ), array ('count(person_to_training.person_id) as count' ) )
 		        ->joinLeft ( array ('training' => "training" ), 'training.id = person_to_training.training_id' )
-		        ->where ( 'training.training_title_option_id=1' )->where ( "training.training_end_date like '" . $yaer . "%'" );
+		        ->where ( 'training.training_title_option_id=1' )->where ( "training.training_end_date like '" . $year . "%'" );
 		        $result = $db->fetchAll ( $select );
 		        $data ['tp_larc'] = $result [0] ['count'];
 		
 		        $select = $db->select ()->from ( array ('person_to_training' => 'person_to_training' ), array ('count(person_to_training.person_id) as count' ) )
 		        ->joinLeft ( array ('training' => "training" ), 'training.id = person_to_training.training_id' )
-		        ->where ( 'training.training_title_option_id=2' )->where ( "training.training_end_date like '" . $yaer . "%'" );
+		        ->where ( 'training.training_title_option_id=2' )->where ( "training.training_end_date like '" . $year . "%'" );
 		        $result = $db->fetchAll ( $select );
 		        $data ['tp_fp'] = $result [0] ['count'];
 		
-		        $output [$yaer] = $data;
-		
-		        $yaer --;
+		        $output [$year] = $data;
+		        $year --;
 		    }
 		    ksort($output);
+		    //accamulate data: add previous years to the current year
+		    foreach ($output as $i => $value){
+		    	$output[$i]['tp_larc'] = $output[$i]['tp_larc'] + $output[$i-1]['tp_larc'];
+		    	$output[$i]['tp_fp'] = $output[$i]['tp_fp'] + $output[$i-1]['tp_fp'];
+		    }
 		    return $output;
 		}
 		

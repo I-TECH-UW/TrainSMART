@@ -196,14 +196,15 @@ drawChart();
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
 
+  //TA:17:17: Coverage HW Trained chart
   function drawChart() {
 
       var chartData = google.visualization.arrayToDataTable([
 
-        [' ', 'Total FP Trained', 'Total LARC Trained'],
+        [' ', 'Total FP Trained', 'Total LARC Trained', '2015 Target # HWs to be Trained in LARC'],
         <?php
                      foreach($this->tp_data as $key=> $value) {
-               echo "['" . $key . "', " . $value['tp_fp'] . ", " . $value['tp_larc'] . "],";
+               echo "['" . $key . "', " . $value['tp_fp'] . ", " . $value['tp_larc'] . ",5500],";
                      }
         ?>                                        
       ]);
@@ -213,7 +214,10 @@ drawChart();
       var chartOptions = {
                 title: title_data,
                 titleTextStyle: { fontSize: 16 },
-                vAxis: {format: '#'},            
+                vAxis: {format: '#'}, 
+                seriesType: "bars",
+                series: {2: {type: "line", color: 'red'}},
+                chartArea: {width: '50%', left: 80},//new          
       };
 
      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
