@@ -1096,7 +1096,7 @@ public function dash996allAction() {
 	    } //else
 	    	
 
-	    $this->view->assign('date', date('F Y')); //TA:17:17
+	    $this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
 	    	
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	
@@ -1192,7 +1192,7 @@ public function dash996allAction() {
 	         
 	    } //else
 	     
-	    $this->view->assign('date', date('F Y')); //TA:17:17
+	    $this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	    
 	}
@@ -1834,7 +1834,7 @@ public function dash996allAction() {
 	
 	    } //else
 	
-	    $this->view->assign('date', date('F Y')); //TA:17:17
+	    $this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	     
 	     

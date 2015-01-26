@@ -232,7 +232,7 @@ function drawChart11() {
 //TA:17:18  01/21/2015 Coverage Summary chart
   function drawChart12() {
       var chart12Data = google.visualization.arrayToDataTable([
-        [' ', '% of facilities with trained HWs', '% of facilities with\nHWs trained in FP or\nLARC that are\nproviding FP or LARC', '% of facilities with\nHWs trained in FP or\nLARC that are stocked\nout of FP or implantsout of\n(FP/LARC)'],
+        [' ', '% of facilities with trained HWs', '% of facilities with\nHWs trained in FP or\nLARC that are\nproviding FP or LARC', '% of facilities with\nHWs trained in FP or\nLARC that are stocked\nout of FP or implants'],
         [ 'FP', <?php echo $this->cs_fp_facility_count*100?> , <?php echo $this->cs_fp_consumption_facility_count*100?>,<?php echo $this->cs_fp_stock_out_facility_count*100?> ],
         [ 'LARC', <?php echo $this->cs_larc_facility_count*100?>,<?php echo $this->cs_larc_consumption_facility_count*100?>,<?php echo $this->cs_larc_stock_out_facility_count*100?> ],	        
       ]);

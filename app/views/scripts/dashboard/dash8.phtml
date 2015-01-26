@@ -187,7 +187,7 @@ print ScriptContainer::$instance->renderJSHead();
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
 
-//TA:17:17 Coverage Fac Providing FP chart
+//TA:17:18 Coverage Fac Providing FP chart
   function drawChart11() {
 	  // Create and populate the data table.
 	  var chart11Data = google.visualization.arrayToDataTable([
@@ -205,7 +205,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 ]);		                                                     	  
 
-	  <?php echo  " var title_data = 'Percent of Facilities Providing FP as of $this->date ' " ?>;
+	  <?php echo  " var title_data = 'Percent of facilities providing FP, $this->date ' " ?>;
 	  var chart11Options = {
 		      title: title_data,
 		      titleTextStyle: { fontSize: 15 },
@@ -216,12 +216,11 @@ print ScriptContainer::$instance->renderJSHead();
 		};
 
 
-	  var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
-	            
+	  var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));	            
 	  chart11.draw(chart11Data, chart11Options);
 	}
 
-//TA:17:17 Coverage Fac Providing LARC chart
+//TA:17:18 Coverage Fac Providing LARC chart
  function drawChart12() {
 	  var chart12Data = google.visualization.arrayToDataTable([
 
@@ -237,7 +236,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 ]);
 
-	  <?php echo  " var title_data = 'Percent of Facilities Providing LARC as of $this->date ' " ?>;
+	  <?php echo  " var title_data = 'Percent of facilities providing LARC, $this->date ' " ?>;
 	  var chart12Options = {
 			  title: title_data,
 		      titleTextStyle: { fontSize: 15 },
@@ -248,8 +247,7 @@ print ScriptContainer::$instance->renderJSHead();
 		};
 
 
-	  var chart12 = new google.visualization.ColumnChart(document.getElementById('chart12_div'));
-	            
+	  var chart12 = new google.visualization.ColumnChart(document.getElementById('chart12_div'));	            
 	  chart12.draw(chart12Data, chart12Options);
 	}
 
