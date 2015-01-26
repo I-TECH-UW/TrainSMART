@@ -1072,7 +1072,7 @@ public function dash996allAction() {
 	            $useName = 'L3_location_name';
 	        } else { // no geo selection
 	            $group = 'CNO_external_id';
-	            $useName = 'L1_location_name';
+	            $useName = 'L3_location_name';
 	            $location = 'National';
 	        }
 	        
@@ -1169,7 +1169,7 @@ public function dash996allAction() {
 	            $useName = 'L3_location_name';
 	        } else { // no geo selection
 	            $group = 'CNO_external_id';
-	            $useName = 'L1_location_name';
+	            $useName = 'L3_location_name';
 	            $location = 'National';
 	        }
 	         

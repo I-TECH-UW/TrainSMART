@@ -1282,7 +1282,7 @@ order by t.training_end_date desc
                 $denom = $denom + $prow['added'];
             }
         }
-        $tmp[] = array($nrow['C_date'], $nrow['numer'], $denom);
+        $tmp[] = array($nrow['C_date'], $nrow['numer'], $denom, $prow['added'], $facilities_reporting );
         
         $date = strtotime($nrow['C_date']);
         $monthName = date('F', $date);
@@ -1293,16 +1293,16 @@ order by t.training_end_date desc
     }
    
     
-    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI PFTP >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+    file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI PFTP >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
     //var_dump('$numer= ', $numer,"END");
     //var_dump('$tmp= ', $tmp,"END");
     //var_dump('$facilities_reporting= ', $facilities_reporting,"END");
     //var_dump('$output= ', $output,"END");
     //var_dump('$new_rows= ', $new_rows,"END");
-    //var_dump('$prev_year= ', $prev_year,"END");
+    var_dump('$prev_year= ', $prev_year,"END");
     //var_dump('$start_denom_total= ', $start_denom_total,"END");
     //var_dump('$month= ', $month,"END");
-    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
     
     return $output;
 }	
@@ -1394,7 +1394,8 @@ order by c.date, cno.external_id
     //var_dump('id=', $id);
     //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
     
-    return $output;
+    //return $output;
+    return array_reverse($output, true);
     
     
 }	
@@ -1483,7 +1484,8 @@ public function fetchPFSODetails($where = null) {
     //var_dump('id=', $id);
     //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
     
-    return $output;
+    //return $output;
+    return array_reverse($output, true);
     
 }	
 	
@@ -1719,8 +1721,9 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
                     foreach ($result as $row) {
                         $output[] = array(
                             "month" => $row['data0'],
-                            "fp_percent" => $row['data1'],
-                            "larc_percent" => $row['data2']
+                            "year" => $row['data1'],
+                            "fp_percent" => $row['data2'],
+                            "larc_percent" => $row['data3']
                         );
                     }
                     break;
@@ -1730,8 +1733,9 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
                     foreach ($result as $row) {
                         $output[] = array(
                             "month" => $row['data0'],
-                            "implant_percent" => $row['data1'],
-                            "seven_days_percent" => $row['data2']
+                            "year" => $row['data1'],
+                            "implant_percent" => $row['data2'],
+                            "seven_days_percent" => $row['data3']
                         );
                     }
                     break;
@@ -1954,8 +1958,9 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
 		                    'datetime'  => $dateTime,
 		                    'chart'  => $chart,
 		                    'data0'  => $row['month'],
-		                    'data1'  => $row['fp_percent'],
-		                    'data2'  => $row['larc_percent'],
+		                    'data1'  => $row['year'],
+		                    'data2'  => $row['fp_percent'],
+		                    'data3'  => $row['larc_percent'],
 		                );
 		        
 		                $insert_result = $dashboard_refresh->insert($data);
@@ -1968,8 +1973,9 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
 		                    'datetime'  => $dateTime,
 		                    'chart'  => $chart,
 		                    'data0'  => $row['month'],
-		                    'data1'  => $row['implant_percent'],
-		                    'data2'  => $row['seven_days_percent'],
+		                    'data1'  => $row['year'],
+		                    'data2'  => $row['implant_percent'],
+		                    'data3'  => $row['seven_days_percent'],
 		                );
 		            
 		                $insert_result = $dashboard_refresh->insert($data);
