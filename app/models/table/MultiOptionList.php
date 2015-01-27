@@ -28,15 +28,15 @@ class MultiOptionList extends ITechTable
 	}
 
 	/**
-	 * Returns an array of options and wether or not they are selected for this user.
+	 * Returns an array of options and whether or not they are selected for this user.
 	 * Used for rendering sets of checkboxes.
-     * @param $intersection_table
-     * @param $owner_col
-     * @param $owner_id
-     * @param $option_table
-     * @param bool $option_cols
+     * @param string $intersection_table - the table containing the link between option owner and linked options
+     * @param string $owner_col - the column name in $intersection_table that contains the owner id
+     * @param string $owner_id - the owner id to retrieve options for
+     * @param string $option_table - the table that contains options that could be linked with owner in this table
+     * @param bool $option_cols - the columns in $option_table to retrieve
      * @param bool $join_cols
-     * @param bool $remove_unknown
+     * @param bool $remove_unknown - whether to unset null variables in the returned dataset
      * @return array
      */
 	public static function choicesList($intersection_table, $owner_col, $owner_id, $option_table, $option_cols = false, $join_cols = false, $remove_unknown = true)
@@ -82,7 +82,17 @@ class MultiOptionList extends ITechTable
     	if(isset($cols[1])) {
             $select->order(($cols[1]).' ASC');
         }
+        $profiler = $optionsTable->getAdapter()->getProfiler();
+        $profiler->setEnabled(true);
+        #$optionsTable->getAdapter()->getProfiler()->setEnabled(true);
+
     	$rows = $optionsTable->fetchAll($select);
+        #$query = $optionsTable->getAdapter()->getProfiler()->getLastQueryProfile()->getQuery();
+        #$values = $optionsTable->getAdapter()->getProfiler()->getLastQueryProfile()->getQueryParams();
+        $query = $profiler->getLastQueryProfile()->getQuery();
+        $values = $profiler->getLastQueryProfile()->getQueryParams();
+
+        $profiler->setEnabled(false);
 
     	$rowArray = $rows->toArray();
         //	unset 'unknown'
@@ -135,15 +145,15 @@ class MultiOptionList extends ITechTable
     /**
     * Matches as posted set of multiple drop downs or checkboxes with an option list intersection table.
     * May update extra columns within link table
-    * 	 *
-    * @param unknown_type $linktable
-    * @param unknown_type $optionLookupTable
-    * @param unknown_type $owner_col
-    * @param unknown_type $owner_id
-    * @param unknown_type $option_col
-    * @param array $valuesFromPost contains the main column values
-    * @param array|string $extra_col additional columns to update
-    * @param array $extra_values array or array of arrays with values to update ; the indexes must match $valuesFromPost and $extra_col
+    *
+    * @param string $linktable - the table name that stores the link information
+    * @param string $optionLookupTable - the table name that has the options to be linked
+    * @param string $owner_col - column name in $linktable that contains the id to be linked
+    * @param string $owner_id - the id to be linked
+    * @param string $option_col - column name in link table that contains the id to be linked to the option
+    * @param array $valuesFromPost - contains the main column values
+    * @param array|string $extra_col - additional columns to update
+    * @param array $extra_values - array or array of arrays with values to update ; the indexes must match $valuesFromPost and $extra_col
     */
     public static function updateOptions($linktable, $optionLookupTable, $owner_col, $owner_id, $option_col, $valuesFromPost, $extra_col = '', $extra_values = array()) {
         if ( $valuesFromPost === null ) {
