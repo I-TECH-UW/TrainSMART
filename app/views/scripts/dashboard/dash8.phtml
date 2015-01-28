@@ -138,11 +138,10 @@ print ScriptContainer::$instance->renderJSHead();
 							<div id="homecontent-mid" class="row rounded">
 								<div id="homebanner" class="rounded">
 								<div class="sliderdiv">
-									<div id="chart13_div" style="width: 500px; height: 300px;"></div>
-									
+									<div id="chart13_div" style="width: 700px; height: 300px;"></div>
 									</div>
 									<div class="main-search">
-										<div id="chart14_div" style="width: 500px; height: 300px;"></div>
+										<div id="chart14_div" style="width: 700px; height: 300px;"></div>
 									</div>
 								</div>
 							</div>
@@ -172,7 +171,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 	drawChart11();
 	drawChart12();
-	//drawChart13();
+	drawChart13();
 		
 	var currentLevel;
 	currentLevel = <?php echo '\'' . $this->location_data[0][name] . '\''; ?>;
@@ -193,12 +192,12 @@ print ScriptContainer::$instance->renderJSHead();
 	  var chart11Data = google.visualization.arrayToDataTable([
 
 
-['State', 'Percentage', { role: 'style' }],
+['Location', 'Percent', { role: 'style' }],
 
 <?php
-	foreach ($this->larc_data as $row){
+	foreach ($this->fp_data as $row){
 ?>
-['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo round($row[percentage],2)*100; ?>,'<?php echo $row[color]; ?>'],
+['<?php echo str_replace("'",'', str_replace(' ', '', $row[location]))  ?>', <?php echo round($row[percent],2)*100; ?>,'<?php echo $row[color]; ?>'],
 <?php
 	}
 ?>
@@ -225,12 +224,12 @@ print ScriptContainer::$instance->renderJSHead();
  function drawChart12() {
 	  var chart12Data = google.visualization.arrayToDataTable([
 
-['State', 'Percentage', { role: 'style' }],
+['Location', 'Percent', { role: 'style' }],
 	                                                           
 <?php
-		foreach ($this->fp_data as $row){
+		foreach ($this->larc_data as $row){
 	?>
-	['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo round($row[percentage],2)*100; ?>, <?php echo "'$row[color]'"; ?>],
+	['<?php echo str_replace("'",'', str_replace(' ', '', $row[location]))  ?>', <?php echo round($row[percent],2)*100; ?>, <?php echo "'$row[color]'"; ?>],
 	<?php
 		}
 	?>
@@ -251,6 +250,39 @@ print ScriptContainer::$instance->renderJSHead();
 	  var chart12 = new google.visualization.ColumnChart(document.getElementById('chart12_div'));
 	            
 	  chart12.draw(chart12Data, chart12Options);
+	}
+
+ function drawChart13() {
+	  // Create and populate the data table.
+	  var chart13Data = google.visualization.arrayToDataTable([
+
+
+['Location', 'Percent', { role: 'style' }],
+
+<?php
+	foreach ($this->inject_data as $row){
+?>
+['<?php echo str_replace("'",'', str_replace(' ', '', $row[location]))  ?>', <?php echo round($row[percent],2)*100; ?>,'<?php echo $row[color]; ?>'],
+<?php
+	}
+?>
+
+]);		                                                     	  
+
+	  <?php echo  " var title_data = 'Percent of Facilities Providing Injectables as of $this->date ' " ?>;
+	  var chart13Options = {
+		      title: title_data,
+		      titleTextStyle: { fontSize: 15 },
+		      vAxis: {format: '#\'%\''},
+		      legend: 'none',
+		      chartArea: {height: '50%', top: 55},
+		      is3D:true
+		};
+
+
+	  var chart13 = new google.visualization.ColumnChart(document.getElementById('chart13_div'));
+	            
+	  chart13.draw(chart13Data, chart13Options);
 	}
 
 </script>

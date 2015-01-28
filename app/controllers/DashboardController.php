@@ -1107,6 +1107,7 @@ public function dash996allAction() {
 	    require_once('models/table/Dashboard-CHAI.php');
 	    $larc_data = new DashboardCHAI();
 	    $fp_data = new DashboardCHAI();
+	    $inject_data = new DashboardCHAI();
 	    
 	    require_once('models/table/Dashboard-CHAI.php');
 	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
@@ -1127,12 +1128,14 @@ public function dash996allAction() {
 	        //get national numbers from refresh
 	        $larc_details = $larc_data->fetchDashboardData('national_percent_facilities_providing_larc');
 	        $fp_details = $fp_data->fetchDashboardData('national_percent_facilities_providing_fp');
+	        $inject_details = $inject_data->fetchDashboardData('national_percent_facilities_providing_inject');
 	    }
 	    
-	    if (count($larc_details) > 0 && count($fp_details) > 0 ) { //got all
+	    if (count($larc_details) > 0 && count($fp_details) > 0 && count($inject_details) > 0) { //got all
 	         
 	        $this->view->assign('larc_data', $larc_details);
 	        $this->view->assign('fp_data', $fp_details);
+	        $this->view->assign('inject_data', $inject_details);
 	    
 	    } else {
 	         
@@ -1145,8 +1148,8 @@ public function dash996allAction() {
 	                $where = $where.$geo[2].', ';
 	            }
 	            $where = $where.') ';
-	            $group = new Zend_Db_Expr('L1_location_name, CNO_external_id');
-	            $useName = 'L1_location_name';
+	            $group = new Zend_Db_Expr('l1.id');
+	            $useName = 'l1.location_name';
 	    
 	        } else if( isset($_POST['district_id']) ){ // CHAINigeria state
 	            $where = $where.' and l2.id in (';
@@ -1155,8 +1158,8 @@ public function dash996allAction() {
 	                $where = $where.$geo[1].', ';
 	            }
 	            $where = $where.') ';
-	            $group = new Zend_Db_Expr('L2_location_name, CNO_external_id');
-	            $useName = 'L2_location_name';
+	            $group = new Zend_Db_Expr('l2.id');
+	            $useName = 'l2.location_name';
 	    
 	        } else if( isset($_POST['province_id']) ){ //province_id is a Trainsmart internal name, represents hightest CHAINigeria level = GPZ
 	            $where = $where.' and l2.parent_id in (';
@@ -1165,30 +1168,45 @@ public function dash996allAction() {
 	                $where = $where.$geo[0].', ';
 	            }
 	            $where = $where.') ';
-	            $group = new Zend_Db_Expr('L3_location_name, CNO_external_id');
-	            $useName = 'L3_location_name';
+	            $group = new Zend_Db_Expr('l3.id');
+	            $useName = 'l3.location_name';
 	        } else { // no geo selection
-	            $group = 'CNO_external_id';
-	            $useName = 'L3_location_name';
+	            $group = 'l3.id';
+	            $useName = 'l3.location_name';
 	            $location = 'National';
 	        }
 	         
 	        $geoWhere = str_replace(', )', ')', $where);
-	        $cnoWhere = " cno.external_id in ('DiXDJRmPwfh') and c.consumption <> 0 ";
+	        
+	        $dateWhere = 
+" c.date between (select min(date) from commodity where month(date) = (select month(max(date)) from commodity) and year(date) = (select year(max(date)) from commodity) )
+and (select max(date) from commodity where month(date) = (select month(max(date)) from commodity) and year(date) = (select year(max(date)) from commodity) ) ";
+	        
+	        //  larc   and ( cno.external_id in ('DiXDJRmPwfh', 'yJSLjbC9Gnr') and c.consumption > 0 ) -- Implant, IUCD inserted
+	        // 	all    and ( cno.external_id in ('w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') and c.consumption > 0 ) -- Any FP
+	        // 	inject and ( cno.external_id in ('ibHR9NQ0bKL') and c.consumption > 0 ) -- Family Planning Injections
 	         
-	        //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	        $cnoWhere = " cno.external_id in ('DiXDJRmPwfh', 'yJSLjbC9Gnr') and c.consumption > 0 ";
+	        $larc_details = $larc_data->fetchPercentProvidingDetails($cnoWhere, $geoWhere, $dateWhere, $group, $useName);
+	        $this->view->assign('larc_data',$larc_details);
+	         
+	        $cnoWhere = " cno.external_id in ('w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') and c.consumption > 0 ";
+	        $fp_details = $fp_data->fetchPercentProvidingDetails($cnoWhere, $geoWhere, $dateWhere, $group, $useName);
+	        $this->view->assign('fp_data',$fp_details);
+	        
+	        $cnoWhere = " cno.external_id in ('ibHR9NQ0bKL') and c.consumption > 0 ";
+	        $inject_details = $inject_data->fetchPercentProvidingDetails($cnoWhere, $geoWhere, $dateWhere, $group, $useName);
+	        $this->view->assign('inject_data',$inject_details);
+	        	    
+	        //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController dash8Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	        //var_dump('$cnoWhere=', $cnoWhere);
 	        //var_dump('$geoWhere=', $geoWhere);
 	        //var_dump('$group=', $group);
 	        //var_dump('$useName=', $useName);
+	        //var_dump('$fp_details=', $fp_details);
+	        //var_dump('$larc_details=', $larc_details);
+	        //var_dump('$inject_details=', $inject_details);
 	        //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
-	         
-	        $larc_details = $larc_data->fetchPercentProvidingDetails($cnoWhere, $geoWhere, $group, $useName);
-	        $this->view->assign('larc_data',$larc_details);
-	         
-	        $cnoWhere = " cno.external_id in ('ibHR9NQ0bKL') and c.consumption <> 0 ";
-	        $fp_details = $fp_data->fetchPercentProvidingDetails($cnoWhere, $geoWhere, $group, $useName);
-	        $this->view->assign('fp_data',$fp_details);
 	         
 	    } //else
 	     
@@ -1704,7 +1722,7 @@ public function dash996allAction() {
 	        $national_larc_coverage[] = array('month' => $pftp_details[$i]['month'], 'year' => $pftp_details[$i]['year'], 'tp_percent' => $pftp_details[$i]['tp_percent'], 'larc_percent' => $pfp_details[$i]['larc_percent'], 'tt_percent' => $pftp_details[$i]['tt_percent']);
 	    }
 	     
-	    $where = " 1=1 and cno.external_id in ( 'ibHR9NQ0bKL')";
+	    $where = " 1=1 and cno.external_id in ( 'w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw' )";
 	    $pfp_details = $pfp_data->fetchPFPDetails( $where );
 	
 	    $where = " 1=1 and t.training_title_option_id = 2 ";
@@ -1809,13 +1827,13 @@ public function dash996allAction() {
 	
 	        $geoWhere = str_replace(', )', ')', $where);
 	        $trainingWhere = ' t.training_title_option_id = 1 ';
-	        $cnoWhere = " cno.external_id in ('DiXDJRmPwfh') and c.consumption <> 0 ";
+	        $cnoWhere = " cno.external_id in ('DiXDJRmPwfh') and c.consumption > 0 ";
 	
 	        $larc_details = $larc_data->fetchPercentFacHWTrainedProvidingDetails($trainingWhere, $cnoWhere, $geoWhere, $group, $useName);
 	        $this->view->assign('larc_data',$larc_details);
 	
 	        $trainingWhere =  ' t.training_title_option_id = 2 ';
-	        $cnoWhere = " cno.external_id in ('ibHR9NQ0bKL') and c.consumption <> 0 ";
+	        $cnoWhere = " cno.external_id in ('w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') and c.consumption > 0 ";
 	        $fp_details = $fp_data->fetchPercentFacHWTrainedProvidingDetails($trainingWhere, $cnoWhere, $geoWhere, $group, $useName);
 	        $this->view->assign('fp_data',$fp_details);
 	

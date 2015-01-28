@@ -1293,16 +1293,16 @@ order by t.training_end_date desc
     }
    
     
-    file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI PFTP >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI PFTP >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
     //var_dump('$numer= ', $numer,"END");
     //var_dump('$tmp= ', $tmp,"END");
     //var_dump('$facilities_reporting= ', $facilities_reporting,"END");
     //var_dump('$output= ', $output,"END");
     //var_dump('$new_rows= ', $new_rows,"END");
-    var_dump('$prev_year= ', $prev_year,"END");
+    //var_dump('$prev_year= ', $prev_year,"END");
     //var_dump('$start_denom_total= ', $start_denom_total,"END");
     //var_dump('$month= ', $month,"END");
-    $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
     
     return $output;
 }	
@@ -1351,8 +1351,8 @@ order by c.date, cno.external_id
             'count(facility_id) / (select sum(cnt) from facilities_reporting_by_state_view) as percent'))
             ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
             ->where($where)
-            ->group(array('C_date', 'CNO_external_id'))
-            ->order(array('C_date') );
+            ->group(array('C_date'))
+            ->order(array('C_date'));
     
     $sql = $create_view->__toString();
     $sql = str_replace('`c`.*,', '', $sql);
@@ -1489,82 +1489,149 @@ public function fetchPFSODetails($where = null) {
     
 }	
 	
-public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null, $group = null, $useName = null) {
+public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null, $dateWhere = null, $group = null, $useName = null) {
     $db = Zend_Db_Table_Abstract::getDefaultAdapter();
     $output = array();
     
-    //$subSelect = new Zend_Db_Expr("(select count(*) from facility)");  // todo facility report rate
-    $subSelect = new Zend_Db_Expr("(select sum(cnt) from facilities_reporting_by_state_view)"); 
+    // national
+    $create_view = $db->select()
+    ->from(array('f' => 'facility'),
+        array(
+             "count(distinct(frr.facility_external_id)) as denom"))            
+            ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+            ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+            ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+            ->joinInner(array('frr' => "facility_report_rate"), 'f.external_id = frr.facility_external_id');
+        
+        $sql = $create_view->__toString();
+        $sql = str_replace('AS `denom`,', 'AS `denom`', $sql);
+        $sql = str_replace('`l1`.*,', '', $sql);
+        $sql = str_replace('`l2`.*,', '', $sql);
+        $sql = str_replace('`l3`.*,', '', $sql);
+        $sql = str_replace('`frr`.*', '', $sql);
+        
+        try{
+            $sql = 'create or replace view pfp_denom_view as ('.$sql.')';
+            $db->fetchOne($sql);
+        }
+        catch (Exception $e) { // normal operation throws "General Error"
+            //echo $e->getMessage();
+            //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+            //var_dump('ERROR= ', $e->getMessage(), "END");
+            //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+        }
+        
+        $subSelect = new Zend_Db_Expr("( select denom from pfp_denom_view )"); //corraelated
+        
+    	$select = $db->select()
+    	->from(array('c' => 'commodity'),
+    	   array(
+    	       "count(distinct(c.facility_id)) as numer",
+    	       "$subSelect  as denom"))
+    	       ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
+    	       ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+    	       ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+    	       ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+    	       ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+    	       ->where($dateWhere)
+    	       ->where($cnoWhere);
+    	
+    	$sql = $select->__toString();
+    	$sql = str_replace('AS `denom`,', 'AS `denom`', $sql);
+    	$sql = str_replace('`cno`.*,', '', $sql);
+    	$sql = str_replace('`f`.*,', '', $sql);
+    	$sql = str_replace('`l1`.*,', '', $sql);
+    	$sql = str_replace('`l2`.*,', '', $sql);
+    	$sql = str_replace('`l3`.*', '', $sql);
+    	
+    	$result = $db->fetchAll($sql);
+    	foreach ($result as $row){
+    	    $color = 'black' ;
+    	
+    	    $output[] = array(
+    	       "location" => 'National',
+    	       "percent" => $row['numer'] / $row['denom'],
+    	       "color" => $color,
+    	        );
+    	}
     
-    $select = $db->select()
-    ->from(array('c' => 'commodity'),
-        array("count(*) / $subSelect / 100 as percentage" ))
-         
-        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
-        ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')
-        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+    
+    // geo
+    $create_view = $db->select()
+    ->from(array('f' => 'facility'),
+        array(
+            "$group as Location_id", // s.b. l1.id, l2.id, or l3.id
+            "count(distinct(frr.facility_external_id)) as denom"))
         ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
         ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
         ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
-        ->where($cnoWhere);
+        ->joinInner(array('frr' => "facility_report_rate"), 'f.external_id = frr.facility_external_id')
+        ->where($geoWhere)
+        ->group(array( $group ));
     
-    $result = $db->fetchAll($select);
+    $sql = $create_view->__toString();
+    $sql = str_replace('AS `denom`,', 'AS `denom`', $sql);
+    $sql = str_replace('`l1`.*,', '', $sql);
+    $sql = str_replace('`l2`.*,', '', $sql);
+    $sql = str_replace('`l3`.*,', '', $sql);
+    $sql = str_replace('`frr`.*', '', $sql);
     
-    foreach ($result as $row){
-        $output[] = array(
-            "state" => 'National',
-            "percentage" => $row['percentage'],
-            "color" => 'black',
-        );
+    try{
+        $sql = 'create or replace view pfp_denom_view as ('.$sql.')';
+        $db->fetchOne($sql);
     }
-     
-    $subSelect = new Zend_Db_Expr("(select count(*) * 100 as cnt
-  from facility f
-  left join location l1 ON f.location_id = l1.id
-  left join location l2 ON l1.parent_id = l2.id
-  left join location l3 ON l2.parent_id = l3.id
-  inner join facility_report_rate frr on f.external_id = frr.facility_external_id 
-  where $geoWhere )");
+    catch (Exception $e) { // normal operation throws "General Error"
+        //echo $e->getMessage();
+        //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+        //var_dump('ERROR= ', $e->getMessage(), "END");
+        //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+    }
+    
+    $subSelect = new Zend_Db_Expr("( select denom from pfp_denom_view where $group = Location_id )"); //corraelated
+    
+	$select = $db->select()
+	->from(array('c' => 'commodity'),
+	   array(
+	       "$useName as Location_name", // s.b. l1.location_name, l2.lo....
+	       "count(distinct(c.facility_id)) as numer",
+	       "$subSelect  as denom"))
+	       ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
+	       ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+	       ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+	       ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+	       ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+	       ->where($geoWhere)
+	       ->where($dateWhere)
+	       ->where($cnoWhere)
+	       ->group(array( $group ));
 	
+	$sql = $select->__toString();
+	$sql = str_replace('AS `denom`,', 'AS `denom`', $sql);
+	$sql = str_replace('`cno`.*,', '', $sql);
+	$sql = str_replace('`f`.*,', '', $sql);
+	$sql = str_replace('`l1`.*,', '', $sql);
+	$sql = str_replace('`l2`.*,', '', $sql);
+	$sql = str_replace('`l3`.*', '', $sql);
 	
-	    $select = $db->select()
-	    ->from(array('c' => 'commodity'),
-	        array(
-	            'l1.location_name as L1_location_name',
-	            'l2.location_name as L2_location_name',
-	            'l3.location_name as L3_location_name',
-	            "count(*) / $subSelect as percentage" ))
-
-	            ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
-	            ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')
-	            ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
-	            ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
-	            ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
-	            ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
-	            ->where($geoWhere)
-	            ->where($cnoWhere)
-	            ->group(array( $useName ))
-	            ->order(array('percentage'));
+	$result = $db->fetchAll($sql);
+	foreach ($result as $row){
+	    $color = 'blue' ;
 	
-	                $result = $db->fetchAll($select);
+	    $output[] = array(
+	       "location" => $row['Location_name'],
+	       "percent" => $row['numer'] / $row['denom'],
+	       "color" => $color,
+	        );
+	}
 	
-	                foreach ($result as $row){
-	                    $color = 'blue' ;
+	//file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 243 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	//var_dump($output,"END");
+	//var_dump('id=', $id);
+	//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	
-	                    $output[] = array(
-	                       "state" => $row[$useName],
-	                       "percentage" => $row['percentage'],
-	                       "color" => $color,
-	                        );
-	                }
+	return $output;
 	
-			//file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 243 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-			//var_dump($output,"END");
-			//var_dump('id=', $id);
-			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-	
-			return $output;
-		}
+}	
 		
 		/*
 		 * TA:17:17: 01/15/2015
