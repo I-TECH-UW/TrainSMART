@@ -9,7 +9,6 @@
 
 #homecontent-mid {
 	background: url("images/bg-stage.png") repeat-y scroll right top #FFFFFF;
-	border: 1px solid #BDBCBD;
 	min-height: 100%;
 	outline: medium none;
 	top: -40px;
@@ -199,7 +198,7 @@ print ScriptContainer::$instance->renderJSHead();
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
 
-//TA:17:17 Coverage Fac HW Providing FP chart
+//TA:17:18 Coverage Fac HW Providing FP chart
   function drawChart11() {
 	  // Create and populate the data table.
 	  var chart11Data = google.visualization.arrayToDataTable([
@@ -215,7 +214,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 ]);		                                                     	  
 
-	 <?php echo  " var title_data = 'Percent of facilities with a trained HW providing FP as of $this->date ' " ?>;
+	 <?php echo  " var title_data = 'Percent of facilities with a trained HW providing FP, $this->date ' " ?>;
 	  var chart11Options = {
 			  title: title_data,
 		      titleTextStyle: { fontSize: 15 },
@@ -229,7 +228,7 @@ print ScriptContainer::$instance->renderJSHead();
 
  <!-------   /////////////////////////// script 1,2 ////////////////////// -->
 
-//TA:17:17 Coverage Fac HW Providing FP chart
+//TA:17:18 Coverage Fac HW Providing FP chart
  function drawChart12() {
 	  // Create and populate the data table.
 	  var chart12Data = google.visualization.arrayToDataTable([
@@ -246,7 +245,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 ]);
 
-	  <?php echo  " var title_data = 'Percent of facilities with a trained HW providing LARC as of $this->date ' " ?>;
+	  <?php echo  " var title_data = 'Percent of facilities with a trained HW providing LARC, $this->date ' " ?>;
 	  var chart12Options = {
 			  title: title_data,
 		      titleTextStyle: { fontSize: 15 },

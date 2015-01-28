@@ -9,7 +9,6 @@
 
 #homecontent-mid {
 	background: url("images/bg-stage.png") repeat-y scroll right top #FFFFFF;
-	border: 1px solid #BDBCBD;
 	min-height: 100%;
 	outline: medium none;
 	top: -40px;
@@ -119,14 +118,14 @@ print ScriptContainer::$instance->renderJSHead();
 				<div id="allCharts" class="container">
 				
 				<div align="right"><font size="4"><label><?php echo 'National Contraceptive Prevalence Rate 15% Target 36%'; ?></label></font></div>
-				<div class="hrNav"></div>
 				
+				<div class="hrNav"></div>
 				
 				    <div id="toprow" class="container">
 						<div id="homecontent" class="container">
 							<div id="homecontent-mid" class="row rounded">
 								<div id="homebanner" class="rounded">
-								<div class="sliderdiv">
+								<div class="sliderdiv"> 
 								    <div class="hrNav"></div>
 									<div id="chart11_div" style="width: 500px; height: 300px;"></div>
 									</div>
@@ -214,7 +213,7 @@ function drawChart11() {
 
 ]);		    
 
-	  <?php echo  " var title_date = 'Monthly Consumption by Method $this->title_date ' " ?>;
+	  <?php echo  " var title_date = 'Monthly Consumption by Method$this->title_date ' " ?>;
 	  
 	  var chart11Options = {
 			  
@@ -232,7 +231,7 @@ function drawChart11() {
 //TA:17:18  01/21/2015 Coverage Summary chart
   function drawChart12() {
       var chart12Data = google.visualization.arrayToDataTable([
-        [' ', '% of Facilities with trained HWs', '% of facilities with\n(FP/LARC) trained HWS providing\n(FP/LARC)', '% of facilities with trained HWs\n(FP/LARC) that are stocked out of\n(FP/LARC)'],
+        [' ', '% of facilities with trained HWs', '% of facilities with\nHWs trained in FP or\nLARC that are\nproviding FP or LARC', '% of facilities with\nHWs trained in FP or\nLARC that are stocked\nout of FP or implants'],
         [ 'FP', <?php echo $this->cs_fp_facility_count*100?> , <?php echo $this->cs_fp_consumption_facility_count*100?>,<?php echo $this->cs_fp_stock_out_facility_count*100?> ],
         [ 'LARC', <?php echo $this->cs_larc_facility_count*100?>,<?php echo $this->cs_larc_consumption_facility_count*100?>,<?php echo $this->cs_larc_stock_out_facility_count*100?> ],	        
       ]);

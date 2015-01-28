@@ -998,8 +998,8 @@ public function dash996allAction() {
 	    //Trained persons chart
 	    require_once('models/table/Dashboard-CHAI.php');
 	    $tp_data = new DashboardCHAI();
-	    $tp_details = $tp_data->fetchTPDetails(2015, 3);
-	    $this->view->assign('tp_date', date_format(date_create("2015-12-01"), 'F Y'));
+	    $tp_details = $tp_data->fetchTPDetails(date('Y'), 3);
+	    $this->view->assign('tp_date', date('F Y'));
 	    $this->view->assign('tp_data', $tp_details);
 	    
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
@@ -1096,7 +1096,7 @@ public function dash996allAction() {
 	    } //else
 	    	
 
-	    $this->view->assign('date', date('F Y')); //TA:17:17
+	    $this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
 	    	
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	
@@ -1210,7 +1210,7 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	         
 	    } //else
 	     
-	    $this->view->assign('date', date('F Y')); //TA:17:17
+	    $this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	    
 	}
@@ -1852,7 +1852,7 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	
 	    } //else
 	
-	    $this->view->assign('date', date('F Y')); //TA:17:17
+	    $this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	     
 	     
@@ -2044,7 +2044,7 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	
 	
 	    } //else
-	
+	    $this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	
 	
@@ -2146,7 +2146,7 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	
 	
 	    } //else
-	
+	    $this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	
 	

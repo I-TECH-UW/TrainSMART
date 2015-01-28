@@ -9,7 +9,6 @@
 
 #homecontent-mid {
 	background: url("images/bg-stage.png") repeat-y scroll right top #FFFFFF;
-	border: 1px solid #BDBCBD;
 	min-height: 100%;
 	outline: medium none;
 	top: -40px;
@@ -198,7 +197,7 @@ print ScriptContainer::$instance->renderJSHead();
   }
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
-  
+  //TA:17:18 Out of stock chart
   function drawChart11() {
 	  // Create and populate the data table.
 	  var chart11Data = google.visualization.arrayToDataTable([
@@ -214,15 +213,17 @@ print ScriptContainer::$instance->renderJSHead();
 	}
 ?>
 
-]);		                                                     	  
+]);		    
+	  <?php echo  " var title_data = 'Percent of facilities with an FP trained HW stocked out of any FP commodity, $this->date' " ?>;
 
 	  var chart11Options = {
-		      title: 'Percent of Facilities with an FP trained HW stocked out of any FP commodity',
+		      title: title_data,
 		      titleTextStyle: { fontSize: 15 },
 		      
 		      hAxis: {title: 'Percentage'},
 		      hAxis: {format: '##.##%'},
 		      vAxis: {format:'##.##%'},
+		      legend:{position: 'none'},
 		      is3D:true
 		};
 
@@ -233,7 +234,8 @@ print ScriptContainer::$instance->renderJSHead();
 	}
 
  <!-------   /////////////////////////// script 1,2 ////////////////////// -->
-  
+
+//TA:17:18 Out of stock chart
  function drawChart12() {
 	  // Create and populate the data table.
 	  var chart12Data = google.visualization.arrayToDataTable([
@@ -249,14 +251,16 @@ print ScriptContainer::$instance->renderJSHead();
 	?>
 
 ]);
-
+	  <?php echo  " var title_data = 'Percent of facilities with a LARC trained HW stocked out of implants, $this->date' " ?>;
+	  
 	  var chart12Options = {
-		      title: 'Percent of Facilities with a LARC trained HW stocked out of implants',
+		      title: title_data,
 		      titleTextStyle: { fontSize: 15 },
 		      
 		      hAxis: {title: 'Percentage'},
 		      hAxis: {format: '##.##%'},
 		      vAxis: {format:'##.##%'},
+		      legend:{position: 'none'},
 		      is3D:true
 		};
 
