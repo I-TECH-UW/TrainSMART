@@ -12,7 +12,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "chef/centos-5.11-i386"
+  config.vm.box = "chef/centos-5.11"
   config.vm.hostname = "php52-xdebug"
   
   # forward http
@@ -30,8 +30,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "file", source: "vagrant-bootstrap-files/data.sql", destination: "/home/vagrant/data.sql"
   config.vm.provision "file", source: "vagrant-bootstrap-files/grant-privileges.sql", destination: "/home/vagrant/grant-privileges.sql"
 
-  config.vm.provision "file", source: "vagrant-bootstrap-files/xdebug-debugger-i386.ini", destination: "/home/vagrant/php-debugger.ini"
-  config.vm.provision "file", source: "vagrant-bootstrap-files/xdebug-2.2.7-i386-php5.2.so", destination: "/home/vagrant/xdebug.so"
+  config.vm.provision "file", source: "vagrant-bootstrap-files/xdebug-debugger.ini", destination: "/home/vagrant/php-debugger.ini"
+  config.vm.provision "file", source: "vagrant-bootstrap-files/xdebug-php5.2.so", destination: "/home/vagrant/xdebug.so"
 
-  config.vm.provision :shell, path: "vagrant-bootstrap-files/bootstrap-php5.2-xdebug-i386-debugger.sh"
+  config.vm.provision :shell, path: "vagrant-bootstrap-files/bootstrap-php5.2-xdebug-debugger.sh"
 end
