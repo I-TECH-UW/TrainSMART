@@ -327,7 +327,7 @@ class TrainingController extends ReportFilterHelpers {
 			}
 
 			if ($status->hasError () && ! $row->is_deleted) {
-				$status->setStatusMessage ( t ( 'This' ).' '.t( 'Training' ).' '.t( 'session could not be saved.+++' ) );
+				$status->setStatusMessage ( t ( 'This' ).' '.t( 'Training' ).' '.t( 'session could not be saved.' ) );
 			} else {
 				$row = self::fillFromArray ( $row, $this->_getAllParams () );
 
@@ -1252,8 +1252,10 @@ class TrainingController extends ReportFilterHelpers {
 	*/
 	
 	public function importAction() {
+		$status = ValidationContainer::instance();
 		$errs = array();
 		$this->view->assign('pageTitle', t( 'Import a training' ));
+		$to_fix = "";
 		
 		// template redirect
 		if ( $this->getSanParam('download') )
@@ -1279,8 +1281,25 @@ class TrainingController extends ReportFilterHelpers {
 			
 			//get training info
 			$values['training_organizer_phrase'] = $rows[0][2];
-			$values['training_start_date'] = $rows[1][3];
-			$values['training_end_date'] = $rows[2][3];
+				
+			//TA:17:16:1 validate training dates
+			if(!trim($rows[2][3])){
+				$status->addError( 'end-day', t('Your changes have been not saved: End date is required.') );
+			}else{
+				list($de, $me, $ye) = array_pad(explode('/', $rows[2][3], 3), 3, 0);
+				$values['training_end_date'] = '20' . $ye . '-' . $me . '-' . $de;
+				$status->isValidDate ( $this, 'end-day', t ( 'Your changes have been not saved: Training end date'), $values['training_end_date'] );
+			}	
+			if(trim($rows[1][3]) !== ''){
+				list($ds, $ms, $ys) = array_pad(explode('/', $rows[1][3], 3), 3, 0);
+				$values['training_start_date'] = '20' . $ys . '-' . $ms . '-' . $ds;
+				$status->isValidDate ( $this, 'start-day', t ( 'Your changes have been not saved: Training start date'), $values['training_start_date'] );
+				if (strtotime ($values['training_end_date'] ) < strtotime ( $values['training_start_date'] )) {
+					$status->addError ( 'end-day', t ( 'Your changes have been not saved: End date must be after start date.' ) );
+				}
+			}
+
+			//TA:17:16:1 validate training type
 			$values['training_title_option_id'] = '';
 			for($i=4; $i<15; $i++){
 				if(! empty($rows[$i][3])){
@@ -1288,7 +1307,11 @@ class TrainingController extends ReportFilterHelpers {
 					break;
 				}
 			}
-			
+			if(!trim($values['training_title_option_id'])){
+				$status->addError ( 'title_option_id', t ( 'Your changes have been not saved: Type of training is required.' ) );
+			}
+
+		if($status->hasError() === 0){ //contunue parse persons if required training info is validated
 			try{
 				if (isset($values['training_title_option_id'])){$values['training_title_option_id']= $this->_importHelperFindOrCreate('training_title_option','training_title_phrase',$values['training_title_option_id']); }
 				if ($values['training_start_date']){$values['training_start_date'] = $this->_date_to_sql($values['training_start_date']); }
@@ -1302,6 +1325,7 @@ class TrainingController extends ReportFilterHelpers {
 				$values['is_approved'] = '1';
 				$values['is_tot'] = '0';
 				$values['is_refresher'] = '1';
+				$values['training_location_id'] = '1'; // by default 'unknown'
 
 				$tableObj = $trainingObj->createRow();
 				$tableObj = ITechController::fillFromArray($tableObj, $values);
@@ -1310,20 +1334,28 @@ class TrainingController extends ReportFilterHelpers {
 					$db = $this->dbfunc();
 					$personObj = new Person (); //in case if we will need to add new persons
 					for($i=17; $i< sizeof($rows); $i++){
-							if(!empty($rows[$i][1]) || !empty($rows[$i][2])  || !empty($rows[$i][3]) ){
+							if(!empty($rows[$i][1]) || !empty($rows[$i][2])  || !empty($rows[$i][3])  || 
+									!empty($rows[$i][4]) || !empty($rows[$i][5]) || !empty($rows[$i][6]) || 
+									!empty($rows[$i][7]) || !empty($rows[$i][8]) || !empty($rows[$i][9]) ||
+							!empty($rows[$i][10]) || !empty($rows[$i][11])){
+								if(!trim($rows[$i][1])){
+									$errs[] = t("Could not add person to training. First name is required."). " Person #" . $rows[$i][0];
+									$to_fix = "to fix data";
+									continue;
+								}
+								if(!trim($rows[$i][3])){
+									$errs[] = t("Could not add person to training. Last name is required."). " Person: #" . $rows[$i][0];
+									$to_fix = "to fix data";
+									continue;
+								}
+							
 								//first, middle, last
 								$trainer_id = Person::tryFind(trim($rows[$i][1]), trim($rows[$i][2]), trim($rows[$i][3]));
 								if ( !$trainer_id ) { //add new person to Person
-									if(!trim($rows[$i][1])){
-										$errs[] = t("Could not add person to training. First name is undefined.").space.t('Training')." #$training_id: " . $rows[$i][1] . " " . $rows[$i][2] . " " . $rows[$i][3];
-										continue;
-									}
-									if(!trim($rows[$i][3])){
-										$errs[] = t("Could not add person to training. Last name is undefined.").space.t('Training')." #$training_id: " . $rows[$i][1] . " " . $rows[$i][2] . " " . $rows[$i][3];
-										continue;
-									}
-									if(!trim($rows[$i][4])){
-										$errs[] = t("Could not add person to training. Gender is undefined.").space.t('Training')." #$training_id: " . $rows[$i][1] . " " . $rows[$i][2] . " " . $rows[$i][3];
+									
+									if(!trim($rows[$i][5])){
+										$errs[] = t("Could not add person to training. Cadre is required."). " Person: #" . $rows[$i][0];
+										$to_fix = "to fix data";
 										continue;
 									}
 									
@@ -1375,26 +1407,34 @@ class TrainingController extends ReportFilterHelpers {
 										if($mes_facility) $mes_facility .= ", ";
 										$mes_facility .= $state_name;
 									}
+									if($mes_facility !== ''){
+										$mes_facility = "Facility not found '" . $mes_facility . "'";
+										$to_fix = "to fix data";
+									}else{
+										$mes_facility = "Facility, LGA and State are required";
+										$to_fix = "to fix data";
+									}
 									$mes_person = '';
 									if($rows[$i][1]) $mes_person .= $rows[$i][1];
 									if($rows[$i][2]){
-										if($mes_person) $mes_person .= ", ";
+										if($mes_person) $mes_person .= " ";
 										$mes_person .= $rows[$i][2];
 									}
 									if($rows[$i][3]){
-										if($mes_person) $mes_person .= ", ";
+										if($mes_person) $mes_person .= " ";
 										$mes_person .= $rows[$i][3];
 									}
 									
 									if($values_person['facility_id'] == '0'){				
-										$errs [] = "Error locating facility: '" . $mes_facility . "', Person: '" . $mes_person . "' will have no assigned facility.";
+										$errs [] = $mes_facility . ". Person #" . $rows[$i][0] . " '" . $mes_person . "' has been added to training, but has not being assigned to any facility.";
+										$to_fix = "to fix data";
 									}
 									
 									$personrow = $personObj->createRow();
 									$personrow = ITechController::fillFromArray($personrow, $values_person);
 									$trainer_id = $personrow->save();
 									if(!$trainer_id){
-										$errs[] = t("Could not add person to training.").space.t('Training')." #$training_id, Person: '" . $mes_person . "'";
+										$errs[] = t("Could not add person to training.").space.t('Training')." #$training_id, Person: #" . $rows[$i][0] . "'" . $mes_person . "'";
 										continue;
  									}
 								}
@@ -1407,12 +1447,13 @@ class TrainingController extends ReportFilterHelpers {
 				}
 			} catch (Exception $e) {
 				$errored = 1;
-				$errs[]  = nl2br($e->getMessage()).' '.t ( 'ERROR: The training data could not be saved.').space.($training_id ? t('Training').space."#$training_id".space.t('Warning: Some data imported.').space.t('Check Funding, PEPFAR, Topic, Refresher options and Participants and Trainers Data; or delete the training and try again.') : '') ;
+				$errs[]  = nl2br($e->getMessage()).' '.t ( 'ERROR: The training data could not be saved. Training#'.$training_id);
 			}
+		}
 			
 			// done processing rows
 			$_POST['redirect'] = null;
-			$status = ValidationContainer::instance();
+// 			$status = ValidationContainer::instance();
 			if( empty($errored) && empty($errs) )
 				$stat = t ('Your changes have been saved.');
 			else
@@ -1423,7 +1464,8 @@ class TrainingController extends ReportFilterHelpers {
 			foreach($errs as $errmsg)
 				$stat .= '<br>'.'Error: '.htmlspecialchars($errmsg, ENT_QUOTES);
 			
-			$stat .='<br><a href='. Settings::$COUNTRY_BASE_URL . '/training/view/id/' . $training_id . '>View new training</a>';
+			if($training_id)
+			 $stat .='<br><a href='. Settings::$COUNTRY_BASE_URL . '/training/view/id/' . $training_id . '>View new training ' . $to_fix . '</a>';
 			
 			$status->setStatusMessage($stat);
 			$this->view->assign('status',$status);

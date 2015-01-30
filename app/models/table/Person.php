@@ -52,6 +52,8 @@ class Person extends ITechTable
 		return $this->fetchRow($select);
 	}
 
+	//TA:17:16:1 where should use 'and' for all parameters:
+	//find person by first and middle and last name 
 	public static function tryFind ($first, $middle, $last)
 	{
 		$first = trim($first);
@@ -64,9 +66,9 @@ class Person extends ITechTable
 		$p = new Person();
 		$select = $p->select()->from($p->_name, array('id', 'first_name', 'middle_name','last_name'));
 
-		if( $first )  $select = $select->where("first_name like ?", $first);
-		if( $middle ) $select = $select->where("middle_name like ?", $middle);
-		if( $last )   $select = $select->where("last_name like ?", $last);
+		  $select->where("first_name like ?", $first);
+		 $select->where("middle_name like ?", $middle);
+		   $select->where("last_name like ?", $last);
 
 		$res = $p->fetchRow($select);
 		return $res->id ? $res->id : null;

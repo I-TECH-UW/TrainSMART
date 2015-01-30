@@ -261,7 +261,7 @@ echo "<br clear='top'/><br clear='left'/><br clear='top'/>";
   <div class="fieldInput" id="startdate">
     <?php tp('Day');?> <input id="start-day" class="dayfield" type="text" name="start-day" maxlength="2" value="<?php echo $this->row['start-day']; ?> " <?php echo $this->viewonly; ?>>
     / <?php tp('Month');?> <input id="start-month" class="monthfield" type="text" name="start-month" maxlength="2" value="<?php echo $this->row['start-month']; ?>"  <?php echo $this->viewonly; ?>>
-    / <?php tp('Year');?> <input id="start-year" class="yearfield" type="text" name="start-year" maxlength="4" value="<?php if($this->row['start-year']) echo $this->row['start-year']; else echo date('Y'); ?>"  <?php echo $this->viewonly; ?>>
+    / <?php tp('Year');?> <input id="start-year" class="yearfield" type="text" name="start-year" maxlength="4" value="<?php echo $this->row['start-year']; ?>"  <?php echo $this->viewonly; ?>>
 
     <?php if(!$this->viewonly) : ?>
       <script  type="text/javascript">

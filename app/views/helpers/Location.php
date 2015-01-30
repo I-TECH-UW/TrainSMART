@@ -493,16 +493,17 @@ function training_location_dropdown(&$tlocations, $selectedValue, $selectContain
 	<option value="">&mdash; <?php tp('select');?> &mdash;</option>
 	<?php
 	foreach($tlocations as $r) {
-		if(!isset($lastProv) || $lastProv != $r['province_name']) {
-			$rgns = $r;       // make copy of regions and join the regions as html for display as: province - district - region
-			unset( $rgns['id'] );
-			unset( $rgns['training_location_name'] );
-			unset( $rgns['city_name'] );
-				$rgnText = implode("&nbsp;&mdash;&nbsp;", $rgns);
-				if ($rgnText != $lastProv)
-					echo '<optgroup label="'.$rgnText.'">';
-				$lastProv = $rgnText;
-		}
+//TA:17:19 this code makes additional empty item
+// 		if(!isset($lastProv) || $lastProv != $r['province_name']) {
+// 			$rgns = $r;       // make copy of regions and join the regions as html for display as: province - district - region
+// 			unset( $rgns['id'] );
+// 			unset( $rgns['training_location_name'] );
+// 			unset( $rgns['city_name'] );
+// 				$rgnText = implode("&nbsp;&mdash;&nbsp;", $rgns);
+// 				if ($rgnText != $lastProv)
+// 					echo '<optgroup label="'.$rgnText.'">';
+// 				$lastProv = $rgnText;
+// 		}
 
       echo '<option value="'.$r['id'].'"'.(($selectedValue == $r['id']) ? ' selected' : '').'>';
       echo $r['training_location_name'];
@@ -511,10 +512,9 @@ function training_location_dropdown(&$tlocations, $selectedValue, $selectContain
       echo "</option>";
    }
 
-		if (!isset($lastProv)) echo '</optgroup>';
+   //TA:17:19 this code makes additional empty item
+		//if (!isset($lastProv)) echo '</optgroup>';
   ?>
-
-  <option value="0"><?php tp('unknown');?></option>
   </select>
   <?php
 }
