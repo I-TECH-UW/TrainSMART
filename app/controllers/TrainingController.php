@@ -842,9 +842,9 @@ class TrainingController extends ReportFilterHelpers {
 		if (! $this->setting ( 'display_middle_name' )) {
 			$personsFields = array ('first_name' => $this->tr ( 'First Name' ), 'last_name' => $this->tr ( 'Last Name' ), 'birthdate' => t ( 'Date of Birth' ), 'facility_name' => t ( 'Facility' ) );
 		} else if ($this->setting ( 'display_middle_name_last' )) {
-			$personsFields = array ('first_name' => $this->tr ( 'First Name' ), 'last_name' => $this->tr ( 'Last Name' ), 'middle_name' => "..." . $this->tr ( 'Middle Name' ), 'birthdate' => t ( 'Date of Birth' ), 'facility_name' => t ( 'Facility' ) );
+			$personsFields = array ('first_name' => $this->tr ( 'First Name' ), 'last_name' => $this->tr ( 'Last Name' ), 'middle_name' => $this->tr ( 'Middle Name' ), 'birthdate' => t ( 'Date of Birth' ), 'facility_name' => t ( 'Facility' ) );
 		} else {
-			$personsFields = array ('first_name' => $this->tr ( 'First Name' ), 'middle_name' => "..." . $this->tr ( 'Middle Name' ), 'last_name' => $this->tr ( 'Last Name' ), 'birthdate' => t ( 'Date of Birth' ), 'facility_name' => t ( 'Facility' ) );
+			$personsFields = array ('first_name' => $this->tr ( 'First Name' ), 'middle_name' => $this->tr ( 'Middle Name' ), 'last_name' => $this->tr ( 'Last Name' ), 'birthdate' => t ( 'Date of Birth' ), 'facility_name' => t ( 'Facility' ) );
 		}
 		if ( $this->setting ( 'module_attendance_enabled' )) {
 			$personsFields['duration_days'] = $this->tr ( 'Days Attended' );
