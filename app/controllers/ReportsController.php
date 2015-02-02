@@ -4553,6 +4553,7 @@ echo $sql . "<br>";
 		$criteria ['training_title_id'] = $this->getSanParam ( 'training_title_id' );
 		$criteria ['training_location_id'] = $this->getSanParam ( 'training_location_id' );
 		$criteria ['training_organizer_id'] = $this->getSanParam ( 'training_organizer_id' );
+		$criteria ['method_id'] = $this->getSanParam ( 'method_id' );//TA:17:19
 		$criteria ['training_pepfar_id'] = $this->getSanParam ( 'training_pepfar_id' );
 		$criteria ['training_topic_id'] = $this->getSanParam ( 'training_topic_id' );
 		$criteria ['training_level_id'] = $this->getSanParam ( 'training_level_id' );
@@ -4569,6 +4570,8 @@ echo $sql . "<br>";
 		$criteria ['showTrainingTitle'] = ($this->getSanParam ( 'showTrainingTitle' ) or ($criteria ['doCount'] and ($criteria ['training_title_option_id'] or $criteria ['training_title_option_id'] === '0' or $criteria ['training_title_id'])));
 		$criteria ['showLocation'] = ($this->getSanParam ( 'showLocation' ) or ($criteria ['doCount'] and $criteria ['training_location_id']));
 		$criteria ['showOrganizer'] = ($this->getSanParam ( 'showOrganizer' ) or ($criteria ['doCount'] and ($criteria ['training_organizer_id'] or $criteria ['training_organizer_id'] === '0')));
+		//TA:17:19 01/30/2015
+		$criteria ['showMethod'] = ($this->getSanParam ( 'showMethod' ) or ($criteria ['doCount'] and ($criteria ['method_id'])));
 		$criteria ['showPepfar'] = ($this->getSanParam ( 'showPepfar' ) or ($criteria ['doCount'] and ($criteria ['training_pepfar_id'] or $criteria ['training_pepfar_id'] === '0')));
 		$criteria ['showTopic'] = ($this->getSanParam ( 'showTopic' ) or ($criteria ['doCount'] and ($criteria ['training_topic_id'] or $criteria ['training_topic_id'] === '0')));
 		$criteria ['showLevel'] = ($this->getSanParam ( 'showLevel' ) or ($criteria ['doCount'] and $criteria ['training_level_id']));
@@ -4583,6 +4586,7 @@ echo $sql . "<br>";
 		$criteria ['showAge']            = ( $this->getSanParam ( 'showAge' )    or ($criteria ['doCount'] and ($criteria['age_min'] or $criteria['age_max'])) );
 		$criteria ['showGender']         = ( $this->getSanParam ( 'showGender' ) or ($criteria ['doCount'] and $criteria ['training_gender']) );
 		$criteria ['showQual']           = ( $this->getSanParam ( 'showQual' )   or ($criteria ['doCount'] and $criteria ['qualification_id']) );
+		
 		if ($criteria ['go']) {
 
 			$sql = 'SELECT '; //todo test
@@ -4614,6 +4618,11 @@ echo $sql . "<br>";
 
 			if ($criteria ['showOrganizer']) {
 				$sql .= ', torg.training_organizer_phrase ';
+			}
+			
+			//TA:17:19
+			if ($criteria ['showMethod']) {
+				$sql .= ', cf.commodity_name ';
 			}
 
 			if ($criteria ['showLevel']) {
@@ -4687,6 +4696,18 @@ echo $sql . "<br>";
 			if ($criteria ['showOrganizer']) {
 				$sql .= '	JOIN training_organizer_option as torg ON torg.id = pt.training_organizer_option_id ';
 			}
+			
+			//TA:17:19
+			if ($criteria ['showMethod']) {
+				$sql .= "	join (select distinct facility.id as fid, commodity.name_id, commodity_name_option.commodity_name as commodity_name from facility " .
+				"join commodity on commodity.facility_id = facility.id " .
+				"join commodity_name_option on commodity_name_option.id = commodity.name_id " ;
+				if($criteria ['method_id']){
+					$sql .= "where commodity.name_id=" . $criteria ['method_id'];
+				}
+				$sql .= ") as cf on cf.fid = pt.facility_id ";
+			}
+			
 			if ($criteria ['showLevel']) {
 				$sql .= '	JOIN training_level_option as tlev ON tlev.id = pt.training_level_option_id ';
 			}
@@ -4886,6 +4907,10 @@ echo $sql . "<br>";
 		// qualifications
 		$qualificationsArray = OptionList::suggestionListHierarchical ( 'person_qualification_option', 'qualification_phrase', false, false, array ('0 AS is_default', 'child.is_default' ) );
 		$this->viewAssignEscaped ( 'qualifications', $qualificationsArray );
+		
+		//TA:17:19 01/30/2015 Methods (=commodity names)
+		$methodsArray = OptionList::suggestionList ( 'commodity_name_option', 'commodity_name', false, false, false );
+		$this->viewAssignEscaped ( 'methods', $methodsArray );
 
 	}
 

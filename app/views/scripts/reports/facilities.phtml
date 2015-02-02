@@ -170,6 +170,20 @@ if ($this->mode == 'search' ) {
 		}
 		?>
 	</select></div></div>
+	
+	<!-- TA:17:19 1/30/2015 START-->
+		<div class="fieldLabel" id="method_id">Method</div><div class="fieldInput">
+		<div  class="leftBorderPad"><input type="checkbox" name="showMethod" <?php  if ($this->criteria['showMethod']) echo 'CHECKED';?> /></div>
+		<div  class="leftBorder"><select id="method_id" name="method_id" >
+		<option value="">--<?php tp('All');?>--</option>
+		<?php
+			foreach ( $this->methods as $vals ) {
+				echo '<option value="'.$vals['id'].'" '.((@$this->criteria['method_id']) == $vals['id']? 'selected="selected"':'').' >'.($vals['commodity_name']).'</option>';
+		}
+		?>
+	</select></div>
+		</div>
+	<!-- TA:17:19 1/30/2015 END-->
 
  	<?php if ( $this->setting['display_training_trainers'] && $this->mode != 'search') { ?>
 	<div class="fieldLabel" id="is_tot_lbl"><?php echo (@$this->translation['Training of Trainers']); ?></div>
@@ -324,6 +338,9 @@ foreach($this->results as $row) {
 			echo ','.$row['age']    ;
 		if ( $this->criteria['showQual'] )
 			echo ',"'.$row['qualification_phrase'].'"';
+		//TA:17:19
+		if ( $this->criteria['showMethod'] )
+			echo ',"'.$row['commodity_name'].'"';
 		echo "]";
 		$cnt++;
 }}
@@ -402,6 +419,10 @@ var trainingColumnDefs = [
 <?php if ( $this->criteria['showQual'] ) { ?>
    ,{key:"qualification_phrase", label: "<?php echo tp('Qualification'); ?>", sortable:true, resizeable:true}
  <?php } ?>
+ //TA:17:19
+ <?php if ( $this->criteria['showMethod'] ) { ?>
+ ,{key:"commodity_name", label: "Method", sortable:true, resizeable:true}
+<?php } ?>
 ];
 
 	makeDataTable("trainings", null, trainingData, trainingColumnDefs);
