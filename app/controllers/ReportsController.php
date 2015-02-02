@@ -4801,7 +4801,7 @@ echo $sql . "<br>";
 			if ($where)
 			$sql .= ' WHERE ' . implode(' AND ', $where);
 
-			if ($criteria ['doCount']) {
+			if ($criteria ['doCount'] || $criteria ['doCount2']) {
 
 				$groupBy = array();
 				if ($criteria ['showFacility'])      $groupBy []= '  pt.facility_id';
@@ -4820,6 +4820,7 @@ echo $sql . "<br>";
 				if ( $criteria['showAge'])           $groupBy []= '  age ';
 				if ($criteria ['showGender'])        $groupBy []= '  pt.gender';
 				if ($criteria ['showQual'])          $groupBy []= '  pt.qualification_phrase ';
+				if ($criteria ['doCount2'])          $groupBy []= '  pt.facility_id ';//TA:17:19
 
 
 				if ($groupBy)
@@ -4830,7 +4831,7 @@ echo $sql . "<br>";
 					$sql .= ' and pt.province_id is not null GROUP BY pt.id';
 				}
 			}
-
+			
 			$rowArray = $db->fetchAll ( $sql . ' and pt.province_id is not null ORDER BY facility_name ASC ' );
 
 			if ($criteria ['doCount']) {
