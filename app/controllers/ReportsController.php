@@ -4503,6 +4503,12 @@ echo $sql . "<br>";
 		$this->view->assign ( 'mode', 'count' );
 		$this->facilityReport ();
 	}
+	
+	//TA:17:19 02/02/2015
+	public function trainingByFacilityCount2Action() {
+		$this->view->assign ( 'mode', 'count2' );
+		$this->facilityReport ();
+	}
 
 	public function facilityReport() {
 
@@ -4564,6 +4570,7 @@ echo $sql . "<br>";
 
 		$criteria ['go'] = $this->getSanParam ( 'go' );
 		$criteria ['doCount'] = ($this->view->mode == 'count');
+		$criteria ['doCount2'] = ($this->view->mode == 'count2');//TA:17:19 02/02/2015
 		$criteria ['showProvince'] = ($this->getSanParam ( 'showProvince' ) or ($criteria ['doCount'] and ($criteria ['province_id'] or $criteria ['province_id'] === '0')));
 		$criteria ['showDistrict'] = ($this->getSanParam ( 'showDistrict' ) or ($criteria ['doCount'] and ($criteria ['district_id'] or $criteria ['district_id'] === '0')));
 		$criteria ['showRegionC'] = ($this->getSanParam ( 'showRegionC' ) or ($criteria ['doCount'] and ($criteria ['region_c_id'] or $criteria ['region_c_id'] === '0')));
@@ -4594,7 +4601,7 @@ echo $sql . "<br>";
 			if ($criteria ['doCount']) {
 				$sql .= ' COUNT(pt.person_id) as "cnt", pt.facility_name ';
 			} else {
-				$sql .= ' DISTINCT pt.id as "id", pt.facility_name, pt.training_start_date  ';
+				$sql .= ' DISTINCT pt.id as "id", pt.facility_id, pt.facility_name, pt.training_start_date  ';
 			}
 			if ($criteria ['showFacility']) {
 				$sql .= ', pt.facility_name ';
@@ -4816,15 +4823,15 @@ echo $sql . "<br>";
 
 
 				if ($groupBy)
-				$groupBy = ' GROUP BY ' . implode(', ',$groupBy);
+				$groupBy = ' and pt.province_id is not null GROUP BY ' . implode(', ',$groupBy);
 				$sql .= $groupBy;
 			} else {
 				if ($criteria ['showPepfar'] || $criteria ['showTopic']) {
-					$sql .= ' GROUP BY pt.id';
+					$sql .= ' and pt.province_id is not null GROUP BY pt.id';
 				}
 			}
 
-			$rowArray = $db->fetchAll ( $sql . ' ORDER BY facility_name ASC ' );
+			$rowArray = $db->fetchAll ( $sql . ' and pt.province_id is not null ORDER BY facility_name ASC ' );
 
 			if ($criteria ['doCount']) {
 				$count = 0;

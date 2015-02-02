@@ -40,6 +40,8 @@ if ($this->mode == 'search' ) {
     		<option value="">--<?php tp('choose');?>--</option>
     		<option value="/reports/trainingByFacility" <?php if ($this->mode == 'id') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('by').' '.t('Facility').' '.t('Name');?></option>
     		<option value="/reports/trainingByFacilityCount" <?php if ($this->mode == 'count') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('by').' '.t('Facility').' '.t('Participant Count');?></option>
+   			<!--  TA:17:19 02/02/2015 -->
+   			<option value="/reports/trainingByFacilityCount2" <?php if ($this->mode == 'count2') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('by').' '.t('Facility').' '.t('Count');?></option>
    	</select>
    <?php } ?>
    <br clear="all" />
@@ -79,6 +81,7 @@ if ($this->mode == 'search' ) {
 	</select></div></div>
 	<?php }?>
 	
+	<?php if ($this->mode != 'count2' ) { ?>
 	<div class="fieldLabel" id="sponsor_id_lbl"><?php tp('Facility Sponsor');?></div>
     <div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showSponsor"  <?php echo $checkVisible;?>  <?php  if ($this->criteria['showSponsor'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showSponsor" <?php echo $checkVisible;?>></label>
 	<div  class="leftBorder">
@@ -90,6 +93,7 @@ if ($this->mode == 'search' ) {
 		}
 		?>
 	</select></div></div>
+	<?php } ?>
 
 	<?php region_filters_dropdown($this, $this->locations, $this->criteria, false, true); ?>
 
@@ -110,6 +114,8 @@ if ($this->mode == 'search' ) {
 		?>
 	</select></div></div>
 <?php } ?>
+
+<?php if ($this->mode != 'count2' ) { ?>
 	<div class="fieldLabel" id="training_location_id_lbl"><?php echo t('Training').' '.t('location');?></div>
 	<div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showLocation" <?php echo $checkVisible;?> <?php  if ($this->criteria['showLocation'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showLocation" <?php echo $checkVisible;?>></label>
 
@@ -118,6 +124,8 @@ if ($this->mode == 'search' ) {
 			training_location_dropdown( $this->tlocations, @$this->criteria['training_location_id'], 'name="training_location_id" id="select_training_location"');
     ?>
 	</div></div>
+	<?php } ?>
+	
 <?php if ($this->mode != 'search' && $this->setting['display_training_topic'] ) { ?>
 	<div class="fieldLabel" id="training_topic_id_lbl"><?php echo (@$this->translation['Training Topic']); ?></div>
 	<div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showTopic" <?php echo $checkVisible;?> <?php  if ($this->criteria['showTopic'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showTopic" <?php echo $checkVisible;?>></label>
@@ -131,6 +139,7 @@ if ($this->mode == 'search' ) {
 		?>
 	</select></div></div>
 <?php } ?>
+
 
 <!-- TA:17: 09/03/2014  -->
 	<?php if ( $this->setting['display_training_level'] ) { ?>
@@ -147,6 +156,7 @@ if ($this->mode == 'search' ) {
 	</select></div></div>
 	<?php }?>
 	
+	<?php if ($this->mode != 'count2' ) { ?>
 	<div class="fieldLabel" id="training_pepfar_id_lbl"><?php print $this->translation['PEPFAR Category'];?></div>
 	<div class="fieldInput"><div  class="leftBorderPad" ><input type="checkbox" name="showPepfar"  <?php echo $checkVisible;?> <?php  if ($this->criteria['showPepfar'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showPepfar" <?php echo $checkVisible;?>></label>
 
@@ -158,6 +168,7 @@ if ($this->mode == 'search' ) {
 		}
 		?>
 	</select></div></div>
+	<?php }?>
 
 	<div class="fieldLabel" id="training_organizer_id_lbl"><?php echo (@$this->translation['Training Organizer']); ?></div>
 	<div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showOrganizer" <?php echo $checkVisible;?> <?php  if ($this->criteria['showOrganizer'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showOrganizer" <?php echo $checkVisible;?>></label>
@@ -275,12 +286,19 @@ if ($this->mode == 'search' ) {
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
 <div class="hrGrey"></div>
-    <div class="fieldIndentNoMargin"><?php echo t('Trainings').' '.t('matched with').' '.t('Facilities');?> <span class="total"><?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span><?php echo $this->printAndExport();?></div>
+    <div class="fieldIndentNoMargin">
+    <?php if($this->mode == 'count2') echo t('Total').' '.t('Facilities');
+    	else echo t('Trainings').' '.t('matched with').' '.t('Facilities');
+    	?> 
+    <span class="total">
+    <?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span>
+    <?php echo $this->printAndExport();?>
+    </div>
 <?php } ?>
     <div id="trainings" class="itechTable"></div>
     <script type="text/javascript">
     	        var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
-	            elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/training/view/id/" + oRecord.getData("id") + "'>" + sData + "</a>";
+	            elCell.innerHTML = "<a href='<?php echo $this->base_url; if($this->mode == 'count2') echo "/facility"; else echo "/training";?>/view/id/" + oRecord.getData("id") + "'>" + sData + "</a>";
 	        };
 
 	        var trainingData = [
@@ -291,7 +309,10 @@ foreach($this->results as $row) {
 		if (!$isFirstRow )
 			echo ',';
 		$isFirstRow = false;
-		echo '['.(isset($row['cnt'])?$row['cnt']:$row['id']);
+		if ( $this->criteria['doCount2'] )
+			echo '['. $row['facility_id'];
+		else
+			echo '['.(isset($row['cnt'])?$row['cnt']:$row['id']);
 		if ( isset($row['id']) )
 			echo ',"'.$row['training_start_date'].'"';
 		if ( $this->criteria['showFacility'] )
@@ -351,7 +372,7 @@ var trainingColumnDefs = [
 {key:"cnt", label: "Count", sortable:true, resizeable:true}
 <?php } else { ?>
 {key:"id", label: "ID", sortable:true, resizeable:true, formatter: formatViewUrl},
-{key:"training_start_date", label: "<?php tp('Date');?>", sortable:true, resizeable:true}
+{key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true}
 <?php } ?>
 <?php if ( $this->criteria['showFacility'] ) { ?>
    ,{key:"facility_name", label: "<?php tp('Facility Name');?>", sortable:true, resizeable:true}
