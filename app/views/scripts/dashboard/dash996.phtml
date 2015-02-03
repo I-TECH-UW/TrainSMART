@@ -170,7 +170,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 	drawChart11();
 	drawChart12();
-	drawChart13();
+	//drawChart13();
 	//drawChart14();
 		
 	var currentLevel;
@@ -188,7 +188,7 @@ print ScriptContainer::$instance->renderJSHead();
   
 
 
-  function drawChart11() {
+  function drawChart13() {
 	  // Create and populate the data table.
 	  var chart11Data = google.visualization.arrayToDataTable([
 
@@ -207,7 +207,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 	  <?php echo  " var title_date = 'Monthly consumption of $title->method $this->title_date ' " ?>;
 	  
-	  var chart11Options = {
+	  var chart13Options = {
 			  
 			  title: title_date,
 			  titleTextStyle: { fontSize: 16 },
@@ -216,12 +216,12 @@ print ScriptContainer::$instance->renderJSHead();
 		      
 		};
 
-	  var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
-	  chart11.draw(chart11Data, chart11Options);
+	  var chart13 = new google.visualization.ColumnChart(document.getElementById('chart13_div'));
+	  chart13.draw(chart13Data, chart13Options);
 	}
 
-  function drawChart12() {
-      var chart12Data = google.visualization.arrayToDataTable([
+  function drawChart11() {
+      var chart11Data = google.visualization.arrayToDataTable([
 ['', ''],
 
 
@@ -237,7 +237,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 	  <?php echo  " var title_date = 'Monthly consumption of $title->method $this->title_date ' " ?>;
 
-      var chart12Options = {
+      var chart11Options = {
     	      
     		  title: title_date,
     		  titleTextStyle: { fontSize: 16 },
@@ -247,14 +247,14 @@ print ScriptContainer::$instance->renderJSHead();
       };
 
       //var chart12 = new google.charts.Bar(document.getElementById('chart11_div'));
-      var chart12 = new google.visualization.ColumnChart(document.getElementById('chart12_div'));
+      var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
 
-      chart12.draw(chart12Data, chart12Options);
+      chart11.draw(chart11Data, chart11Options);
     }
 
-  function drawChart13() {
+  function drawChart12() {
 	  
-      var chart13Data = google.visualization.arrayToDataTable([
+      var chart12Data = google.visualization.arrayToDataTable([
 ['Month', ''],
 
 <?php
@@ -269,16 +269,16 @@ print ScriptContainer::$instance->renderJSHead();
 
 	  <?php echo  " var title_date = 'Consumption of $title->method $this->title_date ' " ?>;
 
-      var chart13Options = {
+      var chart12Options = {
         title: title_date,
         titleTextStyle: { fontSize: 16 },
         legend: 'none',
        
       };
 
-      var chart13 = new google.visualization.LineChart(document.getElementById('chart13_div'));
+      var chart12 = new google.visualization.LineChart(document.getElementById('chart12_div'));
 
-      chart13.draw(chart13Data, chart13Options);
+      chart12.draw(chart12Data, chart12Options);
     }
   
   function drawChart14() {
