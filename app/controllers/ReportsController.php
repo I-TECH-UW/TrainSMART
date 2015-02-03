@@ -4507,7 +4507,183 @@ echo $sql . "<br>";
 	//TA:17:19 02/02/2015
 	public function trainingByFacilityCount2Action() {
 		$this->view->assign ( 'mode', 'count2' );
-		$this->facilityReport ();
+		$this->facilityReportCount2 ();
+	}
+	
+	//TA:17:19 facility report by commodity (method)
+	public function facilityReportCount2() {
+	
+		require_once ('models/table/TrainingLocation.php');
+	
+		$criteria = array ();
+	
+		//find the first date in the database
+		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+		$sql = "SELECT MIN(date) as date FROM commodity";
+		$rowArray = $db->fetchAll ( $sql );
+		$start_default = $rowArray [0] ['date'];
+		$parts = explode ( '-', $start_default );
+		$criteria ['start-year'] = $parts [0];
+		$criteria ['start-month'] = $parts [1];
+		$criteria ['start-day'] = $parts [2];
+	
+		if ($this->getSanParam ( 'start-year' ))
+			$criteria ['start-year'] = $this->getSanParam ( 'start-year' );
+		if ($this->getSanParam ( 'start-month' ))
+			$criteria ['start-month'] = $this->getSanParam ( 'start-month' );
+		if ($this->getSanParam ( 'start-day' ))
+			$criteria ['start-day'] = $this->getSanParam ( 'start-day' );
+		if ($this->view->mode == 'search') {
+			$sql = "SELECT MIN(date) as date FROM commodity ";
+			$rowArray = $db->fetchAll ( $sql );
+			$end_default = $rowArray [0] ['date'];
+			$parts = explode ( '-', $end_default );
+			$criteria ['end-year'] = $parts [0];
+			$criteria ['end-month'] = $parts [1];
+			$criteria ['end-day'] = $parts [2];
+		} else {
+			$criteria ['end-year'] = date ( 'Y' );
+			$criteria ['end-month'] = date ( 'm' );
+			$criteria ['end-day'] = date ( 'd' );
+		}
+	
+		if ($this->getSanParam ( 'end-year' ))
+			$criteria ['end-year'] = $this->getSanParam ( 'end-year' );
+		if ($this->getSanParam ( 'end-month' ))
+			$criteria ['end-month'] = $this->getSanParam ( 'end-month' );
+		if ($this->getSanParam ( 'end-day' ))
+			$criteria ['end-day'] = $this->getSanParam ( 'end-day' );
+	
+		list($criteria, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
+	
+		$criteria ['method_id'] = $this->getSanParam ( 'method_id' );//TA:17:19
+		$criteria ['facility_type_id'] = $this->getSanParam ( 'facility_type_id' );
+		$criteria ['facilityInput'] = $this->getSanParam ( 'facilityInput' );
+		$criteria ['go'] = $this->getSanParam ( 'go' );
+		$criteria ['doCount2'] = ($this->view->mode == 'count2');//TA:17:19 02/02/2015
+		$criteria ['showProvince'] = ($this->getSanParam ( 'showProvince' ) );
+		$criteria ['showDistrict'] = ($this->getSanParam ( 'showDistrict' ) );
+		$criteria ['showRegionC'] = ($this->getSanParam ( 'showRegionC' ) );
+		$criteria ['showMethod'] = ($this->getSanParam ( 'showMethod' ));
+		$criteria ['showType'] = ($this->getSanParam ( 'showType' ) );
+		$criteria ['showFacility'] =       true;
+	
+		if ($criteria ['go']) {
+	
+			$sql = 'SELECT distinct(facility.id) as facility_id, facility_name ';
+			
+			if ($criteria ['showDistrict']) {
+				$sql .= ', l.district_name, l.district_id ';
+			}
+			if ($criteria ['showProvince']) {
+				$sql .= ', l.province_name, l.province_id ';
+			}
+			if ($criteria ['showRegionC']) {
+				$sql .= ', l.region_c_name, l.region_c_id ';
+			}
+				
+			if ($criteria ['showMethod']) {
+				$sql .= ', fc.commodity_name';
+			}
+	
+			if ($criteria ['showType'] && $criteria ['facility_type_id']) {
+				$sql .= ', fto.facility_type_phrase ';
+			}
+	
+			$num_locs = $this->setting('num_location_tiers');
+			list($field_name,$location_sub_query) = Location::subquery($num_locs, $location_tier, $location_id, true);
+	
+			$sql .= " FROM facility ";
+			
+			if ($criteria ['showType'] && $criteria ['facility_type_id']) {
+				$sql .= '	JOIN facility_type_option as fto ON fto.id = facility.type_option_id ';
+			}
+			
+			$sql .= "LEFT JOIN (" .$location_sub_query. ") as l ON facility.location_id = l.id ";
+				
+			if ($criteria ['showMethod']) {
+				$sql .= " join (select facility.id as fid, commodity.name_id, commodity_name_option.commodity_name as commodity_name, commodity.date from facility
+				join commodity on commodity.facility_id = facility.id
+				join commodity_name_option on commodity_name_option.id = commodity.name_id " ;
+				if($criteria ['method_id']){
+					$sql .= " where commodity.name_id=" . $criteria ['method_id'];
+				}
+				$sql .= " and date between ";
+				if (intval ( $criteria ['end-year'] ) and $criteria ['start-year']) {
+					$startDate = $criteria ['start-year'] . '-' . $criteria ['start-month'] . '-' . $criteria ['start-day'];
+					$endDate = $criteria ['end-year'] . '-' . $criteria ['end-month'] . '-' . $criteria ['end-day'];
+					$sql .=  "'" . $startDate . "' AND '" . $endDate . "' ";
+				} 
+				$sql .= " group by fid order by date) as fc on fc.fid = facility.id ";
+			}
+	
+			$where = array(' facility.is_deleted=0 ');
+			$where = array(' l.province_name is not null ');
+	
+			if ($criteria ['facilityInput']) {
+				$where []= ' facility.id = \'' . $criteria ['facilityInput'] . '\'';
+			}
+	
+			if ($criteria ['facility_type_id'] or $criteria ['facility_type_id'] === '0') {
+				$where []= ' facility.type_option_id = \'' . $criteria ['facility_type_id'] . '\'';
+			}
+	
+			if ($where)
+				$sql .= ' WHERE ' . implode(' AND ', $where);
+	
+			$sql .= ' order by facility_name ';
+			
+			$rowArray = $db->fetchAll ( $sql);
+			$count = count ( $rowArray );
+	
+			if ($this->_getParam ( 'outputType' ))
+				$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
+	
+		} else {
+			$count = 0;
+			$rowArray = array ();
+		}
+	
+		$criteria ['go'] = $this->getSanParam ( 'go' );
+	
+		$this->viewAssignEscaped ( 'results', $rowArray );
+		$this->view->assign ( 'count', $count );
+		$this->view->assign ( 'criteria', $criteria );
+	
+		//facilities list
+		$fArray = OptionList::suggestionList ( 'facility', array ('facility_name', 'id' ), false, 9999 );
+		$facilitiesArray = array ();
+		foreach ( $fArray as $key => $val ) {
+			if ($val ['id'] != 0)
+				$facilitiesArray [] = $val;
+		}
+		$this->viewAssignEscaped ( 'facilities', $facilitiesArray );
+	
+		//locations
+		$locations = Location::getAll();
+		$this->viewAssignEscaped ( 'locations', $locations );
+		//facility types
+		$typesArray = OptionList::suggestionList ( 'facility_type_option', 'facility_type_phrase', false, false );
+		$this->viewAssignEscaped ( 'facility_types', $typesArray );
+		
+	
+		//location
+		$tlocations = TrainingLocation::selectAllLocations ($this->setting('num_location_tiers'));
+		$this->viewAssignEscaped ( 'tlocations', $tlocations );
+	
+		//facilities list
+		$rowArray = OptionList::suggestionList ( 'facility', array ('facility_name', 'id' ), false, 9999 );
+		$facilitiesArray = array ();
+		foreach ( $rowArray as $key => $val ) {
+			if ($val ['id'] != 0)
+				$facilitiesArray [] = $val;
+		}
+		$this->viewAssignEscaped ( 'facilities', $facilitiesArray );
+	
+		//TA:17:19 01/30/2015 Methods (=commodity names)
+		$methodsArray = OptionList::suggestionList ( 'commodity_name_option', 'commodity_name', false, false, false );
+		$this->viewAssignEscaped ( 'methods', $methodsArray );
+	
 	}
 
 	public function facilityReport() {
@@ -4570,7 +4746,7 @@ echo $sql . "<br>";
 
 		$criteria ['go'] = $this->getSanParam ( 'go' );
 		$criteria ['doCount'] = ($this->view->mode == 'count');
-		$criteria ['doCount2'] = ($this->view->mode == 'count2');//TA:17:19 02/02/2015
+		//$criteria ['doCount2'] = ($this->view->mode == 'count2');//TA:17:19 02/02/2015
 		$criteria ['showProvince'] = ($this->getSanParam ( 'showProvince' ) or ($criteria ['doCount'] and ($criteria ['province_id'] or $criteria ['province_id'] === '0')));
 		$criteria ['showDistrict'] = ($this->getSanParam ( 'showDistrict' ) or ($criteria ['doCount'] and ($criteria ['district_id'] or $criteria ['district_id'] === '0')));
 		$criteria ['showRegionC'] = ($this->getSanParam ( 'showRegionC' ) or ($criteria ['doCount'] and ($criteria ['region_c_id'] or $criteria ['region_c_id'] === '0')));
@@ -4820,7 +4996,7 @@ echo $sql . "<br>";
 				if ( $criteria['showAge'])           $groupBy []= '  age ';
 				if ($criteria ['showGender'])        $groupBy []= '  pt.gender';
 				if ($criteria ['showQual'])          $groupBy []= '  pt.qualification_phrase ';
-				if ($criteria ['doCount2'])          $groupBy []= '  pt.facility_id ';//TA:17:19
+				//if ($criteria ['doCount2'])          $groupBy []= '  pt.facility_id ';//TA:17:19
 
 
 				if ($groupBy)
@@ -4831,6 +5007,7 @@ echo $sql . "<br>";
 					$sql .= ' and pt.province_id is not null GROUP BY pt.id';
 				}
 			}
+			
 			
 			$rowArray = $db->fetchAll ( $sql . ' and pt.province_id is not null ORDER BY facility_name ASC ' );
 

@@ -97,6 +97,7 @@ if ($this->mode == 'search' ) {
 
 	<?php region_filters_dropdown($this, $this->locations, $this->criteria, false, true); ?>
 
+	 <?php if ($this->mode != 'count2' ) { ?>
   <?php if ($this->mode != 'search' ) { ?>
 	<div class="fieldLabel" id="training_title_option_id_lbl"><?php echo (@$this->translation['Training Name']); ?></div>
 	<div class="fieldInput"><div class="leftBorderPad" ><input type="checkbox" name="showTrainingTitle" <?php echo $checkVisible;?> <?php  if ($this->criteria['showTrainingTitle'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showTrainingTitle" <?php echo $checkVisible;?>></label>
@@ -113,7 +114,7 @@ if ($this->mode == 'search' ) {
 		}
 		?>
 	</select></div></div>
-<?php } ?>
+<?php } }?>
 
 <?php if ($this->mode != 'count2' ) { ?>
 	<div class="fieldLabel" id="training_location_id_lbl"><?php echo t('Training').' '.t('location');?></div>
@@ -141,6 +142,7 @@ if ($this->mode == 'search' ) {
 <?php } ?>
 
 
+<?php if ($this->mode != 'count2' ) { ?>
 <!-- TA:17: 09/03/2014  -->
 	<?php if ( $this->setting['display_training_level'] ) { ?>
 	<div class="fieldLabel" id="training_level_id_lbl"><?php echo (@$this->translation['Training Level']); ?></div>
@@ -156,7 +158,6 @@ if ($this->mode == 'search' ) {
 	</select></div></div>
 	<?php }?>
 	
-	<?php if ($this->mode != 'count2' ) { ?>
 	<div class="fieldLabel" id="training_pepfar_id_lbl"><?php print $this->translation['PEPFAR Category'];?></div>
 	<div class="fieldInput"><div  class="leftBorderPad" ><input type="checkbox" name="showPepfar"  <?php echo $checkVisible;?> <?php  if ($this->criteria['showPepfar'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showPepfar" <?php echo $checkVisible;?>></label>
 
@@ -168,7 +169,6 @@ if ($this->mode == 'search' ) {
 		}
 		?>
 	</select></div></div>
-	<?php }?>
 
 	<div class="fieldLabel" id="training_organizer_id_lbl"><?php echo (@$this->translation['Training Organizer']); ?></div>
 	<div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showOrganizer" <?php echo $checkVisible;?> <?php  if ($this->criteria['showOrganizer'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showOrganizer" <?php echo $checkVisible;?>></label>
@@ -181,6 +181,7 @@ if ($this->mode == 'search' ) {
 		}
 		?>
 	</select></div></div>
+	<?php }?>
 	
 	<!-- TA:17:19 1/30/2015 START-->
 		<div class="fieldLabel" id="method_id">Method</div><div class="fieldInput">
@@ -371,9 +372,11 @@ var trainingColumnDefs = [
 <?php if (isset($this->results[0]['cnt'])) { ?>
 {key:"cnt", label: "Count", sortable:true, resizeable:true}
 <?php } else { ?>
-{key:"id", label: "ID", sortable:true, resizeable:true, formatter: formatViewUrl},
-{key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true}
-<?php } ?>
+{key:"id", label: "ID", sortable:true, resizeable:true, formatter: formatViewUrl}
+<?php if ($this->criteria['doCount2']){?>
+<?php }else{ ?>
+,{key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true}
+<?php }} ?>
 <?php if ( $this->criteria['showFacility'] ) { ?>
    ,{key:"facility_name", label: "<?php tp('Facility Name');?>", sortable:true, resizeable:true}
  <?php } ?>
