@@ -4606,7 +4606,7 @@ echo $sql . "<br>";
 				join commodity on commodity.facility_id = facility.id
 				join commodity_name_option on commodity_name_option.id = commodity.name_id " ;
 				if($criteria ['method_id']){
-					$sql .= " where commodity.name_id=" . $criteria ['method_id'];
+					$sql .= " where commodity.name_id IN (" . $this->_trainsmart_implode($criteria ['method_id']) . ") ";
 				}
 				$sql .= " and date between ";
 				if (intval ( $criteria ['end-year'] ) and $criteria ['start-year']) {
@@ -4616,6 +4616,8 @@ echo $sql . "<br>";
 				} 
 				$sql .= " group by fid order by date) as fc on fc.fid = facility.id ";
 			}
+			
+			print "+" . $criteria ['method_id'] . "+";
 	
 			$where = array(' facility.is_deleted=0 ');
 			$where = array(' l.province_name is not null ');

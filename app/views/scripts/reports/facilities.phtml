@@ -9,7 +9,7 @@ print ScriptContainer::$instance->renderCSSHead();
 print ScriptContainer::$instance->renderJSHead();
 
 $checkLabel = t('show');
-if ( $this->mode == 'count' )
+if ( $this->mode == 'count'  || $this->mode == 'count2')
 	$checkLabel = t('group');
 $checkVisible = '';
 if ($this->mode == 'search' ) {
@@ -47,7 +47,7 @@ if ($this->mode == 'search' ) {
    <br clear="all" />
 	   <form action="" method="get">
    <fieldset <?php if( $this->mode != 'search') echo 'id="criteria"'; ?> ><legend><?php tp('Select Criteria');?></legend>
-  <div id="dividers">
+  <div id="dividers" style='height:390px;'>
     <div class="fieldLabel " ></div>
     <div class="fieldInput criteria-header"><div  class="criteria-label" ><?php echo $checkLabel;?></div><div  class="criteria-label" style="padding-left: 20px;"><?php tp('filter');?></div></div>
 
@@ -184,13 +184,15 @@ if ($this->mode == 'search' ) {
 	<?php }?>
 	
 	<!-- TA:17:19 1/30/2015 START-->
-		<div class="fieldLabel" id="method_id">Method</div><div class="fieldInput">
+		<div class="fieldLabel" id="method_id">Method</div>
+		<div class="fieldInput">
 		<div  class="leftBorderPad"><input type="checkbox" name="showMethod" <?php  if ($this->criteria['showMethod']) echo 'CHECKED';?> /></div>
-		<div  class="leftBorder"><select id="method_id" name="method_id" >
+		<div  class="leftBorder">
+		<select id="method_id" name="method_id[]" multiple="multiple" size="10">
 		<option value="">--<?php tp('All');?>--</option>
 		<?php
 			foreach ( $this->methods as $vals ) {
-				echo '<option value="'.$vals['id'].'" '.((@$this->criteria['method_id']) == $vals['id']? 'selected="selected"':'').' >'.($vals['commodity_name']).'</option>';
+				echo '<option value="'.$vals['id'].'" '.((@$this->criteria['method_id']) == $vals['id']? 'SELECTED="selected"':'').' >'.$vals['commodity_name'].'</option>';
 		}
 		?>
 	</select></div>
