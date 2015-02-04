@@ -190,13 +190,13 @@ print ScriptContainer::$instance->renderJSHead();
 <?php
 	$start_date = '';
 	$end_date = '';
-	for($i=0; $i<count($this->national_larc_coverage); $i++){
-		$row = $this->national_larc_coverage[$i];
+	for($i=0; $i<count($this->larc_coverage); $i++){
+		$row = $this->larc_coverage[$i];
 		if($i == 0)
 			$start_date = $row[month] . " " . $row[year];
-		if($i == count($this->national_larc_coverage)-1)
+		if($i == count($this->larc_coverage)-1)
 			$end_date = $row[month] . " " . $row[year];
-  		//foreach ($this->national_larc_coverage as $row){
+  		//foreach ($this->larc_coverage as $row){
   	?>
   	[<?php echo  " '$row[month]'," . round($row[tp_percent],2)*100 . "," . round($row[larc_percent],2)*100 . "," . round($row[tt_percent],2)*100 ?>],
   	<?php
@@ -227,13 +227,13 @@ print ScriptContainer::$instance->renderJSHead();
 <?php
 $start_date = '';
 	$end_date = '';
-	for($i=0; $i<count($this->national_fp_coverage); $i++){
-		$row = $this->national_fp_coverage[$i];
+	for($i=0; $i<count($this->fp_coverage); $i++){
+		$row = $this->fp_coverage[$i];
 		if($i == 0)
 			$start_date = $row[month] . " " . $row[year];
-		if($i == count($this->national_fp_coverage)-1)
+		if($i == count($this->fp_coverage)-1)
 			$end_date = $row[month] . " " . $row[year];
-  		//foreach ($this->national_larc_coverage as $row){
+  		//foreach ($this->larc_coverage as $row){
   	?>
   	[<?php echo  " '$row[month]'," . round($row[tp_percent],2)*100 . "," . round($row[fp_percent],2)*100 . "," . round($row[tt_percent],2)*100 ?>],
   	<?php

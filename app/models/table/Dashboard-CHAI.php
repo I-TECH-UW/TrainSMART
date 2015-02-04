@@ -1297,33 +1297,13 @@ public function fetchPFTPDetails( $ttoWhere = null, $geoWhere = null, $dateWhere
      * fetch numer from pfp_view, 
      *   select C_date, numer from pfp_view where CNO_external_id = 'DiXDJRmPwfh' order by C_date desc limit 12; -- implant
      *   
-     * 0) fetch denom from sql below, 
+     * 0) fetch denom, 
      * 1) fetch total from begin-of-time to 1 year ago, 
      * 2) fetch previous year by month, 
      * 3) fill missing months with zero, 
      * 4) calc running total, 
      * 5) use as denom
       
-SELECT
- t.training_end_date, count(1)
-FROM `person_to_training` AS `pt`
- LEFT JOIN `person` AS `p` ON pt.person_id = p.id
- LEFT JOIN `facility` AS `f` ON p.facility_id = f.id
- LEFT JOIN `location` AS `l1` ON f.location_id = l1.id
- LEFT JOIN `location` AS `l2` ON l1.parent_id = l2.id
- LEFT JOIN `location` AS `l3` ON l2.parent_id = l3.id
- LEFT JOIN `training` AS `t` ON pt.training_id = t.id
- INNER JOIN `training_title_option` AS `tto` ON t.training_title_option_id = tto.id
-WHERE 1=1
-and (t.training_title_option_id = 1 ) -- LARC
--- and (t.training_title_option_id = 2 ) -- FP Tech
-
--- and (t.training_end_date <= date_sub(now(), interval 365 day))
-and (t.training_end_date between date_sub(now(), interval 365 day) and now() )
-
-GROUP BY t.training_end_date
-order by t.training_end_date desc
-;
      */
     
     //providing, numer
@@ -1360,7 +1340,7 @@ order by t.training_end_date desc
             $sql = str_replace('`f`.*,', '', $sql);
             $sql = str_replace('`l1`.*,', '', $sql);
             $sql = str_replace('`l2`.*,', '', $sql);
-            $sql = str_replace('`l3`.*', '', $sql);
+            $sql = str_replace('`l3`.*,', '', $sql);
             $sql = str_replace('`t`.*,', '', $sql);
             $sql = str_replace('`tto`.*', '', $sql);
     
@@ -1379,7 +1359,7 @@ order by t.training_end_date desc
             ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
             ->joinLeft(array("t" => "training"), 'pt.training_id = t.id')
             ->joinInner(array('tto' => training_title_option), 't.training_title_option_id = tto.id')
-            ->where($where)
+            ->where($geoWhere)
             ->where('t.training_end_date between date_sub(now(), interval 365 day) and now() ')
             ->group('t.training_end_date')
             ->order(array('t.training_end_date asc'));
@@ -1390,7 +1370,7 @@ order by t.training_end_date desc
     $sql = str_replace('`f`.*,', '', $sql);
     $sql = str_replace('`l1`.*,', '', $sql);
     $sql = str_replace('`l2`.*,', '', $sql);
-    $sql = str_replace('`l3`.*', '', $sql);
+    $sql = str_replace('`l3`.*,', '', $sql);
     $sql = str_replace('`t`.*,', '', $sql);
     $sql = str_replace('`tto`.*', '', $sql);
         
@@ -1414,11 +1394,13 @@ order by t.training_end_date desc
     }
     $prev_year = array_merge($prev_year, $new_rows);
     
-    // fetch number of facilities reporting for use in tt calc, select sum(cnt) from facilities_reporting_by_state_view;
+    
+    
+    // fetch number of facilities reporting for use in tt calc, select sum(cnt) from pft_denom_view;
     $select = $db->select()
-    ->from(array('fr' => 'facilities_reporting_by_state_view'),
+    ->from(array('pfp' => 'pfp_denom_view'),
         array(
-            'sum(cnt) as facilities_reporting' ));
+            'sum(denom) as facilities_reporting' ));
     
     $facilities_reporting = $db->fetchOne( $select );
     
@@ -1431,7 +1413,7 @@ order by t.training_end_date desc
                 $denom = $denom + $prow['added'];
             }
         }
-        $tmp[] = array($nrow['C_date'], $nrow['numer'], $denom, $prow['added'], $facilities_reporting );
+        $tmp[] = array('date' => $nrow['C_date'], 'numer' => $nrow['numer'], 'denom' => $denom, 'added' => $prow['added'], 'fac_reporting' => $facilities_reporting );
         
         $date = strtotime($nrow['C_date']);
         $monthName = date('F', $date);
@@ -1442,16 +1424,16 @@ order by t.training_end_date desc
     }
    
     
-    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI PFTP >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+    file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI PFTP >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
     //var_dump('$numer= ', $numer,"END");
-    //var_dump('$tmp= ', $tmp,"END");
+    var_dump('$tmp= ', $tmp,"END");
     //var_dump('$facilities_reporting= ', $facilities_reporting,"END");
     //var_dump('$output= ', $output,"END");
     //var_dump('$new_rows= ', $new_rows,"END");
     //var_dump('$prev_year= ', $prev_year,"END");
     //var_dump('$start_denom_total= ', $start_denom_total,"END");
     //var_dump('$month= ', $month,"END");
-    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
     
     return $output;
 }	
@@ -1471,6 +1453,7 @@ public function fetchPFPDetails( $cnoWhere = null, $geoWhere = null, $dateWhere 
             'count(distinct(c.facility_id)) as numer'))
             ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
             ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+            ->joinInner(array('frr' => "facility_report_rate"), 'f.external_id = frr.facility_external_id')
     	    ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
     	    ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
     	    ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
@@ -1480,10 +1463,11 @@ public function fetchPFPDetails( $cnoWhere = null, $geoWhere = null, $dateWhere 
             ->order(array('C_date'));
     
     $sql = $create_view->__toString();
-    $sql = str_replace('AS `percent`,', 'AS `percent`', $sql);
+    $sql = str_replace('AS `numer`,', 'AS `numer`', $sql);
     $sql = str_replace('`c`.*,', '', $sql);
     $sql = str_replace('`cno`.*,', '', $sql);
     $sql = str_replace('`f`.*,', '', $sql);
+    $sql = str_replace('`frr`.*,', '', $sql);
     $sql = str_replace('`l1`.*,', '', $sql);
     $sql = str_replace('`l2`.*,', '', $sql);
     $sql = str_replace('`l3`.*', '', $sql);

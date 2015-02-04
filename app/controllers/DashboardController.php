@@ -1755,9 +1755,9 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	    $geoWhere = str_replace(', )', ')', $where);
 	    $dateWhere = '1=1'; //todo
 	    
-	    file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController action12 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    var_dump('$geoWhere= ', $geoWhere,"END");
-	    $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController action12 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	    //var_dump('$geoWhere= ', $geoWhere,"END");
+	    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	     
 	    $pfp_data = new DashboardCHAI();
 	    $pftp_data = new DashboardCHAI();
@@ -1772,8 +1772,10 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	    // pivot
 	    //TA:17:17 add year to the result
 	    foreach ($pftp_details as $i => $row){
-	        $national_larc_coverage[] = array('month' => $pftp_details[$i]['month'], 'year' => $pftp_details[$i]['year'], 'tp_percent' => $pftp_details[$i]['tp_percent'], 'larc_percent' => $pfp_details[$i]['larc_percent'], 'tt_percent' => $pftp_details[$i]['tt_percent']);
+	        $larc_coverage[] = array('month' => $pftp_details[$i]['month'], 'year' => $pftp_details[$i]['year'], 'tp_percent' => $pftp_details[$i]['tp_percent'], 'larc_percent' => $pfp_details[$i]['numer'], 'tt_percent' => $pftp_details[$i]['tt_percent']);
 	    }
+	    
+	    /*
 	     
 	    $cnoWhere = " 1=1 and cno.external_id in ( 'w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw' )";
 	    $pfp_details = $pfp_data->fetchPFPDetails(  $cnoWhere, $geoWhere, $dateWhere, $group, $useName );
@@ -1784,23 +1786,20 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	    // pivot
 	    //TA:17:17 add year to the result
 	    foreach ($pftp_details as $i => $row){
-	        $national_fp_coverage[] = array('month' => $pftp_details[$i]['month'], 'year' => $pftp_details[$i]['year'], 'tp_percent' => $pftp_details[$i]['tp_percent'], 'fp_percent' => $pfp_details[$i]['fp_percent'], 'tt_percent' => $pftp_details[$i]['tt_percent']);
+	        $fp_coverage[] = array('month' => $pftp_details[$i]['month'], 'year' => $pftp_details[$i]['year'], 'tp_percent' => $pftp_details[$i]['tp_percent'], 'fp_percent' => $pfp_details[$i]['fp_percent'], 'tt_percent' => $pftp_details[$i]['tt_percent']);
 	    }
+	    */
 	
 	     
-	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController action8a >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController action12 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	    //var_dump('$pfp_details= ', $pfp_details,"END");
 	    //var_dump('$pftp_details= ', $pftp_details,"END");
 	    //var_dump('$pft_details= ', $pft_details,"END");
-	    //var_dump('$national_fp_coverage= ', $national_fp_coverage,"END");
+	    //var_dump('$larc_coverage= ', $larc_coverage,"END");
 	    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	     
-	    //$this->view->assign('fp_data',$fp_details);
-	    //$this->view->assign('larc_data',$larc_details);
-	    $this->view->assign('national_larc_coverage',array_reverse($national_larc_coverage));
-	    $this->view->assign('national_fp_coverage',array_reverse($national_fp_coverage));
-	    //$this->view->assign('national_percent_facilities_training',$pft_details);
-	    //$this->view->assign('national_percent_facilities_training_providing',$pftp_details);
+	    $this->view->assign('larc_coverage',array_reverse($larc_coverage));
+	    $this->view->assign('fp_coverage',array_reverse($fp_coverage));
 	     
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	}
