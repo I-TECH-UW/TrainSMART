@@ -47,7 +47,7 @@ class IndexController extends ITechController {
 	        $cs_details = $cs_data->fetchDashboardData('national_coverage_summary');
 	    }
 	     
-	    if (count($cln_details) > 0 && count($pfp_details) > 0 && count($pfso_details) > 0 && count($cs_details) > 0 ) { //got all
+	    if (count($cln_details) > 0 && count($pfp_details) > 0 && count($pfso_details) > 0 && isset($cs_details[last_date]) ) { //got all
 	    
 	        $this->view->assign('national_consumption_by_method', $cln_details);
 	        $this->view->assign('national_percent_facilities_providing', $pfp_details);
@@ -114,27 +114,37 @@ class IndexController extends ITechController {
 	         
 	        $cln_details = $cln_data->fetchCLNDetails('location', $id, $where, $group, $useName);
 	        
-	        $where = " 1=1 and cno.external_id in ( 'DiXDJRmPwfh', 'ibHR9NQ0bKL')";
-	        $pfp_details = $pfp_data->fetchPFPDetails( $where );
+	        //any 
+	        $where = " 1=1 and cno.external_id in ( 'w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') ";
+	        $pfp_any_details = $pfp_data->fetchPFPDetails( $where );
+	        
+	        //larc
+	        $where = " 1=1 and cno.external_id in ( 'DiXDJRmPwfh', 'yJSLjbC9Gnr')";
+	        $pfp_larc_details = $pfp_data->fetchPFPDetails( $where );
+
+	        file_put_contents('c:\wamp\logs\php_debug.log', 'indexAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	        var_dump('$pfp_any_details= ', $pfp_any_details, 'END');
+	        var_dump('$pfp_larc_details= ', $pfp_larc_details, 'END');
+	        $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	        
 	        $where = " 1=1 and (cno.external_id in ( 'DiXDJRmPwfh') and c.stock_out = 'Y') or  (cno.external_id in ( 'JyiR2cQ6DZT') and c.consumption = 1) ";
 	        $pfso_details = $pfso_data->fetchPFSODetails( $where );
-	         
-	        //file_put_contents('c:\wamp\logs\php_debug.log', 'dash9bAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	        //var_dump('$pfso_details= ', $pfso_details, 'END');
-	        //var_dump('$method= ', $method, 'END');
-	        //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
 	        $total = 0;
 	        
-	        foreach($pfp_details as $i => $row ){
-	            $national_percent_facilities_providing[] =array('month' => $row['month'], 'year' => $row['year'], 'fp_percent' => $row['fp_percent'], 'larc_percent' => $row['larc_percent'] );
+	        foreach($pfp_any_details as $i => $row ){
+	            $national_percent_facilities_providing[] =array('month' => $row['month'], 'year' => $row['year'], 'fp_percent' => $row['percent'], 'larc_percent' => $pfp_larc_details[$i]['percent'] );
 	        }
+	        
+	        //file_put_contents('c:\wamp\logs\php_debug.log', 'dash9bAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	        //var_dump('$pfso_details= ', $pfso_details, 'END');
+	        //var_dump('$method= ', $method, 'END');
+	        //var_dump('$national_percent_facilities_providing= ', $national_percent_facilities_providing, 'END');
+	        //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	        
 	        foreach($pfso_details as $i => $row ){
 	            $national_percent_facilities_stock_out[] =array('month' => $row['month'], 'year' => $row['year'], 'implant_percent' => $row['implant_percent'], 'seven_days_percent' => $row['seven_days_percent'] );
 	        }
-	         
 	         
 	        foreach($cln_details as $i => $row ){
 	             
@@ -197,6 +207,7 @@ class IndexController extends ITechController {
 	            $total_consumption[] = array('location' => $locationNames, 'consumption' => $total );
 	        }
 	        
+	        
 	        $cs_data = new DashboardCHAI();
 	        // specify date by "2014-12-01" or leave empty to get data for the last month
 	        $cs_details = $cs_data->fetchCSDetails(null);
@@ -208,10 +219,11 @@ class IndexController extends ITechController {
 	        $this->view->assign('cs_fp_stock_out_facility_count', round($cs_details['fp_stock_out_facility_count']/$cs_details['total_facility_count'], 2));
 	        $this->view->assign('cs_date', date_format(date_create($cs_details['last_date']), 'F Y'));
 	        
-	        file_put_contents('c:\wamp\logs\php_debug.log', 'dash9bAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	        var_dump('$cs_details= ', $cs_details, 'END');
+	        
+	        //file_put_contents('c:\wamp\logs\php_debug.log', 'dash9bAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	        //var_dump('$cs_details= ', $cs_details, 'END');
 	        //var_dump('$method= ', $method, 'END');
-	        $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	        //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	        	    
 	         
 	        $this->view->assign('national_consumption_by_method', $national_consumption_by_method);

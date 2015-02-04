@@ -202,12 +202,12 @@ print ScriptContainer::$instance->renderJSHead();
   function drawChart11() {
 	  // Create and populate the data table.
 	  var chart11Data = google.visualization.arrayToDataTable([
-			['State', 'Percentage', { role: 'style' }],
+			['Location', 'Percent', { role: 'style' }],
 
 <?php
 	foreach ($this->fp_data as $row){
 ?>
-['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo round($row[percentage],2)*100; ?>,'<?php echo $row[color]; ?>'],
+['<?php echo str_replace("'",'', str_replace(' ', '', $row[location]))  ?>', <?php echo round($row[percent],2)*100; ?>,'<?php echo $row[color]; ?>'],
 <?php
 	}
 ?>
@@ -235,12 +235,12 @@ print ScriptContainer::$instance->renderJSHead();
 	  // Create and populate the data table.
 	  var chart12Data = google.visualization.arrayToDataTable([
 
-['State', 'Percentage', { role: 'style' }],
+['Location', 'Percent', { role: 'style' }],
 	                                                           
 <?php
 		foreach ($this->larc_data as $row){
 	?>
-	['<?php echo str_replace("'",'', str_replace(' ', '', $row[state]))  ?>', <?php echo round($row[percentage],2)*100; ?>, <?php echo "'$row[color]'"; ?>],
+	['<?php echo str_replace("'",'', str_replace(' ', '', $row[location]))  ?>', <?php echo round($row[percent],2)*100; ?>, <?php echo "'$row[color]'"; ?>],
 	<?php
 		}
 	?>
