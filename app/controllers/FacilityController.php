@@ -364,13 +364,20 @@ class FacilityController extends ReportFilterHelpers {
 //  		"(SELECT id FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp2 group by name) " .
 //  		"order by id desc) as temp group by name) as temp3 INNER JOIN commodity_name_option
 // 				ON commodity_name_option.id=temp3.name order by temp3.name");
-		$rows = $db->fetchAll ("select temp3.id, commodity_name_option.commodity_name as name, DATE_FORMAT(date, '%m/%y') as date, consumption, stock_out, temp3.created_by, temp3.modified_by from " .
-				"(SELECT * FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp group by name_id " .
-				"union " .
-				"SELECT * FROM (SELECT *  from commodity where facility_id= ". $id . " and id not in " .
-				"(SELECT id FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp2 group by name_id) " .
-				"order by id desc) as temp group by name_id) as temp3 INNER JOIN commodity_name_option
-				ON commodity_name_option.id=temp3.name_id order by temp3.name_id");
+// 		$rows = $db->fetchAll ("select temp3.id, commodity_name_option.commodity_name as name, DATE_FORMAT(date, '%m/%y') as date, consumption, stock_out, temp3.created_by, temp3.modified_by from " .
+// 				"(SELECT * FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp group by name_id " .
+// 				"union " .
+// 				"SELECT * FROM (SELECT *  from commodity where facility_id= ". $id . " and id not in " .
+// 				"(SELECT id FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp2 group by name_id) " .
+// 				"order by id desc) as temp group by name_id) as temp3 INNER JOIN commodity_name_option
+// 				ON commodity_name_option.id=temp3.name_id order by temp3.name_id");
+//
+//Set 'Stock out of family planning commodities for 7 consecutive days' if consumption 1 then stock out 'Y'
+// update commodity set stock_out='Y', consumption=0 where name_id=32 and consumption=1;
+		$rows = $db->fetchAll ("select commodity.id, commodity_name_option.commodity_name as name, DATE_FORMAT(date, '%m/%y') as date, 
+consumption, stock_out, commodity.created_by, commodity.modified_by from commodity
+join commodity_name_option on commodity_name_option.id = commodity.name_id
+where commodity.facility_id=". $id . " and date > DATE_SUB(now(), INTERVAL 12 MONTH) order by commodity_name_option.commodity_name, date");
 		$noDelete = array();
 		$customColDefs = array();
 		foreach ($rows as $i => $row){ // lets add some data to the resultset to show in the EditTable
