@@ -9,7 +9,7 @@ print ScriptContainer::$instance->renderCSSHead();
 print ScriptContainer::$instance->renderJSHead();
 
 $checkLabel = t('show');
-if ( $this->mode == 'count'  || $this->mode == 'count2')
+if ( $this->mode == 'count'  || $this->mode == 'count2' || $this->mode == 'count3')
 	$checkLabel = t('group');
 $checkVisible = '';
 if ($this->mode == 'search' ) {
@@ -42,12 +42,14 @@ if ($this->mode == 'search' ) {
     		<option value="/reports/trainingByFacilityCount" <?php if ($this->mode == 'count') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('by').' '.t('Facility').' '.t('Participant Count');?></option>
    			<!--  TA:17:19 02/02/2015 -->
    			<option value="/reports/trainingByFacilityCount2" <?php if ($this->mode == 'count2') echo 'selected="selected"';?>><?php echo t('Facility').' '.t('by').' '.t('Count');?></option>
+   			<!--  TA:17:19 03/02/2015 -->
+   			<option value="/reports/trainingByFacilityCount3" <?php if ($this->mode == 'count3') echo 'selected="selected"';?>><?php echo t('Facility').' '.t('by').' '.t('HW trained');?></option>
    	</select>
    <?php } ?>
    <br clear="all" />
 	   <form action="" method="get">
-   <fieldset <?php if( $this->mode != 'search') echo 'id="criteria"'; ?> ><legend><?php tp('Select Criteria');?></legend>
-  <div id="dividers" style='height:390px;'>
+   <fieldset <?php if( $this->mode != 'search') echo 'id="criteria" class="multiselect_report" '; ?> ><legend><?php tp('Select Criteria');?></legend>
+  	<div id="dividers">
     <div class="fieldLabel " ></div>
     <div class="fieldInput criteria-header"><div  class="criteria-label" ><?php echo $checkLabel;?></div><div  class="criteria-label" style="padding-left: 20px;"><?php tp('filter');?></div></div>
 
@@ -81,7 +83,9 @@ if ($this->mode == 'search' ) {
 	</select></div></div>
 	<?php }?>
 	
-	<?php if ($this->mode != 'count2' ) { ?>
+	<?php if ($this->mode != 'count2' && $this->mode != 'count3') { ?>
+	<!-- TA:17:20 fix bug -->
+		<?php if($this->setting['display_facility_sponsor']){?>
 	<div class="fieldLabel" id="sponsor_id_lbl"><?php tp('Facility Sponsor');?></div>
     <div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showSponsor"  <?php echo $checkVisible;?>  <?php  if ($this->criteria['showSponsor'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showSponsor" <?php echo $checkVisible;?>></label>
 	<div  class="leftBorder">
@@ -94,29 +98,35 @@ if ($this->mode == 'search' ) {
 		?>
 	</select></div></div>
 	<?php } ?>
+	<?php } ?>
 
 	<?php region_filters_dropdown($this, $this->locations, $this->criteria, false, true); ?>
 
-	 <?php if ($this->mode != 'count2' ) { ?>
+	 <?php if ($this->mode != 'count2') { ?>
   <?php if ($this->mode != 'search' ) { ?>
 	<div class="fieldLabel" id="training_title_option_id_lbl"><?php echo (@$this->translation['Training Name']); ?></div>
-	<div class="fieldInput"><div class="leftBorderPad" ><input type="checkbox" name="showTrainingTitle" <?php echo $checkVisible;?> <?php  if ($this->criteria['showTrainingTitle'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showTrainingTitle" <?php echo $checkVisible;?>></label>
-	<div  class="leftBorder"><select id="training_title_id" name="training_title_id" >
+	<div class="fieldInput">
+	<div class="leftBorderPad" >
+	<input type="checkbox" name="showTrainingTitle" <?php echo $checkVisible;?> <?php  if ($this->criteria['showTrainingTitle'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div>
+	<label for="showTrainingTitle" <?php echo $checkVisible;?>></label>
+	<div  class="leftBorder">
+	<?php if ($this->mode == 'count2' || $this->mode == 'count3'){?>
+			<select id="training_title_id" name="training_title_id[]" multiple="multiple" size="9">
+		<?php }else {?>
+			<select id="training_title_id" name="training_title_id">
+			<?php }?>
 		<option value="">--<?php tp('All');?>--</option>
 		<?php
 		if  ($this->courses ) {
 			foreach ( $this->courses as $vals ) {
-				echo '<option value="'.$vals['id'].'"
-				     '.((@$this->criteria['training_title_id']) == $vals['id']? 'SELECTED':'').' >'
-				     .$this->truncate($vals['training_title_phrase']).'</option>';
-
+				echo '<option value="'.$vals['id'].'"'.((@$this->criteria['training_title_id']) == $vals['id']? 'SELECTED="selected"':'').' >'.$this->truncate($vals['training_title_phrase']).'</option>';
   		}
 		}
 		?>
 	</select></div></div>
 <?php } }?>
 
-<?php if ($this->mode != 'count2' ) { ?>
+<?php if ($this->mode != 'count2' && $this->mode != 'count3') { ?>
 	<div class="fieldLabel" id="training_location_id_lbl"><?php echo t('Training').' '.t('location');?></div>
 	<div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showLocation" <?php echo $checkVisible;?> <?php  if ($this->criteria['showLocation'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showLocation" <?php echo $checkVisible;?>></label>
 
@@ -142,7 +152,7 @@ if ($this->mode == 'search' ) {
 <?php } ?>
 
 
-<?php if ($this->mode != 'count2' ) { ?>
+<?php if ($this->mode != 'count2' && $this->mode != 'count3') { ?>
 <!-- TA:17: 09/03/2014  -->
 	<?php if ( $this->setting['display_training_level'] ) { ?>
 	<div class="fieldLabel" id="training_level_id_lbl"><?php echo (@$this->translation['Training Level']); ?></div>
@@ -188,7 +198,11 @@ if ($this->mode == 'search' ) {
 		<div class="fieldInput">
 		<div  class="leftBorderPad"><input type="checkbox" name="showMethod" <?php  if ($this->criteria['showMethod']) echo 'CHECKED';?> /></div>
 		<div  class="leftBorder">
-		<select id="method_id" name="method_id[]" multiple="multiple" size="10">
+		<?php if ($this->mode == 'count2' || $this->mode == 'count3'){?>
+			<select id="method_id" name="method_id[]" multiple="multiple" size="10">
+		<?php }else {?>
+			<select id="method_id" name="method_id">
+			<?php }?>
 		<option value="">--<?php tp('All');?>--</option>
 		<?php
 			foreach ( $this->methods as $vals ) {
@@ -290,7 +304,7 @@ if ($this->mode == 'search' ) {
 <?php if ( $this->criteria['go'] ) { ?>
 <div class="hrGrey"></div>
     <div class="fieldIndentNoMargin">
-    <?php if($this->mode == 'count2') echo t('Total').' '.t('Facilities');
+    <?php if($this->mode == 'count2' || $this->mode == 'count3') echo t('Total').' '.t('Facilities');
     	else echo t('Trainings').' '.t('matched with').' '.t('Facilities');
     	?> 
     <span class="total">
@@ -301,7 +315,7 @@ if ($this->mode == 'search' ) {
     <div id="trainings" class="itechTable"></div>
     <script type="text/javascript">
     	        var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
-	            elCell.innerHTML = "<a href='<?php echo $this->base_url; if($this->mode == 'count2') echo "/facility"; else echo "/training";?>/view/id/" + oRecord.getData("id") + "'>" + sData + "</a>";
+	            elCell.innerHTML = "<a href='<?php echo $this->base_url; if($this->mode == 'count2' || $this->mode == 'count3') echo "/facility"; else echo "/training";?>/view/id/" + oRecord.getData("id") + "'>" + sData + "</a>";
 	        };
 
 	        var trainingData = [

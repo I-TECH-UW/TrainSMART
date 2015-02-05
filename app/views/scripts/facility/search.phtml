@@ -44,6 +44,8 @@ print ScriptContainer::$instance->renderJSHead();
 		?>
 		</select></div>
 		<?php }?>
+		<!-- TA:17:20 fix bug -->
+		<?php if($this->setting['display_facility_sponsor']){?>
 		<div class="fieldLabel" id="sponsor_id_lbl"><?php echo t('Facility').space.t('Sponsor');?></div>
 		<div class="fieldInput">
 		<select id="sponsor_id" name="sponsor_id" >
@@ -54,6 +56,7 @@ print ScriptContainer::$instance->renderJSHead();
 				}
 				?>
 		</select></div>
+		<?php }?>
 
 		<div class="clear"></div>
 		<input type="hidden" name="limit" id="limit" value="1" />

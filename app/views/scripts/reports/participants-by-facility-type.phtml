@@ -74,6 +74,8 @@ function setDistrictStatus(selectedIndex)  {
 		}
 		?>
 	</select></div></div>
+	<!-- TA:17:20 fix bug -->
+		<?php if($this->setting['display_facility_sponsor']){?>
 	<div class="fieldLabel" id="sponsor_id_lbl"><?php tp('Facility Sponsor');?></div>
     <div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showSponsor"  <?php  if ($this->criteria['showSponsor'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showSponsor" ></label>
 	<div  class="leftBorder">
@@ -85,6 +87,7 @@ function setDistrictStatus(selectedIndex)  {
 		}
 		?>
 	</select></div></div>
+	<?php }?>
 	<div class="fieldLabel" id="training_title_option_id_lbl"><?php echo (@$this->translation['Training Name']); ?></div>
 	<div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showTrainingTitle" <?php  if ($this->criteria['showTrainingTitle']) echo 'CHECKED';?> /></div>
   	<div  class="leftBorder autoHeight">
