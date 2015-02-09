@@ -1751,46 +1751,41 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	        $useName = 'l3.location_name';
 	        $location = 'National';
 	    }
+
+	    $pftp_data = new DashboardCHAI();
 	    
 	    $geoWhere = str_replace(', )', ')', $where);
-	    $dateWhere = '1=1'; //todo
-	    
-	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController action12 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump('$geoWhere= ', $geoWhere,"END");
-	    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	    $dateWhere = '1=1';
 	     
-	    $pfp_data = new DashboardCHAI();
-	    $pftp_data = new DashboardCHAI();
-	     
-	    // have to call fetchPFPDetails to create base view
-	    $cnoWhere = " 1=1 and cno.external_id in ( 'DiXDJRmPwfh', 'yJSLjbC9Gnr')"; // implants, IUD's = LARC
-	    $pfp_details = $pfp_data->fetchPFPDetails( $cnoWhere, $geoWhere, $dateWhere, $group, $useName );
-	     
+	    $cnoWhere = " 1=1 and cno.external_id in ( 'DiXDJRmPwfh', 'yJSLjbC9Gnr')"; // implants, IUD's = LARC 
 	    $ttoWhere = " 1=1 and t.training_title_option_id = 1";
-	    $pftp_details = $pftp_data->fetchPFTPDetails( $ttoWhere, $geoWhere, $dateWhere, $group, $useName );
+	    $stockoutWhere = " cno.external_id in ( 'DiXDJRmPwfh' ) and c.stock_out = 'Y' "; 
+
+	   $pftp_details = $pftp_data->fetchPFTPDetails( $cnoWhere, $ttoWhere, $geoWhere, $dateWhere, $stockoutWhere, $group, $useName );
 	     
 	    // pivot
 	    //TA:17:17 add year to the result
 	    foreach ($pftp_details as $i => $row){
-	        $larc_coverage[] = array('month' => $pftp_details[$i]['month'], 'year' => $pftp_details[$i]['year'], 'tp_percent' => $pftp_details[$i]['tp_percent'], 'larc_percent' => $pfp_details[$i]['numer'], 'tt_percent' => $pftp_details[$i]['tt_percent']);
+	        $larc_coverage[] = array('month' => $pftp_details[$i]['month'], 'year' => $pftp_details[$i]['year'], 
+	            'tp_percent' => $pftp_details[$i]['tp_percent'], 
+	            'tso_percent' => $pftp_details[$i]['tso_percent'], 
+	            'tt_percent' => $pftp_details[$i]['tt_percent']);
 	    }
 	    
-	    /*
-	     
 	    $cnoWhere = " 1=1 and cno.external_id in ( 'w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw' )";
-	    $pfp_details = $pfp_data->fetchPFPDetails(  $cnoWhere, $geoWhere, $dateWhere, $group, $useName );
-	
 	    $ttoWhere = " 1=1 and t.training_title_option_id = 2 ";
-	    $pftp_details = $pftp_data->fetchPFTPDetails(  $ttoWhere, $geoWhere, $dateWhere, $group, $useName );
+	    $stockoutWhere = " cno.external_id in ( 'JyiR2cQ6DZT' ) ";
+	    $pftp_details = $pftp_data->fetchPFTPDetails( $cnoWhere, $ttoWhere, $geoWhere, $dateWhere, $stockoutWhere, $group, $useName );
 	
 	    // pivot
 	    //TA:17:17 add year to the result
 	    foreach ($pftp_details as $i => $row){
-	        $fp_coverage[] = array('month' => $pftp_details[$i]['month'], 'year' => $pftp_details[$i]['year'], 'tp_percent' => $pftp_details[$i]['tp_percent'], 'fp_percent' => $pfp_details[$i]['fp_percent'], 'tt_percent' => $pftp_details[$i]['tt_percent']);
+	        $fp_coverage[] = array('month' => $pftp_details[$i]['month'], 'year' => $pftp_details[$i]['year'],
+	            'tp_percent' => $pftp_details[$i]['tp_percent'],
+	            'tso_percent' => $pftp_details[$i]['tso_percent'],
+	            'tt_percent' => $pftp_details[$i]['tt_percent']);
 	    }
-	    */
 	
-	     
 	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController action12 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	    //var_dump('$pfp_details= ', $pfp_details,"END");
 	    //var_dump('$pftp_details= ', $pftp_details,"END");

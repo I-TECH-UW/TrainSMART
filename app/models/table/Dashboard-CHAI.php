@@ -1289,7 +1289,7 @@ order by percentage
 
 				    */
 	
-public function fetchPFTPDetails( $ttoWhere = null, $geoWhere = null, $dateWhere = null, $group = null, $useName = null ) {
+public function fetchPFTPDetails( $cnoWhere = null, $ttoWhere = null, $geoWhere = null, $dateWhere = null, $stockoutWhere = null, $group = null, $useName = null ) {
     $db = Zend_Db_Table_Abstract::getDefaultAdapter();
     $output = array();
     
@@ -1306,16 +1306,49 @@ public function fetchPFTPDetails( $ttoWhere = null, $geoWhere = null, $dateWhere
       
      */
     
-    //providing, numer
+    
+    //pfp_view with trained
     $select = $db->select()
-    ->from(array('cv' => 'pfp_view'),
+    ->from(array('c' => 'commodity'),
         array(
-            'C_date',
-            'numer' ))
-            ->order(array('C_date desc'))
-            ->limit('12');
+            'c.date as C_date',
+            'monthname(c.date) as C_monthName',
+            'year(c.date) as C_year',
+                'count(distinct(c.facility_id)) as numer'))
+                ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
+                ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+                ->joinInner(array('frr' => "facility_report_rate"), 'f.external_id = frr.facility_external_id')
+                
+                ->joinLeft(array('p' => "person"), 'f.id = p.facility_id')
+                ->joinLeft(array('pt' => "person_to_training"), 'pt.person_id = p.id')
+                ->joinLeft(array('t' => "training"), 'pt.training_id = t.id')
+                
+        	    ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+        	    ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+        	    ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+                ->where($cnoWhere)
+                ->where($ttoWhere)
+                ->where($geoWhere)
+                ->group(array('C_date'))
+                ->order(array('C_date desc'))
+                ->limit(12);
         
-        $numer = $db->fetchAll($select);
+        $sql = $select->__toString();
+        $sql = str_replace('AS `numer`,', 'AS `numer`', $sql);
+        $sql = str_replace('`c`.*,', '', $sql);
+        $sql = str_replace('`cno`.*,', '', $sql);
+        $sql = str_replace('`f`.*,', '', $sql);
+        $sql = str_replace('`frr`.*,', '', $sql);
+        
+        $sql = str_replace('`p`.*,', '', $sql);
+		$sql = str_replace('`pt`.*,', '', $sql);
+		$sql = str_replace('`t`.*,', '', $sql);
+        
+        $sql = str_replace('`l1`.*,', '', $sql);
+        $sql = str_replace('`l2`.*,', '', $sql);
+        $sql = str_replace('`l3`.*', '', $sql);
+ 
+    $numer = $db->fetchAll($sql);
     
     // fetch total from begin-of-time to 1 year ago
     $select = $db->select()
@@ -1359,6 +1392,7 @@ public function fetchPFTPDetails( $ttoWhere = null, $geoWhere = null, $dateWhere
             ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
             ->joinLeft(array("t" => "training"), 'pt.training_id = t.id')
             ->joinInner(array('tto' => training_title_option), 't.training_title_option_id = tto.id')
+            ->where($ttoWhere)
             ->where($geoWhere)
             ->where('t.training_end_date between date_sub(now(), interval 365 day) and now() ')
             ->group('t.training_end_date')
@@ -1394,18 +1428,72 @@ public function fetchPFTPDetails( $ttoWhere = null, $geoWhere = null, $dateWhere
     }
     $prev_year = array_merge($prev_year, $new_rows);
     
+    // fetch total number of facilities reporting for use in tt calc
     
+	    $select = $db->select()
+	    ->from(array('f' => 'facility'),
+	        array(
+	            'frr.date',
+	            'count(distinct(frr.facility_external_id)) as denom'))
+	            ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+	            ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+	            ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+	            ->joinInner(array('frr' => "facility_report_rate"), 'f.external_id = frr.facility_external_id')
+	            ->where($geoWhere)
+	            ->group(array( 'frr.date' ));
+	        
+	        $sql = $select->__toString();
+	        $sql = str_replace('AS `denom`,', 'AS `denom`', $sql);
+	        $sql = str_replace('`l1`.*,', '', $sql);
+	        $sql = str_replace('`l2`.*,', '', $sql);
+	        $sql = str_replace('`l3`.*,', '', $sql);
+	        $sql = str_replace('`frr`.*', '', $sql);
     
-    // fetch number of facilities reporting for use in tt calc, select sum(cnt) from pft_denom_view;
-    $select = $db->select()
-    ->from(array('pfp' => 'pfp_denom_view'),
-        array(
-            'sum(denom) as facilities_reporting' ));
+        $facilities_reporting = $db->fetchAll( $sql );
     
-    $facilities_reporting = $db->fetchOne( $select );
+    // stocked out
+		    $select = $db->select()
+		    ->from(array('c' => 'commodity'),
+		        array(
+		        'c.date',
+		        'count(distinct(frr.facility_external_id)) AS stocked_out_numer' ))
+		        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
+		        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
+		        
+		        ->joinLeft(array('p' => "person"), 'f.id = p.facility_id')
+		        ->joinLeft(array('pt' => "person_to_training"), 'pt.person_id = p.id')
+		        ->joinLeft(array('t' => "training"), 'pt.training_id = t.id')
+		        
+		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+		        ->where($stockoutWhere)
+		        ->where($ttoWhere)
+ 		        ->where($geoWhere)
+ 		        ->group(array( 'c.date' ))
+ 		        ->order(array('c.date desc'))
+		        ->limit(12);
+		    
+
+		    $sql = $select->__toString();
+		    $sql = str_replace('AS `stocked_out_numer`,','AS `stocked_out_numer`', $sql);
+		    $sql = str_replace('`cno`.*,', '', $sql);
+		    $sql = str_replace('`f`.*,', '', $sql);
+		    $sql = str_replace('`frr`.*,', '', $sql);
+		    
+		    $sql = str_replace('`p`.*,', '', $sql);
+		    $sql = str_replace('`pt`.*,', '', $sql);
+		    $sql = str_replace('`t`.*,', '', $sql);
+		    
+		    $sql = str_replace('`l1`.*,', '', $sql);
+		    $sql = str_replace('`l2`.*,', '', $sql);
+		    $sql = str_replace('`l3`.*', '', $sql);
+		    
+		    $stocked_out = $db->fetchAll( $sql );
     
     // calc running total and use as denom
-    foreach ($numer as $nrow){
+    for ($i = 0; $i < 12; $i++) {
         $denom = $start_denom_total;
         foreach ($prev_year as $prow){
             
@@ -1413,27 +1501,25 @@ public function fetchPFTPDetails( $ttoWhere = null, $geoWhere = null, $dateWhere
                 $denom = $denom + $prow['added'];
             }
         }
-        $tmp[] = array('date' => $nrow['C_date'], 'numer' => $nrow['numer'], 'denom' => $denom, 'added' => $prow['added'], 'fac_reporting' => $facilities_reporting );
         
-        $date = strtotime($nrow['C_date']);
-        $monthName = date('F', $date);
-        $year = date('Y', $date);
-        
-        //$output[] = array($nrow['C_date'], $nrow['numer']/$denom);
-        $output[] = array('month' => $monthName, 'year' => $year, 'tp_percent' => $nrow['numer']/$denom, 'tt_percent' => $denom/$facilities_reporting);
-    }
-   
+        $output[] = array('month' => $numer[$i]['C_monthName'], 'year' => $numer[$i]['C_year'], 
+            'tt_percent' => $denom/$facilities_reporting[$i]['denom'],
+            'tp_percent' => $numer[$i]['numer']/$denom, 
+            'tso_percent' => $stocked_out[$i][stocked_out_numer]/$denom );
     
-    file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI PFTP >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-    //var_dump('$numer= ', $numer,"END");
-    var_dump('$tmp= ', $tmp,"END");
-    //var_dump('$facilities_reporting= ', $facilities_reporting,"END");
+    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI PFTP >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+    //var_dump('$month= ', $monthName,"END");
+    //var_dump('$numer= ', $nrow['numer'],"END");
+    //var_dump('$stocked_out[$i][stocked_out_numer]= ', $stocked_out[$i]['stocked_out_numer'],"END");
+    //var_dump('$denom= ', $denom,"END");
+    //var_dump('$tmp= ', $tmp,"END");
+    //var_dump("$facilities_reporting[$i]['denom']= ", $facilities_reporting[$i]['denom'],"END");
     //var_dump('$output= ', $output,"END");
     //var_dump('$new_rows= ', $new_rows,"END");
     //var_dump('$prev_year= ', $prev_year,"END");
     //var_dump('$start_denom_total= ', $start_denom_total,"END");
-    //var_dump('$month= ', $month,"END");
-    $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    }
     
     return $output;
 }	

@@ -185,20 +185,20 @@ print ScriptContainer::$instance->renderJSHead();
   function drawChart11() {
 	  
       var chart11Data = google.visualization.arrayToDataTable([
-['Month', '% trained providing LARC', '% providing LARC', '% trained in LARC'],
+['Month', '% trained and providing LARC', '% trained and stocked out LARC', '% trained in LARC'],
 
 <?php
-	$start_date = '';
-	$end_date = '';
-	for($i=0; $i<count($this->larc_coverage); $i++){
-		$row = $this->larc_coverage[$i];
-		if($i == 0)
-			$start_date = $row[month] . " " . $row[year];
-		if($i == count($this->larc_coverage)-1)
-			$end_date = $row[month] . " " . $row[year];
-  		//foreach ($this->larc_coverage as $row){
+$start_date = '';
+$end_date = '';
+for($i=0; $i<count($this->larc_coverage); $i++){
+    $row = $this->larc_coverage[$i];
+    if($i == 0)
+        $start_date = $row[month] . " " . $row[year];
+    if($i == count($this->larc_coverage)-1)
+        $end_date = $row[month] . " " . $row[year];
+  	//foreach ($this->larc_coverage as $row){
   	?>
-  	[<?php echo  " '$row[month]'," . round($row[tp_percent],2)*100 . "," . round($row[larc_percent],2)*100 . "," . round($row[tt_percent],2)*100 ?>],
+  	[<?php echo  " '$row[month]'," . round($row[tp_percent],2)*100 . "," . round($row[tso_percent],2)*100 . "," . round($row[tt_percent],2)*100 ?>],
   	<?php
   		}
   	?>
@@ -222,7 +222,7 @@ print ScriptContainer::$instance->renderJSHead();
   function drawChart12() {
 	  
       var chart12Data = google.visualization.arrayToDataTable([
-['Month', '% trained providing FP', '% providing FP', '% trained in FP'],
+['Month', '% trained and providing FP', '% trained and stocked out FP', '% trained in FP'],
 
 <?php
 $start_date = '';
@@ -235,7 +235,7 @@ $start_date = '';
 			$end_date = $row[month] . " " . $row[year];
   		//foreach ($this->larc_coverage as $row){
   	?>
-  	[<?php echo  " '$row[month]'," . round($row[tp_percent],2)*100 . "," . round($row[fp_percent],2)*100 . "," . round($row[tt_percent],2)*100 ?>],
+  	[<?php echo  " '$row[month]'," . round($row[tp_percent],2)*100 . "," . round($row[tso_percent],2)*100 . "," . round($row[tt_percent],2)*100 ?>],
   	<?php
   		}
   	?>
