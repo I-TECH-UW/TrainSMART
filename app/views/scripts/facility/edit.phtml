@@ -143,7 +143,7 @@ print ScriptContainer::$instance->renderJSHead();
   <div class="hrGrey"></div>
   <div class="clear"></div>
   <!-- TA:17: rows count must have this format <span id="[label]_total">-->
-  <div class="fieldIndentNoMargin"><?php tp('Commodity Information');?> <span class="total"><?php tp('Total Commodities:');?> <span id="commodity_total"><?php echo $this->escape($this->totalCommodities);?></span></span></div>
+  <div class="fieldIndentNoMargin"><?php tp('Commodity Information');?> <span class="total"><?php tp('Total Records For Last 12 Months:');?> <span id="commodity_total"><?php echo $this->escape($this->totalCommodities);?></span></span></div>
   <div class="fieldIndent2">
   <!-- TA:17: table div id must have this format  <div id="[label]Table">-->
   <div name="commodityTable" id="commodityTable"></div>
@@ -191,7 +191,7 @@ print ScriptContainer::$instance->renderJSHead();
             jsonAdd.date = month + "/" + oCDateYY.value;
             jsonAdd.consumption = oCCons.value;
             jsonAdd.stock_out = oCStockOut.value;
-          	ITECH.commodityTable.addDataRow(jsonAdd, oCName.value);
+          	ITECH.commodityTable.addDataRow(jsonAdd, oCName.options[oCName.selectedIndex].text);
             
             oCName.value = "";
             oCDateMM.value = "";
