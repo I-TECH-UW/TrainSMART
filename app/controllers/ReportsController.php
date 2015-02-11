@@ -10992,120 +10992,164 @@ die (__LINE__ . " - " . $sql);
 	}
 
 
-  public function mechanismsAction() {
-	require_once ('models/table/Helper.php');
-	require_once ('views/helpers/FormHelper.php');
-	require_once ('views/helpers/DropDown.php');
-	require_once ('views/helpers/Location.php');
-	require_once ('views/helpers/CheckBoxes.php');
-	require_once ('views/helpers/TrainingViewHelper.php');
+	public function mechanismsAction() {
+		require_once ('models/table/Helper.php');
+		require_once ('views/helpers/FormHelper.php');
+		require_once ('views/helpers/DropDown.php');
+		require_once ('views/helpers/Location.php');
+		require_once ('views/helpers/CheckBoxes.php');
+		require_once ('views/helpers/TrainingViewHelper.php');
 
-	$criteria = $this->getAllParams();
-	
-	// file_put_contents('c:\wamp\logs\php_debug.log', 'repCont 10911>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	// var_dump($criteria);
-	// $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-
-	if ($criteria['go'])
-	{
-
-		$where = array();
-		
-		switch ($criteria['report']) {
-			case "defined":
-				
-				$sql = "
-select sfm.id, subp.partner as subpartner, funder_phrase, mechanism_phrase, sfm.funding_end_date
-from subpartner_to_funder_to_mechanism sfm
-left join partner subp on subp.id = sfm.subpartner_id
-left join partner_funder_option pf on pf.id = sfm.partner_funder_option_id
-left join mechanism_option m on m.id = sfm.mechanism_option_id
-";
-				break;
-				
-			case "definedByPartner":
-				
-				$sql = "
-select psfm.id, p.partner, subp.partner as subpartner, funder_phrase, mechanism_phrase, psfm.funding_end_date
-from partner_to_subpartner_to_funder_to_mechanism psfm
-left join partner p on p.id = psfm.partner_id
-left join partner subp on subp.id = psfm.subpartner_id
-left join partner_funder_option pf on pf.id = psfm.partner_funder_option_id
-left join mechanism_option m on m.id = psfm.mechanism_option_id
-";
-				break;
-				
-			case "definedByEmployee":
-				
-				$sql = "
-select epsfm.id, e.employee_code, p.partner, subp.partner as subpartner, funder_phrase, mechanism_phrase, epsfm.percentage
-from employee_to_partner_to_subpartner_to_funder_to_mechanism epsfm
-left join employee e on e.id = epsfm.employee_id
-left join partner p on p.id = epsfm.partner_id
-left join partner subp on subp.id = epsfm.subpartner_id
-left join partner_funder_option pf on pf.id = epsfm.partner_funder_option_id
-left join mechanism_option m on m.id = epsfm.mechanism_option_id
-";
-				break;
-		}
-		
-		
-				// criteria
-		if ($criteria['partner_id'] && $criteria['report'] != 'defined' ) $where[] = 'p.id = '.$criteria['partner_id'];
-		if ($criteria['subpartner_id'])                   $where[] = 'subp.id = '.$criteria['subpartner_id'];
-
-		if ($criteria['start_date'])                      $where[] = 'funding_end_date >= \''.$this->_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
-
-		if ($criteria['end_date'])                        $where[] = 'funding_end_date <= \''.$this->_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
-
-
-		
-		switch ($criteria['report']) {
-			case "defined":
-				if ( count ($where) ){
-					$sql .= ' WHERE ' . implode(' AND ', $where);
-					$sql .= ' AND sfm.is_deleted = false ';
-				}
-				else  $sql .= ' WHERE sfm.is_deleted = false ';
-				$sql .= ' order by subp.partner, funder_phrase, mechanism_phrase ';
-				break;
-			case "definedByPartner":
-				if ( count ($where) ){
-					$sql .= ' WHERE ' . implode(' AND ', $where);
-					$sql .= ' AND psfm.is_deleted = false ';
-				}
-				else  $sql .= ' WHERE psfm.is_deleted = false ';
-				$sql .= ' order by p.partner, subp.partner, funder_phrase, mechanism_phrase ';
-				break;
-			case "definedByEmployee":
-				if ( count ($where) ){
-					$sql .= ' WHERE ' . implode(' AND ', $where);
-					$sql .= ' AND epsfm.is_deleted = false ';
-				}
-				else  $sql .= ' WHERE epsfm.is_deleted = false ';
-				$sql .= ' order by e.employee_code, p.partner, subp.partner, funder_phrase, mechanism_phrase ';
-				break;
-		}
-
+		$criteria = $this->getAllParams();
 		$db = $this->dbfunc();
-		$rowArray = $db->fetchAll( $sql );
-		$this->viewAssignEscaped ('results', $rowArray );
-		$this->view->assign ('count', count($rowArray) );
 
-		if ($criteria ['outputType']) {
-			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
+		if ($criteria['go'])
+		{
+
+			$where = array();
+
+			// TODO: This special case report is bad
+			if($criteria['report'] == "subpartnerEmployees") {
+				$sql = "SELECT partner.partner, link_mechanism_partner.partner_id
+						FROM link_mechanism_partner
+						INNER JOIN partner ON link_mechanism_partner.partner_id = partner.id
+						WHERE link_mechanism_partner.mechanism_option_id = {$criteria['mechanism_id']}";
+				$sql = "SELECT
+partner.partner,
+link_mechanism_partner.partner_id,
+mechanism_option.mechanism_phrase
+FROM
+link_mechanism_partner
+INNER JOIN partner ON link_mechanism_partner.partner_id = partner.id
+INNER JOIN mechanism_option ON link_mechanism_partner.mechanism_option_id = mechanism_option.id
+WHERE link_mechanism_partner.mechanism_option_id = {$criteria['mechanism_id']}";
+				$rowArray = $db->fetchAll($sql);
+				foreach($rowArray as &$row) {
+					$sql = "SELECT COUNT(*) as numberEmployees
+							FROM employee
+							INNER JOIN link_mechanism_employee ON link_mechanism_employee.employee_id = employee.id
+							WHERE employee.partner_id = {$row['partner_id']} AND
+							link_mechanism_employee.mechanism_option_id = {$criteria['mechanism_id']}";
+					$row['numberEmployees'] = $db->fetchOne($sql);
+				}
+				$this->viewAssignEscaped('results', $rowArray);
+				$this->view->assign('count', count($rowArray));
+
+				if ($criteria ['outputType']) {
+					$this->sendData($this->reportHeaders(false, $rowArray));
+				}
+
+			}
+
+			switch ($criteria['report']) {
+				case "defined":
+
+					$sql = "
+							select sfm.id, subp.partner as subpartner, funder_phrase, mechanism_phrase, sfm.funding_end_date
+							from subpartner_to_funder_to_mechanism sfm
+							left join partner subp on subp.id = sfm.subpartner_id
+							left join partner_funder_option pf on pf.id = sfm.partner_funder_option_id
+							left join mechanism_option m on m.id = sfm.mechanism_option_id
+							";
+					break;
+
+				case "definedByPartner":
+
+					$sql = "
+							select psfm.id, p.partner, subp.partner as subpartner, funder_phrase, mechanism_phrase, psfm.funding_end_date
+							from partner_to_subpartner_to_funder_to_mechanism psfm
+							left join partner p on p.id = psfm.partner_id
+							left join partner subp on subp.id = psfm.subpartner_id
+							left join partner_funder_option pf on pf.id = psfm.partner_funder_option_id
+							left join mechanism_option m on m.id = psfm.mechanism_option_id
+							";
+					break;
+
+				case "definedByEmployee":
+
+					$sql = "
+							select epsfm.id, e.employee_code, p.partner, subp.partner as subpartner, funder_phrase, mechanism_phrase, epsfm.percentage
+							from employee_to_partner_to_subpartner_to_funder_to_mechanism epsfm
+							left join employee e on e.id = epsfm.employee_id
+							left join partner p on p.id = epsfm.partner_id
+							left join partner subp on subp.id = epsfm.subpartner_id
+							left join partner_funder_option pf on pf.id = epsfm.partner_funder_option_id
+							left join mechanism_option m on m.id = epsfm.mechanism_option_id
+							";
+					break;
+			}
+
+			// criteria
+			if ($criteria['partner_id'] && $criteria['report'] != 'defined' ) {
+				$where[] = 'p.id = '.$criteria['partner_id'];
+			}
+
+			if ($criteria['subpartner_id']) {
+				$where[] = 'subp.id = '.$criteria['subpartner_id'];
+			}
+
+			if ($criteria['start_date']) {
+				$where[] = 'funding_end_date >= \'' . $this->_date_to_sql($criteria['start_date']) . ' 00:00:00\'';
+			}
+			if ($criteria['end_date']) {
+				$where[] = 'funding_end_date <= \'' . $this->_date_to_sql($criteria['end_date']) . ' 23:59:59\'';
+			}
+
+			switch ($criteria['report']) {
+
+				case "defined":
+					if ( count ($where) ){
+						$sql .= ' WHERE ' . implode(' AND ', $where);
+						$sql .= ' AND sfm.is_deleted = false ';
+					}
+					else  {
+						$sql .= ' WHERE sfm.is_deleted = false ';
+					}
+					$sql .= ' order by subp.partner, funder_phrase, mechanism_phrase ';
+					break;
+				case "definedByPartner":
+					if ( count ($where) ){
+						$sql .= ' WHERE ' . implode(' AND ', $where);
+						$sql .= ' AND psfm.is_deleted = false ';
+					}
+					else {
+						$sql .= ' WHERE psfm.is_deleted = false ';
+					}
+					$sql .= ' order by p.partner, subp.partner, funder_phrase, mechanism_phrase ';
+					break;
+				case "definedByEmployee":
+					if ( count ($where) ){
+						$sql .= ' WHERE ' . implode(' AND ', $where);
+						$sql .= ' AND epsfm.is_deleted = false ';
+					}
+					else {
+						$sql .= ' WHERE epsfm.is_deleted = false ';
+					}
+					$sql .= ' order by e.employee_code, p.partner, subp.partner, funder_phrase, mechanism_phrase ';
+					break;
+			}
+			// TODO: This special case is bad.
+			if($criteria['report'] != "subpartnerEmployees") {
+				$rowArray = $db->fetchAll($sql);
+				$this->viewAssignEscaped('results', $rowArray);
+				$this->view->assign('count', count($rowArray));
+
+				if ($criteria ['outputType']) {
+					$this->sendData($this->reportHeaders(false, $rowArray));
+				}
+			}
 		}
-	}
 
-    $sql = '';
-	// assign form drop downs
-	$this->view->assign ( 'status',   $status );
-	$this->view->assign ( 'criteria', $criteria );
-	$this->view->assign ( 'pageTitle', t('Reports'));
-	$this->view->assign ( 'report', $criteria['report']);
-	
-	$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false ) ); //table, col, selected_value
-	$this->view->assign ( 'subpartners', DropDown::generateHtml ( 'partner', 'partner', $criteria['subpartner_id'], false, $this->view->viewonly, false, true, array('name' => 'subpartner_id'), true ) );
-	
-  }
+		$sql = "SELECT id, mechanism_phrase from mechanism_option where is_deleted = 0 order by mechanism_phrase ASC";
+		$mechanisms = $db->fetchAll($sql);
+
+		// assign form drop downs
+		$this->view->assign('criteria', $criteria);
+		$this->view->assign('pageTitle', t('Reports'));
+		$this->view->assign('report', $criteria['report']);
+		$this->view->assign('mechanisms', $mechanisms);
+
+		$this->view->assign ('partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false)); //table, col, selected_value
+		$this->view->assign ('subpartners', DropDown::generateHtml ( 'partner', 'partner', $criteria['subpartner_id'], false, $this->view->viewonly, false, true, array('name' => 'subpartner_id'), true));
+	}
 }
