@@ -796,6 +796,7 @@ order by date;
 		        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
 		        ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')
 		        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
 		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
 		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
 		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
@@ -819,12 +820,12 @@ order by date;
 		
 		    }
 		    
-		    file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI fetchPercentFacHWProvidingStockOutDetails  >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		    var_dump('$numer= ', $numer, 'END');
-		    var_dump('$denom= ', $denom, 'END');
-		    var_dump('$output= ', $output, 'END');
+		    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI fetchPercentFacHWProvidingStockOutDetails  >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+		    //var_dump('$numer= ', $numer, 'END');
+		    //var_dump('$denom= ', $denom, 'END');
+		    //var_dump('$output= ', $output, 'END');
 		    //var_dump('$ouput= ', $output, 'END');
-		    $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+		    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 		
 		    return $output;
 		}
@@ -912,6 +913,7 @@ order by date;
 		        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
 		        ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')
 		        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
 		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
 		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
 		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
@@ -2074,6 +2076,20 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
                           );
                       }
                       break;
+                  case 'national_larc_coverage':
+                  case 'national_fp_coverage':
+                  
+                      foreach ($result as $row) {
+                          $output[] = array(
+                              "month" => $row['data0'],
+                              "year" => $row['data1'],
+                              "tt_percent" => $row['data2'],
+                              "tso_percent" => $row['data3'],
+                              "tp_percent" => $row['data4'],
+                               
+                          );
+                      }
+                      break;
                   
             }
             
@@ -2340,6 +2356,25 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
 		                  $insert_result = $dashboard_refresh->insert($data);
 		              }
 		              break;
+		              
+		              case 'national_larc_coverage':
+		              case 'national_fp_coverage':
+		                   
+		                  foreach($details as $row){
+		                      $data = array(
+		                          'datetime'  => $dateTime,
+		                          'chart'  => $chart,
+		                          'data0'  => $row['month'],
+		                          'data1'  => $row['year'],
+		                          'data2'  => $row['tt_percent'],
+		                          'data3'  => $row['tso_percent'],
+		                          'data4'  => $row['tp_percent'],
+		                           
+		                      );
+		                       
+		                      $insert_result = $dashboard_refresh->insert($data);
+		                  }
+		                  break;
 
 		    }
 		    

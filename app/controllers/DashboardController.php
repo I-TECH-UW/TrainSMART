@@ -1714,6 +1714,25 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	public function dash12Action() {
 	    
 	    require_once('models/table/Dashboard-CHAI.php');
+	    $larc_data = new DashboardCHAI();
+	    $fp_data = new DashboardCHAI();
+	    
+	    	    // geo selection includes "--choose--" or no selection
+	    if( ( isset($_POST["region_c_id"] ) && $_POST["region_c_id"][0] == "" ) ||
+	        ( isset($_POST["district_id"] ) && $_POST["district_id"][0] == "" ) ||
+	        ( isset($_POST["province_id"] ) && $_POST["province_id"][0] == "" ) ||
+	        (!isset($_POST["region_c_id"] ) && !isset($_POST["district_id"] ) && !isset($_POST["province_id"] ) ) ){
+	        //get national numbers from refresh
+	        $larc_details = $larc_data->fetchDashboardData('national_larc_coverage');
+	        $fp_details = $fp_data->fetchDashboardData('national_fp_coverage');
+	    }
+	    
+	    if (count($larc_details) > 0 && count($fp_details) > 0 ) { //got all
+	         
+	        $this->view->assign('larc_coverage', $larc_details);
+	        $this->view->assign('fp_coverage', $fp_details);
+	    
+	    } else {
 	    
 	    $where = ' 1=1 ';
 	     
@@ -1795,6 +1814,13 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	     
 	    $this->view->assign('larc_coverage',array_reverse($larc_coverage));
 	    $this->view->assign('fp_coverage',array_reverse($fp_coverage));
+	    
+	    if ($location == 'National') {
+	        $larc_details = $larc_data->insertDashboardData(array_reverse($larc_coverage), 'national_larc_coverage');
+	        $fp_details = $fp_data->insertDashboardData(array_reverse($fp_coverage), 'national_fp_coverage');
+	    }
+	    
+	    } // else
 	     
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	}
@@ -2174,8 +2200,8 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	         $larc_details = $larc_data->fetchPercentFacHWProvidingStockOutDetails($cnoConsumptionWhere, $cnoStockOutWhere, $geoWhere, $group, $useName);
 	         $this->view->assign('larc_data',$larc_details);
 	        
-	        $cnoStockOutWhere =  " cno.external_id in ('ibHR9NQ0bKL') and c.stock_out = 'Y' and c.date = (select max(date) from commodity) ";
-	        $cnoConsumptionWhere = " cno.external_id in ('ibHR9NQ0bKL') and c.consumption > 0 and c.date between date_sub(now(), interval 182 day) and now() ";
+	        $cnoStockOutWhere =  " cno.external_id in ('JyiR2cQ6DZT') and c.date = (select max(date) from commodity) ";
+	        $cnoConsumptionWhere = " cno.external_id in ('w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') and c.consumption > 0 and c.date between date_sub(now(), interval 182 day) and now() ";
 	        $fp_details = $fp_data->fetchPercentFacHWProvidingStockOutDetails($cnoConsumptionWhere, $cnoStockOutWhere, $geoWhere, $group, $useName);
 	        $this->view->assign('fp_data',$fp_details);
 	        
