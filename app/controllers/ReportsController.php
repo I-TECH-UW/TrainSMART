@@ -79,13 +79,17 @@ class ReportsController extends ReportFilterHelpers {
 			'score_percent_change' => '% change',
 			'custom1_phrase' => 'Professional registration number',
 			'city_name' => 'City',
-			'cnt' => t ( 'Count' ), 'active' => @$translation ['Is Active'], 'first_name' => @$translation ['First Name'], 'middle_name' => @$translation ['Middle Name'], 'last_name' => @$translation ['Last Name'], 'training_title' => t('Training').' '.t('Name'), 'province_name' => @$translation ['Region A (Province)'], 'district_name' => @$translation ['Region B (Health District)'], 'pepfar_category_phrase' => @$translation ['PEPFAR Category'], 'training_organizer_phrase' => t('Training').' '.t('Organizer'), 'training_level_phrase' => t('Training').' '.t('Level'), 'trainer_language_phrase' => t ( 'Language' ), 'training_location_name' => t ( 'Location' ), 'training_start_date' => t ( 'Date' ), 'training_topic_phrase' => t ('Training').' '.t('topic'), 'funding_phrase' => t ( 'Funding' ), 'is_tot' => t ( 'TOT' ), 'facility_name' => t ('Facility').' '.t('name'), 'facility_type_phrase' => t ('Facility').' '.t('type'), 'facility_sponsor_phrase' => t ('Facility').' '.t('sponsor'), 'course_recommended' => t ( 'Recommended classes' ), 'recommended' => t ( 'Recommended' ), 'qualification_phrase' => t ( 'Qualification' ) . ' ' . t ( '(primary)' ), 'qualification_secondary_phrase' => t ( 'Qualification' ) . ' ' . t ( '(secondary)' ), 'gender' => t ( 'Gender' ), 'name' => t ( 'Name' ), 'email' => t ( 'Email' ), 'phone' => t ( 'Phone' ), 'cat' => t ( 'Category' ), 'language_phrase' => t ( 'Language' ), 'trainer_type_phrase' => t ( 'Type' ), 'trainer_skill_phrase' => t ( 'Skill' ), 'trainer_language_phrase' => t ( 'Language' ), 'trainer_topic_phrase' => t ( 'Topics taught' ), 'phone_work' => t ( 'Work phone' ), 'phone_home' => t ( 'Home phone' ), 'phone_mobile' => t ( 'Mobile phone' ), 'type_option_id' => 'Type' );
+			'cnt' => t ( 'Count' ), 'active' => @$translation ['Is Active'], 'first_name' => @$translation ['First Name'], 'middle_name' => @$translation ['Middle Name'], 
+					'last_name' => @$translation ['Last Name'], 'training_title' => t('Training').' '.t('Name'), 'province_name' => @$translation ['Region A (Province)'], 'region_c_name' => @$translation ['Region C (Local Region)'],
+					'district_name' => @$translation ['Region B (Health District)'], 'pepfar_category_phrase' => @$translation ['PEPFAR Category'], 'training_organizer_phrase' => t('Training').' '.t('Organizer'), 'training_level_phrase' => t('Training').' '.t('Level'), 'trainer_language_phrase' => t ( 'Language' ), 'training_location_name' => t ( 'Location' ), 'training_start_date' => t ( 'Date' ), 'training_topic_phrase' => t ('Training').' '.t('topic'), 'funding_phrase' => t ( 'Funding' ), 'is_tot' => t ( 'TOT' ), 'facility_name' => t ('Facility').' '.t('name'), 'facility_type_phrase' => t ('Facility').' '.t('type'), 'facility_sponsor_phrase' => t ('Facility').' '.t('sponsor'), 'course_recommended' => t ( 'Recommended classes' ), 'recommended' => t ( 'Recommended' ), 'qualification_phrase' => t ( 'Qualification' ) . ' ' . t ( '(primary)' ), 'qualification_secondary_phrase' => t ( 'Qualification' ) . ' ' . t ( '(secondary)' ), 'gender' => t ( 'Gender' ), 'name' => t ( 'Name' ), 'email' => t ( 'Email' ), 'phone' => t ( 'Phone' ), 'cat' => t ( 'Category' ), 'language_phrase' => t ( 'Language' ), 'trainer_type_phrase' => t ( 'Type' ), 'trainer_skill_phrase' => t ( 'Skill' ), 'trainer_language_phrase' => t ( 'Language' ), 'trainer_topic_phrase' => t ( 'Topics taught' ), 'phone_work' => t ( 'Work phone' ), 'phone_home' => t ( 'Home phone' ), 'phone_mobile' => t ( 'Mobile phone' ), 'type_option_id' => 'Type' );
 
 			// action => array(field => label)
 			$headersSpecific = array ('peopleByFacility' => array ('qualification_phrase' => t ( 'Qualification' ) ), 'participantsByCategory' => array ('cnt' => t ( 'Participants' ), 'person_cnt' => t ( 'Unique participants' ) ) );
 		} else {
 			$headers = array (// fieldname => label
-			'id' => 'ID', 'cnt' => t ( 'Count' ), 'active' => @$translation ['Is Active'], 'first_name' => @$translation ['First Name'], 'middle_name' => @$translation ['Middle Name'], 'last_name' => @$translation ['Last Name'], 'training_title' => t('Training').' '.t('Name'), 'province_name' => @$translation ['Region A (Province)'], 'district_name' => @$translation ['Region B (Health District)'], 'pepfar_category_phrase' => @$translation ['PEPFAR Category'], 'training_organizer_phrase' => t('Training').' '.t('Organizer'), 'training_level_phrase' => t('Training').' '.t('Level'), 'trainer_language_phrase' => t ( 'Language' ), 'training_location_name' => t ( 'Location' ), 'training_start_date' => t ( 'Date' ), 'training_topic_phrase' => t ('Training').' '.t('Topic'), 'funding_phrase' => t ( 'Funding' ), 'is_tot' => t ( 'TOT' ), 'facility_name' => t ('Facility').' '.t('Name'), 'facility_type_phrase' => t ('Facility').' '.t('Type'), 'facility_sponsor_phrase' => t ('Facility').' '.t('Sponsor'), 'course_recommended' => t ( 'Recommended classes' ), 'recommended' => t ( 'Recommended' ), 'qualification_phrase' => t ( 'Qualification' ) . ' ' . t ( '(primary)' ), 'qualification_secondary_phrase' => t ( 'Qualification' ) . ' ' . t ( '(secondary)' ), 'gender' => t ( 'Gender' ), 'name' => t ( 'Name' ), 'email' => t ( 'Email' ), 'phone' => t ( 'Phone' ), 'cat' => t ( 'Category' ), 'language_phrase' => t ( 'Language' ), 'trainer_type_phrase' => t ( 'Type' ), 'trainer_skill_phrase' => t ( 'Skill' ), 'trainer_language_phrase' => t ( 'Language' ), 'trainer_topic_phrase' => t ( 'Topics Taught' ), 'phone_work' => t ( 'Work Phone' ), 'phone_home' => t ( 'Home Phone' ), 'phone_mobile' => t ( 'Mobile Phone' ), 'type_option_id' => 'Type' );
+			'id' => 'ID', 'cnt' => t ( 'Count' ), 'active' => @$translation ['Is Active'], 'first_name' => @$translation ['First Name'], 'middle_name' => @$translation ['Middle Name'], 
+					'last_name' => @$translation ['Last Name'], 'training_title' => t('Training').' '.t('Name'), 'province_name' => @$translation ['Region A (Province)'], 'region_c_name' => @$translation ['Region C (Local Region)'],
+					'district_name' => @$translation ['Region B (Health District)'], 'pepfar_category_phrase' => @$translation ['PEPFAR Category'], 'training_organizer_phrase' => t('Training').' '.t('Organizer'), 'training_level_phrase' => t('Training').' '.t('Level'), 'trainer_language_phrase' => t ( 'Language' ), 'training_location_name' => t ( 'Location' ), 'training_start_date' => t ( 'Date' ), 'training_topic_phrase' => t ('Training').' '.t('Topic'), 'funding_phrase' => t ( 'Funding' ), 'is_tot' => t ( 'TOT' ), 'facility_name' => t ('Facility').' '.t('Name'), 'facility_type_phrase' => t ('Facility').' '.t('Type'), 'facility_sponsor_phrase' => t ('Facility').' '.t('Sponsor'), 'course_recommended' => t ( 'Recommended classes' ), 'recommended' => t ( 'Recommended' ), 'qualification_phrase' => t ( 'Qualification' ) . ' ' . t ( '(primary)' ), 'qualification_secondary_phrase' => t ( 'Qualification' ) . ' ' . t ( '(secondary)' ), 'gender' => t ( 'Gender' ), 'name' => t ( 'Name' ), 'email' => t ( 'Email' ), 'phone' => t ( 'Phone' ), 'cat' => t ( 'Category' ), 'language_phrase' => t ( 'Language' ), 'trainer_type_phrase' => t ( 'Type' ), 'trainer_skill_phrase' => t ( 'Skill' ), 'trainer_language_phrase' => t ( 'Language' ), 'trainer_topic_phrase' => t ( 'Topics Taught' ), 'phone_work' => t ( 'Work Phone' ), 'phone_home' => t ( 'Home Phone' ), 'phone_mobile' => t ( 'Mobile Phone' ), 'type_option_id' => 'Type' );
 
 			// action => array(field => label)
 			$headersSpecific = array ('peopleByFacility' => array ('qualification_phrase' => t ( 'Qualification' ) ), 'participantsByCategory' => array ('cnt' => t ( 'Participants' ), 'person_cnt' => t ( 'Unique Participants' ) ) );
@@ -3336,8 +3340,9 @@ echo $sql . "<br>";
 			} else {
 				$count = count ( $rowArray );
 			}
+			
 			if ($this->_getParam ( 'outputType' ))
-			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
+				$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {
 			$count = 0;
@@ -3469,7 +3474,7 @@ echo $sql . "<br>";
  			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
  			$facility_id = $this->getSanParam('id');
  			$sql = "SELECT commodity.id, commodity_name_option.commodity_name as commodity_name, DATE_FORMAT(commodity.date, '%m/%y') as date,
-			commodity.consumption, commodity.stock_out from commodity 
+			commodity.consumption, commodity.stock_out from commodity
 			INNER JOIN commodity_name_option
 				ON commodity_name_option.id=commodity.name_id where commodity.facility_id=" . $facility_id;
  			$commodity_name_option_id = $this->getSanParam('commodity_name_option_id');
@@ -3491,7 +3496,7 @@ echo $sql . "<br>";
  				$sql = $sql . " and date < '" . $dateYYend . "-" . $dateMMend . "-01'";
  			}
  			
-            $rowArray = $db->fetchAll ( $sql );
+ 			$rowArray = $db->fetchAll ( $sql );
       
             $criteria ['go'] = $this->getSanParam ( 'go' );
             $this->view->assign ( 'count', count ( $rowArray ) );
@@ -4510,6 +4515,12 @@ echo $sql . "<br>";
 		$this->facilityReportCount2 ();
 	}
 	
+	//TA:17:19 02/03/2015
+	public function trainingByFacilityCount3Action() {
+		$this->view->assign ( 'mode', 'count3' );
+		$this->facilityReportCount2();
+	}
+	
 	//TA:17:19 facility report by commodity (method)
 	public function facilityReportCount2() {
 	
@@ -4616,8 +4627,6 @@ echo $sql . "<br>";
 				} 
 				$sql .= " group by fid order by date) as fc on fc.fid = facility.id ";
 			}
-			
-			print "+" . $criteria ['method_id'] . "+";
 	
 			$where = array(' facility.is_deleted=0 ');
 			$where = array(' l.province_name is not null ');
@@ -4668,6 +4677,9 @@ echo $sql . "<br>";
 		$typesArray = OptionList::suggestionList ( 'facility_type_option', 'facility_type_phrase', false, false );
 		$this->viewAssignEscaped ( 'facility_types', $typesArray );
 		
+		//course
+		$courseArray = TrainingTitleOption::suggestionList ( false, 10000 );
+		$this->viewAssignEscaped ( 'courses', $courseArray );		
 	
 		//location
 		$tlocations = TrainingLocation::selectAllLocations ($this->setting('num_location_tiers'));

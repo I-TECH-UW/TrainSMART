@@ -27,7 +27,6 @@ $DATA_URL_END = "&dimension=ou:LEVEL-5;TFY8aaVkCtV;BmWTbiMgEai;Gq37IyyjUfj;jXngI
 $USERNAME = "afadeyi";
 $PASSWORD = "CHAI100F";
 
-
 //get program input arguments
 $options = getopt("m::p::h");
 if(sizeof($options) === 0){

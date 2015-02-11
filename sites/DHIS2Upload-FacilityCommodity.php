@@ -19,12 +19,12 @@ $DB_NAME = 'dev_test';
 //constants
 $PERIOD_LAST_MONTH_MODE = false;
 $PERIOD_HISTORICAL_MODE = false;
-//by default true
+//DO NOT CHANGE these values
 $UPDATE_FACILITY_MODE = true;
 $UPDATE_COMMODITY_NAMES_MODE = true;
 $UPDATE_COMMODITY_DATA_MODE = true;
 
-$DEBUG_MODE = false;
+$DEBUG_MODE = true;
 
 $PERIOD_LAST_MONTH = 'LAST_MONTH';
 $PERIOD_HISTORICAL = "201101;201102;201103;201104;201105;201106;201107;201108;201109;201110;201111;201112;201201;201202;201203;201204;201205;201206;201207;201208;201209;201210;201211;201212;201301;201302;201303;201304;201305;201306;201307;201308;201309;201310;201311;201312;201401;201402;201403;201404;201405;201406;201407;201408;201409;201410";
@@ -35,6 +35,13 @@ $USERNAME = "afadeyi";
 $PASSWORD = "CHAI100F";
 //format: [commodity UID];[name];[out of stock UID]
 $COMMODITY_NAMES_IDS_FILE = 'commodity-names-ids';
+
+//Set stock out indicators: if consumption is 0 then stock out 'N', otherwise 'Y'
+// separated by comma like: "'JyiR2cQ6DZT', 'jhgyg67cjd'"
+$STOCK_OUT_INDICATORS = "'JyiR2cQ6DZT'";
+
+//stock out commodities external id
+$STOCK_OUT_COMMODITIES = "'w92UxLIRNTl','DiXDJRmPwfh'";
 
 //get program input arguments
 $options = getopt("m::p::h");
@@ -65,8 +72,8 @@ if(sizeof($options) === 0){
 	}
 }
 
- require_once 'globals.php';
- $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+  require_once 'globals.php';
+  $db = Zend_Db_Table_Abstract::getDefaultAdapter();
  
 //  $db = getDB($DB_NAME);
 // print "USE DATABASE: " . $DB_NAME . "\n\n";
@@ -116,6 +123,7 @@ function upload($DATA_URL, $USERNAME, $PASSWORD, $UPDATE_FACILITY_MODE, $UPDATE_
 	// read web service with facility and commodity data
 	print "Load data: " . $DATA_URL . "\n\n";
 	$data_json = getWebServiceResult($DATA_URL, $USERNAME, $PASSWORD);
+	
 // 	$data_json = file_get_contents ( 'DHIS2-data-json' ); // REMOVE: for test only
 	                                                     
 	$data_json_arr = json_decode($data_json, true);
@@ -126,6 +134,11 @@ function upload($DATA_URL, $USERNAME, $PASSWORD, $UPDATE_FACILITY_MODE, $UPDATE_
 	$date_year = substr ( $date, 0, 4 );
 	$date_month = substr ( $date, - 2 );
 	print "Data period: " . $date_year . "-" . $date_month . "-01\n\n";
+	
+	//save json output to file
+	$file = fopen("DHIS2Upload-FacilityCommodity-". $date . ".json","w");
+	echo fwrite($file,$data_json);
+	fclose($file);
 	
 	// commodity data: [facility type - we do not need],[commodity name],[facility name],[consumption]
 	if (sizeof ( $data_json_arr ["rows"] ) == 0) {
@@ -253,6 +266,8 @@ function updateCommoditiesNames($names, $commodity_name_ids, $db, $db_commodity_
 function updateCommoditiesData($commodity_data, $db_commodity_info, $db_facility_info, $db_commodity_data_info, $db, $date){
 	global $commodity_names_out_of_stock_arr;
 	global $DEBUG_MODE;
+	global $STOCK_OUT_INDICATORS;
+	global $STOCK_OUT_COMMODITIES;
 
 	
 	// get commodity names ids which has out of stock info
@@ -277,15 +292,15 @@ function updateCommoditiesData($commodity_data, $db_commodity_info, $db_facility
 		if($commodity_names_out_of_stock_arr && array_key_exists($commodity_external_id, $commodity_names_out_of_stock_arr)){
 			//add facility and out of stock info
 			$consumption = $commodity[3];
-			if($consumption > 0){
+			//if($consumption > 0){
 				$data_arr = array();
 				$facility_external_id = $commodity[2];
 				if(array_key_exists($facility_external_id, $commodity_names_out_of_stock_arr_to_update)){
 					$data_arr = $commodity_names_out_of_stock_arr_to_update[$facility_external_id];
 				}
-				array_push($data_arr, $commodity_names_out_of_stock_arr[$commodity_external_id]);
+				array_push($data_arr, $commodity_names_out_of_stock_arr[$commodity_external_id] . "=" . $consumption);
 				$commodity_names_out_of_stock_arr_to_update[$facility_external_id] = $data_arr; 
-			}
+		//	}
 			continue;
 		}
 		
@@ -327,6 +342,7 @@ function updateCommoditiesData($commodity_data, $db_commodity_info, $db_facility
 						'date' => $date,
 						'consumption' => $consumption,
 						'timestamp_created' => $date,
+						'modified_by' => '0',
 					);
 				
 					//all value automatically will be removed white spaces at the END during insertion to DB
@@ -345,37 +361,92 @@ function updateCommoditiesData($commodity_data, $db_commodity_info, $db_facility
 	$db_commodity_info_count = $db->fetchAll ("select count(*) as count from commodity where date='" . $date . "'");
 	print $db_commodity_info_count[0]['count'] . " commodities data in database.\n\n";
 	
+	//get all current commodities data
+	$db_commodity_data_info = getDBCommoditiesDataInfo ( $db, $date);
+	
 	// update out of stock info
  	// update 'out_of_stock" = "Y" if this is in $commodity_names_out_of_stock_arr_to_update
  	//otherwise update to 'N'
+	
+	$all_add = array();
 	$count_out_of_stock = 0;
 	if($DEBUG_MODE)
 		print "\n=> UPDATE COMMODITIES DATA out of stock...\n\n";
+	// $commodity_names_out_of_stock_arr_to_update - arr [facility external id]=> arr (commodity external ids which have stock outs):
 	foreach ( $commodity_names_out_of_stock_arr_to_update as $facility_names_out_of_stock_external_id=>$commodity_names_out_of_stock_external_id_arr) {
 		// get facility name id
 		if($db_facility_info && array_key_exists($facility_names_out_of_stock_external_id, $db_facility_info)){
 			$facility_id = $db_facility_info[$facility_names_out_of_stock_external_id]['id'];
 		}
 		if($facility_id){
-			foreach ( $commodity_names_out_of_stock_external_id_arr as $commodity_names_out_of_stock_external_ids){
+			foreach ( $commodity_names_out_of_stock_external_id_arr as $commodity_names_out_of_stock_external_ids_consumption_arr){
+				$commodity_names_out_of_stock_arr = explode("=", $commodity_names_out_of_stock_external_ids_consumption_arr);
+                $commodity_names_out_of_stock_external_ids = $commodity_names_out_of_stock_arr[0];
+				$commodity_names_out_of_stock_external_ids_consumption = $commodity_names_out_of_stock_arr[1];
+				$stock_out = 'N';
+				if($commodity_names_out_of_stock_external_ids_consumption > 0){
+					$stock_out = 'Y';
+				}
 				$count_out_of_stock++;
 					// get commodity name id
 				if($db_commodity_info && array_key_exists($commodity_names_out_of_stock_external_ids, $db_commodity_info)){
 					$commodity_id = $db_commodity_info[$commodity_names_out_of_stock_external_ids]['id'];
-							$db->query("UPDATE commodity SET stock_out='Y', modified_by='' WHERE name_id='" . $commodity_id . "' and facility_id='" . $facility_id . "' and date='" . $date ."'");
-							if($DEBUG_MODE)
-								print "EDIT COMMODITY DATA out of stock : " . $commodity_names_out_of_stock_external_ids . " to facility " . $facility_names_out_of_stock_external_id . "\n";	
+					//if commodity does not exist for this period in DHIS2 (no in DB), but its out of stock exists in DHIS2, then add this info to DB
+					if(array_key_exists($facility_id, $db_commodity_data_info) && array_key_exists($commodity_id, $db_commodity_data_info[$facility_id])){
+						$db->query("UPDATE commodity SET stock_out='" . $stock_out . "', modified_by='' WHERE name_id='" . $commodity_id . "' and facility_id='" . $facility_id . "' and date='" . $date ."'");
+						if($DEBUG_MODE)
+							print "EDIT COMMODITY DATA out of stock : " . $commodity_names_out_of_stock_external_ids . " to facility " . $facility_names_out_of_stock_external_id . "\n";
+					}else{
+						// add new data
+						$bind = array(
+							'name_id'			=>	$commodity_id,
+							'facility_id'=>	$facility_id,
+							'stock_out'=>	$stock_out,
+							'date' => $date,
+							 'consumption' => '0',
+							'timestamp_created' => $date,
+							'modified_by' => '0',
+						);
+						
+						//all value automatically will be removed white spaces at the END during insertion to DB
+						$db->insert("commodity", $bind);
+						if($DEBUG_MODE)
+							print "ADD COMMODITY DATA out of stock: " . $commodity_names_out_of_stock_external_ids . " to facility " . $facility_names_out_of_stock_external_id . "\n";
+					}
 				}else{
 					$error = $error . "ERROR: out of stock update: commodity name " . $commodity_names_out_of_stock_external_ids . " does not exist in database.\n";
 				}
 			}	
 		}
 	}
+	
+	//Remove commodity duplicated if found for commodity which can have stock out:
+// 	select id,name_id, facility_id, date, count(*) from commodity
+// 	group by name_id, facility_id, date having count(*) > 1;
+	try{
+		$db->query("delete T1 from commodity T1, commodity T2 where T1.name_id = T2.name_id and T1.facility_id = T2.facility_id and T1.date = T2.date and T2.date='" . $date . "' and T1.id < T2.id " .
+						"and T1.name_id in (select id from commodity_name_option where external_id in(" . $STOCK_OUT_COMMODITIES . "));");
+		print "\n=> Remove commodity duplicated if found.\n\n";
+	}catch(Exception $e){
+		$error = $error . "ERROR: Remove commodity duplicated if found\n";
+	}
+
+	
+	//Set stock out indicators if consumption 1 then stock out 'Y'
+	try{
+	$db->query("update commodity set commodity.stock_out='Y', commodity.consumption=0 where 
+			commodity.name_id = (select id from commodity_name_option where external_id in (" . $STOCK_OUT_INDICATORS . ") and consumption=1 and date='" . $date ."')");
+	print "\n=> UPDATE COMMODITIES DATA for stock out indicators: " . $STOCK_OUT_INDICATORS . "\n\n";
+	}catch(Exception $e){
+		$error = $error . "ERROR: UPDATE COMMODITY DATA for stock out indicators: " . $STOCK_OUT_INDICATORS . "\n";
+	}
+	
 	print "\n=> UPDATE COMMODITIES DATA: " .  $count_out_of_stock . " commodities out of stock data have been processed.\n\n";
 	if(!empty($error)){
 		global $all_errors;
 		$all_errors = $all_errors . "\n=> UPDATE COMMODITIES DATA:\n" . $error . "\n\n";
 	}
+	
 }
 
 /*
