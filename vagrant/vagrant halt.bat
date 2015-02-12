@@ -1,0 +1,2 @@
+vagrant halt
+pause

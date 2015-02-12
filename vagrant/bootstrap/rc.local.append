@@ -1,0 +1,7 @@
+
+# hack to make logs write to vagrant shared folder
+# the sleep is here so the system has time to mount the virtualbox shared
+# folder and as such isn't 100% reliable
+sleep 30
+/etc/init.d/httpd restart
+/etc/init.d/mysqld restart

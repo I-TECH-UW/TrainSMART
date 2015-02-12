@@ -12,7 +12,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "chef/centos-5.11"
+  config.vm.box = "chef/centos-5.11-i386"
   config.vm.hostname = "php52-xdebug"
   
   # forward http
@@ -30,11 +30,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "file", source: "vagrant/bootstrap/data.sql", destination: "/home/vagrant/data.sql"
   config.vm.provision "file", source: "vagrant/bootstrap/grant-privileges.sql", destination: "/home/vagrant/grant-privileges.sql"
 
-  config.vm.provision "file", source: "vagrant/bootstrap/xdebug-debugger.ini", destination: "/home/vagrant/php-debugger.ini"
-  config.vm.provision "file", source: "vagrant/bootstrap/xdebug-php5.2.so", destination: "/home/vagrant/xdebug.so"
+  config.vm.provision "file", source: "vagrant/bootstrap/xdebug-debugger-i386.ini", destination: "/home/vagrant/php-debugger.ini"
+  config.vm.provision "file", source: "vagrant/bootstrap/xdebug-2.2.7-i386-php5.2.so", destination: "/home/vagrant/xdebug.so"
   config.vm.provision "file", source: "vagrant/bootstrap/php-5.2.ini", destination: "/home/vagrant/php.ini"
   config.vm.provision "file", source: "vagrant/bootstrap/rc.local.append", destination: "/home/vagrant/rc.local.append"
   config.vm.provision "file", source: "vagrant/bootstrap/mysqld.init.d", destination: "/home/vagrant/mysqld.init"
-  
-  config.vm.provision :shell, path: "vagrant/bootstrap/bootstrap-php5.2-xdebug-debugger.sh"
+
+  config.vm.provision :shell, path: "vagrant/bootstrap/bootstrap-php5.2-xdebug-i386-debugger.sh"
 end
