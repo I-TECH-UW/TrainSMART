@@ -116,11 +116,11 @@ print ScriptContainer::$instance->renderJSHead();
 								<div id="homebanner" class="rounded">
 								<div class="sliderdiv">
 								    <div class="hrNav"></div>
-									<div id="chart11_div" style="width: 1000px; height: 800px;"></div>
+									<div id="chart11_div" style="width: 500px; height: 300px;"></div>
 									</div>
 									<div class="main-search">
 									    <div class="hrNav"></div>
-										<div id="chart12_div" style="width: 500px; height: 300px;"></div>
+										<div id="chart12_div" style="width: 1000px; height: 800px;"></div>
 									</div>
 								</div>
 							</div>
@@ -169,7 +169,7 @@ print ScriptContainer::$instance->renderJSHead();
 	  document.getElementById("allCharts").style.marginLeft="130px";
 
 	drawChart11();
-	//drawChart12();
+	drawChart12();
 	//drawChart13();
 	//drawChart14();
 		
@@ -185,12 +185,43 @@ print ScriptContainer::$instance->renderJSHead();
   }
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->
-  
 
-
+//TA:17:17 landing page chart: Monthly Consumption by method
   function drawChart11() {
+  	  // Create and populate the data table.
+  	  var chart11Data = google.visualization.arrayToDataTable([
+
+  ['', ''],
+
+
+  <?php
+    		foreach ($this->national_consumption_by_method as $row){
+    	?>
+    	[<?php echo  " '$row[method]',$row[consumption] "; ?>],
+    	<?php
+    		}
+    	?>
+
+  ]);		    
+
+  	  <?php echo  " var title_date = 'Monthly Consumption by Method$this->title_date ' " ?>;
+  	  
+  	  var chart11Options = {
+  			  
+  			  title: title_date,
+  			  titleTextStyle: { fontSize: 16 },
+  		      is3D:true,
+  		      legend: 'none',
+  		      
+  		};
+
+  	  var chart11 = new google.visualization.ColumnChart(document.getElementById('chart11_div'));
+  	  chart11.draw(chart11Data, chart11Options);
+  }
+
+  function drawChart12() {
 	  
-      var chart11Data = google.visualization.arrayToDataTable([
+      var chart12Data = google.visualization.arrayToDataTable([
 ['Month', 'Condoms distributed (sachet) - female', 'Condoms distributed (sachet) - male', 'Family Planning Injections', 'Implant', 'IUCD inserted', 'Oral pill cycle (packets)', 'Sterilization Total'],
 
 <?php
@@ -205,49 +236,19 @@ print ScriptContainer::$instance->renderJSHead();
 
 	  <?php echo  " var title_date = 'Commodity Consumption $title->method $this->title_date ' " ?>;
 
-      var chart11Options = {
+      var chart12Options = {
         title: title_date,
         titleTextStyle: { fontSize: 16 },
         vAxis: {logScale:true},  //TA:17:17 Commodity Consumption All chart
        
       };
 
-      var chart11 = new google.visualization.LineChart(document.getElementById('chart11_div'));
-
-      chart11.draw(chart11Data, chart11Options);
-    }
-
-  function drawChart12() {
-      var chart12Data = google.visualization.arrayToDataTable([
-['', ''],
-
-
-<?php
-  		foreach ($this->consumption_by_geo as $row){
-  	?>
-  	[<?php echo  " '$row[location]',$row[consumption] "; ?>],
-  	<?php
-  		}
-  	?>
-
-]);		    
-
-	  <?php echo  " var title_date = 'Monthly consumption of $title->method $this->title_date ' " ?>;
-
-      var chart12Options = {
-    	      
-    		  title: title_date,
-    		  titleTextStyle: { fontSize: 16 },
-    		  is3D:true,
-		      legend: 'none',
-    		  
-      };
-
-      //var chart12 = new google.charts.Bar(document.getElementById('chart11_div'));
-      var chart12 = new google.visualization.ColumnChart(document.getElementById('chart12_div'));
+      var chart12 = new google.visualization.LineChart(document.getElementById('chart12_div'));
 
       chart12.draw(chart12Data, chart12Options);
     }
+
+
 
   
   function drawChart13() {
