@@ -1,2 +1,3 @@
+cd ..
 vagrant up
 pause
