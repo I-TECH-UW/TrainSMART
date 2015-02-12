@@ -2134,6 +2134,19 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
                       }
                       break;
                   
+                  case 'national_percent_facilities_providing_larc':
+                  case 'national_percent_facilities_providing_fp':
+                  case 'national_percent_facilities_providing_inject':
+                  
+                      foreach ($result as $row) {
+                          $output[] = array(
+                              "location" => $row['data0'],
+                              "percent" => $row['data1'],
+                              "color" => $row['data2'],
+                          );
+                      }
+                      break;
+                  
             }
             
             
@@ -2416,6 +2429,24 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
 		                          'data3'  => $row['tso_percent'],
 		                          'data4'  => $row['tp_percent'],
 		                           
+		                      );
+		                       
+		                      $insert_result = $dashboard_refresh->insert($data);
+		                  }
+		                  break;
+		              
+		              case 'national_percent_facilities_providing_larc':
+		              case 'national_percent_facilities_providing_fp':
+		              case 'national_percent_facilities_providing_inject':
+		                   
+		                  foreach($details as $row){
+		                      if (is_null($row['tt_percent'])) { $row['tt_percent'] = ''; }  // special case that can be null
+		                      $data = array(
+		                          'datetime'  => $dateTime,
+		                          'chart'  => $chart,
+		                          'data0'  => $row['location'],
+		                          'data1'  => $row['percent'],
+		                          'data2'  => $row['color'],
 		                      );
 		                       
 		                      $insert_result = $dashboard_refresh->insert($data);

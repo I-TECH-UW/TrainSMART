@@ -1197,16 +1197,22 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	        $cnoWhere = " cno.external_id in ('ibHR9NQ0bKL') and c.consumption > 0 ";
 	        $inject_details = $inject_data->fetchPercentProvidingDetails($cnoWhere, $geoWhere, $dateWhere, $group, $useName);
 	        $this->view->assign('inject_data',$inject_details);
+	        
+	        if ($location == 'National') {
+	            $larc_details = $larc_data->insertDashboardData($larc_details, 'national_percent_facilities_providing_larc');
+	            $fp_details = $fp_data->insertDashboardData($fp_details, 'national_percent_facilities_providing_fp');
+	            $inject_details = $inject_data->insertDashboardData($inject_details, 'national_percent_facilities_providing_inject');
+	        }
 	        	    
-	        //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController dash8Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	        file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController dash8Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	        //var_dump('$cnoWhere=', $cnoWhere);
 	        //var_dump('$geoWhere=', $geoWhere);
 	        //var_dump('$group=', $group);
 	        //var_dump('$useName=', $useName);
 	        //var_dump('$fp_details=', $fp_details);
-	        //var_dump('$larc_details=', $larc_details);
+	        var_dump('$larc_details=', $larc_details);
 	        //var_dump('$inject_details=', $inject_details);
-	        //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	        $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	         
 	    } //else
 	     
