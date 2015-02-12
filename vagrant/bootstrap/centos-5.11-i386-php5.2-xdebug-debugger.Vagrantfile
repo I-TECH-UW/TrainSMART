@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# CentOS x86_64 5.11 PHP 5.2.17 with Zend Debugger
+# CentOS x86_64 5.11 PHP 5.2.17 with XDebug Debugger
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
@@ -12,15 +12,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "chef/centos-5.11"
-  config.vm.hostname = "php52-zend"
-    
+  config.vm.box = "chef/centos-5.11-i386"
+  config.vm.hostname = "php52-xdebug"
+  
   # forward http
   config.vm.network "forwarded_port", host: 62326, guest: 80
   
   # forward mysql
-  config.vm.network "forwarded_port", host: 3306, guest: 3306  
-
+  config.vm.network "forwarded_port", host: 3306, guest: 3306
+  
   # we'll put all the custom files in the vagrant user's home directory as we 
   # can't write to system locations without root, we'll move them in 
   # bootstrap-xx.sh when we're root
@@ -30,11 +30,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "file", source: "vagrant/bootstrap/data.sql", destination: "/home/vagrant/data.sql"
   config.vm.provision "file", source: "vagrant/bootstrap/grant-privileges.sql", destination: "/home/vagrant/grant-privileges.sql"
 
-  config.vm.provision "file", source: "vagrant/bootstrap/zend-debugger.ini", destination: "/home/vagrant/php-debugger.ini"
-  config.vm.provision "file", source: "vagrant/bootstrap/ZendDebugger-php5.2.so", destination: "/home/vagrant/ZendDebugger.so"
+  config.vm.provision "file", source: "vagrant/bootstrap/xdebug-debugger-i386.ini", destination: "/home/vagrant/php-debugger.ini"
+  config.vm.provision "file", source: "vagrant/bootstrap/xdebug-2.2.7-i386-php5.2.so", destination: "/home/vagrant/xdebug.so"
   config.vm.provision "file", source: "vagrant/bootstrap/php-5.2.ini", destination: "/home/vagrant/php.ini"
   config.vm.provision "file", source: "vagrant/bootstrap/rc.local.append", destination: "/home/vagrant/rc.local.append"
   config.vm.provision "file", source: "vagrant/bootstrap/mysqld.init.d", destination: "/home/vagrant/mysqld.init"
 
-  config.vm.provision :shell, path: "vagrant/bootstrap/bootstrap-php5.2-zend-debugger.sh"
+  config.vm.provision :shell, path: "vagrant/bootstrap/bootstrap-php5.2-xdebug-i386-debugger.sh"
 end
