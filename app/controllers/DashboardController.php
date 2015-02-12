@@ -1782,7 +1782,7 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	    $geoWhere = str_replace(', )', ')', $where);
 	    $dateWhere = '1=1';
 	     
-	    $cnoWhere = " 1=1 and cno.external_id in ( 'DiXDJRmPwfh', 'yJSLjbC9Gnr')"; // implants, IUD's = LARC 
+	    $cnoWhere = " 1=1 and cno.external_id in ( 'DiXDJRmPwfh', 'yJSLjbC9Gnr') and c.consumption > 0 "; // implants, IUD's = LARC 
 	    $ttoWhere = " 1=1 and t.training_title_option_id = 1";
 	    $stockoutWhere = " cno.external_id in ( 'DiXDJRmPwfh' ) and c.stock_out = 'Y' "; 
 
@@ -1797,7 +1797,7 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	            'tt_percent' => $pftp_details[$i]['tt_percent']);
 	    }
 	    
-	    $cnoWhere = " 1=1 and cno.external_id in ( 'w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw' )";
+	    $cnoWhere = " 1=1 and cno.external_id in ( 'w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') and c.consumption > 0 ";
 	    $ttoWhere = " 1=1 and t.training_title_option_id = 2 ";
 	    $stockoutWhere = " cno.external_id in ( 'JyiR2cQ6DZT' ) ";
 	    $pftp_details = $pftp_data->fetchPFTPDetails( $cnoWhere, $ttoWhere, $geoWhere, $dateWhere, $stockoutWhere, $group, $useName );

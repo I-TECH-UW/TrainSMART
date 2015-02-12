@@ -115,11 +115,11 @@ class IndexController extends ITechController {
 	        $cln_details = $cln_data->fetchCLNDetails('location', $id, $where, $group, $useName);
 	        
 	        //any FP
-	        $where = " 1=1 and cno.external_id in ( 'w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') ";
+	        $where = " 1=1 and cno.external_id in ( 'w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') and c.consumption > 0  ";
 	        $pfp_any_details = $pfp_data->fetchPFPDetails( $where );
 	        
 	        //larc
-	        $where = " 1=1 and cno.external_id in ( 'DiXDJRmPwfh', 'yJSLjbC9Gnr')";
+	        $where = " 1=1 and cno.external_id in ( 'DiXDJRmPwfh', 'yJSLjbC9Gnr') and c.consumption > 0 ";
 	        $pfp_larc_details = $pfp_data->fetchPFPDetails( $where );
 
 	        file_put_contents('c:\wamp\logs\php_debug.log', 'indexAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
