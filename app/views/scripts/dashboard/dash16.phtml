@@ -209,7 +209,7 @@ print ScriptContainer::$instance->renderJSHead();
 <?php
 	foreach ($this->fp_data as $row){
 ?>
-['<?php echo str_replace("'",'', str_replace(' ', '', $row[location]))  ?>', <?php echo $row[percent]; ?>,'<?php echo $row[color]; ?>'],
+['<?php echo str_replace("'",'', str_replace(' ', '', $row[location]))  ?>', <?php echo round($row[percent],2)*100; ?>,'<?php echo $row[color]; ?>'],
 <?php
 	}
 ?>
@@ -222,7 +222,7 @@ print ScriptContainer::$instance->renderJSHead();
 		      
 		      hAxis: {title: 'Percentage'},
 		      hAxis: {format: '##.##%'},
-		      vAxis: {format:'##.##%'},
+		      vAxis: {format:'#\'%\''},
 		      legend:{position: 'none'},
 		      is3D:true
 		};
@@ -245,7 +245,7 @@ print ScriptContainer::$instance->renderJSHead();
 <?php
 		foreach ($this->larc_data as $row){
 	?>
-['<?php echo str_replace("'",'', str_replace(' ', '', $row[location]))  ?>', <?php echo $row[percent]; ?>,'<?php echo $row[color]; ?>'],
+['<?php echo str_replace("'",'', str_replace(' ', '', $row[location]))  ?>', <?php echo round($row[percent],2)*100; ?>,'<?php echo $row[color]; ?>'],
 	<?php
 		}
 	?>
@@ -259,7 +259,7 @@ print ScriptContainer::$instance->renderJSHead();
 		      
 		      hAxis: {title: 'Percentage'},
 		      hAxis: {format: '##.##%'},
-		      vAxis: {format:'##.##%'},
+		      vAxis: {format:'#\'%\''},
 		      legend:{position: 'none'},
 		      is3D:true
 		};

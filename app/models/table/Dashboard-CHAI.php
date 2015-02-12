@@ -1528,9 +1528,51 @@ public function fetchPFTPDetails( $cnoWhere = null, $ttoWhere = null, $geoWhere 
 
 
 	
-public function fetchPFPDetails( $cnoWhere = null, $geoWhere = null, $dateWhere = null, $group = null, $useName = null ) {
+public function fetchPFPDetails( $where = null, $group = null, $useName = null ) {
     $db = Zend_Db_Table_Abstract::getDefaultAdapter();
     $output = array();
+    
+    // national pfp_denom_view
+    $create_view = $db->select()
+    ->from(array('f' => 'facility'),
+        array(
+                'frr.date as FRR_date',
+                "count(distinct(frr.facility_external_id)) as denom"))
+                ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+                ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+                ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+                ->joinInner(array('frr' => "facility_report_rate"), 'f.external_id = frr.facility_external_id')
+                ->group(array('FRR_date'))
+                ->order(array('FRR_date'));
+            
+            $sql = $create_view->__toString();
+            $sql = str_replace('AS `denom`,', 'AS `denom`', $sql);
+            $sql = str_replace('`l1`.*,', '', $sql);
+            $sql = str_replace('`l2`.*,', '', $sql);
+            $sql = str_replace('`l3`.*,', '', $sql);
+            $sql = str_replace('`frr`.*', '', $sql);
+            
+            try{
+                $sql = 'create or replace view pfp_denom_view as ('.$sql.')';
+                $db->fetchOne($sql);
+            }
+            catch (Exception $e) { // normal operation throws "General Error"
+                //echo $e->getMessage();
+                //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+                //var_dump('ERROR= ', $e->getMessage(), "END");
+                //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+            }
+            
+            $select = $db->select()
+            ->from(array('cv' => 'pfp_denom_view'),
+                array(
+                    'FRR_date',
+                    'denom'))
+                    ->order(array('FRR_date desc'))
+                    ->limit('12');
+                
+                $denom = $db->fetchAll($select);
+            
     
     $create_view = $db->select()
     ->from(array('c' => 'commodity'),
@@ -1545,8 +1587,7 @@ public function fetchPFPDetails( $cnoWhere = null, $geoWhere = null, $dateWhere 
     	    ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
     	    ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
     	    ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
-            ->where($cnoWhere)
-            ->where($geoWhere)
+            ->where($where)
             ->group(array('C_date'))
             ->order(array('C_date'));
     
@@ -1578,22 +1619,22 @@ public function fetchPFPDetails( $cnoWhere = null, $geoWhere = null, $dateWhere 
             ->order(array('C_date desc'))
             ->limit('12');
     
-    $result = $db->fetchAll($select);
-                
-    foreach ($result as $row){
+    $numer = $db->fetchAll($select);
+
+    foreach ($numer as $i => $row){
         $output[] = array(
             "month" => $row['C_monthName'],
             "year" => $row['C_year'],
-            "numer" => $row['numer'],
+            "percent" => $row['numer']/$denom[$i]['denom']
         );
     }
     
     //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI fetchpfpdetails >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
     //var_dump($output,"END");
     //var_dump('id=', $id);
-    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-    
-    //return $output;
+    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+        //return $output;
     return array_reverse($output, true);
     
     
@@ -1729,6 +1770,7 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
     	       "$subSelect  as denom"))
     	       ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
     	       ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+    	       ->joinInner(array('frr' => "facility_report_rate"), 'f.external_id = frr.facility_external_id')
     	       ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
     	       ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
     	       ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
@@ -1739,6 +1781,7 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
     	$sql = str_replace('AS `denom`,', 'AS `denom`', $sql);
     	$sql = str_replace('`cno`.*,', '', $sql);
     	$sql = str_replace('`f`.*,', '', $sql);
+    	$sql = str_replace('`frr`.*,', '', $sql);
     	$sql = str_replace('`l1`.*,', '', $sql);
     	$sql = str_replace('`l2`.*,', '', $sql);
     	$sql = str_replace('`l3`.*', '', $sql);
@@ -2153,8 +2196,9 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
                   case 'national_consumptionyJSLjbC9Gnr':
                   case 'national_consumptionvDnxlrIQWUo':
                   case 'national_consumptionkrVqq8Vk5Kw':
-		              
+                      
 		              foreach($details as $row){
+		                  if (is_null($row['consumption'])) { $row['consumption'] = ''; }  // special case that can be null
 		                  $data = array(
 		                      'datetime'  => $dateTime,
 		                      'chart'  => $chart,
@@ -2222,8 +2266,9 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
 		            break;
 		            
 		        case 'national_consumption_by_method':
-		        
+		            
 		            foreach($details as $row){
+		                if (is_null($row['consumption'])) { $row['consumption'] = ''; }  // special case that can be null
 		                $data = array(
 		                    'datetime'  => $dateTime,
 		                    'chart'  => $chart,
@@ -2361,6 +2406,7 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
 		              case 'national_fp_coverage':
 		                   
 		                  foreach($details as $row){
+		                      if (is_null($row['tt_percent'])) { $row['tt_percent'] = ''; }  // special case that can be null 
 		                      $data = array(
 		                          'datetime'  => $dateTime,
 		                          'chart'  => $chart,

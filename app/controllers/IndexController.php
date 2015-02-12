@@ -114,7 +114,7 @@ class IndexController extends ITechController {
 	         
 	        $cln_details = $cln_data->fetchCLNDetails('location', $id, $where, $group, $useName);
 	        
-	        //any 
+	        //any FP
 	        $where = " 1=1 and cno.external_id in ( 'w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') ";
 	        $pfp_any_details = $pfp_data->fetchPFPDetails( $where );
 	        
@@ -124,7 +124,7 @@ class IndexController extends ITechController {
 
 	        file_put_contents('c:\wamp\logs\php_debug.log', 'indexAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	        var_dump('$pfp_any_details= ', $pfp_any_details, 'END');
-	        var_dump('$pfp_larc_details= ', $pfp_larc_details, 'END');
+	        //var_dump('$pfp_larc_details= ', $pfp_larc_details, 'END');
 	        $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	        
 	        $where = " 1=1 and (cno.external_id in ( 'DiXDJRmPwfh') and c.stock_out = 'Y') or  (cno.external_id in ( 'JyiR2cQ6DZT') and c.consumption = 1) ";
@@ -136,7 +136,7 @@ class IndexController extends ITechController {
 	            $national_percent_facilities_providing[] =array('month' => $row['month'], 'year' => $row['year'], 'fp_percent' => $row['percent'], 'larc_percent' => $pfp_larc_details[$i]['percent'] );
 	        }
 	        
-	        //file_put_contents('c:\wamp\logs\php_debug.log', 'dash9bAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	        //file_put_contents('c:\wamp\logs\php_debug.log', 'indexAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	        //var_dump('$pfso_details= ', $pfso_details, 'END');
 	        //var_dump('$method= ', $method, 'END');
 	        //var_dump('$national_percent_facilities_providing= ', $national_percent_facilities_providing, 'END');
