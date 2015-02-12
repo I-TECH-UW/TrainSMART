@@ -426,22 +426,13 @@ class DashboardController extends ReportFilterHelpers {
 public function dash996allAction() {
     require_once('models/table/Dashboard-CHAI.php');
      
-    //$method = $this->getSanParam ( 'method' );
+    // enclosing single quotes added later
+	$method = "w92UxLIRNTl','H8A8xQ9gJ5b','ibHR9NQ0bKL','DiXDJRmPwfh','yJSLjbC9Gnr','vDnxlrIQWUo','krVqq8Vk5Kw";
     $request = $this->getRequest ();
     
-    $method = "w92UxLIRNTl','H8A8xQ9gJ5b','ibHR9NQ0bKL','DiXDJRomPwfh','yJSLjbC9Gnr','vDnxlrIQWUo','krVqq8Vk5Kw";
      
-    //$title_method = new DashboardCHAI();
-    //$title_method = $title_method->fetchTitleMethod($method);
-
-    //$title_date = new DashboardCHAI();
-    //$title_date = $title_date->fetchTitleDate();
-
-    //$this->view->assign('title_date',  $title_method[commodity_name].', '. $title_date[month_name].', '. $title_date[year]);
-     
-    //$cln_data = new DashboardCHAI();
+    $cln_data = new DashboardCHAI();
     $amc_data = new DashboardCHAI();
-    //$tot_data = new DashboardCHAI();
      
     // geo selection includes "--choose--" or no selection
     if( ( isset($_POST["region_c_id"] ) && $_POST["region_c_id"][0] == "" ) ||
@@ -449,15 +440,13 @@ public function dash996allAction() {
         ( isset($_POST["province_id"] ) && $_POST["province_id"][0] == "" ) ||
         (!isset($_POST["region_c_id"] ) && !isset($_POST["district_id"] ) && !isset($_POST["province_id"] ) ) ){
         //get national numbers from refresh
-        //$cln_details = $cln_data->fetchDashboardData('national_consumption'.$method);
+        $cln_details = $cln_data->fetchDashboardData('national_consumption_by_method');
         $amc_details = $amc_data->fetchDashboardData('national_average_monthly_consumption_all');
-        //$tot_details = $tot_data->fetchDashboardData('national_total_consumption'.$method);
     }
      
-    if ( count($amc_details ) > 0  ) { //got all
+    if ( count($cln_details) > 0 && count($amc_details ) > 0  ) { //got all
 
-        //$this->view->assign('consumption_by_geo', $cln_details);
-        //$this->view->assign('total_consumption', $tot_details);
+        $this->view->assign('national_consumption_by_method', $cln_details);
         $this->view->assign('average_monthly_consumption_by_geo', $amc_details);
          
     } else {
@@ -501,145 +490,53 @@ public function dash996allAction() {
 
         $where = str_replace(', )', ')', $where);
         $whereClause = new Zend_Db_Expr($where);
-
-        $amc_details = $amc_data->fetchAMCDetails($whereClause);
-         
-        //file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-        //var_dump('amc_details= ', $amc_details, 'END');
-        //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
-         
-        // $method is external_id and must be single quoted, meant to be int but had to convert table id to external_id
-        //if( "'$method'" != '' ) $where = $where.' and cno.external_id in ( '."'$method'".' )';
-        //$cln_details = $cln_data->fetchCLNDetails('location', $id, $where, $group, $useName);
-         
-        //file_put_contents('c:\wamp\logs\php_debug.log', 'dash996Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-        //var_dump('$cln_details= ', $cln_details, 'END');
-        //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
-/*
-        $total = 0;
-         
+        
+        if( "'$method'" != '' ) $where = $where.' and cno.external_id in ( '."'$method'".' )';
+        $cln_details = $cln_data->fetchCLNDetails('location', $id, $where, $group, $useName);
+        
         foreach($cln_details as $i => $row ){
+            // remove single quotes and explode method
+            $bad_chars = array("'");
+            $method = str_replace($bad_chars, "", $method);
+            $methods =  array( explode(',', $method) );
              
-            if ( $location != 'National' ) {
-                switch($useName){
-                    case 'L1_location_name' :
-                        $location = $row['L1_location_name'];
-                        break;
-                    case 'L2_location_name' :
-                        $location = $row['L2_location_name'];
-                        break;
-                    case 'L3_location_name' :
-                        $location = $row['L3_location_name'];
-                        break;
-                }
-            }
-             
-            $locationNames = $locationNames ? $locationNames.', '.$location : $locationNames.$location;
-
-            switch($method){
-                case 'w92UxLIRNTl' :
-                    $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption1'] );
-                    break;
-                case 'H8A8xQ9gJ5b' :
-                    $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption2'] );
-                    break;
-                case 'ibHR9NQ0bKL' :
-                    $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption3'] );
-                    break;
-                case 'DiXDJRmPwfh' :
-                    $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption4'] );
-                    break;
-                case 'yJSLjbC9Gnr' :
-                    $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption5'] );
-                    break;
-                case 'vDnxlrIQWUo' :
-                    $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption6'] );
-                    break;
-                case 'krVqq8Vk5Kw' :
-                    $consumption_by_geo[] =array('location' => $location, 'consumption' => $row['consumption7'] );
-                    break;
-                case '' :
-                    //bad
-                    break;
-            }
-             
-            $total = $total + $consumption_by_geo[$i]['consumption'];
-             
+            // lookup commodity_names
+            $title_method = new DashboardCHAI();
+            $CNO[] = array ($title_method->fetchTitleMethod($methods[0][0]));
+            $CNO[] = array ($title_method->fetchTitleMethod($methods[0][1]));
+            $CNO[] = array ($title_method->fetchTitleMethod($methods[0][2]));
+            $CNO[] = array ($title_method->fetchTitleMethod($methods[0][3]));
+            $CNO[] = array ($title_method->fetchTitleMethod($methods[0][4]));
+            $CNO[] = array ($title_method->fetchTitleMethod($methods[0][5]));
+            $CNO[] = array ($title_method->fetchTitleMethod($methods[0][6]));
+        
+            $national_consumption_by_method[] =array('method' => $CNO[0][0]['commodity_name'], 'consumption' => $row['consumption1'] );
+            $national_consumption_by_method[] =array('method' => $CNO[1][0]['commodity_name'], 'consumption' => $row['consumption2'] );
+            $national_consumption_by_method[] =array('method' => $CNO[2][0]['commodity_name'], 'consumption' => $row['consumption3'] );
+            $national_consumption_by_method[] =array('method' => $CNO[3][0]['commodity_name'], 'consumption' => $row['consumption4'] );
+            $national_consumption_by_method[] =array('method' => $CNO[4][0]['commodity_name'], 'consumption' => $row['consumption5'] );
+            $national_consumption_by_method[] =array('method' => $CNO[5][0]['commodity_name'], 'consumption' => $row['consumption6'] );
+            $national_consumption_by_method[] =array('method' => $CNO[6][0]['commodity_name'], 'consumption' => $row['consumption7'] );
+        
         } // foreach cln
         
-        	            // lookup commodity_names
+        $this->view->assign('national_consumption_by_method', $national_consumption_by_method);
 
-                $national_consumption_by_method[] =array('method' => $CNO[0][0]['commodity_name'], 'consumption' => $row['consumption1'] );
-                $national_consumption_by_method[] =array('method' => $CNO[1][0]['commodity_name'], 'consumption' => $row['consumption2'] );
-                $national_consumption_by_method[] =array('method' => $CNO[2][0]['commodity_name'], 'consumption' => $row['consumption3'] );
-                $national_consumption_by_method[] =array('method' => $CNO[3][0]['commodity_name'], 'consumption' => $row['consumption4'] );
-                $national_consumption_by_method[] =array('method' => $CNO[4][0]['commodity_name'], 'consumption' => $row['consumption5'] );
-                $national_consumption_by_method[] =array('method' => $CNO[5][0]['commodity_name'], 'consumption' => $row['consumption6'] );
-                $national_consumption_by_method[] =array('method' => $CNO[6][0]['commodity_name'], 'consumption' => $row['consumption7'] );
-        
-        */
-        
-       
-        
+        $amc_details = $amc_data->fetchAMCDetails($whereClause);
+     
         foreach($amc_details as $i => $row ){
 
             $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption1' => $row['consumption1'], 'consumption2' => $row['consumption2'], 'consumption3' => $row['consumption3'], 'consumption4' => $row['consumption4'], 'consumption5' => $row['consumption5'], 'consumption6' => $row['consumption6'], 'consumption7' => $row['consumption7'] );
             
         }
-        /*
-        foreach($amc_details as $i => $row ){
-             
-            switch($method){
-                case 'w92UxLIRNTl' :
-                    $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption1'] );
-                    break;
-                case 'H8A8xQ9gJ5b' :
-                    $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption2'] );
-                    break;
-                case 'ibHR9NQ0bKL' :
-                    $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption3'] );
-                    break;
-                case 'DiXDJRmPwfh' :
-                    $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption4'] );
-                    break;
-                case 'yJSLjbC9Gnr' :
-                    $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption5'] );
-                    break;
-                case 'vDnxlrIQWUo' :
-                    $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption6'] );
-                    break;
-                case 'krVqq8Vk5Kw' :
-                    $average_monthly_consumption_by_geo[] =array('month' => $row['month'], 'consumption' => $row['consumption7'] );
-                    break;
-                case '' :
-                    //bad
-                    break;
-            }
 
-        } // foreach amc
-        
-         
-        if (is_null($consumption_by_geo)) {
-            $consumption_by_geo[] = array('location' => 'No Data', 'consumption' => 0 );
-        }
-         
-        if ($total == 0) {
-            $total_consumption[] = array('location' => 'No Data', 'consumption' => 0 );
-        } else {
-            $total_consumption[] = array('location' => $locationNames, 'consumption' => $total );
-        }
-        */ 
-        //$this->view->assign('consumption_by_geo', $consumption_by_geo);
-        //$this->view->assign('total_consumption', $total_consumption);
         $this->view->assign('average_monthly_consumption_by_geo', $average_monthly_consumption_by_geo);
          
         if ($location == 'National') {
-            //$cln_details = $cln_data->insertDashboardData($consumption_by_geo, 'national_consumption'.$method);
-            //$tot_details = $tot_data->insertDashboardData($total_consumption, 'national_total_consumption'.$method);
+            $cln_details = $cln_data->insertDashboardData($national_consumption_by_method, 'national_consumption_by_method');
             $amc_details = $amc_data->insertDashboardData($average_monthly_consumption_by_geo, 'national_average_monthly_consumption_all');
         }
         
-
     }  // else
 
     $this->viewAssignEscaped ('locations', Location::getAll() );
