@@ -4680,8 +4680,6 @@ echo $sql . "<br>";
 	
 			$sql .= ' order by facility_name ';
 			
-			print $sql;
-			
 			$rowArray = $db->fetchAll ( $sql);
 			$count = count ( $rowArray );
 	
