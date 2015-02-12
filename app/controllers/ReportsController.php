@@ -87,7 +87,7 @@ class ReportsController extends ReportFilterHelpers {
 			$headersSpecific = array ('peopleByFacility' => array ('qualification_phrase' => t ( 'Qualification' ) ), 'participantsByCategory' => array ('cnt' => t ( 'Participants' ), 'person_cnt' => t ( 'Unique participants' ) ) );
 		} else {
 			$headers = array (// fieldname => label
-			'id' => 'ID', 'cnt' => t ( 'Count' ), 'active' => @$translation ['Is Active'], 'first_name' => @$translation ['First Name'], 'middle_name' => @$translation ['Middle Name'], 
+			'id' => 'ID', 'commodity_name'=>'Method', 'training_title_phrase' => @$translation ['Training Name'], 'facility_id' => 'ID','cnt' => t ( 'Count' ), 'active' => @$translation ['Is Active'], 'first_name' => @$translation ['First Name'], 'middle_name' => @$translation ['Middle Name'], 
 					'last_name' => @$translation ['Last Name'], 'training_title' => t('Training').' '.t('Name'), 'province_name' => @$translation ['Region A (Province)'], 'region_c_name' => @$translation ['Region C (Local Region)'],
 					'district_name' => @$translation ['Region B (Health District)'], 'pepfar_category_phrase' => @$translation ['PEPFAR Category'], 'training_organizer_phrase' => t('Training').' '.t('Organizer'), 'training_level_phrase' => t('Training').' '.t('Level'), 'trainer_language_phrase' => t ( 'Language' ), 'training_location_name' => t ( 'Location' ), 'training_start_date' => t ( 'Date' ), 'training_topic_phrase' => t ('Training').' '.t('Topic'), 'funding_phrase' => t ( 'Funding' ), 'is_tot' => t ( 'TOT' ), 'facility_name' => t ('Facility').' '.t('Name'), 'facility_type_phrase' => t ('Facility').' '.t('Type'), 'facility_sponsor_phrase' => t ('Facility').' '.t('Sponsor'), 'course_recommended' => t ( 'Recommended classes' ), 'recommended' => t ( 'Recommended' ), 'qualification_phrase' => t ( 'Qualification' ) . ' ' . t ( '(primary)' ), 'qualification_secondary_phrase' => t ( 'Qualification' ) . ' ' . t ( '(secondary)' ), 'gender' => t ( 'Gender' ), 'name' => t ( 'Name' ), 'email' => t ( 'Email' ), 'phone' => t ( 'Phone' ), 'cat' => t ( 'Category' ), 'language_phrase' => t ( 'Language' ), 'trainer_type_phrase' => t ( 'Type' ), 'trainer_skill_phrase' => t ( 'Skill' ), 'trainer_language_phrase' => t ( 'Language' ), 'trainer_topic_phrase' => t ( 'Topics Taught' ), 'phone_work' => t ( 'Work Phone' ), 'phone_home' => t ( 'Home Phone' ), 'phone_mobile' => t ( 'Mobile Phone' ), 'type_option_id' => 'Type' );
 
@@ -4569,36 +4569,46 @@ echo $sql . "<br>";
 	
 		$criteria ['method_id'] = $this->getSanParam ( 'method_id' );//TA:17:19
 		$criteria ['facility_type_id'] = $this->getSanParam ( 'facility_type_id' );
+		$criteria ['training_title_id'] = $this->getSanParam ( 'training_title_id' );
 		$criteria ['facilityInput'] = $this->getSanParam ( 'facilityInput' );
 		$criteria ['go'] = $this->getSanParam ( 'go' );
 		$criteria ['doCount2'] = ($this->view->mode == 'count2');//TA:17:19 02/02/2015
+		$criteria ['doCount3'] = ($this->view->mode == 'count3');//TA:17:19 02/02/2015
 		$criteria ['showProvince'] = ($this->getSanParam ( 'showProvince' ) );
 		$criteria ['showDistrict'] = ($this->getSanParam ( 'showDistrict' ) );
 		$criteria ['showRegionC'] = ($this->getSanParam ( 'showRegionC' ) );
 		$criteria ['showMethod'] = ($this->getSanParam ( 'showMethod' ));
 		$criteria ['showType'] = ($this->getSanParam ( 'showType' ) );
 		$criteria ['showFacility'] =       true;
+		$criteria ['reportedFacility'] = ($this->getSanParam ( 'reportedFacility' ) );
+		
+		$criteria ['showTrainingTitle'] = ($this->getSanParam ( 'showTrainingTitle' ) or ($criteria ['doCount'] and ($criteria ['training_title_id'] or $criteria ['training_title_id'] === '0' or $criteria ['training_title_id'])));
+		
 	
 		if ($criteria ['go']) {
 	
 			$sql = 'SELECT distinct(facility.id) as facility_id, facility_name ';
 			
 			if ($criteria ['showDistrict']) {
-				$sql .= ', l.district_name, l.district_id ';
+				$sql .= ', l.district_name ';
 			}
 			if ($criteria ['showProvince']) {
-				$sql .= ', l.province_name, l.province_id ';
+				$sql .= ', l.province_name ';
 			}
 			if ($criteria ['showRegionC']) {
-				$sql .= ', l.region_c_name, l.region_c_id ';
+				$sql .= ', l.region_c_name ';
 			}
 				
 			if ($criteria ['showMethod']) {
-				$sql .= ', fc.commodity_name';
+				$sql .= ', fc.commodity_name, fc.consumption_count ';
 			}
 	
 			if ($criteria ['showType'] && $criteria ['facility_type_id']) {
 				$sql .= ', fto.facility_type_phrase ';
+			}
+			
+			if($criteria ['showTrainingTitle'] && $criteria ['training_title_id']){
+				$sql .= ', training_title_option.training_title_phrase ';
 			}
 	
 			$num_locs = $this->setting('num_location_tiers');
@@ -4606,14 +4616,26 @@ echo $sql . "<br>";
 	
 			$sql .= " FROM facility ";
 			
+			if ($criteria ['reportedFacility']) {
+				$sql .= '	JOIN facility_report_rate ON facility.external_id = facility_report_rate.facility_external_id ';
+			}
+			
 			if ($criteria ['showType'] && $criteria ['facility_type_id']) {
 				$sql .= '	JOIN facility_type_option as fto ON fto.id = facility.type_option_id ';
+			}
+			
+			if ($criteria ['showTrainingTitle'] && $criteria ['training_title_id']) {
+				$sql .= '	JOIN person ON facility.id = person.facility_id ';
+				$sql .= '	JOIN person_to_training ON person.id = person_to_training.person_id ';
+				$sql .= '	JOIN training ON training.id = person_to_training.training_id ';
+				$sql .= '	JOIN training_title_option ON training_title_option.id = training.id ';
 			}
 			
 			$sql .= "LEFT JOIN (" .$location_sub_query. ") as l ON facility.location_id = l.id ";
 				
 			if ($criteria ['showMethod']) {
-				$sql .= " join (select facility.id as fid, commodity.name_id, commodity_name_option.commodity_name as commodity_name, commodity.date from facility
+				$sql .= " join (select facility.id as fid, commodity.name_id, commodity_name_option.commodity_name as commodity_name, commodity.date,  
+						sum(CASE WHEN commodity.consumption > 0 THEN commodity.consumption ELSE 0 END) as consumption_count from facility
 				join commodity on commodity.facility_id = facility.id
 				join commodity_name_option on commodity_name_option.id = commodity.name_id " ;
 				if($criteria ['method_id']){
@@ -4638,11 +4660,27 @@ echo $sql . "<br>";
 			if ($criteria ['facility_type_id'] or $criteria ['facility_type_id'] === '0') {
 				$where []= ' facility.type_option_id = \'' . $criteria ['facility_type_id'] . '\'';
 			}
+			
+			if ($criteria ['showTrainingTitle'] && $criteria ['training_title_id']) {
+				$where []= ' training_title_option.id IN (' . $this->_trainsmart_implode($criteria ['training_title_id']) . ')';
+			}
+			
+			if ($criteria ['showMethod']) {
+				$where []= ' fc.consumption_count>0 ';
+			}else if($criteria ['doCount2']){
+				if (intval ( $criteria ['end-year'] ) and $criteria ['start-year']) {
+					$startDate = $criteria ['start-year'] . '-' . $criteria ['start-month'] . '-' . $criteria ['start-day'];
+					$endDate = $criteria ['end-year'] . '-' . $criteria ['end-month'] . '-' . $criteria ['end-day'];
+				}
+				$where []= " date between '" . $startDate . "' AND '" . $endDate . "' ";
+			}
 	
 			if ($where)
 				$sql .= ' WHERE ' . implode(' AND ', $where);
 	
 			$sql .= ' order by facility_name ';
+			
+			print $sql;
 			
 			$rowArray = $db->fetchAll ( $sql);
 			$count = count ( $rowArray );
@@ -4760,6 +4798,7 @@ echo $sql . "<br>";
 
 		$criteria ['go'] = $this->getSanParam ( 'go' );
 		$criteria ['doCount'] = ($this->view->mode == 'count');
+		$criteria ['id'] = ($this->view->mode == 'id');
 		//$criteria ['doCount2'] = ($this->view->mode == 'count2');//TA:17:19 02/02/2015
 		$criteria ['showProvince'] = ($this->getSanParam ( 'showProvince' ) or ($criteria ['doCount'] and ($criteria ['province_id'] or $criteria ['province_id'] === '0')));
 		$criteria ['showDistrict'] = ($this->getSanParam ( 'showDistrict' ) or ($criteria ['doCount'] and ($criteria ['district_id'] or $criteria ['district_id'] === '0')));
