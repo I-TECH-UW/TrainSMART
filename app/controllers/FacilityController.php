@@ -358,7 +358,7 @@ class FacilityController extends ReportFilterHelpers {
 		$rows = $db->fetchAll ("select commodity.id, commodity_name_option.commodity_name as name, DATE_FORMAT(date, '%m/%y') as date, 
 consumption, stock_out, commodity.created_by, commodity.modified_by from commodity
 join commodity_name_option on commodity_name_option.id = commodity.name_id
-where commodity.facility_id=". $id . " and date > DATE_SUB(now(), INTERVAL 12 MONTH) order by date desc, commodity_name_option.commodity_name");
+where commodity.facility_id=". $id . " and date > DATE_SUB(now(), INTERVAL 12 MONTH) order by commodity.date desc, commodity_name_option.commodity_name");
 		$noDelete = array();
 		$customColDefs = array();
 		foreach ($rows as $i => $row){ // lets add some data to the resultset to show in the EditTable

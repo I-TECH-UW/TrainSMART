@@ -24,6 +24,15 @@ if ($this->mode == 'search' ) {
 			window.location = '<?php echo $this->base_url;?>' + reportSelector[reportSelector.selectedIndex].value + '?<?php echo $_SERVER['QUERY_STRING'];?>';
 		}
 	}
+
+	function reportedAction(){
+		var reported_ch = document.getElementById("reportedFacility");
+		var method_cb = document.getElementById("showMethod");
+		if(reported_ch.checked){
+			method_cb.checked = false;
+		}
+		method_cb.disabled = reported_ch.checked;
+	}
 </script>
 
 </head>
@@ -64,8 +73,12 @@ if ($this->mode == 'search' ) {
 			echo '<option value="'.$vals['id'].'" '.($this->criteria['facilityInput'] == $vals['id']?'selected="selected"':'').'>'.$vals['facility_name'].'</option>';
 	}
 	?>
-</select>
-	    </div></div>
+</select><br>
+<?php if ($this->mode == 'count2') { ?><div style='float:left; width:240px; margin-right:1em; margin-bottom:1em; font-size:11px; font-weight:bold; padding-top:0.3em; color:#696969; clear:left;'>
+	Show only reported <input type="checkbox"  id="reportedFacility"  name="reportedFacility" <?php  if ($this->criteria['reportedFacility']) echo 'CHECKED';?> onclick='reportedAction();'/></div>
+	    <?php }?>
+	    </div>
+	    </div>
 	</div>
 	
 	<!-- TA:17: 09/04/2014 START-->
@@ -196,7 +209,7 @@ if ($this->mode == 'search' ) {
 	<!-- TA:17:19 1/30/2015 START-->
 		<div class="fieldLabel" id="method_id">Method</div>
 		<div class="fieldInput">
-		<div  class="leftBorderPad"><input type="checkbox" name="showMethod" <?php  if ($this->criteria['showMethod']) echo 'CHECKED';?> /></div>
+		<div  class="leftBorderPad"><input type="checkbox" id="showMethod" name="showMethod" <?php  if ($this->criteria['showMethod']) echo 'CHECKED';?> /></div>
 		<div  class="leftBorder">
 		<?php if ($this->mode == 'count2' || $this->mode == 'count3'){?>
 			<select id="method_id" name="method_id[]" multiple="multiple" size="10">
@@ -326,17 +339,18 @@ foreach($this->results as $row) {
 		if (!$isFirstRow )
 			echo ',';
 		$isFirstRow = false;
-		if ( $this->criteria['doCount2'] )
+		if ( $this->criteria['doCount2'] || $this->criteria['doCount3'] || $this->criteria['id'])
 			echo '['. $row['facility_id'];
 		else
 			echo '['.(isset($row['cnt'])?$row['cnt']:$row['id']);
-		if ( isset($row['id']) )
+		//if ( isset($row['id']) )
+		if ( $this->criteria['showStartDate'] )
 			echo ',"'.$row['training_start_date'].'"';
 		if ( $this->criteria['showFacility'] )
 			echo ',"'.$row['facility_name'].'"';
 		if ( $this->criteria['showType'] )
 			echo ',"'.$row['facility_type_phrase'].'"';
-		if ( $this->criteria['showSponsor'] )
+		if ( $this->criteria['showSponsor'] && $this->setting['display_facility_sponsor'])
 			echo ',"'.$row['facility_sponsor_phrase'].'"';
 		if ( $this->criteria['showProvince'] )
 			echo ',"'.$row['province_name'].'"';
@@ -356,8 +370,12 @@ foreach($this->results as $row) {
     		echo ',"'.$row['region_h_name'].'"';
 	    if ( $this->criteria['showRegionI'] )
     		echo ',"'.$row['region_i_name'].'"';
-			if ( $this->criteria['showTrainingTitle'] or ($this->mode == 'search' ))
-			echo ',"'.$row['training_title'].'"';
+		if ( $this->criteria['showTrainingTitle'] or ($this->mode == 'search' )){
+			if($row['training_title'])
+				echo ',"'.$row['training_title'].'"';
+			else if($row['training_title_phrase'])
+				echo ',"'.$row['training_title_phrase'].'"';
+		}
 		if ( $this->criteria['showLocation'] )
 			echo ',"'.$row['training_location_name'].'"';
 		if ( $this->criteria['showOrganizer'] )
@@ -379,6 +397,7 @@ foreach($this->results as $row) {
 		//TA:17:19
 		if ( $this->criteria['showMethod'] )
 			echo ',"'.$row['commodity_name'].'"';
+			echo ',"'.$row['consumption_count'].'"';
 		echo "]";
 		$cnt++;
 }}
@@ -389,17 +408,14 @@ var trainingColumnDefs = [
 {key:"cnt", label: "Count", sortable:true, resizeable:true}
 <?php } else { ?>
 {key:"id", label: "ID", sortable:true, resizeable:true, formatter: formatViewUrl}
-<?php if ($this->criteria['doCount2']){?>
-<?php }else{ ?>
-,{key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true}
-<?php }} ?>
+<?php } ?>
 <?php if ( $this->criteria['showFacility'] ) { ?>
    ,{key:"facility_name", label: "<?php tp('Facility Name');?>", sortable:true, resizeable:true}
  <?php } ?>
 <?php if ( $this->criteria['showType'] ) { ?>
    ,{key:"facility_type_phrase", label: "<?php tp('Facility Type');?>", sortable:true, resizeable:true}
  <?php } ?>
-<?php if ( $this->criteria['showSponsor'] ) { ?>
+<?php if ( $this->criteria['showSponsor'] && $this->setting['display_facility_sponsor']) { ?>
    ,{key:"facility_sponsor_phrase", label: "<?php tp('Facility Sponsor');?>", sortable:true, resizeable:true}
  <?php } ?>
  <?php if ( $this->criteria['showProvince'] ) { ?>
@@ -462,6 +478,7 @@ var trainingColumnDefs = [
  //TA:17:19
  <?php if ( $this->criteria['showMethod'] ) { ?>
  ,{key:"commodity_name", label: "Method", sortable:true, resizeable:true}
+ ,{key:"consumption_count", label: "Count", sortable:true, resizeable:true}
 <?php } ?>
 ];
 
