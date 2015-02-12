@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# CentOS x86_64 5.11 PHP 5.2.17 with Zend Debugger - does not work on OSX or Windows
+# CentOS x86_64 5.11 PHP 5.2.17 with Zend Debugger - does not work on OSX or Linux
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
@@ -23,7 +23,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # we'll put all the custom files in the vagrant user's home directory as we 
   # can't write to system locations without root, we'll move them in 
-  # bootstrap.sh when we're root
+  # bootstrap-xx.sh when we're root
 
   config.vm.provision "file", source: "vagrant-bootstrap-files/vagrant-trainsmart-httpd.conf", destination: "/home/vagrant/vagrant-trainsmart-httpd.conf"
 
@@ -32,6 +32,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision "file", source: "vagrant-bootstrap-files/zend-debugger.ini", destination: "/home/vagrant/php-debugger.ini"
   config.vm.provision "file", source: "vagrant-bootstrap-files/ZendDebugger-php5.2.so", destination: "/home/vagrant/ZendDebugger.so"
+  config.vm.provision "file", source: "vagrant-bootstrap-files/php-5.2.ini", destination: "/home/vagrant/php.ini"
+  config.vm.provision "file", source: "vagrant-bootstrap-files/rc.local.append", destination: "/home/vagrant/rc.local.append"
+  config.vm.provision "file", source: "vagrant-bootstrap-files/mysqld.init.d", destination: "/home/vagrant/mysqld.init"
 
   config.vm.provision :shell, path: "vagrant-bootstrap-files/bootstrap-php5.2-zend-debugger.sh"
 end
