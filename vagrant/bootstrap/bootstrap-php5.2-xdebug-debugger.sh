@@ -8,24 +8,28 @@ rpm -Uvh http://mirror.webtatic.com/yum/centos/5/latest.rpm
 yum update -y
 
 # install our custom packages
-yum install nano mysql-server git-core -y
+yum install nano mysql-server git-core dos2unix telnet -y
 yum --enablerepo=webtatic install php-common-5.2.17 php-cli-5.2.17 php-5.2.17 php-mysql-5.2.17 php-pdo-5.2.17 php-devel-5.2.17 -y
 
 # install the xdebug debugger for php 5.2
 mv /home/vagrant/xdebug.so /usr/lib64/php/modules/xdebug.so
 
 # configure the php debugger
+dos2unix /home/vagrant/php-debugger.ini
 mv /home/vagrant/php-debugger.ini /etc/php.d/php-debugger.ini
 
 # Change php's default output buffering to Off for better IDE support
+dos2unix /home/vagrant/php.ini
 mv /home/vagrant/php.ini /etc/
 chmod 644 /etc/php.ini
 
 # add the hack in to restart mysql and apache (hopefully) after shared folders are mounted
+dos2unix /home/vagrant/rc.local.append
 cat /home/vagrant/rc.local.append >> /etc/rc.local
 rm /home/vagrant/rc.local.append
 
 # set up apache to point to shared /vagrant folder and start it
+dos2unix /home/vagrant/vagrant-trainsmart-httpd.conf
 mv /home/vagrant/vagrant-trainsmart-httpd.conf /etc/httpd/conf.d/vagrant-trainsmart-httpd.conf
 chkconfig httpd on
 service httpd start
@@ -33,6 +37,7 @@ service httpd start
 #enable query logging in mysql
 echo "log=/vagrant/vagrant/logs/mysql-query.log" >> /etc/my.cnf
 echo "" >> /etc/my.cnf
+dos2unix /home/vagrant/mysqld.init
 mv /home/vagrant/mysqld.init /etc/init.d/mysqld
 chmod 755 /etc/init.d/mysqld
 
