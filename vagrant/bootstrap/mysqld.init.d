@@ -58,10 +58,9 @@ get_mysql_option mysqld_safe pid-file "/var/run/mysqld/mysqld.pid"
 mypidfile="$result"
 
 # BS 20150212 pick up log file for queries from /etc/my.cnf, 
-# set /tmp/mysql-query.log as default
+# set /tmp/mysql-query.log as the default 
 get_mysql_option mysqld_safe log "/tmp/mysql-query.log"
 logfile="$result"
-
 
 start(){
     [ -x $exec ] || exit 5
