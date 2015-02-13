@@ -1457,7 +1457,7 @@ class TrainingController extends ReportFilterHelpers {
 			if( empty($errored) && empty($errs) )
 				$stat = t ('Your changes have been saved.');
 			else
-				$stat = t ('Error importing data. Some data may have been imported and some may not have.');
+				$stat = t ('Error importing data. Some trainee data has not been uploaded, please fix on the Training Edit page.');
 			
 			foreach ($success as $errmsg)
 				$stat .= '<br>'.$errmsg;
@@ -1791,7 +1791,7 @@ class TrainingController extends ReportFilterHelpers {
 										if( empty($errored) && empty($errs) )
 											$stat = t ('Your changes have been saved.');
 											else
-												$stat = t ('Error importing data. Some data may have been imported and some may not have.');
+												$stat = t ('Error importing data.');
 	
 					foreach ($success as $errmsg)
 														$stat .= '<br>'.$errmsg;

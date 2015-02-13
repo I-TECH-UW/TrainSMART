@@ -441,6 +441,14 @@ function updateCommoditiesData($commodity_data, $db_commodity_info, $db_facility
 		$error = $error . "ERROR: UPDATE COMMODITY DATA for stock out indicators: " . $STOCK_OUT_INDICATORS . "\n";
 	}
 	
+	//clean dashboard_refresh table
+	try{
+		$db->query("delete from dashboard_refresh");
+		print "\n=> Clean dashboard_refresh table\n\n";
+	}catch(Exception $e){
+		$error = $error . "ERROR: Clean dashboard_refresh table\n";
+	}
+	
 	print "\n=> UPDATE COMMODITIES DATA: " .  $count_out_of_stock . " commodities out of stock data have been processed.\n\n";
 	if(!empty($error)){
 		global $all_errors;
