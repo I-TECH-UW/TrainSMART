@@ -1839,6 +1839,7 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
 	       "$subSelect  as denom"))
 	       ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
 	       ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+	       ->joinInner(array('frr' => "facility_report_rate"), 'f.external_id = frr.facility_external_id')
 	       ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
 	       ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
 	       ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
@@ -1851,6 +1852,7 @@ public function fetchPercentProvidingDetails($cnoWhere = null, $geoWhere = null,
 	$sql = str_replace('AS `denom`,', 'AS `denom`', $sql);
 	$sql = str_replace('`cno`.*,', '', $sql);
 	$sql = str_replace('`f`.*,', '', $sql);
+	$sql = str_replace('`frr`.*,', '', $sql);
 	$sql = str_replace('`l1`.*,', '', $sql);
 	$sql = str_replace('`l2`.*,', '', $sql);
 	$sql = str_replace('`l3`.*', '', $sql);

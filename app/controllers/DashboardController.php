@@ -1101,15 +1101,15 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	            $inject_details = $inject_data->insertDashboardData($inject_details, 'national_percent_facilities_providing_inject');
 	        }
 	        	    
-	        file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController dash8Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	        //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController dash8Action >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	        //var_dump('$cnoWhere=', $cnoWhere);
 	        //var_dump('$geoWhere=', $geoWhere);
 	        //var_dump('$group=', $group);
 	        //var_dump('$useName=', $useName);
 	        //var_dump('$fp_details=', $fp_details);
-	        var_dump('$larc_details=', $larc_details);
+	        //var_dump('$larc_details=', $larc_details);
 	        //var_dump('$inject_details=', $inject_details);
-	        $toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	        //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	         
 	    } //else
 	     
