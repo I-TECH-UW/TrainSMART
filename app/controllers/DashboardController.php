@@ -896,7 +896,13 @@ public function dash996allAction() {
 	    require_once('models/table/Dashboard-CHAI.php');
 	    $tp_data = new DashboardCHAI();
 	    $tp_details = $tp_data->fetchTPDetails(date('Y'), 3);
+	    
 	    $this->view->assign('tp_date', date('F Y'));
+	    //GNR:use max commodity date
+	    $tDate = new DashboardCHAI();
+	    $sDate = $tDate->fetchTitleDate();
+	    $this->view->assign('tp_date', $sDate['month_name'].' '.$sDate['year']);
+	    
 	    $this->view->assign('tp_data', $tp_details);
 	    
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
@@ -993,10 +999,13 @@ public function dash996allAction() {
 	    } //else
 	    	
 
-	    $this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
+	   	//$this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
+	    //GNR:use max commodity date
+	    $tDate = new DashboardCHAI();
+	    $sDate = $tDate->fetchTitleDate();
+	    $this->view->assign('date', $sDate['month_name'].' '.$sDate['year']); 
 	    	
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
-	
 
 	}
 	
@@ -1113,7 +1122,12 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	         
 	    } //else
 	     
-	    $this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
+	    //$this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
+	    //GNR:use max commodity date
+	    $tDate = new DashboardCHAI();
+	    $sDate = $tDate->fetchTitleDate();
+	    $this->view->assign('date', $sDate['month_name'].' '.$sDate['year']); 
+	    
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	    
 	}
@@ -1828,7 +1842,12 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	
 	    } //else
 	
-	    $this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
+	   //$this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
+	    //GNR:use max commodity date
+	    $tDate = new DashboardCHAI();
+	    $sDate = $tDate->fetchTitleDate();
+	    $this->view->assign('date', $sDate['month_name'].' '.$sDate['year']); 
+	    
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	     
 	     
@@ -1966,7 +1985,7 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	            }
 	            $where = $where.') ';
 	            $group = new Zend_Db_Expr('L1_location_name, CNO_external_id');
-	            $useName = 'L1_location_name';
+	            $useName = 'l1.location_name';
 	
 	        } else if( isset($_POST['district_id']) ){ // CHAINigeria state
 	            $where = $where.' and l2.id in (';
@@ -1976,7 +1995,7 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	            }
 	            $where = $where.') ';
 	            $group = new Zend_Db_Expr('L2_location_name, CNO_external_id');
-	            $useName = 'L2_location_name';
+	            $useName = 'l2.location_name';
 	
 	        } else if( isset($_POST['province_id']) ){ //province_id is a Trainsmart internal name, represents hightest CHAINigeria level = GPZ
 	            $where = $where.' and l2.parent_id in (';
@@ -1986,23 +2005,26 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	            }
 	            $where = $where.') ';
 	            $group = new Zend_Db_Expr('L3_location_name, CNO_external_id');
-	            $useName = 'L3_location_name';
+	            $useName = 'l3.location_name';
 	        } else { // no geo selection
 	            $group = 'CNO_external_id';
-	            $useName = 'L3_location_name';
+	            $useName = 'l3.location_name';
 	            $location = 'National';
 	        }
 	
 	        $geoWhere = str_replace(', )', ')', $where);
+	        
 	        $cnoStockOutWhere =  " cno.external_id in ('DiXDJRmPwfh') and c.stock_out = 'Y' and c.date = (select max(date) from commodity) ";
 	        $trainingWhere = " t.training_title_option_id = 1 ";
-	        $sixMonthWhere = " cno.external_id in ('w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') "; 
-	         $larc_details = $larc_data->fetchPercentFacHWTrainedStockOutDetails($trainingWhere, $cnoStockOutWhere, $sixMonthWhere, $geoWhere, $group, $useName);
-	         $this->view->assign('larc_data',$larc_details);
+	        $sixMonthWhere = "cno.external_id in ('DiXDJRmPwfh') and c.consumption > 0 and c.date between date_sub(now(), interval 182 day) and now() ";
+	        
+	        $larc_details = $larc_data->fetchPercentFacHWTrainedStockOutDetails($trainingWhere, $cnoStockOutWhere, $sixMonthWhere, $geoWhere, $group, $useName);
+	        $this->view->assign('larc_data',$larc_details);
 	        
 	        $cnoStockOutWhere =  " cno.external_id in ('JyiR2cQ6DZT') and c.date = (select max(date) from commodity) ";
 	        $trainingWhere = " t.training_title_option_id = 2 ";
-	        $sixMonthWhere = " cno.external_id = 'DiXDJRmPwfh' ";
+	        $sixMonthWhere = "cno.external_id in ('w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') and c.consumption > 0 and c.date between date_sub(now(), interval 182 day) and now() ";
+	        
 	        $fp_details = $fp_data->fetchPercentFacHWTrainedStockOutDetails($trainingWhere, $cnoStockOutWhere, $sixMonthWhere, $geoWhere, $group, $useName);
 	        $this->view->assign('fp_data',$fp_details);
 	        
@@ -2020,7 +2042,12 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	
 	
 	    } //else
-	    $this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
+	    //$this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
+	    //GNR:use max commodity date
+	    $tDate = new DashboardCHAI();
+	    $sDate = $tDate->fetchTitleDate();
+	    $this->view->assign('date', $sDate['month_name'].' '.$sDate['year']); 
+	    
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	
 	
@@ -2068,7 +2095,7 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	                $where = $where.$geo[2].', ';
 	            }
 	            $where = $where.') ';
-	            $group = new Zend_Db_Expr('L1_location_name, CNO_external_id');
+	            $group = new Zend_Db_Expr('L1_location_name');
 	            $useName = 'L1_location_name';
 	
 	        } else if( isset($_POST['district_id']) ){ // CHAINigeria state
@@ -2078,7 +2105,7 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	                $where = $where.$geo[1].', ';
 	            }
 	            $where = $where.') ';
-	            $group = new Zend_Db_Expr('L2_location_name, CNO_external_id');
+	            $group = new Zend_Db_Expr('L2_location_name');
 	            $useName = 'L2_location_name';
 	
 	        } else if( isset($_POST['province_id']) ){ //province_id is a Trainsmart internal name, represents hightest CHAINigeria level = GPZ
@@ -2088,24 +2115,24 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	                $where = $where.$geo[0].', ';
 	            }
 	            $where = $where.') ';
-	            $group = new Zend_Db_Expr('L3_location_name, CNO_external_id');
+	            $group = new Zend_Db_Expr('L3_location_name');
 	            $useName = 'L3_location_name';
 	        } else { // no geo selection
-	            $group = 'CNO_external_id';
+	            $group = 'L3_location_name';
 	            $useName = 'L3_location_name';
 	            $location = 'National';
 	        }
 	
 	        $geoWhere = str_replace(', )', ')', $where);
 	        
-	        $cnoStockOutWhere =  " cno.external_id in ('DiXDJRmPwfh') and c.stock_out = 'Y' and c.date = (select max(date) from commodity) ";
-	        $cnoConsumptionWhere = " cno.external_id in ('DiXDJRmPwfh') and c.consumption > 0 and c.date between date_sub(now(), interval 182 day) and now() ";
-	         $larc_details = $larc_data->fetchPercentFacHWProvidingStockOutDetails($cnoConsumptionWhere, $cnoStockOutWhere, $geoWhere, $group, $useName);
+	        $cnoStockOutWhere =  " (cno.external_id in ('DiXDJRmPwfh') and c.stock_out = 'Y' and c.date = (select max(date) from commodity) 
+	                               or cno.external_id in ('DiXDJRmPwfh') and c.consumption > 0 and c.date between date_sub(now(), interval 182 day) and now()) ";
+	         $larc_details = $larc_data->fetchPercentFacHWProvidingStockOutDetails($cnoStockOutWhere, $geoWhere, $group, $useName);
 	         $this->view->assign('larc_data',$larc_details);
 	        
-	        $cnoStockOutWhere =  " cno.external_id in ('JyiR2cQ6DZT') and c.date = (select max(date) from commodity) ";
-	        $cnoConsumptionWhere = " cno.external_id in ('w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') and c.consumption > 0 and c.date between date_sub(now(), interval 182 day) and now() ";
-	        $fp_details = $fp_data->fetchPercentFacHWProvidingStockOutDetails($cnoConsumptionWhere, $cnoStockOutWhere, $geoWhere, $group, $useName);
+	        $cnoStockOutWhere =  " (cno.external_id in ('JyiR2cQ6DZT') and c.date = (select max(date) from commodity)
+	                               or cno.external_id in ('w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'DiXDJRmPwfh', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') and c.consumption > 0 and c.date between date_sub(now(), interval 182 day) and now()) ";
+	        $fp_details = $fp_data->fetchPercentFacHWProvidingStockOutDetails($cnoStockOutWhere, $geoWhere, $group, $useName);
 	        $this->view->assign('fp_data',$fp_details);
 	        
 	        if ($location == 'National') {
@@ -2122,7 +2149,12 @@ and (select max(date) from commodity where month(date) = (select month(max(date)
 	
 	
 	    } //else
-	    $this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
+	    //$this->view->assign('date', date('F Y', strtotime("-1 months"))); //TA:17:18: take last month
+	    //GNR:use max commodity date
+	    $tDate = new DashboardCHAI();
+	    $sDate = $tDate->fetchTitleDate();
+	    $this->view->assign('date', $sDate['month_name'].' '.$sDate['year']);
+	     
 	    $this->viewAssignEscaped ('locations', Location::getAll() );
 	
 	

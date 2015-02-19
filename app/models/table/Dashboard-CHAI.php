@@ -713,111 +713,157 @@ order by date;
 		    return $output;
 		}
 		
-		public function fetchPercentFacHWProvidingStockOutDetails($cnoConsumptionWhere = null, $cnoStockOutWhere = null, $geoWhere = null, $group = null, $useName = null ) {
+		public function fetchPercentFacHWProvidingStockOutDetails($cnoStockOutWhere = null, $geoWhere = null, $group = null, $useName = null ) {
 		    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
-		    $numer = array();
 		    
-		    // provided last 6 months in stock_out
-		    
+		    // national
 		    $stock_out_sql = $db->select()
-		    ->from(array('c' => 'commodity'),
-		        array("frr.facility_external_id as fei" ))
-		        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
-		        ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')
-		        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
-		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
-		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
-		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
-		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
-		        ->where($cnoStockOutWhere)  // s.b.  cno.external_id in ('ibHR9NQ0bKL') and c.stock_out = 'Y' and c.date = (select max(date) from commodity)
- 		        ->where($geoWhere);
-
-		    $sql = $stock_out_sql->__toString();
-		    $sql = str_replace('`frr`.`facility_external_id` AS `fei`,','`frr`.`facility_external_id` AS `fei`', $sql);
-		    $sql = str_replace('`frr`.*,', '', $sql);
-		    $sql = str_replace('`cno`.*,', '', $sql);
-		    $sql = str_replace('`cto`.*,', '', $sql);
-		    $sql = str_replace('`f`.*,', '', $sql);
-		    $sql = str_replace('`frr`.*,', '', $sql);
-		    $sql = str_replace('`l1`.*,', '', $sql);
-		    $sql = str_replace('`l2`.*,', '', $sql);
-		    $sql = str_replace('`l3`.*', '', $sql);
-		    
-		    $six_month_sql = $db->select()
-		    ->from(array('c' => 'commodity'),
-		        array(
-		            'l1.location_name as L1_location_name', 
-		            'l2.location_name as L2_location_name', 
-		            'l3.location_name as L3_location_name', 
- 		            'frr.facility_external_id as fei' ))
-		        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
-		        ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')
-		        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
-		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
-		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
-		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
-		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
-		        ->where($cnoConsumptionWhere) // s.b. cno.external_id in ('ibHR9NQ0bKL') and c.consumption > 0 and c.date between date_sub(now(), interval 182 day) and now()
-		        ->where(" f.external_id in ( $sql ) " )
-		        // ->where($geoWhere)
-		        ->group(array( $useName ));
-		    
-		    $sql = $six_month_sql->__toString();
-		    $sql = str_replace('`frr`.`facility_external_id` AS `fei`,','`frr`.`facility_external_id` AS `fei`', $sql);
-		    $sql = str_replace('`frr`.*,', '', $sql);
-		    $sql = str_replace('`cno`.*,', '', $sql);
-		    $sql = str_replace('`cto`.*,', '', $sql);
-		    $sql = str_replace('`f`.*,', '', $sql);
-		    $sql = str_replace('`frr`.*,', '', $sql);
-		    $sql = str_replace('`l1`.*,', '', $sql);
-		    $sql = str_replace('`l2`.*,', '', $sql);
-		    $sql = str_replace('`l3`.*', '', $sql);
-		    
-		   $final_count_select = 'select L1_location_name, L2_location_name, L3_location_name, count(distinct(fei)) as cnt from ( ' . 
-		  		   $sql . ')t group by ' . $useName;
-		    
-		    $result = $db->fetchAll($final_count_select);
-		
-		    foreach ($result as $row){
-		        $numer[] = array(
-		            "location" => $row[$useName],
-		            "cnt" => $row['cnt'],
-		            "color" => 'blue',
-		        );
-		    }
-		    
-		    $select = $db->select()
 		    ->from(array('c' => 'commodity'),
 		        array(
 		            'l1.location_name as L1_location_name',
 		            'l2.location_name as L2_location_name',
 		            'l3.location_name as L3_location_name',
-		            'count(distinct(c.facility_id)) as cnt' ))
+		            "count(distinct c.facility_id) as numer" ))
 		        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
-		        ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')
 		        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
 		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
 		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
 		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
 		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
-		        ->where($cnoConsumptionWhere)
-		        ->where($geoWhere)
-		        ->group(array( $useName ));
-		
-		    $result = $db->fetchAll($select);
-		
+		        ->where($cnoStockOutWhere)
+		        ->order($useName); 
+		    
+		    $sql = $stock_out_sql->__toString();
+		    $sql = str_replace(' AS `numer`,',' AS `numer`', $sql);
+		    $sql = str_replace('`cno`.*,', '', $sql);
+		    $sql = str_replace('`f`.*,', '', $sql);
+		    $sql = str_replace('`frr`.*,', '', $sql);
+		    $sql = str_replace('`l1`.*,', '', $sql);
+		    $sql = str_replace('`l2`.*,', '', $sql);
+		    $sql = str_replace('`l3`.*', '', $sql);
+		    
+	    
+		    $result = $db->fetchAll($sql);
+		    
+		    foreach ($result as $row){
+		        $numer[] = array(
+		            "location" => 'National',
+		            "numer" => $row['numer'],
+		            "color" => 'black',
+		        );
+		    }
+		    
+		    $select = $db->select()
+		    ->from(array('f' => 'facility'),
+		        array(
+		            'l1.location_name as L1_location_name',
+		            'l2.location_name as L2_location_name',
+		            'l3.location_name as L3_location_name',
+		            'count(distinct(frr.facility_external_id)) as denom' ))
+		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
+		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+		        ->order($useName);
+		    
+		    $sql = $select->__toString();
+		    $sql = str_replace(' AS `denom`,',' AS `denom`', $sql);
+		    $sql = str_replace('`frr`.*,', '', $sql);
+		    $sql = str_replace('`l1`.*,', '', $sql);
+		    $sql = str_replace('`l2`.*,', '', $sql);
+		    $sql = str_replace('`l3`.*', '', $sql);
+		    
+		    $result = $db->fetchAll($sql);
+		    
 		    foreach ($result as $row){
 		        $denom[] = array(
+		            "location" => 'National',
+		            "denom" => $row['denom'],
+		            "color" => 'black',
+		        );
+		    }
+		     		    
+		    // geo, provided last 6 months in stock_out
+		    
+		    $stock_out_sql = $db->select()
+		    ->from(array('c' => 'commodity'),
+		        array(
+		            'l1.location_name as L1_location_name',
+		            'l2.location_name as L2_location_name',
+		            'l3.location_name as L3_location_name',
+		            "count(distinct c.facility_id) as numer" ))
+		        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
+		        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
+		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+		        ->where($cnoStockOutWhere)
+		        ->where($geoWhere)
+		        ->group($group)
+		        ->order($useName); 
+		    
+		    $sql = $stock_out_sql->__toString();
+		    $sql = str_replace(' AS `numer`,',' AS `numer`', $sql);
+		    $sql = str_replace('`cno`.*,', '', $sql);
+		    $sql = str_replace('`f`.*,', '', $sql);
+		    $sql = str_replace('`frr`.*,', '', $sql);
+		    $sql = str_replace('`l1`.*,', '', $sql);
+		    $sql = str_replace('`l2`.*,', '', $sql);
+		    $sql = str_replace('`l3`.*', '', $sql);
+		    
+	    
+		    $result = $db->fetchAll($sql);
+		    
+		    foreach ($result as $row){
+		        $numer[] = array(
 		            "location" => $row[$useName],
-		            "cnt" => $row['cnt'],
+		            "numer" => $row['numer'],
 		            "color" => 'blue',
 		        );
 		    }
-		     
-		    foreach($denom as $i => $row){
-		         
-		        $output[] = array('location' => $row['location'], 'percent' => $numer[$i]['cnt']/ $row['cnt'], 'color' => $row['color']);
-		
+		    
+		    $select = $db->select()
+		    ->from(array('f' => 'facility'),
+		        array(
+		            'l1.location_name as L1_location_name',
+		            'l2.location_name as L2_location_name',
+		            'l3.location_name as L3_location_name',
+		            'count(distinct(frr.facility_external_id)) as denom' ))
+		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
+		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+		        ->where($geoWhere)
+		        ->group($group)
+		        ->order($useName);
+		    
+		    $sql = $select->__toString();
+		    $sql = str_replace(' AS `denom`,',' AS `denom`', $sql);
+		    $sql = str_replace('`cno`.*,', '', $sql);
+		    $sql = str_replace('`f`.*,', '', $sql);
+		    $sql = str_replace('`frr`.*,', '', $sql);
+		    $sql = str_replace('`l1`.*,', '', $sql);
+		    $sql = str_replace('`l2`.*,', '', $sql);
+		    $sql = str_replace('`l3`.*', '', $sql);
+		    
+		    $result = $db->fetchAll($sql);
+		    
+		    foreach ($result as $row){
+		        $denom[] = array(
+		            "location" => $row[$useName],
+		            "denom" => $row['denom'],
+		            "color" => 'blue',
+		        );
+		    }
+
+		    foreach($denom as $i => $drow){
+		        
+		        foreach($numer as $j => $nrow){ // if missing numer elements
+		            
+                    if ($drow['location'] == $nrow['location'])
+                        $output[] = array('location' => $drow['location'], 'percent' => $numer[$j]['numer']/ $drow['denom'], 'color' => $drow['color']);
+		        }
 		    }
 		    
 		    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI fetchPercentFacHWProvidingStockOutDetails  >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
@@ -835,7 +881,105 @@ order by date;
 		    $numer = array();
 		    
 		    // provided last 6 months in stock_out
+		    //national
+		    $stock_out_sql = $db->select()
+		    ->from(array('c' => 'commodity'),
+		        array("frr.facility_external_id as fei" ))
+		        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
+		        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
+		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+		        ->where($stockOutWhere)  // s.b.  cno.external_id in ('JyiR2cQ6DZT') and c.date = (select max(date) from commodity) )
+		        ->where($geoWhere);
 		    
+		    $sql = $stock_out_sql->__toString();
+		    $sql = str_replace('`frr`.`facility_external_id` AS `fei`,','`frr`.`facility_external_id` AS `fei`', $sql);
+		    $sql = str_replace('`frr`.*,', '', $sql);
+		    $sql = str_replace('`cno`.*,', '', $sql);
+		    $sql = str_replace('`cto`.*,', '', $sql);
+		    $sql = str_replace('`f`.*,', '', $sql);
+		    $sql = str_replace('`frr`.*,', '', $sql);
+		    $sql = str_replace('`l1`.*,', '', $sql);
+		    $sql = str_replace('`l2`.*,', '', $sql);
+		    $sql = str_replace('`l3`.*', '', $sql);
+		    
+		    $training_sql = $db->select()
+		    ->from(array('pt' => 'person_to_training'),
+		        array(
+		            "$useName as location",
+           		    'count(distinct(frr.facility_external_id)) as numer' ))
+   		        ->joinLeft(array('p' => "person"), 'pt.person_id = p.id')
+   		        ->joinLeft(array('f' => "facility"), 'p.facility_id = f.id')
+   		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
+   		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+   		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+   		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+   		        ->joinLeft(array('t' => "training"), 'pt.training_id = t.id')
+   		        ->joinInner(array('tto' => "training_title_option"), 't.training_title_option_id = tto.id')
+   		        ->where($trainingWhere) // s.b. t.training_title_option_id = 1  
+   		        //->where($geoWhere)
+   		        ->where(" frr.facility_external_id in ( $sql ) " );
+    		    //->group( "$useName" );
+		    		    
+		    		    $sql = $training_sql->__toString();
+		    		    $sql = str_replace(' AS `numer`,',' AS `numer`', $sql);
+		    		    $sql = str_replace('`p`.*,', '', $sql);
+		    		    $sql = str_replace('`f`.*,', '', $sql);
+		    		    $sql = str_replace('`frr`.*,', '', $sql);
+		    		    $sql = str_replace('`l1`.*,', '', $sql);
+		    		    $sql = str_replace('`l2`.*,', '', $sql);
+		    		    $sql = str_replace('`l3`.*,', '', $sql);
+		    		    $sql = str_replace('`t`.*,', '', $sql);
+		    		    $sql = str_replace('`tto`.*', '', $sql);
+		    		    
+		    		    $result = $db->fetchAll($sql);
+		    		
+		    		    foreach ($result as $row){
+		    		        $numer[] = array(
+		    		            "location" => 'National',
+		    		            "numer" => $row['numer'],
+		    		            "color" => 'black',
+		    		        );
+		    		    }
+		    		    
+		    		    $select = $db->select()
+		    		    ->from(array('c' => 'commodity'),
+		    		        array(
+		    		            "$useName as location",
+		    		            'count(distinct(c.facility_id)) as denom' ))
+		    		        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
+		    		        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
+		    		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
+		    		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
+		    		        ->joinLeft(array('l2' => "location"), 'l1.parent_id = l2.id')
+		    		        ->joinLeft(array('l3' => "location"), 'l2.parent_id = l3.id')
+		    		        ->where($sixMonthWhere); // s.b. cno.external_id in ('w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') or cno.external_id = 'DiXDJRmPwfh', LARC
+		    		        //->where($geoWhere);
+		    		        //->group(array( $useName ));
+		    		    
+		    		    $sql = $select->__toString();
+		    		    $sql = str_replace(' AS `denom`,',' AS `denom`', $sql);
+		    		    $sql = str_replace('`cno`.*,', '', $sql);
+		    		    $sql = str_replace('`f`.*,', '', $sql);
+		    		    $sql = str_replace('`frr`.*,', '', $sql);
+		    		    $sql = str_replace('`l1`.*,', '', $sql);
+		    		    $sql = str_replace('`l2`.*,', '', $sql);
+		    		    $sql = str_replace('`l3`.*', '', $sql);
+		    		
+		    		    $result = $db->fetchAll($sql);
+		    		
+		    		    foreach ($result as $row){
+		    		        $denom[] = array(
+		    		            "location" => 'National',
+		    		            "denom" => $row['denom'],
+		    		            "color" => 'black',
+		    		        );
+		    		    }
+		    		    
+		    
+		    // geo
 		    $stock_out_sql = $db->select()
 		    ->from(array('c' => 'commodity'),
 		        array("frr.facility_external_id as fei" ))
@@ -862,10 +1006,9 @@ order by date;
 		    $training_sql = $db->select()
 		    ->from(array('pt' => 'person_to_training'),
 		        array(
-		            'l1.location_name as L1_location_name', 
-		            'l2.location_name as L2_location_name', 
-		            'l3.location_name as L3_location_name', 
- 		            'frr.facility_external_id as fei' ))
+		            "$useName as location",
+		            'count(distinct(frr.facility_external_id)) as numer' ))
+ 		            
 		        ->joinLeft(array('p' => "person"), 'pt.person_id = p.id')
 		        ->joinLeft(array('f' => "facility"), 'p.facility_id = f.id')
 		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
@@ -877,10 +1020,11 @@ order by date;
 		        ->where($trainingWhere) // s.b. t.training_title_option_id = 1  
 		        ->where($geoWhere)
 		        ->where(" frr.facility_external_id in ( $sql ) " )
-		        ->group(array( $useName ));
+		        //->group(array( $useName ));
+		    ->group( "$useName" );
 		    
 		    $sql = $training_sql->__toString();
-		    $sql = str_replace('`frr`.`facility_external_id` AS `fei`,','`frr`.`facility_external_id` AS `fei`', $sql);
+		    $sql = str_replace(' AS `numer`,',' AS `numer`', $sql);
 		    $sql = str_replace('`p`.*,', '', $sql);
 		    $sql = str_replace('`f`.*,', '', $sql);
 		    $sql = str_replace('`frr`.*,', '', $sql);
@@ -890,15 +1034,14 @@ order by date;
 		    $sql = str_replace('`t`.*,', '', $sql);
 		    $sql = str_replace('`tto`.*', '', $sql);
 		    
-		   $final_count_select = 'select L1_location_name, L2_location_name, L3_location_name, count(distinct(fei)) as cnt from ( ' . 
-		  		   $sql . ')t group by ' . $useName;
+		   // $final_count_select = 'select L1_location_name, L2_location_name, L3_location_name, count(distinct(fei)) as cnt from ( ' . $sql . ')t group by ' . $useName;
 		    
-		    $result = $db->fetchAll($final_count_select);
+		    $result = $db->fetchAll($sql);
 		
 		    foreach ($result as $row){
 		        $numer[] = array(
-		            "location" => $row[$useName],
-		            "cnt" => $row['cnt'],
+		            "location" => $row['location'],
+		            "numer" => $row['numer'],
 		            "color" => 'blue',
 		        );
 		    }
@@ -906,12 +1049,9 @@ order by date;
 		    $select = $db->select()
 		    ->from(array('c' => 'commodity'),
 		        array(
-		            'l1.location_name as L1_location_name',
-		            'l2.location_name as L2_location_name',
-		            'l3.location_name as L3_location_name',
-		            'count(distinct(c.facility_id)) as cnt' ))
+		            "$useName as location",
+		            'count(distinct(c.facility_id)) as denom' ))
 		        ->joinLeft(array('cno' => "commodity_name_option"), 'c.name_id = cno.id')
-		        ->joinLeft(array('cto' => "commodity_type_option"), 'c.type_id = cto.id')
 		        ->joinLeft(array('f' => "facility"), 'c.facility_id = f.id')
 		        ->joinInner(array('frr' => "facility_report_rate"), 'frr.facility_external_id = f.external_id')
 		        ->joinLeft(array('l1' => "location"), 'f.location_id = l1.id')
@@ -920,21 +1060,33 @@ order by date;
 		        ->where($sixMonthWhere) // s.b. cno.external_id in ('w92UxLIRNTl', 'H8A8xQ9gJ5b', 'ibHR9NQ0bKL', 'yJSLjbC9Gnr', 'vDnxlrIQWUo', 'krVqq8Vk5Kw') or cno.external_id = 'DiXDJRmPwfh', LARC
 		        ->where($geoWhere)
 		        ->group(array( $useName ));
+		    
+		    $sql = $select->__toString();
+		    $sql = str_replace(' AS `denom`,',' AS `denom`', $sql);
+		    $sql = str_replace('`cno`.*,', '', $sql);
+		    $sql = str_replace('`f`.*,', '', $sql);
+		    $sql = str_replace('`frr`.*,', '', $sql);
+		    $sql = str_replace('`l1`.*,', '', $sql);
+		    $sql = str_replace('`l2`.*,', '', $sql);
+		    $sql = str_replace('`l3`.*', '', $sql);
 		
-		    $result = $db->fetchAll($select);
+		    $result = $db->fetchAll($sql);
 		
 		    foreach ($result as $row){
 		        $denom[] = array(
-		            "location" => $row[$useName],
-		            "cnt" => $row['cnt'],
+		            "location" => $row['location'],
+		            "denom" => $row['denom'],
 		            "color" => 'blue',
 		        );
 		    }
 		     
-		    foreach($denom as $i => $row){
-		         
-		        $output[] = array('location' => $row['location'], 'percent' => $numer[$i]['cnt']/ $row['cnt'], 'color' => $row['color']);
-		
+		    foreach($denom as $i => $drow){
+		    
+		        foreach($numer as $j => $nrow){ // if missing numer elements
+		    
+		            if ($drow['location'] == $nrow['location'])
+		                $output[] = array('location' => $drow['location'], 'percent' => $numer[$j]['numer']/ $drow['denom'], 'color' => $drow['color']);
+		        }
 		    }
 		    
 		    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI fetchPercentFacHWProvidingStockOutDetails  >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
