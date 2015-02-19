@@ -53,9 +53,11 @@ if(sizeof($options) === 0){
 	}
 }
 
+//to run on local PC
  require_once 'globals.php';
  $db = Zend_Db_Table_Abstract::getDefaultAdapter();
  
+ //to run on server
  //  $db = getDB($DB_NAME);
  // print "USE DATABASE: " . $DB_NAME . "\n\n";
  
@@ -103,6 +105,11 @@ function upload($DATA_URL, $USERNAME, $PASSWORD, $db) {
 	$date_year = substr ( $date, 0, 4 );
 	$date_month = substr ( $date, - 2 );
 	print "Data period: " . $date_year . "-" . $date_month . "-01\n\n";
+	
+	//save json output to file
+	$file = fopen("DHIS2Upload-FacilityReportRate-". $date . ".json","w");
+	echo fwrite($file,$data_json);
+	fclose($file);
 	
 	unset($data_json_arr["metaData"]); // remove this huge object
 	
