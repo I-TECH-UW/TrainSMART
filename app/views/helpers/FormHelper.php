@@ -25,11 +25,9 @@
  * @param  string $id    = '' - html element id
  * @param  string $val   = '' - value to display for input tags
  * @return html string
- */
-
-/* returns:
- * @return string <div class="$class $id">$required$label</div>
- *	<div class="fieldInput">$reportcheck$content$cal1</div>
+ * returns:
+ * string <div class="$class $id">$required$label</div>
+ * <div class="fieldInput">$reportcheck$content$cal1</div>
 */
 
 function labelAndField($view, $label, $content, $id = '', $val = '')

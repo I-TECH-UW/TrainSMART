@@ -68,5 +68,9 @@ class PeopleaddController extends ITechController {
 		$this->view->assign('institutions',$helper->getInstitutions(false));
 	}
 
+    public function skillsmartChwAddAction() {
+        
+    }
+    
 }
 ?>
