@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><?php echo $this->escape($this->title); ?></title>
+        <link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+        <?php
+        require_once('views/helpers/Location.php');
+        require_once('views/helpers/ScriptContainer.php');
+        print ScriptContainer::$instance->renderCSSHead();
+        print ScriptContainer::$instance->renderJSHead();
+        ?>
+        <style type="text/css">
+            fieldset.formSection {float: left; width: 100%; border: 0; margin: 0; padding: 0;}
+            fieldset.formSection legend { margin-bottom: 2em; }
+        </style>
+
+    </head>
+    <body>
+        <div id="pageHolder">
+            <div id="header"><?php require_once('views/scripts/preheader.phtml'); ?></div>
+            <div id="content">
+                <div id="subcontent">
+                    <div id="contentheader">
+                        <h2><?php echo t('Add a new Learner'); ?></h2><br>
+                    </div>
+
+                    <div class="pad50 clear"></div>
+
+                    <div class="mainformholder" style="">
+
+                        <form action="<?php echo $this->escape($this->action); ?>" method="post">
+
+                            <fieldset class="formSection">
+
+                                <?php
+                                require_once('views/helpers/FormHelper.php');
+//                            echo labelAndField($this, t('Last Name'),   'text', 'last_name',  $this->employee['first_name'] );
+                                $temporary_value = "temporary value";
+                                echo '<legend>' . t('Enter details') . '</legend>';
+
+                                echo labelAndField($this, t('Surname'), 'text', 'last_name', $temporary_value);
+                                echo labelAndField($this, t('Full Names'), 'text', 'full_names', $temporary_value);
+                                echo labelAndField($this, t('SA Citizen?'), 'text', 'is_sa_citizen', $temporary_value);
+                                echo labelAndField($this, t('ID Number'), 'text', 'id_number', $temporary_value);
+                                echo labelAndField($this, t('Race'), 'text', 'race', $temporary_value);
+                                echo labelAndField($this, t('Age'), 'text', 'age', $temporary_value);
+                                echo labelAndField($this, t('Gender'), 'text', 'gender', $temporary_value);
+                                echo labelAndField($this, t('Handicap/Special Needs'), 'text', 'ability', $temporary_value);
+                                echo labelAndField($this, t('Highest Qualification Achieved'), 'text', 'highest_qualification', $temporary_value);
+                                echo labelAndField($this, t('Physical Address (Residential)'), 'text', 'residential_address', $temporary_value);
+                                echo labelAndField($this, t('Province'), 'text', 'province', $temporary_value);
+                                echo labelAndField($this, t('Contact Number'), 'text', 'contact_number', $temporary_value);
+                                echo labelAndField($this, t('Email'), 'text', 'personal_email', $temporary_value);
+                                echo labelAndField($this, t('Recognition of RPL'), 'text', 'rpl_recognition', $temporary_value);
+                                echo labelAndField($this, t('List of Modules'), 'text', 'modules', $temporary_value);
+                                ?>
+
+                                <fieldset class="formSection">
+
+                                    <?php
+                                    echo '<legend>' . t('Work Place Information') . '</legend>';
+
+                                    echo labelAndField($this, t('Name of Workplace'), 'text', 'workplace', $temporary_value);
+                                    echo labelAndField($this, t('Address of Workplace'), 'text', 'workplace_address', $temporary_value);
+                                    echo labelAndField($this, t('Contact Number'), 'text', 'workplace_contact_number', $temporary_value);
+                                    echo labelAndField($this, t('Commencing Date for Workplace'), 'text', 'workplace_start_date', $temporary_value);
+                                    echo labelAndField($this, t('End Date for Workplace'), 'text', 'end_date', $temporary_value);
+                                    echo labelAndField($this, t('Name of Employer'), 'text', 'name_of_employer', $temporary_value);
+                                    echo labelAndField($this, t('Address of Employer'), 'text', 'address_of_employer', $temporary_value);
+                                    echo labelAndField($this, t('Telephone Number'), 'text', 'telephone_number', $temporary_value);
+                                    echo labelAndField($this, t('Name of Contact Person'), 'text', 'contact_name', $temporary_value);
+                                    echo labelAndField($this, t('Email Address'), 'text', 'contact_email_address', $temporary_value);
+                                    ?>
+
+                                </fieldset>
+                                <fieldset class="formSection">
+
+                                    <?php
+                                    echo '<legend>' . t('Qualification') . '</legend>';
+                                    echo labelAndField($this, t('Name of Qualification'), 'text', 'qualification_name', $temporary_value);
+                                    echo labelAndField($this, t('SAQA ID'), 'text', 'saqa_id', $temporary_value);
+                                    echo labelAndField($this, t('Credits'), 'text', 'credits', $temporary_value);
+                                    echo labelAndField($this, t('Level'), 'text', 'qualification_level', $temporary_value);
+                                    echo labelAndField($this, t('Commencing Date'), 'text', 'qualifcation_start_date', $temporary_value);
+                                    echo labelAndField($this, t('End Date'), 'text', 'qualification_end_date', $temporary_value);
+                                    echo labelAndField($this, t('Date of Final Integrated External Assessment'), 'text', 'assesment_final_date', $temporary_value);
+                                    echo labelAndField($this, t('Name of Assessment Centre/Site'), 'text', 'assessment_center_name', $temporary_value);
+                                    echo labelAndField($this, t('Address of Assessment Centre/Site'), 'text', 'assessment_center_address', $temporary_value);
+                                    echo labelAndField($this, t('Contact Number of Assessment Centre/Site'), 'text', 'assessment_center_contact_number', $temporary_value);
+                                    echo labelAndField($this, t('Is Learner Employed?'), 'text', 'student_is_employed', $temporary_value);
+                                    ?>
+                                </fieldset>
+
+                                <fieldset class="formSection">
+                                    <?php
+                                    echo '<legend>' . t('Qualified Learners') . '</legend>';
+                                    echo labelAndField($this, t('Date Certificate was Received From the AQP'), 'text', 'certificate_received_from_aqp_date', $temporary_value);
+                                    echo labelAndField($this, t('Certificate Number'), 'text', 'certificate_number', $temporary_value);
+                                    echo labelAndField($this, t('Date Learner Received Certificate'), 'text', 'certificate_received_date', $temporary_value);
+                                    ?>
+                                </fieldset>
+                        </form>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div id="footer"><?php require_once('views/scripts/footer.phtml'); ?></div>
+        </div>
+    </body>
+</html>
