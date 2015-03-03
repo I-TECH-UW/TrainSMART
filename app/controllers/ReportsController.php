@@ -2855,6 +2855,7 @@ echo $sql . "<br>";
 
 			$sql = 'SELECT ';
 
+/*			
 			if ($criteria ['doCount']) {
 				$distinct = ($criteria ['distinctCount']) ? 'DISTINCT ' : '';
 				$sql .= ' COUNT(' . $distinct . 'person_id) as "cnt" ';
@@ -2864,6 +2865,29 @@ echo $sql . "<br>";
 				else
 				$sql .= ' DISTINCT person_id as "id", IFNULL(suffix_phrase, ' . "' '" . ') as suffix_phrase, last_name, first_name, middle_name, pt.training_start_date  ';
 			}
+*/
+
+			if ($criteria ['doCount']) {
+			    $distinct = ($criteria ['distinctCount']) ? 'DISTINCT ' : '';
+			    $sql .= ' COUNT(' . $distinct . 'person_id) as "cnt" ';
+			}
+			else {
+			    if ($criteria ['concatNames']) {
+			        $sql .= ' DISTINCT person_id as "id", CONCAT(first_name, ' . "' '" . ',last_name, ' . "' '" . ', IFNULL(suffix_phrase, ' . "' '" . '))
+             "name", IFNULL(suffix_phrase, ' . "' '" . ') as suffix_phrase ';
+			    }
+			    else {
+			        $sql .= ' DISTINCT person_id as "id", IFNULL(suffix_phrase, ' . "' '" . ') as suffix_phrase, last_name, first_name, middle_name ';
+			    }
+			}
+				
+			if ($criteria ['distinctCount']){
+			    // $sql .= ' , pt.training_title ';
+			}
+			else {
+			    $sql .= ' , pt.training_start_date ';
+			}
+			
 			if ($criteria ['showPhone']) {
 				$sql .= ", CASE WHEN (pt.phone_work IS NULL OR pt.phone_work = '') THEN NULL ELSE pt.phone_work END as \"phone_work\", CASE WHEN (pt.phone_home IS NULL OR pt.phone_home = '') THEN NULL ELSE pt.phone_home END as \"phone_home\", CASE WHEN (pt.phone_mobile IS NULL OR pt.phone_mobile = '') THEN NULL ELSE pt.phone_mobile END as \"phone_mobile\" ";
 			}

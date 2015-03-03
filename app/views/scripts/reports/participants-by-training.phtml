@@ -398,11 +398,15 @@ if ( $this->setting['display_viewing_location'] && $this->mode != 'search' && ! 
 
 </div>
 
-<?php if(strstr($path[2], 'participantsByTraining') != FALSE ) { ?>
+<?php if(strstr($path[2], 'participantsByTraining') == TRUE or strstr($path[2], 'participantsByName') == TRUE) { ?>
   <div class="clear"></div>
 	<div class="fieldLabel">&nbsp;</div>
-   	<div class="fieldInput" style="margin-top:1em;"><input type="checkbox" name="distinctCount" id="distinctCount" <?php  if ($this->criteria['distinctCount']) echo 'checked="checked"';?> /><label for="distinctCount" > <?php tp('Return Unique Participants');?></label></div>
-<?php }; ?>
+   	<div class="fieldInput" style="margin-top:1em;"><input type="checkbox" name="distinctCount" id="distinctCount" 
+   	<?php  if ($this->criteria['distinctCount']) echo 'checked="checked"';?> /><label for="distinctCount" > 
+   	<?php if(strstr($path[2], 'participantsByTraining') == TRUE) tp('Return Unique Participants');?>
+   	<?php if(strstr($path[2], 'participantsByName') == TRUE) tp('Return Unique Participants By Training Names');?>
+   	
+   	</label></div><?php }; ?>
 
 
 	<div class="clear"></div><br /><br />
@@ -752,19 +756,19 @@ var trainingColumnDefs = [
 
 // uncheck return unique if training_title is used, they are not companitable
 $('document').ready(function () {
-	if ($('#training_title_id').val() != "") {
-		$('#distinctCount').removeAttr('checked');
-	}
-	$('#training_title_id').change(function () {
-		if ($('#training_title_id').val() != "") {
-			$('#distinctCount').removeAttr('checked');
-		}
-	})
-	$('#distinctCount').change(function (e) {
-		if ($(this).is(':checked') && $('#training_title_id').val() != "") {
-			alert('<?php echo @$this->translation["Training Name"].space.t("cannot be used with".space.t("Return Unique Participants")); ?>');
-			e.preventDefault();
-			$('#distinctCount').removeAttr('checked');
+	//if ($('#training_title_id').val() != "") {
+		//$('#distinctCount').removeAttr('checked');
+	//}
+	//$('#training_title_id').change(function () {
+		//if ($('#training_title_id').val() != "") {
+			//$('#distinctCount').removeAttr('checked');
+		//}
+	//})
+	//$('#distinctCount').change(function (e) {
+		//if ($(this).is(':checked') && $('#training_title_id').val() != "") {
+			//alert('<?php echo @$this->translation["Training Name"].space.t("cannot be used with".space.t("Return Unique Participants")); ?>');
+			//e.preventDefault();
+			//$('#distinctCount').removeAttr('checked');
 		}
 	})
 })
