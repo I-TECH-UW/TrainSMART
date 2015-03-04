@@ -36,7 +36,7 @@
 		var statsColumnDefs = [
 		    {key:"name", label: "<?php echo $this->min_date;?>&nbsp;to&nbsp;<?php echo $this->max_date;?>", sortable:false, resizeable:true},
 		    {key:"total", label: "<?php tp('Total');?>", sortable:false, resizeable:true},
-			{key:"ytd", label: "<?php tp('Fiscal Year');?> (since&nbsp;<?php echo $this->ytdStart;?>)", sortable:false, resizeable:true}
+			{key:"ytd", label: "<?php tp('Fiscal Year');?> ( <?php tp('since'); ?>&nbsp;<?php echo $this->ytdStart;?>)", sortable:false, resizeable:true}
 		];
 
 		makeDataTable("trainingStats", null, statsData, statsColumnDefs);
@@ -77,7 +77,7 @@
 ?>
 
 
-			<div class="fieldIndentNoMargin"><?php echo t('Future').' '.t('Trainings');?>: <span class="total"><?php tp('Total');?>: <span id="trainingfuture_total">0</span></span>      </div>
+			<div class="fieldIndentNoMargin"><?php echo t('Future Trainings');?>: <span class="total"><?php tp('Total');?>: <span id="trainingfuture_total">0</span></span>      </div>
 
 			<div class="fieldIndent2">
 
@@ -93,7 +93,7 @@
 			<!-- show incomplete trainings -->
 			<?php if($this->tableTrainingPast) : ?>
 
-			<div class="fieldIndentNoMargin"><?php echo t('Incomplete').' '.t('Trainings').' '.t('that already occurred');?>: <span class="total"><?php tp('Total');?>: <span id="trainingpast_total">0</span></span></div>
+			<div class="fieldIndentNoMargin"><?php tp('Incomplete trainings that already occurred');?>: <span class="total"><?php tp('Total');?>: <span id="trainingpast_total">0</span></span></div>
 			<div class="fieldIndent2">
 			<div id="trainingpastTable"></div>
 			  <?php echo $this->tableTrainingPast; ?>
