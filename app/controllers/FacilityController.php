@@ -206,7 +206,7 @@ class FacilityController extends ReportFilterHelpers {
 				$facilityRow->postal_code = $this->getSanParam ( 'facility_postal_code' );
 				$facilityRow->phone = $this->getSanParam ( 'facility_phone' );
 				$facilityRow->fax = $this->getSanParam ( 'facility_fax' );
-				$facilityRow->custom_1 = $this->getSanParam ( 'facility_custom1' );
+				$facilityRow->CUSTOM_1 = $this->getSanParam ( 'facility_custom1' );
 				$facilityRow->sponsor_option_id = $sponsor_id;
 				
 				// dupecheck
