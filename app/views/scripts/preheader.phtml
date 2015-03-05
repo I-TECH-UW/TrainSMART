@@ -54,10 +54,14 @@ if ( $this->isLoggedIn() ) {
 
 	// PEOPLE LINK
 	if ( $this->hasACL('edit_people') && $this->hasACL('edit_studenttutorinst')){
-		$navMain['people'] = array(
+		$addLink = '../peopleadd/peopleadd';
+        if ($this->setting('site_style_id') == 2) {
+            $addLink = '../peopleadd/skillsmart-chw-add';
+        }
+        $navMain['people'] = array(
 		'index' => t('People'),
 		'people' => t('View/Edit Person'),
-		'../peopleadd/peopleadd' => t('Add Person'),
+		$addLink => t('Add Person'),
 		);
 	} else {
 		$navMain['people'] = array(
