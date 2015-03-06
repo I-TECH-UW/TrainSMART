@@ -23,9 +23,10 @@ class PeopleaddController extends ITechController {
 	public function peopleaddAction(){
 		$params = $this->getAllParams();
 		$status = ValidationContainer::instance();
+        $peopleadd = new Peopleadd();
+
 		if ( $this->getRequest()->isPost() ){
 			if (isset ($params['addpeople'])){
-				$peopleadd = new PeopleAdd();	# TRIGGERS ADDING PERSON
 				$tutorid = $peopleadd->addTutor($params);
 
 				if ($tutorid) {// sucess
@@ -47,19 +48,16 @@ class PeopleaddController extends ITechController {
 		$this->view->assign('action','../studentedit/studentedit/');
 		$this->view->assign('title', $this->view->translation['Application Name']);
 
-		$persontitle = new Peopleadd();
-		$result = $persontitle->Peopletitle($fetchtitle);
+		$result = $peopleadd->Peopletitle();
 
 		$this->view->assign('fetchtitle',$result);
 
 		// For Facility
-		$faclilityttitle = new Peopleadd();
-		$result = $faclilityttitle->PeopleFacility($fetchfacility);
+		$result = $peopleadd->PeopleFacility();
 
 		$this->view->assign('fetchfacility',$result);
 
-		$citylist = new Peopleadd();
-		$result = $citylist->PeopleCity($citylist);
+		$result = $peopleadd->PeopleCity();
 
 		$this->view->assign('fetchcity',$result);
 
