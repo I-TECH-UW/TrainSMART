@@ -6,6 +6,7 @@
 *	Fuse IQ -- todd@fuseiq.com
 *
 */
+
 function no_soft_space_str($v){
 	return str_replace(' ', '&nbsp;', $v);
 }
@@ -53,9 +54,10 @@ if ( $this->isLoggedIn() ) {
 	}
 
 	// PEOPLE LINK
+
 	if ( $this->hasACL('edit_people') && $this->hasACL('edit_studenttutorinst')){
 		$addLink = '../peopleadd/peopleadd';
-        if ($this->setting('site_style_id') == 2) {
+        if ($this->setting['site_style_id'] == 2) {
             $addLink = '../peopleadd/skillsmart-chw-add';
         }
         $navMain['people'] = array(
