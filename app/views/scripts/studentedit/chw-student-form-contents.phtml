@@ -1,0 +1,71 @@
+
+<fieldset class="formSection">
+
+    <?php
+    require_once('views/helpers/FormHelper.php');
+    //                            echo labelAndField($this, t('Last Name'),   'text', 'last_name',  $this->employee['first_name'] );
+    $temporary_value = "temporary value";
+    echo '<legend>' . t('Enter details') . '</legend>';
+
+    echo labelAndField($this, t('Last name'), 'text', 'last_name', $temporary_value);
+    echo labelAndField($this, t('Full Names'), 'text', 'full_names', $temporary_value);
+    echo labelAndField($this, t('SA Citizen?'), 'text', 'nationality', $temporary_value);
+    echo labelAndField($this, t('School ID'), 'text', 'nationalid', $temporary_value);
+    echo labelAndField($this, t('Title'), 'text', 'title', $temporary_value);
+    echo labelAndField($this, t('Age'), 'text', 'age', $temporary_value);
+    echo labelAndField($this, t('Gender'), 'text', 'gender', $temporary_value);
+    echo labelAndField($this, $this->escape($this->label_spouse_name), 'text', 'spouse_name', $temporary_value);
+    echo labelAndField($this, t('Highest Qualification Achieved'), 'text', 'highest_qualification', $temporary_value);
+    echo labelAndField($this, t('Physical Address (Residential)'), 'text', 'residential_address', $temporary_value);
+    echo labelAndField($this, t('Province'), 'text', 'province', $temporary_value);
+    echo labelAndField($this, t('Phone'), 'text', 'phone', $temporary_value);
+    echo labelAndField($this, t('Email'), 'text', 'personal_email', $temporary_value);
+    echo labelAndField($this, $this->escape($this->label_marital_status), 'text', 'marital_status', $temporary_value);
+    echo labelAndField($this, t('List of Modules'), 'text', 'modules', $temporary_value);
+    ?>
+</fieldset>
+
+<fieldset class="formSection">
+
+    <?php
+    echo '<legend>' . t('Work Place Information') . '</legend>';
+
+    echo labelAndField($this, t('Facility Name'), 'text', 'postfacilityname', $temporary_value);
+    echo labelAndField($this, t('Comments'), 'text', 'comments', $temporary_value);
+    echo labelAndField($this, $this->escape($this->label_personincharge), 'text', 'personincharge', $temporary_value);
+    echo labelAndField($this, t('Commencing Date for Workplace'), 'text', 'workplace_start_date', $temporary_value);
+    echo labelAndField($this, t('End Date for Workplace'), 'text', 'end_date', $temporary_value);
+    echo labelAndField($this, t('Name of Employer'), 'text', 'name_of_employer', $temporary_value);
+    echo labelAndField($this, t('Address of Employer'), 'text', 'address_of_employer', $temporary_value);
+    echo labelAndField($this, t('Telephone Number'), 'text', 'telephone_number', $temporary_value);
+    echo labelAndField($this, t('Name of Contact Person'), 'text', 'contact_name', $temporary_value);
+    echo labelAndField($this, t('Email Address'), 'text', 'contact_email_address', $temporary_value);
+    ?>
+
+</fieldset>
+<fieldset class="formSection">
+
+    <?php
+    echo '<legend>' . t('Qualification') . '</legend>';
+    echo labelAndField($this, t('Reason for Enrollment'), 'text', 'enrollmentreason', $temporary_value);
+    echo labelAndField($this, $this->escape($this->label_custom_field2), 'text', 'custom_field2', $temporary_value);
+    echo labelAndField($this, $this->escape($this->label_custom_field3), 'text', 'custom_field3', $temporary_value);
+    echo labelAndField($this, t('Reason for Separation'), 'text', 'separationreason', $temporary_value);
+    echo labelAndField($this, t('Date of Enrollment'), 'text', 'enrollmentdate', $temporary_value);
+    echo labelAndField($this, t('Date of Separation'), 'text', 'separationdate', $temporary_value);
+    echo labelAndField($this, t('Date of Final Integrated External Assessment'), 'text', 'assesment_final_date', $temporary_value);
+    echo labelAndField($this, t('ps program enrolled in'), 'text', 'cadre', $temporary_value);
+    echo labelAndField($this, $this->escape($this->label_lastinstatt), 'text', 'lastinstatt', $temporary_value);
+    echo labelAndField($this, t('Contact Number of Assessment Centre/Site'), 'text', 'assessment_center_contact_number', $temporary_value);
+    echo labelAndField($this, $this->escape($this->label_ps_religious_denomin), 'text', 'studenttype', $temporary_value);
+    ?>
+</fieldset>
+
+<fieldset class="formSection">
+    <?php
+    echo '<legend>' . t('Qualified Learners') . '</legend>';
+    echo labelAndField($this, t('Date Certificate was Received From the AQP'), 'text', 'certificate_received_from_aqp_date', $temporary_value);
+    echo labelAndField($this, t('Certificate Number'), 'text', 'certificate_number', $temporary_value);
+    echo labelAndField($this, t('Date Learner Received Certificate'), 'text', 'certificate_received_date', $temporary_value);
+    ?>
+</fieldset>

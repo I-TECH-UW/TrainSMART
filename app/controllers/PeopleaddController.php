@@ -67,7 +67,9 @@ class PeopleaddController extends ITechController {
 	}
 
     public function skillsmartChwAddAction() {
-        
+
+        $this->view->assign('action', '/studentedit/skillsmart-chw-student-edit/');
+        $this->view->assign('title', $this->view->translation['Application Name']);
     }
     
 }
