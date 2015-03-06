@@ -2252,7 +2252,7 @@ class AdminController extends UserController
 	
 	//TA: changed on 7/21/2014
 	public function preserviceLabelsAction(){
-	require_once('models/table/System.php');
+	    require_once('models/table/System.php');
 		$sysTable = new System();
 
 		// For "Labels"
@@ -2361,67 +2361,10 @@ class AdminController extends UserController
 			$status = ValidationContainer::instance();
 			$status->setStatusMessage(t('Your settings have been updated.'));
 		}
-		
-		//remove later TA:
-		
-// 				$helper = new Helper();
-		
-// 				if (isset ($_POST['action'])){
-// 					$helper->saveLabels($_POST);
-// 					$this->_redirect ( 'admin/preservice-labels' );
-// 				}
-		
-// 				$fields = array();
-// 				$fields[] = 'ps institution';
-// 				$fields[] = 'ps license and registration';
-// 				$fields[] = 'ps clinical allocation';
-// 				$fields[] = 'ps local address';
-// 				$fields[] = 'ps permanent address';
-// 				$fields[] = 'ps zip code';
-// 				$fields[] = 'ps religious denomination';
-// 				$fields[] = 'ps program enrolled in';
-// 				$fields[] = 'ps tutor';
-// 				$fields[] = 'ps national id';
-// 				$fields[] = 'ps nationality';
-		
-// 				$list = $helper->AdminLabels($fields);
-		
-// 				$this->view->assign("fieldvalues",$list);
-// 				$this->view->assign("allfields",$fields);
-		
- 				$this->view->assign("header","Field labels");
+
+        $this->view->assign("header","Field labels");
 	}
-	
-	//old code
-// 	public function preserviceLabelsAction(){
-// 		$helper = new Helper();
-	
-// 		if (isset ($_POST['action'])){
-// 			$helper->saveLabels($_POST);
-// 			$this->_redirect ( 'admin/preservice-labels' );
-// 		}
-	
-// 		$fields = array();
-// 		$fields[] = 'ps institution';
-// 		$fields[] = 'ps license and registration';
-// 		$fields[] = 'ps clinical allocation';
-// 		$fields[] = 'ps local address';
-// 		$fields[] = 'ps permanent address';
-// 		$fields[] = 'ps zip code';
-// 		$fields[] = 'ps religious denomination';
-// 		$fields[] = 'ps program enrolled in';
-// 		$fields[] = 'ps tutor';
-// 		$fields[] = 'ps national id';
-// 		$fields[] = 'ps nationality';
-	
-// 		$list = $helper->AdminLabels($fields);
-	
-// 		$this->view->assign("fieldvalues",$list);
-// 		$this->view->assign("allfields",$fields);
-	
-// 		$this->view->assign("header","Field labels");
-// 	}
-	
+
 	public function preserviceCadresAction(){
 		$helper = new Helper();
 	
