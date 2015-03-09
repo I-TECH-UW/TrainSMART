@@ -27,9 +27,9 @@ if ( $this->isLoggedIn() ) {
 	if ( $this->hasACL('edit_people') && $this->hasACL('edit_studenttutorinst')){
 		$navMain['institution'] = array(
 				//TA: added 7/25/2014 : automatic label changes
-		'index' => $this->translation['ps institution'], 
-		'institution'	=> t('View/Edit ') . $this->translation['ps institution'],
-		'institutionadd' =>	t('Add ') . $this->translation['ps institution'],
+		'index' => t($this->translation['ps institution']), 
+		'institution'	=> t('View/Edit') . ' ' . t($this->translation['ps institution']),
+		'institutionadd' =>	t('Add') . ' ' . t($this->translation['ps institution']),
 		);
 	} else {
 		$navMain['institution'] = array(
@@ -73,21 +73,21 @@ if ( $this->isLoggedIn() ) {
 		);
 
 		if (	$this->hasACL('edit_people')	) {
-			$navMain['psfacility']['search']	= t('View/Edit').' '.t('Facility');
+			$navMain['psfacility']['search']	= t('View/Edit Facility');
 		} else if ($this->hasACL('view_people')) {
-			$navMain['psfacility']['search']	= t('View').' '.t('facility');
+			$navMain['psfacility']['search']	= t('View Facility');
 		}
 		if (	$this->hasACL('edit_people') ) {
-			$navMain['psfacility']['add']	= t('Add').' '.t('Facility');
+			$navMain['psfacility']['add']	= t('Add Facility');
 		}
 
 		if (	$this->hasACL('edit_course') ) {
-			$navMain['psfacility']['searchLocation']	= t('View/Edit').' '.t('Training').' '.t('Location');
+			$navMain['psfacility']['searchLocation']	= t('View/Edit Training Location');
 		} else if ($this->hasACL('view_course')) {
-			$navMain['psfacility']['searchLocation']	= t('View').' '.t('Training').' '.t('Location');
+			$navMain['psfacility']['searchLocation']	= t('View Training Location');
 		}
 		if (	$this->hasACL('edit_course')) {
-			$navMain['psfacility']['addLocation']	= t('Add').' '.t('Training').' '.t('Location');
+			$navMain['psfacility']['addLocation']	= t('Add Training Location');
 		}
 
 	}

@@ -21,13 +21,13 @@ if ( $this->isLoggedIn() ) {
 		if ( $this->hasACL('edit_course')  ){
 			$navMain['training'] = array(
 			'index' => t('Trainings'),
-	    'view'  => t('View/Edit').' '.t('Training'),
-	    'add' => t('Add New').' '.t('Training')
+	    'view'  => t('View/Edit Training'),
+	    'add' => t('Add New Training')
 			);
 		} else {
 			$navMain['training'] = array(
 			'index' => t('Trainings'),
-	    'view'  => t('View').' '.t('Training')
+	    'view'  => t('View Training')
 			);
 		}
 
@@ -57,12 +57,12 @@ if ( $this->isLoggedIn() ) {
 			}
 
 			if (   $this->hasACL('edit_course')  && $this->setting['display_training_location']) { //TA:17:14:
-     	$navMain['facility']['searchLocation']  = t('View/Edit').' '.t('Training').' '.t('Location');
+     	$navMain['facility']['searchLocation']  = t('View/Edit').' '.t('Training Location');
 			} else if ($this->hasACL('view_course')) {
-     	$navMain['facility']['searchLocation']  = t('View').' '.t('Training').' '.t('Location');
+     	$navMain['facility']['searchLocation']  = t('View').' '.t('Training Location');
 			}
 			if (   $this->hasACL('edit_course') && $this->setting['display_training_location']) { //TA:17:14:)
-      	$navMain['facility']['addLocation']  = t('Add').' '.t('Training').' '.t('Location');
+      	$navMain['facility']['addLocation']  = t('Add').' '.t('Training Location');
 			}
 		}
 
@@ -79,16 +79,16 @@ if ( $this->isLoggedIn() ) {
 				$navMain['reports']['../']                           = '---------------';
 			}
 
-			$navMain['reports']['trainingByParticipants']            = t('Training').space.t('Reports');
-			$navMain['reports']['participantsByCategory/cat/pepfar'] = t('Participant').space.t('Reports');
+			$navMain['reports']['trainingByParticipants']            = t('Training Reports');
+			$navMain['reports']['participantsByCategory/cat/pepfar'] = t('Participant Reports');
 			if ($this->setting['display_budget_code']) {
-				$navMain['reports']['budgetcode']                    = t('Budget Code').space.t('Reports');
+				$navMain['reports']['budgetcode']                    = t('Budget Code Reports');
 			}
-			$navMain['reports']['trainers']                          = t('Trainer').space.t('Reports');
-			$navMain['reports']['trainingByFacilityCount']           = t('Facility').space.t('Reports');
-			$navMain['reports']['needsByPersonName']                 = t('Assessment').space.t('Reports');
-			$navMain['reports']['roster']                            = t('Roster').space.t('Reports');
-			$navMain['reports']['evaluations']                       = t('Evaluations').space.t('Reports');
+			$navMain['reports']['trainers']                          = t('Trainer Reports');
+			$navMain['reports']['trainingByFacilityCount']           = t('Facility Reports');
+			$navMain['reports']['needsByPersonName']                 = t('Assessment Reports');
+			$navMain['reports']['roster']                            = t('Roster Reports');
+			$navMain['reports']['evaluations']                       = t('Evaluations Reports');
 			$navMain['reports']['data']                              = t('Data Downloads');
 			//  '' =>
 
@@ -135,11 +135,11 @@ if ( $this->isLoggedIn() ) {
     'index' => t('Home'), // file => label (use "index" for root)
     ));
     $navMain['partner'] = array( 'index' => t('Partners') );
-    $navMain['partner']['add']     = t('Add').space.('Partner');
-    $navMain['partner']['search']  = t('View/Edit').space.('Partner');
+    $navMain['partner']['add']     = t('Add Partner');
+    $navMain['partner']['search']  = t('View/Edit Partner');
     $navMain['employee'] = array( 'index' => t('Employees') );// BS:1:10/06/2014 translate employee/employees
-    $navMain['employee']['add']    = t('Add').space.t('Employee'); 
-    $navMain['employee']['search'] = t('View/Edit').space.t('Employee');
+    $navMain['employee']['add']    = t('Add Employee'); 
+    $navMain['employee']['search'] = t('View/Edit Employee');
     #$navMain['site'] = array( 'index' => t('Sites') );
     #$navMain['site']['search']     = t('View/Edit').space.('Site');
     #$navMain['site']['add']        = t('Add').space.('Site');
@@ -160,12 +160,12 @@ if ( $this->isLoggedIn() ) {
 	}
 	if ( isset($this->setting['display_training_partner']) && $this->setting['display_training_partner'] == 1 ) {
 		if ( $this->hasACL('edit_country_options') ) {
-      $navMain['user']['../training-partner/search']  = no_soft_space_str( t('Training').' '.t('Partners') );
+      $navMain['user']['../training-partner/search']  = no_soft_space_str( t('Training Partners') );
 		}
 	}
   if ( isset($this->setting['module_employee_enabled']) && $this->setting['module_employee_enabled'] == 1 ) {
     if ( $this->hasACL('edit_country_options') ) {
-      $navMain['user']['../admin/employee-settings']  = no_soft_space_str( t('Employees').' '.t('Settings') );
+      $navMain['user']['../admin/employee-settings']  = no_soft_space_str( t('Employees Settings') );
     }
   }
 	if ( $this->hasACL('add_edit_users')) {

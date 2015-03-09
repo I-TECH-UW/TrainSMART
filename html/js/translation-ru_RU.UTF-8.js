@@ -1,32 +1,33 @@
 function tr(phrase) {
-	return phrase;
 	switch (phrase) {
 		case 'Remove':
-			return 'Supprimer';
+			return 'Удалить';
 		case 'Deleting...':
-			return 'Suppression';
+			return 'Удаление...';
 		case 'Are you sure you want to remove':
-			return 'Êtes-vous sûr de vouloir supprimer';
+			return 'Вы уверены что хотите удалить';
 		case 'Undeleting...':
-			return 'Undeleting...';
+			return 'Восстановление...';
 		case 'Saving...':
-			return "D'épargne";
+			return "Сохранение...";
 		case 'Edit':
-			return 'Modifier';
+			return 'Редактировать';
 		case 'Delete':
-			return 'Supprimer';
+			return 'Удалить';
+		case 'Add':
+			return 'Добавить';
 		case 'Are you sure you want to delete':
-			return 'Êtes-vous sûr de vouloir supprimer';
+			return 'Вы уверены что хотите удалить';
 		case 'Pick a Date':
-			return 'Choisissez une date';
+			return 'Выбрать дату';
 		case 'No records found.':
-			return 'Aucun enregistrement trouvé.';
+			return 'Не найдено ни одной записи';
 		case 'Loading...':
-			return 'Chargement...';
+			return 'Загрузка...';
 		case 'You have not selected a training category for your new title.':
-			return "Vous n\'avez pas sélectionné une catégorie de formation pour votre nouveau titre.";
+			return "Вы не выбрали категорию тренинга для вашего нового названия.";
 		case 'Do you still wish to add a title without a training category associated with it?':
-			return 'Désirez-vous encore d\'ajouter un titre sans une catégorie de formation qui lui est associé?';
+			return 'Вы все еще хотите добавить заголовок без категории тренинга, связанные с ним?';
 	}
 
 	return phrase;

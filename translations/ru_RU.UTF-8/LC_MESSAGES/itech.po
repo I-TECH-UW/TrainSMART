@@ -17,820 +17,381 @@ msgstr ""
 "X-Poedit-SearchPath-0: controllers\n"
 "X-Poedit-SearchPath-1: views\n"
 
-#: controllers/AdminController.php:161 controllers/AdminController.php:455
-#: controllers/AdminController.php:730 controllers/AdminController.php:843
 msgid "Your settings have been updated."
 msgstr "Ваши настройки были обновлены."
 
-#: controllers/CalendarController.php:92
 msgid "No future trainings found."
 msgstr "Будущие тренинги не найдены."
 
-#: controllers/EditTableController.php:146
 msgid "A record already exists with this value."
 msgstr "Запись уже существует с этим значением."
 
-#: controllers/EvaluationController.php:83
 msgid "The evaluation could not be loaded."
 msgstr "Не удалось загрузить оценивание."
 
-#: controllers/EvaluationController.php:99
-#: controllers/EvaluationController.php:170
-#: controllers/EvaluationController.php:180
 msgid "The evaluation could not be saved."
 msgstr "Не удалось сохранить оценивание."
 
-#: controllers/EvaluationController.php:157
-#: views/scripts/evaluation/browse.phtml:41
-#: views/scripts/external/add.phtml:20
 msgid "Title"
 msgstr "Название"
 
-#: controllers/EvaluationController.php:160
 msgid "You must choose a question type for each question."
 msgstr "Для каждого вопроса вы должны выбрать тип вопроса."
 
-#: controllers/EvaluationController.php:164
 msgid "You must enter question text for each question."
 msgstr "Для каждого вопроса вы должны ввести текст вопроса."
 
-#: controllers/EvaluationController.php:177
 msgid "The new evaluation was created."
 msgstr "Новое оценивание было создано."
 
-#: controllers/EvaluationController.php:226
-#: controllers/PersonController.php:936
 msgid "The trainings have been assigned."
 msgstr "Тренинги были назначены."
 
-#: controllers/EvaluationController.php:261
 msgid "The evaluation has been assigned."
 msgstr "Оценивание назначено."
 
-#: controllers/ExternalController.php:46
-#: controllers/TrainingController.php:183
 msgid "Training start"
 msgstr "Начало тренинга"
 
-#: controllers/ExternalController.php:49 controllers/PersonController.php:239
 msgid "The person could not be saved."
 msgstr "Не удалось сохранить личность."
 
-#: controllers/ExternalController.php:65
 msgid "The external course could not be saved."
 msgstr "Не удалось сохранить внешний курс."
 
-#: controllers/FacilityController.php:96
-#: controllers/PsfacilityController.php:96
 msgid "That name already exists."
 msgstr "Такое имя уже существует."
 
-#: controllers/FacilityController.php:100
-#: controllers/PsfacilityController.php:100
-#: views/scripts/facility/addfacility-form.phtml:35
-#: views/scripts/facility/edit.phtml:66 views/scripts/facility/view.phtml:60
-#: views/scripts/psfacility/addfacility-form.phtml:35
-#: views/scripts/psfacility/edit.phtml:66
-#: views/scripts/psfacility/view.phtml:60
 msgid "Facility type"
 msgstr "Тип учреждения"
 
-#: controllers/FacilityController.php:115 controllers/PersonController.php:234
-#: controllers/PsfacilityController.php:115
-#: controllers/TrainingController.php:1005
 msgid "That city does not appear to be located in the chosen region. If you want to create a new city, check the new city box."
 msgstr "Похоже, что город не находится в выбранном регионе. Если Вы хотите создать новый город, то поставьте отметку о новом городе."
 
-#: controllers/FacilityController.php:120
-#: controllers/PsfacilityController.php:120
 msgid "The facility could not be saved."
 msgstr "Не удалось сохранить учреждение."
 
-#: controllers/FacilityController.php:126 controllers/PersonController.php:246
-#: controllers/PsfacilityController.php:126
-#: controllers/TrainingController.php:1014
 msgid "Could not save that city."
 msgstr "Невозможно сохранить город"
 
-#: controllers/FacilityController.php:156
-#: controllers/FacilityController.php:160
-#: controllers/FacilityController.php:161
-#: controllers/PsfacilityController.php:161
 msgid "The facility was saved."
 msgstr "учреждение было сохранено."
 
-#: controllers/FacilityController.php:166
-#: controllers/PsfacilityController.php:164
 msgid "ERROR: The facility could not be saved."
 msgstr "ОШИБКА: Невозможно сохранить учреждение."
 
-#: controllers/FacilityController.php:270
-#: controllers/PsfacilityController.php:267
 msgid "That facility was deleted."
 msgstr "учреждение было удалено."
 
-#: controllers/FacilityController.php:272
-#: controllers/PsfacilityController.php:269
 msgid "That facility could not be found."
 msgstr "Не удалось найти учреждение."
 
-#: controllers/FacilityController.php:274
-#: controllers/PsfacilityController.php:271
 msgid "That facility is in use and could not be deleted."
 msgstr "Это учреждение находится в использовании и не может быть удалено."
 
-#: controllers/FacilityController.php:298
-#: controllers/PsfacilityController.php:295
 msgid "That location was deleted."
 msgstr "местонахождение было удалено."
 
-#: controllers/FacilityController.php:300
-#: controllers/PsfacilityController.php:297
 msgid "That location could not be found."
 msgstr "Не удалось найти то местонахождение."
 
-#: controllers/FacilityController.php:302
-#: controllers/PsfacilityController.php:299
 msgid "That location is in use and could not be deleted."
 msgstr "это местонахождение используется и не может быть удалено."
 
-#: controllers/IndexController.php:38 views/scripts/training/roster.phtml:29
 msgid "Course Name"
 msgstr "Название курса"
 
-#: controllers/IndexController.php:38
-#: views/scripts/evaluation/assign-evaluation.phtml:47
-#: views/scripts/person/assign-training.phtml:55
-#: views/scripts/person/edit-body-addtl.phtml:222
-#: views/scripts/person/edit-body-bad.phtml:430
-#: views/scripts/person/edit-body-bad.phtml:484
-#: views/scripts/person/edit-body-bad.phtml:528
-#: views/scripts/person/edit-body-class-history.phtml:23
-#: views/scripts/person/edit-body-exclass-history.phtml:13
-#: views/scripts/person/edit-body-rec.phtml:42
-#: views/scripts/person/view.phtml:193 views/scripts/person/view.phtml:221
-#: views/scripts/reportpreservice/coursebyname.phtml:335
-#: views/scripts/reports/training-unknown.phtml:370
-#: views/scripts/reports/trainings.phtml:358
 msgid "Start Date"
 msgstr "Дата начала"
 
-#: controllers/IndexController.php:38 controllers/ReportsController.php:3787
-#: views/scripts/training/roster.phtml:34
 msgid "Training Center"
 msgstr "Центр обучения"
 
-#: controllers/IndexController.php:38
+msgid "Training Centre"
+msgstr "Центр обучения"
+
 msgid "Created By"
 msgstr "Создано"
 
-#: controllers/IndexController.php:80
 msgid "Message"
 msgstr "Сообщение"
 
-#: controllers/ITechController.php:299
 msgid "You do not have access rights to the requested action."
 msgstr "У вас нет прав доступа для запрошенного действия."
 
-#: controllers/PersonController.php:61
 msgid "That person was deleted."
 msgstr "Эта личность была удалена."
 
-#: controllers/PersonController.php:63
 msgid "That person could not be found."
 msgstr "Не удалось найти личность."
 
-#: controllers/PersonController.php:65
 msgid "That person is an active participant or trainer and could not be deleted."
 msgstr "Эта личность является действующим участником или инструктором и не может быть удалена."
 
-#: controllers/PersonController.php:151
 msgid "The person was saved. Refreshing history..."
 msgstr "Данная личность была сохранена. Идёт обновление журнала..."
 
-#: controllers/PersonController.php:152 controllers/PersonController.php:296
 msgid "The person was saved."
 msgstr "Данная личность была сохранена."
 
-#: controllers/PersonController.php:162
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67 views/helpers/ITechTranslate.php:133
-#: views/scripts/person/edit-body-bad.phtml:56
-#: views/scripts/person/edit-body-bad.phtml:92
-#: views/scripts/person/edit-body.phtml:169
-#: views/scripts/person/edit-body.phtml:328
-#: views/scripts/person/search.phtml:141 views/scripts/person/view.phtml:47
-#: views/scripts/reports/needs-by-person-name.phtml:332
-#: views/scripts/reports/participants-by-facility-type.phtml:164
-#: views/scripts/reports/participants-by-facility-type.phtml:364
-#: views/scripts/reports/participants-by-training.phtml:256
-#: views/scripts/reports/participants-by-training.phtml:548
-#: views/scripts/reports/people-by-facility.phtml:313
-#: views/scripts/reports/training-unknown.phtml:154
 msgid "Gender"
 msgstr "Пол"
 
-#: controllers/PersonController.php:163
-#: views/scripts/person/edit-body-addtl.phtml:58
-#: views/scripts/person/edit-body-bad.phtml:297
-#: views/scripts/person/view.phtml:88
 msgid "Professional qualification"
 msgstr "Профессиональная квалификация"
 
-#: controllers/PersonController.php:170 views/helpers/ITechTranslate.php:130
-#: views/scripts/person/search.phtml:142
-#: views/scripts/training/_template_editform.phtml:751
 msgid "Birthdate"
 msgstr "Дата рождения"
 
-#: controllers/PersonController.php:174
-#: views/scripts/person/edit-body-addtl.phtml:165
-#: views/scripts/person/edit-body-bad.phtml:380
-#: views/scripts/reports/trainers.phtml:35
 msgid "Trainer type"
 msgstr "Тип инструктора"
 
-#: controllers/PersonController.php:180
-#: views/scripts/reports/trainers.phtml:44
 msgid "Trainer skill"
 msgstr "Навыки инструктора"
 
-#: controllers/PersonController.php:193
 msgid "Enter a reason, or select a different reason above."
 msgstr "Укажите причину, или выберите другую причину выше."
 
-#: controllers/PersonController.php:197
 msgid "You can not type in a reason with the reason selected above."
 msgstr "Вы не можете ввести причину выбранную выше."
 
-#: controllers/PersonController.php:204 controllers/TrainingController.php:735
-#: controllers/TrainingController.php:737
-#: controllers/TrainingController.php:739
-#: controllers/TrainingController.php:1264
-#: views/helpers/ITechTranslate.php:127
-#: views/scripts/facility/addfacility-form.phtml:2
-#: views/scripts/facility/edit.phtml:21
-#: views/scripts/person/edit-body-addtl.phtml:3
-#: views/scripts/person/edit-body-addtl.phtml:16
-#: views/scripts/person/edit-body-bad.phtml:193
-#: views/scripts/person/edit-body.phtml:170
-#: views/scripts/person/search.phtml:38 views/scripts/person/view.phtml:66
-#: views/scripts/psfacility/addfacility-form.phtml:2
-#: views/scripts/psfacility/edit.phtml:21
-#: views/scripts/reports/facilities.phtml:4
-#: views/scripts/reports/facilities.phtml:36
-#: views/scripts/reports/facilities.phtml:53
-#: views/scripts/reports/needs-by-person-name.phtml:47
-#: views/scripts/reports/needs-by-person-name.phtml:347
-#: views/scripts/reports/participants-by-facility-type.phtml:63
-#: views/scripts/reports/participants-by-facility-type.phtml:382
-#: views/scripts/reports/participants-by-training.phtml:52
-#: views/scripts/reports/participants-by-training.phtml:566
-#: views/scripts/reports/people-by-facility.phtml:70
-#: views/scripts/reports/people-by-facility.phtml:325
-#: views/scripts/training/_template_editform.phtml:752
 msgid "Facility"
 msgstr "Учереждение"
 
-#: controllers/PersonController.php:218
 msgid "That facility name could not be found."
 msgstr "Не удалось найти то название учереждения."
 
-#: controllers/PersonController.php:295
 msgid "The person was saved. Refreshing change history..."
 msgstr "Данная личность была сохранена. Идёт обновление журнала изменений..."
 
-#: controllers/PersonController.php:336
 msgid "The trainer information could not be saved."
 msgstr "Не удалось сохранить информацию инструктора."
 
-#: controllers/PersonController.php:374
 msgid "ERROR: The person could not be saved."
 msgstr "ОШИБКА: Невозможно сохранить личность."
 
-#: controllers/PersonController.php:939
 msgid "No trainings selected."
 msgstr "Не выбран тренинг."
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
-#: views/scripts/reportpreservice/coursebyname.phtml:330
-#: views/scripts/reports/training-unknown.phtml:365
-#: views/scripts/reports/trainings.phtml:353
 msgid "Count"
 msgstr "Количество"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
-#: views/scripts/reports/trainers.phtml:152
 msgid "Language"
 msgstr "Язык"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
-#: controllers/TrainingController.php:1266
-#: views/scripts/evaluation/assign-evaluation.phtml:49
-#: views/scripts/external/add.phtml:45
-#: views/scripts/facility/view-location.phtml:21
-#: views/scripts/person/assign-training.phtml:57
-#: views/scripts/person/edit-body-addtl.phtml:224
-#: views/scripts/person/edit-body-bad.phtml:432
-#: views/scripts/person/edit-body-bad.phtml:531
-#: views/scripts/person/edit-body-class-history.phtml:26
-#: views/scripts/person/edit-body-exclass-history.phtml:15
-#: views/scripts/person/view.phtml:195 views/scripts/person/view.phtml:223
-#: views/scripts/psfacility/view-location.phtml:21
-#: views/scripts/reportpreservice/coursebyname.phtml:356
-#: views/scripts/reports/training-unknown.phtml:391
-#: views/scripts/reports/trainings.phtml:379
 msgid "Location"
-msgstr "Местонахождение "
+msgstr "Местонахождение"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67 views/helpers/ITechTranslate.php:155
-#: views/scripts/external/add.phtml:25
-#: views/scripts/person/edit-body-history-table.phtml:12
-#: views/scripts/reportpreservice/studentname.phtml:309
-#: views/scripts/reports/facilities.phtml:296
-#: views/scripts/reports/participants-by-facility-type.phtml:392
-#: views/scripts/reports/participants-by-training.phtml:545
-#: views/scripts/reports/people-by-facility.phtml:310
 msgid "Date"
 msgstr "Дата"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67 views/scripts/nav-admin.phtml:20
-#: views/scripts/nav-admin.phtml:86
-#: views/scripts/reports/needs-by-person-name.phtml:359
-#: views/scripts/reports/people-by-facility.phtml:334
 msgid "Training Topic"
 msgstr "Тема тренинга"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67 views/scripts/nav-admin.phtml:22
-#: views/scripts/nav-admin.phtml:51 views/scripts/nav-admin.phtml:88
-#: views/scripts/reportpreservice/coursebyname.phtml:148
-#: views/scripts/reportpreservice/coursebyname.phtml:374
-#: views/scripts/reports/participants-by-facility-type.phtml:149
-#: views/scripts/reports/participants-by-training.phtml:227
-#: views/scripts/reports/participants-by-training.phtml:607
-#: views/scripts/reports/training-unknown.phtml:175
-#: views/scripts/reports/training-unknown.phtml:421
-#: views/scripts/reports/trainings.phtml:168
-#: views/scripts/reports/trainings.phtml:400
-#: views/scripts/training/_template_editform.phtml:439
 msgid "Funding"
 msgstr "Финансирование"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
-#: views/scripts/reportpreservice/coursebyname.phtml:377
-#: views/scripts/reportpreservice/studentname.phtml:351
-#: views/scripts/reports/facilities.phtml:335
-#: views/scripts/reports/participants-by-facility-type.phtml:408
-#: views/scripts/reports/participants-by-training.phtml:613
-#: views/scripts/reports/training-unknown.phtml:424
-#: views/scripts/reports/trainings.phtml:403
 msgid "TOT"
 msgstr "ТОТ"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67 views/scripts/facility/search.phtml:24
-#: views/scripts/facility/search.phtml:100
-#: views/scripts/psfacility/search.phtml:24
-#: views/scripts/psfacility/search.phtml:100
-#: views/scripts/reportpreservice/studentname.phtml:312
-#: views/scripts/reports/facilities.phtml:299
 msgid "Facility Name"
 msgstr "Название учереждения"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67 views/scripts/facility/search.phtml:44
-#: views/scripts/psfacility/search.phtml:44
-#: views/scripts/reportpreservice/studentname.phtml:315
-#: views/scripts/reports/facilities.phtml:66
-#: views/scripts/reports/facilities.phtml:302
-#: views/scripts/reports/participants-by-facility-type.phtml:76
 msgid "Facility Type"
 msgstr "Тип учереждения"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67 views/scripts/facility/search.phtml:54
-#: views/scripts/psfacility/search.phtml:54
-#: views/scripts/reportpreservice/studentname.phtml:318
-#: views/scripts/reports/facilities.phtml:77
-#: views/scripts/reports/facilities.phtml:305
-#: views/scripts/reports/participants-by-facility-type.phtml:87
 msgid "Facility Sponsor"
 msgstr "Спонсор учереждения"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
-#: views/scripts/reports/needs-by-person-name.phtml:145
 msgid "Recommended classes"
 msgstr "Рекомендуемые занятия"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
-#: views/scripts/reports/needs-by-person-name.phtml:365
-#: views/scripts/reports/people-by-facility.phtml:337
 msgid "Recommended"
 msgstr "Рекомендуемый"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportpreserviceController.php:34
-#: controllers/ReportsController.php:67 controllers/ReportsController.php:70
-#: views/helpers/ITechTranslate.php:167 views/scripts/person/search.phtml:55
-#: views/scripts/person/search.phtml:143
-#: views/scripts/reports/needs-by-person-name.phtml:61
-#: views/scripts/reports/needs-by-person-name.phtml:72
-#: views/scripts/reports/needs-by-person-name.phtml:353
-#: views/scripts/reports/needs-by-person-name.phtml:356
-#: views/scripts/reports/participants-by-category.phtml:22
-#: views/scripts/reports/participants-by-training.phtml:82
-#: views/scripts/reports/participants-by-training.phtml:95
-#: views/scripts/reports/participants-by-training.phtml:106
-#: views/scripts/reports/participants-by-training.phtml:572
-#: views/scripts/reports/participants-by-training.phtml:575
-#: views/scripts/reports/participants-by-training.phtml:578
-#: views/scripts/reports/people-by-facility.phtml:95
-#: views/scripts/reports/people-by-facility.phtml:331
-#: views/scripts/reports/training-unknown.phtml:136
-#: views/scripts/reports/training-unknown.phtml:400
 msgid "Qualification"
 msgstr "Квалификация"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
-#: views/scripts/reports/needs-by-person-name.phtml:353
-#: views/scripts/reports/participants-by-training.phtml:575
 msgid "(primary)"
 msgstr "(первичный)"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
-#: views/scripts/reports/needs-by-person-name.phtml:356
-#: views/scripts/reports/participants-by-training.phtml:578
 msgid "(secondary)"
 msgstr "дополнительный"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
-#: views/scripts/person/edit-body-addtl.phtml:223
-#: views/scripts/person/edit-body-bad.phtml:431
-#: views/scripts/person/edit-body-bad.phtml:485
-#: views/scripts/person/edit-body-bad.phtml:529
-#: views/scripts/person/edit-body-class-history.phtml:24
-#: views/scripts/person/edit-body-exclass-history.phtml:12
-#: views/scripts/person/edit-body-rec.phtml:43
-#: views/scripts/person/view.phtml:194 views/scripts/person/view.phtml:222
-#: views/scripts/reports/needs-by-person-name.phtml:321
-#: views/scripts/reports/participants-by-facility-type.phtml:354
-#: views/scripts/reports/participants-by-training.phtml:537
-#: views/scripts/reports/people-by-facility.phtml:302
-#: views/scripts/reports/trainers.phtml:148
 msgid "Name"
 msgstr "Имя"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67 controllers/UserController.php:410
-#: views/helpers/ITechTranslate.php:149
-#: views/scripts/person/edit-body-addtl.phtml:43
-#: views/scripts/person/edit-body-bad.phtml:210
-#: views/scripts/person/view.phtml:77
-#: views/scripts/reports/needs-by-person-name.phtml:213
-#: views/scripts/reports/needs-by-person-name.phtml:324
-#: views/scripts/reports/participants-by-facility-type.phtml:195
-#: views/scripts/reports/participants-by-facility-type.phtml:357
-#: views/scripts/reports/participants-by-training.phtml:297
-#: views/scripts/reports/participants-by-training.phtml:540
-#: views/scripts/reports/people-by-facility.phtml:176
-#: views/scripts/reports/people-by-facility.phtml:305
-#: views/scripts/user/search.phtml:37
 msgid "Email"
 msgstr "Электронная почта"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
-#: views/scripts/facility/addfacility-form.phtml:31
-#: views/scripts/facility/edit.phtml:62 views/scripts/facility/view.phtml:56
-#: views/scripts/psfacility/addfacility-form.phtml:31
-#: views/scripts/psfacility/edit.phtml:62
-#: views/scripts/psfacility/view.phtml:56
-#: views/scripts/reports/needs-by-person-name.phtml:218
-#: views/scripts/reports/needs-by-person-name.phtml:327
-#: views/scripts/reports/participants-by-facility-type.phtml:200
-#: views/scripts/reports/participants-by-facility-type.phtml:360
-#: views/scripts/reports/participants-by-training.phtml:302
-#: views/scripts/reports/participants-by-training.phtml:543
-#: views/scripts/reports/people-by-facility.phtml:181
-#: views/scripts/reports/people-by-facility.phtml:308
 msgid "Phone"
 msgstr "Телефон"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
-#: views/scripts/reports/participants-by-category.phtml:122
 msgid "Category"
 msgstr "Категория"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
-#: views/scripts/evaluation/add-copy.phtml:23
-#: views/scripts/facility/search.phtml:108
-#: views/scripts/psfacility/search.phtml:108
-#: views/scripts/reports/evaluations_results.phtml:49
-#: views/scripts/reports/participants-by-facility-type.phtml:385
-#: views/scripts/reports/trainers.phtml:150
 msgid "Type"
 msgstr "Тип"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
-#: views/scripts/reports/trainers.phtml:151
 msgid "Skill"
 msgstr "Навыки"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
-#: views/scripts/reports/trainers.phtml:159
 msgid "Topics Taught"
 msgstr "Прочитанные темы"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
 msgid "Work Phone"
 msgstr "Рабочий телефон"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
 msgid "Home Phone"
 msgstr "Домашний телефон"
 
-#: controllers/ReportpreserviceController.php:31
-#: controllers/ReportsController.php:67
 msgid "Mobile Phone"
 msgstr "Мобильный телефон"
 
-#: controllers/ReportpreserviceController.php:34
-#: controllers/ReportsController.php:70 views/scripts/index/index.phtml:29
-#: views/scripts/reportpreservice/coursebyname.phtml:256
-#: views/scripts/reportpreservice/coursebyname.phtml:398
-#: views/scripts/reportpreservice/studentname.phtml:252
-#: views/scripts/reports/facilities.phtml:241
-#: views/scripts/reports/participants-by-category.phtml:123
-#: views/scripts/reports/participants-by-facility-type.phtml:267
-#: views/scripts/reports/people-by-facility.phtml:225
-#: views/scripts/reports/training-unknown.phtml:280
-#: views/scripts/reports/training-unknown.phtml:445
-#: views/scripts/reports/trainings.phtml:277
-#: views/scripts/reports/trainings.phtml:424
 msgid "Participants"
 msgstr "Участники"
 
-#: controllers/ReportpreserviceController.php:34
-#: controllers/ReportsController.php:70
-#: views/scripts/reports/participants-by-category.phtml:124
 msgid "Unique Participants"
 msgstr "Уникальные участники"
 
-#: controllers/ReportpreserviceController.php:231
-#: controllers/ReportsController.php:310 controllers/ReportsController.php:314
-#: controllers/ReportsController.php:841 controllers/ReportsController.php:845
-#: controllers/ReportsController.php:1341
-#: controllers/ReportsController.php:1959
-#: controllers/ReportsController.php:2717
 msgid "Yes"
 msgstr "Да"
 
-#: controllers/ReportpreserviceController.php:231
-#: controllers/ReportsController.php:310 controllers/ReportsController.php:314
-#: controllers/ReportsController.php:841 controllers/ReportsController.php:845
-#: controllers/ReportsController.php:1341
-#: controllers/ReportsController.php:1959
-#: controllers/ReportsController.php:2717
 msgid "No"
 msgstr "Нет"
 
-#: controllers/ReportsController.php:1160
-#: views/scripts/person/edit-body-bad.phtml:59
-#: views/scripts/person/edit-body.phtml:331 views/scripts/person/view.phtml:50
-#: views/scripts/reports/training-unknown.phtml:396
-#: views/scripts/training/_template_editform.phtml:1003
 msgid "Unknown"
 msgstr "Неизвестный"
 
-#: controllers/ReportsController.php:1161
-#: views/scripts/person/edit-body-bad.phtml:57
-#: views/scripts/person/edit-body.phtml:329 views/scripts/person/view.phtml:48
-#: views/scripts/reports/training-unknown.phtml:394
-#: views/scripts/training/_template_editform.phtml:1002
 msgid "Female"
 msgstr "Женщина"
 
-#: controllers/ReportsController.php:1162
-#: views/scripts/person/edit-body-bad.phtml:58
-#: views/scripts/person/edit-body.phtml:330 views/scripts/person/view.phtml:49
-#: views/scripts/reports/training-unknown.phtml:395
-#: views/scripts/training/_template_editform.phtml:1001
 msgid "Male"
 msgstr "мужчина"
 
-#: controllers/ReportsController.php:3788
 msgid "Dates"
 msgstr "Даты"
 
-#: controllers/ReportsController.php:3789
-#: views/scripts/training/roster.phtml:38
 msgid "Course Length"
 msgstr "Длительность курса"
 
-#: controllers/ReportsController.php:3805
-#: views/scripts/training/roster.phtml:67
 msgid "Course Trainers"
 msgstr "Инструкторы курса"
 
-#: controllers/ReportsController.php:3809
-#: controllers/TrainingController.php:1256
 msgid "Days"
 msgstr "Дни"
 
-#: controllers/ReportsController.php:3832
-#: views/scripts/training/roster.phtml:79
 msgid "Course Participants"
 msgstr "Участники курса"
 
-#: controllers/ReportsController.php:3838
-#: controllers/TrainingController.php:735
-#: controllers/TrainingController.php:737
-#: controllers/TrainingController.php:739
-#: controllers/TrainingController.php:1264
-#: views/scripts/person/edit-body-bad.phtml:91
-#: views/scripts/person/edit-body.phtml:168
 msgid "Date of Birth"
 msgstr "Дата рождения"
 
-#: controllers/ReportsController.php:3844
-#: views/scripts/reports/training-unknown.phtml:399
 msgid "Primary Qualification"
 msgstr "Основная квалификация"
 
-#: controllers/ReportsController.php:3845
 msgid "Secondary Qualification"
 msgstr "Дополнительная квалификация"
 
-#: controllers/ReportsController.php:3848
-#: controllers/TrainingController.php:764
-#: views/scripts/reports/participants-by-training.phtml:616
 msgid "Pre-Test"
 msgstr "До теста"
 
-#: controllers/ReportsController.php:3849
-#: controllers/TrainingController.php:766
-#: views/scripts/reports/participants-by-training.phtml:617
 msgid "Post-Test"
 msgstr "После теста"
 
-#: controllers/ReportsController.php:3850
 msgid "Change in Score"
 msgstr "Изменение в результате"
 
-#: controllers/SyncController.php:73
 msgid "There was a problem with file types <code>"
 msgstr "Возникла проблема с типами файлов"
 
-#: controllers/SyncController.php:80
 msgid "There was a problem creating <code>"
 msgstr "Возникла проблема при создании"
 
-#: controllers/SyncController.php:85
 msgid "There was a problem moving files <code>"
 msgstr "Возникла проблема во время перемещения файлов"
 
-#: controllers/SyncController.php:132
 msgid "Sync database file uploaded."
 msgstr "Синхронизация файлов базы данных загружена."
 
-#: controllers/SyncController.php:137
 msgid "Invalid desktop database file"
 msgstr "Неверный Файл базы данных"
 
-#: controllers/SyncController.php:152 controllers/SyncController.php:195
 msgid "Please upload a file to continue"
 msgstr "Пожалуйста, загрузите файл что бы продолжить"
 
-#: controllers/SyncController.php:265
 msgid "Done"
 msgstr "Завершено"
 
-#: controllers/TrainingController.php:51 views/scripts/header.phtml:25
-#: views/scripts/reportpreservice/coursebyname.phtml:258
-#: views/scripts/reports/training-unknown.phtml:282
-#: views/scripts/reports/trainings.phtml:279
 msgid "Add New Training"
 msgstr "Добавить новый тренинг"
 
-#: controllers/TrainingController.php:60 controllers/TrainingController.php:65
-#: views/scripts/header.phtml:24
 msgid "View/Edit Training"
 msgstr "Посмотреть / редактировать тренинг"
 
-#: controllers/TrainingController.php:72
-#: controllers/TrainingController.php:125 views/scripts/header.phtml:30
 msgid "View Training"
 msgstr "Посмотреть тренинг"
 
-#: controllers/TrainingController.php:152
 msgid "Training Length"
 msgstr "Длительность тренинга"
 
-#: controllers/TrainingController.php:153
 msgid "Training Interval"
 msgstr "Интервал тренинга"
 
-#: controllers/TrainingController.php:162
 msgid "Training length is required."
 msgstr "Требуется указать длительность тренинга."
 
-#: controllers/TrainingController.php:168
-#: controllers/TrainingController.php:175
 msgid "must be numeric."
 msgstr "должно быть числовым"
 
-#: controllers/TrainingController.php:170
-#: controllers/TrainingController.php:177
 msgid "must be between 1-100."
 msgstr "должно быть между 1-100"
 
-#: controllers/TrainingController.php:187
 msgid "Training end"
 msgstr "Окончание тренинга"
 
-#: controllers/TrainingController.php:192
 msgid "End date must be after start date."
 msgstr "Дата окончания должна быть после даты начала."
 
-#: controllers/TrainingController.php:224
 msgid "Number of days is required."
 msgstr "Требуется указать количество дней."
 
-#: controllers/TrainingController.php:248
-#, php-format
 msgid "Total training length is %s, but PEPFAR category total is %d days. "
-msgstr "Общая длительность обучения %, а категория ПЕПФАР составляет всего % дней. "
+msgstr "Общая длительность обучения, а категория ПЕПФАР составляет всего дней. "
 
-#: controllers/TrainingController.php:248
 msgid "day"
 msgstr "день"
 
-#: controllers/TrainingController.php:248 views/scripts/external/add.phtml:42
-#: views/scripts/training/_template_editform.phtml:285
-#: views/scripts/training/_template_editform.phtml:362
-#: views/scripts/training/_template_editform.phtml:581
 msgid "days"
 msgstr "дни"
 
-#: controllers/TrainingController.php:294
 msgid "This training session could not be deleted. Some participants or trainers may still be attached."
 msgstr "Данный тренинг удалить не удалось. Некоторые участники или инструкторы могут до сих пор быть участниками тренинга."
 
-#: controllers/TrainingController.php:300
 msgid "This training session could not be saved."
 msgstr "Данный тренинг сохранить не удалось."
 
-#: controllers/TrainingController.php:460
 msgid "This training session has been saved."
 msgstr "Данный тренинг был сохранён."
 
-#: controllers/TrainingController.php:533 views/helpers/DropDown.php:101
 msgid "Please enter your new"
 msgstr "Пожалуйста, введите свой новый"
 
-#: controllers/TrainingController.php:533 views/helpers/DropDown.php:101
-#: views/scripts/training/_template_editform.phtml:319
-#: views/scripts/training/_template_editform.phtml:387
-#: views/scripts/training/_template_editform.phtml:444
 msgid "Insert new"
 msgstr "Ввести новый"
 
-#: controllers/TrainingController.php:768
-#: views/scripts/training/scores.phtml:27
 msgid "Scores"
 msgstr "Результаты"
 
-#: controllers/TrainingController.php:799
 msgid "Training session has been duplicated.<br>You can edit the duplicate session below."
 msgstr "Обучающая сессия продублирована. Вы можете редактировать сессию-дубликат ниже. "
 
-#: controllers/TrainingController.php:860
 msgid "already exists"
 msgstr "уже существует"
 
-#: controllers/TrainingController.php:912
 msgid "This trainer is already in this training session."
 msgstr "Данный инструктор уже находится в этом тренинге."
 
-#: controllers/TrainingController.php:932
 msgid "Could not update this record."
 msgstr "Невозможно обновить эту запись"
 
@@ -843,109 +404,57 @@ msgstr "Данный участник уже находится в этом тр
 msgid "The training center has been updated."
 msgstr "Центр обучения был обновлён."
 
-#: controllers/TrainingController.php:1052
-#: controllers/TrainingController.php:1053
 msgid "The training center has been saved."
 msgstr "Центр обучения был сохранён."
 
-#: controllers/TrainingController.php:1065
 msgid "The training center could not be saved."
 msgstr "Не удалось сохранить центр обучения."
 
-#: controllers/TrainingController.php:1178
 msgid "Label"
 msgstr "Этикетка"
 
-#: controllers/TrainingController.php:1178
 msgid "Score"
 msgstr "Результат"
 
-#: controllers/TrainingController.php:1337 views/helpers/DropDown.php:57
-#: views/scripts/evaluation/add-copy.phtml:25
-#: views/scripts/facility/view-location.phtml:26
-#: views/scripts/psfacility/view-location.phtml:26
-#: views/scripts/reportpreservice/coursebyname.phtml:115
-#: views/scripts/reports/evaluations.phtml:24
-#: views/scripts/reports/facilities.phtml:124
-#: views/scripts/reports/roster.phtml:29
-#: views/scripts/reports/training-unknown.phtml:114
-#: views/scripts/reports/trainings.phtml:114
-#: views/scripts/training/_template_editform.phtml:202
-#: views/scripts/training/_template_editform.phtml:300
 msgid "select"
 msgstr "выбрать"
 
-#: controllers/TrainingPartnerController.php:44
-#: views/scripts/facility/search-location.phtml:48
-#: views/scripts/facility/search.phtml:67 views/scripts/person/search.phtml:88
-#: views/scripts/psfacility/search-location.phtml:48
-#: views/scripts/psfacility/search.phtml:67
-#: views/scripts/reportpreservice/coursebyname.phtml:251
-#: views/scripts/reports/facilities.phtml:236
-#: views/scripts/reports/participants-by-facility-type.phtml:256
-#: views/scripts/reports/ps-course-by-name.phtml:80
-#: views/scripts/reports/ps-course-by-student-count.phtml:74
-#: views/scripts/reports/ps-graduated-students.phtml:106
-#: views/scripts/reports/ps-students-by-name.phtml:129
-#: views/scripts/reports/ps-students-trained.phtml:90
-#: views/scripts/reports/training-unknown.phtml:275
-#: views/scripts/reports/trainings.phtml:272
-#: views/scripts/training-partner/search.phtml:48
 msgid "Preview"
 msgstr "Предварительный просмотр"
 
-#: controllers/TrainingPartnerController.php:142
-#: controllers/TrainingPartnerController.php:238
 msgid "That partner could not be found."
 msgstr "Не удалось найти партнера."
 
-#: controllers/TrainingPartnerController.php:165
-#: controllers/TrainingPartnerController.php:169
 msgid "The partner was saved."
 msgstr "Партнер был сохранен."
 
-#: controllers/TrainingPartnerController.php:173
-#: controllers/TrainingPartnerController.php:203
 msgid "ERROR: The partner could not be saved."
 msgstr "ОШИБКА: Невозможно сохранить партнера."
 
-#: controllers/TrainingPartnerController.php:236
 msgid "That partner was deleted."
 msgstr "Партнер был удален."
 
-#: controllers/TrainingPartnerController.php:240
 msgid "That partner is in use and could not be deleted."
 msgstr "Данный партнер используется и не может быть удален."
 
-#: controllers/UserController.php:407
 msgid "Starting..."
 msgstr "начало"
 
-#: controllers/UserController.php:512 views/scripts/user/edit.phtml:50
-#: views/scripts/user/forgot-password.phtml:4 views/scripts/user/login.phtml:4
-#: views/scripts/user/login.phtml:18 views/scripts/user/myaccount.phtml:25
-#: views/scripts/user/_add_form.phtml:33
 msgid "Login"
 msgstr "Вход"
 
-#: controllers/UserController.php:512 views/scripts/index/index.phtml:110
-#: views/scripts/user/login.phtml:23 views/scripts/user/_add_form.phtml:35
 msgid "Password"
 msgstr "Пароль"
 
-#: controllers/UserController.php:513
 msgid "The system could not log you in."
 msgstr "Система не смогла принять ваш логин."
 
-#: controllers/UserController.php:535
 msgid "That user account has been disabled."
 msgstr "Эта учётная запись пользователя была отключена."
 
-#: controllers/UserController.php:556 controllers/UserController.php:561
 msgid "That username or password is invalid."
 msgstr "То имя пользователя или пароль недействительны."
 
-#: views/helpers/Calendar.php:420 views/helpers/Calendar.php:441
 msgid "Sunday"
 msgstr "Воскресенье"
 
@@ -969,125 +478,12 @@ msgstr "Четверг"
 msgid "Friday"
 msgstr "Пятница"
 
-#: views/helpers/Calendar.php:438
 msgid "Saturday"
 msgstr "Суббота"
 
-#: views/helpers/DropDown.php:127 views/helpers/Location.php:51
-#: views/helpers/Location.php:137 views/helpers/Location.php:145
-#: views/scripts/admin/people-qual.phtml:7
-#: views/scripts/facility/addfacility-form.phtml:37
-#: views/scripts/facility/addfacility-form.phtml:47
-#: views/scripts/facility/edit.phtml:24 views/scripts/facility/edit.phtml:68
-#: views/scripts/facility/edit.phtml:78 views/scripts/facility/view.phtml:22
-#: views/scripts/person/edit-body-addtl.phtml:17
-#: views/scripts/person/edit-body-addtl.phtml:59
-#: views/scripts/person/edit-body-addtl.phtml:168
-#: views/scripts/person/edit-body-addtl.phtml:180
-#: views/scripts/person/edit-body-bad.phtml:194
-#: views/scripts/person/edit-body-bad.phtml:298
-#: views/scripts/person/edit-body-bad.phtml:312
-#: views/scripts/person/edit-body-bad.phtml:320
-#: views/scripts/person/edit-body-bad.phtml:382
-#: views/scripts/person/edit-body-bad.phtml:392
-#: views/scripts/person/edit-body-bad.phtml:455
-#: views/scripts/person/edit-body-rec.phtml:11
-#: views/scripts/psfacility/addfacility-form.phtml:37
-#: views/scripts/psfacility/addfacility-form.phtml:47
-#: views/scripts/psfacility/edit.phtml:24
-#: views/scripts/psfacility/edit.phtml:68
-#: views/scripts/psfacility/edit.phtml:78
-#: views/scripts/psfacility/view.phtml:22
-#: views/scripts/reports/facilities.phtml:40
-#: views/scripts/reports/facilities.phtml:57
-#: views/scripts/reports/index.phtml:34 views/scripts/reports/index.phtml:40
-#: views/scripts/reports/index.phtml:70
-#: views/scripts/reports/needs-by-person-name.phtml:51
-#: views/scripts/reports/needsReportsPicker.phtml:11
-#: views/scripts/reports/participants-by-facility-type.phtml:67
-#: views/scripts/reports/participants-by-training.phtml:56
-#: views/scripts/reports/people-by-facility.phtml:74
-#: views/scripts/reports/peopleReportsPicker.phtml:11
-#: views/scripts/reports/trainerReportsPicker.phtml:13
-#: views/scripts/reports/training-unknown.phtml:41
-#: views/scripts/reports/training-unknown.phtml:138
-#: views/scripts/reports/trainings.phtml:41
 msgid "choose"
 msgstr "Выбрать"
 
-#: views/helpers/DropDown.php:142
-#: views/scripts/facility/search-location.phtml:26
-#: views/scripts/facility/search.phtml:26
-#: views/scripts/facility/search.phtml:47
-#: views/scripts/facility/search.phtml:57 views/scripts/person/search.phtml:46
-#: views/scripts/person/search.phtml:57
-#: views/scripts/psfacility/search-location.phtml:26
-#: views/scripts/psfacility/search.phtml:26
-#: views/scripts/psfacility/search.phtml:47
-#: views/scripts/psfacility/search.phtml:57
-#: views/scripts/reportpreservice/coursebyname.phtml:84
-#: views/scripts/reportpreservice/coursebyname.phtml:202
-#: views/scripts/reports/facilities.phtml:70
-#: views/scripts/reports/facilities.phtml:81
-#: views/scripts/reports/facilities.phtml:107
-#: views/scripts/reports/facilities.phtml:147
-#: views/scripts/reports/facilities.phtml:159
-#: views/scripts/reports/facilities.phtml:170
-#: views/scripts/reports/facilities.phtml:182
-#: views/scripts/reports/facilities.phtml:197
-#: views/scripts/reports/needs-by-person-name.phtml:64
-#: views/scripts/reports/needs-by-person-name.phtml:75
-#: views/scripts/reports/needs-by-person-name.phtml:109
-#: views/scripts/reports/needs-by-person-name.phtml:120
-#: views/scripts/reports/needs-by-person-name.phtml:135
-#: views/scripts/reports/needs-by-person-name.phtml:150
-#: views/scripts/reports/needs-by-person-name.phtml:165
-#: views/scripts/reports/needs-by-person-name.phtml:181
-#: views/scripts/reports/needs-by-person-name.phtml:193
-#: views/scripts/reports/needs-by-person-name.phtml:204
-#: views/scripts/reports/participants-by-facility-type.phtml:80
-#: views/scripts/reports/participants-by-facility-type.phtml:91
-#: views/scripts/reports/participants-by-facility-type.phtml:102
-#: views/scripts/reports/participants-by-facility-type.phtml:125
-#: views/scripts/reports/participants-by-facility-type.phtml:139
-#: views/scripts/reports/participants-by-facility-type.phtml:153
-#: views/scripts/reports/participants-by-facility-type.phtml:169
-#: views/scripts/reports/participants-by-facility-type.phtml:189
-#: views/scripts/reports/participants-by-facility-type.phtml:215
-#: views/scripts/reports/participants-by-training.phtml:72
-#: views/scripts/reports/participants-by-training.phtml:86
-#: views/scripts/reports/participants-by-training.phtml:98
-#: views/scripts/reports/participants-by-training.phtml:109
-#: views/scripts/reports/participants-by-training.phtml:122
-#: views/scripts/reports/participants-by-training.phtml:136
-#: views/scripts/reports/participants-by-training.phtml:158
-#: views/scripts/reports/participants-by-training.phtml:177
-#: views/scripts/reports/participants-by-training.phtml:204
-#: views/scripts/reports/participants-by-training.phtml:218
-#: views/scripts/reports/participants-by-training.phtml:231
-#: views/scripts/reports/participants-by-training.phtml:245
-#: views/scripts/reports/participants-by-training.phtml:261
-#: views/scripts/reports/participants-by-training.phtml:280
-#: views/scripts/reports/participants-by-training.phtml:317
-#: views/scripts/reports/people-by-facility.phtml:50
-#: views/scripts/reports/people-by-facility.phtml:61
-#: views/scripts/reports/people-by-facility.phtml:87
-#: views/scripts/reports/people-by-facility.phtml:99
-#: views/scripts/reports/people-by-facility.phtml:117
-#: views/scripts/reports/people-by-facility.phtml:131
-#: views/scripts/reports/people-by-facility.phtml:145
-#: views/scripts/reports/people-by-facility.phtml:157
-#: views/scripts/reports/people-by-facility.phtml:168
-#: views/scripts/reports/trainers.phtml:37
-#: views/scripts/reports/trainers.phtml:46
-#: views/scripts/reports/trainers.phtml:55
-#: views/scripts/reports/training-unknown.phtml:83
-#: views/scripts/reports/training-unknown.phtml:226
-#: views/scripts/reports/trainings.phtml:83
-#: views/scripts/reports/trainings.phtml:142
-#: views/scripts/reports/trainings.phtml:222
-#: views/scripts/training-partner/search.phtml:25
-#: views/scripts/training-partner/search.phtml:36
 msgid "All"
 msgstr "Все"
 
@@ -1115,10 +511,6 @@ msgstr "Разрешенные расширения файлов"
 msgid "Max upload size: "
 msgstr "Максимальный размер загрузки:"
 
-#: views/helpers/ITechTranslate.php:112
-#: views/helpers/ITechTranslate_adds.php:24
-#: views/scripts/person/edit-body-bad.phtml:86
-#: views/scripts/person/edit-body.phtml:163
 msgid "First Name"
 msgstr "Имя"
 
@@ -1152,23 +544,9 @@ msgstr "Телефон (домашний)"
 msgid "Phone (mobile)"
 msgstr "Телефон (мобильный)"
 
-#: views/helpers/ITechTranslate.php:145
-#: views/scripts/facility/addfacility-form.phtml:33
-#: views/scripts/facility/edit.phtml:64 views/scripts/facility/view.phtml:58
-#: views/scripts/person/edit-body-addtl.phtml:50
-#: views/scripts/person/edit-body-bad.phtml:212
-#: views/scripts/person/view.phtml:80
-#: views/scripts/psfacility/addfacility-form.phtml:33
-#: views/scripts/psfacility/edit.phtml:64
-#: views/scripts/psfacility/view.phtml:58
 msgid "Fax"
 msgstr "Факс"
 
-#: views/helpers/ITechTranslate.php:152
-#: views/scripts/psfacility/addfacility-form.phtml:56
-#: views/scripts/psfacility/edit.phtml:85
-#: views/scripts/psfacility/view.phtml:73
-#: views/scripts/training/_template_editform.phtml:1052
 msgid "Comments"
 msgstr "Комментарии"
 
@@ -1202,10 +580,6 @@ msgstr "Город"
 msgid "Training Name"
 msgstr "Название тренинга"
 
-#: views/helpers/ITechTranslate_adds.php:12 views/scripts/nav-admin.phtml:18
-#: views/scripts/nav-admin.phtml:84
-#: views/scripts/person/edit-body-bad.phtml:488
-#: views/scripts/person/edit-body-rec.phtml:46
 msgid "Training Organizer"
 msgstr "Организатор тренинга"
 
@@ -1281,24 +655,9 @@ msgstr "Нажмите здесь"
 msgid "Home"
 msgstr "Главная"
 
-#: views/scripts/header.phtml:23 views/scripts/header.phtml:29
-#: views/scripts/index/index.phtml:31
-#: views/scripts/reportpreservice/coursebyname.phtml:256
-#: views/scripts/reports/data.phtml:25
-#: views/scripts/reports/training-unknown.phtml:4
-#: views/scripts/reports/training-unknown.phtml:280
-#: views/scripts/reports/trainings.phtml:277 views/scripts/user/edit.phtml:60
-#: views/scripts/user/_add_form.phtml:41
 msgid "Trainings"
 msgstr "Тренинги"
 
-#: views/scripts/header.phtml:36 views/scripts/header.phtml:42
-#: views/scripts/nav-admin.phtml:28 views/scripts/nav-admin.phtml:94
-#: views/scripts/preheader.phtml:47 views/scripts/preheader.phtml:53
-#: views/scripts/person/assign-training.phtml:31
-#: views/scripts/person/search.phtml:93 views/scripts/reports/data.phtml:23
-#: views/scripts/reports/needs-by-person-name.phtml:238
-#: views/scripts/user/edit.phtml:65 views/scripts/user/_add_form.phtml:46
 msgid "People"
 msgstr "Люди"
 
@@ -1314,7 +673,7 @@ msgstr "Добавить новую личность"
 #: views/scripts/header.phtml:43 views/scripts/preheader.phtml:26
 #: views/scripts/preheader.phtml:40
 msgid "View person"
-msgstr "Посмотреть личность"
+msgstr "Просмотреть личность"
 
 #: views/scripts/header.phtml:49
 msgid "Places"
@@ -1324,45 +683,21 @@ msgstr "Учереждения"
 msgid "View/Edit Facility"
 msgstr "Посмотреть / редактировать учереждение"
 
-#: views/scripts/header.phtml:55 views/scripts/preheader.phtml:66
 msgid "View facility"
 msgstr "Посмотреть учереждение"
 
-#: views/scripts/header.phtml:58 views/scripts/preheader.phtml:69
-#: views/scripts/facility/add.phtml:4 views/scripts/facility/add.phtml:23
-#: views/scripts/psfacility/add.phtml:4 views/scripts/psfacility/add.phtml:23
 msgid "Add Facility"
 msgstr "Добавить учереждение"
 
-#: views/scripts/header.phtml:62 views/scripts/preheader.phtml:73
 msgid "View/Edit Training Location"
 msgstr "Посмотреть / редактировать местонахождение тренинга "
 
-#: views/scripts/header.phtml:64 views/scripts/preheader.phtml:75
-#: views/scripts/facility/view-location.phtml:4
-#: views/scripts/facility/view-location.phtml:18
-#: views/scripts/psfacility/view-location.phtml:4
-#: views/scripts/psfacility/view-location.phtml:18
 msgid "View Training Location"
 msgstr "Посмотреть местонахождение тренинга "
 
-#: views/scripts/header.phtml:67 views/scripts/preheader.phtml:78
-#: views/scripts/facility/add-location.phtml:4
-#: views/scripts/facility/add-location.phtml:17
-#: views/scripts/psfacility/add-location.phtml:4
-#: views/scripts/psfacility/add-location.phtml:17
 msgid "Add Training Location"
 msgstr "Добавить местонахождение тренинга "
 
-#: views/scripts/header.phtml:73 views/scripts/preheader.phtml:86
-#: views/scripts/reportpreservice/coursebyname.phtml:4
-#: views/scripts/reportpreservice/coursebyname.phtml:37
-#: views/scripts/reports/facilities.phtml:4
-#: views/scripts/reports/facilities.phtml:36
-#: views/scripts/reports/training-unknown.phtml:37
-#: views/scripts/reports/trainings.phtml:4
-#: views/scripts/reports/trainings.phtml:37
-#: views/scripts/user/_add_form.phtml:52
 msgid "Reports"
 msgstr "Отчёты"
 
@@ -1370,18 +705,12 @@ msgstr "Отчёты"
 msgid "Training Reports"
 msgstr "Отчёты о тренинге"
 
-#: views/scripts/header.phtml:75
-#: views/scripts/reports/participants-by-category.phtml:37
-#: views/scripts/reports/participants-by-facility-type.phtml:41
-#: views/scripts/reports/participants-by-training.phtml:26
 msgid "Participant Reports"
 msgstr "Отчёты участника"
 
-#: views/scripts/header.phtml:76
 msgid "Trainer Reports"
 msgstr "Отчёты инструктора"
 
-#: views/scripts/header.phtml:77
 msgid "Facility Reports"
 msgstr "Отчёты учереждения"
 
@@ -1389,22 +718,17 @@ msgstr "Отчёты учереждения"
 #: views/scripts/reports/needs-by-person-name.phtml:4
 #: views/scripts/reports/needs-by-person-name.phtml:26
 msgid "Assessment Reports"
-msgstr "Отчеты оценивания"
+msgstr "Отчёты оценивания"
 
 #: views/scripts/header.phtml:79 views/scripts/reports/roster.phtml:4
 #: views/scripts/reports/roster.phtml:22
 msgid "Roster Reports"
-msgstr "Отчеты реестра"
+msgstr "Отчёты реестра"
 
 #: views/scripts/header.phtml:80 views/scripts/reports/data.phtml:21
 msgid "Data Downloads"
 msgstr "Загрузка данных"
 
-#: views/scripts/header.phtml:91 views/scripts/evaluation/add-copy.phtml:4
-#: views/scripts/evaluation/add-copy.phtml:17
-#: views/scripts/evaluation/assign-training.phtml:29
-#: views/scripts/evaluation/browse.phtml:4
-#: views/scripts/evaluation/browse.phtml:17
 msgid "Evaluations"
 msgstr "Оценивание"
 
@@ -1412,19 +736,12 @@ msgstr "Оценивание"
 msgid "Pre-service"
 msgstr "Предварительный сервис"
 
-#: views/scripts/header.phtml:103 views/scripts/preheader.phtml:96
-#: views/scripts/user/myaccount.phtml:4 views/scripts/user/myaccount.phtml:18
 msgid "My Account"
 msgstr "Моя учётная запись"
 
-#: views/scripts/header.phtml:107 views/scripts/nav-admin.phtml:7
-#: views/scripts/nav-admin.phtml:8 views/scripts/nav-admin.phtml:73
-#: views/scripts/nav-admin.phtml:74 views/scripts/preheader.phtml:114
 msgid "Country Setup"
 msgstr "Настройка страны"
 
-#: views/scripts/header.phtml:108 views/scripts/nav-admin.phtml:14
-#: views/scripts/nav-admin.phtml:80 views/scripts/preheader.phtml:115
 msgid "Training Settings"
 msgstr "Параметры тренинга"
 
@@ -1483,18 +800,12 @@ msgstr "Настройка региона"
 msgid "Move Regions"
 msgstr "Переместить регионы"
 
-#: views/scripts/nav-admin.phtml:13 views/scripts/nav-admin.phtml:79
-#: views/scripts/data/trainings.phtml:4
-#: views/scripts/reportpreservice/coursebyname.phtml:4
-#: views/scripts/reports/training-unknown.phtml:37
-#: views/scripts/reports/trainings.phtml:4
-#: views/scripts/reports/trainings.phtml:37
 msgid "Training"
 msgstr "Тренинг"
 
 #: views/scripts/nav-admin.phtml:15 views/scripts/nav-admin.phtml:81
 msgid "Training Category"
-msgstr "Категория Тренинга"
+msgstr "Категория  тренинга"
 
 #: views/scripts/nav-admin.phtml:16 views/scripts/nav-admin.phtml:82
 msgid "Assign Titles"
@@ -1520,10 +831,6 @@ msgstr "Учебный план"
 msgid "Training Method"
 msgstr "Метод тренинга"
 
-#: views/scripts/nav-admin.phtml:30 views/scripts/nav-admin.phtml:96
-#: views/scripts/person/edit-body-addtl.phtml:57
-#: views/scripts/person/edit-body-bad.phtml:296
-#: views/scripts/person/view.phtml:87
 msgid "Qualifications"
 msgstr "Квалификации"
 
@@ -1556,11 +863,6 @@ msgstr "Суффикс"
 msgid "Active Trainer"
 msgstr "Активный тренер"
 
-#: views/scripts/nav-admin.phtml:41 views/scripts/nav-admin.phtml:107
-#: views/scripts/preheader.phtml:60 views/scripts/data/facilities.phtml:4
-#: views/scripts/facility/search.phtml:72
-#: views/scripts/psfacility/search.phtml:72
-#: views/scripts/reports/data.phtml:24
 msgid "Facilities"
 msgstr "Учереждения"
 
@@ -2149,7 +1451,7 @@ msgstr "Вы уверены, что хотите удалить данное у�
 #: views/scripts/facility/search-location.phtml:20
 #: views/scripts/psfacility/search-location.phtml:20
 msgid "Search for Training Location"
-msgstr "Ð˜Ñ�ÐºÐ°Ñ‚ÑŒ Ð¼ÐµÑ�Ñ‚Ð¾Ð½Ð°Ñ…Ð¾Ð¶Ð´ÐµÐ½Ð¸Ðµ Ñ‚Ñ€ÐµÐ½Ð¸Ð½Ð³Ð°"
+msgstr "Искать местонахождение тренинга"
 
 #: views/scripts/facility/search-location.phtml:22
 #: views/scripts/facility/search.phtml:22 views/scripts/person/search.phtml:23
@@ -2183,17 +1485,17 @@ msgstr "Ð˜Ñ�ÐºÐ°Ñ‚ÑŒ Ð¼ÐµÑ�Ñ‚Ð¾Ð½Ð°Ñ…Ð¾Ð¶Ð
 #: views/scripts/reports/trainings.phtml:50
 #: views/scripts/training-partner/search.phtml:21
 msgid "Select Criteria"
-msgstr "Ð’Ñ‹Ð±Ñ€Ð°Ñ‚ÑŒ ÐºÑ€Ð¸Ñ‚ÐµÑ€Ð¸Ð¸"
+msgstr "Выбрать критерии"
 
 #: views/scripts/facility/search-location.phtml:24
 #: views/scripts/psfacility/search-location.phtml:24
 msgid "Training Location Name"
-msgstr "Ð�Ð°Ð·Ð²Ð°Ð½Ð¸Ðµ Ð¼ÐµÑ�Ñ‚Ð¾Ð½Ð°Ñ…Ð¾Ð¶Ð´ÐµÐ½Ð¸Ñ� Ð¾Ð±ÑƒÑ‡ÐµÐ½Ð¸Ñ�"
+msgstr "Название местонахождения тренинга"
 
 #: views/scripts/facility/search-location.phtml:53
 #: views/scripts/psfacility/search-location.phtml:53
 msgid "Training locations"
-msgstr "ÐœÐµÑ�Ñ‚Ð¾Ð½Ð°Ñ…Ð¾Ð¶Ð´ÐµÐ½Ð¸Ñ� Ð¾Ð±ÑƒÑ‡ÐµÐ½Ð¸Ñ�"
+msgstr "Местонахождения тренинга"
 
 #: views/scripts/facility/search-location.phtml:53
 #: views/scripts/facility/search.phtml:72
@@ -2206,7 +1508,7 @@ msgstr "ÐœÐµÑ�Ñ‚Ð¾Ð½Ð°Ñ…Ð¾Ð¶Ð´ÐµÐ½Ð¸Ñ� Ð¾Ð�
 #: views/scripts/reports/trainers.phtml:78
 #: views/scripts/training-partner/search.phtml:56
 msgid "Results"
-msgstr "Ð ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ñ‹"
+msgstr "Результаты"
 
 #: views/scripts/facility/search-location.phtml:54
 #: views/scripts/psfacility/search-location.phtml:54
@@ -2959,7 +2261,6 @@ msgstr "Информация об институте"
 msgid "Tutor By Name"
 msgstr "Инструкторы по имени"
 
-#: views/scripts/reports/index.phtml:79
 msgid "Facility Report"
 msgstr "Отчет учреждения"
 
@@ -3889,7 +3190,6 @@ msgstr "Реестр"
 msgid "Get Required .NET"
 msgstr "Получить требуемый .NET"
 
-#: controllers/AdminController.php:24
 msgid "Administration"
 msgstr "Администрирование"
 
@@ -4004,5 +3304,158 @@ msgstr "Голландский"
 msgid "Save & Continue"
 msgstr "Сохранить и продолжить"
 
-msgid "SOME"
-msgstr ""
+msgid "Refresher Course"
+msgstr "Повышение квалификации"
+
+msgid "Approvers"
+msgstr "Утверждающие"
+
+msgid "People Merge"
+msgstr "Объединение людей"
+
+msgid "Edit Users"
+msgstr "Изменение пользователей"
+
+msgid "Individual Report"
+msgstr "Индивидуальный отчёт"
+
+msgid "Professional Reports"
+msgstr "Профессиональные отчёты"
+
+msgid "Competence Overview Report"
+msgstr "Обзорный отчёт компетентности"
+
+msgid "Competence Compare Reports"
+msgstr "Сравнительные отчёты компетентности"
+
+msgid "Question Compare Reports"
+msgstr "Вопрос сравнительных отчётов"
+
+msgid "Budget Code Reports"
+msgstr "Отчёт бюджета"
+
+msgid "Student Reports"
+msgstr "Отчеты об учащихся"
+
+msgid "Course Reports"
+msgstr "Отчёты по курсам"
+
+msgid "Cohort Reports"
+msgstr "Отчёты по группам"
+
+msgid "Institution Reports"
+msgstr "Отчёты по институтам"
+
+msgid "Tutor Reports"
+msgstr "Отчёты по инструкторам"
+
+msgid "Partners"
+msgstr "Партнеры"
+
+msgid "Add Partner"
+msgstr "Добавить партнера"
+
+msgid "View/Edit Partner"
+msgstr "Посмотреть/редактировать партнера"
+
+msgid "Add Employee"
+msgstr "Добавить Работника"
+
+msgid "View/Edit Employee"
+msgstr "Посмотреть / редактировать Работника"
+
+msgid "PS Field labels"
+msgstr "Полевые этикетки для предварительного сервиса"
+
+msgid "PS Religions"
+msgstr "Религии для предварительного сервиса"
+
+msgid "Enter locations for this country or import a CSV file."
+msgstr "Введите месторасположение для этой страны или импортируйте CSV-файл."
+
+msgid "Import"
+msgstr "Импорт"
+
+msgid "Select the Region below to add values"
+msgstr "Выберите регион ниже для добавления значений"
+
+msgid "Please select a location"
+msgstr "Пожалуйста выберите местонахождение"
+
+msgid "Filter by"
+msgstr "Фильтр по"
+
+msgid "options"
+msgstr "Настройки"
+
+msgid "State"
+msgstr "Область/Край"
+
+msgid "Geopolitical Zone"
+msgstr "Геополитическая зона"
+
+msgid "Local Government Area"
+msgstr "Местноe самоуправление/район"
+
+msgid "Duplicate entry"
+msgstr "Повторяющаяся запись"
+
+msgid "Merge into one"
+msgstr "Объединить в один"
+
+msgid "Merge Selected"
+msgstr "Объединение выбранных"
+
+msgid "Unable to merge phrases."
+msgstr "Не удается объединить фразы."
+
+msgid "The phrases below will be merged into one.  Please select the primary phrase you wish to use:"
+msgstr "Ниже фразы будут объединены в одну.  Пожалуйста, выберите основную фразу, которую вы хотите использовать:"
+
+msgid "Edit"
+msgstr "Редактировать"
+
+msgid "Evaluations Reports"
+msgstr "Отчеты проверок"
+
+msgid "Select the region level you want to move"
+msgstr "Выберите уровень региона, который вы хотите переместить"
+
+msgid "Select the region to move to"
+msgstr "Выберите регион, чтобы переместить в"
+
+msgid "Turn on Level 1 of Reports"
+msgstr "Включить 1-ый уровень отчетов"
+
+msgid "Turn on Level 2 of Reports"
+msgstr "Включить 2-ой уровень отчетов"
+
+msgid "Turn on Level 3 of Reports"
+msgstr "Включить 3-ий уровень отчетов"
+
+msgid "Federal Level Users"
+msgstr "Федеральный уровень пользователей"
+
+msgid "State Level Users"
+msgstr "Областной/Краевой уровень пользователей"
+
+msgid "LGA Level Users"
+msgstr "Районный уровень пользователей"
+
+msgid "Enter Emails of Federal Level Recipients, separated by a comma"
+msgstr "Введите адреса электронной почты федерального уровня получателей, разделенных запятыми"
+
+msgid "Enter Emails of State Level Recipients, separated by a comma"
+msgstr "Введите адреса электронной почты областного/краевого уровня получателей, разделенных запятыми"
+
+msgid "Enter Emails of LGA Level Recipients, separated by a comma"
+msgstr "Введите адреса электронной почты районного уровня получателей, разделенных запятыми"
+
+msgid "View/Edit Cohort"
+msgstr "Просмотр/редактирование группы"
+
+msgid "Add Cohort"
+msgstr "Добавить группу"
+
+msgid "In-service"
+msgstr "В сервисе"

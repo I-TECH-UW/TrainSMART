@@ -424,7 +424,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
         elLinkAdd.href = "javascript:void(0)";
         
         if(!noEdit) {
-          elLinkAdd.innerHTML = "Add " + labelAdd;  
+          elLinkAdd.innerHTML = tr("Add") + " '" + labelAdd + "'";  
         }
         
         elLinkAdd.className = "editTableAdd";
