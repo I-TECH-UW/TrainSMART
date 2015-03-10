@@ -358,7 +358,13 @@ protected function sendData($data) {
   		$status->setStatusMessage(t('You do not have access rights to the requested action.'));
 
   		if ( !$this->isLoggedIn() ) {
-  			$this->_redirect('user/login/?redirect='.urlencode('http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']));
+            if ($_SERVER['SERVER_PORT'] !== '80') {
+                $redirect_target = urlencode('http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI']);
+            }
+            else {
+                $redirect_target = urlencode('http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
+            }
+  			$this->_redirect('user/login/?redirect='.$redirect_target);
   		}
 
   		$this->_redirect('index');
