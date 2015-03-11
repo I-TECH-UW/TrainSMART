@@ -21,7 +21,7 @@
 /**
  * @param  view   $view       - the view object
  * @param  string $label      - label text
- * @param  string $content    - 'text' or 'textarea' or any html blob
+ * @param  string $content    - 'text', 'textarea', 'date', '%' or any html blob
  * @param  string $id    = '' - html element id
  * @param  string $val   = '' - value to display for input tags
  * @return html string
