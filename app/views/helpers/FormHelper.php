@@ -34,7 +34,11 @@ function labelAndField($view, $label, $content, $id = '', $val = '')
 {
 	$class = $view->thin_labels ? 'fieldLabelThin' : 'fieldLabel';
 	$readonly = $view->viewonly ? 'readonly="readonly"' : '';
-	$required = ( array_search($id,$view->required_fields) !== false ) ? '<span class="required">*</span>' : '';
+    $required = '';
+    if (isset($view->required_fields) && (array_search($id, $view->required_fields) !== false)) {
+        $required = '<span class="required">*</span>';
+    }
+
 	$cal = '<a class="calendarbtn" href="#"><img src="'.$view->base_url.'/js/yui/assets/calbtn.gif"></a>';
 	if (!$view->calendar_fields) $view->calendar_fields = array();
 	$cal1 = (array_search($id, $view->calendar_fields) === false) ? '' : $cal;
