@@ -166,7 +166,7 @@ class DropDown {
         }
 
         foreach($options as $option) {
-            $return_html .= "<option value={$option['id']}" . ($option['id'] == $selected_value ? ' selected="selected"' : '') . '>' . $option['value'] . "</option>\n";
+            $return_html .= "<option value={$option['id']}" . ($option['id'] == $selected_value ? ' selected="selected"' : '') . '>' . $option['val'] . "</option>\n";
         }
         $return_html .= "</select>\n";
 

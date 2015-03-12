@@ -75,21 +75,21 @@ class PeopleaddController extends ITechController {
 
         $this->view->assign('nationality_dropdown',
             DropDown::generateSelectionFromQuery(
-                'select id, nationality as value from lookup_nationalities',
+                'select id, nationality as val from lookup_nationalities order by val',
                 array('name' => 'nationalityid')
             )
         );
 
         $this->view->assign('primary_qualification',
             DropDown::generateSelectionFromQuery(
-                'select id, qualification_phrase as value from person_qualification_option',
+                'select id, qualification_phrase as val from person_qualification_option order by val',
                 array('name' => 'primary_qualification_option_id')
             )
         );
 
         $this->view->assign('title_options',
             DropDown::generateSelectionFromQuery(
-                'select id, title_phrase as value from person_title_option',
+                'select id, title_phrase as val from person_title_option order by val',
                 array('name' => 'title_option_id')
             )
         );
@@ -98,7 +98,7 @@ class PeopleaddController extends ITechController {
         $this->view->assign('gender_options',
             DropDown::generateSelectionFromQuery(
                 // gender is stored as a text enum in the person field, thus the weird looking query
-                'select gendername as id, gendername as value from lookup_gender',
+                'select gendername as id, gendername as val from lookup_gender order by val',
                 array('name' => 'gender')
             )
         );
@@ -109,14 +109,14 @@ class PeopleaddController extends ITechController {
 
         $this->view->assign('prior_learning',
             DropDown::generateSelectionFromQuery(
-                'select id, prior_learning_phrase as value from option_prior_learning',
+                'select id, prior_learning_phrase as val from option_prior_learning order by val',
                 array('name' => 'prior_learning')
             )
         );
 
         $this->view->assign('qualification_name',
             DropDown::generateSelectionFromQuery(
-                "select id, reason as value from lookup_reasons where reasontype = 'join'",
+                "select id, reason as val from lookup_reasons where reasontype = 'join' order by val",
                 array('name' => 'joinreason')
             )
         );
@@ -126,21 +126,21 @@ class PeopleaddController extends ITechController {
 
         $this->view->assign('level',
             DropDown::generateSelectionFromQuery(
-                "select id, reason as value from lookup_reasons where reasontype = 'drop'",
+                "select id, reason as val from lookup_reasons where reasontype = 'drop' order by val",
                 array('name' => 'dropreason')
             )
         );
 
         $this->view->assign('assessment_center',
             DropDown::generateSelectionFromQuery(
-                'select id, cadrename as value from cadres',
+                'select id, cadrename as val from cadres order by val',
                 array('name' => 'cadre')
             )
         );
 
         $this->view->assign('student_employed',
             DropDown::generateSelectionFromQuery(
-                'select id, studenttype as value from lookup_studenttype',
+                'select id, studenttype as val from lookup_studenttype order by val',
                 array('name' => 'studenttype', 'id' => 'studenttype')
             )
         );
