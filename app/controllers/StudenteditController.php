@@ -1102,6 +1102,7 @@ class StudenteditController extends ITechController
                 );
             }
 
+            // TODO: this lets us update records that aren't inserted yet (for example if the workplace is empty on add, we can't edit one in)
             if (isset($params['addpeople'])) {
                 $db->insert('link_student_cohort', $cohortData);
                 $db->insert('link_student_classes', $classData);
@@ -1109,12 +1110,16 @@ class StudenteditController extends ITechController
                     $db->insert('link_person_prior_learning', $priorData);
                 }
             } elseif (isset($params['update'])) {
+                $q = "select id from student where personid = {$params['id']}";
+                $studentID = $db->fetchOne($q);
                 $db->update('person', $personData, "id = {$params['id']}");
+                $db->update('student', $studentData, "personid = {$params['id']}");
+
+                // TODO: $db->update('workplace', $workplaceData, "id = {$personData['workplace_id']}");
+                // TODO: these are not reliable ways to retrieve the link records
+                $db->update('link_student_cohort', $cohortData, "id_student = $studentID");
+                $db->update('link_student_classes', $classData, "studentid = $studentID");
                 /* TODO:
-                $db->update('student', $studentData, "id = {$studentData['id']}");
-                $db->update('workplace', $workplaceData, "id = {$workplaceData['id']}");
-                $db->update('link_student_cohort', $cohortData, "id = {$cohortData['id']}");
-                $db->update('link_student_classes', $classData, "id = {$classData['id']}");
                 if ($params['prior_learning']) {
                     $db->update('link_person_prior_learning', $priorData);
                 }
