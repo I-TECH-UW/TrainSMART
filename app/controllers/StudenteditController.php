@@ -1049,12 +1049,12 @@ class StudenteditController extends ITechController
             // workplace
             $workplaceData = array(
                 'name' => $params['workplace_name'],
-                'address_id' => $params['workplace_address_id'],
+                'work_address_1' => $params['work_address_1'],
                 'work_phone' => $params['work_phone'],
                 'start_date' => $this->_euro_date_to_sql($params['start_date']),
                 'end_date' => $this->_euro_date_to_sql($params['end_date']),
                 'employer_name' => $params['employer_name'],
-                'employer_address_id' => $params['employer_address_id'],
+                'employer_address_1' => $params['employer_address_1'],
                 'contact_phone' => $params['contact_phone'],
                 'contact_person' => $params['contact_person'],
                 'contact_email' => $params['contact_email'],

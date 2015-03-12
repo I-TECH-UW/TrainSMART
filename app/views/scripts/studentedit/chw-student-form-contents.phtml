@@ -62,12 +62,12 @@
     echo '<legend>' . t('Work Place Information') . '</legend>';
 
     echo labelAndField($this, t('Facility Name'), 'text', 'workplace_name', $this->workplaceData['name']);
-    echo labelAndField($this, t('Address'), 'text', 'workplace_address_id', $this->workplaceData['address_id']);
+    echo labelAndField($this, t('Address'), 'text', 'work_address_1', $this->workplaceData['work_address_1']);
     echo labelAndField($this, t('ps person in charge'), 'text', 'work_phone', $this->workplaceData['work_phone']);
     echo labelAndField($this, t('Commencing Date for Workplace'), 'date', 'start_date', $this->workplaceData['start_date']);
     echo labelAndField($this, t('End Date for Workplace'), 'date', 'end_date', $this->workplaceData['end_date']);
     echo labelAndField($this, t('Name of Employer'), 'text', 'employer_name', $this->workplaceData['employer_name']);
-    echo labelAndField($this, t('Address of Employer'), 'text', 'employer_address_id', $this->workplaceData['employer_address_id']);
+    echo labelAndField($this, t('Address of Employer'), 'text', 'employer_address_1', $this->workplaceData['employer_address_1']);
     echo labelAndField($this, t('Telephone Number'), 'text', 'contact_phone', $this->workplaceData['contact_phone']);
     echo labelAndField($this, t('Name of Contact Person'), 'text', 'contact_person', $this->workplaceData['contact_person']);
     echo labelAndField($this, t('Email Address'), 'text', 'contact_email', $this->workplaceData['contact_email']);
