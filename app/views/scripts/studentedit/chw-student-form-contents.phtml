@@ -1,5 +1,34 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker({changeMonth:true, changeYear:true});
+        $('.calendarbtn').click(openNearestDatePicker);
+        var v = $('#studenttype option:selected').val();
+        if ($('#studenttype').val() === '1') {
+            $('#workplace').show();
+        }
+        else {
+            $('#workplace').hide();
+        }
+        $('#studenttype').change(function() {
+            var $elt = $(this);
+            var v = $elt.val();
+            if ($elt.val() === '1') {
+                $('#workplace').slideDown();
+            }
+            else {
+                $('#workplace').slideUp();
+            }
+        });
+    });
+
+</script>
 
 <fieldset class="formSection">
+
+    <input type="hidden" name="person_id" value="<?php echo $this->personData['id']?>">
+    <input type="hidden" name="id" value="<?php echo $this->personData['id']?>">
+    <input type="hidden" name="student_id" value="<?php echo $this->studentData['id']?>">
+    <input type="hidden" name="workplace_id" value="<?php echo $this->workplaceData['id']?>">
 
     <?php
     require_once('views/helpers/FormHelper.php');
@@ -7,39 +36,41 @@
     $temporary_value = "temporary value";
     echo '<legend>' . t('Enter details') . '</legend>';
 
-    echo labelAndField($this, t('Last Name'), 'text', 'last_name', $temporary_value);
-    echo labelAndField($this, t('Full Names'), 'text', 'full_names', $temporary_value);
-    echo labelAndField($this, t('ps nationality'), 'text', 'nationality', $temporary_value);
-    echo labelAndField($this, t('ps national id'), 'text', 'nationalid', $temporary_value);
-    echo labelAndField($this, t('ps specialty'), 'text', 'title', $temporary_value);
-    echo labelAndField($this, t('Age'), 'text', 'age', $temporary_value);
-    echo labelAndField($this, t('Gender'), 'text', 'gender', $temporary_value);
-    echo labelAndField($this, t('ps spouse name'), 'text', 'spouse_name', $temporary_value);
-    echo labelAndField($this, t('Highest Qualification Achieved'), 'text', 'highest_qualification', $temporary_value);
-    echo labelAndField($this, t('ps local address'), 'text', 'residential_address', $temporary_value);
-    echo labelAndField($this, t('Province'), 'text', 'province', $temporary_value);
-    echo labelAndField($this, t('Phone'), 'text', 'phone', $temporary_value);
-    echo labelAndField($this, t('Email'), 'text', 'personal_email', $temporary_value);
-    echo labelAndField($this, t('ps marital status'), 'text', 'marital_status', $temporary_value);
-    echo labelAndField($this, t('List of Modules'), 'text', 'modules', $temporary_value);
+    echo labelAndField($this, t('Last Name'), 'text', 'last_name', $this->personData['last_name']);
+    echo labelAndField($this, t('First Name'), 'text', 'first_name', $this->personData['first_name']);
+    echo labelAndField($this, t('ps nationality'), $this->nationality_dropdown); // Dropdown
+    echo labelAndField($this, t('ps national id'), 'text', 'national_id', $this->personData['national_id']);
+    echo labelAndField($this, t('ps specialty'), $this->title_options);
+    echo labelAndField($this, t('Age'), 'text', 'age', $this->personData['home_postal_code']);
+    echo labelAndField($this, t('Gender'), $this->gender_options);
+    echo labelAndField($this, t('ps spouse name'), 'text', 'spouse_name', $this->personData['spouse_name']);
+    echo labelAndField($this, t('Highest Qualification Achieved'), $this->primary_qualification, 'primary_qualification_option_id', $this->personData['primary_qualification_option_id']); // Dropdown
+    echo labelAndField($this, t('ps local address'), 'text', 'residential_address', $this->personData['home_address_1']);
+    echo labelAndField($this, t('Province'), 'text', 'province', $this->personData['home_address_2']);
+    echo labelAndField($this, t('Phone'), 'text', 'phone_home', $this->personData['phone_home']);
+    echo labelAndField($this, t('Email'), 'text', 'email', $this->personData['email']);
+    echo labelAndField($this, t('ps marital status'), 'text', 'marital_status', $this->personData['marital_status']); // Dropdown
+    echo labelAndField($this, t('List of Modules'), $this->prior_learning); // Dropdown
+    echo labelAndField($this, t('ps religious denomination'), $this->student_employed); // Dropdown
+
     ?>
 </fieldset>
 
-<fieldset class="formSection">
+<fieldset class="formSection" id="workplace">
 
     <?php
     echo '<legend>' . t('Work Place Information') . '</legend>';
 
-    echo labelAndField($this, t('Facility Name'), 'text', 'postfacilityname', $temporary_value);
-    echo labelAndField($this, t('Comments'), 'text', 'comments', $temporary_value);
-    echo labelAndField($this, t('ps person in charge'), 'text', 'personincharge', $temporary_value);
-    echo labelAndField($this, t('Commencing Date for Workplace'), 'text', 'workplace_start_date', $temporary_value);
-    echo labelAndField($this, t('End Date for Workplace'), 'text', 'end_date', $temporary_value);
-    echo labelAndField($this, t('Name of Employer'), 'text', 'name_of_employer', $temporary_value);
-    echo labelAndField($this, t('Address of Employer'), 'text', 'address_of_employer', $temporary_value);
-    echo labelAndField($this, t('Telephone Number'), 'text', 'telephone_number', $temporary_value);
-    echo labelAndField($this, t('Name of Contact Person'), 'text', 'contact_name', $temporary_value);
-    echo labelAndField($this, t('Email Address'), 'text', 'contact_email_address', $temporary_value);
+    echo labelAndField($this, t('Facility Name'), 'text', 'workplace_name', $this->workplaceData['name']);
+    echo labelAndField($this, t('Address'), 'text', 'workplace_address_id', $this->workplaceData['address_id']);
+    echo labelAndField($this, t('ps person in charge'), 'text', 'work_phone', $this->workplaceData['work_phone']);
+    echo labelAndField($this, t('Commencing Date for Workplace'), 'date', 'start_date', $this->workplaceData['start_date']);
+    echo labelAndField($this, t('End Date for Workplace'), 'date', 'end_date', $this->workplaceData['end_date']);
+    echo labelAndField($this, t('Name of Employer'), 'text', 'employer_name', $this->workplaceData['employer_name']);
+    echo labelAndField($this, t('Address of Employer'), 'text', 'employer_address_id', $this->workplaceData['employer_address_id']);
+    echo labelAndField($this, t('Telephone Number'), 'text', 'contact_phone', $this->workplaceData['contact_phone']);
+    echo labelAndField($this, t('Name of Contact Person'), 'text', 'contact_person', $this->workplaceData['contact_person']);
+    echo labelAndField($this, t('Email Address'), 'text', 'contact_email', $this->workplaceData['contact_email']);
     ?>
 
 </fieldset>
@@ -47,25 +78,24 @@
 
     <?php
     echo '<legend>' . t('Qualification') . '</legend>';
-    echo labelAndField($this, t('Reason for Enrollment'), 'text', 'enrollmentreason', $temporary_value);
-    echo labelAndField($this, t('ps custom field 2'), 'text', 'custom_field2', $temporary_value);
-    echo labelAndField($this, t('ps custom field 3'), 'text', 'custom_field3', $temporary_value);
-    echo labelAndField($this, t('Reason for Separation'), 'text', 'separationreason', $temporary_value);
-    echo labelAndField($this, t('Date of Enrollment'), 'text', 'enrollmentdate', $temporary_value);
-    echo labelAndField($this, t('Date of Separation'), 'text', 'separationdate', $temporary_value);
-    echo labelAndField($this, t('Date of Final Integrated External Assessment'), 'text', 'assesment_final_date', $temporary_value);
-    echo labelAndField($this, t('ps program enrolled in'), 'text', 'cadre', $temporary_value);
-    echo labelAndField($this, t('ps last university attended'), 'text', 'lastinstatt', $temporary_value);
-    echo labelAndField($this, t('Contact Number of Assessment Centre/Site'), 'text', 'assessment_center_contact_number', $temporary_value);
-    echo labelAndField($this, t('ps religious denomination'), 'text', 'studenttype', $temporary_value);
+    echo labelAndField($this, t('Reason for Enrollment'), $this->qualification_name);
+    echo labelAndField($this, t('ps custom field 2'), 'text', 'custom_field2', $this->personData['custom_field2']); // Dropdown?
+    echo labelAndField($this, t('ps custom field 3'), 'text', 'custom_field3', $this->personData['custom_field3']);
+    echo labelAndField($this, t('Reason for Separation'), $this->level); // Dropdown
+    echo labelAndField($this, t('Date of Enrollment'), 'date', 'joindate', $this->studentCohortData['joindate']);
+    echo labelAndField($this, t('Date of Separation'), 'date', 'dropdate', $this->studentCohortData['dropdate']);
+    echo labelAndField($this, t('Date of Final Integrated External Assessment'), 'date', 'examdate', $this->studentClassData['examdate']);
+    echo labelAndField($this, t('ps program enrolled in'), $this->assessment_center); // Dropdown
+    echo labelAndField($this, t('ps last university attended'), 'text', 'lastunivatt', $this->studentData['lastunivatt']);
+    echo labelAndField($this, t('Contact Number of Assessment Centre/Site'), 'text', 'emergcontact', $this->studentData['emergcontact']);
     ?>
 </fieldset>
 
 <fieldset class="formSection">
     <?php
     echo '<legend>' . t('Qualified Learners') . '</legend>';
-    echo labelAndField($this, t('Date Certificate was Received From the AQP'), 'text', 'certificate_received_from_aqp_date', $temporary_value);
-    echo labelAndField($this, t('Certificate Number'), 'text', 'certificate_number', $temporary_value);
-    echo labelAndField($this, t('Date Learner Received Certificate'), 'text', 'certificate_received_date', $temporary_value);
+    echo labelAndField($this, t('Date Certificate was Received From the AQP'), 'date', 'certificate_issue_date', $this->studentClassData['certificate_issue_date']);
+    echo labelAndField($this, t('Certificate Number'), 'text', 'certificate_number', $this->studentClassData['certificate_number']);
+    echo labelAndField($this, t('Date Learner Received Certificate'), 'date', 'certificate_received_date', $this->studentClassData['certificate_received_date']);
     ?>
 </fieldset>

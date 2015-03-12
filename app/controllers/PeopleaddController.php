@@ -68,8 +68,83 @@ class PeopleaddController extends ITechController {
 
     public function skillsmartChwAddAction() {
 
+        require_once('views/helpers/DropDown.php');
         $this->view->assign('action', '/studentedit/skillsmart-chw-student-edit/');
         $this->view->assign('title', $this->view->translation['Application Name']);
+        $this->view->assign('required_fields', array('last_name', 'first_name', 'primary_qualification_option_id'));
+
+        $this->view->assign('nationality_dropdown',
+            DropDown::generateSelectionFromQuery(
+                'select id, nationality as value from lookup_nationalities',
+                array('name' => 'nationalityid')
+            )
+        );
+
+        $this->view->assign('primary_qualification',
+            DropDown::generateSelectionFromQuery(
+                'select id, qualification_phrase as value from person_qualification_option',
+                array('name' => 'primary_qualification_option_id')
+            )
+        );
+
+        $this->view->assign('title_options',
+            DropDown::generateSelectionFromQuery(
+                'select id, title_phrase as value from person_title_option',
+                array('name' => 'title_option_id')
+            )
+        );
+
+        // gender is stored as an enum in the person field, thus the weird looking query
+        $this->view->assign('gender_options',
+            DropDown::generateSelectionFromQuery(
+                // gender is stored as a text enum in the person field, thus the weird looking query
+                'select gendername as id, gendername as value from lookup_gender',
+                array('name' => 'gender')
+            )
+        );
+
+
+        // do we need a prior learning yes/no when we have a way to select it?
+        //$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
+
+        $this->view->assign('prior_learning',
+            DropDown::generateSelectionFromQuery(
+                'select id, prior_learning_phrase as value from option_prior_learning',
+                array('name' => 'prior_learning')
+            )
+        );
+
+        $this->view->assign('qualification_name',
+            DropDown::generateSelectionFromQuery(
+                "select id, reason as value from lookup_reasons where reasontype = 'join'",
+                array('name' => 'joinreason')
+            )
+        );
+
+        // doc says this field is for SAQA ID but I don't understand how that can be a dropdown
+        //$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
+
+        $this->view->assign('level',
+            DropDown::generateSelectionFromQuery(
+                "select id, reason as value from lookup_reasons where reasontype = 'drop'",
+                array('name' => 'dropreason')
+            )
+        );
+
+        $this->view->assign('assessment_center',
+            DropDown::generateSelectionFromQuery(
+                'select id, cadrename as value from cadres',
+                array('name' => 'cadre')
+            )
+        );
+
+        $this->view->assign('student_employed',
+            DropDown::generateSelectionFromQuery(
+                'select id, studenttype as value from lookup_studenttype',
+                array('name' => 'studenttype', 'id' => 'studenttype')
+            )
+        );
+
     }
     
 }

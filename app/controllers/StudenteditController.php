@@ -1010,6 +1010,242 @@ class StudenteditController extends ITechController
     public function skillsmartChwStudentEditAction()
     {
 
+        $request = $this->getRequest();
+        $db = $this->dbfunc();
+
+        $params = $request->getParams();
+        if ($request->isPost()) {
+
+            // person
+            $personData = array(
+                'last_name' => $params['last_name'],
+                'first_name' => $params['first_name'],
+                'national_id' => $params['national_id'],
+                'title_option_id' => $params['title_option_id'],
+                // TODO: resolve age
+                'home_postal_code' => $params['age'],
+                'gender' => $params['gender'],
+                'spouse_name' => $params['spouse_name'],
+                'primary_qualification_option_id' => $params['primary_qualification_option_id'],
+                // TODO: resolve address & province
+                'home_address_1' => $params['residential_address'],
+                'home_address_2' => $params['province'],
+                'phone_home' => $params['phone_home'],
+                'email' => $params['email'],
+                'marital_status' => $params['marital_status'],
+                'custom_field2' => $params['custom_field2'],
+                'custom_field3' => $params['custom_field3'],
+            );
+
+            // student
+            $studentData = array(
+                'nationalityid' => $params['nationalityid'],
+                'cadre' => $params['cadre'],
+                'lastunivatt' => $params['lastunivatt'],
+                'emergcontact' => $params['emergcontact'],
+                'studenttype' => $params['studenttype'],
+            );
+
+            // workplace
+            $workplaceData = array(
+                'name' => $params['workplace_name'],
+                'address_id' => $params['workplace_address_id'],
+                'work_phone' => $params['work_phone'],
+                'start_date' => $this->_euro_date_to_sql($params['start_date']),
+                'end_date' => $this->_euro_date_to_sql($params['end_date']),
+                'employer_name' => $params['employer_name'],
+                'employer_address_id' => $params['employer_address_id'],
+                'contact_phone' => $params['contact_phone'],
+                'contact_person' => $params['contact_person'],
+                'contact_email' => $params['contact_email'],
+            );
+
+            if (isset($params['addpeople'])) {
+                # need IDs for link tables
+                $db->insert('workplace', $workplaceData);
+                $params['workplace_id'] = $db->lastInsertId('workplace');
+
+                $personData['workplace_id'] = $params['workplace_id'];
+                $db->insert('person', $personData);
+                $params['person_id'] = $db->lastInsertId('person');
+                $params['id'] = $params['person_id'];
+
+                $studentData['personid'] = $params['person_id'];
+                $db->insert('student', $studentData);
+                $params['student_id'] = $db->lastInsertId('student');
+
+            }
+
+            // link_student_cohort
+            $cohortData = array(
+                'id_student' => $params['student_id'],
+                'joinreason' => $params['joinreason'],
+                'dropreason' => $params['dropreason'],
+                'joindate' => $this->_euro_date_to_sql($params['joindate']),
+                'dropdate' => $this->_euro_date_to_sql($params['dropdate']),
+            );
+
+            // link_student_classes
+            $classData = array(
+                'studentid' => $params['student_id'],
+                'examdate' => $this->_euro_date_to_sql($params['examdate']),
+                'certificate_issue_date' => $this->_euro_date_to_sql($params['certificate_issue_date']),
+                'certificate_number' => $params['certificate_number'],
+                'certificate_received_date' => $this->_euro_date_to_sql($params['certificate_received_date']),
+            );
+
+            // link_person_prior_learning
+            if ($params['prior_learning']) {
+                $priorData = array(
+                    'person_id' => $params['person_id'],
+                    'option_prior_learning_id' => $params['prior_learning'],
+                );
+            }
+
+            if (isset($params['addpeople'])) {
+                $db->insert('link_student_cohort', $cohortData);
+                $db->insert('link_student_classes', $classData);
+                if ($params['prior_learning']) {
+                    $db->insert('link_person_prior_learning', $priorData);
+                }
+            } elseif (isset($params['update'])) {
+                $db->update('person', $personData, "id = {$params['id']}");
+                $db->update('student', $studentData, "id = {$studentData['id']}");
+                $db->update('workplace', $workplaceData, "id = {$workplaceData['id']}");
+                $db->update('link_student_cohort', $cohortData, "id = {$cohortData['id']}");
+                $db->update('link_student_classes', $classData, "id = {$classData['id']}");
+                if ($params['prior_learning']) {
+                    $db->update('link_person_prior_learning', $priorData);
+                }
+            }
+        }
+
+        $q = "SELECT * FROM person WHERE id = {$params['id']}";
+        $personData = $db->fetchRow($q);
+
+        $q = "SELECT * FROM student WHERE personid = {$params['id']}";
+        $studentData = $db->fetchRow($q);
+
+        require_once('views/helpers/FormHelper.php');
+        $q = "SELECT * FROM workplace WHERE id = {$personData['workplace_id']}";
+        $workplaceData = $db->fetchRow($q);
+        $workplaceData['start_date'] = formhelperdate($workplaceData['start_date'], "d/m/y");
+        $workplaceData['end_date'] = formhelperdate($workplaceData['end_date'], "d/m/y");
+
+        $q = "SELECT * FROM link_student_cohort WHERE id_student = {$studentData['id']}";
+        $studentCohortData = $db->fetchRow($q);
+        $studentCohortData['joindate'] = formhelperdate($studentCohortData['joindate'], "d/m/y");
+        $studentCohortData['dropdate'] = formhelperdate($studentCohortData['dropdate'], "d/m/y");
+
+
+        $q = "SELECT * FROM link_student_classes WHERE studentid = {$studentData['id']}";
+        $studentClassData = $db->fetchRow($q);
+        $studentClassData['examdate'] = formhelperdate($studentClassData['examdate'], "d/m/y");
+        $studentClassData['certificate_issue_date'] = formhelperdate($studentClassData['certificate_issue_date'], "d/m/y");
+        $studentClassData['certificate_received_date'] = formhelperdate($studentClassData['certificate_received_date'], "d/m/y");
+
+        $q = "SELECT * FROM option_prior_learning";
+        $priorLearningOptions = $db->fetchAll($q);
+
+        $q = "SELECT * FROM link_person_prior_learning where person_id = {$params['id']}";
+        $personPriorLearningData = $db->fetchAll($q);
+
+        require_once('views/helpers/DropDown.php');
+
+        $this->view->assign('title', $this->view->translation['Application Name']);
+        $this->view->assign('required_fields', array('last_name', 'first_name', 'primary_qualification_option_id'));
+        $this->view->assign('action', '/studentedit/skillsmart-chw-student-edit/id/' . $params['person_id']);
+
+        $this->view->assign('personData', $personData);
+        $personData[''];
+        $this->view->assign('studentData', $studentData);
+        $this->view->assign('workplaceData', $workplaceData);
+
+        $this->view->assign('studentCohortData', $studentCohortData);
+        $this->view->assign('studentClassData', $studentClassData);
+        $this->view->assign('priorLearningOptions', $priorLearningOptions);
+        $this->view->assign('personPriorLearningData', $personPriorLearningData);
+
+        $this->view->assign('nationality_dropdown',
+            DropDown::generateSelectionFromQuery(
+                'select id, nationality as value from lookup_nationalities',
+                array('name' => 'nationalityid'),
+                $studentData['nationalityid']
+            )
+        );
+
+        $this->view->assign('primary_qualification',
+            DropDown::generateSelectionFromQuery(
+                'select id, qualification_phrase as value from person_qualification_option',
+                array('name' => 'primary_qualification_option_id'),
+                $personData['primary_qualification_option_id']
+            )
+        );
+
+        $this->view->assign('title_options',
+            DropDown::generateSelectionFromQuery(
+                'select id, title_phrase as value from person_title_option',
+                array('name' => 'title_option_id'),
+                $personData['title_option_id']
+            )
+        );
+
+        $this->view->assign('gender_options',
+            DropDown::generateSelectionFromQuery(
+                // gender is stored as an enum in the person field, thus the weird looking query
+                'select gendername as id, gendername as value from lookup_gender',
+                array('name' => 'gender'),
+                $personData['gender']
+            )
+        );
+
+        // do we need a prior learning yes/no when we have a way to select it?
+        //$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
+
+        $this->view->assign('prior_learning',
+            DropDown::generateSelectionFromQuery(
+                'select id, prior_learning_phrase as value from option_prior_learning',
+                array('name' => 'prior_learning'),
+                "TODO"
+
+            )
+        );
+
+        $this->view->assign('qualification_name',
+            DropDown::generateSelectionFromQuery(
+                "select id, reason as value from lookup_reasons where reasontype = 'join'",
+                array('name' => 'joinreason'),
+                $studentCohortData['joinreason']
+            )
+        );
+
+        // doc says this field is for SAQA ID but I don't understand how that can be a dropdown
+        //$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
+
+        $this->view->assign('level',
+            DropDown::generateSelectionFromQuery(
+                "select id, reason as value from lookup_reasons where reasontype = 'drop'",
+                array('name' => 'dropreason'),
+                $studentCohortData['dropreason']
+            )
+        );
+
+        $this->view->assign('assessment_center',
+            DropDown::generateSelectionFromQuery(
+                'select id, cadrename as value from cadres',
+                array('name' => 'cadre'),
+                $studentData['cadre']
+            )
+        );
+
+        $this->view->assign('student_employed',
+            DropDown::generateSelectionFromQuery(
+                'select id, studenttype as value from lookup_studenttype',
+                array('name' => 'studenttype'),
+                $studentData['studenttype']
+            )
+        );
+
     }
 }
 ?>
