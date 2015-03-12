@@ -137,6 +137,42 @@ class DropDown {
 		return $html;
 	}
 
+    /**
+     * generates a dropdown from an sql query that returns id - value results
+     * @param string $query - SQL query to execute, must return option id and option value as 'id' and 'value' array indices
+     * @param array $elementAttributes - html element attributes
+     * @param string $selected_value - the selected value
+     * @param bool $show_select_option = true - whether to put the text '- select -' in as the first option
+     * @return string
+     */
+
+    public static function generateSelectionFromQuery($query, $elementAttributes, $selected_value = '', $show_select_option = true) {
+        if (!is_string($query) || !isset($elementAttributes['name']))
+        {
+            return '';
+        }
+
+        $return_html = '<select ';
+        foreach($elementAttributes as $k => $v) {
+            $return_html .= "$k=$v ";
+        }
+        $return_html .= ">\n";
+
+        $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+        $options = $db->fetchAll($query);
+
+        if ($show_select_option) {
+            $return_html .= '<option value="">&mdash; ' . t('select') . " &mdash;</option>\n";
+        }
+
+        foreach($options as $option) {
+            $return_html .= "<option value={$option['id']}" . ($option['id'] == $selected_value ? ' selected="selected"' : '') . '>' . $option['value'] . "</option>\n";
+        }
+        $return_html .= "</select>\n";
+
+        return $return_html;
+    }
+
 	/**
 	 * $table - a string for the table name, or an array of rows to be used as the option values
 	 * $id      - option value to select as default
