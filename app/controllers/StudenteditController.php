@@ -1110,6 +1110,7 @@ class StudenteditController extends ITechController
                 }
             } elseif (isset($params['update'])) {
                 $db->update('person', $personData, "id = {$params['id']}");
+                /* TODO:
                 $db->update('student', $studentData, "id = {$studentData['id']}");
                 $db->update('workplace', $workplaceData, "id = {$workplaceData['id']}");
                 $db->update('link_student_cohort', $cohortData, "id = {$cohortData['id']}");
@@ -1117,6 +1118,7 @@ class StudenteditController extends ITechController
                 if ($params['prior_learning']) {
                     $db->update('link_person_prior_learning', $priorData);
                 }
+                */
             }
         }
 
@@ -1241,7 +1243,7 @@ class StudenteditController extends ITechController
         $this->view->assign('student_employed',
             DropDown::generateSelectionFromQuery(
                 'select id, studenttype as value from lookup_studenttype',
-                array('name' => 'studenttype'),
+                array('name' => 'studenttype', 'id' => 'studenttype'),
                 $studentData['studenttype']
             )
         );

@@ -1,8 +1,9 @@
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.datepicker').datepicker({changeMonth:true, changeYear:true});
+        $('.datepicker').datepicker({changeMonth:true, changeYear:true, dateFormat: "dd/mm/yy"});
         $('.calendarbtn').click(openNearestDatePicker);
-        var v = $('#studenttype option:selected').val();
+
+        var v = $('#studenttype').val();
         if ($('#studenttype').val() === '1') {
             $('#workplace').show();
         }
