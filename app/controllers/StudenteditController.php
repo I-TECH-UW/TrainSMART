@@ -1018,7 +1018,7 @@ class StudenteditController extends ITechController
         $request = $this->getRequest();
         $db = $this->dbfunc();
 
-        $params = $request->getParams();
+        $params = $this->getAllParams();
         if ($request->isPost()) {
 
             // person
@@ -1037,9 +1037,9 @@ class StudenteditController extends ITechController
                 'home_address_2' => $params['province'],
                 'phone_home' => $params['phone_home'],
                 'email' => $params['email'],
-                'marital_status' => $params['marital_status'],
-                'custom_field2' => $params['custom_field2'],
-                'custom_field3' => $params['custom_field3'],
+                'marital_status' => $params['marital_status'], // Recognition of Prior Learning - is this field needed?
+                'custom_field2' => $params['custom_field2'], // List of Modules for Prior Learning
+                'custom_field3' => $params['custom_field3'], // is student employed
             );
 
             // student
@@ -1054,11 +1054,15 @@ class StudenteditController extends ITechController
             // workplace
             $workplaceData = array(
                 'name' => $params['workplace_name'],
+
+                // TODO: also resolve address here as above
                 'work_address_1' => $params['work_address_1'],
                 'work_phone' => $params['work_phone'],
                 'start_date' => $this->_euro_date_to_sql($params['start_date']),
                 'end_date' => $this->_euro_date_to_sql($params['end_date']),
                 'employer_name' => $params['employer_name'],
+
+                // TODO: also resolve address here as above
                 'employer_address_1' => $params['employer_address_1'],
                 'contact_phone' => $params['contact_phone'],
                 'contact_person' => $params['contact_person'],
@@ -1107,10 +1111,10 @@ class StudenteditController extends ITechController
                 );
             }
 
-            // TODO: this lets us update records that aren't inserted yet (for example if the workplace is empty on add, we can't edit one in)
             if (isset($params['addpeople'])) {
                 $db->insert('link_student_cohort', $cohortData);
                 $db->insert('link_student_classes', $classData);
+
                 if ($params['prior_learning']) {
                     $db->insert('link_person_prior_learning', $priorData);
                 }
@@ -1120,11 +1124,17 @@ class StudenteditController extends ITechController
                 $db->update('person', $personData, "id = {$params['id']}");
                 $db->update('student', $studentData, "personid = {$params['id']}");
 
-                // TODO: $db->update('workplace', $workplaceData, "id = {$personData['workplace_id']}");
-                // TODO: these are not reliable ways to retrieve the link records
+                if ($personData['workplace_id'] && $personData['workplace_id'] > 0) {
+                    $db->update('workplace', $workplaceData, "id = {$personData['workplace_id']}");
+                }
+                // this assumes only one class and cohort per chw student, if we need multiple
+                // we'll need to devise a way to distinguish the data (maybe making exam date and
+                // join date fields that we don't allow updating, or capturing the link id in a hidden input
                 $db->update('link_student_cohort', $cohortData, "id_student = $studentID");
                 $db->update('link_student_classes', $classData, "studentid = $studentID");
-                /* TODO:
+                /*
+                TODO: does prior learning need to be many to many? just one thing? Can a person have more than one prior learning module?
+                TODO: if more than one, should they be displayed in a table? allow deletion?
                 if ($params['prior_learning']) {
                     $db->update('link_person_prior_learning', $priorData);
                 }

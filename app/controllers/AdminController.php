@@ -3711,5 +3711,28 @@ class AdminController extends UserController
 		return $this->hasACL($validACLEditPages[$this->getRequest()->action]);
 	}
 
+    public function hiddenSettingsAction() {
+
+        $style_id = $this->setting('site_style_id');
+
+        if ($this->getRequest()->isPost()) {
+            $db = $this->dbfunc();
+
+            $id = $this->getSanParam('site_style_option');
+            $q = "UPDATE _system set site_style_id = $id";
+            $style_id = $id;
+            $db->query($q);
+        }
+
+        $this->view->assign('siteStyleDropdown',
+            DropDown::generateSelectionFromQuery(
+                'SELECT id, site_style_name AS val FROM site_styles ORDER BY val ASC',
+                array('name' => 'site_style_option'),
+                $style_id, false
+            )
+        );
+    }
 }
+
+
 ?>

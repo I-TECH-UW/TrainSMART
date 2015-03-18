@@ -412,7 +412,8 @@ protected function sendData($data) {
   	// this might not work on arrays with arrays in them, TODO, might be a security flaw, sanitize() wont handle arrays we should array_walk_recursive here. (but will probably just say: ARRAY)
 		$ret = array_merge($_GET,$_POST,$this->getRequest()->getParams());
 		foreach ($ret as $key => $value) {
-			$ret[$key] = $this->getSanParam($key);
+            // BS 20150317 - strip leading and trailing whitespace from form values
+			$ret[$key] = trim($this->getSanParam($key));
 		}
 
 		return $ret;
