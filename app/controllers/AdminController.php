@@ -2920,6 +2920,15 @@ class AdminController extends UserController
 		$this->view->assign('parent', $parent);
 	}
 
+    public function skillsmartChwPersonFieldsAction() {
+
+        $db = $this->dbfunc();
+
+        $q = "SELECT key_phrase, phrase FROM translation";
+
+
+    }
+
 	public function employeeSettingsAction()
 	{
 

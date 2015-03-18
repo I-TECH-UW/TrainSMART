@@ -1,0 +1,246 @@
+<?php 
+
+// template for page that contains an EditTable
+
+// need $pageTitle and $nextUri variables from these includes
+  
+ob_start();
+require_once('views/scripts/header.phtml');
+$header = ob_get_contents();
+ob_end_clean(); 
+
+ob_start();
+require_once('views/scripts/nav-admin.phtml');
+$nav = ob_get_contents();
+ob_end_clean(); 
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title><?php echo $this->translation['Application Name'];?> | <?php echo $pageTitle; ?></title>
+<?php
+	require_once('views/helpers/ScriptContainer.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+?>
+
+		<style>
+			fieldset input[type=text], fieldset select { margin-bottom:12px; width:95%; padding: .4em; }
+			fieldset { padding:0; border:0; margin-top:25px; text-align : left; font-size : .9em }
+			h1 { font-size: 1.2em; margin: .6em 0; }
+			.ui-dialog .ui-state-error { padding: .3em; }
+			.validateTips { border: 1px solid transparent; padding: 0.3em; }
+		</style>
+		<script>
+			$(function() {
+			});
+
+		</script>
+
+		<script type="text/javascript" charset="utf-8">
+		</script>
+	</head>
+	<body  class="yui-skin-sam">
+		<div id="pageHolder">
+			<div id="header"><?php echo $header; ?></div>
+			<div id="content" class="adminDiv">
+				<div id="navAdmin"><?php echo $nav;?></div>
+				<div id="contentAdmin">
+					<div id="contentheader">
+						<h1><?php echo $this->pageTitle; ?></h1>
+						<h2><?php echo $this->header; ?></h2>
+					</div>
+					<br><br>
+	
+					<form  action="" id="peopleadd" method="post">
+						
+							
+								<div class="pad20"></div>
+								<div style="width :100%;">
+								
+								<!-- TA: added/changed 7/18/2014 - START  -->
+								<table class="settings">
+    <thead>
+    <tr><th>Field</th><th>Display</th><th>Label</th><th>Options</th></tr>
+    </thead> 
+    
+    <tr><td class="fieldTitle">ps institution</td>
+   	<td></td>
+   	<td><input type="text" name="label_ps_institution" value="<?php echo $this->label_ps_institution; ?>"></td>
+   	<td></td>
+    </tr>
+    
+     <tr><td class="fieldTitle">ps license and registration</td>
+   	<td></td>
+   	<td><input type="text" name="label_ps_lic_reg" value="<?php echo $this->label_ps_lic_reg; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps clinical allocation</td>
+   	<td></td>
+   	<td><input type="text" name="label_ps_clinical_allocation" value="<?php echo $this->label_ps_clinical_allocation; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps local address</td>
+   	<td><input type="checkbox" name="check_display_local_address" <?php if($this->check_display_local_address) echo 'checked'; ?> id="check_display_local_address"></td>
+   	<td><input type="text" name="label_ps_local_address" value="<?php echo $this->label_ps_local_address; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps permanent address</td>
+   	<td><input type="checkbox" name="check_display_permanent_address" <?php if($this->check_display_permanent_address) echo 'checked'; ?> id="check_display_permanent_address"></td>
+   	<td><input type="text" name="label_ps_permanent_address" value="<?php echo $this->label_ps_permanent_address; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps zip code</td>
+   	<td></td>
+   	<td><input type="text" name="label_ps_zip_code" value="<?php echo $this->label_ps_zip_code; ?>"></td>
+   	<td></td>
+    </tr>
+		
+	<tr><td class="fieldTitle">ps religious denomination</td>
+   	<td><input type="checkbox" name="check_display_religious_denomin" <?php if($this->check_display_religious_denomin) echo 'checked'; ?> id="check_display_religious_denomin"></td>
+   	<td><input type="text" name="label_ps_religious_denomination" value="<?php echo $this->label_ps_religious_denomination; ?>"></td>
+   	<td></td>
+    </tr>	
+    
+    <tr><td class="fieldTitle">ps program enrolled in</td>
+   <td></td>
+   	<td><input type="text" name="label_ps_program_enrolled" value="<?php echo $this->label_ps_program_enrolled; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps tutor</td>
+   	 <td></td>
+   	<td><input type="text" name="label_ps_tutor" value="<?php echo $this->label_ps_tutor; ?>"></td>
+   	<td></td>
+    </tr>
+		
+    <tr><td class="fieldTitle">ps nationality</td>
+   	<td><input type="checkbox" name="check_display_nationality" <?php if($this->check_display_nationality) echo 'checked'; ?> id="check_display_nationality"></td>
+   	<td><input type="text" name="label_ps_nationality" value="<?php echo $this->label_ps_nationality; ?>"></td>
+   	<td></td>
+    </tr>	
+    
+    <tr><td class="fieldTitle">ps high school completion date</td>
+   	<td><input type="checkbox" name="check_display_inst_compl_date" <?php if($this->check_display_inst_compl_date) echo 'checked'; ?> id="check_display_inst_compl_date"></td>
+   	<td><input type="text" name="label_inst_compl_date" value="<?php echo $this->label_inst_compl_date; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps last school attended</td>
+   	<td><input type="checkbox" name="check_display_last_inst_attended" <?php if($this->check_display_last_inst_attended) echo 'checked'; ?> id="check_display_last_inst_attended"></td>
+   	<td><input type="text" name="label_last_school_att" value="<?php echo $this->label_last_school_att; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps school start date</td>
+   	<td><input type="checkbox" name="check_display_start_school_date" <?php if($this->check_display_start_school_date) echo 'checked'; ?> id="check_display_start_school_date"></td>
+   	<td><input type="text" name="label_schhol_start_date" value="<?php echo $this->label_schhol_start_date; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps equivalence</td>
+   	<td><input type="checkbox" name="check_display_equivalence" <?php if($this->check_display_equivalence) echo 'checked'; ?> id="check_display_equivalence"></td>
+   	<td><input type="text" name="label_equivalence" value="<?php echo $this->label_equivalence; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps last university attended</td>
+   	<td><input type="checkbox" name="check_display_last_univ_attended" <?php if($this->check_display_last_univ_attended) echo 'checked'; ?> id="check_display_last_univ_attended"></td>
+   	<td><input type="text" name="label_last_univ_att" value="<?php echo $this->label_last_univ_att; ?>"></td>
+   	<td></td>
+    </tr>
+    
+     <tr><td class="fieldTitle">ps person in charge </td>
+   	<td><input type="checkbox" name="check_display_person_charge" <?php if($this->check_display_person_charge) echo 'checked'; ?> id="check_display_person_charge"></td>
+   	<td><input type="text" name="label_person_charge" value="<?php echo $this->label_person_charge; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps specialty</td>
+   	<td><input type="checkbox" name="check_display_specialty" <?php if($this->check_display_specialty) echo 'checked'; ?> id="check_display_specialty"></td>
+   	<td><input type="text" name="label_ps_specialty" value="<?php echo $this->label_ps_specialty; ?>"></td>
+   	<td><a href="<?php echo $this->base_url;?>/admin/tutorspecialty" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps contract type</td>
+   	<td><input type="checkbox" name="check_display_contract_type" <?php if($this->check_display_contract_type) echo 'checked'; ?> id="check_display_contract_type"></td>
+   	<td><input type="text" name="label_ps_contract_type" value="<?php echo $this->label_ps_contract_type; ?>"></td>
+   	<td><a href="<?php echo $this->base_url;?>/admin/tutorcontract" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps custom field 1</td>
+   	<td><input type="checkbox" name="check_display_custom_field1" <?php if($this->check_display_custom_field1) echo 'checked'; ?> id="check_display_custom_field1"></td>
+   	<td><input type="text" name="label_ps_custom_field1" value="<?php echo $this->label_ps_custom_field1; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps custom field 2</td>
+   	<td><input type="checkbox" name="check_display_custom_field2" <?php if($this->check_display_custom_field2) echo 'checked'; ?> id="check_display_custom_field2"></td>
+   	<td><input type="text" name="label_ps_custom_field2" value="<?php echo $this->label_ps_custom_field2; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps custom field 3</td>
+   	<td><input type="checkbox" name="check_display_custom_field3" <?php if($this->check_display_custom_field3) echo 'checked'; ?> id="check_display_custom_field3"></td>
+   	<td><input type="text" name="label_ps_custom_field3" value="<?php echo $this->label_ps_custom_field3; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps marital status</td>
+   	<td><input type="checkbox" name="check_display_marital_status" <?php if($this->check_display_marital_status) echo 'checked'; ?> id="check_display_marital_status"></td>
+   	<td><input type="text" name="label_ps_marital_status" value="<?php echo $this->label_ps_marital_status; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps spouse name</td>
+   	<td><input type="checkbox" name="check_display_spouse_name" <?php if($this->check_display_spouse_name) echo 'checked'; ?> id="check_display_spouse_name"></td>
+   	<td><input type="text" name="label_ps_spouse_name" value="<?php echo $this->label_ps_spouse_name; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps exam mark</td>
+   	<td><input type="checkbox" name="check_display_exam_mark" <?php if($this->check_display_exam_mark) echo 'checked'; ?> id="check_display_exam_mark"></td>
+   	<td><input type="text" name="label_ps_exam_mark" value="<?php echo $this->label_ps_exam_mark; ?>"></td>
+   	<td></td>
+    </tr>
+    
+	<tr><td class="fieldTitle">ps ca mark</td>
+   	<td><input type="checkbox" name="check_display_ca_mark" <?php if($this->check_display_ca_mark) echo 'checked'; ?> id="check_display_ca_mark"></td>
+   	<td><input type="text" name="label_ps_ca_mark" value="<?php echo $this->label_ps_ca_mark; ?>"></td>
+   	<td></td>
+    </tr>
+    
+    <tr><td class="fieldTitle">ps credits</td>
+   	<td><input type="checkbox" name="check_display_credits" <?php if($this->check_display_credits) echo 'checked'; ?> id="check_display_credits"></td>
+   	<td><input type="text" name="label_ps_credits" value="<?php echo $this->label_ps_credits; ?>"></td>
+   	<td></td>
+    </tr>
+   
+	 </table>
+	<!-- TA: added/changed 7/18/2014 - END  -->
+   
+    </table>
+
+								</div>
+								<div class="rightdiv">
+									<div class="pad20"></div>
+									<br></br>
+									<input type="submit" name="update" value="Update Labels &raquo;" class="tsbutton green large">
+								</div>
+							<div class="clear"></div>	
+					<input type="hidden" name="action" id="action" value="savelabels">
+					</form>
+					<div class="clear"></div>
+					
+				</div>
+				<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+				<div class="clear"></div>
+			</div>
+		</div>
+	</body>
+</html>
