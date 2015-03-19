@@ -281,50 +281,57 @@ protected function sendData($data) {
 
     public function preDispatch()
     {
-    	require_once('models/table/User.php');
+        require_once('models/table/User.php');
 
-        	//add identity to view variables
-        	$auth = Zend_Auth::getInstance();
-        	$identity = null;
-        	if ($auth->hasIdentity() ) {
-        		//get ACLs and add to identity
-        		$acls = User::getACLs($auth->getIdentity()->id);
-        		$identity = $auth->getIdentity();
-        		$identity->acls = $acls;
-	            $auth->getStorage()->write($identity);
-        		$this->view->assign('identity',$identity);
+        //add identity to view variables
+        $auth = Zend_Auth::getInstance();
+        $identity = null;
+        if ($auth->hasIdentity()) {
+            //get ACLs and add to identity
+            $acls = User::getACLs($auth->getIdentity()->id);
+            $identity = $auth->getIdentity();
+            $identity->acls = $acls;
+            $auth->getStorage()->write($identity);
+            $this->view->assign('identity', $identity);
+        }
 
-  	}
+        //set up localization
+        //get country default locale, then check user settings
+        if (isset($_COOKIE['locale']) and array_key_exists($_COOKIE['locale'], ITechTranslate::getLanguages())) {
+            $locale = $_COOKIE['locale'];
+        }
+        else {
+            $locale = $this->_countrySettings['locale'];
+        }
+        if (!$locale) {
+            $locale = 'en_EN.UTF-8';
+        }
+        if ( $auth->hasIdentity() and $auth->getIdentity()->locale ) {
+            $locale = $auth->getIdentity()->locale;
+        }
 
-   	//set up localization
-   	//get country default locale, then check user settings
-   	if ( isset($_COOKIE['locale']) and array_key_exists($_COOKIE['locale'], ITechTranslate::getLanguages()))
-   		$locale = $_COOKIE['locale'];
-   	else
-   		$locale = $this->_countrySettings['locale'];
+        //set up localization
+        ITechTranslate::init($locale);
 
-	if ( !$locale )
-		$locale = 'en_EN.UTF-8';
+        // get Country-specific phrases for fields
+        self::$_translations = Translation::getAll();
+        $this->view->assign('translation', self::translations());
 
-   	if ( $auth->hasIdentity() and $auth->getIdentity()->locale )
-   		$locale = $auth->getIdentity()->locale;
+        //look for any status messages in the session and put the validation container in the view scope
+        $statusObj = ValidationContainer::instance();
+        if ( isset($_SESSION['status']) ) {
+            $statusObj->setStatusMessage($_SESSION['status']);
+            unset($_SESSION['status']);
+        }
+        $this->view->assign('status',$statusObj);
+    }
 
-  		//set up localization
-		ITechTranslate::init($locale);
-
-		// get Country-specific phrases for fields
-	  self::$_translations = Translation::getAll();
-		$this->view->assign('translation', self::translations());
-
-
-		//look for any status messages in the session and put the validation container in the view scope
-  		$statusObj = ValidationContainer::instance();
- 		if ( isset($_SESSION['status']) ) {
- 			$statusObj->setStatusMessage($_SESSION['status']);
- 			unset($_SESSION['status']);
-		}
-		$this->view->assign('status',$statusObj);
-     }
+    public function updateTranslations()
+    {
+        // get Country-specific phrases for fields
+        self::$_translations = Translation::getAll();
+        $this->view->assign('translation', self::translations());
+    }
 
     public function _getACLs() {
         $auth = Zend_Auth::getInstance();
