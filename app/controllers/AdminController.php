@@ -2922,11 +2922,109 @@ class AdminController extends UserController
 
     public function skillsmartChwPersonFieldsAction() {
 
-        $db = $this->dbfunc();
+        $labelOrder = array(
+            'label_last_name',
+            'label_first_name',
+            'label_ps_nationality',
+            'label_ps_national_id',
+            'label_ps_specialty',
+            'label_age',
+            'label_gender',
+            'label_ps_spouse_name',
+            'label_highest_qualification_achieved',
+            'label_ps_local_address',
+            'label_province',
+            'label_phone',
+            'label_email',
+            'label_ps_marital_status',
+            'label_list_of_modules',
+            '-Workplace-',
+            'label_facility_name',
+            'label_comments',
+            'label_ps_person_in_charge',
+            'label_commencing_date_for_workplace',
+            'label_end_date_for_workplace',
+            'label_name_of_employer',
+            'label_address_of_employer',
+            'label_telephone_number',
+            'label_name_of_contact_person',
+            'label_email_address',
+            '-Qualification-',
+            'label_reason_for_enrollment',
+            'label_ps_custom_field_2',
+            'label_ps_custom_field_3',
+            'label_reason_for_separation',
+            'label_date_of_enrollment',
+            'label_date_of_separation',
+            'label_date_of_final_integrated_external_assessment',
+            'label_ps_program_enrolled_in',
+            'label_ps_last_university_attended',
+            'label_contact_number_of_assessment_centre_site',
+            'label_ps_religious_denomination',
+            '-Qualified Learners-',
+            'label_date_certificate_was_received_from_the_aqp',
+            'label_certificate_number',
+            'label_date_learner_received_certificate',
+        );
 
-        $q = "SELECT key_phrase, phrase FROM translation";
+        $labelNames = array(
+            'label_last_name'                                    => 'Last Name',
+            'label_first_name'                                   => 'First Name',
+            'label_ps_nationality'                               => 'ps nationality',
+            'label_ps_national_id'                               => 'ps national id',
+            'label_ps_specialty'                                 => 'ps specialty',
+            'label_age'                                          => 'Age',
+            'label_gender'                                       => 'Gender',
+            'label_ps_spouse_name'                               => 'ps spouse name',
+            'label_highest_qualification_achieved'               => 'Highest Qualification Achieved',
+            'label_ps_local_address'                             => 'ps local address',
+            'label_province'                                     => 'Province',
+            'label_phone'                                        => 'Phone',
+            'label_email'                                        => 'Email',
+            'label_ps_marital_status'                            => 'ps marital status',
+            'label_list_of_modules'                              => 'List of Modules',
+            'label_facility_name'                                => 'Facility Name',
+            'label_comments'                                     => 'Comments',
+            'label_ps_person_in_charge'                          => 'ps person in charge',
+            'label_commencing_date_for_workplace'                => 'Commencing Date for Workplace',
+            'label_end_date_for_workplace'                       => 'End Date for Workplace',
+            'label_name_of_employer'                             => 'Name of Employer',
+            'label_address_of_employer'                          => 'Address of Employer',
+            'label_telephone_number'                             => 'Telephone Number',
+            'label_name_of_contact_person'                       => 'Name of Contact Person',
+            'label_email_address'                                => 'Email Address',
+            'label_reason_for_enrollment'                        => 'Reason for Enrollment',
+            'label_ps_custom_field_2'                            => 'ps custom field 2',
+            'label_ps_custom_field_3'                            => 'ps custom field 3',
+            'label_reason_for_separation'                        => 'Reason for Separation',
+            'label_date_of_enrollment'                           => 'Date of Enrollment',
+            'label_date_of_separation'                           => 'Date of Separation',
+            'label_date_of_final_integrated_external_assessment' => 'Date of Final Integrated External Assessment',
+            'label_ps_program_enrolled_in'                       => 'ps program enrolled in',
+            'label_ps_last_university_attended'                  => 'ps last university attended',
+            'label_contact_number_of_assessment_centre_site'     => 'Contact Number of Assessment Centre/Site',
+            'label_ps_religious_denomination'                    => 'ps religious denomination',
+            'label_date_certificate_was_received_from_the_aqp'   => 'Date Certificate was Received From the AQP',
+            'label_certificate_number'                           => 'Certificate Number',
+            'label_date_learner_received_certificate'            => 'Date Learner Received Certificate',
+        );
 
+        if ($this->getRequest()->isPost()) {
+            $params = $this->getAllParams();
 
+            require_once('models/table/Translation.php');
+
+            $tranTable = new Translation();
+            foreach($params as $k => $v) {
+                if (strpos($k, 'label_') === 0) {
+                    $tranTable->update(array('phrase' => $v), "key_phrase = '{$labelNames[$k]}'");
+                }
+            }
+            $this->updateTranslations();
+        }
+
+        $this->view->assign('labelOrder', $labelOrder);
+        $this->view->assign('labelNames', $labelNames);
     }
 
 	public function employeeSettingsAction()
