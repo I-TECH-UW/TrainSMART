@@ -3015,9 +3015,21 @@ class AdminController extends UserController
             require_once('models/table/Translation.php');
 
             $tranTable = new Translation();
+            $translations = $tranTable->getAll();
+
             foreach($params as $k => $v) {
                 if (strpos($k, 'label_') === 0) {
-                    $tranTable->update(array('phrase' => $v), "key_phrase = '{$labelNames[$k]}'");
+                    try {
+                        if (!array_key_exists($labelNames[$k], $translations)) {
+                            // This key_phrase is not in the translation table, so add it
+                            $tranTable->insert(array('phrase' => $v, 'key_phrase' => $labelNames[$k]));
+                        } else {
+                            $tranTable->update(array('phrase' => $v), "key_phrase = '{$labelNames[$k]}'");
+                        }
+                    }
+                    catch(Zend_Exception $e) {
+                        error_log($e);
+                    }
                 }
             }
             $this->updateTranslations();
