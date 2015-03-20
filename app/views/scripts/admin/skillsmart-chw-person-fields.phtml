@@ -60,6 +60,11 @@ ob_end_clean();
                         <tr><th>Field</th><th>Display</th><th>Label</th><th>Options</th></tr>
                         </thead>
                         <?php foreach($this->labelOrder as $label) {
+                            $addEditLink = '';
+                            if ($label[0] === '.') {
+                                $addEditLink = '<a href="' . $this->base_url . $this->dropdownLinks[$label] . '" onclick="return submitAdminForm(this);">Add/Edit</a>';
+                                $label = trim($label, ".");
+                            }
                             $key_phrase = $this->labelNames[$label];
                             if ($label[0] === '-') { ?>
                                 <tr><td colspan="4">&nbsp;</td></tr>
@@ -69,7 +74,7 @@ ob_end_clean();
                                 <tr><td class="fieldTitle"><?php echo $key_phrase;?></td>
                                     <td></td>
                                     <td><input type="text" name="<?php echo $label;?>" value="<?php echo t($key_phrase); ?>"></td>
-                                    <td></td>
+                                    <td><?php echo $addEditLink;?></td>
                                 </tr>
                             <?php }?>
 

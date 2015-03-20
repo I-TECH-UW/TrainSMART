@@ -2505,6 +2505,14 @@ class AdminController extends UserController
 		$this->view->assign("header","Nationalities");
 	}
 
+    public function priorLearningAction() {
+
+    }
+
+    public function qualificationsAction() {
+
+    }
+
 	public function preserviceJoindropreasonsAction(){
 		$helper = new Helper();
 
@@ -2925,19 +2933,19 @@ class AdminController extends UserController
         $labelOrder = array(
             'label_last_name',
             'label_first_name',
-            'label_ps_nationality',
+            '.label_ps_nationality.',
             'label_ps_national_id',
-            'label_ps_specialty',
+            '.label_ps_specialty.',
             'label_age',
             'label_gender',
             'label_ps_spouse_name',
-            'label_highest_qualification_achieved',
+            '.label_highest_qualification_achieved.',
             'label_ps_local_address',
             'label_province',
             'label_phone',
             'label_email',
             'label_ps_marital_status',
-            'label_list_of_modules',
+            '.label_list_of_modules.',
             '-Workplace-',
             'label_facility_name',
             'label_comments',
@@ -2950,21 +2958,32 @@ class AdminController extends UserController
             'label_name_of_contact_person',
             'label_email_address',
             '-Qualification-',
-            'label_reason_for_enrollment',
+            '.label_reason_for_enrollment.',
             'label_ps_custom_field_2',
             'label_ps_custom_field_3',
-            'label_reason_for_separation',
+            '.label_reason_for_separation.',
             'label_date_of_enrollment',
             'label_date_of_separation',
             'label_date_of_final_integrated_external_assessment',
-            'label_ps_program_enrolled_in',
+            '.label_ps_program_enrolled_in.',
             'label_ps_last_university_attended',
             'label_contact_number_of_assessment_centre_site',
-            'label_ps_religious_denomination',
+            '.label_ps_religious_denomination.',
             '-Qualified Learners-',
             'label_date_certificate_was_received_from_the_aqp',
             'label_certificate_number',
             'label_date_learner_received_certificate',
+        );
+
+        $dropdownLinks = array(
+            '.label_ps_nationality.'                 => '/admin/preservice-nationalities',
+            '.label_ps_specialty.'                   => '/admin/tutorspecialty',
+            '.label_highest_qualification_achieved.' => '/admin/qualifications',
+            '.label_list_of_modules.'                => '/admin/prior-learning',
+            '.label_reason_for_enrollment.'          => '/admin/preservice-joindropreasons',
+            '.label_reason_for_separation.'          => '/admin/preservice-joindropreasons',
+            '.label_ps_program_enrolled_in.'         => '/admin/preservice-cadres',
+            '.label_ps_religious_denomination.'      => '/admin/preservice-religion',
         );
 
         $labelNames = array(
@@ -3037,6 +3056,7 @@ class AdminController extends UserController
 
         $this->view->assign('labelOrder', $labelOrder);
         $this->view->assign('labelNames', $labelNames);
+        $this->view->assign('dropdownLinks', $dropdownLinks);
     }
 
 	public function employeeSettingsAction()
