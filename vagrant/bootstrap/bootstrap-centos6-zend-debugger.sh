@@ -17,7 +17,7 @@ mv /home/vagrant/selinux-config /etc/selinux/config
 yum update -y
 yum install yum-plugin-replace php php-devel php-mysql mysql-server mysql-devel git-core dos2unix telnet nano -y
 
-yum replace mysql-libs --replace-with mysql56-libs -y
+yum replace mysql-libs --replace-with mysql56u-libs -y
 yum replace php --replace-with php53u -y
 
 # install the Zend Debugger for php 5.3
