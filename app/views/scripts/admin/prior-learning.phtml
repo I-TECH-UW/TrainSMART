@@ -134,10 +134,8 @@ ob_end_clean();
     <p class="validateTips">All form fields are required.</p>
     <form method="post">
         <fieldset>
-            <label for="name">Language</label>
+            <label for="name">Prior Learning Module Name</label>
             <input type="text" name="title" id="title" class="text ui-widget-content ui-corner-all" />
-            <label for="name">Abbreviation</label>
-            <input type="text" name="abbr" id="abbr" class="text ui-widget-content ui-corner-all" maxlength="2" />
         </fieldset>
         <input type="hidden" name="currentid" id="currentid" class="text ui-widget-content ui-corner-all" />
     </form>
@@ -156,8 +154,7 @@ ob_end_clean();
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Title</th>
-                        <th>Abbreviation</th>
+                        <th>Prior Learning Module</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -165,14 +162,13 @@ ob_end_clean();
                         <tr class="GradeA" style="cursor : pointer;" onclick="edititem('<?php echo $lookup['id']; ?>','<?php echo ($lookup['language']); ?>','<?php echo ($lookup['abbreviation']); ?>');">
                             <td><?php echo $lookup['id']; ?></td>
                             <td class=""><?php echo $lookup['language']; ?></td>
-                            <td class=""><?php echo $lookup['abbreviation']; ?></td>
                         </tr>
                     <?php } ?>
                     </tbody>
                 </table>
                 <div style="text-align : right;">
                     <br>
-                    <input type="submit" name="update" id="update" value="Add language" class="tsbutton green large">
+                    <input type="submit" name="update" id="update" value="Add Module" class="tsbutton green large">
                 </div>
             </div>
 
