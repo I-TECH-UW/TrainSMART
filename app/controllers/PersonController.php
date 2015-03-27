@@ -95,13 +95,25 @@ class PersonController extends ReportFilterHelpers {
 	}
 
 	public function viewAction() {
+	   
+	    
+	    //file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'person cont viewAction 99 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	    //var_dump("this->base_url=", $this->base_url,"END");
+	    //var_dump("_SERVER ['SERVER_NAME']=", $_SERVER ['SERVER_NAME'] . $_SERVER ['REQUEST_URI'],"END");
+	    //echo "zend_version=" . zend_version() . PHP_EOL;
+	    //echo "phpversion=" . phpversion() . PHP_EOL;
+	    //var_dump ($this->serverUrl());
+	    //var_dump("facility_data=",$this->facility_data[0],"END");
+	    //$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	    	  
+	    
 		if (! $this->hasACL ( 'view_people' ) and ! $this->hasACL ( 'edit_people' )) {
 			$this->doNoAccessError ();
 		}
 
 		if ($this->hasACL ( 'edit_people' )) {
 			//redirect to edit mode
-			$this->_redirect ( str_replace ( 'view', 'edit', 'http://' . $_SERVER ['SERVER_NAME'] . $_SERVER ['REQUEST_URI'] ) );
+			$this->_redirect ( str_replace ( 'view', 'edit', 'http://' . $_SERVER ['SERVER_NAME'] . ':' . $_SERVER ['SERVER_PORT'] . $_SERVER ['REQUEST_URI'] ) );
 		}
 
 		$this->view->assign ( 'mode', 'view' );

@@ -79,31 +79,31 @@ if ( $this->isLoggedIn() ) {
 				$navMain['reports']['../']                           = '---------------';
 			}
 
-			$navMain['reports']['trainingByParticipants']            = t('Training Reports');
-			$navMain['reports']['participantsByCategory/cat/pepfar'] = t('Participant Reports');
+			$navMain['reports']['training-by-participants']            = t('Training Reports');
+			$navMain['reports']['participants-by-category/cat/pepfar'] = t('Participant Reports');
 			if ($this->setting['display_budget_code']) {
-				$navMain['reports']['budgetcode']                    = t('Budget Code Reports');
+				$navMain['reports']['budget-code']                    = t('Budget Code Reports');
 			}
 			$navMain['reports']['trainers']                          = t('Trainer Reports');
-			$navMain['reports']['trainingByFacilityCount']           = t('Facility Reports');
-			$navMain['reports']['needsByPersonName']                 = t('Assessment Reports');
+			$navMain['reports']['training-by-facility-count']           = t('Facility Reports');
+			$navMain['reports']['needs-by-person-name']                 = t('Assessment Reports');
 			$navMain['reports']['roster']                            = t('Roster Reports');
 			$navMain['reports']['evaluations']                       = t('Evaluations Reports');
 			$navMain['reports']['data']                              = t('Data Downloads');
 			//  '' =>
 
 			if ( !$this->setting['display_training_recommend'] ) {
-				unset($navMain['reports']['needsByPersonName']);
+				unset($navMain['reports']['needs-by-person-name']);
 			}
 
 			if ( $this->hasACL('pre_service')) {
 				$navMain['reports']['..//']                          = '---------------';
-				$navMain['reports']['psStudentsTrained']			= t('Student Reports');
-				$navMain['reports']['psCourseByName']				= t('Course Reports');
-				$navMain['reports']['psCohortByParticipantCount']	= t('Cohort Reports');
-				$navMain['reports']['psInstitutionInformation']		= t('Institution Reports');
-				$navMain['reports']['psTutorByName']				= t('Tutor Reports');
-				$navMain['reports']['psFacilityReport']				= t('Facility Report');
+				$navMain['reports']['ps-students-trained']			= t('Student Reports');
+				$navMain['reports']['ps-course-by-name']				= t('Course Reports');
+				$navMain['reports']['ps-cohort-by-participant-count']	= t('Cohort Reports');
+				$navMain['reports']['ps-institution-information']		= t('Institution Reports');
+				$navMain['reports']['ps-tutor-by-name']				= t('Tutor Reports');
+				$navMain['reports']['ps-facility-report']				= t('Facility Report');
 			}
 		}
 

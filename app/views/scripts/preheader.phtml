@@ -96,12 +96,12 @@ if ( $this->isLoggedIn() ) {
 	if ( $this->hasACL('view_create_reports')) {
 		//TA: added 7/25/2014 : automatic label changes
 		$navMain['reports']['index']  =  t('Reports');
-		$navMain['reports']['psStudentsTrained']			= t('Student Reports');
-		$navMain['reports']['psCourseByName']				= t('Course Reports');
-		$navMain['reports']['psCohortByParticipantCount']	= t('Cohort Reports');
-		$navMain['reports']['psInstitutionInformation']		= $this->translation['ps institution']. t(' Reports');
-		$navMain['reports']['psTutorByName']				= $this->translation['ps tutor']. t(' Reports');
-		$navMain['reports']['psFacilityReport']             = t('Facility Report');
+		$navMain['reports']['ps-students-trained']			= t('Student Reports');
+		$navMain['reports']['ps-course-by-name']				= t('Course Reports');
+		$navMain['reports']['ps-cohort-by-participant-count']	= t('Cohort Reports');
+		$navMain['reports']['ps-institution-information']		= $this->translation['ps institution']. t(' Reports');
+		$navMain['reports']['ps-tutor-by-name']				= $this->translation['ps tutor']. t(' Reports');
+		$navMain['reports']['ps-facility-report']             = t('Facility Report');
 	}
 
 	// PRE-SERVICE LINK

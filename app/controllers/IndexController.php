@@ -48,7 +48,7 @@ class IndexController extends ITechController {
 		$rowsArray = $db->fetchAll ( $sql );
 		$NIMART = 0;
 		foreach($rowsArray as $key => $row) {
-			$NIMARTsplit=split("§",$rowsArray[$key]['comments']);
+			$NIMARTsplit=preg_split("/§/",$rowsArray[$key]['comments']);
 			if(strlen($NIMARTsplit[21])>0) {
 				if($NIMARTsplit[21] = "Nurse Initiating ART") {
 					$NIMART = $NIMART + 1;

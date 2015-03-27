@@ -21,6 +21,7 @@ class Globals {
 	public function __construct() {
 
 		require_once('settings.php');
+		
 		// PATH_SEPARATOR =  ; for windows, : for *nix
 		$iReturn = ini_set( 'include_path',
 					(Globals::$BASE_PATH).PATH_SEPARATOR.

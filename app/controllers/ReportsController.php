@@ -1186,7 +1186,7 @@ echo $sql . "<br>";
 		return $this->trainingReport ();
 	}
 
-	public function trainingbyParticipantsAction() {
+	public function trainingByParticipantsAction() {
 		$this->view->assign ( 'mode', 'count' );
 
 		return $this->trainingReport ();

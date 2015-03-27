@@ -352,26 +352,14 @@ class FacilityController extends ReportFilterHelpers {
 				array () 
 		) ); // sponsor rows or an empty row for the template to work
 		
-		//TA:17: 09/04/2013 
-		require_once('views/helpers/EditTableHelper.php');
-		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
-		//$rows = $db->fetchAll ("SELECT id, name, DATE_FORMAT(date, '%m/%y') as date, consumption, stock_out FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp group by name");
-		// display the 2 most recent commodities based on name
-// 		$rows = $db->fetchAll ("select temp3.id, commodity_name_option.commodity_name as name, DATE_FORMAT(date, '%m/%y') as date, consumption, stock_out, temp3.created_by, temp3.modified_by from " .
-//  		"(SELECT * FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp group by name " .
-// 		"union " .
-//  		"SELECT * FROM (SELECT *  from commodity where facility_id= ". $id . " and id not in " .
-//  		"(SELECT id FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp2 group by name) " .
-//  		"order by id desc) as temp group by name) as temp3 INNER JOIN commodity_name_option
-// 				ON commodity_name_option.id=temp3.name order by temp3.name");
-		$rows = $db->fetchAll ("select temp3.id, commodity_name_option.commodity_name as name, DATE_FORMAT(date, '%m/%y') as date, consumption, stock_out, temp3.created_by, temp3.modified_by from " .
-				"(SELECT * FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp group by name_id " .
-				"union " .
-				"SELECT * FROM (SELECT *  from commodity where facility_id= ". $id . " and id not in " .
-				"(SELECT id FROM (SELECT *  from commodity where facility_id=". $id . " order by id desc) as temp2 group by name_id) " .
-				"order by id desc) as temp group by name_id) as temp3 INNER JOIN commodity_name_option
-				ON commodity_name_option.id=temp3.name_id order by temp3.name_id");
-		$noDelete = array();
+        //TA:17: 09/04/2013 
+        require_once('views/helpers/EditTableHelper.php');
+        $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+        $rows = $db->fetchAll ("select commodity.id, commodity_name_option.commodity_name as name, DATE_FORMAT(date, '%m/%y') as date, 
+        consumption, stock_out, commodity.created_by, commodity.modified_by from commodity
+        join commodity_name_option on commodity_name_option.id = commodity.name_id
+        where commodity.facility_id=". $id . " and date > DATE_SUB(now(), INTERVAL 12 MONTH) order by commodity.date desc, commodity_name_option.commodity_name");
+        $noDelete = array();
 		$customColDefs = array();
 		foreach ($rows as $i => $row){ // lets add some data to the resultset to show in the EditTable
 			if($row['created_by'] === '0' || $row['modified_by'] === '0'){
@@ -626,7 +614,7 @@ class FacilityController extends ReportFilterHelpers {
 		if ($id = $this->getSanParam ( 'id' )) {
 			if ($this->hasACL ( 'edit_people' )) {
 				// redirect to edit mode
-				$this->_redirect ( str_replace ( 'view', 'edit', 'http://' . $_SERVER ['SERVER_NAME'] . $_SERVER ['REQUEST_URI'] ) );
+				$this->_redirect ( str_replace ( 'view', 'edit', 'http://' . $_SERVER ['SERVER_NAME'] . ':' . $_SERVER ['SERVER_PORT'] . $_SERVER ['REQUEST_URI'] ) );
 			}
 			
 			$facility = new Facility ();

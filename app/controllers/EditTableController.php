@@ -38,7 +38,6 @@ class EditTableController extends ITechController { //Zend_Controller_Action
       parent::__construct($parentController->getRequest(), $parentController->getResponse());
   }
 
-
   public function init()
   {
   }
