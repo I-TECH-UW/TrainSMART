@@ -480,7 +480,7 @@ foreach($this->results as $row) {
 	if ( isset($row['id']) and $this->criteria['showPhone']){
 		if (! array_key_exists('phone', $row))
 			$row['phone'] = t('(no phone)');
-			echo ',"'. (isset ($row['phone']) ? $row['phone'] : "N/A") .'"';
+			echo ',"'. (isset ($row['phone']) ? $row['phone'] : t("N/A")) .'"';
 		}
 	if ( isset($row['id']) )
 		echo ',"'.$row['training_start_date'].'"';

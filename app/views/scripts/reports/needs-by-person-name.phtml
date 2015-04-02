@@ -182,9 +182,9 @@ if ( $this->mode == 'count' )
   	<div  class="leftBorder">
 	<select id="training_gender" name="training_gender" >
 		<option value="">--<?php tp('All');?>--</option>
-		<option value="male" <?php echo (@$this->criteria['training_gender'] == 'male'? 'SELECTED':''); ?> >male</option>
-		<option value="female"  <?php echo (@$this->criteria['training_gender'] == 'female'? 'SELECTED':''); ?> >female</option>
-		<option value="na"  <?php echo (@$this->criteria['training_gender'] == 'na'? 'SELECTED':''); ?> >na</option>
+		<option value="male" <?php echo (@$this->criteria['training_gender'] == 'male'? 'SELECTED':''); ?> ><?php echo t('Male') ?></option>
+		<option value="female"  <?php echo (@$this->criteria['training_gender'] == 'female'? 'SELECTED':''); ?> ><?php echo t('Female') ?></option>
+		<option value="na"  <?php echo (@$this->criteria['training_gender'] == 'na'? 'SELECTED':''); ?> ><?php echo t('N/A') ?></option>
 	</select></div></div>
  <?php if ($this->setting['display_people_active']) { ?>
 	<div class="fieldLabel" id="training_active_lbl"><?php echo (@$this->translation['Is Active']); ?></div>

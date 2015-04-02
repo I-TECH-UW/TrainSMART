@@ -400,12 +400,12 @@ YAHOO.util.Event.onDOMReady(function() {
  <?php } ?>
 
  <?php if ($this->setting['display_mod_skillsmart']) { ?>
-	<div class="fieldLabel"><label for="professional_reg_number"><?php echo @$this->translation['Professional Registration Number'] != '' ? @$this->translation['Professional Registration Number'] : 'Professional Registration Number'; ?></label></div>
+	<div class="fieldLabel"><label for="professional_reg_number"><?php echo @$this->translation['Professional Registration Number'] != '' ? @$this->translation['Professional Registration Number'] : t('Professional Registration Number'); ?></label></div>
 	<div class="fieldInput" style="clear:none;"><input type="text" size="24" id="professional_reg_number" name="professional_reg_number" value="<?php echo ($this->person['professional_reg_number'] != '') ? $this->person['professional_reg_number'] : ''; ?>" /></div>
  <?php } ?>
 
  <?php if ($this->setting['display_mod_skillsmart']) { ?>
-	<div class="fieldLabel"><label for="nationality_id"><?php echo @$this->translation['Nationality'] != '' ? @$this->translation['Nationality'] : 'Nationality'; ?></label></div>
+	<div class="fieldLabel"><label for="nationality_id"><?php echo @$this->translation['Nationality'] != '' ? @$this->translation['Nationality'] : t('Nationality'); ?></label></div>
  <div class="fieldInput" style="clear:none;">
    <select id="nationality_id" name="nationality_id">
      <option value="0"><?php echo t('Select...'); ?></option>

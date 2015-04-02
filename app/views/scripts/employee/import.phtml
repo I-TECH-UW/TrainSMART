@@ -22,7 +22,7 @@ print ScriptContainer::$instance->renderJSHead();
       <div class="fieldIndent">
         <div class="fieldLabel"><?php tp('File to upload');?></div><input type="file" name="upload" /><br>
           <div class="fieldLabel"><?php tp('Max file upload size'); print ' '; print ini_get('upload_max_filesize')?></div>&nbsp;</div>
-        <div class="fieldLabel"><input type="submit" class="submitArrow" name="go" value="Continue" /></div>&nbsp;
+        <div class="fieldLabel"><input type="submit" class="submitArrow" name="go" value="<?php tp('Continue');?>" /></div>&nbsp;
         <br/><br/><br/>
         </div>
       </form>

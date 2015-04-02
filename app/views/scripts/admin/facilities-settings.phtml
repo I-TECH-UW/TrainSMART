@@ -35,39 +35,39 @@ ob_end_clean();
 			<div id="navAdmin"><?php echo $nav;?></div>
 
 			<div id="contentAdmin">
-				<h1><?php echo $this->pageTitle; ?></h1>
+				<h1><?php echo t($this->pageTitle); ?></h1>
 
 			<table class="settings">
 				<thead>
-					<tr><th>Field</th><th>Display</th><th>Label</th><th>Options</th></tr>
+					<tr><th><?php echo t('Field');?></th><th><?php echo t('Display');?></th><th><?php echo t('Label');?></th><th><?php echo t('Options');?></th></tr>
 				</thead>
-				<tr><td class="fieldTitle">Facility</td>
+				<tr><td class="fieldTitle"><?php echo t('Facility');?></td>
 					<td></td>
 					<td><input type="text" name="label_facility" value="<?php echo $this->label_facility; ?>"></td>
 					<td></td>
 				</tr>
-				<tr><td class="fieldTitle">Facility Types</td>
+				<tr><td class="fieldTitle"><?php echo t('Facility Types');?></td>
 					<!-- TA:17: 09/03/2014 -->
 					<td><input type="checkbox" name="check_facility_type" <?php if($this->check_facility_type) echo 'checked'; ?> id="check_facility_type"></td>			
 					<td></td>
-					<td><a href="<?php echo $this->base_url;?>/admin/facilities-types" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+					<td><a href="<?php echo $this->base_url;?>/admin/facilities-types" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit');?></a></td>
 				</tr>
-				<tr><td class="fieldTitle">Facility Sponsors</td>
+				<tr><td class="fieldTitle"><?php echo t('Facility Sponsors');?></td>
 					<td><input type="checkbox" name="check_display_sponsor" <?php if($this->check_display_sponsor) echo 'checked'; ?> id="check_display_sponsor"></td>
 					<td></td>
-					<td><a href="<?php echo $this->base_url;?>/admin/facilities-sponsors" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+					<td><a href="<?php echo $this->base_url;?>/admin/facilities-sponsors" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit');?></a></td>
 				</tr>
-				<tr><td class="fieldTitle">Allow Multiple Facility Sponsors</td>
+				<tr><td class="fieldTitle"><?php echo t('Allow Multiple Facility Sponsors');?></td>
 					<td></td>
 					<td></td>
-					<td><input type="checkbox" name="check_multi_sponsors" <?php if($this->check_multi_sponsors) echo 'checked'; ?> id="check_multi_sponsors"><label for="check_multi_sponsors">Enabled</label></td>
+					<td><input type="checkbox" name="check_multi_sponsors" <?php if($this->check_multi_sponsors) echo 'checked'; ?> id="check_multi_sponsors"><label for="check_multi_sponsors"><?php echo t('Enabled');?></label></td>
 				</tr>
-				<tr><td class="fieldTitle">Sponsor Dates</td>
+				<tr><td class="fieldTitle"><?php echo t('Sponsor Dates');?></td>
 					<td><input type="checkbox" name="check_display_dates" <?php if($this->check_display_dates) echo 'checked'; ?> id="check_display_dates"></td>
 					<td><input type="text" name="label_sponsor_date" value="<?php echo $this->label_sponsor_date; ?>"></td>
-					<td><input type="checkbox" name="check_require_dates" <?php if($this->check_require_dates) echo 'checked'; ?> id="check_require_dates"><label for="check_require_dates">Required</label></td>
+					<td><input type="checkbox" name="check_require_dates" <?php if($this->check_require_dates) echo 'checked'; ?> id="check_require_dates"><label for="check_require_dates"><?php echo t('Required');?></label></td>
 				</tr>
-				<tr><td class="fieldTitle">Postal Code</td>
+				<tr><td class="fieldTitle"><?php echo t('Postal Code');?></td>
 					<td><input type="checkbox" name="check_display_postal" <?php if($this->check_display_postal) echo 'checked'; ?> id="check_display_postal"></td>
 					<td></td>
 					<td></td>
@@ -75,95 +75,95 @@ ob_end_clean();
 				
 				<!-- TA:17: 09/03/2014 START-->
 				<tr>
-								<td class="fieldTitle">Address</td>
+								<td class="fieldTitle"><?php echo t('Address');?></td>
 								<td><input type="checkbox" name="check_facility_address" <?php if($this->check_facility_address) echo 'checked'; ?> id="check_facility_address"></td>
 								<td></td>
 								<td></td>
 				</tr>
 				<tr>
-								<td class="fieldTitle">City</td>
+								<td class="fieldTitle"><?php echo t('City');?></td>
 								<td><input type="checkbox" name="check_facility_city" <?php if($this->check_facility_city) echo 'checked'; ?> id="check_facility_city"></td>
 								<td></td>
 								<td></td>
 				</tr>
 				<tr>
-								<td class="fieldTitle">Phone</td>
+								<td class="fieldTitle"><?php echo t('Phone');?></td>
 								<td><input type="checkbox" name="check_facility_phone" <?php if($this->check_facility_phone) echo 'checked'; ?> id="check_facility_phone"></td>
 								<td></td>
 								<td></td>
 				</tr>
 				<tr>
-								<td class="fieldTitle">Fax</td>
+								<td class="fieldTitle"><?php echo t('Fax');?></td>
 								<td><input type="checkbox" name="check_facility_fax" <?php if($this->check_facility_fax) echo 'checked'; ?> id="check_facility_fax"></td>
 								<td></td>
 								<td></td>
 				</tr>
 				<!-- TA:17: 09/03/2014 END-->
 				
-				<tr><td class="fieldTitle">Latitude and Longitude</td>
+				<tr><td class="fieldTitle"><?php echo t('Latitude and Longitude');?></td>
 					<td><input type="checkbox" name="check_display_lat_long" <?php if($this->check_display_lat_long) echo 'checked'; ?> id="check_display_lat_long"></td>
 					<td></td>
 					<td></td>
 				</tr>
-				<tr><td class="fieldTitle">Custom field 1</td>
+				<tr><td class="fieldTitle"><?php echo t('Custom field');?> 1</td>
     			<td><input type="checkbox" name="check_facility_custom1" <?php if($this->check_facility_custom1) echo 'checked'; ?> id="check_facility_custom1"></td>
     			<td><input type="text" name="label_facility_custom1" value="<?php echo $this->label_facility_custom1; ?>"></td>
     			<td></td>
 				 </tr>
-				<tr><td class="fieldTitle">Comments</td>
+				<tr><td class="fieldTitle"><?php echo t('Comments');?></td>
 				<!-- TA:17: 09/03/2014 START-->
 					<td><input type="checkbox" name="check_facility_comments" <?php if($this->check_facility_comments) echo 'checked'; ?> id="check_facility_comments"></td>
 					<td><input type="text" name="label_comments" value="<?php echo $this->label_comments; ?>"></td>
 					<td></td>
 				</tr>
-				<tr><td class="fieldTitle">Approval Mod</td>
+				<tr><td class="fieldTitle"><?php echo t('Facility Approval');?></td>
 					<td></td>
 					<td></td>
-					<td><input type="checkbox" name="check_approval_mod" <?php if($this->check_approval_mod) echo 'checked'; ?> id="check_approval_mod"><label for="check_approval_mod">Enabled</label></td>
+					<td><input type="checkbox" name="check_approval_mod" <?php if($this->check_approval_mod) echo 'checked'; ?> id="check_approval_mod"><label for="check_approval_mod"><?php echo t('Enabled');?></label></td>
 				</tr>
 				
 				<!-- TA:17: 09/19/2014 START -->
-				<tr><td class="fieldTitle">Commodity Names</td>
+				<tr><td class="fieldTitle"><?php echo t('Commodity Names');?></td>
 					<td></td>			
 					<td></td>
-					<td><a href="<?php echo $this->base_url;?>/admin/commodityname" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+					<td><a href="<?php echo $this->base_url;?>/admin/commodityname" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit');?></a></td>
 				</tr>
 				<!-- TA:17: 09/19/2014 END -->
 				
 				<!-- TA:17:12: 10/03/2014 START -->
-				<tr><td class="fieldTitle">Commodity Types</td>
+				<tr><td class="fieldTitle"><?php echo t('Commodity Types');?></td>
 					<td></td>			
 					<td></td>
-					<td><a href="<?php echo $this->base_url;?>/admin/commoditytype" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+					<td><a href="<?php echo $this->base_url;?>/admin/commoditytype" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit');?></a></td>
 				</tr>
 				<!-- TA:17:12: 10/03/2014 END -->
 				
 				<!-- TA:17: 10/02/2014 START -->
-				<tr><td class="fieldTitle">Commodity Table</td>
+				<tr><td class="fieldTitle"><?php echo t('Commodity Table');?></td>
 					<td><input type="checkbox" name="check_facility_commodity" <?php if($this->check_facility_commodity) echo 'checked'; ?> id="check_facility_commodity"></td>			
 					<td></td>
 					<td></td>
 				</tr>
 				
-				<tr><td class="fieldTitle">Commodity Table Column: Commodity Name</td>
+				<tr><td class="fieldTitle"><?php echo t('Commodity Table Column: Commodity Name');?></td>
 					<td></td>			
 					<td><input type="text" name="label_facility_commodity_table_col_name" value="<?php echo $this->label_facility_commodity_table_col_name; ?>"></td>
 					<td></td>
 				</tr>
 				
-				<tr><td class="fieldTitle">Commodity Table Column: Date</td>
+				<tr><td class="fieldTitle"><?php echo t('Commodity Table Column: Date');?></td>
 					<td></td>			
 					<td><input type="text" name="label_facility_commodity_table_col_date" value="<?php echo $this->label_facility_commodity_table_col_date; ?>"></td>
 					<td></td>
 				</tr>
 				
-				<tr><td class="fieldTitle">Commodity Table Column: Consumption</td>
+				<tr><td class="fieldTitle"><?php echo t('Commodity Table Column: Consumption');?></td>
 					<td></td>			
 					<td><input type="text" name="label_facility_commodity_table_col_consumption" value="<?php echo $this->label_facility_commodity_table_col_consumption; ?>"></td>
 					<td></td>
 				</tr>
 				
-				<tr><td class="fieldTitle">Commodity Table Column: Out of Stock</td>
+				<tr><td class="fieldTitle"><?php echo t('Commodity Table Column: Out of Stock');?></td>
 					<td></td>			
 					<td><input type="text" name="label_facility_commodity_table_col_outofstock" value="<?php echo $this->label_facility_commodity_table_col_outofstock; ?>"></td>
 					<td></td>
@@ -173,7 +173,7 @@ ob_end_clean();
 			</table>
 
 			<input type="hidden" name="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>">
-			<input type="submit" value="Save" name="saveonly" class="submitNoArrow" onclick="document.adminForm.redirect.value=''" style="margin-right:1em;">
+			<input type="submit" value="<?php echo t('Save');?>" name="saveonly" class="submitNoArrow" onclick="document.adminForm.redirect.value=''" style="margin-right:1em;">
 			</form>
 
 

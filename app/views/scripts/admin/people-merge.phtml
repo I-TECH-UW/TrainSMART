@@ -34,7 +34,7 @@ print ScriptContainer::$instance->renderJSHead();
     <div id="navAdmin"><?php echo $nav;?></div>
     
     <div id="contentAdmin">
-	    <h1><?php echo $this->pageTitle; ?></h1>
+	    <h1><?php echo t($this->pageTitle); ?></h1>
 	    <br/>
 	    
 	    <?php if(isset($formPrefix)) echo $formPrefix . '<br/><br/>'; ?> 

@@ -29,7 +29,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
           deleteOnly: "<div class=\"editTableLinks\"><a href=\"#\" onclick=\"return false;\">" + tr('Delete') + "</a></div>",
           editLinks:  "<div class=\"editTableLinks\"><a href=\"#\" onclick=\"return false;\">" + tr('Edit') + "</a> &nbsp;<a href=\"#\" onclick=\"return false;\">" + tr('Delete') + "</a></div>",
           deletingText: "<div class=\"editTableDelete\">" + tr('Deleting...') + "</div>",
-          deleteConfirm: tr('Are you sure you want to delete') + " \"%s?\". Please save changes.",
+          deleteConfirm: tr('Are you sure you want to delete') + " \"%s?\". " + tr("Please save changes."),
           autoTabOnSubmit: false
         }
         
@@ -324,7 +324,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
             failure: function() {
               // FAILURE
               // display error message
-              elSaving.innerHTML = "Couldn't save, sorry!";
+              elSaving.innerHTML = tr("Couldn't save, sorry!");
               oCellEditor.isSaving = false;
               return false;
 
@@ -345,7 +345,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
             success: function(o) {
                 var status = YAHOO.lang.JSON.parse(o.responseText);
                 if(status.error != null) {
-                  alert("Could not delete, sorry.  The server said:\n\n" + status.error);
+                  alert(tr("Could not delete, sorry.  The server said:") + "\n\n" + status.error);
                 } else {
                   this.deleteRow(oRecord);
                 }

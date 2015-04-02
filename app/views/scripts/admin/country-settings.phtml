@@ -49,12 +49,12 @@ ob_end_clean();
 								}
 							}
 							function  confirmRegionAddTop(control) {
-								if ( confirm("Are you sure you want to add a region level? A new default location will be created at this level, and all child locations will be added to this default.") ) {
+								if ( confirm(tr("Are you sure you want to add a region level? A new default location will be created at this level, and all child locations will be added to this default.")) ) {
 									window.location = "<?php echo Settings::$COUNTRY_BASE_URL; ?>/admin/add-region-top";
 								}
 							}
 							function  confirmRegionAddBottom(control) {
-								if ( confirm("Are you sure you want to add a region level? A new default location will be created at this level, and all child locations will be added to this default.") ) {
+								if ( confirm(tr("Are you sure you want to add a region level? A new default location will be created at this level, and all child locations will be added to this default.")) ) {
 									window.location = "<?php echo Settings::$COUNTRY_BASE_URL; ?>/admin/add-region-bottom";
 								}
 							}
@@ -197,7 +197,7 @@ ob_end_clean();
 													<div style="clear : both;"></div>
 												</div>
 							<div>
-								<div class="fieldInput"><div class="fieldLabel"><?php tp('Employee');?> <?php tp('Tracking');?></div>
+								<div class="fieldInput"><div class="fieldLabel"><?php tp('Employee Tracking');?></div>
 									<input type="checkbox" name="check_mod_employee" id="check_mod_employee" <?php if($this->check_mod_employee == 1) echo 'checked'; ?>><label for="check_mod_employee"><?php tp('Enable');?></label>
 								</div>
 								<div style="clear : both;"></div>

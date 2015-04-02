@@ -331,17 +331,17 @@ class StudenteditController extends ITechController {
 		
 		//TA:6: added 8/8/2014 - 8/10/2014	
 		$dc = strtotime($details['person'][0]['timestamp_created']);	
-		$dateCreated = $dc != '' && $dc > 0 ? date("d-m-Y",$dc) : "N/A";
+		$dateCreated = $dc != '' && $dc > 0 ? date("d-m-Y",$dc) : t("N/A");
 		$this->view->assign('dateCreated',$dateCreated);
 		$dm = strtotime($details['person'][0]['timestamp_updated']);
-		$dateModified = $dm != '' && $dm >0 ? date("d-m-Y",$dm): "N/A";
+		$dateModified = $dm != '' && $dm >0 ? date("d-m-Y",$dm): t("N/A");
 		$this->view->assign('dateModified',$dateModified);
 		$this->view->assign('uuid',$details['person'][0]['uuid']);		
 		require_once ('models/table/Person.php');
 		$personObj = new Person ( );
-		$created_by = $details['person'][0]['created_by'] ? $personObj->getPersonName($details['person'][0]['created_by']) : "N/A";
+		$created_by = $details['person'][0]['created_by'] ? $personObj->getPersonName($details['person'][0]['created_by']) : t("N/A");
 		$this->viewAssignEscaped('creator', $created_by);
-		$update_by = $details['person'][0]['modified_by'] ? $personObj->getPersonName($details['person'][0]['modified_by']) : "N/A";
+		$update_by = $details['person'][0]['modified_by'] ? $personObj->getPersonName($details['person'][0]['modified_by']) : t("N/A");
 		$this->viewAssignEscaped('updater', $update_by);
 
 		$this->view->assign('facilities',$helper->getFacilities());
@@ -612,17 +612,17 @@ class StudenteditController extends ITechController {
 	
 	    //TA:6: added 8/8/2014 - 8/10/2014
 	    $dc = strtotime($details['person'][0]['timestamp_created']);
-	    $dateCreated = $dc != '' && $dc > 0 ? date("d-m-Y",$dc) : "N/A";
+	    $dateCreated = $dc != '' && $dc > 0 ? date("d-m-Y",$dc) : t("N/A");
 	    $this->view->assign('dateCreated',$dateCreated);
 	    $dm = strtotime($details['person'][0]['timestamp_updated']);
-	    $dateModified = $dm != '' && $dm >0 ? date("d-m-Y",$dm): "N/A";
+	    $dateModified = $dm != '' && $dm >0 ? date("d-m-Y",$dm): t("N/A");
 	    $this->view->assign('dateModified',$dateModified);
 	    $this->view->assign('uuid',$details['person'][0]['uuid']);
 	    require_once ('models/table/Person.php');
 	    $personObj = new Person ( );
-	    $created_by = $details['person'][0]['created_by'] ? $personObj->getPersonName($details['person'][0]['created_by']) : "N/A";
+	    $created_by = $details['person'][0]['created_by'] ? $personObj->getPersonName($details['person'][0]['created_by']) : t("N/A");
 	    $this->viewAssignEscaped('creator', $created_by);
-	    $update_by = $details['person'][0]['modified_by'] ? $personObj->getPersonName($details['person'][0]['modified_by']) : "N/A";
+	    $update_by = $details['person'][0]['modified_by'] ? $personObj->getPersonName($details['person'][0]['modified_by']) : t("N/A");
 	    $this->viewAssignEscaped('updater', $update_by);
 	
 	    $this->view->assign('facilities',$helper->getFacilities());

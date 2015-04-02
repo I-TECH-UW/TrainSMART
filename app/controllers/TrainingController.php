@@ -832,8 +832,8 @@ class TrainingController extends ReportFilterHelpers {
 			$personsFields = array ('first_name' => $this->tr ( 'First Name' ), 'middle_name' => "..." . $this->tr ( 'Middle Name' ), 'last_name' => $this->tr ( 'Last Name' ), 'birthdate' => t ( 'Date of Birth' ), 'facility_name' => t ( 'Facility' ) );
 		}
 		if ( $this->setting ( 'module_attendance_enabled' )) {
-			$personsFields['duration_days'] = $this->tr ( 'Days Attended' );
-			$personsFields['award_phrase']  = $this->tr ( 'Complete' );
+			$personsFields['duration_days'] = t($this->tr ( 'Days Attended' ));
+			$personsFields['award_phrase']  = t($this->tr ( 'Complete' ));
 
 			$rowArray = OptionList::suggestionList('person_to_training_award_option', array('id', 'award_phrase'), false, 9999, false, false);
 			$elements = array(0 => array('text' => ' ', 'value' => 0));
