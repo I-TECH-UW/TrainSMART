@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title><?php echo $this->translation['Application Name'] . " | " . t('Budget Code').space.t('Report') ?></title>
+	<?php
+	require_once('views/helpers/Location.php');
+	require_once('views/helpers/ScriptContainer.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+	?>
+
+</head>
+<body class="yui-skin-sam"  >
+
+	<div id="pageHolder">
+
+		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+		<div id="content">
+
+			<h1><?php echo t('Budget Code').space.t('Report');?></h1>
+			<form action="" method="get" class="form_styled">
+				<fieldset id="criteria"><legend><?php tp('Select Criteria');?></legend>
+					<div class="fieldLabel"></div><div class="fieldInput criteria-header"><div class="criteria-label" ><?php tp('show');?></div><div  class="criteria-label" style="padding-left: 20px;"><?php tp('filter');?></div></div>
+					<div class="clear"></div>
+					<div id="dividers">
+
+					<?php
+						$this->required_fields = array();
+						$this->calendar_fields = array();
+						$this->is_report = true;
+
+						echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, true );
+						echo labelAndField($this, t('Training Location'), training_location_dropdown_as_a_return_value($this->tlocations, $this->criteria['training_location_id'], 'name="training_location_id" id="training_location_id"'), 'training_location_id');
+						echo labelAndField($this, t('Training Title'), $this->titles, 'training_title_option_id');
+
+					?>
+					</div>
+					<div class="clear"></div>
+					<?php
+						echo labelAndField($this, t('Start Date'),     'date', 'start_date', $this->criteria['start_date']);
+						echo labelAndField($this, t('End Date'),       'date', 'end_date',   $this->criteria['end_date']);
+					?>
+					<input type="hidden" name="limit" id="limit" value="1" />
+					<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+				</fieldset>
+			</form>
+
+			<script type="text/javascript">
+				$(document).ready(function () {
+					$('.datepicker').datepicker({changeMonth:true, changeYear:true});
+					$('.calendarbtn').click(openNearestDatePicker);
+
+					/* remove unused checkboxes - todo remove the html */
+					$('input[name=show_start_date],input[name=show_end_date]').remove();
+				});
+			</script>
+
+			<?php if ( $this->criteria['go'] ) { ?>
+			<div class="hrGrey"></div>
+			<div class="fieldIndentNoMargin"><?php tp('Budget Code');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+			<div id="participants"></div>
+			<script type="text/javascript">
+			var participantsData = [
+			<?php
+			$cnt = 0;
+			$isFirstRow = true;
+			foreach($this->results as $row) {
+
+				if ( ( $cnt < 100 ) or ( isset($_REQUEST['limit']) AND !$_REQUEST['limit'] ) ) {
+					if ( !$isFirstRow ) {
+						echo ',';
+					}
+					$isFirstRow = false;
+
+					echo '[';
+						echo $row['training_id'].',';
+						$data = array();
+						if ($this->criteria['showProvince'])                  $data[] = $row['province_name'] ? $row['province_name'] : '-';
+						if ($this->criteria['showDistrict'])                  $data[] = $row['district_name'] ? $row['district_name'] : '-';
+						if ($this->criteria['showRegionC'])                   $data[] = $row['region_c_name'] ? $row['region_c_name'] : '-';
+						if ($this->criteria['showRegionD'])                   $data[] = $row['region_d_name'] ? $row['region_d_name'] : '-';
+						if ($this->criteria['showRegionE'])                   $data[] = $row['region_e_name'] ? $row['region_e_name'] : '-';
+						if ($this->criteria['showRegionF'])                   $data[] = $row['region_f_name'] ? $row['region_f_name'] : '-';
+						if ($this->criteria['showRegionG'])                   $data[] = $row['region_g_name'] ? $row['region_g_name'] : '-';
+						if ($this->criteria['showRegionH'])                   $data[] = $row['region_h_name'] ? $row['region_h_name'] : '-';
+						if ($this->criteria['showRegionI'])                   $data[] = $row['region_i_name'] ? $row['region_i_name'] : '-';
+						if ($this->criteria['show_training_location_id'])     $data[] = $row['training_location_name'] ? $row['training_location_name'] : '-';
+						if ($this->criteria['show_training_title_option_id']) $data[] = $row['training_title_phrase'] ? $row['training_title_phrase'] : '-';
+
+						$data[] = $row['training_start_date'] ? $row['training_start_date'] : '-';
+						$data[] = $row['budget_code_phrase']  ? $row['budget_code_phrase'] : '-';
+						$data[] = $row['num_participants']    ? $row['num_participants'] : '-';
+						$data[] = $row['percentage']          ? number_format($row['percentage'], 2, '.', ',') . '%' : '-';
+						echo '"'.implode('","', $data).'"';
+					echo ']';
+					$cnt++;
+				}
+			}
+			?>];
+
+			var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
+				if ( (sData == null) || (sData.length == 0) )
+					sData = '&nbsp;&nbsp;&nbsp;';
+				elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/training/edit/id/" + oRecord.getData("training_id") + "' >" + sData + "</a>";
+			}
+
+			var participantsColumnDefs = [
+				{key:"training_id", label: "<?php tp("ID");?>", sortable:true, resizable:false,
+				formatter: formatViewUrl},
+				<?php if ( $this->criteria['showProvince'] ) { ?>
+				{key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->criteria['showDistrict'] ) { ?>
+				{key:"district_name", label: "<?php echo (@$this->translation['Region B (Health District)']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->criteria['showRegionC'] ) { ?>
+				{key:"region_c_name", label: "<?php echo (@$this->translation['Region C (Local Region)']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->criteria['showRegionD'] ) { ?>
+				{key:"region_d_name", label: "<?php echo (@$this->translation['Region D']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->criteria['showRegionE'] ) { ?>
+				{key:"region_e_name", label: "<?php echo (@$this->translation['Region E']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->criteria['showRegionF'] ) { ?>
+				{key:"region_f_name", label: "<?php echo (@$this->translation['Region F']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->criteria['showRegionG'] ) { ?>
+				{key:"region_g_name", label: "<?php echo (@$this->translation['Region G']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->criteria['showRegionH'] ) { ?>
+				{key:"region_h_name", label: "<?php echo (@$this->translation['Region H']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->criteria['showRegionI'] ) { ?>
+				{key:"region_i_name", label: "<?php echo (@$this->translation['Region I']); ?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->criteria['show_training_location_id'] ) { ?>
+				{key:"partner",       label: "<?php tp('Training Location');?>", sortable:true, resizeable:true},
+				<?php } ?>
+				<?php if ( $this->criteria['show_training_title_option_id'] ) { ?>
+				{key:"sub_partner",   label: "<?php tp('Training Title');?>", sortable:true, resizeable:true},
+				<?php } ?>
+
+				{key:"start_date",       label: "<?php echo t('Start Date');?>", sortable:true, resizeable:true},
+				{key:"budget_code",      label: "<?php tp('Budget Code');?>", sortable:true, resizeable:true},
+				{key:"num_participants", label: "<?php echo t('Participant').space.t('Count');?>", sortable:true, resizeable:true},
+				{key:"percentage",       label: "%", sortable:true, resizeable:true}
+
+			];
+
+			makeDataTable("participants", null, participantsData, participantsColumnDefs);
+		</script>
+			<?php if ($cnt < count($this->results)) { ?>
+			[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a>
+			<?php } ?>
+			<?php } ?>
+		</div>
+	</body>
+</html>
