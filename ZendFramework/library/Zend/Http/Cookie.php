@@ -4,19 +4,19 @@
  *
  * LICENSE
  *
- * This source file is subject to version 1.0 of the Zend Framework
- * license, that is bundled with this package in the file LICENSE.txt,
- * and is available through the world-wide-web at the following URL:
- * http://framework.zend.com/license/new-bsd. If you did not
- * receive a copy of the Zend Framework license and are unable to
- * obtain it through the world-wide-web, please send a note to
- * license@zend.com so we can mail you a copy immediately.
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://framework.zend.com/license/new-bsd
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
  * @package    Zend_Http
  * @subpackage Cookie
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com/)
- * @version    $Id: Cookie.php 7366 2008-01-09 13:48:52Z shahar $
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com/)
+ * @version    $Id: Cookie.php 14130 2009-02-21 11:24:22Z yoshida@zend.co.jp $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -36,7 +36,7 @@ require_once 'Zend/Uri/Http.php';
  *
  * @category    Zend
  * @package     Zend_Http
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com/)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com/)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Http_Cookie
@@ -90,8 +90,8 @@ class Zend_Http_Cookie
      *
      * @param string $name
      * @param string $value
-     * @param int $expires
      * @param string $domain
+     * @param int $expires
      * @param string $path
      * @param bool $secure
      */
@@ -222,7 +222,7 @@ class Zend_Http_Cookie
 
         // Make sure we have a valid Zend_Uri_Http object
         if (! ($uri->valid() && ($uri->getScheme() == 'http' || $uri->getScheme() =='https'))) {
-            require_once 'Zend/Http/Exception.php';    
+            require_once 'Zend/Http/Exception.php';
             throw new Zend_Http_Exception('Passed URI is not a valid HTTP or HTTPS URI');
         }
 
@@ -319,7 +319,7 @@ class Zend_Http_Cookie
         }
 
         if ($name !== '') {
-            return new Zend_Http_Cookie($name, $value, $domain, $expires, $path, $secure);
+            return new self($name, $value, $domain, $expires, $path, $secure);
         } else {
             return false;
         }

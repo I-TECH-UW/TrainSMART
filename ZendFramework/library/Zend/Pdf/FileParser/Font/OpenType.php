@@ -14,7 +14,7 @@
  *
  * @package    Zend_Pdf
  * @subpackage FileParser
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -47,7 +47,7 @@ require_once 'Zend/Pdf/Cmap.php';
  *
  * @package    Zend_Pdf
  * @subpackage FileParser
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Pdf_FileParser_Font_OpenType extends Zend_Pdf_FileParser_Font
@@ -645,6 +645,12 @@ abstract class Zend_Pdf_FileParser_Font_OpenType extends Zend_Pdf_FileParser_Fon
          * it only has the basic latin set. If it covers any other characters,
          * even any of the extended latin characters, it is considered symbolic
          * to PDF and must be described differently in the Font Descriptor.
+         */
+        /** 
+         * @todo Font is recognized as Adobe Latin subset font if it only contains
+         * Basic Latin characters (only bit 0 of Unicode range bits is set).
+         * Actually, other Unicode subranges like General Punctuation (bit 31) also 
+         * fall into Adobe Latin characters. So this code has to be modified.
          */
         $this->isAdobeLatinSubset = (($unicodeRange1 == 1) && ($unicodeRange2 == 0) &&
                                       ($unicodeRange3 == 0) && ($unicodeRange4 == 0));

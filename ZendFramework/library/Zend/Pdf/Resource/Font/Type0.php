@@ -14,7 +14,7 @@
  *
  * @package    Zend_Pdf
  * @subpackage Fonts
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -56,47 +56,47 @@ require_once 'Zend/Pdf/Resource/Font/CidFont/TrueType.php';
  *
  * @package    Zend_Pdf
  * @subpackage Fonts
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Pdf_Resource_Font_Type0 extends Zend_Pdf_Resource_Font
 {
-	/**
-	 * Descendant CIDFont
-	 * 
-	 * @var Zend_Pdf_Resource_Font_CidFont
-	 */
-	private $_descendantFont;
+    /**
+     * Descendant CIDFont
+     * 
+     * @var Zend_Pdf_Resource_Font_CidFont
+     */
+    private $_descendantFont;
 
 
-	/**
-	 * Generate ToUnicode character map data
-	 * 
-	 * @return string
-	 */
-	static private function getToUnicodeCMapData()
-	{
-		return '/CIDInit /ProcSet findresource begin '              . "\n"
-		     . '12 dict begin '                                     . "\n"
-		     . 'begincmap '                                         . "\n"
-		     . '/CIDSystemInfo '                                    . "\n"
-		     . '<</Registry (Adobe) '                               . "\n"
-		     . '/Ordering (UCS) '                                   . "\n"
-		     . '/Supplement 0'                                      . "\n"
-		     . '>> def'                                             . "\n"
-		     . '/CMapName /Adobe-Identity-UCS def '                 . "\n"
-		     . '/CMapType 2 def '                                   . "\n"
-		     . '1 begincodespacerange'                              . "\n"
-		     . '<0000> <FFFF> '                                     . "\n"
-		     . 'endcodespacerange '                                 . "\n"
-		     . '1 beginbfrange '                                    . "\n"
-		     . '<0000> <FFFF> <0000> '                              . "\n"
-		     . 'endbfrange '                                        . "\n"
-		     . 'endcmap '                                           . "\n"
-		     . 'CMapName currentdict /CMap defineresource pop '     . "\n"
-		     . 'end '
-		     . 'end ';
-			}
+    /**
+     * Generate ToUnicode character map data
+     * 
+     * @return string
+     */
+    static private function getToUnicodeCMapData()
+    {
+        return '/CIDInit /ProcSet findresource begin '              . "\n"
+             . '12 dict begin '                                     . "\n"
+             . 'begincmap '                                         . "\n"
+             . '/CIDSystemInfo '                                    . "\n"
+             . '<</Registry (Adobe) '                               . "\n"
+             . '/Ordering (UCS) '                                   . "\n"
+             . '/Supplement 0'                                      . "\n"
+             . '>> def'                                             . "\n"
+             . '/CMapName /Adobe-Identity-UCS def '                 . "\n"
+             . '/CMapType 2 def '                                   . "\n"
+             . '1 begincodespacerange'                              . "\n"
+             . '<0000> <FFFF> '                                     . "\n"
+             . 'endcodespacerange '                                 . "\n"
+             . '1 beginbfrange '                                    . "\n"
+             . '<0000> <FFFF> <0000> '                              . "\n"
+             . 'endbfrange '                                        . "\n"
+             . 'endcmap '                                           . "\n"
+             . 'CMapName currentdict /CMap defineresource pop '     . "\n"
+             . 'end '
+             . 'end ';
+            }
 
     /**
      * Object constructor
@@ -112,22 +112,22 @@ class Zend_Pdf_Resource_Font_Type0 extends Zend_Pdf_Resource_Font
         $this->_descendantFont = $descendantFont;
 
 
-        $this->_fontNames = $descendantFont->_fontNames;
+        $this->_fontNames    = $descendantFont->getFontNames();
 
-        $this->_isBold       = $descendantFont->_isBold;
-        $this->_isItalic     = $descendantFont->_isItalic;
-        $this->_isMonospaced = $descendantFont->_isMonospaced;
+        $this->_isBold       = $descendantFont->isBold();
+        $this->_isItalic     = $descendantFont->isItalic();
+        $this->_isMonospaced = $descendantFont->isMonospace();
 
-        $this->_underlinePosition  = $descendantFont->_underlinePosition;
-        $this->_underlineThickness = $descendantFont->_underlineThickness;
-        $this->_strikePosition     = $descendantFont->_strikePosition;
-        $this->_strikeThickness    = $descendantFont->_strikeThickness;
+        $this->_underlinePosition  = $descendantFont->getUnderlinePosition();
+        $this->_underlineThickness = $descendantFont->getUnderlineThickness();
+        $this->_strikePosition     = $descendantFont->getStrikePosition();
+        $this->_strikeThickness    = $descendantFont->getStrikeThickness();
 
-        $this->_unitsPerEm = $descendantFont->_unitsPerEm;
+        $this->_unitsPerEm = $descendantFont->getUnitsPerEm();
 
-        $this->_ascent  = $descendantFont->_ascent;
-        $this->_descent = $descendantFont->_descent;
-        $this->_lineGap = $descendantFont->_lineGap;
+        $this->_ascent  = $descendantFont->getAscent();
+        $this->_descent = $descendantFont->getDescent();
+        $this->_lineGap = $descendantFont->getLineGap();
         
         
         $this->_resource->Subtype         = new Zend_Pdf_Element_Name('Type0');

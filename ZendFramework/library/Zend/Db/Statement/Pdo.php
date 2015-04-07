@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Statement
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Mysqli.php 4874 2007-05-19 01:26:32Z bkarwin $
  */
@@ -34,7 +34,7 @@ require_once 'Zend/Db/Statement.php';
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Statement
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Db_Statement_Pdo extends Zend_Db_Statement
@@ -227,18 +227,16 @@ class Zend_Db_Statement_Pdo extends Zend_Db_Statement
      */
     public function _execute(array $params = null)
     {
-//var_dump($params);print_r($this);exit;    
-	
-//    	try {
+        try {
             if ($params !== null) {
                 return $this->_stmt->execute($params);
             } else {
                 return $this->_stmt->execute();
             }
-//        } catch (PDOException $e) {
-//            require_once 'Zend/Db/Statement/Exception.php';
-//            throw new Zend_Db_Statement_Exception($e->getMessage());
-//        }
+        } catch (PDOException $e) {
+            require_once 'Zend/Db/Statement/Exception.php';
+            throw new Zend_Db_Statement_Exception($e->getMessage());
+        }
     }
 
     /**

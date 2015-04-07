@@ -15,9 +15,9 @@
  *
  * @category   Zend
  * @package    Zend_Db
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Db.php 7188 2007-12-18 16:48:27Z darby $
+ * @version    $Id: Db.php 9573 2008-05-29 22:25:26Z peptolab $
  */
 
 
@@ -32,7 +32,7 @@ require_once 'Zend/Loader.php';
  *
  * @category   Zend
  * @package    Zend_Db
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Db
@@ -54,7 +54,7 @@ class Zend_Db
     const AUTO_QUOTE_IDENTIFIERS = 'autoQuoteIdentifiers';
 
     /**
-     * Use the INT_TYPE, BIGINT_TYPE, and FLOAT_TYPE with the quoteType() method.
+     * Use the INT_TYPE, BIGINT_TYPE, and FLOAT_TYPE with the quote() method.
      */
     const INT_TYPE    = 0;
     const BIGINT_TYPE = 1;
@@ -186,6 +186,10 @@ class Zend_Db
      */
     public static function factory($adapter, $config = array())
     {
+        if ($config instanceof Zend_Config) {
+            $config = $config->toArray();
+        }
+
         /*
          * Convert Zend_Config argument to plain string
          * adapter name and separate config object.
@@ -228,7 +232,9 @@ class Zend_Db
          */
         $adapterNamespace = 'Zend_Db_Adapter';
         if (isset($config['adapterNamespace'])) {
-            $adapterNamespace = $config['adapterNamespace'];
+            if ($config['adapterNamespace'] != '') {
+                $adapterNamespace = $config['adapterNamespace'];
+            }
             unset($config['adapterNamespace']);
         }
         $adapterName = strtolower($adapterNamespace . '_' . $adapter);
@@ -238,7 +244,7 @@ class Zend_Db
          * Load the adapter class.  This throws an exception
          * if the specified class cannot be loaded.
          */
-        Zend_Loader::loadClass($adapterName);
+        @Zend_Loader::loadClass($adapterName);
 
         /*
          * Create an instance of the adapter class.

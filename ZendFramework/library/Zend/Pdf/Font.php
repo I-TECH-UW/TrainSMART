@@ -14,7 +14,7 @@
  *
  * @package    Zend_Pdf
  * @subpackage Fonts
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -81,6 +81,9 @@ require_once 'Zend/Pdf/Resource/Font/Simple/Standard/TimesRoman.php';
 /** Zend_Pdf_Resource_Font_Simple_Standard_ZapfDingbats */
 require_once 'Zend/Pdf/Resource/Font/Simple/Standard/ZapfDingbats.php';
 
+/** Zend_Pdf_Resource_Font_Extracted */
+require_once 'Zend/Pdf/Resource/Font/Extracted.php';
+
 
 /**
  * Abstract factory class which vends {@link Zend_Pdf_Resource_Font} objects.
@@ -94,7 +97,7 @@ require_once 'Zend/Pdf/Resource/Font/Simple/Standard/ZapfDingbats.php';
  *
  * @package    Zend_Pdf
  * @subpackage Fonts
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Pdf_Font
@@ -745,7 +748,7 @@ abstract class Zend_Pdf_Font
             if ($fontParser->isAdobeLatinSubset) {
                 $font = new Zend_Pdf_Resource_Font_Simple_Parsed_TrueType($fontParser, $embeddingOptions);
             } else {
-            	/* Use Composite Type 0 font which supports Unicode character mapping */
+                /* Use Composite Type 0 font which supports Unicode character mapping */
                 $cidFont = new Zend_Pdf_Resource_Font_CidFont_TrueType($fontParser, $embeddingOptions);
                 $font    = new Zend_Pdf_Resource_Font_Type0($cidFont);
             }

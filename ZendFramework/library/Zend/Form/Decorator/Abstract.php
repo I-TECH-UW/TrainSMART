@@ -14,7 +14,7 @@
  *
  * @category   Zend
  * @package    Zend_Form
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -27,19 +27,17 @@ require_once 'Zend/Form/Decorator/Interface.php';
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Decorator
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Abstract.php 7565 2008-01-22 17:26:47Z matthew $
+ * @version    $Id: Abstract.php 8892 2008-03-18 19:47:46Z thomas $
  */
 abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Interface
 {
-    /**#@+
+    /**
      * Placement constants
-     * @const string
      */
     const APPEND  = 'APPEND';
     const PREPEND = 'PREPEND';
-    /**#@-*/
 
     /**
      * Default placement: append

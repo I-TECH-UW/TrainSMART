@@ -1177,7 +1177,7 @@ echo $sql . "<br>";
 		return $this->trainingReport ();
 	}
 
-	public function trainingSearchAction() {
+	public function trainingsearchAction() {
 		$this->_countrySettings = array();
 		$this->_countrySettings = System::getAll();
 
@@ -1192,7 +1192,7 @@ echo $sql . "<br>";
 		return $this->trainingReport ();
 	}
 
-	public function trainingbyTitleAction() {
+	public function trainingByTitleAction() {
 		$this->view->assign ( 'mode', 'name' );
 		$this->view->assign ( 'expand_lists', 1 );
 

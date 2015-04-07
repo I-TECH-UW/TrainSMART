@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Session
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Namespace.php 6419 2007-09-19 19:43:14Z darby $
+ * @version    $Id: Namespace.php 13338 2008-12-17 11:13:16Z sidhighwind $
  * @since      Preview Release 0.2
  */
 
@@ -38,7 +38,7 @@ require_once 'Zend/Session/Abstract.php';
  *
  * @category   Zend
  * @package    Zend_Session
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Session_Namespace extends Zend_Session_Abstract implements IteratorAggregate
@@ -96,6 +96,14 @@ class Zend_Session_Namespace extends Zend_Session_Abstract implements IteratorAg
              */
             require_once 'Zend/Session/Exception.php';
             throw new Zend_Session_Exception('Session namespace must not start with an underscore.');
+        }
+
+        if (preg_match('#(^[0-9])#i', $namespace[0])) {
+            /**
+             * @see Zend_Session_Exception
+             */
+            require_once 'Zend/Session/Exception.php';
+            throw new Zend_Session_Exception('Session namespace must not start with a number.');
         }
 
         if (isset(self::$_singleInstances[$namespace])) {

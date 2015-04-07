@@ -15,9 +15,9 @@
  *
  * @category   Zend
  * @package    Zend_Feed
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Element.php 7189 2007-12-18 17:28:43Z weppos $
+ * @version    $Id: Element.php 8064 2008-02-16 10:58:39Z thomas $
  */
 
 
@@ -26,7 +26,7 @@
  *
  * @category   Zend
  * @package    Zend_Feed
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Feed_Element implements ArrayAccess
@@ -126,7 +126,7 @@ class Zend_Feed_Element implements ArrayAccess
      *
      * @return string
      */
-    public function saveXML()
+    public function saveXml()
     {
         // Return a complete document including XML prologue.
         $doc = new DOMDocument($this->_element->ownerDocument->version,
@@ -143,7 +143,7 @@ class Zend_Feed_Element implements ArrayAccess
      *
      * @return string
      */
-    public function saveXMLFragment()
+    public function saveXmlFragment()
     {
         return $this->_element->ownerDocument->saveXML($this->_element);
     }

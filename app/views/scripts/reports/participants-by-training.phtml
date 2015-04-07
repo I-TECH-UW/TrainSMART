@@ -23,7 +23,7 @@ if ( $this->mode == 'count' )
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
 
-<?php if( strstr($path[2], 'trainersByName') === FALSE ):?>
+<?php if( strstr($path[2], 'trainers-by-name') === FALSE ):?>
     <h1><?php tp('Participant Reports');?></h1>
     	<?php require_once('peopleReportsPicker.phtml'); ?>
 <?php else :?>
@@ -134,7 +134,7 @@ if ( $this->mode == 'count' )
 
 	<?php
 
-	if (( strstr($path[2], 'trainersByName') !== FALSE ) OR ( strstr($path[2], 'participantsByName') !== FALSE )) { ?>
+	if (( strstr($path[2], 'trainers-by-name') !== FALSE ) OR ( strstr($path[2], 'participantsByName') !== FALSE )) { ?>
 
 		<!-- Highest Education Level -->
 		<?php if ($this->setting['display_highest_ed_level']) { ?>
@@ -337,7 +337,7 @@ if ( $this->setting['display_viewing_location'] && $this->mode != 'search' && ! 
 	</select></div></div>
 <?php } ?>
 
-<?php if (( strstr($path[2], 'trainersByName') !== FALSE ) OR ( strstr($path[2], 'participantsByName') !== FALSE )) { ?>
+<?php if (( strstr($path[2], 'trainers-by-name') !== FALSE ) OR ( strstr($path[2], 'participantsByName') !== FALSE )) { ?>
 
 	<?php if ($this->setting['display_people_suffix']) { ?>
 		<div class="fieldLabel" id="person_suffix_lbl"><?php echo (@$this->translation['Suffix']); ?></div>

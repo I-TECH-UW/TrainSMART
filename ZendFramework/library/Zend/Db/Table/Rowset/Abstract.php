@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Zend Framework
  *
@@ -16,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Table
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Abstract.php 5896 2007-07-27 20:04:24Z bkarwin $
  */
@@ -30,10 +29,10 @@ require_once 'Zend/Loader.php';
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Table
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-abstract class Zend_Db_Table_Rowset_Abstract implements Iterator, Countable
+abstract class Zend_Db_Table_Rowset_Abstract implements SeekableIterator, Countable, ArrayAccess
 {
     /**
      * The original data for each row.
@@ -117,7 +116,7 @@ abstract class Zend_Db_Table_Rowset_Abstract implements Iterator, Countable
         if (isset($config['rowClass'])) {
             $this->_rowClass   = $config['rowClass'];
         }
-        Zend_Loader::loadClass($this->_rowClass);
+        @Zend_Loader::loadClass($this->_rowClass);
         if (isset($config['data'])) {
             $this->_data       = $config['data'];
         }
@@ -227,11 +226,12 @@ abstract class Zend_Db_Table_Rowset_Abstract implements Iterator, Countable
      * Similar to the reset() function for arrays in PHP.
      * Required by interface Iterator.
      *
-     * @return void
+     * @return Zend_Db_Table_Rowset_Abstract Fluent interface.
      */
     public function rewind()
     {
         $this->_pointer = 0;
+        return $this;
     }
 
     /**
@@ -309,6 +309,96 @@ abstract class Zend_Db_Table_Rowset_Abstract implements Iterator, Countable
     public function count()
     {
         return $this->_count;
+    }
+    
+    /**
+     * Take the Iterator to position $position
+     * Required by interface SeekableIterator.
+     *
+     * @param int $position the position to seek to
+     * @return Zend_Db_Table_Rowset_Abstract
+     * @throws Zend_Db_Table_Rowset_Exception
+     */
+    public function seek($position)
+    {
+        $position = (int) $position;
+        if ($position < 0 || $position > $this->_count) {
+            require_once 'Zend/Db/Table/Rowset/Exception.php';
+            throw new Zend_Db_Table_Rowset_Exception("Illegal index $position");
+        }
+        $this->_pointer = $position;
+        return $this;        
+    }
+    
+    /**
+     * Check if an offset exists
+     * Required by the ArrayAccess implementation
+     *
+     * @param string $offset
+     * @return boolean
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->_data[(int) $offset]);
+    }
+    
+    /**
+     * Get the row for the given offset
+     * Required by the ArrayAccess implementation
+     *
+     * @param string $offset
+     * @return Zend_Db_Table_Row_Abstract
+     */
+    public function offsetGet($offset)
+    {
+        $this->_pointer = (int) $offset;
+
+        return $this->current();
+    }
+    
+    /**
+     * Does nothing
+     * Required by the ArrayAccess implementation
+     *
+     * @param string $offset
+     * @param mixed $value
+     */
+    public function offsetSet($offset, $value)
+    {
+    }
+    
+    /**
+     * Does nothing
+     * Required by the ArrayAccess implementation
+     *
+     * @param string $offset
+     */
+    public function offsetUnset($offset)
+    {
+    }
+
+    /**
+     * Returns a Zend_Db_Table_Row from a known position into the Iterator
+     *
+     * @param int $position the position of the row expected
+     * @param bool $seek wether or not seek the iterator to that position after
+     * @return Zend_Db_Table_Row
+     * @throws Zend_Db_Table_Rowset_Exception
+     */
+    public function getRow($position, $seek = false)
+    {
+        $key = $this->key();
+        try {
+            $this->seek($position);
+            $row = $this->current();
+        } catch (Zend_Db_Table_Rowset_Exception $e) {
+            require_once 'Zend/Db/Table/Rowset/Exception.php';
+            throw new Zend_Db_Table_Rowset_Exception('No row could be found at position ' . (int) $position);
+        }
+        if ($seek == false) {
+            $this->seek($key);
+        }
+        return $row;
     }
 
     /**

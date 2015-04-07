@@ -36,15 +36,15 @@
 				<select id="training" name="training" onchange="gotoPage('training');">
 					<option value="">--<?php tp('choose');?>--</option>
 					<option value="/reports/trainings" <?php if ($this->mode == 'name') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('by').' '.t('Name');?></option>
-					<option value="/reports/trainingByTitle" <?php if ($this->expand_lists) echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('by').' '.t('Multiple Names');?></option>
-					<option value="/reports/trainingByParticipants" <?php if ($this->mode == 'count') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('by').' '.t('Participant Count');?></option>
+					<option value="/reports/training-by-title" <?php if ($this->expand_lists) echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('by').' '.t('Multiple Names');?></option>
+					<option value="/reports/training-by-participants" <?php if ($this->mode == 'count') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('by').' '.t('Participant Count');?></option>
 					<?php if ($this->setting['display_viewing_location']) { ?>
-					<option value="/reports/budgetcode"><?php echo t('Trainings').space.t('by').space.t('Participants').space.t('Viewing Location'); ?></option>
+					<option value="/reports/budget-code"><?php echo t('Trainings').space.t('by').space.t('Participants').space.t('Viewing Location'); ?></option>
 					<?php } ?>
 					<?php if ($this->setting['module_unknown_participants_enabled']) { ?>
-					<option value="/reports/trainingUnknown" <?php if ($this->mode == 'unknown') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('with').' '.t('Unknown Participants');?></option>
+					<option value="/reports/training-unknown" <?php if ($this->mode == 'unknown') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('with').' '.t('Unknown Participants');?></option>
 					<?php } ?>
-					<option value="/reports/trainingsMissingInformation" <?php if ($this->missing_info) echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('with').' '.t('missing information');?></option>
+					<option value="/reports/trainings-missing-information" <?php if ($this->missing_info) echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('with').' '.t('Missing Information');?></option>
 				</select>
 				<?php } ?>
 				<form id="trainingreport" action="" method="get">

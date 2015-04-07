@@ -15,9 +15,9 @@
  *
  * @category   Zend
  * @package    Zend_Feed
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Rss.php 7189 2007-12-18 17:28:43Z weppos $
+ * @version    $Id: Rss.php 13894 2009-01-31 13:23:40Z yoshida@zend.co.jp $
  */
 
 
@@ -43,7 +43,7 @@ require_once 'Zend/Feed/Entry/Rss.php';
  *
  * @category   Zend
  * @package    Zend_Feed
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Feed_Rss extends Zend_Feed_Abstract
@@ -80,9 +80,13 @@ class Zend_Feed_Rss extends Zend_Feed_Abstract
         parent::__wakeup();
 
         // Find the base channel element and create an alias to it.
-        $this->_element = $this->_element->getElementsByTagName('channel')->item(0);
+        if ($this->_element->firstChild->nodeName == 'rdf:RDF') {
+            $this->_element = $this->_element->firstChild;
+        } else {
+            $this->_element = $this->_element->getElementsByTagName('channel')->item(0);
+        }
         if (!$this->_element) {
-            /** 
+            /**
              * @see Zend_Feed_Exception
              */
             require_once 'Zend/Feed/Exception.php';
@@ -147,6 +151,7 @@ class Zend_Feed_Rss extends Zend_Feed_Abstract
 
         if (isset($array->published)) {
             $lastBuildDate = $this->_element->createElement('lastBuildDate', gmdate('r', $array->published));
+            $channel->appendChild($lastBuildDate);
         }
 
         $editor = '';
@@ -167,6 +172,11 @@ class Zend_Feed_Rss extends Zend_Feed_Abstract
         if (!empty($array->copyright)) {
             $copyright = $this->_element->createElement('copyright', $array->copyright);
             $channel->appendChild($copyright);
+        }
+
+        if (isset($array->category)) {
+            $category = $this->_element->createElement('category', $array->category);
+            $channel->appendChild($category);
         }
 
         if (!empty($array->image)) {
@@ -201,6 +211,11 @@ class Zend_Feed_Rss extends Zend_Feed_Abstract
             $cloud->setAttribute('registerProcedure', $array->cloud['procedure']);
             $cloud->setAttribute('protocol', $array->cloud['protocol']);
             $channel->appendChild($cloud);
+        }
+
+        if (isset($array->ttl)) {
+            $ttl = $this->_element->createElement('ttl', $array->ttl);
+            $channel->appendChild($ttl);
         }
 
         if (isset($array->rating)) {
@@ -457,7 +472,7 @@ class Zend_Feed_Rss extends Zend_Feed_Abstract
      *
      * @return string
      */
-    public function saveXML()
+    public function saveXml()
     {
         // Return a complete document including XML prologue.
         $doc = new DOMDocument($this->_element->ownerDocument->version,
@@ -489,16 +504,16 @@ class Zend_Feed_Rss extends Zend_Feed_Abstract
     public function send()
     {
         if (headers_sent()) {
-            /** 
+            /**
              * @see Zend_Feed_Exception
              */
             require_once 'Zend/Feed/Exception.php';
             throw new Zend_Feed_Exception('Cannot send RSS because headers have already been sent.');
         }
 
-        header('Content-type: application/rss+xml; charset: ' . $this->_element->ownerDocument->actualEncoding);
+        header('Content-Type: application/rss+xml; charset=' . $this->_element->ownerDocument->actualEncoding);
 
-        echo $this->saveXML();
+        echo $this->saveXml();
     }
 
 }

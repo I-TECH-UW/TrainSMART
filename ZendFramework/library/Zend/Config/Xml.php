@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Zend Framework
  *
@@ -13,30 +12,37 @@
  * obtain it through the world-wide-web, please send an email
  * to license@zend.com so we can send you a copy immediately.
  *
- * @category   Zend
- * @package    Zend_Config
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Xml.php 7191 2007-12-18 19:30:16Z darby $
+ * @category  Zend
+ * @package   Zend_Config
+ * @copyright Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd     New BSD License
+ * @version   $Id: Xml.php 14413 2009-03-21 19:30:23Z rob $
  */
-
 
 /**
  * @see Zend_Config
  */
 require_once 'Zend/Config.php';
 
-
 /**
- * @category   Zend
- * @package    Zend_Config
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * XML Adapter for Zend_Config
+ *
+ * @category  Zend
+ * @package   Zend_Config
+ * @copyright Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Config_Xml extends Zend_Config
 {
     /**
-     * Loads the section $section from the config file $filename for
+     * Wether to skip extends or not
+     *
+     * @var boolean
+     */
+    protected $_skipExtends = false;
+    
+    /**
+     * Loads the section $section from the config file (or string $xml for
      * access facilitated by nested object properties.
      *
      * Sections are defined in the XML as children of the root element.
@@ -48,70 +54,90 @@ class Zend_Config_Xml extends Zend_Config
      * Note that the keys in $section will override any keys of the same
      * name in the sections that have been included via "extends".
      *
-     * @param string $filename
-     * @param mixed $section
-     * @param boolean $allowModifications
-     * @throws Zend_Config_Exception
+     * @param  string  $filename           File to process
+     * @param  mixed   $section            Section to process
+     * @param  boolean $allowModifications Wether modifiacations are allowed at runtime
+     * @throws Zend_Config_Exception When filename is not set
+     * @throws Zend_Config_Exception When section $sectionName cannot be found in $filename
      */
-    public function __construct($filename, $section = null, $allowModifications = false)
+    public function __construct($filename, $section = null, $options = false)
     {
         if (empty($filename)) {
-            /** @see Zend_Config_Exception */
             require_once 'Zend/Config/Exception.php';
             throw new Zend_Config_Exception('Filename is not set');
         }
 
-        $config = simplexml_load_file($filename);
+        $allowModifications = false;
+        if (is_bool($options)) {
+            $allowModifications = $options;
+        } elseif (is_array($options)) {
+            if (isset($options['allowModifications'])) {
+                $allowModifications = (bool) $options['allowModifications'];
+            }
+            if (isset($options['skipExtends'])) {
+                $this->_skipExtends = (bool) $options['skipExtends'];
+            }
+        }
+        
+        set_error_handler(array($this, '_loadFileErrorHandler'));
+        $config = simplexml_load_file($filename); // Warnings and errors are suppressed
+        restore_error_handler();
+        // Check if there was a error while loading file
+        if ($this->_loadFileErrorStr !== null) {
+            require_once 'Zend/Config/Exception.php';
+            throw new Zend_Config_Exception($this->_loadFileErrorStr);
+        }
 
-        if (null === $section) {
+        if ($section === null) {
             $dataArray = array();
             foreach ($config as $sectionName => $sectionData) {
                 $dataArray[$sectionName] = $this->_processExtends($config, $sectionName);
             }
+
             parent::__construct($dataArray, $allowModifications);
-        } elseif (is_array($section)) {
+        } else if (is_array($section)) {
             $dataArray = array();
             foreach ($section as $sectionName) {
                 if (!isset($config->$sectionName)) {
-                    /** @see Zend_Config_Exception */
                     require_once 'Zend/Config/Exception.php';
                     throw new Zend_Config_Exception("Section '$sectionName' cannot be found in $filename");
                 }
+
                 $dataArray = array_merge($this->_processExtends($config, $sectionName), $dataArray);
             }
+
             parent::__construct($dataArray, $allowModifications);
         } else {
             if (!isset($config->$section)) {
-                /** @see Zend_Config_Exception */
                 require_once 'Zend/Config/Exception.php';
                 throw new Zend_Config_Exception("Section '$section' cannot be found in $filename");
             }
+
             $dataArray = $this->_processExtends($config, $section);
-            if(!is_array($dataArray)) {
-                // section in the XML file contains just one top level string
-                $dataArray = array($section=>$dataArray);
+            if (!is_array($dataArray)) {
+                // Section in the XML file contains just one top level string
+                $dataArray = array($section => $dataArray);
             }
+
             parent::__construct($dataArray, $allowModifications);
         }
 
         $this->_loadedSection = $section;
     }
 
-
     /**
      * Helper function to process each element in the section and handle
      * the "extends" inheritance attribute.
      *
-     * @param SimpleXMLElement $element
-     * @param string $section
-     * @param array $config
-     * @throws Zend_Config_Exception
+     * @param  SimpleXMLElement $element XML Element to process
+     * @param  string           $section Section to process
+     * @param  array            $config  Configuration which was parsed yet
+     * @throws Zend_Config_Exception When $section cannot be found
      * @return array
      */
-    protected function _processExtends($element, $section, $config = array())
+    protected function _processExtends(SimpleXMLElement $element, $section, array $config = array())
     {
-        if (!$element->$section) {
-            /** @see Zend_Config_Exception */
+        if (!isset($element->$section)) {
             require_once 'Zend/Config/Exception.php';
             throw new Zend_Config_Exception("Section '$section' cannot be found");
         }
@@ -121,7 +147,10 @@ class Zend_Config_Xml extends Zend_Config
         if (isset($thisSection['extends'])) {
             $extendedSection = (string) $thisSection['extends'];
             $this->_assertValidExtend($section, $extendedSection);
-            $config = $this->_processExtends($element, $extendedSection, $config);
+            
+            if (!$this->_skipExtends) {
+                $config = $this->_processExtends($element, $extendedSection, $config);
+            }
         }
 
         $config = $this->_arrayMergeRecursive($config, $this->_toArray($thisSection));
@@ -129,62 +158,95 @@ class Zend_Config_Xml extends Zend_Config
         return $config;
     }
 
-
     /**
      * Returns a string or an associative and possibly multidimensional array from
      * a SimpleXMLElement.
      *
-     * @param SimpleXMLElement $xmlObject
+     * @param  SimpleXMLElement $xmlObject Convert a SimpleXMLElement into an array
      * @return array|string
      */
-    protected function _toArray($xmlObject)
+    protected function _toArray(SimpleXMLElement $xmlObject)
     {
         $config = array();
-        if (count($xmlObject->children())) {
-            foreach ($xmlObject->children() as $key => $value) {
-                if ($value->children()) {
-                    $value = $this->_toArray($value);
-                } else {
-                    $value = (string) $value;
+
+        // Search for parent node values
+        if (count($xmlObject->attributes()) > 0) {
+            foreach ($xmlObject->attributes() as $key => $value) {
+                if ($key === 'extends') {
+                    continue;
                 }
+
+                $value = (string) $value;
+
                 if (array_key_exists($key, $config)) {
                     if (!is_array($config[$key])) {
                         $config[$key] = array($config[$key]);
                     }
+
                     $config[$key][] = $value;
                 } else {
                     $config[$key] = $value;
                 }
             }
-        } elseif (!isset($xmlObject['extends'])) {
-            // object has no children and doesn't use the extends attribute: it's a string
+        }
+
+        // Search for children
+        if (count($xmlObject->children()) > 0) {
+            foreach ($xmlObject->children() as $key => $value) {
+                if (count($value->children()) > 0) {
+                    $value = $this->_toArray($value);
+                } else if (count($value->attributes()) > 0) {
+                    $attributes = $value->attributes();
+                    if (isset($attributes['value'])) {
+                        $value = (string) $attributes['value'];
+                    } else {
+                        $value = $this->_toArray($value);
+                    }
+                } else {
+                    $value = (string) $value;
+                }
+
+                if (array_key_exists($key, $config)) {
+                    if (!is_array($config[$key]) || !array_key_exists(0, $config[$key])) {
+                        $config[$key] = array($config[$key]);
+                    }
+
+                    $config[$key][] = $value;
+                } else {
+                    $config[$key] = $value;
+                }
+            }
+        } else if (!isset($xmlObject['extends']) && (count($config) === 0)) {
+            // Object has no children nor attributes and doesn't use the extends
+            // attribute: it's a string
             $config = (string) $xmlObject;
         }
+
         return $config;
     }
 
     /**
      * Merge two arrays recursively, overwriting keys of the same name
-     * in $array1 with the value in $array2.
+     * in $firstArray with the value in $secondArray.
      *
-     * @param array $array1
-     * @param array $array2
+     * @param  mixed $firstArray  First array
+     * @param  mixed $secondArray Second array to merge into first array
      * @return array
      */
-    protected function _arrayMergeRecursive($array1, $array2)
+    protected function _arrayMergeRecursive($firstArray, $secondArray)
     {
-        if (is_array($array1) && is_array($array2)) {
-            foreach ($array2 as $key => $value) {
-                if (isset($array1[$key])) {
-                    $array1[$key] = $this->_arrayMergeRecursive($array1[$key], $value);
+        if (is_array($firstArray) && is_array($secondArray)) {
+            foreach ($secondArray as $key => $value) {
+                if (isset($firstArray[$key])) {
+                    $firstArray[$key] = $this->_arrayMergeRecursive($firstArray[$key], $value);
                 } else {
-                    $array1[$key] = $value;
+                    $firstArray[$key] = $value;
                 }
             }
         } else {
-            $array1 = $array2;
+            $firstArray = $secondArray;
         }
-        return $array1;
-    }
 
+        return $firstArray;
+    }
 }
