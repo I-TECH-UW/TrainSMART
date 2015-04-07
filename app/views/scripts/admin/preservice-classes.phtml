@@ -36,7 +36,6 @@ ob_end_clean();
 			$(function() {
 				$( "#dialog-form" ).dialog({
 					autoOpen: false,
-					height: 550,
 					width: 350,
 					modal: true,
 					buttons: {
@@ -47,6 +46,11 @@ ob_end_clean();
 							$("#_instructorid").val($("#instructorid").val());
 							$("#_coursetypeid").val($("#coursetypeid").val());
 							$("#_coursetopic").val($("#coursetopic").val());
+
+                            $("#_class_modules_id").val($("#class_modules_id").val());
+                            $("#_custom_1").val($("#custom_1").val());
+                            $("#_credits").val($("#credits").val());
+                            $("#_custom_2").val($("#custom_2").val());
 
 							$("#_id").val($("#currentid").val());
 							if ($("#currentid").val() == 0){
@@ -93,16 +97,22 @@ ob_end_clean();
 					});
 			});
 
-			function edititem(iid,itxt,sdate,edate,insid,ctid,ctopic){
-				$('#dialog-form').dialog('option', 'title', 'Update class');
-				$("#currentid").val(iid);
+            function edititem(d){
 
-				$("#classname").val(itxt);
-				$("#startdate").val(sdate);
-				$("#enddate").val(edate);
-				$("#instructorid").val(insid);
-				$("#coursetypeid").val(ctid);
-				$("#coursetopic").val(ctopic);
+				$('#dialog-form').dialog('option', 'title', 'Update class');
+				$("#currentid").val(d['id']);
+
+				$("#classname").val(d['classname']);
+				$("#startdate").val(d['startdate']);
+				$("#enddate").val(d['enddate']);
+				$("#instructorid").val(d['instructorid']);
+				$("#coursetypeid").val(d['coursetypeid']);
+				$("#coursetopic").val(d['coursetopic']);
+
+                $("#class_modules_id").val(d['class_modules_id']);
+                $("#custom_1").val(d['custom_1']);
+                $("#credits").val(d['credits']);
+                $("#custom_2").val(d['custom_2']);
 
 				$( "#dialog-form" ).dialog( "open" );
 			}
@@ -158,30 +168,48 @@ ob_end_clean();
 
 	<form method="post">
 		<fieldset>
-			<label for="name">Class name</label>
+			<label for="classname">Class name</label>
 			<input type="text" name="classname" id="classname" class="text ui-widget-content ui-corner-all" />
-			<label for="name">Start date</label>
-			<input type="text" name="startdate" id="startdate" class="calendarbox text ui-widget-content ui-corner-all" />
-			<label for="name">End date</label>
-			<input type="text" name="enddate" id="enddate" class="calendarbox text ui-widget-content ui-corner-all" />
-			<label for="name">Instructor</label>
-			<select name="instructorid" id="instructorid" class="text ui-widget-content ui-corner-all">
-<?php
-	foreach ($this->tutors as $tutor){
-		echo "<option value=\"" . $tutor['id'] . "\">" . $tutor['last_name'] . ", " . $tutor['first_name'] . "</option>\n";
-	}
-?>
-			</select>
-			<label for="name">Course type</label>
-			<select type="text" name="coursetypeid" id="coursetypeid" class="text ui-widget-content ui-corner-all">
-<?php
-	foreach ($this->coursetypes as $ct){
-		echo "<option value=\"" . $ct['id'] . "\">" . $ct['coursetype'] . "</option>\n";
-	}
-?>
-			</select>
-			<label for="name">Topic</label>
-			<input type="text" name="coursetopic" id="coursetopic" class="text ui-widget-content ui-corner-all" />
+            <label for="coursetypeid">Course type</label>
+            <select type="text" name="coursetypeid" id="coursetypeid" class="text ui-widget-content ui-corner-all">
+                <?php
+                foreach ($this->coursetypes as $ct){
+                    echo "<option value=\"" . $ct['id'] . "\">" . $ct['coursetype'] . "</option>\n";
+                }
+                ?>
+            </select>
+            <label for="coursetopic">Topic</label>
+            <input type="text" name="coursetopic" id="coursetopic" class="text ui-widget-content ui-corner-all" />
+            <?php if ($this->setting['site_style_id'] == 2) { ?>
+                <label for="class_module_id">Module</label>
+                <select name="class_module_id" id="class_module_id" class="text ui-widget-content ui-corner-all">
+                    <?php
+                    foreach ($this->modules as $module){
+                        echo "<option value=\"" . $module['id'] . "\">" . $module['external_id'] . " - " . $module['title'] . "</option>\n";
+                    }
+                    ?>
+                </select>
+                <label for="custom_1">NQF Level</label>
+                <input type="text" name="custom_1" id="custom_1" class="text ui-widget-content ui-corner_all" />
+                <label for="credits">Credits</label>
+                <input type="text" name="credits" id="credits" class="text ui-widget-content ui-corner_all" />
+                <label for="custom_2">Internal Assessment (Y/N)</label>
+                <input type="text" name="custom_2" id="custom_2" class="text ui-widget-content ui-corner_all" />
+            <?php } else { ?>
+                <label for="startdate">Start date</label>
+                <input type="text" name="startdate" id="startdate" class="calendarbox text ui-widget-content ui-corner-all" />
+                <label for="enddate">End date</label>
+                <input type="text" name="enddate" id="enddate" class="calendarbox text ui-widget-content ui-corner-all" />
+                <label for="instructorid">Instructor</label>
+                <select name="instructorid" id="instructorid" class="text ui-widget-content ui-corner-all">
+                <?php
+                    foreach ($this->tutors as $tutor){
+                        echo "<option value=\"" . $tutor['id'] . "\">" . $tutor['last_name'] . ", " . $tutor['first_name'] . "</option>\n";
+                    }
+                    ?>
+                </select>
+            <?php } ?>
+
 		</fieldset>
 		<input type="hidden" name="currentid" id="currentid" class="text ui-widget-content ui-corner-all" />
 	</form>
@@ -202,6 +230,18 @@ ob_end_clean();
 								<tr>
 									<th>ID</th>
 									<th>Title</th>
+                                    <th>Course Type</th>
+                                    <th>Course Topic</th>
+                                    <?php if ($this->setting['site_style_id'] == 2) { ?>
+                                        <th>Module</th>
+                                        <th>NQF Level</th>
+                                        <th>Credits</th>
+                                        <th>Internal Assessment</th>
+                                    <?php } else { ?>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Instructor</th>
+                                    <?php } ?>
 								</tr>
 							</thead>
 							<tbody>
@@ -209,9 +249,22 @@ ob_end_clean();
 <?php
 	foreach ($this->lookup as $lookup){
 ?>
-								<tr class="GradeA" style="cursor : pointer;" onclick="edititem('<?php echo $lookup['id']; ?>','<?php echo ($lookup['classname']); ?>','<?php echo addslashes(date("m/d/Y", strtotime($lookup['startdate']))); ?>','<?php echo addslashes(date("m/d/Y", strtotime($lookup['enddate']))); ?>','<?php echo addslashes($lookup['instructorid']); ?>','<?php echo addslashes($lookup['coursetypeid']); ?>','<?php echo addslashes($lookup['coursetopic']); ?>');">
+                                <tr class="GradeA" style="cursor : pointer;" onclick='edititem(<?php echo json_encode($lookup); ?>);'>
+
 									<td><?php echo $lookup['id']; ?></td>
-									<td class=""><?php echo $lookup['classname']; ?></td>
+									<td><?php echo $lookup['classname']; ?></td>
+                                    <td><?php echo $this->coursetypes[$lookup['coursetypeid']]['coursetype']; ?></td>
+                                    <td><?php echo addslashes($lookup['coursetopic']); ?></td>
+                                    <?php if ($this->setting['site_style_id'] == 2) { ?>
+                                        <td><?php echo $this->modules[$lookup['class_modules_id']]['title'] ?></td>
+                                        <td><?php echo $lookup['custom_1'] ?></td>
+                                        <td><?php echo $lookup['credits'] ?></td>
+                                        <td><?php echo $lookup['custom_2'] ?></td>
+                                    <?php } else { ?>
+                                        <td><?php echo addslashes(date("m/d/Y", strtotime($lookup['startdate']))); ?></td>
+                                        <td><?php echo addslashes(date("m/d/Y", strtotime($lookup['enddate']))); ?></td>
+                                        <td><?php echo addslashes($lookup['instructorid']); ?></td>
+                                    <?php } ?>
 								</tr>
 <?php
 	}
@@ -225,14 +278,18 @@ ob_end_clean();
 					</div>
 
 <form action="" id="adminform" method="post" class="formvalidate">
-<input type="hidden" name="_action" id="_action" value="addnew">
-<input type="hidden" name="_classname" id="_classname" value="">
-<input type="hidden" name="_startdate" id="_startdate" value="">
-<input type="hidden" name="_enddate" id="_enddate" value="">
-<input type="hidden" name="_instructorid" id="_instructorid" value="">
-<input type="hidden" name="_coursetypeid" id="_coursetypeid" value="">
-<input type="hidden" name="_coursetopic" id="_coursetopic" value="">
-<input type="hidden" name="_id" id="_id" value="0">
+    <input type="hidden" name="_action" id="_action" value="addnew" />
+    <input type="hidden" name="_classname" id="_classname" value="" />
+    <input type="hidden" name="_startdate" id="_startdate" value="" />
+    <input type="hidden" name="_enddate" id="_enddate" value="" />
+    <input type="hidden" name="_instructorid" id="_instructorid" value="" />
+    <input type="hidden" name="_coursetypeid" id="_coursetypeid" value="" />
+    <input type="hidden" name="_coursetopic" id="_coursetopic" value="" />
+    <input type="hidden" name="_id" id="_id" value="0" />
+    <input type="hidden" name="_class_modules_id" id="_class_modules_id" value="" />
+    <input type="hidden" name="_custom_1" id="_custom_1" value="" />
+    <input type="hidden" name="_credits" id="_credits" value="" />
+    <input type="hidden" name="_custom_2" id="_custom_2" value="" />
 </form>
 
 				</div>

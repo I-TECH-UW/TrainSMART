@@ -2241,13 +2241,22 @@ class AdminController extends UserController
 			$this->_redirect ( 'admin/preservice-classes' );
 		}
 
+        $db = $this->dbfunc();
+        $q = "select id, external_id, title from class_modules ORDER BY title ASC";
+        $modules = $db->fetchAssoc($q);
+
 		$list = $helper->AdminClasses();
-		$coursetypes = $helper->AdminCourseTypes();
+
+        $q = "select id, coursetype from lookup_coursetype ORDER BY coursetype ASC";
+		$coursetypes = $db->fetchAssoc($q);
+
+        //$coursetypes = $helper->AdminCourseTypes();
 		$tutors = $helper->getAllTutors();
 		$this->view->assign("lookup", $list);
 		$this->view->assign("coursetypes", $coursetypes);
 		$this->view->assign("tutors", $tutors);
 		$this->view->assign("header","Classes");
+        $this->view->assign("modules", $modules);
 	}
 	
 	//TA: changed on 7/21/2014

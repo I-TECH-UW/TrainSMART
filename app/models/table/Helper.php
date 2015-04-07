@@ -1288,6 +1288,11 @@ class Helper extends ITechTable
 	#                      #
 	########################
 
+    /**
+     * update a course's info to the database
+     * @param $params - an array with keys '_id', '_classname', '_startdate', '_enddate', '_instructorid',
+     * '_coursetypeid', and '_coursetopic' to be inserted into the database.
+     */
 	public function updateClasses($params){
 		$linktable = "classes";
 		$maincolumn = "classname";
@@ -1296,13 +1301,13 @@ class Helper extends ITechTable
 		$col4 = "instructorid";
 		$col5 = "coursetypeid";
 		$col6 = "coursetopic";
-		$id = $_POST["_id"];
-		$value = $_POST['_classname'];
-		$value2 = date("Y-m-d", strtotime($_POST['_startdate']));
-		$value3 = date("Y-m-d", strtotime($_POST['_enddate']));
-		$value4 = $_POST['_instructorid'];
-		$value5 = $_POST['_coursetypeid'];
-		$value6 = $_POST['_coursetopic'];
+		$id = $params["_id"];
+		$value = $params['_classname'];
+		$value2 = date("Y-m-d", strtotime($params['_startdate']));
+		$value3 = date("Y-m-d", strtotime($params['_enddate']));
+		$value4 = $params['_instructorid'];
+		$value5 = $params['_coursetypeid'];
+		$value6 = $params['_coursetopic'];
 
 		$select = $this->dbfunc()->select()
 			->from($linktable)
@@ -1580,6 +1585,11 @@ class Helper extends ITechTable
 	#                   #
 	#####################
 
+    /**
+     * add a course's info to the database
+     * @param $params - an array with keys '_id', '_classname', '_startdate', '_enddate', '_instructorid',
+     * '_coursetypeid', and '_coursetopic' to be inserted into the database.
+     */
 	public function addClasses($params){
 		$linktable = "classes";
 		$maincolumn = "classname";
@@ -1588,13 +1598,13 @@ class Helper extends ITechTable
 		$col4 = "instructorid";
 		$col5 = "coursetypeid";
 		$col6 = "coursetopic";
-		$id = $_POST["_id"];
-		$value = $_POST['_classname'];
-		$value2 = date("Y-m-d", strtotime($_POST['_startdate']));
-		$value3 = date("Y-m-d", strtotime($_POST['_enddate']));
-		$value4 = $_POST['_instructorid'];
-		$value5 = $_POST['_coursetypeid'];
-		$value6 = $_POST['_coursetopic'];
+		$id = $params["_id"];
+		$value = $params['_classname'];
+		$value2 = date("Y-m-d", strtotime($params['_startdate']));
+		$value3 = date("Y-m-d", strtotime($params['_enddate']));
+		$value4 = $params['_instructorid'];
+		$value5 = $params['_coursetypeid'];
+		$value6 = $params['_coursetopic'];
 
 		$select = $this->dbfunc()->select()
 			->from($linktable)
