@@ -59,6 +59,7 @@ ob_end_clean();
 								$("#_action").val("update");
 							}
 
+                            // TODO: Enforce data validation on new fields when fields stop changing
 							if ($("#startdate").val() == ""){
 								alert ('Please enter a start date');
 								$("#startdate").focus();
@@ -181,8 +182,8 @@ ob_end_clean();
             <label for="coursetopic">Topic</label>
             <input type="text" name="coursetopic" id="coursetopic" class="text ui-widget-content ui-corner-all" />
             <?php if ($this->setting['site_style_id'] == 2) { ?>
-                <label for="class_module_id">Module</label>
-                <select name="class_module_id" id="class_module_id" class="text ui-widget-content ui-corner-all">
+                <label for="class_modules_id">Module</label>
+                <select name="class_modules_id" id="class_modules_id" class="text ui-widget-content ui-corner-all">
                     <?php
                     foreach ($this->modules as $module){
                         echo "<option value=\"" . $module['id'] . "\">" . $module['external_id'] . " - " . $module['title'] . "</option>\n";

@@ -2229,17 +2229,48 @@ class AdminController extends UserController
 	public function preserviceClassesAction(){
 		$helper = new Helper();
 
-		if (isset ($_POST['_action'])){
-			switch ($_POST['_action']){
-				case "addnew":
-				$helper->addClasses($_POST);
-				break;
-				case "update":
-				$helper->updateClasses($_POST);
-				break;
-			}
-			$this->_redirect ( 'admin/preservice-classes' );
-		}
+        if ($this->getRequest()->isPost()) {
+            $params = $this->getAllParams();
+
+            $map = array(
+                '_startdate' => 'startdate',
+                '_enddate' => 'enddate',
+                '_instructorid' => 'instructorid',
+                '_coursetypeid' => 'coursetypeid',
+                '_coursetopic' => 'coursetopic',
+                '_classname' => 'classname',
+                '_id' => 'id',
+                '_class_modules_id' => 'class_modules_id',
+                '_custom_1' => 'custom_1',
+                '_credits' => 'credits',
+                '_custom_2' => 'custom_2',
+            );
+
+
+            // filter out empty parameters and translate to database column names
+
+            // drop all keys with 0 length
+            $params = array_filter($params, strlen);
+
+            // TODO: What would it take to just use column names in the form? That would eliminate this processing step and the map
+            // translate form fields to database column names
+            $data = array();
+            foreach ($params as $k => $v) {
+                if (array_key_exists($k, $map)) {
+                    $data[$map[$k]] = $v;
+                }
+            }
+
+            switch($params['_action']) {
+                case "addnew":
+                    $helper->addClasses($data);
+                    break;
+                case "update":
+                    $helper->updateClasses($data);
+                    break;
+            }
+            $this->_redirect ( 'admin/preservice-classes' );
+        }
 
         $db = $this->dbfunc();
         $q = "select id, external_id, title from class_modules ORDER BY title ASC";
@@ -2250,7 +2281,6 @@ class AdminController extends UserController
         $q = "select id, coursetype from lookup_coursetype ORDER BY coursetype ASC";
 		$coursetypes = $db->fetchAssoc($q);
 
-        //$coursetypes = $helper->AdminCourseTypes();
 		$tutors = $helper->getAllTutors();
 		$this->view->assign("lookup", $list);
 		$this->view->assign("coursetypes", $coursetypes);

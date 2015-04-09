@@ -1290,44 +1290,18 @@ class Helper extends ITechTable
 
     /**
      * update a course's info to the database
-     * @param $params - an array with keys '_id', '_classname', '_startdate', '_enddate', '_instructorid',
-     * '_coursetypeid', and '_coursetopic' to be inserted into the database.
+     * @param $params - an array with keys matching the table 'classes' column names
      */
 	public function updateClasses($params){
 		$linktable = "classes";
-		$maincolumn = "classname";
-		$col2 = "startdate";
-		$col3 = "enddate";
-		$col4 = "instructorid";
-		$col5 = "coursetypeid";
-		$col6 = "coursetopic";
-		$id = $params["_id"];
-		$value = $params['_classname'];
-		$value2 = date("Y-m-d", strtotime($params['_startdate']));
-		$value3 = date("Y-m-d", strtotime($params['_enddate']));
-		$value4 = $params['_instructorid'];
-		$value5 = $params['_coursetypeid'];
-		$value6 = $params['_coursetopic'];
 
-		$select = $this->dbfunc()->select()
-			->from($linktable)
-			->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)))
-			->where('id <> ?', $id);
-
-
-		$result = $this->dbfunc()->fetchAll($select);
-		if (count ($result) == 0){
-			# LINK NOT FOUND - ADDING
-			$i_arr = array(
-				$maincolumn	=> $value,
-				$col2		=> $value2,
-				$col3		=> $value3,
-				$col4		=> $value4,
-				$col5		=> $value5,
-				$col6		=> $value6
-			);
-			$instypeinsert = $this->dbfunc()->update($linktable,$i_arr,'id = ' . $id);
-		}
+        if (array_key_exists('startdate', $params)) {
+            $params['startdate'] = date("Y-m-d", strtotime($params['startdate']));
+        }
+        if (array_key_exists('enddate', $params)) {
+            $params['enddate'] = date("Y-m-d", strtotime($params['enddate']));
+        }
+        $this->dbfunc()->update($linktable, $params, 'id = ' . $params['id']);
 	}
 
 	public function updateCadres($params){
@@ -1587,43 +1561,19 @@ class Helper extends ITechTable
 
     /**
      * add a course's info to the database
-     * @param $params - an array with keys '_id', '_classname', '_startdate', '_enddate', '_instructorid',
-     * '_coursetypeid', and '_coursetopic' to be inserted into the database.
+     * @param $params - an array with keys matching the table 'classes' column names
      */
 	public function addClasses($params){
 		$linktable = "classes";
-		$maincolumn = "classname";
-		$col2 = "startdate";
-		$col3 = "enddate";
-		$col4 = "instructorid";
-		$col5 = "coursetypeid";
-		$col6 = "coursetopic";
-		$id = $params["_id"];
-		$value = $params['_classname'];
-		$value2 = date("Y-m-d", strtotime($params['_startdate']));
-		$value3 = date("Y-m-d", strtotime($params['_enddate']));
-		$value4 = $params['_instructorid'];
-		$value5 = $params['_coursetypeid'];
-		$value6 = $params['_coursetopic'];
 
-		$select = $this->dbfunc()->select()
-			->from($linktable)
-			->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)));
+        if (array_key_exists('startdate', $params)) {
+            $params['startdate'] = date("Y-m-d", strtotime($params['startdate']));
+        }
+        if (array_key_exists('enddate', $params)) {
+            $params['enddate'] = date("Y-m-d", strtotime($params['enddate']));
+        }
+        $this->dbfunc()->insert($linktable, $params);
 
-
-		$result = $this->dbfunc()->fetchAll($select);
-		if (count ($result) == 0){
-			# LINK NOT FOUND - ADDING
-			$i_arr = array(
-				$maincolumn	=> $value,
-				$col2		=> $value2,
-				$col3		=> $value3,
-				$col4		=> $value4,
-				$col5		=> $value5,
-				$col6		=> $value6
-			);
-			$instypeinsert = $this->dbfunc()->insert($linktable,$i_arr);
-		}
 	}
 
 	public function addCadres($params){
