@@ -2226,6 +2226,11 @@ class AdminController extends UserController
 		$this->_redirect('user/search');
 	}
 
+    /**
+     * this controller's view relies on the indexes of the resulting array from fetchAssoc to be the db ids,
+     * which relies, in turn, on id being the first column selected
+     */
+
 	public function preserviceClassesAction(){
 		$helper = new Helper();
 
@@ -2274,6 +2279,8 @@ class AdminController extends UserController
 
         $db = $this->dbfunc();
         $q = "select id, external_id, title from class_modules ORDER BY title ASC";
+        // this view relies on the indexes of the resulting array from fetchAssoc to be the db ids
+        // which relies, in turn, on id being the first column selected
         $modules = $db->fetchAssoc($q);
 
 		$list = $helper->AdminClasses();
@@ -2288,7 +2295,61 @@ class AdminController extends UserController
 		$this->view->assign("header","Classes");
         $this->view->assign("modules", $modules);
 	}
-	
+
+    /**
+     * this controller relies on view form fields having the same name as the database columns
+     *
+     * this view relies on the indexes of the resulting array from fetchAssoc to be the db ids,
+     * which relies, in turn, on id being the first column selected
+     *
+     */
+
+    public function preserviceClassModulesAction()
+    {
+        // this function relies on form fields having the same names as their database column
+
+        if ($this->getRequest()->isPost()) {
+            $params = $this->getAllParams();
+
+            // drop all keys with 0 length
+            $params = array_filter($params, strlen);
+
+            $dbcols = array (
+                'id',
+                'external_id',
+                'title',
+                'lookup_coursetype_id',
+                'custom_1'
+            );
+            // filter out keys that don't have database columns
+            $db_data = array_intersect_key($params, array_flip($dbcols));
+
+            switch($params['data_action']) {
+                case "addnew":
+                {
+                    $this->dbfunc()->insert('class_modules', $db_data);
+                    break;
+                }
+                case "update":
+                {
+                    $this->dbfunc()->update('class_modules', $db_data, 'id = '.$db_data['id']);
+                    break;
+                }
+            }
+            $this->redirect('admin/preservice-class-modules');
+        }
+        // this view relies on the indexes of the resulting array from fetchAssoc to be the db ids,
+        // which relies, in turn, on id being the first column selected
+        $this->view->assign('modules', $this->dbfunc()->fetchAssoc(
+                $this->dbfunc()->select()->from("class_modules")
+            )
+        );
+        $this->view->assign('coursetypes', $this->dbfunc()->fetchAssoc(
+                $this->dbfunc()->select()->from("lookup_coursetype")
+            )
+        );
+    }
+
 	//TA: changed on 7/21/2014
 	public function preserviceLabelsAction(){
 	    require_once('models/table/System.php');

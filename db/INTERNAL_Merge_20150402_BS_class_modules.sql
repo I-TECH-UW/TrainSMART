@@ -9,5 +9,6 @@ CREATE TABLE `class_modules` (
   `external_id` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `lookup_coursetype_id` int(10) NOT NULL DEFAULT 0,
+  `custom_1` varchar(255)
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
