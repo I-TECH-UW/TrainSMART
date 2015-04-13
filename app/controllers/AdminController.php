@@ -2314,6 +2314,8 @@ class AdminController extends UserController
             // drop all keys with 0 length
             $params = array_filter($params, strlen);
 
+            $params['id'] = $params['currentid'];
+
             $dbcols = array (
                 'id',
                 'external_id',
@@ -2335,19 +2337,24 @@ class AdminController extends UserController
                     $this->dbfunc()->update('class_modules', $db_data, 'id = '.$db_data['id']);
                     break;
                 }
+                case "delete":
+                {
+                    $this->dbfunc()->delete('class_modules', 'id = '.$db_data['id']);
+                    break;
+                }
             }
             $this->_redirect('admin/preservice-class-modules');
         }
+
         // this view relies on the indexes of the resulting array from fetchAssoc to be the db ids,
         // which relies, in turn, on id being the first column selected
         $this->view->assign('modules', $this->dbfunc()->fetchAssoc(
-                $this->dbfunc()->select()->from("class_modules")
-            )
-        );
+            $this->dbfunc()->select()->from("class_modules")
+        ));
+
         $this->view->assign('coursetypes', $this->dbfunc()->fetchAssoc(
-                $this->dbfunc()->select()->from("lookup_coursetype")
-            )
-        );
+            $this->dbfunc()->select()->from("lookup_coursetype")
+        ));
     }
 
 	//TA: changed on 7/21/2014
