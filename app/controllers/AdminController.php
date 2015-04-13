@@ -2336,7 +2336,7 @@ class AdminController extends UserController
                     break;
                 }
             }
-            $this->redirect('admin/preservice-class-modules');
+            $this->_redirect('admin/preservice-class-modules');
         }
         // this view relies on the indexes of the resulting array from fetchAssoc to be the db ids,
         // which relies, in turn, on id being the first column selected
