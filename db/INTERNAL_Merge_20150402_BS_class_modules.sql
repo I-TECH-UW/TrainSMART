@@ -13,4 +13,4 @@ CREATE TABLE `class_modules` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-INSERT IGNORE INTO `translation` (key_phrase, phrase) values ('Class Modules Custom 1', 'Class Modules Custom 1');
+INSERT IGNORE INTO `translation` (key_phrase, phrase) values ('ps class modules custom 1', 'ps class modules custom 1');
