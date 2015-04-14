@@ -2391,6 +2391,7 @@ class AdminController extends UserController
 		'label_ps_exam_mark' => 'ps exam mark',
 		'label_ps_ca_mark' => 'ps ca mark',
 		'label_ps_credits' => 'ps credits',
+        'label_class_modules_custom_1' => 'Class Modules Custom 1',
 				
 		);
 
