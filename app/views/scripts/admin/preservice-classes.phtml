@@ -190,11 +190,11 @@ ob_end_clean();
                     }
                     ?>
                 </select>
-                <label for="custom_1">NQF Level</label>
+                <label for="custom_1">Short Name</label>
                 <input type="text" name="custom_1" id="custom_1" class="text ui-widget-content ui-corner_all" />
                 <label for="credits">Credits</label>
                 <input type="text" name="credits" id="credits" class="text ui-widget-content ui-corner_all" />
-                <label for="custom_2">Internal Assessment (Y/N)</label>
+                <label for="custom_2">Weight</label>
                 <input type="text" name="custom_2" id="custom_2" class="text ui-widget-content ui-corner_all" />
             <?php } else { ?>
                 <label for="startdate">Start date</label>
@@ -235,9 +235,9 @@ ob_end_clean();
                                     <th>Course Topic</th>
                                     <?php if ($this->setting['site_style_id'] == 2) { ?>
                                         <th>Module</th>
-                                        <th>NQF Level</th>
+                                        <th>Short Name</th>
                                         <th>Credits</th>
-                                        <th>Internal Assessment</th>
+                                        <th>Weight</th>
                                     <?php } else { ?>
                                         <th>Start Date</th>
                                         <th>End Date</th>
