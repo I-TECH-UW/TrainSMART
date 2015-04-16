@@ -2389,7 +2389,7 @@ class AdminController extends UserController
 // 				$this->view->assign("fieldvalues",$list);
 // 				$this->view->assign("allfields",$fields);
 		
- 				$this->view->assign("header","Field labels");
+ 				$this->view->assign("header",t("Field labels"));
 	}
 	
 	//old code
@@ -2459,7 +2459,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminDegrees();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Degrees");
+		$this->view->assign("header",t("Degrees"));
 	}
 
 	public function preserviceCoursetypesAction(){
@@ -2479,7 +2479,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminCoursetypes();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Course types");
+		$this->view->assign("header",t("Course types"));
 	}
 
 	public function preserviceFundingAction(){
@@ -2499,7 +2499,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminFunding();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Funding sources");
+		$this->view->assign("header",t("Funding sources"));
 	}
 
 	public function preserviceInstitutiontypesAction(){
@@ -2519,7 +2519,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminInstitutionTypes();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Institution types");
+		$this->view->assign("header",t("Institution types"));
 	}
 
 	public function preserviceLanguagesAction(){
@@ -2539,7 +2539,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminLanguages();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Languages");
+		$this->view->assign("header",t("Languages"));
 	}
 
 	public function preserviceNationalitiesAction(){
@@ -2559,7 +2559,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminNationalities();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Nationalities");
+		$this->view->assign("header",t("Nationalities"));
 	}
 
 	public function preserviceJoindropreasonsAction(){
@@ -2579,7 +2579,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminJoinDropReasons();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Join & drop reasons");
+		$this->view->assign("header",t("Join & drop reasons"));
 	}
 
 	public function preserviceSponsorsAction(){
@@ -2599,7 +2599,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminSponsors();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Sponsors");
+		$this->view->assign("header",t("Sponsors"));
 	}
 
 	public function preserviceStudenttypesAction(){
@@ -2619,7 +2619,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminStudenttypes();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Student types");
+		$this->view->assign("header",t("Student types"));
 	}
 
 	public function preserviceTutortypesAction(){
@@ -2639,7 +2639,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminTutortypes();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Tutor types");
+		$this->view->assign("header",t("Tutor types"));
 	}
 
 	public function preserviceReligionAction(){
@@ -2659,7 +2659,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminStudenttypes();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Religious denominations");
+		$this->view->assign("header",t("Religious denominations"));
 	}
 
 	public function skillsmartSettingsAction()
@@ -2773,7 +2773,7 @@ class AdminController extends UserController
 		$list = $helper->getSkillSmartLookups();
 		$dump = var_export($list,true);
 		$this->view->assign("lookup", $list['race']);
-		$this->view->assign("header","Race");
+		$this->view->assign("header",t("Race"));
 	}
 
 	public function skillsmartDisabilityAction(){
@@ -2793,7 +2793,7 @@ class AdminController extends UserController
 
 		$list = $helper->getSkillSmartLookups();
 		$this->view->assign("lookup", $list['disability']);
-		$this->view->assign("header","Disability");
+		$this->view->assign("header",t("Disability"));
 	}
 
 	public function skillsmartProfessionalbodiesAction(){
@@ -2813,7 +2813,7 @@ class AdminController extends UserController
 
 		$list = $helper->getSkillSmartLookups();
 		$this->view->assign("lookup", $list['professionalbodies']);
-		$this->view->assign("header","Professional Bodies");
+		$this->view->assign("header",t("Professional Bodies"));
 	}
 
 	public function skillsmartSupervisedAction(){
@@ -2833,7 +2833,7 @@ class AdminController extends UserController
 
 		$list = $helper->getSkillSmartLookups();
 		$this->view->assign("lookup", $list['supervised']);
-		$this->view->assign("header","Supervised");
+		$this->view->assign("header",t("Supervised"));
 	}
 
 	public function skillsmartSupervisedfrequencyAction(){
@@ -2853,7 +2853,7 @@ class AdminController extends UserController
 
 		$list = $helper->getSkillSmartLookups();
 		$this->view->assign("lookup", $list['supervisedfrequency']);
-		$this->view->assign("header","Supervision Frequency");
+		$this->view->assign("header",t("Supervision Frequency"));
 	}
 
 	public function skillsmartTrainingAction(){
@@ -2873,7 +2873,7 @@ class AdminController extends UserController
 
 		$list = $helper->getSkillSmartLookups();
 		$this->view->assign("lookup", $list['training']);
-		$this->view->assign("header","Training received");
+		$this->view->assign("header",t("Training received"));
 	}
 
 	public function skillsmartFacilitydepartmentAction(){
@@ -2893,7 +2893,7 @@ class AdminController extends UserController
 
 		$list = $helper->getSkillSmartLookups();
 		$this->view->assign("lookup", $list['facilitydepartment']);
-		$this->view->assign("header","Facility Departments");
+		$this->view->assign("header",t("Facility Departments"));
 	}
 
 	public function skillsmartCompetencyAction(){
@@ -2938,7 +2938,7 @@ class AdminController extends UserController
 			// GENERAL OVERVIEW OF ALL COMPETENCY NAMES
 			$list = $helper->getSkillSmartCompetencies();
 			$this->view->assign("lookup", $list);
-			$this->view->assign("header","Competencies");
+			$this->view->assign("header",t("Competencies"));
 		} else {
 			// COMPETENCY SPECIFIC OUTPUT
 

@@ -37,7 +37,7 @@ ob_end_clean();
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 	<head>
-		<title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+		<title><?php echo t($this->translation['Application Name']);?> | <?php echo t($this->pageTitle); ?></title>
 <?php
 
 	require_once('views/helpers/ScriptContainer.php');
@@ -80,7 +80,7 @@ ob_end_clean();
 
 					buttons: {
 
-						"Save": function() {
+						"<?php echo t('Save') ?>": function() {
 
 							$("#_cadrename").val($("#cadrename").val());
 
@@ -104,7 +104,7 @@ ob_end_clean();
 
 						},
 
-						Cancel: function() {
+						"<?php echo t('Cancel') ?>": function() {
 
 							$( this ).dialog( "close" );
 

@@ -37,7 +37,7 @@ ob_end_clean();
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 	<head>
-		<title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+		<title><?php echo t($this->translation['Application Name']);?> | <?php echo t($this->pageTitle); ?></title>
 <?php
 
 	require_once('views/helpers/ScriptContainer.php');
@@ -80,7 +80,7 @@ ob_end_clean();
 
 					buttons: {
 
-						"Save": function() {
+						"<?php echo t('Save') ?>": function() {
 
 							$("#_degree").val($("#title").val());
 
@@ -102,7 +102,7 @@ ob_end_clean();
 
 						},
 
-						Cancel: function() {
+						"<?php echo t('Cancel') ?>": function() {
 
 							$( this ).dialog( "close" );
 
@@ -140,7 +140,7 @@ ob_end_clean();
 
 			function edititem(iid,itxt){
 
-				$('#dialog-form').dialog('option', 'title', 'Update degree');
+				$('#dialog-form').dialog('option', 'title', '<?php echo t("Update degree")?>');
 
 				$("#currentid").val(iid);
 
@@ -246,7 +246,7 @@ ob_end_clean();
 
 <div id="dialog-form" title="Update degree">
 
-	<p class="validateTips">All form fields are required.</p>
+	<p class="validateTips"><?php echo t('All form fields are required.')?></p>
 
 
 
@@ -254,7 +254,7 @@ ob_end_clean();
 
 		<fieldset>
 
-			<label for="name">Degree</label>
+			<label for="name"><?php echo t('Degree')?></label>
 
 			<input type="text" name="title" id="title" class="text ui-widget-content ui-corner-all" />
 
@@ -294,9 +294,8 @@ ob_end_clean();
 
 								<tr>
 
-									<th>ID</th>
-
-									<th>Title</th>
+									<th><?php echo t('ID');?></th>
+									<th><?php echo t('Title');?></th>
 
 								</tr>
 
@@ -334,7 +333,7 @@ ob_end_clean();
 
 							<br>
 
-							<input type="submit" name="update" id="update" value="Add degree" class="tsbutton green large">
+							<input type="submit" name="update" id="update" value="<?php echo t('Add degree');?>" class="tsbutton green large">
 
 						</div>
 

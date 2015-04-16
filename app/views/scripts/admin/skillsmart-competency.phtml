@@ -50,7 +50,7 @@ ob_end_clean();
 					width: 350,
 					modal: true,
 					buttons: {
-						"Save": function() {
+						"<?php echo t('Save') ?>": function() {
 							$("#_fieldtoupdatedetail").val($("#titledetail").val());
 							$("#_iddetail").val($("#currentiddetail").val());
 							$("#_orderdetail").val($("#orderdetail").val());
@@ -63,11 +63,11 @@ ob_end_clean();
 							$( this ).dialog( "close" );
 							document.getElementById("adminformdetail").submit();
 						},
-						Cancel: function() {
+						<?php echo t('Cancel') ?>: function() {
 							$( this ).dialog( "close" );
 						}
 					},
-					close: function() {
+					"<?php echo t('Close') ?>": function() {
 						//allFields.val( "" ).removeClass( "ui-state-error" );
 					}
 				});
@@ -75,7 +75,7 @@ ob_end_clean();
 				$( "#update" )
 					.button()
 					.click(function() {
-						$('#dialog-form-detail').dialog('option', 'title', 'Add <?php echo $caption ?>');
+						$('#dialog-form-detail').dialog('option', 'title', '<?php echo t('Add competency') ?>');
 						$("#currentiddetail").val("0");
 						$("#titledetail").val("");
 						$("#orderdetail").val("<?php echo(count($this->questions) + 1) ?>");
@@ -93,7 +93,7 @@ ob_end_clean();
 			});
 
 			function edititemdetail(iid,itxt,iorder,itp){
-				$('#dialog-form-detail').dialog('option', 'title', 'Update <?php echo $caption ?>');
+				$('#dialog-form-detail').dialog('option', 'title', '<?php echo t('Update competency') ?>');
 				$("#currentiddetail").val(iid);
 				$("#titledetail").val(itxt);
 				$("#orderdetail").val(iorder);
@@ -111,7 +111,7 @@ ob_end_clean();
 					width: 350,
 					modal: true,
 					buttons: {
-						"Save": function() {
+						"<?php echo t('Save') ?>": function() {
 							$("#_fieldtoupdate").val($("#title").val());
 							$("#_id").val($("#currentid").val());
 							if ($("#currentid").val() == 0){
@@ -122,7 +122,7 @@ ob_end_clean();
 							$( this ).dialog( "close" );
 							document.getElementById("adminform").submit();
 						},
-						Cancel: function() {
+						<?php echo t('Cancel') ?>: function() {
 							$( this ).dialog( "close" );
 						}
 					},
@@ -134,7 +134,7 @@ ob_end_clean();
 				$( "#update" )
 					.button()
 					.click(function() {
-						$('#dialog-form').dialog('option', 'title', 'Add <?php echo $caption ?>');
+						$('#dialog-form').dialog('option', 'title', '<?php echo t('Add competency') ?>');
 						$("#currentid").val("0");
 						$("#title").val("");
 						$( "#dialog-form" ).dialog( "open" );
@@ -143,7 +143,7 @@ ob_end_clean();
 			});
 
 			function edititem(iid,itxt){
-				$('#dialog-form').dialog('option', 'title', 'Update <?php echo $caption ?>');
+				$('#dialog-form').dialog('option', 'title', '<?php echo t('Update competency') ?>');
 				$("#currentid").val(iid);
 				$("#title").val(itxt);
 				$( "#dialog-form" ).dialog( "open" );
@@ -214,15 +214,15 @@ ob_end_clean();
 <?php
 	if ($this->showcomp){
 ?>
-<div id="dialog-form-detail" title="Update <?php echo $caption ?>">
-	<p class="validateTips">All form fields are required.</p>
+<div id="dialog-form-detail" title="<?php echo t('Update competency') ?>">
+	<p class="validateTips"><?php echo t('All form fields are required.')?></p>
 
 	<form method="post">
 		<fieldset>
-			<label for="name"><?php echo strtoupper($caption) ?></label>
+			<label for="name"><?php echo t('Competency') ?></label>
 			<input type="text" name="titledetail" id="titledetail" class="text ui-widget-content ui-corner-all" /><br>
 
-			<label for="name">Field order</label>
+			<label for="name"><?php echo t('Field order') ?></label>
 			<select name="orderdetail" id="orderdetail" class="text ui-widget-content ui-corner-all" style="display : block; width : 100%; padding : .4em;" />
 <?php
 	for ($i = 0; $i <= count($this->questions); $i++){
@@ -231,12 +231,12 @@ ob_end_clean();
 ?>
 			</select>
 
-			<label for="name">Field type</label>
+			<label for="name"><?php echo t('Field type') ?></label>
 			<select name="typedetail" id="typedetail" class="text ui-widget-content ui-corner-all" style="display : block; width : 100%; padding : .4em;" />
-				<option value="text">Text header</option>
-				<option value="questionmulti">Question, A-E options</option>
-				<option value="questionyesno">Question, yes/no options</option>
-				<option value="questiontext">Question, textbox</option>
+				<option value="text"><?php echo t('Text header') ?></option>
+				<option value="questionmulti"><?php echo t('Question, A-E options') ?></option>
+				<option value="questionyesno"><?php echo t('Question, yes/no options') ?></option>
+				<option value="questiontext"><?php echo t('Question, textbox') ?></option>
 			</select>
 		</fieldset>
 		<input type="hidden" name="currentiddetail" id="currentiddetail" class="text ui-widget-content ui-corner-all" />
@@ -256,10 +256,10 @@ ob_end_clean();
 						<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 							<thead>
 								<tr>
-									<th style="width : 70px;">Order</th>
-									<th style="width : 80px;">Type</th>
+									<th style="width : 70px;"><?php echo t('Order') ?></th>
+									<th style="width : 80px;"><?php echo t('Type') ?></th>
 									<th>Title</th>
-									<th style="width : 120px;">Options</th>
+									<th style="width : 120px;"><?php echo t('Options') ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -297,12 +297,12 @@ ob_end_clean();
 						</table>
 						<div style="text-align : right;">
 							<br>
-							<input type="submit" name="update" id="update" value="Add <?php echo $caption ?>" class="tsbutton green large">
+							<input type="submit" name="update" id="update" value="<?php echo t('Add competency') ?>" class="tsbutton green large">
 						</div>
 						
 					</div>
 					<div style="margin-top : 50px;">
-						<h2>Link to qualification</h2>
+						<h2><?php echo t('Link to qualification') ?></h2>
 						<form method="post" name="qualform" id="qualform">
 							<input type="hidden" name="actionqual" id="actionqual" value="1">
 							<input type="hidden" name="compid" id="compid" value="<?php echo($this->compid); ?>">
@@ -311,7 +311,7 @@ ob_end_clean();
 							<thead>
 								<tr>
 									<th style="width : 50px;">Link</th>
-									<th>Qualification group</th>
+									<th><?php echo t('Qualification group') ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -352,12 +352,12 @@ ob_end_clean();
 <?php
 	} else {
 ?>
-<div id="dialog-form" title="Update <?php echo $caption ?>">
-	<p class="validateTips">All form fields are required.</p>
+<div id="dialog-form" title="<?php echo t('Update competency') ?>">
+	<p class="validateTips"><?php echo t('All form fields are required.')?></p>
 
 	<form method="post">
 		<fieldset>
-			<label for="name"><?php echo strtoupper($caption) ?></label>
+			<label for="name"><?php echo t('Competency') ?></label>
 			<input type="text" name="title" id="title" class="text ui-widget-content ui-corner-all" />
 		</fieldset>
 		<input type="hidden" name="currentid" id="currentid" class="text ui-widget-content ui-corner-all" />
@@ -378,8 +378,8 @@ ob_end_clean();
 							<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 								<thead>
 									<tr>
-										<th>Competency</th>
-										<th style="width : 250px;">Options</th>
+										<th><?php echo t('Competency') ?></th>
+										<th style="width : 250px;"><?php echo t('Option') ?></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -389,7 +389,7 @@ ob_end_clean();
 ?>
 									<tr class="GradeA" style="cursor : pointer;">
 										<td class=""><?php echo $lookup['label']; ?></td>
-										<td class="" style="text-align : right;"><input style="padding : 6px;" type="button" value="Edit name" onclick="edititem('<?php echo $lookup['id']; ?>','<?php echo (addslashes($lookup['label'])); ?>');" /> <input style="padding : 6px;" type="button" value="Add/edit questions" onclick="location='/admin/skillsmart-competency/comp/<?php echo($lookup['id']); ?>'" /></td>
+										<td class="" style="text-align : right;"><input style="padding : 6px;" type="button" value="<?php echo t('Edit name')?>" onclick="edititem('<?php echo $lookup['id']; ?>','<?php echo (addslashes($lookup['label'])); ?>');" /> <input style="padding : 6px;" type="button" value="Add/edit questions" onclick="location='/admin/skillsmart-competency/comp/<?php echo($lookup['id']); ?>'" /></td>
 									</tr>
 <?php
 	}
@@ -398,7 +398,7 @@ ob_end_clean();
 							</table>
 							<div style="text-align : right;">
 								<br>
-								<input type="submit" name="update" id="update" value="Add <?php echo $caption ?>" class="tsbutton green large">
+								<input type="submit" name="update" id="update" value="<?php echo t('Add competency') ?>" class="tsbutton green large">
 							</div>
 					</div>
 

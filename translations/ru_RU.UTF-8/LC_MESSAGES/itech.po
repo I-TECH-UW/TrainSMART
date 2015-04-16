@@ -140,6 +140,9 @@ msgstr "Пол"
 msgid "Professional qualification"
 msgstr "Профессиональная квалификация"
 
+msgid "Professional Qualification"
+msgstr "Профессиональная квалификация"
+
 msgid "Birthdate"
 msgstr "Дата рождения"
 
@@ -581,15 +584,15 @@ msgstr "Город"
 
 #: views/helpers/ITechTranslate_adds.php:11
 msgid "Training Name"
-msgstr "Название Тренинга"
+msgstr "Название тренинга"
 
 msgid "Training Organizer"
-msgstr "Организатор Тренинга"
+msgstr "Организатор тренинга"
 
 #: views/helpers/ITechTranslate_adds.php:13 views/scripts/nav-admin.phtml:19
 #: views/scripts/nav-admin.phtml:85 views/scripts/training/roster.phtml:46
 msgid "Training Level"
-msgstr "Уровень Тренинга"
+msgstr "Уровень тренинга"
 
 #: views/helpers/ITechTranslate_adds.php:14
 msgid "PEPFAR topic"
@@ -656,6 +659,9 @@ msgstr "Главная"
 
 msgid "Trainings"
 msgstr "Тренинги"
+
+msgid "Training"
+msgstr "Тренинг"
 
 msgid "People"
 msgstr "Люди"
@@ -799,12 +805,9 @@ msgstr "Настройка региона"
 msgid "Move Regions"
 msgstr "Переместить регионы"
 
-msgid "Training"
-msgstr "Тренинг"
-
 #: views/scripts/nav-admin.phtml:15 views/scripts/nav-admin.phtml:81
 msgid "Training Category"
-msgstr "Категория  Тренинга"
+msgstr "Категория  тренинга"
 
 #: views/scripts/nav-admin.phtml:16 views/scripts/nav-admin.phtml:82
 msgid "Assign Titles"
@@ -812,7 +815,7 @@ msgstr "Присвоить названия"
 
 #: views/scripts/nav-admin.phtml:17 views/scripts/nav-admin.phtml:83
 msgid "Training Title"
-msgstr "Название Тренинга"
+msgstr "Название тренинга"
 
 #: views/scripts/nav-admin.phtml:21 views/scripts/nav-admin.phtml:87
 msgid "PEPFAR Category"
@@ -820,7 +823,7 @@ msgstr "Категория ПЕПФАР"
 
 #: views/scripts/nav-admin.phtml:23 views/scripts/nav-admin.phtml:89
 msgid "Recommended Topic"
-msgstr "Рекомендуемая Тема"
+msgstr "Рекомендуемая тема"
 
 #: views/scripts/nav-admin.phtml:24 views/scripts/nav-admin.phtml:90
 msgid "Nat. Curriculum"
@@ -828,10 +831,10 @@ msgstr "Учебный план"
 
 #: views/scripts/nav-admin.phtml:25 views/scripts/nav-admin.phtml:91
 msgid "Training Method"
-msgstr "Метод Тренинга"
+msgstr "Метод тренинга"
 
 msgid "Training Methods"
-msgstr "Методы Тренинга"
+msgstr "Методы тренинга"
 
 msgid "Method"
 msgstr "Метод"
@@ -875,15 +878,15 @@ msgstr "Учереждения"
 
 #: views/scripts/nav-admin.phtml:42 views/scripts/nav-admin.phtml:108
 msgid "Facilities Settings"
-msgstr "Настройки Учреждения"
+msgstr "Настройки учреждения"
 
 #: views/scripts/nav-admin.phtml:43 views/scripts/nav-admin.phtml:109
 msgid "Facility Types"
-msgstr "Тип Учреждения"
+msgstr "Тип учреждения"
 
 #: views/scripts/nav-admin.phtml:44 views/scripts/nav-admin.phtml:110
 msgid "Facility Sponsors"
-msgstr "Спонсоры Учреждения"
+msgstr "Спонсоры учреждения"
 
 #: views/scripts/nav-admin.phtml:47
 msgid "Preservice"
@@ -901,11 +904,20 @@ msgstr "Кадры"
 msgid "Degrees"
 msgstr "Степень образования"
 
+msgid "Add degree"
+msgstr "Добавить степень образования"
+
+msgid "Update degree"
+msgstr "Обновить степень образования"
+
 msgid "Degree"
 msgstr "Степень образования"
 
 #: views/scripts/nav-admin.phtml:52
 msgid "Institution types"
+msgstr "Типы института"
+
+msgid "Institution type"
 msgstr "Тип института"
 
 #: views/scripts/nav-admin.phtml:54
@@ -914,7 +926,13 @@ msgstr "Национальность"
 
 #: views/scripts/nav-admin.phtml:55
 msgid "Join & drop reasons"
-msgstr "Причины регистрации/бросания курса"
+msgstr "Причины регистрации/отчисления"
+
+msgid "Join"
+msgstr "Pегистрация"
+
+msgid "Drop"
+msgstr "Oтчисление"
 
 #: views/scripts/nav-admin.phtml:56
 msgid "Sponsors"
@@ -926,13 +944,16 @@ msgstr "Типы инструктора"
 
 #: views/scripts/nav-admin.phtml:59
 msgid "Course types"
-msgstr "Типы курса"
+msgstr "Типы курсов"
 
 msgid "Course type"
 msgstr "Тип курса"
 
 #: views/scripts/nav-admin.phtml:60
 msgid "Religious denominations"
+msgstr "Принадлежность к религиям"
+
+msgid "Religious denomination"
 msgstr "Принадлежность к религии"
 
 #: views/scripts/nav-admin.phtml:63 views/scripts/nav-admin.phtml:113
@@ -1026,7 +1047,7 @@ msgstr "Тип института (СПО)"
 
 #: views/scripts/preheader.phtml:105
 msgid "PS Join & Drop Reasons"
-msgstr "Причины регистрации/бросания обучения (СПО)"
+msgstr "Причины регистрации/отчисления (СПО)"
 
 #: views/scripts/preheader.phtml:106
 msgid "PS Languages"
@@ -2320,7 +2341,7 @@ msgstr "Тренинги только с известными участника
 
 #: views/scripts/reports/ps-trainings-by-name.phtml:4
 msgid "Trainings By Name Report"
-msgstr "Отчет Тренингов по названию"
+msgstr "Отчет тренингов по названию"
 
 #: views/scripts/reports/ps-trainings-by-name.phtml:21
 msgid "Trainings By Name"
@@ -2377,7 +2398,7 @@ msgid "Mechanism ID"
 msgstr "Идентификация механизма"
 
 msgid "Mechanism"
-msgstr "Механизма"
+msgstr "Механизм"
 
 #: views/scripts/sync/commit.phtml:4 views/scripts/sync/index.phtml:4
 #: views/scripts/sync/review.phtml:4 views/scripts/sync/search.phtml:4
@@ -2896,7 +2917,7 @@ msgstr "Отправить электронное письмо с информа
 
 #: views/scripts/user/_add_form.phtml:73
 msgid "Finished"
-msgstr "Готовые"
+msgstr "Законченные"
 
 #: views/scripts/admin/country-monthly-email-reports.phtml:22
 msgid "Monthly Email Reports"
@@ -2962,6 +2983,9 @@ msgstr "Действия"
 msgid "Options"
 msgstr "Опции"
 
+msgid "Option"
+msgstr "Опция"
+
 msgid "Country"
 msgstr "Страна"
 
@@ -2978,10 +3002,10 @@ msgid "Add/Edit"
 msgstr "Добавить/Изменить"
 
 msgid "Employee"
-msgstr "Работник"
+msgstr "Сотрудник"
 
 msgid "Employees"
-msgstr "Служащие"
+msgstr "Сотрудники"
 
 msgid "Employer"
 msgstr "Работодатель"
@@ -3112,6 +3136,9 @@ msgstr "Отчёты по инструкторам"
 msgid "Partners"
 msgstr "Партнеры"
 
+msgid "Partner"
+msgstr "Партнер"
+
 msgid "Add Partner"
 msgstr "Добавить партнера"
 
@@ -3119,10 +3146,10 @@ msgid "View/Edit Partner"
 msgstr "Посмотреть/редактировать партнера"
 
 msgid "Add Employee"
-msgstr "Добавить Работника"
+msgstr "Добавить cотрудникa"
 
 msgid "View/Edit Employee"
-msgstr "Посмотреть / редактировать Работника"
+msgstr "Посмотреть / редактировать cотрудникa"
 
 msgid "PS Field labels"
 msgstr "Поля для Системы предварительного обучения (СПО)"
@@ -3230,10 +3257,16 @@ msgid "In-service"
 msgstr "Cистемa обучения без отрыва от производства"
 
 msgid "Please select the TrainSmart module to enter"
-msgstr "Пожалуйста, выберите модуль TrainSmart для ввода"
+msgstr "Пожалуйста, выберите TrainSmart модуль"
 
 msgid "In-Service Training Tracking System"
 msgstr "Мониторинг системы обучения без отрыва от производства"
+
+msgid "In-Service"
+msgstr "Cистемa обучения без отрыва от производства"
+
+msgid "In-service access"
+msgstr "Доступ к cистемe обучения без отрыва от производства"
 
 msgid "Pre-Service Training Tracking System"
 msgstr "Мониторинг системы предварительного обучения (СПО)"
@@ -3553,6 +3586,9 @@ msgstr "Дата регистрации"
 msgid "Reason for Enrollment"
 msgstr "Причина регистрации"
 
+msgid "Reason"
+msgstr "Причина"
+
 msgid "Date of Separation"
 msgstr "Дата отчисления"
 
@@ -3698,7 +3734,7 @@ msgid "Go back to Facility Edit Page"
 msgstr "Вернуться к странице редактирования Учереждения"
 
 msgid "Employee Tracking"
-msgstr "Учет Сотрудников"
+msgstr "Учет cотрудников"
 
 msgid "Site Data Share"
 msgstr "Страница общих данных"
@@ -3776,25 +3812,25 @@ msgid "Specialty"
 msgstr "Специальность"
 
 msgid "Contract Type"
-msgstr "Тип Контракта"
+msgstr "Тип контракта"
 
 msgid "Commodity Type"
-msgstr "Тип Товара"
+msgstr "Тип товара"
 
 msgid "Highest Education Level"
-msgstr "Уровень Образования"
+msgstr "Уровень oбразования"
 
 msgid "Reason Attending"
-msgstr "Причина Регистрации"
+msgstr "Причина регистрации"
 
 msgid "Occupational Category"
-msgstr "Профессиональная Категория"
+msgstr "Профессиональная категория"
 
 msgid "Partner Type"
-msgstr "Тип Партнера"
+msgstr "Тип партнера"
 
 msgid "Staff Category"
-msgstr "Категория Персонала"
+msgstr "Категория персонала"
 
 msgid "Base"
 msgstr "Основание"
@@ -3812,7 +3848,7 @@ msgid "Primary Roles for employees"
 msgstr "Основные роли сотрудников"
 
 msgid "Intended Transitions"
-msgstr "Предназначеный Переход"
+msgstr "Предназначеный переход"
 
 msgid "Relationship"
 msgstr "Связь/Отношение"
@@ -3821,7 +3857,7 @@ msgid "Referral Mechanism"
 msgstr "Механизм перенаправления"
 
 msgid "Training Provided"
-msgstr "Предоставленный Тренинг"
+msgstr "Предоставленный тренинг"
 
 msgid "Importance"
 msgstr "Значение"
@@ -3951,6 +3987,9 @@ msgstr "Профессиональные организации"
 
 msgid "Professional Registration Number"
 msgstr "Профессиональный регистрационный номер"
+
+msgid "Registration Number"
+msgstr "Pегистрационный номер"
 
 msgid "Disability"
 msgstr "Инвалидность"
@@ -4149,3 +4188,306 @@ msgstr "Обновить курс"
 
 msgid "Update cadre"
 msgstr "Обновить кадр"
+
+msgid "Employee Tracking System"
+msgstr "Система мониторинга сотрудников"
+
+msgid "Funding sources"
+msgstr "Источники финансирования"
+
+msgid "Add funding"
+msgstr "Добавить источник финансирования"
+
+msgid "Update funding"
+msgstr "Обновить источник финансирования"
+
+msgid "Add institution type"
+msgstr "Добавить тип института"
+
+msgid "Update institution type"
+msgstr "Обновить тип института"
+
+msgid "Abbreviation"
+msgstr "Aббревиатура"
+
+msgid "Add language"
+msgstr "Добавить язык"
+
+msgid "Update language"
+msgstr "Обновить язык"
+
+msgid "Add nationality"
+msgstr "Добавить национальность"
+
+msgid "Update nationality"
+msgstr "Обновить национальность"
+
+msgid "Add reason"
+msgstr "Добавить причину"
+
+msgid "Update reason"
+msgstr "Обновить причину"
+
+msgid "Add sponsor"
+msgstr "Добавить cпонсорa"
+
+msgid "Update sponsor"
+msgstr "Обновить cпонсорa"
+
+msgid "Add tutor type"
+msgstr "Добавить тип инструктора"
+
+msgid "Update tutor type"
+msgstr "Обновить тип инструктора"
+
+msgid "Tutor type"
+msgstr "Tип инструктора"
+
+msgid "Add course type"
+msgstr "Добавить тип курса"
+
+msgid "Update course type"
+msgstr "Обновить тип курса"
+
+msgid "Add religious denomination"
+msgstr "Добавить религию"
+
+msgid "Update religious denomination"
+msgstr "Обновить религию"
+
+msgid "Employee Module"
+msgstr "Модуль cотрудникoв"
+
+msgid "Access Employees"
+msgstr "Доступ к модулю cотрудникoв"
+
+msgid "Institution access"
+msgstr "Доступ к институту"
+
+msgid "Restrict Access"
+msgstr "Ограничение доступа"
+
+msgid "All organizations data"
+msgstr "Все данные организаций"
+
+msgid "Only selected organizations"
+msgstr "Только отдельных организаций"
+
+msgid "Ability to duplicate Training"
+msgstr "Способность дублировать тренинг"
+
+msgid "Approve people and facilities"
+msgstr "Утвердить людей и учереждения"
+
+msgid "All Institutions"
+msgstr "Все институты"
+
+msgid "User is Administrator or can edit drop down lists, titles, and data, or import excel records"
+msgstr "Пользователь является администратором или можно редактировать раскрывающемся списков, заголовков и данных, или импорта excel отчеты"
+
+msgid "Next User"
+msgstr "Следующий пользователь"
+
+msgid "SkillSmart Main Settings"
+msgstr "Главные настройки навыков"
+
+msgid "Professional Bodies"
+msgstr "Профессиональные организации"
+
+msgid "Supervision"
+msgstr "Обеспечение контроля"
+
+msgid "Add supervised"
+msgstr "Добавить oбеспечение контроля"
+
+msgid "Update supervised"
+msgstr "Обновить oбеспечение контроля"
+
+msgid "Supervision frequency"
+msgstr "Обеспечение частоты контроля"
+
+msgid "Add supervision frequency"
+msgstr "Добавить oбеспечение частоты контроля"
+
+msgid "Update supervision frequency"
+msgstr "Обновить oбеспечение частоты контроля"
+
+msgid "Training received"
+msgstr "Полученный тренинг"
+
+msgid "Add training received"
+msgstr "Добавить полученный тренинг"
+
+msgid "Update training received"
+msgstr "Обновить полученный тренинг"
+
+msgid "Facility Departments"
+msgstr "Отделы учереждения"
+
+msgid "Facility department"
+msgstr "Отдел учереждения"
+
+msgid "Add facility department"
+msgstr "Добавить oтдел учереждения"
+
+msgid "Update facility department"
+msgstr "Обновить oтдел учереждения"
+
+msgid "Competencies"
+msgstr "Компетенции"
+
+msgid "Competency"
+msgstr "Компетенция"
+
+msgid "Add competency"
+msgstr "Добавить компетенцию"
+
+msgid "Update competency"
+msgstr "Обновить компетенцию"
+
+msgid "Nurse trainer type"
+msgstr "Тип инструктора"
+
+msgid "Occupational Categories"
+msgstr "Профессиональные категории"
+
+msgid "Add race"
+msgstr "Добавить расу"
+
+msgid "Update race"
+msgstr "Обновить расу"
+
+msgid "Add disability"
+msgstr "Добавить инвалидность"
+
+msgid "Update disability"
+msgstr "Обновить инвалидность"
+
+msgid "Add professional body"
+msgstr "Добавить профессиональную организацию"
+
+msgid "Update professional body"
+msgstr "Обновить профессиональную организацию"
+
+msgid "Professional body"
+msgstr "Профессиональная организация"
+
+msgid "Question, A-E options"
+msgstr "Вопрос, варианты A-E"
+
+msgid "Question, yes/no options"
+msgstr "Вопрос, варианты да/нет"
+
+msgid "Question, textbox"
+msgstr "Вопрос, текстовое поле"
+
+msgid "Field order"
+msgstr "Порядок полей"
+
+msgid "Text header"
+msgstr "Текст заголовка"
+
+msgid "Field type"
+msgstr "Тип поля"
+
+msgid "Qualification group"
+msgstr "Квалификационная группа"
+
+msgid "Link to qualification"
+msgstr "Ссылка на квалификацию"
+
+msgid "Edit name"
+msgstr "Редактировать название"
+
+msgid "Employee Settings"
+msgstr "Параметры cотрудникa"
+
+msgid "Partner Importance"
+msgstr "Значение партнера"
+
+msgid "Build Funding"
+msgstr "Механизм финансирования"
+
+msgid "Delete Funding"
+msgstr "Удалить финансирование"
+
+msgid "Local Currency"
+msgstr "Региональная валюта"
+
+msgid "Sub Partner"
+msgstr "Подпартнер"
+
+msgid "Type of Partner"
+msgstr "Тип партнера"
+
+msgid "Employee Base"
+msgstr "База сотрудникa"
+
+msgid "Site Type"
+msgstr "Тип страницы общих данных"
+
+msgid "Funded hours per week"
+msgstr "Финансирование часов в неделю"
+
+msgid "Disability Comments"
+msgstr "Kомментарии к инвалидности"
+
+msgid "Annual Cost"
+msgstr "Ежегодные расходы"
+
+msgid "Benefits"
+msgstr "Льготы"
+
+msgid "Additional Expenses"
+msgstr "Дополнительные расходы"
+
+msgid "Stipend"
+msgstr "Стипендия"
+
+msgid "Landing Page Comments"
+msgstr "Комментарии к основной странице"
+
+msgid "Hours per Mechanism"
+msgstr "Часов в механизмe"
+
+msgid "Annual Cost to Mechanism"
+msgstr "Ежегодные расходы механизмa"
+
+msgid "Site Name"
+msgstr "Страница общих данных"
+
+msgid "CHW Supervisor"
+msgstr "Руководитель"
+
+msgid "Actual Transition Date"
+msgstr "Дата фактического перехода"
+
+msgid "Actual Transition"
+msgstr "Фактический переход"
+
+msgid "Transition confirmed"
+msgstr "Подтвердил переход"
+
+msgid "Intended Transition"
+msgstr "Предполагаемый переход"
+
+msgid "Agreement end date"
+msgstr "Дата окончания договора"
+
+msgid "Contract end date"
+msgstr "Дата окончания контракта"
+
+msgid "ID/Passport Number"
+msgstr "Государственное удостоверение личности"
+
+msgid "Incoming partner"
+msgstr "Входящий партнер"
+
+msgid "What training do you provide"
+msgstr "Какое обучение вы предоставляете"
+
+msgid "Courses Completed"
+msgstr "Укомплектованные курсы"
+
+msgid "Salary"
+msgstr "Зарплата"

@@ -40,7 +40,7 @@ ob_end_clean();
 					width: 350,
 					modal: true,
 					buttons: {
-						"Save": function() {
+						"<?php echo t('Save') ?>": function() {
 							$("#_classname").val($("#classname").val());
 							$("#_startdate").val($("#startdate").val());
 							$("#_enddate").val($("#enddate").val());
@@ -69,7 +69,7 @@ ob_end_clean();
 								document.getElementById("adminform").submit();
 							}
 						},
-						Cancel: function() {
+						"<?php echo t('Cancel') ?>": function() {
 							$( this ).dialog( "close" );
 						}
 					},
