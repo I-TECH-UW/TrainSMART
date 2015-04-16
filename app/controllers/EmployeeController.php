@@ -338,7 +338,7 @@ class EmployeeController extends ReportFilterHelpers {
     			// $status->checkRequired ( $this, 'first_name', t ( 'Frist Name' ) );
     			// $status->checkRequired ( $this, 'last_name',  t ( 'Last Name' ) );
     			
-    			$status->checkRequired ( $this, 'employee_code', t('Employee').space.t('Code'));
+    			$status->checkRequired ( $this, 'employee_code', t('Employee Code'));
     			
     			//$status->checkRequired ( $this, 'dob', t ( 'Date of Birth' ) );//TA:18: 08/28/2014 (DOB field is not required)
     			
