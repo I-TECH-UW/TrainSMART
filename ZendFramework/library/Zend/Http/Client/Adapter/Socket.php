@@ -16,8 +16,8 @@
  * @category   Zend
  * @package    Zend_Http
  * @subpackage Client_Adapter
- * @version    $Id: Socket.php 13014 2008-12-04 12:07:05Z yoshida@zend.co.jp $
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: Socket.php 7110 2007-12-13 23:24:01Z shahar $
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -31,7 +31,7 @@ require_once 'Zend/Http/Client/Adapter/Interface.php';
  * @category   Zend
  * @package    Zend_Http
  * @subpackage Client_Adapter
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Http_Client_Adapter_Socket implements Zend_Http_Client_Adapter_Interface
@@ -56,7 +56,6 @@ class Zend_Http_Client_Adapter_Socket implements Zend_Http_Client_Adapter_Interf
      * @var array
      */
     protected $config = array(
-        'persistent'    => false,
         'ssltransport'  => 'ssl',
         'sslcert'       => null,
         'sslpassphrase' => null
@@ -87,7 +86,7 @@ class Zend_Http_Client_Adapter_Socket implements Zend_Http_Client_Adapter_Interf
         if (! is_array($config)) {
             require_once 'Zend/Http/Client/Adapter/Exception.php';
             throw new Zend_Http_Client_Adapter_Exception(
-                '$concig expects an array, ' . gettype($config) . ' recieved.');
+                '$config expects an array, ' . gettype($config) . ' recieved.');
         }
 
         foreach ($config as $k => $v) {
@@ -133,14 +132,11 @@ class Zend_Http_Client_Adapter_Socket implements Zend_Http_Client_Adapter_Interf
                 }
             }
 
-            $flags = STREAM_CLIENT_CONNECT;
-            if ($this->config['persistent']) $flags |= STREAM_CLIENT_PERSISTENT;
-
             $this->socket = @stream_socket_client($host . ':' . $port,
                                                   $errno,
                                                   $errstr,
                                                   (int) $this->config['timeout'],
-                                                  $flags,
+                                                  STREAM_CLIENT_CONNECT,
                                                   $context);
             if (! $this->socket) {
                 $this->close();
@@ -219,68 +215,61 @@ class Zend_Http_Client_Adapter_Socket implements Zend_Http_Client_Adapter_Interf
         // First, read headers only
         $response = '';
         $gotStatus = false;
-        while (($line = @fgets($this->socket)) !== false) {
+        while ($line = @fgets($this->socket)) {
             $gotStatus = $gotStatus || (strpos($line, 'HTTP') !== false);
             if ($gotStatus) {
                 $response .= $line;
-                if (rtrim($line) === '') break;
+                if (!chop($line)) break;
             }
         }
 
-        $statusCode = Zend_Http_Response::extractCode($response);
-
         // Handle 100 and 101 responses internally by restarting the read again
-        if ($statusCode == 100 || $statusCode == 101) return $this->read();
+        if (Zend_Http_Response::extractCode($response) == 100 ||
+            Zend_Http_Response::extractCode($response) == 101) return $this->read();
 
-        /**
-         * Responses to HEAD requests and 204 or 304 responses are not expected
-         * to have a body - stop reading here
-         */
-        if ($statusCode == 304 || $statusCode == 204 ||
-            $this->method == Zend_Http_Client::HEAD) return $response;
+        // If this was a HEAD request, return after reading the header (no need to read body)
+        if ($this->method == Zend_Http_Client::HEAD) return $response;
 
         // Check headers to see what kind of connection / transfer encoding we have
         $headers = Zend_Http_Response::extractHeaders($response);
 
-        // If we got a 'transfer-encoding: chunked' header
-        if (isset($headers['transfer-encoding'])) {
+        // if the connection is set to close, just read until socket closes
+        if (isset($headers['connection']) && $headers['connection'] == 'close') {
+            while ($buff = @fread($this->socket, 8192)) {
+                $response .= $buff;
+            }
+
+            $this->close();
+
+        // Else, if we got a transfer-encoding header (chunked body)
+        } elseif (isset($headers['transfer-encoding'])) {
             if ($headers['transfer-encoding'] == 'chunked') {
                 do {
-                    $line  = @fgets($this->socket);
-                    $chunk = $line;
+                    $chunk = '';
+                    $line = @fgets($this->socket);
+                    $chunk .= $line;
 
-                    // Figure out the next chunk size
-                    $chunksize = trim($line);
-                    if (! ctype_xdigit($chunksize)) {
-                        $this->close();
+                    $hexchunksize = ltrim(chop($line), '0');
+                    $hexchunksize = strlen($hexchunksize) ? strtolower($hexchunksize) : 0;
+
+                    $chunksize = hexdec(chop($line));
+                    if (dechex($chunksize) != $hexchunksize) {
+                        @fclose($this->socket);
                         require_once 'Zend/Http/Client/Adapter/Exception.php';
                         throw new Zend_Http_Client_Adapter_Exception('Invalid chunk size "' .
-                            $chunksize . '" unable to read chunked body');
+                            $hexchunksize . '" unable to read chunked body');
                     }
 
-                    // Convert the hexadecimal value to plain integer
-                    $chunksize = hexdec($chunksize);
-
-                    // Read chunk
                     $left_to_read = $chunksize;
                     while ($left_to_read > 0) {
                         $line = @fread($this->socket, $left_to_read);
-                        if ($line === false || strlen($line) === 0)
-                        {
-                            break;
-                        } else {
-                            $chunk .= $line;
-                            $left_to_read -= strlen($line);
-                        }
-
-                        // Break if the connection ended prematurely
-                        if (feof($this->socket)) break;
+                        $chunk .= $line;
+                        $left_to_read -= strlen($line);
                     }
 
                     $chunk .= @fgets($this->socket);
                     $response .= $chunk;
                 } while ($chunksize > 0);
-
             } else {
                 throw new Zend_Http_Client_Adapter_Exception('Cannot handle "' .
                     $headers['transfer-encoding'] . '" transfer encoding');
@@ -292,35 +281,16 @@ class Zend_Http_Client_Adapter_Socket implements Zend_Http_Client_Adapter_Interf
             $chunk = '';
             while ($left_to_read > 0) {
                 $chunk = @fread($this->socket, $left_to_read);
-                if ($chunk === false || strlen($chunk) === 0)
-                {
-                    break;
-                } else {
-                    $left_to_read -= strlen($chunk);
-                    $response .= $chunk;
-                }
-
-                // Break if the connection ended prematurely
-                if (feof($this->socket)) break;
+                $left_to_read -= strlen($chunk);
+                $response .= $chunk;
             }
 
-        // Fallback: just read the response until EOF
+        // Fallback: just read the response (should not happen)
         } else {
-        	do {
-        		$buff = @fread($this->socket, 8192);
-        		if ($buff === false || strlen($buff) === 0)
-        		{
-        			break;
-        		} else {
-                    $response .= $buff;
-        		}
-        	} while (feof($this->socket) === false);
+            while ($buff = @fread($this->socket, 8192)) {
+                $response .= $buff;
+            }
 
-            $this->close();
-        }
-
-        // Close the connection if requested to do so by the server
-        if (isset($headers['connection']) && $headers['connection'] == 'close') {
             $this->close();
         }
 
@@ -341,13 +311,9 @@ class Zend_Http_Client_Adapter_Socket implements Zend_Http_Client_Adapter_Interf
     /**
      * Destructor: make sure the socket is disconnected
      *
-     * If we are in persistent TCP mode, will not close the connection
-     *
      */
     public function __destruct()
     {
-        if (! $this->config['persistent']) {
-            if ($this->socket) $this->close();
-        }
+        if ($this->socket) $this->close();
     }
 }

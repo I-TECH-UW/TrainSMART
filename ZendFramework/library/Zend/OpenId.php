@@ -15,9 +15,9 @@
  *
  * @category   Zend
  * @package    Zend_OpenId
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: OpenId.php 12972 2008-12-01 13:26:36Z dmitry $
+ * @version    $Id:$
  */
 
 /**
@@ -40,7 +40,7 @@ require_once "Zend/Controller/Response/Abstract.php";
  *
  * @category   Zend
  * @package    Zend_OpenId
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_OpenId
@@ -65,26 +65,6 @@ class Zend_OpenId
      * Allows enable/disable stoping execution of PHP script after redirect()
      */
     static public $exitOnRedirect = true;
-   
-    /**
-     * Alternative request URL that can be used to override the default 
-     * selfUrl() response
-     */
-    static public $selfUrl = null;
-
-    /**
-     * Sets alternative request URL that can be used to override the default
-     * selfUrl() response
-     *
-     * @param string $selfUrl the URL to be set
-     * @return string the old value of overriding URL
-     */
-    static public function setSelfUrl($selfUrl = null)
-    {
-    	$ret = self::$selfUrl;
-		self::$selfUrl = $selfUrl;
-		return $ret;
-	}
 
     /**
      * Returns a full URL that was requested on current HTTP request.
@@ -93,9 +73,7 @@ class Zend_OpenId
      */
     static public function selfUrl()
     {
-    	if (self::$selfUrl !== null) {
-			return self::$selfUrl;
-        } if (isset($_SERVER['SCRIPT_URI'])) {
+        if (isset($_SERVER['SCRIPT_URI'])) {
             return $_SERVER['SCRIPT_URI'];
         }
         $url = '';
@@ -129,16 +107,7 @@ class Zend_OpenId
         }
 
         $url .= $port;
-        if (isset($_SERVER['HTTP_X_REWRITE_URL'])) {
-            $url .= $_SERVER['HTTP_X_REWRITE_URL'];
-        } elseif (isset($_SERVER['REQUEST_URI'])) {
-            $query = strpos($_SERVER['REQUEST_URI'], '?');
-            if ($query === false) {
-                $url .= $_SERVER['REQUEST_URI'];
-            } else {
-                $url .= substr($_SERVER['REQUEST_URI'], 0, $query);
-            }
-        } else if (isset($_SERVER['SCRIPT_URL'])) {
+        if (isset($_SERVER['SCRIPT_URL'])) {
             $url .= $_SERVER['SCRIPT_URL'];
         } else if (isset($_SERVER['REDIRECT_URL'])) {
             $url .= $_SERVER['REDIRECT_URL'];
@@ -281,7 +250,7 @@ class Zend_OpenId
             }
         }
 
-        if (!preg_match('|^([^:]+)://([^:@]*(?:[:][^@]*)?@)?([^/:@?#]*)(?:[:]([^/?#]*))?(/[^?#]*)?((?:[?](?:[^#]*))?)((?:#.*)?)$|', $res, $reg)) {
+        if (!preg_match('|^([^:]+)://([^:@]*(?:[:][^@]*)?@)?([^/:@?#]*)(?:[:]([^/?#]*))?(/[^?]*)?((?:[?](?:[^#]*))?(?:#.*)?)$|', $res, $reg)) {
             return false;
         }
         $scheme = $reg[1];
@@ -290,7 +259,6 @@ class Zend_OpenId
         $port = $reg[4];
         $path = $reg[5];
         $query = $reg[6];
-        $fragment = $reg[7]; /* strip it */
 
         if (empty($scheme) || empty($host)) {
             return false;
@@ -530,7 +498,7 @@ class Zend_OpenId
         if (function_exists('hash_hmac')) {
             return hash_hmac($macFunc, $data, $secret, 1);
         } else {
-            if (Zend_OpenId::strlen($secret) > 64) {
+            if (strlen($secret) > 64) {
                 $secret = self::digest($macFunc, $secret);
             }
             $secret = str_pad($secret, 64, chr(0x00));
@@ -555,7 +523,7 @@ class Zend_OpenId
             return gmp_init(bin2hex($bin), 16);
         } else if (extension_loaded('bcmath')) {
             $bn = 0;
-            $len = Zend_OpenId::strlen($bin);
+            $len = strlen($bin);
             for ($i = 0; $i < $len; $i++) {
                 $bn = bcmul($bn, 256);
                 $bn = bcadd($bn, ord($bin[$i]));
@@ -578,13 +546,7 @@ class Zend_OpenId
     static protected function bigNumToBin($bn)
     {
         if (extension_loaded('gmp')) {
-            $s = gmp_strval($bn, 16);
-            if (strlen($s) % 2 != 0) {
-                $s = '0' . $s;
-            } else if ($s[0] > '7') {
-                $s = '00' . $s;
-            }
-            return pack("H*", $s);
+            return pack("H*", gmp_strval($bn, 16));
         } else if (extension_loaded('bcmath')) {
             $cmp = bccomp($bn, 0);
             if ($cmp == 0) {
@@ -598,9 +560,6 @@ class Zend_OpenId
             while (bccomp($bn, 0) > 0) {
                 $bin = chr(bcmod($bn, 256)) . $bin;
                 $bn = bcdiv($bn, 256);
-            }
-            if (ord($bin[0]) > 127) {
-                $bin = chr(0) . $bin;
             }
             return $bin;
         }
@@ -636,7 +595,7 @@ class Zend_OpenId
             $bn_p        = self::binToBigNum($p);
             $bn_g        = self::binToBigNum($g);
             if (is_null($priv_key)) {
-                $priv_key    = self::randomBytes(Zend_OpenId::strlen($p));
+                $priv_key    = self::randomBytes(strlen($p));
             }
             $bn_priv_key = self::binToBigNum($priv_key);
             if (extension_loaded('gmp')) {
@@ -693,9 +652,6 @@ class Zend_OpenId
     {
         if (function_exists('openssl_dh_compute_key')) {
             $ret = openssl_dh_compute_key($pub_key, $dh);
-            if (ord($ret[0]) > 127) {
-                $ret = chr(0) . $ret;
-            }
             return $ret;
         } else if (extension_loaded('gmp')) {
             $bn_pub_key = self::binToBigNum($pub_key);
@@ -732,22 +688,6 @@ class Zend_OpenId
             return chr(0) . $str;
         }
         return $str;
-    }
-
-    /**
-     * Returns lenght of binary string in bytes
-     *
-     * @param string $str 
-     * @return int the string lenght
-     */
-    static public function strlen($str)
-    {
-        if (extension_loaded('mbstring') &&
-            (((int)ini_get('mbstring.func_overload')) & 2)) {
-            return mb_strlen($str, 'latin1');
-        } else {
-            return strlen($str);
-        }
     }
 
 }

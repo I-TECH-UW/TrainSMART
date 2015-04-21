@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework
  *
@@ -14,16 +15,16 @@
  *
  * @category   Zend
  * @package    Zend_Config
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Config.php 12204 2008-10-30 20:42:37Z dasprid $
+ * @version    $Id: Config.php 7188 2007-12-18 16:48:27Z darby $
  */
 
 
 /**
  * @category   Zend
  * @package    Zend_Config
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Config implements Countable, Iterator
@@ -75,15 +76,6 @@ class Zend_Config implements Countable, Iterator
     protected $_extends = array();
 
     /**
-     * Load file error string.
-     * 
-     * Is null if there was no error while file loading
-     *
-     * @var string
-     */
-    protected $_loadFileErrorStr = null;
-
-    /**
      * Zend_Config provides a property based interface to
      * an array. The data are read-only unless $allowModifications
      * is set to true on construction.
@@ -95,7 +87,7 @@ class Zend_Config implements Countable, Iterator
      * @param  boolean $allowModifications
      * @return void
      */
-    public function __construct(array $array, $allowModifications = false)
+    public function __construct($array, $allowModifications = false)
     {
         $this->_allowModifications = (boolean) $allowModifications;
         $this->_loadedSection = null;
@@ -162,25 +154,6 @@ class Zend_Config implements Countable, Iterator
             throw new Zend_Config_Exception('Zend_Config is read only');
         }
     }
-    
-    /**
-     * Deep clone of this instance to ensure that nested Zend_Configs
-     * are also cloned.
-     * 
-     * @return void
-     */
-    public function __clone()
-    {
-      $array = array();
-      foreach ($this->_data as $key => $value) {
-          if ($value instanceof Zend_Config) {
-              $array[$key] = clone $value;
-          } else {
-              $array[$key] = $value;
-          }
-      }
-      $this->_data = $array;
-    }
 
     /**
      * Return an associative array of the stored data.
@@ -222,7 +195,6 @@ class Zend_Config implements Countable, Iterator
     {
         if ($this->_allowModifications) {
             unset($this->_data[$name]);
-            $this->_count = count($this->_data);
         } else {
             /** @see Zend_Config_Exception */
             require_once 'Zend/Config/Exception.php';
@@ -325,16 +297,12 @@ class Zend_Config implements Countable, Iterator
         foreach($merge as $key => $item) {
             if(array_key_exists($key, $this->_data)) {
                 if($item instanceof Zend_Config && $this->$key instanceof Zend_Config) {
-                    $this->$key = $this->$key->merge(new Zend_Config($item->toArray(), !$this->readOnly()));
+                    $this->$key = $this->$key->merge($item);
                 } else {
                     $this->$key = $item;
                 }
             } else {
-                if($item instanceof Zend_Config) {
-                    $this->$key = new Zend_Config($item->toArray(), !$this->readOnly());
-                } else {
-                    $this->$key = $item;
-                }
+                $this->$key = $item;
             }
         }
 
@@ -351,43 +319,7 @@ class Zend_Config implements Countable, Iterator
     {
         $this->_allowModifications = false;
     }
-    
-    /**
-     * Returns if this Zend_Config object is read only or not.
-     *
-     * @return boolean
-     */
-    public function readOnly()
-    {
-        return !$this->_allowModifications;
-    }
-    
-    /**
-     * Get the current extends
-     *
-     * @return array
-     */
-    public function getExtends()
-    {
-        return $this->_extends;
-    }
-    
-    /**
-     * Set an extend for Zend_Config_Writer
-     *
-     * @param  string $extendingSection
-     * @param  string $extendedSection
-     * @return void
-     */
-    public function setExtend($extendingSection, $extendedSection = null)
-    {
-        if ($extendedSection === null && isset($this->_extends[$extendingSection])) {
-            unset($this->_extends[$extendingSection]);
-        } else if ($extendedSection !== null) {
-            $this->_extends[$extendingSection] = $extendedSection;
-        }
-    }
-    
+
     /**
      * Throws an exception if $extendingSection may not extend $extendedSection,
      * and tracks the section extension if it is valid.
@@ -411,23 +343,6 @@ class Zend_Config implements Countable, Iterator
         }
         // remember that this section extends another section
         $this->_extends[$extendingSection] = $extendedSection;
-    }
-
-    /**
-     * Handle any errors from simplexml_load_file or parse_ini_file
-     *
-     * @param integer $errno
-     * @param string $errstr
-     * @param string $errfile
-     * @param integer $errline
-     */
-    protected function _loadFileErrorHandler($errno, $errstr, $errfile, $errline)
-    { 
-        if ($this->_loadFileErrorStr === null) {
-            $this->_loadFileErrorStr = $errstr;
-        } else {
-            $this->_loadFileErrorStr .= (PHP_EOL . $errstr);
-        }
     }
 
 }

@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Decorator
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -35,32 +35,12 @@ require_once 'Zend/Form/Decorator/Abstract.php';
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Decorator
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: FormElements.php 12347 2008-11-06 21:45:56Z matthew $
+ * @version    $Id: FormElements.php 7607 2008-01-24 14:32:35Z darby $
  */
 class Zend_Form_Decorator_FormElements extends Zend_Form_Decorator_Abstract
 {
-    /**
-     * Merges given two belongsTo (array notation) strings
-     *
-     * @param  string $baseBelongsTo
-     * @param  string $belongsTo
-     * @return string
-     */
-    public function mergeBelongsTo($baseBelongsTo, $belongsTo)
-    {
-        $endOfArrayName = strpos($belongsTo, '[');
-
-        if ($endOfArrayName === false) {
-            return $baseBelongsTo . '[' . $belongsTo . ']';
-        }
-
-        $arrayName = substr($belongsTo, 0, $endOfArrayName);
-
-        return $baseBelongsTo . '[' . $arrayName . ']' . substr($belongsTo, $endOfArrayName);
-    }
-
     /**
      * Render form elements
      *
@@ -74,7 +54,6 @@ class Zend_Form_Decorator_FormElements extends Zend_Form_Decorator_Abstract
             return $content;
         }
 
-        $belongsTo      = ($form instanceof Zend_Form) ? $form->getElementsBelongTo() : null;
         $elementContent = '';
         $separator      = $this->getSeparator();
         $translator     = $form->getTranslator();
@@ -83,20 +62,6 @@ class Zend_Form_Decorator_FormElements extends Zend_Form_Decorator_Abstract
         foreach ($form as $item) {
             $item->setView($view)
                  ->setTranslator($translator);
-            if ($item instanceof Zend_Form_Element) {
-                $item->setBelongsTo($belongsTo);
-            } elseif (!empty($belongsTo) && ($item instanceof Zend_Form)) {
-                if ($item->isArray()) {
-                    $name = $this->mergeBelongsTo($belongsTo, $item->getElementsBelongTo());
-                    $item->setElementsBelongTo($name, true);
-                } else {
-                    $item->setElementsBelongTo($belongsTo, true);
-                }
-            } elseif (!empty($belongsTo) && ($item instanceof Zend_Form_DisplayGroup)) {
-                foreach ($item as $element) {
-                    $element->setBelongsTo($belongsTo);
-                }
-            }
             $items[] = $item->render();
         }
         $elementContent = implode($separator, $items);

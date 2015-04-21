@@ -15,8 +15,7 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage YouTube
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -30,8 +29,7 @@ require_once 'Zend/Gdata/Extension.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage YouTube
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_YouTube_Extension_NoEmbed extends Zend_Gdata_Extension
@@ -44,10 +42,12 @@ class Zend_Gdata_YouTube_Extension_NoEmbed extends Zend_Gdata_Extension
      * Constructs a new Zend_Gdata_YouTube_Extension_VideoShare object.
      * @param bool $enabled(optional) The enabled value of the element.
      */
-    public function __construct($enabled = null)
+    public function __construct($enabled = null) 
     {
-        $this->registerAllNamespaces(Zend_Gdata_YouTube::$namespaces);
-        parent::__construct();
+        foreach (Zend_Gdata_YouTube::$namespaces as $nsPrefix => $nsUri) {
+            $this->registerNamespace($nsPrefix, $nsUri);
+        }
+        parent::__construct();        
     }
 
 }

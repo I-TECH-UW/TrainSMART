@@ -4,17 +4,17 @@
  *
  * LICENSE
  *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
+ * This source file is subject to version 1.0 of the Zend Framework
+ * license, that is bundled with this package in the file LICENSE.txt, and
+ * is available through the world-wide-web at the following URL:
+ * http://framework.zend.com/license/new-bsd. If you did not receive
+ * a copy of the Zend Framework license and are unable to obtain it
+ * through the world-wide-web, please send a note to license@zend.com
+ * so we can mail you a copy immediately.
  *
  * @package    Zend_View
- * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Helpers
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @version    $Id: Placeholder.php 7078 2007-12-11 14:29:33Z matthew $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
@@ -27,8 +27,8 @@ require_once 'Zend/View/Helper/Placeholder/Container/Standalone.php';
  *
  * @uses       Zend_View_Helper_Placeholder_Container_Standalone
  * @package    Zend_View
- * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Helpers
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container_Standalone
@@ -40,27 +40,19 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
     const FILE   = 'FILE';
     const SCRIPT = 'SCRIPT';
     /**#@-*/
-
+    
     /**
      * Registry key for placeholder
      * @var string
      */
     protected $_regKey = 'Zend_View_Helper_HeadScript';
 
-    /**
-     * Are arbitrary attributes allowed?
-     * @var bool
-     */
-    protected $_arbitraryAttributes = false;
-
     /**#@+
      * Capture type and/or attributes (used for hinting during capture)
      * @var string
      */
-    protected $_captureLock;
     protected $_captureScriptType  = null;
     protected $_captureScriptAttrs = null;
-    protected $_captureType;
     /**#@-*/
 
     /**
@@ -78,7 +70,7 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
     protected $_requiredAttributes = array('type');
 
     /**
-     * Whether or not to format scripts using CDATA; used only if doctype
+     * Whether or not to format scripts using CDATA; used only if doctype 
      * helper is not accessible
      * @var bool
      */
@@ -88,7 +80,7 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
      * Constructor
      *
      * Set separator to PHP_EOL.
-     *
+     * 
      * @return void
      */
     public function __construct()
@@ -96,11 +88,11 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
         parent::__construct();
         $this->setSeparator(PHP_EOL);
     }
-
+    
     /**
      * Return headScript object
      *
-     * Returns headScript helper object; optionally, allows specifying a script
+     * Returns headScript helper object; optionally, allows specifying a script 
      * or script file to include.
      *
      * @param  string $mode Script or file
@@ -130,31 +122,25 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
 
         return $this;
     }
-
+   
     /**
      * Start capture action
-     *
-     * @param  mixed $captureType
-     * @param  string $typeOrAttrs
+     * 
+     * @param  mixed $captureType 
+     * @param  string $typeOrAttrs 
      * @return void
      */
     public function captureStart($captureType = Zend_View_Helper_Placeholder_Container_Abstract::APPEND, $type = 'text/javascript', $attrs = array())
     {
-        if ($this->_captureLock) {
-            require_once 'Zend/View/Helper/Placeholder/Container/Exception.php';
-            throw new Zend_View_Helper_Placeholder_Container_Exception('Cannot nest headScript captures');
-        }
-
-        $this->_captureLock        = true;
         $this->_captureType        = $captureType;
         $this->_captureScriptType  = $type;
         $this->_captureScriptAttrs = $attrs;
-        ob_start();
+        return parent::captureStart($captureType);
     }
-
+    
     /**
      * End capture action and store
-     *
+     * 
      * @return void
      */
     public function captureEnd()
@@ -167,9 +153,9 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
         $this->_captureLock        = false;
 
         switch ($this->_captureType) {
-            case Zend_View_Helper_Placeholder_Container_Abstract::SET:
-            case Zend_View_Helper_Placeholder_Container_Abstract::PREPEND:
-            case Zend_View_Helper_Placeholder_Container_Abstract::APPEND:
+            case self::SET:
+            case self::PREPEND:
+            case self::APPEND:
                 $action = strtolower($this->_captureType) . 'Script';
                 break;
             default:
@@ -191,9 +177,9 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
      * - offsetSetScript($index, $src, $type = 'text/javascript', $attrs = array())
      * - prependScript($script, $type = 'text/javascript', $attrs = array())
      * - setScript($script, $type = 'text/javascript', $attrs = array())
-     *
-     * @param  string $method
-     * @param  array $args
+     * 
+     * @param  string $method 
+     * @param  array $args 
      * @return Zend_View_Helper_HeadScript
      * @throws Zend_View_Exception if too few arguments or invalid method
      */
@@ -238,14 +224,12 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
                     break;
                 case 'file':
                 default:
-                    if (!$this->_isDuplicate($content)) {
-                        $attrs['src'] = $content;
-                        $item = $this->createData($type, $attrs);
-                        if ('offsetSet' == $action) {
-                            $this->offsetSet($index, $item);
-                        } else {
-                            $this->$action($item);
-                        }
+                    $attrs['src'] = $content;
+                    $item = $this->createData($type, $attrs);
+                    if ('offsetSet' == $action) {
+                        $this->offsetSet($index, $item);
+                    } else {
+                        $this->$action($item);
                     }
                     break;
             }
@@ -253,33 +237,15 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
             return $this;
         }
 
-        return parent::__call($method, $args);
-    }
-
-    /**
-     * Is the file specified a duplicate?
-     *
-     * @param  string $file
-     * @return bool
-     */
-    protected function _isDuplicate($file)
-    {
-        foreach ($this->getContainer() as $item) {
-            if (($item->source === null)
-                && array_key_exists('src', $item->attributes)
-                && ($file == $item->attributes['src']))
-            {
-                return true;
-            }
-        }
-        return false;
+        require_once 'Zend/View/Exception.php';
+        throw new Zend_View_Exception(sprintf('Method "%s" does not exist', $method));
     }
 
     /**
      * Is the script provided valid?
-     *
-     * @param  mixed $value
-     * @param  string $method
+     * 
+     * @param  mixed $value 
+     * @param  string $method 
      * @return bool
      */
     protected function _isValid($value)
@@ -296,8 +262,8 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
 
     /**
      * Override append
-     *
-     * @param  string $value
+     * 
+     * @param  string $value 
      * @return void
      */
     public function append($value)
@@ -307,13 +273,13 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
             throw new Zend_View_Exception('Invalid argument passed to append(); please use one of the helper methods, appendScript() or appendFile()');
         }
 
-        return $this->getContainer()->append($value);
+        return parent::append($value);
     }
 
     /**
      * Override prepend
-     *
-     * @param  string $value
+     * 
+     * @param  string $value 
      * @return void
      */
     public function prepend($value)
@@ -323,13 +289,13 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
             throw new Zend_View_Exception('Invalid argument passed to prepend(); please use one of the helper methods, prependScript() or prependFile()');
         }
 
-        return $this->getContainer()->prepend($value);
+        return parent::prepend($value);
     }
 
     /**
      * Override set
-     *
-     * @param  string $value
+     * 
+     * @param  string $value 
      * @return void
      */
     public function set($value)
@@ -339,14 +305,14 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
             throw new Zend_View_Exception('Invalid argument passed to set(); please use one of the helper methods, setScript() or setFile()');
         }
 
-        return $this->getContainer()->set($value);
+        return parent::set($value);
     }
 
     /**
      * Override offsetSet
-     *
-     * @param  string|int $index
-     * @param  mixed $value
+     * 
+     * @param  string|int $index 
+     * @param  mixed $value 
      * @return void
      */
     public function offsetSet($index, $value)
@@ -357,38 +323,16 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
         }
 
         $this->_isValid($value);
-        return $this->getContainer()->offsetSet($index, $value);
-    }
-
-    /**
-     * Set flag indicating if arbitrary attributes are allowed
-     *
-     * @param  bool $flag
-     * @return Zend_View_Helper_HeadScript
-     */
-    public function setAllowArbitraryAttributes($flag)
-    {
-        $this->_arbitraryAttributes = (bool) $flag;
-        return $this;
-    }
-
-    /**
-     * Are arbitrary attributes allowed?
-     *
-     * @return bool
-     */
-    public function arbitraryAttributesAllowed()
-    {
-        return $this->_arbitraryAttributes;
+        return parent::offsetSet($index, $value);
     }
 
     /**
      * Create script HTML
-     *
-     * @param  string $type
-     * @param  array $attributes
-     * @param  string $content
-     * @param  string|int $indent
+     * 
+     * @param  string $type 
+     * @param  array $attributes 
+     * @param  string $content 
+     * @param  string|int $indent 
      * @return string
      */
     public function itemToString($item, $indent, $escapeStart, $escapeEnd)
@@ -396,45 +340,35 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
         $attrString = '';
         if (!empty($item->attributes)) {
             foreach ($item->attributes as $key => $value) {
-                if (!$this->arbitraryAttributesAllowed()
-                    && !in_array($key, $this->_optionalAttributes))
-                {
+                if (!in_array($key, $this->_optionalAttributes)) {
                     continue;
                 }
                 if ('defer' == $key) {
                     $value = 'defer';
                 }
-                $attrString .= sprintf(' %s="%s"', $key, ($this->_autoEscape) ? $this->_escape($value) : $value);
+                $attrString .= sprintf(' %s="%s"', $key, htmlspecialchars($value));
             }
         }
 
-        $type = ($this->_autoEscape) ? $this->_escape($item->type) : $item->type;
-        $html  = $indent . '<script type="' . $type . '"' . $attrString . '>';
+        $html  = $indent . '<script type="' . htmlspecialchars($item->type) . '"' . $attrString . '>';
         if (!empty($item->source)) {
-              $html .= PHP_EOL . $indent . '    ' . $escapeStart . PHP_EOL . $item->source . $indent . '    ' . $escapeEnd . PHP_EOL . $indent;
+              $html .= PHP_EOL . $indent . $escapeStart . PHP_EOL . $indent . $indent . $item->source . PHP_EOL . $indent . $escapeEnd . PHP_EOL . $indent;
         }
         $html .= '</script>';
-
-        if (isset($item->attributes['conditional'])
-            && !empty($item->attributes['conditional'])
-            && is_string($item->attributes['conditional']))
-        {
-            $html = '<!--[if ' . $item->attributes['conditional'] . ']> ' . $html . '<![endif]-->';
-        }
 
         return $html;
     }
 
     /**
      * Retrieve string representation
-     *
-     * @param  string|int $indent
+     * 
+     * @param  string|int $indent 
      * @return string
      */
     public function toString($indent = null)
     {
         $indent = (null !== $indent)
-                ? $this->getWhitespace($indent)
+                ? $this->_getWhitespace($indent)
                 : $this->getIndent();
 
         if ($this->view) {
@@ -446,7 +380,6 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
         $escapeEnd   = ($useCdata) ? '//]]>'       : '//-->';
 
         $items = array();
-        $this->getContainer()->ksort();
         foreach ($this as $item) {
             if (!$this->_isValid($item)) {
                 continue;
@@ -455,16 +388,17 @@ class Zend_View_Helper_HeadScript extends Zend_View_Helper_Placeholder_Container
             $items[] = $this->itemToString($item, $indent, $escapeStart, $escapeEnd);
         }
 
-        $return = implode($this->getSeparator(), $items);
+        $return = $indent . implode($this->getSeparator() . $indent, $items);
+        $return = preg_replace("/(\r\n?|\n)/", '$1' . $indent, $return);
         return $return;
     }
 
     /**
      * Create data item containing all necessary components of script
-     *
-     * @param  string $type
-     * @param  array $attributes
-     * @param  string $content
+     * 
+     * @param  string $type 
+     * @param  array $attributes 
+     * @param  string $content 
      * @return stdClass
      */
     public function createData($type, array $attributes, $content = null)

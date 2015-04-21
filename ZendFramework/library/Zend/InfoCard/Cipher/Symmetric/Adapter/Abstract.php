@@ -17,7 +17,8 @@
  * @subpackage Zend_InfoCard_Cipher
  * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Abstract.php 9094 2008-03-30 18:36:55Z thomas $
+ * @version    $Id: Exception.php 2794 2007-01-16 01:29:51Z bkarwin $
+ * @author     John Coggeshall <john@zend.com>
  */
 
 /**
@@ -29,8 +30,9 @@ require_once 'Zend/InfoCard/Cipher/Symmetric/Interface.php';
  * @category   Zend
  * @package    Zend_InfoCard
  * @subpackage Zend_InfoCard_Cipher
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @author     John Coggeshall <john@zend.com>
  */
 abstract class Zend_InfoCard_Cipher_Symmetric_Adapter_Abstract 
     implements Zend_InfoCard_Cipher_Symmetric_Interface 

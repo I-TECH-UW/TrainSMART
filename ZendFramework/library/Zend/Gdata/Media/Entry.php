@@ -15,8 +15,7 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Media
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -31,17 +30,16 @@ require_once 'Zend/Gdata/Entry.php';
 require_once 'Zend/Gdata/Media.php';
 
 /**
- * @see Zend_Gdata_Media_Extension_MediaGroup
+ * @see Zend_Gdata_Media_Extension_Group
  */
 require_once 'Zend/Gdata/Media/Extension/MediaGroup.php';
 
 /**
- * Represents the Gdata flavor of an Atom entry
+ * Represents the GData flavor of an Atom entry
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Media
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Media_Entry extends Zend_Gdata_Entry
@@ -58,13 +56,15 @@ class Zend_Gdata_Media_Entry extends Zend_Gdata_Entry
 
     /**
      * Create a new instance.
-     *
+     * 
      * @param DOMElement $element (optional) DOMElement from which this
      *          object should be constructed.
      */
     public function __construct($element = null)
     {
-        $this->registerAllNamespaces(Zend_Gdata_Media::$namespaces);
+        foreach (Zend_Gdata_Media::$namespaces as $nsPrefix => $nsUri) {
+            $this->registerNamespace($nsPrefix, $nsUri); 
+        }
         parent::__construct($element);
     }
 
@@ -77,9 +77,9 @@ class Zend_Gdata_Media_Entry extends Zend_Gdata_Entry
      * @return DOMElement The DOMElement representing this element and all
      *          child properties.
      */
-    public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null)
+    public function getDOM($doc = null)
     {
-        $element = parent::getDOM($doc, $majorVersion, $minorVersion);
+        $element = parent::getDOM($doc);
         if ($this->_mediaGroup != null) {
             $element->appendChild($this->_mediaGroup->getDOM($element->ownerDocument));
         }
@@ -94,7 +94,7 @@ class Zend_Gdata_Media_Entry extends Zend_Gdata_Entry
      */
     protected function takeChildFromDOM($child)
     {
-        $absoluteNodeName = $child->namespaceURI . ':' . $child->localName;
+        $absoluteNodeName = $child->namespaceURI . ':' . $child->localName;	
         switch ($absoluteNodeName) {
         case $this->lookupNamespace('media') . ':' . 'group':
             $mediaGroup = new Zend_Gdata_Media_Extension_MediaGroup();
@@ -106,28 +106,5 @@ class Zend_Gdata_Media_Entry extends Zend_Gdata_Entry
             break;
         }
     }
-
-    /**
-     * Returns the entry's mediaGroup object.
-     *
-     * @return Zend_Gdata_Media_Extension_MediaGroup
-    */
-    public function getMediaGroup()
-    {
-        return $this->_mediaGroup;
-    }
-
-    /**
-     * Sets the entry's mediaGroup object.
-     *
-     * @param Zend_Gdata_Media_Extension_MediaGroup $mediaGroup
-     * @return Zend_Gdata_Media_Entry Provides a fluent interface
-     */
-    public function setMediaGroup($mediaGroup)
-    {
-        $this->_mediaGroup = $mediaGroup;
-        return $this;
-    }
-
 
 }

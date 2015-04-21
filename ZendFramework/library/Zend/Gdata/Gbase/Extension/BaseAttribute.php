@@ -14,8 +14,7 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Gbase
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Entry.php 3941 2007-03-14 21:36:13Z darby $
  */
@@ -30,8 +29,7 @@ require_once 'Zend/Gdata/App/Extension/Element.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Gbase
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Gbase_Extension_BaseAttribute extends Zend_Gdata_App_Extension_Element
@@ -43,25 +41,27 @@ class Zend_Gdata_Gbase_Extension_BaseAttribute extends Zend_Gdata_App_Extension_
      * var @string
      */
     protected $_rootNamespace = 'g';
-
+    
     /**
      * Create a new instance.
-     *
+     * 
      * @param string $name (optional) The name of the Base attribute
      * @param string $text (optional) The text value of the Base attribute
      * @param string $text (optional) The type of the Base attribute
      */
     public function __construct($name = null, $text = null, $type = null)
     {
-        $this->registerAllNamespaces(Zend_Gdata_Gbase::$namespaces);
+        foreach (Zend_Gdata_Gbase::$namespaces as $nsPrefix => $nsUri) {
+            $this->registerNamespace($nsPrefix, $nsUri);
+        } 
         if ($type !== null) {
           $attr = array('name' => 'type', 'value' => $type);
           $typeAttr = array('type' => $attr);
           $this->setExtensionAttributes($typeAttr);
         }
-        parent::__construct($name,
-                            $this->_rootNamespace,
-                            $this->lookupNamespace($this->_rootNamespace),
+        parent::__construct($name, 
+                            $this->_rootNamespace, 
+                            $this->lookupNamespace($this->_rootNamespace), 
                             $text);
     }
 
@@ -86,7 +86,7 @@ class Zend_Gdata_Gbase_Extension_BaseAttribute extends Zend_Gdata_App_Extension_
 
     /**
      * Set the 'name' of the Base attribute object:
-     *     &lt;g:[$name] type='[$type]'&gt;[$value]&lt;/g:[$name]&gt;
+     *     &lt;g:[$name] type='[$type]'&gt;[$value]&lt;/g:[$name]&gt;      
      *
      * @param Zend_Gdata_App_Extension_Element $attribute The attribute object
      * @param string $name The name of the Base attribute
@@ -99,7 +99,7 @@ class Zend_Gdata_Gbase_Extension_BaseAttribute extends Zend_Gdata_App_Extension_
 
     /**
      * Set the 'type' of the Base attribute object:
-     *     &lt;g:[$name] type='[$type]'&gt;[$value]&lt;/g:[$name]&gt;
+     *     &lt;g:[$name] type='[$type]'&gt;[$value]&lt;/g:[$name]&gt;      
      *
      * @param Zend_Gdata_App_Extension_Element $attribute The attribute object
      * @param string $type The type of the Base attribute

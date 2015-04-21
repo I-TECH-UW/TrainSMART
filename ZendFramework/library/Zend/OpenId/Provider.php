@@ -16,9 +16,9 @@
  * @category   Zend
  * @package    Zend_OpenId
  * @subpackage Zend_OpenId_Provider
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Provider.php 12507 2008-11-10 16:29:09Z matthew $
+ * @version    $Id:$
  */
 
 /**
@@ -37,7 +37,7 @@ require_once "Zend/OpenId/Extension.php";
  * @category   Zend
  * @package    Zend_OpenId
  * @subpackage Zend_OpenId_Provider
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_OpenId_Provider
@@ -77,13 +77,6 @@ class Zend_OpenId_Provider
      * @var string $_trustUrl
      */
     private $_trustUrl;
-
-    /**
-     * The OP Endpoint URL
-     *
-     * @var string $_opEndpoint
-     */
-    private $_opEndpoint;
 
     /**
      * Constructs a Zend_OpenId_Provider object with given parameters.
@@ -135,17 +128,6 @@ class Zend_OpenId_Provider
             $this->_storage = $storage;
         }
         $this->_sessionTtl = $sessionTtl;
-    }
-
-    /**
-     * Sets the OP Endpoint URL
-     *
-     * @param string $url the OP Endpoint URL
-     * @return null
-     */
-    public function setOpEndpoint($url)
-    {
-        $this->_opEndpoint = $url;
     }
 
     /**
@@ -441,11 +423,17 @@ class Zend_OpenId_Provider
             $params['openid_session_type'] == 'no-encryption') {
             $ret['mac_key'] = base64_encode($secret);
         } else if (isset($params['openid_session_type']) &&
-            $params['openid_session_type'] == 'DH-SHA1') {
+            $params['openid_session_type'] == 'DH-SHA1' &&
+            !empty($params['openid_dh_modulus']) &&
+            !empty($params['openid_dh_gen']) &&
+            !empty($params['openid_dh_consumer_public'])) {
             $dhFunc = 'sha1';
         } else if (isset($params['openid_session_type']) &&
             $params['openid_session_type'] == 'DH-SHA256' &&
-            $version >= 2.0) {
+            $version >= 2.0 &&
+            !empty($params['openid_dh_modulus']) &&
+            !empty($params['openid_dh_gen']) &&
+            !empty($params['openid_dh_consumer_public'])) {
             $dhFunc = 'sha256';
         } else {
             $ret['error'] = 'Wrong "openid.session_type"';
@@ -458,22 +446,9 @@ class Zend_OpenId_Provider
         }
 
         if (isset($dhFunc)) {
-            if (empty($params['openid_dh_consumer_public'])) {
-                $ret['error'] = 'Wrong "openid.dh_consumer_public"';
-                return $ret;
-            }
-            if (empty($params['openid_dh_gen'])) {
-                $g = pack('H*', Zend_OpenId::DH_G);
-            } else {
-                $g = base64_decode($params['openid_dh_gen']);
-            }
-            if (empty($params['openid_dh_modulus'])) {
-                $p = pack('H*', Zend_OpenId::DH_P);
-            } else {
-                $p = base64_decode($params['openid_dh_modulus']);
-            }
-
-            $dh = Zend_OpenId::createDhKey($p, $g);
+            $dh = Zend_OpenId::createDhKey(
+                base64_decode($params['openid_dh_modulus']),
+                base64_decode($params['openid_dh_gen']));
             $dh_details = Zend_OpenId::getDhKeyDetails($dh);
 
             $sec = Zend_OpenId::computeDhSecret(
@@ -526,7 +501,7 @@ class Zend_OpenId_Provider
 
         if (isset($params['openid_identity']) &&
             !$this->_storage->hasUser($params['openid_identity'])) {
-            $ret['openid.mode'] = ($immediate && $version >= 2.0) ? 'setup_needed': 'cancel';
+            $ret['openid.mode'] = 'cancel';
             return $ret;
         }
 
@@ -546,7 +521,7 @@ class Zend_OpenId_Provider
             }
             if ($immediate) {
                 $params2['openid.mode'] = 'checkid_setup';
-                $ret['openid.mode'] = ($version >= 2.0) ? 'setup_needed': 'id_res';
+                $ret['openid.mode'] = ($version >= 2.0) ? 'setup_needed': 'cancel';
                 $ret['openid.user_setup_url'] = $this->_loginUrl
                     . (strpos($this->_loginUrl, '?') === false ? '?' : '&')
                     . Zend_OpenId::paramsToQuery($params2);
@@ -559,7 +534,7 @@ class Zend_OpenId_Provider
         }
 
         if (!Zend_OpenId_Extension::forAll($extensions, 'parseRequest', $params)) {
-            $ret['openid.mode'] = ($immediate && $version >= 2.0) ? 'setup_needed': 'cancel';
+            $ret['openid.mode'] = 'cancel';
             return $ret;
         }
 
@@ -618,7 +593,7 @@ class Zend_OpenId_Provider
             }
             if ($immediate) {
                 $params2['openid.mode'] = 'checkid_setup';
-                $ret['openid.mode'] = ($version >= 2.0) ? 'setup_needed': 'id_res';
+                $ret['openid.mode'] = ($version >= 2.0) ? 'setup_needed': 'cancel';
                 $ret['openid.user_setup_url'] = $this->_trustUrl
                     . (strpos($this->_trustUrl, '?') === false ? '?' : '&')
                     . Zend_OpenId::paramsToQuery($params2);
@@ -701,11 +676,7 @@ class Zend_OpenId_Provider
         }
 
         if ($version >= 2.0) {
-            if (!empty($this->_opEndpoint)) {
-                $ret['openid.op_endpoint'] = $this->_opEndpoint;
-            } else {
-                $ret['openid.op_endpoint'] = Zend_OpenId::selfUrl();
-            }
+            $ret['openid.op_endpoint'] = Zend_OpenId::selfUrl();
         }
         $ret['openid.response_nonce'] = gmdate('Y-m-d\TH:i:s\Z') . uniqid();
         $ret['openid.mode'] = 'id_res';

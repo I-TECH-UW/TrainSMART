@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework
  *
@@ -15,9 +16,9 @@
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Adapter
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Ibm.php 13280 2008-12-15 20:48:08Z mikaelkael $
+ * @version    $Id: Ibm.php 7188 2007-12-18 16:48:27Z darby $
  */
 
 
@@ -38,8 +39,11 @@ require_once 'Zend/Db/Statement/Pdo/Ibm.php';
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Adapter
- * @copyright  Copyright (c) 2005-2008 Zend Technologies Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @author     Manas Dadarkar <manas@us.ibm.com>
+ * @author     Kellen Bombardier <kfbombar@us.ibm.com>
+ * @author     Salvador Ledezma <ledezma@us.ibm.com>
  */
 class Zend_Db_Adapter_Pdo_Ibm extends Zend_Db_Adapter_Pdo_Abstract
 {
@@ -193,8 +197,7 @@ class Zend_Db_Adapter_Pdo_Ibm extends Zend_Db_Adapter_Pdo_Abstract
     public function prepare($sql)
     {
         $this->_connect();
-        $stmtClass = $this->_defaultStmtClass;
-        $stmt = new $stmtClass($this, $sql);
+        $stmt = new Zend_Db_Statement_Pdo_Ibm($this, $sql);
         $stmt->setFetchMode($this->_fetchMode);
         return $stmt;
     }
@@ -332,29 +335,5 @@ class Zend_Db_Adapter_Pdo_Ibm extends Zend_Db_Adapter_Pdo_Abstract
     {
         $this->_connect();
         return $this->_serverType->nextSequenceId($sequenceName);
-    }
-
-    /**
-     * Retrieve server version in PHP style
-     * Pdo_Idm doesn't support getAttribute(PDO::ATTR_SERVER_VERSION)
-     * @return string
-     */
-    public function getServerVersion()
-    {
-        try {
-            $stmt = $this->query('SELECT service_level, fixpack_num FROM TABLE (sysproc.env_get_inst_info()) as INSTANCEINFO');
-            $result = $stmt->fetchAll(Zend_Db::FETCH_NUM);
-            if (count($result)) {
-                $matches = null;
-                if (preg_match('/((?:[0-9]{1,2}\.){1,3}[0-9]{1,2})/', $result[0][0], $matches)) {
-                    return $matches[1];
-                } else {
-                    return null;
-                }
-            }
-            return null;
-        } catch (PDOException $e) {
-            return null;
-        }
     }
 }

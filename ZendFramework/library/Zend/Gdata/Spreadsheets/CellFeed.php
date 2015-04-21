@@ -15,8 +15,7 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Spreadsheets
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -39,8 +38,7 @@ require_once 'Zend/Gdata/Spreadsheets/Extension/ColCount.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage   Spreadsheets
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Spreadsheets_CellFeed extends Zend_Gdata_Feed
@@ -80,13 +78,15 @@ class Zend_Gdata_Spreadsheets_CellFeed extends Zend_Gdata_Feed
      */
     public function __construct($element = null)
     {
-        $this->registerAllNamespaces(Zend_Gdata_Spreadsheets::$namespaces);
+        foreach (Zend_Gdata_Spreadsheets::$namespaces as $nsPrefix => $nsUri) {
+            $this->registerNamespace($nsPrefix, $nsUri);
+        }
         parent::__construct($element);
     }
 
-    public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null)
+    public function getDOM($doc = null)
     {
-        $element = parent::getDOM($doc, $majorVersion, $minorVersion);
+        $element = parent::getDOM($doc);
         if ($this->rowCount != null) {
             $element->appendChild($this->_rowCount->getDOM($element->ownerDocument));
         }

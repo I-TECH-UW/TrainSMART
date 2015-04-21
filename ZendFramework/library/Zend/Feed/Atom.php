@@ -15,9 +15,9 @@
  *
  * @category   Zend
  * @package    Zend_Feed
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Atom.php 11654 2008-10-03 16:03:35Z yoshida@zend.co.jp $
+ * @version    $Id: Atom.php 7189 2007-12-18 17:28:43Z weppos $
  */
 
 
@@ -44,7 +44,7 @@ require_once 'Zend/Feed/Entry/Atom.php';
  *
  * @category   Zend
  * @package    Zend_Feed
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Feed_Atom extends Zend_Feed_Abstract
@@ -356,7 +356,7 @@ class Zend_Feed_Atom extends Zend_Feed_Abstract
      *
      * @return string
      */
-    public function saveXml()
+    public function saveXML()
     {
         // Return a complete document including XML prologue.
         $doc = new DOMDocument($this->_element->ownerDocument->version,
@@ -383,7 +383,7 @@ class Zend_Feed_Atom extends Zend_Feed_Abstract
             throw new Zend_Feed_Exception('Cannot send ATOM because headers have already been sent.');
         }
 
-        header('Content-Type: application/atom+xml; charset=' . $this->_element->ownerDocument->actualEncoding);
+        header('Content-type: application/atom+xml; charset: ' . $this->_element->ownerDocument->actualEncoding);
 
         echo $this->saveXML();
     }

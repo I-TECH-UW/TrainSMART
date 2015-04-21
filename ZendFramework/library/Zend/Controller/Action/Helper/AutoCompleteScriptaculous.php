@@ -4,25 +4,23 @@
  *
  * LICENSE
  *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
+ * This source file is subject to version 1.0 of the Zend Framework
+ * license, that is bundled with this package in the file LICENSE.txt, and
+ * is available through the world-wide-web at the following URL:
+ * http://framework.zend.com/license/new-bsd. If you did not receive
+ * a copy of the Zend Framework license and are unable to obtain it
+ * through the world-wide-web, please send a note to license@zend.com
+ * so we can mail you a copy immediately.
  *
  * @category   Zend
  * @package    Zend_Controller
- * @subpackage Zend_Controller_Action_Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Action_Helper
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: AutoCompleteScriptaculous.php 7608 2008-01-24 15:50:39Z darby $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: AutoCompleteScriptaculous.php 9098 2008-03-30 19:29:10Z thomas $
  */
 
-/**
- * @see Zend_Controller_Action_Helper_AutoComplete_Abstract
- */
+/** Zend_Controller_Action_Helper_AutoComplete_Abstract */
 require_once 'Zend/Controller/Action/Helper/AutoComplete/Abstract.php';
 
 /**
@@ -31,8 +29,8 @@ require_once 'Zend/Controller/Action/Helper/AutoComplete/Abstract.php';
  * @uses       Zend_Controller_Action_Helper_AutoComplete_Abstract
  * @category   Zend
  * @package    Zend_Controller
- * @subpackage Zend_Controller_Action_Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Action_Helper
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Controller_Action_Helper_AutoCompleteScriptaculous extends Zend_Controller_Action_Helper_AutoComplete_Abstract
@@ -55,17 +53,13 @@ class Zend_Controller_Action_Helper_AutoCompleteScriptaculous extends Zend_Contr
     /**
      * Prepare data for autocompletion
      * 
-     * @param  mixed   $data 
-     * @param  boolean $keepLayouts 
-     * @throws Zend_Controller_Action_Exception
+     * @param  mixed $data 
+     * @param  bool $keepLayouts 
      * @return string
      */
     public function prepareAutoCompletion($data, $keepLayouts = false)
     {
         if (!$this->validateData($data)) {
-            /**
-             * @see Zend_Controller_Action_Exception
-             */
             require_once 'Zend/Controller/Action/Exception.php';
             throw new Zend_Controller_Action_Exception('Invalid data passed for autocompletion');
         }

@@ -17,7 +17,8 @@
  * @subpackage Zend_InfoCard_Xml
  * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Abstract.php 9094 2008-03-30 18:36:55Z thomas $
+ * @version    $Id: Exception.php 2794 2007-01-16 01:29:51Z bkarwin $
+ * @author     John Coggeshall <john@zend.com>
  */
 
 /**
@@ -33,60 +34,61 @@ require_once 'Zend/InfoCard/Xml/KeyInfo.php';
 /**
  * An abstract class representing a generic EncryptedData XML block. This class is extended
  * into a specific type of EncryptedData XML block (i.e. XmlEnc) as necessary
- *
+ * 
  * @category   Zend
  * @package    Zend_InfoCard
  * @subpackage Zend_InfoCard_Xml
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @author     John Coggeshall <john@zend.com>
  */
-abstract class Zend_InfoCard_Xml_EncryptedData_Abstract extends Zend_InfoCard_Xml_Element
+abstract class Zend_InfoCard_Xml_EncryptedData_Abstract extends Zend_InfoCard_Xml_Element 
 {
-
-    /**
-     * Returns the KeyInfo Block
-     *
-     * @return Zend_InfoCard_Xml_KeyInfo_Abstract
-     */
-    public function getKeyInfo()
+	
+	/**
+	 * Returns the KeyInfo Block
+	 *
+	 * @return Zend_InfoCard_Xml_KeyInfo_Abstract
+	 */
+	public function getKeyInfo() 
     {
-        return Zend_InfoCard_Xml_KeyInfo::getInstance($this->KeyInfo[0]);
-    }
-
-    /**
-     * Return the Encryption method used to encrypt the assertion document
-     * (the symmetric cipher)
-     *
-     * @throws Zend_InfoCard_Xml_Exception
-     * @return string The URI of the Symmetric Encryption Method used
-     */
-    public function getEncryptionMethod()
+		return Zend_InfoCard_Xml_KeyInfo::getInstance($this->KeyInfo[0]);
+	}
+	
+	/**
+	 * Return the Encryption method used to encrypt the assertion document 
+	 * (the symmetric cipher)
+	 *
+	 * @throws Zend_InfoCard_Xml_Exception
+	 * @return string The URI of the Symmetric Encryption Method used
+	 */
+	public function getEncryptionMethod() 
     {
+		
+		/**
+		 * @todo This is pretty hacky unless we can always be confident that the first
+		 * EncryptionMethod block is the correct one (the AES or compariable symetric algorithm)..
+		 * the second is the PK method if provided. 
+		 */
+		list($encryption_method) = $this->xpath("//enc:EncryptionMethod");
 
-        /**
-         * @todo This is pretty hacky unless we can always be confident that the first
-         * EncryptionMethod block is the correct one (the AES or compariable symetric algorithm)..
-         * the second is the PK method if provided.
-         */
-        list($encryption_method) = $this->xpath("//enc:EncryptionMethod");
-
-        if(!($encryption_method instanceof Zend_InfoCard_Xml_Element)) {
-            throw new Zend_InfoCard_Xml_Exception("Unable to find the enc:EncryptionMethod symmetric encryption block");
-        }
-
-        $dom = self::convertToDOM($encryption_method);
-
-        if(!$dom->hasAttribute('Algorithm')) {
-            throw new Zend_InfoCard_Xml_Exception("Unable to determine the encryption algorithm in the Symmetric enc:EncryptionMethod XML block");
-        }
-
-        return $dom->getAttribute('Algorithm');
-    }
-
-    /**
-     * Returns the value of the encrypted block
-     *
-     * @return string the value of the encrypted CipherValue block
-     */
-    abstract function getCipherValue();
+		if(!($encryption_method instanceof Zend_InfoCard_Xml_Element)) {
+			throw new Zend_InfoCard_Xml_Exception("Unable to find the enc:EncryptionMethod symmetric encryption block");
+		}
+		
+		$dom = self::convertToDOM($encryption_method);
+		
+		if(!$dom->hasAttribute('Algorithm')) {
+			throw new Zend_InfoCard_Xml_Exception("Unable to determine the encryption algorithm in the Symmetric enc:EncryptionMethod XML block");
+		}
+		
+		return $dom->getAttribute('Algorithm');
+	}
+	
+	/**
+	 * Returns the value of the encrypted block
+	 * 
+	 * @return string the value of the encrypted CipherValue block
+	 */
+	abstract function getCipherValue();
 }

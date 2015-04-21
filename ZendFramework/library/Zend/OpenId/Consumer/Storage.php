@@ -16,9 +16,9 @@
  * @category   Zend
  * @package    Zend_OpenId
  * @subpackage Zend_OpenId_Consumer
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Storage.php 9239 2008-04-18 12:09:31Z dmitry $
+ * @version    $Id:$
  */
 
 /**
@@ -27,7 +27,7 @@
  * @category   Zend
  * @package    Zend_OpenId
  * @subpackage Zend_OpenId_Consumer
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_OpenId_Consumer_Storage
@@ -117,11 +117,10 @@ abstract class Zend_OpenId_Consumer_Storage
     /**
      * The function checks the uniqueness of openid.response_nonce
      *
-     * @param string $provider openid.openid_op_endpoint field from authentication response
      * @param string $nonce openid.response_nonce field from authentication response
      * @return bool
      */
-    abstract public function isUniqueNonce($provider, $nonce);
+    abstract public function isUniqueNonce($nonce);
 
     /**
      * Removes data from the uniqueness database that is older then given date

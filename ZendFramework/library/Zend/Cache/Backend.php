@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework
  *
@@ -14,20 +15,25 @@
  *
  * @category   Zend
  * @package    Zend_Cache
- * @subpackage Zend_Cache_Backend
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Backend
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
 
 /**
  * @package    Zend_Cache
- * @subpackage Zend_Cache_Backend
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Backend
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Cache_Backend
 {
+
+    // ------------------
+    // --- Properties ---
+    // ------------------
+
     /**
      * Frontend or Core directives
      *
@@ -53,15 +59,18 @@ class Zend_Cache_Backend
      */
     protected $_options = array();
 
+    // ----------------------
+    // --- Public methods ---
+    // ----------------------
+
     /**
      * Constructor
      *
-     * @param  array $options Associative array of options
-     * @throws Zend_Cache_Exception
-     * @return void
+     * @param array $options associative array of options
      */
-    public function __construct(array $options = array())
+    public function __construct($options = array())
     {
+        if (!is_array($options)) Zend_Cache::throwException('Options parameter must be an array');
         while (list($name, $value) = each($options)) {
             $this->setOption($name, $value);
         }
@@ -70,9 +79,7 @@ class Zend_Cache_Backend
     /**
      * Set the frontend directives
      *
-     * @param  array $directives Assoc of directives
-     * @throws Zend_Cache_Exception
-     * @return void
+     * @param array $directives assoc of directives
      */
     public function setDirectives($directives)
     {
@@ -94,10 +101,8 @@ class Zend_Cache_Backend
     /**
      * Set an option
      *
-     * @param  string $name
-     * @param  mixed  $value
-     * @throws Zend_Cache_Exception
-     * @return void
+     * @param string $name
+     * @param mixed $value
      */
     public function setOption($name, $value)
     {
@@ -105,9 +110,10 @@ class Zend_Cache_Backend
             Zend_Cache::throwException("Incorrect option name : $name");
         }
         $name = strtolower($name);
-        if (array_key_exists($name, $this->_options)) {
-            $this->_options[$name] = $value;
+        if (!array_key_exists($name, $this->_options)) {
+            Zend_Cache::throwException("Incorrect option name : $name");
         }
+        $this->_options[$name] = $value;
     }
 
     /**
@@ -116,8 +122,7 @@ class Zend_Cache_Backend
      * if $specificLifetime is not false, the given specific life time is used
      * else, the global lifetime is used
      *
-     * @param  int $specificLifetime
-     * @return int Cache life time
+     * @return int cache life time
      */
     public function getLifetime($specificLifetime)
     {
@@ -130,9 +135,6 @@ class Zend_Cache_Backend
     /**
      * Return true if the automatic cleaning is available for the backend
      *
-     * DEPRECATED : use getCapabilities() instead
-     *
-     * @deprecated
      * @return boolean
      */
     public function isAutomaticCleaningAvailable()
@@ -143,7 +145,7 @@ class Zend_Cache_Backend
     /**
      * Return a system-wide tmp directory
      *
-     * @return string System-wide tmp directory
+     * @return string system-wide tmp directory
      */
     static function getTmpDir()
     {
@@ -174,8 +176,8 @@ class Zend_Cache_Backend
      * is available.
      * Create a default log object if none is set.
      *
-     * @throws Zend_Cache_Exception
      * @return void
+     * @throws Zend_Cache_Exception
      */
     protected function _loggerSanity()
     {
@@ -183,22 +185,16 @@ class Zend_Cache_Backend
             return;
         }
         try {
-            /**
-             * @see Zend_Log
-             */
-            require_once 'Zend/Log.php';
+            require_once 'Zend/Loader.php';
+            Zend_Loader::loadClass('Zend_Log');
         } catch (Zend_Exception $e) {
             Zend_Cache::throwException('Logging feature is enabled but the Zend_Log class is not available');
         }
-        if (isset($this->_directives['logger'])) {
-            if ($this->_directives['logger'] instanceof Zend_Log) {
-                return;
-            } else {
-                Zend_Cache::throwException('Logger object is not an instance of Zend_Log class.');
-            }
+        if (isset($this->_directives['logger']) && $this->_directives['logger'] instanceof Zend_Log) {
+            return;
         }
         // Create a default logger to the standard output stream
-        require_once 'Zend/Log/Writer/Stream.php';
+        Zend_Loader::loadClass('Zend_Log_Writer_Stream');
         $logger = new Zend_Log(new Zend_Log_Writer_Stream('php://output'));
         $this->_directives['logger'] = $logger;
     }
@@ -206,23 +202,20 @@ class Zend_Cache_Backend
     /**
      * Log a message at the WARN (4) priority.
      *
-     * @param  string $message
-     * @throws Zend_Cache_Exception
+     * @param string $message
      * @return void
+     * @throws Zend_Cache_Exception
      */
     protected function _log($message, $priority = 4)
     {
         if (!$this->_directives['logging']) {
             return;
         }
-
-        if (!isset($this->_directives['logger'])) {
-        	Zend_Cache::throwException('Logging is enabled but logger is not set.');
+        if (!(isset($this->_directives['logger']) || $this->_directives['logger'] instanceof Zend_Log)) {
+            Zend_Cache::throwException('Logging is enabled but logger is not set');
         }
         $logger = $this->_directives['logger'];
-        if (!$logger instanceof Zend_Log) {
-            Zend_Cache::throwException('Logger object is not an instance of Zend_Log class.');
-        }
         $logger->log($message, $priority);
     }
+
 }

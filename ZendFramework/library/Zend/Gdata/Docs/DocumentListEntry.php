@@ -15,8 +15,7 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Docs
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -31,8 +30,7 @@ require_once 'Zend/Gdata/Entry.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Docs
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Docs_DocumentListEntry extends Zend_Gdata_Entry
@@ -46,7 +44,9 @@ class Zend_Gdata_Docs_DocumentListEntry extends Zend_Gdata_Entry
      */
     public function __construct($element = null)
     {
-        $this->registerAllNamespaces(Zend_Gdata_Docs::$namespaces);
+        foreach (Zend_Gdata_Docs::$namespaces as $nsPrefix => $nsUri) {
+            $this->registerNamespace($nsPrefix, $nsUri);
+        }
         parent::__construct($element);
     }
 

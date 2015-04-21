@@ -26,23 +26,29 @@ class EditTableController extends ITechController { //Zend_Controller_Action
 
   public $allowMerge = false; // add "merge" checkbox
   public $allowDefault = false; // add "default" radio
-
   
   private $controller;
 
-  public function __construct(&$parentController)
+  public function __construct(Zend_Controller_Request_Abstract $request, Zend_Controller_Response_Abstract $response, array $invokeArgs = array() )
   {
-      $this->controller = $parentController;
-      $this->view = $parentController->view;
-
-      parent::__construct($parentController->getRequest(), $parentController->getResponse());
+      // moved to setParentController, ZF-1.8.0 requires constructor signature match, gnr
+      //$this->controller = $parentController;
+      //$this->view = $parentController->view;
+         
+      parent::__construct($request, $response, $invokeArgs = array ());
   }
 
   public function init()
   {
   }
+  
+  public function setParentController($parentController)
+  {
+      $this->controller = $parentController;
+      $this->view = $parentController->view;
+  }
 
-  public function execute() {
+  public function execute(Zend_Controller_Request_Abstract $request) {
 
     $params = $this->_getAllParams();
 
@@ -66,7 +72,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
     require_once('models/table/EditTable.php');
     $editTable = new EditTable(array('name' => $this->table));
 
-  	$request = $this->controller->getRequest();
+  	//$request = $this->controller->getRequest();
   	$validateOnly = $request->isXmlHttpRequest();
 
     // Delete, insert, or update?

@@ -15,8 +15,7 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Calendar
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -45,18 +44,13 @@ require_once 'Zend/Gdata/Calendar/Extension/Timezone.php';
  */
 require_once 'Zend/Gdata/Calendar/Extension/Link.php';
 
-/**
- * @see Zend_Gdata_Calendar_Extension_QuickAdd
- */
-require_once 'Zend/Gdata/Calendar/Extension/QuickAdd.php';
 
 /**
  * Data model class for a Google Calendar Event Entry
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Calendar
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Calendar_EventEntry extends Zend_Gdata_Kind_EventEntry
@@ -69,13 +63,15 @@ class Zend_Gdata_Calendar_EventEntry extends Zend_Gdata_Kind_EventEntry
 
     public function __construct($element = null)
     {
-        $this->registerAllNamespaces(Zend_Gdata_Calendar::$namespaces);
+        foreach (Zend_Gdata_Calendar::$namespaces as $nsPrefix => $nsUri) {
+            $this->registerNamespace($nsPrefix, $nsUri);
+        }
         parent::__construct($element);
     }
 
-    public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null)
+    public function getDOM($doc = null)
     {
-        $element = parent::getDOM($doc, $majorVersion, $minorVersion);
+        $element = parent::getDOM($doc);
         if ($this->_sendEventNotifications != null) {
             $element->appendChild($this->_sendEventNotifications->getDOM($element->ownerDocument));
         }

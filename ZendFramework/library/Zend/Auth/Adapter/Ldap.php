@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework
  *
@@ -14,10 +15,9 @@
  *
  * @category   Zend
  * @package    Zend_Auth
- * @subpackage Zend_Auth_Adapter
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Ldap.php 11765 2008-10-09 01:53:43Z miallen $
+ * @version    $Id: Ldap.php 7610 2008-01-24 16:49:48Z darby $
  */
 
 /**
@@ -26,10 +26,14 @@
 require_once 'Zend/Auth/Adapter/Interface.php';
 
 /**
+ * @see Zend_Log
+ */
+require_once 'Zend/Log.php';
+
+/**
  * @category   Zend
  * @package    Zend_Auth
- * @subpackage Zend_Auth_Adapter
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
@@ -64,8 +68,11 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
     protected $_password = null;
 
     /**
-     * Constructor
-     *
+     * @var Zend_Log
+     */
+    protected $_logger = null;
+
+    /**
      * @param  array  $options  An array of arrays of Zend_Ldap options
      * @param  string $username The username of the account being authenticated
      * @param  string $password The password of the account being authenticated
@@ -73,36 +80,13 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
      */
     public function __construct(array $options = array(), $username = null, $password = null)
     {
-        $this->setOptions($options);
+        $this->_options = $options;
         if ($username !== null) {
             $this->setUsername($username);
         }
         if ($password !== null) {
             $this->setPassword($password);
         }
-    }
-
-    /**
-     * Returns the array of arrays of Zend_Ldap options of this adapter.
-     *
-     * @return array|null
-     */
-    public function getOptions()
-    {
-        return $this->_options;
-    }
-
-    /**
-     * Sets the array of arrays of Zend_Ldap options to be used by
-     * this adapter.
-     *
-     * @param  array $options The array of arrays of Zend_Ldap options
-     * @return Zend_Auth_Adapter_Ldap Provides a fluent interface
-     */
-    public function setOptions($options)
-    {
-        $this->_options = is_array($options) ? $options : array();
-        return $this;
     }
 
     /**
@@ -117,8 +101,6 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
     }
 
     /**
-     * Sets the username for binding
-     *
      * @param  string $username The username for binding
      * @return Zend_Auth_Adapter_Ldap Provides a fluent interface
      */
@@ -140,8 +122,6 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
     }
 
     /**
-     * Sets the passwort for the account
-     *
      * @param  string $password The password of the account being authenticated
      * @return Zend_Auth_Adapter_Ldap Provides a fluent interface
      */
@@ -152,9 +132,7 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
     }
 
     /**
-     * Returns the LDAP Object
-     *
-     * @return Zend_Ldap The Zend_Ldap object used to authenticate the credentials
+     * @return Zend_Ldap The Zend_Ldap object used to authenticate the credentials.
      */
     public function getLdap()
     {
@@ -169,43 +147,19 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
     }
 
     /**
-     * Returns a domain name for the current LDAP options. This is used
-     * for skipping redundant operations (e.g. authentications).
-     *
-     * @return string
-     */
-    protected function _getAuthorityName()
-    {
-        $options = $this->getLdap()->getOptions();
-        $name = $options['accountDomainName'];
-        if (!$name)
-            $name = $options['accountDomainNameShort'];
-        return $name ? $name : '';
-    }
-
-    /**
-     * Authenticate the user
-     *
-     * @throws Zend_Auth_Adapter_Exception
      * @return Zend_Auth_Result
+     * @throws Zend_Auth_Adapter_Exception
      */
     public function authenticate()
     {
-        /**
-         * @see Zend_Ldap_Exception
-         */
         require_once 'Zend/Ldap/Exception.php';
-
-        $messages = array();
-        $messages[0] = ''; // reserved
-        $messages[1] = ''; // reserved
 
         $username = $this->_username;
         $password = $this->_password;
 
         if (!$username) {
             $code = Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND;
-            $messages[0] = 'A username is required';
+            $messages = array('A username is required');
             return new Zend_Auth_Result($code, '', $messages);
         }
         if (!$password) {
@@ -213,15 +167,15 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
              * treat an empty password as an anonymous bind.
              */
             $code = Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID;
-            $messages[0] = 'A password is required';
+            $messages = array('A password is required');
             return new Zend_Auth_Result($code, '', $messages);
         }
 
         $ldap = $this->getLdap();
 
         $code = Zend_Auth_Result::FAILURE;
-        $messages[0] = "Authority not found: $username";
-        $failedAuthorities = array();
+        $messages = array("Authority not found: $username");
+        $log = $this->getLogger();
 
         /* Iterate through each server and try to authenticate the supplied
          * credentials against it.
@@ -229,49 +183,30 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
         foreach ($this->_options as $name => $options) {
 
             if (!is_array($options)) {
-                /**
-                 * @see Zend_Auth_Adapter_Exception
-                 */
                 require_once 'Zend/Auth/Adapter/Exception.php';
                 throw new Zend_Auth_Adapter_Exception('Adapter options array not in array');
             }
-            $ldap->setOptions($options);
-            $dname = '';
 
             try {
-                if ($messages[1])
-                    $messages[] = $messages[1];
-                $messages[1] = '';
-                $messages[] = $this->_optionsToString($options);
-
-                $dname = $this->_getAuthorityName();
-                if (isset($failedAuthorities[$dname])) {
-                    /* If multiple sets of server options for the same domain
-                     * are supplied, we want to skip redundant authentications
-                     * where the identity or credentials where found to be
-                     * invalid with another server for the same domain. The
-                     * $failedAuthorities array tracks this condition (and also
-                     * serves to supply the original error message).
-                     * This fixes issue ZF-4093.
-                     */
-                    $messages[1] = $failedAuthorities[$dname];
-                    $messages[] = "Skipping previously failed authority: $dname";
-                    continue;
-                }
+                $ldap->setOptions($options);
+                if ($log)
+                    $this->_logOptions($options);
 
                 $canonicalName = $ldap->getCanonicalAccountName($username);
 
+                if (isset($messages[1]))
+                    $this->_log($messages[1]);
+                $messages = array();
+
                 $ldap->bind($canonicalName, $password);
 
-                $messages[0] = '';
-                $messages[1] = '';
-                $messages[] = "$canonicalName authentication successful";
+                $this->_log("$canonicalName authentication successful", Zend_Log::INFO);
 
-                return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $canonicalName, $messages);
+                return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $canonicalName);
             } catch (Zend_Ldap_Exception $zle) {
 
                 /* LDAP based authentication is notoriously difficult to diagnose. Therefore
-                 * we bend over backwards to capture and record every possible bit of
+                 * we bend over backwards to capture and log every possible bit of
                  * information when something goes wrong.
                  */
 
@@ -286,44 +221,72 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
                     continue;
                 } else if ($err == Zend_Ldap_Exception::LDAP_NO_SUCH_OBJECT) {
                     $code = Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND;
-                    $messages[0] = "Account not found: $username";
-                    $failedAuthorities[$dname] = $zle->getMessage();
+                    $messages[] = "Account not found: $username";
                 } else if ($err == Zend_Ldap_Exception::LDAP_INVALID_CREDENTIALS) {
                     $code = Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID;
-                    $messages[0] = 'Invalid credentials';
-                    $failedAuthorities[$dname] = $zle->getMessage();
+                    $messages[] = 'Invalid credentials';
                 } else {
-                    $line = $zle->getLine();
-                    $messages[] = $zle->getFile() . "($line): " . $zle->getMessage();
-                    $messages[] = str_replace($password, '*****', $zle->getTraceAsString());
-                    $messages[0] = 'An unexpected failure occurred';
+                    if ($log) {
+                        $str = $zle->getFile() . '(' . $zle->getLine() . '): ' . $zle->getMessage();
+                        $this->_log($str, Zend_Log::ERR);
+                        $str = str_replace($password, '*****', $zle->getTraceAsString());
+                        $this->_log($str, Zend_Log::WARN);
+                    }
+                    $messages[] = 'An unexpected failure occurred';
                 }
-                $messages[1] = $zle->getMessage();
+                $messages[] = $zle->getMessage();
             }
         }
 
         $msg = isset($messages[1]) ? $messages[1] : $messages[0];
-        $messages[] = "$username authentication failed: $msg";
+        $this->_log("$username authentication failed: $msg", Zend_Log::NOTICE);
 
         return new Zend_Auth_Result($code, $username, $messages);
     }
 
     /**
-     * Converts options to string
-     *
-     * @param  array $options
-     * @return string
+     * @param Zend_Log $logger The Zend_Log object that this adapter should use to log debugging information
+     * @return Zend_Auth_Adapter_Ldap Provides a fluent interface
      */
-    private function _optionsToString(array $options)
+    public function setLogger($logger)
+    {
+        $this->_logger = $logger;
+        return $this;
+    }
+
+    /**
+     * @return Zend_Log The Zend_Log object used by this adapter to log debugging information
+     */
+    public function getLogger()
+    {
+        return $this->_logger;
+    }
+
+    /**
+     * @param $str The message to be logged
+     * @param int The Zend_Log priority value
+     * @return Zend_Auth_Adapter_Ldap Provides a fluent interface
+     */
+    protected function _log($str, $priority = Zend_Log::DEBUG)
+    {
+        $logger = $this->getLogger();
+        if ($logger) {
+            $str = 'Ldap: ' . str_replace("\n", "\n  ", $str);
+            $logger->log($str, $priority);
+        }
+        return $this;
+    }
+
+    private function _logOptions($options)
     {
         $str = '';
         foreach ($options as $key => $val) {
-            if ($key === 'password')
-                $val = '*****';
             if ($str)
                 $str .= ',';
             $str .= $key . '=' . $val;
         }
-        return $str;
+        if ($this->_password)
+            $str = str_replace($this->_password, '*****', $str);
+        $this->_log($str);
     }
 }

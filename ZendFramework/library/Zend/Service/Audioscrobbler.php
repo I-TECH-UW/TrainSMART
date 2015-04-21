@@ -16,9 +16,9 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Audioscrobbler
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Audioscrobbler.php 13633 2009-01-14 21:05:51Z beberlei $
+ * @version    $Id: Audioscrobbler.php 7419 2008-01-14 10:05:37Z weppos $
  */
 
 
@@ -32,8 +32,10 @@ require_once 'Zend/Http/Client.php';
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Audioscrobbler
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @author     Chris Hartjes chartjes@littlehart.net (ZCE # 901167)
+ * @author     Derek Martin  derek@geekunity.com (ZCE # 901168)
  */
 class Zend_Service_Audioscrobbler
 {
@@ -622,33 +624,5 @@ class Zend_Service_Audioscrobbler
             'errline'    => $errline,
             'errcontext' => $errcontext
             );
-    }
-
-    /**
-     * Call Intercept for set($name, $field)
-     *
-     * @param  string $method
-     * @param  array  $args
-     * @return Zend_Service_Audioscrobbler
-     */
-    public function __call($method, $args)
-    {
-        if(substr($method, 0, 3) !== "set") {
-            require_once "Zend/Service/Audioscrobbler/Exception.php";
-            throw new Zend_Service_Audioscrobbler_Exception(
-                "Method ".$method." does not exist in class Zend_Service_Audioscrobbler."
-            );
-        }
-        $field = strtolower(substr($method, 3));
-
-        if(!is_array($args) || count($args) != 1) {
-            require_once "Zend/Service/Audioscrobbler/Exception.php";
-            throw new Zend_Service_Audioscrobbler_Exception(
-                "A value is required for setting a parameter field."
-            );
-        }
-        $this->set($field, $args[0]);
-
-        return $this;
     }
 }

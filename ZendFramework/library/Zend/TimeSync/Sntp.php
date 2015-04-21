@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework
  *
@@ -12,11 +13,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@zend.com so we can send you a copy immediately.
  *
- * @category  Zend
- * @package   Zend_TimeSync
- * @copyright Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @version   $Id: Sntp.php 10835 2008-08-08 22:28:26Z thomas $
+ * @category   Zend
+ * @package    Zend_TimeSync
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: Sntp.php 3567 2007-02-22 20:09:56Z thomas $
+ * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
 /**
@@ -25,46 +26,45 @@
 require_once 'Zend/TimeSync/Protocol.php';
 
 /**
- * SNTP Protocol handling class
- *
- * @category  Zend
- * @package   Zend_TimeSync
- * @copyright Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd     New BSD License
+ * @category   Zend
+ * @package    Zend_TimeSync
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_TimeSync_Sntp extends Zend_TimeSync_Protocol
 {
     /**
      * Port number for this timeserver
      *
-     * @var integer
+     * @var int
      */
     protected $_port = 37;
-
+    
     /**
      * Socket delay
      *
      * @var integer
      */
     private $_delay;
-
+    
     /**
      * Class constructor, sets the timeserver and port number
      *
-     * @param string  $timeserver Timeserver to connect to
-     * @param integer $port       Port of the timeserver when it differs from the default port
+     * @param  string $timeserver
+     * @param  int    $port
+     * @return void
      */
     public function __construct($timeserver, $port)
     {
-        $this->_timeserver = 'udp://' . $timeserver;
-        if (is_null($port) === false) {
+        $this->_timeserver = 'tcp://' . $timeserver;
+        if (!is_null($port)) {
             $this->_port = $port;
         }
     }
 
     /**
      * Prepares the data that will be send to the timeserver
-     *
+     * 
      * @return array
      */
     protected function _prepare()
@@ -74,21 +74,21 @@ class Zend_TimeSync_Sntp extends Zend_TimeSync_Protocol
 
     /**
      * Reads the data returned from the timeserver
-     *
-     * @return string
+     * 
+     * @return void
      */
     protected function _read()
     {
-        $result       = fread($this->_socket, 49);
-        $this->_delay = (($this->_delay - time()) / 2);
+        $result = fread($this->_socket, 49);
+        $this->_delay = ($this->_delay - time()) / 2;
 
         return $result;
     }
 
     /**
      * Writes data to to the timeserver
-     *
-     * @param  string $data Data to write to the timeserver
+     * 
+     * @param  array $data
      * @return void
      */
     protected function _write($data)
@@ -100,16 +100,15 @@ class Zend_TimeSync_Sntp extends Zend_TimeSync_Protocol
 
     /**
      * Extracts the data returned from the timeserver
-     *
-     * @param  string $result Data to extract
+     * 
+     * @param  array $result
      * @return integer
      */
     protected function _extract($result)
     {
-        $dec   = hexdec('7fffffff');
-        $time  = abs(($dec - hexdec(bin2hex($result))) - $dec);
+        $time  = abs(hexdec('7fffffff') - hexdec(bin2hex($result)) - hexdec('7fffffff'));
         $time -= 2208988800;
-        // Socket delay
+        // socket delay
         $time -= $this->_delay;
 
         $this->_info['offset'] = $this->_delay;

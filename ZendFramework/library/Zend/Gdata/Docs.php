@@ -15,8 +15,7 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Docs
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -41,8 +40,7 @@ require_once 'Zend/Gdata/Docs/DocumentListEntry.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Docs
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Docs extends Zend_Gdata
@@ -67,13 +65,12 @@ class Zend_Gdata_Docs extends Zend_Gdata
      * Create Gdata_Docs object
      *
      * @param Zend_Http_Client $client (optional) The HTTP client to use when
-     *          when communicating with the Google servers.
-     * @param string $applicationId The identity of the app in the form of Company-AppName-Version
+     *          when communicating with the Google Docuuments servers.
      */
-    public function __construct($client = null, $applicationId = 'MyCompany-MyApp-1.0')
+    public function __construct($client = null)
     {
         $this->registerPackage('Zend_Gdata_Docs');
-        parent::__construct($client, $applicationId);
+        parent::__construct($client);
         $this->_httpClient->setParameterPost('service', self::AUTH_SERVICE_NAME);
     }
 

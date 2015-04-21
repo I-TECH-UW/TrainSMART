@@ -13,251 +13,327 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Loader
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Loader.php 12507 2008-11-10 16:29:09Z matthew $
+ * @package	Zend_Loader
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license	http://framework.zend.com/license/new-bsd	 New BSD License
+ * @version	$Id: Loader.php 7577 2008-01-22 22:06:41Z darby $
  */
 
 /**
  * Static methods for loading classes and files.
  *
  * @category   Zend
- * @package    Zend_Loader
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @package	Zend_Loader
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license	http://framework.zend.com/license/new-bsd	 New BSD License
  */
 class Zend_Loader
 {
-    /**
-     * Loads a class from a PHP file.  The filename must be formatted
-     * as "$class.php".
-     *
-     * If $dirs is a string or an array, it will search the directories
-     * in the order supplied, and attempt to load the first matching file.
-     *
-     * If $dirs is null, it will split the class name at underscores to
-     * generate a path hierarchy (e.g., "Zend_Example_Class" will map
-     * to "Zend/Example/Class.php").
-     *
-     * If the file was not found in the $dirs, or if no $dirs were specified,
-     * it will attempt to load it from PHP's include_path.
-     *
-     * @param string $class      - The full class name of a Zend component.
-     * @param string|array $dirs - OPTIONAL Either a path or an array of paths
-     *                             to search.
-     * @return void
-     * @throws Zend_Exception
-     */
-    public static function loadClass($class, $dirs = null)
-    {
-        if (class_exists($class, false) || interface_exists($class, false)) {
-            return;
-        }
+	/**
+	 * An array of stdClass objects used for tracking PHP errors from including a file
+	 *
+	 * @var array
+	 */
+	protected static $_errors = array();
 
-        if ((null !== $dirs) && !is_string($dirs) && !is_array($dirs)) {
-            require_once 'Zend/Exception.php';
-            throw new Zend_Exception('Directory argument must be a string or an array');
-        }
+	/**
+	 * Loads a class from a PHP file.  The filename must be formatted
+	 * as "$class.php".
+	 *
+	 * If $dirs is a string or an array, it will search the directories
+	 * in the order supplied, and attempt to load the first matching file.
+	 *
+	 * If $dirs is null, it will split the class name at underscores to
+	 * generate a path hierarchy (e.g., "Zend_Example_Class" will map
+	 * to "Zend/Example/Class.php").
+	 *
+	 * If the file was not found in the $dirs, or if no $dirs were specified,
+	 * it will attempt to load it from PHP's include_path.
+	 *
+	 * @param string $class	  - The full class name of a Zend component.
+	 * @param string|array $dirs - OPTIONAL Either a path or an array of paths
+	 *							 to search.
+	 * @return void
+	 * @throws Zend_Exception
+	 */
+	public static function loadClass($class, $dirs = null)
+	{
+		if (class_exists($class, false) || interface_exists($class, false)) {
+			return;
+		}
 
-        // autodiscover the path from the class name
-        $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
-        if (!empty($dirs)) {
-            // use the autodiscovered path
-            $dirPath = dirname($file);
-            if (is_string($dirs)) {
-                $dirs = explode(PATH_SEPARATOR, $dirs);
-            }
-            foreach ($dirs as $key => $dir) {
-                if ($dir == '.') {
-                    $dirs[$key] = $dirPath;
-                } else {
-                    $dir = rtrim($dir, '\\/');
-                    $dirs[$key] = $dir . DIRECTORY_SEPARATOR . $dirPath;
-                }
-            }
-            $file = basename($file);
-            self::loadFile($file, $dirs, true);
-        } else {
-            self::_securityCheck($file);
-            include_once $file;
-        }
+		if ((null !== $dirs) && !is_string($dirs) && !is_array($dirs)) {
+			require_once 'Zend/Exception.php';
+			throw new Zend_Exception('Directory argument must be a string or an array');
+		}
 
-        if (!class_exists($class, false) && !interface_exists($class, false)) {
-            require_once 'Zend/Exception.php';
-            throw new Zend_Exception("File \"$file\" does not exist or class \"$class\" was not found in the file");
-        }
-    }
+		// autodiscover the path from the class name
+		$file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
 
-    /**
-     * Loads a PHP file.  This is a wrapper for PHP's include() function.
-     *
-     * $filename must be the complete filename, including any
-     * extension such as ".php".  Note that a security check is performed that
-     * does not permit extended characters in the filename.  This method is
-     * intended for loading Zend Framework files.
-     *
-     * If $dirs is a string or an array, it will search the directories
-     * in the order supplied, and attempt to load the first matching file.
-     *
-     * If the file was not found in the $dirs, or if no $dirs were specified,
-     * it will attempt to load it from PHP's include_path.
-     *
-     * If $once is TRUE, it will use include_once() instead of include().
-     *
-     * @param  string        $filename
-     * @param  string|array  $dirs - OPTIONAL either a path or array of paths
-     *                       to search.
-     * @param  boolean       $once
-     * @return boolean
-     * @throws Zend_Exception
-     */
-    public static function loadFile($filename, $dirs = null, $once = false)
-    {
-        self::_securityCheck($filename);
+		if (!empty($dirs)) {
+			// use the autodiscovered path
+			$dirPath = dirname($file);
+			if (is_string($dirs)) {
+				$dirs = explode(PATH_SEPARATOR, $dirs);
+			}
+			foreach ($dirs as $key => $dir) {
+				if ($dir == '.') {
+					$dirs[$key] = $dirPath;
+				} else {
+					$dir = rtrim($dir, '\\/');
+					$dirs[$key] = $dir . DIRECTORY_SEPARATOR . $dirPath;
+				}
+			}
+			$file = basename($file);
+			self::loadFile($file, $dirs, true);
+		} else {
+			self::_securityCheck($file);
+			set_error_handler(array('Zend_Loader', 'errorHandler'));
+#echo "including once " . $file . "<br>";
+			include_once $file;
+#echo __LINE__ . "<br>";
+			restore_error_handler();
+#echo __LINE__ . "<br>";
+			self::_throwIncludeErrors($file);
+#echo __LINE__ . "<br>";
+		}
 
-        /**
-         * Search in provided directories, as well as include_path
-         */
-        $incPath = false;
-        if (!empty($dirs) && (is_array($dirs) || is_string($dirs))) {
-            if (is_array($dirs)) {
-                $dirs = implode(PATH_SEPARATOR, $dirs);
-            }
-            $incPath = get_include_path();
-            set_include_path($dirs . PATH_SEPARATOR . $incPath);
-        }
+		if (!class_exists($class, false) && !interface_exists($class, false)) {
+			require_once 'Zend/Exception.php';
+			throw new Zend_Exception("File \"$file\" was loaded but class \"$class\" was not found in the file");
+		}
+	}
 
-        /**
-         * Try finding for the plain filename in the include_path.
-         */
-        if ($once) {
-            include_once $filename;
-        } else {
-            include $filename;
-        }
+	/**
+	 * Loads a PHP file.  This is a wrapper for PHP's include() function.
+	 *
+	 * $filename must be the complete filename, including any
+	 * extension such as ".php".  Note that a security check is performed that
+	 * does not permit extended characters in the filename.  This method is
+	 * intended for loading Zend Framework files.
+	 *
+	 * If $dirs is a string or an array, it will search the directories
+	 * in the order supplied, and attempt to load the first matching file.
+	 *
+	 * If the file was not found in the $dirs, or if no $dirs were specified,
+	 * it will attempt to load it from PHP's include_path.
+	 *
+	 * If $once is TRUE, it will use include_once() instead of include().
+	 *
+	 * @param  string		$filename
+	 * @param  string|array  $dirs - OPTIONAL either a path or array of paths
+	 *					   to search.
+	 * @param  boolean	   $once
+	 * @return boolean
+	 * @throws Zend_Exception
+	 */
+	public static function loadFile($filename, $dirs = null, $once = false)
+	{
+		self::_securityCheck($filename);
 
-        /**
-         * If searching in directories, reset include_path
-         */
-        if ($incPath) {
-            set_include_path($incPath);
-        }
+		/**
+		 * Search in provided directories, as well as include_path
+		 */
+		$incPath = false;
+		if (!empty($dirs) && (is_array($dirs) || is_string($dirs))) {
+			if (is_array($dirs)) {
+				$dirs = implode(PATH_SEPARATOR, $dirs);
+			}
+			$incPath = get_include_path();
+			set_include_path($dirs . PATH_SEPARATOR . $incPath);
+		}
 
-        return true;
-    }
+		/**
+		 * Try finding for the plain filename in the include_path.
+		 */
+		set_error_handler(array('Zend_Loader', 'errorHandler'));
+		if ($once) {
+			include_once $filename;
+		} else {
+			include $filename;
+		}
+		restore_error_handler();
 
-    /**
-     * Returns TRUE if the $filename is readable, or FALSE otherwise.
-     * This function uses the PHP include_path, where PHP's is_readable()
-     * does not.
-     *
-     * Note from ZF-2900:
-     * If you use custom error handler, please check whether return value
-     *  from error_reporting() is zero or not.
-     * At mark of fopen() can not suppress warning if the handler is used.
-     *
-     * @param string   $filename
-     * @return boolean
-     */
-    public static function isReadable($filename)
-    {
-        if (!$fh = @fopen($filename, 'r', true)) {
-            return false;
-        }
-        @fclose($fh);
-        return true;
-    }
+		/**
+		 * If searching in directories, reset include_path
+		 */
+		if ($incPath) {
+			set_include_path($incPath);
+		}
 
-    /**
-     * spl_autoload() suitable implementation for supporting class autoloading.
-     *
-     * Attach to spl_autoload() using the following:
-     * <code>
-     * spl_autoload_register(array('Zend_Loader', 'autoload'));
-     * </code>
-     *
-     * @param string $class
-     * @return string|false Class name on success; false on failure
-     */
-    public static function autoload($class)
-    {
-        try {
-            self::loadClass($class);
-            return $class;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
+		self::_throwIncludeErrors($filename);
 
-    /**
-     * Register {@link autoload()} with spl_autoload()
-     *
-     * @param string $class (optional)
-     * @param boolean $enabled (optional)
-     * @return void
-     * @throws Zend_Exception if spl_autoload() is not found
-     * or if the specified class does not have an autoload() method.
-     */
-    public static function registerAutoload($class = 'Zend_Loader', $enabled = true)
-    {
-        if (!function_exists('spl_autoload_register')) {
-            require_once 'Zend/Exception.php';
-            throw new Zend_Exception('spl_autoload does not exist in this PHP installation');
-        }
+		/**
+		 * @todo deprecate this behavior
+		 *
+		 * if it doesn't work, throw an exception;
+		 * if it works, no need to return true
+		 */
+		return true;
+	}
 
-        self::loadClass($class);
-        $methods = get_class_methods($class);
-        if (!in_array('autoload', (array) $methods)) {
-            require_once 'Zend/Exception.php';
-            throw new Zend_Exception("The class \"$class\" does not have an autoload() method");
-        }
+	/**
+	 * Stores the information from an error for later examination
+	 *
+	 * @param  integer $errno
+	 * @param  string  $errstr
+	 * @param  string  $errfile
+	 * @param  integer $errline
+	 * @param  array   $errcontext
+	 * @return void
+	 */
+	public static function errorHandler($errno, $errstr, $errfile, $errline, $errcontext)
+	{
+		$error = new stdClass();
 
-        if ($enabled === true) {
-            spl_autoload_register(array($class, 'autoload'));
-        } else {
-            spl_autoload_unregister(array($class, 'autoload'));
-        }
-    }
+		$error->errno	  = $errno;
+		$error->errstr	 = $errstr;
+		$error->errfile	= $errfile;
+		$error->errline	= $errline;
+		$error->errcontext = $errcontext;
 
-    /**
-     * Ensure that filename does not contain exploits
-     *
-     * @param  string $filename
-     * @return void
-     * @throws Zend_Exception
-     */
-    protected static function _securityCheck($filename)
-    {
-        /**
-         * Security check
-         */
-        if (preg_match('/[^a-z0-9\\/\\\\_.-]/i', $filename)) {
-            require_once 'Zend/Exception.php';
-            throw new Zend_Exception('Security check: Illegal character in filename');
-        }
-    }
+		self::$_errors[] = $error;
+	}
 
-    /**
-     * Attempt to include() the file.
-     *
-     * include() is not prefixed with the @ operator because if
-     * the file is loaded and contains a parse error, execution
-     * will halt silently and this is difficult to debug.
-     *
-     * Always set display_errors = Off on production servers!
-     *
-     * @param  string  $filespec
-     * @param  boolean $once
-     * @return boolean
-     * @deprecated Since 1.5.0; use loadFile() instead
-     */
-    protected static function _includeFile($filespec, $once = false)
-    {
-        if ($once) {
-            return include_once $filespec;
-        } else {
-            return include $filespec ;
-        }
-    }
+	/**
+	 * Returns TRUE if the $filename is readable, or FALSE otherwise.
+	 * This function uses the PHP include_path, where PHP's is_readable()
+	 * does not.
+	 *
+	 * @param string   $filename
+	 * @return boolean
+	 */
+	public static function isReadable($filename)
+	{
+		if (!$fh = @fopen($filename, 'r', true)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * spl_autoload() suitable implementation for supporting class autoloading.
+	 *
+	 * Attach to spl_autoload() using the following:
+	 * <code>
+	 * spl_autoload_register(array('Zend_Loader', 'autoload'));
+	 * </code>
+	 *
+	 * @param string $class
+	 * @return string|false Class name on success; false on failure
+	 */
+	public static function autoload($class)
+	{
+		try {
+			self::loadClass($class);
+			return $class;
+		} catch (Exception $e) {
+			return false;
+		}
+	}
+
+	/**
+	 * Register {@link autoload()} with spl_autoload()
+	 *
+	 * @param string $class (optional)
+	 * @param boolean $enabled (optional)
+	 * @return void
+	 * @throws Zend_Exception if spl_autoload() is not found
+	 * or if the specified class does not have an autoload() method.
+	 */
+	public static function registerAutoload($class = 'Zend_Loader', $enabled = true)
+	{
+		if (!function_exists('spl_autoload_register')) {
+			require_once 'Zend/Exception.php';
+			throw new Zend_Exception('spl_autoload does not exist in this PHP installation');
+		}
+
+		self::loadClass($class);
+		$methods = get_class_methods($class);
+		if (!in_array('autoload', (array) $methods)) {
+			require_once 'Zend/Exception.php';
+			throw new Zend_Exception("The class \"$class\" does not have an autoload() method");
+		}
+
+		if ($enabled === true) {
+			spl_autoload_register(array($class, 'autoload'));
+		} else {
+			spl_autoload_unregister(array($class, 'autoload'));
+		}
+	}
+
+	/**
+	 * Ensure that filename does not contain exploits
+	 *
+	 * @param  string $filename
+	 * @return void
+	 * @throws Zend_Exception
+	 */
+	protected static function _securityCheck($filename)
+	{
+		/**
+		 * Security check
+		 */
+		if (preg_match('/[^a-z0-9\\/\\\\_.-]/i', $filename)) {
+			require_once 'Zend/Exception.php';
+			throw new Zend_Exception('Security check: Illegal character in filename');
+		}
+	}
+
+	/**
+	 * Throws an exception with any PHP errors from including $fileIncluded.
+	 * The static $_errors property is cleared prior to throwing the exception.
+	 * If there are no errors to report, then this method does nothing.
+	 *
+	 * @param  string $fileIncluded
+	 * @return void
+	 * @throws Zend_Exception
+	 */
+	protected static function _throwIncludeErrors($fileIncluded)
+	{
+		if (self::$_errors === array()) {
+			return;
+		}
+
+		$message = "At least one error occurred including \"$fileIncluded\"; see includeErrors property";
+
+		/**
+		 * @see Zend_Exception
+		 */
+		require_once 'Zend/Exception.php';
+		$exception = new Zend_Exception($message);
+
+		$exception->includeErrors = array();
+		foreach (self::$_errors as $error) {
+			$exception->includeErrors[] = $error;
+		}
+
+		self::$_errors = array();
+
+		throw $exception;
+	}
+
+	/**
+	 * Attempt to include() the file.
+	 *
+	 * include() is not prefixed with the @ operator because if
+	 * the file is loaded and contains a parse error, execution
+	 * will halt silently and this is difficult to debug.
+	 *
+	 * Always set display_errors = Off on production servers!
+	 *
+	 * @param  string  $filespec
+	 * @param  boolean $once
+	 * @return boolean
+	 * @deprecated Since 1.5.0; use loadFile() instead
+	 */
+	protected static function _includeFile($filespec, $once = false)
+	{
+		if ($once) {
+			return include_once $filespec;
+		} else {
+			return include $filespec ;
+		}
+	}
 }

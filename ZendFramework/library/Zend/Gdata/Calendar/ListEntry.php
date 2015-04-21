@@ -15,8 +15,7 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Calendar
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -67,8 +66,7 @@ require_once 'Zend/Gdata/Extension/Where.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Calendar
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Calendar_ListEntry extends Zend_Gdata_Entry
@@ -83,13 +81,15 @@ class Zend_Gdata_Calendar_ListEntry extends Zend_Gdata_Entry
 
     public function __construct($element = null)
     {
-        $this->registerAllNamespaces(Zend_Gdata_Calendar::$namespaces);
+        foreach (Zend_Gdata_Calendar::$namespaces as $nsPrefix => $nsUri) {
+            $this->registerNamespace($nsPrefix, $nsUri);
+        }
         parent::__construct($element);
     }
 
-    public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null)
+    public function getDOM($doc = null)
     {
-        $element = parent::getDOM($doc, $majorVersion, $minorVersion);
+        $element = parent::getDOM($doc);
         if ($this->_accessLevel != null) {
             $element->appendChild($this->_accessLevel->getDOM($element->ownerDocument));
         }

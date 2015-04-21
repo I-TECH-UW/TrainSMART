@@ -15,8 +15,7 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Photos
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -31,14 +30,13 @@ require_once 'Zend/Gdata/Extension.php';
 require_once 'Zend/Gdata/Photos.php';
 
 /**
- * Represents the gphoto:albumid element used by the API. This
- * class represents the ID of an album and is usually contained
+ * Represents the gphoto:albumid element used by the API. This 
+ * class represents the ID of an album and is usually contained 
  * within an instance of Zend_Gdata_Photos_AlbumEntry or CommentEntry.
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Photos
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Photos_Extension_AlbumId extends Zend_Gdata_Extension
@@ -46,15 +44,17 @@ class Zend_Gdata_Photos_Extension_AlbumId extends Zend_Gdata_Extension
 
     protected $_rootNamespace = 'gphoto';
     protected $_rootElement = 'albumid';
-
+    
     /**
      * Constructs a new Zend_Gdata_Photos_Extension_AlbumId object.
-     *
+     * 
      * @param string $text (optional) The value to use for the Album ID.
      */
-    public function __construct($text = null)
+    public function __construct($text = null) 
     {
-        $this->registerAllNamespaces(Zend_Gdata_Photos::$namespaces);
+        foreach (Zend_Gdata_Photos::$namespaces as $nsPrefix => $nsUri) {
+            $this->registerNamespace($nsPrefix, $nsUri);
+        }
         parent::__construct();
         $this->setText($text);
     }

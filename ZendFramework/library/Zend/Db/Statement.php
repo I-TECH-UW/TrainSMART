@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Statement
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -35,7 +35,7 @@ require_once 'Zend/Db/Statement/Interface.php';
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Statement
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Db_Statement implements Zend_Db_Statement_Interface
@@ -103,7 +103,7 @@ abstract class Zend_Db_Statement implements Zend_Db_Statement_Interface
     {
         $this->_adapter = $adapter;
         if ($sql instanceof Zend_Db_Select) {
-            $sql = $sql->assemble();
+            $sql = $sql->__toString();
         }
         $this->_parseParameters($sql);
         $this->_prepare($sql);
@@ -140,7 +140,7 @@ abstract class Zend_Db_Statement implements Zend_Db_Statement_Interface
                      * @see Zend_Db_Statement_Exception
                      */
                     require_once 'Zend/Db/Statement/Exception.php';
-                    throw new Zend_Db_Statement_Exception("Invalid bind-variable name '$val'");
+                    throw new Zend_Db_Statement_Exception("Invalid bind-variable position '$val'");
                 }
             }
             $this->_sqlParam[] = $val;
@@ -178,13 +178,13 @@ abstract class Zend_Db_Statement implements Zend_Db_Statement_Interface
         // get the value used as an escaped quote,
         // e.g. \' or ''
         $qe = $this->_adapter->quote($q);
-        $qe = substr($qe, 1, 2);
+        $qe = substr($q, 1, 2);
         $qe = str_replace('\\', '\\\\', $qe);
 
         // get a version of the SQL statement with all quoted
         // values and delimited identifiers stripped out
         // remove "foo\"bar"
-        $sql = preg_replace("/$q($qe|\\\\{2}|[^$q])*$q/", '', $sql);
+        $sql = preg_replace("/$d($de|[^$d])*$d/", '', $sql);
         // remove 'foo\'bar'
         if (!empty($q)) {
             $sql = preg_replace("/$q($qe|[^$q])*$q/", '', $sql);
@@ -265,7 +265,7 @@ abstract class Zend_Db_Statement implements Zend_Db_Statement_Interface
      */
     public function bindValue($parameter, $value, $type = null)
     {
-        return $this->bindParam($parameter, $value, $type);
+        return $this->bindParam($parameter, $value);
     }
 
     /**

@@ -15,13 +15,11 @@
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Decorator
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-/**
- * @see Zend_Form_Decorator_Abstract
- */
+/** Zend_Form_Decorator_Abstract */
 require_once 'Zend/Form/Decorator/Abstract.php';
 
 /**
@@ -43,9 +41,9 @@ require_once 'Zend/Form/Decorator/Abstract.php';
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Decorator
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: HtmlTag.php 12514 2008-11-10 16:30:24Z matthew $
+ * @version    $Id: HtmlTag.php 7562 2008-01-22 17:25:45Z matthew $
  */
 class Zend_Form_Decorator_HtmlTag extends Zend_Form_Decorator_Abstract
 {
@@ -54,12 +52,6 @@ class Zend_Form_Decorator_HtmlTag extends Zend_Form_Decorator_Abstract
      * @var string
      */
     protected $_placement = null;
-
-    /**
-     * HTML tag to use
-     * @var string
-     */
-    protected $_tag;
 
     /**
      * @var Zend_Filter
@@ -88,7 +80,7 @@ class Zend_Form_Decorator_HtmlTag extends Zend_Form_Decorator_Abstract
     /**
      * Normalize tag
      *
-     * Ensures tag is alphanumeric characters only, and all lowercase.
+     * Ensures tag is alphabetical characters only, and all lowercase.
      * 
      * @param  string $tag 
      * @return string
@@ -97,46 +89,13 @@ class Zend_Form_Decorator_HtmlTag extends Zend_Form_Decorator_Abstract
     {
         if (!isset($this->_tagFilter)) {
             require_once 'Zend/Filter.php';
-            require_once 'Zend/Filter/Alnum.php';
+            require_once 'Zend/Filter/Alpha.php';
             require_once 'Zend/Filter/StringToLower.php';
-            $this->_tagFilter = new Zend_Filter();
-            $this->_tagFilter->addFilter(new Zend_Filter_Alnum())
-                             ->addFilter(new Zend_Filter_StringToLower());
+            $this->_filter = new Zend_Filter();
+            $this->_filter->addFilter(new Zend_Filter_Alpha())
+                          ->addFilter(new Zend_Filter_StringToLower());
         }
-        return $this->_tagFilter->filter($tag);
-    }
-
-    /**
-     * Set tag to use
-     * 
-     * @param  string $tag 
-     * @return Zend_Form_Decorator_HtmlTag
-     */
-    public function setTag($tag)
-    {
-        $this->_tag = $this->normalizeTag($tag);
-        return $this;
-    }
-
-    /**
-     * Get tag
-     *
-     * If no tag is registered, either via setTag() or as an option, uses 'div'.
-     * 
-     * @return string
-     */
-    public function getTag()
-    {
-        if (null === $this->_tag) {
-            if (null === ($tag = $this->getOption('tag'))) {
-                $this->setTag('div');
-            } else {
-                $this->setTag($tag);
-                $this->removeOption('tag');
-            }
-        }
-
-        return $this->_tag;
+        return $this->_filter->filter($tag);
     }
 
     /**
@@ -175,7 +134,12 @@ class Zend_Form_Decorator_HtmlTag extends Zend_Form_Decorator_Abstract
      */
     public function render($content)
     {
-        $tag       = $this->getTag();
+        $tag     = 'div';
+        if (null !== ($tagOption = $this->getOption('tag'))) {
+            $tag = $this->normalizeTag($tagOption);
+            $this->removeOption('tag');
+        }
+
         $placement = $this->getPlacement();
         $noAttribs = $this->getOption('noAttribs');
         $openOnly  = $this->getOption('openOnly');

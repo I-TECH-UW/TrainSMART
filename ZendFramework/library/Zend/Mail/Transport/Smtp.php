@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Mail
  * @subpackage Transport
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Smtp.php 12519 2008-11-10 18:41:24Z alexander $
+ * @version    $Id: Smtp.php 7310 2007-12-30 21:07:48Z weppos $
  */
 
 
@@ -50,7 +50,7 @@ require_once 'Zend/Mail/Transport/Abstract.php';
  * @category   Zend
  * @package    Zend_Mail
  * @subpackage Transport
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Mail_Transport_Smtp extends Zend_Mail_Transport_Abstract
@@ -145,7 +145,7 @@ class Zend_Mail_Transport_Smtp extends Zend_Mail_Transport_Abstract
             try {
                 $this->_connection->quit();
             } catch (Zend_Mail_Protocol_Exception $e) {
-                // ignore
+            	// ignore
             }
             $this->_connection->disconnect();
         }

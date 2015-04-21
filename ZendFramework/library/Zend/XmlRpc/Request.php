@@ -14,7 +14,7 @@
  *
  * @category   Zend
  * @package    Zend_Controller
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -46,9 +46,9 @@ require_once 'Zend/XmlRpc/Fault.php';
  *
  * @category Zend
  * @package  Zend_XmlRpc
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version $Id: Request.php 8997 2008-03-22 17:17:05Z matthew $
+ * @version $Id: Request.php 7384 2008-01-11 09:55:27Z martel $
  */
 class Zend_XmlRpc_Request
 {
@@ -81,12 +81,6 @@ class Zend_XmlRpc_Request
      * @var Zend_XmlRpc_Fault
      */
     protected $_fault = null;
-
-    /**
-     * XML-RPC type for each param
-     * @var array
-     */
-    protected $_types = array();
 
     /**
      * XML-RPC request params
@@ -175,16 +169,6 @@ class Zend_XmlRpc_Request
     public function addParam($value, $type = null)
     {
         $this->_params[] = $value;
-        if (null === $type) {
-            // Detect type if not provided explicitly
-            if ($value instanceof Zend_XmlRpc_Value) {
-                $type = $value->getType();
-            } else {
-                $xmlRpcValue = Zend_XmlRpc_Value::getXmlRpcValue($value);
-                $type        = $xmlRpcValue->getType();
-            }
-        }
-        $this->_types[]  = $type;
         $this->_xmlRpcParams[] = array('value' => $value, 'type' => $type);
     }
 
@@ -219,7 +203,6 @@ class Zend_XmlRpc_Request
 
         if ((1 == $argc) && is_array($argv[0])) {
             $params     = array();
-            $types      = array();
             $wellFormed = true;
             foreach ($argv[0] as $arg) {
                 if (!is_array($arg) || !isset($arg['value'])) {
@@ -227,30 +210,15 @@ class Zend_XmlRpc_Request
                     break;
                 }
                 $params[] = $arg['value'];
-
-                if (!isset($arg['type'])) {
-                    $xmlRpcValue = Zend_XmlRpc_Value::getXmlRpcValue($arg['value']);
-                    $arg['type'] = $xmlRpcValue->getType();
-                }
-                $types[] = $arg['type'];
             }
             if ($wellFormed) {
                 $this->_xmlRpcParams = $argv[0];
                 $this->_params = $params;
-                $this->_types  = $types;
             } else {
                 $this->_params = $argv[0];
-                $this->_types  = array();
                 $xmlRpcParams  = array();
                 foreach ($argv[0] as $arg) {
-                    if ($arg instanceof Zend_XmlRpc_Value) {
-                        $type = $arg->getType();
-                    } else {
-                        $xmlRpcValue = Zend_XmlRpc_Value::getXmlRpcValue($arg);
-                        $type        = $xmlRpcValue->getType();
-                    }
-                    $xmlRpcParams[] = array('value' => $arg, 'type' => $type);
-                    $this->_types[] = $type;
+                    $xmlRpcParams[]= array('value' => $arg, 'type' => null);
                 }
                 $this->_xmlRpcParams = $xmlRpcParams;
             }
@@ -258,17 +226,9 @@ class Zend_XmlRpc_Request
         }
 
         $this->_params = $argv;
-        $this->_types  = array();
         $xmlRpcParams  = array();
         foreach ($argv as $arg) {
-            if ($arg instanceof Zend_XmlRpc_Value) {
-                $type = $arg->getType();
-            } else {
-                $xmlRpcValue = Zend_XmlRpc_Value::getXmlRpcValue($arg);
-                $type        = $xmlRpcValue->getType();
-            }
-            $xmlRpcParams[] = array('value' => $arg, 'type' => $type);
-            $this->_types[] = $type;
+            $xmlRpcParams[]= array('value' => $arg, 'type' => null);
         }
         $this->_xmlRpcParams = $xmlRpcParams;
     }
@@ -281,16 +241,6 @@ class Zend_XmlRpc_Request
     public function getParams()
     {
         return $this->_params;
-    }
-
-    /**
-     * Return parameter types
-     * 
-     * @return array
-     */
-    public function getTypes()
-    {
-        return $this->_types;
     }
 
     /**
@@ -328,8 +278,7 @@ class Zend_XmlRpc_Request
 
         // Check for parameters
         if (!empty($xml->params)) {
-            $types = array();
-            $argv  = array();
+            $argv = array();
             foreach ($xml->params->children() as $param) {
                 if (! $param->value instanceof SimpleXMLElement) {
                     $this->_fault = new Zend_XmlRpc_Fault(633);
@@ -338,9 +287,7 @@ class Zend_XmlRpc_Request
                 }
 
                 try {
-                    $param   = Zend_XmlRpc_Value::getXmlRpcValue($param->value, Zend_XmlRpc_Value::XML_STRING);
-                    $types[] = $param->getType();
-                    $argv[]  = $param->getValue();
+                    $argv[] = Zend_XmlRpc_Value::getXmlRpcValue($param->value, Zend_XmlRpc_Value::XML_STRING)->getValue();
                 } catch (Exception $e) {
                     $this->_fault = new Zend_XmlRpc_Fault(636);
                     $this->_fault->setEncoding($this->getEncoding());
@@ -348,8 +295,7 @@ class Zend_XmlRpc_Request
                 }
             }
 
-            $this->_types  = $types;
-            $this->_params = $argv;
+           $this->_params = $argv;
         }
 
         $this->_xml = $request;
@@ -391,10 +337,7 @@ class Zend_XmlRpc_Request
                 $value = $param['value'];
                 $type  = isset($param['type']) ? $param['type'] : Zend_XmlRpc_Value::AUTO_DETECT_TYPE;
 
-                if (!$value instanceof Zend_XmlRpc_Value) {
-                    $value = Zend_XmlRpc_Value::getXmlRpcValue($value, $type);
-                }
-                $params[] = $value;
+                $params[] = Zend_XmlRpc_Value::getXmlRpcValue($value, $type);
             }
         }
 

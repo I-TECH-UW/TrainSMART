@@ -16,9 +16,9 @@
  * @category   Zend
  * @package    Zend_OpenId
  * @subpackage Zend_OpenId_Provider
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: File.php 8456 2008-02-29 11:01:12Z dmitry $
+ * @version    $Id:$
  */
 
 /**
@@ -32,7 +32,7 @@ require_once "Zend/OpenId/Provider/Storage.php";
  * @category   Zend
  * @package    Zend_OpenId
  * @subpackage Zend_OpenId_Provider
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
@@ -61,10 +61,6 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
                     $tmp = "/tmp";
                 }
             }
-            $user = get_current_user();
-            if (is_string($user) && !empty($user)) {
-                $tmp .= '/' . $user;
-            }
             $dir = $tmp . '/openid/provider';
         }
         $this->_dir = $dir;
@@ -75,18 +71,6 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
                     Zend_OpenId_Exception::ERROR_STORAGE);
             }
         }
-        if (($f = fopen($this->_dir.'/assoc.lock', 'w+')) === null) {
-            throw new Zend_OpenId_Exception(
-                'Cannot create a lock file in the directory ' . $dir,
-                Zend_OpenId_Exception::ERROR_STORAGE);
-        }
-        fclose($f);
-        if (($f = fopen($this->_dir.'/user.lock', 'w+')) === null) {
-            throw new Zend_OpenId_Exception(
-                'Cannot create a lock file in the directory ' . $dir,
-                Zend_OpenId_Exception::ERROR_STORAGE);
-        }
-        fclose($f);
     }
 
     /**
@@ -101,23 +85,15 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
     public function addAssociation($handle, $macFunc, $secret, $expires)
     {
         $name = $this->_dir . '/assoc_' . md5($handle);
-        $lock = @fopen($this->_dir . '/assoc.lock', 'w+');
-        if ($lock === false) {
-            return false;
-        }
-        if (!flock($lock, LOCK_EX)) {
-            fclose($lock);
-            return false;
-        }
         $f = @fopen($name, 'w+');
         if ($f === false) {
-            fclose($lock);
             return false;
         }
+        flock($f, LOCK_EX);
         $data = serialize(array($handle, $macFunc, $secret, $expires));
         fwrite($f, $data);
+        flock($f, LOCK_UN);
         fclose($f);
-        fclose($lock);
         return true;
     }
 
@@ -135,34 +111,23 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
     public function getAssociation($handle, &$macFunc, &$secret, &$expires)
     {
         $name = $this->_dir . '/assoc_' . md5($handle);
-        $lock = @fopen($this->_dir . '/assoc.lock', 'w+');
-        if ($lock === false) {
-            return false;
-        }
-        if (!flock($lock, LOCK_EX)) {
-            fclose($lock);
-            return false;
-        }
         $f = @fopen($name, 'r');
         if ($f === false) {
-            fclose($lock);
             return false;
         }
         $ret = false;
+        flock($f, LOCK_EX);
         $data = stream_get_contents($f);
         if (!empty($data)) {
             list($storedHandle, $macFunc, $secret, $expires) = unserialize($data);
             if ($handle === $storedHandle && $expires > time()) {
                 $ret = true;
             } else {
-                fclose($f);
-                @unlink($name);
-                fclose($lock);
-                return false;
+                unlink($name);
             }
         }
+        flock($f, LOCK_UN);
         fclose($f);
-        fclose($lock);
         return $ret;
     }
 
@@ -175,16 +140,7 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
     public function delAssociation($handle)
     {
         $name = $this->_dir . '/assoc_' . md5($handle);
-        $lock = @fopen($this->_dir . '/assoc.lock', 'w+');
-        if ($lock === false) {
-            return false;
-        }
-        if (!flock($lock, LOCK_EX)) {
-            fclose($lock);
-            return false;
-        }
         @unlink($name);
-        fclose($lock);
         return true;
     }
 
@@ -200,23 +156,15 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
     public function addUser($id, $password)
     {
         $name = $this->_dir . '/user_' . md5($id);
-        $lock = @fopen($this->_dir . '/user.lock', 'w+');
-        if ($lock === false) {
-            return false;
-        }
-        if (!flock($lock, LOCK_EX)) {
-            fclose($lock);
-            return false;
-        }
         $f = @fopen($name, 'x');
         if ($f === false) {
-            fclose($lock);
             return false;
         }
+        flock($f, LOCK_EX);
         $data = serialize(array($id, $password, array()));
         fwrite($f, $data);
+        flock($f, LOCK_UN);
         fclose($f);
-        fclose($lock);
         return true;
     }
 
@@ -229,20 +177,12 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
     public function hasUser($id)
     {
         $name = $this->_dir . '/user_' . md5($id);
-        $lock = @fopen($this->_dir . '/user.lock', 'w+');
-        if ($lock === false) {
-            return false;
-        }
-        if (!flock($lock, LOCK_SH)) {
-            fclose($lock);
-            return false;
-        }
         $f = @fopen($name, 'r');
         if ($f === false) {
-            fclose($lock);
             return false;
         }
         $ret = false;
+        flock($f, LOCK_EX);
         $data = stream_get_contents($f);
         if (!empty($data)) {
             list($storedId, $storedPassword, $trusted) = unserialize($data);
@@ -250,8 +190,8 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
                 $ret = true;
             }
         }
+        flock($f, LOCK_UN);
         fclose($f);
-        fclose($lock);
         return $ret;
     }
 
@@ -265,20 +205,12 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
     public function checkUser($id, $password)
     {
         $name = $this->_dir . '/user_' . md5($id);
-        $lock = @fopen($this->_dir . '/user.lock', 'w+');
-        if ($lock === false) {
-            return false;
-        }
-        if (!flock($lock, LOCK_SH)) {
-            fclose($lock);
-            return false;
-        }
         $f = @fopen($name, 'r');
         if ($f === false) {
-            fclose($lock);
             return false;
         }
         $ret = false;
+        flock($f, LOCK_EX);
         $data = stream_get_contents($f);
         if (!empty($data)) {
             list($storedId, $storedPassword, $trusted) = unserialize($data);
@@ -286,8 +218,8 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
                 $ret = true;
             }
         }
+        flock($f, LOCK_UN);
         fclose($f);
-        fclose($lock);
         return $ret;
     }
 
@@ -300,16 +232,7 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
     public function delUser($id)
     {
         $name = $this->_dir . '/user_' . md5($id);
-        $lock = @fopen($this->_dir . '/user.lock', 'w+');
-        if ($lock === false) {
-            return false;
-        }
-        if (!flock($lock, LOCK_EX)) {
-            fclose($lock);
-            return false;
-        }
         @unlink($name);
-        fclose($lock);
         return true;
     }
 
@@ -323,20 +246,12 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
     public function getTrustedSites($id)
     {
         $name = $this->_dir . '/user_' . md5($id);
-        $lock = @fopen($this->_dir . '/user.lock', 'w+');
-        if ($lock === false) {
-            return false;
-        }
-        if (!flock($lock, LOCK_SH)) {
-            fclose($lock);
-            return false;
-        }
         $f = @fopen($name, 'r');
         if ($f === false) {
-            fclose($lock);
             return false;
         }
         $ret = false;
+        flock($f, LOCK_EX);
         $data = stream_get_contents($f);
         if (!empty($data)) {
             list($storedId, $storedPassword, $trusted) = unserialize($data);
@@ -344,8 +259,8 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
                 $ret = $trusted;
             }
         }
+        flock($f, LOCK_UN);
         fclose($f);
-        fclose($lock);
         return $ret;
     }
 
@@ -360,20 +275,12 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
     public function addSite($id, $site, $trusted)
     {
         $name = $this->_dir . '/user_' . md5($id);
-        $lock = @fopen($this->_dir . '/user.lock', 'w+');
-        if ($lock === false) {
-            return false;
-        }
-        if (!flock($lock, LOCK_EX)) {
-            fclose($lock);
-            return false;
-        }
         $f = @fopen($name, 'r+');
         if ($f === false) {
-            fclose($lock);
             return false;
         }
         $ret = false;
+        flock($f, LOCK_EX);
         $data = stream_get_contents($f);
         if (!empty($data)) {
             list($storedId, $storedPassword, $sites) = unserialize($data);
@@ -390,8 +297,8 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
                 $ret = true;
             }
         }
+        flock($f, LOCK_UN);
         fclose($f);
-        fclose($lock);
         return $ret;
     }
 }

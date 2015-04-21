@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Search
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -31,7 +31,7 @@ require_once 'Zend/Search/Lucene/Search/Query/MultiTerm.php';
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Search
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Search_Lucene_Search_Query_Range extends Zend_Search_Lucene_Search_Query
@@ -159,7 +159,6 @@ class Zend_Search_Lucene_Search_Query_Range extends Zend_Search_Lucene_Search_Qu
             $fields = array($this->_field);
         }
 
-        $maxTerms = Zend_search_lucene::getTermsPerQueryLimit();
         foreach ($fields as $field) {
             $index->resetTermsStream();
 
@@ -186,11 +185,6 @@ class Zend_Search_Lucene_Search_Query_Range extends Zend_Search_Lucene_Search_Qu
                        $index->currentTerm()->field == $field  &&
                        $index->currentTerm()->text  <  $upperTerm->text) {
                     $this->_matches[] = $index->currentTerm();
-
-                    if ($maxTerms != 0  &&  count($this->_matches) > $maxTerms) {
-                        throw new Zend_Search_Lucene_Exception('Terms per query limit is reached.');
-                    }
-
                     $index->nextTerm();
                 }
 
@@ -202,11 +196,6 @@ class Zend_Search_Lucene_Search_Query_Range extends Zend_Search_Lucene_Search_Qu
                 // Walk up to the end of field data
                 while ($index->currentTerm() !== null  &&  $index->currentTerm()->field == $field) {
                     $this->_matches[] = $index->currentTerm();
-
-                    if ($maxTerms != 0  &&  count($this->_matches) > $maxTerms) {
-                        throw new Zend_Search_Lucene_Exception('Terms per query limit is reached.');
-                    }
-
                     $index->nextTerm();
                 }
             }
@@ -273,10 +262,9 @@ class Zend_Search_Lucene_Search_Query_Range extends Zend_Search_Lucene_Search_Qu
      * It also initializes necessary internal structures
      *
      * @param Zend_Search_Lucene_Interface $reader
-     * @param Zend_Search_Lucene_Index_DocsFilter|null $docsFilter
      * @throws Zend_Search_Lucene_Exception
      */
-    public function execute(Zend_Search_Lucene_Interface $reader, $docsFilter = null)
+    public function execute(Zend_Search_Lucene_Interface $reader)
     {
         throw new Zend_Search_Lucene_Exception('Range query should not be directly used for search. Use $query->rewrite($index)');
     }

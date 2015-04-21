@@ -15,9 +15,9 @@
  *
  * @category   Zend
  * @package    Zend_Validate
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Validate.php 8729 2008-03-10 11:44:10Z thomas $
+ * @version    $Id: Validate.php 7450 2008-01-15 22:37:12Z darby $
  */
 
 
@@ -30,7 +30,7 @@ require_once 'Zend/Validate/Interface.php';
 /**
  * @category   Zend
  * @package    Zend_Validate
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Validate implements Zend_Validate_Interface
@@ -145,23 +145,18 @@ class Zend_Validate implements Zend_Validate_Interface
             $className = $namespace . '_' . ucfirst($classBaseName);
             try {
                 require_once 'Zend/Loader.php';
-                @Zend_Loader::loadClass($className);
-                if (class_exists($className, false)) {
-                    $class = new ReflectionClass($className);
-                    if ($class->implementsInterface('Zend_Validate_Interface')) {
-                        if ($class->hasMethod('__construct')) {
-                            $object = $class->newInstanceArgs($args);
-                        } else {
-                            $object = $class->newInstance();
-                        }
-                        return $object->isValid($value);
+                Zend_Loader::loadClass($className);
+                $class = new ReflectionClass($className);
+                if ($class->implementsInterface('Zend_Validate_Interface')) {
+                    if ($class->hasMethod('__construct')) {
+                        $object = $class->newInstanceArgs($args);
+                    } else {
+                        $object = $class->newInstance();
                     }
+                    return $object->isValid($value);
                 }
-            } catch (Zend_Validate_Exception $ze) {
-                // if there is an exception while validating throw it
-                throw $ze;
             } catch (Zend_Exception $ze) {
-                // fallthrough and continue for missing validation classes
+                // fallthrough and continue
             }
         }
         require_once 'Zend/Validate/Exception.php';

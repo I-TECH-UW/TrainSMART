@@ -15,8 +15,7 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Calendar
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -51,8 +50,7 @@ require_once 'Zend/Gdata/Calendar/ListEntry.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Calendar
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Calendar extends Zend_Gdata
@@ -64,27 +62,17 @@ class Zend_Gdata_Calendar extends Zend_Gdata
 
     protected $_defaultPostUri = self::CALENDAR_EVENT_FEED_URI;
 
-    /**
-     * Namespaces used for Zend_Gdata_Calendar
-     *
-     * @var array
-     */
     public static $namespaces = array(
-        array('gCal', 'http://schemas.google.com/gCal/2005', 1, 0)
-    );
+            'gCal' => 'http://schemas.google.com/gCal/2005');
 
     /**
      * Create Gdata_Calendar object
-     *
-     * @param Zend_Http_Client $client (optional) The HTTP client to use when
-     *          when communicating with the Google servers.
-     * @param string $applicationId The identity of the app in the form of Company-AppName-Version
      */
-    public function __construct($client = null, $applicationId = 'MyCompany-MyApp-1.0')
+    public function __construct($client = null)
     {
         $this->registerPackage('Zend_Gdata_Calendar');
         $this->registerPackage('Zend_Gdata_Calendar_Extension');
-        parent::__construct($client, $applicationId);
+        parent::__construct($client);
         $this->_httpClient->setParameterPost('service', self::AUTH_SERVICE_NAME);
     }
 

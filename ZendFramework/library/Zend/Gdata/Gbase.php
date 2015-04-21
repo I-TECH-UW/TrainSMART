@@ -15,8 +15,7 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Gbase
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -52,8 +51,7 @@ require_once 'Zend/Gdata/Gbase/SnippetFeed.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Gbase
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Gbase extends Zend_Gdata
@@ -78,31 +76,21 @@ class Zend_Gdata_Gbase extends Zend_Gdata
      * The default URI for POST methods
      *
      * @var string
-     */
+     */    
     protected $_defaultPostUri = self::GBASE_ITEM_FEED_URI;
 
-    /**
-     * Namespaces used for Zend_Gdata_Gbase
-     *
-     * @var array
-     */
     public static $namespaces = array(
-        array('g', 'http://base.google.com/ns/1.0', 1, 0),
-        array('batch', 'http://schemas.google.com/gdata/batch', 1, 0)
-    );
+            'g' => 'http://base.google.com/ns/1.0',
+            'batch' => 'http://schemas.google.com/gdata/batch');
 
     /**
      * Create Zend_Gdata_Gbase object
-     *
-     * @param Zend_Http_Client $client (optional) The HTTP client to use when
-     *          when communicating with the Google Apps servers.
-     * @param string $applicationId The identity of the app in the form of Company-AppName-Version
      */
-    public function __construct($client = null, $applicationId = 'MyCompany-MyApp-1.0')
+    public function __construct($client = null)
     {
         $this->registerPackage('Zend_Gdata_Gbase');
         $this->registerPackage('Zend_Gdata_Gbase_Extension');
-        parent::__construct($client, $applicationId);
+        parent::__construct($client);
         $this->_httpClient->setParameterPost('service', self::AUTH_SERVICE_NAME);
     }
 

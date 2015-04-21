@@ -15,8 +15,7 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -26,14 +25,13 @@
 require_once 'Zend/Gdata/App/Util.php';
 
 /**
- * Provides a mechanism to build a query URL for Gdata services.
- * Queries are not defined for APP, but are provided by Gdata services
+ * Provides a mechanism to build a query URL for GData services.
+ * Queries are not defined for APP, but are provided by GData services
  * as an extension.
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Query

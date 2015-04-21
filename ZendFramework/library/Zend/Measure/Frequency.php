@@ -12,12 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@zend.com so we can send you a copy immediately.
  *
- * @category  Zend
- * @package   Zend_Measure
- * @copyright Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @version   $Id: Frequency.php 9508 2008-05-23 10:56:41Z thomas $
+ * @category   Zend
+ * @package    Zend_Measure
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: Frequency.php 7001 2007-11-30 22:05:35Z thomas $
+ * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
+
 
 /**
  * Implement needed classes
@@ -26,17 +27,17 @@ require_once 'Zend/Measure/Exception.php';
 require_once 'Zend/Measure/Abstract.php';
 require_once 'Zend/Locale.php';
 
+
 /**
- * Class for handling flow volume conversions
- *
  * @category   Zend
  * @package    Zend_Measure
  * @subpackage Zend_Measure_Frequency
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Measure_Frequency extends Zend_Measure_Abstract
 {
+    // Frequency definitions
     const STANDARD = 'HERTZ';
 
     const ONE_PER_SECOND        = 'ONE_PER_SECOND';
@@ -58,12 +59,7 @@ class Zend_Measure_Frequency extends Zend_Measure_Abstract
     const RPM                   = 'RPM';
     const TERRAHERTZ            = 'TERRAHERTZ';
 
-    /**
-     * Calculations for all frequency units
-     *
-     * @var array
-     */
-    protected $_units = array(
+    protected $_UNITS = array(
         'ONE_PER_SECOND'        => array('1',             '1/s'),
         'CYCLE_PER_SECOND'      => array('1',             'cps'),
         'DEGREE_PER_HOUR'       => array(array('' => '1', '/' => '1296000'), '°/h'),

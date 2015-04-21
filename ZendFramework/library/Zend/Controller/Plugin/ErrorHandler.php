@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Controller
  * @subpackage Plugins
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -30,9 +30,9 @@ require_once 'Zend/Controller/Plugin/Abstract.php';
  * @category   Zend
  * @package    Zend_Controller
  * @subpackage Plugins
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: ErrorHandler.php 8064 2008-02-16 10:58:39Z thomas $
+ * @version    $Id: ErrorHandler.php 5604 2007-07-07 14:53:02Z thomas $
  */
 class Zend_Controller_Plugin_ErrorHandler extends Zend_Controller_Plugin_Abstract
 {
@@ -229,11 +229,7 @@ class Zend_Controller_Plugin_ErrorHandler extends Zend_Controller_Plugin_Abstrac
                     $error->type = self::EXCEPTION_NO_CONTROLLER;
                     break;
                 case 'Zend_Controller_Action_Exception':
-                    if (404 == $exception->getCode()) {
-                        $error->type = self::EXCEPTION_NO_ACTION;
-                    } else {
-                        $error->type = self::EXCEPTION_OTHER;
-                    }
+                    $error->type = self::EXCEPTION_NO_ACTION;
                     break;
                 default:
                     $error->type = self::EXCEPTION_OTHER;

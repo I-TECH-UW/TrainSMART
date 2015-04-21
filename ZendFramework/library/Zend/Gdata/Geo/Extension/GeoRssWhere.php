@@ -15,8 +15,7 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Geo
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -41,8 +40,7 @@ require_once 'Zend/Gdata/Geo/Extension/GmlPoint.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Geo
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Geo_Extension_GeoRssWhere extends Zend_Gdata_Extension
@@ -50,27 +48,29 @@ class Zend_Gdata_Geo_Extension_GeoRssWhere extends Zend_Gdata_Extension
 
     protected $_rootNamespace = 'georss';
     protected $_rootElement = 'where';
-
+ 
     /**
      * The point location for this geo element
-     *
+     * 
      * @var Zend_Gdata_Geo_Extension_GmlPoint
-     */
+     */   
     protected $_point = null;
-
+    
     /**
      * Create a new instance.
-     *
+     * 
      * @param Zend_Gdata_Geo_Extension_GmlPoint $point (optional) Point to which
      *          object should be initialized.
      */
-    public function __construct($point = null)
+    public function __construct($point = null) 
     {
-        $this->registerAllNamespaces(Zend_Gdata_Geo::$namespaces);
+        foreach (Zend_Gdata_Geo::$namespaces as $nsPrefix => $nsUri) {
+            $this->registerNamespace($nsPrefix, $nsUri);
+        }
         parent::__construct();
         $this->setPoint($point);
     }
-
+    
     /**
      * Retrieves a DOMElement which corresponds to this element and all
      * child properties.  This is used to build an entry back into a DOM
@@ -80,9 +80,9 @@ class Zend_Gdata_Geo_Extension_GeoRssWhere extends Zend_Gdata_Extension
      * @return DOMElement The DOMElement representing this element and all
      *          child properties.
      */
-    public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null)
+    public function getDOM($doc = null)
     {
-        $element = parent::getDOM($doc, $majorVersion, $minorVersion);
+        $element = parent::getDOM($doc);
         if ($this->_point !== null) {
             $element->appendChild($this->_point->getDOM($element->ownerDocument));
         }
@@ -98,16 +98,16 @@ class Zend_Gdata_Geo_Extension_GeoRssWhere extends Zend_Gdata_Extension
     protected function takeChildFromDOM($child)
     {
         $absoluteNodeName = $child->namespaceURI . ':' . $child->localName;
-
+        
         switch ($absoluteNodeName) {
-            case $this->lookupNamespace('gml') . ':' . 'Point';
+            case $this->lookupNamespace('gml') . ':' . 'Point'; 
                 $point = new Zend_Gdata_Geo_Extension_GmlPoint();
                 $point->transferFromDOM($child);
                 $this->_point = $point;
                 break;
         }
     }
-
+    
     /**
      * Get the value for this element's point attribute.
      *

@@ -4,16 +4,15 @@ INSTALLATION
 Zend Framework requires no special installation steps. Simply download the framework,
 extract it to the folder you would like to keep it in, and add the /library directory
 to your PHP include_path.
-This release also includes the extras library. To use components in this library,
-add the /extras/library directory to your PHP include_path.
 
 SYSTEM REQUIREMENTS
 -------------------
 
-Zend Framework requires PHP 5.2.4 or later. Please see the system requirements
+Zend Framework requires PHP 5.1.4 or later. Please see the system requirements
 appendix for more detailed information:
 
 http://framework.zend.com/manual/en/requirements.html
+
 
 DEVELOPMENT VERSIONS
 --------------------
@@ -57,7 +56,7 @@ of the following methods:
 CONFIGURING THE INCLUDE PATH
 ----------------------------
 
-Once you have a copy of Zend Framework available, your application will need to
+Once you have a copy of the Zend Framework available, your application will need to
 access the framework classes. Though there are several ways to achieve this, your
 PHP include_path needs to contain the path to the Zend Framework classes under the
 /library directory in this distribution. You can find out more about the PHP
@@ -72,11 +71,12 @@ http://www.php.net/manual/en/configuration.changes.php
 GETTING STARTED
 ---------------
 
-A great place to get up-to-speed quickly is the Zend Framework QuickStart:
+One of the Zend Framework's most useful features is its implementation of the Front
+Controller and Model-View-Controller (MVC) design patterns. The Zend_Controller Quick
+Start is a great place to get started building MVC applications:
 
-http://framework.zend.com/docs/quickstart
+http://framework.zend.com/manual/en/zend.controller.html#zend.controller.quickstart
 
-The QuickStart covers some of the most commonly used components of ZF. Since
-Zend Framework is designed with a use-at-will architecture and components are
+Since Zend Framework is designed with a use-at-will architecture and components are
 loosely coupled, you can select and use only those components that are needed for
 your project.

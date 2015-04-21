@@ -15,8 +15,8 @@
  *
  * @category   Zend
  * @package    Zend_TimeSync
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: TimeSync.php 9534 2008-05-26 20:01:56Z thomas $
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: TimeSync.php 7618 2008-01-24 21:03:25Z darby $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -38,7 +38,7 @@ require_once 'Zend/TimeSync/Exception.php';
 /**
  * @category   Zend
  * @package    Zend_TimeSync
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_TimeSync implements IteratorAggregate
@@ -171,7 +171,7 @@ class Zend_TimeSync implements IteratorAggregate
      */
     public function setServer($alias)
     {
-        if (isset($this->_timeservers[$alias]) === true) {
+    	if (array_key_exists($alias, $this->_timeservers)) {
             $this->_current = $this->_timeservers[$alias];
         } else {
             throw new Zend_TimeSync_Exception("'$alias' does not point to valid timeserver");
@@ -191,7 +191,7 @@ class Zend_TimeSync implements IteratorAggregate
             return Zend_TimeSync::$options;
         }
 
-        if (isset(Zend_TimeSync::$options[$key]) === true) {
+        if (array_key_exists($key, Zend_TimeSync::$options)) {
             return Zend_TimeSync::$options[$key];
         } else {
             throw new Zend_TimeSync_Exception("'$key' does not point to valid option");
@@ -215,7 +215,7 @@ class Zend_TimeSync implements IteratorAggregate
                 throw new Zend_TimeSync_Exception('there is no timeserver set');
             }
         }
-        if (isset($this->_timeservers[$alias]) === true) {
+        if (array_key_exists($alias, $this->_timeservers)) {
             return $this->_timeservers[$alias];
         } else {
             throw new Zend_TimeSync_Exception("'$alias' does not point to valid timeserver");

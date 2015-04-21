@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.6/ldml.dtd">
+<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.5/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 1.56 $"/>
-		<generation date="$Date: 2008/06/15 08:09:47 $"/>
+		<version number="$Revision: 1.52 $"/>
+		<generation date="$Date: 2007/11/14 16:26:57 $"/>
 		<language type="dz"/>
 	</identity>
 	<localeDisplayNames>
@@ -388,6 +388,7 @@
 			</decimalFormatLength>
 		</decimalFormats>
 		<scientificFormats>
+			<default choice="long"/>
 			<scientificFormatLength>
 				<scientificFormat>
 					<pattern>#E+00</pattern>
@@ -397,7 +398,7 @@
 		<percentFormats>
 			<percentFormatLength>
 				<percentFormat>
-					<pattern>#,##,##0 %</pattern>
+					<pattern>#,##,##0 %</pattern>
 				</percentFormat>
 			</percentFormatLength>
 		</percentFormats>

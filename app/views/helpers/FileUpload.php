@@ -17,12 +17,14 @@ class FileUpload {
     
     // Only allow delete 
     $request = $controller->getRequest ();    
+    $response = $controller->getResponse ();
     if ($request->isPost () && !$controller->getSanParam('edittabledelete')) {
       return;  
     }
     
 		require_once ('controllers/EditTableController.php');
-		$editTable = new EditTableController ( $controller );
+		$editTable = new EditTableController ( $request, $response, $invokeArgs = array () );
+		$editTable->setParentController($controller);
 		$editTable->table = 'file';
     $editTable->viewVar = 'editTableFiles';
 		$editTable->fields = array ('filename' => t ( 'Filename' ), 'filesize' => t ( 'Size' ), 'creator_name' => t ( 'Author' ), /*'filemime' => t('Type') ,*/ 'timestamp_created' => t('Upload Date') );
@@ -35,7 +37,7 @@ class FileUpload {
     }    
     
     $editTable->rowHook = "FileUpload::modifyRows";
-		$editTable->execute ();
+		$editTable->execute ($request);
   }
   
   public static function modifyRows($rowRay) {

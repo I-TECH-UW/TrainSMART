@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Document
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -30,7 +30,7 @@ require_once 'Zend/Search/Lucene/Document.php';
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Document
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Search_Lucene_Document_Html extends Zend_Search_Lucene_Document
@@ -57,16 +57,6 @@ class Zend_Search_Lucene_Document_Html extends Zend_Search_Lucene_Document
     private $_doc;
 
     /**
-     * Exclud nofollow links flag
-     *
-     * If true then links with rel='nofollow' attribute are not included into
-     * document links.
-     *
-     * @var boolean
-     */
-    private static $_excludeNoFollowLinks = false;
-
-    /**
      * Object constructor
      *
      * @param string  $data
@@ -79,11 +69,10 @@ class Zend_Search_Lucene_Document_Html extends Zend_Search_Lucene_Document
         $this->_doc->substituteEntities = true;
 
         if ($isFile) {
-            $htmlData = file_get_contents($data);
-        } else {
-            $htmlData = $data;
+            @$this->_doc->loadHTMLFile($data);
+        } else{
+            @$this->_doc->loadHTML($data);
         }
-        @$this->_doc->loadHTML($htmlData);
 
         $xpath = new DOMXPath($this->_doc);
 
@@ -116,9 +105,7 @@ class Zend_Search_Lucene_Document_Html extends Zend_Search_Lucene_Document
 
         $linkNodes = $this->_doc->getElementsByTagName('a');
         foreach ($linkNodes as $linkNode) {
-            if (($href = $linkNode->getAttribute('href')) != '' &&
-                (!self::$_excludeNoFollowLinks  ||  strtolower($linkNode->getAttribute('rel')) != 'nofollow' )
-               ) {
+            if (($href = $linkNode->getAttribute('href')) != '') {
                 $this->_links[] = $href;
             }
         }
@@ -131,26 +118,6 @@ class Zend_Search_Lucene_Document_Html extends Zend_Search_Lucene_Document
             }
         }
         $this->_headerLinks = array_unique($this->_headerLinks);
-    }
-
-    /**
-     * Set exclude nofollow links flag
-     *
-     * @param boolean $newValue
-     */
-    public static function setExcludeNoFollowLinks($newValue)
-    {
-        self::$_excludeNoFollowLinks = $newValue;
-    }
-
-    /**
-     * Get exclude nofollow links flag
-     *
-     * @return boolean
-     */
-    public static function getExcludeNoFollowLinks()
-    {
-        return self::$_excludeNoFollowLinks;
     }
 
     /**

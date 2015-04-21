@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Technorati
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Result.php 8064 2008-02-16 10:58:39Z thomas $
+ * @version    $Id: Result.php 7334 2008-01-02 23:25:56Z weppos $
  */
 
 
@@ -29,7 +29,7 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Technorati
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @abstract 
  */
@@ -56,6 +56,7 @@ abstract class Zend_Service_Technorati_Result
      *
      * @var     DOMXpath
      * @access  protected
+     * @todo    XPath and DOM elements cannot be serialized, don't cache them
      */
     protected $_xpath;
 
@@ -106,16 +107,5 @@ abstract class Zend_Service_Technorati_Result
         } else {
             $this->_weblog = null;
         }
-    }
-
-    /**
-     * Returns the document fragment for this object as XML string.
-     *
-     * @return string   the document fragment for this object
-     *                  converted into XML format
-     */
-    public function getXml()
-    {
-        return $this->_dom->ownerDocument->saveXML($this->_dom);
     }
 }

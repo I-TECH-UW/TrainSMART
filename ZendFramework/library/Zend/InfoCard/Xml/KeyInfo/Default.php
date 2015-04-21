@@ -17,7 +17,8 @@
  * @subpackage Zend_InfoCard_Xml
  * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Default.php 9094 2008-03-30 18:36:55Z thomas $
+ * @version    $Id: Exception.php 2794 2007-01-16 01:29:51Z bkarwin $
+ * @author     John Coggeshall <john@zend.com>
  */
 
 /**
@@ -34,31 +35,32 @@ require_once 'Zend/InfoCard/Xml/SecurityTokenReference.php';
  * An object representation of a XML <KeyInfo> block which doesn't provide a namespace
  * In this context, it is assumed to mean that it is the type of KeyInfo block which
  * contains the SecurityTokenReference
- *
+ * 
  * @category   Zend
  * @package    Zend_InfoCard
  * @subpackage Zend_InfoCard_Xml
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @author     John Coggeshall <john@zend.com>
  */
-class Zend_InfoCard_Xml_KeyInfo_Default extends Zend_InfoCard_Xml_KeyInfo_Abstract
+class Zend_InfoCard_Xml_KeyInfo_Default extends Zend_InfoCard_Xml_KeyInfo_Abstract 
 {
-    /**
-     * Returns the object representation of the SecurityTokenReference block
-     *
-     * @throws Zend_InfoCard_Xml_Exception
-     * @return Zend_InfoCard_Xml_SecurityTokenReference
-     */
-    public function getSecurityTokenReference()
+	/**
+	 * Returns the object representation of the SecurityTokenReference block
+	 *
+	 * @throws Zend_InfoCard_Xml_Exception
+	 * @return Zend_InfoCard_Xml_SecurityTokenReference
+	 */
+    public function getSecurityTokenReference() 
     {
-        $this->registerXPathNamespace('o', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd');
-
-        list($sectokenref) = $this->xpath('//o:SecurityTokenReference');
-
-        if(!($sectokenref instanceof Zend_InfoCard_Xml_Element)) {
-            throw new Zend_InfoCard_Xml_Exception('Could not locate the Security Token Reference');
-        }
-
-        return Zend_InfoCard_Xml_SecurityTokenReference::getInstance($sectokenref);
-    }
+		$this->registerXPathNamespace('o', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd');
+		
+		list($sectokenref) = $this->xpath('//o:SecurityTokenReference');
+		
+		if(!($sectokenref instanceof Zend_InfoCard_Xml_Element)) {
+			throw new Zend_InfoCard_Xml_Exception('Could not locate the Security Token Reference');
+		}
+				
+		return Zend_InfoCard_Xml_SecurityTokenReference::getInstance($sectokenref);
+	}
 }

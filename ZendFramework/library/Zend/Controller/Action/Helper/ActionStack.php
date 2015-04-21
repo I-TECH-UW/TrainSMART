@@ -4,26 +4,27 @@
  *
  * LICENSE
  *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
+ * This source file is subject to version 1.0 of the Zend Framework
+ * license, that is bundled with this package in the file LICENSE.txt, and
+ * is available through the world-wide-web at the following URL:
+ * http://framework.zend.com/license/new-bsd. If you did not receive
+ * a copy of the Zend Framework license and are unable to obtain it
+ * through the world-wide-web, please send a note to license@zend.com
+ * so we can mail you a copy immediately.
  *
  * @category   Zend
  * @package    Zend_Controller
- * @subpackage Zend_Controller_Action_Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Action_Helper
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: ActionStack.php 7078 2007-12-11 14:29:33Z matthew $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: ActionStack.php 11493 2008-09-23 14:25:11Z doctorrock83 $
  */
 
-/**
- * @see Zend_Controller_Action_Helper_Abstract
- */
+/** Zend_Controller_Action_Helper_Abstract */
 require_once 'Zend/Controller/Action/Helper/Abstract.php';
+
+/** Zend_Registry */
+require_once 'Zend/Registry.php';
 
 /**
  * Add to action stack
@@ -31,15 +32,13 @@ require_once 'Zend/Controller/Action/Helper/Abstract.php';
  * @uses       Zend_Controller_Action_Helper_Abstract
  * @category   Zend
  * @package    Zend_Controller
- * @subpackage Zend_Controller_Action_Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Action_Helper
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Controller_Action_Helper_ActionStack extends Zend_Controller_Action_Helper_Abstract
 {
-    /**
-     * @var Zend_Controller_Plugin_ActionStack
-     */
+    /** @var Zend_Controller_Plugin_ActionStack */
     protected $_actionStack;
 
     /**
@@ -53,9 +52,6 @@ class Zend_Controller_Action_Helper_ActionStack extends Zend_Controller_Action_H
     {
         $front = Zend_Controller_Front::getInstance();
         if (!$front->hasPlugin('Zend_Controller_Plugin_ActionStack')) {
-            /**
-             * @see Zend_Controller_Plugin_ActionStack
-             */
             require_once 'Zend/Controller/Plugin/ActionStack.php';
             $this->_actionStack = new Zend_Controller_Plugin_ActionStack();
             $front->registerPlugin($this->_actionStack, 97);
@@ -68,7 +64,7 @@ class Zend_Controller_Action_Helper_ActionStack extends Zend_Controller_Action_H
      * Push onto the stack 
      * 
      * @param  Zend_Controller_Request_Abstract $next 
-     * @return Zend_Controller_Action_Helper_ActionStack Provides a fluent interface
+     * @return Zend_Controller_Action_Helper_ActionStack
      */
     public function pushStack(Zend_Controller_Request_Abstract $next)
     {
@@ -82,8 +78,7 @@ class Zend_Controller_Action_Helper_ActionStack extends Zend_Controller_Action_H
      * @param  string $action 
      * @param  string $controller 
      * @param  string $module 
-     * @param  array  $params
-     * @throws Zend_Controller_Action_Exception 
+     * @param  array $params 
      * @return Zend_Controller_Action_Helper_ActionStack
      */
     public function actionToStack($action, $controller = null, $module = null, array $params = array())
@@ -91,29 +86,15 @@ class Zend_Controller_Action_Helper_ActionStack extends Zend_Controller_Action_H
         if ($action instanceof Zend_Controller_Request_Abstract) {
             return $this->pushStack($action);
         } elseif (!is_string($action)) {
-            /**
-             * @see Zend_Controller_Action_Exception
-             */
-            require_once 'Zend/Controller/Action/Exception.php';
+            require_once 'Zend/Controller/Action/Exception';
             throw new Zend_Controller_Action_Exception('ActionStack requires either a request object or minimally a string action');
         }
 
         $request = $this->getRequest();
 
-        if ($request instanceof Zend_Controller_Request_Abstract === false){
-            /**
-             * @see Zend_Controller_Action_Exception
-             */
-            require_once 'Zend/Controller/Action/Exception.php';
-            throw new Zend_Controller_Action_Exception('Request object not set yet');
-        }
-        
         $controller = (null === $controller) ? $request->getControllerName() : $controller;
         $module = (null === $module) ? $request->getModuleName() : $module;
 
-        /**
-         * @see Zend_Controller_Request_Simple
-         */
         require_once 'Zend/Controller/Request/Simple.php';
         $newRequest = new Zend_Controller_Request_Simple($action, $controller, $module, $params);
 
@@ -129,7 +110,7 @@ class Zend_Controller_Action_Helper_ActionStack extends Zend_Controller_Action_H
      * @param  string $controller
      * @param  string $module
      * @param  array $params
-     * @return boolean
+     * @return bool
      */
     public function direct($action, $controller = null, $module = null, array $params = array())
     {

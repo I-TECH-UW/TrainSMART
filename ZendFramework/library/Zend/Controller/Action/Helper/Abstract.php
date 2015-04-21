@@ -14,28 +14,23 @@
  *
  * @category   Zend
  * @package    Zend_Controller
- * @subpackage Zend_Controller_Action_Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
 
-/**
- * @see Zend_Controller_Exception
- */
+/** Zend_Controller_Exception */
 require_once 'Zend/Controller/Action/Exception.php';
 
-/**
- * @see Zend_Controller_Action
- */
+/** Zend_Controller_Action */
 require_once 'Zend/Controller/Action.php';
 
 
 /**
  * @category   Zend
  * @package    Zend_Controller
- * @subpackage Zend_Controller_Action_Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Zend_Controller_Action
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Controller_Action_Helper_Abstract
@@ -43,20 +38,20 @@ abstract class Zend_Controller_Action_Helper_Abstract
     /**
      * $_actionController
      *
-     * @var Zend_Controller_Action $_actionController
+     * @var Zend_Controller_Action
      */
     protected $_actionController = null;
 
     /**
-     * @var mixed $_frontController
+     * @var mixed
      */
     protected $_frontController = null;
 
     /**
      * setActionController()
      *
-     * @param  Zend_Controller_Action $actionController
-     * @return Zend_Controller_ActionHelper_Abstract Provides a fluent interface
+     * @param Zend_Controller_Action $actionController
+     * @return Zend_Controller_ActionHelper_Abstract
      */
     public function setActionController(Zend_Controller_Action $actionController = null)
     {

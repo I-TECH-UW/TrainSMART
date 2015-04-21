@@ -12,12 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@zend.com so we can send you a copy immediately.
  *
- * @category  Zend
- * @package   Zend_Measure
- * @copyright Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @version   $Id: Force.php 9508 2008-05-23 10:56:41Z thomas $
+ * @category   Zend
+ * @package    Zend_Measure
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: Force.php 7001 2007-11-30 22:05:35Z thomas $
+ * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
+
 
 /**
  * Implement needed classes
@@ -26,17 +27,17 @@ require_once 'Zend/Measure/Exception.php';
 require_once 'Zend/Measure/Abstract.php';
 require_once 'Zend/Locale.php';
 
+
 /**
- * Class for handling force conversions
- *
  * @category   Zend
  * @package    Zend_Measure
  * @subpackage Zend_Measure_Force
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Measure_Force extends Zend_Measure_Abstract
 {
+    // Force definitions
     const STANDARD = 'NEWTON';
 
     const ATTONEWTON      = 'ATTONEWTON';
@@ -76,14 +77,9 @@ class Zend_Measure_Force extends Zend_Measure_Abstract
     const YOCTONEWTON     = 'YOCTONEWTON';
     const YOTTANEWTON     = 'YOTTANEWTON';
     const ZEPTONEWTON     = 'ZEPTONEWTON';
-    const ZETTANEWTON     = 'ZETTANEWTON';
+    const ZETTANEWTON = 'ZETTANEWTON';
 
-    /**
-     * Calculations for all force units
-     *
-     * @var array
-     */
-    protected $_units = array(
+    protected $_UNITS = array(
         'ATTONEWTON'      => array('1.0e-18',     'aN'),
         'CENTINEWTON'     => array('0.01',        'cN'),
         'DECIGRAM_FORCE'  => array('0.000980665', 'dgf'),

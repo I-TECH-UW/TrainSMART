@@ -15,8 +15,7 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Geo
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -26,7 +25,7 @@
 require_once 'Zend/Gdata.php';
 
 /**
- * Service class for interacting with the services which use the
+ * Service class for interacting with the services which use the 
  * GeoRSS + GML extensions.
  * @link http://georss.org/
  * @link http://www.opengis.net/gml/
@@ -34,36 +33,27 @@ require_once 'Zend/Gdata.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Geo
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Geo extends Zend_Gdata
 {
 
-    /**
-     * Namespaces used for Zend_Gdata_Geo
-     *
-     * @var array
-     */
     public static $namespaces = array(
-        array('georss', 'http://www.georss.org/georss', 1, 0),
-        array('gml', 'http://www.opengis.net/gml', 1, 0)
-    );
-
+            'georss' => 'http://www.georss.org/georss',
+            'gml' => 'http://www.opengis.net/gml');
 
     /**
      * Create Zend_Gdata_Geo object
-     *
-     * @param Zend_Http_Client $client (optional) The HTTP client to use when
-     *          when communicating with the Google Apps servers.
-     * @param string $applicationId The identity of the app in the form of Company-AppName-Version
+     * 
+     * @param Zend_Http_Client $client (optional) The HTTP client to use when 
+     *          when communicating with the servers.
      */
-    public function __construct($client = null, $applicationId = 'MyCompany-MyApp-1.0')
+    public function __construct($client = null)
     {
         $this->registerPackage('Zend_Gdata_Geo');
         $this->registerPackage('Zend_Gdata_Geo_Extension');
-        parent::__construct($client, $applicationId);
+        parent::__construct($client);
     }
 
 }

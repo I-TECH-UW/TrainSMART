@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework
  *
@@ -12,11 +13,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@zend.com so we can send you a copy immediately.
  *
- * @category  Zend
- * @package   Zend_TimeSync
- * @copyright Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @version   $Id: Exception.php 9488 2008-05-19 20:41:34Z thomas $
+ * @category   Zend
+ * @package    Zend_TimeSync
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: Exception.php 6398 2007-09-18 13:47:00Z darby $
+ * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
 /**
@@ -25,12 +26,10 @@
 require_once 'Zend/Exception.php';
 
 /**
- * Exception class for Zend_TimeSync
- *
- * @category  Zend
- * @package   Zend_TimeSync
- * @copyright Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd     New BSD License
+ * @category   Zend
+ * @package    Zend_TimeSync
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_TimeSync_Exception extends Zend_Exception
 {
@@ -44,8 +43,7 @@ class Zend_TimeSync_Exception extends Zend_Exception
     /**
      * Adds an exception to the exception list
      *
-     * @param  Zend_TimeSync_Exception $exception New exteption to throw
-     * @return void
+     * @param object Zend_TimeSync_Exception
      */
     public function addException(Zend_TimeSync_Exception $exception)
     {
@@ -54,8 +52,6 @@ class Zend_TimeSync_Exception extends Zend_Exception
 
     /**
      * Returns an array of exceptions that were thrown
-     *
-     * @return array
      */
     public function get()
     {

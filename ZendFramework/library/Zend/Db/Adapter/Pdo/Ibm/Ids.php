@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework
  *
@@ -15,9 +16,9 @@
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Adapter
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: $
+ * @version    $Id$
  */
 
 
@@ -32,8 +33,11 @@ require_once 'Zend/Db/Statement/Pdo/Ibm.php';
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Adapter
- * @copyright  Copyright (c) 2005-2008 Zend Technologies Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @author     Manas Dadarkar <manas@us.ibm.com>
+ * @author     Kellen Bombardier <kfbombar@us.ibm.com>
+ * @author     Salvador Ledezma <ledezma@us.ibm.com>
  */
 class Zend_Db_Adapter_Pdo_Ibm_Ids
 {

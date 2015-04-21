@@ -15,8 +15,7 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Exif
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -35,8 +34,7 @@ require_once 'Zend/Gdata/Exif.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @subpackage Exif
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Exif_Extension_FStop extends Zend_Gdata_Extension
@@ -44,15 +42,17 @@ class Zend_Gdata_Exif_Extension_FStop extends Zend_Gdata_Extension
 
     protected $_rootNamespace = 'exif';
     protected $_rootElement = 'fstop';
-
+    
     /**
      * Constructs a new Zend_Gdata_Exif_Extension_FStop object.
-     *
+     * 
      * @param string $text (optional) The value to use for this element.
      */
-    public function __construct($text = null)
+    public function __construct($text = null) 
     {
-        $this->registerAllNamespaces(Zend_Gdata_Exif::$namespaces);
+        foreach (Zend_Gdata_Exif::$namespaces as $nsPrefix => $nsUri) {
+            $this->registerNamespace($nsPrefix, $nsUri);
+        }
         parent::__construct();
         $this->setText($text);
     }

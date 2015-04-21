@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework
  *
@@ -14,26 +15,26 @@
  *
  * @category   Zend
  * @package    Zend_Acl
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Interface.php 8861 2008-03-16 14:30:18Z thomas $
+ * @version    $Id: Interface.php 2797 2007-01-16 01:35:30Z bkarwin $
  */
 
 
 /**
- * @see Zend_Acl
+ * Zend_Acl
  */
 require_once 'Zend/Acl.php';
 
 
 /**
- * @see Zend_Acl_Role_Interface
+ * Zend_Acl_Role_Interface
  */
 require_once 'Zend/Acl/Role/Interface.php';
 
 
 /**
- * @see Zend_Acl_Resource_Interface
+ * Zend_Acl_Resource_Interface
  */
 require_once 'Zend/Acl/Resource/Interface.php';
 
@@ -41,7 +42,7 @@ require_once 'Zend/Acl/Resource/Interface.php';
 /**
  * @category   Zend
  * @package    Zend_Acl
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 interface Zend_Acl_Assert_Interface

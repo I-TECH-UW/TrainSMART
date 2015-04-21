@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.6/ldml.dtd">
+<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.5/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 1.111 $"/>
-		<generation date="$Date: 2008/06/26 03:47:58 $"/>
+		<version number="$Revision: 1.95 $"/>
+		<generation date="$Date: 2007/11/14 16:26:58 $"/>
 		<language type="th"/>
 	</identity>
 	<localeDisplayNames>
-		<localeDisplayPattern>
-			<localePattern>{0} ({1})</localePattern>
-			<localeSeparator>, </localeSeparator>
-		</localeDisplayPattern>
 		<languages>
-			<language type="aa">อะฟาร์</language>
+			<language type="aa">อาฟา</language>
 			<language type="ab">แอบกาเซีย</language>
 			<language type="ace">อาเจะห์</language>
 			<language type="ach">อาโคลิ</language>
 			<language type="ada">อาดางมี</language>
 			<language type="ady">อะดีเกยา</language>
 			<language type="ae">อาเวสทาน</language>
-			<language type="af">แอฟริกา</language>
+			<language type="af">แอฟริกัน</language>
 			<language type="afa">อาฟโร-เอเชียติก</language>
 			<language type="afh">อาฟริฮิลิ</language>
 			<language type="ain">ไอนุ</language>
@@ -37,10 +33,10 @@
 			<language type="arc">อราเมอิก</language>
 			<language type="arn">อาราคาเนียน</language>
 			<language type="arp">อาราพาโฮ</language>
-			<language type="art">ภาษาประดิษฐ์</language>
+			<language type="art">ภาษาประดิษฐ์ (อื่นๆ)</language>
 			<language type="arw">อาราวัก</language>
 			<language type="as">อัสสัม</language>
-			<language type="ast">อัสตูเรียส</language>
+			<language type="ast">อัสเตอเรียน</language>
 			<language type="ath">ภาษาอาธาพาสกาน</language>
 			<language type="aus">ภาษาออสเตรเลีย</language>
 			<language type="av">อาวาริก</language>
@@ -53,13 +49,13 @@
 			<language type="bal">บาลูชิ</language>
 			<language type="ban">บาหลี</language>
 			<language type="bas">บาสา</language>
-			<language type="bat">ภาษาบอลติก</language>
+			<language type="bat">บอลติก (อื่นๆ)</language>
 			<language type="be">เบลารุส</language>
 			<language type="bej">เบจา</language>
 			<language type="bem">เบมบา</language>
 			<language type="ber">เบอร์เบอร์</language>
 			<language type="bg">บัลแกเรีย</language>
-			<language type="bh">พิหาร</language>
+			<language type="bh">บิฮารี</language>
 			<language type="bho">ภจบุรี</language>
 			<language type="bi">บิสลามา</language>
 			<language type="bik">บิกอล</language>
@@ -69,21 +65,21 @@
 			<language type="bn">เบงกาลี</language>
 			<language type="bnt">บันตู</language>
 			<language type="bo">ทิเบต</language>
-			<language type="br">เบรตัน</language>
+			<language type="br">บรีทัน</language>
 			<language type="bra">บราจ</language>
 			<language type="bs">บอสเนีย</language>
 			<language type="btk">บาตัก</language>
 			<language type="bua">บูเรียต</language>
-			<language type="bug">บูกิส</language>
+			<language type="bug">บูกีนิส</language>
 			<language type="byn">บลิน</language>
 			<language type="ca">คาตาลัน</language>
 			<language type="cad">คัดโด</language>
-			<language type="cai">ภาษาอเมริกันอินเดียนกลาง</language>
+			<language type="cai">อเมริกันอินเดียนกลาง (อื่นๆ)</language>
 			<language type="car">คาริบ</language>
-			<language type="cau">ภาษาคอเคเซียน</language>
+			<language type="cau">คอเคเซียน (อื่นๆ)</language>
 			<language type="ce">เชเชน</language>
 			<language type="ceb">เซบู</language>
-			<language type="cel">ภาษาเซลติก</language>
+			<language type="cel">เซลติก</language>
 			<language type="ch">ชามอร์โร</language>
 			<language type="chb">ชิบชา</language>
 			<language type="chg">ชากาไท</language>
@@ -102,11 +98,11 @@
 			<language type="cpp">ครีโอเลสและพิกกินส์ที่มาจากโปรตุเกสอื่นๆ</language>
 			<language type="cr">ครี</language>
 			<language type="crh">ตุรกีไครเมีย</language>
-			<language type="crp">คริโอลหรือพิดจิน</language>
+			<language type="crp">ครีโอเลสและพิกกินส์ (อื่นๆ)</language>
 			<language type="cs">เช็ก</language>
 			<language type="csb">คาซูเบียน</language>
 			<language type="cu">เชอร์ชสลาวิก</language>
-			<language type="cus">ภาษาคูชิทิก</language>
+			<language type="cus">คูชิทิก (อื่นๆ)</language>
 			<language type="cv">ชูวาส</language>
 			<language type="cy">เวลส์</language>
 			<language type="da">เดนมาร์ก</language>
@@ -114,14 +110,13 @@
 			<language type="dar">ดาร์จวา</language>
 			<language type="day">ดายัก</language>
 			<language type="de">เยอรมัน</language>
-			<language type="de_AT">เยอรมัน - ออสเตรีย</language>
 			<language type="de_CH">เยอรมันสูง (สวิส)</language>
 			<language type="del">เดลาแวร์</language>
 			<language type="den">สลาฟ</language>
 			<language type="dgr">ดอจริบ</language>
 			<language type="din">ดินกา</language>
 			<language type="doi">ดอจริ</language>
-			<language type="dra">ภาษาดราวิเดียน</language>
+			<language type="dra">ดราวิเดียน (อื่นๆ)</language>
 			<language type="dsb">ซอร์เบียนต่ำ</language>
 			<language type="dua">ดัวลา</language>
 			<language type="dum">ดัตช์กลาง</language>
@@ -135,10 +130,6 @@
 			<language type="el">กรีก</language>
 			<language type="elx">อีลาไมต์</language>
 			<language type="en">อังกฤษ</language>
-			<language type="en_AU">อังกฤษ - ออสเตรเลีย</language>
-			<language type="en_CA">อังกฤษ - แคนาดา</language>
-			<language type="en_GB">อังกฤษ - สหราชอาณาจักร</language>
-			<language type="en_US">อังกฤษ - อเมริกัน</language>
 			<language type="enm">อังกฤษกลาง</language>
 			<language type="eo">เอสเปอรันโต</language>
 			<language type="es">สเปน</language>
@@ -170,7 +161,7 @@
 			<language type="gay">กาโย</language>
 			<language type="gba">กบายา</language>
 			<language type="gd">สก็อตส์เกลิค</language>
-			<language type="gem">ภาษาเจอร์เมนิก</language>
+			<language type="gem">เยอรมัน (อื่นๆ)</language>
 			<language type="gez">กีซ</language>
 			<language type="gil">กิลเบอร์ทิส</language>
 			<language type="gl">กาลิเซีย</language>
@@ -212,8 +203,8 @@
 			<language type="ijo">อิโจ</language>
 			<language type="ik">ไอนูเปียก</language>
 			<language type="ilo">อิโลโก</language>
-			<language type="inc">ภาษาอินดิก</language>
-			<language type="ine">ภาษาอินโด-ยูโรเปียน</language>
+			<language type="inc">อินดิก (อื่นๆ)</language>
+			<language type="ine">อินโด-ยูโรเปียน (อื่นๆ)</language>
 			<language type="inh">อิงกุช</language>
 			<language type="io">อิโด</language>
 			<language type="ira">อิหร่าน</language>
@@ -234,10 +225,9 @@
 			<language type="kar">กะเหรี่ยง</language>
 			<language type="kaw">กาวิ</language>
 			<language type="kbd">คาร์บาเดีย</language>
-			<language type="kfo">โคโร</language>
 			<language type="kg">คองโก</language>
 			<language type="kha">คาสิ</language>
-			<language type="khi">ภาษาคอยสัน</language>
+			<language type="khi">คอยสัน (อื่นๆ)</language>
 			<language type="kho">คอทานิส</language>
 			<language type="ki">กิกุยุ</language>
 			<language type="kj">กวนยามา</language>
@@ -247,9 +237,9 @@
 			<language type="kmb">คิมบุนดู</language>
 			<language type="kn">กันนาดา</language>
 			<language type="ko">เกาหลี</language>
-			<language type="kok">กอนกานี</language>
+			<language type="kok">กงกัณ</language>
 			<language type="kos">กอสราเอียน</language>
-			<language type="kpe">กเปลเล</language>
+			<language type="kpe">กเปลล์</language>
 			<language type="kr">คานูรี</language>
 			<language type="krc">คาราไช-บัลการ์</language>
 			<language type="kro">กรุ</language>
@@ -264,7 +254,7 @@
 			<language type="la">ละติน</language>
 			<language type="lad">ลาดิโน</language>
 			<language type="lah">ลาฮ์นดา</language>
-			<language type="lam">แลมบา</language>
+			<language type="lam">ลามบา</language>
 			<language type="lb">ลักเซมเบิร์ก</language>
 			<language type="lez">เลซเกียน</language>
 			<language type="lg">กานดา</language>
@@ -273,7 +263,7 @@
 			<language type="lo">ลาว</language>
 			<language type="lol">มองโก</language>
 			<language type="loz">โลซิ</language>
-			<language type="lt">ลิทัวเนีย</language>
+			<language type="lt">ลิธัวเนีย</language>
 			<language type="lu">ลูบา-กาตองกา</language>
 			<language type="lua">ลูบา-ลูลัว</language>
 			<language type="lui">ลุยเซโน</language>
@@ -299,7 +289,7 @@
 			<language type="min">มินางกาเบา</language>
 			<language type="mis">ภาษาอื่นๆ</language>
 			<language type="mk">มาซิโดเนีย</language>
-			<language type="mkh">ภาษามอญ-เขมร</language>
+			<language type="mkh">มอญ-เขมร (อื่นๆ)</language>
 			<language type="ml">มาลายาลัม</language>
 			<language type="mn">มองโกล</language>
 			<language type="mnc">แมนจู</language>
@@ -325,12 +315,12 @@
 			<language type="nap">เนียโพลิแทน</language>
 			<language type="nb">นอร์เวย์บอกมอล</language>
 			<language type="nd">เอ็นเดเบลีเหนือ</language>
-			<language type="nds">เยอรมันตอนเหนือ</language>
+			<language type="nds">เยอรมันต่ำ; แซกซอนต่ำ</language>
 			<language type="ne">เนปาล</language>
 			<language type="new">เนวาริ</language>
 			<language type="ng">ดองกา</language>
 			<language type="nia">เนีส</language>
-			<language type="nic">ภาษาไนเจอร์-กอร์โดฟาเนียน</language>
+			<language type="nic">ไนเจอร์-กอร์โดฟาเนีย (อื่นๆ)</language>
 			<language type="niu">ไนอีน</language>
 			<language type="nl">ดัตช์</language>
 			<language type="nl_BE">เฟลมิช</language>
@@ -338,9 +328,8 @@
 			<language type="no">นอร์เวย์</language>
 			<language type="nog">โนไก</language>
 			<language type="non">นอร์สโบราณ</language>
-			<language type="nqo">เอ็นโก</language>
 			<language type="nr">เอ็นเดเบลีใต้</language>
-			<language type="nso">โซโทเหนือ</language>
+			<language type="nso">โซโธเหนือ</language>
 			<language type="nub">ภาษานูเบียน</language>
 			<language type="nv">นาวาโฮ</language>
 			<language type="nwc">เนวาริคลาสสิก</language>
@@ -358,14 +347,14 @@
 			<language type="ota">ตุรกีออตโดมัน</language>
 			<language type="oto">ภาษาโอโทเมียน</language>
 			<language type="pa">ปัญจาบ</language>
-			<language type="paa">ภาษาปาปวน</language>
+			<language type="paa">ปาปัว (อื่นๆ)</language>
 			<language type="pag">พันกาซินัน</language>
 			<language type="pal">พาฮลาวิ</language>
 			<language type="pam">พามพานกา</language>
 			<language type="pap">พาเพียเมนโท</language>
 			<language type="pau">พาลาอวน</language>
 			<language type="peo">เปอร์เซียโบราณ</language>
-			<language type="phi">ภาษาฟิลิปปิน</language>
+			<language type="phi">ฟิลิปปินส์ (อื่นๆ)</language>
 			<language type="phn">ฟินิเชียน</language>
 			<language type="pi">บาลี</language>
 			<language type="pl">โปแลนด์</language>
@@ -374,7 +363,6 @@
 			<language type="pro">โพรเวนคอลโบราณ</language>
 			<language type="ps">พาชตู</language>
 			<language type="pt">โปรตุเกส</language>
-			<language type="pt_BR">โปรตุเกส - บราซิล</language>
 			<language type="pt_PT">โปรตุเกส (ไอบีเรีย)</language>
 			<language type="qu">เกซัว</language>
 			<language type="raj">ราจาสธานิ</language>
@@ -383,7 +371,7 @@
 			<language type="rm">เรโต-โรแมนซ์</language>
 			<language type="rn">คิรันดี</language>
 			<language type="ro">โรมาเนีย</language>
-			<language type="roa">ภาษาโรมานซ์</language>
+			<language type="roa">โรมานซ์ (อื่นๆ)</language>
 			<language type="rom">โรมานี</language>
 			<language type="root">ราก</language>
 			<language type="ru">รัสเซีย</language>
@@ -392,7 +380,7 @@
 			<language type="sa">สันสกฤต</language>
 			<language type="sad">ซันดาเว</language>
 			<language type="sah">ยากุต</language>
-			<language type="sai">ภาษาอเมริกันอินเดียนใต้</language>
+			<language type="sai">อเมริกันอินเดียนใต้ (อื่นๆ)</language>
 			<language type="sal">ภาษาซาลิชัน</language>
 			<language type="sam">ซามาริทันอราเมอิก</language>
 			<language type="sas">ซาซัก</language>
@@ -403,22 +391,22 @@
 			<language type="sd">สินธุ</language>
 			<language type="se">ซามิเหนือ</language>
 			<language type="sel">เซลกุป</language>
-			<language type="sem">ภาษาเซมิติก</language>
-			<language type="sg">แซงโก</language>
+			<language type="sem">เซมิทิก (อื่นๆ)</language>
+			<language type="sg">สันโค</language>
 			<language type="sga">ไอริชโบราณ</language>
 			<language type="sgn">ภาษาสัญญาณ</language>
-			<language type="sh">เซอร์โบ-โครเอเชีย</language>
+			<language type="sh">เซอร์โบ-โครเอเทียน</language>
 			<language type="shn">ชาน</language>
 			<language type="si">สิงหล</language>
 			<language type="sid">ซิดาโม</language>
 			<language type="sio">ภาษาซิอวน</language>
-			<language type="sit">ภาษาซิโน-ทิเบตัน</language>
+			<language type="sit">ซิโน-ทิเบต (อื่นๆ)</language>
 			<language type="sk">สโลวัก</language>
 			<language type="sl">สโลวีเนีย</language>
-			<language type="sla">ภาษาสลาวิก</language>
+			<language type="sla">สลาวิก (อื่นๆ)</language>
 			<language type="sm">ซามัว</language>
 			<language type="sma">ซามิใต้</language>
-			<language type="smi">ภาษาซามิ</language>
+			<language type="smi">ภาษาซามิ (อื่นๆ)</language>
 			<language type="smj">ลูลซามิ</language>
 			<language type="smn">อินาริซามิ</language>
 			<language type="sms">สกอลตซามิ</language>
@@ -432,7 +420,7 @@
 			<language type="srn">ซรานานทองโก</language>
 			<language type="srr">เซเรอร์</language>
 			<language type="ss">สวาติ</language>
-			<language type="ssa">ภาษานิโล-ซาฮารัน</language>
+			<language type="ssa">นิโล-ซาฮารัน (อื่นๆ)</language>
 			<language type="st">โซโทใต้</language>
 			<language type="su">ซุนดา</language>
 			<language type="suk">ซุกุมา</language>
@@ -442,7 +430,7 @@
 			<language type="sw">สวาฮีลี</language>
 			<language type="syr">ไซเรียก</language>
 			<language type="ta">ทมิฬ</language>
-			<language type="tai">ภาษาไท</language>
+			<language type="tai">ไท (อื่นๆ)</language>
 			<language type="te">เตลูกู</language>
 			<language type="tem">ทิมเน</language>
 			<language type="ter">เทเรโน</language>
@@ -460,7 +448,7 @@
 			<language type="tmh">ทามาเชก</language>
 			<language type="tn">สวานา</language>
 			<language type="to">ตองกา</language>
-			<language type="tog">ตองกา - ไนซา</language>
+			<language type="tog">ท็องกา (ไนซา)</language>
 			<language type="tpi">ท็อกพิซิน</language>
 			<language type="tr">ตุรกี</language>
 			<language type="ts">ซองกา</language>
@@ -468,9 +456,9 @@
 			<language type="tt">ตาตาร์</language>
 			<language type="tum">ทุมบูกา</language>
 			<language type="tup">ภาษาทุพิ</language>
-			<language type="tut">ภาษาอัลตาอิก</language>
+			<language type="tut">อัลทาอิก (อื่นๆ)</language>
 			<language type="tvl">ตูวาลู</language>
-			<language type="tw">ทวิ</language>
+			<language type="tw">ทวี</language>
 			<language type="ty">ตาฮิเตียน</language>
 			<language type="tyv">ทูวิเนียน</language>
 			<language type="udm">อัดมาร์ต</language>
@@ -496,7 +484,7 @@
 			<language type="xal">กาลมิก</language>
 			<language type="xh">โซสา</language>
 			<language type="yao">เย้า</language>
-			<language type="yap">แยป</language>
+			<language type="yap">ยาเพส</language>
 			<language type="yi">ยิดดิช</language>
 			<language type="yo">โยรูบา</language>
 			<language type="ypk">ภาษายูพิก</language>
@@ -504,17 +492,15 @@
 			<language type="zap">ซาโปเทก</language>
 			<language type="zen">เซนากา</language>
 			<language type="zh">จีน</language>
-			<language type="zh_Hans">จีนประยุกต์</language>
-			<language type="zh_Hant">จีนดั้งเดิม</language>
+			<language type="zh_Hans">จีนตัวย่อ</language>
+			<language type="zh_Hant">จีนตัวเต็ม</language>
 			<language type="znd">ซานเด</language>
 			<language type="zu">ซูลู</language>
 			<language type="zun">ซูนิ</language>
-			<language type="zxx">ไม่มีข้อมูลภาษา</language>
 		</languages>
 		<scripts>
 			<script type="Arab">อาหรับ</script>
 			<script type="Armn">อาร์เมเนีย</script>
-			<script type="Avst">อเวสตัน</script>
 			<script type="Bali">บาหลี</script>
 			<script type="Batk">บาตัก</script>
 			<script type="Beng">เบงกาลี</script>
@@ -522,15 +508,14 @@
 			<script type="Bopo">โบโพโมโฟ</script>
 			<script type="Brah">บรามี</script>
 			<script type="Brai">เบรลล์</script>
-			<script type="Bugi">บูกิส</script>
+			<script type="Bugi">บูกินิส</script>
 			<script type="Buhd">บูฮิด</script>
 			<script type="Cans">สัญลักษณ์ชนเผ่าพื้นเมืองแคนาดา</script>
-			<script type="Cari">คาเรีย</script>
 			<script type="Cham">จาม</script>
 			<script type="Cher">เชอโรกี</script>
 			<script type="Cirt">เซิร์ต</script>
 			<script type="Copt">คอปติก</script>
-			<script type="Cprt">ไซเปรียท</script>
+			<script type="Cprt">ไซพริออต</script>
 			<script type="Cyrl">ซีริลลิก</script>
 			<script type="Cyrs">ซีริลลิกโบสถ์สลาโวนิกโบราณ</script>
 			<script type="Deva">เทวนาครี</script>
@@ -539,7 +524,7 @@
 			<script type="Egyh">เฮียราติกอียิปต์</script>
 			<script type="Egyp">เฮียโรกลิฟส์อียิปต์</script>
 			<script type="Ethi">เอธิโอเปีย</script>
-			<script type="Geok">คัตซูรี - อาซอมทัฟรูลีและนูสคูรี</script>
+			<script type="Geok">คัตซูรี (อาซอมทัฟรูลีและนูสคูรี)</script>
 			<script type="Geor">จอร์เจีย</script>
 			<script type="Glag">กลาโกลิติก</script>
 			<script type="Goth">โกธิก</script>
@@ -548,15 +533,15 @@
 			<script type="Guru">เกอร์มูคิ</script>
 			<script type="Hang">ฮันกูล</script>
 			<script type="Hani">ฮั่น</script>
-			<script type="Hano">ฮานูโนโอ</script>
-			<script type="Hans">ฮั่นประยุกต์</script>
-			<script type="Hant">ฮั่นดั้งเดิม</script>
+			<script type="Hano">ฮานูนู</script>
+			<script type="Hans">ฮั่นตัวย่อ</script>
+			<script type="Hant">ฮั่นตัวเต็ม</script>
 			<script type="Hebr">ฮีบรู</script>
 			<script type="Hira">ฮิรางานะ</script>
 			<script type="Hmng">พาฮาวมอง</script>
 			<script type="Hrkt">กาตะงานะหรือฮิรางานะ</script>
 			<script type="Hung">ฮังการีโบราณ</script>
-			<script type="Inds">อินดัส - ฮารัปพัน</script>
+			<script type="Inds">อินดัส (ฮารัปพัน)</script>
 			<script type="Ital">อิตาลีโบราณ</script>
 			<script type="Java">ชวา</script>
 			<script type="Jpan">ญี่ปุ่น</script>
@@ -565,25 +550,20 @@
 			<script type="Khar">คาโรสติ</script>
 			<script type="Khmr">เขมร</script>
 			<script type="Knda">กันนาดา</script>
-			<script type="Kore">เกาหลี</script>
 			<script type="Lana">ล้านนา</script>
 			<script type="Laoo">ลาว</script>
-			<script type="Latf">ลาติน - ฟรังเตอร์</script>
-			<script type="Latg">ลาติน - แกลิก</script>
+			<script type="Latf">ลาติน (ฟรังเตอร์)</script>
+			<script type="Latg">ลาติน (แกลิก)</script>
 			<script type="Latn">ลาติน</script>
 			<script type="Lepc">เลปชา</script>
 			<script type="Limb">ลิมบู</script>
 			<script type="Lina">ลีเนียร์เอ</script>
 			<script type="Linb">ลีเนียร์บี</script>
-			<script type="Lyci">ไลเซีย</script>
-			<script type="Lydi">ลีเดีย</script>
 			<script type="Mand">แมนแดน</script>
 			<script type="Maya">มายันฮีโรกลิฟส์</script>
 			<script type="Mero">เมโรติก</script>
 			<script type="Mlym">มาลายาลัม</script>
 			<script type="Mong">มองโกเลีย</script>
-			<script type="Moon">มูน</script>
-			<script type="Mtei">มีเตยมาเยก</script>
 			<script type="Mymr">พม่า</script>
 			<script type="Nkoo">เอ็นโก</script>
 			<script type="Ogam">โอคัม</script>
@@ -592,18 +572,15 @@
 			<script type="Osma">ออสมันยา</script>
 			<script type="Perm">เปอร์มิกโบราณ</script>
 			<script type="Phag">ฟากส์-พา</script>
-			<script type="Phlv">บุ๊กปะห์ลาวี</script>
 			<script type="Phnx">ฟินิเชียน</script>
 			<script type="Plrd">สัทศาสตร์พอลลาร์ด</script>
 			<script type="Qaai">อินเฮอริต</script>
 			<script type="Rjng">รจัง</script>
 			<script type="Roro">รองโกรองโก</script>
 			<script type="Runr">รูนิก</script>
-			<script type="Samr">ซามาริทัน</script>
 			<script type="Sara">ซาราทิ</script>
 			<script type="Shaw">ชาเวียน</script>
 			<script type="Sinh">สิงหล</script>
-			<script type="Sund">ซุนดา</script>
 			<script type="Sylo">ไซโลทินากรี</script>
 			<script type="Syrc">ซีเรียค</script>
 			<script type="Syre">ซีเรึยคเอสทราจีโล</script>
@@ -679,7 +656,7 @@
 			<territory type="AT">ออสเตรีย</territory>
 			<territory type="AU">ออสเตรเลีย</territory>
 			<territory type="AW">อารูบา</territory>
-			<territory type="AX">หมู่เกาะโอลันด์</territory>
+			<territory type="AX">หมู่เกาะอแลนด์</territory>
 			<territory type="AZ">อาเซอร์ไบจาน</territory>
 			<territory type="BA">บอสเนียและเฮอร์เซโกวีนา</territory>
 			<territory type="BB">บาร์เบโดส</territory>
@@ -690,8 +667,7 @@
 			<territory type="BH">บาห์เรน</territory>
 			<territory type="BI">บุรุนดี</territory>
 			<territory type="BJ">เบนิน</territory>
-			<territory type="BL">เซนต์บาร์เธเลมี</territory>
-			<territory type="BM">เบอร์มิวดา</territory>
+			<territory type="BM">เบอร์มิวด้า</territory>
 			<territory type="BN">บรูไน</territory>
 			<territory type="BO">โบลิเวีย</territory>
 			<territory type="BR">บราซิล</territory>
@@ -712,7 +688,7 @@
 			<territory type="CL">ชิลี</territory>
 			<territory type="CM">แคเมอรูน</territory>
 			<territory type="CN">จีน</territory>
-			<territory type="CO">โคลอมเบีย</territory>
+			<territory type="CO">โคลัมเบีย</territory>
 			<territory type="CR">คอสตาริกา</territory>
 			<territory type="CS">เซอร์เบียและมอนเตเนโกร</territory>
 			<territory type="CU">คิวบา</territory>
@@ -743,22 +719,21 @@
 			<territory type="GB">สหราชอาณาจักร</territory>
 			<territory type="GD">เกรนาดา</territory>
 			<territory type="GE">จอร์เจีย</territory>
-			<territory type="GF">เฟรนช์เกียนา</territory>
-			<territory type="GG">เกิร์นซีย์</territory>
-			<territory type="GH">กานา</territory>
+			<territory type="GF">เฟรนช์กีอานา</territory>
+			<territory type="GH">กาน่า</territory>
 			<territory type="GI">ยิบรอลตาร์</territory>
 			<territory type="GL">กรีนแลนด์</territory>
 			<territory type="GM">แกมเบีย</territory>
 			<territory type="GN">กินี</territory>
-			<territory type="GP">กวาเดอลูป</territory>
+			<territory type="GP">กัวเดอลูป</territory>
 			<territory type="GQ">อิเควทอเรียลกินี</territory>
 			<territory type="GR">กรีซ</territory>
 			<territory type="GS">เกาะเซาท์จอร์เจียและหมู่เกาะเซาท์แซนด์วิช</territory>
 			<territory type="GT">กัวเตมาลา</territory>
 			<territory type="GU">กวม</territory>
 			<territory type="GW">กินี-บิสเซา</territory>
-			<territory type="GY">กายอานา</territory>
-			<territory type="HK">ฮ่องกง</territory>
+			<territory type="GY">กายานา</territory>
+			<territory type="HK">ฮ่องกง เขตปกครองพิเศษประเทศจีน</territory>
 			<territory type="HM">เกาะเฮิร์ดและหมู่เกาะแมกดอนัลด์</territory>
 			<territory type="HN">ฮอนดูรัส</territory>
 			<territory type="HR">โครเอเชีย</territory>
@@ -779,7 +754,7 @@
 			<territory type="JO">จอร์แดน</territory>
 			<territory type="JP">ญี่ปุ่น</territory>
 			<territory type="KE">เคนยา</territory>
-			<territory type="KG">คีร์กีซสถาน</territory>
+			<territory type="KG">คีร์กิซสถาน</territory>
 			<territory type="KH">กัมพูชา</territory>
 			<territory type="KI">คิริบาตี</territory>
 			<territory type="KM">คอโมโรส</territory>
@@ -804,36 +779,35 @@
 			<territory type="MC">โมนาโก</territory>
 			<territory type="MD">มอลโดวา</territory>
 			<territory type="ME">มอนเตเนโกร</territory>
-			<territory type="MF">เซนต์มาติน</territory>
 			<territory type="MG">มาดากัสการ์</territory>
 			<territory type="MH">หมู่เกาะมาร์แชลล์</territory>
 			<territory type="MK">มาซิโดเนีย</territory>
 			<territory type="ML">มาลี</territory>
 			<territory type="MM">พม่า</territory>
 			<territory type="MN">มองโกเลีย</territory>
-			<territory type="MO">มาเก๊า</territory>
-			<territory type="MP">หมู่เกาะนอร์เทิร์นมาเรียนา</territory>
+			<territory type="MO">มาเก๊า เขตปกครองพิเศษประเทศจีน</territory>
+			<territory type="MP">หมู่เกาะนอร์ทเทิร์นมาเรียนา</territory>
 			<territory type="MQ">มาร์ตินีก</territory>
 			<territory type="MR">มอริเตเนีย</territory>
-			<territory type="MS">มอนต์เซอร์รัต</territory>
+			<territory type="MS">มอนต์เซร์แร็ต</territory>
 			<territory type="MT">มอลตา</territory>
 			<territory type="MU">มอริเชียส</territory>
 			<territory type="MV">มัลดีฟส์</territory>
 			<territory type="MW">มาลาวี</territory>
 			<territory type="MX">เม็กซิโก</territory>
 			<territory type="MY">มาเลเซีย</territory>
-			<territory type="MZ">โมซัมบิก</territory>
+			<territory type="MZ">โมแซมบิค</territory>
 			<territory type="NA">นามิเบีย</territory>
 			<territory type="NC">นิวแคลิโดเนีย</territory>
 			<territory type="NE">ไนเจอร์</territory>
 			<territory type="NF">เกาะนอร์ฟอล์ก</territory>
 			<territory type="NG">ไนจีเรีย</territory>
-			<territory type="NI">นิการากัว</territory>
+			<territory type="NI">นิคารากัว</territory>
 			<territory type="NL">เนเธอร์แลนด์</territory>
 			<territory type="NO">นอร์เวย์</territory>
 			<territory type="NP">เนปาล</territory>
 			<territory type="NR">นาอูรู</territory>
-			<territory type="NU">นีอูเอ</territory>
+			<territory type="NU">นียู</territory>
 			<territory type="NZ">นิวซีแลนด์</territory>
 			<territory type="OM">โอมาน</territory>
 			<territory type="PA">ปานามา</territory>
@@ -872,7 +846,7 @@
 			<territory type="SM">ซานมารีโน</territory>
 			<territory type="SN">เซเนกัล</territory>
 			<territory type="SO">โซมาเลีย</territory>
-			<territory type="SR">ซูรินาเม</territory>
+			<territory type="SR">สุรินัม</territory>
 			<territory type="ST">เซาตูเมและปรินซิปี</territory>
 			<territory type="SV">เอลซัลวาดอร์</territory>
 			<territory type="SY">ซีเรีย</territory>
@@ -881,7 +855,7 @@
 			<territory type="TD">ชาด</territory>
 			<territory type="TF">อาณาเขตทางใต้ของฝรั่งเศส</territory>
 			<territory type="TG">โตโก</territory>
-			<territory type="TH">ไทย</territory>
+			<territory type="TH">ประเทศไทย</territory>
 			<territory type="TJ">ทาจิกิสถาน</territory>
 			<territory type="TK">โตเกเลา</territory>
 			<territory type="TL">ติมอร์ตะวันออก</territory>
@@ -930,40 +904,32 @@
 		</variants>
 		<keys>
 			<key type="calendar">ปฏิทิน</key>
-			<key type="collation">การเรียงลำดับ</key>
 			<key type="currency">เงินตรา</key>
 		</keys>
 		<types>
-			<type type="big5han" key="collation">เรียงตามอักษรจีนดั้งเดิม</type>
+			<type type="big5han" key="collation">เรียงตามอักษรจีนตัวเต็ม</type>
 			<type type="buddhist" key="calendar">ปฏิทินพุทธ</type>
 			<type type="chinese" key="calendar">ปฏิทินจีน</type>
 			<type type="direct" key="collation">เรียงตามลำดับโดยตรง</type>
-			<type type="gb2312han" key="collation">เรียงตามอักษรจีนประยุกต์</type>
+			<type type="gb2312han" key="collation">เรียงตามอักษรจีนตัวย่อ</type>
 			<type type="gregorian" key="calendar">ปฏิทินเกรกอเรียน</type>
 			<type type="hebrew" key="calendar">ปฏิทินฮิบรู</type>
-			<type type="indian" key="calendar">ปฏิทินแห่งชาติอินเดีย</type>
 			<type type="islamic" key="calendar">ปฏิทินอิสลาม</type>
 			<type type="islamic-civil" key="calendar">ปฏิทินอิสลามซีวิล</type>
 			<type type="japanese" key="calendar">ปฏิทินญี่ปุ่น</type>
 			<type type="phonebook" key="collation">เรียงตามสมุดโทรศัพท์</type>
 			<type type="pinyin" key="collation">เรียงตามการถอดเสียงภาษาจีน</type>
-			<type type="roc" key="calendar">ปฏิทินไต้หวัน</type>
 			<type type="stroke" key="collation">เรียงตามการลากเส้น</type>
 			<type type="traditional" key="collation">เรียงตามแบบดั้งเดิม</type>
 		</types>
 		<measurementSystemNames>
-			<measurementSystemName type="US">อเมริกัน</measurementSystemName>
+			<measurementSystemName type="US">US</measurementSystemName>
 			<measurementSystemName type="metric">เมตริก</measurementSystemName>
 		</measurementSystemNames>
-		<codePatterns>
-			<codePattern type="language">{0}</codePattern>
-			<codePattern type="script">{0}</codePattern>
-			<codePattern type="territory">{0}</codePattern>
-		</codePatterns>
 	</localeDisplayNames>
 	<characters>
 		<exemplarCharacters>[ฯ ๆ ๎ ็-ํ ก-ฮ ะ-ฺ เ-ๅ]</exemplarCharacters>
-		<exemplarCharacters type="auxiliary">[\u200B a e g m n p q t]</exemplarCharacters>
+		<exemplarCharacters type="auxiliary">[\u200B]</exemplarCharacters>
 	</characters>
 	<delimiters>
 		<quotationStart>'</quotationStart>
@@ -974,8 +940,10 @@
 	<dates>
 		<localizedPatternChars>GanjkHmsSEDFwWxhKzAeugXZvcL</localizedPatternChars>
 		<calendars>
-			<default choice="buddhist"/>
+                        <default choice="buddhist"/>
 			<calendar type="buddhist">
+				<am>ก่อนเที่ยง</am>
+				<pm>หลังเที่ยง</pm>
 				<eras>
 					<eraAbbr>
 						<era type="0">พ.ศ.</era>
@@ -1032,18 +1000,41 @@
 						</dateTimeFormat>
 					</dateTimeFormatLength>
 					<availableFormats>
-						<dateFormatItem id="yyMM">M/yyyy</dateFormatItem>
-						<dateFormatItem id="yyMMM">MMM yyyy</dateFormatItem>
+						<dateFormatItem id="yyMM">MM/yy</dateFormatItem>
+						<dateFormatItem id="yyMMM">MMM yy</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
 			<calendar type="chinese">
+				<days>
+					<dayContext type="stand-alone">
+						<dayWidth type="narrow">
+							<day type="sun">อา</day>
+						</dayWidth>
+					</dayContext>
+				</days>
 				<am>ก่อนเที่ยง</am>
 				<pm>หลังเที่ยง</pm>
 			</calendar>
 			<calendar type="coptic">
+				<days>
+					<dayContext type="stand-alone">
+						<dayWidth type="narrow">
+							<day type="sun">อา</day>
+						</dayWidth>
+					</dayContext>
+				</days>
 				<am>ก่อนเที่ยง</am>
 				<pm>หลังเที่ยง</pm>
+			</calendar>
+			<calendar type="ethiopic">
+				<days>
+					<dayContext type="stand-alone">
+						<dayWidth type="narrow">
+							<day type="sun">อา</day>
+						</dayWidth>
+					</dayContext>
+				</days>
 			</calendar>
 			<calendar type="gregorian">
 				<months>
@@ -1145,14 +1136,6 @@
 							<quarter type="4">ไตรมาส 4</quarter>
 						</quarterWidth>
 					</quarterContext>
-					<quarterContext type="stand-alone">
-						<quarterWidth type="narrow">
-							<quarter type="1">1</quarter>
-							<quarter type="2">2</quarter>
-							<quarter type="3">3</quarter>
-							<quarter type="4">4</quarter>
-						</quarterWidth>
-					</quarterContext>
 				</quarters>
 				<am>ก่อนเที่ยง</am>
 				<pm>หลังเที่ยง</pm>
@@ -1219,103 +1202,13 @@
 					<availableFormats>
 						<dateFormatItem id="HHmm">HH:mm</dateFormatItem>
 						<dateFormatItem id="HHmmss">HH:mm:ss</dateFormatItem>
-						<dateFormatItem id="Hm">H:mm</dateFormatItem>
-						<dateFormatItem id="M">L</dateFormatItem>
-						<dateFormatItem id="MEd">E, d-M</dateFormatItem>
-						<dateFormatItem id="MMM">LLL</dateFormatItem>
-						<dateFormatItem id="MMMEd">E d MMM</dateFormatItem>
-						<dateFormatItem id="MMMMEd">E d MMMM</dateFormatItem>
 						<dateFormatItem id="MMMMd">d MMMM</dateFormatItem>
-						<dateFormatItem id="MMMd">d MMM</dateFormatItem>
 						<dateFormatItem id="Md">d/M</dateFormatItem>
-						<dateFormatItem id="d">d</dateFormatItem>
 						<dateFormatItem id="mmss">mm:ss</dateFormatItem>
-						<dateFormatItem id="ms">mm:ss</dateFormatItem>
-						<dateFormatItem id="y">yyyy</dateFormatItem>
-						<dateFormatItem id="yM">M/yyyy</dateFormatItem>
-						<dateFormatItem id="yMEd">EEE d/M/yyyy</dateFormatItem>
-						<dateFormatItem id="yMMM">MMM yyyy</dateFormatItem>
-						<dateFormatItem id="yMMMEd">EEE d MMM yyyy</dateFormatItem>
-						<dateFormatItem id="yMMMM">MMMM yyyy</dateFormatItem>
-						<dateFormatItem id="yQ">Q yyyy</dateFormatItem>
-						<dateFormatItem id="yQQQ">QQQ yyyy</dateFormatItem>
 						<dateFormatItem id="yyQ">Q yy</dateFormatItem>
 						<dateFormatItem id="yyyyM">M/yyyy</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM yyyy</dateFormatItem>
 					</availableFormats>
-					<intervalFormats>
-						<intervalFormatFallback>{0} - {1}</intervalFormatFallback>
-						<intervalFormatItem id="M">
-							<greatestDifference id="M">M-M</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MEd">
-							<greatestDifference id="M">E d/M – E d/M</greatestDifference>
-							<greatestDifference id="d">E d – E d/M</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MMM">
-							<greatestDifference id="M">LLL-LLL</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MMMEd">
-							<greatestDifference id="M">E d MMM – E d MMM</greatestDifference>
-							<greatestDifference id="d">E d – E d MMM</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MMMM">
-							<greatestDifference id="M">LLLL-LLLL</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MMMd">
-							<greatestDifference id="M">d MMM – d MMM</greatestDifference>
-							<greatestDifference id="d">d – d MMM</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="Md">
-							<greatestDifference id="M">d/M - d/M</greatestDifference>
-							<greatestDifference id="d">d/M - d/M</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="d">
-							<greatestDifference id="d">d-d</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="h">
-							<greatestDifference id="h">H-H</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="hm">
-							<greatestDifference id="h">H:mm-H:mm</greatestDifference>
-							<greatestDifference id="m">H:mm-H:mm</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="y">
-							<greatestDifference id="y">y-y</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="yM">
-							<greatestDifference id="M">M–M/yy</greatestDifference>
-							<greatestDifference id="y">M/yyyy - M/yyyy</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="yMEd">
-							<greatestDifference id="M">E d/M/yy – E d/M/yy</greatestDifference>
-							<greatestDifference id="d">E d – E d/M/yy</greatestDifference>
-							<greatestDifference id="y">E d/M/yy – E d/M/yy</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="yMMM">
-							<greatestDifference id="M">MMM-MMM yyyy</greatestDifference>
-							<greatestDifference id="y">MMM yyyy - MMM yyyy</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="yMMMEd">
-							<greatestDifference id="M">E d MMM – E d MMM yyyy</greatestDifference>
-							<greatestDifference id="d">E d – E d MMM yyyy</greatestDifference>
-							<greatestDifference id="y">E d MMM yyyy – E d MMM yyyy</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="yMMMM">
-							<greatestDifference id="M">M–M/yyyy</greatestDifference>
-							<greatestDifference id="y">M/yyyy – M/yyyy</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="yMMMd">
-							<greatestDifference id="M">d MMM – d MMM yyyy</greatestDifference>
-							<greatestDifference id="d">d–d MMM yyyy</greatestDifference>
-							<greatestDifference id="y">d MMM yyyy – d MMM yyyy</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="yMd">
-							<greatestDifference id="M">d/M/yy – d/M/yy</greatestDifference>
-							<greatestDifference id="d">d-d/M/yy</greatestDifference>
-							<greatestDifference id="y">d/M/yy – d/M/yy</greatestDifference>
-						</intervalFormatItem>
-					</intervalFormats>
 				</dateTimeFormats>
 				<fields>
 					<field type="era">
@@ -1335,10 +1228,8 @@
 						<relative type="0">วันนี้</relative>
 						<relative type="1">พรุ่งนี้</relative>
 						<relative type="2">มะรืนนี้</relative>
-						<relative type="3">สามวันถัดไป</relative>
 						<relative type="-1">เมื่อวานนี้</relative>
 						<relative type="-2">เมื่อวานซืน</relative>
-						<relative type="-3">สามวันก่อนหน้า</relative>
 					</field>
 					<field type="weekday">
 						<displayName>วันในสัปดาห์</displayName>
@@ -1360,15 +1251,45 @@
 					</field>
 				</fields>
 			</calendar>
+			<calendar type="hebrew">
+				<days>
+					<dayContext type="stand-alone">
+						<dayWidth type="narrow">
+							<day type="sun">อา</day>
+						</dayWidth>
+					</dayContext>
+				</days>
+			</calendar>
 			<calendar type="islamic">
+				<days>
+					<dayContext type="stand-alone">
+						<dayWidth type="narrow">
+							<day type="sun">อา</day>
+						</dayWidth>
+					</dayContext>
+				</days>
 				<am>ก่อนเที่ยง</am>
 				<pm>หลังเที่ยง</pm>
 			</calendar>
 			<calendar type="japanese">
+				<days>
+					<dayContext type="stand-alone">
+						<dayWidth type="narrow">
+							<day type="sun">อา</day>
+						</dayWidth>
+					</dayContext>
+				</days>
 				<am>ก่อนเที่ยง</am>
 				<pm>หลังเที่ยง</pm>
 			</calendar>
 			<calendar type="persian">
+				<days>
+					<dayContext type="stand-alone">
+						<dayWidth type="narrow">
+							<day type="sun">อา</day>
+						</dayWidth>
+					</dayContext>
+				</days>
 				<am>ก่อนเที่ยง</am>
 				<pm>หลังเที่ยง</pm>
 			</calendar>
@@ -1377,7 +1298,12 @@
 			<hourFormat>+HHmm;-HHmm</hourFormat>
 			<gmtFormat>GMT{0}</gmtFormat>
 			<regionFormat>{0}</regionFormat>
-			<fallbackFormat>{1} ({0})</fallbackFormat>
+			<zone type="America/Argentina/ComodRivadavia">
+				<exemplarCity>โคมอดริวาดาเวีย</exemplarCity>
+			</zone>
+			<zone type="Europe/Belfast">
+				<exemplarCity>เบลฟัสต์</exemplarCity>
+			</zone>
 			<zone type="Etc/Unknown">
 				<exemplarCity>ไม่ทราบ</exemplarCity>
 			</zone>
@@ -1409,7 +1335,7 @@
 				<exemplarCity>โรเธรา</exemplarCity>
 			</zone>
 			<zone type="Antarctica/Palmer">
-				<exemplarCity>พาล์เมอร์</exemplarCity>
+				<exemplarCity>ปาล์มเมอร์</exemplarCity>
 			</zone>
 			<zone type="Antarctica/South_Pole">
 				<exemplarCity>ขั้วโลกใต้</exemplarCity>
@@ -1433,7 +1359,7 @@
 				<exemplarCity>ดูมอนต์ดียูร์วิลล์</exemplarCity>
 			</zone>
 			<zone type="Antarctica/McMurdo">
-				<exemplarCity>แมคมัวโด</exemplarCity>
+				<exemplarCity>แมคมูร์ดู</exemplarCity>
 			</zone>
 			<zone type="America/Argentina/Rio_Gallegos">
 				<exemplarCity>ริโอกาลเลกอส</exemplarCity>
@@ -1442,7 +1368,7 @@
 				<exemplarCity>เมนดูซา</exemplarCity>
 			</zone>
 			<zone type="America/Argentina/San_Juan">
-				<exemplarCity>ซานฮวน</exemplarCity>
+				<exemplarCity>ซานจวน</exemplarCity>
 			</zone>
 			<zone type="America/Argentina/Ushuaia">
 				<exemplarCity>อูชูเอีย</exemplarCity>
@@ -1450,11 +1376,8 @@
 			<zone type="America/Argentina/La_Rioja">
 				<exemplarCity>ลาริโอจา</exemplarCity>
 			</zone>
-			<zone type="America/Argentina/San_Luis">
-				<exemplarCity>ซันลูอิส</exemplarCity>
-			</zone>
 			<zone type="America/Catamarca">
-				<exemplarCity>กาตามาร์กา</exemplarCity>
+				<exemplarCity>คาตามาร์กา</exemplarCity>
 			</zone>
 			<zone type="America/Jujuy">
 				<exemplarCity>จูจิว</exemplarCity>
@@ -1476,9 +1399,6 @@
 			</zone>
 			<zone type="Australia/Perth">
 				<exemplarCity>เพิิร์ท</exemplarCity>
-			</zone>
-			<zone type="Australia/Eucla">
-				<exemplarCity>ยูคลา</exemplarCity>
 			</zone>
 			<zone type="Australia/Darwin">
 				<exemplarCity>ดาร์วิน</exemplarCity>
@@ -1639,9 +1559,6 @@
 			<zone type="America/Winnipeg">
 				<exemplarCity>วินนิเพก</exemplarCity>
 			</zone>
-			<zone type="America/Resolute">
-				<exemplarCity>เรโซลูท</exemplarCity>
-			</zone>
 			<zone type="America/Rainy_River">
 				<exemplarCity>เรนนี่ริเวอร์</exemplarCity>
 			</zone>
@@ -1649,7 +1566,7 @@
 				<exemplarCity>แรงกินอินเล็ต</exemplarCity>
 			</zone>
 			<zone type="America/Coral_Harbour">
-				<exemplarCity>คอรัลฮาร์เบอร์</exemplarCity>
+				<exemplarCity>โครัลฮาร์เบอร์</exemplarCity>
 			</zone>
 			<zone type="America/Thunder_Bay">
 				<exemplarCity>ทันเดอร์เบย์</exemplarCity>
@@ -1681,9 +1598,6 @@
 			<zone type="America/Glace_Bay">
 				<exemplarCity>อ่าวแกลซ</exemplarCity>
 			</zone>
-			<zone type="America/Blanc-Sablon">
-				<exemplarCity>บลังค์-ซาบลอน</exemplarCity>
-			</zone>
 			<zone type="America/St_Johns">
 				<exemplarCity>เซนต์จอนส์</exemplarCity>
 			</zone>
@@ -1709,7 +1623,7 @@
 				<exemplarCity>อีสเตอร์</exemplarCity>
 			</zone>
 			<zone type="America/Santiago">
-				<exemplarCity>ซันติอาโก</exemplarCity>
+				<exemplarCity>ซั඀ติอาโก</exemplarCity>
 			</zone>
 			<zone type="Asia/Kashgar">
 				<exemplarCity>กัชการ์</exemplarCity>
@@ -2132,7 +2046,7 @@
 				<exemplarCity>มาร์เควซัส</exemplarCity>
 			</zone>
 			<zone type="Pacific/Gambier">
-				<exemplarCity>แกมเบียร์</exemplarCity>
+				<exemplarCity>กองบีเย</exemplarCity>
 			</zone>
 			<zone type="Pacific/Port_Moresby">
 				<exemplarCity>พอร์ตมอร์สบี</exemplarCity>
@@ -2186,7 +2100,7 @@
 				<exemplarCity>คาลินิงกราด</exemplarCity>
 			</zone>
 			<zone type="Europe/Moscow">
-				<exemplarCity>มอสโก</exemplarCity>
+				<exemplarCity>มอสโค</exemplarCity>
 			</zone>
 			<zone type="Europe/Volgograd">
 				<exemplarCity>วอลโกกราด</exemplarCity>
@@ -2247,6 +2161,9 @@
 			</zone>
 			<zone type="Atlantic/St_Helena">
 				<exemplarCity>เซนต์เฮเลนา</exemplarCity>
+			</zone>
+			<zone type="Atlantic/Jan_Mayen">
+				<exemplarCity>แจนมาเยน</exemplarCity>
 			</zone>
 			<zone type="Arctic/Longyearbyen">
 				<exemplarCity>ลองเยียร์เบียน</exemplarCity>
@@ -2345,7 +2262,7 @@
 				<exemplarCity>โฮโนลูลู</exemplarCity>
 			</zone>
 			<zone type="America/Anchorage">
-				<exemplarCity>แองเคอเรจ</exemplarCity>
+				<exemplarCity>แอนชอเรจ</exemplarCity>
 			</zone>
 			<zone type="America/Yakutat">
 				<exemplarCity>ยากูทัต</exemplarCity>
@@ -2369,7 +2286,7 @@
 				<exemplarCity>เดนเวอร์</exemplarCity>
 			</zone>
 			<zone type="America/North_Dakota/New_Salem">
-				<exemplarCity>นิวเซเลม, นอร์ทดาโคตา</exemplarCity>
+				<exemplarCity>นิวเซเลม</exemplarCity>
 			</zone>
 			<zone type="America/North_Dakota/Center">
 				<exemplarCity>เซนเตอร์</exemplarCity>
@@ -2386,23 +2303,14 @@
 			<zone type="America/Indiana/Petersburg">
 				<exemplarCity>ปีเตอร์สเบิร์ก</exemplarCity>
 			</zone>
-			<zone type="America/Indiana/Tell_City">
-				<exemplarCity>เทลล์ซิตี, อินดีแอนา</exemplarCity>
-			</zone>
 			<zone type="America/Indiana/Knox">
 				<exemplarCity>นอกซ์</exemplarCity>
-			</zone>
-			<zone type="America/Indiana/Winamac">
-				<exemplarCity>วินาแมค, อินดีแอนา</exemplarCity>
 			</zone>
 			<zone type="America/Indiana/Marengo">
 				<exemplarCity>มาเรงโก</exemplarCity>
 			</zone>
 			<zone type="America/Indianapolis">
 				<exemplarCity>อินเดียแนโพลิส</exemplarCity>
-			</zone>
-			<zone type="America/Louisville">
-				<exemplarCity>ลูส์วิลล์</exemplarCity>
 			</zone>
 			<zone type="America/Indiana/Vevay">
 				<exemplarCity>วีเวย์</exemplarCity>
@@ -2674,7 +2582,7 @@
 			<metazone type="Europe_Eastern">
 				<long>
 					<standard>เวลายุโรปตะวันออก</standard>
-					<daylight>เวลาฤดูร¹อนยุโรปตะวันออก</daylight>
+					<daylight>เวลาฤดูร้อนยุโรปตะวันออก</daylight>
 				</long>
 			</metazone>
 			<metazone type="Europe_Western">
@@ -2747,7 +2655,7 @@
 			</metazone>
 			<metazone type="Israel">
 				<long>
-					<standard>เวล¥ามาตรฐานอิสราเอล</standard>
+					<standard>เวลามาตรฐานอิสราเอล</standard>
 				</long>
 				<short>
 					<standard>IST (อิสราเอล)</standard>
@@ -2926,16 +2834,6 @@
 		<symbols>
 			<decimal>.</decimal>
 			<group>,</group>
-			<list>;</list>
-			<percentSign>%</percentSign>
-			<nativeZeroDigit>0</nativeZeroDigit>
-			<patternDigit>#</patternDigit>
-			<plusSign>+</plusSign>
-			<minusSign>-</minusSign>
-			<exponential>E</exponential>
-			<perMille>‰</perMille>
-			<infinity>∞</infinity>
-			<nan>NaN</nan>
 		</symbols>
 		<decimalFormats>
 			<decimalFormatLength>
@@ -2985,7 +2883,7 @@
 				<displayName>ดรัมอาเมเนีย</displayName>
 			</currency>
 			<currency type="ANG">
-				<displayName>กิลเดอร์เนเธอร์แลนด์แอนทิลลิส</displayName>
+				<displayName>แอนทิลลันกิลเดอร์เนเธอร์แลนด์</displayName>
 			</currency>
 			<currency type="AOA">
 				<displayName>กวานซาแองโกลา</displayName>
@@ -3000,7 +2898,7 @@
 				<displayName>กวานซารีจัสทาโดแองโกลา (1995-1999)</displayName>
 			</currency>
 			<currency type="ARA">
-				<displayName>ออสตรัลอาร์เจนตินา</displayName>
+				<displayName>ออสตรัลอาเจนตินา</displayName>
 			</currency>
 			<currency type="ARP">
 				<displayName>เปโซอาร์เจนติน่า (1983-1985)</displayName>
@@ -3013,7 +2911,7 @@
 				<displayName>ชิลลิงออสเตรีย</displayName>
 			</currency>
 			<currency type="AUD">
-				<displayName>ดอลลาร์ออสเตรเลีย</displayName>
+				<displayName>เหรียญออสเตรเลีย</displayName>
 				<symbol>$A</symbol>
 			</currency>
 			<currency type="AWG">
@@ -3022,9 +2920,6 @@
 			<currency type="AZM">
 				<displayName>มานัตอาเซอร์ไบจัน</displayName>
 			</currency>
-			<currency type="AZN">
-				<displayName>มานัตอาเซอร์ไบจาน</displayName>
-			</currency>
 			<currency type="BAD">
 				<displayName>ดีนาร์บอสเนีย-เฮอร์เซโกวีนา</displayName>
 			</currency>
@@ -3032,7 +2927,7 @@
 				<displayName>มาร​์กบอสเนีย-เฮอร์เซโกวีนา</displayName>
 			</currency>
 			<currency type="BBD">
-				<displayName>ดอลลาร์บาร์เบโดส</displayName>
+				<displayName>ดอลลาร์บาร์เบดอส</displayName>
 			</currency>
 			<currency type="BDT">
 				<displayName>ตากาบังกลาเทศ</displayName>
@@ -3084,7 +2979,6 @@
 			</currency>
 			<currency type="BRL">
 				<displayName>รีล</displayName>
-				<symbol>R$</symbol>
 			</currency>
 			<currency type="BRN">
 				<displayName>ครูซาโดโนโวบราซิล</displayName>
@@ -3099,7 +2993,7 @@
 				<displayName>กัลทรัมภูฏาน</displayName>
 			</currency>
 			<currency type="BUK">
-				<displayName>จ๊าดพม่า</displayName>
+				<displayName>จัคพม่า [BUK]</displayName>
 			</currency>
 			<currency type="BWP">
 				<displayName>พูลาบอตสวานา</displayName>
@@ -3108,13 +3002,13 @@
 				<displayName>นิวรูเบิลเบลารัสเซีย (1994-1999)</displayName>
 			</currency>
 			<currency type="BYR">
-				<displayName>รูเบิลเบลารุส</displayName>
+				<displayName>รูเบิลเบลารัสเซีย</displayName>
 			</currency>
 			<currency type="BZD">
 				<displayName>ดอลลาร์เบลีซ</displayName>
 			</currency>
 			<currency type="CAD">
-				<displayName>ดอลลาร์แคนาดา</displayName>
+				<displayName>เหรียญคานาดา</displayName>
 				<symbol>Can$</symbol>
 			</currency>
 			<currency type="CDF">
@@ -3150,7 +3044,7 @@
 				<displayName>โคลอนคอสตาริกา</displayName>
 			</currency>
 			<currency type="CSD">
-				<displayName>ดีนาร์เซอร์เบียเก่า</displayName>
+				<displayName>ไดนาร์เซอร์เบีย</displayName>
 			</currency>
 			<currency type="CSK">
 				<displayName>ฮาร์ดโครูนาเช็กโกสโลวัก</displayName>
@@ -3217,7 +3111,6 @@
 			</currency>
 			<currency type="EUR">
 				<displayName>ยูโร</displayName>
-				<symbol>€</symbol>
 			</currency>
 			<currency type="FIM">
 				<displayName>มาร์กกาฟินแลนด์</displayName>
@@ -3230,7 +3123,7 @@
 				<displayName>ปอนด์เกาะฟอล์กแลนด์</displayName>
 			</currency>
 			<currency type="FRF">
-				<displayName>ฟรังก์ฝรั่งเศส</displayName>
+				<displayName>เหรียญฝรั่งเศส</displayName>
 			</currency>
 			<currency type="GBP">
 				<displayName>ปอนด์สเตอร์ลิงอังกฤษ</displayName>
@@ -3265,9 +3158,6 @@
 			</currency>
 			<currency type="GTQ">
 				<displayName>เควตซัลกัวเตมาลา</displayName>
-			</currency>
-			<currency type="GWE">
-				<displayName>เอสคูโดกินีโปรตุเกส</displayName>
 			</currency>
 			<currency type="GWP">
 				<displayName>เปโซกีนีบิสเซา</displayName>
@@ -3310,7 +3200,6 @@
 			</currency>
 			<currency type="INR">
 				<displayName>รูปีอินเดีย</displayName>
-				<symbol>0≤Rs.|1≤Re.|1&lt;Rs.</symbol>
 			</currency>
 			<currency type="IQD">
 				<displayName>ดีนาร์อิรัก</displayName>
@@ -3356,7 +3245,7 @@
 				<displayName>ดีนาร์คูเวต</displayName>
 			</currency>
 			<currency type="KYD">
-				<displayName>ดอลลาร์ห඀¡ู่เกาะเคย์แมน</displayName>
+				<displayName>ดอลลาร์หมู่เกาะเคย์แมน</displayName>
 			</currency>
 			<currency type="KZT">
 				<displayName>เทนจ์คาซัคสถาน</displayName>
@@ -3386,13 +3275,13 @@
 				<displayName>ทาโลนัสลิทัวเนีย</displayName>
 			</currency>
 			<currency type="LUC">
-				<displayName>คอนเวอร์ทิเบิลฟรังก์ลักเซมเบิร์ก</displayName>
+				<displayName>ฟรังก์ลักเซมเบิร์ก [LUC]</displayName>
 			</currency>
 			<currency type="LUF">
 				<displayName>ฟรังก์ลักเซมเบิร์ก</displayName>
 			</currency>
 			<currency type="LUL">
-				<displayName>ไฟแนลเชียลฟรังก์ลักเซมเบิร์ก</displayName>
+				<displayName>ฟรังก์ลักเซมเบิร์ก  [LUL]</displayName>
 			</currency>
 			<currency type="LVL">
 				<displayName>ลัตส์ลัตเวีย</displayName>
@@ -3449,7 +3338,7 @@
 				<displayName>รูฟิยาเกาะมัลดีฟส์</displayName>
 			</currency>
 			<currency type="MWK">
-				<displayName>ควาชามาลาวี</displayName>
+				<displayName>กวาชามาลาวี</displayName>
 			</currency>
 			<currency type="MXN">
 				<displayName>เปโซแม็กซิโก</displayName>
@@ -3496,7 +3385,7 @@
 				<displayName>รูปีเนปาล</displayName>
 			</currency>
 			<currency type="NZD">
-				<displayName>ดอลลาร์นิวซีแลนด์</displayName>
+				<displayName>เหรียญนิวซีแลนด์</displayName>
 				<symbol>$NZ</symbol>
 			</currency>
 			<currency type="OMR">
@@ -3528,13 +3417,13 @@
 				<displayName>ซลอตีโปแลนด์</displayName>
 			</currency>
 			<currency type="PLZ">
-				<displayName>ซวอตีโปแลนด์ (1950-1995)</displayName>
+				<displayName>ซลอตีโปแลนด์ [PLZ]</displayName>
 			</currency>
 			<currency type="PTE">
 				<displayName>เอสคูโดโปรตุเกส</displayName>
 			</currency>
 			<currency type="PYG">
-				<displayName>กวารานีปารากวัย</displayName>
+				<displayName>กัวรานีปารากวัย</displayName>
 			</currency>
 			<currency type="QAR">
 				<displayName>เรียลกาตาร์</displayName>
@@ -3545,15 +3434,8 @@
 			<currency type="ROL">
 				<displayName>ลิวโรมาเนียเก่า</displayName>
 			</currency>
-			<currency type="RON">
-				<displayName>ลิวโรมาเนีย</displayName>
-			</currency>
-			<currency type="RSD">
-				<displayName>ดีนาร์เซอร์เบีย</displayName>
-			</currency>
 			<currency type="RUB">
 				<displayName>รูเบิลรัสเซีย</displayName>
-				<symbol>RUB</symbol>
 			</currency>
 			<currency type="RUR">
 				<displayName>รูเบิลรัสเซีย (1991-1998)</displayName>
@@ -3580,7 +3462,7 @@
 				<displayName>โครนาสวีเดน</displayName>
 			</currency>
 			<currency type="SGD">
-				<displayName>ดอลลาร์สิงคโปร์</displayName>
+				<displayName>เหรียญสิงคโปร์</displayName>
 				<symbol>S$</symbol>
 			</currency>
 			<currency type="SHP">
@@ -3599,7 +3481,7 @@
 				<displayName>ชิลลิงโซมาเลีย</displayName>
 			</currency>
 			<currency type="SRD">
-				<displayName>ดอลลาร์ซูรินาเม</displayName>
+				<displayName>ดอลลาร์สุรินัม</displayName>
 			</currency>
 			<currency type="SRG">
 				<displayName>กิลเดอร์สุรินัม</displayName>
@@ -3669,14 +3551,13 @@
 				<displayName>ชิลลิงยูกันดา</displayName>
 			</currency>
 			<currency type="USD">
-				<displayName>ดอลลาร์สหรัฐ</displayName>
-				<symbol>US$</symbol>
+				<displayName>ดอร์ล่าร์สหรัฐ</displayName>
 			</currency>
 			<currency type="USN">
-				<displayName>ดอลลาร์สหรัฐ (วันถัดไป)</displayName>
+				<displayName>เหรียญสหรัฐ (วันถัดไป)</displayName>
 			</currency>
 			<currency type="USS">
-				<displayName>ดอลลาร์สหรัฐ (วันเดียวกัน)</displayName>
+				<displayName>เหรียญสหรัฐ (วันเดียวกัน)</displayName>
 			</currency>
 			<currency type="UYP">
 				<displayName>เปโซอุรุกวัย (1975-1993)</displayName>
@@ -3690,9 +3571,6 @@
 			<currency type="VEB">
 				<displayName>โบลิวาร์เวเนซุเอลา</displayName>
 			</currency>
-			<currency type="VEF">
-				<displayName>ฟูร์เตโบลีวาร์เวเนซุเอลา</displayName>
-			</currency>
 			<currency type="VND">
 				<displayName>ดองเวียดนาม</displayName>
 			</currency>
@@ -3701,9 +3579,6 @@
 			</currency>
 			<currency type="WST">
 				<displayName>ทาลาซามัวตะวันตก</displayName>
-			</currency>
-			<currency type="XAF">
-				<displayName>ฟรังก์เซฟาธนาคารรัฐแอฟริกากลาง</displayName>
 			</currency>
 			<currency type="XAG">
 				<displayName>เงิน</displayName>
@@ -3727,35 +3602,22 @@
 				<displayName>ดอลลาร์แคริบเบียนตะวันออก</displayName>
 			</currency>
 			<currency type="XEU">
-				<displayName>หน่วยสกุลเงินยุโรป</displayName>
+				<displayName>หน่วยเงินตรายุโรป</displayName>
 			</currency>
 			<currency type="XFO">
 				<displayName>ฟรังก์ทองฝรั่งเศส</displayName>
 			</currency>
-			<currency type="XFU">
-				<displayName>ฟรังก์ยูไอซีฝรั่งเศส</displayName>
-			</currency>
-			<currency type="XOF">
-				<displayName>ฟรังก์เซฟาธนาคารกลางรัฐแอฟริกาตะวันตก</displayName>
-			</currency>
 			<currency type="XPD">
 				<displayName>พัลลาดีม</displayName>
-			</currency>
-			<currency type="XPF">
-				<displayName>ฟรังก์ซีเอฟพี</displayName>
 			</currency>
 			<currency type="XPT">
 				<displayName>แพลตินัม</displayName>
 			</currency>
-			<currency type="XRE">
-				<displayName>กองทุนไรเน็ต</displayName>
-			</currency>
 			<currency type="XTS">
-				<displayName>รหัสทดสอบสกุลเงิน</displayName>
+				<displayName>รหัสทดสอบเงินตรา</displayName>
 			</currency>
 			<currency type="XXX">
 				<displayName>ไม่มีหน่วยเงินตรา</displayName>
-				<symbol>XXX</symbol>
 			</currency>
 			<currency type="YDD">
 				<displayName>ดีนาร์เยเมน</displayName>
@@ -3764,7 +3626,7 @@
 				<displayName>เรียลเยเมน</displayName>
 			</currency>
 			<currency type="YUD">
-				<displayName>ฮาร์ดดีนาร์ยูโกสลาเวีย</displayName>
+				<displayName>ฮารืดดีนาร์ยูโกสลาเวีย</displayName>
 			</currency>
 			<currency type="YUM">
 				<displayName>โนวิย์ดีนาร์ยูโกสลาเวีย</displayName>
@@ -3792,29 +3654,6 @@
 			</currency>
 		</currencies>
 	</numbers>
-	<units>
-		<unit type="day">
-			<unitPattern count="other">{0} วัน</unitPattern>
-		</unit>
-		<unit type="hour">
-			<unitPattern count="other">{0} ชั่วโมง</unitPattern>
-		</unit>
-		<unit type="minute">
-			<unitPattern count="other">{0} นาที</unitPattern>
-		</unit>
-		<unit type="month">
-			<unitPattern count="other">{0} เดือน</unitPattern>
-		</unit>
-		<unit type="second">
-			<unitPattern count="other">{0} วินาที</unitPattern>
-		</unit>
-		<unit type="week">
-			<unitPattern count="other">{0} สัปดาห์</unitPattern>
-		</unit>
-		<unit type="year">
-			<unitPattern count="other">{0} ปี</unitPattern>
-		</unit>
-	</units>
 	<posix>
 		<messages>
 			<yesstr>ใช่</yesstr>
@@ -3822,4 +3661,3 @@
 		</messages>
 	</posix>
 </ldml>
-

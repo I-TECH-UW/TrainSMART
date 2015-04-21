@@ -16,9 +16,9 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Delicious
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Delicious.php 9638 2008-06-08 15:58:11Z ghacek $
+ * @version    $Id: Delicious.php 7197 2007-12-18 22:25:44Z weppos $
  */
 
 
@@ -54,7 +54,7 @@ require_once 'Zend/Service/Delicious/PostList.php';
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Delicious
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Service_Delicious
@@ -441,17 +441,16 @@ class Zend_Service_Delicious
      * @param  string $url URL for which to get details
      * @return array 
      */
-    public function getUrlDetails($url) 
-    {
-        $parms = array('hash' => md5($url));
-        
-        $res = $this->makeRequest(self::JSON_URL, $parms, 'json');
-        
-        if(isset($res[0])) {
-            return $res[0];
-        } else {
-            return null;
-        }
+    public function getUrlDetails($url) {
+	    $parms = array('hash' => md5($url));
+	    
+	    $res = $this->makeRequest(self::JSON_URL, $parms, 'json');
+	    
+	    if(isset($res[0])) {
+		    return $res[0];
+	    } else {
+		    return null;
+    	}
     }
 
     /**

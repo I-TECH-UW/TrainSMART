@@ -14,7 +14,7 @@
  *
  * @category   Zend
  * @package    Zend_Translate
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @version    $Id: Date.php 2498 2006-12-23 22:13:38Z thomas $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
@@ -30,7 +30,7 @@ require_once 'Zend/Translate/Adapter.php';
 /**
  * @category   Zend
  * @package    Zend_Translate
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Translate_Adapter_Csv extends Zend_Translate_Adapter {
@@ -45,9 +45,7 @@ class Zend_Translate_Adapter_Csv extends Zend_Translate_Adapter {
      */
     public function __construct($data, $locale = null, array $options = array())
     {
-        $this->_options['delimiter'] = ";";
-        $this->_options['length']    = 0;
-        $this->_options['enclosure'] = '"';
+        $this->_options['separator'] = ";";
         parent::__construct($data, $locale, $options);
     }
 
@@ -61,7 +59,7 @@ class Zend_Translate_Adapter_Csv extends Zend_Translate_Adapter {
      */
     protected function _loadTranslationData($filename, $locale, array $options = array())
     {
-        $options = $options + $this->_options;
+        $options = array_merge($this->_options, $options);
 
         if ($options['clear']  ||  !isset($this->_translate[$locale])) {
             $this->_translate[$locale] = array();
@@ -73,16 +71,48 @@ class Zend_Translate_Adapter_Csv extends Zend_Translate_Adapter {
             throw new Zend_Translate_Exception('Error opening translation file \'' . $filename . '\'.');
         }
 
-        while(($data = fgetcsv($this->_file, $options['length'], $options['delimiter'], $options['enclosure'])) !== false) {
-            if (substr($data[0], 0, 1) === '#') {
-                continue;
+        while(!feof($this->_file)) {
+            $content = fgets($this->_file);
+            $content = explode($options['separator'], $content);
+
+            while ((count($content) > 1) and ($content[1] == "")) {
+                $value = array_shift($content);
+                array_shift($content);
+                $value2 = array_shift($content);
+                array_unshift($content, $value . $options['separator'] . $value2);
             }
 
-            if (isset($data[1]) !== true) {
+            $origin = array_shift($content);
+            while (count($content) > 1) {
+                $value2 = array_pop($content);
+                $value  = array_pop($content);
+
+                if ($value == "") {
+                    $value = $options['separator'];
+                }
+                if ($value2 == "") {
+                    $value2 = $options['separator'];
+                }
+                array_push($content, $value . $value2);
+            }
+            array_unshift($content, $origin);
+
+            // # marks a comment in the translation source
+            if ((!is_array($content) and (substr(trim($content), 0, 1) == "#")) or
+                 (is_array($content) and (substr(trim($content[0]), 0, 1) == "#"))) {
                 continue;
             }
-
-            $this->_translate[$locale][$data[0]] = $data[1];
+            if (!empty($content[1])) {
+                if (feof($this->_file)) {
+                    $this->_translate[$locale][$content[0]] = $content[1];
+                } else {
+                    if (substr($content[1], -2, 2) == "\r\n") {
+                        $this->_translate[$locale][$content[0]] = substr($content[1], 0, -2);
+                    } else {
+                        $this->_translate[$locale][$content[0]] = substr($content[1], 0, -1);
+                    }
+                }
+            }
         }
     }
 

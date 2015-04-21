@@ -16,9 +16,9 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Simpy
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Simpy.php 10478 2008-07-26 17:29:07Z elazar $
+ * @version    $Id: Simpy.php 5393 2007-06-20 21:16:06Z darby $
  */
 
 
@@ -26,9 +26,8 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Simpy
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @link       http://www.simpy.com/doc/api/rest/
  */
 class Zend_Service_Simpy
 {
@@ -116,7 +115,7 @@ class Zend_Service_Simpy
      * decreasing order
      *
      * @param  int $limit Limits the number of tags returned (optional)
-     * @link   http://www.simpy.com/doc/api/rest/GetTags
+     * @see    http://www.simpy.com/doc/api/rest/GetTags
      * @throws Zend_Service_Exception
      * @return Zend_Service_Simpy_TagSet
      */
@@ -139,7 +138,7 @@ class Zend_Service_Simpy
      * Removes a tag.
      *
      * @param  string $tag Tag to be removed
-     * @link   http://www.simpy.com/doc/api/rest/RemoveTag
+     * @see    http://www.simpy.com/doc/api/rest/RemoveTag
      * @return Zend_Service_Simpy Provides a fluent interface
      */
     public function removeTag($tag)
@@ -158,7 +157,7 @@ class Zend_Service_Simpy
      *
      * @param  string $fromTag Tag to be renamed
      * @param  string $toTag   New tag name
-     * @link   http://www.simpy.com/doc/api/rest/RenameTag
+     * @see    http://www.simpy.com/doc/api/rest/RenameTag
      * @return Zend_Service_Simpy Provides a fluent interface
      */
     public function renameTag($fromTag, $toTag)
@@ -179,7 +178,7 @@ class Zend_Service_Simpy
      * @param  string $fromTag1 First tag to merge.
      * @param  string $fromTag2 Second tag to merge.
      * @param  string $toTag    Tag to merge the two tags into.
-     * @link   http://www.simpy.com/doc/api/rest/MergeTags
+     * @see    http://www.simpy.com/doc/api/rest/MergeTags
      * @return Zend_Service_Simpy Provides a fluent interface
      */
     public function mergeTags($fromTag1, $fromTag2, $toTag)
@@ -201,7 +200,7 @@ class Zend_Service_Simpy
      * @param  string $tag    Tag to split
      * @param  string $toTag1 First tag to split into
      * @param  string $toTag2 Second tag to split into
-     * @link   http://www.simpy.com/doc/api/rest/SplitTag
+     * @see    http://www.simpy.com/doc/api/rest/SplitTag
      * @return Zend_Service_Simpy Provides a fluent interface
      */
     public function splitTag($tag, $toTag1, $toTag2)
@@ -261,7 +260,7 @@ class Zend_Service_Simpy
      * @param  string $note        Free text note (optional)
      * @link   Zend_Service_Simpy::ACCESSTYPE_PUBLIC
      * @link   Zend_Service_Simpy::ACCESSTYPE_PRIVATE
-     * @link   http://www.simpy.com/doc/api/rest/SaveLink
+     * @see    http://www.simpy.com/doc/api/rest/SaveLink
      * @return Zend_Service_Simpy Provides a fluent interface
      */
     public function saveLink($title, $href, $accessType, $tags = null, $urlNickname = null, $note = null)
@@ -288,7 +287,7 @@ class Zend_Service_Simpy
      * Deletes a given link.
      *
      * @param  string $href URL of the bookmark to delete
-     * @link   http://www.simpy.com/doc/api/rest/DeleteLink
+     * @see    http://www.simpy.com/doc/api/rest/DeleteLink
      * @return Zend_Service_Simpy Provides a fluent interface
      */
     public function deleteLink($href)
@@ -306,7 +305,7 @@ class Zend_Service_Simpy
      * Return a list of watchlists and their meta-data, including the number
      * of new links added to each watchlist since last login.
      *
-     * @link   http://www.simpy.com/doc/api/rest/GetWatchlists
+     * @see    http://www.simpy.com/doc/api/rest/GetWatchlists
      * @return Zend_Service_Simpy_WatchlistSet
      */
     public function getWatchlists()
@@ -324,7 +323,7 @@ class Zend_Service_Simpy
      * Returns the meta-data for a given watchlist.
      *
      * @param  int $watchlistId ID of the watchlist to retrieve
-     * @link   http://www.simpy.com/doc/api/rest/GetWatchlist
+     * @see    http://www.simpy.com/doc/api/rest/GetWatchlist
      * @return Zend_Service_Simpy_Watchlist
      */
     public function getWatchlist($watchlistId)
@@ -349,9 +348,9 @@ class Zend_Service_Simpy
      * @param  string $q     Query string formatted using Simpy search syntax
      *                       and search fields (optional)
      * @param  int    $limit Limits the number notes returned (optional)
-     * @link   http://www.simpy.com/doc/api/rest/GetNotes
-     * @link   http://www.simpy.com/simpy/FAQ.do#searchSyntax
-     * @link   http://www.simpy.com/simpy/FAQ.do#searchFieldsLinks
+     * @see    http://www.simpy.com/doc/api/rest/GetNotes
+     * @see    http://www.simpy.com/simpy/FAQ.do#searchSyntax
+     * @see    http://www.simpy.com/simpy/FAQ.do#searchFieldsLinks
      * @return Zend_Service_Simpy_NoteSet
      */
     public function getNotes($q = null, $limit = null)
@@ -380,7 +379,7 @@ class Zend_Service_Simpy
      * @param  string $description Free-text note (optional)
      * @param  int    $noteId      Unique identifier for an existing note to
      *                             update (optional)
-     * @link   http://www.simpy.com/doc/api/rest/SaveNote
+     * @see    http://www.simpy.com/doc/api/rest/SaveNote
      * @return Zend_Service_Simpy Provides a fluent interface
      */
     public function saveNote($title, $tags = null, $description = null, $noteId = null)
@@ -405,7 +404,7 @@ class Zend_Service_Simpy
      * Deletes a given note.
      *
      * @param  int $noteId ID of the note to delete
-     * @link   http://www.simpy.com/doc/api/rest/DeleteNote
+     * @see    http://www.simpy.com/doc/api/rest/DeleteNote
      * @return Zend_Service_Simpy Provides a fluent interface
      */
     public function deleteNote($noteId)

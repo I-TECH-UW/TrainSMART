@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -32,7 +32,7 @@ require_once 'Zend/View/Helper/FormElement.php';
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_View_Helper_HtmlList extends Zend_View_Helper_FormElement
@@ -57,16 +57,13 @@ class Zend_View_Helper_HtmlList extends Zend_View_Helper_FormElement
 
         foreach ($items as $item) {
             if (!is_array($item)) {
-                if ($escape) {
-                    $item = $this->view->escape($item);
-                }
-                $list .= '<li>' . $item . '</li>' . self::EOL;
+                if ($escape) $item = $this->view->escape($item); 
+                $list .= '<li>' . $item . '</li>';
             } else {
                 if (5 < strlen($list)) {
-                    $list = substr($list, 0, strlen($list) - 5)
-                     . $this->htmlList($item, $ordered, $attribs, $escape) . '</li>' . self::EOL;
+                    $list = substr($list, 0, strlen($list) - 5) . $this->htmlList($item, $ordered) . '</li>';
                 } else {
-                    $list .= '<li>' . $this->htmlList($item, $ordered, $attribs, $escape) . '</li>' . self::EOL;
+                    $list .= '<li>' . $this->htmlList($item, $ordered) . '</li>';
                 }
             }
         }
@@ -82,6 +79,6 @@ class Zend_View_Helper_HtmlList extends Zend_View_Helper_FormElement
             $tag = 'ol';
         }
 
-        return '<' . $tag . $attribs . '>' . self::EOL . $list . '</' . $tag . '>' . self::EOL;
+        return '<' . $tag . $attribs . '>' . $list . '</' . $tag . '>';
     }
 }

@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Document
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -31,7 +31,7 @@
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Document
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Search_Lucene_Field
@@ -43,50 +43,18 @@ class Zend_Search_Lucene_Field
      */
     public $name;
 
-    /**
-     * Field value
-     * 
-     * @var boolean
-     */
-    public $value;
-    
-    /**
-     * Field is to be stored in the index for return with search hits.
-     * 
-     * @var boolean
-     */
-    public $isStored    = false;
-    
-    /**
-     * Field is to be indexed, so that it may be searched on.
-     * 
-     * @var boolean
-     */
-    public $isIndexed   = true;
 
-    /**
-     * Field should be tokenized as text prior to indexing.
-     * 
-     * @var boolean
-     */
+    public $value;
+    public $isStored    = false;
+    public $isIndexed   = true;
     public $isTokenized = true;
-    /**
-     * Field is stored as binary.
-     * 
-     * @var boolean
-     */
     public $isBinary    = false;
 
-    /**
-     * Field are stored as a term vector
-     * 
-     * @var boolean
-     */
     public $storeTermVector = false;
 
     /**
-     * Field boost factor
-     * It's not stored directly in the index, but affects on normalization factor
+     * Field boos factor
+     * It's not stored directly in the index, but affects on normalizetion factor
      *
      * @var float
      */
@@ -141,7 +109,7 @@ class Zend_Search_Lucene_Field
      * @param string $encoding
      * @return Zend_Search_Lucene_Field
      */
-    public static function keyword($name, $value, $encoding = '')
+    public static function Keyword($name, $value, $encoding = '')
     {
         return new self($name, $value, $encoding, true, true, false);
     }
@@ -156,7 +124,7 @@ class Zend_Search_Lucene_Field
      * @param string $encoding
      * @return Zend_Search_Lucene_Field
      */
-    public static function unIndexed($name, $value, $encoding = '')
+    public static function UnIndexed($name, $value, $encoding = '')
     {
         return new self($name, $value, $encoding, true, false, false);
     }
@@ -171,7 +139,7 @@ class Zend_Search_Lucene_Field
      * @param string $encoding
      * @return Zend_Search_Lucene_Field
      */
-    public static function binary($name, $value)
+    public static function Binary($name, $value)
     {
         return new self($name, $value, '', true, false, false, true);
     }
@@ -186,7 +154,7 @@ class Zend_Search_Lucene_Field
      * @param string $encoding
      * @return Zend_Search_Lucene_Field
      */
-    public static function text($name, $value, $encoding = '')
+    public static function Text($name, $value, $encoding = '')
     {
         return new self($name, $value, $encoding, true, true, true);
     }
@@ -201,7 +169,7 @@ class Zend_Search_Lucene_Field
      * @param string $encoding
      * @return Zend_Search_Lucene_Field
      */
-    public static function unStored($name, $value, $encoding = '')
+    public static function UnStored($name, $value, $encoding = '')
     {
         return new self($name, $value, $encoding, false, true, true);
     }
@@ -217,8 +185,7 @@ class Zend_Search_Lucene_Field
             strcasecmp($this->encoding, 'utf-8') == 0 ) {
                 return $this->value;
         } else {
-            
-            return (PHP_OS != 'AIX') ? iconv($this->encoding, 'UTF-8', $this->value) : iconv('ISO8859-1', 'UTF-8', $this->value);
+            return iconv($this->encoding, 'UTF-8', $this->value);
         }
     }
 }

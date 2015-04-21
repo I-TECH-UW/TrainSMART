@@ -14,7 +14,7 @@
  *
  * @package    Zend_Pdf
  * @subpackage Fonts
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -31,7 +31,7 @@ require_once 'Zend/Pdf/Cmap.php';
  *
  * @package    Zend_Pdf
  * @subpackage Fonts
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Pdf_Cmap_SegmentToDelta extends Zend_Pdf_Cmap
@@ -276,24 +276,24 @@ class Zend_Pdf_Cmap_SegmentToDelta extends Zend_Pdf_Cmap
         $glyphNumbers = array();
         
         for ($segmentNum = 1; $segmentNum <= $this->_segmentCount; $segmentNum++) {
-            if ($this->_segmentTableIdRangeOffsets[$segmentNum] == 0) {
-                $delta = $this->_segmentTableIdDeltas[$segmentNum];
+        	if ($this->_segmentTableIdRangeOffsets[$segmentNum] == 0) {
+        		$delta = $this->_segmentTableIdDeltas[$segmentNum];
 
                 for ($code =  $this->_segmentTableStartCodes[$segmentNum];
                      $code <= $this->_segmentTableEndCodes[$segmentNum];
                      $code++) {
                     $glyphNumbers[$code] = ($code + $delta) % 65536;
                 }
-            } else {
-                $code       = $this->_segmentTableStartCodes[$segmentNum];
-                $glyphIndex = $this->_segmentTableIdRangeOffsets[$segmentNum] - ($this->_segmentCount - $segmentNum) - 1;
+        	} else {
+        		$code       = $this->_segmentTableStartCodes[$segmentNum];
+        		$glyphIndex = $this->_segmentTableIdRangeOffsets[$segmentNum] - ($this->_segmentCount - $segmentNum) - 1;
 
-                while ($code <= $this->_segmentTableEndCodes[$segmentNum]) {
+        		while ($code <= $this->_segmentTableEndCodes[$segmentNum]) {
                     $glyphNumbers[$code] = $this->_glyphIndexArray[$glyphIndex];
 
                     $code++;
                     $glyphIndex++;
-                }
+        		}
             }
         }
         

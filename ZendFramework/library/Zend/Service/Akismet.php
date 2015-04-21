@@ -15,16 +15,11 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Akismet
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Akismet.php 8502 2008-03-01 19:56:46Z weppos $
+ * @version    $Id: Akismet.php 7197 2007-12-18 22:25:44Z weppos $
  */
 
-
-/**
- * @see Zend_Version
- */
-require_once 'Zend/Version.php';
 
 /**   
  * @see Zend_Service_Abstract
@@ -39,7 +34,7 @@ require_once 'Zend/Service/Abstract.php';
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Akismet
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Service_Akismet extends Zend_Service_Abstract
@@ -72,7 +67,7 @@ class Zend_Service_Akismet extends Zend_Service_Abstract
      * User Agent string to send in requests
      * @var string
      */
-    protected $_userAgent;
+    protected $_userAgent = 'Zend Framework/0.7.0 | Akismet/1.11';
 
     /**
      * Constructor
@@ -84,8 +79,7 @@ class Zend_Service_Akismet extends Zend_Service_Abstract
     public function __construct($apiKey, $blog)
     {
         $this->setBlogUrl($blog)
-             ->setApiKey($apiKey)
-             ->setUserAgent('Zend Framework/' . Zend_Version::VERSION . ' | Akismet/1.11');
+            ->setApiKey($apiKey);
     }
 
     /**

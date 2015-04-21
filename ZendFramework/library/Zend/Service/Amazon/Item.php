@@ -16,9 +16,9 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Amazon
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Item.php 14126 2009-02-20 16:15:52Z sidhighwind $
+ * @version    $Id: Item.php 4357 2007-04-04 22:32:40Z darby $
  */
 
 
@@ -26,85 +26,25 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Amazon
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Service_Amazon_Item
 {
-    /**
-     * @var string
-     */
     public $ASIN;
-
-    /**
-     * @var string
-     */
     public $DetailPageURL;
-
-    /**
-     * @var int
-     */
     public $SalesRank;
-
-    /**
-     * @var int
-     */
-    public $TotalReviews;
-
-    /**
-     * @var int
-     */
-    public $AverageRating;
-
-    /**
-     * @var string
-     */
     public $SmallImage;
-
-    /**
-     * @var string
-     */
     public $MediumImage;
-
-    /**
-     * @var string
-     */
     public $LargeImage;
-
-    /**
-     * @var string
-     */
     public $Subjects;
-
-    /**
-     * @var Zend_Service_Amazon_OfferSet
-     */
     public $Offers;
-
-    /**
-     * @var Zend_Service_Amazon_CustomerReview[]
-     */
-    public $CustomerReviews = array();
-
-    /**
-     * @var Zend_Service_Amazon_SimilarProducts[]
-     */
-    public $SimilarProducts = array();
-
-    /**
-     * @var Zend_Service_Amazon_Accessories[]
-     */
-    public $Accessories = array();
-
-    /**
-     * @var array
-     */
-    public $Tracks = array();
-
-    /**
-     * @var Zend_Service_Amazon_ListmaniaLists[]
-     */
-    public $ListmaniaLists = array();
+    public $CustomerReviews;
+    public $SimilarProducts;
+    public $Accessories;
+    public $Tracks;
+    public $ListmaniaLists;
+    public $PromotionalTag;
 
     protected $_dom;
 
@@ -213,9 +153,7 @@ class Zend_Service_Amazon_Item
         if ($result->length > 1) {
             foreach ($result as $disk) {
                 foreach ($xpath->query('./*/text()', $disk) as $t) {
-                    // TODO: For consistency in a bugfix all tracks are appended to one single array
-                    // Erroreous line: $this->Tracks[$disk->getAttribute('number')] = (string) $t->data;
-                    $this->Tracks[] = (string) $t->data;
+                    $this->Tracks[$disk->getAttribute('number')] = (string) $t->data;
                 }
             }
         } else if ($result->length == 1) {

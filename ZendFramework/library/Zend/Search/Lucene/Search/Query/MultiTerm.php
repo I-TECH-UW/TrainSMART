@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Search
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -31,7 +31,7 @@ require_once 'Zend/Search/Lucene/Search/Weight/MultiTerm.php';
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Search
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Search_Lucene_Search_Query_MultiTerm extends Zend_Search_Lucene_Search_Query
@@ -103,15 +103,10 @@ class Zend_Search_Lucene_Search_Query_MultiTerm extends Zend_Search_Lucene_Searc
      *
      * @param array $terms    Array of Zend_Search_Lucene_Index_Term objects
      * @param array $signs    Array of signs.  Sign is boolean|null.
-     * @throws Zend_Search_Lucene_Exception
      */
     public function __construct($terms = null, $signs = null)
     {
         if (is_array($terms)) {
-            if (count($terms) > Zend_search_lucene::getTermsPerQueryLimit()) {
-                throw new Zend_Search_Lucene_Exception('Terms per query limit is reached.');
-            }
-
             $this->_terms = $terms;
 
             $this->_signs = null;
@@ -321,31 +316,47 @@ class Zend_Search_Lucene_Search_Query_MultiTerm extends Zend_Search_Lucene_Searc
             $this->_resVector = array();
         }
 
-        // Order terms by selectivity
-        $docFreqs = array();
-        $ids      = array();
-        foreach ($this->_terms as $id => $term) {
-            $docFreqs[] = $reader->docFreq($term);
-            $ids[]      = $id; // Used to keep original order for terms with the same selectivity and omit terms comparison
-        }
-        array_multisort($docFreqs, SORT_ASC, SORT_NUMERIC,
-                        $ids,      SORT_ASC, SORT_NUMERIC,
-                        $this->_terms);
-
-        $docsFilter = new Zend_Search_Lucene_Index_DocsFilter();
+        $resVectors      = array();
+        $resVectorsSizes = array();
+        $resVectorsIds   = array(); // is used to prevent arrays comparison
         foreach ($this->_terms as $termId => $term) {
-            $termDocs = $reader->termDocs($term, $docsFilter);
-        }
-        // Treat last retrieved docs vector as a result set
-        // (filter collects data for other terms)
-        $this->_resVector = array_flip($termDocs);
+            $resVectors[]      = array_flip($reader->termDocs($term));
+            $resVectorsSizes[] = count(end($resVectors));
+            $resVectorsIds[]   = $termId;
 
-        foreach ($this->_terms as $termId => $term) {
-            $this->_termsFreqs[$termId] = $reader->termFreqs($term, $docsFilter);
+            $this->_termsFreqs[$termId] = $reader->termFreqs($term);
+        }
+        // sort resvectors in order of subquery cardinality increasing
+        array_multisort($resVectorsSizes, SORT_ASC, SORT_NUMERIC,
+                        $resVectorsIds,   SORT_ASC, SORT_NUMERIC,
+                        $resVectors);
+
+        foreach ($resVectors as $nextResVector) {
+            if($this->_resVector === null) {
+                $this->_resVector = $nextResVector;
+            } else {
+                //$this->_resVector = array_intersect_key($this->_resVector, $nextResVector);
+                
+                /**
+                 * This code is used as workaround for array_intersect_key() slowness problem.
+                 */
+                $updatedVector = array();
+                foreach ($this->_resVector as $id => $value) {
+                    if (isset($nextResVector[$id])) {
+                        $updatedVector[$id] = $value;
+                    }
+                }
+                $this->_resVector = $updatedVector;
+            }
+
+            if (count($this->_resVector) == 0) {
+                // Empty result set, we don't need to check other terms
+                break;
+            }
         }
 
         // ksort($this->_resVector, SORT_NUMERIC);
-        // Docs are returned ordered. Used algorithms doesn't change elements order.
+        // Docs are returned ordered. Used algorithm doesn't change elements order.
     }
 
 
@@ -360,10 +371,10 @@ class Zend_Search_Lucene_Search_Query_MultiTerm extends Zend_Search_Lucene_Searc
         $requiredVectors      = array();
         $requiredVectorsSizes = array();
         $requiredVectorsIds   = array(); // is used to prevent arrays comparison
-
+        
         $optional   = array();
         $prohibited = array();
-
+        
         foreach ($this->_terms as $termId => $term) {
             $termDocs = array_flip($reader->termDocs($term));
 
@@ -389,14 +400,14 @@ class Zend_Search_Lucene_Search_Query_MultiTerm extends Zend_Search_Lucene_Searc
         array_multisort($requiredVectorsSizes, SORT_ASC, SORT_NUMERIC,
                         $requiredVectorsIds,   SORT_ASC, SORT_NUMERIC,
                         $requiredVectors);
-
+        
         $required = null;
         foreach ($requiredVectors as $nextResVector) {
             if($required === null) {
                 $required = $nextResVector;
             } else {
                 //$required = array_intersect_key($required, $nextResVector);
-
+                
                 /**
                  * This code is used as workaround for array_intersect_key() slowness problem.
                  */
@@ -414,7 +425,7 @@ class Zend_Search_Lucene_Search_Query_MultiTerm extends Zend_Search_Lucene_Searc
                 break;
             }
         }
-
+                
         if ($required !== null) {
             $this->_resVector = $required;
         } else {
@@ -423,7 +434,7 @@ class Zend_Search_Lucene_Search_Query_MultiTerm extends Zend_Search_Lucene_Searc
 
         if (count($prohibited) != 0) {
             // $this->_resVector = array_diff_key($this->_resVector, $prohibited);
-
+            
             /**
              * This code is used as workaround for array_diff_key() slowness problem.
              */
@@ -443,7 +454,7 @@ class Zend_Search_Lucene_Search_Query_MultiTerm extends Zend_Search_Lucene_Searc
                 $this->_resVector = $updatedVector;
             }
         }
-
+        
         ksort($this->_resVector, SORT_NUMERIC);
     }
 
@@ -464,7 +475,7 @@ class Zend_Search_Lucene_Search_Query_MultiTerm extends Zend_Search_Lucene_Searc
 
         $score = 0.0;
 
-        foreach ($this->_terms as $termId => $term) {
+        foreach ($this->_terms as $termId=>$term) {
             /**
              * We don't need to check that term freq is not 0
              * Score calculation is performed only for matched docs
@@ -530,9 +541,8 @@ class Zend_Search_Lucene_Search_Query_MultiTerm extends Zend_Search_Lucene_Searc
      * It also initializes necessary internal structures
      *
      * @param Zend_Search_Lucene_Interface $reader
-     * @param Zend_Search_Lucene_Index_DocsFilter|null $docsFilter
      */
-    public function execute(Zend_Search_Lucene_Interface $reader, $docsFilter = null)
+    public function execute(Zend_Search_Lucene_Interface $reader)
     {
         if ($this->_signs === null) {
             $this->_calculateConjunctionResult($reader);
