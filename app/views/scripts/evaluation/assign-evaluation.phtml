@@ -17,9 +17,9 @@ print ScriptContainer::$instance->renderJSHead();
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
 
-    <h1><?php echo t('Assign Evaluation to').' '.t('Training');?></h1>
+    <h1><?php echo t('Assign Evaluation to Training');?></h1>
 
-    <label><?php echo $this->evaluation->title;?></label><br/><br/>
+    <label><?php echo t($this->evaluation->title);?></label><br/><br/>
 
 	   <form action="" method="post" id="assignForm">
 
