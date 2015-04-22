@@ -331,7 +331,7 @@ var trainingColumnDefs = [
 <?php } ?>
 <?php if (isset($this->results[0]['id'])) { ?>
 <?php if (isset($this->results[0]['cnt'])) echo ',';?>
-{key:"id", label: "ID", sortable:true, resizeable:true, formatter: formatViewUrl},
+{key:"id", label: "<?php tp('ID')?>", sortable:true, resizeable:true, formatter: formatViewUrl},
 {key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true}
 <?php } ?>
 <?php if ( $this->criteria['showEndDate'] ) { ?>

@@ -389,7 +389,7 @@ ob_end_clean();
 ?>
 									<tr class="GradeA" style="cursor : pointer;">
 										<td class=""><?php echo $lookup['label']; ?></td>
-										<td class="" style="text-align : right;"><input style="padding : 6px;" type="button" value="<?php echo t('Edit name')?>" onclick="edititem('<?php echo $lookup['id']; ?>','<?php echo (addslashes($lookup['label'])); ?>');" /> <input style="padding : 6px;" type="button" value="Add/edit questions" onclick="location='/admin/skillsmart-competency/comp/<?php echo($lookup['id']); ?>'" /></td>
+										<td class="" style="text-align : right;"><input style="padding : 6px;" type="button" value="<?php echo t('Edit name')?>" onclick="edititem('<?php echo $lookup['id']; ?>','<?php echo (addslashes($lookup['label'])); ?>');" /> <input style="padding : 6px;" type="button" value="<?php tp('Add/edit questions')?>" onclick="location='/admin/skillsmart-competency/comp/<?php echo($lookup['id']); ?>'" /></td>
 									</tr>
 <?php
 	}

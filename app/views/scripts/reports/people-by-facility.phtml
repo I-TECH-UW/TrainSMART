@@ -217,7 +217,7 @@ function setDistrictStatus(selected="selected"Index)  {
 <?php } ?>
 	<div class="clear"></div>
 	<input type="hidden" name="limit" id="limit" value="1" />
-   	<input type="submit" class="submitNoArrow" name="go" value="Preview" />
+   	<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview')?>" />
    </fieldset>
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
@@ -288,7 +288,7 @@ var trainingColumnDefs = [
 <?php if (isset($this->results[0]['cnt'])) { ?>
 {key:"cnt", label: "<?php tp('Participant Count');?>", sortable:false, resizeable:true}
 <?php } else { ?>
-	{key:"id", label: "ID", sortable:false, resizeable:true, formatter: formatViewUrl},
+	{key:"id", label: "<?php tp('ID')?>", sortable:false, resizeable:true, formatter: formatViewUrl},
 	<?php if ( !$this->criteria['concatNames'] ) { ?>
 		{key:"first_name", label: "<?php echo (@$this->translation['First Name']); ?>", sortable:true, resizeable:true},
    <?php if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) { ?>

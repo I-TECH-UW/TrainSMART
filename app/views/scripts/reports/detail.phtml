@@ -13,7 +13,7 @@
 	var all = false;
 	function allcompetence(){
 		if ($('#complist').is(":disabled")){
-			alert("Please select an occupational category first.");
+			alert("<?php tp('Please select an occupational category first')?>");
 			$("#qualification_id").focus();
 		} else {
 			if (!all){

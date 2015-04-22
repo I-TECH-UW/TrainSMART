@@ -600,7 +600,7 @@ if ( $this->row['has_known_participants']) :
   <div class="hrGrey"></div>
   <div class="clear"></div>
   
-  <div class="fieldIndentNoMargin"><span class="required">*</span><?php echo t('Trainer').' '.t('Information');?> <span class="total"><?php echo t('Total').' '.t('Trainers').':';?> <span id="trainer_total">0</span></span></div>
+  <div class="fieldIndentNoMargin"><span class="required">*</span><?php echo t('Trainer Information');?> <span class="total"><?php echo t('Total Trainers').':';?> <span id="trainer_total">0</span></span></div>
   <div class="fieldIndent2">
 
       <div id="trainerTable"></div>
@@ -742,7 +742,7 @@ if ( $this->row['has_known_participants']) :
     		var oIsTrainer = YAHOO.util.Dom.get('is_trainer');
 
     		if(oTrainerId.value == 0) {
-          alert("<?php echo t('The entered').' '.t('trainer').' '.t('name could not be found.\n\nPlease select one from the list or add a new person.');?>");
+          alert("<?php echo t('The entered trainer name could not be found.') . '\n' . t('Please select one from the list or add a new person.');?>");
           return;
         }
 
@@ -935,7 +935,7 @@ if ( $this->row['has_known_participants']) :
     	      var oPId = YAHOO.util.Dom.get('person_id');
 
     		if(oPId.value == 0) {
-          alert("<?php echo t('The entered person could not be found.\n\nPlease select one from the list or add a new person.'); ?>");
+          alert("<?php echo t('The entered person could not be found.') . '\n'. t('Please select one from the list or add a new person.'); ?>");
           return;
         }
 

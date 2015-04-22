@@ -339,7 +339,7 @@ class UserController extends ReportFilterHelpers {
 				self::fillFromArray ( $userRow, $params );
 
 				if ($userRow->save ()) {
-					$status->setStatusMessage ( 'Your account information was saved.' );
+					$status->setStatusMessage ( t('Your account information was saved.') );
 					if ($this->view->mode == 'edit')
 					$this->saveAclCheckboxes ( $user_id );
 
@@ -368,7 +368,7 @@ class UserController extends ReportFilterHelpers {
 						}
 					}
 				} else {
-					$status->setStatusMessage ( 'Your account information could not be saved.' );
+					$status->setStatusMessage ( t('Your account information could not be saved.') );
 				}
 			}
 

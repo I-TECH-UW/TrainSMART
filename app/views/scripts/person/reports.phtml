@@ -70,7 +70,7 @@ echo '<option value="'.$vals['id'].'" '.((@$this->criteria['qualification_id']) 
     }
    ?>
 	</select></div>
-	<div class="fieldLabel" id="persal_id_lbl"><?php echo t('Persal number'); ?></div>
+	<div class="fieldLabel" id="persal_id_lbl"><?php echo t('Personal number'); ?></div>
 	<div class="fieldInput">
 	<input id="persal" name="persal" type="text" size="20" maxlength="128" value="<?php if(isset($this->criteria ['persal'])){echo $this->criteria ['persal'];}?>" />
 	</div>
@@ -165,7 +165,7 @@ echo '<option value="'.$vals['id'].'" '.((@$this->criteria['qualification_id']) 
 		}
 
 		var peopleColumnDefs = [
-			{key:"id", label: "ID", sortable:false, resizable:false,
+			{key:"id", label: "<?php tp('ID')?>", sortable:false, resizable:false,
 			                formatter: formatViewUrl},
 		    {key:"first_name", label: "<?php echo (@$this->translation['First Name']); ?>", sortable:true, resizeable:true},
    <?php if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) { ?>
@@ -178,7 +178,7 @@ echo '<option value="'.$vals['id'].'" '.((@$this->criteria['qualification_id']) 
 		    {key:"gender", label: "<?php tp('Gender');?>", sortable:true, resizeable:true},
 		    {key:"birthdate", label: "DOB", sortable:true, resizeable:true},
 		    {key:"qualification_phrase", label: "<?php tp('Occupational category');?>", sortable:true, resizeable:true},
-		    {key:"persal", label: "<?php tp('Persal number');?>", sortable:true, resizeable:true},
+		    {key:"persal", label: "<?php tp('Personal number');?>", sortable:true, resizeable:true},
 		    {key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true},
 			{key:"rpt", label: "<?php tp('Report');?>", sortable:false, resizeable:false}
 		];

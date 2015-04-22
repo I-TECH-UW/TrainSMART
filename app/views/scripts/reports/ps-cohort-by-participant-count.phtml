@@ -145,7 +145,8 @@
 	
 							<div class="fieldquestion"><?php echo t('Age'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="showage" id="showage" value="1"<?php echo $_GET['showage'] ? " checked" : "" ?>></div>
-							<div class="fieldselect"><input type="text" name="agemin" id="agemin" value="" style="width : 50px;" placeholder="Min"> <input type="text" name="agemax" id="agemax" value="" style="width : 50px;" placeholder="Max"></div>
+							<div class="fieldselect"><input type="text" name="agemin" id="agemin" value="" style="width : 50px;" placeholder="<?php tp('Min')?>"> 
+							<input type="text" name="agemax" id="agemax" value="" style="width : 50px;" placeholder="<?php tp('Max')?>"></div>
 							<div class="clear pad20">&nbsp;</div>
 	
 							<div class="fieldquestion"><?php echo t('Graduation Date'); ?></div>
@@ -153,7 +154,7 @@
 							<div class="fieldselect"></div>
 							<div class="clear pad20">&nbsp;</div>
 
-							<div class="fieldquestion"><?php echo t('Course Name and Exam Scores to Date'); ?></div>
+							<div class="fieldquestion"><?php echo t('Course Name And Exam Scores To Date'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="showdatesscores" id="showdatesscores" value="1"<?php echo $_GET['showdatesscores'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"></div>
 							<div class="clear pad20">&nbsp;</div>
@@ -185,7 +186,13 @@
 
 							<div class="fieldquestion"><?php echo t('Start date between'); ?></div>
 							<div class="fieldshow">&nbsp;</div>
-							<div class="fieldselect"><input type="text" name="startday" id="startday" value="" placeholder="Day" style="width : 30px; margin-right : 10px; margin-left : 0px;"><input type="text" name="startmonth" id="startmonth" value="" placeholder="Month" style="width : 30px; margin-right : 10px; margin-left : 0px;"> <input type="text" name="startyear" id="startyear" value="" placeholder="Year" style="width : 50px; margin-right : 10px; margin-left : 0px;"><br><br>and<br><br><input type="text" name="endday" id="endday" value="" placeholder="Day" style="width : 30px; margin-right : 10px; margin-left : 0px;"> <input type="text" name="endmonth" id="endmonth" value="" placeholder="Month" style="width : 30px; margin-right : 10px; margin-left : 0px;"> <input type="text" name="endyear" id="endyear" value="" placeholder="Year" style="width : 50px; margin-right : 10px; margin-left : 0px;"></div>
+							<div class="fieldselect"><input type="text" name="startday" id="startday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;">
+							<input type="text" name="startmonth" id="startmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
+							<input type="text" name="startyear" id="startyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;"><br><br>
+							<?php tp('and')?><br><br>
+							<input type="text" name="endday" id="endday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
+							<input type="text" name="endmonth" id="endmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
+							<input type="text" name="endyear" id="endyear" value="" placeholder="<?php tp('Yaer')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;"></div>
 							<div class="clear pad20">&nbsp;</div>
 	
 						</div>
@@ -206,12 +213,12 @@ if (isset($this->output)) {
 		echo "				<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"display tablegrid\" id=\"\" style=\"width:100%\">\n";
 		echo "					<thead>\n";
 		echo "						<tr>\n";
-		echo "							<th>Output</th>\n";
+		echo "							<th>" . t('Output') . "</th>\n";
 		echo "						</tr>\n";
 		echo "					</thead>\n";
 		echo "					<tbody>\n";
 		echo "						<tr>\n";
-		echo "							<td>Your search criteria returned no results</td>\n";
+		echo "							<td>" . t('Your search criteria returned no results') . "</td>\n";
 		echo "						</tr>\n";
 		echo "					</tbody>\n";
 		echo "				</table>\n";
@@ -224,7 +231,7 @@ if (isset($this->output)) {
 						<tr>
 <?php
 		foreach ($this->headers as $key=>$value){
-			echo "							<th>" . $value . "</th>\n";
+			echo "							<th>" . t($value) . "</th>\n";
 		}
 ?>
 						</tr>

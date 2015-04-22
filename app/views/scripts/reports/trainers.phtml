@@ -18,7 +18,7 @@ print ScriptContainer::$instance->renderJSHead();
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
 
-    <h1><?php echo t('Trainer').' '.t('Report');?></h1>
+    <h1><?php echo t('Trainer Report');?></h1>
       <?php require_once('trainerReportsPicker.phtml'); ?>
 	   <form action="" method="get">
    <fieldset><legend><?php tp('Select Criteria');?></legend>
@@ -26,7 +26,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 	<?php region_filters_dropdown($this, $this->locations, $this->criteria, false, false); ?>
 	
-	<div class="fieldLabel" id="trainer_type_id_lbl"><?php echo t('Trainer').' '.t('type');?></div>
+	<div class="fieldLabel" id="trainer_type_id_lbl"><?php echo t('Trainer type');?></div>
 	<div class="fieldInput"><select id="trainer_type_id" name="trainer_type_id">
 		<option value="">--<?php tp('All');?>--</option>
 		<?php
@@ -35,7 +35,7 @@ print ScriptContainer::$instance->renderJSHead();
 		}
 		?>
 	</select></div>
- 	<div class="fieldLabel" id="trainer_skill_id_lbl"><?php echo t('Trainer').' '.t('skill');?></div>
+ 	<div class="fieldLabel" id="trainer_skill_id_lbl"><?php echo t('Trainer skill');?></div>
 	<div class="fieldInput"><select id="trainer_skill_id" name="trainer_skill_id[]" multiple="multiple" size="10">
 		<option value="">--<?php tp('All');?>--</option>
 		<?php
@@ -44,7 +44,7 @@ print ScriptContainer::$instance->renderJSHead();
 		}
 		?>
 	</select></div>
-	<div class="fieldLabel" id="trainer_language_id_lbl"><?php echo t('Trainer').' '.t('language');?></div>
+	<div class="fieldLabel" id="trainer_language_id_lbl"><?php echo t('Trainer language');?></div>
 	<div class="fieldInput"><select id="trainer_language_id" name="trainer_language_id">
 		<option value="">--<?php tp('All');?>--</option>
 		<?php
@@ -64,7 +64,7 @@ print ScriptContainer::$instance->renderJSHead();
   
   <div class="clear"></div>
 	<input type="hidden" name="limit" id="limit" value="1" />
-   	<input type="submit" class="submitNoArrow" name="go" value="Preview" />
+   	<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview')?>" />
    </fieldset>
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
@@ -124,7 +124,7 @@ var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
 }
 
 var trainerColumnDefs = [
-    {key:"id", label: "ID", sortable:false, resizeable:true,
+    {key:"id", label: "<?php tp('ID')?>", sortable:false, resizeable:true,
 	                formatter: formatViewUrl},
 <?php if (!@$this->criteria['concatNames']) { ?>
 		{key:"first_name", label: "<?php echo (@$this->translation['First Name']); ?>", sortable:true, resizeable:true},

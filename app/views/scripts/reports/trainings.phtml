@@ -29,10 +29,10 @@
 			<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
 
 			<div id="content">
-				<h1><?php echo ($this->identity->locale == 'nl_NL.UTF-8' ? t('Training Search') : ($this->mode != 'search'? t('Training Reports Training Search') ));  ?></h1>
+				<h1><?php echo ($this->identity->locale == 'nl_NL.UTF-8' ? t('Training Search') : ($this->mode != 'search'? t('Training Reports Training Search') : ''));  ?></h1>
 
 				<?php if ($this->mode != 'search' ) { ?>
-				<div class="fieldLabel" style="width: auto;"><?php echo t('Select').' '.t('training').' '.t('report');?></div>
+				<div class="fieldLabel" style="width: auto;"><?php echo t('Select training report');?></div>
 				<select id="training" name="training" onchange="gotoPage('training');">
 					<option value="">--<?php tp('choose');?>--</option>
 					<option value="/reports/trainings" <?php if ($this->mode == 'name') echo 'selected="selected"';?>><?php echo t('Trainings by Name');?></option>
@@ -516,7 +516,7 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 																//TA:17: 9/3/2014
 																<?php if (isset($this->results[0]['id'])) { ?> 
 																	<?php  if (isset($this->results[0]['cnt'])) echo ',';?>		
-																	{key:"id", label: "ID", sortable:true, resizeable:true, formatter: formatViewUrl}
+																	{key:"id", label: "<?php tp('ID')?>", sortable:true, resizeable:true, formatter: formatViewUrl}
 																	<?php if($this->setting['display_training_start_date'] == 1){?> //TA:17; 9/3/2014
 																	,{key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true}
 																	<?php }?>
