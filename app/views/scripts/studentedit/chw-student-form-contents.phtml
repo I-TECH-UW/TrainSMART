@@ -47,6 +47,7 @@
     echo labelAndField($this, t('ps spouse name'), 'text', 'spouse_name', $this->personData['spouse_name']);
     echo labelAndField($this, t('Highest Qualification Achieved'), $this->primary_qualification, 'primary_qualification_option_id', $this->personData['primary_qualification_option_id']); // Dropdown
     echo labelAndField($this, t('ps local address'), 'text', 'residential_address', $this->personData['home_address_1']);
+    region_filters_dropdown($this, $this->locations, $this->criteria);
     echo labelAndField($this, t('Province'), 'text', 'province', $this->personData['home_address_2']);
     echo labelAndField($this, t('Phone'), 'text', 'phone_home', $this->personData['phone_home']);
     echo labelAndField($this, t('Email'), 'text', 'email', $this->personData['email']);

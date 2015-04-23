@@ -66,13 +66,23 @@ class PeopleaddController extends ITechController {
 		$this->view->assign('institutions',$helper->getInstitutions(false));
 	}
 
+    /**
+     * this action is only expected to be called for SkillSMART CHW (pre-service)
+     */
     public function skillsmartChwAddAction() {
 
         require_once('views/helpers/DropDown.php');
+        require_once('views/helpers/Location.php');
+        require_once('controllers/ReportFilterHelpers.php');
+
+        $criteria = array('province_id' => '', 'district_id' => '', 'region_c_id' => '');
+
         $this->view->assign('action', '/studentedit/skillsmart-chw-student-edit/');
         $this->view->assign('title', $this->view->translation['Application Name']);
         $this->view->assign('required_fields', array('last_name', 'first_name', 'primary_qualification_option_id'));
 
+        $this->view->assign('locations', Location::getAll());
+        $this->view->assign('criteria', $criteria);
         $this->view->assign('nationality_dropdown',
             DropDown::generateSelectionFromQuery(
                 'select id, nationality as val from lookup_nationalities order by val',
@@ -144,8 +154,6 @@ class PeopleaddController extends ITechController {
                 array('name' => 'studenttype', 'id' => 'studenttype')
             )
         );
-
     }
-    
 }
 ?>
