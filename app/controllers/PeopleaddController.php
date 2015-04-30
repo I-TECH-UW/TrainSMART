@@ -75,14 +75,15 @@ class PeopleaddController extends ITechController {
         require_once('views/helpers/Location.php');
         require_once('controllers/ReportFilterHelpers.php');
 
-        $criteria = array('province_id' => '', 'district_id' => '', 'region_c_id' => '');
-
         $this->view->assign('action', '/studentedit/skillsmart-chw-student-edit/');
         $this->view->assign('title', $this->view->translation['Application Name']);
         $this->view->assign('required_fields', array('last_name', 'first_name', 'primary_qualification_option_id'));
 
+
         $this->view->assign('locations', Location::getAll());
-        $this->view->assign('criteria', $criteria);
+        $this->view->assign('personCriteria', getCriteriaValues(array(), 'person'));
+        $this->view->assign('workplaceCriteria', getCriteriaValues(array(), 'workplace'));
+        $this->view->assign('employerCriteria', getCriteriaValues(array(), 'employer'));
         $this->view->assign('nationality_dropdown',
             DropDown::generateSelectionFromQuery(
                 'select id, nationality as val from lookup_nationalities order by val',
@@ -117,13 +118,8 @@ class PeopleaddController extends ITechController {
         // do we need a prior learning yes/no when we have a way to select it?
         //$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
 
-        $this->view->assign('prior_learning',
-            DropDown::generateSelectionFromQuery(
-                'select id, prior_learning_phrase as val from option_prior_learning order by val',
-                array('name' => 'prior_learning')
-            )
-        );
-
+        $this->view->assign('class_modules', $this->dbfunc()->fetchAll('select id, external_id, title from class_modules order by id'));
+        $this->view->assign('prior_modules', array());
         $this->view->assign('qualification_name',
             DropDown::generateSelectionFromQuery(
                 "select id, reason as val from lookup_reasons where reasontype = 'join' order by val",

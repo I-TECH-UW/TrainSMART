@@ -1020,6 +1020,11 @@ class StudenteditController extends ITechController
 
         $params = $this->getAllParams();
         if ($request->isPost()) {
+            require_once('views/helpers/Location.php');
+
+            $person_location_id = regionFiltersGetLastID('person', $params);
+            $workplace_location_id = regionFiltersGetLastID('workplace', $params);
+            $employer_location_id = regionFiltersGetLastID('employer', $params);
 
             // person
             $personData = array(
@@ -1028,13 +1033,14 @@ class StudenteditController extends ITechController
                 'national_id' => $params['national_id'],
                 'title_option_id' => $params['title_option_id'],
                 // TODO: resolve age
-                'home_postal_code' => $params['age'],
+                'birthdate' => $this->_euro_date_to_sql($params['dob']),
                 'gender' => $params['gender'],
                 'spouse_name' => $params['spouse_name'],
                 'primary_qualification_option_id' => $params['primary_qualification_option_id'],
-                // TODO: resolve address & province
-                'home_address_1' => $params['residential_address'],
-                'home_address_2' => $params['province'],
+
+                'home_address_1' => $params['person_address_1'],
+                'home_address_2' => $params['person_address_2'],
+                'home_location_id' => $person_location_id,
                 'phone_home' => $params['phone_home'],
                 'email' => $params['email'],
                 'marital_status' => $params['marital_status'], // Recognition of Prior Learning - is this field needed?
@@ -1055,15 +1061,17 @@ class StudenteditController extends ITechController
             $workplaceData = array(
                 'name' => $params['workplace_name'],
 
-                // TODO: also resolve address here as above
                 'work_address_1' => $params['work_address_1'],
+                'work_address_2' => $params['work_address_2'],
+                'work_location_id' => $workplace_location_id,
                 'work_phone' => $params['work_phone'],
                 'start_date' => $this->_euro_date_to_sql($params['start_date']),
                 'end_date' => $this->_euro_date_to_sql($params['end_date']),
                 'employer_name' => $params['employer_name'],
 
-                // TODO: also resolve address here as above
                 'employer_address_1' => $params['employer_address_1'],
+                'employer_address_2' => $params['employer_address_2'],
+                'employer_location_id' => $employer_location_id,
                 'contact_phone' => $params['contact_phone'],
                 'contact_person' => $params['contact_person'],
                 'contact_email' => $params['contact_email'],
@@ -1141,14 +1149,17 @@ class StudenteditController extends ITechController
                 */
             }
         }
+        require_once('views/helpers/FormHelper.php');
+        require_once('views/helpers/DropDown.php');
+        require_once('views/helpers/Location.php');
 
         $q = "SELECT * FROM person WHERE id = {$params['id']}";
         $personData = $db->fetchRow($q);
+        $personData['birthdate'] = formhelperdate($personData['birthdate'], "d/m/y");
 
         $q = "SELECT * FROM student WHERE personid = {$params['id']}";
         $studentData = $db->fetchRow($q);
 
-        require_once('views/helpers/FormHelper.php');
         $q = "SELECT * FROM workplace WHERE id = {$personData['workplace_id']}";
         $workplaceData = $db->fetchRow($q);
         $workplaceData['start_date'] = formhelperdate($workplaceData['start_date'], "d/m/y");
@@ -1172,14 +1183,17 @@ class StudenteditController extends ITechController
         $q = "SELECT * FROM link_person_prior_learning where person_id = {$params['id']}";
         $personPriorLearningData = $db->fetchAll($q);
 
-        require_once('views/helpers/DropDown.php');
+
+        $this->view->assign('locations', Location::getAll());
+        $this->view->assign('personCriteria', getCriteriaValues(array(), 'person'));
+        $this->view->assign('workplaceCriteria', getCriteriaValues(array(), 'workplace'));
+        $this->view->assign('employerCriteria', getCriteriaValues(array(), 'employer'));
 
         $this->view->assign('title', $this->view->translation['Application Name']);
         $this->view->assign('required_fields', array('last_name', 'first_name', 'primary_qualification_option_id'));
         $this->view->assign('action', '/studentedit/skillsmart-chw-student-edit/id/' . $params['person_id']);
 
         $this->view->assign('personData', $personData);
-        $personData[''];
         $this->view->assign('studentData', $studentData);
         $this->view->assign('workplaceData', $workplaceData);
 
@@ -1187,6 +1201,10 @@ class StudenteditController extends ITechController
         $this->view->assign('studentClassData', $studentClassData);
         $this->view->assign('priorLearningOptions', $priorLearningOptions);
         $this->view->assign('personPriorLearningData', $personPriorLearningData);
+
+        // TODO: need assigned modules query
+        // $db->fetchAll('select id, external_id, title from class_modules where id in (select class_modules_id from link_student_class_modules where student_id = ' . $studentData['id'] . ')');
+        $this->view->assign('prior_modules', array());
 
         $this->view->assign('nationality_dropdown',
             DropDown::generateSelectionFromQuery(
@@ -1223,15 +1241,7 @@ class StudenteditController extends ITechController
 
         // do we need a prior learning yes/no when we have a way to select it?
         //$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
-
-        $this->view->assign('prior_learning',
-            DropDown::generateSelectionFromQuery(
-                'select id, prior_learning_phrase as val from option_prior_learning order by val',
-                array('name' => 'prior_learning'),
-                "TODO"
-
-            )
-        );
+        $this->view->assign('class_modules', $this->dbfunc()->fetchAll('select id, external_id, title from class_modules order by id'));
 
         $this->view->assign('qualification_name',
             DropDown::generateSelectionFromQuery(

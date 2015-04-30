@@ -27,6 +27,110 @@ function buildId($tier, &$locations, $id) {
 }
 
 /**
+ * Get the location filter values
+ *
+ * @param array $params - the location search user criteria
+ * @param array $settings - a copy of this->_countrySettings used for determining available regions
+ * @param array $criteria - extra criteria to pass through, matching keys are overwritten
+ * @param string $prefix - prefix for region names in $params
+ *
+ * @return array - $criteria(with city, city_parent_id), location tier, location id
+ */
+function getCriteriaValues($params, $settings, $criteria = array(), $prefix = '') {
+    if ( $prefix != '' ) $prefix .= '_';
+
+    $criteria[$prefix.'city'] = $params[$prefix.'city'] ? $params[$prefix.'city'] : ""; // set city
+
+    $rgns = array('province_id', 'district_id','region_c_id','region_d_id','region_e_id','region_f_id','region_g_id','region_h_id','region_i_id');
+    // get value from each region sent by form
+    foreach($rgns as $rgn_name) {
+        $index_name = $prefix.$rgn_name;
+        $tmp = $params[$index_name] ? $params[$index_name] : "";
+        if (is_array ( $tmp ) ) {
+            if ( $tmp [0] === "") { // "All"
+                $criteria [$index_name] = array ();
+            } else {
+                foreach($tmp as $key => $val) {
+                    if (strstr ( $val, '_' ) !== false) {
+                        $parts = explode ( '_', $val );
+                        #$tmp [$key] = $parts [count($parts)-1];
+                        $tmp [$key] = array_pop($parts);
+                    }
+                }
+                $criteria [$index_name] = $tmp;
+            }
+        } else {
+            if (strstr ( $tmp, '_' ) !== false) {
+                $parts = explode ( '_', $tmp );
+                $tmp = array_pop($parts);
+            }
+            $criteria [$index_name] = $tmp;
+        }
+    }
+
+    $city_parent_id = 0; // todo: small bug here, on receiving array input for region_ids, city_parent_id returns an array of ids, possibly even wrong ids -- probably ok - its not used in reports anyway...
+    if ($settings['display_region_i']) {
+        $city_parent_id = $criteria[$prefix.'region_i_id'];
+    } else if ($settings['display_region_h']) {
+        $city_parent_id = $criteria[$prefix.'region_h_id'];
+    } else if ($settings['display_region_g']) {
+        $city_parent_id = $criteria[$prefix.'region_g_id'];
+    } else if ($settings['display_region_f']) {
+        $city_parent_id = $criteria[$prefix.'region_f_id'];
+    } else if ($settings['display_region_e']) {
+        $city_parent_id = $criteria[$prefix.'region_e_id'];
+    } else if ($settings['display_region_d']) {
+        $city_parent_id = $criteria[$prefix.'region_d_id'];
+    } else if ($settings['display_region_c']) {
+        $city_parent_id = $criteria[$prefix.'region_c_id'];
+    } else if ($settings['display_region_b']) {
+        $city_parent_id = $criteria[$prefix.'region_b_id'];
+    } else {
+        $city_parent_id = $criteria['_id'];
+    }
+    $criteria [$prefix.'city_parent_id'] = $city_parent_id;
+
+
+    $location_tier = 1;
+    $location_id = $criteria [$prefix.'province_id'];
+    if ( $criteria [$prefix.'district_id'] ) {
+        $location_id = $criteria [$prefix.'district_id'];
+        $location_tier = 2;
+    }
+    if ( $criteria [$prefix.'region_c_id'] ) {
+        $location_id = $criteria [$prefix.'region_c_id'];
+        $location_tier = 3;
+    }
+    if ( $criteria [$prefix.'region_d_id'] ) {
+        $location_id = $criteria [$prefix.'region_d_id'];
+        $location_tier = 4;
+    }
+    if ( $criteria [$prefix.'region_e_id'] ) {
+        $location_id = $criteria [$prefix.'region_e_id'];
+        $location_tier = 5;
+    }
+    if ( $criteria [$prefix.'region_f_id'] ) {
+        $location_id = $criteria [$prefix.'region_f_id'];
+        $location_tier = 6;
+    }
+    if ( $criteria [$prefix.'region_g_id'] ) {
+        $location_id = $criteria [$prefix.'region_g_id'];
+        $location_tier = 7;
+    }
+    if ( $criteria [$prefix.'region_h_id'] ) {
+        $location_id = $criteria [$prefix.'region_h_id'];
+        $location_tier = 8;
+    }
+    if ( $criteria [$prefix.'region_i_id'] ) {
+        $location_id = $criteria [$prefix.'region_i_id'];
+        $location_tier = 9;
+    }
+
+    return array($criteria, $location_tier, $location_id);
+
+}
+
+/**
  * outputs html and javascript for location <select> options
  *
  * @param array $locations                     - reference to array of location arrays
@@ -229,7 +333,14 @@ function renderFacilityDropDown($facilities, $selected_index, $readonly)
 
 }
 
-// get the last drop down chosen by region filters
+
+/**
+ * get the last drop down chosen by region filters
+ *
+ * @param string $prefix - prefix for html element names
+ * @param $criteria - html form parameters
+ * @return mixed|null
+ */
 function regionFiltersGetLastID($prefix, $criteria)
 {
 	if ($prefix)
