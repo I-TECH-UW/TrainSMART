@@ -511,7 +511,7 @@ class FacilityController extends ReportFilterHelpers {
 		// facilities list
 		$criteria = array ();
 		list ( $criteria, $location_tier, $location_id ) = $this->getLocationCriteriaValues ( $criteria );
-		$criteria ['facility_name'] = $this->getSanParam ( 'facility_name' );
+        $criteria ['facility_name'] = $this->getSanParam ( 'facility_name' );
 		$criteria ['facility_name_text'] = $this->getSanParam ( 'facility_name_text' );
 		$criteria ['type_id'] = $this->getSanParam ( 'type_id' );
 		$criteria ['sponsor_id'] = $this->getSanParam ( 'sponsor_id' );
