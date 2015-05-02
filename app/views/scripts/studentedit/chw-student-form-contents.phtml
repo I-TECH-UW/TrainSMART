@@ -1,12 +1,30 @@
+<script id="class_modules_data" type="application/json">
+    <?php
+      // The javascript code relies on the class_modules array indexes to be the class module id
+        echo json_encode($this->class_modules);
+    ?>
+</script>
+
 <script type="text/javascript">
     $(document).ready(function () {
+        window.ITECH.modulesData = JSON.parse($("#class_modules_data").html());
+        $("#add_modules_ids").data("ids", []);
+        $("#remove_modules_ids").data("ids", []);
+
         $('.datepicker').datepicker({
-            changeMonth:true,
-            changeYear:true,
+            changeMonth: true,
+            changeYear: true,
             dateFormat: "dd/mm/yy",
             yearRange: "-125:+0"
         });
         $('.calendarbtn').click(openNearestDatePicker);
+
+        $('input[type=submit]').click(function () {
+            $("#add_modules_ids").val($("#add_modules_ids").data("ids").join(','));
+            $("#remove_modules_ids").val($("#remove_modules_ids").data("ids").join(','));
+
+            return true;
+        });
 
         if ($('#studenttype').val() === '1') {
             $('#workplace').show();
@@ -14,7 +32,8 @@
         else {
             $('#workplace').hide();
         }
-        $('#studenttype').change(function() {
+
+        $('#studenttype').change(function () {
             var $elt = $(this);
             if ($elt.val() === '1') {
                 $('#workplace').slideDown();
@@ -23,15 +42,14 @@
                 $('#workplace').slideUp();
             }
         });
-        $(".tablegrid tbody").click(function(event) {
-            $(oTable.fnSettings().aoData).each(function (){
+        $(".tablegrid tbody").click(function (event) {
+            $(window.ITECH.oTable.fnSettings().aoData).each(function () {
                 $(this.nTr).removeClass('row_selected');
             });
             $(event.target.parentNode).addClass('row_selected');
         });
 
-        /* Init the table */
-        oTable = $('.tablegrid').dataTable({
+        window.ITECH.oTable = $('.tablegrid').dataTable({
             "bJQueryUI": true,
             "bPaginate": false,
             "bSort": true,
@@ -40,89 +58,108 @@
             "bAutoWidth": false
         });
 
-    });
-
-    $(function() {
-        $( "#dialog-form" ).dialog({
+        $("#dialog-form").dialog({
             autoOpen: false,
             width: 600,
             modal: true,
             buttons: {
-                Delete: function() {
+                Delete: function () {
                     if (confirm('Are you sure you want to delete record id ' + $("#class_modules_id").val() + '?')) {
-                        $("#data_action").val("delete");
+                        $("#remove_modules_id").data().push($("#class_modules_id").val());
                         $(this).dialog("close");
-
-                        $("#remove_modules_id").val($("#class_modules_id").val());
+                        window.ITECH.oTable.fnDeleteRow($("#modulesTable_" + $("#currentid").val()));
                     }
                 },
-                "Save": function() {
+                "Save": function () {
 
-                    if ($("#class_modules_id").val() == 0){
-                        $("#data_action").val("addnew");
-                    } else {
-                        $("#data_action").val("update");
+                    var newid = $("#class_modules_id").val(), currentid = $("#currentid").val();
+
+                    if (currentid === "0") {
+                        // adding a new module id
+                        $("#add_modules_ids").data("ids").push(currentid);
                     }
+                    else if (newid !== currentid) {
+                        // changing a module to a different one
+                        var addData = $("#add_modules_ids").data("ids");
+                        var removeData = $("#remove_modules_ids").data("ids");
 
-                    oTable.fnAddData(["A", "B"]);
-                    $("#add_modules_id").val($("#class_modules_id").val());
-                    $( this ).dialog( "close" );
+                        // remove current id from #add_modules_ids
+                        var i = addData.indexOf(currentid);
+                        if (i > -1) {
+                            addData.splice(i, 1);
+                        }
+                        // remove #class_modules_id from #remove_modules_ids
+                        i = removeData.indexOf(newid);
+                        if (i > -1) {
+                            removeData.splice(i, 1);
+                        }
+
+                        // add current id to #remove_modules_ids
+                        removeData.push(currentid);
+
+                        // add class_modules_id to add_modules_ids
+                        addData.push(newid);
+                    }
+                    else {
+                        $(this).dialog("close");
+                        return;
+                    }
+                    window.ITECH.oTable.fnAddData([window.ITECH.modulesData[newid]['external_id'], window.ITECH.modulesData[newid]['title']]);
+
+                    $(this).dialog("close");
                 },
-                Cancel: function() {
-                    $( this ).dialog( "close" );
+                Cancel: function () {
+                    $(this).dialog("close");
                 }
             }
         });
-
-        $( "#addmodule" )
-            .button()
-            .click(function() {
-                $('#dialog-form').dialog('option', 'title', 'Add Class Module');
-                $("#class_modules_id").val("0");
-
-                $( "#dialog-form" ).dialog( "open" );
-            });
-
     });
 
+    function addClassModules() {
+        $('#dialog-form').dialog('option', 'title', 'Add Class Modules');
+        $("#class_modules_id").val(0);
+        $("#currentid").val(0);
+        $( "#dialog-form" ).dialog( "open" );
+    }
 
-    function edititem(d){
+    function editTableItem(d){
 
         $('#dialog-form').dialog('option', 'title', 'Update Class Module');
 
         $("#class_modules_id").val(d['id']);
+        $("#currentid").val(d['id']);
 
         $( "#dialog-form" ).dialog( "open" );
-    }
+    };
+
 
 </script>
+
+
 <div id="dialog-form" title="Select Class Module">
-    <p class="validateTips">All form fields are required.</p>
+    <fieldset id="dialogform">
 
-        <fieldset id="dialogform">
-
-            <label for="class_modules_id"><?php echo t('Class Module');?></label>
-            <select type="text" name="class_modules_id" id="class_modules_id" class="text ui-widget-content ui-corner-all">
-                <?php
-                foreach ($this->class_modules as $cm){
-                    echo "<option value=\"" . $cm['id'] . "\">" . $cm['external_id'] . " &mdash; " . $cm['title'] . "</option>\n";
-                }
-                ?>
-            </select>
-            <input type="hidden" name="currentid" id="currentid" value="0" class="text ui-widget-content ui-corner-all" />
-            <input type="hidden" name="data_action" id="data_action" value="0" class="text ui-widget-content ui-corner-all" />
-
-        </fieldset>
+        <label for="class_modules_id"><?php echo t('Class Module');?></label>
+        <select type="text" multiple="multiple" name="class_modules_id" id="class_modules_id" class="text ui-widget-content ui-corner-all">
+            <?php
+            foreach ($this->class_modules as $cm){
+                echo "<option value=\"" . $cm['id'] . "\">" . $cm['external_id'] . " &mdash; " . $cm['title'] . "</option>\n";
+            }
+            ?>
+        </select>
+        <input type="hidden" name="currentid" id="currentid" value="0" class="text ui-widget-content ui-corner-all" />
+        <input type="hidden" name="data_action" id="data_action" value="0" class="text ui-widget-content ui-corner-all" />
+    </fieldset>
 </div>
+
 
 <fieldset class="formSection">
 
     <input type="hidden" name="person_id" value="<?php echo $this->personData['id']?>">
-    <input type="hidden" name="id" value="<?php echo $this->personData['id']?>">
     <input type="hidden" name="student_id" value="<?php echo $this->studentData['id']?>">
     <input type="hidden" name="workplace_id" value="<?php echo $this->workplaceData['id']?>">
-    <input type="hidden" name="add_modules_id" id="add_modules_id" value="">
-    <input type="hidden" name="remove_modules_id" id="remove_modules_id" value="">
+    <input type="hidden" name="add_modules_ids" id="add_modules_ids" value="">
+    <input type="hidden" name="remove_modules_ids" id="remove_modules_ids" value="">
 
     <?php
     require_once('views/helpers/FormHelper.php');
@@ -170,9 +207,9 @@
         </tbody>
     </table>
     <div style="text-align : right;">
-        <br>
-        <input type="button" name="addmodule" id="addmodule" value="Add Class Module" class="tsbutton green large">
+        <input type="button" name="addmodule" id="addmodule" value="Add Class Modules" onclick="addClassModules();" class="tsbutton green large">
     </div>
+
 
     <?php
     echo labelAndField($this, t('ps religious denomination'), $this->student_employed); // Dropdown

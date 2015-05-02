@@ -1026,8 +1026,21 @@ class StudenteditController extends ITechController
             $workplace_location_id = regionFiltersGetLastID('workplace', $params);
             $employer_location_id = regionFiltersGetLastID('employer', $params);
 
+            $studentData = array();
+            $personData = array();
+            $workplaceData = array();
+            $cohortData = array();
+            $classData = array();
+            if (isset($params['update'])) {
+                $studentData = $db->fetchRow("SELECT * from student where personid = ?", $params['id']);
+                $personData = $db->fetchRow("SELECT * FROM person WHERE id = ?", $params['id']);
+                $workplaceData = $db->fetchRow("SELECT * FROM workplace where id = ?", $personData['workplace_id']);
+                $cohortData = $db->fetchRow("SELECT * from link_student_cohort where id_student = ?", $studentData['id']);
+                $classData = $db->fetchRow("SELECT * FROM link_student_classes WHERE studentid = ?", $studentData['id']);
+            }
+
             // person
-            $personData = array(
+            $personData = array_merge($personData, array(
                 'last_name' => $params['last_name'],
                 'first_name' => $params['first_name'],
                 'national_id' => $params['national_id'],
@@ -1046,19 +1059,19 @@ class StudenteditController extends ITechController
                 'marital_status' => $params['marital_status'], // Recognition of Prior Learning - is this field needed?
                 'custom_field2' => $params['custom_field2'], // List of Modules for Prior Learning
                 'custom_field3' => $params['custom_field3'], // is student employed
-            );
+            ));
 
             // student
-            $studentData = array(
+            $studentData = array_merge($studentData, array(
                 'nationalityid' => $params['nationalityid'],
                 'cadre' => $params['cadre'],
                 'lastunivatt' => $params['lastunivatt'],
                 'emergcontact' => $params['emergcontact'],
                 'studenttype' => $params['studenttype'],
-            );
+            ));
 
             // workplace
-            $workplaceData = array(
+            $workplaceData = array_merge($workplaceData, array(
                 'name' => $params['workplace_name'],
 
                 'work_address_1' => $params['work_address_1'],
@@ -1075,12 +1088,13 @@ class StudenteditController extends ITechController
                 'contact_phone' => $params['contact_phone'],
                 'contact_person' => $params['contact_person'],
                 'contact_email' => $params['contact_email'],
-            );
+            ));
 
             if (isset($params['addpeople'])) {
-                # need IDs for link tables
+                // need IDs for data relationships
                 $db->insert('workplace', $workplaceData);
                 $params['workplace_id'] = $db->lastInsertId('workplace');
+                $workplaceData['id'] = $params['workplace_id'];
 
                 $personData['workplace_id'] = $params['workplace_id'];
                 $db->insert('person', $personData);
@@ -1094,43 +1108,35 @@ class StudenteditController extends ITechController
             }
 
             // link_student_cohort
-            $cohortData = array(
+            $cohortData = array_merge($cohortData, array(
                 'id_student' => $params['student_id'],
                 'joinreason' => $params['joinreason'],
                 'dropreason' => $params['dropreason'],
                 'joindate' => $this->_euro_date_to_sql($params['joindate']),
                 'dropdate' => $this->_euro_date_to_sql($params['dropdate']),
-            );
+            ));
 
             // link_student_classes
-            $classData = array(
+            $classData = array_merge($classData, array(
                 'studentid' => $params['student_id'],
                 'examdate' => $this->_euro_date_to_sql($params['examdate']),
                 'certificate_issue_date' => $this->_euro_date_to_sql($params['certificate_issue_date']),
                 'certificate_number' => $params['certificate_number'],
                 'certificate_received_date' => $this->_euro_date_to_sql($params['certificate_received_date']),
-            );
-
-            // link_person_prior_learning
-            if ($params['prior_learning']) {
-                $priorData = array(
-                    'person_id' => $params['person_id'],
-                    'option_prior_learning_id' => $params['prior_learning'],
-                );
-            }
+            ));
 
             if (isset($params['addpeople'])) {
                 $db->insert('link_student_cohort', $cohortData);
-                $db->insert('link_student_classes', $classData);
+                $cohortData['id'] = $db->lastInsertId('link_student_cohort');
 
-                if ($params['prior_learning']) {
-                    $db->insert('link_person_prior_learning', $priorData);
-                }
+                $db->insert('link_student_classes', $classData);
+                $classData['id'] = $db->lastInsertId('link_student_classes');
+
+                // TODO: use link_student_class_modules
+
             } elseif (isset($params['update'])) {
-                $q = "select id from student where personid = {$params['id']}";
-                $studentID = $db->fetchOne($q);
-                $db->update('person', $personData, "id = {$params['id']}");
-                $db->update('student', $studentData, "personid = {$params['id']}");
+                $db->update('person', $personData, "id = {$params['person_id']}");
+                $db->update('student', $studentData, "personid = {$params['person_id']}");
 
                 if ($personData['workplace_id'] && $personData['workplace_id'] > 0) {
                     $db->update('workplace', $workplaceData, "id = {$personData['workplace_id']}");
@@ -1138,8 +1144,8 @@ class StudenteditController extends ITechController
                 // this assumes only one class and cohort per chw student, if we need multiple
                 // we'll need to devise a way to distinguish the data (maybe making exam date and
                 // join date fields that we don't allow updating, or capturing the link id in a hidden input
-                $db->update('link_student_cohort', $cohortData, "id_student = $studentID");
-                $db->update('link_student_classes', $classData, "studentid = $studentID");
+                $db->update('link_student_cohort', $cohortData, "id_student = {$studentData['id']}");
+                $db->update('link_student_classes', $classData, "studentid = {$studentData['id']}");
                 /*
                 TODO: does prior learning need to be many to many? just one thing? Can a person have more than one prior learning module?
                 TODO: if more than one, should they be displayed in a table? allow deletion?
@@ -1170,28 +1176,20 @@ class StudenteditController extends ITechController
         $studentCohortData['joindate'] = formhelperdate($studentCohortData['joindate'], "d/m/y");
         $studentCohortData['dropdate'] = formhelperdate($studentCohortData['dropdate'], "d/m/y");
 
-
         $q = "SELECT * FROM link_student_classes WHERE studentid = {$studentData['id']}";
         $studentClassData = $db->fetchRow($q);
         $studentClassData['examdate'] = formhelperdate($studentClassData['examdate'], "d/m/y");
         $studentClassData['certificate_issue_date'] = formhelperdate($studentClassData['certificate_issue_date'], "d/m/y");
         $studentClassData['certificate_received_date'] = formhelperdate($studentClassData['certificate_received_date'], "d/m/y");
 
-        $q = "SELECT * FROM option_prior_learning";
-        $priorLearningOptions = $db->fetchAll($q);
-
-        $q = "SELECT * FROM link_person_prior_learning where person_id = {$params['id']}";
-        $personPriorLearningData = $db->fetchAll($q);
-
-
         $this->view->assign('locations', Location::getAll());
-        $this->view->assign('personCriteria', getCriteriaValues(array(), 'person'));
-        $this->view->assign('workplaceCriteria', getCriteriaValues(array(), 'workplace'));
-        $this->view->assign('employerCriteria', getCriteriaValues(array(), 'employer'));
+        $this->view->assign('personCriteria', locationIDTo3TierCriteriaArray($personData['home_location_id'], 'person'));
+        $this->view->assign('workplaceCriteria', locationIDTo3TierCriteriaArray($workplaceData['work_location_id'], 'workplace'));
+        $this->view->assign('employerCriteria', locationIDTo3TierCriteriaArray($workplaceData['employer_location_id'], 'employer'));
 
         $this->view->assign('title', $this->view->translation['Application Name']);
         $this->view->assign('required_fields', array('last_name', 'first_name', 'primary_qualification_option_id'));
-        $this->view->assign('action', '/studentedit/skillsmart-chw-student-edit/id/' . $params['person_id']);
+        $this->view->assign('action', '/studentedit/skillsmart-chw-student-edit/id/' . $params['id']);
 
         $this->view->assign('personData', $personData);
         $this->view->assign('studentData', $studentData);
@@ -1199,12 +1197,15 @@ class StudenteditController extends ITechController
 
         $this->view->assign('studentCohortData', $studentCohortData);
         $this->view->assign('studentClassData', $studentClassData);
-        $this->view->assign('priorLearningOptions', $priorLearningOptions);
-        $this->view->assign('personPriorLearningData', $personPriorLearningData);
 
-        // TODO: need assigned modules query
-        // $db->fetchAll('select id, external_id, title from class_modules where id in (select class_modules_id from link_student_class_modules where student_id = ' . $studentData['id'] . ')');
-        $this->view->assign('prior_modules', array());
+        $q = 'SELECT class_modules.id, class_modules.external_id, class_modules.title
+              FROM
+              class_modules
+              INNER JOIN link_student_class_modules ON link_student_class_modules.class_modules_id = class_modules.id
+              INNER JOIN student ON student.id = link_student_class_modules.student_id
+              WHERE student.id = ?';
+
+        $this->view->assign('prior_modules', $db->fetchAll($q, $studentData['id']));
 
         $this->view->assign('nationality_dropdown',
             DropDown::generateSelectionFromQuery(
@@ -1241,7 +1242,7 @@ class StudenteditController extends ITechController
 
         // do we need a prior learning yes/no when we have a way to select it?
         //$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
-        $this->view->assign('class_modules', $this->dbfunc()->fetchAll('select id, external_id, title from class_modules order by id'));
+        $this->view->assign('class_modules', $this->dbfunc()->fetchAssoc('select id, external_id, title from class_modules order by id'));
 
         $this->view->assign('qualification_name',
             DropDown::generateSelectionFromQuery(

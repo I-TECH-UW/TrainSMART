@@ -255,6 +255,65 @@ function renderCityAutocomplete($prefix, $container, $data_url, $num_tiers) {
 <?php
 }
 
+/**
+ * retrieves parent region ids for up to 3 tiers and returns them as a criteria array
+ *
+ * TODO: How does city fit into criteria?
+ * TODO: Support maximum number of tiers.
+ *
+ * @param int|string $location_id - id of a location row in database
+ * @param string $prefix = '' - prefix to prepend to resulting criteria keys
+ *
+ * @return array - criteria-style array for region_filters_dropdown()
+ */
+function locationIDTo3TierCriteriaArray($location_id, $prefix='')
+{
+    $prefix = $prefix ? $prefix.'_' : '';
+
+    $sql = "SELECT
+                    location3.tier,
+                    location3.id AS child_id,
+                    location2.id AS parent_id,
+                    location1.id AS grandparent_id
+                FROM
+                    location AS location3
+                LEFT JOIN location AS location2 ON location3.parent_id = location2.id
+                LEFT JOIN location AS location1 ON location2.parent_id = location1.id
+                WHERE location3.id = ?";
+    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+    $locations = $db->fetchRow($sql, $location_id);
+
+    // TODO: How does city fit into criteria array?
+    $criteria = array(
+        $prefix.'province_id' => '',
+        $prefix.'district_id' => '',
+        $prefix.'region_c_id' => '',
+        $prefix.'region_d_id' => '',
+        $prefix.'region_e_id' => '',
+        $prefix.'region_f_id' => '',
+        $prefix.'region_g_id' => '',
+        $prefix.'region_h_id' => '',
+        $prefix.'region_i_id' => '',
+    );
+
+    if ($locations['tier'] == 3) {
+        $criteria[$prefix.'province_id'] = $locations['grandparent_id'];
+        $criteria[$prefix.'district_id'] = $locations['parent_id'];
+        $criteria[$prefix.'region_c_id'] = $locations['child_id'];
+    }
+    elseif ($locations['tier'] == 2) {
+        $criteria[$prefix.'province_id'] = $locations['parent_id'];
+        $criteria[$prefix.'district_id'] = $locations['child_id'];
+    }
+    elseif ($locations['tier'] == 1) {
+        $criteria[$prefix.'province_id'] = $locations['child_id'];
+    }
+
+    return $criteria;
+
+}
+
+
 function renderFacilityDropDown($facilities, $selected_index, $readonly)
 {
   $db = Zend_Db_Table_Abstract::getDefaultAdapter ();
