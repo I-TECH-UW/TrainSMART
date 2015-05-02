@@ -357,7 +357,7 @@ print ScriptContainer::$instance->renderJSHead();
 		    <div class="hrGrey"></div>
     <div class="fieldIndentNoMargin"><?php tp('Results');?>  <?php echo $this->printAndExport();?></div>
 	<table cellpadding="0" cellspacing="0" border="0" style="width:40%;border:solid 1px #AAA">
-	<tr><td><div class="nwtxtbig">ID</div></td><td><div class="nwtxtbig"><?php echo t('First Name'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Surname'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Gender'); ?></div></td></tr>
+	<tr><td><div class="nwtxtbig"><?php echo t('ID'); ?></div></td><td><div class="nwtxtbig"><?php echo t('First Name'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Surname'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Gender'); ?></div></td></tr>
 	<?php
 	foreach ( $this->results as $k => $y ) {
 		echo '<tr><td><div class="nwtxt">'.$y['id'].'</div></td><td><div class="nwtxt">'.$y['first_name'].'</div></td><td><div class="nwtxt">'.$y['last_name'].'</div></td><td><div class="nwtxt">'.$y['gender'].'</div></td></tr>';

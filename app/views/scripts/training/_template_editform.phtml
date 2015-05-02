@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+  <title><?php echo t($this->translation['Application Name']);?> | <?php echo t($this->pageTitle); ?></title>
 <?php
 require_once('views/helpers/ScriptContainer.php');
 print ScriptContainer::$instance->renderCSSHead();
@@ -190,8 +190,8 @@ YAHOO.util.Event.onDOMReady(init);
     <?php if ( @$this->evaluation_id ) : ?><a href="javascript:submitThenRedirect('<?php echo $this->base_url;?>/evaluation/data/id/<?php echo $this->evaluation_to_training_id; ?>');" onclick=""><?php tp('Enter Evaluation Data');?></a>&nbsp;&nbsp;&nbsp;<a href="javascript:submitThenRedirect('<?php echo $this->base_url;?>/reports/evaluations/training_id/<?php echo $this->row['id']; ?>');" onclick=""><?php tp('View Data');?></a>&nbsp;&nbsp;&nbsp;<a href="javascript:submitThenRedirect('<?php echo $this->base_url;?>/reports/evaluations/training_id/<?php echo $this->row['id']; ?>/outputType/csv');" onclick=""><?php tp('Export');?></a><?php else : ?><?php tp('unassigned')?><?php endif;?><br>
     <?php } ?>
     <?php if(!$this->viewonly) : ?>
-      <?php if ($this->hasACL('duplicate_training')) { echo '  <a href="" onclick="duplicateTraining(); return false;">'.t('Duplicate this').' '.t('Training').'</a><br>'; } ?>
-      <a href="#" onclick="deleteTraining(); return false;"><?php echo t('Delete this').' '.t('Training');?></a>
+      <?php if ($this->hasACL('duplicate_training')) { echo '  <a href="" onclick="duplicateTraining(); return false;">'.t('Duplicate this Training').'</a><br>'; } ?>
+      <a href="#" onclick="deleteTraining(); return false;"><?php echo t('Delete this Training');?></a>
     <?php endif; ?>
 
   </div>
@@ -257,7 +257,7 @@ echo "<br clear='top'/><br clear='left'/><br clear='top'/>";
 
 <!-- TA:17: 09/02/2014  -->
 <?php if($this->setting['display_training_start_date']){?>
-  <div class="fieldLabel"><?php echo t('Training').' '.t('start date');?></div>
+  <div class="fieldLabel"><?php echo t('Training start date');?></div>
   <div class="fieldInput" id="startdate">
     <?php tp('Day');?> <input id="start-day" class="dayfield" type="text" name="start-day" maxlength="2" value="<?php echo $this->row['start-day']; ?> " <?php echo $this->viewonly; ?>>
     / <?php tp('Month');?> <input id="start-month" class="monthfield" type="text" name="start-month" maxlength="2" value="<?php echo $this->row['start-month']; ?>"  <?php echo $this->viewonly; ?>>
@@ -274,7 +274,7 @@ echo "<br clear='top'/><br clear='left'/><br clear='top'/>";
    <?php } ?>
    
 <?php if ( $this->setting['display_end_date'] ) { ?>
- <div class="fieldLabel"><?php echo t('Training').' '.t('end date');?></div>
+ <div class="fieldLabel"><?php echo t('Training end date');?></div>
  <div class="fieldInput" id="enddate">
     <?php tp('Day');?> <input id="end-day" class="dayfield" type="text" name="end-day" maxlength="2" value="<?php echo $this->row['end-day']; ?>"  <?php echo $this->viewonly; ?>>
     / <?php tp('Month');?> <input id="end-month" class="monthfield" type="text" name="end-month" maxlength="2" value="<?php echo $this->row['end-month']; ?>"  <?php echo $this->viewonly; ?>>
@@ -292,7 +292,7 @@ echo "<br clear='top'/><br clear='left'/><br clear='top'/>";
 
   <!-- TA:17: 09/03/2014 START-->
 <?php if($this->setting['display_training_length']){?>
-  <div class="fieldLabel" id="training_length_value_lbl"><?php echo t('Training').' '.t('length');?></div>
+  <div class="fieldLabel" id="training_length_value_lbl"><?php echo t('Training length');?></div>
   <div class="fieldInput">
     <input type="text" id="training_length_value" name="training_length_value" size="6" value="<?php echo $this->row['training_length_value']; ?>" <?php echo $this->viewonly; ?>>
     &nbsp;
@@ -600,7 +600,7 @@ if ( $this->row['has_known_participants']) :
   <div class="hrGrey"></div>
   <div class="clear"></div>
   
-  <div class="fieldIndentNoMargin"><span class="required">*</span><?php echo t('Trainer').' '.t('Information');?> <span class="total"><?php echo t('Total').' '.t('Trainers').':';?> <span id="trainer_total">0</span></span></div>
+  <div class="fieldIndentNoMargin"><span class="required">*</span><?php echo t('Trainer Information');?> <span class="total"><?php echo t('Total Trainers').':';?> <span id="trainer_total">0</span></span></div>
   <div class="fieldIndent2">
 
       <div id="trainerTable"></div>
@@ -742,7 +742,7 @@ if ( $this->row['has_known_participants']) :
     		var oIsTrainer = YAHOO.util.Dom.get('is_trainer');
 
     		if(oTrainerId.value == 0) {
-          alert("<?php echo t('The entered').' '.t('trainer').' '.t('name could not be found.\n\nPlease select one from the list or add a new person.');?>");
+          alert("<?php echo t('The entered trainer name could not be found.') . '\n' . t('Please select one from the list or add a new person.');?>");
           return;
         }
 
@@ -935,7 +935,7 @@ if ( $this->row['has_known_participants']) :
     	      var oPId = YAHOO.util.Dom.get('person_id');
 
     		if(oPId.value == 0) {
-          alert("<?php echo t('The entered person could not be found.\n\nPlease select one from the list or add a new person.'); ?>");
+          alert("<?php echo t('The entered person could not be found.') . '\n'. t('Please select one from the list or add a new person.'); ?>");
           return;
         }
 

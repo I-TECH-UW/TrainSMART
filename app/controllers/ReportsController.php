@@ -8656,7 +8656,7 @@ echo $sql . "<br>";
 			//$select[] = "coh.id AS cohort_id";
 			$select[] = "coh.cohortname";
 
-			$headers[] = "Cohort Name";
+			$headers[] = t("Cohort Name");
 
 			$institution_set = false;
 

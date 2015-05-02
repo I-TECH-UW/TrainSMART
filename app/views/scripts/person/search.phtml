@@ -192,7 +192,7 @@
 						}
 
 						var peopleColumnDefs = [
-						{key:"id", label: "ID", sortable:false, resizable:false,
+						{key:"id", label: "<?php tp('ID')?>", sortable:false, resizable:false,
 						formatter: formatViewUrl},
 						{key:"first_name", label: "<?php echo addslashes((@$this->translation['First Name'])); ?>", sortable:true, resizeable:true},
 						<?php if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) { ?>

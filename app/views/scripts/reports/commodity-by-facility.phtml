@@ -46,11 +46,11 @@ if ( $this->mode == 'count' )
 	<div class="fieldInput">
 	<label for="showCreationDate" ></label>
 	<div  class="leftBorder">
-	<input type="number" id="dateMMstart"  name="dateMMstart" min="1" max="12" placeholder="MM" style="width:3em;" value="<?php echo $this->dateMMstart?>"/>/
- 	<input type="number" id="dateYYstart"  name="dateYYstart" min="10" max="99" placeholder="YY" style="width:3em;" value="<?php echo $this->dateYYstart?>"/>
+	<input type="number" id="dateMMstart"  name="dateMMstart" min="1" max="12" placeholder="<?php tp('MM');?>" style="width:3em;" value="<?php echo $this->dateMMstart?>"/>/
+ 	<input type="number" id="dateYYstart"  name="dateYYstart" min="10" max="99" placeholder="<?php tp('YY');?>" style="width:3em;" value="<?php echo $this->dateYYstart?>"/>
  	&nbsp;&nbsp;<label class="label"><?php tp('to'); ?></label>&nbsp;&nbsp;
- 	<input type="number" id="dateMMend"  name="dateMMend" min="1" max="12" placeholder="MM" style="width:3em;" value="<?php echo $this->dateMMend?>"/>/
- <input type="number" id="dateYYend"  name="dateYYend" min="10" max="99" placeholder="YY" style="width:3em;" value="<?php echo $this->dateYYend?>"/>
+ 	<input type="number" id="dateMMend"  name="dateMMend" min="1" max="12" placeholder="<?php tp('MM');?>" style="width:3em;" value="<?php echo $this->dateMMend?>"/>/
+ <input type="number" id="dateYYend"  name="dateYYend" min="10" max="99" placeholder="<?php tp('YY');?>" style="width:3em;" value="<?php echo $this->dateYYend?>"/>
  	</div>
 	
 	</div>
@@ -59,13 +59,13 @@ if ( $this->mode == 'count' )
 
 	<div class="clear"></div>
 	<input type="hidden" name="limit" id="limit" value="1" />
-	<input type="submit" class="submitNoArrow" name="clear" value="Clear" onclick='clearForm();'/>
-   	<input type="submit" class="submitNoArrow" name="go" value="Preview" />
+	<input type="submit" class="submitNoArrow" name="clear" value="<?php tp('Clear');?>" onclick='clearForm();'/>
+   	<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
    </fieldset>
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
 <div class="hrGrey"></div>
-    <div class="fieldIndentNoMargin">Total commodities <span class="total"><?php echo $this->count;?></span><?php echo $this->printAndExport();?></div>
+    <div class="fieldIndentNoMargin"><?php echo t('Total Commodities')?> <span class="total"><?php echo $this->count;?></span><?php echo $this->printAndExport();?></div>
 
     <div id="commodity"  class="itechTable"></div>
   
@@ -124,7 +124,7 @@ var commodityColumnDefs = [
 <?php } ?>
 <?php } ?>
 <!-- TA:17:12: 10/04/2014  -->
-<br><a href='<?php echo Settings::$COUNTRY_BASE_URL?>/facility/edit/id/<?php echo $this->facility_id;?>'>Go back to Facility Edit Page</a>
+<br><a href='<?php echo Settings::$COUNTRY_BASE_URL?>/facility/edit/id/<?php echo $this->facility_id;?>'><?php echo t('Go back to Facility Edit Page')?></a>
   </div>
   
   <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>

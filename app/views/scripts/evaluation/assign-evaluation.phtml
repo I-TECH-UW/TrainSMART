@@ -17,9 +17,9 @@ print ScriptContainer::$instance->renderJSHead();
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
 
-    <h1><?php echo t('Assign Evaluation to').' '.t('Training');?></h1>
+    <h1><?php echo t('Assign Evaluation to Training');?></h1>
 
-    <label><?php echo $this->evaluation->title;?></label><br/><br/>
+    <label><?php echo t($this->evaluation->title);?></label><br/><br/>
 
 	   <form action="" method="post" id="assignForm">
 
@@ -41,7 +41,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 		var trainingColumnDefs = [
       {key:"input_checkbox", label: "<?php tp('Assign'); ?>", sortable:false, resizable:false},
-      {key:"training_id", label: "ID", sortable:true, resizeable:true, formatter: formatTrainingViewUrl},
+      {key:"training_id", label: "<?php tp('ID')?>", sortable:true, resizeable:true, formatter: formatTrainingViewUrl},
 
       //TA:17: 09/02/2014 
       <?php if($this->setting['display_training_category']){

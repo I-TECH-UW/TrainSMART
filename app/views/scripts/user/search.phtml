@@ -30,10 +30,10 @@ print ScriptContainer::$instance->renderJSHead();
     };
 
 var userColumnDefs = [
-    {key:"id", label: "ID", sortable:false, resizeable:true,
+    {key:"id", label: "<?php tp('ID');?>", sortable:false, resizeable:true,
 	                formatter: formatEditUrl},
-    {key:"first_name", label: "<?php tp('First');?>", sortable:true, resizeable:true},
-    {key:"last_name", label: "<?php tp('Last');?>", sortable:true, resizeable:true},
+    {key:"first_name", label: "<?php tp('First Name');?>", sortable:true, resizeable:true},
+    {key:"last_name", label: "<?php tp('Last Name');?>", sortable:true, resizeable:true},
     {key:"email", label: "<?php tp('Email');?>", sortable:true, resizeable:true},
     {key:"username", label: "<?php tp('Username');?>", sortable:true, resizeable:true},
     {key:"is_blocked", label: "<?php tp('Status');?>", sortable:true, resizeable:true,
