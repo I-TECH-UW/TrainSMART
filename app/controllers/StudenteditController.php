@@ -1127,13 +1127,7 @@ class StudenteditController extends ITechController
 
             if (isset($params['addpeople'])) {
                 $db->insert('link_student_cohort', $cohortData);
-                $cohortData['id'] = $db->lastInsertId('link_student_cohort');
-
                 $db->insert('link_student_classes', $classData);
-                $classData['id'] = $db->lastInsertId('link_student_classes');
-
-                // TODO: use link_student_class_modules
-
             } elseif (isset($params['update'])) {
                 $db->update('person', $personData, "id = {$params['person_id']}");
                 $db->update('student', $studentData, "personid = {$params['person_id']}");
@@ -1141,18 +1135,24 @@ class StudenteditController extends ITechController
                 if ($personData['workplace_id'] && $personData['workplace_id'] > 0) {
                     $db->update('workplace', $workplaceData, "id = {$personData['workplace_id']}");
                 }
-                // this assumes only one class and cohort per chw student, if we need multiple
-                // we'll need to devise a way to distinguish the data (maybe making exam date and
-                // join date fields that we don't allow updating, or capturing the link id in a hidden input
+                // TODO: this assumes only one class and cohort per chw student
+                // TODO: need to devise a way to distinguish the data because I'm sure they're going to want more classes
                 $db->update('link_student_cohort', $cohortData, "id_student = {$studentData['id']}");
                 $db->update('link_student_classes', $classData, "studentid = {$studentData['id']}");
-                /*
-                TODO: does prior learning need to be many to many? just one thing? Can a person have more than one prior learning module?
-                TODO: if more than one, should they be displayed in a table? allow deletion?
-                if ($params['prior_learning']) {
-                    $db->update('link_person_prior_learning', $priorData);
+                if ($params['add_modules_ids']) {
+                    $ids = explode(',', $params['add_modules_ids']);
+                    $pairs = array();
+                    foreach ($ids as $id) {
+                        array_push($pairs, "({$studentData['id']}, $id)");
+                    }
+
+                    $q = "insert into link_student_class_modules (student_id, class_modules_id) VALUES " . implode(',', $pairs);
+                    $db->query($q);
                 }
-                */
+                if ($params['remove_modules_ids']) {
+                    $q = "delete from link_student_class_modules where student_id = {$studentData['id']} and class_modules_id in ({$params['remove_modules_ids']})";
+                    $db->query($q);
+                }
             }
         }
         require_once('views/helpers/FormHelper.php');
@@ -1205,7 +1205,7 @@ class StudenteditController extends ITechController
               INNER JOIN student ON student.id = link_student_class_modules.student_id
               WHERE student.id = ?';
 
-        $this->view->assign('prior_modules', $db->fetchAll($q, $studentData['id']));
+        $this->view->assign('prior_modules', $db->fetchAssoc($q, $studentData['id']));
 
         $this->view->assign('nationality_dropdown',
             DropDown::generateSelectionFromQuery(
@@ -1242,7 +1242,7 @@ class StudenteditController extends ITechController
 
         // do we need a prior learning yes/no when we have a way to select it?
         //$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
-        $this->view->assign('class_modules', $this->dbfunc()->fetchAssoc('select id, external_id, title from class_modules order by id'));
+        $this->view->assign('class_modules', $this->dbfunc()->fetchAssoc('select id, external_id, title from class_modules order by title'));
 
         $this->view->assign('qualification_name',
             DropDown::generateSelectionFromQuery(

@@ -1,13 +1,20 @@
 <script id="class_modules_data" type="application/json">
     <?php
-      // The javascript code relies on the class_modules array indexes to be the class module id
+        // The javascript code relies on the class_modules array indexes to be the class module id
         echo json_encode($this->class_modules);
     ?>
+</script>
+<script id="prior_learning_modules" type="application/json">
+<?php
+    // The javascript code relies on the class_modules array indexes to be the class module id
+    echo json_encode($this->prior_learning);
+?>
 </script>
 
 <script type="text/javascript">
     $(document).ready(function () {
         window.ITECH.modulesData = JSON.parse($("#class_modules_data").html());
+        window.ITECH.assignedModules = JSON.parse($("#prior_learning_modules").html());
         $("#add_modules_ids").data("ids", []);
         $("#remove_modules_ids").data("ids", []);
 
@@ -58,53 +65,93 @@
             "bAutoWidth": false
         });
 
+        Array.prototype.removeIds = function(a) {
+            // return array of values in this array which are not in a
+            return this.filter(function(i) {
+                // return true for any i that's not in array a
+                return (a.indexOf(i) < 0);
+            });
+        };
+
+        $("#add-dialog-form").dialog({
+            autoOpen: false,
+            width: 600,
+            modal: true,
+            buttons: {
+                "Save": function () {
+                    var newIds = $("#class_modules_id").val();
+                    var addData = $("#add_modules_ids").data("ids");
+                    var removeData = $("#remove_modules_ids").data("ids");
+
+                    // all newIds need to be taken out of the remove list so they're not submitted to the
+                    // backend as both add and remove
+                    var filtered = removeData.removeIds(newIds);
+                    $("#remove_modules_ids").data("ids", filtered);
+
+                    // do the same on the addData ids to eliminate possible duplicates before adding new ones
+                    // (some of the newly added ids may be in the addData array already)
+                    filtered = addData.removeIds(newIds).concat(newIds);
+
+                    $("#add_modules_ids").data("ids", filtered);
+
+                    $(this).dialog("close");
+                    for (var i = 0, len = newIds.length; i < len; ++i) {
+                        if (!document.getElementById("modulesTable_" + newIds[i])) {
+                            window.ITECH.oTable.fnAddData([window.ITECH.modulesData[newIds[i]]['external_id'], window.ITECH.modulesData[newIds[i]]['title']]);
+                        }
+                    }
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
         $("#dialog-form").dialog({
             autoOpen: false,
             width: 600,
             modal: true,
             buttons: {
                 Delete: function () {
-                    if (confirm('Are you sure you want to delete record id ' + $("#class_modules_id").val() + '?')) {
-                        $("#remove_modules_id").data().push($("#class_modules_id").val());
+                    var classModuleId = $("#single_class_module_id").val();
+                    if (confirm('Are you sure you want to remove ' + window.ITECH.modulesData[classModuleId]['title'] + '?')) {
+                        $("#remove_modules_ids").data("ids").push(classModuleId);
+                        $("#add_modules_ids").data("ids", $("#add_modules_ids").data("ids").removeIds([classModuleId]));
+                        window.ITECH.oTable.fnDeleteRow($("#modulesTable_" + classModuleId)[0]);
                         $(this).dialog("close");
-                        window.ITECH.oTable.fnDeleteRow($("#modulesTable_" + $("#currentid").val()));
                     }
                 },
-                "Save": function () {
+                Save: function () {
 
-                    var newid = $("#class_modules_id").val(), currentid = $("#currentid").val();
+                    var newId = $("#single_class_module_id").val(), currentId = $("#currentid").val();
 
-                    if (currentid === "0") {
-                        // adding a new module id
-                        $("#add_modules_ids").data("ids").push(currentid);
-                    }
-                    else if (newid !== currentid) {
+                    if (newId !== currentId) {
                         // changing a module to a different one
                         var addData = $("#add_modules_ids").data("ids");
                         var removeData = $("#remove_modules_ids").data("ids");
 
-                        // remove current id from #add_modules_ids
-                        var i = addData.indexOf(currentid);
+                        // remove former id from #add_modules_ids
+                        var i = addData.indexOf(currentId);
                         if (i > -1) {
                             addData.splice(i, 1);
                         }
-                        // remove #class_modules_id from #remove_modules_ids
-                        i = removeData.indexOf(newid);
+                        // remove new id from #remove_modules_ids, if it's there
+                        i = removeData.indexOf(newId);
                         if (i > -1) {
                             removeData.splice(i, 1);
                         }
 
                         // add current id to #remove_modules_ids
-                        removeData.push(currentid);
+                        removeData.push(currentId);
 
                         // add class_modules_id to add_modules_ids
-                        addData.push(newid);
+                        addData.push(newId);
+                        window.ITECH.oTable.fnDeleteRow($("#modulesTable_" + currentId)[0]);
+
+                        if (!document.getElementById("modulesTable_" + newId)) {
+                            window.ITECH.oTable.fnAddData([window.ITECH.modulesData[newId]['external_id'], window.ITECH.modulesData[newId]['title']]);
+                        }
                     }
-                    else {
-                        $(this).dialog("close");
-                        return;
-                    }
-                    window.ITECH.oTable.fnAddData([window.ITECH.modulesData[newid]['external_id'], window.ITECH.modulesData[newid]['title']]);
 
                     $(this).dialog("close");
                 },
@@ -116,31 +163,40 @@
     });
 
     function addClassModules() {
-        $('#dialog-form').dialog('option', 'title', 'Add Class Modules');
+        $('#add-dialog-form').dialog('option', 'title', 'Add Class Modules');
         $("#class_modules_id").val(0);
         $("#currentid").val(0);
-        $( "#dialog-form" ).dialog( "open" );
+        $("#add-dialog-form").dialog("open");
     }
 
     function editTableItem(d){
-
-        $('#dialog-form').dialog('option', 'title', 'Update Class Module');
-
-        $("#class_modules_id").val(d['id']);
+        $('#dialog-form').dialog('option', 'title', 'Edit Class Module');
+        $("#single_class_module_id").val(d['id']);
         $("#currentid").val(d['id']);
-
-        $( "#dialog-form" ).dialog( "open" );
+        $("#dialog-form" ).dialog("open");
     };
 
 
 </script>
 
-
-<div id="dialog-form" title="Select Class Module">
+<div id="add-dialog-form" title="Select Class Modules">
     <fieldset id="dialogform">
-
         <label for="class_modules_id"><?php echo t('Class Module');?></label>
-        <select type="text" multiple="multiple" name="class_modules_id" id="class_modules_id" class="text ui-widget-content ui-corner-all">
+        <select type="text" multiple="multiple" size="8" style='width: 80em;' name="class_modules_id" id="class_modules_id" class="text ui-widget-content ui-corner-all">
+            <?php
+            foreach ($this->class_modules as $cm){
+                echo "<option value=\"" . $cm['id'] . "\">" . $cm['external_id'] . " &mdash; " . $cm['title'] . "</option>\n";
+            }
+            ?>
+        </select>
+    </fieldset>
+</div>
+
+
+<div id="dialog-form" title="Change Class Module">
+    <fieldset id="dialogform">
+        <label for="class_modules_id"><?php echo t('Class Module');?></label>
+        <select type="text" name="single_class_module_id" id="single_class_module_id" class="text ui-widget-content ui-corner-all">
             <?php
             foreach ($this->class_modules as $cm){
                 echo "<option value=\"" . $cm['id'] . "\">" . $cm['external_id'] . " &mdash; " . $cm['title'] . "</option>\n";
@@ -148,7 +204,6 @@
             ?>
         </select>
         <input type="hidden" name="currentid" id="currentid" value="0" class="text ui-widget-content ui-corner-all" />
-        <input type="hidden" name="data_action" id="data_action" value="0" class="text ui-widget-content ui-corner-all" />
     </fieldset>
 </div>
 
@@ -185,7 +240,7 @@
     echo label($this, t('ps marital status'), true);
     ?>
 
-    <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+    <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="prior_learning_modules_table" style="width:100%">
         <thead>
         <tr>
             <th><?php echo t('Module Number'); ?></th>
@@ -197,7 +252,7 @@
         <?php
         foreach ($this->prior_modules as $mod){
             ?>
-            <tr class="GradeA" style="cursor : pointer;" id="modulesTable_<?php echo $mod['id'];?>" onclick='edititem(<?php echo json_encode($mod); ?>);'>
+            <tr class="GradeA" style="cursor : pointer;" id="modulesTable_<?php echo $mod['id'];?>" onclick='editTableItem(<?php echo json_encode($mod); ?>);'>
                 <td><?php echo $mod['external_id']; ?></td>
                 <td><?php echo $mod['title']; ?></td>
             </tr>
