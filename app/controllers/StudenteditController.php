@@ -1103,8 +1103,9 @@ class StudenteditController extends ITechController
 
                 $studentData['personid'] = $params['person_id'];
                 $db->insert('student', $studentData);
-                $params['student_id'] = $db->lastInsertId('student');
 
+                $params['student_id'] = $db->lastInsertId('student');
+                $studentData['id'] = $params['student_id'];
             }
 
             // link_student_cohort
@@ -1139,20 +1140,20 @@ class StudenteditController extends ITechController
                 // TODO: need to devise a way to distinguish the data because I'm sure they're going to want more classes
                 $db->update('link_student_cohort', $cohortData, "id_student = {$studentData['id']}");
                 $db->update('link_student_classes', $classData, "studentid = {$studentData['id']}");
-                if ($params['add_modules_ids']) {
-                    $ids = explode(',', $params['add_modules_ids']);
-                    $pairs = array();
-                    foreach ($ids as $id) {
-                        array_push($pairs, "({$studentData['id']}, $id)");
-                    }
+            }
+            if ($params['add_modules_ids']) {
+                $ids = explode(',', $params['add_modules_ids']);
+                $pairs = array();
+                foreach ($ids as $id) {
+                    array_push($pairs, "({$studentData['id']}, $id)");
+                }
 
-                    $q = "insert into link_student_class_modules (student_id, class_modules_id) VALUES " . implode(',', $pairs);
-                    $db->query($q);
-                }
-                if ($params['remove_modules_ids']) {
-                    $q = "delete from link_student_class_modules where student_id = {$studentData['id']} and class_modules_id in ({$params['remove_modules_ids']})";
-                    $db->query($q);
-                }
+                $q = "insert into link_student_class_modules (student_id, class_modules_id) VALUES " . implode(',', $pairs);
+                $db->query($q);
+            }
+            if ($params['remove_modules_ids']) {
+                $q = "delete from link_student_class_modules where student_id = {$studentData['id']} and class_modules_id in ({$params['remove_modules_ids']})";
+                $db->query($q);
             }
         }
         require_once('views/helpers/FormHelper.php');
