@@ -13,4 +13,12 @@ CREATE TABLE `class_modules` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE `link_student_class_modules` (
+  `id` int(11) NOT NULL auto_increment,
+  `student_id` int(11) default NULL,
+  `class_modules_id` int(11) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
 INSERT IGNORE INTO `translation` (key_phrase, phrase) values ('ps class modules custom 1', 'ps class modules custom 1');
+
