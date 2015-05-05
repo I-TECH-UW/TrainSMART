@@ -4123,3 +4123,6 @@ msgstr "Не применимо"
 
 msgid "Likert"
 msgstr "Лайкерт"
+
+msgid "Sign In"
+msgstr "Войти в"
