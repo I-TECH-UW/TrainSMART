@@ -186,7 +186,6 @@ if ( $this->mode == 'count' )
 	</div>
 
 
-
   <?php if ( $this->setting['display_training_topic'] ) { ?>
 	<div class="fieldLabel" id="training_topic_id_lbl"><?php echo (@$this->translation['Training Topic']); ?></div>
 	<div class="fieldInput">
@@ -201,6 +200,24 @@ if ( $this->mode == 'count' )
 		?>
 	</select></div></div>
 	<?php } ?>
+	
+	<!-- TA:22 START -->
+	<?php if ( $this->setting['display_funding_options'] ) { ?>
+	<div class="fieldLabel" id="funding_option_id_lbl"><?php tp('Funding');?></div>
+	<div  class="leftBorderPad"><input type="checkbox" name="showFunding"  <?php  if ($this->criteria['showFunding']) echo 'checked="checked"';?> /></div>
+	<div  class="leftBorder">    
+	<select id="funding_id" name="funding_id">
+	<option value="">--<?php tp('All');?>--</option>
+	<?php
+	foreach ( $this->fundings as $vals ) {
+		echo '<option value="'.$vals['id'].'" '.((@$this->criteria['funding_id']) == $vals['id']? 'SELECTED':'').' >'.($vals['funding_phrase']).'</option>';
+	}
+	?>
+	</select></div>
+	<div class="fieldInput">
+	</div>
+	<?php } ?>
+	<!-- TA:22 END -->
 
 	<div class="fieldLabel" id="training_pepfar_id_lbl"><?php print $this->translation['PEPFAR Category'];?></div>
 	<div class="fieldInput">
