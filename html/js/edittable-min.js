@@ -29,7 +29,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
           deleteOnly: "<div class=\"editTableLinks\"><a href=\"#\" onclick=\"return false;\">" + tr('Delete') + "</a></div>",
           editLinks:  "<div class=\"editTableLinks\"><a href=\"#\" onclick=\"return false;\">" + tr('Edit') + "</a> &nbsp;<a href=\"#\" onclick=\"return false;\">" + tr('Delete') + "</a></div>",
           deletingText: "<div class=\"editTableDelete\">" + tr('Deleting...') + "</div>",
-          deleteConfirm: tr('Are you sure you want to delete') + " \"%s?\"",
+          deleteConfirm: tr('Are you sure you want to delete') + " \"%s?\". " + tr("Please save changes."),
           autoTabOnSubmit: false
         }
         
@@ -109,6 +109,14 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
         this.addDataRow = function(jsonData, row_name) {
           jsonData.edit = (noEdit) ? this.config.deleteOnly : this.config.editLinks;
           jsonData.row_name = row_name; // Name to display when "delete" is clicked
+//TA:17:20
+          for(var i=0; i<this.myDataTable.getRecordSet().getLength(); i++){
+        	  var row = this.myDataTable.getRecord(i);
+        	  if(row.getData("date") == jsonData.date && row.getData("name") == row_name){
+        		 alert("Cannot add record. It exists in the table.");
+        		 return;
+        	  }
+          }
           this.myDataTable.addRow(jsonData);
           $("#" + labelSafe + "_total").text(this.myDataTable.getRecordSet().getLength()); //TA:17: 09/05/2014
           
@@ -122,7 +130,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
           	}
          }
           $('#' + labelSafe + '_new_data').val('{"data":' +  JSON.stringify(arr) + '}');
-          ////
+        
           
         }
         
@@ -316,7 +324,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
             failure: function() {
               // FAILURE
               // display error message
-              elSaving.innerHTML = "Couldn't save, sorry!";
+              elSaving.innerHTML = tr("Couldn't save, sorry!");
               oCellEditor.isSaving = false;
               return false;
 
@@ -337,7 +345,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
             success: function(o) {
                 var status = YAHOO.lang.JSON.parse(o.responseText);
                 if(status.error != null) {
-                  alert("Could not delete, sorry.  The server said:\n\n" + status.error);
+                  alert(tr("Could not delete, sorry.  The server said:") + "\n\n" + status.error);
                 } else {
                   this.deleteRow(oRecord);
                 }
@@ -424,7 +432,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
         elLinkAdd.href = "javascript:void(0)";
         
         if(!noEdit) {
-          elLinkAdd.innerHTML = "Add " + labelAdd;  
+          elLinkAdd.innerHTML = tr("Add") + " '" + labelAdd + "'";  
         }
         
         elLinkAdd.className = "editTableAdd";

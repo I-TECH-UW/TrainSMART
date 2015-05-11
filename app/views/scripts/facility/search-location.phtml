@@ -17,13 +17,13 @@
 	<div id="header"><?php require_once('views/scripts/header.phtml'); ?></div>
 	<div id="content">
 
-		<h1><?php echo t('Search for') . ' ' . t('Training') . ' ' . t('Location'); ?></h1>
+		<h1><?php echo t('Search for Training Location');?></h1>
 
 		<form action="" method="get">
 			<fieldset>
 				<legend><?php tp('Select Criteria'); ?></legend>
 
-				<div class="fieldLabel"><?php echo t('Training') . ' ' . t('Location Name'); ?></div>
+				<div class="fieldLabel"><?php echo t('Training Location Name');?></div>
 				<div class="fieldInput"><select id="training_location_name" name="training_location_name">
 						<option value="">--<?php tp('All'); ?>--</option>
 						<?php
@@ -86,7 +86,7 @@
 				}
 
 				var locationsColumnDefs = [
-					{key: "id", label: "ID", sortable: false, resizable: false, formatter: formatViewUrl},
+					{key:"id", label: "<?php tp('ID')?>", sortable:false, resizable:false, formatter: formatViewUrl},
 					{
 						key: "training_location_name",
 						label: "<?php tp('Location Name'); ?>",

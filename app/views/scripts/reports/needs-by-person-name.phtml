@@ -182,9 +182,9 @@ if ( $this->mode == 'count' )
   	<div  class="leftBorder">
 	<select id="training_gender" name="training_gender" >
 		<option value="">--<?php tp('All');?>--</option>
-		<option value="male" <?php echo (@$this->criteria['training_gender'] == 'male'? 'SELECTED':''); ?> >male</option>
-		<option value="female"  <?php echo (@$this->criteria['training_gender'] == 'female'? 'SELECTED':''); ?> >female</option>
-		<option value="na"  <?php echo (@$this->criteria['training_gender'] == 'na'? 'SELECTED':''); ?> >na</option>
+		<option value="male" <?php echo (@$this->criteria['training_gender'] == 'male'? 'SELECTED':''); ?> ><?php echo t('Male') ?></option>
+		<option value="female"  <?php echo (@$this->criteria['training_gender'] == 'female'? 'SELECTED':''); ?> ><?php echo t('Female') ?></option>
+		<option value="na"  <?php echo (@$this->criteria['training_gender'] == 'na'? 'SELECTED':''); ?> ><?php echo t('N/A') ?></option>
 	</select></div></div>
  <?php if ($this->setting['display_people_active']) { ?>
 	<div class="fieldLabel" id="training_active_lbl"><?php echo (@$this->translation['Is Active']); ?></div>
@@ -221,7 +221,7 @@ if ( $this->mode == 'count' )
 <?php } ?>
 	<div class="clear"></div>
 	<input type="hidden" name="limit" id="limit" value="1" />
-   	<input type="submit" class="submitNoArrow" name="go" value="Preview" />
+   	<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview')?>" />
    </fieldset>
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
@@ -295,7 +295,7 @@ var trainingColumnDefs = [
 <?php if (isset($this->results[0]['cnt'])) { ?>
 {key:"cnt", label: "<?php tp('Person Count');?>", sortable:true, resizeable:true}
 <?php } else { ?>
-	{key:"id", label: "ID", sortable:true, resizeable:true, formatter: formatViewUrl}
+	{key:"id", label: "<?php tp('ID')?>", sortable:true, resizeable:true, formatter: formatViewUrl}
 
 	<?php if ( !$this->criteria['concatNames'] ) { ?>
 		,{key:"first_name", label: "<?php echo (@$this->translation['First Name']); ?>", sortable:true, resizeable:true}

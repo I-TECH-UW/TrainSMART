@@ -20,7 +20,7 @@ ob_end_clean();
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+  <title><?php echo t($this->translation['Application Name']);?> | <?php echo t($this->pageTitle); ?></title>
 <?php
 require_once('views/helpers/ScriptContainer.php');
 print ScriptContainer::$instance->renderCSSHead();
@@ -37,8 +37,8 @@ print ScriptContainer::$instance->renderJSHead();
     <div id="navAdmin"><?php echo $nav;?></div>
 
     <div id="contentAdmin">
-    <h1><?php echo $this->pageTitle; ?></h1>
-    <div style="font-style:italic;">Assign Training Titles to Categories</div>
+    <h1><?php echo t($this->pageTitle); ?></h1>
+    <div style="font-style:italic;"><?php echo t('Assign Training Titles to Categories'); ?></div>
     <br/>
     
     <?php print $this->multiAssign; ?>
@@ -48,8 +48,8 @@ print ScriptContainer::$instance->renderJSHead();
     <br>
 
     <input type="hidden" name="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>">
-    <input type="submit" value="Save & Continue" class="submitArrow">
-    <input type="submit" value="Save" name="saveonly" class="submitNoArrow" onclick="document.adminForm.redirect.value=''" style="margin-right:1em;">
+    <input type="submit" value="<?php echo t('Save & Continue'); ?>" class="submitArrow">
+    <input type="submit" value="<?php echo t('Save'); ?>" name="saveonly" class="submitNoArrow" onclick="document.adminForm.redirect.value=''" style="margin-right:1em;">
     </form>
 
 

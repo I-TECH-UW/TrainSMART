@@ -72,7 +72,7 @@
 
 							<label><?php echo t('Institution'); ?></label>
 							<select name="institution" id="institution">
-								<option value="">Any</option>
+								<option value=""><?php echo t('Any')?></option>
 								<?php
 								foreach ($this->lookup_institutions as $ins){
 									echo "<option value=\"" . $ins['id'] . "\"" . ($_REQUEST['institution'] == $ins['id'] ? " selected" : "") . ">" . $ins['institutionname'] . "</option>\n";
@@ -109,7 +109,7 @@
 										<th><?php echo t('Start Date'); ?></th>
 										<th><?php echo t('Graduation Date'); ?></th>
 										<th><?php echo t('Institution'); ?></th>
-										<th><?php echo t('# of members'); ?></th>
+										<th><?php echo t('Number of members'); ?></th>
 										<th><?php echo t('Cadre'); ?></th>
 									</tr>
 								</thead>
@@ -120,11 +120,11 @@
 										<tr class="GradeA" onclick="location='<?php  echo Settings::$COUNTRY_BASE_URL; ?>/cohort/cohortedit/id/<?php echo $fetchcohort['id']; ?>'">
 											<td><?php echo $fetchcohort['id']; ?></td>
 											<td><?php echo $fetchcohort['cohortname']; ?></td>
-											<td class=""><?php echo trim($fetchcohort['startdate']) != "" ? date("d/m/Y", strtotime($fetchcohort['startdate'])) : "N/A"; ?></td>
-											<td class=""><?php echo trim($fetchcohort['graddate']) != "" ? date("d/m/Y", strtotime($fetchcohort['graddate'])) : "N/A"; ?></td>
-											<td class=""><?php echo trim($fetchcohort['institutionname']) != "" ? $fetchcohort['institutionname'] : "N/A"; ?></td>
+											<td class=""><?php echo trim($fetchcohort['startdate']) != "" ? date("d/m/Y", strtotime($fetchcohort['startdate'])) : t("N/A"); ?></td>
+											<td class=""><?php echo trim($fetchcohort['graddate']) != "" ? date("d/m/Y", strtotime($fetchcohort['graddate'])) : t("N/A"); ?></td>
+											<td class=""><?php echo trim($fetchcohort['institutionname']) != "" ? $fetchcohort['institutionname'] : t("N/A"); ?></td>
 											<td class=""><?php echo($fetchcohort['studentcount']); ?></td>
-											<td class=""><?php echo trim($fetchcohort['cadrename']) != "" ? $fetchcohort['cadrename'] : "N/A"; ?></td>
+											<td class=""><?php echo trim($fetchcohort['cadrename']) != "" ? $fetchcohort['cadrename'] : t("N/A"); ?></td>
 										</tr>
 										<?php
 									}

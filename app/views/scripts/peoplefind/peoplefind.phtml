@@ -126,7 +126,7 @@
                     <p style="padding : 0px; margin : 0px; background-color : #FFFFFF;">&nbsp;</p>
 
 					<div class="rightdiv">
-						<input type="submit" name="search" class="tsbutton green large" value="Search &raquo;">
+						<input type="submit" name="search" class="tsbutton green large" value="<?php echo t('Search')?> &raquo;">
 					</div>
                     </form>
 				</div>
@@ -156,26 +156,26 @@
 							<tr class="GradeA" style="cursor : pointer;" onClick="window.location.href='<?php echo $getpeople['link']; ?>'">
 								<td name="getpeo" style="width : 120px;"><?php echo $getpeople['id']; ?></td>
 								<td class=""><?php echo trim ($getpeople['first_name'] . " " . $getpeople['last_name'] . ($_REQUEST['type'] == "every" ? " (" . $getpeople['type'] . ")" : "")); ?></td>
-								<td class="" style="width : 150px;"><?php echo $getpeople['gender'] ? $getpeople['gender'] : 'N/A'; ?></td>
+								<td class="" style="width : 150px;"><?php echo $getpeople['gender'] ? $getpeople['gender'] : t("N/A"); ?></td>
                 <?php
                 if (array_key_exists('institution',$getpeople)) {
                 ?>
-                <td class="" style="width : 150px;"><?php echo $getpeople['institution']['institutionname'] ? $getpeople['institution']['institutionname'] : 'N/A'; ?></td>
+                <td class="" style="width : 150px;"><?php echo $getpeople['institution']['institutionname'] ? $getpeople['institution']['institutionname'] : t("N/A"); ?></td>
                 <?php
                 } else {
                 ?>
-                 <td class="" style="width : 150px;"><?php echo array_key_exists('institutionname',$getpeople) ? $getpeople['institutionname'] : 'N/A'; ?></td>
+                 <td class="" style="width : 150px;"><?php echo array_key_exists('institutionname',$getpeople) ? $getpeople['institutionname'] : t("N/A"); ?></td>
                 <?php
                 }
                 ?>                
                 <?php
                 if (is_array($getpeople['cohort'])) {
                 ?>
-                <td class="" style="width : 150px;"><?php echo $getpeople['cohort']['cohortname'] ? $getpeople['cohort']['cohortname'] : 'N/A'; ?></td>
+                <td class="" style="width : 150px;"><?php echo $getpeople['cohort']['cohortname'] ? $getpeople['cohort']['cohortname'] : t("N/A"); ?></td>
                 <?php
                 } else {
                 ?>
-                <td class="" style="width : 150px;"><?php echo $getpeople['cohort'] ? $getpeople['cohort'] : 'N/A'; ?></td>
+                <td class="" style="width : 150px;"><?php echo $getpeople['cohort'] ? $getpeople['cohort'] : t("N/A"); ?></td>
                 <?php
                 }
                 ?>

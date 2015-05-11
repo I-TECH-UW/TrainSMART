@@ -707,7 +707,7 @@ function build_funding_dropdown(&$view, &$subPartner, &$partnerFunder, &$mechani
 	$class = $is_multiple ? 'autoHeight' : '';
 	?>
 
-		<div class="fieldLabel" id="partner_lbl"><?php echo 'Subpartner'; ?></div>
+		<div class="fieldLabel" id="partner_lbl"><?php echo t('Subpartner'); ?></div>
 		<div class="fieldInput">
 	
 		<?php renderFunder($subPartner, 'subPartner', $val_partner, 'partnerFunder', $is_multiple); ?></div>
@@ -721,7 +721,7 @@ function build_funding_dropdown(&$view, &$subPartner, &$partnerFunder, &$mechani
 		renderFunder($partnerFunder, 'partnerFunder', $val_partnerFunder, 'mechanism', $is_multiple); ?></div>
 		<?php //echo '</div>'; ?>
 		
-		<div class="fieldLabel" id="mechanism_lbl"><?php echo 'Mechanism'; ?></div>
+		<div class="fieldLabel" id="mechanism_lbl"><?php echo t('Mechanism'); ?></div>
 		<div  class="fieldInput">
 		<?php 
 

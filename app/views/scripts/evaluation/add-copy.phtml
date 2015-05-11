@@ -52,13 +52,18 @@ function add20evaluations() {
 	<tr>
 		<td><label for="" class="label"><?php echo $i+1;?></label></td>
 		<td><input type="text" name="qtext[]" maxlength="255" size="50" value="<?php if ( is_array($this->qtext) ) echo $this->qtext[$i];?>"></input></td>
-		<td><select name="qtype[]"><option value="">&mdash; <?php tp('select');?> &mdash;</option><option value="Likert" <?php if ( is_array($this->qtype) ) echo ($this->qtype[$i] == 'Likert'?'selected':'');?>><?php tp('Likert');?></option><option value="LikertNA" <?php if ( is_array($this->qtype) ) echo ($this->qtype[$i] == 'LikertNA'?'selected':'');?>><?php tp('Likert');?> + N/A</option><option value="Likert3" <?php if ( is_array($this->qtype) ) echo ($this->qtype[$i] == 'Likert3'?'selected':'');?>><?php tp('Likert');?> (1-3)</option><option value="Likert3NA" <?php if ( is_array($this->qtype) ) echo ($this->qtype[$i] == 'Likert3NA'?'selected':'');?>><?php tp('Likert');?> (1-3) + N/A</option><option value="Text" <?php if ( is_array($this->qtype) ) echo  ($this->qtype[$i] == 'Text'?'selected':'');?>><?php tp('Text');?></option></select></td>
+		<td><select name="qtype[]"><option value="">&mdash; <?php tp('select');?> &mdash;</option>
+		<option value="Likert" <?php if ( is_array($this->qtype) ) echo ($this->qtype[$i] == 'Likert'?'selected':'');?>><?php tp('Likert');?></option>
+		<option value="LikertNA" <?php if ( is_array($this->qtype) ) echo ($this->qtype[$i] == 'LikertNA'?'selected':'');?>><?php tp('Likert');?> + <?php tp('N/A');?></option>
+		<option value="Likert3" <?php if ( is_array($this->qtype) ) echo ($this->qtype[$i] == 'Likert3'?'selected':'');?>><?php tp('Likert');?> (1-3)</option>
+		<option value="Likert3NA" <?php if ( is_array($this->qtype) ) echo ($this->qtype[$i] == 'Likert3NA'?'selected':'');?>><?php tp('Likert');?> (1-3) + <?php tp('N/A');?></option>
+		<option value="Text" <?php if ( is_array($this->qtype) ) echo  ($this->qtype[$i] == 'Text'?'selected':'');?>><?php tp('Text');?></option></select></td>
 		<td class="col_4"><input type="checkbox" name="qrelabel[<?php echo $i; ?>]" <?php echo ($this->qrelabel[$i]?"checked":"") ?>><label for="qrelabel[]" class="label"><?php tp('Re-Label Likert Answers'); ?></label></td>
 	</tr>
 	<tr class="<?php if(!$this->qrelabel[$i]) echo 'displayNone'; ?> evalRelabelWrapper">
 		<td> </td>
 		<td colspan="4">
-			<label for="" class="label">Answer</label>
+			<label for="" class="label"><?php tp('Answer');?></label>
 			<label for="" class="label">1</label> <input type="text" name="answers<?php echo ($i+1); ?>[]" value="<?php echo $this->answers[$i][0]; ?>">
 			<label for="" class="label">2</label> <input type="text" name="answers<?php echo ($i+1); ?>[]" value="<?php echo $this->answers[$i][1]; ?>">
 			<label for="" class="label">3</label> <input type="text" name="answers<?php echo ($i+1); ?>[]" value="<?php echo $this->answers[$i][2]; ?>">

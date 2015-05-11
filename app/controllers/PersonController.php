@@ -58,7 +58,7 @@ class PersonController extends ReportFilterHelpers {
 
 		$user_row->approved = 1;
 		$user_row->save();
-		$status->setStatusMessage ( t( 'That person has been approved.' ) );
+		$status->setStatusMessage ( t( 'That person has been approved' ) );
 		$this->_redirect( 'admin/people-new-people' );
 	}
 
@@ -86,7 +86,7 @@ class PersonController extends ReportFilterHelpers {
 		} else if (! $id) {
 			$status->setStatusMessage ( t ( 'That person could not be found.' ) );
 		} else {
-			$status->setStatusMessage ( t ( 'That person is an active').' '.t('participant').' '.t('or').' '.t('trainer').' '.t( 'and could not be deleted.' ) );
+			$status->setStatusMessage ( t ( 'That person is an active participant or trainer and could not be deleted.' ) );
 		}
 
 		//validate
@@ -518,7 +518,7 @@ class PersonController extends ReportFilterHelpers {
 				foreach ($status->messages as $k=>$v){
 					$errortext .= $v . "<br>";
 				}
-				$status->setStatusMessage ( t ( 'The person could not be saved. <br>' . $errortext ) );
+				$status->setStatusMessage ( t ( 'The person could not be saved.') .'<br>' . $errortext );
 			} else {
 
 				$personrow = self::fillFromArray ( $personrow, $this->_getAllParams () );
@@ -1715,10 +1715,10 @@ class PersonController extends ReportFilterHelpers {
 					$result = $tableObj->addPersonToTraining ( $id, $training_id );
 				}
 
-				$status->setStatusMessage ( t ('The').' '.t('Training').t('(s) have been assigned.' ) );
+				$status->setStatusMessage ( t ('The Training (s) have been assigned.' ) );
 				$status->setRedirect ( '/person/edit/id/' . $id );
 			} else {
-				$status->setStatusMessage ( t ( 'No').' '.t('Trainings').' '.t('selected').'.' );
+				$status->setStatusMessage ( t ( 'No Trainings selected').'.' );
 			}
 
 			$this->sendData ( $status );

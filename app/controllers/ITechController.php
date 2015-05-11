@@ -120,6 +120,7 @@ class ITechController extends Zend_Controller_Action
   	if ( !isset($translations[$keyPhrase]) ) return $keyPhrase;
   	return str_replace("'",'\'',($translations[$keyPhrase]));
   }
+  
 
   //cached settings per request
   protected function setting($settingKey) {

@@ -42,7 +42,7 @@ ob_end_clean();
 					width: 350,
 					modal: true,
 					buttons: {
-						"Save": function() {
+						"<?php echo t('Save') ?>": function() {
 							$("#_fieldtoupdate").val($("#title").val());
 							$("#_id").val($("#currentid").val());
 							if ($("#currentid").val() == 0){
@@ -53,7 +53,7 @@ ob_end_clean();
 							$( this ).dialog( "close" );
 							document.getElementById("adminform").submit();
 						},
-						Cancel: function() {
+						"<?php echo t('Cancel') ?>": function() {
 							$( this ).dialog( "close" );
 						}
 					},
@@ -65,7 +65,7 @@ ob_end_clean();
 				$( "#update" )
 					.button()
 					.click(function() {
-						$('#dialog-form').dialog('option', 'title', 'Add <?php echo $caption ?>');
+						$('#dialog-form').dialog('option', 'title', '<?php echo t('Add disability') ?>');
 						$("#currentid").val("0");
 						$("#title").val("");
 						$( "#dialog-form" ).dialog( "open" );
@@ -73,7 +73,7 @@ ob_end_clean();
 			});
 
 			function edititem(iid,itxt){
-				$('#dialog-form').dialog('option', 'title', 'Update <?php echo $caption ?>');
+				$('#dialog-form').dialog('option', 'title', '<?php echo t('Update disability') ?>');
 				$("#currentid").val(iid);
 				$("#title").val(itxt);
 				$( "#dialog-form" ).dialog( "open" );
@@ -126,11 +126,11 @@ ob_end_clean();
 	</head>
 	<body  class="yui-skin-sam">
 <div id="dialog-form" title="Update <?php echo $caption ?>">
-	<p class="validateTips">All form fields are required.</p>
+	<p class="validateTips"><?php echo t('All form fields are required.')?></p>
 
 	<form method="post">
 		<fieldset>
-			<label for="name"><?php echo strtoupper($caption) ?></label>
+			<label for="name"><?php echo t('Disability') ?></label>
 			<input type="text" name="title" id="title" class="text ui-widget-content ui-corner-all" />
 		</fieldset>
 		<input type="hidden" name="currentid" id="currentid" class="text ui-widget-content ui-corner-all" />
@@ -150,8 +150,8 @@ ob_end_clean();
 						<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 							<thead>
 								<tr>
-									<th>ID</th>
-									<th>Title</th>
+									<th><?php echo t('ID')?></th>
+									<th><?php echo t('Title')?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -170,7 +170,7 @@ ob_end_clean();
 						</table>
 						<div style="text-align : right;">
 							<br>
-							<input type="submit" name="update" id="update" value="Add <?php echo $caption ?>" class="tsbutton green large">
+							<input type="submit" name="update" id="update" value="<?php echo t('Update disability') ?>" class="tsbutton green large">
 						</div>
 					</div>
 

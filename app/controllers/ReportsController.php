@@ -2855,6 +2855,7 @@ echo $sql . "<br>";
 
 			$sql = 'SELECT ';
 
+/*			
 			if ($criteria ['doCount']) {
 				$distinct = ($criteria ['distinctCount']) ? 'DISTINCT ' : '';
 				$sql .= ' COUNT(' . $distinct . 'person_id) as "cnt" ';
@@ -2864,6 +2865,29 @@ echo $sql . "<br>";
 				else
 				$sql .= ' DISTINCT person_id as "id", IFNULL(suffix_phrase, ' . "' '" . ') as suffix_phrase, last_name, first_name, middle_name, pt.training_start_date  ';
 			}
+*/
+
+			if ($criteria ['doCount']) {
+			    $distinct = ($criteria ['distinctCount']) ? 'DISTINCT ' : '';
+			    $sql .= ' COUNT(' . $distinct . 'person_id) as "cnt" ';
+			}
+			else {
+			    if ($criteria ['concatNames']) {
+			        $sql .= ' DISTINCT person_id as "id", CONCAT(first_name, ' . "' '" . ',last_name, ' . "' '" . ', IFNULL(suffix_phrase, ' . "' '" . '))
+             "name", IFNULL(suffix_phrase, ' . "' '" . ') as suffix_phrase ';
+			    }
+			    else {
+			        $sql .= ' DISTINCT person_id as "id", IFNULL(suffix_phrase, ' . "' '" . ') as suffix_phrase, last_name, first_name, middle_name ';
+			    }
+			}
+				
+			if ($criteria ['distinctCount']){
+			    // $sql .= ' , pt.training_title ';
+			}
+			else {
+			    $sql .= ' , pt.training_start_date ';
+			}
+			
 			if ($criteria ['showPhone']) {
 				$sql .= ", CASE WHEN (pt.phone_work IS NULL OR pt.phone_work = '') THEN NULL ELSE pt.phone_work END as \"phone_work\", CASE WHEN (pt.phone_home IS NULL OR pt.phone_home = '') THEN NULL ELSE pt.phone_home END as \"phone_home\", CASE WHEN (pt.phone_mobile IS NULL OR pt.phone_mobile = '') THEN NULL ELSE pt.phone_mobile END as \"phone_mobile\" ";
 			}
@@ -3037,7 +3061,7 @@ echo $sql . "<br>";
 				$sql .= '	JOIN training_organizer_option as torg ON torg.id = pt.training_organizer_option_id ';
 			}
 
-			if ($criteria ['showFunding']) {
+			if ($criteria ['showFunding']) { 
 				$sql .= '	LEFT JOIN (SELECT training_id, ttfo.training_funding_option_id, funding_phrase FROM training_to_training_funding_option as ttfo JOIN training_funding_option as tfo ON ttfo.training_funding_option_id = tfo.id) as tfund ON tfund.training_id = pt.id ';
 			}
 
@@ -3325,8 +3349,9 @@ echo $sql . "<br>";
 					$sql .= ' GROUP BY person_id, pt.id';
 				}
 			}
-
+			
 			$rowArray = $db->fetchAll ( $sql );
+			
 
 			if ($criteria ['doCount']) {
 				$count = 0;
@@ -3347,6 +3372,7 @@ echo $sql . "<br>";
 		$criteria ['go'] = $this->getSanParam ( 'go' );
 
 		$this->viewAssignEscaped ( 'results', $rowArray );
+		
 		if ($rowArray) {
 			$first = reset ( $rowArray );
 			if (isset ( $first ['phone_work'] )) {
@@ -3363,7 +3389,7 @@ echo $sql . "<br>";
 				$this->view->assign ( 'results', $rowArray );
 			}
 		}
-
+		
 		$this->view->assign ( 'count', $count );
 		$this->view->assign ( 'criteria', $criteria );
 
@@ -3377,6 +3403,9 @@ echo $sql . "<br>";
 		//topics
 		$topicsArray = OptionList::suggestionList ( 'training_topic_option', 'training_topic_phrase', false, false, false );
 		$this->viewAssignEscaped ( 'topics', $topicsArray );
+		//TA:22 funding
+		$fundingsArray = OptionList::suggestionList ( 'training_funding_option', 'funding_phrase', false, false, false );
+		$this->viewAssignEscaped ( 'fundings', $fundingsArray );
 		//topics
 		$qualsArray = OptionList::suggestionList ( 'person_qualification_option', 'qualification_phrase', false, false, false );
 		$this->viewAssignEscaped ( 'qualifications', $qualsArray );
@@ -8632,7 +8661,7 @@ echo $sql . "<br>";
 			//$select[] = "coh.id AS cohort_id";
 			$select[] = "coh.cohortname";
 
-			$headers[] = "Cohort Name";
+			$headers[] = t("Cohort Name");
 
 			$institution_set = false;
 

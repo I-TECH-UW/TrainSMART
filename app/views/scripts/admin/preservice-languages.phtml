@@ -18,7 +18,7 @@ ob_end_clean();
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+	<title><?php echo t($this->translation['Application Name']);?> | <?php echo t($this->pageTitle); ?></title>
 	<?php
 	require_once('views/helpers/ScriptContainer.php');
 	print ScriptContainer::$instance->renderCSSHead();
@@ -41,7 +41,7 @@ ob_end_clean();
 				width: 350,
 				modal: true,
 				buttons: {
-					"Save": function() {
+					"<?php echo t('Save') ?>": function() {
 						$("#_language").val($("#title").val());
 						$("#_abbreviation").val($("#abbr").val());
 						$("#_id").val($("#currentid").val());
@@ -55,7 +55,7 @@ ob_end_clean();
 						document.getElementById("adminform").submit();
 					},
 
-					Cancel: function() {
+					"<?php echo t('Cancel') ?>": function() {
 						$( this ).dialog( "close" );
 					}
 				},
@@ -67,7 +67,7 @@ ob_end_clean();
 			$( "#update" )
 				.button()
 				.click(function() {
-					$('#dialog-form').dialog('option', 'title', 'Add language');
+					$('#dialog-form').dialog('option', 'title', '<?php echo t('Add language')?>');
 					$("#currentid").val("0");
 					$("#title").val("");
 					$("#abbr").val("");
@@ -76,7 +76,7 @@ ob_end_clean();
 		});
 
 		function edititem(iid,itxt,iabr){
-			$('#dialog-form').dialog('option', 'title', 'Update language');
+			$('#dialog-form').dialog('option', 'title', '<?php echo t('Update language')?>');
 			$("#currentid").val(iid);
 			$("#title").val(itxt);
 			$("#abbr").val(iabr);
@@ -131,12 +131,12 @@ ob_end_clean();
 
 <body  class="yui-skin-sam">
 <div id="dialog-form" title="Update language">
-	<p class="validateTips">All form fields are required.</p>
+	<p class="validateTips"><?php echo t('All form fields are required.')?></p>
 	<form method="post">
 		<fieldset>
-			<label for="name">Language</label>
+			<label for="name"><?php echo t('Language')?></label>
 			<input type="text" name="title" id="title" class="text ui-widget-content ui-corner-all" />
-			<label for="name">Abbreviation</label>
+			<label for="name"><?php echo t('Abbreviation')?></label>
 			<input type="text" name="abbr" id="abbr" class="text ui-widget-content ui-corner-all" maxlength="2" />
 		</fieldset>
 		<input type="hidden" name="currentid" id="currentid" class="text ui-widget-content ui-corner-all" />
@@ -155,9 +155,9 @@ ob_end_clean();
 				<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 					<thead>
 					<tr>
-						<th>ID</th>
-						<th>Title</th>
-						<th>Abbreviation</th>
+						<th><?php echo t('ID')?></th>
+						<th><?php echo t('Title')?></th>
+						<th><?php echo t('Abbreviation')?></th>
 					</tr>
 					</thead>
 					<tbody>
@@ -172,7 +172,7 @@ ob_end_clean();
 				</table>
 				<div style="text-align : right;">
 					<br>
-					<input type="submit" name="update" id="update" value="Add language" class="tsbutton green large">
+					<input type="submit" name="update" id="update" value="<?php echo t('Add language')?>" class="tsbutton green large">
 				</div>
 			</div>
 
