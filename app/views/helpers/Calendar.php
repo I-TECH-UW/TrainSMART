@@ -395,8 +395,21 @@ class calendar {
         //Get the name of the month based on the monthFormat variable.
         switch (strtolower($this->monthFormat)) {
             case "long":
-                $month = strftime("%B", mktime(0, 0, 0, $m, 1, $y));
-                break;
+		if($m == 1){$month = "January"; break;}
+		if($m == 2){$month = "February"; break;}
+		if($m == 3){$month = "March"; break;}
+		if($m == 4){$month = "April"; break;}
+		if($m == 5){$month = "May"; break;}
+		if($m == 6){$month = "June"; break;}
+		if($m == 7){$month = "July"; break;}
+		if($m == 8){$month = "August"; break;}
+		if($m == 9){$month = "September"; break;}
+		if($m == 10){$month = "October"; break;}
+		if($m == 11){$month = "November"; break;}
+		if($m == 12){$month = "December"; break;}
+		//TA:24 it does not work on Lunux (trnaslation) with current PHP version of funaction strftime()
+               // $month = strftime("%B", mktime(0, 0, 0, $m, 1, $y));
+               // break;
             case "short":
                 $month = strftime("%b", mktime(0, 0, 0, $m, 1, $y));
                 break;
@@ -406,6 +419,7 @@ class calendar {
         }
         return ucfirst($month);
     } //End function getMonth()
+    
 
     /*
     This function for the class will return the day of the week.

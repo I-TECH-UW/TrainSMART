@@ -3810,7 +3810,7 @@ msgid "April"
 msgstr "Апрель"
 
 msgid "May"
-msgstr "Май"
+msgstr "Maй"
 
 msgid "June"
 msgstr "Июнь"
@@ -4126,3 +4126,10 @@ msgstr "Лайкерт"
 
 msgid "Sign In"
 msgstr "Войти в"
+
+# ADD
+msgid "Select the file that contains the data in MS Excel format (*.xlsx) you want to import."
+msgstr "Выберите файл в формате MS Excel (*.xlsx), содержащий данные, которые вы хотите импортировать."
+
+msgid "Import a training"
+msgstr "Импортировать тренинг"

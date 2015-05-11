@@ -34,7 +34,7 @@
    ];
 
 		var statsColumnDefs = [
-		    {key:"name", label: "<?php echo $this->min_date;?>&nbsp;to&nbsp;<?php echo $this->max_date;?>", sortable:false, resizeable:true},
+		    {key:"name", label: "<?php echo $this->min_date;?>&nbsp;<?php tp('to');?>&nbsp;<?php echo $this->max_date;?>", sortable:false, resizeable:true},
 		    {key:"total", label: "<?php tp('Total');?>", sortable:false, resizeable:true},
 			{key:"ytd", label: "<?php tp('Fiscal Year');?> ( <?php tp('since'); ?>&nbsp;<?php echo $this->ytdStart;?>)", sortable:false, resizeable:true}
 		];

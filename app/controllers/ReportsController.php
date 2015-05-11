@@ -3349,7 +3349,7 @@ echo $sql . "<br>";
 					$sql .= ' GROUP BY person_id, pt.id';
 				}
 			}
-
+			
 			$rowArray = $db->fetchAll ( $sql );
 			
 
