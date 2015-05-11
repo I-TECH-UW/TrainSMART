@@ -1031,6 +1031,7 @@ class StudenteditController extends ITechController
             $workplaceData = array();
             $cohortData = array();
             $classData = array();
+
             if (isset($params['update'])) {
                 $studentData = $db->fetchRow("SELECT * from student where personid = ?", $params['id']);
                 $personData = $db->fetchRow("SELECT * FROM person WHERE id = ?", $params['id']);
@@ -1167,10 +1168,12 @@ class StudenteditController extends ITechController
         $q = "SELECT * FROM student WHERE personid = {$params['id']}";
         $studentData = $db->fetchRow($q);
 
-        $q = "SELECT * FROM workplace WHERE id = {$personData['workplace_id']}";
-        $workplaceData = $db->fetchRow($q);
-        $workplaceData['start_date'] = formhelperdate($workplaceData['start_date'], "d/m/y");
-        $workplaceData['end_date'] = formhelperdate($workplaceData['end_date'], "d/m/y");
+        if (($personData['studenttype'] == 1) && $personData['workplace_id']) {
+            $q = "SELECT * FROM workplace WHERE id = {$personData['workplace_id']}";
+            $workplaceData = $db->fetchRow($q);
+            $workplaceData['start_date'] = formhelperdate($workplaceData['start_date'], "d/m/y");
+            $workplaceData['end_date'] = formhelperdate($workplaceData['end_date'], "d/m/y");
+        }
 
         $q = "SELECT * FROM link_student_cohort WHERE id_student = {$studentData['id']}";
         $studentCohortData = $db->fetchRow($q);
