@@ -29,7 +29,7 @@ class AdminController extends UserController
 		$rtn =	parent::preDispatch();
 
 		if ( !$this->isLoggedIn() )
-		$this->doNoAccessError();
+			$this->doNoAccessError();
 
 		if ( ! $this->hasEditorACL() && ! $this->hasACL('edit_country_options') )
 			$this->doNoAccessError();
@@ -61,43 +61,43 @@ class AdminController extends UserController
 		$sysTable = new System();
 		return $sysTable->putSetting($field, $value);
 	}
-	
+
 	/*
 	 * TA:17:11: 10/22/2014
 	*/
 	public function countryMonthlyEmailReportsAction(){
-		
+
 		require_once('models/table/System.php');
 		$sysTable = new System();
-		
+
 		// _system settings
-		$checkboxFields = array( 
-				'display_email_report_1'           => 'display_email_report_1',
-				'display_email_report_2'      => 'display_email_report_2',
-				'display_email_report_3'     => 'display_email_report_3',
+		$checkboxFields = array(
+			'display_email_report_1'           => 'display_email_report_1',
+			'display_email_report_2'      => 'display_email_report_2',
+			'display_email_report_3'     => 'display_email_report_3',
 		);
-		
+
 		// For "Labels"
 		require_once('models/table/Translation.php');
 		$labelNames = array( // input name => key_phrase
-				'label_email_report_1'          => 'Label Email Report Level 1',
-				'label_email_report_2'          => 'Label Email Report Level 2',
-				'label_email_report_3'          => 'Label Email Report Level 3',
-				'email_report_federal'          => 'Emails Report Level 1',
-				'email_report_state'          => 'Emails Report Level 2',
-				'email_report_lga'          => 'Emails Report Level 3',
+			'label_email_report_1'          => 'Label Email Report Level 1',
+			'label_email_report_2'          => 'Label Email Report Level 2',
+			'label_email_report_3'          => 'Label Email Report Level 3',
+			'email_report_federal'          => 'Emails Report Level 1',
+			'email_report_state'          => 'Emails Report Level 2',
+			'email_report_lga'          => 'Emails Report Level 3',
 		);
-		
+
 		if($this->getRequest()->isPost()) { // Update db
 			// update translation labels
 			$tranTable = new Translation();
 			foreach($labelNames as $input_key => $db_key) {
-			
+
 				if ( $this->_getParam($input_key) ) {
 					try {
 						$tranTable->update(
-								array('phrase' => $this->_getParam($input_key)),
-								"key_phrase = '$db_key'"
+							array('phrase' => $this->_getParam($input_key)),
+							"key_phrase = '$db_key'"
 						);
 						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
 					} catch(Zend_Exception $e) {
@@ -105,8 +105,8 @@ class AdminController extends UserController
 					}
 				}
 			}
-			
-		// update _system (checkboxes)
+
+			// update _system (checkboxes)
 			foreach($checkboxFields as $input_key => $db_field) {
 				$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
 				$updateData[$db_field] = $value;
@@ -119,8 +119,8 @@ class AdminController extends UserController
 			foreach($labelNames as $input_key => $db_key) {
 				$this->viewAssignEscaped($input_key, $t[$db_key]);
 			}
-				
-		// checkboxes
+
+			// checkboxes
 			$sysRows = $sysTable->fetchRow($sysTable->select()->limit(1));
 			foreach($checkboxFields as $input_key => $field_key) {
 				$this->view->assign($input_key, $sysRows->$field_key);
@@ -137,42 +137,42 @@ class AdminController extends UserController
 		// For "Labels"
 		require_once('models/table/Translation.php');
 		$labelNames = array( // input name => key_phrase
-		'label_country'          => 'Country',
-		'label_regiona'          => 'Region A (Province)',
-		'label_regionb'          => 'Region B (Health District)',
-		'label_regionc'          => 'Region C (Local Region)',
-		'label_regiond'          => 'Region D',
-		'label_regione'          => 'Region E',
-		'label_regionf'          => 'Region F',
-		'label_regiong'          => 'Region G',
-		'label_regionh'          => 'Region H',
-		'label_regioni'          => 'Region I',
-		'label_citytown'         => 'City or Town',
-		'label_application_name' => 'Application Name',
-		'label_training'         => 'Training',
-		'label_trainings'        => 'Trainings',
-		'label_trainer'          => 'Trainer',
-		'label_trainers'         => 'Trainers',
-		'label_training_center'  => 'Training Center',
-		'label_participant'      => 'Participant',
-		'label_participants'     => 'Participants',
-		'label_employee'         => 'Employee',
-		'label_employees'        => 'Employees',
-		'label_employer'         => 'Employer',
+			'label_country'          => 'Country',
+			'label_regiona'          => 'Region A (Province)',
+			'label_regionb'          => 'Region B (Health District)',
+			'label_regionc'          => 'Region C (Local Region)',
+			'label_regiond'          => 'Region D',
+			'label_regione'          => 'Region E',
+			'label_regionf'          => 'Region F',
+			'label_regiong'          => 'Region G',
+			'label_regionh'          => 'Region H',
+			'label_regioni'          => 'Region I',
+			'label_citytown'         => 'City or Town',
+			'label_application_name' => 'Application Name',
+			'label_training'         => 'Training',
+			'label_trainings'        => 'Trainings',
+			'label_trainer'          => 'Trainer',
+			'label_trainers'         => 'Trainers',
+			'label_training_center'  => 'Training Center',
+			'label_participant'      => 'Participant',
+			'label_participants'     => 'Participants',
+			'label_employee'         => 'Employee',
+			'label_employees'        => 'Employees',
+			'label_employer'         => 'Employer',
 		);
 
 		// _system settings
 		$checkboxFields = array( // input name => db field
-		'check_mod_eval'           => 'module_evaluation_enabled',
-		'check_mod_approvals'      => 'module_approvals_enabled',
-		'check_mod_historical'     => 'module_historical_data_enabled',
-		'check_mod_unknown'        => 'module_unknown_participants_enabled',
-		'check_mod_attendance'     => 'module_attendance_enabled',
-		'display_training_partner' => 'display_training_partner',
-		'display_mod_skillsmart'   => 'display_mod_skillsmart',
-		'fiscal_year_start'        => 'fiscal_year_start',
-		'check_mod_employee'       => 'module_employee_enabled',
-				'check_country_reports' => 'display_country_reports',//TA:17: 9/11/2014
+			'check_mod_eval'           => 'module_evaluation_enabled',
+			'check_mod_approvals'      => 'module_approvals_enabled',
+			'check_mod_historical'     => 'module_historical_data_enabled',
+			'check_mod_unknown'        => 'module_unknown_participants_enabled',
+			'check_mod_attendance'     => 'module_attendance_enabled',
+			'display_training_partner' => 'display_training_partner',
+			'display_mod_skillsmart'   => 'display_mod_skillsmart',
+			'fiscal_year_start'        => 'fiscal_year_start',
+			'check_mod_employee'       => 'module_employee_enabled',
+			'check_country_reports' => 'display_country_reports',//TA:17: 9/11/2014
 		);
 
 
@@ -188,8 +188,8 @@ class AdminController extends UserController
 				if ( $this->_getParam($input_key) ) {
 					try {
 						$tranTable->update(
-						array('phrase' => $this->_getParam($input_key)),
-						"key_phrase = '$db_key'"
+							array('phrase' => $this->_getParam($input_key)),
+							"key_phrase = '$db_key'"
 						);
 						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
 					} catch(Zend_Exception $e) {
@@ -201,7 +201,7 @@ class AdminController extends UserController
 			// save locale
 			$updateData['locale_enabled'] = implode(',', $this->_getParam('locales'));
 			if ( $this->_getParam('locale_default') )
-			$updateData['locale'] = $this->_getParam('locale_default');
+				$updateData['locale'] = $this->_getParam('locale_default');
 
 			// update _system (checkboxes)
 			foreach($checkboxFields as $input_key => $db_field) {
@@ -266,7 +266,7 @@ class AdminController extends UserController
 			if ($this->setting('display_region_g')) $upd = array('display_region_h' => 1);
 			if ($this->setting('display_region_h')) $upd = array('display_region_i' => 1);
 			if (! empty($upd))
-			$sysTable->update($upd, '');
+				$sysTable->update($upd, '');
 		}
 
 		$this->_redirect('admin/country-settings');
@@ -289,7 +289,7 @@ class AdminController extends UserController
 			if ($this->setting('display_region_g')) $upd = array('display_region_h' => 1);
 			if ($this->setting('display_region_h')) $upd = array('display_region_i' => 1);
 			if (! empty($upd))
-			$sysTable->update($upd, '');
+				$sysTable->update($upd, '');
 		}
 
 		$this->_redirect('admin/country-settings');
@@ -325,7 +325,7 @@ class AdminController extends UserController
 			// determine site
 			$parts = explode('.', $_SERVER['SERVER_NAME']); // same style as globals.php
 			$this_site = $GLOBALS->$COUNTRY ? $GLOBALS->$COUNTRY : $parts[0];
-			
+
 			$newPass = $this->getSanParam('site_pass');
 			if ($newPass and $this->hasACL('edit_country_options')) { // new password for site - the theory behind pw is sites will only be able to add your site as a child or sibling site if they know your password
 				$sites->update(array('site_password' => $newPass), array('db_name' => $this_site)); // $data, $where
@@ -481,65 +481,65 @@ class AdminController extends UserController
 		// For "Labels"
 		require_once('models/table/Translation.php');
 		$labelNames = array( // input name => key_phrase
-		'label_training_category' => 'Training Category',
-		'label_training_topic'    => 'Training Topic',
-		'label_training_name'     => 'Training Name',
-		'label_training_org'      => 'Training Organizer',
-		'label_training_level'    => 'Training Level',
-		'label_training_got_curric' => 'GOT Curriculum',
-		'label_training_got_comment' => 'GOT Comment',
-		'label_training_refresher'  => 'Refresher Course',
-		'label_training_comments'   => 'Training Comments',
-		'label_pepfar'            => 'PEPFAR Category',
-		'label_training_trainers' => 'Training of Trainers',
-		'label_course_objectives' => 'Course Objectives',
-		'label_training_pre'      => 'Pre Test Score',
-		'label_training_post'     => 'Post Test Score',
-		'label_training_custom1'  => 'Training Custom 1',
-		'label_training_custom2'  => 'Training Custom 2',
-		'label_training_custom3'     => 'Training Custom 3',
-		'label_training_custom4'     => 'Training Custom 4',
-		'label_training_method'  => 'Training Method',
-		'label_training_funding_amt' => 'Funding Amount',
-		'label_primary_language' => 'Primary Language',
-		'label_secondary_language' => 'Secondary Language',
-		'label_award'                => 'Award',
-		'label_viewing_location'     => 'Viewing Location',
-		'label_budget_code'          => 'Budget Code'
+			'label_training_category' => 'Training Category',
+			'label_training_topic'    => 'Training Topic',
+			'label_training_name'     => 'Training Name',
+			'label_training_org'      => 'Training Organizer',
+			'label_training_level'    => 'Training Level',
+			'label_training_got_curric' => 'GOT Curriculum',
+			'label_training_got_comment' => 'GOT Comment',
+			'label_training_refresher'  => 'Refresher Course',
+			'label_training_comments'   => 'Training Comments',
+			'label_pepfar'            => 'PEPFAR Category',
+			'label_training_trainers' => 'Training of Trainers',
+			'label_course_objectives' => 'Course Objectives',
+			'label_training_pre'      => 'Pre Test Score',
+			'label_training_post'     => 'Post Test Score',
+			'label_training_custom1'  => 'Training Custom 1',
+			'label_training_custom2'  => 'Training Custom 2',
+			'label_training_custom3'     => 'Training Custom 3',
+			'label_training_custom4'     => 'Training Custom 4',
+			'label_training_method'  => 'Training Method',
+			'label_training_funding_amt' => 'Funding Amount',
+			'label_primary_language' => 'Primary Language',
+			'label_secondary_language' => 'Secondary Language',
+			'label_award'                => 'Award',
+			'label_viewing_location'     => 'Viewing Location',
+			'label_budget_code'          => 'Budget Code'
 		);
 
 		// _system settings
 		$checkboxFields = array( // input name => db field
-		'check_training_topic' => 'display_training_topic',
-		'check_training_trainers' => 'display_training_trainers',
-		'check_training_got_curric'  => 'display_training_got_curric',
-		'check_training_got_comment' => 'display_training_got_comment',
-		'check_training_pepfar'      => 'display_training_pepfar',
-		'check_training_refresher'   => 'display_training_refresher',
-		'check_multi_refresher'      => 'multi_opt_refresher_course',
-		'check_course_objectives' => 'display_course_objectives',
-		'check_training_pre'      => 'display_training_pre_test',
-		'check_training_post'     => 'display_training_post_test',
-		'check_training_custom1'  => 'display_training_custom1',
-		'check_training_custom2'  => 'display_training_custom2',
-		'check_training_custom3'     => 'display_training_custom3',
-		'check_training_custom4'     => 'display_training_custom4',
-		'check_training_method'  => 'display_training_method',
-		'check_training_primary_language'  => 'display_primary_language',
-		'check_training_secondary_language'  => 'display_secondary_language',
-		'check_training_end_date' => 'display_end_date',
-		'check_training_funding_options' => 'display_funding_options',
-		'check_training_funding_amounts'     => 'display_funding_amounts',
-		'check_display_viewing_location'     => 'display_viewing_location',
-		'check_display_budget_code'          => 'display_budget_code',
-		'check_training_category'          => 'display_training_category', //TA:17: 8/27/2014
-		'check_training_start_date'          => 'display_training_start_date', //TA:17: 9/02/2014
-		'check_training_length'          => 'display_training_length', //TA:17: 9/03/2014
-		'check_training_level'          => 'display_training_level', //TA:17: 9/03/2014
-		'check_training_comments'          => 'display_training_comments', //TA:17: 9/03/2014
-		'check_facilitator_info' => 'display_facilitator_info',//TA:17: 9/03/2014
-		'check_training_score' => 'display_training_score',//TA:17: 9/03/2014
-		'check_training_location'          => 'display_training_location', //TA:17:14 11/20/2014
+			'check_training_topic' => 'display_training_topic',
+			'check_training_trainers' => 'display_training_trainers',
+			'check_training_got_curric'  => 'display_training_got_curric',
+			'check_training_got_comment' => 'display_training_got_comment',
+			'check_training_pepfar'      => 'display_training_pepfar',
+			'check_training_refresher'   => 'display_training_refresher',
+			'check_multi_refresher'      => 'multi_opt_refresher_course',
+			'check_course_objectives' => 'display_course_objectives',
+			'check_training_pre'      => 'display_training_pre_test',
+			'check_training_post'     => 'display_training_post_test',
+			'check_training_custom1'  => 'display_training_custom1',
+			'check_training_custom2'  => 'display_training_custom2',
+			'check_training_custom3'     => 'display_training_custom3',
+			'check_training_custom4'     => 'display_training_custom4',
+			'check_training_method'  => 'display_training_method',
+			'check_training_primary_language'  => 'display_primary_language',
+			'check_training_secondary_language'  => 'display_secondary_language',
+			'check_training_end_date' => 'display_end_date',
+			'check_training_funding_options' => 'display_funding_options',
+			'check_training_funding_amounts'     => 'display_funding_amounts',
+			'check_display_viewing_location'     => 'display_viewing_location',
+			'check_display_budget_code'          => 'display_budget_code',
+			'check_training_category'          => 'display_training_category', //TA:17: 8/27/2014
+			'check_training_start_date'          => 'display_training_start_date', //TA:17: 9/02/2014
+			'check_training_length'          => 'display_training_length', //TA:17: 9/03/2014
+			'check_training_level'          => 'display_training_level', //TA:17: 9/03/2014
+			'check_training_comments'          => 'display_training_comments', //TA:17: 9/03/2014
+			'check_facilitator_info' => 'display_facilitator_info',//TA:17: 9/03/2014
+			'check_training_score' => 'display_training_score',//TA:17: 9/03/2014
+			'check_training_location'          => 'display_training_location', //TA:17:14 11/20/2014
 		);
 
 		if($this->getRequest()->isPost()) { // Update db
@@ -552,8 +552,8 @@ class AdminController extends UserController
 				if ( $this->_getParam($input_key) ) {
 					try {
 						$tranTable->update(
-						array('phrase' => $this->_getParam($input_key)),
-						"key_phrase = '$db_key'"
+							array('phrase' => $this->_getParam($input_key)),
+							"key_phrase = '$db_key'"
 						);
 						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
 					} catch(Zend_Exception $e) {
@@ -653,18 +653,18 @@ class AdminController extends UserController
 						if ( isset($row[0] ) ) {
 							$prov_id = $location_obj->insertUnique('location_name',$row[0], true, 'tier',1);
 						}
-	//add city (basically offset all our if(display_region) by 1, because city does not have a display_city setting
+						//add city (basically offset all our if(display_region) by 1, because city does not have a display_city setting
 						if ( isset($row[1] ) ) {
 							$dist_id = $location_obj->insertUnique('location_name',$row[1],true,'parent_id',$prov_id, 'tier',2);
 						}
-	//add district
+						//add district
 						if ( isset($row[2] ) && $this->setting('display_region_b') ) {
 							$dist_id = $location_obj->insertUnique('location_name',$row[2],true,'parent_id',$dist_id, 'tier',3);
 						}
-	//add region c
+						//add region c
 						if ( isset($row[3] ) && $this->setting('display_region_c')  ) {
 							$dist_id = $location_obj->insertUnique('location_name',$row[3],true,'parent_id',$dist_id, 'tier',4);
-					}
+						}
 						if ( isset($row[4] ) && $this->setting('display_region_d')  ) {
 							$dist_id = $location_obj->insertUnique('location_name',$row[4],true,'parent_id',$dist_id, 'tier',5);
 						}
@@ -676,7 +676,7 @@ class AdminController extends UserController
 						}
 						if ( isset($row[7] ) && $this->setting('display_region_g')  ) {
 							$dist_id = $location_obj->insertUnique('location_name',$row[7],true,'parent_id',$dist_id, 'tier',8);
-				}
+						}
 						if ( isset($row[8] ) && $this->setting('display_region_h')  ) {
 							$dist_id = $location_obj->insertUnique('location_name',$row[8],true,'parent_id',$dist_id, 'tier',9);
 						}
@@ -713,16 +713,16 @@ class AdminController extends UserController
 		if ( $location_id ) {
 			// viewing a location/children
 			if ( count($loc_parts) ) {
-					$this->view->assign('province_id', $loc_parts[0]);
+				$this->view->assign('province_id', $loc_parts[0]);
 				$this->view->assign('district_id', $loc_parts[1]);
-					$this->view->assign('region_c_id', $loc_parts[2]);
-					$this->view->assign('region_d_id', $loc_parts[3]);
-					$this->view->assign('region_e_id', $loc_parts[4]);
-					$this->view->assign('region_f_id', $loc_parts[5]);
-					$this->view->assign('region_g_id', $loc_parts[6]);
-					$this->view->assign('region_h_id', $loc_parts[7]);
-					$this->view->assign('region_i_id', $loc_parts[8]);
-					$this->view->assign('city_id', $loc_parts[9]);
+				$this->view->assign('region_c_id', $loc_parts[2]);
+				$this->view->assign('region_d_id', $loc_parts[3]);
+				$this->view->assign('region_e_id', $loc_parts[4]);
+				$this->view->assign('region_f_id', $loc_parts[5]);
+				$this->view->assign('region_g_id', $loc_parts[6]);
+				$this->view->assign('region_h_id', $loc_parts[7]);
+				$this->view->assign('region_i_id', $loc_parts[8]);
+				$this->view->assign('city_id', $loc_parts[9]);
 			}
 			else {
 				$loc_parts = null;
@@ -754,16 +754,16 @@ class AdminController extends UserController
 			$editTable->fields  = array('location_name' => $this->tr($name[$tier]));
 			$editTable->label   = $this->tr($name[$tier]);
 			$editTable->dependencies = array(
-			'parent_id' => 'self',
-			'location_id' => 'training_location',
-			'home_location_id' => 'person',
-			'location_id' => 'facility',
+				'parent_id' => 'self',
+				'location_id' => 'training_location',
+				'home_location_id' => 'person',
+				'location_id' => 'facility',
 			);
 			$editTable->where = 'tier = '.$tier.($location_id?' AND parent_id = '.$location_id:' ');
 			if ( $location_id )
-			$editTable->insertExtra = array('parent_id'=>$location_id, 'tier'=>$tier);
+				$editTable->insertExtra = array('parent_id'=>$location_id, 'tier'=>$tier);
 			else
-			$editTable->insertExtra = array('tier'=>1);
+				$editTable->insertExtra = array('tier'=>1);
 
 			$editTable->allowDefault = true;
 			$editTable->noEdit  = false;
@@ -795,16 +795,16 @@ class AdminController extends UserController
 
 		if ( $location_id ) {
 			if ( count($loc_parts) ) {
-					$this->view->assign('province_id', $loc_parts[0]);
-					$this->view->assign('district_id', $loc_parts[1]);
-					$this->view->assign('region_c_id', $loc_parts[2]);
-					$this->view->assign('region_d_id', $loc_parts[3]);
-					$this->view->assign('region_e_id', $loc_parts[4]);
-					$this->view->assign('region_f_id', $loc_parts[5]);
-					$this->view->assign('region_g_id', $loc_parts[6]);
-					$this->view->assign('region_h_id', $loc_parts[7]);
-					$this->view->assign('region_i_id', $loc_parts[8]);
-					$this->view->assign('city_id', $loc_parts[9]);
+				$this->view->assign('province_id', $loc_parts[0]);
+				$this->view->assign('district_id', $loc_parts[1]);
+				$this->view->assign('region_c_id', $loc_parts[2]);
+				$this->view->assign('region_d_id', $loc_parts[3]);
+				$this->view->assign('region_e_id', $loc_parts[4]);
+				$this->view->assign('region_f_id', $loc_parts[5]);
+				$this->view->assign('region_g_id', $loc_parts[6]);
+				$this->view->assign('region_h_id', $loc_parts[7]);
+				$this->view->assign('region_i_id', $loc_parts[8]);
+				$this->view->assign('city_id', $loc_parts[9]);
 			}
 			else {
 				$loc_parts = null;
@@ -814,32 +814,32 @@ class AdminController extends UserController
 				$target = null;
 				switch($tier) {
 					case 2:
-					$target = $this->getSanParam('target_province_id');
-					break;
+						$target = $this->getSanParam('target_province_id');
+						break;
 					case 3:
-					$target = $this->getSanParam('target_district_id');
-					break;
+						$target = $this->getSanParam('target_district_id');
+						break;
 					case 4:
-					$target = $this->getSanParam('target_region_c_id');
-					break;
+						$target = $this->getSanParam('target_region_c_id');
+						break;
 					case 5:
 						$target = $this->getSanParam('target_region_d_id');
-					break;
+						break;
 					case 6:
 						$target = $this->getSanParam('target_region_e_id');
-					break;
+						break;
 					case 7:
 						$target = $this->getSanParam('target_region_f_id');
-					break;
+						break;
 					case 8:
 						$target = $this->getSanParam('target_region_g_id');
-					break;
+						break;
 					case 9:
 						$target = $this->getSanParam('target_region_h_id');
-					break;
+						break;
 					case 10:
 						$target = $this->getSanParam('target_region_i_id');
-					break;
+						break;
 				}
 				$target_parts = explode('_',$target);
 				$target_id = $target_parts[count($target_parts) - 1];
@@ -859,7 +859,7 @@ class AdminController extends UserController
 			$candidates = array();
 			foreach($locations as $l) {
 				if ( $l['parent_id'] == $location_id )
-				$candidates []= $l;
+					$candidates []= $l;
 			}
 
 			$this->viewAssignEscaped('candidates', $candidates);
@@ -878,26 +878,26 @@ class AdminController extends UserController
 		// For "Labels"
 		require_once('models/table/Translation.php');
 		$labelNames = array( // input name => key_phrase
-		'label_facility'         => 'Facility',
-		'label_comments'         => 'Facility Comments',
-		'label_sponsor_date'     => 'Sponsor Date',
-		'label_facility_custom1'    => 'Facility Custom 1',
-				//TA:17: 10/02/2014
-		'label_facility_commodity_table_col_name'         => 'Facility Commodity Column Table Commodity Name', 
-		'label_facility_commodity_table_col_date'         => 'Facility Commodity Column Table Date',
-		'label_facility_commodity_table_col_consumption'         => 'Facility Commodity Column Table Consumption',
-		'label_facility_commodity_table_col_outofstock'         => 'Facility Commodity Column Table Out of Stock',
-				///
+			'label_facility'         => 'Facility',
+			'label_comments'         => 'Facility Comments',
+			'label_sponsor_date'     => 'Sponsor Date',
+			'label_facility_custom1'    => 'Facility Custom 1',
+			//TA:17: 10/02/2014
+			'label_facility_commodity_table_col_name'         => 'Facility Commodity Column Table Commodity Name',
+			'label_facility_commodity_table_col_date'         => 'Facility Commodity Column Table Date',
+			'label_facility_commodity_table_col_consumption'         => 'Facility Commodity Column Table Consumption',
+			'label_facility_commodity_table_col_outofstock'         => 'Facility Commodity Column Table Out of Stock',
+			///
 		);
-	$checkboxFields = array(
-		'check_approval_mod'     => 'module_facility_approval',
-		'check_multi_sponsors'   => 'allow_multi_sponsors',
-		'check_display_dates'    => 'display_sponsor_dates',
-		'check_require_dates'    => 'require_sponsor_dates',
-		'check_display_lat_long' => 'display_facility_lat_long',
-		'check_display_postal'   => 'display_facility_postal_code',
-		'check_display_sponsor'  => 'display_facility_sponsor',
-		'check_facility_custom1'  => 'display_facility_custom1',
+		$checkboxFields = array(
+			'check_approval_mod'     => 'module_facility_approval',
+			'check_multi_sponsors'   => 'allow_multi_sponsors',
+			'check_display_dates'    => 'display_sponsor_dates',
+			'check_require_dates'    => 'require_sponsor_dates',
+			'check_display_lat_long' => 'display_facility_lat_long',
+			'check_display_postal'   => 'display_facility_postal_code',
+			'check_display_sponsor'  => 'display_facility_sponsor',
+			'check_facility_custom1'  => 'display_facility_custom1',
 			'check_facility_address' => 'display_facility_address', //TA:17: 9/03/2014
 			'check_facility_phone' => 'display_facility_phone', //TA:17: 9/03/2014
 			'check_facility_fax' => 'display_facility_fax', //TA:17: 9/03/2014
@@ -917,8 +917,8 @@ class AdminController extends UserController
 				if ( $this->_getParam($input_key) ) {
 					try {
 						$tranTable->update(
-						array('phrase' => $this->_getParam($input_key)),
-						"key_phrase = '$db_key'"
+							array('phrase' => $this->_getParam($input_key)),
+							"key_phrase = '$db_key'"
 						);
 						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
 					} catch(Zend_Exception $e) {
@@ -938,9 +938,9 @@ class AdminController extends UserController
 		} else { // view
 			// checkboxes
 			$sysRows = $sysTable->fetchRow($sysTable->select()->limit(1));
-			foreach($checkboxFields as $input_key => $field_key) {  
+			foreach($checkboxFields as $input_key => $field_key) {
 				if ( isset($sysRows->$field_key) )
-				$this->view->assign($input_key, $sysRows->$field_key);
+					$this->view->assign($input_key, $sysRows->$field_key);
 			}
 			// labels
 			$t = Translation::getAll();
@@ -969,64 +969,64 @@ class AdminController extends UserController
 		// For "Labels"
 		require_once('models/table/Translation.php');
 		$labelNames = array( // input name => key_phrase
-		'label_people_active'   => 'Is Active',
-		'label_people_title'   => 'Title',
-		'label_people_first'   => 'First Name',
-		'label_people_middle'   => 'Middle Name',
-		'label_people_last'   => 'Last Name',
-		'label_people_suffix'   => 'Suffix',
-		'label_people_national'   => 'National ID',
-		'label_people_file_num'    => 'File Number',
-		'label_people_age'   => 'Age',
-		'label_people_gender'   => 'Gender',
-		'label_people_custom1'    => 'People Custom 1',
-		'label_people_custom2'    => 'People Custom 2',
-		'label_people_custom3'            => 'People Custom 3',
-		'label_people_custom4'            => 'People Custom 4',
-		'label_people_custom5'            => 'People Custom 5',
-		'label_responsibility_me'    => 'M&E Responsibility',
-		'label_highest_ed_level'    => 'Highest Education Level',
-		'label_attend_reason'    => 'Reason Attending',
-		'label_primary_responsibility'    => 'Primary Responsibility',
-		'label_secondary_responsibility'    => 'Secondary Responsibility',
-		'label_comments'    => 'Qualification Comments',
-		'label_address1'		=> 'Address 1',
-		'label_address2'		=> 'Address 2',
-		'label_home_phone'  => 'Home phone'
+			'label_people_active'   => 'Is Active',
+			'label_people_title'   => 'Title',
+			'label_people_first'   => 'First Name',
+			'label_people_middle'   => 'Middle Name',
+			'label_people_last'   => 'Last Name',
+			'label_people_suffix'   => 'Suffix',
+			'label_people_national'   => 'National ID',
+			'label_people_file_num'    => 'File Number',
+			'label_people_age'   => 'Age',
+			'label_people_gender'   => 'Gender',
+			'label_people_custom1'    => 'People Custom 1',
+			'label_people_custom2'    => 'People Custom 2',
+			'label_people_custom3'            => 'People Custom 3',
+			'label_people_custom4'            => 'People Custom 4',
+			'label_people_custom5'            => 'People Custom 5',
+			'label_responsibility_me'    => 'M&E Responsibility',
+			'label_highest_ed_level'    => 'Highest Education Level',
+			'label_attend_reason'    => 'Reason Attending',
+			'label_primary_responsibility'    => 'Primary Responsibility',
+			'label_secondary_responsibility'    => 'Secondary Responsibility',
+			'label_comments'    => 'Qualification Comments',
+			'label_address1'		=> 'Address 1',
+			'label_address2'		=> 'Address 2',
+			'label_home_phone'  => 'Home phone'
 		);
 
 		// _system settings
 		$checkboxFields = array( // input name => db field
-		'check_people_title'   => 'display_people_title',
-		'check_people_active'   => 'display_people_active',
-		'check_people_suffix'   => 'display_people_suffix',
-		'check_people_national'   => 'display_national_id',
-		'check_people_middle' => 'display_middle_name',
-		'check_middle_last'   => 'display_middle_name_last',
-		'check_people_gender'     => 'display_gender',
-		'check_people_custom1'    => 'display_people_custom1',
-		'check_people_custom2'    => 'display_people_custom2',
-		'check_people_custom3'    => 'display_people_custom3',
-		'check_people_custom4'    => 'display_people_custom4',
-		'check_people_custom5'    => 'display_people_custom5',
-		//      'check_regionb'     => 'display_region_b',
-		'check_people_file_num'    => 'display_people_file_num',
-		'check_people_age'    => 'display_people_age',
-		'check_people_home_address'    => 'display_people_home_address',
-		'check_people_home_phone'  => 'display_people_home_phone',
-		'check_people_second_email'  => 'display_people_second_email',
-		'check_people_fax'         => 'display_people_fax',
-		'check_trainer_affiliations' => 'display_trainer_affiliations',
-		'check_responsibility_me'    => 'display_responsibility_me',
-		'check_highest_ed_level'    => 'display_highest_ed_level',
-		'check_attend_reason'    => 'display_attend_reason',
-		'check_external_classes'  => 'display_external_classes',
-		'check_primary_responsibility'  => 'display_primary_responsibility',
-		'check_secondary_responsibility'  => 'display_secondary_responsibility',
-		'check_approval_mod'              => 'module_person_approval',
-		'check_people_comments'	=> 'display_people_comments', //TA:17: 09/09/2014
-		'check_people_facilitator' => 'display_people_facilitator', //TA:17: 09/09/2014
-		'check_people_birthdate' => 'display_people_birthdate', //TA:17: 09/10/2014
+			'check_people_title'   => 'display_people_title',
+			'check_people_active'   => 'display_people_active',
+			'check_people_suffix'   => 'display_people_suffix',
+			'check_people_national'   => 'display_national_id',
+			'check_people_middle' => 'display_middle_name',
+			'check_middle_last'   => 'display_middle_name_last',
+			'check_people_gender'     => 'display_gender',
+			'check_people_custom1'    => 'display_people_custom1',
+			'check_people_custom2'    => 'display_people_custom2',
+			'check_people_custom3'    => 'display_people_custom3',
+			'check_people_custom4'    => 'display_people_custom4',
+			'check_people_custom5'    => 'display_people_custom5',
+			//      'check_regionb'     => 'display_region_b',
+			'check_people_file_num'    => 'display_people_file_num',
+			'check_people_age'    => 'display_people_age',
+			'check_people_home_address'    => 'display_people_home_address',
+			'check_people_home_phone'  => 'display_people_home_phone',
+			'check_people_second_email'  => 'display_people_second_email',
+			'check_people_fax'         => 'display_people_fax',
+			'check_trainer_affiliations' => 'display_trainer_affiliations',
+			'check_responsibility_me'    => 'display_responsibility_me',
+			'check_highest_ed_level'    => 'display_highest_ed_level',
+			'check_attend_reason'    => 'display_attend_reason',
+			'check_external_classes'  => 'display_external_classes',
+			'check_primary_responsibility'  => 'display_primary_responsibility',
+			'check_secondary_responsibility'  => 'display_secondary_responsibility',
+			'check_approval_mod'              => 'module_person_approval',
+			'check_people_comments'	=> 'display_people_comments', //TA:17: 09/09/2014
+			'check_people_facilitator' => 'display_people_facilitator', //TA:17: 09/09/2014
+			'check_people_birthdate' => 'display_people_birthdate', //TA:17: 09/10/2014
 		);
 
 		if($this->getRequest()->isPost()) { // Update db
@@ -1039,8 +1039,8 @@ class AdminController extends UserController
 				if ( $this->_getParam($input_key) ) {
 					try {
 						$tranTable->update(
-						array('phrase' => $this->_getParam($input_key)),
-						"key_phrase = '$db_key'"
+							array('phrase' => $this->_getParam($input_key)),
+							"key_phrase = '$db_key'"
 						);
 						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
 					} catch(Zend_Exception $e) {
@@ -1113,8 +1113,8 @@ class AdminController extends UserController
 	}
 	*/
 	/************************************************************************************
-	* Training
-	*/
+	 * Training
+	 */
 
 	public function trainingCategoryAction()
 	{
@@ -1168,9 +1168,9 @@ class AdminController extends UserController
 		}
 
 		$checkbox = array(
-		'name'  => $fieldSystem,
-		'label' => 'Allow multiple Training topics',
-		'value' => $this->getSetting($fieldSystem),
+			'name'  => $fieldSystem,
+			'label' => 'Allow multiple Training topics',
+			'value' => $this->getSetting($fieldSystem),
 		);
 		$this->view->assign('checkbox', $checkbox);
 
@@ -1193,9 +1193,9 @@ class AdminController extends UserController
 		}
 
 		$checkbox = array(
-		'name'  => $fieldSystem,
-		'label' => 'Allow multiple PEPFAR categories',
-		'value' => $this->getSetting($fieldSystem),
+			'name'  => $fieldSystem,
+			'label' => 'Allow multiple PEPFAR categories',
+			'value' => $this->getSetting($fieldSystem),
 		);
 		$this->view->assign('checkbox', $checkbox);
 
@@ -1273,9 +1273,9 @@ class AdminController extends UserController
 		}
 
 		$checkbox = array(
-		'name'  => $fieldSystem,
-		'label' => 'Display recommended trainings per individual',
-		'value' => $this->getSetting($fieldSystem),
+			'name'  => $fieldSystem,
+			'label' => 'Display recommended trainings per individual',
+			'value' => $this->getSetting($fieldSystem),
 		);
 		$this->view->assign('checkbox', $checkbox);
 
@@ -1285,8 +1285,8 @@ class AdminController extends UserController
 		if($this->getRequest()->isPost()) { // Update db
 			if(is_numeric($this->_getParam('person_qualification_option_id'))) {
 				TrainingRecommend::saveRecommendations(
-				$this->_getParam('person_qualification_option_id'),
-				$this->_getParam('training_topic_option_id')
+					$this->_getParam('person_qualification_option_id'),
+					$this->_getParam('training_topic_option_id')
 				);
 
 				// Remove current, then redirect to clean page
@@ -1446,7 +1446,7 @@ class AdminController extends UserController
 						$tranTable->update(
 							array('phrase' => $this->_getParam($input_key)),
 							"key_phrase = '$db_key'"
-							);
+						);
 						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
 					} catch(Zend_Exception $e) {
 						error_log($e);
@@ -1532,9 +1532,9 @@ class AdminController extends UserController
 		}
 
 		$checkbox = array(
-		'name'  => $fieldSystem,
-		'label' => 'Display recommended trainings per individual',
-		'value' => $this->getSetting($fieldSystem),
+			'name'  => $fieldSystem,
+			'label' => 'Display recommended trainings per individual',
+			'value' => $this->getSetting($fieldSystem),
 		);
 		$this->view->assign('checkbox', $checkbox);
 
@@ -1544,8 +1544,8 @@ class AdminController extends UserController
 		if($this->getRequest()->isPost()) { // Update db
 			if(is_numeric($this->_getParam('person_qualification_option_id'))) {
 				TrainingRecommend::saveRecommendations(
-				$this->_getParam('person_qualification_option_id'),
-				$this->_getParam('training_topic_option_id')
+					$this->_getParam('person_qualification_option_id'),
+					$this->_getParam('training_topic_option_id')
 				);
 
 				// Remove current, then redirect to clean page
@@ -1612,7 +1612,7 @@ class AdminController extends UserController
 		$rowArray = TrainingRecommend::getRecommendedAdmin();
 		foreach($rowArray as $key => $row) {
 			$rowArray[$key]['edit'] = '<a href="' . Settings::$COUNTRY_BASE_URL . '/admin/training-recommend/edit/'. $row['person_qualification_option_id'] . '#edit">edit</a>&nbsp;' .
-			'<a href="' . Settings::$COUNTRY_BASE_URL . '/admin/training-recommend/delete/'. $row['person_qualification_option_id'] . '" onclick="return confirm(\'Are you sure you wish to remove these recommendations?\')">delete</a>';
+				'<a href="' . Settings::$COUNTRY_BASE_URL . '/admin/training-recommend/delete/'. $row['person_qualification_option_id'] . '" onclick="return confirm(\'Are you sure you wish to remove these recommendations?\')">delete</a>';
 		}
 		$this->sendData($rowArray);
 	}
@@ -1654,8 +1654,8 @@ class AdminController extends UserController
 	}
 
 	/************************************************************************************
-	* People (Person) / Trainer
-	*/
+	 * People (Person) / Trainer
+	 */
 
 	public function peopleNewPeopleAction(){
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
@@ -1722,7 +1722,7 @@ class AdminController extends UserController
 			$table = 'external_course';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT id FROM external_course WHERE person_id = ?', $mergeFromID ) );
 			$db->query ("UPDATE external_course SET person_id = $mergeToID WHERE person_id = $mergeFromID");
-			
+
 			$table = 'facs';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT sno FROM facs WHERE person = ?', $mergeFromID ) );
 			$db->query ("UPDATE facs SET person = $mergeToID WHERE person = $mergeFromID");
@@ -1736,7 +1736,7 @@ class AdminController extends UserController
 			$db->query ("UPDATE person_history SET person_id = $mergeToID WHERE person_id = $mergeFromID");
 
 			$table = 'person_to_training';
-			$affectedIDs = implode( $db->fetchCol ( 'SELECT id FROM person_to_training WHERE person_id = ?', $mergeFromID ) );			
+			$affectedIDs = implode( $db->fetchCol ( 'SELECT id FROM person_to_training WHERE person_id = ?', $mergeFromID ) );
 			//TA:21: 09/30/2014
 			$from_person_training = $db->fetchCol ( 'SELECT training_id FROM person_to_training WHERE person_id=?', $mergeFromID);
 			$to_person_training = $db->fetchCol ( 'SELECT training_id FROM person_to_training WHERE person_id=?', $mergeToID);
@@ -1750,7 +1750,7 @@ class AdminController extends UserController
 				$db->query ("UPDATE person_to_training SET person_id = $mergeToID WHERE person_id = $mergeFromID and training_id=$arr[$i]");
 			}
 			///
-			
+
 			$table = 'person_to_training_topic_option';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT id FROM person_to_training_topic_option WHERE person_id = ?', $mergeFromID ) );
 			$db->query ("UPDATE person_to_training_topic_option SET person_id = $mergeToID WHERE person_id = $mergeFromID");
@@ -1783,7 +1783,7 @@ class AdminController extends UserController
 
 			$table = 'person';
 			$db->query ("UPDATE person SET is_deleted = 1 WHERE id = $mergeFromID");
-			
+
 		} catch (Exception $e) {
 			$status->addError( null, t('Error updating people. Table:').space.$table );
 			return;
@@ -1912,7 +1912,7 @@ class AdminController extends UserController
 			'name'  => 'require_trainer_skill',
 			'label' => t('Require at least one trainer skill per trainer'),
 			'value' => $this->getSetting('require_trainer_skill'),
-			);
+		);
 		$this->view->assign('checkbox', $checkbox);
 
 		$editTable = new EditTableController($this);
@@ -1959,7 +1959,7 @@ class AdminController extends UserController
 		$editTable->execute();
 
 	}
-	
+
 	//TA: added 7/24/2014
 	public function tutorspecialtyAction()
 	{
@@ -1968,9 +1968,9 @@ class AdminController extends UserController
 		$editTable->fields  = array('specialty_phrase' => 'Specialty');
 		$editTable->label   = 'Specialty';
 		$editTable->dependencies = array('specialty' => 'tutor');
-		$editTable->execute();	
+		$editTable->execute();
 	}
-	
+
 	//TA: added 7/24/2014
 	public function tutorcontractAction()
 	{
@@ -1981,10 +1981,10 @@ class AdminController extends UserController
 		$editTable->dependencies = array('contract_type' => 'tutor');
 		$editTable->execute();
 	}
-	
+
 	//TA:17:12: added 9/19/2014
 	public function commoditynameAction(){
-		
+
 		$editTable = new EditTableController($this);
 		$editTable->fields  = array('commodity_name' => 'Commodity Name');
 		$editTable->table   = 'commodity_name_option';
@@ -1992,8 +1992,8 @@ class AdminController extends UserController
 		$editTable->dependencies = array('name_id' => 'commodity');
 		$editTable->execute();
 	}
-		
-		
+
+
 	//TA:17:12: added 10/03/2014
 	public function commoditytypeAction()
 	{
@@ -2054,8 +2054,8 @@ class AdminController extends UserController
 	}
 
 	/************************************************************************************
-	* Facilities
-	*/
+	 * Facilities
+	 */
 
 	public function facilitiesTypesAction()
 	{
@@ -2121,34 +2121,34 @@ class AdminController extends UserController
 		$status = ValidationContainer::instance();
 		$db = $this->dbfunc();
 		try {
-			
+
 			$table = 'facs';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT sno FROM facs WHERE facility = ?', $mergeFromID ) );
 			$db->query ("UPDATE facs SET facility = $mergeToID WHERE facility = $mergeFromID");
-			
+
 			$table = 'person';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT id FROM person WHERE facility_id = ?', $mergeFromID ) );
 			$db->query ("UPDATE person SET facility_id = $mergeToID WHERE facility_id = $mergeFromID");
-			
+
 			$table = 'person_history';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT vid FROM person_history WHERE facility_id = ?', $mergeFromID ) );
 			$db->query ("UPDATE person_history SET facility_id = $mergeToID WHERE facility_id = $mergeFromID");
-			
+
 			$table = 'practicum';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT id FROM practicum WHERE facilityid = ?', $mergeFromID ) );
 			$db->query ("UPDATE practicum SET facilityid = $mergeToID WHERE facilityid = $mergeFromID");
-			
+
 			$table = 'tutor';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT id FROM tutor WHERE facilityid = ?', $mergeFromID ) );
 			$db->query ("UPDATE tutor SET facilityid = $mergeToID WHERE facilityid = $mergeFromID");
-			
+
 			$table = 'employee';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT id FROM employee WHERE site_id = ?', $mergeFromID ) );
 			$db->query ("UPDATE employee SET site_id = $mergeToID WHERE site_id = $mergeFromID");
 
 			$table = 'facility';
 			$db->query ("UPDATE facility SET is_deleted = 1 WHERE id = $mergeFromID");
-			
+
 		} catch (Exception $e) {
 			$status->addError( null, t('Error updating facilities. Table:').space.$table );
 			return;
@@ -2195,8 +2195,8 @@ class AdminController extends UserController
 		$this->viewAssignEscaped ( 'facility_sponsors', $sponsorsArray );
 	}
 	/************************************************************************************
-	* Internal
-	*/
+	 * Internal
+	 */
 
 	protected function _csv_get_row($filepath, $reset = FALSE) {
 		ini_set('auto_detect_line_endings',true);
@@ -2226,66 +2226,66 @@ class AdminController extends UserController
 		$this->_redirect('user/search');
 	}
 
-    /**
-     * this controller's view relies on the indexes of the resulting array from fetchAssoc to be the db ids,
-     * which relies, in turn, on id being the first column selected
-     */
+	/**
+	 * this controller's view relies on the indexes of the resulting array from fetchAssoc to be the db ids,
+	 * which relies, in turn, on id being the first column selected
+	 */
 
 	public function preserviceClassesAction(){
 		$helper = new Helper();
 
-        if ($this->getRequest()->isPost()) {
-            $params = $this->getAllParams();
+		if ($this->getRequest()->isPost()) {
+			$params = $this->getAllParams();
 
-            $map = array(
-                '_startdate' => 'startdate',
-                '_enddate' => 'enddate',
-                '_instructorid' => 'instructorid',
-                '_coursetypeid' => 'coursetypeid',
-                '_coursetopic' => 'coursetopic',
-                '_classname' => 'classname',
-                '_id' => 'id',
-                '_class_modules_id' => 'class_modules_id',
-                '_custom_1' => 'custom_1',
-                '_credits' => 'credits',
-                '_custom_2' => 'custom_2',
-            );
+			$map = array(
+				'_startdate' => 'startdate',
+				'_enddate' => 'enddate',
+				'_instructorid' => 'instructorid',
+				'_coursetypeid' => 'coursetypeid',
+				'_coursetopic' => 'coursetopic',
+				'_classname' => 'classname',
+				'_id' => 'id',
+				'_class_modules_id' => 'class_modules_id',
+				'_custom_1' => 'custom_1',
+				'_credits' => 'credits',
+				'_custom_2' => 'custom_2',
+			);
 
 
-            // filter out empty parameters and translate to database column names
+			// filter out empty parameters and translate to database column names
 
-            // drop all keys with 0 length
-            $params = array_filter($params, strlen);
+			// drop all keys with 0 length
+			$params = array_filter($params, strlen);
 
-            // TODO: What would it take to just use column names in the form? That would eliminate this processing step and the map
-            // translate form fields to database column names
-            $data = array();
-            foreach ($params as $k => $v) {
-                if (array_key_exists($k, $map)) {
-                    $data[$map[$k]] = $v;
-                }
-            }
+			// TODO: What would it take to just use column names in the form? That would eliminate this processing step and the map
+			// translate form fields to database column names
+			$data = array();
+			foreach ($params as $k => $v) {
+				if (array_key_exists($k, $map)) {
+					$data[$map[$k]] = $v;
+				}
+			}
 
-            switch($params['_action']) {
-                case "addnew":
-                    $helper->addClasses($data);
-                    break;
-                case "update":
-                    $helper->updateClasses($data);
-                    break;
-            }
-            $this->_redirect ( 'admin/preservice-classes' );
-        }
+			switch($params['_action']) {
+				case "addnew":
+					$helper->addClasses($data);
+					break;
+				case "update":
+					$helper->updateClasses($data);
+					break;
+			}
+			$this->_redirect ( 'admin/preservice-classes' );
+		}
 
-        $db = $this->dbfunc();
-        $q = "select id, external_id, title from class_modules ORDER BY title ASC";
-        // this view relies on the indexes of the resulting array from fetchAssoc to be the db ids
-        // which relies, in turn, on id being the first column selected
-        $modules = $db->fetchAssoc($q);
+		$db = $this->dbfunc();
+		$q = "select id, external_id, title from class_modules ORDER BY title ASC";
+		// this view relies on the indexes of the resulting array from fetchAssoc to be the db ids
+		// which relies, in turn, on id being the first column selected
+		$modules = $db->fetchAssoc($q);
 
 		$list = $helper->AdminClasses();
 
-        $q = "select id, coursetype from lookup_coursetype ORDER BY coursetype ASC";
+		$q = "select id, coursetype from lookup_coursetype ORDER BY coursetype ASC";
 		$coursetypes = $db->fetchAssoc($q);
 
 		$tutors = $helper->getAllTutors();
@@ -2293,131 +2293,131 @@ class AdminController extends UserController
 		$this->view->assign("coursetypes", $coursetypes);
 		$this->view->assign("tutors", $tutors);
 		$this->view->assign("header","Classes");
-        $this->view->assign("modules", $modules);
+		$this->view->assign("modules", $modules);
 	}
 
-    /**
-     * this controller relies on view form fields having the same name as the database columns
-     *
-     * this view relies on the indexes of the resulting array from fetchAssoc to be the db ids,
-     * which relies, in turn, on id being the first column selected
-     *
-     */
+	/**
+	 * this controller relies on view form fields having the same name as the database columns
+	 *
+	 * this view relies on the indexes of the resulting array from fetchAssoc to be the db ids,
+	 * which relies, in turn, on id being the first column selected
+	 *
+	 */
 
-    public function preserviceClassModulesAction()
-    {
-        // this function relies on form fields having the same names as their database column
+	public function preserviceClassModulesAction()
+	{
+		// this function relies on form fields having the same names as their database column
 
-        if ($this->getRequest()->isPost()) {
-            $params = $this->getAllParams();
+		if ($this->getRequest()->isPost()) {
+			$params = $this->getAllParams();
 
-            // drop all keys with 0 length
-            $params = array_filter($params, strlen);
+			// drop all keys with 0 length
+			$params = array_filter($params, strlen);
 
-            $params['id'] = $params['currentid'];
+			$params['id'] = $params['currentid'];
 
-            $dbcols = array (
-                'id',
-                'external_id',
-                'title',
-                'lookup_coursetype_id',
-                'custom_1'
-            );
+			$dbcols = array (
+				'id',
+				'external_id',
+				'title',
+				'lookup_coursetype_id',
+				'custom_1'
+			);
 
-            // filter out keys that don't have database columns
-            $db_data = array_intersect_key($params, array_flip($dbcols));
+			// filter out keys that don't have database columns
+			$db_data = array_intersect_key($params, array_flip($dbcols));
 
-            switch($params['data_action']) {
-                case "addnew":
-                {
-                    $this->dbfunc()->insert('class_modules', $db_data);
-                    break;
-                }
-                case "update":
-                {
-                    $this->dbfunc()->update('class_modules', $db_data, 'id = '.$db_data['id']);
-                    break;
-                }
-                case "delete":
-                {
-                    $this->dbfunc()->delete('class_modules', 'id = '.$db_data['id']);
-                    break;
-                }
-            }
-            $this->_redirect('admin/preservice-class-modules');
-        }
+			switch($params['data_action']) {
+				case "addnew":
+				{
+					$this->dbfunc()->insert('class_modules', $db_data);
+					break;
+				}
+				case "update":
+				{
+					$this->dbfunc()->update('class_modules', $db_data, 'id = '.$db_data['id']);
+					break;
+				}
+				case "delete":
+				{
+					$this->dbfunc()->delete('class_modules', 'id = '.$db_data['id']);
+					break;
+				}
+			}
+			$this->_redirect('admin/preservice-class-modules');
+		}
 
-        // this view relies on the indexes of the resulting array from fetchAssoc to be the db ids,
-        // which relies, in turn, on id being the first column selected
-        $this->view->assign('modules', $this->dbfunc()->fetchAssoc(
-            $this->dbfunc()->select()->from("class_modules")
-        ));
+		// this view relies on the indexes of the resulting array from fetchAssoc to be the db ids,
+		// which relies, in turn, on id being the first column selected
+		$this->view->assign('modules', $this->dbfunc()->fetchAssoc(
+			$this->dbfunc()->select()->from("class_modules")
+		));
 
-        $this->view->assign('coursetypes', $this->dbfunc()->fetchAssoc(
-            $this->dbfunc()->select()->from("lookup_coursetype")
-        ));
-    }
+		$this->view->assign('coursetypes', $this->dbfunc()->fetchAssoc(
+			$this->dbfunc()->select()->from("lookup_coursetype")
+		));
+	}
 
 	//TA: changed on 7/21/2014
 	public function preserviceLabelsAction(){
-	    require_once('models/table/System.php');
+		require_once('models/table/System.php');
 		$sysTable = new System();
 
 		// For "Labels"
 		require_once('models/table/Translation.php');
 		$labelNames = array( // input name => key_phrase
-		'label_ps_institution'   => 'ps institution',
-		'label_ps_tutor' => 'ps tutor',
-		'label_ps_zip_code' => 'ps zip code',
-		'label_ps_clinical_allocation' => 'ps clinical allocation',
-		'label_ps_local_address' => 'ps local address',			
-		'label_ps_lic_reg' => 'ps license and registration',
-		'label_ps_permanent_address' => 'ps permanent address',
-		'label_ps_religious_denomination' => 'ps religious denomination',
-		'label_ps_program_enrolled' => 'ps program enrolled in',
-		'label_ps_nationality' => 'ps nationality',			
-		'label_inst_compl_date'   => 'ps high school completion date', 
-		'label_last_school_att' => 'ps last school attended',
-		'label_schhol_start_date' => 'ps school start date',
-		'label_equivalence' => 'ps equivalence',
-		'label_last_univ_att' => 'ps last university attended',
-		'label_person_charge' => 'ps person in charge',
-		'label_ps_custom_field1' => 'ps custom field 1',
-		'label_ps_custom_field2' => 'ps custom field 2',
-		'label_ps_custom_field3' => 'ps custom field 3',
-		'label_ps_marital_status' => 'ps marital status',
-		'label_ps_spouse_name' => 'ps spouse name',
-		'label_ps_specialty' => 'ps specialty',
-		'label_ps_contract_type' => 'ps contract type',
-		'label_ps_exam_mark' => 'ps exam mark',
-		'label_ps_ca_mark' => 'ps ca mark',
-		'label_ps_credits' => 'ps credits',
-        'label_ps_class_modules_custom_1' => 'ps class modules custom 1',
-				
+			'label_ps_institution'   => 'ps institution',
+			'label_ps_tutor' => 'ps tutor',
+			'label_ps_zip_code' => 'ps zip code',
+			'label_ps_clinical_allocation' => 'ps clinical allocation',
+			'label_ps_local_address' => 'ps local address',
+			'label_ps_lic_reg' => 'ps license and registration',
+			'label_ps_permanent_address' => 'ps permanent address',
+			'label_ps_religious_denomination' => 'ps religious denomination',
+			'label_ps_program_enrolled' => 'ps program enrolled in',
+			'label_ps_nationality' => 'ps nationality',
+			'label_inst_compl_date'   => 'ps high school completion date',
+			'label_last_school_att' => 'ps last school attended',
+			'label_schhol_start_date' => 'ps school start date',
+			'label_equivalence' => 'ps equivalence',
+			'label_last_univ_att' => 'ps last university attended',
+			'label_person_charge' => 'ps person in charge',
+			'label_ps_custom_field1' => 'ps custom field 1',
+			'label_ps_custom_field2' => 'ps custom field 2',
+			'label_ps_custom_field3' => 'ps custom field 3',
+			'label_ps_marital_status' => 'ps marital status',
+			'label_ps_spouse_name' => 'ps spouse name',
+			'label_ps_specialty' => 'ps specialty',
+			'label_ps_contract_type' => 'ps contract type',
+			'label_ps_exam_mark' => 'ps exam mark',
+			'label_ps_ca_mark' => 'ps ca mark',
+			'label_ps_credits' => 'ps credits',
+			'label_ps_class_modules_custom_1' => 'ps class modules custom 1',
+
 		);
 
 		// _system settings
 		$checkboxFields = array( // input name => db field _system table
-		'check_display_inst_compl_date'   => 'ps_display_inst_compl_date', 
-		'check_display_last_inst_attended' => 'ps_display_last_inst_attended',
-		'check_display_start_school_date' => 'ps_display_start_school_date',
-		'check_display_equivalence' => 'ps_display_equivalence',
-		'check_display_last_univ_attended' => 'ps_display_last_univ_attended',
-		'check_display_person_charge' => 'ps_display_person_charge',
-		'check_display_custom_field1' => 'ps_display_custom_field1',
-		'check_display_custom_field2' => 'ps_display_custom_field2',
-		'check_display_custom_field3' => 'ps_display_custom_field3',
-		'check_display_marital_status' => 'ps_display_marital_status',
-		'check_display_spouse_name' => 'ps_display_spouse_name',
-		'check_display_specialty' => 'ps_display_specialty',
-		'check_display_contract_type' => 'ps_display_contract_type',
-		'check_display_local_address' => 'ps_display_local_address',
-		'check_display_permanent_address' => 'ps_display_permanent_address',
-		'check_display_religious_denomin' => 'ps_display_religious_denomin',
-		'check_display_nationality' => 'ps_display_nationality',
-		'check_display_exam_mark' => 'ps_display_exam_mark',
-		'check_display_ca_mark' => 'ps_display_ca_mark',
-		'check_display_credits' => 'ps_display_credits',
+			'check_display_inst_compl_date'   => 'ps_display_inst_compl_date',
+			'check_display_last_inst_attended' => 'ps_display_last_inst_attended',
+			'check_display_start_school_date' => 'ps_display_start_school_date',
+			'check_display_equivalence' => 'ps_display_equivalence',
+			'check_display_last_univ_attended' => 'ps_display_last_univ_attended',
+			'check_display_person_charge' => 'ps_display_person_charge',
+			'check_display_custom_field1' => 'ps_display_custom_field1',
+			'check_display_custom_field2' => 'ps_display_custom_field2',
+			'check_display_custom_field3' => 'ps_display_custom_field3',
+			'check_display_marital_status' => 'ps_display_marital_status',
+			'check_display_spouse_name' => 'ps_display_spouse_name',
+			'check_display_specialty' => 'ps_display_specialty',
+			'check_display_contract_type' => 'ps_display_contract_type',
+			'check_display_local_address' => 'ps_display_local_address',
+			'check_display_permanent_address' => 'ps_display_permanent_address',
+			'check_display_religious_denomin' => 'ps_display_religious_denomin',
+			'check_display_nationality' => 'ps_display_nationality',
+			'check_display_exam_mark' => 'ps_display_exam_mark',
+			'check_display_ca_mark' => 'ps_display_ca_mark',
+			'check_display_credits' => 'ps_display_credits',
 		);
 
 		if($this->getRequest()->isPost()) { // Update db
@@ -2429,8 +2429,8 @@ class AdminController extends UserController
 				if ( $this->_getParam($input_key) ) {
 					try {
 						$tranTable->update(
-						array('phrase' => $this->_getParam($input_key)),
-						"key_phrase = '$db_key'"
+							array('phrase' => $this->_getParam($input_key)),
+							"key_phrase = '$db_key'"
 						);
 						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
 					} catch(Zend_Exception $e) {
@@ -2471,12 +2471,12 @@ class AdminController extends UserController
 			$status->setStatusMessage(t('Your settings have been updated.'));
 		}
 
-        $this->view->assign("header","Field labels");
+		$this->view->assign("header","Field labels");
 	}
 
 	public function preserviceCadresAction(){
 		$helper = new Helper();
-	
+
 		if (isset ($_POST['_action'])){
 			switch ($_POST['_action']){
 				case "addnew":
@@ -2488,7 +2488,7 @@ class AdminController extends UserController
 			}
 			$this->_redirect ( 'admin/preservice-cadres' );
 		}
-	
+
 		$list = $helper->AdminCadres();
 		$this->view->assign("lookup", $list);
 		$this->view->assign("header","Cadres");
@@ -2500,11 +2500,11 @@ class AdminController extends UserController
 		if (isset ($_POST['_action'])){
 			switch ($_POST['_action']){
 				case "addnew":
-				$helper->addDegrees($_POST);
-				break;
+					$helper->addDegrees($_POST);
+					break;
 				case "update":
-				$helper->updateDegrees($_POST);
-				break;
+					$helper->updateDegrees($_POST);
+					break;
 			}
 			$this->_redirect ( 'admin/preservice-degrees' );
 		}
@@ -2520,11 +2520,11 @@ class AdminController extends UserController
 		if (isset ($_POST['_action'])){
 			switch ($_POST['_action']){
 				case "addnew":
-				$helper->addCoursetypes($_POST);
-				break;
+					$helper->addCoursetypes($_POST);
+					break;
 				case "update":
-				$helper->updateCoursetypes($_POST);
-				break;
+					$helper->updateCoursetypes($_POST);
+					break;
 			}
 			$this->_redirect ( 'admin/preservice-coursetypes' );
 		}
@@ -2540,11 +2540,11 @@ class AdminController extends UserController
 		if (isset ($_POST['_action'])){
 			switch ($_POST['_action']){
 				case "addnew":
-				$helper->addFunding($_POST);
-				break;
+					$helper->addFunding($_POST);
+					break;
 				case "update":
-				$helper->updateFunding($_POST);
-				break;
+					$helper->updateFunding($_POST);
+					break;
 			}
 			$this->_redirect ( 'admin/preservice-funding' );
 		}
@@ -2560,11 +2560,11 @@ class AdminController extends UserController
 		if (isset ($_POST['_action'])){
 			switch ($_POST['_action']){
 				case "addnew":
-				$helper->addInstitutiontypes($_POST);
-				break;
+					$helper->addInstitutiontypes($_POST);
+					break;
 				case "update":
-				$helper->updateInstitutiontypes($_POST);
-				break;
+					$helper->updateInstitutiontypes($_POST);
+					break;
 			}
 			$this->_redirect ( 'admin/preservice-institutiontypes' );
 		}
@@ -2580,11 +2580,11 @@ class AdminController extends UserController
 		if (isset ($_POST['_action'])){
 			switch ($_POST['_action']){
 				case "addnew":
-				$helper->addLanguages($_POST);
-				break;
+					$helper->addLanguages($_POST);
+					break;
 				case "update":
-				$helper->updateLanguages($_POST);
-				break;
+					$helper->updateLanguages($_POST);
+					break;
 			}
 			$this->_redirect ( 'admin/preservice-languages' );
 		}
@@ -2600,11 +2600,11 @@ class AdminController extends UserController
 		if (isset ($_POST['_action'])){
 			switch ($_POST['_action']){
 				case "addnew":
-				$helper->addNationalities($_POST);
-				break;
+					$helper->addNationalities($_POST);
+					break;
 				case "update":
-				$helper->updateNationalities($_POST);
-				break;
+					$helper->updateNationalities($_POST);
+					break;
 			}
 			$this->_redirect ( 'admin/preservice-nationalities' );
 		}
@@ -2614,13 +2614,13 @@ class AdminController extends UserController
 		$this->view->assign("header","Nationalities");
 	}
 
-    public function priorLearningAction() {
+	public function priorLearningAction() {
 
-    }
+	}
 
-    public function qualificationsAction() {
+	public function qualificationsAction() {
 
-    }
+	}
 
 	public function preserviceJoindropreasonsAction(){
 		$helper = new Helper();
@@ -2628,11 +2628,11 @@ class AdminController extends UserController
 		if (isset ($_POST['_action'])){
 			switch ($_POST['_action']){
 				case "addnew":
-				$helper->addJoindropreasons($_POST);
-				break;
+					$helper->addJoindropreasons($_POST);
+					break;
 				case "update":
-				$helper->updateJoindropreasons($_POST);
-				break;
+					$helper->updateJoindropreasons($_POST);
+					break;
 			}
 			$this->_redirect ( 'admin/preservice-joindropreasons' );
 		}
@@ -2648,11 +2648,11 @@ class AdminController extends UserController
 		if (isset ($_POST['_action'])){
 			switch ($_POST['_action']){
 				case "addnew":
-				$helper->addSponsors($_POST);
-				break;
+					$helper->addSponsors($_POST);
+					break;
 				case "update":
-				$helper->updateSponsors($_POST);
-				break;
+					$helper->updateSponsors($_POST);
+					break;
 			}
 			$this->_redirect ( 'admin/preservice-sponsors' );
 		}
@@ -2668,11 +2668,11 @@ class AdminController extends UserController
 		if (isset ($_POST['_action'])){
 			switch ($_POST['_action']){
 				case "addnew":
-				$helper->addStudenttypes($_POST);
-				break;
+					$helper->addStudenttypes($_POST);
+					break;
 				case "update":
-				$helper->updateStudenttypes($_POST);
-				break;
+					$helper->updateStudenttypes($_POST);
+					break;
 			}
 			$this->_redirect ( 'admin/preservice-studenttypes' );
 		}
@@ -2688,11 +2688,11 @@ class AdminController extends UserController
 		if (isset ($_POST['_action'])){
 			switch ($_POST['_action']){
 				case "addnew":
-				$helper->addTutortypes($_POST);
-				break;
+					$helper->addTutortypes($_POST);
+					break;
 				case "update":
-				$helper->updateTutortypes($_POST);
-				break;
+					$helper->updateTutortypes($_POST);
+					break;
 			}
 			$this->_redirect ( 'admin/preservice-tutortypes' );
 		}
@@ -2708,11 +2708,11 @@ class AdminController extends UserController
 		if (isset ($_POST['_action'])){
 			switch ($_POST['_action']){
 				case "addnew":
-				$helper->addReligion($_POST);
-				break;
+					$helper->addReligion($_POST);
+					break;
 				case "update":
-				$helper->updateReligion($_POST);
-				break;
+					$helper->updateReligion($_POST);
+					break;
 			}
 			$this->_redirect ( 'admin/preservice-religion' );
 		}
@@ -2771,8 +2771,8 @@ class AdminController extends UserController
 				if ( $this->_getParam($input_key) ) {
 					try {
 						$tranTable->update(
-						array('phrase' => $this->_getParam($input_key)),
-						"key_phrase = '$db_key'"
+							array('phrase' => $this->_getParam($input_key)),
+							"key_phrase = '$db_key'"
 						);
 						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
 					} catch(Zend_Exception $e) {
@@ -2822,10 +2822,10 @@ class AdminController extends UserController
 			switch ($_POST['_action']){
 				case "addnew":
 					$helper->addSkillsmartLookup($_POST,"race");
-				break;
+					break;
 				case "update":
 					$helper->updateSkillsmartLookup($_POST);
-				break;
+					break;
 			}
 			$this->_redirect ( 'admin/skillsmart-race' );
 		}
@@ -2843,10 +2843,10 @@ class AdminController extends UserController
 			switch ($_POST['_action']){
 				case "addnew":
 					$helper->addSkillsmartLookup($_POST,"disability");
-				break;
+					break;
 				case "update":
 					$helper->updateSkillsmartLookup($_POST);
-				break;
+					break;
 			}
 			$this->_redirect ( 'admin/skillsmart-disability' );
 		}
@@ -2863,10 +2863,10 @@ class AdminController extends UserController
 			switch ($_POST['_action']){
 				case "addnew":
 					$helper->addSkillsmartLookup($_POST,"professionalbodies");
-				break;
+					break;
 				case "update":
 					$helper->updateSkillsmartLookup($_POST);
-				break;
+					break;
 			}
 			$this->_redirect ( 'admin/skillsmart-professionalbodies' );
 		}
@@ -2883,10 +2883,10 @@ class AdminController extends UserController
 			switch ($_POST['_action']){
 				case "addnew":
 					$helper->addSkillsmartLookup($_POST,"supervised");
-				break;
+					break;
 				case "update":
 					$helper->updateSkillsmartLookup($_POST);
-				break;
+					break;
 			}
 			$this->_redirect ( 'admin/skillsmart-supervised' );
 		}
@@ -2903,10 +2903,10 @@ class AdminController extends UserController
 			switch ($_POST['_action']){
 				case "addnew":
 					$helper->addSkillsmartLookup($_POST,"supervisedfrequency");
-				break;
+					break;
 				case "update":
 					$helper->updateSkillsmartLookup($_POST);
-				break;
+					break;
 			}
 			$this->_redirect ( 'admin/skillsmart-supervisedfrequency' );
 		}
@@ -2923,10 +2923,10 @@ class AdminController extends UserController
 			switch ($_POST['_action']){
 				case "addnew":
 					$helper->addSkillsmartLookup($_POST,"training");
-				break;
+					break;
 				case "update":
 					$helper->updateSkillsmartLookup($_POST);
-				break;
+					break;
 			}
 			$this->_redirect ( 'admin/skillsmart-training' );
 		}
@@ -2943,10 +2943,10 @@ class AdminController extends UserController
 			switch ($_POST['_action']){
 				case "addnew":
 					$helper->addSkillsmartLookup($_POST,"facilitydepartment");
-				break;
+					break;
 				case "update":
 					$helper->updateSkillsmartLookup($_POST);
-				break;
+					break;
 			}
 			$this->_redirect ( 'admin/skillsmart-facilitydepartment' );
 		}
@@ -2970,20 +2970,20 @@ class AdminController extends UserController
 			switch ($_POST['_action']){
 				case "addnew":
 					$helper->addSkillsmartCompetency($_POST);
-				break;
+					break;
 				case "update":
 					$helper->updateSkillsmartCompetency($_POST);
-				break;
+					break;
 			}
 			$this->_redirect ( 'admin/skillsmart-competency' );
 		} elseif (isset ($_POST['_actiondetail'])){
 			switch ($_POST['_actiondetail']){
 				case "addnew":
 					$helper->addSkillsmartCompetencyQuestion($_POST,$compid);
-				break;
+					break;
 				case "update":
 					$helper->updateSkillsmartCompetencyQuestion($_POST,$compid);
-				break;
+					break;
 			}
 			$this->_redirect ( 'admin/skillsmart-competency/comp/' . $compid );
 		} elseif (isset ($_POST['actionqual'])){
@@ -3037,136 +3037,136 @@ class AdminController extends UserController
 		$this->view->assign('parent', $parent);
 	}
 
-    public function skillsmartChwPersonFieldsAction() {
+	public function skillsmartChwPersonFieldsAction() {
 
-        $labelOrder = array(
-            'label_last_name',
-            'label_first_name',
-            '.label_ps_nationality.',
-            'label_ps_national_id',
-            '.label_ps_specialty.',
-            'label_age',
-            'label_gender',
-            'label_ps_spouse_name',
-            '.label_highest_qualification_achieved.',
-            'label_ps_local_address',
-            'label_province',
-            'label_phone',
-            'label_email',
-            'label_ps_marital_status',
-            '.label_list_of_modules.',
-            '-Workplace-',
-            'label_facility_name',
-            'label_comments',
-            'label_ps_person_in_charge',
-            'label_commencing_date_for_workplace',
-            'label_end_date_for_workplace',
-            'label_name_of_employer',
-            'label_address_of_employer',
-            'label_telephone_number',
-            'label_name_of_contact_person',
-            'label_email_address',
-            '-Qualification-',
-            '.label_reason_for_enrollment.',
-            'label_ps_custom_field_2',
-            'label_ps_custom_field_3',
-            '.label_reason_for_separation.',
-            'label_date_of_enrollment',
-            'label_date_of_separation',
-            'label_date_of_final_integrated_external_assessment',
-            '.label_ps_program_enrolled_in.',
-            'label_ps_last_university_attended',
-            'label_contact_number_of_assessment_centre_site',
-            '.label_ps_religious_denomination.',
-            '-Qualified Learners-',
-            'label_date_certificate_was_received_from_the_aqp',
-            'label_certificate_number',
-            'label_date_learner_received_certificate',
-        );
+		$labelOrder = array(
+			'label_last_name',
+			'label_first_name',
+			'.label_ps_nationality.',
+			'label_ps_national_id',
+			'.label_ps_specialty.',
+			'label_age',
+			'label_gender',
+			'label_ps_spouse_name',
+			'.label_highest_qualification_achieved.',
+			'label_ps_local_address',
+			'label_province',
+			'label_phone',
+			'label_email',
+			'label_ps_marital_status',
+			'.label_list_of_modules.',
+			'-Workplace-',
+			'label_facility_name',
+			'label_comments',
+			'label_ps_person_in_charge',
+			'label_commencing_date_for_workplace',
+			'label_end_date_for_workplace',
+			'label_name_of_employer',
+			'label_address_of_employer',
+			'label_telephone_number',
+			'label_name_of_contact_person',
+			'label_email_address',
+			'-Qualification-',
+			'.label_reason_for_enrollment.',
+			'label_ps_custom_field_2',
+			'label_ps_custom_field_3',
+			'.label_reason_for_separation.',
+			'label_date_of_enrollment',
+			'label_date_of_separation',
+			'label_date_of_final_integrated_external_assessment',
+			'.label_ps_program_enrolled_in.',
+			'label_ps_last_university_attended',
+			'label_contact_number_of_assessment_centre_site',
+			'.label_ps_religious_denomination.',
+			'-Qualified Learners-',
+			'label_date_certificate_was_received_from_the_aqp',
+			'label_certificate_number',
+			'label_date_learner_received_certificate',
+		);
 
-        $dropdownLinks = array(
-            '.label_ps_nationality.'                 => '/admin/preservice-nationalities',
-            '.label_ps_specialty.'                   => '/admin/tutorspecialty',
-            '.label_highest_qualification_achieved.' => '/admin/qualifications',
-            '.label_list_of_modules.'                => '/admin/prior-learning',
-            '.label_reason_for_enrollment.'          => '/admin/preservice-joindropreasons',
-            '.label_reason_for_separation.'          => '/admin/preservice-joindropreasons',
-            '.label_ps_program_enrolled_in.'         => '/admin/preservice-cadres',
-            '.label_ps_religious_denomination.'      => '/admin/preservice-religion',
-        );
+		$dropdownLinks = array(
+			'.label_ps_nationality.'                 => '/admin/preservice-nationalities',
+			'.label_ps_specialty.'                   => '/admin/tutorspecialty',
+			'.label_highest_qualification_achieved.' => '/admin/qualifications',
+			'.label_list_of_modules.'                => '/admin/prior-learning',
+			'.label_reason_for_enrollment.'          => '/admin/preservice-joindropreasons',
+			'.label_reason_for_separation.'          => '/admin/preservice-joindropreasons',
+			'.label_ps_program_enrolled_in.'         => '/admin/preservice-cadres',
+			'.label_ps_religious_denomination.'      => '/admin/preservice-religion',
+		);
 
-        $labelNames = array(
-            'label_last_name'                                    => 'Last Name',
-            'label_first_name'                                   => 'First Name',
-            'label_ps_nationality'                               => 'ps nationality',
-            'label_ps_national_id'                               => 'ps national id',
-            'label_ps_specialty'                                 => 'ps specialty',
-            'label_age'                                          => 'Age',
-            'label_gender'                                       => 'Gender',
-            'label_ps_spouse_name'                               => 'ps spouse name',
-            'label_highest_qualification_achieved'               => 'Highest Qualification Achieved',
-            'label_ps_local_address'                             => 'ps local address',
-            'label_province'                                     => 'Province',
-            'label_phone'                                        => 'Phone',
-            'label_email'                                        => 'Email',
-            'label_ps_marital_status'                            => 'ps marital status',
-            'label_list_of_modules'                              => 'List of Modules',
-            'label_facility_name'                                => 'Facility Name',
-            'label_comments'                                     => 'Comments',
-            'label_ps_person_in_charge'                          => 'ps person in charge',
-            'label_commencing_date_for_workplace'                => 'Commencing Date for Workplace',
-            'label_end_date_for_workplace'                       => 'End Date for Workplace',
-            'label_name_of_employer'                             => 'Name of Employer',
-            'label_address_of_employer'                          => 'Address of Employer',
-            'label_telephone_number'                             => 'Telephone Number',
-            'label_name_of_contact_person'                       => 'Name of Contact Person',
-            'label_email_address'                                => 'Email Address',
-            'label_reason_for_enrollment'                        => 'Reason for Enrollment',
-            'label_ps_custom_field_2'                            => 'ps custom field 2',
-            'label_ps_custom_field_3'                            => 'ps custom field 3',
-            'label_reason_for_separation'                        => 'Reason for Separation',
-            'label_date_of_enrollment'                           => 'Date of Enrollment',
-            'label_date_of_separation'                           => 'Date of Separation',
-            'label_date_of_final_integrated_external_assessment' => 'Date of Final Integrated External Assessment',
-            'label_ps_program_enrolled_in'                       => 'ps program enrolled in',
-            'label_ps_last_university_attended'                  => 'ps last university attended',
-            'label_contact_number_of_assessment_centre_site'     => 'Contact Number of Assessment Centre/Site',
-            'label_ps_religious_denomination'                    => 'ps religious denomination',
-            'label_date_certificate_was_received_from_the_aqp'   => 'Date Certificate was Received From the AQP',
-            'label_certificate_number'                           => 'Certificate Number',
-            'label_date_learner_received_certificate'            => 'Date Learner Received Certificate',
-        );
+		$labelNames = array(
+			'label_last_name'                                    => 'Last Name',
+			'label_first_name'                                   => 'First Name',
+			'label_ps_nationality'                               => 'ps nationality',
+			'label_ps_national_id'                               => 'ps national id',
+			'label_ps_specialty'                                 => 'ps specialty',
+			'label_age'                                          => 'Age',
+			'label_gender'                                       => 'Gender',
+			'label_ps_spouse_name'                               => 'ps spouse name',
+			'label_highest_qualification_achieved'               => 'Highest Qualification Achieved',
+			'label_ps_local_address'                             => 'ps local address',
+			'label_province'                                     => 'Province',
+			'label_phone'                                        => 'Phone',
+			'label_email'                                        => 'Email',
+			'label_ps_marital_status'                            => 'ps marital status',
+			'label_list_of_modules'                              => 'List of Modules',
+			'label_facility_name'                                => 'Facility Name',
+			'label_comments'                                     => 'Comments',
+			'label_ps_person_in_charge'                          => 'ps person in charge',
+			'label_commencing_date_for_workplace'                => 'Commencing Date for Workplace',
+			'label_end_date_for_workplace'                       => 'End Date for Workplace',
+			'label_name_of_employer'                             => 'Name of Employer',
+			'label_address_of_employer'                          => 'Address of Employer',
+			'label_telephone_number'                             => 'Telephone Number',
+			'label_name_of_contact_person'                       => 'Name of Contact Person',
+			'label_email_address'                                => 'Email Address',
+			'label_reason_for_enrollment'                        => 'Reason for Enrollment',
+			'label_ps_custom_field_2'                            => 'ps custom field 2',
+			'label_ps_custom_field_3'                            => 'ps custom field 3',
+			'label_reason_for_separation'                        => 'Reason for Separation',
+			'label_date_of_enrollment'                           => 'Date of Enrollment',
+			'label_date_of_separation'                           => 'Date of Separation',
+			'label_date_of_final_integrated_external_assessment' => 'Date of Final Integrated External Assessment',
+			'label_ps_program_enrolled_in'                       => 'ps program enrolled in',
+			'label_ps_last_university_attended'                  => 'ps last university attended',
+			'label_contact_number_of_assessment_centre_site'     => 'Contact Number of Assessment Centre/Site',
+			'label_ps_religious_denomination'                    => 'ps religious denomination',
+			'label_date_certificate_was_received_from_the_aqp'   => 'Date Certificate was Received From the AQP',
+			'label_certificate_number'                           => 'Certificate Number',
+			'label_date_learner_received_certificate'            => 'Date Learner Received Certificate',
+		);
 
-        if ($this->getRequest()->isPost()) {
-            $params = $this->getAllParams();
+		if ($this->getRequest()->isPost()) {
+			$params = $this->getAllParams();
 
-            require_once('models/table/Translation.php');
+			require_once('models/table/Translation.php');
 
-            $tranTable = new Translation();
-            $translations = $tranTable->getAll();
+			$tranTable = new Translation();
+			$translations = $tranTable->getAll();
 
-            foreach($params as $k => $v) {
-                if (strpos($k, 'label_') === 0) {
-                    try {
-                        if (!array_key_exists($labelNames[$k], $translations)) {
-                            // This key_phrase is not in the translation table, so add it
-                            $tranTable->insert(array('phrase' => $v, 'key_phrase' => $labelNames[$k]));
-                        } else {
-                            $tranTable->update(array('phrase' => $v), "key_phrase = '{$labelNames[$k]}'");
-                        }
-                    }
-                    catch(Zend_Exception $e) {
-                        error_log($e);
-                    }
-                }
-            }
-            $this->updateTranslations();
-        }
+			foreach($params as $k => $v) {
+				if (strpos($k, 'label_') === 0) {
+					try {
+						if (!array_key_exists($labelNames[$k], $translations)) {
+							// This key_phrase is not in the translation table, so add it
+							$tranTable->insert(array('phrase' => $v, 'key_phrase' => $labelNames[$k]));
+						} else {
+							$tranTable->update(array('phrase' => $v), "key_phrase = '{$labelNames[$k]}'");
+						}
+					}
+					catch(Zend_Exception $e) {
+						error_log($e);
+					}
+				}
+			}
+			$this->updateTranslations();
+		}
 
-        $this->view->assign('labelOrder', $labelOrder);
-        $this->view->assign('labelNames', $labelNames);
-        $this->view->assign('dropdownLinks', $dropdownLinks);
-    }
+		$this->view->assign('labelOrder', $labelOrder);
+		$this->view->assign('labelNames', $labelNames);
+		$this->view->assign('dropdownLinks', $dropdownLinks);
+	}
 
 	public function employeeSettingsAction()
 	{
@@ -3174,8 +3174,8 @@ class AdminController extends UserController
 		require_once('models/table/System.php');
 		$sysTable = new System();
 
-	// For "Labels"
-	// same logic as other Settings pages - except the employee_header setting below
+		// For "Labels"
+		// same logic as other Settings pages - except the employee_header setting below
 		require_once('models/table/Translation.php');
 		$labelNames = array( // input name => key_phrase
 			'label_partner'                  => 'Partner',
@@ -3209,9 +3209,9 @@ class AdminController extends UserController
 			'label_additional_expenses'      => 'Additional Expenses',
 			'label_stipend'                  => 'Stipend',
 			'label_currency'                 => 'Employee Local Currency',
-		    'label_hours_per_mechanism'      => 'Hours per Mechanism',
-		    'label_annual_cost_to_mechanism' => 'Annual Cost to Mechanism',
-			);
+			'label_hours_per_mechanism'      => 'Hours per Mechanism',
+			'label_annual_cost_to_mechanism' => 'Annual Cost to Mechanism',
+		);
 		$checkboxFields = array(
 			'check_partner'                  => 'display_employee_partner',
 			'check_sub_partner'              => 'display_employee_sub_partner',
@@ -3249,14 +3249,14 @@ class AdminController extends UserController
 			'check_benefits'                 => 'display_employee_benefits',
 			'check_additional_expenses'      => 'display_employee_additional_expenses',
 			'check_stipend'                  => 'display_employee_stipend',
-		    'check_hours_per_mechanism'      => 'display_hours_per_mechanism',
-		    'check_annual_cost_to_mechanism' => 'display_annual_cost_to_mechanism',
-			);
+			'check_hours_per_mechanism'      => 'display_hours_per_mechanism',
+			'check_annual_cost_to_mechanism' => 'display_annual_cost_to_mechanism',
+		);
 
 		if($this->getRequest()->isPost()) { // Update db
 			$updateData = array();
 
-		// update translation labels
+			// update translation labels
 			$tranTable = new Translation();
 			foreach($labelNames as $input_key => $db_key) {
 
@@ -3265,14 +3265,14 @@ class AdminController extends UserController
 						$tranTable->update(
 							array('phrase' => $this->_getParam($input_key)),
 							"key_phrase = '$db_key'"
-							);
+						);
 						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
 					} catch(Zend_Exception $e) {
 						error_log($e);
 					}
 				}
 			}
-		// update _system (checkboxes)
+			// update _system (checkboxes)
 			foreach($checkboxFields as $input_key => $db_field) {
 				$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
 				$updateData[$db_field] = $value;
@@ -3283,14 +3283,14 @@ class AdminController extends UserController
 			$sysTable->update($updateData, '');
 
 		} else { // view
-		// checkboxes
+			// checkboxes
 			$sysRows = $sysTable->fetchRow($sysTable->select()->limit(1));
 			$this->view->assign('employee_header', isset($sysRows->employee_header) ? $sysRows->employee_header : '');
 			foreach($checkboxFields as $input_key => $field_key) {
 				if ( isset($sysRows->$field_key) )
 					$this->view->assign($input_key, $sysRows->$field_key);
 			}
-		// labels
+			// labels
 			$t = Translation::getAll();
 			foreach($labelNames as $input_key => $db_key) {
 				$this->viewAssignEscaped($input_key, $t[$db_key]);
@@ -3475,10 +3475,10 @@ class AdminController extends UserController
 		$editTable->dependencies = array('partner_importance_option_id' => 'partner');
 		$editTable->execute();
 	}
-	
+
 	public function employeeAgencyAction()
 	{
-	
+
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'agency_option';
@@ -3487,10 +3487,10 @@ class AdminController extends UserController
 		// $editTable->dependencies = array('partner_importance_option_id' => 'partner');
 		$editTable->execute();
 	}
-	
+
 	public function employeeMechanismAction()
 	{
-	
+
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'mechanism_option';
@@ -3499,394 +3499,394 @@ class AdminController extends UserController
 		$editTable->dependencies = array('mechanism_option_id' => 'subpartner_to_funder_to_mechanism');
 		$editTable->execute();
 	}
-	
+
 	//$editTable->dependencies = array('partner_importance_option_id' => 'partner');
-	
+
 	public function employeeSubpartnerToFunderToMechanismAction()
 	{
-	
-		/* edit table */ 
+
+		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'subpartner_to_funder_to_mechanism';
 		$editTable->fields  = array('id' => 'ID', 'subpartner_id' => 'Subpartner', 'partner_funder_option_id' => 'Funder', 'mechanism_option_id' => 'Mechanism', 'funding_end_date' => 'Funding End Date');
 		$editTable->label   = 'Funding  Mechanisms';
 		$editTable->dependencies = array('id' => 'partner_to_subpartner_to_funder_to_mechanism');
 		$editTable->execute();
-		
+
 	}
-	
+
 	public function employeeBuildFundingAction()
 	{
-				
-		require_once('views/helpers/Location.php'); // funder stuff
-		require_once('models/table/Partner.php'); 
-		
-		if ( $this->getRequest()->isPost() ) {
-		  $db     = $this->dbfunc();
-		  $status = ValidationContainer::instance ();
-		  $params = $this->getAllParams();
-		
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3036> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($params);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-				
-		  // prepare date for database
-		  $params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-		
-		  foreach ($params['funding_end_date'] as $i => $value)
-			$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
 
-		  // test for all values
-		  if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
-			$status->addError('', t ( 'All fields' ) . space . t('are required'));
-		  else {
-		    // test for existing record
-		    $recArr = array(0 => $params['subPartner'],  1 => $params['partnerFunder'], 2 => $params['mechanism'],);
-		    
-		    $sql = 'SELECT * FROM subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
-		    $where = "subpartner_id = $recArr[0] and partner_funder_option_id = $recArr[1] and mechanism_option_id = $recArr[2] and is_deleted = false";
-		    $sql .= $where;
-		    	
-		    $row = $db->fetchRow( $sql );
-		    if ($row){
-		    	$status->addError('', t('Record exists'));
-		    }
-          
-		    if ( $status->hasError() ) 
-		      $status->setStatusMessage( t('That funding mechanism could not be saved.') );
-		    else {	//save
-       	  	$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
-       	  	
-      	  			$data = array(
-      	  					'subpartner_id'  => $params['subPartner'],
-      	  					'partner_funder_option_id' => $params['partnerFunder'],
-      	  					'mechanism_option_id' => $params['mechanism'],
-      	  					'funding_end_date' => $params['funding_end_date'][0],
-      	  			);
-      	  	
-      	  	  $insert_result = $sfm->insert($data);
-      	  	  $status->setStatusMessage( t('The funding mechanism was saved.') );
-      	  	  $this->_redirect("admin/employee-build_funding");
-	        }
-		  }
+		require_once('views/helpers/Location.php'); // funder stuff
+		require_once('models/table/Partner.php');
+
+		if ( $this->getRequest()->isPost() ) {
+			$db     = $this->dbfunc();
+			$status = ValidationContainer::instance ();
+			$params = $this->getAllParams();
+
+			//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3036> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+			//var_dump($params);
+			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+			// prepare date for database
+			$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
+
+			foreach ($params['funding_end_date'] as $i => $value)
+				$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
+
+			// test for all values
+			if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
+				$status->addError('', t ( 'All fields' ) . space . t('are required'));
+			else {
+				// test for existing record
+				$recArr = array(0 => $params['subPartner'],  1 => $params['partnerFunder'], 2 => $params['mechanism'],);
+
+				$sql = 'SELECT * FROM subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
+				$where = "subpartner_id = $recArr[0] and partner_funder_option_id = $recArr[1] and mechanism_option_id = $recArr[2] and is_deleted = false";
+				$sql .= $where;
+
+				$row = $db->fetchRow( $sql );
+				if ($row){
+					$status->addError('', t('Record exists'));
+				}
+
+				if ( $status->hasError() )
+					$status->setStatusMessage( t('That funding mechanism could not be saved.') );
+				else {	//save
+					$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
+
+					$data = array(
+						'subpartner_id'  => $params['subPartner'],
+						'partner_funder_option_id' => $params['partnerFunder'],
+						'mechanism_option_id' => $params['mechanism'],
+						'funding_end_date' => $params['funding_end_date'][0],
+					);
+
+					$insert_result = $sfm->insert($data);
+					$status->setStatusMessage( t('The funding mechanism was saved.') );
+					$this->_redirect("admin/employee-build_funding");
+				}
+			}
 		}
-		
+
 		$helper = new Helper();
-		
+
 		$subPartner = $helper->getAllSubPartners();
 		$this->viewAssignEscaped ( 'subPartner', $subPartner );
-		
+
 		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3068>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 		//var_dump($subPartner);
 		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-		
+
 		$partnerFunder = $helper->getAllFunders();
 		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-		
+
 		$mechanism = $helper->getAllMechanisms();
-		$this->viewAssignEscaped ( 'mechanism', $mechanism );	
-		
+		$this->viewAssignEscaped ( 'mechanism', $mechanism );
+
 	} //employeeBuildFundingAction
-	
+
 	public function employeeFunderFilterAction()
 	{
-	
+
 		require_once('views/helpers/Location.php'); // funder stuff
-		require_once('models/table/Partner.php'); 
-		
+		require_once('models/table/Partner.php');
+
 		if ( $this->getRequest()->isPost() ) {
-		  $db     = $this->dbfunc();
-		  $status = ValidationContainer::instance ();
-		  $params = $this->getAllParams();
-		
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3007> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($params);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-				
-		  // prepare date for database
-		  $params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-		
-		  foreach ($params['funding_end_date'] as $i => $value)
-			$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
-		
-		  // test for all values
-		  if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
-			$status->addError('', t ( 'All fields' ) . space . t('are required'));
-		
-		  // test for existing record
-		  //$id = $this->_findOrCreateSaveGeneric('partner_to_funder_to_mechanism', $params);
-		  $id = false;
-		  if ($id) {
-		  	$status->addError('', t('Record exists'));
-		  }
-		
-			
-		  if ( $status->hasError() ) 
-		    $status->setStatusMessage( t('That funding mechanism could not be saved.') );
-				
-		  else {	
-	        		//save
-       		$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
-       				
-       		
-      				$data = array(
-      						'subpartner_id'  => $params['subPartner'],
-      						'partner_funder_option_id' => $params['partnerFunder'],
-      						'mechanism_option_id' => $params['mechanism'],
-      						'funding_end_date' => $params['funding_end_date'][0],
-      				);
-      		
-      		  $insert_result = $sfm->insert($data);
-      		  $status->setStatusMessage( t('The funding mechanism was saved.') );
-      		  $this->_redirect("admin/employee-build_funding");
-	        }
+			$db     = $this->dbfunc();
+			$status = ValidationContainer::instance ();
+			$params = $this->getAllParams();
+
+			//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3007> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+			//var_dump($params);
+			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+			// prepare date for database
+			$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
+
+			foreach ($params['funding_end_date'] as $i => $value)
+				$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
+
+			// test for all values
+			if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
+				$status->addError('', t ( 'All fields' ) . space . t('are required'));
+
+			// test for existing record
+			//$id = $this->_findOrCreateSaveGeneric('partner_to_funder_to_mechanism', $params);
+			$id = false;
+			if ($id) {
+				$status->addError('', t('Record exists'));
+			}
+
+
+			if ( $status->hasError() )
+				$status->setStatusMessage( t('That funding mechanism could not be saved.') );
+
+			else {
+				//save
+				$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
+
+
+				$data = array(
+					'subpartner_id'  => $params['subPartner'],
+					'partner_funder_option_id' => $params['partnerFunder'],
+					'mechanism_option_id' => $params['mechanism'],
+					'funding_end_date' => $params['funding_end_date'][0],
+				);
+
+				$insert_result = $sfm->insert($data);
+				$status->setStatusMessage( t('The funding mechanism was saved.') );
+				$this->_redirect("admin/employee-build_funding");
+			}
 		}
-		
+
 		$helper = new Helper();
-		
+
 		$subPartner = $helper->getAllSubPartners();
 		$this->viewAssignEscaped ( 'subPartner', $subPartner );
-		
 
-		
+
+
 		$partnerFunder = $helper->getFunder();
 		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
 
 		$mechanism = $helper->getMechanism();
-		$this->viewAssignEscaped ( 'mechanism', $mechanism );	
-		
+		$this->viewAssignEscaped ( 'mechanism', $mechanism );
+
 		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3163>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 		//var_dump($mechanism);
 		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-	
+
 	}
-	
+
 	public function employeeSfmFilterAction()
 	{
-	
+
 		require_once('views/helpers/Location.php'); // funder stuff
 		require_once('models/table/Partner.php');
-	
+
 		if ( $this->getRequest()->isPost() ) {
 			$db     = $this->dbfunc();
 			$status = ValidationContainer::instance ();
 			$params = $this->getAllParams();
-	
+
 			//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3007> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 			//var_dump($params);
 			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-	
+
 			// prepare date for database
 			$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-	
+
 			foreach ($params['funding_end_date'] as $i => $value)
 				$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
-	
+
 			// test for all values
 			if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
 				$status->addError('', t ( 'All fields' ) . space . t('are required'));
-	
+
 			// test for existing record
 			//$id = $this->_findOrCreateSaveGeneric('partner_to_funder_to_mechanism', $params);
 			$id = false;
 			if ($id) {
 				$status->addError('', t('Record exists'));
 			}
-	
-				
+
+
 			if ( $status->hasError() )
 				$status->setStatusMessage( t('That funding mechanism could not be saved.') );
-	
+
 			else {
 				//save
 				$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
-				 
-				 
+
+
 				$data = array(
-						'subpartner_id'  => $params['subPartner'],
-						'partner_funder_option_id' => $params['partnerFunder'],
-						'mechanism_option_id' => $params['mechanism'],
-						'funding_end_date' => $params['funding_end_date'][0],
+					'subpartner_id'  => $params['subPartner'],
+					'partner_funder_option_id' => $params['partnerFunder'],
+					'mechanism_option_id' => $params['mechanism'],
+					'funding_end_date' => $params['funding_end_date'][0],
 				);
-	
+
 				$insert_result = $sfm->insert($data);
 				$status->setStatusMessage( t('The funding mechanism was saved.') );
 				$this->_redirect("admin/employee-build_funding");
 			}
 		}
-	
+
 		$helper = new Helper();
-	
+
 		$subPartner = $helper->getSfmSubPartner();
 		$this->viewAssignEscaped ( 'subPartner', $subPartner );
-	
+
 		$partnerFunder = $helper->getSfmFunder();
 		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-	
+
 		$mechanism = $helper->getSfmMechanism();
 		$this->viewAssignEscaped ( 'mechanism', $mechanism );
-	
+
 		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3234>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 		//var_dump($mechanism);
 		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-	
+
 	}
-	
+
 	public function employeePsfmFilterAction()
 	{
-	
+
 		require_once('views/helpers/Location.php'); // funder stuff
 		require_once('models/table/Partner.php');
-	
+
 		if ( $this->getRequest()->isPost() ) {
 			$db     = $this->dbfunc();
 			$status = ValidationContainer::instance ();
 			$params = $this->getAllParams();
-	
+
 			//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3007> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 			//var_dump($params);
 			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-	
+
 			// prepare date for database
 			$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-	
+
 			foreach ($params['funding_end_date'] as $i => $value)
 				$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
-	
+
 			// test for all values
 			if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
 				$status->addError('', t ( 'All fields' ) . space . t('are required'));
-	
+
 			// test for existing record
 			//$id = $this->_findOrCreateSaveGeneric('partner_to_funder_to_mechanism', $params);
 			$id = false;
 			if ($id) {
 				$status->addError('', t('Record exists'));
 			}
-	
-				
+
+
 			if ( $status->hasError() )
 				$status->setStatusMessage( t('That funding mechanism could not be saved.') );
-	
+
 			else {
 				//save
 				$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
-				 
-				 
+
+
 				$data = array(
-						'subpartner_id'  => $params['subPartner'],
-						'partner_funder_option_id' => $params['partnerFunder'],
-						'mechanism_option_id' => $params['mechanism'],
-						'funding_end_date' => $params['funding_end_date'][0],
+					'subpartner_id'  => $params['subPartner'],
+					'partner_funder_option_id' => $params['partnerFunder'],
+					'mechanism_option_id' => $params['mechanism'],
+					'funding_end_date' => $params['funding_end_date'][0],
 				);
-	
+
 				$insert_result = $sfm->insert($data);
 				$status->setStatusMessage( t('The funding mechanism was saved.') );
 				$this->_redirect("admin/employee-build_funding");
 			}
 		}
-	
+
 		$helper = new Helper();
-		
-		$partner = $helper->getPsfmPartner(); 
+
+		$partner = $helper->getPsfmPartner();
 		$this->viewAssignEscaped ( 'partner', $partner );
-	
+
 		$subPartner = $helper->getPsfmSubPartner();
 		$this->viewAssignEscaped ( 'subPartner', $subPartner );
-	
+
 		$partnerFunder = $helper->getPsfmFunder();
 		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-		
+
 
 		$mechanism = $helper->getPsfmMechanism();
 		$this->viewAssignEscaped ( 'mechanism', $mechanism );
-	
+
 		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3310>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 		//var_dump($mechanism);
 		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-		
-	
+
+
 	}
-	
+
 	public function employeeEpsfmFilterAction()
 	{
-	
+
 		require_once('views/helpers/Location.php'); // funder stuff
 		require_once('models/table/Partner.php');
-	
+
 		if ( $this->getRequest()->isPost() ) {
 			$db     = $this->dbfunc();
 			$status = ValidationContainer::instance ();
 			$params = $this->getAllParams();
-	
+
 			//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3007> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 			//var_dump($params);
 			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-	
+
 			// prepare date for database
 			$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-	
+
 			foreach ($params['funding_end_date'] as $i => $value)
 				$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
-	
+
 			// test for all values
 			if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
 				$status->addError('', t ( 'All fields' ) . space . t('are required'));
-	
+
 			// test for existing record
 			//$id = $this->_findOrCreateSaveGeneric('partner_to_funder_to_mechanism', $params);
 			$id = false;
 			if ($id) {
 				$status->addError('', t('Record exists'));
 			}
-	
-	
+
+
 			if ( $status->hasError() )
 				$status->setStatusMessage( t('That funding mechanism could not be saved.') );
-	
+
 			else {
 				//save
 				$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
-					
-					
+
+
 				$data = array(
-						'subpartner_id'  => $params['subPartner'],
-						'partner_funder_option_id' => $params['partnerFunder'],
-						'mechanism_option_id' => $params['mechanism'],
-						'funding_end_date' => $params['funding_end_date'][0],
+					'subpartner_id'  => $params['subPartner'],
+					'partner_funder_option_id' => $params['partnerFunder'],
+					'mechanism_option_id' => $params['mechanism'],
+					'funding_end_date' => $params['funding_end_date'][0],
 				);
-	
+
 				$insert_result = $sfm->insert($data);
 				$status->setStatusMessage( t('The funding mechanism was saved.') );
 				$this->_redirect("admin/employee-build_funding");
 			}
 		}
-	
+
 		$helper = new Helper();
-	
+
 		$employee = $helper->getEpsfmEmployee();
 		$this->viewAssignEscaped ( 'employee', $employee );
-		
+
 		$partner = $helper->getEpsfmPartner();
 		$this->viewAssignEscaped ( 'partner', $partner );
-	
+
 		$subPartner = $helper->getEpsfmSubPartner();
 		$this->viewAssignEscaped ( 'subPartner', $subPartner );
-	
+
 		$partnerFunder = $helper->getEpsfmFunder();
 		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-	
-	
+
+
 		$mechanism = $helper->getEpsfmMechanism();
 		$this->viewAssignEscaped ( 'mechanism', $mechanism );
-	
+
 		// file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3388>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 		// var_dump($mechanism);
 		// $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-	
-	
+
+
 	}
-	
+
 
 	public function hasEditorACL(){
 		// return hasACL() based on admin page viewing
@@ -3944,33 +3944,33 @@ class AdminController extends UserController
 			'tutorcontract'                => 'acl_editor_tutor_contract', //TA: added 7/24/2014
 			'commodityname'                => 'acl_editor_commodityname', //TA:17: added 9/19/2014
 			'commoditytype'                => 'acl_editor_commoditytype', //TA:17:12: added 10/03/2014
-			);
+		);
 
 
 		return $this->hasACL($validACLEditPages[$this->getRequest()->action]);
 	}
 
-    public function hiddenSettingsAction() {
+	public function hiddenSettingsAction() {
 
-        $style_id = $this->setting('site_style_id');
+		$style_id = $this->setting('site_style_id');
 
-        if ($this->getRequest()->isPost()) {
-            $db = $this->dbfunc();
+		if ($this->getRequest()->isPost()) {
+			$db = $this->dbfunc();
 
-            $id = $this->getSanParam('site_style_option');
-            $q = "UPDATE _system set site_style_id = $id";
-            $style_id = $id;
-            $db->query($q);
-        }
+			$id = $this->getSanParam('site_style_option');
+			$q = "UPDATE _system set site_style_id = $id";
+			$style_id = $id;
+			$db->query($q);
+		}
 
-        $this->view->assign('siteStyleDropdown',
-            DropDown::generateSelectionFromQuery(
-                'SELECT id, site_style_name AS val FROM site_styles ORDER BY val ASC',
-                array('name' => 'site_style_option'),
-                $style_id, false
-            )
-        );
-    }
+		$this->view->assign('siteStyleDropdown',
+			DropDown::generateSelectionFromQuery(
+				'SELECT id, site_style_name AS val FROM site_styles ORDER BY val ASC',
+				array('name' => 'site_style_option'),
+				$style_id, false
+			)
+		);
+	}
 }
 
 
