@@ -27,15 +27,3 @@ CREATE TABLE `workplace` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-CREATE TABLE `link_person_prior_learning` (
-  `id` int(11) NOT NULL auto_increment,
-  `person_id` int(11) NOT NULL,
-  `option_prior_learning_id` int(11) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-CREATE TABLE `option_prior_learning` (
-  `id` int(11) NOT NULL auto_increment,
-  `prior_learning_phrase` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
