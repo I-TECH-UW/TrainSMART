@@ -749,7 +749,11 @@ class AdminController extends UserController
 
 		// make the edit table
 		if ( ($tier == 1) OR ($location_id && ($locations[$location_id]['tier'] + 1 == $tier))) {
-			$editTable = new EditTableController($this);
+		    
+			$controller = &$this;  //gnr, Call-time pass-by-reference has been removed
+	        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+	        $editTable->setParentController($controller);
+	        
 			$editTable->table   = 'location';
 			$editTable->fields  = array('location_name' => $this->tr($name[$tier]));
 			$editTable->label   = $this->tr($name[$tier]);
@@ -767,7 +771,7 @@ class AdminController extends UserController
 
 			$editTable->allowDefault = true;
 			$editTable->noEdit  = false;
-			$editTable->execute();
+			$editTable->execute($controller->getRequest());
 		}
 	}
 
@@ -1118,44 +1122,52 @@ class AdminController extends UserController
 
 	public function trainingCategoryAction()
 	{
-		$editTable = new EditTableController($this);
+		$controller = &$this;  //gnr, Call-time pass-by-reference has been removed and EditTableController constructor signature must match Zend_Controller_Action_Interface
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'training_category_option';
 		$editTable->fields  = array('training_category_phrase' => 'Training Category');
 		$editTable->label   = 'Training Category';
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function trainingTitleAction()
 	{
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'training_title_option';
 		$editTable->fields  = array('training_title_phrase' => 'Training Title');
 		$editTable->label   = 'Training Title';
 		$editTable->allowMerge = true;
 		$editTable->dependencies = array('training');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function trainingOrganizerAction()
 	{
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'training_organizer_option';
 		$editTable->fields  = array('training_organizer_phrase' => 'Training Organizer');
 		$editTable->label   = 'Training Organizer';
 		$editTable->dependencies = array('training');
 		$editTable->allowDefault = true;
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function trainingLevelAction()
 	{
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'training_level_option';
 		$editTable->fields  = array('training_level_phrase' => 'Training Level');
 		$editTable->label   = 'Training Level';
 		$editTable->dependencies = array('training');
 		$editTable->allowDefault = true;
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function trainingTopicAction()
@@ -1174,13 +1186,15 @@ class AdminController extends UserController
 		);
 		$this->view->assign('checkbox', $checkbox);
 
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'training_topic_option';
 		$editTable->fields  = array('training_topic_phrase' => 'Training Topic');
 		$editTable->label   = 'Training Topic';
 		$editTable->dependencies = array('training_to_training_topic_option');
 		$editTable->allowDefault = true;
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function trainingPepfarAction()
@@ -1200,13 +1214,15 @@ class AdminController extends UserController
 		$this->view->assign('checkbox', $checkbox);
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'training_pepfar_categories_option';
 		$editTable->fields  = array('pepfar_category_phrase' => 'PEPFAR Category');
 		$editTable->label   = 'PEPFAR Category';
 		$editTable->dependencies = array('training_to_training_pepfar_categories_option');
 		$editTable->allowDefault = true;
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function trainingFundingAction()
@@ -1219,45 +1235,53 @@ class AdminController extends UserController
 		}
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'training_funding_option';
 		$editTable->fields  = array('funding_phrase' => 'Funding');
 		$editTable->label   = 'Funding';
 		$editTable->dependencies = array('training_to_training_funding_option');
 		$editTable->allowDefault = true;
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
-	public function trainingRefresherCourseAction()
+	public function trainingRefreshercourseAction()
 	{
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'training_refresher_option';
 		$editTable->fields  = array('refresher_phrase_option' => 'Refresher Course');
 		$editTable->label   = 'Refresher Course';
 		$editTable->dependencies = array('training');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function trainingGotcurriculumAction()
 	{
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'training_got_curriculum_option';
 		$editTable->fields  = array('training_got_curriculum_phrase' => 'National Curriculum');
 		$editTable->label   = 'National Curriculum';
 		$editTable->dependencies = array('training');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function trainingMethodAction()
 	{
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'training_method_option';
 		$editTable->fields  = array('training_method_phrase' => 'Method');
 		$editTable->label   = 'Training Methods';
 		$editTable->dependencies = array('training_to_training_pepfar_categories_option');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function trainingRecommendAction()
@@ -1621,36 +1645,42 @@ class AdminController extends UserController
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+		$editTable->setParentController($controller);
 		$editTable->table   = 'person_to_training_award_option';
 		$editTable->fields  = array('award_phrase' => 'Training Completion');
 		$editTable->label   = 'Complete Status';
 		$editTable->dependencies = array('award_id' => 'person_to_training');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function trainingViewingLocationAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+		$editTable->setParentController($controller);
 		$editTable->table   = 'person_to_training_viewing_loc_option';
 		$editTable->fields  = array('location_phrase' => 'Location');
 		$editTable->label   = 'Location';
 		$editTable->dependencies = array('viewing_location_option_id' => 'person_to_training');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function trainingBudgetCodeAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+		$editTable->setParentController($controller);
 		$editTable->table   = 'person_to_training_budget_option';
 		$editTable->fields  = array('budget_code_phrase' => 'Budget Code');
 		$editTable->label   = 'Budget Code';
 		$editTable->dependencies = array('budget_code_option_id' => 'person_to_training');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	/************************************************************************************
@@ -1844,7 +1874,9 @@ class AdminController extends UserController
 		$parent = $this->getSanParam('parent');
 
 		if ( $parent or $this->getSanParam('redirect') ) {
-			$editTable = new EditTableController($this);
+			$controller = &$this;
+		    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		    $editTable->setParentController($controller);
 			$editTable->table   = 'person_qualification_option';
 			$editTable->fields  = array('qualification_phrase' => 'Qualification');
 			$editTable->label   = 'Person Qualification';
@@ -1852,7 +1884,7 @@ class AdminController extends UserController
 			$editTable->where = 'parent_id = '.$parent;
 			$editTable->insertExtra = array('parent_id'=>$parent);
 			$editTable->allowDefault = true;
-			$editTable->execute();
+			$editTable->execute($controller->getRequest());
 		}
 
 		$parentArray = OptionList::suggestionList('person_qualification_option','qualification_phrase',false,false, true, 'parent_id IS NULL');
@@ -1868,32 +1900,38 @@ class AdminController extends UserController
 
 	public function peoplePrimaryrespAction() // was peopleResponsibilityAction
 	{
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'person_primary_responsibility_option';
 		$editTable->fields  = array('responsibility_phrase' => 'Primary Responsibility');
 		$editTable->label   = 'Primary Responsibility';
 		$editTable->dependencies = array('primary_responsibility_option_id' => 'person');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function peopleSecondaryrespAction()
 	{
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'person_secondary_responsibility_option';
 		$editTable->fields  = array('responsibility_phrase' => 'Secondary Responsibility');
 		$editTable->label   = 'Secondary Responsibility';
 		$editTable->dependencies = array('secondary_responsibility_option_id' => 'person');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function peopleTypesAction()
 	{
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'trainer_type_option';
 		$editTable->fields  = array('trainer_type_phrase' => 'Type');
 		$editTable->label   = 'Trainer Type';
 		$editTable->dependencies = array('type_option_id' => 'trainer');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function peopleSkillsAction()
@@ -1915,23 +1953,27 @@ class AdminController extends UserController
 			);
 		$this->view->assign('checkbox', $checkbox);
 
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'trainer_skill_option';
 		$editTable->fields  = array('trainer_skill_phrase' => 'Trainer Skill');
 		$editTable->label   = 'Trainer Skill';
 		$editTable->dependencies = array('trainer_to_trainer_skill_option');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function peopleLanguagesAction()
 	{
 
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'trainer_language_option';
 		$editTable->fields  = array('language_phrase' => 'Language');
 		$editTable->label   = 'Language';
 		$editTable->dependencies = array('trainer_to_trainer_language_option');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function peopleAffiliationsAction()
@@ -1939,118 +1981,138 @@ class AdminController extends UserController
 
 		/* edit table */
 
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'trainer_affiliation_option';
 		$editTable->fields  = array('trainer_affiliation_phrase' => 'Affiliation');
 		$editTable->label   = 'Affiliation';
 		$editTable->dependencies = array('affiliation_option_id' => 'trainer');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function peopleTitleAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'person_title_option';
 		$editTable->fields  = array('title_phrase' => 'Title');
 		$editTable->label   = 'Title';
 		$editTable->dependencies = array('title_option_id' => 'person');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 
 	}
 	
 	//TA: added 7/24/2014
 	public function tutorspecialtyAction()
 	{
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'tutor_specialty_option';
 		$editTable->fields  = array('specialty_phrase' => 'Specialty');
 		$editTable->label   = 'Specialty';
 		$editTable->dependencies = array('specialty' => 'tutor');
-		$editTable->execute();	
+		$editTable->execute($controller->getRequest());	
 	}
 	
 	//TA: added 7/24/2014
 	public function tutorcontractAction()
 	{
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'tutor_contract_option';
 		$editTable->fields  = array('contract_phrase' => 'Contract Type');
 		$editTable->label   = 'Contract Type';
 		$editTable->dependencies = array('contract_type' => 'tutor');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 	
 	//TA:17:12: added 9/19/2014
 	public function commoditynameAction(){
 		
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->fields  = array('commodity_name' => 'Commodity Name');
 		$editTable->table   = 'commodity_name_option';
 		$editTable->label   = 'Commodity Name';
 		$editTable->dependencies = array('name_id' => 'commodity');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 		
 		
 	//TA:17:12: added 10/03/2014
 	public function commoditytypeAction()
 	{
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'commodity_type_option';
 		$editTable->fields  = array('commodity_type' => 'Commodity Type');
 		$editTable->label   = 'Commodity Type';
 		$editTable->dependencies = array('type_id' => 'commodity');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function peopleSuffixAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'person_suffix_option';
 		$editTable->fields  = array('suffix_phrase' => 'Suffix');
 		$editTable->label   = 'Suffix';
 		$editTable->dependencies = array('suffix_option_id' => 'person');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function peopleActiveTrainerAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'person_active_trainer_option';
 		$editTable->fields  = array('active_trainer_phrase' => 'Active Trainer');
 		$editTable->label   = 'Active Trainer';
 		$editTable->dependencies = array('active_trainer_option_id' => 'trainer');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function peopleHighestedulevelAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'person_education_level_option';
 		$editTable->fields  = array('education_level_phrase' => 'Highest Education Level');
 		$editTable->label   = 'Highest Education Level';
 		$editTable->dependencies = array('highest_edu_level_option_id' => 'person');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function peopleAttendreasonAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable->setParentController($controller);
 		$editTable->table   = 'person_attend_reason_option';
 		$editTable->fields  = array('attend_reason_phrase' => 'Reason Attending');
 		$editTable->label   = 'Reason Attending';
 		$editTable->dependencies = array('attend_reason_option_id' => 'person');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	/************************************************************************************
@@ -2059,22 +2121,26 @@ class AdminController extends UserController
 
 	public function facilitiesTypesAction()
 	{
-		$editTable = new EditTableController($this);
+	    $controller = &$this;  // gnr, Call-time pass-by-reference has been removed
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'facility_type_option';
 		$editTable->fields  = array('facility_type_phrase' => 'Facility Type');
 		$editTable->label   = 'Facility Type';
 		$editTable->dependencies = array('type_option_id' => 'facility');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function facilitiesSponsorsAction()
 	{
-		$editTable = new EditTableController($this);
+	    $controller = &$this;  //gnr, Call-time pass-by-reference has been removed
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+	    $editTable->setParentController($controller);
 		$editTable->table   = 'facility_sponsor_option';
 		$editTable->fields  = array('facility_sponsor_phrase' => 'Facility Sponsor');
 		$editTable->label   = 'Facility Sponsor';
 		$editTable->dependencies = array('sponsor_option_id' => 'facility');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function facilitiesNewFacilitiesAction()
@@ -2961,7 +3027,9 @@ class AdminController extends UserController
 		$parent = $this->getSanParam('parent');
 
 		if ( $parent or $this->getSanParam('redirect') ) {
-			$editTable = new EditTableController($this);
+			$controller = &$this;
+		    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+		    $editTable->setParentController($controller);
 			$editTable->table   = 'occupational_categories';
 			$editTable->fields  = array('category_phrase' => 'Category');
 			$editTable->label   = 'Occupational Category';
@@ -2969,7 +3037,7 @@ class AdminController extends UserController
 			$editTable->where = 'parent_id = '.$parent;
 			$editTable->insertExtra = array('parent_id'=>$parent);
 			$editTable->allowDefault = true;
-			$editTable->execute();
+			$editTable->execute($controller->getRequest());
 		}
 
 		$parentArray = OptionList::suggestionList('occupational_categories', 'category_phrase', false, false, true, 'parent_id IS NULL');
@@ -3121,192 +3189,224 @@ class AdminController extends UserController
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'partner_type_option';
 		$editTable->fields  = array('type_phrase' => 'Partner Type');
 		$editTable->label   = 'Partner Type';
 		$editTable->dependencies = array('partner_type_option_id' => 'partner');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function employeeCategoryAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'employee_category_option';
 		$editTable->fields  = array('category_phrase' => 'Staff Category');
 		$editTable->label   = 'Staff Category';
 		$editTable->dependencies = array('employee_category_option_id' => 'employee');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function employeeBaseAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'employee_base_option';
 		$editTable->fields  = array('base_phrase' => 'Base');
 		$editTable->label   = 'Base';
 		$editTable->dependencies = array('employee_base_option_id' => 'employee');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function employeeSiteTypeAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'employee_site_type_option';
 		$editTable->fields  = array('site_type_phrase' => 'Type');
 		$editTable->label   = 'Type';
 		$editTable->dependencies = array('facility_type_option_id' => 'employee');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function employeeFullTimeAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'employee_fulltime_option';
 		$editTable->fields  = array('fulltime_phrase' => 'Full Time');
 		$editTable->label   = 'Status';
 		$editTable->dependencies = array('employee_fulltime_option_id' => 'employee');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function personRaceAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'person_race_option';
 		$editTable->fields  = array('race_phrase' => 'Race');
 		$editTable->label   = 'Race';
 		$editTable->dependencies = array('race_option_id' => 'employee');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function employeeQualificationAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'employee_qualification_option';
 		$editTable->fields  = array('qualification_phrase' => 'Qualification');
 		$editTable->label   = 'Qualification';
 		$editTable->dependencies = array('employee_qualification_option_id' => 'employee');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function employeeRoleAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'employee_role_option';
 		$editTable->fields  = array('role_phrase' => 'Primary Role');
 		$editTable->label   = 'Primary Roles for employees';
 		$editTable->dependencies = array('employee_role_option_id' => 'employee');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function employeeTransitionAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'employee_transition_option';
 		$editTable->fields  = array('transition_phrase' => 'Intended Transition');
 		$editTable->label   = 'Intended Transitions';
 		$editTable->dependencies = array('employee_transition_option_id' => 'employee');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function employeeRelationshipAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'employee_relationship_option';
 		$editTable->fields  = array('relationship_phrase' => 'relationship');
 		$editTable->label   = 'Relationship';
 		$editTable->dependencies = array('relationship_option_id' => 'employee_to_relationship');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function employeeReferralAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'employee_referral_option';
 		$editTable->fields  = array('referral_phrase' => 'Referral Mechanism');
 		$editTable->label   = 'Mechanism';
 		$editTable->dependencies = array('referral_option_id' => 'employee_to_referral');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function employeeTrainingProvidedAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'employee_training_provided_option';
 		$editTable->fields  = array('training_provided_phrase' => 'Training Provided');
 		$editTable->label   = 'Training Provided';
 		$editTable->dependencies = array('employee_training_provided_option_id' => 'employee');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function employeePartnerFunderAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'partner_funder_option';
 		$editTable->fields  = array('funder_phrase' => 'Funder');
 		$editTable->label   = 'Funder';
 		$editTable->dependencies = array('partner_funder_option_id' => 'subpartner_to_funder_to_mechanism');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 
 	public function employeePartnerImportanceAction()
 	{
 
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'partner_importance_option';
 		$editTable->fields  = array('importance_phrase' => 'Importance');
 		$editTable->label   = 'Importance';
 		$editTable->dependencies = array('partner_importance_option_id' => 'partner');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 	
 	public function employeeAgencyAction()
 	{
 	
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'agency_option';
 		$editTable->fields  = array('agency_phrase' => 'Agency');
 		$editTable->label   = 'Agency';
 		// $editTable->dependencies = array('partner_importance_option_id' => 'partner');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 	
 	public function employeeMechanismAction()
 	{
 	
 		/* edit table */
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'mechanism_option';
 		$editTable->fields  = array('mechanism_phrase' => 'Mechanism');
 		$editTable->label   = 'Mechanism';
 		$editTable->dependencies = array('mechanism_option_id' => 'subpartner_to_funder_to_mechanism');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 	}
 	
 	//$editTable->dependencies = array('partner_importance_option_id' => 'partner');
@@ -3315,12 +3415,14 @@ class AdminController extends UserController
 	{
 	
 		/* edit table */ 
-		$editTable = new EditTableController($this);
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable->setParentController($controller);
 		$editTable->table   = 'subpartner_to_funder_to_mechanism';
 		$editTable->fields  = array('id' => 'ID', 'subpartner_id' => 'Subpartner', 'partner_funder_option_id' => 'Funder', 'mechanism_option_id' => 'Mechanism', 'funding_end_date' => 'Funding End Date');
 		$editTable->label   = 'Funding  Mechanisms';
 		$editTable->dependencies = array('id' => 'partner_to_subpartner_to_funder_to_mechanism');
-		$editTable->execute();
+		$editTable->execute($controller->getRequest());
 		
 	}
 	

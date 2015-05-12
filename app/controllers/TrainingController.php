@@ -2316,7 +2316,7 @@ class TrainingController extends ReportFilterHelpers {
 		$this->sendData ( $rowArray );
 	}
 
-	public function listByTrainerAction() {
+	public function listbytrainerAction() {
 		//training info
 		$trainingObj = new Training ( );
 		$rowArray = $trainingObj->findFromTrainer ( $this->_getParam ( 'id' ) );
@@ -2331,7 +2331,7 @@ class TrainingController extends ReportFilterHelpers {
 		$this->sendData ( $rowArray );
 	}
 
-	public function listByTrainingRecommendPersonAction() {
+	public function listbytrainingrecommendpersonAction() {
 		// recommended classes based on person id
 		require_once 'models/table/TrainingRecommend.php';
 		$trainingRecObj = new TrainingRecommend ( );
@@ -2339,7 +2339,7 @@ class TrainingController extends ReportFilterHelpers {
 		$this->sendData ( $rowArray );
 	}
 
-	public function listByParticipantAction() {
+	public function listbyparticipantAction() {
 		//organizer info
 		$orgAccessListAllowed = allowed_org_access_full_list($this) . "," . allowed_organizer_in_this_site($this);
 		if ($orgAccessListAllowed == ",")

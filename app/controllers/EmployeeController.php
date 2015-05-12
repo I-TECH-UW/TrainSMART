@@ -177,6 +177,7 @@ class EmployeeController extends ReportFilterHelpers {
 	}
 	
 	public function generateMechanismTable($employee_id){
+	    /*
 	    if (!$this->view['mechanismList']) 
 	    {
 	       $mechanisms = $this->generateMechanismList($employee_id);
@@ -185,6 +186,10 @@ class EmployeeController extends ReportFilterHelpers {
 	    else {
 	        $mechanisms = $this->view['mechanismList'];
 	    }
+	    */
+	    $mechanisms = $this->generateMechanismList($employee_id);
+	    $this->view->assign("mechanismList", $mechanisms);
+	    
 	    if (!$employee_id)
 	    {
 	        return;

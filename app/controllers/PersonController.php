@@ -1880,7 +1880,7 @@ class PersonController extends ReportFilterHelpers {
 						$values['person_custom_2_option_id']          = $this->_importHelperFindOrCreate('person_custom_2_option',        'custom2_phrase',         $values['person_custom_2_option_id']);
 						$values['highest_level_option_id']            = $this->_importHelperFindOrCreate('person_education_level_option', 'education_level_phrase', $values['highest_level_option_id']);
 						//$values['courses']                            = $this->_importHelperFindOrCreate('???',         '?????', null, $values['courses']);
-						$personrow = $personObj->createRow();
+						$personrow = $personObj->createTableRow();
 						$personrow = ITechController::fillFromArray($personrow, $values);
 						$row_id = $personrow->save();
 					} catch (Exception $e) {

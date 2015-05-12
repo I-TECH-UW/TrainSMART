@@ -24,7 +24,7 @@ class History extends ITechTable {
 	 * To be called after an update
 	 *
 	 */
-	public function insert($source_table, $id) {
+	public function tableInsert($source_table, $id) {
 		if ($id) {
 			$data = array ();
 			foreach ( $source_table->_cols as $col ) {

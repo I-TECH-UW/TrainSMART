@@ -15,7 +15,7 @@ class Person extends ITechTable
 	protected $_name = 'person';
 	protected $_primary = 'id';
 
-	public function createRow(array $data = array()) {
+	public function createTableRow( array $data = array() ) {
 		$row = parent::createRow($data);
 		if ( !isset($data['active']) ) {
 			$row->active = 'active';

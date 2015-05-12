@@ -26,7 +26,7 @@ class ExternalController extends ITechController
 
     }
 
-   public function listByParticipantAction() {
+   public function listbyparticipantAction() {
 			//class info
 			$courseObj = new ExternalCourse();
 			$rowArray = $courseObj->findFromParticipant($this->_getParam('id'));

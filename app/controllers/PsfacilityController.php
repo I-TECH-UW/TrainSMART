@@ -368,7 +368,7 @@ class PsfacilityController extends ReportFilterHelpers {
 	
 	}
 	
-	public function searchLocationAction() {
+	public function searchlocationAction() {
 		
 		require_once ('models/table/OptionList.php');
 		

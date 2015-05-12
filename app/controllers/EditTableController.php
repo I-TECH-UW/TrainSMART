@@ -30,10 +30,15 @@ class EditTableController extends ITechController { //Zend_Controller_Action
   private $controller;
 
   public function __construct(Zend_Controller_Request_Abstract $request, Zend_Controller_Response_Abstract $response, array $invokeArgs = array() )
+  //public function __construct( &$partentController )
   {
       // moved to setParentController, ZF-1.8.0 requires constructor signature match, gnr
       //$this->controller = $parentController;
       //$this->view = $parentController->view;
+      
+      //file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'EditTableController contructor >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+      //var_dump("request=", $request,"END");
+      //$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
          
       parent::__construct($request, $response, $invokeArgs = array ());
   }

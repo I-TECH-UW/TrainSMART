@@ -51,7 +51,7 @@ class TrainingRecommend extends ITechTable
 	/**
 	 * Returns recommended training topics for person
 	 */
-	public function getRecommendedforPerson($person_id) {
+	public static function getRecommendedforPerson($person_id) {
     if(!$person_id) return array();
     $tableObj = new TrainingRecommend();
 
@@ -69,7 +69,7 @@ class TrainingRecommend extends ITechTable
   /**
    * Returns recommended training topics for qualification
    */
-  public function getRecommendedTrainingTopics($qualification_id) {
+  public static function getRecommendedTrainingTopics($qualification_id) {
     $tableObj = new TrainingRecommend();
 
     if(!$qualification_id) return array();
