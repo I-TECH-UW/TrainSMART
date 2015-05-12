@@ -37,7 +37,7 @@ ob_end_clean();
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 	<head>
-		<title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+		<title><?php echo t($this->translation['Application Name']);?> | <?php echo t($this->pageTitle); ?></title>
 <?php
 
 	require_once('views/helpers/ScriptContainer.php');
@@ -80,7 +80,7 @@ ob_end_clean();
 
 					buttons: {
 
-						"Save": function() {
+						"<?php echo t('Save') ?>": function() {
 
 							$("#_reason").val($("#title").val());
 
@@ -104,7 +104,7 @@ ob_end_clean();
 
 						},
 
-						Cancel: function() {
+						"<?php echo t('Cancel') ?>": function() {
 
 							$( this ).dialog( "close" );
 
@@ -128,7 +128,7 @@ ob_end_clean();
 
 					.click(function() {
 
-						$('#dialog-form').dialog('option', 'title', 'Add reason');
+						$('#dialog-form').dialog('option', 'title', '<?php echo t('Add reason')?>');
 
 						$("#currentid").val("0");
 
@@ -146,7 +146,7 @@ ob_end_clean();
 
 			function edititem(iid,itxt,itype){
 
-				$('#dialog-form').dialog('option', 'title', 'Update reason');
+				$('#dialog-form').dialog('option', 'title', '<?php echo t('Update reason')?>');
 
 				$("#currentid").val(iid);
 
@@ -252,9 +252,9 @@ ob_end_clean();
 
 	<body  class="yui-skin-sam">
 
-<div id="dialog-form" title="Update reason">
+<div id="dialog-form" title="<?php echo t('Update reason')?>">
 
-	<p class="validateTips">All form fields are required.</p>
+	<p class="validateTips"><?php echo t('All form fields are required.')?></p>
 
 
 
@@ -262,17 +262,17 @@ ob_end_clean();
 
 		<fieldset>
 
-			<label for="name">Reason</label>
+			<label for="name"><?php echo t('Reason')?></label>
 
 			<input type="text" name="title" id="title" class="text ui-widget-content ui-corner-all" />
 
-			<label for="name">Type</label>
+			<label for="name"><?php echo t('Type')?></label>
 
 			<select name="type" id="type" class="text ui-widget-content ui-corner-all">
 
-				<option value="join">Join</option>
+				<option value="join"><?php echo t('Join')?></option>
 
-				<option value="drop">Drop</option>
+				<option value="drop"><?php echo t('Drop')?></option>
 
 			</select>
 
@@ -312,11 +312,11 @@ ob_end_clean();
 
 								<tr>
 
-									<th>ID</th>
+									<th><?php echo t('ID')?></th>
 
-									<th>Reason</th>
+									<th><?php echo t('Reason')?></th>
 
-									<th>Type</th>
+									<th><?php echo t('Type')?></th>
 
 								</tr>
 
@@ -356,7 +356,7 @@ ob_end_clean();
 
 							<br>
 
-							<input type="submit" name="update" id="update" value="Add reason" class="tsbutton green large">
+							<input type="submit" name="update" id="update" value="<?php echo t('Add reason')?>" class="tsbutton green large">
 
 						</div>
 

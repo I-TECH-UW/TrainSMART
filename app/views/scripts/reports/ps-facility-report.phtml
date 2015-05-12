@@ -93,7 +93,7 @@
 					<input type="hidden" name="process" id="process" value="1">
 					<?php tp('Select Criteria');?><br>
 
-							<div class="fieldquestion">Facility</div>
+							<div class="fieldquestion"><?php tp('Facility')?></div>
 							<div class="fieldshow"><input type="checkbox" name="showfacility" id="showfacility" value="1"<?php echo $_GET['showfacility'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="facility" id="facility" style="" size="10">
 <?php
@@ -143,7 +143,7 @@
 							<div class="clear pad20">&nbsp;</div>
 							<?php }?>
 
-							<div class="fieldquestion"><?php echo t('Facility sponsors'); ?></div>
+							<div class="fieldquestion"><?php echo t('Facility sponsor'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="showinstitutionsponsors" id="showinstitutionsponsors" value="1"<?php echo $_GET['showinstitutionsponsors'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="institutionsponsors" id="institutionsponsors" style="" size="10">
 	<?php
@@ -182,7 +182,13 @@
 	
 							<div class="fieldquestion"><?php echo t('Start date between'); ?></div>
 							<div class="fieldshow">&nbsp;</div>
-							<div class="fieldselect"><input type="text" name="startday" id="startday" value="" placeholder="Day" style="width : 30px; margin-right : 10px; margin-left : 0px;"><input type="text" name="startmonth" id="startmonth" value="" placeholder="Month" style="width : 30px; margin-right : 10px; margin-left : 0px;"> <input type="text" name="startyear" id="startyear" value="" placeholder="Year" style="width : 50px; margin-right : 10px; margin-left : 0px;"><br><br>and<br><br><input type="text" name="endday" id="endday" value="" placeholder="Day" style="width : 30px; margin-right : 10px; margin-left : 0px;"> <input type="text" name="endmonth" id="endmonth" value="" placeholder="Month" style="width : 30px; margin-right : 10px; margin-left : 0px;"> <input type="text" name="endyear" id="endyear" value="" placeholder="Year" style="width : 50px; margin-right : 10px; margin-left : 0px;"></div>
+							<div class="fieldselect"><input type="text" name="startday" id="startday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;">
+							<input type="text" name="startmonth" id="startmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
+							<input type="text" name="startyear" id="startyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;">
+							<br><br><?php tp('and')?><br><br>
+							<input type="text" name="endday" id="endday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
+							<input type="text" name="endmonth" id="endmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
+							<input type="text" name="endyear" id="endyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;"></div>
 							<div class="clear pad20">&nbsp;</div>
 
 						</div>
@@ -222,7 +228,7 @@ if (isset($this->output)) {
 						<tr>
 <?php
 		foreach ($this->headers as $key=>$value){
-			echo "							<th>" . $value . "</th>\n";
+			echo "							<th>" . t($value) . "</th>\n";
 		}
 ?>
 						</tr>

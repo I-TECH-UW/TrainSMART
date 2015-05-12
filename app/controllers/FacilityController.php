@@ -368,10 +368,10 @@ where commodity.facility_id=". $id . " and date > DATE_SUB(now(), INTERVAL 12 MO
 		}
 		require_once('models/table/Translation.php');
 		$translation = Translation::getAll();
- 		$fieldDefs = array('name' => $translation['Facility Commodity Column Table Commodity Name'], 
- 				'date' => $translation['Facility Commodity Column Table Date'] . " (MM/YY)", 
- 				'consumption' => $translation['Facility Commodity Column Table Consumption'], 
- 				'stock_out' => $translation['Facility Commodity Column Table Out of Stock'] . " (Y/N)");
+ 		$fieldDefs = array('name' => t($translation['Facility Commodity Column Table Commodity Name']), 
+ 				'date' =>t($translation['Facility Commodity Column Table Date']) . " (" . t('MM/YY') . ")", 
+ 				'consumption' => t($translation['Facility Commodity Column Table Consumption']), 
+ 				'stock_out' => t($translation['Facility Commodity Column Table Out of Stock']) . " (" . t('Y/N') . ")");
 // 		$customColDefs['consumption'] = "editor:'textbox'";
 // 		$elements = array(array('text' => 'N', 'value' => 'N'), array('text' => 'Y', 'value' => 'Y'));
 // 		$elements = json_encode($elements); // yui data table will enjoy spending time with a json encoded array

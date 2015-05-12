@@ -163,7 +163,7 @@ class InstitutionController extends ITechController
 		if (($details['tutorcount'] != 0) && (is_numeric($details['tutorcount'])) && ($details['studentcount'] != 0) && (is_numeric($details['studentcount']))){
 			$this->view->assign('tutorratio',"1 : " . round(($details['studentcount'] / $details['tutorcount']),2));
 		} else {
-			$this->view->assign('tutorratio',"N/A");
+			$this->view->assign('tutorratio',t("N/A"));
 		}
 
 
@@ -268,7 +268,7 @@ class InstitutionController extends ITechController
 	if (($details['tutorcount'] != 0) && (is_numeric($details['tutorcount'])) && ($details['studentcount'] != 0) && (is_numeric($details['studentcount']))){
 	    $this->view->assign('tutorratio',"1 : " . round(($details['studentcount'] / $details['tutorcount']),2));
 	} else {
-			$this->view->assign('tutorratio',"N/A");
+			$this->view->assign('tutorratio',t("N/A"));
 	}
 	
 	

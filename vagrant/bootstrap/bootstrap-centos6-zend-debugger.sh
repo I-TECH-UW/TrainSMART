@@ -15,7 +15,7 @@ mv /home/vagrant/selinux-config /etc/selinux/config
 
 # update base packages
 yum update -y
-yum install yum-plugin-replace php php-devel php-mysql mysql-server mysql-devel git-core dos2unix telnet nano -y
+yum install yum-plugin-replace php php-devel php-mysql php-xml mysql-server mysql-devel git-core dos2unix telnet nano -y
 
 yum replace mysql-libs --replace-with mysql56u-libs -y
 yum replace php --replace-with php53u -y

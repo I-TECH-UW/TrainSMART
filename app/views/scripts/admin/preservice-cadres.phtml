@@ -37,7 +37,7 @@ ob_end_clean();
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 	<head>
-		<title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+		<title><?php echo t($this->translation['Application Name']);?> | <?php echo t($this->pageTitle); ?></title>
 <?php
 
 	require_once('views/helpers/ScriptContainer.php');
@@ -80,7 +80,7 @@ ob_end_clean();
 
 					buttons: {
 
-						"Save": function() {
+						"<?php echo t('Save') ?>": function() {
 
 							$("#_cadrename").val($("#cadrename").val());
 
@@ -104,7 +104,7 @@ ob_end_clean();
 
 						},
 
-						Cancel: function() {
+						"<?php echo t('Cancel') ?>": function() {
 
 							$( this ).dialog( "close" );
 
@@ -128,7 +128,7 @@ ob_end_clean();
 
 					.click(function() {
 
-						$('#dialog-form').dialog('option', 'title', 'Add cadre');
+						$('#dialog-form').dialog('option', 'title', '<?php echo t('Add cadre');?>');
 
 						$("#currentid").val("0");
 
@@ -154,7 +154,7 @@ ob_end_clean();
 
 			function edititem(iid,itxt,sdate,edate,insid,ctid,ctopic){
 
-				$('#dialog-form').dialog('option', 'title', 'Update cadre');
+				$('#dialog-form').dialog('option', 'title', '<?php echo t('Update cadre')?>');
 
 				$("#currentid").val(iid);
 
@@ -274,7 +274,7 @@ ob_end_clean();
 
 <div id="dialog-form" title="Update class">
 
-	<p class="validateTips">All form fields are required.</p>
+	<p class="validateTips"><?php echo t('All form fields are required.')?></p>
 
 
 
@@ -282,7 +282,7 @@ ob_end_clean();
 
 		<fieldset>
 
-			<label for="name">Cadre name</label>
+			<label for="name"><?php echo t("Cadre name")?></label>
 
 			<input type="text" name="cadrename" id="cadrename" class="text ui-widget-content ui-corner-all" />
 
@@ -322,9 +322,9 @@ ob_end_clean();
 
 								<tr>
 
-									<th>ID</th>
+									<th><?php echo t('ID');?></th>
 
-									<th>Title</th>
+									<th><?php echo t('Title');?></th>
 
 								</tr>
 
@@ -365,7 +365,7 @@ ob_end_clean();
 
 							<br>
                             <?php if ($this->hasACL( 'edit_studenttutorinst' )){?> 
-							<input type="submit" name="update" id="update" value="Add cadre" class="tsbutton green large">
+							<input type="submit" name="update" id="update" value="<?php echo t('Add cadre');?>" class="tsbutton green large">
                             <?php }?>
 						</div>
 

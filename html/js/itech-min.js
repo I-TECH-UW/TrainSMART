@@ -55,7 +55,7 @@ function addToSelect(promptMsg, selectId, jsonUrl) {
     var oldIndex = oSelect.selectedIndex;
     
     if(firstItem.text == SAVETEXT) {
-      alert("Trying to save... please wait.");
+      alert(tr("Trying to save... please wait"));
       return false;
     }
     
@@ -101,7 +101,7 @@ function addToSelect(promptMsg, selectId, jsonUrl) {
       },
       failure: function() {        
         // display error message
-        alert("Couldn't save, sorry!");
+        alert(tr("Couldn't save, sorry!"));
         oSelect.options[0] = firstItem;
         oSelect.className = "";
         return false;        
@@ -400,7 +400,7 @@ form_has_submitted = false;
 
 function exit_callback () {
 	if (form_has_changes && !form_has_submitted)
-		return "If you have made any changes to this page without clicking the Save button, your changes will be lost.  Are you sure you wish to leave this page?";
+		return tr("If you have made any changes to this page without clicking the Save button, your changes will be lost.  Are you sure you wish to leave this page?");
 }
 
 function itech_save_confirm_on_leave ()

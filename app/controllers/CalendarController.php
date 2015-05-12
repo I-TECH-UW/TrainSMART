@@ -102,7 +102,7 @@ class CalendarController extends ITechController
           $calHtml = $cal->display();
           
         } else {
-          $calhtml = t('No future').' '.t('Trainings').' '.t('found.');  
+          $calhtml = t('No future trainings found.');  
         }
         
         

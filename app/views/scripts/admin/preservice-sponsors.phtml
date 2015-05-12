@@ -37,7 +37,7 @@ ob_end_clean();
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 	<head>
-		<title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+		<title><?php echo t($this->translation['Application Name']);?> | <?php echo t($this->pageTitle); ?></title>
 <?php
 
 	require_once('views/helpers/ScriptContainer.php');
@@ -82,7 +82,7 @@ ob_end_clean();
 
 					buttons: {
 
-						"Save": function() {
+						"<?php echo t('Save') ?>": function() {
 
 							$("#_sponsor").val($("#title").val());
 
@@ -104,7 +104,7 @@ ob_end_clean();
 
 						},
 
-						Cancel: function() {
+						"<?php echo t('Cancel') ?>": function() {
 
 							$( this ).dialog( "close" );
 
@@ -128,7 +128,7 @@ ob_end_clean();
 
 					.click(function() {
 
-						$('#dialog-form').dialog('option', 'title', 'Add sponsor');
+						$('#dialog-form').dialog('option', 'title', '<?php echo t('Add sponsor')?>');
 
 						$("#currentid").val("0");
 
@@ -144,7 +144,7 @@ ob_end_clean();
 
 			function edititem(iid,itxt){
 
-				$('#dialog-form').dialog('option', 'title', 'Update sponsor');
+				$('#dialog-form').dialog('option', 'title', '<?php echo t('Update sponsor')?>');
 
 				$("#currentid").val(iid);
 
@@ -248,9 +248,9 @@ ob_end_clean();
 
 	<body  class="yui-skin-sam">
 
-<div id="dialog-form" title="Update sponsor">
+<div id="dialog-form" title="<?php echo t('Update sponsor') ?>">
 
-	<p class="validateTips">All form fields are required.</p>
+	<p class="validateTips"><?php echo t('All form fields are required.')?></p>
 
 
 
@@ -258,7 +258,7 @@ ob_end_clean();
 
 		<fieldset>
 
-			<label for="name">Sponsor</label>
+			<label for="name"><?php echo t('Sponsor') ?></label>
 
 			<input type="text" name="title" id="title" class="text ui-widget-content ui-corner-all" />
 
@@ -298,9 +298,9 @@ ob_end_clean();
 
 								<tr>
 
-									<th>ID</th>
+									<th><?php echo t('ID')?></th>
 
-									<th>Title</th>
+									<th><?php echo t('Title')?></th>
 
 								</tr>
 
@@ -340,7 +340,7 @@ ob_end_clean();
 
 							<br>
 
-							<input type="submit" name="update" id="update" value="Add sponsor" class="tsbutton green large">
+							<input type="submit" name="update" id="update" value="<?php echo t('Add sponsor') ?>" class="tsbutton green large">
 
 						</div>
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title><?php echo $this->translation['Application Name'];?> | <?php tp('Professionals Reports');?></title>
+	<title><?php echo $this->translation['Application Name'];?> | <?php tp('Professional Reports');?></title>
 	<?php
 	require_once('views/helpers/Location.php');
 	require_once('views/helpers/ScriptContainer.php');
@@ -16,7 +16,7 @@
 	var all = false;
 	function allcompetence(){
 		if ($('#complist').is(":disabled")){
-			alert("Please select an occupational category first.");
+			alert("<?php tp('Please select an occupational category first')?>");
 			$("#qualification_id").focus();
 		} else {
 			if (!all){
@@ -40,7 +40,7 @@
 		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
 		<div id="content">
 
-			<h1><?php tp('Professionals Reports');?></h1>
+			<h1><?php tp('Professional Reports');?></h1>
 			<form action="" method="get">
 				<fieldset><legend><?php tp('Select Criteria');?></legend>
 					<div class="fieldLabel" id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></div>
@@ -151,7 +151,7 @@
 ?>
 						<div class="fieldInput">
 							<select name="complist[]" id="complist" style="width : 350px;" size="5" multiple="multiple" disabled onchange="ShwHid(this)">
-								<option>Select an occupational category first</option>
+								<option><?php tp('Select an occupational category first')?></option>
 							</select>
 						</div>
 
@@ -483,12 +483,12 @@
 						<input type="hidden" name="listpq" id="listpq" value="1,2,3,4,5,6,7~8,9,10" />
 						<input type="hidden" name="ques" id="ques" value="<?php echo $this->criteria['ques'] ?>" />
 						<input type="hidden" name="limit" id="limit" value="1" />
-						<input type="submit" onclick="if(document.getElementById('ques').value==''){alert('Please select a competence');return false;}" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+						<input type="submit" onclick="if(document.getElementById('ques').value==''){alert('<?php tp('Please select a competence')?>');return false;}" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
 					</fieldset>
 				</form>
 				<?php if ( $this->criteria['go'] ) { ?>
 				<div class="hrGrey"></div>
-				<div class="fieldIndentNoMargin"><?php tp('Results');?></span><span class="printAndExport"><a href="javascript:window.print()">Print</a>&nbsp;&nbsp;<a href="javascript:myExport()">Export</a>&nbsp;&nbsp;<a href="javascript:myExport()"><img src="<?php echo (Settings::$COUNTRY_BASE_URL).'/images/excel.jpg'; ?>" /></a></span></div>
+				<div class="fieldIndentNoMargin"><?php tp('Results');?></span><span class="printAndExport"><a href="javascript:window.print()"><?php tp('Print')?></a>&nbsp;&nbsp;<a href="javascript:myExport()"><?php tp('Export')?></a>&nbsp;&nbsp;<a href="javascript:myExport()"><img src="<?php echo (Settings::$COUNTRY_BASE_URL).'/images/excel.jpg'; ?>" /></a></span></div>
 				<?php
 				if(isset($this->reportoutput))
 				{

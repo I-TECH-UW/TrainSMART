@@ -1120,8 +1120,8 @@ class AdminController extends UserController
 	{
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'training_category_option';
-		$editTable->fields  = array('training_category_phrase' => 'Training Category');
-		$editTable->label   = 'Training Category';
+		$editTable->fields  = array('training_category_phrase' => t('Training Category'));
+		$editTable->label   = t('Training Category');
 		$editTable->execute();
 	}
 
@@ -1129,8 +1129,8 @@ class AdminController extends UserController
 	{
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'training_title_option';
-		$editTable->fields  = array('training_title_phrase' => 'Training Title');
-		$editTable->label   = 'Training Title';
+		$editTable->fields  = array('training_title_phrase' => t('Training Title'));
+		$editTable->label   = t('Training Title');
 		$editTable->allowMerge = true;
 		$editTable->dependencies = array('training');
 		$editTable->execute();
@@ -1140,8 +1140,8 @@ class AdminController extends UserController
 	{
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'training_organizer_option';
-		$editTable->fields  = array('training_organizer_phrase' => 'Training Organizer');
-		$editTable->label   = 'Training Organizer';
+		$editTable->fields  = array('training_organizer_phrase' => t('Training Organizer'));
+		$editTable->label   = t('Training Organizer');
 		$editTable->dependencies = array('training');
 		$editTable->allowDefault = true;
 		$editTable->execute();
@@ -1151,8 +1151,8 @@ class AdminController extends UserController
 	{
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'training_level_option';
-		$editTable->fields  = array('training_level_phrase' => 'Training Level');
-		$editTable->label   = 'Training Level';
+		$editTable->fields  = array('training_level_phrase' => t('Training Level'));
+		$editTable->label   = t('Training Level');
 		$editTable->dependencies = array('training');
 		$editTable->allowDefault = true;
 		$editTable->execute();
@@ -1169,15 +1169,15 @@ class AdminController extends UserController
 
 		$checkbox = array(
 		'name'  => $fieldSystem,
-		'label' => 'Allow multiple Training topics',
+		'label' => t('Allow multiple Training topics'),
 		'value' => $this->getSetting($fieldSystem),
 		);
 		$this->view->assign('checkbox', $checkbox);
 
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'training_topic_option';
-		$editTable->fields  = array('training_topic_phrase' => 'Training Topic');
-		$editTable->label   = 'Training Topic';
+		$editTable->fields  = array('training_topic_phrase' => t('Training Topic'));
+		$editTable->label   = t('Training Topic');
 		$editTable->dependencies = array('training_to_training_topic_option');
 		$editTable->allowDefault = true;
 		$editTable->execute();
@@ -1194,7 +1194,7 @@ class AdminController extends UserController
 
 		$checkbox = array(
 		'name'  => $fieldSystem,
-		'label' => 'Allow multiple PEPFAR categories',
+		'label' => t('Allow multiple PEPFAR categories'),
 		'value' => $this->getSetting($fieldSystem),
 		);
 		$this->view->assign('checkbox', $checkbox);
@@ -1202,8 +1202,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'training_pepfar_categories_option';
-		$editTable->fields  = array('pepfar_category_phrase' => 'PEPFAR Category');
-		$editTable->label   = 'PEPFAR Category';
+		$editTable->fields  = array('pepfar_category_phrase' => t('PEPFAR Category'));
+		$editTable->label   = t('PEPFAR Category');
 		$editTable->dependencies = array('training_to_training_pepfar_categories_option');
 		$editTable->allowDefault = true;
 		$editTable->execute();
@@ -1221,8 +1221,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'training_funding_option';
-		$editTable->fields  = array('funding_phrase' => 'Funding');
-		$editTable->label   = 'Funding';
+		$editTable->fields  = array('funding_phrase' => t('Funding'));
+		$editTable->label   = t('Funding');
 		$editTable->dependencies = array('training_to_training_funding_option');
 		$editTable->allowDefault = true;
 		$editTable->execute();
@@ -1232,8 +1232,8 @@ class AdminController extends UserController
 	{
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'training_refresher_option';
-		$editTable->fields  = array('refresher_phrase_option' => 'Refresher Course');
-		$editTable->label   = 'Refresher Course';
+		$editTable->fields  = array('refresher_phrase_option' => t('Refresher Course'));
+		$editTable->label   = t('Refresher Course');
 		$editTable->dependencies = array('training');
 		$editTable->execute();
 	}
@@ -1243,8 +1243,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'training_got_curriculum_option';
-		$editTable->fields  = array('training_got_curriculum_phrase' => 'National Curriculum');
-		$editTable->label   = 'National Curriculum';
+		$editTable->fields  = array('training_got_curriculum_phrase' => t('National Curriculum'));
+		$editTable->label   = t('National Curriculum');
 		$editTable->dependencies = array('training');
 		$editTable->execute();
 	}
@@ -1254,8 +1254,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'training_method_option';
-		$editTable->fields  = array('training_method_phrase' => 'Method');
-		$editTable->label   = 'Training Methods';
+		$editTable->fields  = array('training_method_phrase' => t('Method'));
+		$editTable->label   = t('Training Methods');
 		$editTable->dependencies = array('training_to_training_pepfar_categories_option');
 		$editTable->execute();
 	}
@@ -1274,7 +1274,7 @@ class AdminController extends UserController
 
 		$checkbox = array(
 		'name'  => $fieldSystem,
-		'label' => 'Display recommended trainings per individual',
+		'label' => t('Display recommended trainings per individual'),
 		'value' => $this->getSetting($fieldSystem),
 		);
 		$this->view->assign('checkbox', $checkbox);
@@ -1496,10 +1496,10 @@ class AdminController extends UserController
 		$multiAssign->table = 'training_category_option_to_training_title_option';
 
 		$multiAssign->option_table = 'training_title_option';
-		$multiAssign->option_field = array('training_title_phrase' => 'Title');
+		$multiAssign->option_field = array('training_title_phrase' => t('Title'));
 
 		$multiAssign->parent_table = 'training_category_option';
-		$multiAssign->parent_field = array('training_category_phrase' => 'Training Category');;
+		$multiAssign->parent_field = array('training_category_phrase' => t('Training Category'));
 
 		$output = $multiAssign->init($this);
 		if(is_array($output)) { // json
@@ -1533,7 +1533,7 @@ class AdminController extends UserController
 
 		$checkbox = array(
 		'name'  => $fieldSystem,
-		'label' => 'Display recommended trainings per individual',
+		'label' => t('Display recommended trainings per individual'),
 		'value' => $this->getSetting($fieldSystem),
 		);
 		$this->view->assign('checkbox', $checkbox);
@@ -1611,8 +1611,8 @@ class AdminController extends UserController
 		require_once('models/table/TrainingRecommend.php');
 		$rowArray = TrainingRecommend::getRecommendedAdmin();
 		foreach($rowArray as $key => $row) {
-			$rowArray[$key]['edit'] = '<a href="' . Settings::$COUNTRY_BASE_URL . '/admin/training-recommend/edit/'. $row['person_qualification_option_id'] . '#edit">edit</a>&nbsp;' .
-			'<a href="' . Settings::$COUNTRY_BASE_URL . '/admin/training-recommend/delete/'. $row['person_qualification_option_id'] . '" onclick="return confirm(\'Are you sure you wish to remove these recommendations?\')">delete</a>';
+			$rowArray[$key]['edit'] = '<a href="' . Settings::$COUNTRY_BASE_URL . '/admin/training-recommend/edit/'. $row['person_qualification_option_id'] . '#edit">' . t('edit') . '</a>&nbsp;' .
+			'<a href="' . Settings::$COUNTRY_BASE_URL . '/admin/training-recommend/delete/'. $row['person_qualification_option_id'] . '" onclick="return confirm(\'' . t('Are you sure you wish to remove these recommendations?') . '\')">' . t('delete') . '</a>';
 		}
 		$this->sendData($rowArray);
 	}
@@ -1623,8 +1623,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'person_to_training_award_option';
-		$editTable->fields  = array('award_phrase' => 'Training Completion');
-		$editTable->label   = 'Complete Status';
+		$editTable->fields  = array('award_phrase' => t('Training Completion'));
+		$editTable->label   = t('Complete Status');
 		$editTable->dependencies = array('award_id' => 'person_to_training');
 		$editTable->execute();
 	}
@@ -1635,8 +1635,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'person_to_training_viewing_loc_option';
-		$editTable->fields  = array('location_phrase' => 'Location');
-		$editTable->label   = 'Location';
+		$editTable->fields  = array('location_phrase' => t('Location'));
+		$editTable->label   = t('Location');
 		$editTable->dependencies = array('viewing_location_option_id' => 'person_to_training');
 		$editTable->execute();
 	}
@@ -1647,8 +1647,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'person_to_training_budget_option';
-		$editTable->fields  = array('budget_code_phrase' => 'Budget Code');
-		$editTable->label   = 'Budget Code';
+		$editTable->fields  = array('budget_code_phrase' => t('Budget Code'));
+		$editTable->label   = t('Budget Code');
 		$editTable->dependencies = array('budget_code_option_id' => 'person_to_training');
 		$editTable->execute();
 	}
@@ -1816,7 +1816,7 @@ class AdminController extends UserController
 
 		// fill form dropdowns
 		$this->viewAssignEscaped ( 'locations', Location::getAll() );
-		$this->view->assign ('pageTitle', t('Person').space.t('Merge'));
+		$this->view->assign ('pageTitle', t('Person Merge'));
 		$this->view->assign ('status', $status);
 
 		//training titles
@@ -1846,8 +1846,8 @@ class AdminController extends UserController
 		if ( $parent or $this->getSanParam('redirect') ) {
 			$editTable = new EditTableController($this);
 			$editTable->table   = 'person_qualification_option';
-			$editTable->fields  = array('qualification_phrase' => 'Qualification');
-			$editTable->label   = 'Person Qualification';
+			$editTable->fields  = array('qualification_phrase' => t('Qualification'));
+			$editTable->label   = t('Person Qualification');
 			$editTable->dependencies = array('primary_qualification_option_id' => 'person');
 			$editTable->where = 'parent_id = '.$parent;
 			$editTable->insertExtra = array('parent_id'=>$parent);
@@ -1870,8 +1870,8 @@ class AdminController extends UserController
 	{
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'person_primary_responsibility_option';
-		$editTable->fields  = array('responsibility_phrase' => 'Primary Responsibility');
-		$editTable->label   = 'Primary Responsibility';
+		$editTable->fields  = array('responsibility_phrase' => t('Primary Responsibility'));
+		$editTable->label   = t('Primary Responsibility');
 		$editTable->dependencies = array('primary_responsibility_option_id' => 'person');
 		$editTable->execute();
 	}
@@ -1880,8 +1880,8 @@ class AdminController extends UserController
 	{
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'person_secondary_responsibility_option';
-		$editTable->fields  = array('responsibility_phrase' => 'Secondary Responsibility');
-		$editTable->label   = 'Secondary Responsibility';
+		$editTable->fields  = array('responsibility_phrase' => t('Secondary Responsibility'));
+		$editTable->label   = t('Secondary Responsibility');
 		$editTable->dependencies = array('secondary_responsibility_option_id' => 'person');
 		$editTable->execute();
 	}
@@ -1890,8 +1890,8 @@ class AdminController extends UserController
 	{
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'trainer_type_option';
-		$editTable->fields  = array('trainer_type_phrase' => 'Type');
-		$editTable->label   = 'Trainer Type';
+		$editTable->fields  = array('trainer_type_phrase' => t('Type'));
+		$editTable->label   = t('Trainer Type');
 		$editTable->dependencies = array('type_option_id' => 'trainer');
 		$editTable->execute();
 	}
@@ -1917,8 +1917,8 @@ class AdminController extends UserController
 
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'trainer_skill_option';
-		$editTable->fields  = array('trainer_skill_phrase' => 'Trainer Skill');
-		$editTable->label   = 'Trainer Skill';
+		$editTable->fields  = array('trainer_skill_phrase' => t('Trainer Skill'));
+		$editTable->label   = t('Trainer Skill');
 		$editTable->dependencies = array('trainer_to_trainer_skill_option');
 		$editTable->execute();
 	}
@@ -1928,8 +1928,8 @@ class AdminController extends UserController
 
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'trainer_language_option';
-		$editTable->fields  = array('language_phrase' => 'Language');
-		$editTable->label   = 'Language';
+		$editTable->fields  = array('language_phrase' => t('Language'));
+		$editTable->label   = t('Language');
 		$editTable->dependencies = array('trainer_to_trainer_language_option');
 		$editTable->execute();
 	}
@@ -1941,8 +1941,8 @@ class AdminController extends UserController
 
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'trainer_affiliation_option';
-		$editTable->fields  = array('trainer_affiliation_phrase' => 'Affiliation');
-		$editTable->label   = 'Affiliation';
+		$editTable->fields  = array('trainer_affiliation_phrase' => t('Affiliation'));
+		$editTable->label   = t('Affiliation');
 		$editTable->dependencies = array('affiliation_option_id' => 'trainer');
 		$editTable->execute();
 	}
@@ -1953,8 +1953,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'person_title_option';
-		$editTable->fields  = array('title_phrase' => 'Title');
-		$editTable->label   = 'Title';
+		$editTable->fields  = array('title_phrase' => t('Title'));
+		$editTable->label   = t('Title');
 		$editTable->dependencies = array('title_option_id' => 'person');
 		$editTable->execute();
 
@@ -1965,8 +1965,8 @@ class AdminController extends UserController
 	{
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'tutor_specialty_option';
-		$editTable->fields  = array('specialty_phrase' => 'Specialty');
-		$editTable->label   = 'Specialty';
+		$editTable->fields  = array('specialty_phrase' => t('Specialty'));
+		$editTable->label   = t('Specialty');
 		$editTable->dependencies = array('specialty' => 'tutor');
 		$editTable->execute();	
 	}
@@ -1976,8 +1976,8 @@ class AdminController extends UserController
 	{
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'tutor_contract_option';
-		$editTable->fields  = array('contract_phrase' => 'Contract Type');
-		$editTable->label   = 'Contract Type';
+		$editTable->fields  = array('contract_phrase' => t('Contract Type'));
+		$editTable->label   = t('Contract Type');
 		$editTable->dependencies = array('contract_type' => 'tutor');
 		$editTable->execute();
 	}
@@ -1986,9 +1986,9 @@ class AdminController extends UserController
 	public function commoditynameAction(){
 		
 		$editTable = new EditTableController($this);
-		$editTable->fields  = array('commodity_name' => 'Commodity Name');
+		$editTable->fields  = array('commodity_name' => t('Commodity Name'));
 		$editTable->table   = 'commodity_name_option';
-		$editTable->label   = 'Commodity Name';
+		$editTable->label   = t('Commodity Name');
 		$editTable->dependencies = array('name_id' => 'commodity');
 		$editTable->execute();
 	}
@@ -1999,8 +1999,8 @@ class AdminController extends UserController
 	{
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'commodity_type_option';
-		$editTable->fields  = array('commodity_type' => 'Commodity Type');
-		$editTable->label   = 'Commodity Type';
+		$editTable->fields  = array('commodity_type' => t('Commodity Type'));
+		$editTable->label   = t('Commodity Type');
 		$editTable->dependencies = array('type_id' => 'commodity');
 		$editTable->execute();
 	}
@@ -2011,8 +2011,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'person_suffix_option';
-		$editTable->fields  = array('suffix_phrase' => 'Suffix');
-		$editTable->label   = 'Suffix';
+		$editTable->fields  = array('suffix_phrase' => t('Suffix'));
+		$editTable->label   = t('Suffix');
 		$editTable->dependencies = array('suffix_option_id' => 'person');
 		$editTable->execute();
 	}
@@ -2023,8 +2023,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'person_active_trainer_option';
-		$editTable->fields  = array('active_trainer_phrase' => 'Active Trainer');
-		$editTable->label   = 'Active Trainer';
+		$editTable->fields  = array('active_trainer_phrase' => t('Active Trainer'));
+		$editTable->label   = t('Active Trainer');
 		$editTable->dependencies = array('active_trainer_option_id' => 'trainer');
 		$editTable->execute();
 	}
@@ -2035,8 +2035,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'person_education_level_option';
-		$editTable->fields  = array('education_level_phrase' => 'Highest Education Level');
-		$editTable->label   = 'Highest Education Level';
+		$editTable->fields  = array('education_level_phrase' => t('Highest Education Level'));
+		$editTable->label   = t('Highest Education Level');
 		$editTable->dependencies = array('highest_edu_level_option_id' => 'person');
 		$editTable->execute();
 	}
@@ -2047,8 +2047,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'person_attend_reason_option';
-		$editTable->fields  = array('attend_reason_phrase' => 'Reason Attending');
-		$editTable->label   = 'Reason Attending';
+		$editTable->fields  = array('attend_reason_phrase' => t('Reason Attending'));
+		$editTable->label   = t('Reason Attending');
 		$editTable->dependencies = array('attend_reason_option_id' => 'person');
 		$editTable->execute();
 	}
@@ -2061,8 +2061,8 @@ class AdminController extends UserController
 	{
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'facility_type_option';
-		$editTable->fields  = array('facility_type_phrase' => 'Facility Type');
-		$editTable->label   = 'Facility Type';
+		$editTable->fields  = array('facility_type_phrase' => t('Facility Type'));
+		$editTable->label   = t('Facility Type');
 		$editTable->dependencies = array('type_option_id' => 'facility');
 		$editTable->execute();
 	}
@@ -2071,8 +2071,8 @@ class AdminController extends UserController
 	{
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'facility_sponsor_option';
-		$editTable->fields  = array('facility_sponsor_phrase' => 'Facility Sponsor');
-		$editTable->label   = 'Facility Sponsor';
+		$editTable->fields  = array('facility_sponsor_phrase' => t('Facility Sponsor'));
+		$editTable->label   = t('Facility Sponsor');
 		$editTable->dependencies = array('sponsor_option_id' => 'facility');
 		$editTable->execute();
 	}
@@ -2181,7 +2181,7 @@ class AdminController extends UserController
 		}
 
 		// fill form dropdowns
-		$this->view->assign('pageTitle', t('Facility').space.t('Merge'));
+		$this->view->assign('pageTitle', t('Facilities Merge'));
 		// facility name
 		$nameArray = OptionList::suggestionListValues ( 'facility', 'facility_name', false, false, false );
 		$this->viewAssignEscaped ( 'facility_names', $nameArray );
@@ -2247,7 +2247,7 @@ class AdminController extends UserController
 		$this->view->assign("lookup", $list);
 		$this->view->assign("coursetypes", $coursetypes);
 		$this->view->assign("tutors", $tutors);
-		$this->view->assign("header","Classes");
+		$this->view->assign("header",t("Classes"));
 	}
 	
 	//TA: changed on 7/21/2014
@@ -2389,7 +2389,7 @@ class AdminController extends UserController
 // 				$this->view->assign("fieldvalues",$list);
 // 				$this->view->assign("allfields",$fields);
 		
- 				$this->view->assign("header","Field labels");
+ 				$this->view->assign("header",t("Field labels"));
 	}
 	
 	//old code
@@ -2439,7 +2439,7 @@ class AdminController extends UserController
 	
 		$list = $helper->AdminCadres();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Cadres");
+		$this->view->assign("header",t("Cadres"));
 	}
 
 	public function preserviceDegreesAction(){
@@ -2459,7 +2459,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminDegrees();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Degrees");
+		$this->view->assign("header",t("Degrees"));
 	}
 
 	public function preserviceCoursetypesAction(){
@@ -2479,7 +2479,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminCoursetypes();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Course types");
+		$this->view->assign("header",t("Course types"));
 	}
 
 	public function preserviceFundingAction(){
@@ -2499,7 +2499,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminFunding();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Funding sources");
+		$this->view->assign("header",t("Funding sources"));
 	}
 
 	public function preserviceInstitutiontypesAction(){
@@ -2519,7 +2519,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminInstitutionTypes();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Institution types");
+		$this->view->assign("header",t("Institution types"));
 	}
 
 	public function preserviceLanguagesAction(){
@@ -2539,7 +2539,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminLanguages();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Languages");
+		$this->view->assign("header",t("Languages"));
 	}
 
 	public function preserviceNationalitiesAction(){
@@ -2559,7 +2559,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminNationalities();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Nationalities");
+		$this->view->assign("header",t("Nationalities"));
 	}
 
 	public function preserviceJoindropreasonsAction(){
@@ -2579,7 +2579,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminJoinDropReasons();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Join & drop reasons");
+		$this->view->assign("header",t("Join & drop reasons"));
 	}
 
 	public function preserviceSponsorsAction(){
@@ -2599,7 +2599,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminSponsors();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Sponsors");
+		$this->view->assign("header",t("Sponsors"));
 	}
 
 	public function preserviceStudenttypesAction(){
@@ -2619,7 +2619,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminStudenttypes();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Student types");
+		$this->view->assign("header",t("Student types"));
 	}
 
 	public function preserviceTutortypesAction(){
@@ -2639,7 +2639,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminTutortypes();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Tutor types");
+		$this->view->assign("header",t("Tutor types"));
 	}
 
 	public function preserviceReligionAction(){
@@ -2659,7 +2659,7 @@ class AdminController extends UserController
 
 		$list = $helper->AdminStudenttypes();
 		$this->view->assign("lookup", $list);
-		$this->view->assign("header","Religious denominations");
+		$this->view->assign("header",t("Religious denominations"));
 	}
 
 	public function skillsmartSettingsAction()
@@ -2773,7 +2773,7 @@ class AdminController extends UserController
 		$list = $helper->getSkillSmartLookups();
 		$dump = var_export($list,true);
 		$this->view->assign("lookup", $list['race']);
-		$this->view->assign("header","Race");
+		$this->view->assign("header",t("Race"));
 	}
 
 	public function skillsmartDisabilityAction(){
@@ -2793,7 +2793,7 @@ class AdminController extends UserController
 
 		$list = $helper->getSkillSmartLookups();
 		$this->view->assign("lookup", $list['disability']);
-		$this->view->assign("header","Disability");
+		$this->view->assign("header",t("Disability"));
 	}
 
 	public function skillsmartProfessionalbodiesAction(){
@@ -2813,7 +2813,7 @@ class AdminController extends UserController
 
 		$list = $helper->getSkillSmartLookups();
 		$this->view->assign("lookup", $list['professionalbodies']);
-		$this->view->assign("header","Professional Bodies");
+		$this->view->assign("header",t("Professional Bodies"));
 	}
 
 	public function skillsmartSupervisedAction(){
@@ -2833,7 +2833,7 @@ class AdminController extends UserController
 
 		$list = $helper->getSkillSmartLookups();
 		$this->view->assign("lookup", $list['supervised']);
-		$this->view->assign("header","Supervised");
+		$this->view->assign("header",t("Supervised"));
 	}
 
 	public function skillsmartSupervisedfrequencyAction(){
@@ -2853,7 +2853,7 @@ class AdminController extends UserController
 
 		$list = $helper->getSkillSmartLookups();
 		$this->view->assign("lookup", $list['supervisedfrequency']);
-		$this->view->assign("header","Supervision Frequency");
+		$this->view->assign("header",t("Supervision Frequency"));
 	}
 
 	public function skillsmartTrainingAction(){
@@ -2873,7 +2873,7 @@ class AdminController extends UserController
 
 		$list = $helper->getSkillSmartLookups();
 		$this->view->assign("lookup", $list['training']);
-		$this->view->assign("header","Training received");
+		$this->view->assign("header",t("Training received"));
 	}
 
 	public function skillsmartFacilitydepartmentAction(){
@@ -2893,7 +2893,7 @@ class AdminController extends UserController
 
 		$list = $helper->getSkillSmartLookups();
 		$this->view->assign("lookup", $list['facilitydepartment']);
-		$this->view->assign("header","Facility Departments");
+		$this->view->assign("header",t("Facility Departments"));
 	}
 
 	public function skillsmartCompetencyAction(){
@@ -2938,7 +2938,7 @@ class AdminController extends UserController
 			// GENERAL OVERVIEW OF ALL COMPETENCY NAMES
 			$list = $helper->getSkillSmartCompetencies();
 			$this->view->assign("lookup", $list);
-			$this->view->assign("header","Competencies");
+			$this->view->assign("header",t("Competencies"));
 		} else {
 			// COMPETENCY SPECIFIC OUTPUT
 
@@ -2963,8 +2963,8 @@ class AdminController extends UserController
 		if ( $parent or $this->getSanParam('redirect') ) {
 			$editTable = new EditTableController($this);
 			$editTable->table   = 'occupational_categories';
-			$editTable->fields  = array('category_phrase' => 'Category');
-			$editTable->label   = 'Occupational Category';
+			$editTable->fields  = array('category_phrase' => t('Category'));
+			$editTable->label   = t('Occupational Category');
 			$editTable->dependencies = array('occupational_category_id' => 'person');
 			$editTable->where = 'parent_id = '.$parent;
 			$editTable->insertExtra = array('parent_id'=>$parent);
@@ -3123,8 +3123,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'partner_type_option';
-		$editTable->fields  = array('type_phrase' => 'Partner Type');
-		$editTable->label   = 'Partner Type';
+		$editTable->fields  = array('type_phrase' => t('Partner Type'));
+		$editTable->label   = t('Partner Type');
 		$editTable->dependencies = array('partner_type_option_id' => 'partner');
 		$editTable->execute();
 	}
@@ -3135,8 +3135,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'employee_category_option';
-		$editTable->fields  = array('category_phrase' => 'Staff Category');
-		$editTable->label   = 'Staff Category';
+		$editTable->fields  = array('category_phrase' => t('Staff Category'));
+		$editTable->label   = t('Staff Category');
 		$editTable->dependencies = array('employee_category_option_id' => 'employee');
 		$editTable->execute();
 	}
@@ -3147,8 +3147,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'employee_base_option';
-		$editTable->fields  = array('base_phrase' => 'Base');
-		$editTable->label   = 'Base';
+		$editTable->fields  = array('base_phrase' => t('Base'));
+		$editTable->label   = t('Base');
 		$editTable->dependencies = array('employee_base_option_id' => 'employee');
 		$editTable->execute();
 	}
@@ -3159,8 +3159,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'employee_site_type_option';
-		$editTable->fields  = array('site_type_phrase' => 'Type');
-		$editTable->label   = 'Type';
+		$editTable->fields  = array('site_type_phrase' => t('Type'));
+		$editTable->label   = t('Type');
 		$editTable->dependencies = array('facility_type_option_id' => 'employee');
 		$editTable->execute();
 	}
@@ -3171,8 +3171,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'employee_fulltime_option';
-		$editTable->fields  = array('fulltime_phrase' => 'Full Time');
-		$editTable->label   = 'Status';
+		$editTable->fields  = array('fulltime_phrase' => t('Full Time'));
+		$editTable->label   = t('Status');
 		$editTable->dependencies = array('employee_fulltime_option_id' => 'employee');
 		$editTable->execute();
 	}
@@ -3183,8 +3183,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'person_race_option';
-		$editTable->fields  = array('race_phrase' => 'Race');
-		$editTable->label   = 'Race';
+		$editTable->fields  = array('race_phrase' => t('Race'));
+		$editTable->label   = t('Race');
 		$editTable->dependencies = array('race_option_id' => 'employee');
 		$editTable->execute();
 	}
@@ -3195,8 +3195,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'employee_qualification_option';
-		$editTable->fields  = array('qualification_phrase' => 'Qualification');
-		$editTable->label   = 'Qualification';
+		$editTable->fields  = array('qualification_phrase' => t('Qualification'));
+		$editTable->label   = t('Qualification');
 		$editTable->dependencies = array('employee_qualification_option_id' => 'employee');
 		$editTable->execute();
 	}
@@ -3207,8 +3207,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'employee_role_option';
-		$editTable->fields  = array('role_phrase' => 'Primary Role');
-		$editTable->label   = 'Primary Roles for employees';
+		$editTable->fields  = array('role_phrase' => t('Primary Role'));
+		$editTable->label   = t('Primary Roles for employees');
 		$editTable->dependencies = array('employee_role_option_id' => 'employee');
 		$editTable->execute();
 	}
@@ -3219,8 +3219,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'employee_transition_option';
-		$editTable->fields  = array('transition_phrase' => 'Intended Transition');
-		$editTable->label   = 'Intended Transitions';
+		$editTable->fields  = array('transition_phrase' => t('Intended Transition'));
+		$editTable->label   = t('Intended Transitions');
 		$editTable->dependencies = array('employee_transition_option_id' => 'employee');
 		$editTable->execute();
 	}
@@ -3231,8 +3231,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'employee_relationship_option';
-		$editTable->fields  = array('relationship_phrase' => 'relationship');
-		$editTable->label   = 'Relationship';
+		$editTable->fields  = array('relationship_phrase' => t('Relationship'));
+		$editTable->label   = t('Relationship');
 		$editTable->dependencies = array('relationship_option_id' => 'employee_to_relationship');
 		$editTable->execute();
 	}
@@ -3243,8 +3243,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'employee_referral_option';
-		$editTable->fields  = array('referral_phrase' => 'Referral Mechanism');
-		$editTable->label   = 'Mechanism';
+		$editTable->fields  = array('referral_phrase' => t('Referral Mechanism'));
+		$editTable->label   = t('Mechanism');
 		$editTable->dependencies = array('referral_option_id' => 'employee_to_referral');
 		$editTable->execute();
 	}
@@ -3255,8 +3255,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'employee_training_provided_option';
-		$editTable->fields  = array('training_provided_phrase' => 'Training Provided');
-		$editTable->label   = 'Training Provided';
+		$editTable->fields  = array('training_provided_phrase' => t('Training Provided'));
+		$editTable->label   = t('Training Provided');
 		$editTable->dependencies = array('employee_training_provided_option_id' => 'employee');
 		$editTable->execute();
 	}
@@ -3267,8 +3267,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'partner_funder_option';
-		$editTable->fields  = array('funder_phrase' => 'Funder');
-		$editTable->label   = 'Funder';
+		$editTable->fields  = array('funder_phrase' => t('Funder'));
+		$editTable->label   = t('Funder');
 		$editTable->dependencies = array('partner_funder_option_id' => 'subpartner_to_funder_to_mechanism');
 		$editTable->execute();
 	}
@@ -3279,8 +3279,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'partner_importance_option';
-		$editTable->fields  = array('importance_phrase' => 'Importance');
-		$editTable->label   = 'Importance';
+		$editTable->fields  = array('importance_phrase' => t('Importance'));
+		$editTable->label   = t('Importance');
 		$editTable->dependencies = array('partner_importance_option_id' => 'partner');
 		$editTable->execute();
 	}
@@ -3291,8 +3291,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'agency_option';
-		$editTable->fields  = array('agency_phrase' => 'Agency');
-		$editTable->label   = 'Agency';
+		$editTable->fields  = array('agency_phrase' => t('Agency'));
+		$editTable->label   = t('Agency');
 		// $editTable->dependencies = array('partner_importance_option_id' => 'partner');
 		$editTable->execute();
 	}
@@ -3303,8 +3303,8 @@ class AdminController extends UserController
 		/* edit table */
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'mechanism_option';
-		$editTable->fields  = array('mechanism_phrase' => 'Mechanism');
-		$editTable->label   = 'Mechanism';
+		$editTable->fields  = array('mechanism_phrase' => t('Mechanism'));
+		$editTable->label   = t('Mechanism');
 		$editTable->dependencies = array('mechanism_option_id' => 'subpartner_to_funder_to_mechanism');
 		$editTable->execute();
 	}
@@ -3317,8 +3317,8 @@ class AdminController extends UserController
 		/* edit table */ 
 		$editTable = new EditTableController($this);
 		$editTable->table   = 'subpartner_to_funder_to_mechanism';
-		$editTable->fields  = array('id' => 'ID', 'subpartner_id' => 'Subpartner', 'partner_funder_option_id' => 'Funder', 'mechanism_option_id' => 'Mechanism', 'funding_end_date' => 'Funding End Date');
-		$editTable->label   = 'Funding  Mechanisms';
+		$editTable->fields  = array('id' => t('ID'), 'subpartner_id' => t('Subpartner'), 'partner_funder_option_id' => t('Funder'), 'mechanism_option_id' => t('Mechanism'), 'funding_end_date' => t('Funding End Date'));
+		$editTable->label   = t('Funding  Mechanisms');
 		$editTable->dependencies = array('id' => 'partner_to_subpartner_to_funder_to_mechanism');
 		$editTable->execute();
 		

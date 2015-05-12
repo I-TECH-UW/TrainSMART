@@ -379,8 +379,8 @@ class EvaluationController extends ITechController {
 			require_once('models/table/MultiOptionList.php');
 			MultiOptionList::updateOptions('evaluation_to_training', 'training', 'evaluation_id', $id, 'training_id', $adjusted);
 
-			$_SESSION['status'] = t('The').' '.t('Trainings').' '.t('have been assigned.');
-			$status->setStatusMessage ( t('The').' '.t('Trainings').' '.t('have been assigned.') );
+			$_SESSION['status'] = t('The trainings have been assigned.');
+			$status->setStatusMessage ( t('The trainings have been assigned.') );
 
 		      $status->setRedirect ( '/evaluation/browse' );
 
