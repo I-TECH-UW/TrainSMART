@@ -1,6 +1,6 @@
 ALTER TABLE `classes`
-ADD COLUMN `credits`  int(10) NOT NULL DEFAULT 0 AFTER `coursetopic`,
-ADD COLUMN `class_modules_id`  int(10) NOT NULL DEFAULT 0 AFTER `credits`,
+ADD COLUMN `maxcredits`  int(10) NOT NULL DEFAULT 0 AFTER `coursetopic`,
+ADD COLUMN `class_modules_id`  int(10) NOT NULL DEFAULT 0 AFTER `maxcredits`,
 ADD COLUMN `custom_1`  varchar(255) NULL AFTER `class_modules_id`,
 ADD COLUMN `custom_2`  varchar(255) NULL AFTER `custom_1`;
 

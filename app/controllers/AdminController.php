@@ -2247,7 +2247,7 @@ class AdminController extends UserController
 				'_id' => 'id',
 				'_class_modules_id' => 'class_modules_id',
 				'_custom_1' => 'custom_1',
-				'_credits' => 'credits',
+				'_credits' => 'maxcredits',
 				'_custom_2' => 'custom_2',
 			);
 
