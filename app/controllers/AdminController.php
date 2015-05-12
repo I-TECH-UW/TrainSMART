@@ -156,9 +156,6 @@ class AdminController extends UserController
 		'label_training_center'  => 'Training Center',
 		'label_participant'      => 'Participant',
 		'label_participants'     => 'Participants',
-		'label_employee'         => 'Employee',
-		'label_employees'        => 'Employees',
-		'label_employer'         => 'Employer',
 		);
 
 		// _system settings
@@ -2987,6 +2984,10 @@ class AdminController extends UserController
 	// same logic as other Settings pages - except the employee_header setting below
 		require_once('models/table/Translation.php');
 		$labelNames = array( // input name => key_phrase
+			'label_employee'                 => 'Employee',
+			'label_employees'                => 'Employees',
+			'label_employer'                 => 'Employer',
+			'label_employee_code'            => 'Employee Code',
 			'label_partner'                  => 'Partner',
 			'label_sub_partner'              => 'Sub Partner',
 			'label_type'                     => 'Type of Partner',

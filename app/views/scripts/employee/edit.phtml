@@ -72,10 +72,10 @@
 						{
 						    $this->viewonly = false;
 						}
-						echo labelAndField($this, t('Employee').space.t('Code'),    'text', 'employee_code',   $this->employee['employee_code'] );
+						echo labelAndField($this, t('Employee Code'), 'text', 'employee_code', $this->employee['employee_code'] );
 						
 						if($this->setting['display_employee_dob'])
-						echo labelAndField($this, t('Employee Date of Birth').space.('(dd/mm/yyyy)'),'date', 'dob',         $this->employee['dob'] );
+						echo labelAndField($this, t('Employee Date of Birth').space.('(dd/mm/yyyy)'),'date', 'dob', $this->employee['dob'] );
 						
 						if($this->setting['display_employee_disability'])
 						{
