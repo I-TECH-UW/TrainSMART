@@ -3,4125 +3,4165 @@ msgstr ""
 "Project-Id-Version: Trainsmart\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-09-24 16:51-0800\n"
-"PO-Revision-Date: \n"
+"PO-Revision-Date: 2015-05-13 09:44-0800\n"
 "Last-Translator: DB\n"
 "Language-Team: Fuse IQ <todd@fuseiq.com>\n"
 "Language: uk_UA\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && n%10<=4 &&(n%100<10||n"
+"%100 >= 20)? 1 : 2);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: iso-8859-1\n"
+"X-Loco-Source-Locale: ru_RU\n"
 "X-Poedit-KeywordsList: t;tp\n"
 "X-Poedit-Basepath: c:\\wamp\\www\\d\\app\n"
+"X-Generator: Poedit 1.7.4\n"
+"X-Loco-Parser: loco_parse_po\n"
+"X-Loco-Target-Locale: uk_UA\n"
 "X-Poedit-SearchPath-0: controllers\n"
 "X-Poedit-SearchPath-1: views\n"
 
 msgid "Your settings have been updated."
-msgstr ""
+msgstr "Ваші налаштування були оновлені."
 
 msgid "No future trainings found."
-msgstr ""
+msgstr "Не знайдено майбутні тренінги."
 
 msgid "A record already exists with this value."
-msgstr ""
+msgstr "Запис вже існує з цим значенням."
 
 msgid "The evaluation could not be loaded."
-msgstr ""
+msgstr "Не вдалося завантажити деталі процесу визначення якості."
 
 msgid "Are you sure you wish to delete this evaluation?"
-msgstr ""
+msgstr "Ви впевнені, що хочете видалити деталі процесу визначення якості?"
 
 msgid "The evaluation could not be saved."
-msgstr ""
+msgstr "Неможливо зберегти деталі процесу визначення якості."
 
 msgid "Title"
-msgstr ""
+msgstr "Назва"
 
 msgid "You must choose a question type for each question."
-msgstr ""
+msgstr "Ви повинні вибрати тип питання для кожного питання."
 
 msgid "You must enter question text for each question."
-msgstr ""
+msgstr "Введіть текст запитання для кожного питання."
 
 msgid "The new evaluation was created."
-msgstr ""
+msgstr "Новий процес визначення якості створений."
 
 msgid "This evaluation has been deleted."
-msgstr ""
+msgstr "Цей процес визначення якості видалений."
 
 msgid "The trainings have been assigned."
-msgstr ""
+msgstr "Тренінги були призначені."
 
 msgid "The evaluation has been assigned."
-msgstr ""
+msgstr "Процес визначення якості призначений."
 
 msgid "Training start"
-msgstr ""
+msgstr "Початок  тренінгу"
 
 msgid "The person could not be saved."
-msgstr ""
+msgstr "Не вдалося зберегти особу."
 
 msgid "The external course could not be saved."
-msgstr ""
+msgstr "Не вдалося зберегти зовнішній курс."
 
 msgid "That name already exists."
-msgstr ""
+msgstr "Таке ім'я вже існує."
 
 msgid "Facility type"
-msgstr ""
+msgstr "Тип закладу"
 
-msgid "That city does not appear to be located in the chosen region. If you want to create a new city, check the new city box."
+msgid ""
+"That city does not appear to be located in the chosen region. If you want to create a new city, "
+"check the new city box."
 msgstr ""
+"Схоже, що місто не знаходиться у вибраному регіоні. Якщо Ви хочете створити нове місто, то "
+"поставте позначку про нове місто."
 
 msgid "The facility could not be saved."
-msgstr ""
+msgstr "Не вдалося зберегти заклад."
 
 msgid "Could not save that city."
-msgstr ""
+msgstr "Неможливо зберегти місто."
 
 msgid "The facility was saved."
-msgstr ""
+msgstr "Заклад було збережено."
 
 msgid "ERROR: The facility could not be saved."
-msgstr ""
+msgstr "ПОМИЛКА: Неможливо зберегти установу."
 
 msgid "That facility was deleted."
-msgstr ""
+msgstr "Заклад було видалено."
 
 msgid "That facility could not be found."
-msgstr ""
+msgstr "Не вдалося знайти заклад. "
 
 msgid "That facility is in use and could not be deleted."
-msgstr ""
+msgstr "Цей заклад знаходиться у використанні й не може бути видалений."
 
 msgid "That location was deleted."
-msgstr ""
+msgstr "Місцезнаходження було видалено."
 
 msgid "That location could not be found."
-msgstr ""
+msgstr "Не вдалося знайти таке місцезнаходження."
 
 msgid "That location is in use and could not be deleted."
-msgstr ""
+msgstr "Це місцезнаходження використовується і не може бути видалено."
 
 msgid "Course Name"
-msgstr ""
+msgstr "Назва курсу"
 
 msgid "Start Date"
-msgstr ""
+msgstr "Дата початку"
 
 msgid "Training Center"
-msgstr ""
+msgstr "Центр навчання"
 
 msgid "Training Centre"
-msgstr ""
+msgstr "Центр навчання"
 
 msgid "Created By"
-msgstr ""
+msgstr "Створено"
 
 msgid "Message"
-msgstr ""
+msgstr "Повідомлення"
 
 msgid "You do not have access rights to the requested action."
-msgstr ""
+msgstr "У вас немає прав доступу для запитаної дії."
 
 msgid "That person was deleted."
-msgstr ""
+msgstr "Цю особу було видалено."
 
 msgid "That person could not be found."
-msgstr ""
+msgstr "Не вдалося знайти цю особу. "
 
 msgid "That person is an active participant or trainer and could not be deleted."
-msgstr ""
+msgstr "Ця особа є діючим учасником або інструктором і не може бути видалена."
 
 msgid "The person was saved. Refreshing history..."
-msgstr ""
+msgstr "Дана особа була збережена. Йде оновлення журналу ..."
 
 msgid "The person was saved."
-msgstr ""
+msgstr "Дана особа була збережена."
 
 msgid "Gender"
-msgstr ""
+msgstr "Стать"
 
 msgid "Professional qualification"
-msgstr ""
+msgstr "Професійна кваліфікація"
 
 msgid "Professional Qualification"
-msgstr ""
+msgstr "Професійна кваліфікація"
 
 msgid "Birthdate"
-msgstr ""
+msgstr "Дата народження"
 
 msgid "Trainer type"
-msgstr ""
+msgstr "Тип інструктора"
 
 msgid "Trainer skill"
-msgstr ""
+msgstr "Навички інструктора"
 
 msgid "Enter a reason, or select a different reason above."
-msgstr ""
+msgstr "Вкажіть причину, або виберіть іншу причину вище."
 
 msgid "You can not type in a reason with the reason selected above."
-msgstr ""
+msgstr "Ви не можете ввести причину обрану вище."
 
 msgid "Facility"
-msgstr ""
+msgstr "Заклад"
 
 msgid "That facility name could not be found."
-msgstr ""
+msgstr "Не вдалося знайти цю назву установи."
 
 msgid "The person was saved. Refreshing change history..."
-msgstr ""
+msgstr "Дана особа була збережена. Йде оновлення журналу змін ..."
 
 msgid "The trainer information could not be saved."
-msgstr ""
+msgstr "Не вдалося зберегти інформацію інструктора."
 
 msgid "ERROR: The person could not be saved."
-msgstr ""
+msgstr "ПОМИЛКА: Неможливо зберегти особу."
 
 msgid "No trainings selected."
-msgstr ""
+msgstr "Не вибрано тренінг."
 
 msgid "Count"
-msgstr ""
+msgstr "Кількість"
 
 msgid "Language"
-msgstr ""
+msgstr "Мова"
 
 msgid "Location"
-msgstr ""
+msgstr "Місцезнаходження"
 
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
 msgid "Training Topic"
-msgstr ""
+msgstr "Тема тренінгу"
 
 msgid "Funding"
-msgstr ""
+msgstr "Фінансування"
 
 msgid "Facility Name"
-msgstr ""
+msgstr "Назва закладу"
 
 msgid "Facility Type"
-msgstr ""
+msgstr "Тип закладу"
 
 msgid "Facility Sponsor"
-msgstr ""
+msgstr "Спонсор закладу"
 
 msgid "Recommended classes"
-msgstr ""
+msgstr "Рекомендовані заняття"
 
 msgid "Recommended"
-msgstr ""
+msgstr "Рекомендований"
 
 msgid "Qualification"
-msgstr ""
+msgstr "Кваліфікація"
 
 msgid "(primary)"
-msgstr ""
+msgstr "(основний)"
 
 msgid "(secondary)"
-msgstr ""
+msgstr "(додатковий)"
 
 msgid "Name"
-msgstr ""
+msgstr "Ім'я"
 
 msgid "Email"
-msgstr ""
+msgstr "Електронна пошта"
 
 msgid "Phone"
-msgstr ""
+msgstr "Телефон"
 
 msgid "Category"
-msgstr ""
+msgstr "Категорія"
 
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
 msgid "Skill"
-msgstr ""
+msgstr "Навички"
 
 msgid "Topics Taught"
-msgstr ""
+msgstr "Прочитані теми"
 
 msgid "Work Phone"
-msgstr ""
+msgstr "Робочий телефон"
 
 msgid "Home Phone"
-msgstr ""
+msgstr "Домашній телефон"
 
 msgid "Mobile Phone"
-msgstr ""
+msgstr "Мобільний телефон"
 
 msgid "Participants"
-msgstr ""
+msgstr "Учасники"
 
 msgid "Unique Participants"
-msgstr ""
+msgstr "Унікальні учасники"
 
 msgid "Yes"
-msgstr ""
+msgstr "Так"
 
 msgid "No"
-msgstr ""
+msgstr "Ні"
 
 msgid "Unknown"
-msgstr ""
+msgstr "Невідомий"
 
 msgid "Female"
-msgstr ""
+msgstr "Жіночий"
 
 msgid "Male"
-msgstr ""
+msgstr "Чоловічий"
 
 msgid "Dates"
-msgstr ""
+msgstr "Дати"
 
 msgid "Course Length"
-msgstr ""
+msgstr "Тривалість курсу"
 
 msgid "Course Trainers"
-msgstr ""
+msgstr "Інструктори курсу"
 
 msgid "Days"
-msgstr ""
+msgstr "Дні"
 
 msgid "Months"
-msgstr ""
+msgstr "Місяці"
 
 msgid "Quarter"
-msgstr ""
+msgstr "Квартал"
 
 msgid "Course Participants"
-msgstr ""
+msgstr "Учасники курсу"
 
 msgid "Date of Birth"
-msgstr ""
+msgstr "Дата народження"
 
 msgid "Primary Qualification"
-msgstr ""
+msgstr "Основна кваліфікація"
 
 msgid "Secondary Qualification"
-msgstr ""
+msgstr "Додаткова кваліфікація"
 
 msgid "Pre-Test"
-msgstr ""
+msgstr "До тесту"
 
 msgid "Post-Test"
-msgstr ""
+msgstr "Після тесту"
 
 msgid "Change in Score"
-msgstr ""
+msgstr "Зміна в результаті"
 
 msgid "There was a problem with file types <code>"
-msgstr ""
+msgstr "Виникла проблема з типами файлів"
 
 msgid "There was a problem creating <code>"
-msgstr ""
+msgstr "Виникла проблема при створенні"
 
 msgid "There was a problem moving files <code>"
-msgstr ""
+msgstr "Виникла проблема під час переміщення файлів"
 
 msgid "Sync database file uploaded."
-msgstr ""
+msgstr "Синхронізація файлів бази даних завантажена."
 
 msgid "Invalid desktop database file"
-msgstr ""
+msgstr "Невірний файл бази даних"
 
 msgid "Please upload a file to continue"
-msgstr ""
+msgstr "Будь ласка, завантажте файл щоб продовжити"
 
 msgid "Done"
-msgstr ""
+msgstr "Завершено"
 
 msgid "Add New Training"
-msgstr ""
+msgstr "Додати новий тренінг"
 
 msgid "View/Edit Training"
-msgstr ""
+msgstr "Переглянути/редагувати тренінг"
 
 msgid "View Training"
-msgstr ""
+msgstr "Переглянути тренінг"
 
 msgid "Training Length"
-msgstr ""
+msgstr "Тривалість тренінгу"
 
 msgid "Training Interval"
-msgstr ""
+msgstr "Інтервал тренінгу"
 
 msgid "Training length is required."
-msgstr ""
+msgstr "Потрібно вказати тривалість тренінгу."
 
 msgid "must be numeric."
-msgstr ""
+msgstr "повинен бути числовим."
 
 msgid "must be between 1-100."
-msgstr ""
+msgstr "повинен бути між 1-100."
 
 msgid "Training end"
-msgstr ""
+msgstr "Завершення тренінгу"
 
 msgid "End date must be after start date."
-msgstr ""
+msgstr "Дата закінчення має бути після дати початку."
 
 msgid "Number of days is required."
-msgstr ""
+msgstr "Потрібно вказати кількість днів."
 
+#, c-format
 msgid "Total training length is %s, but PEPFAR category total is %d days. "
-msgstr ""
+msgstr "Загальна тривалість навчання у %s, а категорія ПЕПФАР становить %d всіх днів."
 
 msgid "day"
-msgstr ""
+msgstr "день"
 
 msgid "days"
-msgstr ""
+msgstr "дні"
 
-msgid "This training session could not be deleted. Some participants or trainers may still be attached."
+msgid ""
+"This training session could not be deleted. Some participants or trainers may still be attached."
 msgstr ""
+"Даний тренінг видалити не вдалося. Деякі учасники або інструктори можуть досі бути учасниками "
+"тренінгу."
 
 msgid "This training session could not be saved."
-msgstr ""
+msgstr "Даний тренінг зберегти не вдалося."
 
 msgid "This training session has been saved."
-msgstr ""
+msgstr "Даний тренінг був збережений."
 
 msgid "Please enter your new"
-msgstr ""
+msgstr "Будь ласка, введіть свій новий"
 
 msgid "Insert new"
-msgstr ""
+msgstr "Ввести новий"
 
 msgid "Scores"
-msgstr ""
+msgstr "Результати"
 
 msgid "Training session has been duplicated.<br>You can edit the duplicate session below."
-msgstr ""
+msgstr "Навчальна сесія продубльована. Ви можете редагувати сесію-дублікат нижче."
 
 msgid "already exists"
-msgstr ""
+msgstr "вже існує"
 
 msgid "This trainer is already in this training session."
-msgstr ""
+msgstr "Даний інструктор вже знаходиться в цьому тренінгу."
 
 msgid "Could not update this record."
-msgstr ""
+msgstr "Неможливо оновити цей запис."
 
 msgid "This participant is already in this training session."
-msgstr ""
+msgstr "Даний учасник вже знаходиться в цьому тренінгу."
 
 msgid "The training center has been updated."
-msgstr ""
+msgstr "Центр навчання був оновлений."
 
 msgid "The training center has been saved."
-msgstr ""
+msgstr "Центр навчання був збережений."
 
 msgid "The training center could not be saved."
-msgstr ""
+msgstr "Не вдалося зберегти центр навчання."
 
 msgid "Label"
-msgstr ""
+msgstr "Етикетка"
 
 msgid "Score"
-msgstr ""
+msgstr "Результат"
 
 msgid "select"
-msgstr ""
+msgstr "обрати"
 
 msgid "Preview"
-msgstr ""
+msgstr "Попередній пкрегляд"
 
 msgid "That partner could not be found."
-msgstr ""
+msgstr "Не вдалося знайти партнера."
 
 msgid "The partner was saved."
-msgstr ""
+msgstr "Партнер був збережений."
 
 msgid "ERROR: The partner could not be saved."
-msgstr ""
+msgstr "ПОМИЛКА: Неможливо зберегти партнера."
 
 msgid "That partner was deleted."
-msgstr ""
+msgstr "Партнер був видалений."
 
 msgid "That partner is in use and could not be deleted."
-msgstr ""
+msgstr "Даний партнер використовується і не може бути видалений."
 
 msgid "Starting..."
-msgstr ""
+msgstr "Початок..."
 
 msgid "Login"
-msgstr ""
+msgstr "Логін"
 
 msgid "Password"
-msgstr ""
+msgstr "Пароль"
 
 msgid "The system could not log you in."
-msgstr ""
+msgstr "Система не змогла прийняти ваш логін."
 
 msgid "That user account has been disabled."
-msgstr ""
+msgstr "Цей обліковий запис користувача було відключено."
 
 msgid "That username or password is invalid."
-msgstr ""
+msgstr "Ім'я користувача або пароль недійсні."
 
 msgid "Sunday"
-msgstr ""
+msgstr "Неділя"
 
 msgid "Monday"
-msgstr ""
+msgstr "Понеділок"
 
 msgid "Tuesday"
-msgstr ""
+msgstr "Вівторок"
 
 msgid "Wednesday"
-msgstr ""
+msgstr "Середа"
 
 msgid "Thursday"
-msgstr ""
+msgstr "Четвер"
 
 msgid "Friday"
-msgstr ""
+msgstr "П'ятниця"
 
 msgid "Saturday"
-msgstr ""
+msgstr "Субота"
 
 msgid "choose"
-msgstr ""
+msgstr "обрати"
 
 msgid "All"
-msgstr ""
+msgstr "Всі"
 
 msgid "Filename"
-msgstr ""
+msgstr "Назва файлу"
 
 msgid "Size"
-msgstr ""
+msgstr "Розмір"
 
 msgid "Author"
-msgstr ""
+msgstr "Автор"
 
 msgid "Upload Date"
-msgstr ""
+msgstr "Дата завантаження"
 
 msgid "Allowed file extensions"
-msgstr ""
+msgstr "Дозволені розширення файлу"
 
 msgid "Max upload size: "
-msgstr ""
+msgstr "Максимальний розмір завантаження:"
 
 msgid "First Name"
-msgstr ""
+msgstr "Ім'я"
 
 msgid "Middle Name"
-msgstr ""
+msgstr "По батькові"
 
 msgid "Last Name"
-msgstr ""
+msgstr "Призвище"
 
 msgid "Surname"
-msgstr ""
+msgstr "Призвище"
 
 msgid "National ID"
-msgstr ""
+msgstr "Державне посвідчення особи"
 
 msgid "File Number"
-msgstr ""
+msgstr "Номер файлу "
 
 msgid "Phone (work)"
-msgstr ""
+msgstr "Телефон (робочий)"
 
 msgid "Phone (mobile)"
-msgstr ""
+msgstr "Телефон (мобільний)"
 
 msgid "Fax"
-msgstr ""
+msgstr "Факс"
 
 msgid "Comments"
-msgstr ""
+msgstr "Коментарі"
 
 msgid "Deleted"
-msgstr ""
+msgstr "Видалено"
 
 msgid "Active"
-msgstr ""
+msgstr "Діючий"
 
 msgid "Responsibility"
-msgstr ""
+msgstr "Відповідальність"
 
 msgid "Address"
-msgstr ""
+msgstr "Адреса"
 
 msgid "Department"
-msgstr ""
+msgstr "Відділ"
 
 msgid "City"
-msgstr ""
+msgstr "Місто"
 
 msgid "Training Name"
-msgstr ""
+msgstr "Назва тренінгу"
 
 msgid "Training Organizer"
-msgstr ""
+msgstr "Організатор тренінгу"
 
 msgid "Training Level"
-msgstr ""
+msgstr "Рівень тренінгу"
 
 msgid "PEPFAR topic"
-msgstr ""
+msgstr "Тема ПЕПФАР"
 
 msgid "Training of Trainers"
-msgstr ""
+msgstr "Трейнінг інструкторів"
 
 msgid "Course Objectives"
-msgstr ""
+msgstr "Цілі курсу"
 
 msgid "Pre Test Score"
-msgstr ""
+msgstr "Результат до тесту"
 
 msgid "Post Test Score"
-msgstr ""
+msgstr "Результат після тесту"
 
 msgid "Custom field"
-msgstr ""
+msgstr "Поле користувача"
 
 msgid "Is Active"
-msgstr ""
+msgstr "Діючий"
 
 msgid "English"
-msgstr ""
+msgstr "Англійський"
 
 msgid "French"
-msgstr ""
+msgstr "Французький"
 
 msgid "Russian"
-msgstr ""
+msgstr "Російський"
 
 msgid "Print"
-msgstr ""
+msgstr "Друк"
 
 msgid "Export"
-msgstr ""
+msgstr "Експортувати"
 
 msgid "Developed and funded by I-TECH. For questions or help,"
-msgstr ""
+msgstr "Розроблено та профінансовано I-TECH. З питаннями або за допомогою звертайтеся,"
 
 msgid "click here"
-msgstr ""
+msgstr "натисніть тут"
 
 msgid "Home"
-msgstr ""
+msgstr "Головна"
 
 msgid "Trainings"
-msgstr ""
+msgstr "Тренінги"
 
 msgid "Training"
-msgstr ""
+msgstr "Тренінг"
 
 msgid "People"
-msgstr ""
+msgstr "Люди "
 
 msgid "View/Edit Person"
-msgstr ""
+msgstr "Подивитися/редагувати особу"
 
 msgid "Add New Person"
-msgstr ""
+msgstr "Додати нову особу"
 
 msgid "View person"
-msgstr ""
+msgstr "Подивитися особу"
 
 msgid "Places"
-msgstr ""
+msgstr "Місця"
 
 msgid "View/Edit Facility"
-msgstr ""
+msgstr "Подивитися/Редагувати заклад"
 
 msgid "View facility"
-msgstr ""
+msgstr "Переглянути заклад"
 
 msgid "Add Facility"
-msgstr ""
+msgstr "Додати заклад"
 
 msgid "View/Edit Training Location"
-msgstr ""
+msgstr "Подивитися/редагувати місцезнаходження тренінгу"
 
 msgid "View Training Location"
-msgstr ""
+msgstr "Подивитися місцезнаходження тренінгу"
 
 msgid "Add Training Location"
-msgstr ""
+msgstr "Додати місцезнаходження тренінгу"
 
 msgid "Reports"
-msgstr ""
+msgstr "Звіти "
 
 msgid "Training Reports"
-msgstr ""
+msgstr "Звіти по тренінгам"
 
 msgid "Participant Reports"
-msgstr ""
+msgstr "Звіти по учасниках"
 
 msgid "Trainer Reports"
-msgstr ""
+msgstr "Звіти по інструкторах"
 
 msgid "Facility Reports"
-msgstr ""
+msgstr "Звіти по закладах"
 
 msgid "Facility Search"
-msgstr ""
+msgstr "Пошук по закладах"
 
 msgid "Assessment Reports"
-msgstr ""
+msgstr "Звіти по оцінюванню"
 
 msgid "Roster Reports"
-msgstr ""
+msgstr "Звіти по реєстрах"
 
 msgid "Data Downloads"
-msgstr ""
+msgstr "Завантаження даних"
 
 msgid "Evaluations"
-msgstr ""
+msgstr "Процес визначення якості"
 
 msgid "Pre-service"
-msgstr ""
+msgstr "Система попереднього навчання"
 
 msgid "My Account"
-msgstr ""
+msgstr "Мій обликовий запис"
 
 msgid "Country Setup"
-msgstr ""
+msgstr "Настройки країни"
 
 msgid "Training Settings"
-msgstr ""
+msgstr "Настройки тренінгу"
 
 msgid "People Settings"
-msgstr ""
+msgstr "Настройки людей"
 
 msgid "Facility Settings"
-msgstr ""
+msgstr "Настройки закладу"
 
 msgid "Training Partners"
-msgstr ""
+msgstr "Партнери тренінгу"
 
 msgid "Add New User"
-msgstr ""
+msgstr "Додати нового користувача "
 
 msgid "Edit User"
-msgstr ""
+msgstr "Редагувати користувача "
 
 msgid "Create App Now"
-msgstr ""
+msgstr "Створити додаток"
 
 msgid "Download Application"
-msgstr ""
+msgstr "Завантажити додаток"
 
 msgid "Download"
-msgstr ""
+msgstr "Завантажити"
 
 msgid "Upload Data"
-msgstr ""
+msgstr "Завантажити дані"
 
 msgid "login"
-msgstr ""
+msgstr "вхід"
 
 msgid "logout"
-msgstr ""
+msgstr "вихід"
 
 msgid "Welcome"
-msgstr ""
+msgstr "Ласкаво просимо"
 
 msgid "Region Setup"
-msgstr ""
+msgstr "Регіональні настройки"
 
 msgid "Move Regions"
-msgstr ""
+msgstr "Перемістити регіони"
 
 msgid "Training Category"
-msgstr ""
+msgstr "Категорія тренінгу"
 
 msgid "Assign Titles"
-msgstr ""
+msgstr "Надати назви"
 
 msgid "Training Title"
-msgstr ""
+msgstr "Назва тренінгу"
 
 msgid "PEPFAR Category"
-msgstr ""
+msgstr "Категорія ПЕПФАР"
 
 msgid "Recommended Topic"
-msgstr ""
+msgstr "Рекомендована тема"
 
 msgid "Nat. Curriculum"
-msgstr ""
+msgstr "Учбовий план"
 
 msgid "Training Method"
-msgstr ""
+msgstr "Метод тренінгу"
 
 msgid "Training Methods"
-msgstr ""
+msgstr "Методи тренінгу"
 
 msgid "Method"
-msgstr ""
+msgstr "Метод"
 
 msgid "Qualifications"
-msgstr ""
+msgstr "Кваліфікації"
 
 msgid "Trainer Types"
-msgstr ""
+msgstr "Тип інструктора"
 
 msgid "Trainer Skills"
-msgstr ""
+msgstr "Навички інструктора"
 
 msgid "Trainer Skill"
-msgstr ""
+msgstr "Навичка інструктора"
 
 msgid "Languages"
-msgstr ""
+msgstr "Мови"
 
 msgid "Affiliations"
-msgstr ""
+msgstr "Приналежність"
 
 msgid "Affiliation"
-msgstr ""
+msgstr "Приєднання"
 
 msgid "Titles"
-msgstr ""
+msgstr "Назви"
 
 msgid "Suffix"
-msgstr ""
+msgstr "Суфікс"
 
 msgid "Facilities"
-msgstr ""
+msgstr "Заклади"
 
 msgid "Facilities Settings"
-msgstr ""
+msgstr "Налаштування закладів"
 
 msgid "Facility Types"
-msgstr ""
+msgstr "Тип закладу"
 
 msgid "Facility Sponsors"
-msgstr ""
+msgstr "Спонсори закладу"
 
 msgid "Preservice"
-msgstr ""
+msgstr "Система попереднього навчання"
 
 msgid "Classes"
-msgstr ""
+msgstr "Курси"
 
 msgid "Cadres"
-msgstr ""
+msgstr "Кадри"
 
 msgid "Degrees"
-msgstr ""
+msgstr "Ступені освіти"
 
 msgid "Add degree"
-msgstr ""
+msgstr "Додати ступень освіти "
 
 msgid "Update degree"
-msgstr ""
+msgstr "Оновити ступень освіти"
 
 msgid "Degree"
-msgstr ""
+msgstr "Ступінь"
 
 msgid "Institution types"
-msgstr ""
+msgstr "Типи інституту"
 
 msgid "Institution type"
-msgstr ""
+msgstr "Тип інституту"
 
 msgid "Nationalities"
-msgstr ""
+msgstr "Національності"
 
 msgid "Join & drop reasons"
-msgstr ""
+msgstr "Причини реєстрації/відрахування"
 
 msgid "Join"
-msgstr ""
+msgstr "Реєстрація"
 
 msgid "Drop"
-msgstr ""
+msgstr "Відрахування"
 
 msgid "Sponsors"
-msgstr ""
+msgstr "Спонсори"
 
 msgid "Tutor types"
-msgstr ""
+msgstr "Типи інструкторів"
 
 msgid "Course types"
-msgstr ""
+msgstr "Типи курсів"
 
 msgid "Course type"
-msgstr ""
+msgstr "Типи курсу"
 
 msgid "Religious denominations"
-msgstr ""
+msgstr "Належність до релігій"
 
 msgid "Religious denomination"
-msgstr ""
+msgstr "Належність до релігії"
 
 msgid "Users"
-msgstr ""
+msgstr "Користуачі"
 
 msgid "Add Users"
-msgstr ""
+msgstr "Додати користувачів"
 
 msgid "Institutions"
-msgstr ""
+msgstr "Інститути"
 
 msgid "Institution Search"
-msgstr ""
+msgstr "Пошук інститутів"
 
 msgid "Add New Institution"
-msgstr ""
+msgstr "Додати новий інститут"
 
 msgid "Course"
-msgstr ""
+msgstr "Курс"
 
 msgid "Cohorts"
-msgstr ""
+msgstr "Групи"
 
 msgid "Cohort Search"
-msgstr ""
+msgstr "Пошук групи"
 
 msgid "Add New Cohort"
-msgstr ""
+msgstr "Додати нову групу"
 
 msgid "Cohort"
-msgstr ""
+msgstr "Група"
 
 msgid "People Search"
-msgstr ""
+msgstr "Пошук людей"
 
 msgid "Add People"
-msgstr ""
+msgstr "Додати людей"
 
 msgid "Students Trained"
-msgstr ""
+msgstr "Студенти, які пройшли навчання"
 
 msgid "Students By Name"
-msgstr ""
+msgstr "Студенти за ім`ям"
 
 msgid "Graduated Students"
-msgstr ""
+msgstr "Випускники"
 
 msgid "Course by Student Count"
-msgstr ""
+msgstr "Курс за кількістю студентів"
 
 msgid "Course by Name"
-msgstr ""
+msgstr "Курс за назвою"
 
 msgid "PS Classes"
-msgstr ""
+msgstr "СПО курси"
 
 msgid "PS Cadres"
-msgstr ""
+msgstr "СПО кадри"
 
 msgid "PS Degrees"
-msgstr ""
+msgstr "СПО ступені освіти"
 
 msgid "PS Funding"
-msgstr ""
+msgstr "СПО фінансування"
 
 msgid "PS Institution Types"
-msgstr ""
+msgstr "СПО типи інститутів"
 
 msgid "PS Join & Drop Reasons"
-msgstr ""
+msgstr "СПО Причини реєстрації/відрахування"
 
 msgid "PS Languages"
-msgstr ""
+msgstr "СПО мови"
 
 msgid "PS Nationalities"
-msgstr ""
+msgstr "СПО Національності"
 
 msgid "PS Sponsors"
-msgstr ""
+msgstr "СПО Спонсори"
 
 msgid "PS Student Types"
-msgstr ""
+msgstr "СПО Типи студентів"
 
 msgid "PS Tutor Types"
-msgstr ""
+msgstr "СПО Типи інструкторів"
 
 msgid "PS Course Types"
-msgstr ""
+msgstr "СПО Типи курсів"
 
 msgid "Move"
-msgstr ""
+msgstr "Переміщення"
 
 msgid "City or Town"
-msgstr ""
+msgstr "Місто"
 
 msgid "Training Calendar"
-msgstr ""
+msgstr "Календар тренінгу"
 
 msgid "Print Calendar"
-msgstr ""
+msgstr "Друк календарю "
 
 msgid "Data"
-msgstr ""
+msgstr "Дані"
 
 msgid "Persons"
-msgstr ""
+msgstr "Особи"
 
 msgid "Database Export"
-msgstr ""
+msgstr "Експорт бази даних"
 
 msgid "A training was approved by "
-msgstr ""
+msgstr "Тренінг було схвалено"
 
 msgid "You have been assigned a new temporary password."
-msgstr ""
+msgstr "Вам надали новий тимчасовий пароль."
 
 msgid "Please change your password once you log in"
-msgstr ""
+msgstr "Будь ласка, змініть свій пароль, коли увійдете"
 
 msgid "here"
-msgstr ""
+msgstr "тут"
 
 msgid "Your login is as follows:"
-msgstr ""
+msgstr "Ваш логін наступний:"
 
 msgid "password:"
-msgstr ""
+msgstr "пароль:"
 
 msgid "Dear"
-msgstr ""
+msgstr "Шановний"
 
 msgid "Your new account has been created and is ready for use."
-msgstr ""
+msgstr "Ваш новий обліковий запис створено і готов для використання."
 
 msgid "website:"
-msgstr ""
+msgstr "вебсайт"
 
 msgid "Your password has been changed as requested."
-msgstr ""
+msgstr "Ваш пароль був змінений за запитом."
 
 msgid "You can log into our website at: "
-msgstr ""
+msgstr "Ви можете увійти на наш сайт за адресою:"
 
 msgid "A training was rejected by "
-msgstr ""
+msgstr "Тренінг був відхилений"
 
 msgid "A training was resubmitted by "
-msgstr ""
+msgstr "Тренінг був знову представлений"
 
 msgid "Please change your password once you log in here"
-msgstr ""
+msgstr "Будь ласка, змініть свій пароль, як тільки увійдете тут"
 
 msgid "You can log into our website at:"
-msgstr ""
+msgstr "Ви можете увійти на наш сайт за адресою:"
 
 msgid "Oops"
-msgstr ""
+msgstr "Ой"
 
 msgid "Sorry. An error just occurred. Please try again, or contact a system administrator."
 msgstr ""
+"Вибачте. Щойно сталася помилка. Будь ласка, спробуйте ще раз або зверніться до системного "
+"адміністратора."
 
 msgid "Enter title of Evaluation"
-msgstr ""
+msgstr "Ввести назву процесу визначення якості"
 
 msgid "Number"
-msgstr ""
+msgstr "Номер"
 
 msgid "Question"
-msgstr ""
+msgstr "Питання"
 
 msgid "Text"
-msgstr ""
+msgstr "Текст"
 
 msgid "Add Evaluation"
-msgstr ""
+msgstr "Додати  процес визначення якості"
 
 msgid "Assign Evaluation to Training"
-msgstr ""
+msgstr "Призначити процес визначення якості для тренінгу"
 
 msgid "Assign"
-msgstr ""
+msgstr "Призначити"
 
 msgid "Submit"
-msgstr ""
+msgstr "Подати"
 
 msgid "Copy"
-msgstr ""
+msgstr "Копіювати"
 
 msgid "Date created"
-msgstr ""
+msgstr "Дата створення"
 
 msgid "Add New Evaluation"
-msgstr ""
+msgstr "Додавання нового процесу визначення якості"
 
 msgid "Evaluation Data Entry"
-msgstr ""
+msgstr "Введення даних процесу визначення якості"
 
 msgid "Save and Exit"
-msgstr ""
+msgstr "Зберегти та вийти"
 
 msgid "Save and Continue"
-msgstr ""
+msgstr "Зберегти та продовжити"
 
 msgid "Add External Course"
-msgstr ""
+msgstr "Додати зовнішній курс"
 
 msgid "Add new External Course for "
-msgstr ""
+msgstr "Додати зовнішній курс для"
 
 msgid "Day"
-msgstr ""
+msgstr "День"
 
 msgid "Month"
-msgstr ""
+msgstr "Місяц"
 
 msgid "Year"
-msgstr ""
+msgstr "Рік"
 
 msgid "Length"
-msgstr ""
+msgstr "Тривалість"
 
 msgid "Who Funded"
-msgstr ""
+msgstr "Ким фінансується"
 
 msgid "Add Course"
-msgstr ""
+msgstr "Додати курс"
 
 msgid "Please enter training location information"
-msgstr ""
+msgstr "Будь ласка, додайте інформацію про місцезнаходження тренінгу"
 
 msgid "Add Location"
-msgstr ""
+msgstr "Додати місцезнаходження"
 
 msgid "Add new Facility"
-msgstr ""
+msgstr "Додати новий заклад"
 
 msgid "Address 1"
-msgstr ""
+msgstr "Адреса 1"
 
 msgid "Address 2"
-msgstr ""
+msgstr "Адреса 2"
 
 msgid "New city"
-msgstr ""
+msgstr "Нове місто"
 
 msgid "Postal code"
-msgstr ""
+msgstr "Поштовий індекс"
 
 msgid "Facility sponsor"
-msgstr ""
+msgstr "Спонсор закладу"
 
 msgid "Facility Comments"
-msgstr ""
+msgstr "Коментарі закладу"
 
 msgid "Delete Location"
-msgstr ""
+msgstr "Видалити місцезнахлдження"
 
 msgid "Delete Facility"
-msgstr ""
+msgstr "Видалити заклад"
 
 msgid "Edit Facility"
-msgstr ""
+msgstr "Редагувати заклад"
 
 msgid "Facility name"
-msgstr ""
+msgstr "Назва закладу"
 
 msgid "Address "
-msgstr ""
+msgstr "Адреса"
 
 msgid "Save changes"
-msgstr ""
+msgstr "Зберегти зміни "
 
 msgid "Are you sure you wish to delete this facility?"
-msgstr ""
+msgstr "Ви впевнені, що хочете видалити цей заклад?"
 
 msgid "Search for Training Location"
-msgstr ""
+msgstr "Пошук за масцезнаходженням тренінгу"
 
 msgid "Select Criteria"
-msgstr ""
+msgstr "Обрати критерії"
 
 msgid "Training Location Name"
-msgstr ""
+msgstr "Назва місцезнаходження тренінгу"
 
 msgid "Training locations"
-msgstr ""
+msgstr "Місцезнаходження тренінгу"
 
 msgid "Results"
-msgstr ""
+msgstr "Результати "
 
 msgid "Add new training location"
-msgstr ""
+msgstr "Додати нове місцезнаходження тренінгу"
 
 msgid "Location Name"
-msgstr ""
+msgstr "Назва місцезнаходження "
 
 msgid "Limited to 100 rows"
-msgstr ""
+msgstr "Обмежено до 100 рядків"
 
 msgid "Full Results"
-msgstr ""
+msgstr "Повні результати"
 
 msgid "Search Facilities"
-msgstr ""
+msgstr "Пошук закладів"
 
 msgid "Add New Facility"
-msgstr ""
+msgstr "Додати новий заклад"
 
 msgid "ID"
-msgstr ""
+msgstr "Ідентифікація"
 
 msgid "UUID"
-msgstr ""
+msgstr "Унікальна ідентифікація"
 
 msgid "Sponsor"
-msgstr ""
+msgstr "Спонсор"
 
 msgid "unknown"
-msgstr ""
+msgstr "невідомий"
 
 msgid "Save Changes"
-msgstr ""
+msgstr "Зберегти зміни"
 
 msgid "Are you sure you wish to delete this location?"
-msgstr ""
+msgstr "Ви впевнені, що хочете видалити це місцезнаходження?"
 
 msgid "View Facility"
-msgstr ""
+msgstr "Переглянути заклад"
 
 msgid "Postal Code"
-msgstr ""
+msgstr "Поштовий індекс"
 
 msgid "Welcome to"
-msgstr ""
+msgstr "Ласкаво просимо до"
 
 msgid "Training System Monitoring and Reporting Tool"
-msgstr ""
+msgstr "Інструмент моніторингу та звітності системи навчання"
 
 msgid "Data Summary"
-msgstr ""
+msgstr "Зведення даних"
 
 msgid "unique"
-msgstr ""
+msgstr "унікальний"
 
 msgid "Trainers"
-msgstr ""
+msgstr "Інструктори"
 
 msgid "Trainer"
-msgstr ""
+msgstr "Інструктор"
 
 msgid "Total"
-msgstr ""
+msgstr "Всього"
 
 msgid "Fiscal Year"
-msgstr ""
+msgstr "Фінансовий рік"
 
 msgid "Future Trainings"
-msgstr ""
+msgstr "Майбутні тренінги"
 
 msgid "Future Training"
-msgstr ""
+msgstr "Майбутній тренінг"
 
 msgid "Past Training"
-msgstr ""
+msgstr "Минулий тренінг"
 
 msgid "Future"
-msgstr ""
+msgstr "Майбутній "
 
 msgid "View Printable Calendar"
-msgstr ""
+msgstr "Подивитися календар, який можна роздрукувати"
 
 msgid "To be Approved"
-msgstr ""
+msgstr "Підлягає затвердженню"
 
 msgid "Attached Documents"
-msgstr ""
+msgstr "Документи, що додаються"
 
 msgid "Right-click and select \"Save Target As...\" to download."
-msgstr ""
+msgstr "Натисніть праву клавішу миші та виберіть  \"Зберегти як ... \" щоб завантажити."
 
 msgid "Document Upload"
-msgstr ""
+msgstr "Загрузка документу"
 
 msgid "Please login below"
-msgstr ""
+msgstr "Будь ласка, увійдіть в систему нижче"
 
 msgid "User name"
-msgstr ""
+msgstr "Ім'я користувача"
 
 msgid "Forgot your password?"
-msgstr ""
+msgstr "Забули пароль?"
 
 msgid "Add Person"
-msgstr ""
+msgstr "Додати особу"
 
 msgid "Assign Person to Training"
-msgstr ""
+msgstr "Записати людину на тренінг"
 
 msgid "Delete Person"
-msgstr ""
+msgstr "Видалити особу"
 
 msgid "Current Contact Information"
-msgstr ""
+msgstr "Поточна контактна інформація"
 
 msgid "Insert new facility"
-msgstr ""
+msgstr "Ввести новий заклад"
 
 msgid "Address and Phone"
-msgstr ""
+msgstr "Адреса і телефон"
 
 msgid "Work phone"
-msgstr ""
+msgstr "Робочий телефон"
 
 msgid "Mobile phone"
-msgstr ""
+msgstr "Мобільний телефон"
 
 msgid "Email Secondary"
-msgstr ""
+msgstr "Додаткова електрона пошта"
 
 msgid "Qualification Comments"
-msgstr ""
+msgstr "Коментарі до кваліфікації"
 
 msgid "Trainer Information"
-msgstr ""
+msgstr "Інформація про інструктора"
 
 msgid "Show/Hide"
-msgstr ""
+msgstr "Показати/Сховати"
 
 msgid "Is person an active trainer?"
-msgstr ""
+msgstr "Ця особа є діючим інструктором?"
 
 msgid "Trainer Affiliation"
-msgstr ""
+msgstr "Приналежність інструктора"
 
 msgid "Trainer skills"
-msgstr ""
+msgstr "Навички інструктора"
 
 msgid "check all that apply"
-msgstr ""
+msgstr "відмітити все, що підходить"
 
 msgid "Primary language"
-msgstr ""
+msgstr "Основна мова"
 
 msgid "Secondary languages"
-msgstr ""
+msgstr "Додаткові мови"
 
 msgid "Secondary language"
-msgstr ""
+msgstr "Додаткова мова"
 
 msgid "Created by"
-msgstr ""
+msgstr "Створено"
 
 msgid "Date modified"
-msgstr ""
+msgstr "Дата внесення змін"
 
 msgid "Modified by"
-msgstr ""
+msgstr "Змінено"
 
 msgid "Delete this Person"
-msgstr ""
+msgstr "Видалити цю особу"
 
 msgid "Are you sure you wish to delete this person?"
-msgstr ""
+msgstr "Ви впевнені, що хочете видалити цю особу?"
 
 msgid "Edit person's record"
-msgstr ""
+msgstr "Редагувати запис особи"
 
 msgid "Add person's record"
-msgstr ""
+msgstr "Додати запис особи"
 
 msgid "Personal Information"
-msgstr ""
+msgstr "Особиста інформація"
 
 msgid "Birth date"
-msgstr ""
+msgstr "Дата народження"
 
 msgid "Duplicate Check"
-msgstr ""
+msgstr "Перевірка дубліката"
 
 msgid "Continue"
-msgstr ""
+msgstr "Продовжити"
 
 msgid "If the person already exists, please select their name below."
-msgstr ""
+msgstr "Якщо особа вже існує, будь ласка, виберіть ім'я нижче."
 
 msgid "Please enter a first and last name."
-msgstr ""
+msgstr "Будь ласка, введіть ім'я та прізвище."
 
 msgid "Submission failed:"
-msgstr ""
+msgstr "Подача на вдалася:"
 
 msgid "Primary responsibility"
-msgstr ""
+msgstr "Основна відповідальність"
 
 msgid "Secondary responsibility"
-msgstr ""
+msgstr "Додаткова відповідальність"
 
 msgid "Trainer languages"
-msgstr ""
+msgstr "Мови інструктора"
 
 msgid "Recommended Training Topics"
-msgstr ""
+msgstr "Рекомендовані теми тренінгу"
 
 msgid "No recommended classes were found for the above primary qualification"
-msgstr ""
+msgstr "Рекомендовані заняття для вищевказаної основної кваліфікації не знайдені."
 
 msgid "Upcoming Trainings"
-msgstr ""
+msgstr "Майбутні тренінги"
 
 msgid "Topic(s)"
-msgstr ""
+msgstr "Тема (и)"
 
 msgid "Class History"
-msgstr ""
+msgstr "Журнал курсів"
 
 msgid "Topics(s)"
-msgstr ""
+msgstr "Тема (и)"
 
 msgid "Topics"
-msgstr ""
+msgstr "Теми"
 
 msgid "Please add or verify the trainer information below."
-msgstr ""
+msgstr "Будь ласка, додайте або підтвердіть нижче інформацію про інструктора."
 
 msgid "Please enter facility information"
-msgstr ""
+msgstr "Будь ласка, введіть інформацію про заклад"
 
 msgid "Assign this person to a class"
-msgstr ""
+msgstr "Зареєструвати на заняття"
 
 msgid "External Class History"
-msgstr ""
+msgstr "Журнал зовнішніх курсів"
 
 msgid "Add an external class"
-msgstr ""
+msgstr "Додати зовнішній курс"
 
 msgid "Change History"
-msgstr ""
+msgstr "Журнал змін"
 
 msgid "Change"
-msgstr ""
+msgstr "Змінити"
 
 msgid "Previous entry"
-msgstr ""
+msgstr "Попередній запис"
 
 msgid "No duplicates found."
-msgstr ""
+msgstr "Дублікати не знайдені."
 
 msgid "Age"
-msgstr ""
+msgstr "Вік"
 
 msgid "Edit Person"
-msgstr ""
+msgstr "Редагувати особу"
 
 msgid "Person Search"
-msgstr ""
+msgstr "Пошук особи"
 
 msgid "Trainers only"
-msgstr ""
+msgstr "Лише інструктори"
 
 msgid "Participants only"
-msgstr ""
+msgstr "Лише учасники"
 
 msgid "Unattached only"
-msgstr ""
+msgstr "Лише не прикріплені"
 
 msgid "Everyone"
-msgstr ""
+msgstr "Кожен"
 
 msgid "View Person"
-msgstr ""
+msgstr "Подивитися особу"
 
 msgid "First name"
-msgstr ""
+msgstr "Ім'я"
 
 msgid "Middle name"
-msgstr ""
+msgstr "По батькові"
 
 msgid "Last name"
-msgstr ""
+msgstr "Призвище"
 
 msgid "Trainer Type"
-msgstr ""
+msgstr "Тип інструктора"
 
 msgid "Training History"
-msgstr ""
+msgstr "Журнал тренінгу"
 
 msgid "Search"
-msgstr ""
+msgstr "Пошук"
 
 msgid "show"
-msgstr ""
+msgstr "показати"
 
 msgid "group"
-msgstr ""
+msgstr "група"
 
 msgid "course name"
-msgstr ""
+msgstr "Назва курсу"
 
 msgid "Min"
-msgstr ""
+msgstr "мінімальний"
 
 msgid "Max"
-msgstr ""
+msgstr "Максимальний"
 
 msgid "End date"
-msgstr ""
+msgstr "Дата закінчення"
 
 msgid "Start date"
-msgstr ""
+msgstr "Дата початку"
 
 msgid "Trainings with known participants only"
-msgstr ""
+msgstr "Тренінги тільки з відомими учасниками"
 
 msgid "Trainings with unknown participants only"
-msgstr ""
+msgstr "Тренінги тільки з невідомими учасниками"
 
 msgid "All trainings"
-msgstr ""
+msgstr "Всі тренінги"
 
 msgid "End Date"
-msgstr ""
+msgstr "Дата закінчення"
 
 msgid "Refresher"
-msgstr ""
+msgstr "Підвищення кваліфікації"
 
 msgid "facility"
-msgstr ""
+msgstr "заклад"
 
 msgid "Trainings matched with Facilities"
-msgstr ""
+msgstr "Тренінги, зіставлені із закладами"
 
 msgid "Training Location"
-msgstr ""
+msgstr "Місцезнаходження тренінгу"
 
 msgid "PEPFAR"
-msgstr ""
+msgstr "ПЕПФАР"
 
 msgid "Evaluation Reports"
-msgstr ""
+msgstr "Звіти по процесах визначення якості"
 
 msgid "Evaluation Report"
-msgstr ""
+msgstr "Звіт по процесах визначення якості"
 
 msgid "Evaluation"
-msgstr ""
+msgstr "Процес визначення якості"
 
 msgid "Generate Report"
-msgstr ""
+msgstr "Створити звіт"
 
 msgid "Evaluation Name"
-msgstr ""
+msgstr "Назва процесу визначення якості"
 
 msgid "Responses"
-msgstr ""
+msgstr "Відповіді"
 
 msgid "Select facility report"
-msgstr ""
+msgstr "Вибрати звіт про заклад"
 
 msgid "Trainings by Facility Name"
-msgstr ""
+msgstr "Тренінги за назвою закладу"
 
 msgid "Trainings by Facility Participant Count"
-msgstr ""
+msgstr "Тренінги за кількістю учасників закладу"
 
 msgid "filter"
-msgstr ""
+msgstr "фільтр"
 
 msgid "Training location"
-msgstr ""
+msgstr "Місцезнаходження тренінгу"
 
 msgid "Report"
-msgstr ""
+msgstr "Звіт"
 
 msgid "Select trainer report"
-msgstr ""
+msgstr "Вибрати звіт про інструктора"
 
 msgid "Trainers by Skill, Language, and PEPFAR"
-msgstr ""
+msgstr "Інструктори за навичками, мовою та ПЕПФАР"
 
 msgid "Select training report"
-msgstr ""
+msgstr "Вибрати звіт про тренінг"
 
 msgid "Trainings by Name"
-msgstr ""
+msgstr "Тренінги за назвою"
 
 msgid "Trainings by Participant Count"
-msgstr ""
+msgstr "Тренінги за кількістю учасників"
 
 msgid "Pre-service reports"
-msgstr ""
+msgstr "Звіти по системі попереднього навчання"
 
 msgid "Course By Student Count"
-msgstr ""
+msgstr "Курс за кількістю студентів"
 
 msgid "Course By Name"
-msgstr ""
+msgstr "Курс за назвою"
 
 msgid "Cohort By Participant Count"
-msgstr ""
+msgstr "Група за кількістю учасників"
 
 msgid "Institution Information"
-msgstr ""
+msgstr "Інформація про інститут"
 
 msgid "Tutor By Name"
-msgstr ""
+msgstr "Інструктор за ім`ям"
 
 msgid "Facility Report"
-msgstr ""
+msgstr "Звіт закладу"
 
 msgid "primary"
-msgstr ""
+msgstr "основний"
 
 msgid "secondary"
-msgstr ""
+msgstr "додатковий"
 
 msgid "Classes taken"
-msgstr ""
+msgstr "Пройдені курси"
 
 msgid "Upcoming classes"
-msgstr ""
+msgstr "Майбутні тренінги"
 
 msgid "Training topic"
-msgstr ""
+msgstr "Тема тренінгу"
 
 msgid "Recommended topics"
-msgstr ""
+msgstr "Рекомендовані теми "
 
 msgid "Combine First and Last Names"
-msgstr ""
+msgstr "Об'єднати ім'я та прізвище"
 
 msgid "Person Count"
-msgstr ""
+msgstr "Кількість осіб"
 
 msgid "Select person report"
-msgstr ""
+msgstr "Вибрати звіт про особу"
 
 msgid "Needs by Person's Name"
-msgstr ""
+msgstr "Потрібно за ім'ям особи"
 
 msgid "Needs by Person Count"
-msgstr ""
+msgstr "Потрібно за кількістю осіб"
 
 msgid "Unique by"
-msgstr ""
+msgstr "Унікальний за"
 
 msgid "and"
-msgstr ""
+msgstr "і"
 
 msgid "Not unique overall."
-msgstr ""
+msgstr "Не унікально в цілому."
 
 msgid "Unique by "
-msgstr ""
+msgstr "Унікальний за"
 
 msgid "facility location"
-msgstr ""
+msgstr "Місцезнаходження закладу"
 
 msgid "Total Participants by"
-msgstr ""
+msgstr "Всього учасників за"
 
 msgid "Participants Report"
-msgstr ""
+msgstr "Звіт учасників"
 
 msgid "male"
-msgstr ""
+msgstr "чоловічий"
 
 msgid "female"
-msgstr ""
+msgstr "жіночий"
 
 msgid "na"
-msgstr ""
+msgstr "не відноситься"
 
 msgid "min"
-msgstr ""
+msgstr "мінімальний"
 
 msgid "max"
-msgstr ""
+msgstr "максимальний"
 
 msgid "clear"
-msgstr ""
+msgstr "очистити"
 
 msgid "active"
-msgstr ""
+msgstr "діючий"
 
 msgid "inactive"
-msgstr ""
+msgstr "недіючий"
 
-msgid "Note: This report may contain multiple rows for participants who attended multiple trainings"
+msgid ""
+"Note: This report may contain multiple rows for participants who attended multiple trainings"
 msgstr ""
+"Примітка: цей звіт може містити багато рядків для учасників, які відвідали багато тренінгів"
 
 msgid "Participant Count"
-msgstr ""
+msgstr "Кількість учасників"
 
 msgid "Trainers by Name"
-msgstr ""
+msgstr "Інструктори за ім`ям"
 
 msgid "Show post-test scores above"
-msgstr ""
+msgstr "Показати вище результати після тесту"
 
 msgid "Show score increase above"
-msgstr ""
+msgstr "Показати вище зростання результатів"
 
 msgid "Return Unique Participants"
-msgstr ""
+msgstr "Повернути унікальних учасників"
 
 msgid "Trainings Attended"
-msgstr ""
+msgstr "Відвідані тренінги"
 
 msgid "% Change"
-msgstr ""
+msgstr "% змін"
 
 msgid "Match primary/secondary"
-msgstr ""
+msgstr "Відповідність основний/додатковий"
 
 msgid "Recommended classes (based on topic)"
-msgstr ""
+msgstr "Рекомендовані заняття (залежно від теми)"
 
 msgid "Select participant report"
-msgstr ""
+msgstr "Вибрати звіт про учасника"
 
 msgid "Unique Participants by "
-msgstr ""
+msgstr "Унікальні учасники за"
 
 msgid "Unique Participants by"
-msgstr ""
+msgstr "Унікальні учасники за"
 
 msgid "Unique Participants by Qualification"
-msgstr ""
+msgstr "Унікальні учасники за кваліфікацією"
 
 msgid "Participants Trained"
-msgstr ""
+msgstr "Учасники, які пройшли навчання"
 
 msgid "Participants by Facility"
-msgstr ""
+msgstr "Учасники за закладом"
 
 msgid "Participants by Name"
-msgstr ""
+msgstr "Учасники за ім`ям"
 
 msgid "Participants with Scores"
-msgstr ""
+msgstr "Учасники із результатами"
 
 msgid "Course By Name Report"
-msgstr ""
+msgstr "Курс за назвою звіту"
 
 msgid "Course By Student Count Report"
-msgstr ""
+msgstr "Звіт курсу за кількістю студентів"
 
 msgid "Graduated Students Report"
-msgstr ""
+msgstr "Звіт студентів-випускників"
 
 msgid "Missing Cohort By Participant Count Report"
-msgstr ""
+msgstr "Звіт відсутніх груп за кількістю учасників"
 
 msgid "Missing Cohort By Participant Count"
-msgstr ""
+msgstr "Відсутні групи за кількістю учасників"
 
 msgid "Missing Course By Name Report"
-msgstr ""
+msgstr "Звіт відсутніх курсів за назвою"
 
 msgid "Missing Course By Name"
-msgstr ""
+msgstr "Відсутні курси за назвою"
 
 msgid "Missing Course By Student Count Report"
-msgstr ""
+msgstr "Звіт відсутніх курсів за кількістю студентів"
 
 msgid "Missing Course By Student Count"
-msgstr ""
+msgstr "Відсутні курси за кількістю студентів"
 
 msgid "Missing Facility Report Report"
-msgstr ""
+msgstr "Звіт відсутніх закладів"
 
 msgid "Missing Facility Report"
-msgstr ""
+msgstr "Звіт відсутніх установ"
 
 msgid "Missing Graduated Students Report"
-msgstr ""
+msgstr "Звіт відсутніх студентів-випускників"
 
 msgid "Missing Graduated Students"
-msgstr ""
+msgstr "Відсутні студенти-випускники"
 
 msgid "Missing Institution Information Report"
-msgstr ""
+msgstr "Звіт відсутніх інститутів"
 
 msgid "Missing Institution Information"
-msgstr ""
+msgstr "Відсутні інститути"
 
 msgid "Missing Students By Name Report"
-msgstr ""
+msgstr "Звіт відсутніх студентів за ім'ям"
 
 msgid "Missing Students By Name"
-msgstr ""
+msgstr "Відсутні студенти за ім`ям"
 
 msgid "Missing Students Trained Report"
-msgstr ""
+msgstr "Звіт відсутніх студентів, які пройшли навчання"
 
 msgid "Missing Students Trained"
-msgstr ""
+msgstr "Відсутні студенти, які пройшли навчання"
 
 msgid "Missing Tutor By Name Report"
-msgstr ""
+msgstr "Звіт відсутніх інструкторів зв ім'ям"
 
 msgid "Missing Tutor By Name"
-msgstr ""
+msgstr "Відсутні інструктора за ім`ям"
 
 msgid "Students By Name Report"
-msgstr ""
+msgstr "Звіт студентів за ім'ям"
 
 msgid "training location"
-msgstr ""
+msgstr "місцезнаходження тренінгу"
 
 msgid "Students Trained Report"
-msgstr ""
+msgstr "Звіт студентів, які пройшли навчання"
 
 msgid "Trainings By Participants Report"
-msgstr ""
+msgstr "Тренінги за звітами учасників"
 
 msgid "Trainings By Participants"
-msgstr ""
+msgstr "Тренінги за учасниками"
 
 msgid "Trainings By Name Report"
-msgstr ""
+msgstr "Тренінги за назвою звіту"
 
 msgid "Trainings By Name"
-msgstr ""
+msgstr "Тренінги за назвою"
 
 msgid "Extended Report with Test Scores"
-msgstr ""
+msgstr "Розширений звіт із результатами тестів"
 
 msgid "Extended Report with Regions and Qualification"
-msgstr ""
+msgstr "Розширений звіт із регіонами і кваліфікацією"
 
 msgid "Trainer Report"
-msgstr ""
+msgstr "Звіт по інструкторах"
 
 msgid "trainer report"
-msgstr ""
+msgstr "звіт по інструкторах"
 
 msgid "Trainer language"
-msgstr ""
+msgstr "Мова інструктора"
 
 msgid "Select topic taught"
-msgstr ""
+msgstr "Вибрати прочитану тему"
 
 msgid "Combine first and last names"
-msgstr ""
+msgstr "Об'єднати ім'я та прізвище"
 
 msgid "with Unknown Participants"
-msgstr ""
+msgstr "з невідомими учасниками"
 
 msgid "Trainings with Unknown Participants"
-msgstr ""
+msgstr "Тренінги з невідомими учасниками"
 
 msgid "Age Range"
-msgstr ""
+msgstr "Віковий діапазон"
 
 msgid "Mechanism ID"
-msgstr ""
+msgstr "Ідентифікація механізму"
 
 msgid "Mechanism"
-msgstr ""
+msgstr "Механізм"
 
 msgid "Data Synchronization"
-msgstr ""
+msgstr "Синхронізація даних"
 
 msgid "Uploaded Data"
-msgstr ""
+msgstr "Завантажені дані"
 
 msgid "Existing Data"
-msgstr ""
+msgstr "Існуючи дані"
 
 msgid "Conflict(s)"
-msgstr ""
+msgstr "Помилка (и)"
 
 msgid "Resolution"
-msgstr ""
+msgstr "Рішення"
 
 msgid "Preview Upload Data"
-msgstr ""
+msgstr "Попередній перегляд завантажених даних"
 
 msgid "Import Summary"
-msgstr ""
+msgstr "Зведення даних"
 
 msgid "Record"
-msgstr ""
+msgstr "Запис"
 
 msgid "Additions"
-msgstr ""
+msgstr "Додавання"
 
 msgid "Modifications"
-msgstr ""
+msgstr "Виправлення"
 
 msgid "Deletions"
-msgstr ""
+msgstr "Видалення"
 
 msgid "Add Alias (Duplicate)"
-msgstr ""
+msgstr "Додати псевдоніма (дублікат)"
 
 msgid "Conflicts"
-msgstr ""
+msgstr "Помилки"
 
 msgid "Training Conflicts"
-msgstr ""
+msgstr "Помилка інформації про тренінг"
 
 msgid "People Conflicts"
-msgstr ""
+msgstr "Помилка інформації про особу"
 
 msgid "Facility Conflicts"
-msgstr ""
+msgstr "Помилка інформації про заклад"
 
 msgid "Training Location Conflicts"
-msgstr ""
+msgstr "Помилка інформації про місцезнаходження тренінгу"
 
 msgid "Select the file that contains the exported data (*.sqlite database) you want to import."
 msgstr ""
+"Виберіть файл, який містить експортовані дані (* .sqlite бази даних), які ви хочете імпортувати."
 
 msgid "File to upload"
-msgstr ""
+msgstr "Файл для завантаження"
 
 msgid "Training Session Deleted"
-msgstr ""
+msgstr "Даний тренінг був видалений"
 
 msgid "This training session has been deleted."
-msgstr ""
+msgstr "Данный тренинг был удалён."
 
 msgid "Edit Topics"
-msgstr ""
+msgstr "Редагувати теми"
 
 msgid "Edit Trainer Topic"
-msgstr ""
+msgstr "Редагувати тему інструктора"
 
 msgid "Training Roster"
-msgstr ""
+msgstr "Реєстр тренінгу"
 
 msgid "Course Roster"
-msgstr ""
+msgstr "Реєстр курсу"
 
 msgid "Start Date:"
-msgstr ""
+msgstr "Дата початку:"
 
 msgid "End Date:"
-msgstr ""
+msgstr "Дата закінчення:"
 
 msgid "Total Trainers:"
-msgstr ""
+msgstr "Всього інструкторів:"
 
 msgid "Total Trainers"
-msgstr ""
+msgstr "Всього інструкторів"
 
 msgid "Total Participants:"
-msgstr ""
+msgstr "Всього учасників:"
 
 msgid "Return to training"
-msgstr ""
+msgstr "Повернутися до тренінгу"
 
 msgid "Person"
-msgstr ""
+msgstr "Особа"
 
 msgid "Are you sure you wish to delete this score?"
-msgstr ""
+msgstr "Ви впевнені, що хочете видалити цей результат?"
 
 msgid "Return to Training Session"
-msgstr ""
+msgstr "Повернутися до тренінгу"
 
 msgid "Return to Training"
-msgstr ""
+msgstr "Повернутися до тренінгу"
 
 msgid "Save Training"
-msgstr ""
+msgstr "Зберегти тренінг"
 
 msgid "Add new Training Location"
-msgstr ""
+msgstr "Додати нове місцезнаходження тренінгу"
 
 msgid "Please enter training location information:"
-msgstr ""
+msgstr "Будь ласка, додайте інформацію про місцезнаходження тренінгу:"
 
-msgid "It looks like the training dates do not match the length. Please double check these fields."
+msgid ""
+"It looks like the training dates do not match the length. Please double check these fields."
 msgstr ""
+"Схоже, що дати тренінгу не збігаються з його тривалістю. Будь ласка, перевірте ці поля ще раз."
 
 msgid "Cancel"
-msgstr ""
+msgstr "Скасувати"
 
 msgid "Date created:"
-msgstr ""
+msgstr "Дата створення:"
 
 msgid "Created by:"
-msgstr ""
+msgstr "Створено:"
 
 msgid "Date modified:"
-msgstr ""
+msgstr "Дата внесення змін:"
 
 msgid "Modified by:"
-msgstr ""
+msgstr "Змінено:"
 
 msgid "View/Print Training Roster"
-msgstr ""
+msgstr "Подивитися/роздрукувати реєстр тренінгу"
 
 msgid "Enter Evaluation Data"
-msgstr ""
+msgstr "Ввести данні процесу визначення якості"
 
 msgid "View Data"
-msgstr ""
+msgstr "Подивитися дані"
 
 msgid "unassigned"
-msgstr ""
+msgstr "непризначений"
 
 msgid "Duplicate this Training"
-msgstr ""
+msgstr "Дублювати цей тренінг"
 
 msgid "Delete this Training"
-msgstr ""
+msgstr "Видалити цей тренінг"
 
 msgid "Training start date"
-msgstr ""
+msgstr "Дата початку  тренінгу:"
 
 msgid "Training end date"
-msgstr ""
+msgstr "Дата закінчення тренінгу:"
 
 msgid "Training length"
-msgstr ""
+msgstr "Тривалість тренінгу"
 
 msgid "hours"
-msgstr ""
+msgstr "години"
 
 msgid "weeks"
-msgstr ""
+msgstr "тижні"
 
 msgid "Participants are known"
-msgstr ""
+msgstr "Відомі учасники"
 
 msgid "Check all that apply below"
-msgstr ""
+msgstr "Нижче відмітити все, що підходить"
 
 msgid "Please enter the name your new funding item:"
-msgstr ""
+msgstr "Будь ласка, введіть назву вашого нового фінансованого елементу:"
 
 msgid "Insert"
-msgstr ""
+msgstr "Вставити"
 
 msgid "New Person Form"
-msgstr ""
+msgstr "Форма нової особистості"
 
 msgid "The entered trainer name could not be found."
-msgstr ""
+msgstr "Введене ім'я інструктора не знайдено."
 
 msgid "The entered person could not be found."
-msgstr ""
+msgstr "Введене ім'я людини не знайдено."
 
 msgid "Please select one from the list or add a new person."
-msgstr ""
+msgstr "Будь ласка, виберіть зі списку або додайте нову людину. "
 
 msgid "Please enter the number of days for this trainer."
-msgstr ""
+msgstr "Будь ласка, введіть кількість днів для даного інструктора."
 
-msgid "You must edit this person's trainer profile before adding them to this session.\\n\\nWould you like to do this now?"
+msgid ""
+"You must edit this person's trainer profile before adding them to this session.\\n\\nWould you "
+"like to do this now?"
 msgstr ""
+"Ви повинні відредагувати інформацію про даного інструктора перед тим як додати його до цієї "
+"сессіі.Ви хочете зробити це зараз?"
 
 msgid "Participant Information"
-msgstr ""
+msgstr "Інформація про учасника"
 
 msgid "Course Average Test Scores"
-msgstr ""
+msgstr "Середні результати тестування по курсу"
 
 msgid "You need to choose a qualification for all recorded participants."
-msgstr ""
+msgstr "Вам потрібно вибрати кваліфікацію для всіх записаних учасників."
 
 msgid "Participant Qualifications"
-msgstr ""
+msgstr "Кваліфікації учасника"
 
 msgid "Approval Status"
-msgstr ""
+msgstr "Затверджений статус"
 
 msgid "Location name"
-msgstr ""
+msgstr "Назва місцезнаходження "
 
 msgid "Add new Training Partner"
-msgstr ""
+msgstr "Додати нового партнера тренінгу"
 
 msgid "Training Sub Partner"
-msgstr ""
+msgstr "Субпартнер тренінгу"
 
 msgid "Funder Name"
-msgstr ""
+msgstr "Назва засновника"
 
 msgid "Funder ID"
-msgstr ""
+msgstr "Ідентифікація засновника"
 
 msgid "Delete Training Partner"
-msgstr ""
+msgstr "Видалити партнера тренінгу"
 
 msgid "Edit Training Partner"
-msgstr ""
+msgstr "Редагувати партнера тренінгу"
 
 msgid "Are you sure you wish to delete this partner?"
-msgstr ""
+msgstr "Ви впевнені, що хочете видалити цього партнера?"
 
 msgid "Search for Training Partner"
-msgstr ""
+msgstr "Пошук партнера тренінгу"
 
 msgid "Training Partner Name"
-msgstr ""
+msgstr "Ім`я партнера тренінгу"
 
 msgid "Funder"
-msgstr ""
+msgstr "Засновник"
 
 msgid "View Training Partner"
-msgstr ""
+msgstr "Подивитися партнера тренінгу"
 
 msgid "Training organizer"
-msgstr ""
+msgstr "Організатор тренінгу"
 
 msgid "Activate User"
-msgstr ""
+msgstr "Активувати користувача"
 
 msgid "Add User"
-msgstr ""
+msgstr "Додати користувача"
 
 msgid "User Set Up"
-msgstr ""
+msgstr "Настройки користувача"
 
 msgid "Block User"
-msgstr ""
+msgstr "Блокувати користувача"
 
 msgid "Edit Account"
-msgstr ""
+msgstr "Редагувати обліковий запис"
 
 msgid "E-mail"
-msgstr ""
+msgstr "Електрона пошта"
 
 msgid "New password"
-msgstr ""
+msgstr "Новий пароль"
 
 msgid "Confirm new password"
-msgstr ""
+msgstr "Підтвердити новий пароль"
 
 msgid "Access Level"
-msgstr ""
+msgstr "Рівень доступу"
 
 msgid "Add/Edit/Delete"
-msgstr ""
+msgstr "Додати/редагувати/видалити"
 
 msgid "View only"
-msgstr ""
+msgstr "Лише перегляд"
 
 msgid "View/create reports"
-msgstr ""
+msgstr "Переглянути/створити звіти"
 
 msgid "Edit country options"
-msgstr ""
+msgstr "Змінити параметри країни"
 
 msgid "Add Training Titles"
-msgstr ""
+msgstr "Додати назву тренінгу"
 
 msgid "Use Offline Application"
-msgstr ""
+msgstr "Використання програми поза інтернетом"
 
 msgid "Add/Edit users"
-msgstr ""
+msgstr "Додати/змінити користувачів"
 
 msgid "Approval"
-msgstr ""
+msgstr "Затвердження:"
 
 msgid "Approve trainings"
-msgstr ""
+msgstr "Затвердити тренінги"
 
 msgid "Files"
-msgstr ""
+msgstr "Файли"
 
 msgid "Upload and delete"
-msgstr ""
+msgstr "Загрузити та видалити"
 
 msgid "Organizer access"
-msgstr ""
+msgstr "Доступ організатора"
 
 msgid "All Training Organizers"
-msgstr ""
+msgstr "Всі організатори навчання"
 
 msgid "Block this User"
-msgstr ""
+msgstr "Блокувати користувача"
 
 msgid "Are you sure you wish to block this user?"
-msgstr ""
+msgstr "Ви впевнені, що хочете блокувати цього користувача?"
 
 msgid "Activate this User"
-msgstr ""
+msgstr "Активувати користувача"
 
 msgid "Are you sure you wish to activate this user?"
-msgstr ""
+msgstr "Ви впевекеы, що хочете активувати цього користувача?"
 
 msgid "Forgot Password"
-msgstr ""
+msgstr "Забули пароль"
 
 msgid "Enter your email address, and a new temporary password will be sent to you."
-msgstr ""
+msgstr "Введіть свою адресу електронної пошти і вам відправлять новий тимчасовий пароль."
 
 msgid "Send Password"
-msgstr ""
+msgstr "Надіслати пароль"
 
 msgid "Confirm New password"
-msgstr ""
+msgstr "Підтвердити новий пароль"
 
 msgid "User List"
-msgstr ""
+msgstr "Список користувачів"
 
 msgid "Browse Users"
-msgstr ""
+msgstr "Переглянути користувачів"
 
 msgid "blocked"
-msgstr ""
+msgstr "заблокований"
 
 msgid "First"
-msgstr ""
+msgstr "Перший"
 
 msgid "Last"
-msgstr ""
+msgstr "Останній"
 
 msgid "Username"
-msgstr ""
+msgstr "Ім`я користувача"
 
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 msgid "Admin"
-msgstr ""
+msgstr "Адмін"
 
 msgid "Pre-Service"
-msgstr ""
+msgstr "Система попереднього навчання"
 
 msgid "Pre-service access"
-msgstr ""
+msgstr "Доступ до системи попереднього навчання"
 
 msgid "Send email with login information"
-msgstr ""
+msgstr "Надіслати електронного листа з інформацією про логін"
 
 msgid "Finished"
-msgstr ""
+msgstr "Завершений"
 
 msgid "Monthly Email Reports"
-msgstr ""
+msgstr "Щомісячні звіти електронною поштою"
 
 msgid "View/Edit"
-msgstr ""
+msgstr "Подивитися/Редагувати"
 
 msgid "Add"
-msgstr ""
+msgstr "Додати "
 
 msgid "Add New"
-msgstr ""
+msgstr "Додати новий "
 
 msgid "City is required."
-msgstr ""
+msgstr "Поле місто обов'язково"
 
 msgid "Trainer affiliation"
-msgstr ""
+msgstr "Приналежність інструктора"
 
 msgid "Your new password has been sent. Please check your email for further instructions."
 msgstr ""
+"Ваш новий пароль було надіслано. Будь ласка, перевірте свою електронну пошту для отримання "
+"подальших інструкцій."
 
 msgid "Participant"
-msgstr ""
+msgstr "Учасник"
 
 msgid "Facilitator"
-msgstr ""
+msgstr "Посередник"
 
 msgid "Roster"
-msgstr ""
+msgstr "Реєстр"
 
 msgid "Get Required .NET"
-msgstr ""
+msgstr "Отримати необхідний .NET"
 
 msgid "Administration"
-msgstr ""
+msgstr "Адміністрування"
 
 msgid "Appearance"
-msgstr ""
+msgstr "Зовнішній вигляд"
 
 msgid "Application name"
-msgstr ""
+msgstr "Ім'я програми"
 
 msgid "Logo"
-msgstr ""
+msgstr "Логотип"
 
 msgid "Approximate image dimensions"
-msgstr ""
+msgstr "Приблизні розміри логотипу"
 
 msgid "Refresh this page, or go to the home page to see changes applied."
-msgstr ""
+msgstr "Оновити цю сторінку, або перейдіть на головну сторінку щоб побачити зміни."
 
 msgid "Settings"
-msgstr ""
+msgstr "Настройки"
 
 msgid "Field"
-msgstr ""
+msgstr "Поле "
 
 msgid "Actions"
-msgstr ""
+msgstr "Дії"
 
 msgid "Action"
-msgstr ""
+msgstr "Дія"
 
 msgid "Options"
-msgstr ""
+msgstr "Опції"
 
 msgid "Option"
-msgstr ""
+msgstr "Опція"
 
 msgid "Country"
-msgstr ""
+msgstr "Країна"
 
 msgid "Region"
-msgstr ""
+msgstr "Регіон"
 
 msgid "Add region"
-msgstr ""
+msgstr "Додати регіон"
 
 msgid "Delete region"
-msgstr ""
+msgstr "Видалити регіон"
 
 msgid "Add/Edit"
-msgstr ""
+msgstr "Додати/редагувати"
 
 msgid "Employee"
-msgstr ""
+msgstr "Співробітник"
 
 msgid "Employees"
-msgstr ""
+msgstr "Співробітники"
 
 msgid "Employer"
-msgstr ""
+msgstr "Роботодавець"
 
 msgid "since"
-msgstr ""
+msgstr "з"
 
 msgid "Incomplete trainings that already occurred"
-msgstr ""
+msgstr "Незавершені тренінги, які вже відбулися"
 
 msgid "City/Town"
-msgstr ""
+msgstr "Місто"
 
 msgid "Fiscal Year Start"
-msgstr ""
+msgstr "Початок фінансового року"
 
 msgid "Modules"
-msgstr ""
+msgstr "Модулі"
 
 msgid "Enable"
-msgstr ""
+msgstr "Включити"
 
 msgid "Tracking"
-msgstr ""
+msgstr "Облік"
 
 msgid "SkillSmart"
-msgstr ""
+msgstr "Навички"
 
 msgid "Training Organizer Partners"
-msgstr ""
+msgstr "Партнери тренінгу"
 
 msgid "Attendance Tracking"
-msgstr ""
+msgstr "Облік відвідуваності"
 
 msgid "Unknown Participants"
-msgstr ""
+msgstr "Невідомі учасники"
 
 msgid "Approvals"
-msgstr ""
+msgstr "Затвердження"
 
 msgid "Default"
-msgstr ""
+msgstr "За замовчуванням"
 
 msgid "German"
-msgstr ""
+msgstr "Німецька"
 
 msgid "Ukrainian"
-msgstr ""
+msgstr "Українська"
 
 msgid "Spanish"
-msgstr ""
+msgstr "Іспанська"
 
 msgid "Portuguese"
-msgstr ""
+msgstr "Португальська"
 
 msgid "Save"
-msgstr ""
+msgstr "Зберегти "
 
 msgid "Dutch"
-msgstr ""
+msgstr "Голландська"
 
 msgid "Save & Continue"
-msgstr ""
+msgstr "Зберегти та продовжити"
 
 msgid "Refresher Course"
-msgstr ""
+msgstr "Курс підвищення кваліфікації"
 
 msgid "Approvers"
-msgstr ""
+msgstr "Особи, які затверджують"
 
 msgid "Approver"
-msgstr ""
+msgstr "Особа, яка затверджує"
 
 msgid "Master Approver"
-msgstr ""
+msgstr "Головна особа, яка затверджує"
 
 msgid "Make Low Level Approver"
-msgstr ""
+msgstr "Знизити рівень особи, яка затверджує"
 
 msgid "Make Master"
-msgstr ""
+msgstr "Призначити головним"
 
 msgid "People Merge"
-msgstr ""
+msgstr "Об'єднання записів людей"
 
 msgid "Facilities Merge"
-msgstr ""
+msgstr "Об'єднання записів установ"
 
 msgid "Person Merge"
-msgstr ""
+msgstr "Об'єднання записів людей"
 
 msgid "Edit Users"
-msgstr ""
+msgstr "Редагувати користувачів"
 
 msgid "Individual Report"
-msgstr ""
+msgstr "Індивідуальний звіт"
 
 msgid "Individual Reports"
-msgstr ""
+msgstr "Індивідуальні звіти"
 
 msgid "Professional Reports"
-msgstr ""
+msgstr "Професійні звіти"
 
 msgid "Competence Overview Report"
-msgstr ""
+msgstr "Оглядовий звіт компетентності"
 
 msgid "Competence Compare Reports"
-msgstr ""
+msgstr "Порівняльні звіти компетентності"
 
 msgid "Question Compare Reports"
-msgstr ""
+msgstr "Питання порівняльних звітів"
 
 msgid "Budget Code Reports"
-msgstr ""
+msgstr "Звіти по бюджетах"
 
 msgid "Budget Code Report"
-msgstr ""
+msgstr "Звіт бюджету"
 
 msgid "Student Reports"
-msgstr ""
+msgstr "Звіти про учнів"
 
 msgid "Course Reports"
-msgstr ""
+msgstr "Звіти по курсах"
 
 msgid "Select course report"
-msgstr ""
+msgstr "Вибрати звіт по курсу"
 
 msgid "Cohort Reports"
-msgstr ""
+msgstr "Звіти по групах"
 
 msgid "Institution Reports"
-msgstr ""
+msgstr "Звіти по інститутах"
 
 msgid "Tutor Reports"
-msgstr ""
+msgstr "Звіти по інструкторах"
 
 msgid "Partners"
-msgstr ""
+msgstr "Партнери"
 
 msgid "Partner"
-msgstr ""
+msgstr "Партнер"
 
 msgid "Add Partner"
-msgstr ""
+msgstr "Додати партнера"
 
 msgid "View/Edit Partner"
-msgstr ""
+msgstr "Подивитися/Редагувати партнера"
 
 msgid "Add Employee"
-msgstr ""
+msgstr "Додати співробітника"
 
 msgid "View/Edit Employee"
-msgstr ""
+msgstr "Подивитися/Редагувати співробітника"
 
 msgid "PS Field labels"
-msgstr ""
+msgstr "Поля для системи попереднього навчання (СПН)"
 
 msgid "Field labels"
-msgstr ""
+msgstr "Поля для системи попереднього навчання (СПН)"
 
 msgid "PS Religions"
-msgstr ""
+msgstr "Релігії (СПН)"
 
 msgid "Enter locations for this country or import a CSV file."
-msgstr ""
+msgstr "Введіть місце розташування для цієї країни або імпортуйте файл CSV."
 
 msgid "Import"
-msgstr ""
+msgstr "Імпорт"
 
 msgid "Select the Region below to add values"
-msgstr ""
+msgstr "Оберіть регіон нижче для додавання значень"
 
 msgid "Please select a location"
-msgstr ""
+msgstr "Будь ласка, виберіть місцезнаходження"
 
 msgid "Filter by"
-msgstr ""
+msgstr "Фільтр за:"
 
 msgid "options"
-msgstr ""
+msgstr "опції"
 
 msgid "State"
-msgstr ""
+msgstr "Область/Край"
 
 msgid "Geopolitical Zone"
-msgstr ""
+msgstr "Геополітична зона"
 
 msgid "Local Government Area"
-msgstr ""
+msgstr "Місцеве самоврядування"
 
 msgid "Duplicate entry"
-msgstr ""
+msgstr "Запис, що повторюється"
 
 msgid "Merge into one"
-msgstr ""
+msgstr "Об'єднати в один"
 
 msgid "Merge Selected"
-msgstr ""
+msgstr "Об'єднання обраних"
 
 msgid "Unable to merge phrases."
-msgstr ""
+msgstr "Не вдається об'єднати фрази."
 
-msgid "The phrases below will be merged into one.  Please select the primary phrase you wish to use:"
+msgid ""
+"The phrases below will be merged into one.  Please select the primary phrase you wish to use:"
 msgstr ""
+"Нижче фрази будуть об'єднані в одну. Будь ласка, виберіть основну фразу, яку ви хочете "
+"використовувати:"
 
 msgid "Edit"
-msgstr ""
+msgstr "Редагувати"
 
 msgid "edit"
-msgstr ""
+msgstr "редагувати"
 
 msgid "Evaluations Reports"
-msgstr ""
+msgstr "Звіти по процесах визначення якості"
 
 msgid "Select the region level you want to move"
-msgstr ""
+msgstr "Select the region level you want to move"
 
 msgid "Select the region to move to"
-msgstr ""
+msgstr "Оберіть регіон, щоб перемістити в"
 
 msgid "Local Region"
-msgstr ""
+msgstr "Локальний регіон"
 
 msgid "Turn on Level 1 of Reports"
-msgstr ""
+msgstr "Включити перший рівень звітів"
 
 msgid "Turn on Level 2 of Reports"
-msgstr ""
+msgstr "Включити другий рівень звітів"
 
 msgid "Turn on Level 3 of Reports"
-msgstr ""
+msgstr "Включити третій рівень звітів"
 
 msgid "Federal Level Users"
-msgstr ""
+msgstr "Федеральний рівень користувачів"
 
 msgid "State Level Users"
-msgstr ""
+msgstr "Обласний/Крайовий рівень користувачів"
 
 msgid "LGA Level Users"
-msgstr ""
+msgstr "Районний рівень користувачів"
 
 msgid "Enter Emails of Federal Level Recipients, separated by a comma"
-msgstr ""
+msgstr "Введіть адреси електронної пошти федерального рівня одержувачів, розділені комами"
 
 msgid "Enter Emails of State Level Recipients, separated by a comma"
-msgstr ""
+msgstr "Введіть адреси електронної пошти обласного/крайового рівня одержувачів, розділені комами"
 
 msgid "Enter Emails of LGA Level Recipients, separated by a comma"
-msgstr ""
+msgstr "Введіть адреси електронної пошти районного рівня одержувачів, розділені комами"
 
 msgid "View/Edit Cohort"
-msgstr ""
+msgstr "Перегляд / редагування групи"
 
 msgid "Add Cohort"
-msgstr ""
+msgstr "Додати групу"
 
 msgid "In-service"
-msgstr ""
+msgstr "Система навчання без відриву від виробництва"
 
 msgid "Please select the TrainSmart module to enter"
-msgstr ""
+msgstr "Будь ласка, виберіть TrainSmart модуль для входу"
 
 msgid "In-Service Training Tracking System"
-msgstr ""
+msgstr "Моніторинг системи навчання без відриву від виробництва"
 
 msgid "In-Service"
-msgstr ""
+msgstr "Система навчання без відриву від виробництва"
 
 msgid "In-service access"
-msgstr ""
+msgstr "Доступ до системи навчання без відриву від виробництва"
 
 msgid "Pre-Service Training Tracking System"
-msgstr ""
+msgstr "Моніторинг системи попереднього навчання (СПН)"
 
 msgid "Training Centre Reports"
-msgstr ""
+msgstr "Звіти по центрах навчання"
 
 msgid "Training Center Reports"
-msgstr ""
+msgstr "Звіти по центрах навчання"
 
 msgid "Центр обучения Reports"
-msgstr ""
+msgstr "Звіти по центрах навчання"
 
 msgid "Select criteria"
-msgstr ""
+msgstr "Обрати критерії"
 
 msgid "Institution Name"
-msgstr ""
+msgstr "Назва інституту"
 
 msgid "Institution Sponsor"
-msgstr ""
+msgstr "Спонсор інституту"
 
 msgid "Institution Type"
-msgstr ""
+msgstr "Тип інституту"
 
 msgid "Select"
-msgstr ""
+msgstr "Обрати "
 
 msgid "Select..."
-msgstr ""
+msgstr "Обрати..."
 
 msgid "Any"
-msgstr ""
+msgstr "Будь який"
 
 msgid "N/A"
-msgstr ""
+msgstr "Відсутній"
 
 msgid "Add Institution"
-msgstr ""
+msgstr "Додати інститут"
 
 msgid "Institution details"
-msgstr ""
+msgstr "Деталі інституту"
 
 msgid "Cadres Trained"
-msgstr ""
+msgstr "Навчені кадри"
 
 msgid "Qualification Attained"
-msgstr ""
+msgstr "Досягнута кваліфікація"
 
 msgid "Number of Computers"
-msgstr ""
+msgstr "Кількість комп`ютерів"
 
 msgid "Dormitories"
-msgstr ""
+msgstr "Гуртожитки"
 
 msgid "y/n"
-msgstr ""
+msgstr "так/ні"
 
 msgid "Number of Dormitories"
-msgstr ""
+msgstr "Кількість гуртожитків"
 
 msgid "Number of beds (students)"
-msgstr ""
+msgstr "Кількість спальних місць (студентів)"
 
 msgid "Tutor housing"
-msgstr ""
+msgstr "Житло для інструкторів"
 
 msgid "Number of Tutor houses"
-msgstr ""
+msgstr "Кількість житла для інструкторів"
 
 msgid "Year Founded"
-msgstr ""
+msgstr "Фінансовий рік"
 
 msgid "Edit/View Institution Record"
-msgstr ""
+msgstr "Редагування/перегляд запису інституту"
 
 msgid "Enter details"
-msgstr ""
+msgstr "Ввести деталі"
 
 msgid "Institution ID"
-msgstr ""
+msgstr "Ідентифікація інституту"
 
 msgid "Back"
-msgstr ""
+msgstr "Назад"
 
 msgid "Update Institution"
-msgstr ""
+msgstr "Оновити деталі інституту"
 
 msgid "Principal/Key Staff Members"
-msgstr ""
+msgstr "Головні/ключові співробітники"
 
 msgid "Add/Edit Staff Members"
-msgstr ""
+msgstr "Додати/редагувати співробітників"
 
 msgid "Tutor to Student Ratio"
-msgstr ""
+msgstr "Відношення кількості інструкторів до кількості студентів"
 
 msgid "Number of Tutors"
-msgstr ""
+msgstr "Кількість інструкторів"
 
 msgid "Number of Students"
-msgstr ""
+msgstr "Кількість студентів"
 
 msgid "Cohort Name"
-msgstr ""
+msgstr "Назва групи"
 
 msgid "Cohort ID"
-msgstr ""
+msgstr "Ідентифікація групи"
 
 msgid "Cohort Start Date"
-msgstr ""
+msgstr "Дата початку групи"
 
 msgid "Cohort Graduation Date"
-msgstr ""
+msgstr "Дата завершення групи"
 
 msgid "Institution"
-msgstr ""
+msgstr "Інститут"
 
 msgid "Cadre"
-msgstr ""
+msgstr "Кадри"
 
 msgid "Graduation Date"
-msgstr ""
+msgstr "Дата завершення"
 
 msgid "Number of members"
-msgstr ""
+msgstr "Кількість членів"
 
 msgid "Add Cohort Record"
-msgstr ""
+msgstr "Додати запис групи"
 
 msgid "Enter Criteria"
-msgstr ""
+msgstr "Введіть критерії"
 
 msgid "Edit/View Cohort Record"
-msgstr ""
+msgstr "Перегляд/редагування групи"
 
 msgid "Cohort details"
-msgstr ""
+msgstr "Деталі групи"
 
 msgid "Degree Information"
-msgstr ""
+msgstr "Ступень освіти"
 
 msgid "Cohort Participants at Start"
-msgstr ""
+msgstr "Учасники групи на початку"
 
 msgid "Cohort Participants Dropped Out"
-msgstr ""
+msgstr "Учасники групи, які кинули навчання"
 
 msgid "Cohort Current or Graduating Number"
-msgstr ""
+msgstr "Учасники групи, які навчаються або закінчили навчання"
 
 msgid "Update"
-msgstr ""
+msgstr "Оновити"
 
 msgid "Students associated with the cohort"
-msgstr ""
+msgstr "Студенти, асоційовані з групою"
 
 msgid "Student ID"
-msgstr ""
+msgstr "Ідентифікація студента"
 
 msgid "DOB"
-msgstr ""
+msgstr "Дата народження"
 
 msgid "Date of birth"
-msgstr ""
+msgstr "Дата народження"
 
 msgid "Update associated students"
-msgstr ""
+msgstr "Оновити студентів, асоційованих з групою"
 
 msgid "Graduated"
-msgstr ""
+msgstr "Випускник"
 
 msgid "Dropped"
-msgstr ""
+msgstr "Які покинули навчання"
 
 msgid "License / Registration"
-msgstr ""
+msgstr "Ліцензія/Реєстрація"
 
 msgid "Add a license"
-msgstr ""
+msgstr "Додати ліцензію"
 
 msgid "Add license"
-msgstr ""
+msgstr "Додати ліцензію"
 
 msgid "Classes associated with the Cohort"
-msgstr ""
+msgstr "Курси, асоційовані з групою"
 
 msgid "Class Name"
-msgstr ""
+msgstr "Найменування курсу"
 
 msgid "Tutor"
-msgstr ""
+msgstr "Інструктор"
 
 msgid "Update associated classes"
-msgstr ""
+msgstr "Оновити заняття, асоційовані з групою"
 
 msgid "Clinical Allocation"
-msgstr ""
+msgstr "Клінічний розподіл"
 
 msgid "Advisor"
-msgstr ""
+msgstr "Консультант"
 
 msgid "Hours Required"
-msgstr ""
+msgstr "Потрібно годин"
 
 msgid "Add a practicum"
-msgstr ""
+msgstr "Додайте практикум"
 
 msgid "Assessment associated with Cohort"
-msgstr ""
+msgstr "Оцінки, асоційовані з групою"
 
 msgid "Update students"
-msgstr ""
+msgstr "Оновити студентів"
 
 msgid "All form fields are required"
-msgstr ""
+msgstr "Всі поля форми обов'язкові"
 
 msgid "Update classes"
-msgstr ""
+msgstr "Оновити заняття"
 
 msgid "Instructor"
-msgstr ""
+msgstr "Інструктор"
 
 msgid "Delete"
-msgstr ""
+msgstr "Видалити"
 
 msgid "delete"
-msgstr ""
+msgstr "видалити"
 
 msgid "Student cadre"
-msgstr ""
+msgstr "Студентські кадри"
 
 msgid "Return"
-msgstr ""
+msgstr "Повернути"
 
 msgid "Students"
-msgstr ""
+msgstr "Студенти"
 
 msgid "Personal"
-msgstr ""
+msgstr "Особиста інформація"
 
 msgid "Add a person"
-msgstr ""
+msgstr "Додати особу"
 
 msgid "Add person"
-msgstr ""
+msgstr "Додати особу"
 
 msgid "Add a New Student or Tutor Record"
-msgstr ""
+msgstr "Додати запис нового студента або інструктора"
 
 msgid "Local address"
-msgstr ""
+msgstr "Місцева адреса"
 
 msgid "Local Address"
-msgstr ""
+msgstr "Місцева адреса"
 
 msgid "Edit Student Record"
-msgstr ""
+msgstr "Редагувати запис студента"
 
 msgid "Nationality"
-msgstr ""
+msgstr "Національність"
 
 msgid "Marital Status"
-msgstr ""
+msgstr "Сімейний стан"
 
 msgid "Single"
-msgstr ""
+msgstr "Неодружений/незаміжня"
 
 msgid "Married"
-msgstr ""
+msgstr "Одружений/Заміжня"
 
 msgid "Divorced"
-msgstr ""
+msgstr "Розлучений (а)"
 
 msgid "Widowed"
-msgstr ""
+msgstr "Вдова/Вдівець"
 
 msgid "Other Contact Information"
-msgstr ""
+msgstr "Додаткова контактна інформація"
 
 msgid "Postal Code / ZIP"
-msgstr ""
+msgstr "Поштовий індекс"
 
 msgid "Postal Code/ZIP"
-msgstr ""
+msgstr "Поштовий індекс"
 
 msgid "ZIP"
-msgstr ""
+msgstr "Поштовий індекс"
 
 msgid "ZIP Code"
-msgstr ""
+msgstr "Поштовий індекс"
 
 msgid "Residential Address"
-msgstr ""
+msgstr "Адреса місця проживання"
 
 msgid "Next of Kin"
-msgstr ""
+msgstr "Найближчий родич"
 
 msgid "Permanent Address"
-msgstr ""
+msgstr "Постійна адреса"
 
 msgid "Cellphone"
-msgstr ""
+msgstr "Мобільній телефон"
 
 msgid "Emergency Contact"
-msgstr ""
+msgstr "Контакт для екстрених випадків"
 
 msgid "Student Information"
-msgstr ""
+msgstr "Інформація про студента"
 
 msgid "Religious Denomination 2"
-msgstr ""
+msgstr "Належність до релігії 2"
 
 msgid "Date of Enrollment"
-msgstr ""
+msgstr "Дата реєстрації"
 
 msgid "Reason for Enrollment"
-msgstr ""
+msgstr "Причина реєстрації"
 
 msgid "Reason"
-msgstr ""
+msgstr "Причина"
 
 msgid "Date of Separation"
-msgstr ""
+msgstr "Дата відрахування"
 
 msgid "Clear date"
-msgstr ""
+msgstr "Очистити дату"
 
 msgid "Clear"
-msgstr ""
+msgstr "очистити"
 
 msgid "Reason for Separation"
-msgstr ""
+msgstr "Причина відрахування"
 
 msgid "Years of Study"
-msgstr ""
+msgstr "Кількість років навчання"
 
 msgid "Remove separation date"
-msgstr ""
+msgstr "Очистити дату відрахування"
 
 msgid "Program Enrolled In"
-msgstr ""
+msgstr "Зареєстрований в програмі"
 
 msgid "Prior Education"
-msgstr ""
+msgstr "Раніше отримана освіта"
 
 msgid "Facility After Graduation"
-msgstr ""
+msgstr "Місце роботи/навчання після закінчення навчання"
 
 msgid "High School Completion Date"
-msgstr ""
+msgstr "Дата завершення середньої школи"
 
 msgid "Last School Attended"
-msgstr ""
+msgstr "Школа, відвідувана востаннє"
 
 msgid "Admission to School Date"
-msgstr ""
+msgstr "Дата прийому до школу"
 
 msgid "Equivalence"
-msgstr ""
+msgstr "Еквівалентність"
 
 msgid "Last University Attended"
-msgstr ""
+msgstr "Університет, відвідуваний востаннє"
 
 msgid "Person In Charge"
-msgstr ""
+msgstr "Відповідальна особа"
 
 msgid "Topic"
-msgstr ""
+msgstr "Тема"
 
 msgid "Grade"
-msgstr ""
+msgstr "Оцінка"
 
 msgid "Exam Mark"
-msgstr ""
+msgstr "Оцінка за іспит"
 
 msgid "Credits"
-msgstr ""
+msgstr "Кредити"
 
 msgid "Practicum name"
-msgstr ""
+msgstr "Назва практикума"
 
 msgid "Hours required"
-msgstr ""
+msgstr "Потрібно годин"
 
 msgid "Hours completed"
-msgstr ""
+msgstr "Завершені години"
 
 msgid "License name"
-msgstr ""
+msgstr "Назва ліцензії"
 
 msgid "Update exams"
-msgstr ""
+msgstr "Оновити іспити"
 
 msgid "Update clinical allocation"
-msgstr ""
+msgstr "Оновити клінічний розподіл"
 
 msgid "Practicum date"
-msgstr ""
+msgstr "Дата практикума"
 
 msgid "School ID"
-msgstr ""
+msgstr "Ідентифікація школи"
 
 msgid "Student Transcript Report"
-msgstr ""
+msgstr "Звіт за успішністю студентів"
 
 msgid "Date updated"
-msgstr ""
+msgstr "Оновити дату"
 
 msgid "Updated by"
-msgstr ""
+msgstr "Оновлено"
 
 msgid "Insert New"
-msgstr ""
+msgstr "Ввести новий"
 
 msgid "Commodity Information"
-msgstr ""
+msgstr "Інформація про товар"
 
 msgid "Commodity Report"
-msgstr ""
+msgstr "Звіт по товарах"
 
 msgid "Commodity Reports"
-msgstr ""
+msgstr "Звіти по товарах"
 
 msgid "Total Commodities"
-msgstr ""
+msgstr "Всього товарів"
 
 msgid "Commodity Name"
-msgstr ""
+msgstr "Назва товару"
 
 msgid "Consumption"
-msgstr ""
+msgstr "Розхід"
 
 msgid "Out of Stock"
-msgstr ""
+msgstr "Немає у наявності на складі"
 
 msgid "Y/N"
-msgstr ""
+msgstr "Так/Ні"
 
 msgid "Y"
-msgstr ""
+msgstr "Так"
 
 msgid "N"
-msgstr ""
+msgstr "Ні"
 
 msgid "MM/YY"
-msgstr ""
+msgstr "ММ/РР"
 
 msgid "MM"
-msgstr ""
+msgstr "ММ"
 
 msgid "YY"
-msgstr ""
+msgstr "РР"
 
 msgid "Import facility from Excel"
-msgstr ""
+msgstr "Імпорт закладу із файла Excel"
 
 msgid "Please enter your new Facility sponsor"
-msgstr ""
+msgstr "Будь ласка, введіть нового спонсора закладу"
 
 msgid "to"
-msgstr ""
+msgstr "до"
 
 msgid "Go back to Facility Edit Page"
-msgstr ""
+msgstr "Повернутися до сторінки редагування закладу"
 
 msgid "Employee Tracking"
-msgstr ""
+msgstr "Облік співробітників"
 
 msgid "Site Data Share"
-msgstr ""
+msgstr "Сторінка загальних даних"
 
 msgid "Change our password"
-msgstr ""
+msgstr "Зміна паролю"
 
 msgid "Drag me down"
-msgstr ""
+msgstr "Перетягніть униз"
 
 msgid "Order"
-msgstr ""
+msgstr "Порядок"
 
 msgid "Parent"
-msgstr ""
+msgstr "Ісходник"
 
 msgid "Favorite color"
-msgstr ""
+msgstr "Улюблений колір"
 
 msgid "Display"
-msgstr ""
+msgstr "Показати"
 
 msgid "TOT"
-msgstr ""
+msgstr "Навчання інструкторів"
 
 msgid "Mutiple checkbox field"
-msgstr ""
+msgstr "Поле для декількох відміток"
 
 msgid "Funding Amount"
-msgstr ""
+msgstr "Сума фінансування"
 
 msgid "Nat. Curriculum Comment"
-msgstr ""
+msgstr "Коментарі до національного навчального плану"
 
 msgid "National Curriculum"
-msgstr ""
+msgstr "Національний навчальний план"
 
 msgid "Pre test score"
-msgstr ""
+msgstr "Результат до тесту"
 
 msgid "Post test score"
-msgstr ""
+msgstr "Результат після тесту"
 
 msgid "Particpant Training Completion"
-msgstr ""
+msgstr "Завершення тренінгу учасника"
 
 msgid "Training Completion"
-msgstr ""
+msgstr "Завершення тренінгу"
 
 msgid "Particpant Viewing Location"
-msgstr ""
+msgstr "Перегляд розташування учасника"
 
 msgid "Participant Budget Code"
-msgstr ""
+msgstr "Код бюджету учасника"
 
 msgid "Budget Code"
-msgstr ""
+msgstr "Код бюджету"
 
 msgid "Training score"
-msgstr ""
+msgstr "Оцінка тренінгу"
 
 msgid "Complete Status"
-msgstr ""
+msgstr "Статус завершення"
 
 msgid "Person Qualification"
-msgstr ""
+msgstr "Кваліфікація особи"
 
 msgid "Primary Responsibility"
-msgstr ""
+msgstr "Основна відповідальність"
 
 msgid "Secondary Responsibility"
-msgstr ""
+msgstr "Додаткова відповідальність"
 
 msgid "Specialty"
-msgstr ""
+msgstr "Спеціальність"
 
 msgid "Contract Type"
-msgstr ""
+msgstr "Тип контракту"
 
 msgid "Commodity Type"
-msgstr ""
+msgstr "Тип товару"
 
 msgid "Highest Education Level"
-msgstr ""
+msgstr "Рівень освіти"
 
 msgid "Reason Attending"
-msgstr ""
+msgstr "Причина реєстрації"
 
 msgid "Occupational Category"
-msgstr ""
+msgstr "Професійна категорія"
 
 msgid "Partner Type"
-msgstr ""
+msgstr "Тип партнера"
 
 msgid "Staff Category"
-msgstr ""
+msgstr "Категорія персоналу"
 
 msgid "Base"
-msgstr ""
+msgstr "Основа"
 
 msgid "Full Time"
-msgstr ""
+msgstr "Повний робочий день"
 
 msgid "Race"
-msgstr ""
+msgstr "Раса"
 
 msgid "Primary Role"
-msgstr ""
+msgstr "Основна роль"
 
 msgid "Primary Roles for employees"
-msgstr ""
+msgstr "Основні ролі співробітників"
 
 msgid "Intended Transitions"
-msgstr ""
+msgstr "Призначений перехід"
 
 msgid "Relationship"
-msgstr ""
+msgstr "Зв'язок/Відношення"
 
 msgid "Referral Mechanism"
-msgstr ""
+msgstr "Механізм перенаправлення"
 
 msgid "Training Provided"
-msgstr ""
+msgstr "Наданий тренінг"
 
 msgid "Importance"
-msgstr ""
+msgstr "Значення"
 
 msgid "Agency"
-msgstr ""
+msgstr "Агенство"
 
 msgid "Subpartner"
-msgstr ""
+msgstr "Суб-партнер"
 
 msgid "Funding End Date"
-msgstr ""
+msgstr "Дата закінчення фінансування"
 
 msgid "Funding  Mechanisms"
-msgstr ""
+msgstr "Механізми фінансування"
 
 msgid "Mechanisms"
-msgstr ""
+msgstr "Механізми"
 
 msgid "Merge?"
-msgstr ""
+msgstr "Об`єднати?"
 
 msgid "Merge"
-msgstr ""
+msgstr "Об`єднати"
 
 msgid "Allow multiple PEPFAR categories"
-msgstr ""
+msgstr "Дозволяється декілька категорій ПЕПФАР"
 
 msgid "Allow multiple Training topics"
-msgstr ""
+msgstr "Дозволяється декілька навчальних тем"
 
 msgid "Display recommended trainings per individual"
-msgstr ""
+msgstr "Показати рекомендовані тренінги для людини"
 
 msgid "Require at least one trainer skill per trainer"
-msgstr ""
+msgstr "Потрібно щонайменше один навик для інструктора"
 
 msgid "Assign Training Titles to Categories"
-msgstr ""
+msgstr "Присвоїти назви тренінгу до категорій"
 
 msgid "Add/edit Recommended Training Topics"
-msgstr ""
+msgstr "Додати/редагувати рекомендовані теми тренінгу"
 
 msgid "Select the recommended topics for this qualification"
-msgstr ""
+msgstr "Виберіть рекомендовані теми для цієї кваліфікації"
 
 msgid "Are you sure you wish to remove these recommendations?"
-msgstr ""
+msgstr "Ви впевнені, що хочете видалити ці рекомендації?"
 
 msgid "Are you sure you wish to unasign this?"
-msgstr ""
+msgstr "Ви впевнені, що хочете прибрати це призначення?"
 
 msgid "Two Levels of Approval"
-msgstr ""
+msgstr "Два рівня затвердження"
 
 msgid "That user is now a regular approver"
-msgstr ""
+msgstr "В даний момент цей користувач є регулярною особою, яка затверджує"
 
 msgid "Unable to remove that user as a master approve"
-msgstr ""
+msgstr "Не вдається видалити цього користувача як головну особу, яка затверджує"
 
 msgid "That user is now a master approver"
-msgstr ""
+msgstr "В даний момент цей користувач є головною особою, яка затверджує"
 
 msgid "Unable to make that user a master approve"
-msgstr ""
+msgstr "Неможливо зробити цього користувача головною особою, яка затверджує "
 
 msgid "That user is no longer an approver"
-msgstr ""
+msgstr "Цей користувач вже не є особою, яка затверджує"
 
 msgid "Unable to delete that approver"
-msgstr ""
+msgstr "Неможливо видалити цю особу, яка затверджує"
 
 msgid "Home Address"
-msgstr ""
+msgstr "Домашня адреса"
 
 msgid "External Classes"
-msgstr ""
+msgstr "Зовнішні курси"
 
 msgid "Second email"
-msgstr ""
+msgstr "Додаткова електрона пошта"
 
 msgid "M&E Responsibility"
-msgstr ""
+msgstr "Відповідальність за моніторинг і процес визначення якості"
 
 msgid "Active trainer"
-msgstr ""
+msgstr "Діючий інструктор"
 
 msgid "Active Trainer"
-msgstr ""
+msgstr "Діючий інструктор"
 
 msgid "Facilitator Information"
-msgstr ""
+msgstr "Інформація про посередника"
 
 msgid "People Approval"
-msgstr ""
+msgstr "Затвердження людей"
 
 msgid "Display Last"
-msgstr ""
+msgstr "Показати останнім"
 
 msgid "Enabled"
-msgstr ""
+msgstr "Включено"
 
 msgid "People Awaiting Approval"
-msgstr ""
+msgstr "Люди, що очікують затвердження"
 
 msgid "Unapproved People"
-msgstr ""
+msgstr "Незатверджені люди"
 
 msgid "look for duplicates"
-msgstr ""
+msgstr "шукати дублікати"
 
 msgid "approve"
-msgstr ""
+msgstr "затвердити"
 
 msgid "Both Names"
-msgstr ""
+msgstr "За ім`ям та призвищем"
 
 msgid "That person has been approved"
-msgstr ""
+msgstr "Ця особа була затверджена"
 
 msgid "Error approving person: That account could not be found."
-msgstr ""
+msgstr "Помилка затвердження особистості: не вдалося знайти обліковий запис."
 
 msgid "Government employee"
-msgstr ""
+msgstr "Державний службовець"
 
 msgid "Professional bodies"
-msgstr ""
+msgstr "Професійні органи"
 
 msgid "Professional Registration Number"
-msgstr ""
+msgstr "Професійний реєстраційний номер"
 
 msgid "Registration Number"
-msgstr ""
+msgstr "Реєстраційний номер"
 
 msgid "Disability"
-msgstr ""
+msgstr "Інвалідність"
 
 msgid "Nurse Trainer Type"
-msgstr ""
+msgstr "Тип інструктора"
 
 msgid "Year you started providing care"
-msgstr ""
+msgstr "Рік, коли ви почали надавати допомогу"
 
 msgid "Rank patient groups based on time"
-msgstr ""
+msgstr "Ранг групи пацієнтів, засновані на часі"
 
 msgid "Pregnant women"
-msgstr ""
+msgstr "Вагітні жінки"
 
 msgid "Adults"
-msgstr ""
+msgstr "Дорослі"
 
 msgid "Children"
-msgstr ""
+msgstr "Діти"
 
 msgid "Supervised"
-msgstr ""
+msgstr "Забезпечення контролю"
 
 msgid "Indicate the training you received"
-msgstr ""
+msgstr "Вкажіть тренінг, який ви отримали"
 
 msgid "Import person from Excel"
-msgstr ""
+msgstr "Імпорт людини із файла Excel"
 
 msgid "Training Institution"
-msgstr ""
+msgstr "Інститут тренінгу"
 
 msgid "Import a person"
-msgstr ""
+msgstr "Імпорт особи"
 
-msgid "Select the file that contains the data (Excel Comma Seperated Values database - CSV) you want to import."
+msgid ""
+"Select the file that contains the data (Excel Comma Seperated Values database - CSV) you want "
+"to import."
 msgstr ""
+"Виберіть файл, який містить дані (значення, розділені комами у базі даних Excel - CSV), які ви "
+"хочете імпортувати."
 
 msgid "Get sample template"
-msgstr ""
+msgstr "Отримати зразок файлу"
 
 msgid "Max file upload size"
-msgstr ""
+msgstr "Максимальний розмір файлу для завантаження"
 
 msgid "If facility is a hospital, please click specific department"
-msgstr ""
+msgstr "Якщо установа є лікарнею, будь ласка, виберіть спеціальний департамент"
 
 msgid "Residential Address?"
-msgstr ""
+msgstr "Адреса місця проживання?"
 
 msgid "Reason (if Other selected above)"
-msgstr ""
+msgstr "Причина (якщо Інші обрані вище)"
 
 msgid "required"
-msgstr ""
+msgstr "обов'язкове поле"
 
 msgid "Required"
-msgstr ""
+msgstr "Обов'язкове поле"
 
 msgid "Show me Trainings From"
-msgstr ""
+msgstr "Показати тренінги за"
 
 msgid "Trainings by Participants Viewing Location"
-msgstr ""
+msgstr "Тренінги за місцезнаходженням учасників"
 
 msgid "Days Attended"
-msgstr ""
+msgstr "Дні відвідування"
 
 msgid "Complete"
-msgstr ""
+msgstr "Завершено"
 
 msgid "Participant Test Scores"
-msgstr ""
+msgstr "Результати учасників тестування"
 
 msgid "Approved"
-msgstr ""
+msgstr "Затверджений"
 
 msgid "Rejected"
-msgstr ""
+msgstr "Відхилено"
 
 msgid "Import Scores"
-msgstr ""
+msgstr "Імпортувати результати"
 
 msgid "Test scores"
-msgstr ""
+msgstr "Результати тесту"
 
 msgid "Score Import"
-msgstr ""
+msgstr "Імпорт результатів"
 
 msgid "Enter scores by importing a CSV file."
-msgstr ""
+msgstr "Введіть оцінки шляхом імпорту файлу CSV."
 
 msgid "Get sample Excel template"
-msgstr ""
+msgstr "Отримати зразок файлу Excel"
 
 msgid "No Trainings selected"
-msgstr ""
+msgstr "Жодного тренінгу не обрано"
 
 msgid "The Training (s) have been assigned."
-msgstr ""
+msgstr "Тренінги були призначені."
 
 msgid "Merge From"
-msgstr ""
+msgstr "Об`єднати з"
 
 msgid "Merge To"
-msgstr ""
+msgstr "Об`єднати в"
 
 msgid "You must select a valid person to merge"
-msgstr ""
+msgstr "Необхідно вибрати особистість для об'єднання записів"
 
 msgid "You must select a valid facility to merge"
-msgstr ""
+msgstr "Необхідно вибрати заклад для об'єднання записів"
 
 msgid "Enter Secondary Qualifications for this qualification."
-msgstr ""
+msgstr "Введіть додаткову кваліфікацію для цієї кваліфікації."
 
 msgid "Allow Multiple Facility Sponsors"
-msgstr ""
+msgstr "Дозволяється декілька спонсорів закладу"
 
 msgid "Facility Approval"
-msgstr ""
+msgstr "Затвердження закладу"
 
 msgid "Commodity Table"
-msgstr ""
+msgstr "Таблиця товарів"
 
 msgid "Commodity Table Column: Commodity Name"
-msgstr ""
+msgstr "Стовпець таблиці товарів: Ім'я товару"
 
 msgid "Commodity Table Column: Date"
-msgstr ""
+msgstr "Стовпець таблиці товарів: Дата"
 
 msgid "Commodity Table Column: Consumption"
-msgstr ""
+msgstr "Стовпець таблиці товарів: Витрати"
 
 msgid "Commodity Table Column: Out of Stock"
-msgstr ""
+msgstr "Стовпець таблиці товарів: Немає у наявності на складі"
 
 msgid "Latitude and Longitude"
-msgstr ""
+msgstr "Широта і довгота"
 
 msgid "Latitude"
-msgstr ""
+msgstr "Широта"
 
 msgid "Longitude"
-msgstr ""
+msgstr "Довгота"
 
 msgid "Sponsor Date"
-msgstr ""
+msgstr "Дати спонсорування"
 
 msgid "Commodity Names"
-msgstr ""
+msgstr "Назви товару"
 
 msgid "Commodity Types"
-msgstr ""
+msgstr "Типу товару"
 
 msgid "Update Labels"
-msgstr ""
+msgstr "Оновити поля"
 
 msgid "License And Registration"
-msgstr ""
+msgstr "Ліцензія та Реєстрація"
 
 msgid "Type Of Contract"
-msgstr ""
+msgstr "Тип контракту"
 
 msgid "ps custom field"
-msgstr ""
+msgstr "поле користувача"
 
 msgid "Spouse Names"
-msgstr ""
+msgstr "Імена подружжя"
 
 msgid "CA Mark"
-msgstr ""
+msgstr "Відмітка"
 
 msgid "Add class"
-msgstr ""
+msgstr "Додати курс"
 
 msgid "Add cadre"
-msgstr ""
+msgstr "Додати кадр"
 
 msgid "All form fields are required."
-msgstr ""
+msgstr "Всі поля форми обов'язкові"
 
 msgid "Cadre name"
-msgstr ""
+msgstr "Ім`я кадру"
 
 msgid "Class name"
-msgstr ""
+msgstr "Найменування курсу"
 
 msgid "The end date cannot be before the start date"
-msgstr ""
+msgstr "Дата закінчення не може бути раніше дати початку"
 
 msgid "Update class"
-msgstr ""
+msgstr "Оновити курс"
 
 msgid "Update cadre"
-msgstr ""
+msgstr "Оновити кадр"
 
 msgid "Employee Tracking System"
-msgstr ""
+msgstr "Система моніторингу співробітників"
 
 msgid "Funding sources"
-msgstr ""
+msgstr "Джерела фінансування"
 
 msgid "Funding source"
-msgstr ""
+msgstr "Джерела фінансування"
 
 msgid "Add funding"
-msgstr ""
+msgstr "Додати джерело фінансування"
 
 msgid "Update funding"
-msgstr ""
+msgstr "Оновити джерело фінансування"
 
 msgid "Add institution type"
-msgstr ""
+msgstr "Додати тип інституту"
 
 msgid "Update institution type"
-msgstr ""
+msgstr "Оновити тип інституту"
 
 msgid "Abbreviation"
-msgstr ""
+msgstr "Абревіатура"
 
 msgid "Add language"
-msgstr ""
+msgstr "Додати мову"
 
 msgid "Update language"
-msgstr ""
+msgstr "Оновити мову"
 
 msgid "Add nationality"
-msgstr ""
+msgstr "Додати національність"
 
 msgid "Update nationality"
-msgstr ""
+msgstr "Оновити національність"
 
 msgid "Add reason"
-msgstr ""
+msgstr "Додати причину"
 
 msgid "Update reason"
-msgstr ""
+msgstr "Оновити причину"
 
 msgid "Add sponsor"
-msgstr ""
+msgstr "Додати спонсора"
 
 msgid "Update sponsor"
-msgstr ""
+msgstr "Оновити спонсора"
 
 msgid "Add tutor type"
-msgstr ""
+msgstr "Додатти тип інструктору"
 
 msgid "Update tutor type"
-msgstr ""
+msgstr "Оновити тип інструктору"
 
 msgid "Tutor type"
-msgstr ""
+msgstr "Тип інструктора"
 
 msgid "Add course type"
-msgstr ""
+msgstr "Додати тип курсу"
 
 msgid "Update course type"
-msgstr ""
+msgstr "Оновити тип курсу"
 
 msgid "Add religious denomination"
-msgstr ""
+msgstr "Додати належність до релігії"
 
 msgid "Update religious denomination"
-msgstr ""
+msgstr "Оновити належність до релігії"
 
 msgid "Employee Module"
-msgstr ""
+msgstr "Модуль співробітників"
 
 msgid "Access Employees"
-msgstr ""
+msgstr "Доступ до модулю співробітників"
 
 msgid "Restrict Access"
-msgstr ""
+msgstr "Обмеження доступу"
 
 msgid "All organizations data"
-msgstr ""
+msgstr "Всі дані організації"
 
 msgid "Only selected organizations"
-msgstr ""
+msgstr "Лише обрані організації"
 
 msgid "Ability to duplicate Training"
-msgstr ""
+msgstr "Здатність дублювати тренінг"
 
 msgid "Approve people and facilities"
-msgstr ""
+msgstr "Затвердити людей та установи"
 
 msgid "All Institutions"
-msgstr ""
+msgstr "Всі інститути"
 
-msgid "User is Administrator or can edit drop down lists, titles, and data, or import excel records"
+msgid ""
+"User is Administrator or can edit drop down lists, titles, and data, or import excel records"
 msgstr ""
+"Користувач є адміністратором або можна редагувати списки, що розкриваються, заголовкі і дані, "
+"або імпортувати звіти Excel"
 
 msgid "Next User"
-msgstr ""
+msgstr "Наступний користувач"
 
 msgid "SkillSmart Main Settings"
-msgstr ""
+msgstr "Головні настройки навичок"
 
 msgid "Professional Bodies"
-msgstr ""
+msgstr "Професійні органи"
 
 msgid "Supervision"
-msgstr ""
+msgstr "Забезпечення контролю"
 
 msgid "Add supervised"
-msgstr ""
+msgstr "Додати забезпечення контролю"
 
 msgid "Update supervised"
-msgstr ""
+msgstr "Оновити забезпечення контролю"
 
 msgid "Supervision frequency"
-msgstr ""
+msgstr "Забезпечення частоти контролю"
 
 msgid "Add supervision frequency"
-msgstr ""
+msgstr "Додати забезпечення частоти контролю"
 
 msgid "Update supervision frequency"
-msgstr ""
+msgstr "Оновити забезпечення частоти контролю"
 
 msgid "Training received"
-msgstr ""
+msgstr "Отриманий тренінг"
 
 msgid "Add training received"
-msgstr ""
+msgstr "Додати тренінг, який отримали"
 
 msgid "Add trainings"
-msgstr ""
+msgstr "Додати тренінги"
 
 msgid "Update training received"
-msgstr ""
+msgstr "Оновити тренінг, що отримали"
 
 msgid "Facility Departments"
-msgstr ""
+msgstr "Відділи закладу"
 
 msgid "Facility department"
-msgstr ""
+msgstr "Відділ закладу"
 
 msgid "Add facility department"
-msgstr ""
+msgstr "Додати відділ закладу"
 
 msgid "Update facility department"
-msgstr ""
+msgstr "Оновити відділ закладу"
 
 msgid "Competencies"
-msgstr ""
+msgstr "Компетенції"
 
 msgid "Competency"
-msgstr ""
+msgstr "Компетенція"
 
 msgid "Add competency"
-msgstr ""
+msgstr "Додати компетенцію"
 
 msgid "Update competency"
-msgstr ""
+msgstr "Оновити компетенцію"
 
 msgid "Nurse trainer type"
-msgstr ""
+msgstr "Тип інструктора"
 
 msgid "Occupational Categories"
-msgstr ""
+msgstr "Професійні категорії"
 
 msgid "Add race"
-msgstr ""
+msgstr "Додати расу"
 
 msgid "Update race"
-msgstr ""
+msgstr "Оновити расу"
 
 msgid "Add disability"
-msgstr ""
+msgstr "Додати інвалідність"
 
 msgid "Update disability"
-msgstr ""
+msgstr "Оновити інвалідність"
 
 msgid "Add professional body"
-msgstr ""
+msgstr "Додати професійну організацію"
 
 msgid "Update professional body"
-msgstr ""
+msgstr "Оновити професійну організацію"
 
 msgid "Professional body"
-msgstr ""
+msgstr "Професійна організація"
 
 msgid "Question, A-E options"
-msgstr ""
+msgstr "Питання, А-Е варіанти"
 
 msgid "Question, yes/no options"
-msgstr ""
+msgstr "Питання так/ні варіанти"
 
 msgid "Question, textbox"
-msgstr ""
+msgstr "Питання, текстове поле"
 
 msgid "Field order"
-msgstr ""
+msgstr "Порядок поля"
 
 msgid "Text header"
-msgstr ""
+msgstr "Текст заголовку"
 
 msgid "Field type"
-msgstr ""
+msgstr "Тип поля"
 
 msgid "Qualification group"
-msgstr ""
+msgstr "Кваліфікаційна група"
 
 msgid "Link to qualification"
-msgstr ""
+msgstr "Посилання на кваліфікацію"
 
 msgid "Edit name"
-msgstr ""
+msgstr "Редагувати назву"
 
 msgid "Employee Settings"
-msgstr ""
+msgstr "Настройки співробітника"
 
 msgid "Partner Importance"
-msgstr ""
+msgstr "Значення партнера"
 
 msgid "Build Funding"
-msgstr ""
+msgstr "Механізм фінансування"
 
 msgid "Delete Funding"
-msgstr ""
+msgstr "Видалити фінансування"
 
 msgid "Local Currency"
-msgstr ""
+msgstr "Регіональна валюта"
 
 msgid "Sub Partner"
-msgstr ""
+msgstr "Субпартнер "
 
 msgid "Type of Partner"
-msgstr ""
+msgstr "Тип партнера"
 
 msgid "Employee Base"
-msgstr ""
+msgstr "База співробітника"
 
 msgid "Site Type"
-msgstr ""
+msgstr "Тип сторінки"
 
 msgid "Funded hours per week"
-msgstr ""
+msgstr "Фінансування годин на тиждень"
 
 msgid "Disability Comments"
-msgstr ""
+msgstr "Коментарі до інвалідності"
 
 msgid "Annual Cost"
-msgstr ""
+msgstr "Щорічні витрати"
 
 msgid "Benefits"
-msgstr ""
+msgstr "Пільги"
 
 msgid "Additional Expenses"
-msgstr ""
+msgstr "Додаткові витрати"
 
 msgid "Stipend"
-msgstr ""
+msgstr "Стипендія"
 
 msgid "Landing Page Comments"
-msgstr ""
+msgstr "Коментарі до основної сторінки"
 
 msgid "Hours per Mechanism"
-msgstr ""
+msgstr "Годин за механізмом"
 
 msgid "Annual Cost to Mechanism"
-msgstr ""
+msgstr "Щорічні витрати механізму"
 
 msgid "Site Name"
-msgstr ""
+msgstr "Назва сайту"
 
 msgid "CHW Supervisor"
-msgstr ""
+msgstr "Керівник"
 
 msgid "Actual Transition Date"
-msgstr ""
+msgstr "Дата фактичного переходу"
 
 msgid "Actual Transition"
-msgstr ""
+msgstr "Фактичний перехід"
 
 msgid "Transition confirmed"
-msgstr ""
+msgstr "Затверджений перехід"
 
 msgid "Intended Transition"
-msgstr ""
+msgstr "Передбачуваний перехід"
 
 msgid "Agreement end date"
-msgstr ""
+msgstr "Дата закінчення договору"
 
 msgid "Contract end date"
-msgstr ""
+msgstr "Дата закінчення контракту"
 
 msgid "ID/Passport Number"
-msgstr ""
+msgstr "Державне посвідчення особи"
 
 msgid "Incoming partner"
-msgstr ""
+msgstr "Вхідний партнер"
 
 msgid "What training do you provide"
-msgstr ""
+msgstr "Яке навчання ви надаєте"
 
 msgid "Courses Completed"
-msgstr ""
+msgstr "Завершені курси"
 
 msgid "Salary"
-msgstr ""
+msgstr "Зарплата"
 
 msgid "Add/edit questions"
-msgstr ""
+msgstr "Додати/редагувати питання"
 
 msgid "Occupational category"
-msgstr ""
+msgstr "Професійна категорія"
 
 msgid "Past"
-msgstr ""
+msgstr "Минулий"
 
 msgid "Legend"
-msgstr ""
+msgstr "Легенда"
 
 msgid "Today"
-msgstr ""
+msgstr "Сьогодні"
 
 msgid "January"
-msgstr ""
+msgstr "Січень"
 
 msgid "February"
-msgstr ""
+msgstr "Лютий "
 
 msgid "March"
-msgstr ""
+msgstr "Березень"
 
 msgid "April"
-msgstr ""
+msgstr "Квітень"
 
 msgid "May"
-msgstr ""
+msgstr "Травень"
 
 msgid "June"
-msgstr ""
+msgstr "Червень"
 
 msgid "July"
-msgstr ""
+msgstr "Липень"
 
 msgid "August"
-msgstr ""
+msgstr "Серпень"
 
 msgid "September"
-msgstr ""
+msgstr "Вересень"
 
 msgid "October"
-msgstr ""
+msgstr "Жовтень"
 
 msgid "November"
-msgstr ""
+msgstr "Листопад"
 
 msgid "December"
-msgstr ""
+msgstr "Грудень"
 
 msgid "Import trainings from Excel"
-msgstr ""
+msgstr "Імпортувати тренінги із файла Excel"
 
 msgid "Import location from Excel"
-msgstr ""
+msgstr "Імпортувати місцезнаходження із файла Excel"
 
 msgid "Please enter Training location information"
-msgstr ""
+msgstr "Будь ласка, введіть інформацію про місцезнаходження тренінгу"
 
 msgid "Personal number"
-msgstr ""
+msgstr "Особистий номер"
 
 msgid "Competence Overview Reports"
-msgstr ""
+msgstr "Оглядовий звіт компетентності"
 
 msgid "Please select a competence"
-msgstr ""
+msgstr "Будь ласка, виберіть компетентність"
 
 msgid "Select All"
-msgstr ""
+msgstr "Обрати все"
 
 msgid "Competence"
-msgstr ""
+msgstr "Компетенція"
 
 msgid "Select an occupational category first"
-msgstr ""
+msgstr "Спочатку виберіть професійну категорію"
 
 msgid "Please select an occupational category first"
-msgstr ""
+msgstr "Будь ласка, спочатку виберіть професійну категорію"
 
 msgid "Province"
-msgstr ""
+msgstr "Провінція"
 
 msgid "District"
-msgstr ""
+msgstr "Місто"
 
 msgid "Sub-district"
-msgstr ""
+msgstr "Район"
 
 msgid "Add Criteria"
-msgstr ""
+msgstr "Додати критерій"
 
 msgid "Trainer by Name"
-msgstr ""
+msgstr "За ім`ям інструктора"
 
 msgid "Partcipant or Trainer"
-msgstr ""
+msgstr "Учасник або Інструктор"
 
 msgid "All People Data"
-msgstr ""
+msgstr "Дані за всіма людьми"
 
 msgid "All Facilities Data"
-msgstr ""
+msgstr "Дані за всіма закладами"
 
 msgid "All Training Data"
-msgstr ""
+msgstr "Дані за всіма тренінгами"
 
 msgid "Select Trainings"
-msgstr ""
+msgstr "Обрати тренінги"
 
 msgid "Question Number"
-msgstr ""
+msgstr "Номер питання"
 
 msgid "Question Type"
-msgstr ""
+msgstr "Тип питання"
 
 msgid "Question Text"
-msgstr ""
+msgstr "Текст питання"
 
 msgid "Average"
-msgstr ""
+msgstr "Середній"
 
 msgid "Response"
-msgstr ""
+msgstr "Відповідь"
 
 msgid "Select student report"
-msgstr ""
+msgstr "Оберіть з0віт студенту "
 
 msgid "Terminated early"
-msgstr ""
+msgstr "Припинено дострокова"
 
 msgid "Facility @ graduation"
-msgstr ""
+msgstr "Заклад закінчення навчання"
 
 msgid "Tutor advisor"
-msgstr ""
+msgstr "Консультант"
 
 msgid "Return unique participants"
-msgstr ""
+msgstr "Повернути унікальних учасників"
 
 msgid "Start date between"
-msgstr ""
+msgstr "Дата початку між"
 
 msgid "Course Name And Exam Scores To Date"
-msgstr ""
+msgstr "Назва курсів і результати іспитів на сьогоднішній день"
 
 msgid "Graduation date"
-msgstr ""
+msgstr "Дата завершення навчання"
 
 msgid "Graduation date between"
-msgstr ""
+msgstr "Дата завершення навчання між"
 
 msgid "Grades"
-msgstr ""
+msgstr "Оцінки"
 
 msgid "# of Exams"
-msgstr ""
+msgstr "# іспитів"
 
 msgid "Year In School"
-msgstr ""
+msgstr "Кількість років у школі"
 
 msgid "# of Students"
-msgstr ""
+msgstr "# студентів"
 
 msgid "Student Count"
-msgstr ""
+msgstr "Кількість студентів"
 
 msgid "Student names"
-msgstr ""
+msgstr "Імена студентів"
 
 msgid "Student"
-msgstr ""
+msgstr "Студент"
 
 msgid "Participation"
-msgstr ""
+msgstr "Участь"
 
 msgid "Your search criteria returned no results"
-msgstr ""
+msgstr "Ваші критерії пошуку не дали результатів"
 
 msgid "Output"
-msgstr ""
+msgstr "Вихід"
 
 msgid "# of Computers"
-msgstr ""
+msgstr "# комп`ютерів"
 
 msgid "Computer Count"
-msgstr ""
+msgstr "Кількість комп`ютерів"
 
 msgid "# of Tutors"
-msgstr ""
+msgstr "# інструкторів"
 
 msgid "Tutor Count"
-msgstr ""
+msgstr "Кількість інструкторів"
 
 msgid "# of Beds"
-msgstr ""
+msgstr "# спальних місць"
 
 msgid "Tutor Student Ratio"
-msgstr ""
+msgstr "Відношення кількості інструкторів до кількості студентів"
 
 msgid "Bed Count"
-msgstr ""
+msgstr "Кількість спальних місць"
 
 msgid "Dorm Count"
-msgstr ""
+msgstr "Кількість гуртожиків"
 
 msgid "Tutor Advisor"
-msgstr ""
+msgstr "Консультант"
 
 msgid "# of Graduates"
-msgstr ""
+msgstr "# випускників"
 
 msgid "# of Patients"
-msgstr ""
+msgstr "# пацієнтів"
 
 msgid "Year of Graduates"
-msgstr ""
+msgstr "Рік випуску"
 
 msgid "Tutors By Name Report"
-msgstr ""
+msgstr "Звіт інструкторів за іменами"
 
 msgid "Tutors By Name"
-msgstr ""
+msgstr "Інструктори за іменами"
 
 msgid "Facility (work)"
-msgstr ""
+msgstr "Заклад (місце роботи)"
 
 msgid "Degree Institution"
-msgstr ""
+msgstr "Ступень інституту"
 
 msgid "Degree year"
-msgstr ""
+msgstr "Рік завершення"
 
 msgid "Languages Spoken"
-msgstr ""
+msgstr "Мови спілкування"
 
 msgid "# of Students Advised"
-msgstr ""
+msgstr "# студентів, які отримали консультації"
 
 msgid "Tutor Length"
-msgstr ""
+msgstr "Тривалість курсу"
 
 msgid "Length with Curr. Inst."
-msgstr ""
+msgstr "Тривалість навчання в цьому інституті"
 
 msgid "Employees Access"
-msgstr ""
+msgstr "Доступ до модуля Співробітники"
 
 msgid "Institution access"
-msgstr ""
+msgstr "Доступ до модуля Інститути"
 
 msgid "Program access"
-msgstr ""
+msgstr "Доступ до модуля Програми"
 
 msgid "Your account information was saved."
-msgstr ""
+msgstr "Дані вашого облікового запису були збережені."
 
 msgid "Your account information could not be saved."
-msgstr ""
+msgstr "Дані вашого облікового запису не були збережені."
 
 msgid "All Programs"
-msgstr ""
+msgstr "Всі програми"
 
 msgid "Admin access"
-msgstr ""
+msgstr "Адміністративний доступ"
 
 msgid "select all admin capabilities"
-msgstr ""
+msgstr "Виберіть всі можливості адміністратора"
 
 msgid "de-select all"
-msgstr ""
+msgstr "скасувати вибір всіх"
 
 msgid "Restricted Settings"
-msgstr ""
+msgstr "обмежені налаштування"
 
 msgid "Fields on/off and Labels"
-msgstr ""
+msgstr "Поля вкл/викл та мітки"
 
 msgid "Delete Student/Tutor"
-msgstr ""
+msgstr "Видалити студента/інструктора"
 
 msgid "Student/Tutor/Cadre/Institution"
-msgstr ""
+msgstr "Студент/інструктор/кадри/інститут"
 
 msgid "Sponsor Dates"
-msgstr ""
+msgstr "Дати спонсорування"
 
 msgid "Employees Settings"
-msgstr ""
+msgstr "Настройки співробітників"
 
 msgid "Training institution"
-msgstr ""
+msgstr "Інститут тренінгу"
 
 msgid "# of students"
-msgstr ""
+msgstr "# студентів"
 
 msgid "# of tutors"
-msgstr ""
+msgstr "# інструкторів"
 
 msgid "Student/Tutor Ratio"
-msgstr ""
+msgstr "Відношення кількості інструкторів до кількості студентів"
 
 msgid "# of grads"
-msgstr ""
+msgstr "# випускників"
 
 msgid "Early terminations"
-msgstr ""
+msgstr "Припинено дострокова"
 
 msgid "Инструктор Reports"
-msgstr ""
+msgstr "Звіти по інструкторах"
 
 msgid "Download Complete Excel Data for these trainings"
-msgstr ""
+msgstr "Завантажити повні дані у форматі Excel для цих тренінгів"
 
 msgid "Answer"
-msgstr ""
+msgstr "Відповідь"
 
 msgid "Re-Label Answers"
-msgstr ""
+msgstr "Переназвати відповіді"
 
 msgid "Re-Label Likert Answers"
-msgstr ""
+msgstr "Переназвати відповіді за Лайкертом"
 
 msgid "Add 20 more rows"
-msgstr ""
+msgstr "Додати ще 20 рядків"
 
 msgid "Paste"
-msgstr ""
+msgstr "Вставити"
 
 msgid "Copy to All"
-msgstr ""
+msgstr "Копіювати все"
 
 msgid "Physical Questions"
-msgstr ""
+msgstr "Фізичні питання"
 
 msgid "Not Applicable"
-msgstr ""
+msgstr "Не застосовується"
 
 msgid "Likert"
-msgstr ""
+msgstr "Лайкерт"
 
-msgid "Sign In"
-msgstr ""
+msgid "Select the file that contains the data in MS Excel format (*.xlsx) you want to import."
+msgstr "Виберіть файл, який містить дані у форматі MS Excel (* .xlsx), які ви хочете імпортувати."
+
+msgid "Import a training"
+msgstr "Імпортувати тренінг"
