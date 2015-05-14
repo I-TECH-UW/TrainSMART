@@ -26,7 +26,6 @@ class FileUpload {
 		$editTable->table = 'file';
     $editTable->viewVar = 'editTableFiles';
 		$editTable->fields = array ('filename' => t ( 'Filename' ), 'filesize' => t ( 'Size' ), 'creator_name' => t ( 'Author' ), /*'filemime' => t('Type') ,*/ 'timestamp_created' => t('Upload Date') );
-		$editTable->label = t('Attached Documents');
 		$editTable->where = "parent_table = '$parent_table' AND parent_id = $parent_id";
     $editTable->noEdit = true;
     
