@@ -1,109 +1,107 @@
 function tr(phrase) {
 	switch (phrase) {
 		case 'Remove':
-			return 'Удалить';
+			return 'Видалити';
 		case 'Deleting...':
-			return 'Удаление...';
+			return 'Видалення ...';
 		case 'Are you sure you want to remove':
-			return 'Вы уверены что хотите удалить';
+			return 'Ви впевнені, що хочете видалити';
 		case 'Undeleting...':
-			return 'Восстановление...';
+			return 'Відновлення...';
 		case 'Saving...':
-			return "Сохранение...";
+			return "Збереження...";		
 		case 'Edit':
-			return 'Редактировать';
+			return 'Редагувати';
 		case 'Delete':
-			return 'Удалить';
+			return 'Видалити ';
 		case 'Add':
-			return 'Добавить';
+			return 'Додати';		
 		case 'Are you sure you want to delete':
-			return 'Вы уверены что хотите удалить';
+			return 'Ви впевнені, що хочете видалити';
 		case 'Pick a Date':
-			return 'Выбрать дату';
+			return 'Вибрати дату';
 		case 'No records found.':
-			return 'Не найдено ни одной записи';
+			return 'Записів не знайдено.';
 		case 'Loading...':
-			return 'Загрузка...';
+			return 'Завантаження...';
 		case 'You have not selected a training category for your new title.':
-			return "Вы не выбрали категорию тренинга для вашего нового названия.";
+			return "Ви не обрали категорію тренінгу для вашої нової назви.";
 		case 'Do you still wish to add a title without a training category associated with it?':
-			return 'Вы все еще хотите добавить заголовок без категории тренинга, связанные с ним?';
+			return 'Ви все ще хочете додати заголовок без категорії тренінгу, повязаний з ним?';
 		case 'Next':
-			return 'Следующий';
+			return 'Наступний';	
 		case 'First':
-			return 'Первый';
+			return 'Перший';
 		case 'Last':
-			return 'Последний';
+			return 'Останній';	
 		case 'Previous':
-			return 'Предыдущий';
+			return 'Попередній';
 		case 'Search':
-			return 'Поиск';
-		case 'активировать для сортировки столбца по возрастанию':
-			return 'Поиск';
+			return 'Пошук';
+		case 'activate to sort column ascending':
+			return 'активувати для сортування стовпця за зростанням';
 		case 'activate to sort column descending':
-			return 'активировать для сортировки столбца по убыванию';
-		case 'filtered from _MAX_ total entries':
+			return 'активувати для сортування стовпця за спаданням';
+		case 'відфільтровані з _MAX_ всього записів':
 			return 'отфильтровaнные из _MAX_ всего записей';
 		case 'Show _MENU_ entries':
-			return 'Показать записи _MENU_';
+			return 'Показати записи _MENU_';
 		case 'Processing...':
-			return 'Обработка ...';
+			return 'Обробка ...';
 		case 'No matching records found':
-			return 'Не найдено ни одной записи';
+			return 'Не знайдено жодного запису';
 		case 'No data available in table':
-			return 'Данные отсутствуют в таблице';
+			return 'Дані відсутні в таблиці';
 		case 'Showing _START_ to _END_ of _TOTAL_ entries':
-			return 'Показано от _START_ до _END_ из _TOTAL_ записей';
+			return 'Показано від _START до _END_ з _TOTAL_ записів';
 		case 'Showing 0 to 0 of 0 entries':
-			return 'Показано от 0 до 0 из 0 записей';
+			return 'Показано від 0 до 0 з 0 записів';
 		case 'This field is required':
-			return 'Заполнение данного поля обязательно';
+			return 'Заповнення даного поля обовязково';
 		case 'Please fix this field':
-			return 'Пожалуйста, исправьте это поле';
+			return 'Будь ласка, виправте це поле';
 		case 'Please enter a valid email address':
-			return 'Пожалуйста, введите верный адрес электронной почты';
+			return 'Будь ласка, введіть вірну адресу електронної пошти';
 		case 'Please enter a valid URL':
-			return 'Пожалуйста, введите верный URL';
-		case 'Please enter a valid date':
+			return 'Будь ласка, введіть вірний URL';
+		case 'Будь ласка, введіть вірну дату':
 			return 'Пожалуйста, введите верную дату';
 		case 'Please enter a valid date (ISO)':
-			return 'Пожалуйста, введите верную дату (ISO)';
+			return 'Будь ласка, введіть вірну дату (ISO)';
 		case 'Please enter a valid number':
-			return 'Пожалуйста, введите верный номер';
+			return 'Будь ласка, введіть вірний номер';
 		case 'Please enter only digits':
-			return 'Пожалуйста, введите только цифры';
+			return 'Будь ласка, введіть тільки цифри';
 		case 'Please enter a valid credit card number':
-			return 'Пожалуйста, введите верный номер кредитной карты';
+			return 'Будь ласка, введіть вірний номер кредитної картки';
 		case 'Please enter the same value again':
-			return 'Пожалуйста, введите то же значение снова';
+			return 'Будь ласка, введіть те ж значення знову';
 		case 'Please enter a value with a valid extension':
-			return 'Пожалуйста, введите значение с допустимым расширением';
+			return 'Будь ласка, введіть значення з допустимим розширенням';
 		case 'Please enter no more than {0} characters':
-			return 'Пожалуйста, введите не более {0} символов';
+			return 'Будь ласка, введіть не більше {0} символів';
 		case 'Please enter at least {0} characters':
-			return 'Пожалуйста, введите по крайней мере {0} символов';
+			return 'Будь ласка, введіть принаймні {0} символів';
 		case 'Please enter a value between {0} and {1} characters long':
-			return 'Пожалуйста, введите значение длиной между {0} и {1} символов';
+			return 'Будь ласка, введіть значення довжиною між {0} та {1} символів';
 		case 'Please enter a value between {0} and {1}':
-			return 'Пожалуйста, введите значение между {0} и {1}';
+			return 'Будь ласка, введіть значення між {0} та {1}';
 		case 'Please enter a value less than or equal to {0}':
-			return 'Пожалуйста, введите значение, которое меньше или равно {0}';
+			return 'Будь ласка, введіть значення, яке менше або дорівнює {0}';
 		case 'Please enter a value greater than or equal to {0}':
-			return 'Пожалуйста, введите значение больше или равно {0}';
+			return 'Будь ласка, введіть значення більше або дорівнює {0}';
 		case 'Trying to save... please wait':
-		return 'Пожалуйста, подождите';
+		return 'Будь ласка зачекайте';
 		case "Couldn't save, sorry!":
-			return 'Не удалось сохранить.';
+			return 'Не вдалося зберегти!';
 		case "If you have made any changes to this page without clicking the Save button, your changes will be lost.  Are you sure you wish to leave this page?":
-			return 'Если вы внесли какие-либо изменения этой страницы без нажатия на кнопку Сохранить, ваши изменения будут потеряны. Вы уверены, что хотите покинуть эту страницу?';
+			return 'Якщо ви внесли якісь зміни цієї сторінки без натискання на кнопку Зберегти, ваші зміни будуть втрачені. Ви впевнені, що хочете залишити цю сторінку?';
 		case "Please save changes.":
-			return 'Пожалуйста, сохраните изменения.';
+			return 'Будь ласка, збережіть зміни.';
 		case "Could not delete, sorry.  The server said:":
-			return 'Не удалось удалить. Сообщение с сервера:';	
-		case "Could not delete, sorry.  The server said:":
-			return 'Не удалось удалить эту запись.';
+			return 'Не вдалося видалити. Повідомлення з сервера:';	
 		case "Are you sure you want to add a region level? A new default location will be created at this level, and all child locations will be added to this default.":
-			return 'Вы уверены, что вы хотите добавить уровень региона? Новое местоположение по умолчанию будет создаваться на этом уровне, и все следующие местоположения будут добавляться к этому уровню по умолчанию.';
+			return 'Ви впевнені, що ви хочете додати рівень регіону? Нове місце розташування за замовчуванням буде створюватися на цьому рівні, і всі наступні місцезнаходження будуть додаватися до цього рівня за замовчуванням.';
 	}
 
 	return phrase;

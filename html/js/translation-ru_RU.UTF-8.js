@@ -38,8 +38,8 @@ function tr(phrase) {
 			return 'Предыдущий';
 		case 'Search':
 			return 'Поиск';
-		case 'активировать для сортировки столбца по возрастанию':
-			return 'Поиск';
+		case 'activate to sort column ascending':
+			return 'активировать для сортировки столбца по возрастанию';
 		case 'activate to sort column descending':
 			return 'активировать для сортировки столбца по убыванию';
 		case 'filtered from _MAX_ total entries':
@@ -100,8 +100,6 @@ function tr(phrase) {
 			return 'Пожалуйста, сохраните изменения.';
 		case "Could not delete, sorry.  The server said:":
 			return 'Не удалось удалить. Сообщение с сервера:';	
-		case "Could not delete, sorry.  The server said:":
-			return 'Не удалось удалить эту запись.';
 		case "Are you sure you want to add a region level? A new default location will be created at this level, and all child locations will be added to this default.":
 			return 'Вы уверены, что вы хотите добавить уровень региона? Новое местоположение по умолчанию будет создаваться на этом уровне, и все следующие местоположения будут добавляться к этому уровню по умолчанию.';
 	}
