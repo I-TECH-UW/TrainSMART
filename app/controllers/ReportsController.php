@@ -1097,6 +1097,9 @@ echo $sql . "<br>";
 				}
 			}
 			$num_locs = $this->setting('num_location_tiers');
+			
+			list($criteria, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria); //TA:26 fixing bug, do not move this line from here
+			
 			list($field_name,$location_sub_query) = Location::subquery($num_locs, $location_tier, $location_id);
 			$sql = 'SELECT  DISTINCT p.`id`, p.`first_name` ,  p.`last_name` ,  p.`gender` FROM `person` as p, facility as f, ('.$location_sub_query.') as l, `person_qualification_option` as q WHERE p.`primary_qualification_option_id` = q.`id` and p.facility_id = f.id and f.location_id = l.id AND p.`primary_qualification_option_id` IN (SELECT `id` FROM `person_qualification_option` WHERE `parent_id` = ' . $criteria ['qualification_id'] . ') AND p.`is_deleted` = 0 AND p.`id` IN (';
 			if(count($prsns)>0)
@@ -1254,8 +1257,6 @@ echo $sql . "<br>";
 		if ($this->getSanParam ( 'end-day' ))
 		$criteria ['end-day'] = $this->getSanParam ( 'end-day' );
 
-		list($criteria, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
-
 		// find training name from new category/title format: categoryid_titleid
 		$ct_ids = $criteria ['training_category_and_title_id'] = $this->getSanParam ( 'training_category_and_title_id' );
 		$criteria ['training_title_option_id'] = $this->_pop_all($ct_ids);
@@ -1297,6 +1298,18 @@ echo $sql . "<br>";
 			$criteria ['age_min'] =                                $this->getSanParam ( 'age_min' );
 			$criteria ['training_gender'] =                       $this->getSanParam ( 'training_gender' );
 		}
+		
+		//TA:26 fix bug, get http parameter
+		$criteria ['province_id'] = $this->getSanParam ( 'province_id' );
+		$arr_dist = $this->getSanParam ( 'district_id' );
+		// level 2 location has parameter as [parent_location_id]_[location_id], we need to take only location_ids
+		for($i=0;$i<sizeof($arr_dist); $i++){
+			if ( strstr($arr_dist[$i], '_') !== false ) {
+				$parts = explode('_',$arr_dist[$i]);
+				$arr_dist[$i] = $parts[1];
+			}
+		}
+		$criteria ['district_id'] = $arr_dist;
 
 		$criteria ['go'] = $this->getSanParam ( 'go' );
 		$criteria ['showProvince'] =  ($this->getSanParam ( 'showProvince' ) or ($criteria ['doCount'] and ($criteria ['province_id'] or ! empty ( $criteria ['province_id'] ))));
@@ -1768,6 +1781,7 @@ echo $sql . "<br>";
 			if ($criteria ['province_id'] && ! empty ( $criteria ['province_id'] )) {
 				$where [] = ' pt.province_id IN (' . implode ( ',', $criteria ['province_id'] ) . ')';
 			}
+			
 
 			if ($criteria ['district_id'] && ! empty ( $criteria ['district_id'] )) {
 				$where [] = ' pt.district_id IN (' . implode ( ',', $criteria ['district_id'] ) . ')';
@@ -1935,6 +1949,7 @@ echo $sql . "<br>";
 			if ($this->view->mode == 'search') {
 				$sql .= ' ORDER BY training_start_date DESC';
 			}
+			
 
 			$rowArray = $db->fetchAll ( $sql );
 
