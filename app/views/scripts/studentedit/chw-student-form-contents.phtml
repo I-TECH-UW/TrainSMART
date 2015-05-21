@@ -228,8 +228,21 @@
 
     echo labelAndField($this, t('Date of Birth'), 'date', 'dob', $this->personData['birthdate']);
 
-    echo labelAndField($this, t('Gender'), $this->gender_options);
-    echo labelAndField($this, t('ps spouse name'), 'text', 'spouse_name', $this->personData['spouse_name']);
+    ?>
+
+	<div class="fieldLabel">
+    <?php echo t('Gender'); ?>
+	</div>
+	<div class="fieldInput">
+		<select name="gender">
+			<option value="na"><?php echo t('Select...'); ?></option>
+			<option value="female"<?php echo ($this->escape($this->personData['gender']) == "female" ? " selected" : "");?>><?php echo t('Female'); ?></option>
+			<option value="male"<?php echo ($this->escape($this->personData['gender']) == "male" ? " selected" : "");?>><?php echo t('Male'); ?></option>
+		</select>
+	</div>
+
+    <?php
+	echo labelAndField($this, t('ps spouse name'), 'text', 'spouse_name', $this->personData['spouse_name']);
     echo labelAndField($this, t('Highest Qualification Achieved'), $this->primary_qualification, 'primary_qualification_option_id', $this->personData['primary_qualification_option_id']); // Dropdown
     echo labelAndField($this, t('Address 1'), 'text', 'person_address_1', $this->personData['home_address_1']);
     echo labelAndField($this, t('Address 2'), 'text', 'person_address_2', $this->personData['home_address_2']);

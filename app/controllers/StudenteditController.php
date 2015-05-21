@@ -1235,15 +1235,6 @@ class StudenteditController extends ITechController
 			)
 		);
 
-		$this->view->assign('gender_options',
-			DropDown::generateSelectionFromQuery(
-			// gender is stored as an enum in the person field, thus the weird looking query
-				'select gendername as id, gendername as val from lookup_gender order by val',
-				array('name' => 'gender'),
-				$personData['gender']
-			)
-		);
-
 		// do we need a prior learning yes/no when we have a way to select it?
 		//$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
 		$this->view->assign('class_modules', $this->dbfunc()->fetchAssoc('select id, external_id, title from class_modules order by title'));
