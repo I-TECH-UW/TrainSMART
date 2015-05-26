@@ -112,7 +112,7 @@ ob_end_clean();
 
 			$("#class_modules_id").val(d['class_modules_id']);
 			$("#custom_1").val(d['custom_1']);
-			$("#credits").val(d['credits']);
+			$("#credits").val(d['maxcredits']);
 			$("#custom_2").val(d['custom_2']);
 
 			$( "#dialog-form" ).dialog( "open" );
@@ -259,7 +259,7 @@ ob_end_clean();
 							<?php if ($this->setting['site_style_id'] == 2) { ?>
 								<td><?php echo $this->modules[$lookup['class_modules_id']]['title'] ?></td>
 								<td><?php echo $lookup['custom_1'] ?></td>
-								<td><?php echo $lookup['credits'] ?></td>
+								<td><?php echo $lookup['maxcredits'] ?></td>
 								<td><?php echo $lookup['custom_2'] ?></td>
 							<?php } else { ?>
 								<td><?php echo addslashes(date("m/d/Y", strtotime($lookup['startdate']))); ?></td>
