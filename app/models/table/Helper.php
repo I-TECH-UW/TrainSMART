@@ -1111,7 +1111,6 @@ class Helper extends ITechTable
 	################################
 
 	public function AdminLabels($labels){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("translation")
 			->where("key_phrase IN ('" . implode("','",$labels) . "')")
@@ -1121,7 +1120,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminClasses(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("classes")
 			->order('classname');
@@ -1139,7 +1137,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminDegrees(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_degrees")
 			->order('degree');
@@ -1148,7 +1145,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminFunding(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_fundingsources")
 			->order('fundingname');
@@ -1157,7 +1153,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminInstitutionTypes(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_institutiontype")
 			->order('typename');
@@ -1166,7 +1161,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminLanguages(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_languages")
 			->order('language');
@@ -1175,7 +1169,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminNationalities(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_nationalities")
 			->order('nationality');
@@ -1184,7 +1177,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminJoinDropReasons(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_reasons")
 			->order('reason');
@@ -1193,7 +1185,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminSponsors(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_sponsors")
 			->where("status = 1")
@@ -1203,7 +1194,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminStudenttypes(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_studenttype")
 			->where("status = 1")
@@ -1213,7 +1203,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminTutortypes(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_tutortype")
 			->where("status = 1")
