@@ -206,7 +206,7 @@ class FacilityController extends ReportFilterHelpers {
 				$facilityRow->postal_code = $this->getSanParam ( 'facility_postal_code' );
 				$facilityRow->phone = $this->getSanParam ( 'facility_phone' );
 				$facilityRow->fax = $this->getSanParam ( 'facility_fax' );
-				$facilityRow->CUSTOM_1 = $this->getSanParam ( 'facility_custom1' );
+				$facilityRow->custom_1 = $this->getSanParam ( 'facility_custom1' );//TA:25 use 'custom_1' not 'CUSTOM_1'
 				$facilityRow->sponsor_option_id = $sponsor_id;
 				
 				// dupecheck
@@ -265,7 +265,9 @@ class FacilityController extends ReportFilterHelpers {
 	public function listwithunknownAction() {
 		$this->listAction ();
 	}
+	
 	public function editAction() {
+	
 		if (! $this->hasACL ( 'edit_people' )) {
 			$this->doNoAccessError ();
 		}
@@ -292,6 +294,7 @@ class FacilityController extends ReportFilterHelpers {
 		
 		if ($validateOnly)
 			$this->setNoRenderer ();
+		
 		
 		if ($request->isPost ()) {
 			$rslt = $this->validateAndSave ( $facilityRow, false );
@@ -321,6 +324,7 @@ class FacilityController extends ReportFilterHelpers {
 		}
 		$this->viewAssignEscaped ( 'facilities', $facilitiesArray );
 		
+		
 		// locations
 		$locations = Location::getAll ();
 		$this->viewAssignEscaped ( 'locations', $locations );
@@ -342,7 +346,7 @@ class FacilityController extends ReportFilterHelpers {
 		
 		$this->viewAssignEscaped ( 'facility', $facilityArray );
 		
-		// sponsors
+		//sponsors
 		$sTable = new ITechTable ( array (
 				'name' => 'facility_sponsors' 
 		) );
@@ -355,6 +359,7 @@ class FacilityController extends ReportFilterHelpers {
 		//TA:17: 09/04/2013 
 		require_once('views/helpers/EditTableHelper.php');
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+		
 		$rows = $db->fetchAll ("select commodity.id, commodity_name_option.commodity_name as name, DATE_FORMAT(date, '%m/%y') as date, 
 consumption, stock_out, commodity.created_by, commodity.modified_by from commodity
 join commodity_name_option on commodity_name_option.id = commodity.name_id
@@ -382,7 +387,8 @@ where commodity.facility_id=". $id . " and date > DATE_SUB(now(), INTERVAL 12 MO
 		$this->view->assign ( 'totalCommodities',  sizeof($rows));
 		
 		$this->view->assign('commodity_names',$facility->ListCommodityNames());
-		//TA:17: 09/12/2013		
+		//TA:17: 09/12/2013	
+		
 		
 	}
 	
