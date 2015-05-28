@@ -1227,11 +1227,11 @@ class StudenteditController extends ITechController
 			)
 		);
 
-		$this->view->assign('title_options',
+		$this->view->assign('race_options',
 			DropDown::generateSelectionFromQuery(
-				'select id, title_phrase as val from person_title_option order by val',
-				array('name' => 'title_option_id'),
-				$personData['title_option_id']
+				'select id, race_phrase as val from person_race_option order by val',
+				array('name' => 'race_option_id'),
+				$personData['race_option_id']
 			)
 		);
 

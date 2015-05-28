@@ -97,12 +97,12 @@ class PeopleaddController extends ITechController {
             )
         );
 
-        $this->view->assign('title_options',
-            DropDown::generateSelectionFromQuery(
-                'select id, title_phrase as val from person_title_option order by val',
-                array('name' => 'title_option_id')
-            )
-        );
+	    $this->view->assign('race_options',
+		    DropDown::generateSelectionFromQuery(
+			    'select id, race_phrase as val from person_race_option order by val',
+			    array('name' => 'race_option_id')
+		    )
+	    );
 
         // do we need a prior learning yes/no when we have a way to select it?
         //$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
