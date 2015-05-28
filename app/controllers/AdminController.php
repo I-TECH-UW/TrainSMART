@@ -3368,7 +3368,7 @@ class AdminController extends UserController
 		$editTable->execute();
 	}
 
-	public function personRaceAction()
+	public function peopleRaceAction()
 	{
 
 		/* edit table */
