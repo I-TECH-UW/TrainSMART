@@ -24,7 +24,24 @@
             dateFormat: "dd/mm/yy",
             yearRange: "-125:+0"
         });
-        $('.calendarbtn').click(openNearestDatePicker);
+
+	    $('.calendarbtn').click(function () {
+
+		    var $picker = $(this).siblings('input.datepicker').first();
+		    var pickerId = $picker.attr('id');
+
+		    // open calendar for joindate and dropdate only if cohort is selected
+            if ($('#cohort').val() === "") {
+			    if (!((pickerId === 'joindate') || (pickerId === 'dropdate'))) {
+				    $picker.datepicker("show");
+			    }
+		    }
+		    else {
+			    $picker.datepicker("show");
+		    }
+		    // override the browser scrolling to the top of the page by returning false
+		    return false;
+	    });
 
         $('input[type=submit]').click(function () {
             $("#add_modules_ids").val($("#add_modules_ids").data("ids").join(','));
@@ -40,15 +57,21 @@
             $('#workplace').hide();
         }
 
-        $('#studenttype').change(function () {
-            var $elt = $(this);
-            if ($elt.val() === '1') {
-                $('#workplace').slideDown();
-            }
-            else {
-                $('#workplace').slideUp();
-            }
-        });
+	    $('#studenttype').change(function () {
+		    var $elt = $(this);
+		    if ($elt.val() === '1') {
+			    $('#workplace').slideDown();
+		    }
+		    else {
+			    $('#workplace').slideUp();
+		    }
+	    });
+
+	    toggleCohortFields();
+	    $('#cohort').change(function () {
+		    toggleCohortFields();
+	    });
+
         $(".tablegrid tbody").click(function (event) {
             $(window.ITECH.oTable.fnSettings().aoData).each(function () {
                 $(this.nTr).removeClass('row_selected');
@@ -176,6 +199,20 @@
         $("#dialog-form" ).dialog("open");
     };
 
+	function toggleCohortFields() {
+		if ($('#cohort').val() === "") {
+			$('#joindate').attr('disabled', 'disabled');
+			$('#joinreason').attr('disabled', 'disabled');
+			$('#dropdate').attr('disabled', 'disabled');
+			$('#dropreason').attr('disabled', 'disabled');
+		}
+		else {
+			$('#joindate').removeAttr('disabled');
+			$('#joinreason').removeAttr('disabled');
+			$('#dropdate').removeAttr('disabled');
+			$('#dropreason').removeAttr('disabled');
+		}
+	}
 
 </script>
 
@@ -222,10 +259,10 @@
     echo '<legend>' . t('Enter details') . '</legend>';
     echo labelAndField($this, t('Last Name'), 'text', 'last_name', $this->personData['last_name']);
     echo labelAndField($this, t('First Name'), 'text', 'first_name', $this->personData['first_name']);
+    echo labelAndField($this, t('Cohort'), $this->cohorts);
     echo labelAndField($this, t('ps nationality'), $this->nationality_dropdown); // Dropdown
     echo labelAndField($this, t('ps national id'), 'text', 'national_id', $this->personData['national_id']);
     echo labelAndField($this, t('Race'), $this->race_options);
-
     echo labelAndField($this, t('Date of Birth'), 'date', 'dob', $this->personData['birthdate']);
 
     ?>

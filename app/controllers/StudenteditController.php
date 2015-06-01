@@ -1110,14 +1110,16 @@ class StudenteditController extends ITechController
 			}
 
 			// link_student_cohort
-			$cohortData = array_merge($cohortData, array(
-				'id_student' => $params['student_id'],
-				'joinreason' => $params['joinreason'],
-				'dropreason' => $params['dropreason'],
-				'joindate' => $this->_euro_date_to_sql($params['joindate']),
-				'dropdate' => $this->_euro_date_to_sql($params['dropdate']),
-			));
-
+			if (isset($params['cohort']) && strlen($params['cohort'])) {
+				$cohortData = array_merge($cohortData, array(
+					'id_student' => $params['student_id'],
+					'id_cohort' => $params['cohort'],
+					'joinreason' => $params['joinreason'],
+					'dropreason' => $params['dropreason'],
+					'joindate' => $this->_euro_date_to_sql($params['joindate']),
+					'dropdate' => $this->_euro_date_to_sql($params['dropdate']),
+				));
+			}
 			// link_student_classes
 			$classData = array_merge($classData, array(
 				'studentid' => $params['student_id'],
@@ -1128,7 +1130,9 @@ class StudenteditController extends ITechController
 			));
 
 			if (isset($params['addpeople'])) {
-				$db->insert('link_student_cohort', $cohortData);
+				if (isset($params['cohort']) && strlen($params['cohort'])) {
+					$db->insert('link_student_cohort', $cohortData);
+				}
 				$db->insert('link_student_classes', $classData);
 			} elseif (isset($params['update'])) {
 				$db->update('person', $personData, "id = {$params['person_id']}");
@@ -1137,9 +1141,14 @@ class StudenteditController extends ITechController
 				if ($personData['workplace_id'] && $personData['workplace_id'] > 0) {
 					$db->update('workplace', $workplaceData, "id = {$personData['workplace_id']}");
 				}
-				// TODO: this assumes only one class and cohort per chw student
+				if (isset($params['cohort']) && strlen($params['cohort'])) {
+					$db->update('link_student_cohort', $cohortData, "id_student = {$studentData['id']}");
+				}
+				else {
+					$db->delete('link_student_cohort', "where id_student = {$studentData['id']}");
+				}
+				// TODO: this assumes only one class per chw student
 				// TODO: need to devise a way to distinguish the data because I'm sure they're going to want more classes
-				$db->update('link_student_cohort', $cohortData, "id_student = {$studentData['id']}");
 				$db->update('link_student_classes', $classData, "studentid = {$studentData['id']}");
 			}
 			if ($params['add_modules_ids']) {
@@ -1242,7 +1251,7 @@ class StudenteditController extends ITechController
 		$this->view->assign('qualification_name',
 			DropDown::generateSelectionFromQuery(
 				"select id, reason as val from lookup_reasons where reasontype = 'join' order by val",
-				array('name' => 'joinreason'),
+				array('name' => 'joinreason', 'id' => 'joinreason'),
 				$studentCohortData['joinreason']
 			)
 		);
@@ -1250,10 +1259,18 @@ class StudenteditController extends ITechController
 		// doc says this field is for SAQA ID but I don't understand how that can be a dropdown
 		//$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
 
+		$this->view->assign('cohorts',
+			DropDown::generateSelectionFromQuery(
+				"select id, cohortname as val from cohort order by val",
+				array('name' => 'cohort', 'id' => 'cohort'),
+				$studentCohortData['id_cohort']
+			)
+		);
+
 		$this->view->assign('level',
 			DropDown::generateSelectionFromQuery(
 				"select id, reason as val from lookup_reasons where reasontype = 'drop' order by val",
-				array('name' => 'dropreason'),
+				array('name' => 'dropreason', 'id' => 'dropreason'),
 				$studentCohortData['dropreason']
 			)
 		);

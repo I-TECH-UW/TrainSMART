@@ -112,17 +112,24 @@ class PeopleaddController extends ITechController {
         $this->view->assign('qualification_name',
             DropDown::generateSelectionFromQuery(
                 "select id, reason as val from lookup_reasons where reasontype = 'join' order by val",
-                array('name' => 'joinreason')
+                array('name' => 'joinreason', 'id' => 'joinreason')
             )
         );
 
         // doc says this field is for SAQA ID but I don't understand how that can be a dropdown
         //$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
 
+	    $this->view->assign('cohorts',
+		    DropDown::generateSelectionFromQuery(
+			    "select id, cohortname as val from cohort order by val",
+			    array('name' => 'cohort', 'id' => 'cohort')
+		    )
+	    );
+
         $this->view->assign('level',
             DropDown::generateSelectionFromQuery(
                 "select id, reason as val from lookup_reasons where reasontype = 'drop' order by val",
-                array('name' => 'dropreason')
+                array('name' => 'dropreason', 'id' => 'dropreason')
             )
         );
 
