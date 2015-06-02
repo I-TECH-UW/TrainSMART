@@ -1,71 +1,193 @@
 <?php
 require_once('views/helpers/ITechTranslate.php');
 
-//return parent1_parent2_id
+
+
+/**
+ * @param $tier - id number for location tier
+ * @param $locations - reference to locations array
+ * @param $id - this item's id
+ * @return string parent1_parent2_id
+ */
 function buildId($tier, &$locations, $id) {
-	$parents = '';
-	$parent_id = (isset( $locations[$id]) ? $locations[$id]['parent_id']: 0);
-	while($tier > 1 ) {
-		if ($parent_id) {
-		  $parents = $parent_id.'_'.$parents;
-		  $parent_id = $locations[$parent_id]['parent_id'];
-		} else {
-      $parents = '0_'.$parents;
-		}
-
-	  $tier--;
-	}
-
-	return $parents.$id;
-}
-
-function renderFilter(&$locations, $tier, $widget_id, $default_val_id = false, $child_widget_id = false, $is_multiple = false, $readonly = false) {
-  if ( $default_val_id === false) {
-    foreach ( $locations as $val ) {
-        if ( ($val['tier'] == $tier) && $val['is_default'])
-          $default_val_id = $val['id'];
-    }
-  }
-  if ( !is_array($default_val_id) && strpos($default_val_id, '_')){ // bugfix - print_all_region_filters() might get actual option value="123_123" from some controllers (partnerController)
-    $also_match_id = array_pop(explode('_', $default_val_id));
-  }
-
-	?>
-  <select id="<?php echo $widget_id;?>" name="<?php echo $widget_id;?><?php if ($is_multiple) echo '[]';?>" <?php if ($readonly) echo 'disabled="disabled"'?> <?php if ( $is_multiple) echo 'multiple="multiple" size="10"';?>
-  <?php if ($child_widget_id ) { ?>onchange="setChildStatus_<?php echo str_replace('-', '_', $widget_id);?>();" <?php }?>>
-    <option value="">--<?php tp('choose');?>--</option>
-    <?php
-      foreach ( $locations as $val ) {
-        if ( $val['tier'] == $tier) {
-        	  $selected = '';
-        	  if ( is_array($default_val_id) && (@in_array($val['id'], $default_val_id) ) ) {
-        	   $selected = 'selected="selected"';
-            } else if ( !is_array($default_val_id) && $val['id'] === $default_val_id ) {
-        	   $selected = 'selected="selected"';
-            } else if ( $also_match_id === $val['id'] ) {
-              $selected = 'selected="selected"';
-        	  }
-            echo '<option value="'.buildId($tier, $locations, $val['id']).'" '.$selected.'>'.$val['name'].'</option>';
+    $parents = '';
+    $parent_id = (isset( $locations[$id]) ? $locations[$id]['parent_id']: 0);
+    while($tier > 1 ) {
+        if ($parent_id) {
+            $parents = $parent_id.'_'.$parents;
+            $parent_id = $locations[$parent_id]['parent_id'];
+        } else {
+            $parents = '0_'.$parents;
         }
-      }
-    ?>
-  </select>
-  <?php
-if ( $child_widget_id ) {?>
-<script type="text/javascript">
-<!--//--><![CDATA[//><!--
 
-function setChildStatus_<?php echo str_replace('-', '_', $widget_id);?>() {
-	var widgetObj = YAHOO.util.Dom.get('<?php echo $widget_id;?>');
-	setChildStatus(widgetObj.selectedIndex,'<?php echo $child_widget_id;?>','<?php echo $widget_id;?>', <?php echo $readonly ? $readonly : "0"?>);
+        $tier--;
+    }
+
+    return $parents.$id;
 }
 
-YAHOO.util.Event.onDOMReady(function () {
-	setChildStatus_<?php echo str_replace('-', '_', $widget_id);?>();
-});
-//--><!]]>
-</script>
-<?php }
+/**
+ * Get the location filter values
+ *
+ * @param array $params - the location search user criteria
+ * @param array $settings - a copy of this->_countrySettings used for determining available regions
+ * @param array $criteria - extra criteria to pass through, matching keys are overwritten
+ * @param string $prefix - prefix for region names in $params
+ *
+ * @return array - $criteria(with city, city_parent_id), location tier, location id
+ */
+function getCriteriaValues($params, $settings, $criteria = array(), $prefix = '') {
+    if ( $prefix != '' ) $prefix .= '_';
+
+    $criteria[$prefix.'city'] = $params[$prefix.'city'] ? $params[$prefix.'city'] : ""; // set city
+
+    $rgns = array('province_id', 'district_id','region_c_id','region_d_id','region_e_id','region_f_id','region_g_id','region_h_id','region_i_id');
+    // get value from each region sent by form
+    foreach($rgns as $rgn_name) {
+        $index_name = $prefix.$rgn_name;
+        $tmp = $params[$index_name] ? $params[$index_name] : "";
+        if (is_array ( $tmp ) ) {
+            if ( $tmp [0] === "") { // "All"
+                $criteria [$index_name] = array ();
+            } else {
+                foreach($tmp as $key => $val) {
+                    if (strstr ( $val, '_' ) !== false) {
+                        $parts = explode ( '_', $val );
+                        #$tmp [$key] = $parts [count($parts)-1];
+                        $tmp [$key] = array_pop($parts);
+                    }
+                }
+                $criteria [$index_name] = $tmp;
+            }
+        } else {
+            if (strstr ( $tmp, '_' ) !== false) {
+                $parts = explode ( '_', $tmp );
+                $tmp = array_pop($parts);
+            }
+            $criteria [$index_name] = $tmp;
+        }
+    }
+
+    $city_parent_id = 0; // todo: small bug here, on receiving array input for region_ids, city_parent_id returns an array of ids, possibly even wrong ids -- probably ok - its not used in reports anyway...
+    if ($settings['display_region_i']) {
+        $city_parent_id = $criteria[$prefix.'region_i_id'];
+    } else if ($settings['display_region_h']) {
+        $city_parent_id = $criteria[$prefix.'region_h_id'];
+    } else if ($settings['display_region_g']) {
+        $city_parent_id = $criteria[$prefix.'region_g_id'];
+    } else if ($settings['display_region_f']) {
+        $city_parent_id = $criteria[$prefix.'region_f_id'];
+    } else if ($settings['display_region_e']) {
+        $city_parent_id = $criteria[$prefix.'region_e_id'];
+    } else if ($settings['display_region_d']) {
+        $city_parent_id = $criteria[$prefix.'region_d_id'];
+    } else if ($settings['display_region_c']) {
+        $city_parent_id = $criteria[$prefix.'region_c_id'];
+    } else if ($settings['display_region_b']) {
+        $city_parent_id = $criteria[$prefix.'region_b_id'];
+    } else {
+        $city_parent_id = $criteria['_id'];
+    }
+    $criteria [$prefix.'city_parent_id'] = $city_parent_id;
+
+
+    $location_tier = 1;
+    $location_id = $criteria [$prefix.'province_id'];
+    if ( $criteria [$prefix.'district_id'] ) {
+        $location_id = $criteria [$prefix.'district_id'];
+        $location_tier = 2;
+    }
+    if ( $criteria [$prefix.'region_c_id'] ) {
+        $location_id = $criteria [$prefix.'region_c_id'];
+        $location_tier = 3;
+    }
+    if ( $criteria [$prefix.'region_d_id'] ) {
+        $location_id = $criteria [$prefix.'region_d_id'];
+        $location_tier = 4;
+    }
+    if ( $criteria [$prefix.'region_e_id'] ) {
+        $location_id = $criteria [$prefix.'region_e_id'];
+        $location_tier = 5;
+    }
+    if ( $criteria [$prefix.'region_f_id'] ) {
+        $location_id = $criteria [$prefix.'region_f_id'];
+        $location_tier = 6;
+    }
+    if ( $criteria [$prefix.'region_g_id'] ) {
+        $location_id = $criteria [$prefix.'region_g_id'];
+        $location_tier = 7;
+    }
+    if ( $criteria [$prefix.'region_h_id'] ) {
+        $location_id = $criteria [$prefix.'region_h_id'];
+        $location_tier = 8;
+    }
+    if ( $criteria [$prefix.'region_i_id'] ) {
+        $location_id = $criteria [$prefix.'region_i_id'];
+        $location_tier = 9;
+    }
+
+    return array($criteria, $location_tier, $location_id);
+
+}
+
+/**
+ * outputs html and javascript for location <select> options
+ *
+ * @param array $locations                     - reference to array of location arrays
+ * @param int $tier                            - location tier level
+ * @param string $widget_id                    - id for html element
+ * @param bool|string $default_val_id = false  - id of the selected value
+ * @param bool|string $child_widget_id = false - id of dependent child element
+ * @param bool $is_multiple = false            - is multiple selection
+ * @param bool $readonly = false               - is read only
+ */
+function renderFilter(&$locations, $tier, $widget_id, $default_val_id = false, $child_widget_id = false, $is_multiple = false, $readonly = false) {
+    if ( $default_val_id === false) {
+        foreach ( $locations as $val ) {
+            if ( ($val['tier'] == $tier) && $val['is_default'])
+                $default_val_id = $val['id'];
+        }
+    }
+    if ( !is_array($default_val_id) && strpos($default_val_id, '_')){ // bugfix - print_all_region_filters() might get actual option value="123_123" from some controllers (partnerController)
+        $also_match_id = array_pop(explode('_', $default_val_id));
+    }
+
+    ?>
+    <select id="<?php echo $widget_id;?>" name="<?php echo $widget_id;?><?php if ($is_multiple) echo '[]';?>" <?php if ($readonly) echo 'disabled="disabled"'?> <?php if ( $is_multiple) echo 'multiple="multiple" size="10"';?>
+            <?php if ($child_widget_id ) { ?>onchange="setChildStatus_<?php echo str_replace('-', '_', $widget_id);?>();" <?php }?>>
+        <option value="">--<?php tp('choose');?>--</option>
+        <?php
+        foreach ( $locations as $val ) {
+            if ( $val['tier'] == $tier) {
+                $selected = '';
+                if ( is_array($default_val_id) && (@in_array($val['id'], $default_val_id) ) ) {
+                    $selected = 'selected="selected"';
+                } else if ( !is_array($default_val_id) && $val['id'] === $default_val_id ) {
+                    $selected = 'selected="selected"';
+                } else if ( $also_match_id === $val['id'] ) {
+                    $selected = 'selected="selected"';
+                }
+                echo '<option value="'.buildId($tier, $locations, $val['id']).'" '.$selected.'>'.$val['name'].'</option>';
+            }
+        }
+        ?>
+    </select>
+    <?php
+    if ( $child_widget_id ) {?>
+        <script type="text/javascript">
+            <!--//--><![CDATA[//><!--
+
+            function setChildStatus_<?php echo str_replace('-', '_', $widget_id);?>() {
+                var widgetObj = YAHOO.util.Dom.get('<?php echo $widget_id;?>');
+                setChildStatus(widgetObj.selectedIndex,'<?php echo $child_widget_id;?>','<?php echo $widget_id;?>', <?php echo $readonly ? $readonly : "0"?>);
+            }
+
+            YAHOO.util.Event.onDOMReady(function () {
+                setChildStatus_<?php echo str_replace('-', '_', $widget_id);?>();
+            });
+            //--><!]]>
+        </script>
+    <?php }
 }
 
 function renderCityAutocomplete($prefix, $container, $data_url, $num_tiers) {
@@ -132,6 +254,65 @@ function renderCityAutocomplete($prefix, $container, $data_url, $num_tiers) {
 
 <?php
 }
+
+/**
+ * retrieves parent region ids for up to 3 tiers and returns them as a criteria array
+ *
+ * TODO: How does city fit into criteria?
+ * TODO: Support maximum number of tiers.
+ *
+ * @param int|string $location_id - id of a location row in database
+ * @param string $prefix = '' - prefix to prepend to resulting criteria keys
+ *
+ * @return array - criteria-style array for region_filters_dropdown()
+ */
+function locationIDTo3TierCriteriaArray($location_id, $prefix='')
+{
+    $prefix = $prefix ? $prefix.'_' : '';
+
+    $sql = "SELECT
+                    location3.tier,
+                    location3.id AS child_id,
+                    location2.id AS parent_id,
+                    location1.id AS grandparent_id
+                FROM
+                    location AS location3
+                LEFT JOIN location AS location2 ON location3.parent_id = location2.id
+                LEFT JOIN location AS location1 ON location2.parent_id = location1.id
+                WHERE location3.id = ?";
+    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+    $locations = $db->fetchRow($sql, $location_id);
+
+    // TODO: How does city fit into criteria array?
+    $criteria = array(
+        $prefix.'province_id' => '',
+        $prefix.'district_id' => '',
+        $prefix.'region_c_id' => '',
+        $prefix.'region_d_id' => '',
+        $prefix.'region_e_id' => '',
+        $prefix.'region_f_id' => '',
+        $prefix.'region_g_id' => '',
+        $prefix.'region_h_id' => '',
+        $prefix.'region_i_id' => '',
+    );
+
+    if ($locations['tier'] == 3) {
+        $criteria[$prefix.'province_id'] = $locations['grandparent_id'];
+        $criteria[$prefix.'district_id'] = $locations['parent_id'];
+        $criteria[$prefix.'region_c_id'] = $locations['child_id'];
+    }
+    elseif ($locations['tier'] == 2) {
+        $criteria[$prefix.'province_id'] = $locations['parent_id'];
+        $criteria[$prefix.'district_id'] = $locations['child_id'];
+    }
+    elseif ($locations['tier'] == 1) {
+        $criteria[$prefix.'province_id'] = $locations['child_id'];
+    }
+
+    return $criteria;
+
+}
+
 
 function renderFacilityDropDown($facilities, $selected_index, $readonly)
 {
@@ -211,7 +392,14 @@ function renderFacilityDropDown($facilities, $selected_index, $readonly)
 
 }
 
-// get the last drop down chosen by region filters
+
+/**
+ * get the last drop down chosen by region filters
+ *
+ * @param string $prefix - prefix for html element names
+ * @param $criteria - html form parameters
+ * @return mixed|null
+ */
 function regionFiltersGetLastID($prefix, $criteria)
 {
 	if ($prefix)
@@ -235,72 +423,79 @@ function regionFiltersGetLastID($prefix, $criteria)
 	return array_pop($o);
 }
 
+
 /**
- * region filters (Dropdown style)
+ * region filters (Dropdown style) - heavily uses renderFilter
  *
- * @param $is_multiple = multiple select box
+ * @param &$view                     - the view object, by reference
+ * @param array &$locations          - reference to an array of location arrays, often from Location::getAll. passed to renderFilter
+ * @param array &$criteria           - reference to an array returned by ReportFilterHelpers::getLocationCriteriaValues
+ * @param bool $is_multiple = false  - is multiple select box
+ * @param bool $middleColumn = false - has middle column
+ * @param string $prefix = ''        - prefix to prepend to element id
+ * @param bool $required = false     - mark as required
  */
 function region_filters_dropdown(&$view, &$locations, &$criteria, $is_multiple = false, $middleColumn = false, $prefix = '', $required = false) {
-	if ( $prefix )
-		$prefix .= '_';
+    if ( $prefix )
+        $prefix .= '_';
 
-	$required = $required ? '<span class="required">*</span>' : '';
-	$class = $is_multiple ? 'autoHeight' : '';
-?>
+    $required = $required ? '<span class="required">*</span>' : '';
+    $class = $is_multiple ? 'autoHeight' : '';
+    ?>
 
-		<div class="fieldLabel" id="<?php echo $prefix; ?>province_id_lbl"><?php echo $required . t('Region A (Province)'); ?></div>
-		<div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showProvince"    <?php  if ($criteria['showProvince']) echo 'checked="checked"';?> /></div><label for="showProvince" ></label></div> <?php } ?>
-		<div class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 1, $prefix.'province_id', @$criteria[$prefix.'province_id'], ($view->setting['display_region_b']?$prefix.'district_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
+    <div class="fieldLabel" id="<?php echo $prefix; ?>province_id_lbl"><?php echo $required . t('Region A (Province)'); ?></div>
+    <div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showProvince"    <?php  if ($criteria['showProvince']) echo 'checked="checked"';?> /></div><label for="showProvince" ></label></div> <?php } ?>
+    <div class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 1, $prefix.'province_id', @$criteria[$prefix.'province_id'], ($view->setting['display_region_b']?$prefix.'district_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
 
-	<?php if ( $view->setting['display_region_b'] ) { ?>
-		<div class="fieldLabel" id="<?php echo $prefix; ?>district_id_lbl"><?php echo $required . t('Region B (Health District)'); ?></div>
-		<div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showDistrict"   <?php  if (@$criteria['showDistrict']) echo 'checked="checked"';?> /></div><label for="showDistrict" ></label></div> <?php } ?>
-		<div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 2, $prefix.'district_id', @$criteria[$prefix.'district_id'], ($view->setting['display_region_c']?$prefix.'region_c_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
-	<?php } ?>
+    <?php if ( $view->setting['display_region_b'] ) { ?>
+        <div class="fieldLabel" id="<?php echo $prefix; ?>district_id_lbl"><?php echo $required . t('Region B (Health District)'); ?></div>
+        <div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showDistrict"   <?php  if (@$criteria['showDistrict']) echo 'checked="checked"';?> /></div><label for="showDistrict" ></label></div> <?php } ?>
+        <div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 2, $prefix.'district_id', @$criteria[$prefix.'district_id'], ($view->setting['display_region_c']?$prefix.'region_c_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
+    <?php } ?>
 
-	<?php if ( $view->setting['display_region_c'] ) { ?>
-		<div class="fieldLabel" id="<?php echo $prefix; ?>region_c_lbl"><?php echo $required . t('Region C (Local Region)'); ?></div>
-		<div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showRegionC"   <?php  if (@$criteria['showRegionC']) echo 'checked="checked"';?> /></div><label for="showRegionC" ></label></div> <?php } ?>
-		<div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 3, $prefix.'region_c_id', @$criteria[$prefix.'region_c_id'], ($view->setting['display_region_d']?$prefix.'region_d_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
-	<?php } ?>
+    <?php if ( $view->setting['display_region_c'] ) { ?>
+        <div class="fieldLabel" id="<?php echo $prefix; ?>region_c_lbl"><?php echo $required . t('Region C (Local Region)'); ?></div>
+        <div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showRegionC"   <?php  if (@$criteria['showRegionC']) echo 'checked="checked"';?> /></div><label for="showRegionC" ></label></div> <?php } ?>
+        <div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 3, $prefix.'region_c_id', @$criteria[$prefix.'region_c_id'], ($view->setting['display_region_d']?$prefix.'region_d_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
+    <?php } ?>
 
-	<?php if ( $view->setting['display_region_d'] ) { ?>
-		<div class="fieldLabel" id="<?php echo $prefix; ?>region_d_lbl"><?php echo $required . t('Region D'); ?></div>
-		<div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showRegionD"   <?php  if (@$criteria['showRegionD']) echo 'checked="checked"';?> /></div><label for="showRegionD" ></label></div> <?php } ?>
-		<div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 4, $prefix.'region_d_id', @$criteria[$prefix.'region_d_id'], ($view->setting['display_region_e']?$prefix.'region_e_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
-	<?php } ?>
+    <?php if ( $view->setting['display_region_d'] ) { ?>
+        <div class="fieldLabel" id="<?php echo $prefix; ?>region_d_lbl"><?php echo $required . t('Region D'); ?></div>
+        <div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showRegionD"   <?php  if (@$criteria['showRegionD']) echo 'checked="checked"';?> /></div><label for="showRegionD" ></label></div> <?php } ?>
+        <div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 4, $prefix.'region_d_id', @$criteria[$prefix.'region_d_id'], ($view->setting['display_region_e']?$prefix.'region_e_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
+    <?php } ?>
 
-	<?php if ( $view->setting['display_region_e'] ) { ?>
-		<div class="fieldLabel" id="<?php echo $prefix; ?>region_e_lbl"><?php echo $required . t('Region E'); ?></div>
-		<div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showRegionE"   <?php  if (@$criteria['showRegionE']) echo 'checked="checked"';?> /></div><label for="showRegionE" ></label></div> <?php } ?>
-		<div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 5, $prefix.'region_e_id', @$criteria[$prefix.'region_e_id'], ($view->setting['display_region_f']?$prefix.'region_f_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
-	<?php } ?>
+    <?php if ( $view->setting['display_region_e'] ) { ?>
+        <div class="fieldLabel" id="<?php echo $prefix; ?>region_e_lbl"><?php echo $required . t('Region E'); ?></div>
+        <div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showRegionE"   <?php  if (@$criteria['showRegionE']) echo 'checked="checked"';?> /></div><label for="showRegionE" ></label></div> <?php } ?>
+        <div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 5, $prefix.'region_e_id', @$criteria[$prefix.'region_e_id'], ($view->setting['display_region_f']?$prefix.'region_f_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
+    <?php } ?>
 
-	<?php if ( $view->setting['display_region_f'] ) { ?>
-		<div class="fieldLabel" id="<?php echo $prefix; ?>region_f_lbl"><?php echo $required . t('Region F'); ?></div>
-		<div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showRegionF"   <?php  if (@$criteria['showRegionF']) echo 'checked="checked"';?> /></div><label for="showRegionF" ></label></div> <?php } ?>
-		<div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 6, $prefix.'region_f_id', @$criteria[$prefix.'region_f_id'], ($view->setting['display_region_g']?$prefix.'region_g_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
-	<?php } ?>
+    <?php if ( $view->setting['display_region_f'] ) { ?>
+        <div class="fieldLabel" id="<?php echo $prefix; ?>region_f_lbl"><?php echo $required . t('Region F'); ?></div>
+        <div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showRegionF"   <?php  if (@$criteria['showRegionF']) echo 'checked="checked"';?> /></div><label for="showRegionF" ></label></div> <?php } ?>
+        <div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 6, $prefix.'region_f_id', @$criteria[$prefix.'region_f_id'], ($view->setting['display_region_g']?$prefix.'region_g_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
+    <?php } ?>
 
-	<?php if ( $view->setting['display_region_g'] ) { ?>
-		<div class="fieldLabel" id="<?php echo $prefix; ?>region_g_lbl"><?php echo $required . t('Region G'); ?></div>
-		<div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showRegionG"   <?php  if (@$criteria['showRegionG']) echo 'checked="checked"';?> /></div><label for="showRegionG" ></label></div> <?php } ?>
-		<div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 7, $prefix.'region_g_id', @$criteria[$prefix.'region_g_id'], ($view->setting['display_region_h']?$prefix.'region_h_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
-	<?php } ?>
+    <?php if ( $view->setting['display_region_g'] ) { ?>
+        <div class="fieldLabel" id="<?php echo $prefix; ?>region_g_lbl"><?php echo $required . t('Region G'); ?></div>
+        <div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showRegionG"   <?php  if (@$criteria['showRegionG']) echo 'checked="checked"';?> /></div><label for="showRegionG" ></label></div> <?php } ?>
+        <div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 7, $prefix.'region_g_id', @$criteria[$prefix.'region_g_id'], ($view->setting['display_region_h']?$prefix.'region_h_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
+    <?php } ?>
 
-	<?php if ( $view->setting['display_region_h'] ) { ?>
-		<div class="fieldLabel" id="<?php echo $prefix; ?>region_h_lbl"><?php echo $required . t('Region H'); ?></div>
-		<div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showRegionH"   <?php  if (@$criteria['showRegionH']) echo 'checked="checked"';?> /></div><label for="showRegionH" ></label></div> <?php } ?>
-		<div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 8, $prefix.'region_h_id', @$criteria[$prefix.'region_h_id'], ($view->setting['display_region_i']?$prefix.'region_i_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
-	<?php } ?>
+    <?php if ( $view->setting['display_region_h'] ) { ?>
+        <div class="fieldLabel" id="<?php echo $prefix; ?>region_h_lbl"><?php echo $required . t('Region H'); ?></div>
+        <div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showRegionH"   <?php  if (@$criteria['showRegionH']) echo 'checked="checked"';?> /></div><label for="showRegionH" ></label></div> <?php } ?>
+        <div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 8, $prefix.'region_h_id', @$criteria[$prefix.'region_h_id'], ($view->setting['display_region_i']?$prefix.'region_i_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
+    <?php } ?>
 
-	<?php if ( $view->setting['display_region_i'] ) { ?>
-		<div class="fieldLabel" id="<?php echo $prefix; ?>region_i_lbl"><?php echo $required . t('Region I'); ?></div>
-		<div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showRegionI"   <?php  if (@$criteria['showRegionI']) echo 'checked="checked"';?> /></div><label for="showRegionI" ></label></div> <?php } ?>
-		<div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 9, $prefix.'region_i_id', @$criteria[$prefix.'region_i_id'], ($view->setting['display_region_i']?'region_i_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
-	<?php }
+    <?php if ( $view->setting['display_region_i'] ) { ?>
+        <div class="fieldLabel" id="<?php echo $prefix; ?>region_i_lbl"><?php echo $required . t('Region I'); ?></div>
+        <div class="fieldInput"><?php if ($middleColumn) { ?><div  class="leftBorderPad"><input type="checkbox" name="showRegionI"   <?php  if (@$criteria['showRegionI']) echo 'checked="checked"';?> /></div><label for="showRegionI" ></label></div> <?php } ?>
+        <div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 9, $prefix.'region_i_id', @$criteria[$prefix.'region_i_id'], ($view->setting['display_region_i']?'region_i_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
+    <?php }
 
-	// done
+    // done
 }
 
 

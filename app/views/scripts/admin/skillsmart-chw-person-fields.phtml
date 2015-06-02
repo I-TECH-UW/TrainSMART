@@ -1,0 +1,102 @@
+<?php
+
+// need $pageTitle and $nextUri variables from these includes
+
+ob_start();
+require_once('views/scripts/header.phtml');
+$header = ob_get_contents();
+ob_end_clean();
+
+ob_start();
+require_once('views/scripts/nav-admin.phtml');
+$nav = ob_get_contents();
+ob_end_clean();
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title><?php echo $this->translation['Application Name'];?> | <?php echo $pageTitle; ?></title>
+    <?php
+    require_once('views/helpers/ScriptContainer.php');
+    print ScriptContainer::$instance->renderCSSHead();
+    print ScriptContainer::$instance->renderJSHead();
+    ?>
+
+    <style>
+        fieldset input[type=text], fieldset select { margin-bottom:12px; width:95%; padding: .4em; }
+        fieldset { padding:0; border:0; margin-top:25px; text-align : left; font-size : .9em }
+        h1 { font-size: 1.2em; margin: .6em 0; }
+        .ui-dialog .ui-state-error { padding: .3em; }
+        .validateTips { border: 1px solid transparent; padding: 0.3em; }
+    </style>
+    <script>
+        $(function() {
+        });
+
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+    </script>
+</head>
+<body  class="yui-skin-sam">
+<div id="pageHolder">
+    <div id="header"><?php echo $header; ?></div>
+    <div id="content" class="adminDiv">
+        <div id="navAdmin"><?php echo $nav;?></div>
+        <div id="contentAdmin">
+            <div id="contentheader">
+                <h1><?php echo $this->pageTitle; ?></h1>
+                <h2><?php echo $this->header; ?></h2>
+            </div>
+            <br><br>
+
+            <form  action="" id="peopleadd" method="post">
+                <div class="pad20"></div>
+                <div style="width :100%;">
+
+                    <table class="settings">
+                        <thead>
+                        <tr><th>Field</th><th>Display</th><th>Label</th><th>Options</th></tr>
+                        </thead>
+                        <?php foreach($this->labelOrder as $label) {
+                            $addEditLink = '';
+                            if ($label[0] === '.') {
+                                $addEditLink = '<a href="' . $this->base_url . $this->dropdownLinks[$label] . '" onclick="return submitAdminForm(this);">Add/Edit</a>';
+                                $label = trim($label, ".");
+                            }
+                            $key_phrase = $this->labelNames[$label];
+                            if ($label[0] === '-') { ?>
+                                <tr><td colspan="4">&nbsp;</td></tr>
+                                <tr><td colspan="4"><?php echo trim($label, "-");?></td></tr>
+                                <tr><td colspan="4">&nbsp;</td></tr>
+                            <?php } else { ?>
+                                <tr><td class="fieldTitle"><?php echo $key_phrase;?></td>
+                                    <td></td>
+                                    <td><input type="text" name="<?php echo $label;?>" value="<?php echo t($key_phrase); ?>"></td>
+                                    <td><?php echo $addEditLink;?></td>
+                                </tr>
+                            <?php }?>
+
+                        <?php } ?>
+
+                    </table>
+
+                </div>
+                <div class="rightdiv">
+                    <div class="pad20"></div>
+                    <br></br>
+                    <input type="submit" name="update" value="Update Labels &raquo;" class="tsbutton green large">
+                </div>
+                <div class="clear"></div>
+                <input type="hidden" name="action" id="action" value="savelabels">
+            </form>
+            <div class="clear"></div>
+
+        </div>
+        <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+        <div class="clear"></div>
+    </div>
+</div>
+</body>
+</html>

@@ -41,6 +41,7 @@ if (($this->hasACL('pre_service')) || ($this->hasACL('admin_preservice'))){
 			'title'				=> t('Titles'),
 			'suffix'			=> t('Suffix'),
 		'active-trainer'	=> t('Active Trainer'),
+			'race'          => t('Race'),
 		),
 		'facilities' => array(
 			'index'				=> t('Facilities'),
@@ -54,6 +55,7 @@ if (($this->hasACL('pre_service')) || ($this->hasACL('admin_preservice'))){
 			'index'				=> t('Preservice'),
 			'labels'			=> t('Field labels'),
 			'classes'			=> t('Classes'),
+            'class-modules'     => t('Class Modules'),
 			'cadres'			=> t('Cadres'),
 			'degrees'			=> t('Degrees'),
 			'funding'			=> t('Funding'),
@@ -121,6 +123,7 @@ if (($this->hasACL('pre_service')) || ($this->hasACL('admin_preservice'))){
 			'title'				=> t('Titles'),
 			'suffix'			=> t('Suffix'),
 		'active-trainer'	=> t('Active Trainer'),
+			'race'          => t('Race'),
 		),
 		'facilities' => array(
 			'index'				=> t('Facilities'),
@@ -151,7 +154,8 @@ if (isset($this->setting['display_mod_skillsmart']) && ($this->setting['display_
 		"training"				=> t('Training received'),
 		"facilitydepartment"	=> t('Facility Departments'),
 		"competency"			=> t('Competencies'),
-		"occupationalcats"		=> t('Occupational Categories')
+		"occupationalcats"		=> t('Occupational Categories'),
+        "chw-person-fields"     => t('CHW Field Labels'),
 	);
 }
 

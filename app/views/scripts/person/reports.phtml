@@ -108,6 +108,7 @@ echo '<option value="'.$vals['id'].'" '.((@$this->criteria['qualification_id']) 
 		    <div class="fieldIndentNoMargin"><?php tp('People');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
 		    <div id="people"></div>
 		    <script type="text/javascript">
+		    //TA:28 fixing bug - report table is not displayed because of wrong array format, not closing ]
 		var peopleData = [
 		<?php
 		$cnt = 0;
@@ -121,38 +122,35 @@ echo '<option value="'.$vals['id'].'" '.((@$this->criteria['qualification_id']) 
 			   if ( $this->setting['display_middle_name'] &&  !$this->setting['display_middle_name_last'] ) {
 			   	echo $row['middle_name'].'","';
 			   }
-				echo $row['last_name'].'","';
+				echo $row['last_name'].'"';
 			   if ( $this->setting['display_middle_name'] && $this->setting['display_middle_name_last'] ) {
-			   	echo $row['middle_name'].'","';
+			   	echo ',"' . $row['middle_name'].'","';
 			   }
-				if($row['parent_id']=="6")
-				{
+				if($row['parent_id']=="6"){
 				 if($row['cmp']=="0")
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""';
 				 else
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomc/id/'.$row['id'].'\'>View</a>"]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomc/id/'.$row['id'].'\'>View</a>"';
 				}
-				if($row['parent_id']=="7")
-				{
+				if($row['parent_id']=="7"){
 				 if($row['cmp']=="0")
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""';
 				 else
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomd/id/'.$row['id'].'\'>View</a>"]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomd/id/'.$row['id'].'\'>View</a>"';
 				}
-				if($row['parent_id']=="8")
-				{
+				if($row['parent_id']=="8"){
 				 if($row['cmp']=="0")
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""';
 				 else
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomn/id/'.$row['id'].'\'>View</a>"]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomn/id/'.$row['id'].'\'>View</a>"';
 				}
-				if($row['parent_id']=="9")
-				{
+				if($row['parent_id']=="9"){
 				 if($row['cmp']=="0")
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""';
 				 else
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomp/id/'.$row['id'].'\'>View</a>"]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomp/id/'.$row['id'].'\'>View</a>"';
 				}
+				echo ']';
 				$cnt++;
 			}
 			}
