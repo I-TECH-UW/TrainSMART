@@ -1046,11 +1046,11 @@ class StudenteditController extends ITechController
 				'first_name' => $params['first_name'],
 				'national_id' => $params['national_id'],
 				'title_option_id' => $params['title_option_id'],
-				// TODO: resolve age
 				'birthdate' => $this->_euro_date_to_sql($params['dob']),
 				'gender' => $params['gender'],
 				'spouse_name' => $params['spouse_name'],
 				'primary_qualification_option_id' => $params['primary_qualification_option_id'],
+				'race_option_id' => $params['race_option_id'],
 
 				'home_address_1' => $params['person_address_1'],
 				'home_address_2' => $params['person_address_2'],
@@ -1144,11 +1144,10 @@ class StudenteditController extends ITechController
 				if (isset($params['cohort']) && strlen($params['cohort'])) {
 					$db->update('link_student_cohort', $cohortData, "id_student = {$studentData['id']}");
 				}
-				else {
+				else if ($cohortData) {
 					$db->delete('link_student_cohort', "where id_student = {$studentData['id']}");
 				}
-				// TODO: this assumes only one class per chw student
-				// TODO: need to devise a way to distinguish the data because I'm sure they're going to want more classes
+				// TODO: this data should not be stored in classes table
 				$db->update('link_student_classes', $classData, "studentid = {$studentData['id']}");
 			}
 			if ($params['add_modules_ids']) {
