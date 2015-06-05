@@ -272,9 +272,11 @@
 			<thead>
 				<tr>
 					<th><?php echo t('Class Name'); ?></th>
-					<th><?php echo t('Instructor'); ?></th>
-					<th><?php echo t('Start date'); ?></th>
-					<th><?php echo t('End date'); ?></th>
+					<?php if ($this->setting['site_style_id'] != 2) { ?>
+						<th><?php echo t('Instructor'); ?></th>
+						<th><?php echo t('Start date'); ?></th>
+						<th><?php echo t('End date'); ?></th>
+					<?php } ?>
 				</tr>
 			</thead>
 			<tbody>
@@ -288,10 +290,14 @@
 						}
 						?>
 						<tr class="GradeA">
-							<td><input type="checkbox" name="class[<?php echo $classes['id']; ?>][id]" id="class[<?php echo $classes['id']; ?>][id]" value="<?php echo $classes['id']; ?>"<?php echo ($found ? " checked" : "") ?>> <?php echo $classes['classname']; ?></td>
-							<td class=""><?php echo $classes['first_name'] . " " . $classes['last_name']; ?></td>
-							<td class=""><?php echo date("m/d/Y", strtotime($classes['startdate'])); ?></td>
-							<td class=""><?php echo date("m/d/Y", strtotime($classes['enddate'])); ?></td>
+							<?php if ($this->setting['site_style_id'] == 2) { ?>
+								<td><input type="checkbox" name="class[<?php echo $classes['id']; ?>][id]" id="class[<?php echo $classes['id']; ?>][id]" value="<?php echo $classes['id']; ?>"<?php echo ($found ? " checked" : "") ?>> <?php echo $classes['custom_1']; ?></td>
+							<?php } else { ?>
+								<td><input type="checkbox" name="class[<?php echo $classes['id']; ?>][id]" id="class[<?php echo $classes['id']; ?>][id]" value="<?php echo $classes['id']; ?>"<?php echo ($found ? " checked" : "") ?>> <?php echo $classes['classname']; ?></td>
+								<td class=""><?php echo $classes['first_name'] . " " . $classes['last_name']; ?></td>
+								<td class=""><?php echo date("m/d/Y", strtotime($classes['startdate'])); ?></td>
+								<td class=""><?php echo date("m/d/Y", strtotime($classes['enddate'])); ?></td>
+							<?php } ?>
 						</tr>
 						<?php
 					}

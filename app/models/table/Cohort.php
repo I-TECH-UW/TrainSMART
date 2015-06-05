@@ -467,6 +467,9 @@ class Cohortedit extends ITechTable
 			FROM classes c
 			INNER JOIN tutor t ON t.id = c.instructorid
 			INNER JOIN person p ON t.personid = p.id ORDER BY c.classname, p.first_name, p.last_name";
+		if ($this->setting('site_style_id') == 2) {
+			$query = "SELECT * from classes ORDER BY custom_1";
+		}
 		$select = $db->query($query);
 		$row = $select->fetchAll();
 		return $row;	
