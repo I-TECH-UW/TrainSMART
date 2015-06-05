@@ -153,6 +153,7 @@ class ReportsController extends ReportFilterHelpers {
 	}
 
 	public function detailAction() {
+		
 		$helper = new Helper();
 		if (! $this->hasACL ( 'view_people' ) and ! $this->hasACL ( 'edit_people' )) {
 			$this->doNoAccessError ();
@@ -384,80 +385,102 @@ die ("OK");
 		$criteria ['qualification_id'] = $this->getSanParam ( 'qualification_id' );
 		$criteria ['ques'] = $this->getSanParam ( 'ques' );
 		$criteria ['go'] = $this->getSanParam ( 'go' );
+		
+		//TA:29 fixing bug
+		$helper = new Helper();
+		$complist = $helper->getQualificationCompetencies();
+		
 		if ($criteria ['go']) {
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 			$num_locs = $this->setting('num_location_tiers');
 			list($field_name,$location_sub_query) = Location::subquery($num_locs, $location_tier, $location_id);
-			$sql = 'select DISTINCT cmp.person, cmp.question, cmp.option from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l, comp as cmp, compres as cmpr';
+			$sql = 'select DISTINCT cmp.person, cmp.question, cmp.option from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l, comp as cmp '; //compres as cmpr';
 			$where = array('p.is_deleted = 0');
 			$whr = array();
-			$where []= 'cmpr.person = p.id';
+			//TA:29 fix bug $where []= 'cmpr.person = p.id';
 			$where []= 'cmp.person = p.id';
 			$where []= ' p.primary_qualification_option_id = q.id and p.facility_id = f.id and f.location_id = l.id ';
 			if ($criteria ['facilityInput']) {
 				$where []= ' p.facility_id = "' . $criteria ['facilityInput'] . '"';
 			}
-			$where []= ' primary_qualification_option_id IN (SELECT id FROM person_qualification_option WHERE parent_id = ' . $criteria ['qualification_id'] . ') ';
-			$where []= 'cmpr.active = \'Y\'';
-			$where []= 'cmpr.res = 1';
+			//TA:29 fix bug, why should we take by parent_id????
+			//$where []= ' primary_qualification_option_id IN (SELECT id FROM person_qualification_option WHERE parent_id = ' . $criteria ['qualification_id'] . ') ';
+			$where []= ' primary_qualification_option_id IN (SELECT id FROM person_qualification_option) ';
+			//TA:29 fix bug $where []= 'cmpr.active = \'Y\'';
+			//TA:29 fix bug $where []= 'cmpr.res = 1';
 			$where []= 'cmp.active = \'Y\'';
-			if($criteria ['qualification_id']=="6")
-			{
-				$whr []= 'cmp.question IN ('."'".str_replace(",","','",$this->getSanParam ( 'listcq' ))."'".')';
-			}
-			if($criteria ['qualification_id']=="7")
-			{
-				$qs=split(",",$this->getSanParam ( 'ques' ));
-				$nms=split("~",$this->getSanParam ( 'listdq' ));
-				foreach ( $qs as $kys => $vls ) {
-					$whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
-				}
-			}
-			if($criteria ['qualification_id']=="8")
-			{
-				$qs=split(",",$this->getSanParam ( 'ques' ));
-				$nms=split("~",$this->getSanParam ( 'listnq' ));
-				foreach ( $qs as $kys => $vls ) {
-					$whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
-				}
-			}
-			if($criteria ['qualification_id']=="9")
-			{
-				$whr []= 'cmp.question IN ('."'".str_replace(",","','",$this->getSanParam ( 'listpq' ))."'".')';
-			}
+			
+			//TA:29 fixing bug
+			$questionids = $helper->getCompQuestions($this->getSanParam ( 'complist' ));
+			$whr []= 'cmp.question IN ('."'".str_replace(",","','", implode(",", $questionids)) ."'".')';
+			
+			//TA:29 fixing bug
+// 			if($criteria ['qualification_id']=="6"){
+// 				$whr []= 'cmp.question IN ('."'".str_replace(",","','",$this->getSanParam ( 'listcq' ))."'".')';
+// 			}
+// 			if($criteria ['qualification_id']=="7"){
+// 				$qs=split(",",$this->getSanParam ( 'ques' ));
+// 				$nms=split("~",$this->getSanParam ( 'listdq' ));
+// 				foreach ( $qs as $kys => $vls ) {
+// 					$whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
+// 				}
+// 			}
+// 			if($criteria ['qualification_id']=="8"){
+// 				$qs=split(",",$this->getSanParam ( 'ques' ));
+// 				$nms=split("~",$this->getSanParam ( 'listnq' ));
+// 				foreach ( $qs as $kys => $vls ) {
+// 					$whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
+// 				}
+// 			}
+// 			if($criteria ['qualification_id']=="9"){
+// 				$whr []= 'cmp.question IN ('."'".str_replace(",","','",$this->getSanParam ( 'listpq' ))."'".')';
+// 			}
+
 			$sql .= ' WHERE ' . implode(' AND ', $where);
-			$sql .= ' AND (' . implode(' OR ', $whr) . ')';
-			$rowArray = $db->fetchAll ( $sql );
+			if(!empty($whr)){ //TA:29 do not add if array is empty
+				$sql .= ' AND (' . implode(' OR ', $whr) . ')';
+			}
+			
+			//print $sql;
+			
+			$rowArray = $db->fetchAll ( $sql);
+			
+			//print_r($rowArray);
+			
 			$qss=array();
 			$nmss=array();
-			if($criteria ['qualification_id']=="6")
-			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listcq' ));
-			}
-			if($criteria ['qualification_id']=="7")
-			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listdq' ));
-			}
-			if($criteria ['qualification_id']=="8")
-			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listnq' ));
-			}
-			if($criteria ['qualification_id']=="9")
-			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listpq' ));
-			}
-			$ct;
+			
+			//TA:29 it does not matter, take for any case
+// 			if($criteria ['qualification_id']=="6"){
+// 				$qss=split(",",$this->getSanParam ( 'ques' ));
+// 				$nmss=split("~",$this->getSanParam ( 'listcq' ));
+// 			}
+// 			if($criteria ['qualification_id']=="7"){
+// 				$qss=split(",",$this->getSanParam ( 'ques' ));
+// 				$nmss=split("~",$this->getSanParam ( 'listdq' ));
+// 			}
+// 			if($criteria ['qualification_id']=="8"){
+// 				$qss=split(",",$this->getSanParam ( 'ques' ));
+// 				$nmss=split("~",$this->getSanParam ( 'listnq' ));
+// 			}
+// 			if($criteria ['qualification_id']=="9"){
+// 				$qss=split(",",$this->getSanParam ( 'ques' ));
+// 				$nmss=split("~",$this->getSanParam ( 'listpq' ));
+// 			}
+
+			$qss = $this->getSanParam ( 'complist' ); //ex: Array ( [0] => 6 [1] => 2 [2] => 5 [3] => 7 )
+			$nmss=split("~",$this->getSanParam ( 'listpq' )); //ex: Array ( [0] => 1,2,3,4,5,6,7 [1] => 8,9,10 )
+			
+			//TA:29 fix bug
 			$ct=0;
 			$rss=array();
-			$ctt;
-			foreach ( $qss as $kys => $vls ) {
+			foreach ( $qss as $kys => $vls ) {	
+				$thiscomp = $helper->getSkillSmartCompetencies($vls);
+				$ct = $thiscomp['label'];
 				$rss[$ct]=0;
 				$ctt=0;
-				$wss=split(",",$nmss[$vls]);
+				//TA:29 $wss=split(",",$nmss[$vls]);
+				$wss=split(",",$nmss[$kys]);
 				foreach ( $wss as $kyss => $vlss ) {
 					foreach ( $rowArray as $kss => $vss ) {
 						if($vlss." " == $vss['question']." ")
@@ -491,14 +514,20 @@ die ("OK");
 						}
 					}
 				}
-				if($ctt>0)
-				$rss[$ct]=number_format((($rss[$ct]/(4*$ctt))*100),2);
-				$ct=$ct+1;
+				if($ctt>0){
+				 $rss[$ct]=number_format((($rss[$ct]/(4*$ctt))*100),2);
+				}
+				//$ct=$ct+1;//TA:29 fix bug
 			}
+			
 			$this->viewAssignEscaped ( 'results', $rowArray );
 			$this->viewAssignEscaped ( 'rss', $rss );
 		}
 		$this->view->assign ( 'criteria', $criteria );
+		
+		//ta:29 fixing bug
+		$this->viewAssignEscaped ( 'complist', $complist );
+		
 		$this->viewAssignEscaped ( 'locations', Location::getAll() );
 		$qualificationsArray = OptionList::suggestionListHierarchical ( 'person_qualification_option', 'qualification_phrase', false, false );
 		$this->viewAssignEscaped ( 'qualifications', $qualificationsArray );
@@ -533,13 +562,13 @@ die ("OK");
 				$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 				$num_locs = $this->setting('num_location_tiers');
 				list($field_name,$location_sub_query) = Location::subquery($num_locs, $location_tier, $location_id);
-				$sql = 'select DISTINCT cmp.person, cmp.question, cmp.option from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l, comp as cmp, compres as cmpr';
+				$sql = 'select DISTINCT cmp.person, cmp.question, cmp.option from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l, comp as cmp '; //TA:30 fix bug , compres as cmpr';
 				if ( $criteria['training_title_option_id'] ) {
 					$sql .= ', person_to_training as ptt ';
 					$sql .= ', training as tr  ';
 				}
 				$where = array('p.is_deleted = 0');
-				$where []= 'cmpr.person = p.id';
+				//TA:30 fix bug $where []= 'cmpr.person = p.id';
 				$where []= 'cmp.person = p.id';
 				$where []= ' p.primary_qualification_option_id = q.id and p.facility_id = f.id and f.location_id = l.id ';
 				if ($criteria ['facilityInput']) {
@@ -549,8 +578,8 @@ die ("OK");
 					$where []= ' p.id = ptt.person_id AND ptt.training_id = tr.id AND tr.training_title_option_id = ' . ($criteria ['training_title_option_id']) . ' ';
 				}
 				$where []= ' primary_qualification_option_id IN (SELECT id FROM person_qualification_option WHERE parent_id IN (6, 7, 8, 9) ) ';
-				$where []= 'cmpr.active = \'Y\'';
-				$where []= 'cmpr.res = 1';
+				//TA:30 fix bug $where []= 'cmpr.active = \'Y\'';
+				//TA:30 fix bug $where []= 'cmpr.res = 1';
 				$where []= 'cmp.active = \'Y\'';
 				$sql .= ' WHERE ' . implode(' AND ', $where);
 
@@ -638,14 +667,14 @@ echo $sql . "<br>";
 				$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 				$num_locs = $this->setting('num_location_tiers');
 				list($field_name,$location_sub_query) = Location::subquery($num_locs, $location_tier, $location_id);
-				$sql = 'select DISTINCT cmp.person, cmp.question, cmp.option from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l, comp as cmp, compres as cmpr';
+				$sql = 'select DISTINCT cmp.person, cmp.question, cmp.option from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l, comp as cmp'; ////TA:30 fix bug, compres as cmpr';
 				if ( $criteria['training_title_option_id'] ) {
 					$sql .= ', person_to_training as ptt ';
 					$sql .= ', training as tr  ';
 				}
 				$where = array('p.is_deleted = 0');
 				$whr = array();
-				$where []= 'cmpr.person = p.id';
+				//TA:30 fix bug $where []= 'cmpr.person = p.id';
 				$where []= 'cmp.person = p.id';
 				$where []= ' p.primary_qualification_option_id = q.id and p.facility_id = f.id and f.location_id = l.id ';
 				if ($criteria ['facilityInput']) {
@@ -654,38 +683,13 @@ echo $sql . "<br>";
 				if ( $criteria['training_title_option_id'] ) {
 					$where []= ' p.id = ptt.person_id AND ptt.training_id = tr.id AND tr.training_title_option_id = ' . ($criteria ['training_title_option_id']) . ' ';
 				}
-				$where []= ' primary_qualification_option_id IN (SELECT id FROM person_qualification_option WHERE parent_id = ' . $criteria ['qualification_id'] . ') ';
-				$where []= 'cmpr.active = \'Y\'';
-				$where []= 'cmpr.res = 1';
+				//TA:30 fix bug
+				//$where []= ' primary_qualification_option_id IN (SELECT id FROM person_qualification_option WHERE parent_id = ' . $criteria ['qualification_id'] . ') ';
+				$where []= ' primary_qualification_option_id IN (SELECT id FROM person_qualification_option) ';
+				//TA:30 fix bug $where []= 'cmpr.active = \'Y\'';
+				//TA:30 fix bug $where []= 'cmpr.res = 1';
 				$where []= 'cmp.active = \'Y\'';
 
-/*
-				// REMOVING OLD HARDCODED VALUES
-				if($criteria ['qualification_id']=="6")
-				{
-					$whr []= 'cmp.question IN ('."'".str_replace(",","','",$this->getSanParam ( 'listcq' ))."'".')';
-				}
-				if($criteria ['qualification_id']=="7")
-				{
-					$qs=split(",",$this->getSanParam ( 'ques' ));
-					$nms=split("~",$this->getSanParam ( 'listdq' ));
-					foreach ( $qs as $kys => $vls ) {
-						$whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
-					}
-				}
-				if($criteria ['qualification_id']=="8")
-				{
-					$qs=split(",",$this->getSanParam ( 'ques' ));
-					$nms=split("~",$this->getSanParam ( 'listnq' ));
-					foreach ( $qs as $kys => $vls ) {
-						$whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
-					}
-				}
-				if($criteria ['qualification_id']=="9")
-				{
-					$whr []= 'cmp.question IN ('."'".str_replace(",","','",$this->getSanParam ( 'listpq' ))."'".')';
-				}
-*/
 
 				// GETTING QUESTIONS TIED TO THE SELECTED COMPETENCIES
 				$questionids = $helper->getCompQuestions($this->getSanParam ( 'complist' ));
@@ -695,8 +699,8 @@ echo $sql . "<br>";
 
 				if( !empty($where) ){ $sql .= ' WHERE ' . implode(' AND ', $where); }
 				if( !empty($whr) ){ $sql .= ' AND (' . implode(' OR ', $whr) . ')'; }
-
-				$rowArray = $db->fetchAll ( $sql );
+				
+				$rowArray = $db->fetchAll ($sql );
 
 				$return = array();
 				// For each competency, we loop through this block
