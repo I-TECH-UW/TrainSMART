@@ -103,7 +103,8 @@
 					</script>
 					
 					<!-- TA:29 START fixing bug,  by some reason "Competence" was undisplyed -->
-					<div class="fieldLabel" id="qualification_id_lbl"><?php echo t('Competence'); ?><br /><br><a href="javascript:void(0)" onclick="allcompetence()"><?php echo t('Select All'); ?></a></div>
+					<div class="fieldLabel" id="qualification_id_lbl"><?php echo t('Competence'); ?><br /><br>
+					<a href="javascript:void(0)" onclick="allcompetence()"><?php echo t('Select All'); ?></a></div>
 					<!-- TA:29 END -->
 	
 	<?php
@@ -134,38 +135,37 @@
 					//TA:29 fixing bug 	document.getElementById("listd").options.remove(0);
 					//TA:29 fixing bug 	document.getElementById("listn").options.remove(0);
 					//TA:29 fixing bug	document.getElementById("listp").options.remove(0);
-						function SelAll()
-						{
-							if(document.getElementById("listc").style.display!="none" ||
-							document.getElementById("listd").style.display!="none" ||
-							document.getElementById("listn").style.display!="none" ||
-							document.getElementById("listp").style.display!="none")
-							{
-								var List;
-								if(document.getElementById("listc").style.display!="none")
-								{
-									List=document.getElementById("listc");
-								}
-								if(document.getElementById("listd").style.display!="none")
-								{
-									List=document.getElementById("listd");
-								}
-								//TA:29 fix bugs
-// 								if(document.getElementById("listn").style.display!="none"){
-// 									List=document.getElementById("listn");
+// 						function SelAll(){ //TA:29 fixing bug
+// 							if(document.getElementById("listc").style.display!="none" ||
+// 							document.getElementById("listd").style.display!="none" ||
+// 							document.getElementById("listn").style.display!="none" ||
+// 							document.getElementById("listp").style.display!="none")
+// 							{
+// 								var List;
+// 								if(document.getElementById("listc").style.display!="none")
+// 								{
+// 									List=document.getElementById("listc");
 // 								}
-								if(document.getElementById("listp").style.display!="none")
-								{
-									List=document.getElementById("listp");
-								}
-								for(var i=0;i<List.options.length;i++)
-								{
-									List.options[i].selected=true;
-								}
-								ShwHid(List);
-							}
+// 								if(document.getElementById("listd").style.display!="none")
+// 								{
+// 									List=document.getElementById("listd");
+// 								}
+// 								//TA:29 fix bugs
+// // 								if(document.getElementById("listn").style.display!="none"){
+// // 									List=document.getElementById("listn");
+// // 								}
+// 								if(document.getElementById("listp").style.display!="none")
+// 								{
+// 									List=document.getElementById("listp");
+// 								}
+// 								for(var i=0;i<List.options.length;i++)
+// 								{
+// 									List.options[i].selected=true;
+// 								}
+// 								ShwHid(List);
+// 							}
 
-						}
+// 						}
 						function myExport()
 						{
 							var v1;

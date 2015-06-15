@@ -259,7 +259,8 @@ echo "<br clear='top'/><br clear='left'/><br clear='top'/>";
 <?php if($this->setting['display_training_start_date']){?>
   <div class="fieldLabel"><?php echo t('Training start date');?></div>
   <div class="fieldInput" id="startdate">
-    <?php tp('Day');?> <input id="start-day" class="dayfield" type="text" name="start-day" maxlength="2" value="<?php echo $this->row['start-day']; ?> " <?php echo $this->viewonly; ?>>
+  <!-- TA:34 fixing bug, allow two digit eneter (remove extra white space for text field) -->
+    <?php tp('Day');?> <input id="start-day" class="dayfield" type="text" name="start-day" maxlength="2" value="<?php echo $this->row['start-day']; ?>" <?php echo $this->viewonly; ?>>
     / <?php tp('Month');?> <input id="start-month" class="monthfield" type="text" name="start-month" maxlength="2" value="<?php echo $this->row['start-month']; ?>"  <?php echo $this->viewonly; ?>>
     / <?php tp('Year');?> <input id="start-year" class="yearfield" type="text" name="start-year" maxlength="4" value="<?php if($this->row['start-year']) echo $this->row['start-year']; else echo date('Y'); ?>"  <?php echo $this->viewonly; ?>>
 

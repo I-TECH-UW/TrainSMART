@@ -30,8 +30,8 @@
 					</span>
 				</span>
 				<?php endif; ?>
-
-				<button type="button" id="submitFacility"><?php echo t('Add').space.t('Facility');?></button><br>
+				<!-- TA:34 remove underscores for sumbit button -->
+				<button type="button" id="submitFacility"><?php echo t('Add Facility');?></button><br>
 
 				<script type="text/javascript">
 				addAjaxSubmit('submitFacility','add','<?php echo $this->base_url;?>/facility/add/outputType/json');

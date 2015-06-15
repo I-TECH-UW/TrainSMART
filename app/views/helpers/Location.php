@@ -37,6 +37,7 @@ function buildId($tier, &$locations, $id) {
  * @return array - $criteria(with city, city_parent_id), location tier, location id
  */
 function getCriteriaValues($params, $settings, $criteria = array(), $prefix = '') {
+	
     if ( $prefix != '' ) $prefix .= '_';
 
     $criteria[$prefix.'city'] = $params[$prefix.'city'] ? $params[$prefix.'city'] : ""; // set city
