@@ -1354,6 +1354,13 @@ class Helper extends ITechTable
 			$instypeinsert = $this->dbfunc()->update($linktable,$i_arr,'id = ' . $id);
 		}
 	}
+	
+	//TA:35 able to delete a degree
+	public function deleteDegrees($params){
+		$db = $this->dbfunc();
+		$query = "DELETE FROM lookup_degrees WHERE id = " . $_POST["_id"];
+		$db->query($query);
+	}
 
 	public function updateReligion($params){
 		$linktable = "lookup_studenttype";

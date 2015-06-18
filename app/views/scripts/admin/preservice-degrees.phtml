@@ -150,6 +150,17 @@ ob_end_clean();
 
 			}
 
+			//TA:35
+			function deleteitem(sel_row, iid){
+				oTable.fnDeleteRow( sel_row );
+				$("#currentid").val(iid);
+				$("#_id").val($("#currentid").val());
+				if ($("#currentid").val() != 0){
+					$("#_action").val("delete");
+				}
+				document.getElementById("adminform").submit();
+			}
+
 		</script>
 
 
@@ -296,6 +307,8 @@ ob_end_clean();
 
 									<th><?php echo t('ID');?></th>
 									<th><?php echo t('Title');?></th>
+									<!-- TA:35 -->
+									<th width=100px><?php echo t('Action');?></th>
 
 								</tr>
 
@@ -307,20 +320,26 @@ ob_end_clean();
 
 <?php
 
+$i = 0;
 	foreach ($this->lookup as $lookup){
 
 ?>
 
-								<tr class="GradeA" style="cursor : pointer;" onclick="edititem('<?php echo $lookup['id']; ?>','<?php echo ($lookup['degree']); ?>');">
+								<!-- TA:35 <tr class="GradeA" style="cursor : pointer;" onclick="edititem('<?php echo $lookup['id']; ?>','<?php echo ($lookup['degree']); ?>');">-->
+								<tr>
 
 									<td><?php echo $lookup['id']; ?></td>
 
 									<td class=""><?php echo $lookup['degree']; ?></td>
+									
+									<!-- TA:35 -->
+									<td><a href="javascript:edititem('<?php echo $lookup['id']; ?>','<?php echo ($lookup['degree']); ?>');">Edit</a>
+									<a href="javascript:deleteitem('<?php echo $i; ?>','<?php echo $lookup['id']; ?>');">Delete</a></td>
 
 								</tr>
 
 <?php
-
+$i = $i+1;
 	}
 
 ?>

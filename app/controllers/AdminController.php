@@ -2494,10 +2494,12 @@ class AdminController extends UserController
 		$this->view->assign("header",t("Cadres"));
 	}
 
+	//TA:35 able to delete a degree
 	public function preserviceDegreesAction(){
 		$helper = new Helper();
 
 		if (isset ($_POST['_action'])){
+			print_r($_POST);
 			switch ($_POST['_action']){
 				case "addnew":
 					$helper->addDegrees($_POST);
@@ -2505,6 +2507,9 @@ class AdminController extends UserController
 				case "update":
 					$helper->updateDegrees($_POST);
 					break;
+				case "delete":
+						$helper->deleteDegrees($_POST);
+						break;
 			}
 			$this->_redirect ( 'admin/preservice-degrees' );
 		}
@@ -2512,6 +2517,7 @@ class AdminController extends UserController
 		$list = $helper->AdminDegrees();
 		$this->view->assign("lookup", $list);
 		$this->view->assign("header",t("Degrees"));
+
 	}
 
 	public function preserviceCoursetypesAction(){
