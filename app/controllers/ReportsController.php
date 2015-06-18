@@ -3749,8 +3749,18 @@ echo $sql . "<br>";
 		$criteria ['end-month'] = $this->getSanParam ( 'end-month' );
 		if ($this->getSanParam ( 'end-day' ))
 		$criteria ['end-day'] = $this->getSanParam ( 'end-day' );
+		
+		//TA:38 fixing bug to filter by geography
+		$criteria ['province_id'] = $this->getSanParam ( 'province_id' );
+		$criteria ['district_id'] = $this->getSanParam ( 'district_id' );
+		// level 2 location has parameter as [parent_location_id]_[location_id], we need to take only location_ids
+		if ( strstr($criteria ['district_id'], '_') !== false ) {
+				$parts = explode('_',$criteria ['district_id']);
+				$criteria ['district_id'] = $parts[1];
+		}
+		///
 
-		list($criteria, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
+		//TA:38 list($criteria, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
 
 		$criteria ['training_gender'] = $this->getSanParam ( 'training_gender' );
 		$criteria ['training_active'] = $this->getSanParam ( 'training_active' );
@@ -3983,6 +3993,11 @@ echo $sql . "<br>";
 			$where = array();
 
 			$where []= 'pt.is_deleted=0 ';
+			
+			//TA:38 use this way to get where condition for locations
+			if($criteria['district_id'] && !empty($criteria['district_id']) && $criteria['district_id'][0]){
+				$where [] = "pt.district_id IN (" . $criteria['district_id'] . ")";
+			}
 
 			if ($criteria ['age_min']) {
 				$where []= ' pt.age >= '.$criteria['age_min'];
@@ -4108,7 +4123,7 @@ echo $sql . "<br>";
 
 			if ($where)
 			$sql .= ' WHERE ' . implode(' AND ',$where);
-
+			
 			$rowArray = $db->fetchAll ( $sql );
 
 			if ($criteria ['doCount']) {
