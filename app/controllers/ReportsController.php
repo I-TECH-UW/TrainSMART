@@ -3751,13 +3751,23 @@ echo $sql . "<br>";
 		$criteria ['end-day'] = $this->getSanParam ( 'end-day' );
 		
 		//TA:38 fixing bug to filter by geography
+// 		$criteria ['province_id'] = $this->getSanParam ( 'province_id' );
+// 		$criteria ['district_id'] = $this->getSanParam ( 'district_id' );
+// 		// level 2 location has parameter as [parent_location_id]_[location_id], we need to take only location_ids
+// 		if ( strstr($criteria ['district_id'], '_') !== false ) {
+// 				$parts = explode('_',$criteria ['district_id']);
+// 				$criteria ['district_id'] = $parts[1];
+// 		}
 		$criteria ['province_id'] = $this->getSanParam ( 'province_id' );
-		$criteria ['district_id'] = $this->getSanParam ( 'district_id' );
+		$arr_dist = $this->getSanParam ( 'district_id' );
 		// level 2 location has parameter as [parent_location_id]_[location_id], we need to take only location_ids
-		if ( strstr($criteria ['district_id'], '_') !== false ) {
-				$parts = explode('_',$criteria ['district_id']);
-				$criteria ['district_id'] = $parts[1];
+		for($i=0;$i<sizeof($arr_dist); $i++){
+			if ( strstr($arr_dist[$i], '_') !== false ) {
+				$parts = explode('_',$arr_dist[$i]);
+				$arr_dist[$i] = $parts[1];
+			}
 		}
+		$criteria ['district_id'] = $arr_dist;
 		///
 
 		//TA:38 list($criteria, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
@@ -3995,8 +4005,11 @@ echo $sql . "<br>";
 			$where []= 'pt.is_deleted=0 ';
 			
 			//TA:38 use this way to get where condition for locations
+// 			if($criteria['district_id'] && !empty($criteria['district_id']) && $criteria['district_id'][0]){
+// 				$where [] = "pt.district_id IN (" . $criteria['district_id'] . ")";
+// 			}
 			if($criteria['district_id'] && !empty($criteria['district_id']) && $criteria['district_id'][0]){
-				$where [] = "pt.district_id IN (" . $criteria['district_id'] . ")";
+				$where [] = "pt.district_id IN (" . implode(',', $criteria['district_id']) . ")";
 			}
 
 			if ($criteria ['age_min']) {
