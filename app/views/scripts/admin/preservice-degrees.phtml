@@ -325,7 +325,7 @@ $i = 0;
 
 ?>
 
-								<!-- TA:35 <tr class="GradeA" style="cursor : pointer;" onclick="edititem('<?php echo $lookup['id']; ?>','<?php echo ($lookup['degree']); ?>');">-->
+								<!-- TA:35 START <tr class="GradeA" style="cursor : pointer;" onclick="edititem('<?php echo $lookup['id']; ?>','<?php echo ($lookup['degree']); ?>');">-->
 								<tr>
 
 									<td><?php echo $lookup['id']; ?></td>
@@ -334,9 +334,13 @@ $i = 0;
 									
 									<!-- TA:35 -->
 									<td><a href="javascript:edititem('<?php echo $lookup['id']; ?>','<?php echo ($lookup['degree']); ?>');">Edit</a>
-									<a href="javascript:deleteitem('<?php echo $i; ?>','<?php echo $lookup['id']; ?>');">Delete</a></td>
+									<?php if(!$lookup['used']){?>
+									 <a href="javascript:deleteitem('<?php echo $i; ?>','<?php echo $lookup['id']; ?>');">Delete</a>
+									<?php }?>
+									</td>
 
 								</tr>
+								<!-- TA:35 END-->
 
 <?php
 $i = $i+1;
