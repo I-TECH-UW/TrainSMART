@@ -22,7 +22,7 @@ print ScriptContainer::$instance->renderJSHead();
 	<form action="" method="get">
 		<fieldset><legend><?php tp('Select Criteria');?></legend>
 
-		<div class="fieldLabel"><?php echo t('Facility').space.t('Name');?></div>
+		<div class="fieldLabel"><?php echo t('Facility Name');?></div>
 		<div class="fieldInput">
 		<!-- TA:17:14: Replace drop down to text field searchable like 'text' it will be in SQL  "like %text% "-->	
 		<input type="text" id="facility_name" name="facility_name" value=<?php echo $this->facility_name_sel; ?>>
@@ -33,7 +33,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 		 <!-- TA:17: 09/04/2014 START-->
 <?php if($this->setting['display_facility_type']){?>
-		<div class="fieldLabel" id="type_id_lbl"><?php echo t('Facility').space.t('Type');?></div>
+		<div class="fieldLabel" id="type_id_lbl"><?php echo t('Facility Type');?></div>
 		<div class="fieldInput">
 		<select id="type_id" name="type_id" >
 		<option value="">--<?php tp('All');?>--</option>
@@ -44,7 +44,7 @@ print ScriptContainer::$instance->renderJSHead();
 		?>
 		</select></div>
 		<?php }?>
-		<div class="fieldLabel" id="sponsor_id_lbl"><?php echo t('Facility').space.t('Sponsor');?></div>
+		<div class="fieldLabel" id="sponsor_id_lbl"><?php echo t('Facility Sponsor');?></div>
 		<div class="fieldInput">
 		<select id="sponsor_id" name="sponsor_id" >
 				<option value="">--<?php tp('All');?>--</option>
