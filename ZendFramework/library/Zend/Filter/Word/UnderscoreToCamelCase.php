@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: CamelCaseToDash.php 6779 2007-11-08 15:10:41Z matthew $
+ * @version    $Id$
  */
 
 /**
@@ -24,18 +24,17 @@
  */
 require_once 'Zend/Filter/Word/SeparatorToCamelCase.php';
 
-
 /**
  * @category   Zend
  * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Filter_Word_UnderscoreToCamelCase extends Zend_Filter_Word_SeparatorToCamelCase
 {
     /**
      * Constructor
-     * 
+     *
      * @return void
      */
     public function __construct()

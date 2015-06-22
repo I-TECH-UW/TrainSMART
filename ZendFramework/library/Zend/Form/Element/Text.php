@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Element
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -24,14 +24,19 @@ require_once 'Zend/Form/Element/Xhtml.php';
 
 /**
  * Text form element
- * 
+ *
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Element
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Text.php 7378 2008-01-10 22:00:55Z matthew $
+ * @version    $Id$
  */
 class Zend_Form_Element_Text extends Zend_Form_Element_Xhtml
 {
+    /**
+     * Default form view helper to use for rendering
+     * @var string
+     */
+    public $helper = 'formText';
 }

@@ -4,34 +4,43 @@
  *
  * LICENSE
  *
- * This source file is subject to version 1.0 of the Zend Framework
- * license, that is bundled with this package in the file LICENSE.txt, and
- * is available through the world-wide-web at the following URL:
- * http://framework.zend.com/license/new-bsd. If you did not receive
- * a copy of the Zend Framework license and are unable to obtain it
- * through the world-wide-web, please send a note to license@zend.com
- * so we can mail you a copy immediately.
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://framework.zend.com/license/new-bsd
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@zend.com so we can send you a copy immediately.
  *
+ * @category   Zend
  * @package    Zend_View
- * @subpackage Helpers
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: Standalone.php 7199 2007-12-19 02:35:57Z matthew $
+ * @subpackage Helper
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id$
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-/** Zend_View_Helper_Placeholder_Container_Abstract */
-require_once 'Zend/View/Helper/Placeholder/Container/Abstract.php';
+/** Zend_View_Helper_Placeholder_Registry */
+require_once 'Zend/View/Helper/Placeholder/Registry.php';
+
+/** Zend_View_Helper_Abstract.php */
+require_once 'Zend/View/Helper/Abstract.php';
 
 /**
  * Base class for targetted placeholder helpers
  *
  * @package    Zend_View
- * @subpackage Helpers
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Helper
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */ 
-abstract class Zend_View_Helper_Placeholder_Container_Standalone extends Zend_View_Helper_Placeholder_Container_Abstract
-{  
+ */
+abstract class Zend_View_Helper_Placeholder_Container_Standalone extends Zend_View_Helper_Abstract implements IteratorAggregate, Countable, ArrayAccess
+{
+    /**
+     * @var Zend_View_Helper_Placeholder_Container_Abstract
+     */
+    protected $_container;
+
     /**
      * @var Zend_View_Helper_Placeholder_Registry
      */
@@ -44,25 +53,26 @@ abstract class Zend_View_Helper_Placeholder_Container_Standalone extends Zend_Vi
     protected $_regKey;
 
     /**
-     * @var Zend_View_Interface
+     * Flag wheter to automatically escape output, must also be
+     * enforced in the child class if __toString/toString is overriden
+     * @var book
      */
-    public $view;
+    protected $_autoEscape = true;
 
     /**
      * Constructor
-     * 
+     *
      * @return void
      */
     public function __construct()
     {
-        parent::__construct();
         $this->setRegistry(Zend_View_Helper_Placeholder_Registry::getRegistry());
-        $this->getRegistry()->setContainer($this->_regKey, $this);
+        $this->setContainer($this->getRegistry()->getContainer($this->_regKey));
     }
 
     /**
      * Retrieve registry
-     * 
+     *
      * @return Zend_View_Helper_Placeholder_Registry
      */
     public function getRegistry()
@@ -71,9 +81,9 @@ abstract class Zend_View_Helper_Placeholder_Container_Standalone extends Zend_Vi
     }
 
     /**
-     * Set registry object 
-     * 
-     * @param  Zend_View_Helper_Placeholder_Registry $registry 
+     * Set registry object
+     *
+     * @param  Zend_View_Helper_Placeholder_Registry $registry
      * @return Zend_View_Helper_Placeholder_Container_Standalone
      */
     public function setRegistry(Zend_View_Helper_Placeholder_Registry $registry)
@@ -83,29 +93,232 @@ abstract class Zend_View_Helper_Placeholder_Container_Standalone extends Zend_Vi
     }
 
     /**
-     * Set viewobject
-     * 
-     * @param  Zend_View_Interface $view 
+     * Set whether or not auto escaping should be used
+     *
+     * @param  bool $autoEscape whether or not to auto escape output
      * @return Zend_View_Helper_Placeholder_Container_Standalone
      */
-    public function setView(Zend_View_Interface $view)
+    public function setAutoEscape($autoEscape = true)
     {
-        $this->view = $view;
+        $this->_autoEscape = ($autoEscape) ? true : false;
         return $this;
     }
 
     /**
+     * Return whether autoEscaping is enabled or disabled
+     *
+     * return bool
+     */
+    public function getAutoEscape()
+    {
+        return $this->_autoEscape;
+    }
+
+    /**
      * Escape a string
-     * 
-     * @param  string $string 
+     *
+     * @param  string $string
      * @return string
      */
     protected function _escape($string)
     {
-        if ($this->view instanceof Zend_View_Interface) {
-            return $this->view->escape($string);
+        $enc = 'UTF-8';
+        if ($this->view instanceof Zend_View_Interface
+            && method_exists($this->view, 'getEncoding')
+        ) {
+            $enc = $this->view->getEncoding();
         }
 
-        return htmlentities((string) $string, null, 'UTF-8');
+        return htmlspecialchars((string) $string, ENT_COMPAT, $enc);
+    }
+
+    /**
+     * Set container on which to operate
+     *
+     * @param  Zend_View_Helper_Placeholder_Container_Abstract $container
+     * @return Zend_View_Helper_Placeholder_Container_Standalone
+     */
+    public function setContainer(Zend_View_Helper_Placeholder_Container_Abstract $container)
+    {
+        $this->_container = $container;
+        return $this;
+    }
+
+    /**
+     * Retrieve placeholder container
+     *
+     * @return Zend_View_Helper_Placeholder_Container_Abstract
+     */
+    public function getContainer()
+    {
+        return $this->_container;
+    }
+
+    /**
+     * Overloading: set property value
+     *
+     * @param  string $key
+     * @param  mixed $value
+     * @return void
+     */
+    public function __set($key, $value)
+    {
+        $container = $this->getContainer();
+        $container[$key] = $value;
+    }
+
+    /**
+     * Overloading: retrieve property
+     *
+     * @param  string $key
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        $container = $this->getContainer();
+        if (isset($container[$key])) {
+            return $container[$key];
+        }
+
+        return null;
+    }
+
+    /**
+     * Overloading: check if property is set
+     *
+     * @param  string $key
+     * @return bool
+     */
+    public function __isset($key)
+    {
+        $container = $this->getContainer();
+        return isset($container[$key]);
+    }
+
+    /**
+     * Overloading: unset property
+     *
+     * @param  string $key
+     * @return void
+     */
+    public function __unset($key)
+    {
+        $container = $this->getContainer();
+        if (isset($container[$key])) {
+            unset($container[$key]);
+        }
+    }
+
+    /**
+     * Overload
+     *
+     * Proxy to container methods
+     *
+     * @param  string $method
+     * @param  array $args
+     * @return mixed
+     */
+    public function __call($method, $args)
+    {
+        $container = $this->getContainer();
+        if (method_exists($container, $method)) {
+            $return = call_user_func_array(array($container, $method), $args);
+            if ($return === $container) {
+                // If the container is returned, we really want the current object
+                return $this;
+            }
+            return $return;
+        }
+
+        require_once 'Zend/View/Exception.php';
+        $e = new Zend_View_Exception('Method "' . $method . '" does not exist');
+        $e->setView($this->view);
+        throw $e;
+    }
+
+    /**
+     * String representation
+     *
+     * @return string
+     */
+    public function toString()
+    {
+        return $this->getContainer()->toString();
+    }
+
+    /**
+     * Cast to string representation
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
+    /**
+     * Countable
+     *
+     * @return int
+     */
+    public function count()
+    {
+        $container = $this->getContainer();
+        return count($container);
+    }
+
+    /**
+     * ArrayAccess: offsetExists
+     *
+     * @param  string|int $offset
+     * @return bool
+     */
+    public function offsetExists($offset)
+    {
+        return $this->getContainer()->offsetExists($offset);
+    }
+
+    /**
+     * ArrayAccess: offsetGet
+     *
+     * @param  string|int $offset
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        return $this->getContainer()->offsetGet($offset);
+    }
+
+    /**
+     * ArrayAccess: offsetSet
+     *
+     * @param  string|int $offset
+     * @param  mixed $value
+     * @return void
+     */
+    public function offsetSet($offset, $value)
+    {
+        return $this->getContainer()->offsetSet($offset, $value);
+    }
+
+    /**
+     * ArrayAccess: offsetUnset
+     *
+     * @param  string|int $offset
+     * @return void
+     */
+    public function offsetUnset($offset)
+    {
+        return $this->getContainer()->offsetUnset($offset);
+    }
+
+    /**
+     * IteratorAggregate: get Iterator
+     *
+     * @return Iterator
+     */
+    public function getIterator()
+    {
+        return $this->getContainer()->getIterator();
     }
 }

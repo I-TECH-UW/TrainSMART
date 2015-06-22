@@ -15,9 +15,9 @@
  *
  * @category   Zend
  * @package    Zend_Session
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Abstract.php 4773 2007-05-09 19:33:10Z darby $
+ * @version    $Id$
  * @since      Preview Release 0.2
  */
 
@@ -27,7 +27,7 @@
  *
  * @category   Zend
  * @package    Zend_Session
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Session_Abstract
@@ -120,7 +120,7 @@ abstract class Zend_Session_Abstract
             unset(self::$_expiringData[$namespace]);
         } else {
             unset($_SESSION[$namespace][$name]);
-            unset(self::$_expiringData[$namespace]);
+            unset(self::$_expiringData[$namespace][$name]);
         }
 
         // if we remove the last value, remove namespace.

@@ -36,7 +36,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
       //$this->controller = $parentController;
       //$this->view = $parentController->view;
       
-      //file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'EditTableController contructor >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+      //file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'EditTableController constructor >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
       //var_dump("request=", $request,"END");
       //$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
          

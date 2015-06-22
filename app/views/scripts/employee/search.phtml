@@ -39,7 +39,7 @@
 						  //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 						}
 						if ( $this->setting['display_employee_site_name'] ) 	
-						  echo labelAndField($this, t('Site'), renderFacilityDropDown($this->sites, $this->criteria['facilityInput']));
+						  echo labelAndField($this, t('Site'), renderFacilityDropDown($this->sites, $this->criteria['facilityInput'], $this->viewonly));
 						
 						echo labelAndField($this, t('Staff Cadre'),    $this->cadres);
 						

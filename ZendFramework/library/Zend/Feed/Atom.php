@@ -15,9 +15,9 @@
  *
  * @category   Zend
  * @package    Zend_Feed
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Atom.php 7189 2007-12-18 17:28:43Z weppos $
+ * @version    $Id$
  */
 
 
@@ -44,7 +44,7 @@ require_once 'Zend/Feed/Entry/Atom.php';
  *
  * @category   Zend
  * @package    Zend_Feed
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Feed_Atom extends Zend_Feed_Abstract
@@ -89,7 +89,7 @@ class Zend_Feed_Atom extends Zend_Feed_Abstract
             // Try to find a single <entry> instead.
             $element = $this->_element->getElementsByTagName($this->_entryElementName)->item(0);
             if (!$element) {
-                /** 
+                /**
                  * @see Zend_Feed_Exception
                  */
                 require_once 'Zend/Feed/Exception.php';
@@ -356,7 +356,7 @@ class Zend_Feed_Atom extends Zend_Feed_Abstract
      *
      * @return string
      */
-    public function saveXML()
+    public function saveXml()
     {
         // Return a complete document including XML prologue.
         $doc = new DOMDocument($this->_element->ownerDocument->version,
@@ -376,14 +376,14 @@ class Zend_Feed_Atom extends Zend_Feed_Abstract
     public function send()
     {
         if (headers_sent()) {
-            /** 
+            /**
              * @see Zend_Feed_Exception
              */
             require_once 'Zend/Feed/Exception.php';
             throw new Zend_Feed_Exception('Cannot send ATOM because headers have already been sent.');
         }
 
-        header('Content-type: application/atom+xml; charset: ' . $this->_element->ownerDocument->actualEncoding);
+        header('Content-Type: application/atom+xml; charset=' . $this->_element->ownerDocument->actualEncoding);
 
         echo $this->saveXML();
     }

@@ -357,7 +357,7 @@ class FacilityController extends ReportFilterHelpers {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         $rows = $db->fetchAll ("select commodity.id, commodity_name_option.commodity_name as name, DATE_FORMAT(date, '%m/%y') as date, 
         consumption, stock_out, commodity.created_by, commodity.modified_by from commodity
-        join commodity_name_option on commodity_name_option.id = commodity.name_id
+        join commodity_name_option on commodity_name_option.id = commodity.id
         where commodity.facility_id=". $id . " and date > DATE_SUB(now(), INTERVAL 12 MONTH) order by commodity.date desc, commodity_name_option.commodity_name");
         $noDelete = array();
 		$customColDefs = array();
@@ -410,7 +410,7 @@ class FacilityController extends ReportFilterHelpers {
 		// validate
 		$this->view->assign ( 'status', $status );
 	}
-	public function deleteLocationAction() {
+	public function deletelocationAction() {
 		if (! $this->hasACL ( 'edit_course' )) {
 			$this->doNoAccessError ();
 		}
@@ -436,7 +436,7 @@ class FacilityController extends ReportFilterHelpers {
 		// validate
 		$this->view->assign ( 'status', $status );
 	}
-	public function searchLocationAction() {
+	public function searchlocationAction() {
 		require_once ('models/table/OptionList.php');
 		
 		// location list
@@ -668,6 +668,7 @@ class FacilityController extends ReportFilterHelpers {
 		// locations
 		$this->viewAssignEscaped ( 'locations', Location::getAll () );
 	}
+	
 	function viewlocationAction() {
 		if (! $this->hasACL ( 'edit_course' )) {
 			$this->view->assign ( 'viewonly', 'disabled="disabled"' );

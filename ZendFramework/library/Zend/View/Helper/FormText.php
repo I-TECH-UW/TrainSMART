@@ -15,8 +15,9 @@
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id$
  */
 
 
@@ -32,7 +33,7 @@ require_once 'Zend/View/Helper/FormElement.php';
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_View_Helper_FormText extends Zend_View_Helper_FormElement
@@ -58,19 +59,19 @@ class Zend_View_Helper_FormText extends Zend_View_Helper_FormElement
         extract($info); // name, value, attribs, options, listsep, disable
 
         // build the element
+        $disabled = '';
         if ($disable) {
             // disabled
-            $xhtml = $this->_hidden($name, $value)
-                   . $this->view->escape($value);
-        } else {
-            // enabled
-            $xhtml = '<input type="text"'
-                   . ' name="' . $this->view->escape($name) . '"'
-                   . ' id="' . $this->view->escape($id) . '"'
-                   . ' value="' . $this->view->escape($value) . '"'
-                   . $this->_htmlAttribs($attribs)
-                   . ' />';
+            $disabled = ' disabled="disabled"';
         }
+
+        $xhtml = '<input type="text"'
+                . ' name="' . $this->view->escape($name) . '"'
+                . ' id="' . $this->view->escape($id) . '"'
+                . ' value="' . $this->view->escape($value) . '"'
+                . $disabled
+                . $this->_htmlAttribs($attribs)
+                . $this->getClosingBracket();
 
         return $xhtml;
     }

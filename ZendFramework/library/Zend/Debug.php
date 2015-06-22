@@ -14,16 +14,17 @@
  *
  * @category   Zend
  * @package    Zend_Debug
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id$
  */
 
 /**
- * Concrete class for handling view scripts.
+ * Concrete class for generating debug dumps related to the output source.
  *
  * @category   Zend
  * @package    Zend_Debug
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -88,9 +89,18 @@ class Zend_Debug
                     . PHP_EOL . $output
                     . PHP_EOL;
         } else {
+            if(!extension_loaded('xdebug')) {
+                $flags = ENT_QUOTES;
+                // PHP 5.4.0+
+                if (defined('ENT_SUBSTITUTE')) {
+                    $flags = ENT_QUOTES | ENT_SUBSTITUTE;
+                }
+                $output = htmlspecialchars($output, $flags);
+            }
+
             $output = '<pre>'
                     . $label
-                    . htmlspecialchars($output, ENT_QUOTES)
+                    . $output
                     . '</pre>';
         }
 

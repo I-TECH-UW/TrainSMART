@@ -15,28 +15,28 @@
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Element
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-/** Zend_Form_Element_Xhtml */
-require_once 'Zend/Form/Element/Xhtml.php';
+/** Zend_Form_Element_Submit */
+require_once 'Zend/Form/Element/Submit.php';
 
 /**
  * Reset form element
- * 
+ *
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Element
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Reset.php 7449 2008-01-15 22:38:53Z matthew $
+ * @version    $Id$
  */
-class Zend_Form_Element_Reset extends Zend_Form_Element_Xhtml
+class Zend_Form_Element_Reset extends Zend_Form_Element_Submit
 {
     /**
      * Use formReset view helper by default
      * @var string
      */
-    protected $_defaultHelper = 'formReset';
+    public $helper = 'formReset';
 }

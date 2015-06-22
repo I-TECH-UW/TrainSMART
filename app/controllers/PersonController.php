@@ -471,15 +471,56 @@ class PersonController extends ReportFilterHelpers {
 				//}
 			}
 
+			//check facility
+			if ($status->checkRequired ( $this, 'facilityInput', t ( 'Facility' ) )) {
+			    $facility_id = $this->getSanParam ( 'facilityInput' );
+			
+			    if( is_array($facility_id) ){
+			        $fac_arr = array();
+			        foreach($facility_id as $fac_id){
+			            if ($strrpos = strrpos ( $fac_id, '_' )) {
+			                $fac_arr[] = substr ( $fac_id, $strrpos + 1 );
+			            }
+			        }
+			        $personrow->multi_facility_ids = json_encode($fac_arr);
+			
+			        $facility_id = current($facility_id);
+			    } else {
+			        $personrow->multi_facility_ids = '';
+			    }
+			
+			    if ($strrpos = strrpos ( $facility_id, '_' )) {
+			        $facility_id = array_pop(explode('_', $facility_id));
+			    }
+			
+			    //find by name
+			    if ($facility_id) {
+			        $facilityByName = new Facility ( );
+			        $row = $facilityByName->fetchRow ( 'id = ' . $facility_id );
+			        //$row = $facilityByName->fetchRow($facilityByName->select()->where('facility_name = ?', $this->getSanParam('facilityInput')));
+			    }
+			    if (@$row->id) {
+			        $personrow->facility_id = $row->id;
+			
+			    } else {
+			        $status->addError ( 'facilityInput', t ( 'That facility name could not be found.' ) );
+			        $errortext .= "That facility name could not be found.<br>";
+			        error_log("That facility name could not be found.");
+			    }
+			
+			}
 
+/*
 			//check facility
 			if ($status->checkRequired ( $this, 'facilityInput', t ( 'Facility' ) )) {
 				$facility_id = $this->getSanParam ( 'facilityInput' );
 
 				if( is_array($facility_id) ){
 					$fac_arr = array();
+					
 					foreach($facility_id as $fac_id){
-						if ($strrpos = strrpos ( $fac_id, '_' )) {
+					    $strrpos = strrpos ( $fac_id, '_' );
+						if ($strrpos) {
 							$fac_arr[] = substr ( $fac_id, $strrpos + 1 );
 						}
 					}
@@ -490,7 +531,7 @@ class PersonController extends ReportFilterHelpers {
 					$personrow->multi_facility_ids = '';
 				}
 
-				if ($strrpos = strrpos ( $facility_id, '_' )) {
+				if ($strrpos == strrpos ( $facility_id, '_' )) {
 					$facility_id = array_pop(explode('_', $facility_id));
 				}
 
@@ -510,7 +551,7 @@ class PersonController extends ReportFilterHelpers {
 				}
 
 			}
-
+*/
 			//get home city name
 			$city_id = false;
 			$criteria = $this->_getAllParams ();

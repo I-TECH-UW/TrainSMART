@@ -215,7 +215,7 @@ class DesktopController extends ITechController {
 				$data = $optRow->toArray ();
 				
 				foreach ( array_keys ( $data ) as $k ) {
-					if ($opt == 'age_range_option') echo "@@: $k";
+					// if ($opt == 'age_range_option') echo "@@: $k";
 					if (! array_key_exists ( $k, $liteKeys ))
 						unset ( $data [$k] );
 				}

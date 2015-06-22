@@ -7,7 +7,7 @@
 <?php region_filters_dropdown($this, $this->locations, $this->criteria, false, false); ?>
 
 <div class="fieldLabel"  id="facilityInput_lbl"><?php tp('Facility');?></div><div class="fieldInput">
-<?php echo renderFacilityDropDown($this->facilities, $this->criteria['facilityInput']); ?>
+<?php echo renderFacilityDropDown($this->facilities, $this->criteria['facilityInput'], $this->viewonly); ?>
 </div>
 	<div class="clear"></div>
 

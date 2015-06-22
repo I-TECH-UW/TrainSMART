@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Element
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -24,19 +24,109 @@ require_once 'Zend/Form/Element/Xhtml.php';
 
 /**
  * Image form element
- * 
+ *
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Element
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Image.php 7449 2008-01-15 22:38:53Z matthew $
+ * @version    $Id$
  */
 class Zend_Form_Element_Image extends Zend_Form_Element_Xhtml
 {
     /**
-     * Use formImage view helper by default
+     * What view helper to use when using view helper decorator
      * @var string
      */
-    protected $_defaultHelper = 'formImage';
+    public $helper = 'formImage';
+
+    /**
+     * Image source
+     * @var string
+     */
+    public $src;
+
+    /**
+     * Image value
+     * @var mixed
+     */
+    protected $_imageValue;
+
+    /**
+     * Load default decorators
+     *
+     * @return Zend_Form_Element_Image
+     */
+    public function loadDefaultDecorators()
+    {
+        if ($this->loadDefaultDecoratorsIsDisabled()) {
+            return $this;
+        }
+
+        $decorators = $this->getDecorators();
+        if (empty($decorators)) {
+            $this->addDecorator('Tooltip')
+                 ->addDecorator('Image')
+                 ->addDecorator('Errors')
+                 ->addDecorator('HtmlTag', array('tag' => 'dd'))
+                 ->addDecorator('Label', array('tag' => 'dt'));
+        }
+        return $this;
+    }
+
+    /**
+     * Set image path
+     *
+     * @param  string $path
+     * @return Zend_Form_Element_Image
+     */
+    public function setImage($path)
+    {
+        $this->src = (string) $path;
+        return $this;
+    }
+
+    /**
+     * Get image path
+     *
+     * @return string
+     */
+    public function getImage()
+    {
+        return $this->src;
+    }
+
+    /**
+     * Set image value to use when submitted
+     *
+     * @param  mixed $value
+     * @return Zend_Form_Element_Image
+     */
+    public function setImageValue($value)
+    {
+        $this->_imageValue = $value;
+        return $this;
+    }
+
+    /**
+     * Get image value to use when submitted
+     *
+     * @return mixed
+     */
+    public function getImageValue()
+    {
+        return $this->_imageValue;
+    }
+
+    /**
+     * Was this element used to submit the form?
+     *
+     * @return bool
+     */
+    public function isChecked()
+    {
+        $imageValue = $this->getImageValue();
+        return ((null !== $imageValue) && ($this->getValue() == $imageValue));
+    }
+
 }

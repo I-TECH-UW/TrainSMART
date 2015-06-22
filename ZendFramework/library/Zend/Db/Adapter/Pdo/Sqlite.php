@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Zend Framework
  *
@@ -16,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Adapter
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Sqlite.php 7188 2007-12-18 16:48:27Z darby $
+ * @version    $Id$
  */
 
 
@@ -34,7 +33,7 @@ require_once 'Zend/Db/Adapter/Pdo/Abstract.php';
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Adapter
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Db_Adapter_Pdo_Sqlite extends Zend_Db_Adapter_Pdo_Abstract
@@ -198,11 +197,13 @@ class Zend_Db_Adapter_Pdo_Sqlite extends Zend_Db_Adapter_Pdo_Abstract
      */
     public function describeTable($tableName, $schemaName = null)
     {
+        $sql = 'PRAGMA ';
+
         if ($schemaName) {
-            $sql = "PRAGMA $schemaName.table_info($tableName)";
-        } else {
-            $sql = "PRAGMA table_info($tableName)";
+            $sql .= $this->quoteIdentifier($schemaName) . '.';
         }
+
+        $sql .= 'table_info('.$this->quoteIdentifier($tableName).')';
 
         $stmt = $this->query($sql);
 
@@ -222,7 +223,16 @@ class Zend_Db_Adapter_Pdo_Sqlite extends Zend_Db_Adapter_Pdo_Abstract
 
         $p = 1;
         foreach ($result as $key => $row) {
-            list($primary, $primaryPosition, $identity) = array(false, null, false);
+            list($length, $scale, $precision, $primary, $primaryPosition, $identity) =
+                array(null, null, null, false, null, false);
+            if (preg_match('/^((?:var)?char)\((\d+)\)/i', $row[$type], $matches)) {
+                $row[$type] = $matches[1];
+                $length = $matches[2];
+            } else if (preg_match('/^decimal\((\d+),(\d+)\)/i', $row[$type], $matches)) {
+                $row[$type] = 'DECIMAL';
+                $precision = $matches[1];
+                $scale = $matches[2];
+            }
             if ((bool) $row[$pk]) {
                 $primary = true;
                 $primaryPosition = $p;
@@ -240,10 +250,10 @@ class Zend_Db_Adapter_Pdo_Sqlite extends Zend_Db_Adapter_Pdo_Abstract
                 'DATA_TYPE'        => $row[$type],
                 'DEFAULT'          => $row[$dflt_value],
                 'NULLABLE'         => ! (bool) $row[$notnull],
-                'LENGTH'           => null, // @todo
-                'SCALE'            => null, // @todo
-                'PRECISION'        => null, // @todo
-                'UNSIGNED'         => null, // @todo
+                'LENGTH'           => $length,
+                'SCALE'            => $scale,
+                'PRECISION'        => $precision,
+                'UNSIGNED'         => null, // Sqlite3 does not support unsigned data
                 'PRIMARY'          => $primary,
                 'PRIMARY_POSITION' => $primaryPosition,
                 'IDENTITY'         => $identity

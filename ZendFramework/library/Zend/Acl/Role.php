@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Zend Framework
  *
@@ -15,14 +14,14 @@
  *
  * @category   Zend
  * @package    Zend_Acl
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Role.php 2797 2007-01-16 01:35:30Z bkarwin $
+ * @version    $Id$
  */
 
 
 /**
- * Zend_Acl_Role_Interface
+ * @see Zend_Acl_Role_Interface
  */
 require_once 'Zend/Acl/Role/Interface.php';
 
@@ -30,7 +29,7 @@ require_once 'Zend/Acl/Role/Interface.php';
 /**
  * @category   Zend
  * @package    Zend_Acl
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Acl_Role implements Zend_Acl_Role_Interface
@@ -45,8 +44,7 @@ class Zend_Acl_Role implements Zend_Acl_Role_Interface
     /**
      * Sets the Role identifier
      *
-     * @param  string $id
-     * @return void
+     * @param  string $roleId
      */
     public function __construct($roleId)
     {
@@ -63,4 +61,14 @@ class Zend_Acl_Role implements Zend_Acl_Role_Interface
         return $this->_roleId;
     }
 
+    /**
+     * Defined by Zend_Acl_Role_Interface; returns the Role identifier
+     * Proxies to getRoleId()
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getRoleId();
+    }
 }

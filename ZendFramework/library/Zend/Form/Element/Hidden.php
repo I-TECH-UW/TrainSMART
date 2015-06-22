@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Element
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -24,13 +24,13 @@ require_once 'Zend/Form/Element/Xhtml.php';
 
 /**
  * Hidden form element
- * 
+ *
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Element
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Hidden.php 7449 2008-01-15 22:38:53Z matthew $
+ * @version    $Id$
  */
 class Zend_Form_Element_Hidden extends Zend_Form_Element_Xhtml
 {
@@ -38,5 +38,5 @@ class Zend_Form_Element_Hidden extends Zend_Form_Element_Xhtml
      * Use formHidden view helper by default
      * @var string
      */
-    protected $_defaultHelper = 'formHidden';
+    public $helper = 'formHidden';
 }

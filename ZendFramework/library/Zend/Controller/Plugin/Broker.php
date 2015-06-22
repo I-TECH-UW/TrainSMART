@@ -15,28 +15,19 @@
  * @category   Zend
  * @package    Zend_Controller
  * @subpackage Plugins
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id$
  */
-
-
-/** Zend_Controller_Exception */
-require_once 'Zend/Controller/Exception.php';
 
 /** Zend_Controller_Plugin_Abstract */
 require_once 'Zend/Controller/Plugin/Abstract.php';
-
-/** Zend_Controller_Request_Abstract */
-require_once 'Zend/Controller/Request/Abstract.php';
-
-/** Zend_Controller_Response_Abstract */
-require_once 'Zend/Controller/Response/Abstract.php';
 
 /**
  * @category   Zend
  * @package    Zend_Controller
  * @subpackage Plugins
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Controller_Plugin_Broker extends Zend_Controller_Plugin_Abstract
@@ -60,6 +51,7 @@ class Zend_Controller_Plugin_Broker extends Zend_Controller_Plugin_Abstract
     public function registerPlugin(Zend_Controller_Plugin_Abstract $plugin, $stackIndex = null)
     {
         if (false !== array_search($plugin, $this->_plugins, true)) {
+            require_once 'Zend/Controller/Exception.php';
             throw new Zend_Controller_Exception('Plugin already registered');
         }
 
@@ -67,6 +59,7 @@ class Zend_Controller_Plugin_Broker extends Zend_Controller_Plugin_Abstract
 
         if ($stackIndex) {
             if (isset($this->_plugins[$stackIndex])) {
+                require_once 'Zend/Controller/Exception.php';
                 throw new Zend_Controller_Exception('Plugin with stackIndex "' . $stackIndex . '" already registered');
             }
             $this->_plugins[$stackIndex] = $plugin;
@@ -104,6 +97,7 @@ class Zend_Controller_Plugin_Broker extends Zend_Controller_Plugin_Abstract
             // Given a plugin object, find it in the array
             $key = array_search($plugin, $this->_plugins, true);
             if (false === $key) {
+                require_once 'Zend/Controller/Exception.php';
                 throw new Zend_Controller_Exception('Plugin never registered.');
             }
             unset($this->_plugins[$key]);
@@ -127,7 +121,6 @@ class Zend_Controller_Plugin_Broker extends Zend_Controller_Plugin_Abstract
      */
     public function hasPlugin($class)
     {
-        $found = array();
         foreach ($this->_plugins as $plugin) {
             $type = get_class($plugin);
             if ($class == $type) {
@@ -244,7 +237,7 @@ class Zend_Controller_Plugin_Broker extends Zend_Controller_Plugin_Abstract
                 $plugin->routeStartup($request);
             } catch (Exception $e) {
                 if (Zend_Controller_Front::getInstance()->throwExceptions()) {
-                    throw $e;
+                    throw new Zend_Controller_Exception($e->getMessage() . $e->getTraceAsString(), $e->getCode(), $e);
                 } else {
                     $this->getResponse()->setException($e);
                 }
@@ -267,7 +260,7 @@ class Zend_Controller_Plugin_Broker extends Zend_Controller_Plugin_Abstract
                 $plugin->routeShutdown($request);
             } catch (Exception $e) {
                 if (Zend_Controller_Front::getInstance()->throwExceptions()) {
-                    throw $e;
+                    throw new Zend_Controller_Exception($e->getMessage() . $e->getTraceAsString(), $e->getCode(), $e);
                 } else {
                     $this->getResponse()->setException($e);
                 }
@@ -294,7 +287,7 @@ class Zend_Controller_Plugin_Broker extends Zend_Controller_Plugin_Abstract
                 $plugin->dispatchLoopStartup($request);
             } catch (Exception $e) {
                 if (Zend_Controller_Front::getInstance()->throwExceptions()) {
-                    throw $e;
+                    throw new Zend_Controller_Exception($e->getMessage() . $e->getTraceAsString(), $e->getCode(), $e);
                 } else {
                     $this->getResponse()->setException($e);
                 }
@@ -316,9 +309,11 @@ class Zend_Controller_Plugin_Broker extends Zend_Controller_Plugin_Abstract
                 $plugin->preDispatch($request);
             } catch (Exception $e) {
                 if (Zend_Controller_Front::getInstance()->throwExceptions()) {
-                    throw $e;
+                    throw new Zend_Controller_Exception($e->getMessage() . $e->getTraceAsString(), $e->getCode(), $e);
                 } else {
                     $this->getResponse()->setException($e);
+					// skip rendering of normal dispatch give the error handler a try
+					$this->getRequest()->setDispatched(false);
                 }
             }
         }
@@ -338,7 +333,7 @@ class Zend_Controller_Plugin_Broker extends Zend_Controller_Plugin_Abstract
                 $plugin->postDispatch($request);
             } catch (Exception $e) {
                 if (Zend_Controller_Front::getInstance()->throwExceptions()) {
-                    throw $e;
+                    throw new Zend_Controller_Exception($e->getMessage() . $e->getTraceAsString(), $e->getCode(), $e);
                 } else {
                     $this->getResponse()->setException($e);
                 }
@@ -360,7 +355,7 @@ class Zend_Controller_Plugin_Broker extends Zend_Controller_Plugin_Abstract
                 $plugin->dispatchLoopShutdown();
             } catch (Exception $e) {
                 if (Zend_Controller_Front::getInstance()->throwExceptions()) {
-                    throw $e;
+                    throw new Zend_Controller_Exception($e->getMessage() . $e->getTraceAsString(), $e->getCode(), $e);
                 } else {
                     $this->getResponse()->setException($e);
                 }

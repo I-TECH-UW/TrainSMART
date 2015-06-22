@@ -4,23 +4,27 @@
  *
  * LICENSE
  *
- * This source file is subject to version 1.0 of the Zend Framework
- * license, that is bundled with this package in the file LICENSE.txt, and
- * is available through the world-wide-web at the following URL:
- * http://framework.zend.com/license/new-bsd. If you did not receive
- * a copy of the Zend Framework license and are unable to obtain it
- * through the world-wide-web, please send a note to license@zend.com
- * so we can mail you a copy immediately.
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://framework.zend.com/license/new-bsd
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@zend.com so we can send you a copy immediately.
  *
+ * @category   Zend
  * @package    Zend_View
- * @subpackage Helpers
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: Placeholder.php 7096 2007-12-12 20:59:05Z matthew $
+ * @subpackage Helper
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id$
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-/** Zend_Registry */
-require_once 'Zend/Registry.php';
+/** Zend_View_Helper_Placeholder_Registry */
+require_once 'Zend/View/Helper/Placeholder/Registry.php';
+
+/** Zend_View_Helper_Abstract.php */
+require_once 'Zend/View/Helper/Abstract.php';
 
 /**
  * Helper for passing data between otherwise segregated Views. It's called
@@ -29,22 +33,17 @@ require_once 'Zend/Registry.php';
  * guaranteed to effect subsequently rendered templates, and of course Layouts.
  *
  * @package    Zend_View
- * @subpackage Helpers
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Helper
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */ 
-class Zend_View_Helper_Placeholder  
-{  
-    /**
-     * @var Zend_View_Interface
-     */  
-    public $view;  
-  
+ */
+class Zend_View_Helper_Placeholder extends Zend_View_Helper_Abstract
+{
     /**
      * Placeholder items
      * @var array
-     */  
-    protected $_items = array();  
+     */
+    protected $_items = array();
 
     /**
      * @var Zend_View_Helper_Placeholder_Registry
@@ -55,40 +54,30 @@ class Zend_View_Helper_Placeholder
      * Constructor
      *
      * Retrieve container registry from Zend_Registry, or create new one and register it.
-     * 
+     *
      * @return void
      */
     public function __construct()
     {
         $this->_registry = Zend_View_Helper_Placeholder_Registry::getRegistry();
     }
-  
-    /**
-     * Set view
-     * 
-     * @param  Zend_View_Interface $view 
-     * @return void
-     */  
-    public function setView(Zend_View_Interface $view)  
-    {  
-        $this->view = $view;  
-    }  
-  
+
+
     /**
      * Placeholder helper
-     * 
-     * @param  string $name 
+     *
+     * @param  string $name
      * @return Zend_View_Helper_Placeholder_Container_Abstract
-     */  
-    public function placeholder($name)  
-    {  
-        $name = (string) $name;  
+     */
+    public function placeholder($name)
+    {
+        $name = (string) $name;
         return $this->_registry->getContainer($name);
-    }  
+    }
 
     /**
      * Retrieve the registry
-     * 
+     *
      * @return Zend_View_Helper_Placeholder_Registry
      */
     public function getRegistry()

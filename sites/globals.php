@@ -42,6 +42,7 @@ class Globals {
 		));
 		 require_once 'Zend/Db/Table/Abstract.php';
 		Zend_Db_Table_Abstract::setDefaultAdapter($db);
+		date_default_timezone_set('UTC');
 		}
 }
 

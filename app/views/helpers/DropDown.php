@@ -281,7 +281,7 @@ class DropDown {
 	    return $html;
 	}
 
-	function render_report_filter($id, $show_id, $label, $options, $value_key, $selected_id, $show_selected, $set_default = false, $fixedWidth = false, $multiple = false) {
+	public static function render_report_filter($id, $show_id, $label, $options, $value_key, $selected_id, $show_selected, $set_default = false, $fixedWidth = false, $multiple = false) {
 		$html = "<div class='fieldLabel' id='" . $id . "_lbl'>$label</div>\n";
 		$html .= "<div class='fieldInput'><div  class='leftBorderPad'>\n";
 		$html .= "<input type='checkbox' name='$show_id' " . ($show_selected ? 'checked="checked"' : '') . " />\n";

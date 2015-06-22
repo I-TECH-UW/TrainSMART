@@ -39,7 +39,7 @@
 							//echo labelAndField($this, t('Sub Partner'), $this->partners, 'sub_partner');
 						echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, true );
 						if ( $this->setting['display_employee_site_name'] )
-							echo labelAndField($this, t('Site').space.t('Name'), renderFacilityDropDown($this->facilities, $this->criteria['facilityInput']), 'site');
+							echo labelAndField($this, t('Site').space.t('Name'), renderFacilityDropDown($this->facilities, $this->criteria['facilityInput'], $this->viewonly), 'site');
 						if ( $this->setting['display_employee_site_name'] )
 							echo labelAndField($this, t('Facility Type'), $this->facilitytypes, 'facility_type');
 						echo labelAndField($this, t('Staff Cadre'), $this->cadres, 'staff_cadre');
