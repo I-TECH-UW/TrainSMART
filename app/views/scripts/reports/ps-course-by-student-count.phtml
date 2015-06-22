@@ -147,7 +147,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showyearinschool" id="showyearinschool" value="1"<?php echo $_GET['showyearinschool'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="yearinschool" id="yearinschool" style="height : 25px;">
 <?php
-	echo "<option value=''>Select...</option>\n";
+	echo "<option value=''>" . t('Select') . "...</option>\n";
 	for ($i = 1990; $i <= date("Y"); $i++){
 		echo "<option value='" . $i . "'>" . $i . "</option>\n";
 	}
@@ -155,7 +155,7 @@
 							</select></div>
 							<div class="clear pad20">&nbsp;</div>
 	
-							<div class="fieldquestion"><?php echo t('Course Type'); ?></div>
+							<div class="fieldquestion"><?php echo t('Course type'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="showcoursetype" id="showcoursetype" value="1"<?php echo $_GET['showcoursetype'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="coursetype" id="coursetype" style="" size="10">
 	<?php
@@ -173,7 +173,13 @@
 							
 							<div class="fieldquestion"><?php echo t('Start date between'); ?></div>
 							<div class="fieldshow">&nbsp;</div>
-							<div class="fieldselect"><input type="text" name="startday" id="startday" value="" placeholder="Day" style="width : 30px; margin-right : 10px; margin-left : 0px;"><input type="text" name="startmonth" id="startmonth" value="" placeholder="Month" style="width : 30px; margin-right : 10px; margin-left : 0px;"> <input type="text" name="startyear" id="startyear" value="" placeholder="Year" style="width : 50px; margin-right : 10px; margin-left : 0px;"><br><br>and<br><br><input type="text" name="endday" id="endday" value="" placeholder="Day" style="width : 30px; margin-right : 10px; margin-left : 0px;"> <input type="text" name="endmonth" id="endmonth" value="" placeholder="Month" style="width : 30px; margin-right : 10px; margin-left : 0px;"> <input type="text" name="endyear" id="endyear" value="" placeholder="Year" style="width : 50px; margin-right : 10px; margin-left : 0px;"></div>
+							<div class="fieldselect"><input type="text" name="startday" id="startday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;">
+							<input type="text" name="startmonth" id="startmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
+							<input type="text" name="startyear" id="startyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;">
+							<br><br><?php tp('and')?><br><br>
+							<input type="text" name="endday" id="endday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
+							<input type="text" name="endmonth" id="endmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
+							<input type="text" name="endyear" id="endyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;"></div>
 							<div class="clear pad20">&nbsp;</div>
 						</div>
 						<div class="pad20 clear"></div>
@@ -191,12 +197,12 @@ if (isset($this->output)) {
 		echo "				<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"display tablegrid\" id=\"\" style=\"width:100%\">\n";
 		echo "					<thead>\n";
 		echo "						<tr>\n";
-		echo "							<th>Output</th>\n";
+		echo "							<th>" . t('Output') . "</th>\n";
 		echo "						</tr>\n";
 		echo "					</thead>\n";
 		echo "					<tbody>\n";
 		echo "						<tr>\n";
-		echo "							<td>Your search criteria returned no results</td>\n";
+		echo "							<td>" . t('Your search criteria returned no results') . "</td>\n";
 		echo "						</tr>\n";
 		echo "					</tbody>\n";
 		echo "				</table>\n";
@@ -208,7 +214,7 @@ if (isset($this->output)) {
 						<tr>
 <?php
 		foreach ($this->headers as $key=>$value){
-			echo "							<th>" . $value . "</th>\n";
+			echo "							<th>" . t($value) . "</th>\n";
 		}
 ?>
 						</tr>

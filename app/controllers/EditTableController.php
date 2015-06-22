@@ -71,7 +71,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
       exit;
     } elseif(isset($params['saveonly'])) {
       $status = ValidationContainer::instance();
-      $status->setStatusMessage('Your settings have been updated.');
+      $status->setStatusMessage(t('Your settings have been updated.'));
     }
 
     require_once('models/table/EditTable.php');
@@ -220,7 +220,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
           <input type="checkbox" name="merge[]" value="'.$row['id'].'" id="merge'.$row['id'].'">';
         }
         $this->customColDef['merge'] = 'editor:false';
-        $this->fields['merge'] = 'Merge?';
+        $this->fields['merge'] = t('Merge?');
       }
       
       // default radio

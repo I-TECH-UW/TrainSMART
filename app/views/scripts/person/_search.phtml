@@ -52,8 +52,8 @@
 	var lastAuto = makeAutocomplete('last_name', 'lastContainer', '<?php echo $this->base_url;?>/person/lastList/outputType/text/' );
 </script>
 	<div class="clear"></div>
-      <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_trainer" value="is_trainer" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_trainer') echo 'CHECKED'; ?> /><?php echo t('Trainers').' '.t('only');?></div>
-      <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_participant" value="is_participant" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_participant' ) echo 'CHECKED'; ?> /><?php echo t('Participants').' '.t('only');?></div>
+      <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_trainer" value="is_trainer" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_trainer') echo 'CHECKED'; ?> /><?php echo t('Trainers only');?></div>
+      <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_participant" value="is_participant" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_participant' ) echo 'CHECKED'; ?> /><?php echo t('Participants only');?></div>
       <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_unattached_person" value="is_unattached_person" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_unattached_person' ) echo 'CHECKED'; ?> /><?php tp('Unattached only');?></div>
       <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_everyone" value="is_everyone" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_everyone' ) echo 'CHECKED'; ?> /><?php tp('Everyone');?></div>
 	<input type="hidden" name="limit" id="limit" value="1" />
@@ -87,7 +87,7 @@
 				if (! array_key_exists('province_name', $row)) {
 					$row['province_name'] = '(no region)';
 				}
-				echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['province_name'].'"';
+				echo $row['gender'] .'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['province_name'].'"';
 
 				if ($this->showMerge){
 				//$toID = $this->getSanParam('')
@@ -107,7 +107,7 @@
 		}
 
 		var peopleColumnDefs = [
-			{key:"id", label: "ID", sortable:false, resizable:false, formatter: formatViewUrl},
+			{key:"id", label: "<?php echo t("ID")?>", sortable:false, resizable:false, formatter: formatViewUrl},
 		    {key:"first_name", label: "<?php echo (@$this->translation['First Name']); ?>", sortable:true, resizeable:true},
    <?php if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) { ?>
 		    {key:"middle_name", label: "<?php echo (@$this->translation['Middle Name']); ?>", sortable:true, resizeable:true},

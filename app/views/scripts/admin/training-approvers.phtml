@@ -32,7 +32,7 @@ ob_end_clean();
 
 	<div id="contentAdmin">
 
-	<h1><?php echo $this->pageTitle; ?></h1>
+	<h1><?php echo t($this->pageTitle); ?></h1>
 
 	<div class="fieldLabel"><?php tp("Two Levels of Approval"); ?></div><div class="fieldInput"><input type="checkbox" name="master_approver" <?php if($this->master_approver) echo ' checked'; ?>><label for="master_approver"><?php tp("Enable"); ?></label></div>
 
@@ -51,7 +51,7 @@ ob_end_clean();
 
 	<div style="float:right;">
 		<input type="submit" value="<?php tp('Save'); ?>" name="saveonly" class="submitNoArrow" onclick="document.adminForm.redirect.value=''" style="float:left;margin-right:1em;">
-		<input type="submit" value="<?php tp('Save And Continue'); ?>" name="save" class="submitArrow" style="float:float:left;right;margin-right:1em;">
+		<input type="submit" value="<?php tp('Save & Continue'); ?>" name="save" class="submitArrow" style="float:float:left;right;margin-right:1em;">
 	</div>
 </form>
 

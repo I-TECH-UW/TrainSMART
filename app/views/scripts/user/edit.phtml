@@ -90,13 +90,13 @@
 					<!-- TA:10: added 8/11/2014 END -->
 					
 						<?php if ($this->setting['module_employee_enabled']): ?>
-						<div class="fieldLabelThin"> <?php print(t('Employee').space.t('Module'));?></div>
+						<div class="fieldLabelThin"> <?php print(t('Employee Module'));?></div>
 					<div class="fieldInput width100">
 						<div class="float50">
 							<input type="checkbox" name="employees_module"
 								id="employees_module"
 								<?php if ( array_search('employees_module', $this->user['acls']) !== false) echo 'CHECKED'; ?> /><label
-								for=employees_module> <?php print(t('Employees').space.t('Access'));?></label>
+								for=employees_module> <?php print(t('Employees Access'));?></label>
 						</div>
 					</div>
 						<?php endif; ?>
@@ -324,7 +324,7 @@
 
 	<?php
 	if ($this->showinstitutions && $this->showprograms){
-		echo "      <fieldset id=\"institutions\" ><legend>Institution access</legend>\n";
+		echo "      <fieldset id=\"institutions\" ><legend>" . t('Institution access') . "</legend>\n";
 		echo "        <div>\n";
 		echo "          <div class=\"fieldLabel\">\n";
 		echo "          </div>\n";
@@ -352,7 +352,7 @@
 		echo "        </div>\n";
 		echo "      </fieldset>\n";
 
-    echo "      <fieldset id=\"programs\" ><legend>Program access</legend>\n";
+    echo "      <fieldset id=\"programs\" ><legend>" . t('Program access') . "</legend>\n";
     echo "        <div>\n";
     echo "          <div class=\"fieldLabel\">\n";
     echo "          </div>\n";
@@ -387,10 +387,10 @@
 					<legend><?php tp('Admin access');?></legend>
 					<div class="fieldLabelThin"> <?php tp('Admin'); ?></div>
 					<div class="fieldInput">
-						<label><a href="#" id="admin_select_all"><button>select all admin
-									capabilities</button></a><a href="#" id="admin_select_none"><button>de-select
-									all</button></a>
-							<button>de-select all</button> </a></label>
+						<label>
+						<a href="#" id="admin_select_all"><button><?php tp('select all admin capabilities')?></button></a>
+						<a href="#" id="admin_select_none"><button><?php tp('de-select all')?></button></a>
+						</label>
 					</div>
 					<div class="fieldLabelThin"> <?php tp('Restricted Settings'); ?></div>
 					<div class="fieldInput">
@@ -713,7 +713,7 @@
 						<div class="float50">
 							<label for="acl_delete_ps_student"><input type="checkbox"
 								id="acl_delete_ps_student" name="acl_delete_ps_student"
-								<?php if ( array_search('acl_delete_ps_student',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Delete').' '.t('Student/Tutor');?></label>
+								<?php if ( array_search('acl_delete_ps_student',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php echo t('Delete Student/Tutor');?></label>
 						</div>
 						<div class="fieldLabelThin"></div>
 						<div class="fieldInput">

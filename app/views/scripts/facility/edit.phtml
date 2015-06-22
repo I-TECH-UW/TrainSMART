@@ -87,7 +87,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 <!-- TA:17: 09/03/2014 -->
 	<?php if($this->setting['display_facility_type']) { ?>
-	<div class="fieldLabel" id="facility_type_id_lbl"><?php tp('Facility'); echo ' '; tp('type');?></div>
+	<div class="fieldLabel" id="facility_type_id_lbl"><?php echo t('Facility type');?></div>
 	<div class="fieldInput"><select id="facility_type_id" name="facility_type_id">
 		<option value="">--<?php tp('choose');?>--</option>
 		<?php
@@ -100,7 +100,7 @@ print ScriptContainer::$instance->renderJSHead();
 	
 <?php if($this->setting['display_facility_sponsor']) { ?>
 <?php foreach($this->sponsor_data as $i => $sponsorRow) { ?>
-	<div class="fieldLabel" id="<?php if ($i==0) echo 'facility_sponsor_id_lbl'; ?>"><?php tp('Facility'); echo ' '; tp('sponsor');?></div>
+	<div class="fieldLabel" id="<?php if ($i==0) echo 'facility_sponsor_id_lbl'; ?>"><?php echo t('Facility sponsor');?></div>
 	  <div class="fieldInput" id="<?php if ($i==0) echo 'facility_sponsor_wrapper'; ?>">
 		<select id="facility_sponsor_id" name="facility_sponsor_id[]">
 		<option value="">--<?php tp('choose');?>--</option>
@@ -113,7 +113,7 @@ print ScriptContainer::$instance->renderJSHead();
 			}
 		?>
 		</select>
-		<?php if ( $this->hasACL( 'acl_editor_facility_sponsors' ) && $i==0 ) { echo '<a href="#" onclick="addToSelect(\''.t('Please enter your new').' '.t('Facility sponsor').':'.'\', \'facility_sponsor_id\', \''.Settings::$COUNTRY_BASE_URL.'/training/insert-table/table/facility_sponsor_option/column/facility_sponsor_phrase/outputType/json\'); return false;">'.t('Insert New').'</a>'; } ?>
+		<?php if ( $this->hasACL( 'acl_editor_facility_sponsors' ) && $i==0 ) { echo '<a href="#" onclick="addToSelect(\''.t('Please enter your new Facility sponsor').':'.'\', \'facility_sponsor_id\', \''.Settings::$COUNTRY_BASE_URL.'/training/insert-table/table/facility_sponsor_option/column/facility_sponsor_phrase/outputType/json\'); return false;">'.t('Insert New').'</a>'; } ?>
 		<?php if ( @$this->setting['allow_multi_sponsors'] && $i==0 ) {         echo '<a id="sponsor_add" href="#" onclick="addSponsorRow();return false;">'.t('Add another sponsor to this Facility').'</a>'; } ?>
 		<?php echo hasACLEdit( 'acl_editor_facility_sponsors', 'admin/facilities-sponsors' , $this ); ?>
 	</div>
@@ -143,7 +143,7 @@ print ScriptContainer::$instance->renderJSHead();
   <div class="hrGrey"></div>
   <div class="clear"></div>
   <!-- TA:17: rows count must have this format <span id="[label]_total">-->
-  <div class="fieldIndentNoMargin"><?php tp('Commodity Information');?> <span class="total"><?php tp('Total Commodities:');?> <span id="commodity_total"><?php echo $this->escape($this->totalCommodities);?></span></span></div>
+  <div class="fieldIndentNoMargin"><?php tp('Commodity Information');?> <span class="total"><?php echo t('Total Commodities');?>: <span id="commodity_total"><?php echo $this->escape($this->totalCommodities);?></span></span></div>
   <div class="fieldIndent2">
   <!-- TA:17: table div id must have this format  <div id="[label]Table">-->
   <div name="commodityTable" id="commodityTable"></div>
@@ -207,7 +207,7 @@ print ScriptContainer::$instance->renderJSHead();
   <input type="hidden" id="commodity_new_data" name="commodity_new_data"/>
   <input type="hidden" id="commodity_delete_data" name="commodity_delete_data"/>
   
-  <?php echo (@$this->translation['Facility Commodity Column Table Commodity Name']);?>
+  <?php echo t((@$this->translation['Facility Commodity Column Table Commodity Name']));?>
   <?php echo "<select id='name' name='name'>";
 								echo "<option value='0'>" . t('Select...') . "</option>";
 								foreach ($this->commodity_names as $name){
@@ -217,12 +217,12 @@ print ScriptContainer::$instance->renderJSHead();
   ?>
   
   &nbsp;&nbsp;&nbsp;&nbsp;<?php echo (@$this->translation['Facility Commodity Column Table Date']);?>
-  <input type="number" id="dateMM"  min="1" max="12" placeholder="MM" style="width:3em;"/>/
- <input type="number" id="dateYY"  min="10" max="99" placeholder="YY" style="width:3em;"/>
- &nbsp;&nbsp;&nbsp;&nbsp;<?php echo (@$this->translation['Facility Commodity Column Table Consumption']);?>
-  <input type="text" id="consumption" size="10"  placeholder="Consumption">
-  &nbsp;&nbsp;&nbsp;&nbsp;<?php echo (@$this->translation['Facility Commodity Column Table Out of Stock']);?>
-  <select id='stock_out'><option value='' selected='selected'></option><option value='N'>N</option><option value='Y'>Y</option></select>
+  <input type="number" id="dateMM"  min="1" max="12" placeholder="<?php echo t('MM')?>" style="width:3em;"/>/
+ <input type="number" id="dateYY"  min="10" max="99" placeholder="<?php echo t('YY')?>" style="width:3em;"/>
+ &nbsp;&nbsp;&nbsp;&nbsp;<?php echo t((@$this->translation['Facility Commodity Column Table Consumption']));?>
+  <input type="text" id="consumption" size="10"  placeholder="<?php echo t('Consumption')?>">
+  &nbsp;&nbsp;&nbsp;&nbsp;<?php echo t((@$this->translation['Facility Commodity Column Table Out of Stock']));?>
+  <select id='stock_out'><option value='' selected='selected'></option><option value='N'><?php echo t('N')?></option><option value='Y'><?php echo t('Y')?></option></select>
    &nbsp;&nbsp;&nbsp;&nbsp;
         <input type="button" name="Insert" value="<?php tp("Insert");?>" class="insert" id="commodityInsertButton" onclick="addCommodity(this);return false;">
        &nbsp;&nbsp;&nbsp;
@@ -234,7 +234,7 @@ print ScriptContainer::$instance->renderJSHead();
 	<!-- TA:17: 09/04/2014 END -->
 
 	<button type="button" id="submitFacility" class="submitNoArrow"><?php tp('Save changes');?></button>
-	<div style="float:right;">&nbsp;</div><?php if ($this->okToDelete) { ?><input type="button" id="deleteFacility" name="deleteFacility" value="Delete" class="submitNoArrow"  onclick="doDelete();" /><?php } ?>
+	<div style="float:right;">&nbsp;</div><?php if ($this->okToDelete) { ?><input type="button" id="deleteFacility" name="deleteFacility" value="<?php tp('Delete');?>" class="submitNoArrow"  onclick="doDelete();" /><?php } ?>
 	<script type="text/javascript">
 		addAjaxSubmit('submitFacility','edit','<?php echo $this->base_url;?>/facility/edit/outputType/json');
 	</script>

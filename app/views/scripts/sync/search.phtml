@@ -22,7 +22,7 @@ print ScriptContainer::$instance->renderJSHead();
 			<p class="status" id="status-box2">&nbsp;</p>
 			
 			<form style="display:none; width:50%;" id="continue" action="<?php echo $this->base_url;?>/sync/review/fid/<?php echo $this->fid;?>" method="get">
-				<input type="submit" class="submitArrow" name="go" value="Continue" />
+				<input type="submit" class="submitArrow" name="go" value="<?php tp('Continue')?>" />
 			</form>
 			
 			<br/><br/><br/>

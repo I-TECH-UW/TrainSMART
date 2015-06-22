@@ -426,7 +426,7 @@ YAHOO.util.Event.onDOMReady(init);
 	<div id="trainerInfo" class="itechTable"></div>
 	<script type="text/javascript">
 		var trainerColumnDefs = [
-		    {key:"id", label: "ID", sortable:false, resizeable:true},
+		    {key:"id", label: "<?php tp('ID')?>", sortable:false, resizeable:true},
 		    {key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true},
 		    {key:"course_name", label: "<?php tp('Name');?>", sortable:true, resizeable:true},
 		    {key:"training_location_name", label: "<?php tp('Location');?>", sortable:true, resizeable:true}
@@ -479,7 +479,7 @@ YAHOO.util.Event.onDOMReady(init);
     }
 
   var classColumnDefs = [
-      {key:"training_id", label: "ID", sortable:false, resizeable:true,
+      {key:"training_id", label: "<?php tp('ID')?>", sortable:false, resizeable:true,
   	                formatter: formatTrainingViewUrl},
       {key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true},
       {key:"course_name", label: "<?php tp('Name');?>", sortable:true, resizeable:true},
@@ -523,7 +523,7 @@ var classInfoData = [
     elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/training/view/id/" + oRecord.getData("training_id") + "' >" + sData + "</a>";
 }
 var classColumnDefs = [
-    {key:"training_id", label: "ID", sortable:false, resizeable:true,
+    {key:"training_id", label: "<?php tp('ID')?>", sortable:false, resizeable:true,
 	                formatter: formatTrainingViewUrl},
     {key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true},
     {key:"course_name", label: "<?php tp('Name');?>", sortable:true, resizeable:true},

@@ -10,8 +10,30 @@
 		?>
 		<style>
 		</style>
+		
+		<!-- TA:29 fixing bug -->
+		<script language="JavaScript">
+	var all = false;
+	function allcompetence(){
+		if ($('#complist').is(":disabled")){
+			alert("<?php tp('Please select an occupational category first')?>");
+			$("#qualification_id").focus();
+		} else {
+			if (!all){
+				$("#complist > option").attr("selected", true);
+				all = true;
+			} else {
+				$("#complist > option").removeAttr("selected");
+				all = false;
+			}
+			$('#complist').change();
+//			ShwHid(document.getElementById("complist"));
+		}
+	}
+</script>
+		
 	</head>
-	<body class="yui-skin-sam" onload="SwHd(document.getElementById('qualification_id'));Sel();">
+	<body class="yui-skin-sam" onload="document.getElementById('ques').value=''; document.getElementById('qualification_id').getElementsByTagName('option')[0].selected = 'selected';">
 		<div id="pageHolder">
 
 			<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
@@ -42,7 +64,8 @@
 					<div class="clear"></div>
 
 					<div class="fieldLabel" id="qualification_id_lbl"><?php echo t('Occupational category'); ?></div>
-					<div class="fieldInput"><select id="qualification_id" name="qualification_id" onchange="SwHd(this)">
+					<!--  TA:29 old  <div class="fieldInput"><select id="qualification_id" name="qualification_id" onchange="SwHd(this)"> -->
+					<div class="fieldInput"><select id="qualification_id" name="qualification_id" onchange="showCompetencies(this)">
 						<option value="">--<?php tp('choose');?>--</option>
 						<?php
 						$lastParent = null;
@@ -54,7 +77,23 @@
 						}
 						?>
 					</select></div>
+	
+	
 					<script type="text/javascript">
+// TA:29 
+<?php
+	echo "var comptrans = new Array();\n";
+	foreach ($this->complist as $cl){
+		$comp = array();
+		if (count($cl['competencies']) > 0){
+			foreach ($cl['competencies'] as $c_arr){
+				$comp[] = "[" . $c_arr['id'] . ",'" . addslashes($c_arr['name']) . "']";
+			}
+		}
+		echo "comptrans['c" . $cl['id'] . "'] = [" . implode(",", $comp) . "];\n";
+	}
+	?>//TA
+	
 						var i;
 						for(i=0;i<document.getElementById("qualification_id").options.length;i++)
 						{
@@ -62,54 +101,71 @@
 							document.getElementById("qualification_id").options[i].text=document.getElementById("qualification_id").options[i].text.substr(0,document.getElementById("qualification_id").options[i].text.length-2).replace("Z_","");
 						}
 					</script>
-					<div class="fieldLabel competence_label" id="qualification_id_lbl" style="display:none;"><?php echo t('Competence'); ?><br /><a href="javascript:void(0)" onclick="SelAll()"><?php echo t('Select All'); ?></a></div>
+					
+					<!-- TA:29 START fixing bug,  by some reason "Competence" was undisplyed -->
+					<div class="fieldLabel" id="qualification_id_lbl"><?php echo t('Competence'); ?><br /><br>
+					<a href="javascript:void(0)" onclick="allcompetence()"><?php echo t('Select All'); ?></a></div>
+					<!-- TA:29 END -->
+	
+	<?php
+/*
 					<div class="fieldInput">
 						<?php require_once('listcomn.phtml');?>
 						<?php require_once('listcomd.phtml');?>
 						<?php require_once('listcomp.phtml');?>
 						<?php require_once('listcomc.phtml');?>
 					</div>
-					<script type="text/javascript">
-						document.getElementById("listc").setAttribute("multiple","multiple");
-						document.getElementById("listd").setAttribute("multiple","multiple");
-						document.getElementById("listn").setAttribute("multiple","multiple");
-						document.getElementById("listp").setAttribute("multiple","multiple");
-						document.getElementById("listc").options.remove(0);
-						document.getElementById("listd").options.remove(0);
-						document.getElementById("listn").options.remove(0);
-						document.getElementById("listp").options.remove(0);
-						function SelAll()
-						{
-							if(document.getElementById("listc").style.display!="none" ||
-							document.getElementById("listd").style.display!="none" ||
-							document.getElementById("listn").style.display!="none" ||
-							document.getElementById("listp").style.display!="none")
-							{
-								var List;
-								if(document.getElementById("listc").style.display!="none")
-								{
-									List=document.getElementById("listc");
-								}
-								if(document.getElementById("listd").style.display!="none")
-								{
-									List=document.getElementById("listd");
-								}
-								if(document.getElementById("listn").style.display!="none")
-								{
-									List=document.getElementById("listn");
-								}
-								if(document.getElementById("listp").style.display!="none")
-								{
-									List=document.getElementById("listp");
-								}
-								for(var i=0;i<List.options.length;i++)
-								{
-									List.options[i].selected=true;
-								}
-								ShwHid(List);
-							}
+*/
+?>
+					
+					<!-- TA:29 START fixing bug,  by some reason "Competence" was undisplyed -->
+					<div class="fieldInput">
+							<select name="complist[]" id="complist" style="width : 350px;" size="5" multiple="multiple" disabled onchange="ShwHid(this)">
+								<option><?php tp('Select an occupational category first')?></option>
+							</select>
+						</div>
+					<!-- TA:29 END -->
 
-						}
+					<script type="text/javascript">
+					//TA:29 fixing bug document.getElementById("listc").setAttribute("multiple","multiple");
+					//TA:29 fixing bug document.getElementById("listd").setAttribute("multiple","multiple");
+						//TA:29 fixing bug document.getElementById("listn").setAttribute("multiple","multiple");
+					//TA:29 fixing bug document.getElementById("listp").setAttribute("multiple","multiple");
+					//TA:29 fixing bug 	document.getElementById("listc").options.remove(0);
+					//TA:29 fixing bug 	document.getElementById("listd").options.remove(0);
+					//TA:29 fixing bug 	document.getElementById("listn").options.remove(0);
+					//TA:29 fixing bug	document.getElementById("listp").options.remove(0);
+// 						function SelAll(){ //TA:29 fixing bug
+// 							if(document.getElementById("listc").style.display!="none" ||
+// 							document.getElementById("listd").style.display!="none" ||
+// 							document.getElementById("listn").style.display!="none" ||
+// 							document.getElementById("listp").style.display!="none")
+// 							{
+// 								var List;
+// 								if(document.getElementById("listc").style.display!="none")
+// 								{
+// 									List=document.getElementById("listc");
+// 								}
+// 								if(document.getElementById("listd").style.display!="none")
+// 								{
+// 									List=document.getElementById("listd");
+// 								}
+// 								//TA:29 fix bugs
+// // 								if(document.getElementById("listn").style.display!="none"){
+// // 									List=document.getElementById("listn");
+// // 								}
+// 								if(document.getElementById("listp").style.display!="none")
+// 								{
+// 									List=document.getElementById("listp");
+// 								}
+// 								for(var i=0;i<List.options.length;i++)
+// 								{
+// 									List.options[i].selected=true;
+// 								}
+// 								ShwHid(List);
+// 							}
+
+// 						}
 						function myExport()
 						{
 							var v1;
@@ -215,9 +271,9 @@
 								}
 							}
 						}
-						function SwHd(obj)
-						{
-							document.getElementById("listc").style.display="none";
+						function SwHd(obj){
+							//TA:29 fixing bug
+							/*document.getElementById("listc").style.display="none";
 							document.getElementById("listd").style.display="none";
 							document.getElementById("listn").style.display="none";
 							document.getElementById("listp").style.display="none";
@@ -228,7 +284,7 @@
 							document.getElementById("listc").options[0].selected=false;
 							document.getElementById("listd").options[0].selected=false;
 							document.getElementById("listn").options[0].selected=false;
-							document.getElementById("listp").options[0].selected=false;
+							document.getElementById("listp").options[0].selected=false;*/
 							competence_label_display_state = 'none';
 							if(obj.value=="6")
 							{
@@ -253,8 +309,7 @@
 
 							$('.competence_label').css('display', competence_label_display_state);
 						}
-						function ShwHid(obj)
-						{
+						function ShwHid(obj){
 							document.getElementById("ques").value="";
 							for(var i=0;i<obj.options.length;i++)
 							{
@@ -265,32 +320,73 @@
 							}
 							document.getElementById("ques").value=document.getElementById("ques").value.replace(/,+$/,'');
 						}
-						function PrintProvince()
-						{
+						function PrintProvince(){
 							if(document.getElementById("province_id").value != "")
 							{
 								document.write(document.getElementById("province_id").options[document.getElementById("province_id").selectedIndex].text);
 							}
 						}
-						function PrintDistrict()
-						{
+						function PrintDistrict(){
 							if(document.getElementById("district_id").value != "")
 							{
 								document.write(document.getElementById("district_id").options[document.getElementById("district_id").selectedIndex].text);
 							}
 						}
-						function PrintSubdistrict()
-						{
+						function PrintSubdistrict(){
 							if(document.getElementById("region_c_id").value != "")
 							{
 								document.write(document.getElementById("region_c_id").options[document.getElementById("region_c_id").selectedIndex].text);
 							}
 						}
-						function PrintFacility()
-						{
+						function PrintFacility(){
 							if(document.getElementById("facilityInput").value != "")
 							{
 								document.write(document.getElementById("facilityInput").options[document.getElementById("facilityInput").selectedIndex].text);
+							}
+						}
+
+						//TA:29 bug fixing
+						function showCompetencies(selected){
+							document.getElementById('ques').value = '';//TA:29 clean from preious selected value
+							all = false;
+							if ($("#qualification_id").val() != ""){
+								var items = comptrans['c'+$("#qualification_id").val()];
+								$("#complist").empty();
+								var ctr = 0;
+								if (items[ctr]){
+									while (items[ctr]){
+										$('#complist')
+											.append($("<option></option>")
+											.attr("value",items[ctr][0])
+											.text(items[ctr][1])); 
+										ctr++;
+									}
+									$("#complist").removeAttr("disabled");
+
+									if (is_array(selected)){
+										// highlighting selected elements
+										var ctr = 0;
+										while(selected[ctr]){
+											$("#complist option[value='" + selected[ctr] + "']").attr("selected", true);
+											ctr++;
+										}
+									}
+
+								} else {
+									$('#complist')
+										.append($("<option></option>")
+										.attr("value","")
+										.text("Category has no competencies")); 
+									$("#complist").attr("disabled",true);
+								}
+							} else {
+								$("#complist").empty();
+								$('#complist')
+									.append($("<option></option>")
+									.attr("value","")
+									.text("Select an occupational category first")); 
+								$("#complist").attr("disabled",true);
+								ctr++;
 							}
 						}
 					</script>
@@ -300,21 +396,18 @@
 					<input type="hidden" name="listpq" id="listpq" value="1,2,3,4,5,6,7~8,9,10" />
 					<input type="hidden" name="ques" id="ques" value="<?php echo $this->criteria['ques'] ?>" />
 					<input type="hidden" name="limit" id="limit" value="1" />
-					<input type="submit" onclick="if(document.getElementById('ques').value==''){alert('Please select a competence');return false;}" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+					<input type="submit" onclick="if(document.getElementById('ques').value==''){alert('<?php tp('Please select a competence')?>');return false;}" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
 				</fieldset>
 			</form>
 			<?php if ( $this->criteria['go'] ) { ?>
 			<div class="hrGrey"></div>
 		<div class="fieldIndentNoMargin"><?php tp('Results');?></span><span class="printAndExport"><a href="javascript:window.print()"><?php echo t('Print'); ?></a>&nbsp;&nbsp;<a href="javascript:myExport()"><?php echo t('Export'); ?></a>&nbsp;&nbsp;<a href="javascript:myExport()"><img src="<?php echo (Settings::$COUNTRY_BASE_URL).'/images/excel.jpg'; ?>" /></a></span></div>
 			<?php
-			if(isset($this->rss[0]))
-			{
-				$cntr;
 				$cntr=0;
 				echo '<table cellpadding="0" cellspacing="0" border="0" style="width:40%;border:solid 1px #AAA">';
 				echo '<tr><td><div class="nwtxtbig">'.t('Competence').'</div></td><td><div class="nwtxtbig">'.t('Province').'</div></td><td><div class="nwtxtbig">'.t('District').'</div></td><td><div class="nwtxtbig">'.t('Sub-district').'</div></td><td><div class="nwtxtbig">'.t('Facility').'</div></td><td><div class="nwtxtbig">'.t('Result').'</div></td></tr>';
 				foreach ( $this->rss as $ys => $ls ) {
-					echo '<tr><td><div class="nwtxt" id="dv'.$cntr.'"></div></td>';
+					echo '<tr><td><div class="nwtxt" id="dv'.$cntr.'">' . $ys . '</div></td>';
 					echo '<td><div class="nwtxt" id="lcc1'.$cntr.'">';
 					echo '<script type="text/javascript">PrintProvince()</script>';
 					echo '</div></td>';
@@ -334,7 +427,6 @@
 					$cntr=$cntr+1;;
 				}
 				echo '</table>';
-			}
 			?>
 			<?php } ?>
 		</div>

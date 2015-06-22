@@ -34,7 +34,7 @@
    ];
 
 		var statsColumnDefs = [
-		    {key:"name", label: "<?php echo $this->min_date;?>&nbsp;to&nbsp;<?php echo $this->max_date;?>", sortable:false, resizeable:true},
+		    {key:"name", label: "<?php echo $this->min_date;?>&nbsp;<?php tp('to');?>&nbsp;<?php echo $this->max_date;?>", sortable:false, resizeable:true},
 		    {key:"total", label: "<?php tp('Total');?>", sortable:false, resizeable:true},
 			{key:"ytd", label: "<?php tp('Fiscal Year');?> ( <?php tp('since'); ?>&nbsp;<?php echo $this->ytdStart;?>)", sortable:false, resizeable:true}
 		];
@@ -65,8 +65,8 @@
 					];
 
 					var workerColumnDefs = [
-					{key:"qualification_phrase", label: "Occupational category", sortable:false, resizeable:true},
-					{key:"CNT", label: "Count", sortable:false, resizeable:true}
+					{key:"qualification_phrase", label: "<?php tp('Occupational category')?>", sortable:false, resizeable:true},
+					{key:"CNT", label: "<?php tp('Count')?>", sortable:false, resizeable:true}
 					];
 
 					makeDataTable("workerStats", null, workerData, workerColumnDefs);
@@ -145,7 +145,7 @@
 	  <div class="fieldInput"><input type="password" name="password" size="32" maxlength="32" tabindex=2  value=""/></div>
 		<div class="fieldLabel" for="spacer"></div>
 		<div class="fieldInput"><a href="<?php echo $this->base_url;?>/user/forgotPassword" tabindex=4 ><?php tp('Forgot your password?');?></a></div>
-      <input type="submit" value="Sign In" tabindex=3  title="log in now" class="submitArrow"/>
+      <input type="submit" value="<?php tp('Sign In');?>" tabindex=3  title="log in now" class="submitArrow"/>
 
   	</form>
   	</div>

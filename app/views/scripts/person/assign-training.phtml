@@ -17,7 +17,7 @@ print ScriptContainer::$instance->renderJSHead();
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
 
-    <h1><?php echo t('Assign Person to').' '.t('Training');?></h1>
+    <h1><?php echo t('Assign Person to Training');?></h1>
     
     <p><strong>
       &raquo;
@@ -25,12 +25,12 @@ print ScriptContainer::$instance->renderJSHead();
     </strong></p>
     <br />
     <form action="" method="get" id="changeAge">
-      <label class="label" style="float;left"><?php tp('Show me Trainings From:'); ?></label>
+      <label class="label" style="float;left"><?php tp('Show me Trainings From'); ?>:</label>
       <select id="maxage" name="maxage">
-        <option value="30days"<?php echo ($this->maxage == '30days') ? ' selected' : ''; ?>><?php tp('30 Days'); ?></option>
-        <option value="60days"<?php echo ($this->maxage == '60days') ? ' selected' : ''; ?>><?php tp('60 Days'); ?></option>
-        <option value="1quarter"<?php echo ($this->maxage == '1quarter') ? ' selected' : ''; ?>><?php tp('1 Quarter'); ?></option>
-        <option value="6months"<?php echo ($this->maxage == '6months') ? ' selected' : ''; ?>><?php tp('6 Months'); ?></option>
+        <option value="30days"<?php echo ($this->maxage == '30days') ? ' selected' : ''; ?>>30 <?php tp('Days'); ?></option>
+        <option value="60days"<?php echo ($this->maxage == '60days') ? ' selected' : ''; ?>>60 <?php tp('Days'); ?></option>
+        <option value="1quarter"<?php echo ($this->maxage == '1quarter') ? ' selected' : ''; ?>>1 <?php tp('Quarter'); ?></option>
+        <option value="6months"<?php echo ($this->maxage == '6months') ? ' selected' : ''; ?>>6 <?php tp('Months'); ?></option>
         <option value="all"<?php echo ($this->maxage == 'all') ? ' selected' : ''; ?>><?php tp('All'); ?></option>
       </select>
     </form>
@@ -60,7 +60,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 		var trainingColumnDefs = [
       {key:"input_checkbox", label: "<?php tp('Assign'); ?>", sortable:false, resizable:false},
-      {key:"training_id", label: "ID", sortable:false, resizeable:true, formatter: formatTrainingViewUrl},
+      {key:"training_id", label: "<?php tp('ID'); ?>", sortable:false, resizeable:true, formatter: formatTrainingViewUrl},
       
       //TA:17: 08/28/2014 
       <?php if($this->setting['display_training_category']){

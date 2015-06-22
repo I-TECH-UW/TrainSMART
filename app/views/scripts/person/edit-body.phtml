@@ -159,7 +159,7 @@ var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
 
 //{key:"input", width:0, resizeable:true , label:"", hidden:"true", width:"0", className:"hidden"},
 var dupeColDefs =
-[ {key:"person_id", label: "ID", sortable:false, resizable:false, formatter: formatViewUrl},
+[ {key:"person_id", label: "<?php tp('ID')?>", sortable:false, resizable:false, formatter: formatViewUrl},
 {key:"first_name", width:60, sortable:true, resizeable:true , label:"<?php tp("First Name"); ?>"},
 <?php if ( !$this->setting['display_middle_name_last'] ) { ?>
 {key:"middle_name", width:66, sortable:true, resizeable:true , label:"<?php echo (@$this->translation['Middle Name']); ?>"},
@@ -400,12 +400,12 @@ YAHOO.util.Event.onDOMReady(function() {
  <?php } ?>
 
  <?php if ($this->setting['display_mod_skillsmart']) { ?>
-	<div class="fieldLabel"><label for="professional_reg_number"><?php echo @$this->translation['Professional Registration Number'] != '' ? @$this->translation['Professional Registration Number'] : 'Professional Registration Number'; ?></label></div>
+	<div class="fieldLabel"><label for="professional_reg_number"><?php echo @$this->translation['Professional Registration Number'] != '' ? @$this->translation['Professional Registration Number'] : t('Professional Registration Number'); ?></label></div>
 	<div class="fieldInput" style="clear:none;"><input type="text" size="24" id="professional_reg_number" name="professional_reg_number" value="<?php echo ($this->person['professional_reg_number'] != '') ? $this->person['professional_reg_number'] : ''; ?>" /></div>
  <?php } ?>
 
  <?php if ($this->setting['display_mod_skillsmart']) { ?>
-	<div class="fieldLabel"><label for="nationality_id"><?php echo @$this->translation['Nationality'] != '' ? @$this->translation['Nationality'] : 'Nationality'; ?></label></div>
+	<div class="fieldLabel"><label for="nationality_id"><?php echo @$this->translation['Nationality'] != '' ? @$this->translation['Nationality'] : t('Nationality'); ?></label></div>
  <div class="fieldInput" style="clear:none;">
    <select id="nationality_id" name="nationality_id">
      <option value="0"><?php echo t('Select...'); ?></option>
@@ -437,7 +437,9 @@ YAHOO.util.Event.onDOMReady(function() {
 <div class="fieldInput">
     <label for="female"><?php tp('Female');?><input type="radio" id="female" name="gender" value="female" <?php echo ( $this->person['gender'] == 'female' ? 'checked="checked"' :'');?> ></input></label>
     <label for="male"><?php tp('Male');?><input type="radio" id="male" name="gender" value="male" <?php echo ( $this->person['gender'] == 'male' ? 'checked="checked"' :'');?>></input></label>
-     <label for="na"><?php tp('Unknown');?><input type="radio" id="na" name="gender" value="na" <?php echo ( $this->person['gender'] == 'na' ? 'checked="checked"' :'');?>></input></label>
+     <label for="na"><?php tp('Unknown');?><input type="radio" id="na" name="gender" value="na" 
+     <?php echo ( ($this->person['gender'] != 'female' && $this->person['gender'] != 'male') || $this->person['gender'] == 'na' ? 'checked="checked"' :'');?>></input></label>
+     <!-- TA:17:16: automatically check gender UKNOWN if no female or male -->
 </div>
 <?php }?>
 

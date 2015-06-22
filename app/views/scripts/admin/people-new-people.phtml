@@ -15,7 +15,7 @@ ob_end_clean();
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+  <title><?php echo t($this->translation['Application Name']);?> | <?php echo t($this->pageTitle); ?></title>
 <?php
 require_once('views/helpers/ScriptContainer.php');
 print ScriptContainer::$instance->renderCSSHead();
@@ -37,7 +37,7 @@ print ScriptContainer::$instance->renderJSHead();
     <div id="navAdmin"><?php echo $nav;?></div>
     
     <div id="contentAdmin">
-    <h1><?php echo $this->pageTitle; ?></h1>
+    <h1><?php echo t($this->pageTitle); ?></h1>
     <br/>
     
     <?php if(isset($formPrefix)) echo $formPrefix . '<br/><br/>'; ?> 
@@ -65,7 +65,7 @@ var ppl1Data = [
 
 $isFirstRow = true;
 $cnt = 0;
-$linksA = '<a class=\"dupeCheckLink\" onclick=\"ppl_new_ppl_showDupeMenu(this);return false;\" href=\"#\">look for<br>duplicates</a>';
+$linksA = '<a class=\"dupeCheckLink\" onclick=\"ppl_new_ppl_showDupeMenu(this);return false;\" href=\"#\">' . t('look for duplicates') . '</a>';
 
 foreach($this->primary_results as $row) {
 	if ( $cnt < 100 )
@@ -75,7 +75,7 @@ foreach($this->primary_results as $row) {
 
 		$links = '';
 		if ( isset($row['id']) )
-			$links = '<a href=\"'.$this->base_url.'/person/approve/id/'.$row['id'].'\">approve</a>';
+			$links = '<a href=\"'.$this->base_url.'/person/approve/id/'.$row['id'].'\">' . t('approve') . '</a>';
 		$name = implode(' ', array($row['first_name'] , $row['middle_name'] , $row['last_name']));
 		if ( $this->setting['display_middle_name_last'] )
 			$name = implode(' ', array($row['first_name'] , $row['last_name']), $row['middle_name']);
@@ -88,7 +88,7 @@ foreach($this->primary_results as $row) {
 			echo ',"'.$row['national_id'].'"';
 			echo ',"'.$row['file_number'].'"';
 			echo ',"'.$row['birthdate']  .'"';
-			echo ',"'.$row['gender']     .'"';
+			echo ',"'.t($row['gender'])    .'"';
 			echo ',"'.$row['facility_name'].', '.$row['location_name'].'"';
 			#echo ',"'.$row['phone_work']  .'"';
 			#echo ',"'.$row['phone_mobile'].'"';
@@ -112,8 +112,8 @@ foreach($this->primary_results as $row) {
 	var ppl1ColumnDefs = [
 	 {key:"linksa",label: "<?php tp('Search'); ?>",sortable:true, resizable:true}
 	,{key:"name",label: "<?php tp('Name'); ?>",sortable:true, resizable:true}
-	,{key:"national_id",label: "<?php tp('National id'); ?>",sortable:true, resizable:true}
-	,{key:"file_number",label: "<?php tp('File number'); ?>",sortable:true, resizable:true}
+	,{key:"national_id",label: "<?php tp('National ID'); ?>",sortable:true, resizable:true}
+	,{key:"file_number",label: "<?php tp('File Number'); ?>",sortable:true, resizable:true}
 	,{key:"birthdate",label: "<?php tp('Birthdate'); ?>",sortable:true, resizable:true}
 	,{key:"gender",label: "<?php tp('Gender'); ?>",sortable:true, resizable:true}
 	,{key:"facility_id",label: "<?php tp('Facility'); ?>",sortable:true, resizable:true}

@@ -736,12 +736,12 @@
 						<div class="historyDiv">
 						
 						<!-- TA:6: added 8/8/2014 START -->
-						<b>ID</b>&nbsp;<?php echo $this->escape($this->id);?><br>
-						<b>Date created</b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>						
-						<b>Created by</b>&nbsp;<?php echo ($this->creator == "N/A" ? "N/A" : "{$this->creator->first_name} {$this->creator->middle_name} {$this->creator->last_name}") ?><br>
-						<b>Date updated</b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
-						<b>Updated by</b>&nbsp;<?php echo ($this->updater == "N/A" ? "N/A" : "{$this->updater->first_name} {$this->updater->middle_name} {$this->updater->last_name}") ?><br>
-						<b>UUID</b>&nbsp;<?php echo $this->escape($this->uuid);?><br>
+						<b><?php echo t('ID'); ?></b>&nbsp;<?php echo $this->escape($this->id);?><br>
+						<b><?php echo t('Date created'); ?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>						
+						<b><?php echo t('Created by'); ?></b>&nbsp;<?php echo ($this->creator == "N/A" ? t("N/A") : "{$this->creator->first_name} {$this->creator->middle_name} {$this->creator->last_name}") ?><br>
+						<b><?php echo t('Date updated'); ?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
+						<b><?php echo t('Updated by'); ?></b>&nbsp;<?php echo ($this->updater == "N/A" ? t("N/A") : "{$this->updater->first_name} {$this->updater->middle_name} {$this->updater->last_name}") ?><br>
+						<b><?php echo t('UUID'); ?></b>&nbsp;<?php echo $this->escape($this->uuid);?><br>
 						<hr>
 						<!-- TA:6: added 8/8/2014 END -->
 						

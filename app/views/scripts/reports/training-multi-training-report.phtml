@@ -39,13 +39,13 @@
 				<div class="fieldLabel" style="width: auto;"><?php echo t('Select').' '.t('Training').' '.t('report');?></div>
 				<select id="training" name="training" onchange="gotoPage('training');">
 					<option value="">--<?php tp('choose');?>--</option>
-					<option value="/reports/trainings" <?php if ($this->mode == 'id') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('by').' '.t('Name');?></option>
-					<option value="/reports/training-by-participants" <?php if ($this->mode == 'count') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('by').' '.t('Participant Count');?></option>
+					<option value="/reports/trainings" <?php if ($this->mode == 'id') echo 'selected="selected"';?>><?php echo t('Trainings by Name');?></option>
+					<option value="/reports/training-by-participants" <?php if ($this->mode == 'count') echo 'selected="selected"';?>><?php echo t('Trainings by Participant Count');?></option>
 					<?php if ($this->setting['display_viewing_location']) { ?>
-					<option value="/reports/budget-code"><?php echo t('Trainings').space.t('by').space.t('Participants').space.t('Viewing Location'); ?></option>
+					<option value="/reports/budget-code"><?php echo t('Trainings by Participants Viewing Location'); ?></option>
 					<?php } ?>
 					<?php if ($this->setting['module_unknown_participants_enabled']) { ?>
-					<option value="/reports/trainingUnknown" <?php if ($this->mode == 'unknown') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('with').' '.t('Unknown Participants');?></option>
+					<option value="/reports/trainingUnknown" <?php if ($this->mode == 'unknown') echo 'selected="selected"';?>><?php echo t('Trainings with Unknown Participants');?></option>
 					<?php } ?>
 				</select>
 				<?php } ?>
@@ -443,7 +443,7 @@
 																<?php } ?>
 																<?php if (isset($this->results[0]['id'])) { ?>
 																	<?php if (isset($this->results[0]['cnt'])) echo ',';?>
-																	{key:"id", label: "ID", sortable:true, resizeable:true, formatter: formatViewUrl},
+																	{key:"id", label: "<?php tp('ID')?>", sortable:true, resizeable:true, formatter: formatViewUrl},
 																	{key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true}
 																<?php } ?>
 																<?php if ( $this->criteria['showEndDate'] ) { ?>

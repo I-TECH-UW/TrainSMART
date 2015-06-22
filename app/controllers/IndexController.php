@@ -224,7 +224,8 @@ class IndexController extends ITechController {
 	public function languageAction() {
 		require_once ('models/Session.php');
 		require_once ('models/table/User.php');
-		if ($this->isLoggedIn () and array_key_exists ( $this->getSanParam ( 'opt' ), ITechTranslate::getLanguages () )) {
+		if (array_key_exists ( $this->getSanParam ( 'opt' ), ITechTranslate::getLanguages () )) { //TA:24 allow change language even though loged out
+		//if ($this->isLoggedIn () and array_key_exists ( $this->getSanParam ( 'opt' ), ITechTranslate::getLanguages () )) {
 			$user = new User ( );
 			$userRow = $user->find ( Session::getCurrentUserId () )->current ();
 			$user->updateLocale ( $this->getSanParam ( 'opt' ), Session::getCurrentUserId () );

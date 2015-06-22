@@ -18,7 +18,7 @@ ob_end_clean();
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+	<title><?php echo t($this->translation['Application Name']);?> | <?php echo t($this->pageTitle); ?></title>
 	<?php
 	require_once('views/helpers/ScriptContainer.php');
 	print ScriptContainer::$instance->renderCSSHead();
@@ -36,38 +36,38 @@ ob_end_clean();
 				<div id="navAdmin"><?php echo $nav;?></div>
 
 				<div id="contentAdmin">
-					<h1><?php echo $this->pageTitle; ?></h1>
+					<h1><?php echo t($this->pageTitle); ?></h1>
 
 					<table class="settings">
 
-						<thead> <tr><th>Field</th><th>Display</th><th>Label</th><th>Options</th></tr> </thead>
+						<thead> <tr><th><?php echo t('Field'); ?></th><th><?php echo t('Display'); ?></th><th><?php echo t('Label'); ?></th><th><?php echo t('Options'); ?></th></tr></thead>
 						<tbody>
 
 							<tr>
-								<td class="fieldTitle">Training category</td>
+								<td class="fieldTitle"><?php echo t('Training Category'); ?></td>
 								<!-- TA:17: 8/28/2014 -->
 								<td><input type="checkbox" name="check_training_category" <?php if($this->check_training_category) echo 'checked'; ?> id="check_training_category"></td>
 								<td><input type="text" name="label_training_category" value="<?php echo $this->label_training_category; ?>"></td>
-								<td><a href="<?php echo $this->base_url;?>/admin/training-category" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-category" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
 							</tr>
 
 							<tr>
-								<td class="fieldTitle">Training name</td>
+								<td class="fieldTitle"><?php echo t('Training Name'); ?></td>
 								<td></td>
 								<td><input type="text" name="label_training_name" value="<?php echo $this->label_training_name; ?>"></td>
-								<td><a href="<?php echo $this->base_url;?>/admin/training-title" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-title" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
 							</tr>
 
 							<tr>
-								<td class="fieldTitle">Training organizer</td>
+								<td class="fieldTitle"><?php echo t('Training Organizer'); ?></td>
 								<td></td>
 								<td><input type="text" name="label_training_org" value="<?php echo $this->label_training_org; ?>"></td>
-								<td><a href="<?php echo $this->base_url;?>/admin/training-organizer" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-organizer" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
 							</tr>
 							
 							<!-- TA:17:14: START -->
 							<tr>
-								<td class="fieldTitle">Training Location</td>
+								<td class="fieldTitle"><?php echo t('Training Location'); ?></td>
 								<td><input type="checkbox" name="check_training_location" <?php if($this->check_training_location) echo 'checked'; ?> id="check_training_location"></td>
 								<td></td>
 								<td></td>
@@ -76,7 +76,7 @@ ob_end_clean();
 							
 							<!-- TA:17: 09/02/2014 START -->
 							<tr>
-								<td class="fieldTitle">Start Date</td>
+								<td class="fieldTitle"><?php echo t('Start Date'); ?></td>
 								<td><input type="checkbox" name="check_training_start_date" <?php if($this->check_training_start_date) echo 'checked'; ?> id="check_training_start_date"></td>
 								<td></td>
 								<td></td>
@@ -84,7 +84,7 @@ ob_end_clean();
 					<!-- TA:17: 09/02/2014 END -->
 					
 							<tr>
-								<td class="fieldTitle">End Date</td>
+								<td class="fieldTitle"><?php echo t('End Date'); ?></td>
 								<td><input type="checkbox" name="check_training_end_date" <?php if($this->check_training_end_date) echo 'checked'; ?> id="check_training_end_date"></td>
 								<td></td>
 								<td></td>
@@ -92,7 +92,7 @@ ob_end_clean();
 							
 							<!-- TA:17: 09/03/2014 START -->
 							<tr>
-								<td class="fieldTitle">Training length</td>
+								<td class="fieldTitle"><?php echo t('Training length'); ?></td>
 								<td><input type="checkbox" name="check_training_length" <?php if($this->check_training_length) echo 'checked'; ?> id="check_training_length"></td>
 								<td></td>
 								<td></td>
@@ -100,38 +100,38 @@ ob_end_clean();
 					<!-- TA:17: 09/03/2014 END -->
 
 							<tr>
-								<td class="fieldTitle">Training level</td>
+								<td class="fieldTitle"><?php echo t('Training Level'); ?></td>
 								<td><input type="checkbox" name="check_training_level" <?php if($this->check_training_level) echo 'checked'; ?> id="check_training_level"></td>
 								<td><input type="text" name="label_training_level" value="<?php echo $this->label_training_level; ?>"></td>
-								<td><a href="<?php echo $this->base_url;?>/admin/training-level" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-level" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
 							</tr>
 
 							<tr>
-								<td class="fieldTitle">PEPFAR Category</td>
+								<td class="fieldTitle"><?php echo t('PEPFAR Category'); ?></td>
 								<td><input type="checkbox" name="check_training_pepfar" <?php if($this->check_training_pepfar) echo 'checked'; ?> id="check_training_pepfar"></td>
 								<td><input type="text" name="label_pepfar" value="<?php echo $this->label_pepfar; ?>"></td>
-								<td><a href="<?php echo $this->base_url;?>/admin/training-pepfar" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-pepfar" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
 							</tr>
 
 							<tr>
-								<td class="fieldTitle">Training topic</td>
+								<td class="fieldTitle"><?php echo t('Training topic'); ?></td>
 								<td><input type="checkbox" name="check_training_topic" <?php if($this->check_training_topic) echo 'checked'; ?> id="check_training_topic"></td>
 								<td><input type="text" name="label_training_topic" value="<?php echo $this->label_training_topic; ?>">
 
 								</td>
-								<td><a href="<?php echo $this->base_url;?>/admin/training-topic" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-topic" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
 							</tr>
 							<tr>
-								<td class="fieldTitle">Training method</td>
+								<td class="fieldTitle"><?php echo t('Training Method'); ?></td>
 								<td><input type="checkbox" name="check_training_method" <?php if($this->check_training_method) echo 'checked'; ?> id="check_training_method"></td>
 								<td><input type="text" name="label_training_method" value="<?php echo $this->label_training_method; ?>">
 
 								</td>
-								<td><a href="<?php echo $this->base_url;?>/admin/training-method" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-method" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
 							</tr>
 
 							<tr>
-								<td class="fieldTitle"><!--Training of Trainers-->TOT</td>
+								<td class="fieldTitle"><!--Training of Trainers--><?php echo t('TOT'); ?></td>
 								<td><input type="checkbox" name="check_training_trainers" <?php if($this->check_training_trainers) echo 'checked'; ?> id="check_training_trainers"></td>
 								<td><input type="text" name="label_training_trainers" value="<?php echo $this->label_training_trainers; ?>">
 
@@ -139,15 +139,15 @@ ob_end_clean();
 								<td></td>
 							</tr>
 							<tr>
-								<td class="fieldTitle">Funding</td>
+								<td class="fieldTitle"><?php echo t('Funding'); ?></td>
 								<td><input type="checkbox" name="check_training_funding_options" <?php if($this->check_training_funding_options) echo 'checked'; ?> id="check_training_funding_options"></td>
 								<td>
 
 								</td>
-								<td><a href="<?php echo $this->base_url;?>/admin/training-funding" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-funding" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
 							</tr>
 							<tr>
-								<td class="fieldTitle">Funding Amount</td>
+								<td class="fieldTitle"><?php echo t('Funding Amount'); ?></td>
 								<td><input type="checkbox" name="check_training_funding_amounts" <?php if($this->check_training_funding_amounts) echo 'checked'; ?> id="check_training_funding_amounts"></td>
 								<td><input type="text" name="label_training_funding_amt" value="<?php echo $this->label_training_funding_amt; ?>"></td>
 								<td></td>
@@ -156,16 +156,16 @@ ob_end_clean();
 
 
 							<tr>
-								<td class="fieldTitle">Nat. Curriculum</td>
+								<td class="fieldTitle"><?php echo t('Nat. Curriculum'); ?></td>
 								<td><input type="checkbox" name="check_training_got_curric" <?php if($this->check_training_got_curric) echo 'checked'; ?> id="check_training_got_curric"></td>
 								<td><input type="text" name="label_training_got_curric" value="<?php echo $this->label_training_got_curric; ?>">
 
 								</td>
-								<td><a href="<?php echo $this->base_url;?>/admin/training-gotcurriculum" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-gotcurriculum" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
 							</tr>
 
 							<tr>
-								<td class="fieldTitle">Nat. Curriculum Comment</td>
+								<td class="fieldTitle"><?php echo t('Nat. Curriculum Comment'); ?></td>
 								<td><input type="checkbox" name="check_training_got_comment" <?php if($this->check_training_got_comment) echo 'checked'; ?> id="check_training_got_comment"></td>
 								<td><input type="text" name="label_training_got_comment" value="<?php echo $this->label_training_got_comment; ?>">
 
@@ -174,36 +174,36 @@ ob_end_clean();
 							</tr>
 
 							<tr>
-								<td class="fieldTitle">Refresher Course</td>
+								<td class="fieldTitle"><?php echo t('Refresher Course'); ?></td>
 								<td><input type="checkbox" name="check_training_refresher" <?php if($this->check_training_refresher) echo 'checked'; ?> id="check_training_refresher"></td>
 								<td><input type="text" name="label_training_refresher" value="<?php echo $this->label_training_refresher; ?>"></td>
-								<td><input type="checkbox" name="check_multi_refresher" <?php if($this->check_multi_refresher) echo 'checked'; ?> id="check_multi_refresher"><label><?php tp('Mutiple checkbox field'); ?></label><br><a href="<?php echo $this->base_url;?>/admin/training-refreshercourse" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+								<td><input type="checkbox" name="check_multi_refresher" <?php if($this->check_multi_refresher) echo 'checked'; ?> id="check_multi_refresher"><label><?php tp('Mutiple checkbox field'); ?></label><br><a href="<?php echo $this->base_url;?>/admin/training-refreshercourse" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
 							</tr>
 
 
 							<tr>
-								<td class="fieldTitle">Comments</td>
+								<td class="fieldTitle"><?php echo t('Comments'); ?></td>
 								<td><input type="checkbox" name="check_training_comments" <?php if($this->check_training_comments) echo 'checked'; ?> id="check_training_comments"></td>
 								<td><input type="text" name="label_training_comments" value="<?php echo $this->label_training_comments; ?>"></td>
 								<td></td>
 							</tr>
 
 							<tr>
-								<td class="fieldTitle">Course Objectives</td>
+								<td class="fieldTitle"><?php echo t('Course Objectives'); ?></td>
 								<td><input type="checkbox" name="check_course_objectives" <?php if($this->check_course_objectives) echo 'checked'; ?> id="check_course_objectives"></td>
 								<td><input type="text" name="label_course_objectives" value="<?php echo $this->label_course_objectives; ?>">
 								</td>
 								<td></td>
 							</tr>
 							<tr>
-								<td class="fieldTitle">Primary language</td>
+								<td class="fieldTitle"><?php echo t('Primary language'); ?></td>
 								<td><input type="checkbox" name="check_training_primary_language" <?php if($this->check_training_primary_language) echo 'checked'; ?> id="check_training_primary_language"></td>
 								<td><input type="text" name="label_primary_language" value="<?php echo $this->label_primary_language; ?>">
 								</td>
-								<td><a href="<?php echo $this->base_url;?>/admin/people-languages" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/people-languages" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
 							</tr>
 							<tr>
-								<td class="fieldTitle">Secondary language</td>
+								<td class="fieldTitle"><?php echo t('Secondary language'); ?></td>
 								<td><input type="checkbox" name="check_training_secondary_language" <?php if($this->check_training_secondary_language) echo 'checked'; ?> id="check_training_secondary_language"></td>
 								<td><input type="text" name="label_secondary_language" value="<?php echo $this->label_secondary_language; ?>">
 								</td>
@@ -211,7 +211,7 @@ ob_end_clean();
 							</tr>
 
 							<tr>
-								<td class="fieldTitle">Pre test score</td>
+								<td class="fieldTitle"><?php echo t('Pre test score'); ?></td>
 								<td><input type="checkbox" name="check_training_pre" <?php if($this->check_training_pre) echo 'checked'; ?> id="check_training_pre"></td>
 								<td><input type="text" name="label_training_pre" value="<?php echo $this->label_training_pre; ?>">
 
@@ -220,7 +220,7 @@ ob_end_clean();
 							</tr>
 
 							<tr>
-								<td class="fieldTitle">Post test score</td>
+								<td class="fieldTitle"><?php echo t('Post test score'); ?></td>
 								<td><input type="checkbox" name="check_training_post" <?php if($this->check_training_post) echo 'checked'; ?> id="check_training_post"></td>
 								<td><input type="text" name="label_training_post" value="<?php echo $this->label_training_post; ?>">
 
@@ -229,60 +229,60 @@ ob_end_clean();
 							</tr>
 
 							<tr>
-								<td class="fieldTitle">Custom field 1</td>
+								<td class="fieldTitle"><?php echo t('Custom field'); ?> 1</td>
 								<td><input type="checkbox" name="check_training_custom1" <?php if($this->check_training_custom1) echo 'checked'; ?> id="check_training_custom1"></td>
 								<td><input type="text" name="label_training_custom1" value="<?php echo $this->label_training_custom1; ?>"></td>
 								<td></td>
 							</tr>
 							<tr>
-								<td class="fieldTitle">Custom field 2</td>
+								<td class="fieldTitle"><?php echo t('Custom field'); ?> 2</td>
 								<td><input type="checkbox" name="check_training_custom2" <?php if($this->check_training_custom2) echo 'checked'; ?> id="check_training_custom2"></td>
 								<td><input type="text" name="label_training_custom2" value="<?php echo $this->label_training_custom2; ?>"></td>
 							</tr>
 							<tr>
-								<td class="fieldTitle">Custom field 3</td>
+								<td class="fieldTitle"><?php echo t('Custom field'); ?> 3</td>
 								<td><input type="checkbox" name="check_training_custom3" <?php if($this->check_training_custom3) echo 'checked'; ?> id="check_training_custom3"></td>
 								<td><input type="text" name="label_training_custom3" value="<?php echo $this->label_training_custom3; ?>"></td>
 								<td></td>
 							</tr>
 							<tr>
-								<td class="fieldTitle">Custom field 4</td>
+								<td class="fieldTitle"><?php echo t('Custom field'); ?> 4</td>
 								<td><input type="checkbox" name="check_training_custom4" <?php if($this->check_training_custom4) echo 'checked'; ?> id="check_training_custom4"></td>
 								<td><input type="text" name="label_training_custom4" value="<?php echo $this->label_training_custom4; ?>"></td>
 								<td></td>
 							</tr>
 
 							<tr>
-								<td class="fieldTitle">Particpant Training Completion</td>
+								<td class="fieldTitle"><?php echo t('Particpant Training Completion'); ?></td>
 								<td></td>
 								<td><input type="text" name="label_award" value="<?php echo $this->label_award; ?>"></td>
-								<td><a href="<?php echo $this->base_url;?>/admin/training-completion" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-completion" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
 							</tr>
 
 							<tr>
-								<td class="fieldTitle">Particpant Viewing Location</td>
+								<td class="fieldTitle"><?php echo t('Particpant Viewing Location'); ?></td>
 								<td><input type="checkbox" name="check_display_viewing_location" <?php if($this->check_display_viewing_location) echo 'checked'; ?> id="check_display_viewing_location"></td>
 								<td><input type="text" name="label_viewing_location" value="<?php echo $this->label_viewing_location; ?>"></td>
-								<td><a href="<?php echo $this->base_url;?>/admin/training-viewing-location" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-viewing-location" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
 							</tr>
 
 							<tr>
-								<td class="fieldTitle">Participant Budget Code</td>
+								<td class="fieldTitle"><?php echo t('Participant Budget Code'); ?></td>
 								<td><input type="checkbox" name="check_display_budget_code" <?php if($this->check_display_budget_code) echo 'checked'; ?> id="check_display_budget_code"></td>
 								<td><input type="text" name="label_budget_code" value="<?php echo $this->label_budget_code; ?>"></td>
-								<td><a href="<?php echo $this->base_url;?>/admin/training-budget-code" onclick="return submitAdminForm(this);">Add/Edit</a></td>
+								<td><a href="<?php echo $this->base_url;?>/admin/training-budget-code" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
 							</tr>
 							
 							<!-- TA:17: 09/02/2014 START -->
 							<tr>
-								<td class="fieldTitle">Trainer Information</td>
+								<td class="fieldTitle"><?php echo t('Trainer Information'); ?></td>
 								<td><input type="checkbox" name="check_facilitator_info" <?php if($this->check_facilitator_info) echo 'checked'; ?> id="check_facilitator_info"></td>
 								<td></td>
 								<td></td>
 							</tr>
 							
 							<tr>
-								<td class="fieldTitle">Training score</td>
+								<td class="fieldTitle"><?php echo t('Training score'); ?></td>
 								<td><input type="checkbox" name="check_training_score" <?php if($this->check_training_score) echo 'checked'; ?> id="check_training_score"></td>
 								<td></td>
 								<td></td>
@@ -294,7 +294,7 @@ ob_end_clean();
 				</table>
 
 				<input type="hidden" name="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>">
-				<input type="submit" value="Save" name="saveonly" class="submitNoArrow" onclick="document.adminForm.redirect.value=''" style="margin-right:1em;">
+				<input type="submit" value="<?php echo t('Save'); ?>" name="saveonly" class="submitNoArrow" onclick="document.adminForm.redirect.value=''" style="margin-right:1em;">
 				</form>
 
 
