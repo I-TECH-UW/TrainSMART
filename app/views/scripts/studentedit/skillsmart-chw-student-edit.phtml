@@ -30,19 +30,8 @@
 
             <div class="pad50 clear"></div>
 
-            <div class="mainformholder" style="">
+	        <?php require_once('views/scripts/studentedit/chw-student-form-contents.phtml'); ?>
 
-                <form action="<?php echo $this->escape($this->action); ?>" method="post">
-
-                    <?php require_once('views/scripts/studentedit/chw-student-form-contents.phtml'); ?>
-
-                    <div class="rightdiv" style="padding-top:50px;margin-left:25px;;">
-                        <input type="submit" name="update" value="Update Student &raquo;" class="tsbutton green large">
-
-                    </div>
-                </form>
-                <div class="clear"></div>
-            </div>
             <div class="clear"></div>
         </div>
         <div class="clear"></div>

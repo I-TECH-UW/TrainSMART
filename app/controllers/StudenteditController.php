@@ -1210,6 +1210,13 @@ class StudenteditController extends ITechController
 		$this->view->assign('studentCohortData', $studentCohortData);
 		$this->view->assign('studentClassData', $studentClassData);
 
+		if (isset($params['addpeople'])) {
+			$this->view->assign('formType', 'add');
+		}
+		elseif (isset($params['update'])) {
+			$this->view->assign('formType', 'update');
+		}
+
 		$q = 'SELECT class_modules.id, class_modules.external_id, class_modules.title
               FROM
               class_modules
