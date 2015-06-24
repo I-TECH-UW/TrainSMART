@@ -2727,7 +2727,7 @@ ALTER TABLE `person` CHANGE COLUMN `primary_responsibility_option_id` `primary_r
 
 ALTER TABLE `person_history` CHANGE COLUMN `primary_responsibility_option_id` `primary_responsibility_option_id` int(11) DEFAULT '0', CHANGE COLUMN `secondary_responsibility_option_id` `secondary_responsibility_option_id` int(11) DEFAULT '0';
 
-ALTER TABLE `facility` DROP INDEX `facility_name`, ADD UNIQUE `facility_name`(facility_name, location_id);
+ALTER TABLE `facility` DROP INDEX `facility_name`;
 
 CREATE TABLE `age_range_option` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
