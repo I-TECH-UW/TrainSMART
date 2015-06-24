@@ -4,3 +4,5 @@
 /nbproject/
 /.idea
 /.vagrant
+/sites/settings.php
+/sites/globals.php
