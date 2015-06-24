@@ -2100,7 +2100,7 @@ ALTER TABLE `facility` DROP COLUMN `uuid`;
 ALTER TABLE `facility` ADD COLUMN `uuid` char(36) AFTER `id`;
 ALTER TABLE `facility` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `facility` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
-ALTER TABLE `facility` ADD COLUMN CUSTOM_1 varchar(255) DEFAULT '';
+ALTER TABLE `facility` ADD COLUMN custom_1 varchar(255) DEFAULT '';
 
 DELIMITER ;;
 CREATE TRIGGER `facility_insert` BEFORE INSERT ON `facility` FOR EACH ROW BEGIN
