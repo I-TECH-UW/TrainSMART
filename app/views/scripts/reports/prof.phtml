@@ -34,7 +34,7 @@
 
 </head>
 <!--<body class="yui-skin-sam" onload="SwHd(document.getElementById('qualification_id'));Sel();"> -->
-<body class="yui-skin-sam" onload="Sel();">
+<body class="yui-skin-sam" onload="document.getElementById('ques').value=''; document.getElementById('qualification_id').getElementsByTagName('option')[0].selected = 'selected';">
 	<div id="pageHolder">
 
 		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
@@ -107,6 +107,7 @@
 
 ?>
 
+//TA not using function
 					function ShowAll()
 					{
 						if(document.getElementById("province_id").selectedIndex>0)

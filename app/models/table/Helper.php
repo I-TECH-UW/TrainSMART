@@ -1136,10 +1136,13 @@ class Helper extends ITechTable
 		return $result;
 	}
 
+	//TA:35 
 	public function AdminDegrees(){
-		$select = $this->dbfunc()->select()
-			->from("lookup_degrees")
-			->order('degree');
+// 		$select = $this->dbfunc()->select()
+// 			->from("lookup_degrees")
+// 			->order('degree');
+		$select = "select lookup_degrees.id, lookup_degrees.degree,  link_institution_degrees.id as used from lookup_degrees
+		left join link_institution_degrees on link_institution_degrees.id_degree = lookup_degrees.id group by lookup_degrees.id";
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
@@ -1353,6 +1356,13 @@ class Helper extends ITechTable
 			);
 			$instypeinsert = $this->dbfunc()->update($linktable,$i_arr,'id = ' . $id);
 		}
+	}
+	
+	//TA:35 able to delete a degree
+	public function deleteDegrees($params){
+		$db = $this->dbfunc();
+		$query = "DELETE FROM lookup_degrees WHERE id = " . $_POST["_id"];
+		$db->query($query);
 	}
 
 	public function updateReligion($params){

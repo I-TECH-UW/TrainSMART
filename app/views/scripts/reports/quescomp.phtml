@@ -11,8 +11,29 @@ print ScriptContainer::$instance->renderJSHead();
 <style>
 
 </style>
+<!-- TA:32 fixing bug -->
+		<script language="JavaScript">
+	var all = false;
+	function allcompetence(){
+		if ($('#complist').is(":disabled")){
+			alert("<?php tp('Please select an occupational category first')?>");
+			$("#qualification_id").focus();
+		} else {
+			if (!all){
+				$("#complist > option").attr("selected", true);
+				all = true;
+			} else {
+				$("#complist > option").removeAttr("selected");
+				all = false;
+			}
+			$('#complist').change();
+//			ShwHid(document.getElementById("complist"));
+		}
+	}
+</script>
+	
 </head>
-<body class="yui-skin-sam" onload="RenderNow();SwHd(document.getElementById('qualification_id'))">
+<body class="yui-skin-sam" onload="document.getElementById('qualification_id').getElementsByTagName('option')[0].selected = 'selected'; document.getElementById('ques').value=''; ">
 
 <div id="pageHolder">
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
@@ -20,8 +41,9 @@ print ScriptContainer::$instance->renderJSHead();
     <h1><?php tp('Question Compare Reports');?></h1>
 	   <form action="" method="get">
    <fieldset><legend><?php tp('Select Criteria');?></legend>
-    <div class="fieldLabel" style="padding:0px;margin:0px;margin-bottom:4px;text-align:left;float:none"><?php echo t('Occupational category'); ?></div><div>
-	<select id="qualification_id" name="qualification_id" onchange="SwHd(this);document.getElementById('Questions').value='';RenderNow();">
+    <div class="fieldLabel" ><?php echo t('Occupational category'); ?></div><div>
+	<!-- TA:32 fixing bug<select id="qualification_id" name="qualification_id" onchange="SwHd(this);document.getElementById('Questions').value='';RenderNow();">-->
+	<div class="fieldInput"><select id="qualification_id" name="qualification_id" onchange="showCompetencies(this)">
 	<option value="">--<?php echo t('choose'); ?>--</option>
    <?php
     $lastParent = null;
@@ -34,8 +56,22 @@ print ScriptContainer::$instance->renderJSHead();
    ?>
 	</select></div>
 	<script type="text/javascript">
-		function SwHd(obj)
-		{
+
+	// TA:32 
+	<?php
+		echo "var comptrans = new Array();\n";
+		foreach ($this->complist as $cl){
+			$comp = array();
+			if (count($cl['competencies']) > 0){
+				foreach ($cl['competencies'] as $c_arr){
+					$comp[] = "[" . $c_arr['id'] . ",'" . addslashes($c_arr['name']) . "']";
+				}
+			}
+			echo "comptrans['c" . $cl['id'] . "'] = [" . implode(",", $comp) . "];\n";
+		}
+		?>//TA
+		
+		function SwHd(obj){
 			document.getElementById("listc").style.display="none";
 			document.getElementById("listd").style.display="none";
 			document.getElementById("listn").style.display="none";
@@ -104,127 +140,128 @@ print ScriptContainer::$instance->renderJSHead();
 		}
 		function ShwHid(obj)
 		{
-			document.getElementById("listc1").style.display="none";
-			document.getElementById("listd1").style.display="none";
-			document.getElementById("listd2").style.display="none";
-			document.getElementById("listd3").style.display="none";
-			document.getElementById("listd4").style.display="none";
-			document.getElementById("listd5").style.display="none";
-			document.getElementById("listd6").style.display="none";
-			document.getElementById("listn1").style.display="none";
-			document.getElementById("listn2").style.display="none";
-			document.getElementById("listn3").style.display="none";
-			document.getElementById("listn4").style.display="none";
-			document.getElementById("listn5").style.display="none";
-			document.getElementById("listn6").style.display="none";
-			document.getElementById("listp1").style.display="none";
-            document.getElementById("listc2").style.display="none";
-            document.getElementById("listd7").style.display="none";
-            document.getElementById("listd8").style.display="none";
-            document.getElementById("listn7").style.display="none";
-            document.getElementById("listn8").style.display="none";
-            document.getElementById("listp2").style.display="none";
-			document.getElementById("listc1").selectedIndex=0;
-			document.getElementById("listd1").selectedIndex=0;
-			document.getElementById("listd2").selectedIndex=0;
-			document.getElementById("listd3").selectedIndex=0;
-			document.getElementById("listd4").selectedIndex=0;
-			document.getElementById("listd5").selectedIndex=0;
-			document.getElementById("listd6").selectedIndex=0;
-			document.getElementById("listn1").selectedIndex=0;
-			document.getElementById("listn2").selectedIndex=0;
-			document.getElementById("listn3").selectedIndex=0;
-			document.getElementById("listn4").selectedIndex=0;
-			document.getElementById("listn5").selectedIndex=0;
-			document.getElementById("listn6").selectedIndex=0;
-			document.getElementById("listp1").selectedIndex=0;
-            document.getElementById("listc2").selectedIndex=0;
-            document.getElementById("listd7").selectedIndex=0;
-            document.getElementById("listd8").selectedIndex=0;
-            document.getElementById("listn7").selectedIndex=0;
-            document.getElementById("listn8").selectedIndex=0;
-            document.getElementById("listp2").selectedIndex=0;
-			document.getElementById("score_id").selectedIndex=0;
-			document.getElementById(obj.id+obj.value).style.display="block";
+			//TA:32 remove all this
+// 			document.getElementById("listc1").style.display="none";
+// 			document.getElementById("listd1").style.display="none";
+// 			document.getElementById("listd2").style.display="none";
+// 			document.getElementById("listd3").style.display="none";
+// 			document.getElementById("listd4").style.display="none";
+// 			document.getElementById("listd5").style.display="none";
+// 			document.getElementById("listd6").style.display="none";
+// 			document.getElementById("listn1").style.display="none";
+// 			document.getElementById("listn2").style.display="none";
+// 			document.getElementById("listn3").style.display="none";
+// 			document.getElementById("listn4").style.display="none";
+// 			document.getElementById("listn5").style.display="none";
+// 			document.getElementById("listn6").style.display="none";
+// 			document.getElementById("listp1").style.display="none";
+//             document.getElementById("listc2").style.display="none";
+//             document.getElementById("listd7").style.display="none";
+//             document.getElementById("listd8").style.display="none";
+//             document.getElementById("listn7").style.display="none";
+//             document.getElementById("listn8").style.display="none";
+//             document.getElementById("listp2").style.display="none";
+// 			document.getElementById("listc1").selectedIndex=0;
+// 			document.getElementById("listd1").selectedIndex=0;
+// 			document.getElementById("listd2").selectedIndex=0;
+// 			document.getElementById("listd3").selectedIndex=0;
+// 			document.getElementById("listd4").selectedIndex=0;
+// 			document.getElementById("listd5").selectedIndex=0;
+// 			document.getElementById("listd6").selectedIndex=0;
+// 			document.getElementById("listn1").selectedIndex=0;
+// 			document.getElementById("listn2").selectedIndex=0;
+// 			document.getElementById("listn3").selectedIndex=0;
+// 			document.getElementById("listn4").selectedIndex=0;
+// 			document.getElementById("listn5").selectedIndex=0;
+// 			document.getElementById("listn6").selectedIndex=0;
+// 			document.getElementById("listp1").selectedIndex=0;
+//             document.getElementById("listc2").selectedIndex=0;
+//             document.getElementById("listd7").selectedIndex=0;
+//             document.getElementById("listd8").selectedIndex=0;
+//             document.getElementById("listn7").selectedIndex=0;
+//             document.getElementById("listn8").selectedIndex=0;
+//             document.getElementById("listp2").selectedIndex=0;
+// 			document.getElementById("score_id").selectedIndex=0;
+// 			document.getElementById(obj.id+obj.value).style.display="block";
 		}
 	</script>
-	<div style="padding:0px;margin:0px;margin-bottom:4px;text-align:left;float:none" class="fieldLabel"><?php echo t('Competence'); ?></div><div>
+	<!-- TA:32 fixing bug,  by some reason "Competence" was undisplyed -->
+	<div class="fieldLabel" id="qualification_id_lbl"><?php echo t('Competence'); ?><br />
+	<a href="javascript:void(0)" onclick="allcompetence()">
+	<?php echo t('Select All'); ?></a></div>
+	<?php
+/*  TA:32: fixing bug
+	<div>
 	<?php require_once('listcomn.phtml');?>
 	<?php require_once('listcomd.phtml');?>
 	<?php require_once('listcomp.phtml');?>
 	<?php require_once('listcomc.phtml');?>
-	</div>
-	<div style="padding:0px;margin:0px;margin-bottom:4px;text-align:left;float:none" class="fieldLabel"><?php echo t('Question'); ?> <a href="javascript:void(0)" onclick="SelAll1()"><?php echo t('Select All'); ?></a></div><div>
+	</div>*/?>
+	<!-- TA:32 START fixing bug,  by some reason "Competence" was undisplyed -->
+					<div class="fieldInput">
+							<select name="complist[]" id="complist" style="width : 350px;" size="5" multiple="multiple" disabled onchange="ShwHid(this)">
+								<option><?php tp('Select an occupational category first')?></option>
+							</select>
+						</div>
+					<!-- TA:32 END -->
+	
+	<div class="fieldLabel">
+	<?php echo t('Question'); ?><br><a href="javascript:void(0)" onclick="SelAllQuestions()"><?php echo t('Select All'); ?></a></div><div>
+	<?php
+/*  TA:32: fixing bug
 	<?php require_once('quescomn.phtml');?>
 	<?php require_once('quescomd.phtml');?>
 	<?php require_once('quesscomp.phtml');?>
 	<?php require_once('quescomc.phtml');?>
+	</div>*/?>
+	<div>
+	<!-- TA:32: fixing bug: add question options -->
+	<select name="quetion[]" id="quetion" multiple="multiple">
+	<option value="A">A</option>
+	<option value="B">B</option>
+	<option value="C">C</option>
+	<option value="D">D</option>
+	<option value="E">E</option>
+	</select>
 	</div>
-    <div class="fieldLabel" style="padding:0px;margin:0px;margin-bottom:4px;text-align:left;float:none"><?php echo t('Score'); ?> <a href="javascript:void(0)" onclick="SelAll2()"><?php echo t('Select All'); ?></a></div><div>
+	
+    <br><div class="fieldLabel"><?php echo t('Score'); ?><br><a href="javascript:void(0)" onclick="SelAllScores()"><?php echo t('Select All'); ?></a></div>
+    <!-- TA:32: fixing bug: it is wrong place 
+    <div>
 	<select id="score_id" multiple="multiple">
 	<option value="A">A</option>
 	<option value="B">B</option>
 	<option value="C">C</option>
 	<option value="D">D</option>
 	<option value="E">E</option>
+	</select>
+	</div>
+	-->
+	<!-- TA:32 fixing bug: add score options -->
+	<select name="score_id[]" id="score_id" multiple="multiple">
+	<option value="100">90 - 100%</option>
+	<option value="89">75 - 89%</option>
+	<option value="74">60 - 74%</option>
+	<option value="0"><?php echo t('Less than 60%'); ?></option>
 	</select></div>
-	<button type="button" onclick="Add_Question();return false"><?php echo t('Add Criteria'); ?></button>
+	
+	<!-- TA:32: we do not need this for now <button type="button" onclick="Add_Question();return false"><?php echo t('Add Criteria'); ?></button>-->
 <script type="text/javascript">
-        function SelAll2()
-        {
+	//TA:32 fixing bug
+        function SelAllScores(){
             var List;
             List=document.getElementById("score_id")
-                for(var i=0;i<List.options.length;i++)
-                {
+                for(var i=0;i<List.options.length;i++){
                     List.options[i].selected=true;
                 }
         }
-        function SelAll1()
-        {
-            if(document.getElementById("listc").style.display!="none" ||
-                document.getElementById("listd").style.display!="none" ||
-                document.getElementById("listn").style.display!="none" ||
-                document.getElementById("listp").style.display!="none")
-            {
-                var List;
-                if(document.getElementById("listc").style.display!="none")
-                {
-                    List=document.getElementById("listc");
-                }
-                if(document.getElementById("listd").style.display!="none")
-                {
-                    List=document.getElementById("listd");
-                }
-                if(document.getElementById("listn").style.display!="none")
-                {
-                    List=document.getElementById("listn");
-                }
-                if(document.getElementById("listp").style.display!="none")
-                {
-                    List=document.getElementById("listp");
-                }
-                if(List.value!="")
-                {
-                    var Lister;
-                    Lister = null;
-                    for(var cn=1;cn<9;cn++)
-                    {
-                        if(document.getElementById(FindComp(document.getElementById("qualification_id").value)+""+cn).style.display!="none")
-                        {
-                            Lister=document.getElementById(FindComp(document.getElementById("qualification_id").value)+""+cn);
-                            break;
-                        }
-                    }
-                    if(Lister!=null)
-                    {
-                        for(var i=0;i<Lister.options.length;i++)
-                        {
-                            Lister.options[i].selected=true;
-                        }
-                    }
-                }
-            }
-
+        //TA:32 fixing bug
+        function SelAllQuestions(){
+       	 var List;
+         List=document.getElementById("quetion")
+             for(var i=0;i<List.options.length;i++){
+                 List.options[i].selected=true;
+             }
         }
  function FindComp(obj)
  {
@@ -347,11 +384,57 @@ print ScriptContainer::$instance->renderJSHead();
   HTM = HTM + "</table>";
   Target.innerHTML = HTM;
  }
+
+//TA:32 bug fixing
+	function showCompetencies(selected){
+		//document.getElementById('ques').value = '';//TA:32 clean from preious selected value
+		all = false;
+		if ($("#qualification_id").val() != ""){
+			var items = comptrans['c'+$("#qualification_id").val()];
+			$("#complist").empty();
+			var ctr = 0;
+			if (items[ctr]){
+				while (items[ctr]){
+					$('#complist')
+						.append($("<option></option>")
+						.attr("value",items[ctr][0])
+						.text(items[ctr][1])); 
+					ctr++;
+				}
+				$("#complist").removeAttr("disabled");
+
+				if (is_array(selected)){
+					// highlighting selected elements
+					var ctr = 0;
+					while(selected[ctr]){
+						$("#complist option[value='" + selected[ctr] + "']").attr("selected", true);
+						ctr++;
+					}
+				}
+
+			} else {
+				$('#complist')
+					.append($("<option></option>")
+					.attr("value","")
+					.text("Category has no competencies")); 
+				$("#complist").attr("disabled",true);
+			}
+		} else {
+			$("#complist").empty();
+			$('#complist')
+				.append($("<option></option>")
+				.attr("value","")
+				.text("Select an occupational category first")); 
+			$("#complist").attr("disabled",true);
+			ctr++;
+		}
+	}
 </script>
 <div id="RenderInput"></div>
 	<input type="hidden" name="Questions" id="Questions" value="<?php echo $this->criteria ['Questions']; ?>" />
+	<input type="hidden" name="listpq" id="listpq" value="1,2,3,4,5,6,7,8,9,10" />
 	<input type="hidden" name="limit" id="limit" value="1" />
-    <input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+    <input type="submit" onclick="if(document.getElementById('complist').value==''){alert('<?php tp('Please select a competence')?>');return false;} if(document.getElementById('quetion').value==''){alert('<?php tp('Please select a question')?>');return false;} if(document.getElementById('score_id').value==''){alert('<?php tp('Please select a score')?>');return false;}" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
    </fieldset>
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
