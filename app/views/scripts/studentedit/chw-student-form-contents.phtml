@@ -74,13 +74,6 @@
 					toggleCohortFields();
 				});
 
-				$(".tablegrid tbody").click(function (event) {
-					$(window.ITECH.oTable.fnSettings().aoData).each(function () {
-						$(this.nTr).removeClass('row_selected');
-					});
-					$(event.target.parentNode).addClass('row_selected');
-				});
-
 				window.ITECH.oTable = $('.tablegrid').dataTable({
 					"bJQueryUI": true,
 					"bPaginate": false,
@@ -88,6 +81,13 @@
 					"bInfo": false,
 					"bFilter": false,
 					"bAutoWidth": false
+				});
+
+				$(".tablegrid tbody").click(function (event) {
+					$(window.ITECH.oTable.fnSettings().aoData).each(function () {
+						$(this.nTr).removeClass('row_selected');
+					});
+					$(event.target.parentNode).addClass('row_selected');
 				});
 
 				Array.prototype.removeIds = function(a) {
@@ -316,9 +316,9 @@
 		<div id="dialog-form-license" title="<?php echo t('Update exams')?>">
 			<form method="post" name="licenseform" id="licenseform">
 				<input type="hidden" name="licenseaction" id="licenseaction" value="license">
-				<input type="hidden" name="licenseid" id="licenseid" value="<?php echo $this->id; ?>">
-				<input type="hidden" name="cohortid" id="cohortid" value="<?php echo $this->cohortid ?>">
-				<input type="hidden" name="sid" value="<?php echo $this->escape($this->sid); ?>">
+				<input type="hidden" name="licenseid" id="licenseid" value="<?php echo $this->personData['id']; ?>">
+				<input type="hidden" name="cohortid" id="cohortid" value="<?php echo $this->studentCohortData['id_cohort'] ?>">
+				<input type="hidden" name="sid" value="<?php echo $this->escape($this->studentData['id']); ?>">
 				<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 					<thead>
 					<tr>
@@ -356,9 +356,10 @@
 		<div id="dialog-form-class" title="<?php echo t('Update classes'); ?>">
 			<form method="post" name="classform" id="classform">
 				<input type="hidden" name="classaction" id="classaction" value="classaction">
-				<input type="hidden" name="classid" id="classid" value="<?php echo $this->id; ?>">
-				<input type="hidden" name="cohortid" id="cohortid" value="<?php echo $this->cohortid ?>">
-				<input type="hidden" name="sid" value="<?php echo $this->escape($this->sid); ?>">
+				<input type="hidden" name="licenseid" id="licenseid" value="<?php echo $this->personData['id']; ?>">
+				<input type="hidden" name="cohortid" id="cohortid" value="<?php echo $this->studentCohortData['id_cohort'] ?>">
+				<input type="hidden" name="sid" value="<?php echo $this->escape($this->studentData['id']); ?>">
+
 				<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 					<thead>
 					<tr>
@@ -419,8 +420,8 @@
 			<form method="post" name="practicumform" id="practicumform">
 				<input type="hidden" name="practicumaction" id="practicumaction" value="practicumaction">
 				<input type="hidden" name="practicumid" id="practicumid" value="0">
-				<input type="hidden" name="cohortid" id="cohortid" value="<?php echo $this->cohortid ?>">
-				<input type="hidden" name="sid" value="<?php echo $this->escape($this->sid); ?>">
+				<input type="hidden" name="cohortid" id="cohortid" value="<?php echo $this->studentCohortData['id_cohort'] ?>">
+				<input type="hidden" name="sid" value="<?php echo $this->escape($this->studentData['id']); ?>">
 				<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 					<thead>
 					<tr>

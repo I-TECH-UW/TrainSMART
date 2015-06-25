@@ -1017,9 +1017,27 @@ class StudenteditController extends ITechController
 
 		$request = $this->getRequest();
 		$db = $this->dbfunc();
+		$helper = new Helper();
 
 		$params = $this->getAllParams();
 		if ($request->isPost()) {
+			if (isset($params['licenseaction'])) {
+				// TODO: Using $_POST isn't great, but getAllParams doesn't do nested data structures ($params['grades'] gets turned into the text string "Array")
+				$helper->updateStudentLicense($params['sid'], $_POST);
+				#exit;
+				$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/skillsmart-chw-student-edit/id/' . $params['id']);
+			}
+			if (isset($_POST['classaction'])) {
+				$helper->updateStudentClass($params['sid'], $_POST);
+				#exit;
+				$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/skillsmart-chw-student-edit/id/' . $params['id']);
+			}
+			if (isset($_POST['practicumaction'])) {
+				$helper->updateStudentPracticum($params['sid'], $_POST);
+				#exit;
+				$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/skillsmart-chw-student-edit/id/' . $params['id']);
+			}
+
 			require_once('views/helpers/Location.php');
 
 			$person_location_id = regionFiltersGetLastID('person', $params);
@@ -1150,6 +1168,7 @@ class StudenteditController extends ITechController
 				// TODO: this data should not be stored in classes table
 				$db->update('link_student_classes', $classData, "studentid = {$studentData['id']}");
 			}
+
 			if ($params['add_modules_ids']) {
 				$ids = explode(',', $params['add_modules_ids']);
 				$pairs = array();
@@ -1160,9 +1179,14 @@ class StudenteditController extends ITechController
 				$q = "insert into link_student_class_modules (student_id, class_modules_id) VALUES " . implode(',', $pairs);
 				$db->query($q);
 			}
+
 			if ($params['remove_modules_ids']) {
 				$q = "delete from link_student_class_modules where student_id = {$studentData['id']} and class_modules_id in ({$params['remove_modules_ids']})";
 				$db->query($q);
+			}
+
+			if ($params['']) {
+
 			}
 		}
 		require_once('views/helpers/FormHelper.php');
@@ -1215,6 +1239,16 @@ class StudenteditController extends ITechController
 		}
 		elseif (isset($params['update'])) {
 			$this->view->assign('formType', 'update');
+		}
+
+		if ($studentCohortData['id_cohort'] != 0) {
+			$this->view->assign('currentclasses', $helper->listcurrentclasses($studentCohortData['id_cohort'], $studentData['id']));
+			$this->view->assign('currentpracticum', $helper->ListCurrentPracticum($studentCohortData['id_cohort'], $studentData['id']));
+			$this->view->assign('currentlicenses', $helper->ListCurrentLicenses($studentCohortData['id_cohort'], $studentData['id']));
+		} else {
+			$this->view->assign('currentclasses', array());
+			$this->view->assign('currentpracticum', array());
+			$this->view->assign('currentlicenses', array());
 		}
 
 		$q = 'SELECT class_modules.id, class_modules.external_id, class_modules.title
