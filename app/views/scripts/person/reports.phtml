@@ -111,6 +111,7 @@ echo '<option value="'.$vals['id'].'" '.((@$this->criteria['qualification_id']) 
 		    //TA:28 fixing bug - report table is not displayed because of wrong array format, not closing ]
 		var peopleData = [
 		<?php
+	
 		$cnt = 0;
 		 	$isFirstRow = true;
 			foreach($this->results as $row) {
@@ -149,6 +150,12 @@ echo '<option value="'.$vals['id'].'" '.((@$this->criteria['qualification_id']) 
 				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""';
 				 else
 				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomp/id/'.$row['id'].'\'>View</a>"';
+				}else{ //TA:28 fixin bug
+					if($row['cmp']=="0")
+	echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""';
+else
+	echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomp/id/'.$row['id'].'\'>View</a>"';
+
 				}
 				echo ']';
 				$cnt++;

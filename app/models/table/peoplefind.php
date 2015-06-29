@@ -32,6 +32,7 @@ class Peoplefind extends ITechTable
     switch ($param['type']){
       case "every":
         // If person was a student, then became a tutor- always show as tutor
+        //TA:36 add cohort id to the returned fields
         $sql = 'SELECT p.id, first_name, last_name, gender,
           CASE
             WHEN tutor_type IS NOT NULL THEN tutor_type
@@ -47,6 +48,11 @@ class Peoplefind extends ITechTable
             WHEN student_id IS NOT NULL THEN student_institutionname
             ELSE NULL
           END AS institutionname,
+        		cohort_id,
+        		cadre,
+        		student_inst_id,
+        		tutor_inst_id,
+        		facility_id,
           cohort '; // will have dup rows if student in multiple cohorts over time
         break;
       case "student":
@@ -54,6 +60,10 @@ class Peoplefind extends ITechTable
           student_type AS type,
           student_link AS link,
           student_institutionname AS institutionname,
+        cohort_id,
+        cadre,
+        		student_inst_id,
+        		facility_id,
           cohort '; // will have dup rows if student in multiple cohorts over time
         break;
       case "key":
@@ -62,6 +72,8 @@ class Peoplefind extends ITechTable
           tutor_type AS type,
           tutor_link AS link,
           tutor_institutionname AS institutionname,
+        		tutor_inst_id,
+        		facility_id,
           \'N/A\' AS cohort ';
         break;
     }    
@@ -71,6 +83,7 @@ class Peoplefind extends ITechTable
     
     // STUDENT JOIN
     if ($param['type'] == 'student' || $param['type'] == 'every') {
+    	//TA:36 add cohort id to the returned fields, DROPPED condition corrected, add cadre, add institute, add facility
       $sql .= '
         LEFT JOIN (
           SELECT 
@@ -86,12 +99,18 @@ class Peoplefind extends ITechTable
               WHEN sc.id_cohort IS NOT NULL 
               THEN 
                 CASE
-                  WHEN dropdate IS NOT NULL 
+                  WHEN dropdate IS NOT NULL AND dropdate != \'\' AND dropdate != \'0000-00-00\'
                   THEN CONCAT(c.cohortname,\' (DROPPED)\') 
                   ELSE c.cohortname
                 END
               ELSE \'N/A\'
-            END AS cohort
+            END AS cohort,
+            sc.id_cohort as cohort_id,
+            cadre as cadre,
+            		CASE 
+              WHEN c.institutionid IS NOT NULL THEN c.institutionid 
+              WHEN s.institutionid IS NOT NULL THEN s.institutionid 
+            END AS student_inst_id
           FROM student s 
             LEFT JOIN link_student_cohort sc
               ON s.id = sc.id_student
@@ -109,7 +128,6 @@ class Peoplefind extends ITechTable
     // TUTOR JOIN
     if ($param['type'] == 'key' || $param['type'] == 'tutor' || $param['type'] == 'every') {
       $sql .= '
-        -- Because of the one-to-many here, duplicate person rows can result
         LEFT JOIN (
           SELECT
             CASE WHEN is_keypersonal = 0 THEN \'tutor\' ELSE \'key personal\' END AS tutor_type,
@@ -120,7 +138,11 @@ class Peoplefind extends ITechTable
             CASE 
               WHEN lti.id_institution IS NOT NULL THEN i2.institutionname 
               WHEN t.institutionid IS NOT NULL THEN i1.institutionname 
-            END AS tutor_institutionname
+            END AS tutor_institutionname,
+            CASE
+                WHEN lti.id_institution IS NOT NULL THEN lti.id_institution
+                WHEN t.institutionid IS NOT NULL THEN t.institutionid
+            END AS tutor_inst_id
           FROM tutor t
             LEFT JOIN link_tutor_institution lti
               ON t.id = lti.id_tutor
@@ -148,7 +170,32 @@ class Peoplefind extends ITechTable
       case "tutor":
         $where[] = ' AND tutor_id IS NOT NULL ';
       break;
-    }      
+    }  
+
+    //TA:36 fixing bug
+    if($param['firstname']){
+    	$where[] = " AND first_name ='" . $param['firstname'] . "'";
+    }
+    if($param['lastname']){
+    	$where[] = " AND last_name ='" . $param['lastname'] . "'";
+    }
+    if( $param['type'] == 'student' && $param['cohort']){
+    	$where[] = " AND cohort_id =" . $param['cohort'];
+    }
+    if($param['cadre']){
+    	$where[] = " AND cadre =" . $param['cadre'];
+    }
+    if($param['inst']){
+    	if($param['type'] == 'tutor'){
+    	 $where[] = " AND tutor_inst_id =" . $param['inst'];
+    	}else if($param['type'] == 'student'){
+    		$where[] = " AND student_inst_id =" . $param['inst'];
+    	}
+    }
+    if($param['fact']){
+    	$where[] = " AND facility_id =" . $param['fact'];
+    }
+    //
     
     $sql .= ' WHERE 1 = 1 AND ' ;
     foreach ($where as $whereClause) {
@@ -161,11 +208,6 @@ class Peoplefind extends ITechTable
     return $sql;
     
   }
-  
-  
-  
-  
-  
   
   
   public function peoplesearch_orig($param) {

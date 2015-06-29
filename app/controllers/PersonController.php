@@ -1294,11 +1294,12 @@ class PersonController extends ReportFilterHelpers {
 			$num_locs = $this->setting('num_location_tiers');
 			list($field_name,$location_sub_query) = Location::subquery($num_locs, $location_tier, $location_id, true);
 
+			//TA:28 fixing bug (fix query)
 			if ($criteria ['person_type'] == 'is_everyone') {
 				// left join instead of inner for everyone
 				$sql = '
 				SELECT DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).'
-				,q.parent_id, (SELECT COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.comments as "persal",IFNULL(cmpr.res,10) `res` FROM person as p
+				,q.parent_id, (SELECT COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.persal_number as "persal",IFNULL(cmpr.res,10) `res` FROM person as p
 				LEFT JOIN person_qualification_option as q ON p.primary_qualification_option_id = q.id
 				LEFT JOIN facility as f ON p.facility_id = f.id
 				LEFT JOIN compres as cmpr ON cmpr.person = p.id AND cmpr.active=\'Y\'
@@ -1309,7 +1310,7 @@ class PersonController extends ReportFilterHelpers {
 				#if($criteria ['is_complete']=='is_complete'){
 				#	$sql = 'select DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).',q.parent_id, (SELECT COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.comments as "persal", cmpr.res from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l, compres as cmpr';
 				#} else {
-					$sql = 'select DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).',q.parent_id, (SELECT COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.comments as "persal", IFNULL((SELECT `res` FROM `compres` WHERE `compres`.`person` = `p`.`id` AND `compres`.`active` = \'Y\'),10) `res` from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l';
+					$sql = 'select DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).',q.parent_id, (SELECT COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.persal_number as "persal", IFNULL((SELECT `res` FROM `compres` WHERE `compres`.`person` = `p`.`id` AND `compres`.`active` = \'Y\'),10) `res` from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l';
 				#}
 			}
 
@@ -1440,7 +1441,6 @@ class PersonController extends ReportFilterHelpers {
 					$rowArray[$key]['gender'] = t(trim($row['gender']));
 				}
 			}
-
 
 			$this->viewAssignEscaped ( 'results', $rowArray );
 			$this->view->assign ( 'count', count ( $rowArray ) );

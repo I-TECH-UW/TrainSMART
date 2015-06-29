@@ -35,7 +35,7 @@ class PeoplefindController extends ITechController {
 
 		$param = $_GET;
 		if( empty($_GET) ){ $param = $_POST; }
-
+		
 		$search = $people->peoplesearch($param);
 
 		$helper = new Helper();
@@ -51,8 +51,6 @@ class PeoplefindController extends ITechController {
 		$this->view->assign('facility',$facility);
 
 		$this->view->assign('getpeople',$search);
-
-
 
 	}
 
