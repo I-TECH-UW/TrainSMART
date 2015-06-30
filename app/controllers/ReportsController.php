@@ -3162,7 +3162,10 @@ echo $sql . "<br>";
 			}
 
 			$sql .= ' FROM (';
-			$sql .= 'SELECT training.*, person.facility_id as "facility_id", person.id as "person_id", person.last_name, IFNULL(suffix_phrase, ' . "' '" . ') as suffix_phrase, ';
+			//TA:42 add person.is_delete column result
+			//$sql .= 'SELECT training.*, person.facility_id as "facility_id", person.id as "person_id", person.last_name, IFNULL(suffix_phrase, ' . "' '" . ') as suffix_phrase, ';
+			$sql .= 'SELECT training.*, person.facility_id as "facility_id", person.id as "person_id", person.is_deleted as person_is_deleted, person.last_name, IFNULL(suffix_phrase, ' . "' '" . ') as suffix_phrase, ';
+			
 			$sql .= 'person.first_name, person.middle_name, person.person_custom_1_option_id, person.person_custom_2_option_id, person.custom_3 as person_custom_3, person.custom_4 as person_custom_4, person.custom_5 as person_custom_5, ';
 			$sql .= 'CASE WHEN birthdate  IS NULL OR birthdate = \'0000-00-00\' THEN NULL ELSE ((date_format(now(),\'%Y\') - date_format(birthdate,\'%Y\')) - (date_format(now(),\'00-%m-%d\') < date_format(birthdate,\'00-%m-%d\')) ) END as "age", ';
 			$sql .= 'person.phone_work, person.phone_home, person.phone_mobile, person.email, ';
@@ -3248,8 +3251,11 @@ echo $sql . "<br>";
 			}
 
 			$where = array ();
-
+ 
 			$where [] = ' pt.is_deleted = 0 ';
+			
+			//TA:42 add condition for person.is_deleted condition
+			$where [] = ' person_is_deleted = 0 ';
 
 			//TA:33 this part is not working then to do it by different way
 // 			if($locWhere = $this->getLocationCriteriaWhereClause($criteria,  '', 'pt')) {
@@ -3488,6 +3494,7 @@ echo $sql . "<br>";
 					$sql .= ' GROUP BY person_id, pt.id';
 				}
 			}
+			
 			
 			$rowArray = $db->fetchAll ( $sql);
 			
