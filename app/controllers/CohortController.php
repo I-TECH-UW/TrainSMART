@@ -178,7 +178,7 @@ class CohortController extends ITechController {
 		$this->view->assign('fetchexams',$result);
 		//$this->view->assign('action','../cohort/cohortexamedit');
 		
-		$result = $cohort->ListClasses();	
+		$result = $cohort->ListClasses($this->setting('site_style_id'));
 		$this->view->assign('fetchclasses',$result);
 
 		$result = $helper->ListCurrentClasses($cohortid);	

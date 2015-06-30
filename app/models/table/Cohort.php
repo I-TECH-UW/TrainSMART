@@ -461,13 +461,13 @@ class Cohortedit extends ITechTable
 		$rowArray = $this->dbfunc()->insert($this->_classes,$insert);
 	}
 	 
-	public function ListClasses() {
+	public function ListClasses($site_style_id = 1) {
 		$db = $this->dbfunc();
 		$query = "SELECT c.*, p.first_name, p.last_name
 			FROM classes c
 			INNER JOIN tutor t ON t.id = c.instructorid
 			INNER JOIN person p ON t.personid = p.id ORDER BY c.classname, p.first_name, p.last_name";
-		if ($this->setting('site_style_id') == 2) {
+		if ($site_style_id == 2) {
 			$query = "SELECT * from classes ORDER BY custom_1";
 		}
 		$select = $db->query($query);
