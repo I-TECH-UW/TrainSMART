@@ -412,7 +412,9 @@
 							<input type="text" name="graddate" readonly value="<?php echo $this->escape($this->studentsgraduating);?>">
 
 							<div class="rightdiv" style="margin-top:10px; margin-right:12px;">
-								<input type="submit" name="deletecohort" value="<?php echo t('Delete'); ?>" class="tsbutton green large" style="display:none;">
+							<!-- TA:44 add button Delete -->
+								<input type="submit" name="deletecohort" value="<?php echo t('Delete'); ?>" class="tsbutton green large" 
+								onclick="<?php if(sizeof($this->cohortStudents) !=0 ) echo 'alert(\'Please remove all Students associated with the cohort first\'); return false;'; ?>">
 								<input type="submit" name="updatecohort" value="<?php echo t('Update'); ?> &raquo;" class="tsbutton green large">
 							</div>
 						</div>
