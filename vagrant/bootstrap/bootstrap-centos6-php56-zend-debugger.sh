@@ -1,13 +1,16 @@
 
 yum install epel-release -y
 
-# add package index for php 5.6
+
 # wget http://dl.iuscommunity.org/pub/ius/stable/CentOS/6/x86_64/ius-release-1.0-13.ius.centos6.noarch.rpm
-wget https://dl.iuscommunity.org/pub/ius/archive/CentOS/6/x86_64/ius-release-1.0-13.ius.centos6.noarch.rpm
+# wget https://dl.iuscommunity.org/pub/ius/archive/CentOS/6/x86_64/ius-release-1.0-13.ius.centos6.noarch.rpm
 
-rpm -Uvh ius-release-1.0-13.ius.centos6.noarch.rpm
+# add package index for ius repository packages
+wget -r -l1 --no-parent -A "ius-release*.ius.centos6.noarch.rpm" https://dl.iuscommunity.org/pub/ius/stable/CentOS/6/x86_64/
+rpm -Uvh dl.iuscommunity.org/pub/ius/stable/CentOS/6/x86_64/ius-release*.ius.centos6.noarch.rpm
+rm -rf /home/vagrant/dl.iuscommunity.org
 
-# copy repository config that enables legacy php (5.6) installation
+# copy repository config that enables archived package installation
 mv /home/vagrant/ius-archive.repo /etc/yum.repos.d/ius-archive.repo
 
 # disable SELinux for vagrant installs - production servers should not use this
@@ -25,7 +28,8 @@ yum replace php --replace-with php56u -y
 # install the Zend Debugger for php 5.6
 mv /home/vagrant/ZendDebugger.so /usr/lib64/php/modules/ZendDebugger.so
 
-# this is a hack to make zend debugger work - it presents the newer (1.0) libcrypto and libssl as the old (0.9.8) # version. this will work fine if and only if the functions that zend debugger calls in libcrypto 
+# this is a hack to make zend debugger work - it presents the newer (1.0) libcrypto and libssl as the old (0.9.8) 
+# version. this will work fine if and only if the functions that zend debugger calls in libcrypto 
 # and libssl 0.9.8 are compatible with the implementations in 1.0
 ln -s /usr/lib64/libssl.so.10 /usr/lib64/libssl.so.0.9.8
 ln -s /usr/lib64/libcrypto.so.10 /usr/lib64/libcrypto.so.0.9.8
@@ -60,6 +64,7 @@ service mysqld start
 mysql -u root </home/vagrant/grant-privileges.sql
 mysql -u root </home/vagrant/data.sql
 rm /home/vagrant/data.sql
+rm /home/vagrant/grant-privileges.sql
 service mysqld restart
 
 # let's make it so we can look at the log files without being root
