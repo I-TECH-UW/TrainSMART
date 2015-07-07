@@ -56,7 +56,7 @@ print ScriptContainer::$instance->renderJSHead();
 		    {key:"edit", label: "<?php echo t("Edit")?>", sortable:true, resizeable:true}
 		];
 
-		var action = '<?php echo $this->base_url;?>/admin/listByRecommend/outputType/json';
+		var action = '<?php echo $this->base_url;?>/admin/list-by-recommend/outputType/json';
 		makeJSONDataTable("trainingRecommend", null, action, trainerColumnDefs);
 	</script>
 

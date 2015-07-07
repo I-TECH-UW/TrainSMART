@@ -71,7 +71,7 @@ print ScriptContainer::$instance->renderJSHead();
 <script language="JavaScript">
 function doDelete() {
 	if(confirm("<?php tp('Are you sure you wish to delete this location?');?>")) {
-		window.location = '<?php echo $this->base_url;?>/facility/deleteLocation/id/<?php echo $this->id;?>';
+		window.location = '<?php echo $this->base_url;?>/facility/delete-location/id/<?php echo $this->id;?>';
 		return false;
 	}
 }
