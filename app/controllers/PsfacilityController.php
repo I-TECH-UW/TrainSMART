@@ -229,7 +229,7 @@ class PsfacilityController extends ReportFilterHelpers {
 		$this->sendData ( $rowArray );
 	}
 	
-	public function listwithunknownAction() {
+	public function listWithUnknownAction() {
 		$this->listAction ();
 	}
 	
@@ -368,7 +368,7 @@ class PsfacilityController extends ReportFilterHelpers {
 	
 	}
 	
-	public function searchlocationAction() {
+	public function searchLocationAction() {
 		
 		require_once ('models/table/OptionList.php');
 		
@@ -558,7 +558,7 @@ class PsfacilityController extends ReportFilterHelpers {
 	
 	}
 	
-	function addlocationAction() {
+	function addLocationAction() {
 		require_once 'views/helpers/DropDown.php';
 		
 		//locations
@@ -566,7 +566,7 @@ class PsfacilityController extends ReportFilterHelpers {
 	
 	}
 	
-	function viewlocationAction() {
+	function viewLocationAction() {
 		if (! $this->hasACL ( 'edit_course' )) {
 			$this->view->assign ( 'viewonly', 'disabled="disabled"' );
 		}

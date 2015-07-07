@@ -88,12 +88,12 @@ if ( $this->isLoggedIn() ) {
 		}
 
 		if (	$this->hasACL('edit_course') ) {
-			$navMain['psfacility']['searchLocation']	= t('View/Edit Training Location');
+			$navMain['psfacility']['search-location']	= t('View/Edit Training Location');
 		} else if ($this->hasACL('view_course')) {
-			$navMain['psfacility']['searchLocation']	= t('View Training Location');
+			$navMain['psfacility']['search-location']	= t('View Training Location');
 		}
 		if (	$this->hasACL('edit_course')) {
-			$navMain['psfacility']['addLocation']	= t('Add Training Location');
+			$navMain['psfacility']['add-location']	= t('Add Training Location');
 		}
 
 	}

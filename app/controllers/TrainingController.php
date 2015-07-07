@@ -75,7 +75,7 @@ class TrainingController extends ReportFilterHelpers {
 
 		// edittable ajax (remove/update/etc)
 		if ($this->_getParam ( 'edittable' )) {
-			$this->ajaxeditTable ();
+			$this->ajaxEditTable ();
 			return;
 		}
 
@@ -1100,7 +1100,7 @@ class TrainingController extends ReportFilterHelpers {
 	/**
 	* editTable ajax
 	*/
-	private function ajaxeditTable() {
+	private function ajaxEditTable() {
 
 		if (! $this->hasACL ( 'edit_course' )) {
 			$this->doNoAccessError ();
@@ -2208,7 +2208,7 @@ class TrainingController extends ReportFilterHelpers {
 	}
 
 	public function searchAction() {
-		return $this->_forward ( 'trainingSearch', 'reports' );
+		$this->_forward ( 'training-search', 'reports' );
 	}
 
 	public function deletedAction() {
@@ -2316,7 +2316,7 @@ class TrainingController extends ReportFilterHelpers {
 		$this->sendData ( $rowArray );
 	}
 
-	public function listbytrainerAction() {
+	public function listByTrainerAction() {
 		//training info
 		$trainingObj = new Training ( );
 		$rowArray = $trainingObj->findFromTrainer ( $this->_getParam ( 'id' ) );
@@ -2331,17 +2331,19 @@ class TrainingController extends ReportFilterHelpers {
 		$this->sendData ( $rowArray );
 	}
 
-	public function listbytrainingrecommendpersonAction() {
+	public function listByTrainingRecommendPersonAction() {
 		// recommended classes based on person id
+        // TODO: this looks unused BS 20150706
 		require_once 'models/table/TrainingRecommend.php';
 		$trainingRecObj = new TrainingRecommend ( );
 		$rowArray = $trainingRecObj->getRecommendedClassesforPerson ( $this->_getParam ( 'id' ) ); // person id
 		$this->sendData ( $rowArray );
 	}
 
-	public function listbyparticipantAction() {
+	public function listByParticipantAction() {
 		//organizer info
-		$orgAccessListAllowed = allowed_org_access_full_list($this) . "," . allowed_organizer_in_this_site($this);
+        // TODO: this looks unused BS 20150706
+        $orgAccessListAllowed = allowed_org_access_full_list($this) . "," . allowed_organizer_in_this_site($this);
 		if ($orgAccessListAllowed == ",")
 			$orgAccessListAllowed = "";
 		//class info

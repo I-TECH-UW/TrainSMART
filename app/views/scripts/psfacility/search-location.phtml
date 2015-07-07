@@ -86,7 +86,7 @@ print ScriptContainer::$instance->renderJSHead();
 		   var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
 			if ( (sData == null) || (sData.length == 0) )
 				sData = '&nbsp;&nbsp;&nbsp;';
-		    elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/facility/viewlocation/id/" + oRecord.getData("id") + "' >" + sData + "</a>";
+		    elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/facility/view-location/id/" + oRecord.getData("id") + "' >" + sData + "</a>";
 		}
 
 		var locationsColumnDefs = [

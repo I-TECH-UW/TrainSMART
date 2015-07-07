@@ -35,43 +35,9 @@ if ( $this->mode == 'count' ) {
   <div id="content">
 
     <h1><?php tp('Course');?> <?php echo ($this->mode != 'search'? t('Reports'):t('Search') );  ?></h1>
- <?php /*?><?php if ($this->mode != 'search' ) { ?>
-    	<div class="fieldLabel" style="width: auto;"><?php echo t('Select').' '.t('Training').' '.t('report');?></div>
-    	<select id="training" name="training" onchange="gotoPage('training');">
-    		<option value="">--<?php tp('choose');?>--</option>
-    		<option value="/reports/trainings" <?php if ($this->mode == 'id') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('by Name');?></option>
-    		<option value="/reports/trainingByParticipants" <?php if ($this->mode == 'count') echo 'selected="selected"';?>><?php tp('Trainings by Participant Count');?></option>
-        <?php if ($this->setting['module_unknown_participants_enabled']) { ?>
-        <option value="/reports/trainingUnknown" <?php if ($this->mode == 'unknown') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('with Unknown Participants');?></option>
-         <?php } ?>
-   	</select>
-   <?php } ?><?php */?>
-	   <form action="" method="get">
+ 	   <form action="" method="get">
    <fieldset <?php if( $checkLabel) echo 'id="criteria"'; ?> ><legend><?php tp('Select Criteria');?></legend>
 <div id="dividers" >
-<?php /*?><?php if ($checkLabel) { ?>
-     	<div class="fieldLabel" ></div>
-    	<div class="fieldInput criteria-header"><div  class="criteria-label" ><?php echo $checkLabel;?></div><div  class="criteria-label" style="padding-left: 20px;"><?php tp('filter');?></div></div>
-<?php } ?>
-<?php */?>   	<?php /*?><div class="fieldLabel" id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?> (<?php tp('training location');?>)</div>
-    	<div class="fieldInput"><div class="leftBorderPad"><input type="checkbox" name="showProvince"    <?php  if ($this->criteria['showProvince']) echo 'checked="checked"';?> /></div><label for="showProvince" ></label>
-	<div  class="leftBorder autoHeight">
-	 <?php renderFilter($this->locations, 1, 'province_id', $this->criteria['province_id'], 'district_id', true); ?>
-	<p>&nbsp;</p></div></div><?php */?>
- 	<?php /*?><?php if ( $this->setting['display_region_b'] ) { ?>
-	<div class="fieldLabel" id="district_id_lbl"><?php echo (@$this->translation['Region B (Health District)']); ?> (<?php tp('training location');?>)</div>
-	<div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showDistrict"   <?php  if ($this->criteria['showDistrict']) echo 'checked="checked"';?> /></div><label for="showDistrict" ></label>
-
-	<div  class="leftBorder autoHeight"><?php renderFilter($this->locations, 2, 'district_id', $this->criteria['district_id'], ($this->setting['display_region_c']?'region_c_id':false), true); ?><p>&nbsp;</p></div></div>
-	<?php } ?>
-  <?php if ( $this->setting['display_region_c'] ) { ?>
-  
-  <div class="fieldLabel" id="region_c_lbl"><?php echo (@$this->translation['Region C (Local Region)']); ?> (<?php tp('training location');?>)</div>
-  <div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showRegionC"   <?php  if ($this->criteria['showRegionC']) echo 'checked="checked"';?> /></div><label for="showRegionC" ></label>
-
-  <div  class="leftBorder autoHeight"><?php renderFilter($this->locations, 3, 'region_c_id', $this->criteria['region_c_id'], false, true); ?><p>&nbsp;</p></div></div>
-  <?php } ?><?php */?>
-
 
 <?php 
    echo DropDown::render_report_filter('training_category', 'showCategory', @$this->translation['Institution'], $this->category, 'training_category_phrase', @$this->criteria['training_category_id'], $this->criteria['showCategory']);

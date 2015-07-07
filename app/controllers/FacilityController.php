@@ -262,7 +262,8 @@ class FacilityController extends ReportFilterHelpers {
 		
 		$this->sendData ( $rowArray );
 	}
-	public function listwithunknownAction() {
+
+	public function listWithUnknownAction() {
 		$this->listAction ();
 	}
 	
@@ -415,7 +416,7 @@ class FacilityController extends ReportFilterHelpers {
 		// validate
 		$this->view->assign ( 'status', $status );
 	}
-	public function deletelocationAction() {
+	public function deleteLocationAction() {
 		if (! $this->hasACL ( 'edit_course' )) {
 			$this->doNoAccessError ();
 		}
@@ -441,7 +442,7 @@ class FacilityController extends ReportFilterHelpers {
 		// validate
 		$this->view->assign ( 'status', $status );
 	}
-	public function searchlocationAction() {
+	public function searchLocationAction() {
 		require_once ('models/table/OptionList.php');
 		
 		// location list
@@ -667,14 +668,14 @@ class FacilityController extends ReportFilterHelpers {
 		$this->viewAssignEscaped ( 'facility', $facilityArray );
 		
 	}
-	function addlocationAction() {
+	function addLocationAction() {
 		require_once 'views/helpers/DropDown.php';
 		
 		// locations
 		$this->viewAssignEscaped ( 'locations', Location::getAll () );
 	}
 	
-	function viewlocationAction() {
+	function viewLocationAction() {
 		if (! $this->hasACL ( 'edit_course' )) {
 			$this->view->assign ( 'viewonly', 'disabled="disabled"' );
 		}

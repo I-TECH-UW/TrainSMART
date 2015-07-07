@@ -1288,7 +1288,7 @@ echo $sql . "<br>";
 		return $this->trainingReport ();
 	}
 
-	public function trainingsearchAction() {
+	public function trainingSearchAction() {
 		$this->_countrySettings = array();
 		$this->_countrySettings = System::getAll();
 
