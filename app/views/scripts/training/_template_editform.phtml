@@ -668,20 +668,20 @@ if ( $this->row['has_known_participants']) :
     <script type="text/javascript">
     YAHOO.util.Event.onDOMReady( function() {
     	      // last name
-    	var autoComp = makeAutocomplete('trainer_last_name', 'trainerContainer', '<?php echo $this->base_url;?>/training/trainerLastList/outputType/text/' );
+    	var autoComp = makeAutocomplete('trainer_last_name', 'trainerContainer', '<?php echo $this->base_url;?>/training/trainer-last-list/outputType/text/' );
       formatNameAutocomplete(autoComp);
       YAHOO.util.Dom.get('trainerContainer').style.position = "absolute"; // fix position
       YAHOO.util.Dom.get('trainerContainer').style.top = '0px';
 
       // first name
-    	var autoCompFirst = makeAutocomplete('trainer_first_name', 'trainerContainerFirst', '<?php echo $this->base_url;?>/training/trainerFirstList/outputType/text/' );
+    	var autoCompFirst = makeAutocomplete('trainer_first_name', 'trainerContainerFirst', '<?php echo $this->base_url;?>/training/trainer-first-list/outputType/text/' );
      formatNameAutocomplete(autoCompFirst);
       YAHOO.util.Dom.get('trainerContainerFirst').style.position = "absolute";
       YAHOO.util.Dom.get('trainerContainerFirst').style.top = '0px';
 
             // middle name
       <?php if ( $this->setting['display_middle_name'] ) {?>
-    	var autoCompMiddle = makeAutocomplete('trainer_middle_name', 'trainerContainerMiddle', '<?php echo $this->base_url;?>/training/trainerMiddleList/outputType/text/' );
+    	var autoCompMiddle = makeAutocomplete('trainer_middle_name', 'trainerContainerMiddle', '<?php echo $this->base_url;?>/training/trainer-middle-list/outputType/text/' );
      formatNameAutocomplete(autoCompMiddle);
       YAHOO.util.Dom.get('trainerContainerMiddle').style.position = "absolute";
       YAHOO.util.Dom.get('trainerContainerMiddle').style.top = '0px';
@@ -855,20 +855,20 @@ if ( $this->row['has_known_participants']) :
     <script type="text/javascript">
     YAHOO.util.Event.onDOMReady( function() {
       // last name
-    	var autoCompPerson = makeAutocomplete('person_last_name', 'personContainer', '<?php echo $this->base_url;?>/training/personLastList/outputType/text/' );
+    	var autoCompPerson = makeAutocomplete('person_last_name', 'personContainer', '<?php echo $this->base_url;?>/training/person-last-list/outputType/text/' );
       formatNameAutocomplete(autoCompPerson);
       YAHOO.util.Dom.get('personContainer').style.position = "absolute"; // fix position
       YAHOO.util.Dom.get('personContainer').style.top = '0px';
 
       // first name
-    	var autoCompPersonFirst = makeAutocomplete('person_first_name', 'personContainerFirst', '<?php echo $this->base_url;?>/training/personFirstList/outputType/text/' );
+    	var autoCompPersonFirst = makeAutocomplete('person_first_name', 'personContainerFirst', '<?php echo $this->base_url;?>/training/person-first-list/outputType/text/' );
       formatNameAutocomplete(autoCompPersonFirst);
       YAHOO.util.Dom.get('personContainerFirst').style.position = "absolute"; // fix position
       YAHOO.util.Dom.get('personContainerFirst').style.top = '0px';
 
            // middle name
       <?php if ( $this->setting['display_middle_name'] ) { ?>
-    	var autoCompPersonMiddle = makeAutocomplete('person_middle_name', 'personContainerMiddle', '<?php echo $this->base_url;?>/training/personMiddleList/outputType/text/' );
+    	var autoCompPersonMiddle = makeAutocomplete('person_middle_name', 'personContainerMiddle', '<?php echo $this->base_url;?>/training/person-middle-list/outputType/text/' );
       formatNameAutocomplete(autoCompPersonMiddle);
       YAHOO.util.Dom.get('personContainerMiddle').style.position = "absolute"; // fix position
       YAHOO.util.Dom.get('personContainerMiddle').style.top = '0px';
