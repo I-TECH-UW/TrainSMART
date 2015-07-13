@@ -9,7 +9,21 @@ yum update -y
 
 # install our custom packages
 yum install nano mysql-server git-core dos2unix telnet -y
-yum --enablerepo=webtatic install php-common-5.2.17 php-cli-5.2.17 php-5.2.17 php-mysql-5.2.17 php-pdo-5.2.17 php-devel-5.2.17 php-xml-5.2.17 -y
+
+# webtatic seems to have pulled php 5.2, use a different source of unsigned packages
+wget http://vuksan.com/centos/RPMS/x86_64/php-common-5.2.17-1.x86_64.rpm
+wget http://vuksan.com/centos/RPMS/x86_64/php-cli-5.2.17-1.x86_64.rpm
+wget http://vuksan.com/centos/RPMS/x86_64/php-5.2.17-1.x86_64.rpm
+wget http://vuksan.com/centos/RPMS/x86_64/php-mysql-5.2.17-1.x86_64.rpm
+wget http://vuksan.com/centos/RPMS/x86_64/php-pdo-5.2.17-1.x86_64.rpm
+wget http://vuksan.com/centos/RPMS/x86_64/php-devel-5.2.17-1.x86_64.rpm
+wget http://vuksan.com/centos/RPMS/x86_64/php-xml-5.2.17-1.x86_64.rpm
+wget http://vuksan.com/centos/RPMS/x86_64/libcurl-7.18.2-7.x86_64.rpm
+
+yum --nogpgcheck --enablerepo=webtatic install --skip-broken libcurl*.rpm -y
+yum --nogpgcheck --enablerepo=webtatic install --skip-broken *.rpm -y
+
+rm *.rpm
 
 # install the zend debugger for php 5.2 from http://www.zend.com/en/download/534?start=true
 mv /home/vagrant/ZendDebugger.so /usr/lib64/php/modules/ZendDebugger.so
