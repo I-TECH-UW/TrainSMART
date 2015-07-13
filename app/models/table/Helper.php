@@ -3,6 +3,25 @@ require_once('ITechTable.php');
 
 class Helper extends ITechTable
 {
+    
+    #################################
+    #                               #
+    # ASSESSMENT SPECIFIC FUNCTIONS #
+    #                               #
+    #################################
+    
+    public function getAssessmentTypes($all = false){
+       
+        // RETURNS A LIST OF ALL Assessment Types ORDERED BY assessment_type
+        $select = $this->dbfunc()->select()
+          ->from("lookup_assessment_types")
+          ->order('assessment_type');
+       
+        $result = $this->dbfunc()->fetchAll($select);
+        return $result;
+    }
+    
+    
 	#################################
 	#                               #
 	#   COHORT SPECIFIC FUNCTIONS   #
@@ -1146,6 +1165,14 @@ class Helper extends ITechTable
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
+	
+	public function AdminAssessments(){
+	    $select = $this->dbfunc()->select()
+	    	->from("lookup_assessment_types")
+	    	->order('assessment_type');
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return $result;
+	}
 
 	public function AdminFunding(){
 		$select = $this->dbfunc()->select()
@@ -1594,6 +1621,51 @@ class Helper extends ITechTable
 			);
 			$instypeinsert = $this->dbfunc()->insert($linktable,$i_arr);
 		}
+	}
+	
+	public function addAssessments($params){
+	    $linktable = "lookup_assessment_types";
+	    $maincolumn = "assessment_type";
+	    $id = $_POST["_id"];
+	    $value = $_POST['_assessment_type'];
+	
+	    $select = $this->dbfunc()->select()
+	    ->from($linktable)
+	    ->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)));
+	    $result = $this->dbfunc()->fetchAll($select);
+	    if (count ($result) == 0){
+	        # LINK NOT FOUND - ADDING
+	        $i_arr = array(
+	        $maincolumn	=> $value
+	        );
+	        $instypeinsert = $this->dbfunc()->insert($linktable,$i_arr);
+	    }
+	}
+	
+	public function updateAssessments($params){
+	    $linktable = "lookup_assessment_types";
+	    $maincolumn = "assessment_type";
+	    $id = $_POST["_id"];
+	    $value = $_POST['_assessment_type'];
+	
+	    $select = $this->dbfunc()->select()
+	    ->from($linktable)
+	    ->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)))
+	    ->where('id <> ?', $id);
+	    $result = $this->dbfunc()->fetchAll($select);
+	    if (count ($result) == 0){
+	        # LINK NOT FOUND - ADDING
+	        $i_arr = array(
+	        $maincolumn	=> $value
+	        );
+	        $instypeinsert = $this->dbfunc()->update($linktable,$i_arr,'id = ' . $id);
+	    }
+	}
+	
+	public function deleteAssessments($params){
+	    $db = $this->dbfunc();
+	    $query = "DELETE FROM lookup_assessment_types WHERE id = " . $_POST["_id"];
+	    $db->query($query);
 	}
 
 	public function addDegrees($params){
@@ -2605,7 +2677,498 @@ class Helper extends ITechTable
 		}
 		return $return;
 	}
+	
+	//assessment admin begin
+	
+	public function getSkillSmartAssessments($aid = 0){
+	    if (!$aid){
+	        $db = $this->dbfunc();
+	        $select = $db->select()
+	        ->from("assessments")
+	        ->where('status = ?', 1)
+	        ->order('assessmentname');
+	        $result = $db->fetchAll($select);
+	        $return = array();
+	        if (count ($result) > 0){
+	            foreach ($result as $row){
+	                // ADDING GROUPING, IF NOT EXIST
+	                $return[] = array(
+	                    "id"	=> $row['id'],
+	                    "label"	=> $row['assessmentname'],
+	                );
+	            }
+	        }
+	    } else {
+	        $db = $this->dbfunc();
+	        $select = $db->select()
+	        ->from("assessments")
+	        ->where('status = ?', 1)
+	        ->where('id = ?', $aid)
+	        ->order('assessmentname');
+	        $result = $db->fetchAll($select);
+	        $return = array();
+	        if (count ($result) > 0){
+	            foreach ($result as $row){
+	                // ADDING GROUPING, IF NOT EXIST
+	                $return = array(
+	                    "id"	=> $row['id'],
+	                    "label"	=> $row['assessmentname'],
+	                );
+	            }
+	        }
+	    }
+	    return $return;
+	
+	}
+	
+	public function addSkillsmartAssessment($params){
+	    $linktable		= "assessments";
+	    $maincolumn		= "assessmentname";
+	    $id				= $_POST["_id"];
+	    $value			= $_POST['_fieldtoupdate'];
+	
+	    $select = $this->dbfunc()->select()
+	    ->from($linktable)
+	    ->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)));
+	    $result = $this->dbfunc()->fetchAll($select);
+	    if (count ($result) == 0){
+	        # LINK NOT FOUND - ADDING
+	        $i_arr = array(
+	        $maincolumn		=> $value
+	        );
+	        $instypeinsert = $this->dbfunc()->insert($linktable,$i_arr);
+	    }
+	}
+	
+	public function updateSkillsmartAssessment($params){
+	    $linktable		= "assessments";
+	    $maincolumn		= "assessmentname";
+	    $id				= $_POST["_id"];
+	    $value			= $_POST['_fieldtoupdate'];
+	
+	    $select = $this->dbfunc()->select()
+	    ->from($linktable)
+	    ->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)))
+	    ->where('status = ?', 1)
+	    ->where('id = ?', $id);
+	    $result = $this->dbfunc()->fetchAll($select);
+	    if (count ($result) == 0){
+	        # LINK NOT FOUND - ADDING
+	        $i_arr = array(
+	        $maincolumn	=> $value
+	        );
+	        $instypeinsert = $this->dbfunc()->update($linktable,$i_arr,'id = ' . $id);
+	    }
+	}
+	
+	public function getSkillSmartAssessmentsQuestions($cid = 0){
+	    $db = $this->dbfunc();
+	    $select = $db->select()
+	    ->from("assessments_questions")
+	    ->where('status = ?', 1)
+	    ->where('assessment_id = ?', $cid)
+	    ->order('itemorder')
+	    ->order('question');
+	    $result = $db->fetchAll($select);
+	    $return = array();
+	    if (count ($result) > 0){
+	        foreach ($result as $row){
+	            // ADDING GROUPING, IF NOT EXIST
+	            $return[] = array(
+	                "id"			=> $row['id'],
+	                "assessment_id"	=> $row['assessment_id'],
+	                "question"		=> $row['question'],
+	                "itemorder"		=> $row['itemorder'],
+	                "itemtype"		=> $row['itemtype'],
+	                "status"		=> $row['status'],
+	                "questiontype"	=> $row['questiontype'],
+	            );
+	        }
+	    }
+	    return $return;
+	
+	}
+	
+	public function addSkillsmartAssessmentQuestion($params,$assessid){
+	    $db = $this->dbfunc();
+	
+	    $id = $_POST['_iddetail'];
+	    $question = $_POST['_fieldtoupdatedetail'];
+	    $itemorder = $_POST['_orderdetail'];
+	    $itemtype = $_POST['_qtypedetail'];
+	
+	    $query = "SELECT * FROM assessments_questions WHERE assessment_id = " . $assessid . " AND itemorder >= " . $itemorder;
+	    #die($query);
+	    $select = $db->query($query);
+	    $itemstomove = $select->fetchAll();
+	
+	    foreach ($itemstomove as $itm){
+	        // MOVING ITEMS BACK BY ONE TO OPEN A SPOT
+	        $upd = "UPDATE assessments_questions SET itemorder = " . ($itm['itemorder'] + 1) . " WHERE id = " . $itm['id'];
+	        #die($upd);
+	        $db->query($upd);
+	    }
+	
+	    $query = "INSERT INTO assessments_questions SET
+			assessment_id = '" . addslashes($assessid) . "',
+			question = '" . addslashes($question) . "',
+			itemorder = '" . addslashes($itemorder) . "',
+			itemtype = '" . addslashes($itemtype) . "',
+			status = 1";
+	    #die($query);
+	    $db->query($query);
+	    $this->skillsmartAssessmentCloseGaps($assessid);
+	}
+	
+	public function updateSkillsmartAssessmentQuestion($params,$assessid){
+	    $db = $this->dbfunc();
+	
+	    $id = $_POST['_iddetail'];
+	    $question = $_POST['_fieldtoupdatedetail'];
+	    $itemorder = $_POST['_orderdetail'];
+	    $itemtype = $_POST['_qtypedetail'];
+	
+	    // MAKING A GAP IN THE NUMBERING FOR THE NEW ITEM
+	    $query = "SELECT * FROM assessments_questions WHERE assessment_id = " . $assessid . " AND id <> " . $id . " AND itemorder >= " . $itemorder;
+	
+	    #die($query);
+	
+	    $select = $db->query($query);
+	    $itemstomove = $select->fetchAll();
+	
+	    foreach ($itemstomove as $itm){
+	        // MOVING ITEMS BACK BY ONE TO OPEN A SPOT
+	        $upd = "UPDATE assessments_questions SET itemorder = " . ($itm['itemorder'] + 1) . " WHERE id = " . $itm['id'];
+	        #die($upd);
+	        $db->query($upd);
+	    }
+	
+	    $query = "UPDATE assessments_questions SET
+			question = '" . addslashes($question) . "',
+			itemorder = '" . addslashes($itemorder) . "',
+			itemtype = '" . addslashes($itemtype) . "'
+			WHERE id = " . $id;
+	    #die($query);
+	    $db->query($query);
+	    $this->skillsmartAssessmentCloseGaps($assessid);
+	}
+	
+	// some questions on qualification competancy links 
+	function skillsmartAssessmentCloseGaps($assessid){
+		$db = $this->dbfunc();
+		// CLOSING ANY NUMBERING GAPS AFTER MOVING/ADDING/UPDATING/DELETING ACTIONS
+		$query = "SELECT * FROM assessments_questions WHERE assessment_id = " . $assessid . " AND status = 1 ORDER BY itemorder";
+		$select = $db->query($query);
+		$itemstomove = $select->fetchAll();
+		$counter = 1;
 
+		foreach ($itemstomove as $itm){
+			// MOVING ITEMS TO COUNTER POSITION
+			$upd = "UPDATE assessments_questions SET itemorder = " . $counter . " WHERE id = " . $itm['id'];
+			$db->query($upd);
+			$counter++;
+		}
+	}
+
+	function skillsmartLinkQualAssess($params){
+		$db = $this->dbfunc();
+		$assessid = $params['assessid'];
+		$parsed = array();
+		foreach ($params['qual'] as $k=>$v){
+			$parsed[] = $v;
+			$query = "SELECT * FROM link_qualification_assessment WHERE
+				assessment_id = '" . addslashes($assessid) . "' AND qualificationid = '" . addslashes($v) . "'";
+			$result = $db->query($query);
+			$rows = $result->fetchAll();
+			if (count ($rows) == 0){
+				$query = "INSERT INTO link_qualification_assessment SET
+					assessment_id = '" . addslashes($assessid) . "',
+					qualificationid = '" . addslashes($v) . "'";
+				$db->query($query);
+			}
+		}
+
+		// Removing any remaining items if they are no longer checked
+		$query = "DELETE FROM link_qualification_assessment WHERE assessment_id = '" . addslashes($assessid) . "' AND qualificationid NOT IN (" . implode(",", $parsed) . ")";
+
+		$db->query ($query);
+	}
+
+	function skillsmartGetAssessmentLinks($assessid){
+		$return = array();
+		$db = $this->dbfunc();
+		$query = "SELECT * FROM link_qualification_assessment WHERE
+			assessment_id = '" . addslashes($assessid) . "'";
+		$result = $db->query($query);
+		$rows = $result->fetchAll();
+		if (count ($rows) != 0){
+			foreach ($rows as $row){
+				$return[] = $row['qualificationid'];
+			}
+		}
+		return $return;
+	}
+	 	
+	
+	//assessment admin end
+	
+	// assessment begin
+	
+	function getPersonAssessments($pid, $get_secondary = false){
+	    $db = $this->dbfunc();
+	    $query = "SELECT * FROM person WHERE id = " . $pid;
+	    #echo $query . "<br>";
+	    $result = $db->query($query);
+	    $rows = $result->fetchAll();
+	    $return = false;
+	    if (count ($rows) > 0){
+	        $return = array();
+	        $personrow = $rows[0];
+	        $qualification = $personrow['primary_qualification_option_id'];
+	
+	        $qualification_ids = array();
+	        $qualification_ids[] = $qualification;
+	        if($get_secondary){
+	            $secondary_sql = "SELECT id FROM person_qualification_option WHERE parent_id = {$qualification}";
+	            $res = $db->query($secondary_sql);
+	            $qualrows = $res->fetchAll();
+	            foreach($qualrows as $row){
+	                $qualification_ids[] = $row['id'];
+	            }
+	        }
+	
+	        $qualquery = "SELECT * FROM link_qualification_assesment WHERE qualificationid IN (".implode(',', $qualification_ids).")";
+	        #echo $qualquery . "<br>";
+	        $qualresult = $db->query($qualquery);
+	        $qualrows = $qualresult->fetchAll();
+	        if (count ($qualrows) > 0){
+	            $assessments = array();
+	            foreach ($qualrows as $qr){
+	                $assessments[] = $qr['assessment_id'];
+	            }
+	
+	            // GETTING QUESTIONS FOR THIS assessment
+	            if (count ($assessments) > 0){
+	                $assessment_ids = implode(",", $assessments);
+	
+	                // Getting all questions
+	                // $qquery = "SELECT * FROM competencies_questions WHERE competencyid IN (" . $compids . ") AND status = 1";
+	                $qquery = "SELECT * FROM assessments_questions WHERE assessment_id IN (" . $assessment_ids . ") AND status = 1";
+	                #echo $qquery . "<br>";
+	                $qresult = $db->query($qquery);
+	                $qrows = $qresult->fetchAll();
+	                $questions = array();
+	                $required = 0;
+	                $qids = array();
+	                foreach ($qrows as $q){
+	                    $questions[] = $q;
+	                    if (substr($q['itemtype'],0,8) == "question"){
+	                        $required++;
+	                        $qids[] = $q['id'];
+	                    }
+	                }
+	
+	                // Getting all answers
+	                $aquery = "SELECT * FROM assess WHERE `question` IN (" . (count($qids) > 0 ? implode(",", $qids) : 0) . ") AND `person` = " . $pid . " AND `active` = 'Y'";
+	                $aresult = $db->query($aquery);
+	                $arows = $aresult->fetchAll();
+	                $answers = array();
+	                $unanswered = 0;
+	                foreach ($arows as $a){
+	                    $answers[] = $a;
+	                    if ($a['answer'] == "F"){
+	                        $unanswered++;
+	                    }
+	                }
+	
+	                $return['assessments'] = $assessments;
+	                $return['questions'] = $questions;
+	                $return['answers'] = $answers;
+	                $return['required'] = $required;
+	                $return['unanswered'] = $unanswered;
+	            }
+	        }
+	    }
+	    return $return;
+	}
+	
+	function getPersonAssessmentsDetailed($pa_id){
+	    
+
+	    $db = $this->dbfunc();
+	    $query = "SELECT * FROM person_to_assessments WHERE id = " . $pa_id;
+	    $result = $db->query($query);
+	    $rows = $result->fetchAll();
+	    $row = $rows[0];
+	    $pid = $row['person_id'];
+	    $fid = $row['facility_id'];
+	    
+	    $date_created = str_replace(' ', '', $row['date_created']);
+	    
+	    $aid = $row['assessment_id'];
+	    
+	    //file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'getPersonAssessmentsDetailed >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	    //var_dump("getPersonAssessmentsDetailed pid=", $pid, "END");
+	    //$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+	    $query = "SELECT * FROM assessments WHERE id = " . $aid;
+	    $result = $db->query($query);
+	    $rows = $result->fetchAll();
+	    $row = $rows[0];
+	    $atid = $row['assessment_type_id'];
+	    
+	    $query = "SELECT last_name, first_name  FROM person WHERE id = " . $pid;
+	    $result = $db->query($query);
+	    $rows = $result->fetchAll();
+	    $row = $rows[0];
+	    $last_name = $row['last_name']; 
+	    $first_name = $row['first_name'];
+	    	  
+	    $query = "SELECT * FROM facility WHERE id = " . $fid;
+	    $result = $db->query($query);
+	    $rows = $result->fetchAll();
+	    $row = $rows[0];
+	    $facility_name = $row['facility_name']; // title
+	    	  
+	    
+	    $query = "SELECT * FROM lookup_assessment_types WHERE id = " . $atid;
+	    $result = $db->query($query);
+	    $rows = $result->fetchAll();
+	    $row = $rows[0];
+	    $assessment_name = $row['assessment_type']; // title
+	    
+	    $_str = array(
+	        "last_name" => $last_name,
+	        "first_name" => $first_name,
+	        "facility_name" => $facility_name, 
+	        "assessment_name" => $assessment_name, // title
+	        "date_created" => $date_created,
+	        "questions" => array(),
+	    );
+	    
+	    // get questions
+	    $qids = array();
+	    $query = "SELECT * FROM assessments_questions WHERE assessment_id = " . $aid . " AND status = 1 ORDER BY itemorder";
+	    $result = $db->query($query);
+	    $rows = $result->fetchAll();
+	    foreach ($rows as $q){
+	        $_str['questions'][] = $q;
+	        $qids[] = $q['id'];
+	    }
+	    
+	    // get answers
+	    $query = "SELECT * FROM assess WHERE `question` IN (" . (count($qids) > 0 ? implode(",", $qids) : 0) . 
+	    ") AND `person` = " . $pid . 
+	    " AND `facility` = " . $fid .
+	    " AND `date_created` = '" . $date_created . "'" .
+	    " AND `assessment_id` = " . $aid .
+	    " AND `active` = 'Y'";
+	    $result = $db->query($query);
+	    $rows = $result->fetchAll();
+	    $_str['answers'] = array();
+	    foreach ($rows as $a){
+	        $_str['answers'][] = $a;
+	    }
+	    $structure[] = $_str;
+	    
+	    //file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'getPersonAssessmentsDetailed >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	    //var_dump("getPersonAssessmentsDetailed structure=", $structure, "END");
+	    //$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	    
+	    
+	    return $structure;
+
+	}
+	
+	public function saveAssessmentAnswers($questions,$pa_id){
+	    
+	    	  
+	    $db = $this->dbfunc();
+	    $query = "SELECT * FROM person_to_assessments WHERE id = " . $pa_id;
+	    $result = $db->query($query);
+	    $rows = $result->fetchAll();
+	    $row = $rows[0];
+	    $pid = $row['person_id'];
+	    $fid = $row['facility_id'];
+	    $date_created = str_replace(' ', '', $row['date_created']);
+	    $aid = $row['assessment_id'];
+	    
+	    $query = "SELECT * FROM assessments WHERE id = " . $aid;
+	    $result = $db->query($query);
+	    $rows = $result->fetchAll();
+	    $row = $rows[0];
+	    $atid = $row['assessment_type_id'];
+	     
+	    $query = "SELECT * FROM lookup_assessment_types WHERE id = " . $atid;
+	    $result = $db->query($query);
+	    $rows = $result->fetchAll();
+	    $row = $rows[0];
+	    $assessment_type = $row['assessment_type']; // title
+	    
+	    $db = $this->dbfunc();
+	    $parsed = array();
+	    foreach ($questions as $k=>$v){
+	        if (trim ($v) != ""){
+	            $query = "SELECT * FROM assess WHERE
+					`question` = '" . addslashes($k) . "' AND
+					`person` = '" . addslashes($pid) . "' AND
+					`facility` = '" . addslashes($fid) . "' AND
+					`date_created` = '" . addslashes($date_created) . "'";
+	            $result = $db->query($query);
+	            $rows = $result->fetchAll();
+	            
+	            file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'saveAssessmentAnswers >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	            var_dump("saveAssessmentAnswers rows=", $rows, $query, "END");
+	            $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	            	      
+	            
+	            if (count ($rows) == 0){
+	                file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'INSERT >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	                //var_dump("saveAssessmentAnswers rows=", $rows, "END");
+	                $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	                 
+	                $query = "INSERT INTO assess SET
+						`person` = '" . addslashes($pid) . "',
+						`facility` = '" . addslashes($fid) . "',
+    				    `assessment_id` = '" . addslashes($aid) . "',
+						`date_created` = '" . addslashes($date_created) . "',
+						`question` = '" . addslashes($k) . "',
+						`option` = '" . addslashes($v) . "',
+						`active` = 'Y'";
+	                $db->query($query);
+	                $parsed[] = $this->dbfunc()->lastInsertId();
+	            } else {
+	                file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'UPDATE >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	                //var_dump("saveAssessmentAnswers rows=", $rows, "END");
+	                $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	                $row = $rows[0];
+	                $query = "UPDATE assess SET
+						`option` = '" . addslashes($v) . "'
+						WHERE id = " . $row['id'];
+	                $db->query($query);
+	                $parsed[] = $row['id'];
+	            }
+	        }
+	    }
+	
+	    // Deactivating any remaining items if they are no longer checked
+	    //$query = "UPDATE assess SET active = 'N' WHERE person = " . $pid . " AND id NOT IN (" . implode(",", $parsed) . ")";
+	    //$db->query ($query);
+	}
+	
+	public function getAssessments(){
+	    $db = $this->dbfunc();
+	    $query = "SELECT * FROM assessments WHERE
+			status = 1
+			ORDER BY assessmentname";
+	    $select = $db->query($query);
+	    $result = $select->fetchAll();
+	    return $result;
+	}
+	
+    // assessment end
+
+	
 	function getPersonCompetencies($pid, $get_secondary = false){
 		$db = $this->dbfunc();
 		$query = "SELECT * FROM person WHERE id = " . $pid;
@@ -2787,6 +3350,7 @@ class Helper extends ITechTable
 		$query = "UPDATE comp SET active = 'N' WHERE person = " . $pid . " AND id NOT IN (" . implode(",", $parsed) . ")";
 		$db->query ($query);
 	}
+	
 	public function getCompetencies(){
 		$db = $this->dbfunc();
 		$query = "SELECT * FROM competencies WHERE

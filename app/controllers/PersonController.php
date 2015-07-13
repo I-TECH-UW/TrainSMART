@@ -146,6 +146,7 @@ class PersonController extends ReportFilterHelpers {
 		$rtn = $this->doAddEditView ();
 		return $rtn;
 	}
+	
 
 	public function editcompetencyAction(){
 		$person_id	= $this->getSanParam ( 'id' );

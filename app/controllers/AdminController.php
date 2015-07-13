@@ -1892,6 +1892,31 @@ class AdminController extends UserController
 		$this->view->assign('parent', $parent);
 
 	}
+		
+	public function peopleAssessmentsAction(){
+	    $helper = new Helper();
+	
+	    if (isset ($_POST['_action'])){
+	        print_r($_POST);
+	        switch ($_POST['_action']){
+	            case "addnew":
+	                $helper->addAssessments($_POST);
+	                break;
+	            case "update":
+	                $helper->updateAssessments($_POST);
+	                break;
+	            case "delete":
+	                $helper->deleteAssessments($_POST);
+	                break;
+	        }
+	        $this->_redirect ( 'admin/people-assessments' );
+	    }
+	
+	    $list = $helper->AdminAssessments();
+	    $this->view->assign("lookup", $list);
+	    $this->view->assign("header",t("Assessments"));
+	
+	}
 
 	public function peopleResponsibilityAction()
 	{
@@ -3027,6 +3052,67 @@ class AdminController extends UserController
 		$this->view->assign("lookup", $list['facilitydepartment']);
 		$this->view->assign("header",t("Facility Departments"));
 	}
+	
+	public function skillsmartAssessmentAction(){
+	    $helper = new Helper();
+	
+	    $assessid = $this->getSanParam('assess');
+	    $assess = false;
+	    if (is_numeric($assessid)){
+	        $assess = true;
+	    }
+	
+	    if (isset ($_POST['_action'])){
+	        // UPDATING ASSESSMENT NAME
+	        switch ($_POST['_action']){
+	            case "addnew":
+	                $helper->addSkillsmartAssessment($_POST);
+	                break;
+	            case "update":
+	                $helper->updateSkillsmartAssessment($_POST);
+	                break;
+	        }
+	        $this->_redirect ( 'admin/skillsmart-assessment' );
+	    } elseif (isset ($_POST['_actiondetail'])){
+	        switch ($_POST['_actiondetail']){
+	            case "addnew":
+	                $helper->addSkillsmartAssessmentQuestion($_POST,$assessid);
+	                break;
+	            case "update":
+	                $helper->updateSkillsmartAssessmentQuestion($_POST,$assessid);
+	                break;
+	        }
+	        $this->_redirect ( 'admin/skillsmart-assessment/assess/' . $assessid );
+	    } elseif (isset ($_POST['actionqual'])){
+	        $helper->skillsmartLinkQualAssess($_POST);
+	        $this->_redirect ( 'admin/skillsmart-assessment/assess/' . $assessid );
+	        //			var_dump ($_POST['qual']);
+	        //			exit;
+	    }
+	
+	    $this->view->assign("showassess",$assess);
+	    if (!$assess){
+	        // GENERAL OVERVIEW OF ALL ASSESSMENT NAMES
+	        $list = $helper->getSkillSmartAssessments();
+	        $this->view->assign("lookup", $list);
+	        $this->view->assign("header",t("Assessments"));
+	    } else {
+	        // ASSESSMENT SPECIFIC OUTPUT
+	
+	        $assessment = $helper->getSkillSmartAssessments($assessid);
+	        $questions = $helper->getSkillSmartAssessmentsQuestions($assessid);
+	
+	        $this->view->assign("header","Update assessment '" . $assessment['label'] . "'");
+	        $this->view->assign("questions",$questions);
+	
+	        // GETTING QUALIFICATIONS
+	        $quals = $helper->skillsmartGetQualifications($assessid);
+	        $this->view->assign("quals",$quals);
+	        $this->view->assign("assessid",$assessid);
+	        $this->view->assign("currentlinks",$helper->skillsmartGetAssessmentLinks($assessid));
+	    }
+	}
+	
 
 	public function skillsmartCompetencyAction(){
 		$helper = new Helper();
