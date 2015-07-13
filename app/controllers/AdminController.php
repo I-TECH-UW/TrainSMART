@@ -3061,6 +3061,7 @@ class AdminController extends UserController
 			'label_email',
 			'label_ps_marital_status',
 			'.label_list_of_modules.',
+            'label_ps_class_modules_custom_1',
 			'-Workplace-',
 			'label_workplace_name',
 			'label_workplace_address_1',
@@ -3119,6 +3120,7 @@ class AdminController extends UserController
 			'label_email'                                        => 'Email',
 			'label_ps_marital_status'                            => 'ps marital status',
 			'label_list_of_modules'                              => 'List of Modules',
+            'label_ps_class_modules_custom_1'                    => 'ps class modules custom 1',
 
             'label_workplace_name'                               => 'Workplace Name',
             'label_workplace_address_1'                          => 'Workplace Address 1',
