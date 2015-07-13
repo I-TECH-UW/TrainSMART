@@ -413,7 +413,7 @@
 			echo labelAndField($this, t('Reason for Separation'), $this->level); // Dropdown
 			echo labelAndField($this, t('Date of Enrollment'), 'date', 'joindate', $this->studentCohortData['joindate']);
 			echo labelAndField($this, t('Date of Separation'), 'date', 'dropdate', $this->studentCohortData['dropdate']);
-			echo labelAndField($this, t('Date of Final Integrated External Assessment'), 'date', 'examdate', $this->studentClassData['examdate']);
+			echo labelAndField($this, t('Date of Final Integrated External Assessment'), 'date', 'examdate', $this->studentCohortData['examdate']);
 			echo labelAndField($this, t('ps program enrolled in'), $this->assessment_center); // Dropdown
 			echo labelAndField($this, t('ps last university attended'), 'text', 'lastunivatt', $this->studentData['lastunivatt']);
 			echo labelAndField($this, t('Contact Number of Assessment Centre/Site'), 'text', 'emergcontact', $this->studentData['emergcontact']);
@@ -423,9 +423,9 @@
 		<fieldset class="formSection">
 			<?php
 			echo '<legend>' . t('Qualified Learners') . '</legend>';
-			echo labelAndField($this, t('Date Certificate was Received From the AQP'), 'date', 'certificate_issue_date', $this->studentClassData['certificate_issue_date']);
-			echo labelAndField($this, t('Certificate Number'), 'text', 'certificate_number', $this->studentClassData['certificate_number']);
-			echo labelAndField($this, t('Date Learner Received Certificate'), 'date', 'certificate_received_date', $this->studentClassData['certificate_received_date']);
+			echo labelAndField($this, t('Date Certificate was Received From the AQP'), 'date', 'certificate_issue_date', $this->studentCohortData['certificate_issue_date']);
+			echo labelAndField($this, t('Certificate Number'), 'text', 'certificate_number', $this->studentCohortData['certificate_number']);
+			echo labelAndField($this, t('Date Learner Received Certificate'), 'date', 'certificate_received_date', $this->studentCohortData['certificate_received_date']);
 			?>
 		</fieldset>
 		<div class="rightdiv" style="padding-top:50px;margin-left:25px;;">
@@ -436,5 +436,5 @@
 			<?php } ?>
 		</div>
 
-	</div> <!-- this closes the div class="mainformholder" so we get more width in these tables -->
+	</div>
 </form>

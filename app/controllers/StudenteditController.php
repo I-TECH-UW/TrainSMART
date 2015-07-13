@@ -1048,14 +1048,12 @@ class StudenteditController extends ITechController
 			$personData = array();
 			$workplaceData = array();
 			$cohortData = array();
-			$classData = array();
 
 			if (isset($params['update'])) {
 				$studentData = $db->fetchRow("SELECT * from student where personid = ?", $params['id']);
 				$personData = $db->fetchRow("SELECT * FROM person WHERE id = ?", $params['id']);
 				$workplaceData = $db->fetchRow("SELECT * FROM workplace where id = ?", $personData['workplace_id']);
 				$cohortData = $db->fetchRow("SELECT * from link_student_cohort where id_student = ?", $studentData['id']);
-				$classData = $db->fetchRow("SELECT * FROM link_student_classes WHERE studentid = ?", $studentData['id']);
 			}
 
 			// person
@@ -1136,22 +1134,19 @@ class StudenteditController extends ITechController
 					'dropreason' => $params['dropreason'],
 					'joindate' => $this->_euro_date_to_sql($params['joindate']),
 					'dropdate' => $this->_euro_date_to_sql($params['dropdate']),
+					'examdate' => $this->_euro_date_to_sql($params['examdate']),
+					'certificate_issue_date' => $this->_euro_date_to_sql($params['certificate_issue_date']),
+					'certificate_number' => $params['certificate_number'],
+					'certificate_received_date' => $this->_euro_date_to_sql($params['certificate_received_date']),
+
 				));
 			}
-			// link_student_classes
-			$classData = array_merge($classData, array(
-				'studentid' => $params['student_id'],
-				'examdate' => $this->_euro_date_to_sql($params['examdate']),
-				'certificate_issue_date' => $this->_euro_date_to_sql($params['certificate_issue_date']),
-				'certificate_number' => $params['certificate_number'],
-				'certificate_received_date' => $this->_euro_date_to_sql($params['certificate_received_date']),
-			));
 
 			if (isset($params['addpeople'])) {
 				if (isset($params['cohort']) && strlen($params['cohort'])) {
 					$db->insert('link_student_cohort', $cohortData);
 				}
-				$db->insert('link_student_classes', $classData);
+
 			} elseif (isset($params['update'])) {
 				$db->update('person', $personData, "id = {$params['person_id']}");
 				$db->update('student', $studentData, "personid = {$params['person_id']}");
@@ -1165,8 +1160,6 @@ class StudenteditController extends ITechController
 				else if ($cohortData) {
 					$db->delete('link_student_cohort', "where id_student = {$studentData['id']}");
 				}
-				// TODO: this data should not be stored in classes table
-				$db->update('link_student_classes', $classData, "studentid = {$studentData['id']}");
 			}
 
 			if ($params['add_modules_ids']) {
@@ -1211,12 +1204,10 @@ class StudenteditController extends ITechController
 		$studentCohortData = $db->fetchRow($q);
 		$studentCohortData['joindate'] = formhelperdate($studentCohortData['joindate'], "d/m/y");
 		$studentCohortData['dropdate'] = formhelperdate($studentCohortData['dropdate'], "d/m/y");
+        $studentCohortData['examdate'] = formhelperdate($studentCohortData['examdate'], "d/m/y");
+        $studentCohortData['certificate_issue_date'] = formhelperdate($studentCohortData['certificate_issue_date'], "d/m/y");
+        $studentCohortData['certificate_received_date'] = formhelperdate($studentCohortData['certificate_received_date'], "d/m/y");
 
-		$q = "SELECT * FROM link_student_classes WHERE studentid = {$studentData['id']}";
-		$studentClassData = $db->fetchRow($q);
-		$studentClassData['examdate'] = formhelperdate($studentClassData['examdate'], "d/m/y");
-		$studentClassData['certificate_issue_date'] = formhelperdate($studentClassData['certificate_issue_date'], "d/m/y");
-		$studentClassData['certificate_received_date'] = formhelperdate($studentClassData['certificate_received_date'], "d/m/y");
 
 		$this->view->assign('locations', Location::getAll());
 		$this->view->assign('personCriteria', locationIDTo3TierCriteriaArray($personData['home_location_id'], 'person'));
@@ -1232,7 +1223,7 @@ class StudenteditController extends ITechController
 		$this->view->assign('workplaceData', $workplaceData);
 
 		$this->view->assign('studentCohortData', $studentCohortData);
-		$this->view->assign('studentClassData', $studentClassData);
+		//$this->view->assign('studentClassData', $studentClassData);
 
 		if (isset($params['update'])) {
 			$this->view->assign('formType', 'update');
@@ -1281,8 +1272,6 @@ class StudenteditController extends ITechController
 			)
 		);
 
-		// do we need a prior learning yes/no when we have a way to select it?
-		//$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
 		$this->view->assign('class_modules', $this->dbfunc()->fetchAssoc('select id, external_id, title from class_modules order by title'));
 
 		$this->view->assign('qualification_name',
@@ -1292,9 +1281,6 @@ class StudenteditController extends ITechController
 				$studentCohortData['joinreason']
 			)
 		);
-
-		// doc says this field is for SAQA ID but I don't understand how that can be a dropdown
-		//$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
 
 		$this->view->assign('cohorts',
 			DropDown::generateSelectionFromQuery(

@@ -1,6 +1,6 @@
 
-ALTER TABLE `link_student_classes`
-ADD COLUMN `examdate`  date NULL AFTER `camark`,
+ALTER TABLE `link_student_cohort`
+ADD COLUMN `examdate`  date NULL AFTER `isgraduated`,
 ADD COLUMN `certificate_issue_date`  date NULL AFTER `examdate`,
 ADD COLUMN `certificate_received_date`  date NULL AFTER `certificate_issue_date`,
 ADD COLUMN `certificate_number`  int NULL AFTER `certificate_received_date`;
