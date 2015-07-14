@@ -161,10 +161,10 @@
                         foreach ($this->currentclasses as $classes){
                             ?>
                             <tr class="GradeA">
-                                <td><?php echo $classes['classname']; ?></td>
+                                <td><?php echo $classes['custom_1']; ?></td>
                                 <td class="" style="width : 200px;"><?php echo $classes['first_name'] . " " . $classes['last_name']; ?></td>
-                                <td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($classes['startdate'])); ?></td>
-                                <td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($classes['enddate'])); ?></td>
+                                <td class="" style="width : 120px;"><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); } ?></td>
+                                <td class="" style="width : 120px;"><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); } ?></td>
                                 <?php if($this->setting['ps_display_ca_mark']) : ?>
                                     <td class="" style="width : 120px;"><input type="text" name="camark[<?php echo $classes['id'] ?>]" id="camark[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['camark'])) != "n/a" ? $classes['camark'] : ""; ?>" style="width : 100%;"></td>
                                 <?php endif; ?>
