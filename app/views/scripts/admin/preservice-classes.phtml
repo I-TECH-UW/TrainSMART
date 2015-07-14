@@ -181,6 +181,18 @@ ob_end_clean();
 			</select>
 			<label for="coursetopic"><?php echo t('Topic');?></label>
 			<input type="text" name="coursetopic" id="coursetopic" class="text ui-widget-content ui-corner-all" />
+			<label for="startdate"><?php echo t('Start date');?></label>
+			<input type="text" name="startdate" id="startdate" class="calendarbox text ui-widget-content ui-corner-all" />
+			<label for="enddate"><?php echo t('End date');?></label>
+			<input type="text" name="enddate" id="enddate" class="calendarbox text ui-widget-content ui-corner-all" />
+			<label for="instructorid"><?php echo t('Instructor');?></label>
+			<select name="instructorid" id="instructorid" class="text ui-widget-content ui-corner-all">
+				<?php
+				foreach ($this->tutors as $tutor){
+					echo "<option value=\"" . $tutor['id'] . "\">" . $tutor['last_name'] . ", " . $tutor['first_name'] . "</option>\n";
+				}
+				?>
+			</select>
 			<?php if ($this->setting['site_style_id'] == 2) { ?>
 				<label for="class_modules_id">Module</label>
 				<select name="class_modules_id" id="class_modules_id" class="text ui-widget-content ui-corner-all">
@@ -196,19 +208,6 @@ ob_end_clean();
 				<input type="text" name="credits" id="credits" class="text ui-widget-content ui-corner_all" />
 				<label for="custom_2">Weight</label>
 				<input type="text" name="custom_2" id="custom_2" class="text ui-widget-content ui-corner_all" />
-			<?php } else { ?>
-				<label for="startdate"><?php echo t('Start date');?></label>
-				<input type="text" name="startdate" id="startdate" class="calendarbox text ui-widget-content ui-corner-all" />
-				<label for="enddate"><?php echo t('End date');?></label>
-				<input type="text" name="enddate" id="enddate" class="calendarbox text ui-widget-content ui-corner-all" />
-				<label for="instructorid"><?php echo t('Instructor');?></label>
-				<select name="instructorid" id="instructorid" class="text ui-widget-content ui-corner-all">
-					<?php
-					foreach ($this->tutors as $tutor){
-						echo "<option value=\"" . $tutor['id'] . "\">" . $tutor['last_name'] . ", " . $tutor['first_name'] . "</option>\n";
-					}
-					?>
-				</select>
 			<?php } ?>
 
 		</fieldset>
@@ -233,16 +232,15 @@ ob_end_clean();
 						<th><?php echo t('Title');?></th>
 						<th>Course Type</th>
 						<th>Course Topic</th>
+						<th>Start Date</th>
+						<th>End Date</th>
+						<th>Instructor</th>
 						<?php if ($this->setting['site_style_id'] == 2) { ?>
 							<th>Module</th>
 							<th>Short Name</th>
 							<th>Credits</th>
 							<th>Weight</th>
-						<?php } else { ?>
-							<th>Start Date</th>
-							<th>End Date</th>
-							<th>Instructor</th>
-						<?php } ?>
+						<?php }  ?>
 					</tr>
 					</thead>
 					<tbody>
@@ -256,15 +254,14 @@ ob_end_clean();
 							<td><?php echo $lookup['classname']; ?></td>
 							<td><?php echo $this->coursetypes[$lookup['coursetypeid']]['coursetype']; ?></td>
 							<td><?php echo addslashes($lookup['coursetopic']); ?></td>
+							<td><?php echo addslashes(date("m/d/Y", strtotime($lookup['startdate']))); ?></td>
+							<td><?php echo addslashes(date("m/d/Y", strtotime($lookup['enddate']))); ?></td>
+							<td><?php echo addslashes($lookup['instructorid']); ?></td>
 							<?php if ($this->setting['site_style_id'] == 2) { ?>
 								<td><?php echo $this->modules[$lookup['class_modules_id']]['title'] ?></td>
 								<td><?php echo $lookup['custom_1'] ?></td>
 								<td><?php echo $lookup['maxcredits'] ?></td>
 								<td><?php echo $lookup['custom_2'] ?></td>
-							<?php } else { ?>
-								<td><?php echo addslashes(date("m/d/Y", strtotime($lookup['startdate']))); ?></td>
-								<td><?php echo addslashes(date("m/d/Y", strtotime($lookup['enddate']))); ?></td>
-								<td><?php echo addslashes($lookup['instructorid']); ?></td>
 							<?php } ?>
 						</tr>
 					<?php
