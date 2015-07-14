@@ -57,7 +57,7 @@ if ( $this->isLoggedIn() ) {
 
 	if ( $this->hasACL('edit_people') && $this->hasACL('edit_studenttutorinst')){
 		$addLink = '../peopleadd/peopleadd';
-		if ($this->setting['site_style_id'] == 2) {
+		if ($this->setting['site_style'] == 'skillsmart') {
 			$addLink = '../peopleadd/skillsmart-chw-add';
 		}
 		$navMain['people'] = array(
@@ -65,7 +65,7 @@ if ( $this->isLoggedIn() ) {
 			'people' => t('View/Edit Person'),
 			$addLink => t('Add Person'),
 		);
-		if ($this->setting['site_style_id'] == 2) {
+		if ($this->setting['site_style'] == 'skillsmart') {
 			$navMain['people']['../peopleadd/peopleadd'] = t('Add') . ' ' . t('Tutor');
 		}
 

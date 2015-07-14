@@ -193,7 +193,7 @@ ob_end_clean();
 				}
 				?>
 			</select>
-			<?php if ($this->setting['site_style_id'] == 2) { ?>
+			<?php if ($this->setting['site_style'] == 'skillsmart') { ?>
 				<label for="class_modules_id">Module</label>
 				<select name="class_modules_id" id="class_modules_id" class="text ui-widget-content ui-corner-all">
 					<?php
@@ -235,7 +235,7 @@ ob_end_clean();
 						<th>Start Date</th>
 						<th>End Date</th>
 						<th>Instructor</th>
-						<?php if ($this->setting['site_style_id'] == 2) { ?>
+						<?php if ($this->setting['site_style'] == 'skillsmart') { ?>
 							<th>Module</th>
 							<th>Short Name</th>
 							<th>Credits</th>
@@ -257,7 +257,7 @@ ob_end_clean();
 							<td><?php echo addslashes(date("m/d/Y", strtotime($lookup['startdate']))); ?></td>
 							<td><?php echo addslashes(date("m/d/Y", strtotime($lookup['enddate']))); ?></td>
 							<td><?php echo addslashes($lookup['instructorid']); ?></td>
-							<?php if ($this->setting['site_style_id'] == 2) { ?>
+							<?php if ($this->setting['site_style'] == 'skillsmart') { ?>
 								<td><?php echo $this->modules[$lookup['class_modules_id']]['title'] ?></td>
 								<td><?php echo $lookup['custom_1'] ?></td>
 								<td><?php echo $lookup['maxcredits'] ?></td>

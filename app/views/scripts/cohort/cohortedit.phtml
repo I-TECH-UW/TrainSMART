@@ -288,7 +288,7 @@
 						}
 						?>
 						<tr class="GradeA">
-							<?php if ($this->setting['site_style_id'] == 2) { ?>
+							<?php if ($this->setting['site_style'] == 'skillsmart') { ?>
 								<td><input type="checkbox" name="class[<?php echo $classes['id']; ?>][id]" id="class[<?php echo $classes['id']; ?>][id]" value="<?php echo $classes['id']; ?>"<?php echo ($found ? " checked" : "") ?>> <?php echo $classes['custom_1']; ?></td>
 							<?php } else { ?>
 								<td><input type="checkbox" name="class[<?php echo $classes['id']; ?>][id]" id="class[<?php echo $classes['id']; ?>][id]" value="<?php echo $classes['id']; ?>"<?php echo ($found ? " checked" : "") ?>> <?php echo $classes['classname']; ?></td>
@@ -526,7 +526,7 @@
 									?>
 									<tr class="GradeA">
 										<td class="">
-											<?php if ($this->setting['site_style_id'] == 2) {
+											<?php if ($this->setting['site_style'] == 'skillsmart') {
 												echo $classes['custom_1'];
 											} else {
 												echo $classes['classname'];

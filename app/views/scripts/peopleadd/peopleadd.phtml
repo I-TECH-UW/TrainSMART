@@ -187,7 +187,7 @@
 
 							<label><?php echo t('Type'); ?></label>
 							<select name="type" onchange="clickform(this.value)">
-								<?php if ($this->setting['site_style_id'] == 2) { ?>
+								<?php if ($this->setting['site_style'] == 'skillsmart') { ?>
 									<option value="tutor"><?php echo t('Tutor'); ?></option>
 								<?php } else { ?>
 									<option value="student"><?php echo t('Student'); ?></option>

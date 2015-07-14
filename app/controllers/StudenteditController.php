@@ -249,7 +249,7 @@ class StudenteditController extends ITechController
 	{
 		if ($this->hasACL('edit_studenttutorinst')) {
 			$instid = $this->getSanParam('id');
-			if ($this->setting('site_style_id') == 2) {
+			if ($this->setting('site_style') == 'skillsmart') {
 				$this->_redirect("studentedit/skillsmart-chw-student-edit/id/".$instid);
 			}
 			else {
