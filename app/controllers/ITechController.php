@@ -41,70 +41,48 @@ class ITechController extends Zend_Controller_Action
      */
     public function __construct(Zend_Controller_Request_Abstract $request, Zend_Controller_Response_Abstract $response, array $invokeArgs = array())
     {
-		//$renderer = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer');
-		//$view = new ITechView(array('basePath' => Globals::$BASE_PATH.'/app/views'));
-		//$renderer->setView($view);
 
         parent::__construct($request, $response, $invokeArgs);
 
         //not sure if we need this stuff
-    	require_once('Zend/Filter/Digits.php');
-   		require_once('Zend/Filter/Alpha.php');
+        require_once('Zend/Filter/Digits.php');
+        require_once('Zend/Filter/Alpha.php');
         $this->digitsFilter = new Zend_Filter_Digits(false); //no whitespace
         $this->alphaFilter  = new Zend_Filter_Alpha(false); //no whitespace
 
-        //Zend_Json::$useBuiltinEncoderDecoder = false;
-
-         //set default template variables
-	    $this->view->assign('base_url',Settings::$COUNTRY_BASE_URL);
-	    $this->view->setHelperPath(Globals::$BASE_PATH.'/app/views/helpers');
+        //set default template variables
+        $this->view->assign('base_url',Settings::$COUNTRY_BASE_URL);
+        $this->view->setHelperPath(Globals::$BASE_PATH.'/app/views/helpers');
 
 
-		// get Country-specific settings
-		try {
+        $this->_countrySettings = array();
+        // get Country-specific settings
+        try {
 
-		  $this->_countrySettings = array();
-		  $this->_countrySettings = System::getAll();
+            $this->_countrySettings = System::getAll();
 
-		  $this->_countrySettings['num_location_tiers'] = 2 //including city
-        + $this->_countrySettings['display_region_b']
-        + $this->_countrySettings['display_region_c']
-        + $this->_countrySettings['display_region_d']
-        + $this->_countrySettings['display_region_e']
-        + $this->_countrySettings['display_region_f']
-        + $this->_countrySettings['display_region_g']
-        + $this->_countrySettings['display_region_h']
-        + $this->_countrySettings['display_region_i'];
-
-	    $this->view->assign('setting', $this->_countrySettings);
-	    $this->view->assign('languages', ITechTranslate::getLanguages());
-	    $this->view->assign('languages_enabled', ITechTranslate::getLocaleEnabled());
-
-		} catch (exception $e) {
-
-      throw new Exception('Could not connect to a database associated with this country. Please double check that you have the correct URL and that the site is configured correctly.');
-
-		}
+            $this->_countrySettings['num_location_tiers'] = 2 //including city
+                + $this->_countrySettings['display_region_b']
+                + $this->_countrySettings['display_region_c']
+                + $this->_countrySettings['display_region_d']
+                + $this->_countrySettings['display_region_e']
+                + $this->_countrySettings['display_region_f']
+                + $this->_countrySettings['display_region_g']
+                + $this->_countrySettings['display_region_h']
+                + $this->_countrySettings['display_region_i'];
 
 
-# TRY loop is not returning values on system::getall()
-# Adding settings outside loop
-# CDL, 5.25.2012
-		$sys = System::getAll();
-		foreach ($sys as $key=>$val){
-			$this->_countrySettings[$key] = $val;
-		}
-    $this->_countrySettings['num_location_tiers'] = 2 //including city
-      + $this->_countrySettings['display_region_b']
-      + $this->_countrySettings['display_region_c']
-      + $this->_countrySettings['display_region_d']
-      + $this->_countrySettings['display_region_e']
-      + $this->_countrySettings['display_region_f']
-      + $this->_countrySettings['display_region_g']
-      + $this->_countrySettings['display_region_h']
-      + $this->_countrySettings['display_region_i'];
+            $this->view->assign('setting', $this->_countrySettings);
+            $this->view->assign('languages', ITechTranslate::getLanguages());
+            $this->view->assign('languages_enabled', ITechTranslate::getLocaleEnabled());
 
-		$response->setHeader('Content-Type', 'text/html; charset=utf-8', true);
+        } catch (exception $e) {
+
+            throw new Exception('Could not connect to a database associated with this country. Please double check that you have the correct URL and that the site is configured correctly.');
+
+        }
+
+        $response->setHeader('Content-Type', 'text/html; charset=utf-8', true);
 
     }
 

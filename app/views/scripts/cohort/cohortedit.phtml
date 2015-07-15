@@ -288,10 +288,14 @@
 						}
 						?>
 						<tr class="GradeA">
-							<td><input type="checkbox" name="class[<?php echo $classes['id']; ?>][id]" id="class[<?php echo $classes['id']; ?>][id]" value="<?php echo $classes['id']; ?>"<?php echo ($found ? " checked" : "") ?>> <?php echo $classes['classname']; ?></td>
+							<?php if ($this->setting['site_style'] == 'skillsmart') { ?>
+								<td><input type="checkbox" name="class[<?php echo $classes['id']; ?>][id]" id="class[<?php echo $classes['id']; ?>][id]" value="<?php echo $classes['id']; ?>"<?php echo ($found ? " checked" : "") ?>> <?php echo $classes['custom_1']; ?></td>
+							<?php } else { ?>
+								<td><input type="checkbox" name="class[<?php echo $classes['id']; ?>][id]" id="class[<?php echo $classes['id']; ?>][id]" value="<?php echo $classes['id']; ?>"<?php echo ($found ? " checked" : "") ?>> <?php echo $classes['classname']; ?></td>
+							<?php } ?>
 							<td class=""><?php echo $classes['first_name'] . " " . $classes['last_name']; ?></td>
-							<td class=""><?php echo date("m/d/Y", strtotime($classes['startdate'])); ?></td>
-							<td class=""><?php echo date("m/d/Y", strtotime($classes['enddate'])); ?></td>
+							<td class=""><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); } ?></td>
+							<td class=""><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); } ?></td>
 						</tr>
 						<?php
 					}
@@ -521,10 +525,15 @@
 								foreach ($this->fetchcurrentclasses as $classes){
 									?>
 									<tr class="GradeA">
-										<td class=""><?php echo $classes['classname'];?></td>
+										<td class="">
+											<?php if ($this->setting['site_style'] == 'skillsmart') {
+												echo $classes['custom_1'];
+											} else {
+												echo $classes['classname'];
+											}?></td>
 										<td class="" style=" width : 160px;"><?php echo $classes['first_name'] . " " . $classes['last_name'];?></td>
-										<td class="" style=" width : 120px;"><?php echo date("m/d/Y", strtotime($classes['startdate']));?></td>
-										<td class="" style=" width : 120px;"><?php echo date("m/d/Y", strtotime($classes['enddate']));?></td>
+										<td class="" style=" width : 120px;"><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); }?></td>
+										<td class="" style=" width : 120px;"><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); }?></td>
 									</tr>
 									<?php
 								}

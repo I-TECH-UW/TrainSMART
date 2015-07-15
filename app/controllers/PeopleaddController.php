@@ -83,6 +83,8 @@ class PeopleaddController extends ITechController {
         $this->view->assign('personCriteria', getCriteriaValues(array(), 'person'));
         $this->view->assign('workplaceCriteria', getCriteriaValues(array(), 'workplace'));
         $this->view->assign('employerCriteria', getCriteriaValues(array(), 'employer'));
+	    $this->view->assign('formType', 'add');
+
         $this->view->assign('nationality_dropdown',
             DropDown::generateSelectionFromQuery(
                 'select id, nationality as val from lookup_nationalities order by val',

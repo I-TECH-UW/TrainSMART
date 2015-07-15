@@ -187,9 +187,13 @@
 
 							<label><?php echo t('Type'); ?></label>
 							<select name="type" onchange="clickform(this.value)">
-								<option value="student"><?php echo t('Student'); ?></option>
-								<option value="tutor"><?php echo t('Tutor'); ?></option>
-								<option value="key"><?php echo t('Personal'); ?></option>
+								<?php if ($this->setting['site_style'] == 'skillsmart') { ?>
+									<option value="tutor"><?php echo t('Tutor'); ?></option>
+								<?php } else { ?>
+									<option value="student"><?php echo t('Student'); ?></option>
+									<option value="tutor"><?php echo t('Tutor'); ?></option>
+									<option value="key"><?php echo t('Personal'); ?></option>
+								<?php } ?>
 							</select>
 
 							<div class="rightdiv" style="padding-top:50px;margin-left:25px;;">

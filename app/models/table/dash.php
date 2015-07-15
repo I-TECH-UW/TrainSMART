@@ -74,7 +74,7 @@ class Dashview extends ITechTable
 		foreach ($result as $row){
 			$output[] = array(
 				"id" => $row['id'],
-				"name" => trim($row['cohortid'] . " " . $row['cohortname']),
+				"name" => $row['cohortname'],
 				"count" => $this->fetchCohortStudents($row['id'])
 			);
 		}
