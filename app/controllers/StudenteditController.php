@@ -249,7 +249,7 @@ class StudenteditController extends ITechController
 	{
 		if ($this->hasACL('edit_studenttutorinst')) {
 			$instid = $this->getSanParam('id');
-			if ($this->setting('site_style_id') == 2) {
+			if ($this->setting('site_style') == 'skillsmart') {
 				$this->_redirect("studentedit/skillsmart-chw-student-edit/id/".$instid);
 			}
 			else {
@@ -1017,9 +1017,27 @@ class StudenteditController extends ITechController
 
 		$request = $this->getRequest();
 		$db = $this->dbfunc();
+		$helper = new Helper();
 
 		$params = $this->getAllParams();
 		if ($request->isPost()) {
+			if (isset($params['licenseaction'])) {
+				// TODO: Using $_POST isn't great, but getAllParams doesn't do nested data structures ($params['grades'] gets turned into the text string "Array")
+				$helper->updateStudentLicense($params['sid'], $_POST);
+				#exit;
+				$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/skillsmart-chw-student-edit/id/' . $params['id']);
+			}
+			if (isset($_POST['classaction'])) {
+				$helper->updateStudentClass($params['sid'], $_POST);
+				#exit;
+				$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/skillsmart-chw-student-edit/id/' . $params['id']);
+			}
+			if (isset($_POST['practicumaction'])) {
+				$helper->updateStudentPracticum($params['sid'], $_POST);
+				#exit;
+				$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/skillsmart-chw-student-edit/id/' . $params['id']);
+			}
+
 			require_once('views/helpers/Location.php');
 
 			$person_location_id = regionFiltersGetLastID('person', $params);
@@ -1030,14 +1048,12 @@ class StudenteditController extends ITechController
 			$personData = array();
 			$workplaceData = array();
 			$cohortData = array();
-			$classData = array();
 
 			if (isset($params['update'])) {
 				$studentData = $db->fetchRow("SELECT * from student where personid = ?", $params['id']);
 				$personData = $db->fetchRow("SELECT * FROM person WHERE id = ?", $params['id']);
 				$workplaceData = $db->fetchRow("SELECT * FROM workplace where id = ?", $personData['workplace_id']);
 				$cohortData = $db->fetchRow("SELECT * from link_student_cohort where id_student = ?", $studentData['id']);
-				$classData = $db->fetchRow("SELECT * FROM link_student_classes WHERE studentid = ?", $studentData['id']);
 			}
 
 			// person
@@ -1118,22 +1134,19 @@ class StudenteditController extends ITechController
 					'dropreason' => $params['dropreason'],
 					'joindate' => $this->_euro_date_to_sql($params['joindate']),
 					'dropdate' => $this->_euro_date_to_sql($params['dropdate']),
+					'examdate' => $this->_euro_date_to_sql($params['examdate']),
+					'certificate_issue_date' => $this->_euro_date_to_sql($params['certificate_issue_date']),
+					'certificate_number' => $params['certificate_number'],
+					'certificate_received_date' => $this->_euro_date_to_sql($params['certificate_received_date']),
+
 				));
 			}
-			// link_student_classes
-			$classData = array_merge($classData, array(
-				'studentid' => $params['student_id'],
-				'examdate' => $this->_euro_date_to_sql($params['examdate']),
-				'certificate_issue_date' => $this->_euro_date_to_sql($params['certificate_issue_date']),
-				'certificate_number' => $params['certificate_number'],
-				'certificate_received_date' => $this->_euro_date_to_sql($params['certificate_received_date']),
-			));
 
 			if (isset($params['addpeople'])) {
 				if (isset($params['cohort']) && strlen($params['cohort'])) {
 					$db->insert('link_student_cohort', $cohortData);
 				}
-				$db->insert('link_student_classes', $classData);
+
 			} elseif (isset($params['update'])) {
 				$db->update('person', $personData, "id = {$params['person_id']}");
 				$db->update('student', $studentData, "personid = {$params['person_id']}");
@@ -1147,9 +1160,8 @@ class StudenteditController extends ITechController
 				else if ($cohortData) {
 					$db->delete('link_student_cohort', "where id_student = {$studentData['id']}");
 				}
-				// TODO: this data should not be stored in classes table
-				$db->update('link_student_classes', $classData, "studentid = {$studentData['id']}");
 			}
+
 			if ($params['add_modules_ids']) {
 				$ids = explode(',', $params['add_modules_ids']);
 				$pairs = array();
@@ -1160,9 +1172,14 @@ class StudenteditController extends ITechController
 				$q = "insert into link_student_class_modules (student_id, class_modules_id) VALUES " . implode(',', $pairs);
 				$db->query($q);
 			}
+
 			if ($params['remove_modules_ids']) {
 				$q = "delete from link_student_class_modules where student_id = {$studentData['id']} and class_modules_id in ({$params['remove_modules_ids']})";
 				$db->query($q);
+			}
+
+			if ($params['']) {
+
 			}
 		}
 		require_once('views/helpers/FormHelper.php');
@@ -1187,12 +1204,10 @@ class StudenteditController extends ITechController
 		$studentCohortData = $db->fetchRow($q);
 		$studentCohortData['joindate'] = formhelperdate($studentCohortData['joindate'], "d/m/y");
 		$studentCohortData['dropdate'] = formhelperdate($studentCohortData['dropdate'], "d/m/y");
+        $studentCohortData['examdate'] = formhelperdate($studentCohortData['examdate'], "d/m/y");
+        $studentCohortData['certificate_issue_date'] = formhelperdate($studentCohortData['certificate_issue_date'], "d/m/y");
+        $studentCohortData['certificate_received_date'] = formhelperdate($studentCohortData['certificate_received_date'], "d/m/y");
 
-		$q = "SELECT * FROM link_student_classes WHERE studentid = {$studentData['id']}";
-		$studentClassData = $db->fetchRow($q);
-		$studentClassData['examdate'] = formhelperdate($studentClassData['examdate'], "d/m/y");
-		$studentClassData['certificate_issue_date'] = formhelperdate($studentClassData['certificate_issue_date'], "d/m/y");
-		$studentClassData['certificate_received_date'] = formhelperdate($studentClassData['certificate_received_date'], "d/m/y");
 
 		$this->view->assign('locations', Location::getAll());
 		$this->view->assign('personCriteria', locationIDTo3TierCriteriaArray($personData['home_location_id'], 'person'));
@@ -1208,7 +1223,21 @@ class StudenteditController extends ITechController
 		$this->view->assign('workplaceData', $workplaceData);
 
 		$this->view->assign('studentCohortData', $studentCohortData);
-		$this->view->assign('studentClassData', $studentClassData);
+		//$this->view->assign('studentClassData', $studentClassData);
+
+		if (isset($params['update'])) {
+			$this->view->assign('formType', 'update');
+		}
+
+		if ($studentCohortData['id_cohort'] != 0) {
+			$this->view->assign('currentclasses', $helper->listcurrentclasses($studentCohortData['id_cohort'], $studentData['id']));
+			$this->view->assign('currentpracticum', $helper->ListCurrentPracticum($studentCohortData['id_cohort'], $studentData['id']));
+			$this->view->assign('currentlicenses', $helper->ListCurrentLicenses($studentCohortData['id_cohort'], $studentData['id']));
+		} else {
+			$this->view->assign('currentclasses', array());
+			$this->view->assign('currentpracticum', array());
+			$this->view->assign('currentlicenses', array());
+		}
 
 		$q = 'SELECT class_modules.id, class_modules.external_id, class_modules.title
               FROM
@@ -1243,8 +1272,6 @@ class StudenteditController extends ITechController
 			)
 		);
 
-		// do we need a prior learning yes/no when we have a way to select it?
-		//$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
 		$this->view->assign('class_modules', $this->dbfunc()->fetchAssoc('select id, external_id, title from class_modules order by title'));
 
 		$this->view->assign('qualification_name',
@@ -1254,9 +1281,6 @@ class StudenteditController extends ITechController
 				$studentCohortData['joinreason']
 			)
 		);
-
-		// doc says this field is for SAQA ID but I don't understand how that can be a dropdown
-		//$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
 
 		$this->view->assign('cohorts',
 			DropDown::generateSelectionFromQuery(
