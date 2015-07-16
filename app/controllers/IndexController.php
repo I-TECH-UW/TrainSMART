@@ -104,7 +104,6 @@ class IndexController extends ITechController {
 
 			// Incomplete
 			$tableObj = new Training ( );
-			//$rowsPast = $tableObj->getIncompleteTraining ( $uid, 'training_start_date < NOW() '.$allowedWhereClause )->toArray();
 			$rowsPast = $tableObj->getIncompleteTraining ( $uid, 'training_start_date < NOW() '.$allowedWhereClause );
 			if ($rowsPast) {
 				$html = EditTableHelper::generateHtmlTraining ( 'TrainingPast', $rowsPast, $trainingFields, $colStatic, $linkInfo, $editLinkInfo, $colCustom );
@@ -113,7 +112,6 @@ class IndexController extends ITechController {
 
 			// Future
 			$tableObj = new Training ( );
-			//$rowsFuture = $tableObj->getIncompleteTraining ( $uid, 'training_start_date >= NOW()'.$allowedWhereClause, '' )->toArray();
 			$rowsFuture = $tableObj->getIncompleteTraining ( $uid, 'training_start_date >= NOW()'.$allowedWhereClause, '' );
 			if ($rowsFuture) {
 				$html = EditTableHelper::generateHtmlTraining ( 'TrainingFuture', $rowsFuture, $trainingFields, $colStatic, $linkInfo, $editLinkInfo, $colCustom );
