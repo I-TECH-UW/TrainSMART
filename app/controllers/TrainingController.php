@@ -1225,10 +1225,11 @@ class TrainingController extends ReportFilterHelpers {
 
 		}
 
-		// update "modified_by" field in training table
-		$tableObj = new Training ( );
-		$tableObj->update ( array (), "id = $training_id" );
-
+		if (!isset($sendRay['error'])) {
+			// update "modified_by" field in training table
+			$tableObj = new Training ();
+			$tableObj->update(array(), "id = $training_id");
+		}
 	}
 
 	/**
