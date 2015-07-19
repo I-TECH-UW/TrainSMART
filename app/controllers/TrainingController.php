@@ -2048,7 +2048,8 @@ class TrainingController extends ReportFilterHelpers {
 		$this->view->assign ( 'training_id', $personTrainingRow->training_id );
 
 		require_once ('EditTableController.php');
-		$editTable = new EditTableController ( $this );
+		$editTable = new EditTableController ($this->getRequest(), $this->getResponse());
+		$editTable->setParentController($this);
 		$editTable->table = 'score';
 		$editTable->fields = array ('score_label' => t ( 'Label' ), 'score_value' => t ( 'Score' ) ); // TODO: Label translations
 		$editTable->label = 'Score';
@@ -2059,7 +2060,7 @@ class TrainingController extends ReportFilterHelpers {
 		$editTable->customColDef = array('score_value' => 'formatter:fickle');/*Todo rename this*/
 
 
-		$editTable->execute ();
+		$editTable->execute ($this->getRequest());
 	}
 
 	/**

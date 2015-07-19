@@ -751,7 +751,7 @@ class AdminController extends UserController
 		if ( ($tier == 1) OR ($location_id && ($locations[$location_id]['tier'] + 1 == $tier))) {
 		    
 			$controller = &$this;  //gnr, Call-time pass-by-reference has been removed
-	        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+	        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
 	        $editTable->setParentController($controller);
 	        
 			$editTable->table   = 'location';
@@ -1123,7 +1123,7 @@ class AdminController extends UserController
 	public function trainingCategoryAction()
 	{
 		$controller = &$this;  //gnr, Call-time pass-by-reference has been removed and EditTableController constructor signature must match Zend_Controller_Action_Interface
-		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'training_category_option';
 		$editTable->fields  = array('training_category_phrase' => t('Training Category'));
@@ -1134,7 +1134,7 @@ class AdminController extends UserController
 	public function trainingTitleAction()
 	{
 		$controller = &$this;
-		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'training_title_option';
 		$editTable->fields  = array('training_title_phrase' => t('Training Title'));
@@ -1147,7 +1147,7 @@ class AdminController extends UserController
 	public function trainingOrganizerAction()
 	{
 		$controller = &$this;
-		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'training_organizer_option';
 		$editTable->fields  = array('training_organizer_phrase' => t('Training Organizer'));
@@ -1160,7 +1160,7 @@ class AdminController extends UserController
 	public function trainingLevelAction()
 	{
 		$controller = &$this;
-		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'training_level_option';
 		$editTable->fields  = array('training_level_phrase' => t('Training Level'));
@@ -1187,7 +1187,7 @@ class AdminController extends UserController
 		$this->view->assign('checkbox', $checkbox);
 
 		$controller = &$this;
-		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'training_topic_option';
 		$editTable->fields  = array('training_topic_phrase' => t('Training Topic'));
@@ -1215,7 +1215,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'training_pepfar_categories_option';
 		$editTable->fields  = array('pepfar_category_phrase' => t('PEPFAR Category'));
@@ -1236,7 +1236,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'training_funding_option';
 		$editTable->fields  = array('funding_phrase' => t('Funding'));
@@ -1249,7 +1249,7 @@ class AdminController extends UserController
 	public function trainingRefreshercourseAction()
 	{
 		$controller = &$this;
-		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'training_refresher_option';
 		$editTable->fields  = array('refresher_phrase_option' => t('Refresher Course'));
@@ -1262,7 +1262,7 @@ class AdminController extends UserController
 	{
 		/* edit table */
 		$controller = &$this;
-		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'training_got_curriculum_option';
 		$editTable->fields  = array('training_got_curriculum_phrase' => t('National Curriculum'));
@@ -1275,7 +1275,7 @@ class AdminController extends UserController
 	{
 		/* edit table */
 		$controller = &$this;
-		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'training_method_option';
 		$editTable->fields  = array('training_method_phrase' => t('Method'));
@@ -1646,7 +1646,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
 		$editTable->setParentController($controller);
 		$editTable->table   = 'person_to_training_award_option';
 		$editTable->fields  = array('award_phrase' => t('Training Completion'));
@@ -1660,7 +1660,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
 		$editTable->setParentController($controller);
 		$editTable->table   = 'person_to_training_viewing_loc_option';
 		$editTable->fields  = array('location_phrase' => t('Location'));
@@ -1674,7 +1674,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
 		$editTable->setParentController($controller);
 		$editTable->table   = 'person_to_training_budget_option';
 		$editTable->fields  = array('budget_code_phrase' => t('Budget Code'));
@@ -1875,7 +1875,7 @@ class AdminController extends UserController
 
 		if ( $parent or $this->getSanParam('redirect') ) {
 			$controller = &$this;
-		    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+		    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		    $editTable->setParentController($controller);
 			$editTable->table   = 'person_qualification_option';
 			$editTable->fields  = array('qualification_phrase' => t('Qualification'));
@@ -1901,7 +1901,7 @@ class AdminController extends UserController
 	public function peoplePrimaryrespAction() // was peopleResponsibilityAction
 	{
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'person_primary_responsibility_option';
 		$editTable->fields  = array('responsibility_phrase' => t('Primary Responsibility'));
@@ -1913,7 +1913,7 @@ class AdminController extends UserController
 	public function peopleSecondaryrespAction()
 	{
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'person_secondary_responsibility_option';
 		$editTable->fields  = array('responsibility_phrase' => t('Secondary Responsibility'));
@@ -1925,7 +1925,7 @@ class AdminController extends UserController
 	public function peopleTypesAction()
 	{
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'trainer_type_option';
 		$editTable->fields  = array('trainer_type_phrase' => t('Type'));
@@ -1954,7 +1954,7 @@ class AdminController extends UserController
 		$this->view->assign('checkbox', $checkbox);
 
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'trainer_skill_option';
 		$editTable->fields  = array('trainer_skill_phrase' => t('Trainer Skill'));
@@ -1967,7 +1967,7 @@ class AdminController extends UserController
 	{
 
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'trainer_language_option';
 		$editTable->fields  = array('language_phrase' => t('Language'));
@@ -1982,7 +1982,7 @@ class AdminController extends UserController
 		/* edit table */
 
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'trainer_affiliation_option';
 		$editTable->fields  = array('trainer_affiliation_phrase' => t('Affiliation'));
@@ -1996,7 +1996,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'person_title_option';
 		$editTable->fields  = array('title_phrase' => t('Title'));
@@ -2010,7 +2010,7 @@ class AdminController extends UserController
 	public function tutorspecialtyAction()
 	{
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'tutor_specialty_option';
 		$editTable->fields  = array('specialty_phrase' => t('Specialty'));
@@ -2023,7 +2023,7 @@ class AdminController extends UserController
 	public function tutorcontractAction()
 	{
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'tutor_contract_option';
 		$editTable->fields  = array('contract_phrase' => t('Contract Type'));
@@ -2036,7 +2036,7 @@ class AdminController extends UserController
 	public function commoditynameAction(){
 
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->fields  = array('commodity_name' => t('Commodity Name'));
 		$editTable->table   = 'commodity_name_option';
@@ -2050,7 +2050,7 @@ class AdminController extends UserController
 	public function commoditytypeAction()
 	{
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'commodity_type_option';
 		$editTable->fields  = array('commodity_type' => t('Commodity Type'));
@@ -2064,7 +2064,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'person_suffix_option';
 		$editTable->fields  = array('suffix_phrase' => t('Suffix'));
@@ -2078,7 +2078,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'person_active_trainer_option';
 		$editTable->fields  = array('active_trainer_phrase' => t('Active Trainer'));
@@ -2092,7 +2092,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'person_education_level_option';
 		$editTable->fields  = array('education_level_phrase' => t('Highest Education Level'));
@@ -2106,7 +2106,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());  
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
 		$editTable->table   = 'person_attend_reason_option';
 		$editTable->fields  = array('attend_reason_phrase' => t('Reason Attending'));
@@ -2122,7 +2122,7 @@ class AdminController extends UserController
 	public function facilitiesTypesAction()
 	{
 	    $controller = &$this;  // gnr, Call-time pass-by-reference has been removed
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'facility_type_option';
 		$editTable->fields  = array('facility_type_phrase' => t('Facility Type'));
@@ -2134,7 +2134,7 @@ class AdminController extends UserController
 	public function facilitiesSponsorsAction()
 	{
 	    $controller = &$this;  //gnr, Call-time pass-by-reference has been removed
-	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
 	    $editTable->setParentController($controller);
 		$editTable->table   = 'facility_sponsor_option';
 		$editTable->fields  = array('facility_sponsor_phrase' => t('Facility Sponsor'));
@@ -3094,7 +3094,7 @@ class AdminController extends UserController
 
 		if ( $parent or $this->getSanParam('redirect') ) {
 			$controller = &$this;
-		    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+		    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
 		    $editTable->setParentController($controller);
 			$editTable->table   = 'occupational_categories';
 			$editTable->fields  = array('category_phrase' => t('Category'));
@@ -3396,7 +3396,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'partner_type_option';
 		$editTable->fields  = array('type_phrase' => t('Partner Type'));
@@ -3410,7 +3410,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'employee_category_option';
 		$editTable->fields  = array('category_phrase' => t('Staff Category'));
@@ -3424,7 +3424,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'employee_base_option';
 		$editTable->fields  = array('base_phrase' => t('Base'));
@@ -3438,7 +3438,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'employee_site_type_option';
 		$editTable->fields  = array('site_type_phrase' => t('Type'));
@@ -3452,7 +3452,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'employee_fulltime_option';
 		$editTable->fields  = array('fulltime_phrase' => t('Full Time'));
@@ -3466,7 +3466,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'person_race_option';
 		$editTable->fields  = array('race_phrase' => t('Race'));
@@ -3480,7 +3480,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'employee_qualification_option';
 		$editTable->fields  = array('qualification_phrase' => t('Qualification'));
@@ -3494,7 +3494,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'employee_role_option';
 		$editTable->fields  = array('role_phrase' => t('Primary Role'));
@@ -3508,7 +3508,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'employee_transition_option';
 		$editTable->fields  = array('transition_phrase' => t('Intended Transition'));
@@ -3522,7 +3522,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'employee_relationship_option';
 		$editTable->fields  = array('relationship_phrase' => t('Relationship'));
@@ -3536,7 +3536,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'employee_referral_option';
 		$editTable->fields  = array('referral_phrase' => t('Referral Mechanism'));
@@ -3550,7 +3550,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'employee_training_provided_option';
 		$editTable->fields  = array('training_provided_phrase' => t('Training Provided'));
@@ -3564,7 +3564,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'partner_funder_option';
 		$editTable->fields  = array('funder_phrase' => t('Funder'));
@@ -3578,7 +3578,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'partner_importance_option';
 		$editTable->fields  = array('importance_phrase' => t('Importance'));
@@ -3592,7 +3592,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'agency_option';
 		$editTable->fields  = array('agency_phrase' => t('Agency'));
@@ -3606,7 +3606,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'mechanism_option';
 		$editTable->fields  = array('mechanism_phrase' => t('Mechanism'));
@@ -3622,7 +3622,7 @@ class AdminController extends UserController
 
 		/* edit table */
 		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse(), $invokeArgs = array ());
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
         $editTable->setParentController($controller);
 		$editTable->table   = 'subpartner_to_funder_to_mechanism';
 		$editTable->fields  = array('id' => t('ID'), 'subpartner_id' => t('Subpartner'), 'partner_funder_option_id' => t('Funder'), 'mechanism_option_id' => t('Mechanism'), 'funding_end_date' => t('Funding End Date'));

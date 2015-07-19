@@ -28,7 +28,7 @@ class FileUpload {
     }
     
 	require_once ('controllers/EditTableController.php');
-	$editTable = new EditTableController ( $request, $response, $invokeArgs = array () );
+	$editTable = new EditTableController($request, $response);
 	$editTable->setParentController($controller);
 	$editTable->table = 'file';
     $editTable->viewVar = 'editTableFiles';
