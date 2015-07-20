@@ -2681,38 +2681,53 @@ class Helper extends ITechTable
 	//assessment admin begin
 	
 	public function getSkillSmartAssessments($aid = 0){
+	    
+	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper getSkillSmartAssessments >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+	    var_dump("aid=", $aid, "END");
+	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+	     
 	    if (!$aid){
 	        $db = $this->dbfunc();
 	        $select = $db->select()
-	        ->from("assessments")
-	        ->where('status = ?', 1)
-	        ->order('assessmentname');
+	        ->from(array('lat' => 'lookup_assessment_types'),
+	        array(
+	            'a.id as A_id',
+	            'lat.assessment_type as LAT_assessment_type'
+	        ))
+	        ->joinLeft(array("a" => "assessments"), 'lat.id = a.assessment_type_id')
+	        //->where('status = ?', 1)
+	        ->order('A_id');
 	        $result = $db->fetchAll($select);
 	        $return = array();
 	        if (count ($result) > 0){
 	            foreach ($result as $row){
 	                // ADDING GROUPING, IF NOT EXIST
 	                $return[] = array(
-	                    "id"	=> $row['id'],
-	                    "label"	=> $row['assessmentname'],
+	                    "id"	=> $row['A_id'],
+	                    "label"	=> $row['LAT_assessment_type'],
 	                );
 	            }
 	        }
 	    } else {
 	        $db = $this->dbfunc();
 	        $select = $db->select()
-	        ->from("assessments")
-	        ->where('status = ?', 1)
-	        ->where('id = ?', $aid)
-	        ->order('assessmentname');
+	        ->from(array('lat' => 'lookup_assessment_types'),
+	        array(
+	            'a.id as A_id',
+	            'lat.assessment_type as LAT_assessment_type'
+	        ))
+	        ->joinLeft(array("a" => "assessments"), 'lat.id = a.assessment_type_id')
+	        //->where('status = ?', 1)
+	        ->where('a.id = ?', $aid)
+	        ->order('A_id');
 	        $result = $db->fetchAll($select);
 	        $return = array();
 	        if (count ($result) > 0){
 	            foreach ($result as $row){
 	                // ADDING GROUPING, IF NOT EXIST
 	                $return = array(
-	                    "id"	=> $row['id'],
-	                    "label"	=> $row['assessmentname'],
+	                    "id"	=> $row['A_id'],
+	                    "label"	=> $row['LAT_assessment_type'],
 	                );
 	            }
 	        }
@@ -2722,11 +2737,16 @@ class Helper extends ITechTable
 	}
 	
 	public function addSkillsmartAssessment($params){
-	    $linktable		= "assessments";
-	    $maincolumn		= "assessmentname";
+
+	    $linktable		= "lookup_assessment_types";
+	    $maincolumn		= "assessment_type";
 	    $id				= $_POST["_id"];
 	    $value			= $_POST['_fieldtoupdate'];
-	
+	    
+	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper addSkillsmartAssessment >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+	    var_dump("value=", $value, "END");
+	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+	    
 	    $select = $this->dbfunc()->select()
 	    ->from($linktable)
 	    ->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)));
@@ -2737,31 +2757,84 @@ class Helper extends ITechTable
 	        $maincolumn		=> $value
 	        );
 	        $instypeinsert = $this->dbfunc()->insert($linktable,$i_arr);
+	        
+	        // after insert into lookup, select added rec then add lookup id to assessments as type_id
+	        $select = $this->dbfunc()->select()
+	        ->from("lookup_assessment_types")
+	        ->where('LOWER(TRIM(' . assessment_type . ')) = ?', trim(strtolower($value)));
+	        $lat_result = $this->dbfunc()->fetchAll($select);
+	        
+	        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper addSkillsmartAssessment insert0 >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+	        var_dump("lat result id =", $lat_result[0]['id'], "END");
+	        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+	        
+	        if (count ($lat_result) == 1){
+	            # ADDING to assessments
+
+	            $i_arr = array(
+	            
+	            'assessment_type_id' => $lat_result[0]['id'],
+	            'status' => 1,   
+	            );
+	            $instypeinsert = $this->dbfunc()->insert('assessments',$i_arr);
+	        
+    	        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper addSkillsmartAssessment insert1 >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+    	        var_dump("instypeinsert=", $instypeinsert, "END");
+    	        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+	        }
 	    }
 	}
 	
 	public function updateSkillsmartAssessment($params){
+	    
+	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper updateSkillsmartAssessment >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+	    var_dump("params=", $params, "END");
+	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+	    
+	    // lookup type_id from assessments where id = param._id,
+	    // update lookup_type.assessment_type = param._fieldtoupdate where lat.id = a.type_id
+	     
 	    $linktable		= "assessments";
-	    $maincolumn		= "assessmentname";
+	    $maincolumn		= "assessment_type_id";
 	    $id				= $_POST["_id"];
 	    $value			= $_POST['_fieldtoupdate'];
-	
+
+	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper updateSkillsmartAssessment >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+	    var_dump("select=", $id, $value, "END");
+	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+	     
+	    
 	    $select = $this->dbfunc()->select()
 	    ->from($linktable)
-	    ->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)))
+	    // ->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)))
 	    ->where('status = ?', 1)
 	    ->where('id = ?', $id);
-	    $result = $this->dbfunc()->fetchAll($select);
-	    if (count ($result) == 0){
-	        # LINK NOT FOUND - ADDING
-	        $i_arr = array(
-	        $maincolumn	=> $value
-	        );
-	        $instypeinsert = $this->dbfunc()->update($linktable,$i_arr,'id = ' . $id);
-	    }
+	    $a_result = $this->dbfunc()->fetchAll($select);
+	    
+	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper updateSkillsmartAssessment >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+	    var_dump("a_result=", $a_result, "END");
+	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+	     
+		if (count ($a_result) == 1){
+    	    # updating lat
+    	    $i_arr = array(
+    	    //'id' => $a_result[0]['id'],
+    	    'assessment_type' => $value,   
+    	    );
+
+    	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper addSkillsmartAssessment insert >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+    	    var_dump("i_arr=", $i_arr, "END");
+    	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+    	    
+    	    $titleupdate = $this->dbfunc()->update('lookup_assessment_types',$i_arr, 'id = ' . $a_result[0]['assessment_type_id'] );
+		}
 	}
 	
 	public function getSkillSmartAssessmentsQuestions($cid = 0){
+	    
+	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper getSkillSmartAssessmentsQuestions >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+	     
 	    $db = $this->dbfunc();
 	    $select = $db->select()
 	    ->from("assessments_questions")

@@ -79,6 +79,18 @@ class ITechTable extends Zend_Db_Table_Abstract
 
  		return $personrow;
  	}
+ 	
+ 	public function findOrCreateAssessment($id = false) {
+ 	    if ( ($id !== false) and ($id !== null) ) {
+ 	        $assessmentrow = $this->find($id)->current();
+ 	        if ( !$assessmentrow )
+ 	            $assessmentrow = $this->add();
+ 	    } else {
+ 	        $assessmentrow = $this->add();
+ 	    }
+ 	
+ 	    return $assessmentrow;
+ 	}
 
 
  	/**

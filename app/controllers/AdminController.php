@@ -3097,8 +3097,8 @@ class AdminController extends UserController
 	        $this->view->assign("lookup", $list);
 	        $this->view->assign("header",t("Assessments"));
 	    } else {
+	        
 	        // ASSESSMENT SPECIFIC OUTPUT
-	
 	        $assessment = $helper->getSkillSmartAssessments($assessid);
 	        $questions = $helper->getSkillSmartAssessmentsQuestions($assessid);
 	
@@ -3106,10 +3106,10 @@ class AdminController extends UserController
 	        $this->view->assign("questions",$questions);
 	
 	        // GETTING QUALIFICATIONS
-	        $quals = $helper->skillsmartGetQualifications($assessid);
-	        $this->view->assign("quals",$quals);
-	        $this->view->assign("assessid",$assessid);
-	        $this->view->assign("currentlinks",$helper->skillsmartGetAssessmentLinks($assessid));
+	        //$quals = $helper->skillsmartGetQualifications($assessid);
+	        //$this->view->assign("quals",$quals);
+	        //$this->view->assign("assessid",$assessid);
+	        //$this->view->assign("currentlinks",$helper->skillsmartGetAssessmentLinks($assessid));
 	    }
 	}
 	

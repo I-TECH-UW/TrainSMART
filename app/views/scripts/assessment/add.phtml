@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title><?php echo $this->translation['Application Name'];?> | <?php echo t('Add').space.t('Assessment');?></title>
+	<?php
+	require_once('views/helpers/ScriptContainer.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+	?>
+
+</head>
+<body class="yui-skin-sam">
+	<div id="pageHolder">
+		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+		<div id="content">
+
+			<h1><?php echo t('Add New Assessment');?></h1>
+
+			<form id="add" action="" method="post">
+
+				<?php require_once('addassessment-form.phtml');?>
+
+				<div class="clear" ></div>
+
+				<!-- TA:34 remove underscores for sumbit button -->
+				<button type="button" id="submitAssessment"><?php echo t('Add Assessment');?></button><br>
+
+				<script type="text/javascript">
+				addAjaxSubmit('submitAssessment','add','<?php echo $this->base_url;?>/assessment/testadd/outputType/json');
+				</script>
+
+			</form>
+			<div class="clear" ></div>
+
+		</div>
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+	</div>
+</body>
+</html>

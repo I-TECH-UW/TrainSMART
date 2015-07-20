@@ -1,0 +1,36 @@
+		<div  id="firstAutoComplete">
+		<div class="fieldLabel"><span class="required">*</span><?php echo (@$this->translation['First Name']); ?></div><div class="fieldInput"><input id="first_name" type="text" name="first_name" value="<?php echo $this->criteria['first_name'];?>" /><div class="clear"></div><div id="firstContainer" class="autoComplete"></div></div>
+		</div>
+		<script type="text/javascript">
+			var firstAuto = makeAutocomplete('first_name', 'firstContainer', '<?php echo $this->base_url;?>/person/firstList/outputType/text/' );
+		</script>
+		<div id="lastAutoComplete">
+			<div class="fieldLabel"><span class="required">*</span><?php echo (@$this->translation['Last Name']); ?></div><div class="fieldInput"><input id="last_name" type="text" name="last_name" value="<?php echo $this->criteria['last_name'];?>" /><div class="clear"></div><div id="lastContainer" class="autoComplete"></div></div>
+		</div>
+		<script type="text/javascript">
+			var lastAuto = makeAutocomplete('last_name', 'lastContainer', '<?php echo $this->base_url;?>/person/lastList/outputType/text/' );
+		</script>
+		<div class="clear"></div>
+
+		<div class="fieldLabel" id="type_id_lbl"><span class="required">*</span><?php echo t('Assessment Type');?></div>
+		<div class="fieldInput">
+		<select id="assessment_type_id" name="assessment_type_id" >
+		<option value="">--<?php tp('Choose');?>--</option>
+		<?php
+		foreach ( $this->assessment_types as $vals ) {
+						echo '<option value="'.$vals['id'].'" '.((@$this->criteria['assessment_type_id']) == $vals['id']? 'SELECTED':'').' >'.$vals['assessment_type'].'</option>';
+		}
+		?>
+		</select></div>
+					
+					<div class="fieldLabel" style="padding-top:1em;"><?php tp('Add date');?></div>
+					<div class="fieldInput" id="adddate" style="margin-top:1em;">
+						<?php tp('Day');?> <input id="add-day" class="dayfield" type="text" name="add-day" maxlength="2" value="<?php echo $this->criteria['add-day']; ?>"  />
+						/ <?php tp('Month');?> <input id="add-month" class="monthfield" type="text" name="add-month" maxlength="2" value="<?php echo $this->criteria['add-month']; ?>"  />
+						/ <?php tp('Year');?> <input id="add-year" class="yearfield" type="text" name="add-year" maxlength="4" value="<?php echo $this->criteria['add-year'];  ?>" />
+						<script  type="text/javascript">
+							YAHOO.util.Event.onDOMReady(function () {
+								makeAdditionalCalendar("adddate","add-day", "add-month", "add-year");
+							});
+						</script>
+					</div>

@@ -1490,6 +1490,7 @@ abstract class Zend_Db_Table_Abstract
         }
 
         if ($defaultSource == self::DEFAULT_DB) {
+
             foreach ($this->_metadata as $metadataName => $metadata) {
                 if (($metadata['DEFAULT'] != null) &&
                     ($metadata['NULLABLE'] !== true || ($metadata['NULLABLE'] === true && isset($this->_defaultValues[$metadataName]) && $this->_defaultValues[$metadataName] === true)) &&

@@ -90,6 +90,10 @@ class FacilityController extends ReportFilterHelpers {
 	}
 	
 	protected function validateAndSave($facilityRow, $checkName = true) {
+	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'facilityController validateAndSave >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	     
+	    
 		$status = ValidationContainer::instance ();
 		
 		// check for required fields

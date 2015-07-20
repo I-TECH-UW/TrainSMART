@@ -1,0 +1,239 @@
+<html>
+	<head>
+		<title><?php echo $this->escape($this->title);?></title>
+		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+	<?php
+    require_once('views/helpers/ScriptContainer.php');
+    print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();      ?>
+
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				/* Add a click handler to the rows - this could be used as a callback */
+				$(".tablegrid tbody").click(function(event) {
+					$(oTable.fnSettings().aoData).each(function (){
+						$(this.nTr).removeClass('row_selected');
+
+					});
+					$(event.target.parentNode).addClass('row_selected');
+
+				});
+
+				/* Add a click handler for the delete row */
+				$('#delete').click( function() {
+					var anSelected = fnGetSelected( oTable );
+					oTable.fnDeleteRow( anSelected[0] );
+				} );
+
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+			} );
+
+			/* Get the rows which are currently selected */
+			function fnGetSelected( oTableLocal ){
+				var aReturn = new Array();
+				var aTrs = oTableLocal.fnGetNodes();
+
+				for ( var i=0 ; i<aTrs.length ; i++ ){
+					if ( $(aTrs[i]).hasClass('row_selected') ){
+						aReturn.push( aTrs[i] );
+					}
+				}
+				return aReturn;
+			}
+
+			//TA:36 fixing bug
+			function selectTutor(){
+				document.getElementById("cohort").disabled = true;
+				document.getElementById("cohort").options.selectedIndex = 0;
+				document.getElementById("cadre").disabled = true;
+				document.getElementById("cadre").options.selectedIndex = 0;
+			}
+
+			//TA:36 fixing bug
+			function selectStudent(){
+				document.getElementById("cohort").disabled = false;
+				document.getElementById("cadre").disabled = false;
+			}
+
+			//TA:36 fixing bug
+			function selectPersonal(){
+				document.getElementById("cohort").disabled = true;
+				document.getElementById("cohort").options.selectedIndex = 0;
+				document.getElementById("cadre").disabled = true;
+				document.getElementById("cadre").options.selectedIndex = 0;
+			}
+
+			//TA:36 fixing bug
+			function selectEvery(){
+				document.getElementById("cohort").disabled = false;
+				document.getElementById("cadre").disabled = false;
+			}
+			
+		</script>
+	</head>
+	 <body  class="yui-skin-sam" onload="selectEvery(); <?php if($this->escape($_REQUEST['type']) == 'tutor' || $this->escape($_REQUEST['type']) == 'key'){ echo  ' selectTutor();'; }?>">
+     <div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+            <div id="content">
+
+			<div id="subcontent">
+				<div id="contentheader">
+					<h2><?php echo t('People Search'); ?></h2><br/>
+					<p style="float:left;font-size:13px;"><?php echo t('Select criteria'); ?></p>
+				</div>
+				<div class="pad50 clear"></div>
+
+				<div class="mainformholder">
+                <form name="peoplefind" action="../peoplefind/peoplefind" method="post">
+					<label><?php echo t('First name'); ?></label>
+					<input type="text" name="firstname" value="<?php echo $this->escape($_REQUEST['firstname']);?>">
+
+					<label><?php echo t('Last name'); ?></label>
+					<input type="text" name="lastname" value="<?php echo $this->escape($_REQUEST['lastname']);?>">
+
+
+					<label><?php echo t('Cohort'); ?></label>
+					<select id="cohort" name="cohort">
+						<option value="0"><?php echo t('Select...'); ?></option>
+						<?php
+							foreach ($this->cohort as $cohort){
+								echo "<option value=\"" . $cohort['id'] . "\"" . ($_REQUEST['cohort'] == $cohort['id'] ? " selected" : "") . ">" . $cohort['cohortname'] . "</option>\n";
+							}
+						?>
+					</select>
+
+					<label><?php echo t('Student cadre'); ?></label>
+					<select id="cadre" name="cadre">
+						<option value="0"><?php echo t('Select...'); ?></option>
+						<?php
+							foreach ($this->cadre as $cadre){
+								echo "<option value=\"" . $cadre['id'] . "\"" . ($_REQUEST['cadre'] == $cadre['id'] ? " selected" : "") . ">" . $cadre['cadrename'] . "</option>\n";
+							}
+						?>
+					</select>
+
+					<!-- TA: added 7/30/2014 -->
+					<label><?php echo $this->translation['ps institution'] ?></label>
+					<select id="inst" name="inst">
+						<option value="0"><?php echo t('Select...'); ?></option>
+						<?php
+							foreach ($this->institution as $institution){
+								echo "<option value=\"" . $institution['id'] . "\"" . ($_REQUEST['inst'] == $institution['id'] ? " selected" : "") . ">" . $institution['institutionname'] . "</option>\n";
+							}
+						?>
+					</select>
+
+					<label><?php echo t('Facility'); ?></label>
+					<select id="fact" name="fact">
+						<option value="0"><?php echo t('Select...'); ?></option>
+						<?php
+							foreach ($this->facility as $facility){
+								echo "<option value=\"" . $facility['id'] . "\"" . ($_REQUEST['fact'] == $facility['id'] ? " selected" : "") . ">" . $facility['facility_name'] . "</option>\n";
+							}
+						?>
+					</select>
+
+					<label>Return</label>
+	                <input type="radio" name="type" value="every" style="margin-left : 30px;"<?php echo (empty($_REQUEST) || $this->escape($_REQUEST['type']) == "every") ? " checked" : ""; ?> onchange=selectEvery();> 
+	                <?php echo t('Everyone'); ?>
+                    <p style="padding : 0px; margin : 0px; background-color : #FFFFFF;">&nbsp;</p>
+
+					<label>&nbsp;</label>
+                    <input type="radio" name="type" value="student" style="margin-left : 30px;"<?php echo $this->escape($_REQUEST['type']) == "student" ? " checked" : ""; ?> onchange=selectStudent();> 
+                    <?php echo t('Students'); ?>
+                    <p style="padding : 0px; margin : 0px; background-color : #FFFFFF;">&nbsp;</p>
+
+                    <label>&nbsp;</label>
+                    <!-- TA: added 7/30/2014 -->
+                    <!-- TA:27 fixed bug, display default 'Tutor' if ps_tutor is undefined -->
+                    <!-- TA:36 fixing bug -->
+                    <input type="radio" name="type" value="tutor" style="margin-left : 30px;"<?php echo $this->escape($_REQUEST['type']) == "tutor" ? " checked" : ""; ?> onchange=selectTutor();> 
+                    <?php echo $this->translation['ps tutor']?$this->translation['ps tutor']:t('Tutor') ?>
+                    <p style="padding : 0px; margin : 0px; background-color : #FFFFFF;">&nbsp;</p>
+
+                    <label>&nbsp;</label>
+                    <input type="radio" name="type" value="key" style="margin-left : 30px;"<?php echo $this->escape($_REQUEST['type']) == "key" ? " checked" : ""; ?> onchange=selectPersonal();> <?php echo t('Personal'); ?>
+                    <p style="padding : 0px; margin : 0px; background-color : #FFFFFF;">&nbsp;</p>
+
+					<div class="rightdiv">
+						<input type="submit" name="search" class="tsbutton green large" value="<?php echo t('Search')?> &raquo;">
+					</div>
+                    </form>
+				</div>
+				<div class="pad50 clear"></div>
+
+
+
+				<div style="width :100%;">
+				<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+					<thead>
+						<tr>
+							<th><?php echo t('ID'); ?></th>
+							<th><?php echo t('Name'); ?></th>
+							<th><?php echo t('Gender'); ?></th>
+							<!-- TA: added 07/30/2014 -->
+							<th><?php echo $this->translation['ps institution'] ?></th>
+							<th><?php echo t('Cohort'); ?></th>
+						</tr>
+					</thead>
+					<tbody>
+
+
+
+					<?php
+						foreach($this->getpeople as $getpeople){
+						?>
+							<tr class="GradeA" style="cursor : pointer;" onClick="window.location.href='<?php echo $getpeople['link']; ?>'">
+								<td name="getpeo" style="width : 120px;"><?php echo $getpeople['id']; ?></td>
+								<td class=""><?php echo trim ($getpeople['first_name'] . " " . $getpeople['last_name'] . ($_REQUEST['type'] == "every" ? " (" . $getpeople['type'] . ")" : "")); ?></td>
+								<td class="" style="width : 150px;"><?php echo $getpeople['gender'] ? $getpeople['gender'] : t("N/A"); ?></td>
+                <?php
+                if (array_key_exists('institution',$getpeople)) {
+                ?>
+                <td class="" style="width : 150px;"><?php echo $getpeople['institution']['institutionname'] ? $getpeople['institution']['institutionname'] : t("N/A"); ?></td>
+                <?php
+                } else {
+                ?>
+                 <td class="" style="width : 150px;"><?php echo array_key_exists('institutionname',$getpeople) ? $getpeople['institutionname'] : t("N/A"); ?></td>
+                <?php
+                }
+                ?>                
+                <?php
+                if (is_array($getpeople['cohort'])) {
+                ?>
+                <td class="" style="width : 150px;"><?php echo $getpeople['cohort']['cohortname'] ? $getpeople['cohort']['cohortname'] : t("N/A"); ?></td>
+                <?php
+                } else {
+                ?>
+                <td class="" style="width : 150px;"><?php echo $getpeople['cohort'] ? $getpeople['cohort'] : t("N/A"); ?></td>
+                <?php
+                }
+                ?>
+							</tr>
+						<?php
+						}
+					?>
+
+					</tbody>
+				</table>
+				</div>
+
+				<div>&nbsp;</div>
+				<div class="pad20 clear"></div>
+				<div class="rightdiv">
+					<a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/peopleadd/peopleadd'; ?>" class="tsbutton green large"><?php echo t('Add a person'); ?> &raquo;</a>
+				</div>
+
+			</div>
+		</div>
+
+        </div>
+		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+        </div>
+
+	</body>
+</html>
