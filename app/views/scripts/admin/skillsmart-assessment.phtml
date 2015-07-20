@@ -238,6 +238,7 @@ ob_end_clean();
 				<option value="question110"><?php echo t('Question, 1-10 options') ?></option>
 				<option value="questionyesno"><?php echo t('Question, yes/no options') ?></option>
 				<option value="questiontext"><?php echo t('Question, textbox') ?></option>
+				<option value="questiontextarea"><?php echo t('Question, textarea') ?></option>
 			</select>
 		</fieldset>
 		<input type="hidden" name="currentiddetail" id="currentiddetail" class="text ui-widget-content ui-corner-all" />
@@ -282,6 +283,9 @@ ob_end_clean();
 		case "questiontext":
 			$tp = "Textbox";
 		break;
+		case "questiontextarea":
+		    $tp = "Textarea";
+		    break;
 		case "question110":
 		    $tp = "1-10";
 		break;
@@ -302,52 +306,15 @@ ob_end_clean();
 ?>
 							</tbody>
 							
-							
-							
-							
 						</table>
-						<div style="text-align : right;">
+											<div style="text-align : right;">
 							<br>
 							<input type="submit" name="update" id="update" value="<?php echo t('Add') ?>" class="tsbutton green large">
 						</div>
 						
-					</div>
-					
-					
-					<div style="margin-top : 50px;">
-						<h2><?php echo t('Link to qualification') ?></h2>
-						<form method="post" name="qualform" id="qualform">
-							<input type="hidden" name="actionqual" id="actionqual" value="1">
-							<input type="hidden" name="assessid" id="assessid" value="<?php echo($this->assessid); ?>">
-
-						<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
-							<thead>
-								<tr>
-									<th style="width : 50px;">Link</th>
-									<th><?php echo t('Qualification group') ?></th>
-								</tr>
-							</thead>
-							<tbody>
-
-<?php
-	foreach ($this->quals as $group){
-		echo "<tr><td><input type=\"checkbox\" id=\"qual[]\" name=\"qual[]\" value=\"" . $group['id'] . "\"" . (in_array($group['id'],$this->currentlinks) ? " checked" : "") . "></td><td>" . $group['label'] . "</td></tr>\n";
-	}
-#	var_dump ($this->quals);
-?>
-							</tbody>
-							
-							
-							
-							
-						</table>
 						<div style="float : left; width : 45%; height : 60px;">
 							<br>
 							<input type="button" name="" id="" value="Back" class="tsbutton green large" onclick="location='/admin/skillsmart-assessment'">
-						</div>
-						<div style="text-align : right; float : right; width : 50%; height : 60px;">
-							<br>
-							<input type="submit" name="updatequalification" id="updatequalification" value="Update links" class="tsbutton green large">
 						</div>
 						</form>
 					</div>

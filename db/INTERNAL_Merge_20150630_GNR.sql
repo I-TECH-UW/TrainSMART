@@ -58,7 +58,7 @@ CREATE TABLE `assess` (
   `facility` int(11) NOT NULL,
   `date_created` date NOT NULL,
   `question` varchar(3) DEFAULT NULL,
-  `option` varchar(128) DEFAULT NULL,
+  `option` varchar(2048) DEFAULT NULL,
   `active` char(1) NOT NULL DEFAULT 'N',
   PRIMARY KEY (`id`),
   KEY `person` (`person`,`active`)
