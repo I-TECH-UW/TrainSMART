@@ -28,11 +28,10 @@ class PeopleaddController extends ITechController {
 			if (isset ($params['addpeople'])){
 				$tutorid = $peopleadd->addTutor($params);
 
-				if ($tutorid) {// sucess
+				if ($tutorid) {
 					$status->setStatusMessage ( t ( 'The person was saved.' ) );
 					$_SESSION['status'] = t ( 'The person was saved.' );
 				}
-
 
 				switch ($params['type']){
 					case "key":
