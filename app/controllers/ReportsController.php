@@ -10058,6 +10058,28 @@ echo $sql . "<br>";
 	 *                                                             *
 	 ***************************************************************/
 
+
+	public function ssChwStatementOfResultsAction() {
+		if (! $this->hasACL('view_people')) {
+			$this->doNoAccessError ();
+		}
+
+		if ($this->getRequest()->isPost()) {
+			$id = $this->getSanParam('id');
+			$db = $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+
+
+			// TODO: Finish query
+			$select = $db->select()
+				->from(array('p' => 'person'),
+					array('p.first_name', 'p.middle_name', 'p.last_name'))
+				->join(array('s' => 'student'), 'p.id = s.personid')
+				->join(array('lsc' => 'link_student_classes'), 's.id = lsc.studentid')
+				->where("p.id = $id");
+
+		}
+	}
+
 	public function ssCompAction() {
 		if (! $this->hasACL ( 'view_people' ) and ! $this->hasACL ( 'edit_people' )) {
 			$this->doNoAccessError ();
