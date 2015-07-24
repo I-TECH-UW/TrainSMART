@@ -919,12 +919,6 @@ echo $sql . "<br>";
 		$qualificationsArray = OptionList::suggestionListHierarchical ( 'person_qualification_option', 'qualification_phrase', false, false );
 		$this->viewAssignEscaped ( 'qualifications', $qualificationsArray );
 	}
-	
-	public function jasperReportAction() {
-	    $this->view->assign ( 'mode', 'name' );
-	    return $this->trainingReport ();
-	    
-	}
 
 	public function trainingsAction() {
 		$this->view->assign ( 'mode', 'name' );
