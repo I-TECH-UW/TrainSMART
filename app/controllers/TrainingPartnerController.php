@@ -210,7 +210,7 @@ class TrainingPartnerController extends ReportFilterHelpers {
 /*
 	public function listAction() {
 		require_once ('models/table/TrainingPartner.php');
-		$rowArray = TrainingPartner::suggestionList ( $this->_getParam ( 'query' ) );//TODO
+		$rowArray = TrainingPartner::suggestionList ( $this->getParam ( 'query' ) );//TODO
 		
 		$this->sendData ( $rowArray );
 	}

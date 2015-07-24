@@ -93,13 +93,13 @@ class AdminController extends UserController
 			$tranTable = new Translation();
 			foreach($labelNames as $input_key => $db_key) {
 
-				if ( $this->_getParam($input_key) ) {
+				if ( $this->getParam($input_key) ) {
 					try {
 						$tranTable->update(
-							array('phrase' => $this->_getParam($input_key)),
+							array('phrase' => $this->getParam($input_key)),
 							"key_phrase = '$db_key'"
 						);
-						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
+						$this->viewAssignEscaped($input_key, $this->getParam($input_key));
 					} catch(Zend_Exception $e) {
 						error_log($e);
 					}
@@ -108,7 +108,7 @@ class AdminController extends UserController
 
 			// update _system (checkboxes)
 			foreach($checkboxFields as $input_key => $db_field) {
-				$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
+				$value = ($this->getParam($input_key) == NULL) ? 0 : 1;
 				$updateData[$db_field] = $value;
 				$this->view->assign($input_key, $value);
 				$sysTable->update($updateData, '');
@@ -178,20 +178,20 @@ class AdminController extends UserController
 
 		if($this->getRequest()->isPost()) { // Update db
 			$updateData = array();
-			$country = $this->_getParam('country');
+			$country = $this->getParam('country');
 			$this->putSetting('country', $country);
 
 			// update translation labels
 			$tranTable = new Translation();
 			foreach($labelNames as $input_key => $db_key) {
 
-				if ( $this->_getParam($input_key) ) {
+				if ( $this->getParam($input_key) ) {
 					try {
 						$tranTable->update(
-							array('phrase' => $this->_getParam($input_key)),
+							array('phrase' => $this->getParam($input_key)),
 							"key_phrase = '$db_key'"
 						);
-						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
+						$this->viewAssignEscaped($input_key, $this->getParam($input_key));
 					} catch(Zend_Exception $e) {
 						error_log($e);
 					}
@@ -199,17 +199,17 @@ class AdminController extends UserController
 			}
 
 			// save locale
-			$updateData['locale_enabled'] = implode(',', $this->_getParam('locales'));
-			if ( $this->_getParam('locale_default') )
-				$updateData['locale'] = $this->_getParam('locale_default');
+			$updateData['locale_enabled'] = implode(',', $this->getParam('locales'));
+			if ( $this->getParam('locale_default') )
+				$updateData['locale'] = $this->getParam('locale_default');
 
 			// update _system (checkboxes)
 			foreach($checkboxFields as $input_key => $db_field) {
-				$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
+				$value = ($this->getParam($input_key) == NULL) ? 0 : 1;
 				$updateData[$db_field] = $value;
 				$this->view->assign($input_key, $value);
 			}
-			$updateData['fiscal_year_start'] = $this->_getParam('fiscal_year_start');
+			$updateData['fiscal_year_start'] = $this->getParam('fiscal_year_start');
 			$sysTable->update($updateData, '');
 
 		} else { // view
@@ -237,14 +237,14 @@ class AdminController extends UserController
 		$this->view->assign('locale_enabled', ITechTranslate::getLocaleEnabled());
 
 		// redirect to next page
-		if($this->_getParam('saveonly')) {
+		if($this->getParam('saveonly')) {
 			$status = ValidationContainer::instance();
 			$status->setStatusMessage(t('Your settings have been updated.'));
 			//reload the page
 			$this->_redirect('admin/country-settings');
 
-		} else if($this->_getParam('redirect')) {
-			header("Location: " . $this->_getParam('redirect'));
+		} else if($this->getParam('redirect')) {
+			header("Location: " . $this->getParam('redirect'));
 			exit;
 		}
 
@@ -401,20 +401,20 @@ class AdminController extends UserController
 
 	if($this->getRequest()->isPost()) { // Update db
 	$updateData = array();
-	$country = $this->_getParam('country');
+	$country = $this->getParam('country');
 	$this->putSetting('country', $country);
 
 	// update translation labels
 	$tranTable = new Translation();
 	foreach($labelNames as $input_key => $db_key) {
 
-	if ( $this->_getParam($input_key) ) {
+	if ( $this->getParam($input_key) ) {
 	try {
 	$tranTable->update(
-	array('phrase' => $this->_getParam($input_key)),
+	array('phrase' => $this->getParam($input_key)),
 	"key_phrase = '$db_key'"
 	);
-	$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
+	$this->viewAssignEscaped($input_key, $this->getParam($input_key));
 	} catch(Zend_Exception $e) {
 	error_log($e);
 	}
@@ -422,16 +422,16 @@ class AdminController extends UserController
 	}
 
 	// save locale
-	$updateData['locale_enabled'] = implode(',', $this->_getParam('locales'));
-	if ( $this->_getParam('locale_default') )
-	$updateData['locale'] = $this->_getParam('locale_default');
+	$updateData['locale_enabled'] = implode(',', $this->getParam('locales'));
+	if ( $this->getParam('locale_default') )
+	$updateData['locale'] = $this->getParam('locale_default');
 
 	// update _system (checkboxes)
 	foreach($checkboxFields as $input_key => $db_field) {
 	if ( $input_key == 'check_people_middle')
-	$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
+	$value = ($this->getParam($input_key) == NULL) ? 0 : 1;
 	else
-	$value = ($this->_getParam($input_key) == NULL) ? 1 : 0;
+	$value = ($this->getParam($input_key) == NULL) ? 1 : 0;
 	$updateData[$db_field] = $value;
 	$this->view->assign($input_key, $value);
 	}
@@ -462,10 +462,10 @@ class AdminController extends UserController
 	$this->view->assign('locale_enabled', ITechTranslate::getLocaleEnabled());
 
 	// redirect to next page
-	if($this->_getParam('redirect')) {
-	header("Location: " . $this->_getParam('redirect'));
+	if($this->getParam('redirect')) {
+	header("Location: " . $this->getParam('redirect'));
 	exit;
-	} else if($this->_getParam('saveonly')) {
+	} else if($this->getParam('saveonly')) {
 	$status = ValidationContainer::instance();
 	$status->setStatusMessage(t('Your settings have been updated.'));
 	}
@@ -549,13 +549,13 @@ class AdminController extends UserController
 			$tranTable = new Translation();
 			foreach($labelNames as $input_key => $db_key) {
 
-				if ( $this->_getParam($input_key) ) {
+				if ( $this->getParam($input_key) ) {
 					try {
 						$tranTable->update(
-							array('phrase' => $this->_getParam($input_key)),
+							array('phrase' => $this->getParam($input_key)),
 							"key_phrase = '$db_key'"
 						);
-						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
+						$this->viewAssignEscaped($input_key, $this->getParam($input_key));
 					} catch(Zend_Exception $e) {
 						error_log($e);
 					}
@@ -564,7 +564,7 @@ class AdminController extends UserController
 
 			// update _system (checkboxes)
 			foreach($checkboxFields as $input_key => $db_field) {
-				$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
+				$value = ($this->getParam($input_key) == NULL) ? 0 : 1;
 				$updateData[$db_field] = $value;
 				$this->view->assign($input_key, $value);
 			}
@@ -586,57 +586,16 @@ class AdminController extends UserController
 		}
 
 		// redirect to next page
-		if($this->_getParam('redirect')) {
-			header("Location: " . $this->_getParam('redirect'));
+		if($this->getParam('redirect')) {
+			header("Location: " . $this->getParam('redirect'));
 			exit;
-		} else if($this->_getParam('saveonly')) {
+		} else if($this->getParam('saveonly')) {
 			$status = ValidationContainer::instance();
 			$status->setStatusMessage(t('Your settings have been updated.'));
 		}
 
 	}
 
-	/*   public function countryProvstatesAction()
-	{
-	if(@$_FILES['import']['tmp_name']) {
-	$filename = ($_FILES['import']['tmp_name']);
-	if ( $filename ) {
-	$provinceObj = new ITechTable(array('name' => 'location_province'));
-	$districtObj = new ITechTable(array('name' => 'location_district'));
-	while ($row = $this->_csv_get_row($filename) ) {
-	if ( is_array($row) ) {
-	//add province
-	if ( isset($row[0] ) ) {
-	$prov_id = $provinceObj->insertUnique('province_name',$row[0], true);
-	}
-	//add district
-	if ( isset($row[1] ) ) {
-	$dist_id = $districtObj->insertUnique('district_name',$row[1],true,'parent_province_id',$prov_id);
-	}
-	}
-
-	}
-	}
-	//kinda ugly, but $this->_setParam doesn't do it
-	$_POST['redirect'] = null;
-
-	}
-
-	$editTable = new EditTableController($this);
-	$editTable->table   = 'location_province';
-	$editTable->fields  = array('province_name' => 'Province/State');
-	$editTable->label   = 'Province';
-	$editTable->dependencies = array(
-	array('parent_province_id' => 'location_district'),
-	array('parent_province_id' => 'location_city'),
-	'location_province_id' => 'training_location',
-	'province_id' => 'facility',
-	);
-	$editTable->allowDefault = true;
-	$editTable->execute();
-
-	}
-	*/
 	public function countryRegionAction()
 	{
 		require_once('models/table/Location.php');
@@ -918,13 +877,13 @@ class AdminController extends UserController
 			$tranTable = new Translation();
 			foreach($labelNames as $input_key => $db_key) {
 
-				if ( $this->_getParam($input_key) ) {
+				if ( $this->getParam($input_key) ) {
 					try {
 						$tranTable->update(
-							array('phrase' => $this->_getParam($input_key)),
+							array('phrase' => $this->getParam($input_key)),
 							"key_phrase = '$db_key'"
 						);
-						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
+						$this->viewAssignEscaped($input_key, $this->getParam($input_key));
 					} catch(Zend_Exception $e) {
 						error_log($e);
 					}
@@ -932,7 +891,7 @@ class AdminController extends UserController
 			}
 			// update _system (checkboxes)
 			foreach($checkboxFields as $input_key => $db_field) {
-				$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
+				$value = ($this->getParam($input_key) == NULL) ? 0 : 1;
 				$updateData[$db_field] = $value;
 				$this->view->assign($input_key, $value);
 			}
@@ -955,10 +914,10 @@ class AdminController extends UserController
 		}
 
 		// redirect to next page
-		if($this->_getParam('redirect')) {
-			header("Location: " . $this->_getParam('redirect'));
+		if($this->getParam('redirect')) {
+			header("Location: " . $this->getParam('redirect'));
 			exit;
-		} else if($this->_getParam('saveonly')) {
+		} else if($this->getParam('saveonly')) {
 			$status = ValidationContainer::instance();
 			$status->setStatusMessage(t('Your settings have been updated.'));
 		}
@@ -1040,13 +999,13 @@ class AdminController extends UserController
 			$tranTable = new Translation();
 			foreach($labelNames as $input_key => $db_key) {
 
-				if ( $this->_getParam($input_key) ) {
+				if ( $this->getParam($input_key) ) {
 					try {
 						$tranTable->update(
-							array('phrase' => $this->_getParam($input_key)),
+							array('phrase' => $this->getParam($input_key)),
 							"key_phrase = '$db_key'"
 						);
-						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
+						$this->viewAssignEscaped($input_key, $this->getParam($input_key));
 					} catch(Zend_Exception $e) {
 						error_log($e);
 					}
@@ -1055,7 +1014,7 @@ class AdminController extends UserController
 
 			// update _system (checkboxes)
 			foreach($checkboxFields as $input_key => $db_field) {
-				$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
+				$value = ($this->getParam($input_key) == NULL) ? 0 : 1;
 				$updateData[$db_field] = $value;
 				$this->view->assign($input_key, $value);
 			}
@@ -1077,10 +1036,10 @@ class AdminController extends UserController
 		}
 
 		// redirect to next page
-		if($this->_getParam('redirect')) {
-			header("Location: " . $this->_getParam('redirect'));
+		if($this->getParam('redirect')) {
+			header("Location: " . $this->getParam('redirect'));
 			exit;
-		} else if($this->_getParam('saveonly')) {
+		} else if($this->getParam('saveonly')) {
 			$status = ValidationContainer::instance();
 			$status->setStatusMessage(t('Your settings have been updated.'));
 		}
@@ -1175,8 +1134,8 @@ class AdminController extends UserController
 		/* checkbox */
 		$fieldSystem = 'allow_multi_topic';
 
-		if($this->getRequest()->isPost() && !$this->_getParam("id")) { // Update db
-			$this->putSetting($fieldSystem, $this->_getParam($fieldSystem));
+		if($this->getRequest()->isPost() && !$this->getParam("id")) { // Update db
+			$this->putSetting($fieldSystem, $this->getParam($fieldSystem));
 		}
 
 		$checkbox = array(
@@ -1202,8 +1161,8 @@ class AdminController extends UserController
 		/* checkbox */
 		$fieldSystem = 'allow_multi_pepfar';
 
-		if($this->getRequest()->isPost() && !$this->_getParam("id")) { // Update db
-			$this->putSetting($fieldSystem, $this->_getParam($fieldSystem));
+		if($this->getRequest()->isPost() && !$this->getParam("id")) { // Update db
+			$this->putSetting($fieldSystem, $this->getParam($fieldSystem));
 		}
 
 		$checkbox = array(
@@ -1230,8 +1189,8 @@ class AdminController extends UserController
 		/* checkbox */
 		$fieldSystem = 'display_funding_options';
 
-		if($this->getRequest()->isPost() && !$this->_getParam("id")) { // Update db
-			$this->putSetting($fieldSystem, $this->_getParam($fieldSystem));
+		if($this->getRequest()->isPost() && !$this->getParam("id")) { // Update db
+			$this->putSetting($fieldSystem, $this->getParam($fieldSystem));
 		}
 
 		/* edit table */
@@ -1292,8 +1251,8 @@ class AdminController extends UserController
 		/* checkbox */
 		$fieldSystem = 'display_training_recommend';
 
-		if($this->getRequest()->isPost() && !$this->_getParam("id")) { // Update db
-			$this->putSetting($fieldSystem, $this->_getParam($fieldSystem));
+		if($this->getRequest()->isPost() && !$this->getParam("id")) { // Update db
+			$this->putSetting($fieldSystem, $this->getParam($fieldSystem));
 		}
 
 		$checkbox = array(
@@ -1307,35 +1266,35 @@ class AdminController extends UserController
 
 		// Save POST
 		if($this->getRequest()->isPost()) { // Update db
-			if(is_numeric($this->_getParam('person_qualification_option_id'))) {
+			if(is_numeric($this->getParam('person_qualification_option_id'))) {
 				TrainingRecommend::saveRecommendations(
-					$this->_getParam('person_qualification_option_id'),
-					$this->_getParam('training_topic_option_id')
+					$this->getParam('person_qualification_option_id'),
+					$this->getParam('training_topic_option_id')
 				);
 
 				// Remove current, then redirect to clean page
-				if($this->_getParam('edit') && $this->_getParam('edit') != $this->_getParam('person_qualification_option_id')) {
-					TrainingRecommend::saveRecommendations($this->_getParam('edit'), array());
+				if($this->getParam('edit') && $this->getParam('edit') != $this->getParam('person_qualification_option_id')) {
+					TrainingRecommend::saveRecommendations($this->getParam('edit'), array());
 					header("Location: " . Settings::$COUNTRY_BASE_URL . '/admin/training-recommend');
 					exit;
 				}
 			}
 
 			// redirect to next page
-			if($this->_getParam('redirect')) {
-				header("Location: " . $this->_getParam('redirect'));
+			if($this->getParam('redirect')) {
+				header("Location: " . $this->getParam('redirect'));
 				exit;
-			} else if($this->_getParam('saveonly')) {
+			} else if($this->getParam('saveonly')) {
 				$status = ValidationContainer::instance();
 				$status->setStatusMessage('Your recommended trainings have been saved.');
 			}
 		}
 
 		// Edting
-		if($this->_getParam('edit') || $this->_getParam('edit') === '0' ) {
-			$qualId = $this->_getParam('edit');
+		if($this->getParam('edit') || $this->getParam('edit') === '0' ) {
+			$qualId = $this->getParam('edit');
 			$topicId = array_fill(1, $NUM_TOPICS, '');
-			$topics = TrainingRecommend::getRecommendations($this->_getParam('edit'));
+			$topics = TrainingRecommend::getRecommendations($this->getParam('edit'));
 			$pos = 0;
 			foreach($topics->ToArray() as $row) {
 				$topicId[++$pos] = $row['training_topic_option_id'];
@@ -1346,8 +1305,8 @@ class AdminController extends UserController
 		}
 
 		// Delete
-		if($delete = $this->_getParam('delete')) {
-			TrainingRecommend::saveRecommendations($this->_getParam('delete'), array());
+		if($delete = $this->getParam('delete')) {
+			TrainingRecommend::saveRecommendations($this->getParam('delete'), array());
 		}
 
 		require_once 'views/helpers/DropDown.php';
@@ -1465,13 +1424,13 @@ class AdminController extends UserController
 			$tranTable = new Translation();
 			foreach($labelNames as $input_key => $db_key) {
 
-				if ( $this->_getParam($input_key) ) {
+				if ( $this->getParam($input_key) ) {
 					try {
 						$tranTable->update(
-							array('phrase' => $this->_getParam($input_key)),
+							array('phrase' => $this->getParam($input_key)),
 							"key_phrase = '$db_key'"
 						);
-						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
+						$this->viewAssignEscaped($input_key, $this->getParam($input_key));
 					} catch(Zend_Exception $e) {
 						error_log($e);
 					}
@@ -1479,7 +1438,7 @@ class AdminController extends UserController
 			}
 			// update _system (checkboxes)
 			foreach($checkboxFields as $input_key => $db_field) {
-				$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
+				$value = ($this->getParam($input_key) == NULL) ? 0 : 1;
 				$updateData[$db_field] = $value;
 				$this->view->assign($input_key, $value);
 			}
@@ -1501,10 +1460,10 @@ class AdminController extends UserController
 		}
 
 		// redirect to next page
-		if($this->_getParam('redirect')) {
-			header("Location: " . $this->_getParam('redirect'));
+		if($this->getParam('redirect')) {
+			header("Location: " . $this->getParam('redirect'));
 			exit;
-		} else if($this->_getParam('saveonly')) {
+		} else if($this->getParam('saveonly')) {
 			$status = ValidationContainer::instance();
 			$status->setStatusMessage(t('Your settings have been updated.'));
 		}
@@ -1534,10 +1493,10 @@ class AdminController extends UserController
 
 		if($this->getRequest()->isPost()) { // Redirect
 			// redirect to next page
-			if($this->_getParam('redirect')) {
-				header("Location: " . $this->_getParam('redirect'));
+			if($this->getParam('redirect')) {
+				header("Location: " . $this->getParam('redirect'));
 				exit;
-			} else if($this->_getParam('saveonly')) {
+			} else if($this->getParam('saveonly')) {
 				$status = ValidationContainer::instance();
 				$status->setStatusMessage('Your assigned categories have been saved.');
 			}
@@ -1551,8 +1510,8 @@ class AdminController extends UserController
 		/* checkbox */
 		$fieldSystem = 'display_training_recommend';
 
-		if($this->getRequest()->isPost() && !$this->_getParam("id")) { // Update db
-			$this->putSetting($fieldSystem, $this->_getParam($fieldSystem));
+		if($this->getRequest()->isPost() && !$this->getParam("id")) { // Update db
+			$this->putSetting($fieldSystem, $this->getParam($fieldSystem));
 		}
 
 		$checkbox = array(
@@ -1566,15 +1525,15 @@ class AdminController extends UserController
 
 		// Save POST
 		if($this->getRequest()->isPost()) { // Update db
-			if(is_numeric($this->_getParam('person_qualification_option_id'))) {
+			if(is_numeric($this->getParam('person_qualification_option_id'))) {
 				TrainingRecommend::saveRecommendations(
-					$this->_getParam('person_qualification_option_id'),
-					$this->_getParam('training_topic_option_id')
+					$this->getParam('person_qualification_option_id'),
+					$this->getParam('training_topic_option_id')
 				);
 
 				// Remove current, then redirect to clean page
-				if($this->_getParam('edit') && $this->_getParam('edit') != $this->_getParam('person_qualification_option_id')) {
-					TrainingRecommend::saveRecommendations($this->_getParam('edit'), array());
+				if($this->getParam('edit') && $this->getParam('edit') != $this->getParam('person_qualification_option_id')) {
+					TrainingRecommend::saveRecommendations($this->getParam('edit'), array());
 					header("Location: " . Settings::$COUNTRY_BASE_URL . '/admin/training-recommend');
 					exit;
 				}
@@ -1582,20 +1541,20 @@ class AdminController extends UserController
 			}
 
 			// redirect to next page
-			if($this->_getParam('redirect')) {
-				header("Location: " . $this->_getParam('redirect'));
+			if($this->getParam('redirect')) {
+				header("Location: " . $this->getParam('redirect'));
 				exit;
-			} else if($this->_getParam('saveonly')) {
+			} else if($this->getParam('saveonly')) {
 				$status = ValidationContainer::instance();
 				$status->setStatusMessage('Your recommended trainings have been saved.');
 			}
 		}
 
 		// Edting
-		if($this->_getParam('edit') || $this->_getParam('edit') === '0' ) {
-			$qualId = $this->_getParam('edit');
+		if($this->getParam('edit') || $this->getParam('edit') === '0' ) {
+			$qualId = $this->getParam('edit');
 			$topicId = array_fill(1, $NUM_TOPICS, '');
-			$topics = TrainingRecommend::getRecommendations($this->_getParam('edit'));
+			$topics = TrainingRecommend::getRecommendations($this->getParam('edit'));
 			$pos = 0;
 			foreach($topics->ToArray() as $row) {
 				$topicId[++$pos] = $row['training_topic_option_id'];
@@ -1606,8 +1565,8 @@ class AdminController extends UserController
 		}
 
 		// Delete
-		if($delete = $this->_getParam('delete')) {
-			TrainingRecommend::saveRecommendations($this->_getParam('delete'), array());
+		if($delete = $this->getParam('delete')) {
+			TrainingRecommend::saveRecommendations($this->getParam('delete'), array());
 		}
 
 		require_once 'views/helpers/DropDown.php';
@@ -1940,7 +1899,7 @@ class AdminController extends UserController
 		if($this->getRequest()->isPost()) {
 			// form submit
 			$updateData = array();
-			$require_trainer_skill = $this->_getParam('require_trainer_skill');
+			$require_trainer_skill = $this->getParam('require_trainer_skill');
 			if (empty($require_trainer_skill)) { $require_trainer_skill = 0; }
 			$this->putSetting('require_trainer_skill', $require_trainer_skill);
 		}
@@ -2492,13 +2451,13 @@ class AdminController extends UserController
 			// update translation labels
 			$tranTable = new Translation();
 			foreach($labelNames as $input_key => $db_key) {
-				if ( $this->_getParam($input_key) ) {
+				if ( $this->getParam($input_key) ) {
 					try {
 						$tranTable->update(
-							array('phrase' => $this->_getParam($input_key)),
+							array('phrase' => $this->getParam($input_key)),
 							"key_phrase = '$db_key'"
 						);
-						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
+						$this->viewAssignEscaped($input_key, $this->getParam($input_key));
 					} catch(Zend_Exception $e) {
 						error_log($e);
 					}
@@ -2507,7 +2466,7 @@ class AdminController extends UserController
 
 			// update _system (checkboxes)
 			foreach($checkboxFields as $input_key => $db_field) {
-				$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
+				$value = ($this->getParam($input_key) == NULL) ? 0 : 1;
 				$updateData[$db_field] = $value;
 				$this->view->assign($input_key, $value);
 			}
@@ -2529,10 +2488,10 @@ class AdminController extends UserController
 		}
 
 		// redirect to next page
-		if($this->_getParam('redirect')) {
-			header("Location: " . $this->_getParam('redirect'));
+		if($this->getParam('redirect')) {
+			header("Location: " . $this->getParam('redirect'));
 			exit;
-		} else if($this->_getParam('saveonly')) {
+		} else if($this->getParam('saveonly')) {
 			$status = ValidationContainer::instance();
 			$status->setStatusMessage(t('Your settings have been updated.'));
 		}
@@ -2840,13 +2799,13 @@ class AdminController extends UserController
 			$tranTable = new Translation();
 			foreach($labelNames as $input_key => $db_key) {
 
-				if ( $this->_getParam($input_key) ) {
+				if ( $this->getParam($input_key) ) {
 					try {
 						$tranTable->update(
-							array('phrase' => $this->_getParam($input_key)),
+							array('phrase' => $this->getParam($input_key)),
 							"key_phrase = '$db_key'"
 						);
-						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
+						$this->viewAssignEscaped($input_key, $this->getParam($input_key));
 					} catch(Zend_Exception $e) {
 						error_log($e);
 					}
@@ -2855,7 +2814,7 @@ class AdminController extends UserController
 
 			// update _system (checkboxes)
 			foreach($checkboxFields as $input_key => $db_field) {
-				$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
+				$value = ($this->getParam($input_key) == NULL) ? 0 : 1;
 				$updateData[$db_field] = $value;
 				$this->view->assign($input_key, $value);
 			}
@@ -2877,10 +2836,10 @@ class AdminController extends UserController
 		}
 
 		// redirect to next page
-		if($this->_getParam('redirect')) {
-			header("Location: " . $this->_getParam('redirect'));
+		if($this->getParam('redirect')) {
+			header("Location: " . $this->getParam('redirect'));
 			exit;
-		} else if($this->_getParam('saveonly')) {
+		} else if($this->getParam('saveonly')) {
 			$status = ValidationContainer::instance();
 			$status->setStatusMessage(t('Your settings have been updated.'));
 		}
@@ -3343,13 +3302,13 @@ class AdminController extends UserController
 			$tranTable = new Translation();
 			foreach($labelNames as $input_key => $db_key) {
 
-				if ( $this->_getParam($input_key) ) {
+				if ( $this->getParam($input_key) ) {
 					try {
 						$tranTable->update(
-							array('phrase' => $this->_getParam($input_key)),
+							array('phrase' => $this->getParam($input_key)),
 							"key_phrase = '$db_key'"
 						);
-						$this->viewAssignEscaped($input_key, $this->_getParam($input_key));
+						$this->viewAssignEscaped($input_key, $this->getParam($input_key));
 					} catch(Zend_Exception $e) {
 						error_log($e);
 					}
@@ -3357,12 +3316,12 @@ class AdminController extends UserController
 			}
 			// update _system (checkboxes)
 			foreach($checkboxFields as $input_key => $db_field) {
-				$value = ($this->_getParam($input_key) == NULL) ? 0 : 1;
+				$value = ($this->getParam($input_key) == NULL) ? 0 : 1;
 				$updateData[$db_field] = $value;
 				$this->view->assign($input_key, $value);
 			}
-			$updateData['employee_header'] = $this->_getParam('employee_header');
-			$this->view->assign('employee_header', $this->_getParam('employee_header') ? $this->_getParam('employee_header') : '');
+			$updateData['employee_header'] = $this->getParam('employee_header');
+			$this->view->assign('employee_header', $this->getParam('employee_header') ? $this->getParam('employee_header') : '');
 			$sysTable->update($updateData, '');
 
 		} else { // view
@@ -3382,10 +3341,10 @@ class AdminController extends UserController
 		}
 
 		// redirect to next page
-		if($this->_getParam('redirect')) {
-			header("Location: " . $this->_getParam('redirect'));
+		if($this->getParam('redirect')) {
+			header("Location: " . $this->getParam('redirect'));
 			exit;
-		} else if($this->_getParam('saveonly')) {
+		} else if($this->getParam('saveonly')) {
 			$status = ValidationContainer::instance();
 			$status->setStatusMessage(t('Your settings have been updated.'));
 		}

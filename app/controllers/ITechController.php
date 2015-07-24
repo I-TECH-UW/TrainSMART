@@ -214,7 +214,7 @@ protected function sendData($data) {
 	if ( !$data )
 		return false;
 
-	$outputType     = $this->alphaFilter->filter($this->_getParam('outputType'));
+	$outputType     = $this->alphaFilter->filter($this->getParam('outputType'));
 	$processorClass = $this->getProcessorClass($outputType);
 
 	$processor      = new $processorClass($data);
@@ -255,7 +255,7 @@ protected function sendData($data) {
 	 */
 	public function getSanParam($param) {
 
-		return $this->sanitize($this->_getParam($param));
+		return $this->sanitize($this->getParam($param));
 	}
 
     public function preDispatch()

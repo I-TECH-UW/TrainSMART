@@ -79,7 +79,7 @@ class EmployeeController extends ReportFilterHelpers {
 	{
 		try {
 			if (! $this->hasACL ( 'employees_module' )) {
-				if($this->_getParam('outputType') == 'json') {
+				if($this->getParam('outputType') == 'json') {
 					$this->sendData(array('msg'=>'Not Authorized'));
 					exit();
 					return;
@@ -127,7 +127,7 @@ class EmployeeController extends ReportFilterHelpers {
 
 		}
 		catch (Exception $e) {
-			if($this->_getParam('outputType') == 'json') {
+			if($this->getParam('outputType') == 'json') {
 				$this->sendData(array('errored' => true, 'msg'=>'Error: ' . $e->getMessage()));
 				return;
 			} else {
@@ -266,7 +266,7 @@ class EmployeeController extends ReportFilterHelpers {
 
 			    if (!$this->hasACL("edit_employee"))
 			    {
-    				if($this->_getParam('outputType') == 'json') {
+    				if($this->getParam('outputType') == 'json') {
 					   $this->sendData(array('msg'=>'Not Authorized'));
 					   exit();
 				    }

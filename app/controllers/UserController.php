@@ -58,24 +58,24 @@ class UserController extends ReportFilterHelpers {
 			//valid email?
 			$validator = new Zend_Validate_EmailAddress ( );
 
-			if (! $validator->isValid ( $this->_getParam ( 'email' ) )) {
+			if (! $validator->isValid ( $this->getParam ( 'email' ) )) {
 				$status->addError ( 'email', 'That email address does not appear to be valid.' );
 			}
 
-			if (strlen ( $this->_getParam ( 'username' ) ) < 3) {
+			if (strlen ( $this->getParam ( 'username' ) ) < 3) {
 				$status->addError ( 'username', 'Usernames should be at least 3 characters in length.' );
 			}
 
 			$status->checkRequired ( $this, 'password', 'Password' );
 			//check unique username and email
-			if ($uniqueArray = User::isUnique ( $this->getSanParam ( 'username' ), $this->_getParam ( 'email' ) )) {
+			if ($uniqueArray = User::isUnique ( $this->getSanParam ( 'username' ), $this->getParam ( 'email' ) )) {
 				if (isset ( $uniqueArray ['email'] ))
 				$status->addError ( 'email', 'That email address is already in use. Please choose another one.' );
 				if (isset ( $uniqueArray ['username'] ))
 				$status->addError ( 'username', 'That username is already in use. Please choose another one.' );
 			}
 
-			if (strlen ( $this->_getParam ( 'password' ) ) < 6) {
+			if (strlen ( $this->getParam ( 'password' ) ) < 6) {
 				$status->addError ( 'password', 'Passwords should be at least 6 characters in length.' );
 			}
 
@@ -83,13 +83,13 @@ class UserController extends ReportFilterHelpers {
 				$status->setStatusMessage ( 'The user could not be saved.' );
 			} else {
 
-				if ($this->_getParam ( 'send_email' )) {
+				if ($this->getParam ( 'send_email' )) {
 
 					$view = new Zend_View ( );
 					$view->setScriptPath ( Globals::$BASE_PATH . '/app/views/scripts/email' );
-					$view->assign ( 'first_name', $this->_getParam ( 'first_name' ) );
-					$view->assign ( 'username', $this->_getParam ( 'username' ) );
-					$view->assign ( 'password', $this->_getParam ( 'password' ) );
+					$view->assign ( 'first_name', $this->getParam ( 'first_name' ) );
+					$view->assign ( 'username', $this->getParam ( 'username' ) );
+					$view->assign ( 'password', $this->getParam ( 'password' ) );
 					$text = $view->render ( 'text/new_account.phtml' );
 					$html = $view->render ( 'html/new_account.phtml' );
 
@@ -98,7 +98,7 @@ class UserController extends ReportFilterHelpers {
 						$mail->setBodyText ( $text );
 						$mail->setBodyHtml ( $html );
 						$mail->setFrom ( Settings::$EMAIL_ADDRESS, Settings::$EMAIL_NAME );
-						$mail->addTo ( $this->_getParam ( 'email' ), $this->_getParam ( 'first_name' ) . " " . $this->_getParam ( 'last_name' ) );
+						$mail->addTo ( $this->getParam ( 'email' ), $this->getParam ( 'first_name' ) . " " . $this->getParam ( 'last_name' ) );
 						$mail->setSubject ( 'New Account Created' );
 						$mail->send ();
 					} catch (Exception $e) {
@@ -107,7 +107,7 @@ class UserController extends ReportFilterHelpers {
 
 				}
 
-				self::fillFromArray ( $userRow, $this->_getAllParams () );
+				self::fillFromArray ( $userRow, $this->getAllParams () );
 				$userRow->is_blocked = 0;
 				if ($id = $userRow->save ()) {
 					$status->setStatusMessage ( 'The new user was created.' );
@@ -177,7 +177,7 @@ class UserController extends ReportFilterHelpers {
 				'acl_delete_ps_student', 
 		); 
 		foreach ($checkboxes as $value) {
-			$acl [$value] = ( ( $this->_getParam ( $value ) == $value || $this->_getParam($value) == 'on' ) ? $value : null);
+			$acl [$value] = ( ( $this->getParam ( $value ) == $value || $this->getParam($value) == 'on' ) ? $value : null);
 		}
 
 		$checkboxes = array(
@@ -194,11 +194,11 @@ class UserController extends ReportFilterHelpers {
 		    'edit_training_location' => 'view_training_location',
 		);
 		foreach ($checkboxes as $key => $value) {
-			$acl [$value] = ( $this->_getParam ( $key ) == $value ? $value : null );
+			$acl [$value] = ( $this->getParam ( $key ) == $value ? $value : null );
 		}
 		
 		MultiOptionList::updateOptions ( 'user_to_acl', 'acl', 'user_id', $user_id, 'acl_id', $acl );
-		MultiOptionList::updateOptions ( 'user_to_organizer_access', 'training_organizer_option', 'user_id', $user_id, 'training_organizer_option_id', $this->_getParam ( 'training_organizer_option_id' ) );
+		MultiOptionList::updateOptions ( 'user_to_organizer_access', 'training_organizer_option', 'user_id', $user_id, 'training_organizer_option_id', $this->getParam ( 'training_organizer_option_id' ) );
 
 		// Capturing the institution access if necessary
 
@@ -208,9 +208,9 @@ class UserController extends ReportFilterHelpers {
 			$identity = $auth->getIdentity ();
 
 			$helper = new Helper();
-			//$helper->saveUserInstitutions($identity->id, is_array($this->_getParam ('institutionselect')) ? $this->_getParam ('institutionselect') : array());
-			$helper->saveUserInstitutions($user_id, is_array($this->_getParam ('institutionselect')) ? $this->_getParam ('institutionselect') : array());
-			$helper->saveUserPrograms($user_id, is_array($this->_getParam('programselect')) ? $this->_getParam('programselect') : array());
+			//$helper->saveUserInstitutions($identity->id, is_array($this->getParam ('institutionselect')) ? $this->getParam ('institutionselect') : array());
+			$helper->saveUserInstitutions($user_id, is_array($this->getParam ('institutionselect')) ? $this->getParam ('institutionselect') : array());
+			$helper->saveUserPrograms($user_id, is_array($this->getParam('programselect')) ? $this->getParam('programselect') : array());
 		}
 	}
 	
@@ -225,7 +225,7 @@ class UserController extends ReportFilterHelpers {
 	}
 
 	public function indexAction() {
-		$this->_forward ( 'myaccount' );
+		$this->forward ( 'myaccount' );
 	}
 
 	public function searchAction() {
@@ -292,15 +292,15 @@ class UserController extends ReportFilterHelpers {
 
 			//valid email?
 			$validator = new Zend_Validate_EmailAddress ( );
-			if (! $validator->isValid ( $this->_getParam ( 'email' ) )) {
+			if (! $validator->isValid ( $this->getParam ( 'email' ) )) {
 				$status->addError ( 'email', 'That email address does not appear to be valid.' );
 			}
-			if (strlen ( $this->_getParam ( 'username' ) ) < 3) {
+			if (strlen ( $this->getParam ( 'username' ) ) < 3) {
 				$status->addError ( 'username', 'Usernames should be at least 3 characters in length.' );
 			}
 
 			//changing usernames?
-			if ($this->_getParam ( 'username' ) != $userRow->username) {
+			if ($this->getParam ( 'username' ) != $userRow->username) {
 				//check unique username and email
 				if ($uniqueArray = User::isUnique ( $this->getSanParam ( 'username' ) )) {
 					if (isset ( $uniqueArray ['username'] ))
@@ -308,7 +308,7 @@ class UserController extends ReportFilterHelpers {
 				}
 			}
 			//changing email?
-			if ($this->_getParam ( 'email' ) != $userRow->email) {
+			if ($this->getParam ( 'email' ) != $userRow->email) {
 				//check unique username and email
 				if ($uniqueArray = User::isUnique ( false, $this->getSanParam ( 'email' ) )) {
 					if (isset ( $uniqueArray ['email'] ))
@@ -318,11 +318,11 @@ class UserController extends ReportFilterHelpers {
 
 			//changing passwords?
 			$passwordChange = false;
-			if (strlen ( $this->_getParam ( 'password' ) ) > 0 and strlen ( $this->_getParam ( 'confirm_password' ) ) > 0) {
-				if (strlen ( $this->_getParam ( 'password' ) ) < 6) {
+			if (strlen ( $this->getParam ( 'password' ) ) > 0 and strlen ( $this->getParam ( 'confirm_password' ) ) > 0) {
+				if (strlen ( $this->getParam ( 'password' ) ) < 6) {
 					$status->addError ( 'password', 'Passwords should be at least 6 characters in length.' );
 				}
-				if ($this->_getParam ( 'password' ) != $this->_getParam ( 'confirm_password' )) {
+				if ($this->getParam ( 'password' ) != $this->getParam ( 'confirm_password' )) {
 					$status->addError ( 'password', 'Password fields do not match. Please enter them again.' );
 				}
 				$passwordChange = true;
@@ -331,7 +331,7 @@ class UserController extends ReportFilterHelpers {
 			if ($status->hasError ()) {
 				$status->setStatusMessage ( 'Your account information could not be saved.' );
 			} else {
-				$params = $this->_getAllParams ();
+				$params = $this->getAllParams ();
 				if (! $passwordChange) {
 					unset ( $params ['password'] );
 				}
@@ -344,13 +344,13 @@ class UserController extends ReportFilterHelpers {
 					$this->saveAclCheckboxes ( $user_id );
 
 					if($passwordChange == true) {
-						$email = $this->_getParam ( 'email' );
+						$email = $this->getParam ( 'email' );
 						if (trim($email) != '') {
 							$view = new Zend_View ( );
 							$view->setScriptPath ( Globals::$BASE_PATH . '/app/views/scripts/email' );
-							$view->assign ( 'first_name', $this->_getParam ( 'first_name' ) );
-							$view->assign ( 'username', $this->_getParam ( 'username' ) );
-							$view->assign ( 'password', $this->_getParam ( 'password' ) );
+							$view->assign ( 'first_name', $this->getParam ( 'first_name' ) );
+							$view->assign ( 'username', $this->getParam ( 'username' ) );
+							$view->assign ( 'password', $this->getParam ( 'password' ) );
 							$text = $view->render ( 'text/password_changed.phtml' );
 							$html = $view->render ( 'html/password_changed.phtml' );
 
@@ -359,7 +359,7 @@ class UserController extends ReportFilterHelpers {
 								$mail->setBodyText ( $text );
 								$mail->setBodyHtml ( $html );
 								$mail->setFrom ( Settings::$EMAIL_ADDRESS, Settings::$EMAIL_NAME );
-								$mail->addTo ( $this->_getParam ( 'email' ), $this->getSanParam ( 'first_name' ) . " " . $this->getSanParam ( 'last_name' ) );
+								$mail->addTo ( $this->getParam ( 'email' ), $this->getSanParam ( 'first_name' ) . " " . $this->getSanParam ( 'last_name' ) );
 								$mail->setSubject ( 'Password Changed');
 								$mail->send ();
 							} catch (Exception $e) {
@@ -499,7 +499,7 @@ class UserController extends ReportFilterHelpers {
 
 		$status->setStatusMessage ( t ( 'Starting...' ) );
 
-		if ($this->_getParam ( 'send' )) {
+		if ($this->getParam ( 'send' )) {
 			$status->checkRequired ( $this, 'email', t ( 'Email' ) );
 
 			if (! $status->hasError ()) {
@@ -509,7 +509,7 @@ class UserController extends ReportFilterHelpers {
 				$userTable = new User ( );
 				$select = $userTable->select ();
 
-				$select->where ( "email = ?", $this->_getParam ( 'email' ) );
+				$select->where ( "email = ?", $this->getParam ( 'email' ) );
 
 				$row = $userTable->fetchRow ( $select );
 
@@ -589,7 +589,7 @@ class UserController extends ReportFilterHelpers {
 
 
 			// determine the page the user was originally trying to request
-			$redirect = $this->_getParam ( 'redirect' );
+			$redirect = $this->getParam ( 'redirect' );
 
 			//if (strlen($redirect) == 0)
 			//    $redirect = $request->getServer('REQUEST_URI');
@@ -607,8 +607,8 @@ class UserController extends ReportFilterHelpers {
 
 				// fetch login details from form and validate them
 				$username = $this->getSanParam ( 'username' );
-				$password = $this->_getParam ( 'password' );
-				if (! $status->checkRequired ( $this, 'username', t ( 'Login' ) ) or (! $this->_getParam ( 'send_email' ) and ! $status->checkRequired ( $this, 'password', t ( 'Password' ) )))
+				$password = $this->getParam ( 'password' );
+				if (! $status->checkRequired ( $this, 'username', t ( 'Login' ) ) or (! $this->getParam ( 'send_email' ) and ! $status->checkRequired ( $this, 'password', t ( 'Password' ) )))
 				$status->setStatusMessage ( t ( 'The system could not log you in.' ) );
 
 				if (! $status->hasError ()) {

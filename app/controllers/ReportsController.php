@@ -1707,7 +1707,7 @@ echo $sql . "<br>";
 				$count = count ( $rowArray );
 			}
 
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {
@@ -2313,7 +2313,7 @@ echo $sql . "<br>";
 				$count = count ( $rowArray );
 			}
 
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {
@@ -2480,7 +2480,7 @@ echo $sql . "<br>";
 			$this->view->assign ( 'count' , count($rowArray) );
 
 			// output csv if necessary
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 				$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 
@@ -3144,7 +3144,7 @@ echo $sql . "<br>";
 			} else {
 				$count = count ( $rowArray );
 			}
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {
@@ -3327,7 +3327,7 @@ echo $sql . "<br>";
             $this->view->assign ( 'dateMMend', $dateMMend);
             $this->view->assign ( 'dateYYend', $dateYYend);
             
-            if ($this->_getParam ( 'outputType' )){
+            if ($this->getParam ( 'outputType' )){
             	$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
             }
             
@@ -3785,7 +3785,7 @@ echo $sql . "<br>";
 			} else {
 				$count = count ( $rowArray );
 			}
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {
@@ -3980,7 +3980,7 @@ echo $sql . "<br>";
 
 
 			$rowArray = $db->fetchAll ( $sql );
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {
@@ -4101,7 +4101,7 @@ echo $sql . "<br>";
 	$qDate = $rowArray[0]['next_quarter_start'];
 
 	}
-	if ( $this->_getParam('outputType')  ) $this->sendData($results);
+	if ( $this->getParam('outputType')  ) $this->sendData($results);
 	}
 
 	$this->view->assign('count',(isset($grandTotal)?$grandTotal:0) );
@@ -4295,7 +4295,7 @@ echo $sql . "<br>";
 				$total += $row ['cnt'];
 			}
 
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 				$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 		}
 
@@ -4643,7 +4643,7 @@ echo $sql . "<br>";
 				$count = count ( $rowArray );
 			}
 
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {
@@ -5143,7 +5143,7 @@ echo $sql . "<br>";
 					$rowArray = $db->fetchAll ( $sql );
 				}
 			}
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {
@@ -5234,7 +5234,7 @@ echo $sql . "<br>";
 		#ini_set('max_execution_time','120'); // these are now exceeded globally
 		#ini_set('memory_limit', '256M');
 		$criteria ['training_organizer_id'] = $this->getSanParam ( 'training_organizer_id' );
-		$criteria ['training_title_id'] = $this->_getParam ( 'training_title_id' );
+		$criteria ['training_title_id'] = $this->getParam ( 'training_title_id' );
 		$criteria ['is_extended'] = $is_extended = $this->getSanParam ( 'is_extended' );
 		$criteria ['add_additional'] = $add_additional = $this->getSanParam ( 'add_additional' );
 		$criteria ['go'] = $this->getSanParam('go');
@@ -5797,7 +5797,7 @@ echo $sql . "<br>";
 				$this->viewAssignEscaped('numColumns', $maxVisits);
 				$this->viewAssignEscaped('results', $rows);
 
-				if ($this->_getParam ( 'outputType' ))
+				if ($this->getParam ( 'outputType' ))
 					$this->sendData ( $this->reportHeaders ( false, $rows ) );
 
 			} else {
@@ -6114,7 +6114,7 @@ echo $sql . "<br>";
 			// end training lookup
 
 			// output csv if necessary
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 				$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 			//done

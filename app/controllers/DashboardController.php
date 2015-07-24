@@ -806,7 +806,7 @@ class DashboardController extends ReportFilterHelpers {
 	{
 		try {
 			if (! $this->hasACL ( 'employees_module' )) {
-				if($this->_getParam('outputType') == 'json') {
+				if($this->getParam('outputType') == 'json') {
 					$this->sendData(array('msg'=>'Not Authorized'));
 					exit();
 					return;
@@ -854,7 +854,7 @@ class DashboardController extends ReportFilterHelpers {
 
 		}
 		catch (Exception $e) {
-			if($this->_getParam('outputType') == 'json') {
+			if($this->getParam('outputType') == 'json') {
 				$this->sendData(array('errored' => true, 'msg'=>'Error: ' . $e->getMessage()));
 				return;
 			} else {
@@ -1431,7 +1431,7 @@ public function loginAction() {
 
 
 		// determine the page the user was originally trying to request
-		$redirect = $this->_getParam ( 'redirect' );
+		$redirect = $this->getParam ( 'redirect' );
 
 		//if (strlen($redirect) == 0)
 		//    $redirect = $request->getServer('REQUEST_URI');
@@ -1449,8 +1449,8 @@ public function loginAction() {
 
 			// fetch login details from form and validate them
 			$username = $this->getSanParam ( 'username' );
-			$password = $this->_getParam ( 'password' );
-			if (! $status->checkRequired ( $this, 'username', t ( 'Login' ) ) or (! $this->_getParam ( 'send_email' ) and ! $status->checkRequired ( $this, 'password', t ( 'Password' ) )))
+			$password = $this->getParam ( 'password' );
+			if (! $status->checkRequired ( $this, 'username', t ( 'Login' ) ) or (! $this->getParam ( 'send_email' ) and ! $status->checkRequired ( $this, 'password', t ( 'Password' ) )))
 				$status->setStatusMessage ( t ( 'The system could not log you in.' ) );
 
 			if (! $status->hasError ()) {

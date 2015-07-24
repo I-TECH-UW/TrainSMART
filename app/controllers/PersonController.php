@@ -410,7 +410,7 @@ class PersonController extends ReportFilterHelpers
                     if ($this->getSanParam('maketrainer')) {
                         // require user to add trainer info
                         $status->setRedirect('/person/edit/id/' . $dupe_id . '/trainingredirect/' . $this->getSanParam('trainingredirect') . '/maketrainer/1');
-                    } else if ($this->_getParam('trainingredirect')) {
+                    } else if ($this->getParam('trainingredirect')) {
                         $status->setStatusMessage(t('The person was saved. Refreshing history...'));
                         $_SESSION['status'] = t('The person was saved.');
                         $this->trainingRedirect($dupe_id);
@@ -513,7 +513,7 @@ class PersonController extends ReportFilterHelpers
 
                 //get home city name
                 $city_id = false;
-                $criteria = $this->_getAllParams();
+                $criteria = $this->getAllParams();
                 require_once 'views/helpers/Location.php';
                 $home_city_parent_id = regionFiltersGetLastID('home', $criteria);
                 if ($criteria['home_city'] && !$criteria['is_new_home_city']) {
@@ -533,7 +533,7 @@ class PersonController extends ReportFilterHelpers
                     $status->setStatusMessage(t('The person could not be saved.') . '<br>' . $errortext);
                 } else {
 
-                    $personrow = self::fillFromArray($personrow, $this->_getAllParams());
+                    $personrow = self::fillFromArray($personrow, $this->getAllParams());
                     if (($city_id === false) && $this->getSanParam('is_new_home_city')) {
                         $city_id = Location::insertIfNotFound($criteria['home_city'], $home_city_parent_id, $this->setting('num_location_tiers'));
                         if ($city_id === false)
@@ -738,9 +738,9 @@ class PersonController extends ReportFilterHelpers
 
                         TrainingRecommend::saveRecommendedforPerson($person_id, $this->getSanParam('training_recommend'));
 
-                        if ($this->_getParam('redirectUrl')) {
-                            $status->redirect = $this->_getParam('redirectUrl');
-                        } else if ($this->_getParam('trainingredirect')) { // redirect back to training session
+                        if ($this->getParam('redirectUrl')) {
+                            $status->redirect = $this->getParam('redirectUrl');
+                        } else if ($this->getParam('trainingredirect')) { // redirect back to training session
                             $this->trainingRedirect($person_id);
                         } else { //if it's an add then redirect to the view page
                             if ($this->setting('display_mod_skillsmart')) {
@@ -969,14 +969,14 @@ class PersonController extends ReportFilterHelpers
             $this->view->assign('okToDelete', ((!$person_id) or (!Person::isReferenced($person_id))));
 
             // create reference for GET paramaters
-            if ($this->_getParam('trainingredirect')) {
-                $this->view->assign('trainingredirect', $this->_getParam('trainingredirect'));
+            if ($this->getParam('trainingredirect')) {
+                $this->view->assign('trainingredirect', $this->getParam('trainingredirect'));
             }
-            if ($this->_getParam('maketrainer')) {
-                $this->view->assign('maketrainer', $this->_getParam('maketrainer'));
+            if ($this->getParam('maketrainer')) {
+                $this->view->assign('maketrainer', $this->getParam('maketrainer'));
             }
-            if ($this->_getParam('days')) {
-                $this->view->assign('days', $this->_getParam('days'));
+            if ($this->getParam('days')) {
+                $this->view->assign('days', $this->getParam('days'));
             }
 
         } catch (Exception $e) {
@@ -1483,7 +1483,7 @@ class PersonController extends ReportFilterHelpers
     public function lastListAction()
     {
         require_once('models/table/Person.php');
-        $rowArray = Person::suggestionQuery($this->_getParam('query'), 100, 'last_name', array('p.last_name'))->toArray();
+        $rowArray = Person::suggestionQuery($this->getParam('query'), 100, 'last_name', array('p.last_name'))->toArray();
         //$rowArray = $this->_attach_locations($rowArray);
 
         $this->sendData($rowArray);
@@ -1495,7 +1495,7 @@ class PersonController extends ReportFilterHelpers
     public function firstListAction()
     {
         require_once('models/table/Person.php');
-        $rowArray = Person::suggestionQuery($this->_getParam('query'), 100, 'first_name', array('p.first_name'))->toArray();
+        $rowArray = Person::suggestionQuery($this->getParam('query'), 100, 'first_name', array('p.first_name'))->toArray();
         //$rowArray = $this->_attach_locations($rowArray);
         $this->sendData($rowArray);
     }
@@ -1508,25 +1508,25 @@ class PersonController extends ReportFilterHelpers
         require_once('models/table/Person.php');
         $fieldAnd = array();
 
-        if ($this->_getParam('first_name'))
-            $fieldAnd ["p.first_name"] = trim($this->_getParam('first_name'));
+        if ($this->getParam('first_name'))
+            $fieldAnd ["p.first_name"] = trim($this->getParam('first_name'));
 
-        if ($this->_getParam('last_name'))
-            $fieldAnd ["p.last_name"] = trim($this->_getParam('last_name'));
+        if ($this->getParam('last_name'))
+            $fieldAnd ["p.last_name"] = trim($this->getParam('last_name'));
 
-        if ($this->_getParam('gender'))
-            $fieldAnd ["p.gender"] = $this->_getParam('gender');
+        if ($this->getParam('gender'))
+            $fieldAnd ["p.gender"] = $this->getParam('gender');
 
-        if ($this->_getParam('national_id'))
-            $fieldAnd ["p.national_id"] = trim($this->_getParam('national_id'));
+        if ($this->getParam('national_id'))
+            $fieldAnd ["p.national_id"] = trim($this->getParam('national_id'));
 
-        if ($this->_getParam('file_number'))
-            $fieldAnd ["p.file_number"] = trim($this->_getParam('file_number'));
+        if ($this->getParam('file_number'))
+            $fieldAnd ["p.file_number"] = trim($this->getParam('file_number'));
 
-        if ($this->_getParam('primary_qualification_option_id'))
-            $fieldAnd ["p.primary_qualification_option_id"] = trim($this->_getParam('primary_qualification_option_id'));
+        if ($this->getParam('primary_qualification_option_id'))
+            $fieldAnd ["p.primary_qualification_option_id"] = trim($this->getParam('primary_qualification_option_id'));
 
-        $rowArray = Person::suggestionFindDupes($this->_getParam('last_name'), 50, $this->setting('display_middle_name_last'), $fieldAnd);
+        $rowArray = Person::suggestionFindDupes($this->getParam('last_name'), 50, $this->setting('display_middle_name_last'), $fieldAnd);
 
         foreach ($rowArray as $key => $row) {
             //$rowArray [$key] = array_merge ( array ('input' => '<a href="'.Settings::$COUNTRY_BASE_URL.'/person/edit/id/'.$rowArray [$key] ['id'].'">'.$rowArray[$key]['id'].'</a>' ), $row );
@@ -1539,7 +1539,7 @@ class PersonController extends ReportFilterHelpers
     // redirect back to training session
     function trainingRedirect($person_id)
     {
-        $training_id = $this->_getParam('trainingredirect');
+        $training_id = $this->getParam('trainingredirect');
 
         // first, add trainer/person to training session
         if ($this->view->mode == 'add' || $this->getSanParam('maketrainer')) {

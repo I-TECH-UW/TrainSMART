@@ -41,7 +41,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
 
   public function execute(Zend_Controller_Request_Abstract $request) {
 
-    $params = $this->_getAllParams();
+    $params = $this->getAllParams();
 
     if(isset($params['merge']) && $this->allowMerge) {
       $this->merge();
@@ -250,7 +250,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
   public function merge() {
     require_once('models/table/EditTable.php');
 
-    $params = $this->_getAllParams();
+    $params = $this->getAllParams();
 
     if(!isset($params['mergeto']) && is_array($params['merge'])) {
       $fields = array_keys($this->fields);
@@ -282,7 +282,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
   public function setDefault() {
     require_once('models/table/EditTable.php');
     
-    $params = $this->_getAllParams();
+    $params = $this->getAllParams();
     
     if(is_numeric($params['default'])) {
       EditTable::setDefault($this->table, $params['default'], $this->where);
