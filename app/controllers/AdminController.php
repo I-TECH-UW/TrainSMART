@@ -335,143 +335,6 @@ class AdminController extends UserController
 		$this->view->assign('sites', $sitesArray ? $sitesArray->toArray() : array());
 	}
 
-	/*
-	public function countryLabelsAction()
-	{
-
-	require_once('models/table/System.php');
-	$sysTable = new System();
-
-	// For "Labels"
-	require_once('models/table/Translation.php');
-	$labelNames = array( // input name => key_phrase
-	'label_country'   => 'Country',
-	'label_regiona'   => 'Region A (Province)',
-	'label_regionb'   => 'Region B (Health District)',
-	'label_citytown'  => 'City or Town',
-	//'label_training_title'    => 'Training Title',
-	'label_training_category' => 'Training Category',
-	'label_training_topic'    => 'Training Topic',
-	'label_training_name'     => 'Training Name',
-	'label_training_org'      => 'Training Organizer',
-	'label_training_level'    => 'Training Level',
-	'label_training_got_curric' => 'GOT Curriculum',
-	'label_training_got_comment'=> 'GOT Comment',
-	'label_training_refresher'  => 'Refresher Course',
-	'label_training_comments'   => 'Comments',
-	'label_pepfar'            => 'PEPFAR Category',
-	'label_training_trainers' => 'Training of Trainers',
-	'label_course_objectives' => 'Course Objectives',
-	'label_training_pre'      => 'Pre Test Score',
-	'label_training_post'     => 'Post Test Score',
-	'label_training_custom1'  => 'Training Custom 1',
-	'label_training_custom2'  => 'Training Custom 2',
-	'label_people_active'   => 'Is Active',
-	'label_people_first'   => 'First Name',
-	'label_people_middle'   => 'Middle Name',
-	'label_people_last'   => 'Last Name',
-	'label_people_national'   => 'National ID',
-	'label_people_custom1'    => 'People Custom 1',
-	'label_people_custom2'    => 'People Custom 2',
-	'label_people_file_num'    => 'File Number',
-	);
-
-	// _system settings
-	$checkboxFields = array( // input name => db field
-	'check_training_topic' => 'display_training_topic',
-	'check_training_trainers' => 'display_training_trainers',
-	'check_training_got_curric'  => 'display_training_got_curric',
-	'check_training_got_comment' => 'display_training_got_comment',
-	'check_training_refresher'   => 'display_training_refresher',
-	'check_course_objectives' => 'display_course_objectives',
-	'check_training_pre'      => 'display_training_pre_test',
-	'check_training_post'     => 'display_training_post_test',
-	'check_training_custom1'  => 'display_training_custom1',
-	'check_training_custom2'  => 'display_training_custom2',
-	'check_people_active'   => 'display_people_active',
-	'check_people_national'   => 'display_national_id',
-	'check_people_middle'   => 'display_middle_name_last',
-	'check_people_custom1'    => 'display_people_custom1',
-	'check_people_custom2'    => 'display_people_custom2',
-	'check_regionb'     => 'display_region_b',
-	'check_people_file_num'    => 'display_people_file_num',
-	'check_people_home_phone'  => 'display_people_home_phone',
-	'check_people_fax'         => 'display_people_fax',
-	);
-
-	if($this->getRequest()->isPost()) { // Update db
-	$updateData = array();
-	$country = $this->getParam('country');
-	$this->putSetting('country', $country);
-
-	// update translation labels
-	$tranTable = new Translation();
-	foreach($labelNames as $input_key => $db_key) {
-
-	if ( $this->getParam($input_key) ) {
-	try {
-	$tranTable->update(
-	array('phrase' => $this->getParam($input_key)),
-	"key_phrase = '$db_key'"
-	);
-	$this->viewAssignEscaped($input_key, $this->getParam($input_key));
-	} catch(Zend_Exception $e) {
-	error_log($e);
-	}
-	}
-	}
-
-	// save locale
-	$updateData['locale_enabled'] = implode(',', $this->getParam('locales'));
-	if ( $this->getParam('locale_default') )
-	$updateData['locale'] = $this->getParam('locale_default');
-
-	// update _system (checkboxes)
-	foreach($checkboxFields as $input_key => $db_field) {
-	if ( $input_key == 'check_people_middle')
-	$value = ($this->getParam($input_key) == NULL) ? 0 : 1;
-	else
-	$value = ($this->getParam($input_key) == NULL) ? 1 : 0;
-	$updateData[$db_field] = $value;
-	$this->view->assign($input_key, $value);
-	}
-	$sysTable->update($updateData, '');
-
-	} else { // view
-
-	// labels
-	$t = Translation::getAll();
-	foreach($labelNames as $input_key => $db_key) {
-	$this->viewAssignEscaped($input_key, $t[$db_key]);
-	}
-
-	// checkboxes
-	$sysRows = $sysTable->fetchRow($sysTable->select()->limit(1));
-	foreach($checkboxFields as $input_key => $field_key) {
-	$this->view->assign($input_key, $sysRows->$field_key);
-	}
-	}
-
-	// country
-	$country = $this->getSetting('country');
-	$this->view->assign('country', htmlspecialchars($country));
-
-	// locale
-	$this->view->assign('languages', ITechTranslate::getLanguages());
-	$this->view->assign('locale', $this->getSetting('locale'));
-	$this->view->assign('locale_enabled', ITechTranslate::getLocaleEnabled());
-
-	// redirect to next page
-	if($this->getParam('redirect')) {
-	header("Location: " . $this->getParam('redirect'));
-	exit;
-	} else if($this->getParam('saveonly')) {
-	$status = ValidationContainer::instance();
-	$status->setStatusMessage(t('Your settings have been updated.'));
-	}
-
-	}
-	*/
 	public function trainingSettingsAction()
 	{
 
@@ -1045,36 +908,6 @@ class AdminController extends UserController
 		}
 
 	}
-	/*
-	public function countryDistrictsAction()
-	{
-
-	$province = $this->getSanParam('province');
-
-	if ( $province or $this->getSanParam('redirect') ) {
-	$editTable = new EditTableController($this);
-	$editTable->table   = 'location_district';
-	$editTable->fields  = array('district_name' => 'District');
-	$editTable->label   = 'District';
-	$editTable->where = 'parent_province_id = '.$province;
-	$editTable->insertExtra = array('parent_province_id'=>$province);
-	$editTable->allowDefault = true;
-
-	$editTable->dependencies = array(
-	'parent_district_id' => 'location_city',
-	'location_district_id' => 'training_location',
-	'district_id' => 'facility',
-	);
-
-	$editTable->execute();
-	}
-
-	$provinceArray = OptionList::suggestionList('location_province','province_name',false,false);
-	$this->viewAssignEscaped('provinces',$provinceArray);
-	$this->viewAssignEscaped('province', $province);
-
-	}
-	*/
 	/************************************************************************************
 	 * Training
 	 */
@@ -3602,10 +3435,6 @@ class AdminController extends UserController
 			$status = ValidationContainer::instance ();
 			$params = $this->getAllParams();
 
-			//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3036> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-			//var_dump($params);
-			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-
 			// prepare date for database
 			$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
 
@@ -3652,10 +3481,6 @@ class AdminController extends UserController
 		$subPartner = $helper->getAllSubPartners();
 		$this->viewAssignEscaped ( 'subPartner', $subPartner );
 
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3068>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($subPartner);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-
 		$partnerFunder = $helper->getAllFunders();
 		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
 
@@ -3675,10 +3500,6 @@ class AdminController extends UserController
 			$status = ValidationContainer::instance ();
 			$params = $this->getAllParams();
 
-			//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3007> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-			//var_dump($params);
-			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-
 			// prepare date for database
 			$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
 
@@ -3690,7 +3511,6 @@ class AdminController extends UserController
 				$status->addError('', t ( 'All fields' ) . space . t('are required'));
 
 			// test for existing record
-			//$id = $this->_findOrCreateSaveGeneric('partner_to_funder_to_mechanism', $params);
 			$id = false;
 			if ($id) {
 				$status->addError('', t('Record exists'));
@@ -3731,9 +3551,6 @@ class AdminController extends UserController
 		$mechanism = $helper->getMechanism();
 		$this->viewAssignEscaped ( 'mechanism', $mechanism );
 
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3163>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($mechanism);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 
 	}
 
@@ -3747,10 +3564,6 @@ class AdminController extends UserController
 			$db     = $this->dbfunc();
 			$status = ValidationContainer::instance ();
 			$params = $this->getAllParams();
-
-			//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3007> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-			//var_dump($params);
-			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 
 			// prepare date for database
 			$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
@@ -3802,10 +3615,6 @@ class AdminController extends UserController
 		$mechanism = $helper->getSfmMechanism();
 		$this->viewAssignEscaped ( 'mechanism', $mechanism );
 
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3234>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($mechanism);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-
 	}
 
 	public function employeePsfmFilterAction()
@@ -3818,10 +3627,6 @@ class AdminController extends UserController
 			$db     = $this->dbfunc();
 			$status = ValidationContainer::instance ();
 			$params = $this->getAllParams();
-
-			//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3007> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-			//var_dump($params);
-			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 
 			// prepare date for database
 			$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
@@ -3877,11 +3682,6 @@ class AdminController extends UserController
 		$mechanism = $helper->getPsfmMechanism();
 		$this->viewAssignEscaped ( 'mechanism', $mechanism );
 
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3310>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($mechanism);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-
-
 	}
 
 	public function employeeEpsfmFilterAction()
@@ -3894,10 +3694,6 @@ class AdminController extends UserController
 			$db     = $this->dbfunc();
 			$status = ValidationContainer::instance ();
 			$params = $this->getAllParams();
-
-			//file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3007> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-			//var_dump($params);
-			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 
 			// prepare date for database
 			$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
@@ -3955,11 +3751,6 @@ class AdminController extends UserController
 
 		$mechanism = $helper->getEpsfmMechanism();
 		$this->viewAssignEscaped ( 'mechanism', $mechanism );
-
-		// file_put_contents('c:\wamp\logs\php_debug.log', 'adminCont 3388>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		// var_dump($mechanism);
-		// $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-
 
 	}
 

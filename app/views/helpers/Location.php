@@ -697,11 +697,6 @@ function make_page_select2()
 
      <?php
 }
-
-//file_put_contents('c:\wamp\logs\php_debug.log', 'Location 517>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-//var_dump($partnerFunder);
-//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-
 function build_funding_dropdown(&$view, &$subPartner, &$partnerFunder, &$mechanism, $val_partner = null, $val_subpartner = null, $val_partnerFunder = null, $val_mechanism = null, $is_multiple = false, $required = false) {
 
 	$required = $required ? '<span class="required">*</span>' : '';
@@ -825,14 +820,6 @@ function partner_sfm_dropdown($fieldIndex, &$view, &$subPartner, &$partnerFunder
   $required = $required ? '<span class="required">*</span>' : '';
   $class = $is_multiple ? 'autoHeight' : '';
   ?>
-
-  <?php 
-  		//file_put_contents('c:\wamp\logs\php_debug.log', 'Loc 611>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($val_employee);var_dump($val_partner);var_dump($val_subPartner);var_dump($val_partnerFunder);var_dump($val_mechanism);
-		//var_dump($subPartner);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-		?>
-  
   
 		<div class="fieldLabel" id="subPartner_lbl"><?php echo t('Partner'); ?></div>
 		<div class="fieldInput">

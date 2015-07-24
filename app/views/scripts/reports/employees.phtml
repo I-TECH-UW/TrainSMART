@@ -29,14 +29,9 @@
 						$this->calendar_fields = array('start_date','end_date');
 						$this->is_report = true;
 
-// 						file_put_contents('c:\wamp\logs\php_debug.log', 'emp 32>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-// 						var_dump($this->partners);
-// 						$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-						
+
 						if ( $this->setting['display_employee_partner'] )
 							echo labelAndField($this, t('Partner'), $this->partners, 'partner');
-						//if ( $this->setting['display_employee_sub_partner'] )
-							//echo labelAndField($this, t('Sub Partner'), $this->partners, 'sub_partner');
 						echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, true );
 						if ( $this->setting['display_employee_site_name'] )
 							echo labelAndField($this, t('Site').space.t('Name'), renderFacilityDropDown($this->facilities, $this->criteria['facilityInput'], $this->viewonly), 'site');
@@ -71,8 +66,6 @@
 							    t('to'), 'employee_cost_per_mechanism_min', 'employee_cost_per_mechanism_max', 
 							    $this->criteria['employee_cost_per_mechanism_min'], $this->criteria['employee_cost_per_mechanism_max']);
     					}
-						#echo labelAndField($this, t('Annual Cost to Mechanism'),  'text', 'employee_cost_per_mechanism',  $employee_mechanism_cost.space.$this->translation['Employee Local Currency'], 2);
-											#echo labelAndField($this, t('Employee Comments'), '', 'comments'); //empty field ('')
 
 					?>
 					</div>

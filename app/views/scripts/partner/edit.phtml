@@ -37,38 +37,7 @@
 					  echo labelAndField($this, t('Partner').space.t('ID'),  'text', 'id',      $this->partner['id']);
 					}
 					echo labelAndField($this, t('Partner').space.t('Name'),'text', 'partner', $this->partner['partner']);
-					
-					
-					
-					/*
-					if ($this->setting['display_partner_type'])
-					echo labelAndField($this, t('Type of Partner'), $this->types, 'partner_type_option_id');
-					if ($this->setting['display_employee_sub_partner']){
-						echo '<div class="clear"></div>';                              // clear
-						echo '<div class="fieldLabel subpartner_label">'.t('Prime Partners').'</div>';    // a label
-						echo '<div class="fieldInput subpartners_wrapper">';           // the normal fieldInput
-						echo '<table id="subpartners_table">';                         // a table to line everything up nicely
-						if ($this->partner['subpartners'])
-							foreach($this->partner['subpartners'] as $i => $value){
-								$subPartners = DropDown::generateHtml ( 'partner', 'partner', $value, false, $this->viewonly, false, true, array('name' => 'subpartner_id[]'), true );
-								echo   '<tr>
-											<td><label class="label">'.t('ID').' </label></td>
-											<td><input type="text" class="subpartner_id_display" name="subpartner_id_display[]" value="'.$value.'" readonly="readonly" /></td>
-											<td><label class="label"> '.t('Prime Partner\'s Name').' </label></td>
-											<td>'.$subPartners.'</td>
-										</tr>';
-							}
-						echo '</table></div>';
-						echo '<div class="clear"></div>';
-						echo '<button id="add_sub_partner">'.t('Add a new').space.t('Prime Partner').'</button><br/><br/>'; // button to interact with dynamic section
-					}
-					*/
-					
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'partEdit 63>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-					//var_dump($this->partner['funder']);
-					//var_dump($this->subPartner);
-					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-					
+
 					if ($this->setting['display_employee_funder']) {
 
 
@@ -80,10 +49,8 @@
 								echo labelAndField($this, t('Funding End Date'), 'date','funding_end_date[]', formhelperdate($row['funding_end_date']));
 						}
 						
-						//echo '<button id="funder_add">'.t('Add a new').space.t('Funder').'</button><br />';
 					}
 
-					//$this->viewonly = false;
 					$organizers = $this->organizers;
 				    $organizers .= hasACLEdit('acl_editor_training_organizer', 'admin/training-organizer', $this); // give them an insert and edit link if they have rights to this stuff
 				    $organizers .= $this->hasACL('acl_editor_training_organizer') ? "<a href=\"#\" onclick=\"addToSelect('" . str_replace ( "'", "\\" . "'", t ( 'Please enter your new' ) ) . " " . strtolower ( t('Organizer') ) . ":', 'select_training_organizer_option', '" . Settings::$COUNTRY_BASE_URL . "/training/insert-table/table/training_organizer_option/column/training_organizer_phrase/outputType/json'); return false;\">" . t ( 'Insert new' ) . "</a>" : ""; // copied from training edit form
@@ -97,13 +64,9 @@
 					echo labelAndField($this, t('HR Contact Office Phone'),             'text', 'hr_contact_phone', $this->partner['hr_contact_phone']);
 					echo labelAndField($this, t('HR Contact Office Fax'),               'text', 'hr_contact_fax',   $this->partner['hr_contact_fax']);
 					echo labelAndField($this, t('HR Contact Email'),                    'text', 'hr_contact_email', $this->partner['hr_contact_email']);
-					#echo labelAndField($this, t('Phone'),     'text', 'phone',     $this->partner['phone']);
-					#echo labelAndField($this, t('Fax'),       'text', 'fax',       $this->partner['fax']);
 
 
 
-					#if ($this->setting['display_employee_intended_transition'])
-					#	echo labelAndField($this, t('Intended Transition'), $this->transitions, 'employee_transition_option_id');
 					if ($this->setting['display_employee_agreement_end_date'])
 						echo labelAndField($this, t('Agreement End Date'), 'date', 'agreement_end_date', $this->partner['agreement_end_date']);
 					if ($this->setting['display_employee_importance'])
@@ -112,7 +75,6 @@
 						echo labelAndField($this, t('Incoming Partner(s)'), $this->incomingPartners, 'incoming_partner');
 					if ($this->setting['display_employee_transition_confirmed'])
 					echo labelAndCheckBox($this, t('Transition Confirmed'), 'transition_confirmed', $this->partner['transition_confirmed'], false, $this->viewonly);
-#					echo labelAndField($this, t('Partner Comments'), 'textarea', 'comments', $this->partner['comments']);
 
 				?>
 

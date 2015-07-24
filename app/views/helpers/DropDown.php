@@ -78,14 +78,8 @@ class DropDown {
 	
 		$html .= ' >';
 	
-		// if (!$multiple_choice) {
 		$html .= "\t<option value=\"\">&mdash; " . t ( 'select' ) . " &mdash;</option>\n";
-		// }
-	
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'dd 85>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($mechanism);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-		
+
 		foreach ( $rows as $r ) {
 			if (($allowIds === false) or (array_search ( $r->id, $allowIds ) !== false)) {
 				$isSelected = '';
@@ -110,9 +104,6 @@ class DropDown {
 			if(isset($fieldlabel[1])){ $label .= ' ' . $fieldlabel [1]; }
 	
 	
-			//$label = substr($column, strpos($column, '_'));
-			//$label = str_replace('phrase', '', $label);
-			//$label = trim(str_replace('_', ' ', $label));
 			if (trim ( $label )) {
 				switch ($label) { // modify so label translates nicely, if needed
 					case 'training got' :

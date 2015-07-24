@@ -38,10 +38,6 @@ $this->required_fields = array();
   // funder_filter_dropdown is cascading fields 
   //funder_filter_dropdown($this, $this->partners, $this->partnerFunder, $this->mechanism);
   // build_funding_dropdown builds cascading with all options
-  
-//file_put_contents('c:\wamp\logs\php_debug.log', 'add-funder 40>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-//var_dump($this->partner[0]['id']);
-//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 
  $this->viewonly = true;
  echo labelAndField($this, t('Partner').space.t('ID'),  'text', 'id', $this->partner[0]['id']);

@@ -17,12 +17,6 @@ class IndexController extends ITechController {
 
 	public function indexAction() {
 
-	    
-	    //file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'index cont indexAction 21 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump("get_include_path()=", get_include_path(),"END");
-	    //$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
-	    
-	    
 		if($this->hasACL('edit_employee') && $this->setting('employees_module')){
 			if($this->hasACL('in_service') == false && $this->hasACL('pre_service') == false) {
 				$this->_redirect('employee');

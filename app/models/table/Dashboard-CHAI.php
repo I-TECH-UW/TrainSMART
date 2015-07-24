@@ -184,11 +184,7 @@ class DashboardCHAI extends Dashboard
 	            }
 	            break;
 	        case 'location':
-	            
-                //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 171>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	            //var_dump('all=', $dataName, $id, $where, $group, $useName, "END");
-	            //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
-	            
+
 	    	    $create_view = $db->select()
 	           ->from(array('f' => 'facility'),
 	           array(
@@ -264,10 +260,6 @@ class DashboardCHAI extends Dashboard
 	            break;
 	            
 	        case 'facility':
-	            
-	            //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 231>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	            //var_dump('all=', $dataName, $id, $where, $group, $useName, "END");
-	            //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	            
 	            $create_view = $db->select()
 	            ->from(array('f' => 'facility'),
@@ -376,14 +368,6 @@ class DashboardCHAI extends Dashboard
 	            ->order(array('cv.date'));
 	    
 	    
-	    /*
-	    select monthname(date) as month, sum(implant_consumption) as implant_consumption, sum(injectable_consumption) as injectable_consumption
-	    from amc_view_extended_pivot_non_null
-	    group by monthname(date)
-	    order by date;
-	    */
-	    
-	            
 	    $result = $db->fetchAll($select);
 	    
 	    foreach ($result as $row){
@@ -410,15 +394,7 @@ class DashboardCHAI extends Dashboard
                 'sum(hv.larc_trained) as larc_trained'))
                 ->group(array('year(hv.date)'))
 		        ->order(array('hv.date'));
-		    
-		    /*
-select year(date) as year, sum(fp_trained) as fp_trained, sum(larc_trained) as larc_trained
-from hcwt_view_extended_pivot_non_null 
-group by year(date)
-order by date;
 
-		    */
-		            
 		    $result = $db->fetchAll($select);
 		    
 		    foreach ($result as $row){
@@ -512,47 +488,11 @@ order by date;
 		          );
 		      }   
 		
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 243 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($output,"END");
-		//var_dump('id=', $id);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 
 		return $output;
 	}
 				    
-				    /*
-	select 
-l2.location_name as outer_state,
 
-count(*) /
-(select count(*) as cnt
-  from facility f
-  left join location l1 ON f.location_id = l1.id
-  left join location l2 ON l1.parent_id = l2.id
-  left join location l3 ON l2.parent_id = l3.id
-  where l2.location_name = outer_state
-  group by l2.location_name ) as percentage,
-
-tto.training_title_phrase as title_phrase
--- pt.timestamp_created as date
-from person_to_training pt
-left join person p on pt.person_id = p.id
-left join facility f on p.facility_id = f.id
-left join location l1 ON f.location_id = l1.id
-left join location l2 ON l1.parent_id = l2.id
-left join location l3 ON l2.parent_id = l3.id
-left join training t on pt.training_id = t.id
-left join training_title_option tto on t.training_title_option_id = tto.id
-where 1=1
-and t.training_title_option_id in (5) 
-and pt.award_id in (1,2)
-group by outer_state, title_phrase
--- group by f.facility_name
-order by percentage 
-;
-
-				    */
-	
 public function fetchPercentProvidingDetails($where = null, $group = null) {
     $db = Zend_Db_Table_Abstract::getDefaultAdapter();
     $output = array();
@@ -625,25 +565,14 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 			          "color" => 'black',
 		            );
 			      }
-	
-			//file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 243 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-			//var_dump($output,"END");
-			//var_dump('id=', $id);
-			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-	
+
 			return $output;
 		}
 		
 		public function fetchDashboardData($chart = null) {
 		    $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		    $output = array();
-		    /*
-		    select * from dashboard_refresh
-		    where chart = 'percent_facilities_hw_trained_larc'
-		    and datetime = (select max(datetime) from dashboard_refresh where chart = 'percent_facilities_hw_trained_larc')
-		    ;
-		    */
-		     
+
 		    $where = "chart = '$chart' and datetime = (select max(datetime) from dashboard_refresh where chart = '$chart')";
 		    $subSelect = new Zend_Db_Expr("(select max(datetime) from dashboard_refresh where chart = $chart)");
 		
@@ -686,35 +615,12 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
                     }
                     break;
             }
-            
-            
-		    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 243 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		    //var_dump($output,"END");
-		    //var_dump('id=', $id);
-		    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-		
+
 		    return $output;
 		}
 	
 		public function insertDashboardData($details, $chart) {
-		    //current_datetime = now()
-		    //INSERT INTO `itechweb_chainigeria`.`dashboard_refresh`
-		    //( `datetime`, `chart`, `data0`, `data1`, `data2`)
-		    //VALUES (current_datetime, 'percent_facilities_hw_trained_larc', 'Plateau', '0.0025', 'red');
-		    
-		    /*save
-		    $sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
-		     
-		    $data = array(
-		        'subpartner_id'  => $params['subPartner'],
-		        'partner_funder_option_id' => $params['partnerFunder'],
-		        'mechanism_option_id' => $params['mechanism'],
-		        'funding_end_date' => $params['funding_end_date'][0],
-		    );
-		    
-		    $insert_result = $sfm->insert($data);
-		    */
-		    
+
 		    $dateTime = date("Y-m-d H:i:s");
 		    $dashboard_refresh = new ITechTable(array('name' => 'dashboard_refresh'));
 		    
@@ -753,12 +659,6 @@ public function fetchPercentProvidingDetails($where = null, $group = null) {
 		            break;
 		    }
 		    
-		    //file_put_contents('c:\wamp\logs\php_debug.log', 'Dashboard-CHAI 697>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		    //var_dump('id=', $id);
-		    //var_dump('dateTime=', $dateTime);
-		    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-		    
 		}
-	
 }
 ?>

@@ -191,12 +191,7 @@ class DashboardController extends ReportFilterHelpers {
 		$geo_data = new DashboardCHAI();
 		$details = $geo_data->fetchConsumptionDetails('geo', $id, $whereClause);
 		$this->view->assign('geo_data',$details);
-		
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 190>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump('id=', $id);
-		//var_dump('count(details)=', count($details));
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-		
+
 		$whereClause = ($id ==  "") ? 'l3.tier = 1' : 'l2.parent_id = ' . $id ;
 		$groupClause = ($id == "") ? 'L2_id' : 'L1_id';
 		$useName = ($id == "") ? 'L3_location_name' : 'L2_location_name';
@@ -231,12 +226,7 @@ class DashboardController extends ReportFilterHelpers {
 	    $geo_data = new DashboardCHAI();
 	    $details = $geo_data->fetchConsumptionDetails('geo', $id, $whereClause);
 	    $this->view->assign('geo_data',$details);
-	
-	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 190>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump('id=', $id);
-	    //var_dump('count(details)=', count($details));
-	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-	
+
 	    $whereClause = ($id ==  "") ? 'l3.tier = 1' : 'l2.parent_id = ' . $id ;
 	    $groupClause = ($id == "") ? 'L2_id' : 'L1_id';
 	    $useName = ($id == "") ? 'L3_location_name' : 'L2_location_name';
@@ -338,18 +328,10 @@ class DashboardController extends ReportFilterHelpers {
 		$details = $amc_data->fetchAMCDetails();
 		$this->view->assign('AMC_data',$details);
 		
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump('id=', $id);
-		//var_dump('details=', $details);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	}
 	
 	public function dash5aAction() {
-	
-	    //if (! $this->hasACL ( 'edit_employee' )) {
-	    //$this->doNoAccessError ();
-	    //}
-	
+
 	    require_once('models/table/Dashboard-CHAI.php');
 	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
 	
@@ -388,10 +370,6 @@ class DashboardController extends ReportFilterHelpers {
 	    $details = $amc_data->fetchAMCDetails();
 	    $this->view->assign('AMC_data',$details);
 	
-	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump('id=', $id);
-	    //var_dump('details=', $details);
-	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	}
 	
 	public function dash5bAction() {
@@ -413,18 +391,10 @@ class DashboardController extends ReportFilterHelpers {
 	       $this->view->assign('AMC_data',$details);
 	    }
 	
-	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump('id=', $id);
-	    //var_dump('details=', $details);
-	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	}
 	
 	public function dash6Action() {
-	
-	    //if (! $this->hasACL ( 'edit_employee' )) {
-	    //$this->doNoAccessError ();
-	    //}
-	
+
 	    require_once('models/table/Dashboard-CHAI.php');
 	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
 	
@@ -440,18 +410,10 @@ class DashboardController extends ReportFilterHelpers {
 	    $details = $hcwt_data->fetchHCWTDetails();
 	    $this->view->assign('HCWT_data',$details);
 	
-	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump('id=', $id);
-	    //var_dump('details=', $details);
-	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	}
 	
 	public function dash7Action() {
-	
-	    //if (! $this->hasACL ( 'edit_employee' )) {
-	    //$this->doNoAccessError ();
-	    //}
-	
+
 	    require_once('models/table/Dashboard-CHAI.php');
 	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
 	
@@ -475,18 +437,10 @@ class DashboardController extends ReportFilterHelpers {
 	    $details = $fp_data->fetchPercentFacHWTrainedDetails($whereClause);
 	    $this->view->assign('fp_data',$details);
 	
-	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump('id=', $id);
-	    //var_dump('details=', $details);
-	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	}
 	
 	public function dash8Action() {
-	
-	    //if (! $this->hasACL ( 'edit_employee' )) {
-	    //$this->doNoAccessError ();
-	    //}
-	
+
 	    require_once('models/table/Dashboard-CHAI.php');
 	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
 	
@@ -510,17 +464,9 @@ class DashboardController extends ReportFilterHelpers {
 	    $details = $fp_data->fetchPercentProvidingDetails($whereClause);
 	    $this->view->assign('fp_data',$details);
 	    
-	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump('id=', $id);
-	    //var_dump('details=', $details);
-	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	}
 	
 	public function dash9Action() {
-	
-	    //if (! $this->hasACL ( 'edit_employee' )) {
-	    //$this->doNoAccessError ();
-	    //}
 	
 	    require_once('models/table/Dashboard-CHAI.php');
 	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
@@ -539,18 +485,10 @@ class DashboardController extends ReportFilterHelpers {
 	    $details = $stockOut_data->fetchPercentProvidingDetails($whereClause);
 	    $this->view->assign('stockOut_data',$details);
 	
-	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump('id=', $id);
-	    //var_dump('details=', $details);
-	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	}
 	
 	public function dash9aAction() {
-	
-	    //if (! $this->hasACL ( 'edit_employee' )) {
-	    //$this->doNoAccessError ();
-	    //}
-	
+
 	    require_once('models/table/Dashboard-CHAI.php');
 	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
 	
@@ -578,11 +516,7 @@ class DashboardController extends ReportFilterHelpers {
 	        $id = $this->getSanParam ( 'id' );
     	
     	    $whereClause = ($id ==  "") ? 'tier = 1' : 'parent_id = ' . $id ;
-    	
-    	    //$geo_data = new DashboardCHAI();
-    	    //$details = $geo_data->fetchConsumptionDetails('geo', $id, $whereClause);
-    	    //$this->view->assign('geo_data',$details);
-    	
+
     	    $whereClause =  't.training_title_option_id = 3 and pt.award_id in (1,2)';
     	
     	    $larc_data = new DashboardCHAI();
@@ -612,10 +546,6 @@ class DashboardController extends ReportFilterHelpers {
     	    $this->view->assign('fp_data14',$details);
 	    }
 	
-	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 297>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump('id=', $id);
-	    //var_dump('details=', $details);
-	    //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 	}
 	
 	public function dash9bAction() {
@@ -687,14 +617,7 @@ class DashboardController extends ReportFilterHelpers {
 	    
 	    $title_data = new DashboardCHAI();
 	    $details = $title_data->fetchTitleData();
-	    
-	     
-	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 654>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump('id=', $id); var_dump('tier=', $tier);
-	    //var_dump('details=', $details);
-	    //var_dump('title=', $details[C_date]);
-	    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
-	    
+
 	    $this->view->assign('title_data', $details[month_name].', '. $details[year]);
 	}
 	
@@ -755,22 +678,12 @@ class DashboardController extends ReportFilterHelpers {
 	     
 	    $title_data = new DashboardCHAI();
 	    $details = $title_data->fetchTitleData();
-	     
-	
-	    //file_put_contents('c:\wamp\logs\php_debug.log', 'DashboardController 654>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump('id=', $id); var_dump('tier=', $tier);
-	    //var_dump('details=', $details);
-	    //var_dump('title=', $details[C_date]);
-	    //$toss = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
-	     
+
 	    $this->view->assign('title_data', $details[month_name].', '. $details[year]);
 	}
 	
 	public function dash11Action() {
-	    //if (! $this->hasACL ( 'edit_employee' )) {
-	    //$this->doNoAccessError ();
-	    //}
-	    
+
 	    require_once('models/table/Dashboard-CHAI.php');
 	    $this->view->assign('title',$this->t['Application Name'].space.t('CHAI').space.t('Dashboard'));
 	    
@@ -890,14 +803,7 @@ class DashboardController extends ReportFilterHelpers {
 			$helper = new Helper();
 				
 			if ( $this->getRequest()->isPost() ) {
-	
-				//$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-				//foreach ($params['funding_end_date'] as $i => $value) $params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
-	
-				//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont isPost 172> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-				//var_dump($params);
-				//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);			
-				
+
 				// test for all values
 				if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['percentage']))
 					$status->addError('', t ( 'All fields' ) . space . t('are required'));
@@ -920,14 +826,9 @@ class DashboardController extends ReportFilterHelpers {
 							'percentage' => $params['percentage'],
 					);
 						
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont isPost 192> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-					//var_dump($data);
-					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-						
+
 					$insert_result = $epsfm->insert($data);
 					$status->setStatusMessage( t('The funding mechanism was saved.') );
-					//$this->_redirect("admin/employee-build_funding");
-					//$this->_redirect("partner/edit/" . $params['id']);
 				}
 			}
 				
@@ -946,11 +847,7 @@ class DashboardController extends ReportFilterHelpers {
 				
 			$mechanism = $helper->getPsfmMechanismExclude($id, $employee[0]['partner_id']);
 			$this->viewAssignEscaped ( 'mechanism', $mechanism );
-				
-			//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont 219>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-			//var_dump($subPartner);
-			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-				
+
 		} // if ($id)
 	
 		//validate
@@ -1012,26 +909,20 @@ class DashboardController extends ReportFilterHelpers {
 				$row = $db->fetchRow( $sql );
 				if (! $row){
 					$status->setStatusMessage ( t('Cannot find that record in the database.') );
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'That record could not be found.'.PHP_EOL, FILE_APPEND | LOCK_EX);
 				}
 					
 				else { // found, safe to delete
 	
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'Ready to delete '.$row['id'].PHP_EOL, FILE_APPEND | LOCK_EX);
 					$update_result = $db->update('employee_to_partner_to_subpartner_to_funder_to_mechanism', array('is_deleted' => 1), 'id = '.$row['id']);
 					var_dump($update_result);
 	
 					if($update_result){
 						$status->setStatusMessage ( t ( 'That mechanism was deleted.' ) );
-						//file_put_contents('c:\wamp\logs\php_debug.log', 'That record was deleted.'.PHP_EOL, FILE_APPEND | LOCK_EX);
 					}
 					else{
 						$status->setStatusMessage ( t ( 'That mechanism was not deleted.' ) );
-						//file_put_contents('c:\wamp\logs\php_debug.log', 'That record was not deleted.'.PHP_EOL, FILE_APPEND | LOCK_EX);
 					}
 				}
-				
-			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 		}
 		$this->_redirect("employee/edit/id/" . $row['employee_id']);
 	}
@@ -1071,9 +962,6 @@ class DashboardController extends ReportFilterHelpers {
 			$params['facility_type_option_id']  = $params['employee_site_type_option_id'];
 			$params['race_option_id']           = $params['person_race_option_id'];
 
-			// $status->checkRequired ( $this, 'first_name', t ( 'Frist Name' ) );
-			// $status->checkRequired ( $this, 'last_name',  t ( 'Last Name' ) );
-			
 			$status->checkRequired ( $this, 'employee_code', t('Employee').space.t('Code'));
 			
 			$status->checkRequired ( $this, 'dob', t ( 'Date of Birth' ) );
@@ -1156,10 +1044,6 @@ class DashboardController extends ReportFilterHelpers {
 		
 					$delete_result = $epsfm->delete($where, false);
 					
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont 300>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-					//var_dump($params['subPartner']);
-					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-					
 					// insert from view
 					foreach($params['subPartner'] as $i => $val){
 						
@@ -1217,12 +1101,6 @@ class DashboardController extends ReportFilterHelpers {
             	
             	$mechanism = $helper->getEmployeeMechanism($id);
             	$this->viewAssignEscaped ( 'mechanism', $mechanism );
-            	
-            	//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont 511>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-            	//var_dump($params['funder']);
-            	//var_dump($mechanism);
-            	//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-            	
 			}
 		}
 

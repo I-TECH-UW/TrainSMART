@@ -32,26 +32,13 @@
 					require_once ('views/helpers/DropDown.php');
 					$this->required_fields = array();
 				
-					//build_funding_dropdown($this, $this->subPartner, $this->partnerFunder, $this->mechanism);
-					
+
 					foreach ($this->sfm as $i => $row) {
-					
-						//file_put_contents('c:\wamp\logs\php_debug.log', 'mechEdit 39>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-						//var_dump($row);
-						//var_dump($row['subpartner_id']);var_dump($row['partner_funder_option_id']); var_dump($row['mechanism_option_id']);
-						//var_dump($this->subPartner[$i]['partner']);
-						//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-							
 						
 						partner_sfm_dropdown($i, $this, $this->subPartner, $this->partnerFunder, $this->mechanism, '', '', $row['subpartner_id'], $row['partner_funder_option_id'], $row['mechanism_option_id'], false,  false, ' disabled ');
 							
 						echo labelAndField($this, t('Funding End Date'), 'date','funding_end_date[]', formhelperdate($row['funding_end_date']));
 					}
-					
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'partEdit 63>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-					//var_dump($this->partner['funder']);
-					//var_dump($this->subPartner);
-					//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 
 				?>
 

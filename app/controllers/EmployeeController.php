@@ -364,26 +364,20 @@ class EmployeeController extends ReportFilterHelpers {
 				$row = $db->fetchRow( $sql );
 				if (! $row){
 					$status->setStatusMessage ( t('Cannot find that record in the database.') );
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'That record could not be found.'.PHP_EOL, FILE_APPEND | LOCK_EX);
 				}
 					
 				else { // found, safe to delete
 	
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'Ready to delete '.$row['id'].PHP_EOL, FILE_APPEND | LOCK_EX);
 					$update_result = $db->update('employee_to_partner_to_subpartner_to_funder_to_mechanism', array('is_deleted' => 1), 'id = '.$row['id']);
 					var_dump($update_result);
 	
 					if($update_result){
 						$status->setStatusMessage ( t ( 'That mechanism was deleted.' ) );
-						//file_put_contents('c:\wamp\logs\php_debug.log', 'That record was deleted.'.PHP_EOL, FILE_APPEND | LOCK_EX);
 					}
 					else{
 						$status->setStatusMessage ( t ( 'That mechanism was not deleted.' ) );
-						//file_put_contents('c:\wamp\logs\php_debug.log', 'That record was not deleted.'.PHP_EOL, FILE_APPEND | LOCK_EX);
 					}
 				}
-				
-			//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 		}
 		$this->_redirect("employee/edit/id/" . $row['employee_id']);
 	}
@@ -572,12 +566,7 @@ class EmployeeController extends ReportFilterHelpers {
             	
             	$mechanism = $helper->getEmployeeMechanism($id);
             	$this->viewAssignEscaped ( 'mechanism', $mechanism );
-            	
-            	//file_put_contents('c:\wamp\logs\php_debug.log', 'empCont 511>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-            	//var_dump($params['funder']);
-            	//var_dump($mechanism);
-            	//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-            	
+
 			}
 		}
 
@@ -617,20 +606,6 @@ class EmployeeController extends ReportFilterHelpers {
 		
 		$this->view->assign ( 'partners',    DropDown::generateHtml   ( 'partner', 'partner', $params['partner_id'], false, !$this->hasACL("edit_employee"), false ) );
 		
-		//$this->view->assign ( 'funder_mechanisms', DropDown::generateHtml( $params['funder_mechanism'], 'funder_mechanism_option', $params['funder_mechanism'], false, $this->view->viewonly, false ) );
-		/*
-		$this->view->assign ( 'funders',
-		DropDown::generateHtml (
-		'partner_funder_option',
-		'funder_phrase',
-		$params['partner_funder_option_id'],
-		false,
-		$this->viewonly,
-		false
-		));
-		*/
-		
-		//$this->view->assign ( 'subpartners', DropDown::generateHtml   ( 'partner', 'partner', $params['subpartner_id'], false, $this->view->viewonly, false, false, array('name' => 'subpartner_id'), true ) );
 		$this->view->assign ( 'bases',       DropDown::generateHtml   ( 'employee_base_option', 'base_phrase', $params['employee_base_option_id'], false, !$this->hasACL("edit_employee")) );
 		$this->view->assign ( 'site_types',  DropDown::generateHtml   ( 'employee_site_type_option', 'site_type_phrase', $params['facility_type_option_id'], false, !$this->hasACL("edit_employee")) );
 		$this->view->assign ( 'cadres',      DropDown::generateHtml   ( 'employee_qualification_option', 'qualification_phrase', $params['employee_qualification_option_id'], false, !$this->hasACL("edit_employee")) );
