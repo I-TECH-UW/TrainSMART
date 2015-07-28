@@ -3191,7 +3191,7 @@ class Helper extends ITechTable
 	            $rows = $result->fetchAll();
 	            
 	            file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'saveAssessmentAnswers >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	            var_dump("saveAssessmentAnswers rows=", $rows, $query, "END");
+	            //var_dump("saveAssessmentAnswers rows=", $rows, $query, "END");
 	            $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	            	      
 	            
@@ -3212,7 +3212,7 @@ class Helper extends ITechTable
 	                $parsed[] = $this->dbfunc()->lastInsertId();
 	            } else {
 	                file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'UPDATE >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	                //var_dump("saveAssessmentAnswers rows=", $rows, "END");
+	                //var_dump("v=", $v, "END");
 	                $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	                $row = $rows[0];
 	                $query = "UPDATE assess SET
