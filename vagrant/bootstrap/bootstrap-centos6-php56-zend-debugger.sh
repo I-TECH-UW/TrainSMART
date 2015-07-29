@@ -20,7 +20,7 @@ mv /home/vagrant/selinux-config /etc/selinux/config
 
 # update base packages
 yum update -y
-yum install yum-plugin-replace php php-devel php-mysql mysql-server mysql-devel git-core dos2unix telnet nano -y
+yum install yum-plugin-replace dkms php php-devel php-mysql mysql-server mysql-devel git-core dos2unix telnet nano mod_ssl -y
 
 yum replace mysql-libs --replace-with mysql56u-libs -y
 yum replace php --replace-with php56u -y
@@ -48,6 +48,9 @@ chmod 644 /etc/php.ini
 # set up apache to point to shared /vagrant folder and start it
 dos2unix /home/vagrant/vagrant-trainsmart-httpd.conf
 mv /home/vagrant/vagrant-trainsmart-httpd.conf /etc/httpd/conf.d/vagrant-trainsmart-httpd.conf
+dos2unix /home/vagrant/ssl.conf
+mv /home/vagrant/ssl.conf /etc/httpd/conf.d/ssl.conf
+
 # this is a sample of how to enable selinux access to a file, and used used for all files
 # in the event of production deployment of trainsmart
 chcon -v --type=httpd_sys_content_t /etc/httpd/conf.d/vagrant-trainsmart-httpd.conf

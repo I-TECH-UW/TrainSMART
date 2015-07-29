@@ -17,14 +17,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # forward http
   config.vm.network "forwarded_port", host: 62326, guest: 80
   
+  # forward https
+  config.vm.network "forwarded_port", host: 62443, guest: 443
+  
   # forward mysql
   config.vm.network "forwarded_port", host: 3306, guest: 3306
+  
+  
   
   # we'll put all the custom files in the vagrant user's home directory as we 
   # can't write to system locations without root, we'll move them in 
   # bootstrap-xx.sh when we're root
 
   config.vm.provision "file", source: "vagrant/bootstrap/vagrant-trainsmart-httpd.conf", destination: "/home/vagrant/vagrant-trainsmart-httpd.conf"
+  config.vm.provision "file", source: "vagrant/bootstrap/ssl.conf", destination: "/home/vagrant/ssl.conf"
   config.vm.provision "file", source: "vagrant/bootstrap/selinux-config", destination: "/home/vagrant/selinux-config"
 
   config.vm.provision "file", source: "vagrant/bootstrap/data.sql", destination: "/home/vagrant/data.sql"
