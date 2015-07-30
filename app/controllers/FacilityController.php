@@ -21,7 +21,7 @@ class FacilityController extends ReportFilterHelpers {
 			
 			// we extend these controllers, lets redirect to their URL
 		if (strstr ( $_SERVER ['HTTP_REFERER'], '/site/' ) && strstr ( $_SERVER ['REQUEST_URI'], '/facility' ))
-			$this->_redirect ( str_replace ( '/facility/', '/site/', 'http://' . $_SERVER ['SERVER_NAME'] . $_SERVER ['REQUEST_URI'] ) );
+			$this->_redirect ( str_replace ( '/facility/', '/site/', '//' . $_SERVER ['SERVER_NAME'] . $_SERVER ['REQUEST_URI'] ) );
 	}
 	public function indexAction() {
 		$this->_redirect ( 'facility/search' );
@@ -620,7 +620,7 @@ class FacilityController extends ReportFilterHelpers {
 		if ($id = $this->getSanParam ( 'id' )) {
 			if ($this->hasACL ( 'edit_people' )) {
 				// redirect to edit mode
-				$this->_redirect ( str_replace ( 'view', 'edit', 'http://' . $_SERVER ['SERVER_NAME'] . ':' . $_SERVER ['SERVER_PORT'] . $_SERVER ['REQUEST_URI'] ) );
+				$this->_redirect ( str_replace ( 'view', 'edit', '//' . $_SERVER ['SERVER_NAME'] . ':' . $_SERVER ['SERVER_PORT'] . $_SERVER ['REQUEST_URI'] ) );
 			}
 			
 			$facility = new Facility ();

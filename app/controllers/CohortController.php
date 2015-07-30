@@ -404,10 +404,10 @@ class CohortController extends ITechController {
 			
 			if(!$converted){
 				$params_query = http_build_query($_POST);
-				header("Location:http://{$_SERVER['HTTP_HOST']}/cohort/cohortsearch?{$params_query}");
+				header("Location://{$_SERVER['HTTP_HOST']}/cohort/cohortsearch?{$params_query}");
 			}
 		}
-		#print_r ($cohorts);
+
 		$this->view->assign('cohort',$cohorts);
 
 		$helper = new Helper();

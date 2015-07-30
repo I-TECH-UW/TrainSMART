@@ -344,10 +344,10 @@ protected function sendData($data) {
 
   		if ( !$this->isLoggedIn() ) {
             if ($_SERVER['SERVER_PORT'] !== '80') {
-                $redirect_target = urlencode('http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI']);
+                $redirect_target = urlencode('//'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI']);
             }
             else {
-                $redirect_target = urlencode('http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
+                $redirect_target = urlencode('//'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
             }
   			$this->_redirect('user/login/?redirect='.$redirect_target);
   		}
@@ -410,16 +410,22 @@ protected function sendData($data) {
     * $path is from the base path beginning with the action, such as 'user/login'
     */
    protected function _redirect($url, array $options = array()) {
-  		$msg = ValidationContainer::instance()->status;
- 		if ( $msg ) {
- 			$_SESSION['status'] = $msg;
- 		}
+       $msg = ValidationContainer::instance()->status;
+       if ( $msg ) {
+           $_SESSION['status'] = $msg;
+       }
 
-   	  if ( strstr($url, 'http://') !== false )
-   	  	header('Location: '.$url);
-   	  else
-   	  	header('Location: '.Settings::$COUNTRY_BASE_URL.'/'.$url);
-   	  exit();
+       // is this a full url starting with case-insensitive http://, https://, or //?
+       if (preg_match('/^(http(s?):)?\/\//i', $url) === 1)
+       {
+           // full url
+           header('Location: '.$url);
+       }
+       else {
+           // url segment
+           header('Location: ' . Settings::$COUNTRY_BASE_URL . '/' . $url);
+       }
+       exit();
    }
 
     public function viewAssignEscaped($spec, $value) {

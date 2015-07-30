@@ -686,6 +686,8 @@ function training_location_dropdown_as_a_return_value(&$tlocations, $selectedVal
 
 function make_page_select2()
 {
+
+    // TODO: These github links no longer exist:
 	?>
       <link href="http://ivaynberg.github.com/select2/select2-3.2/select2.css" rel="stylesheet"/>
       <script src="http://ivaynberg.github.com/select2/select2-3.2/select2.js"></script>
