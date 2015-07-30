@@ -310,7 +310,7 @@ where';
 	        	
 	        //$sql .= " GROUP BY facility.id "; // bugfixes dual (depricated) column "sponsor_option_id" and linked lookup table "facility_sponsors", todo: OK to remove this when above TODO is fixed
 	        	
-	        //$sql .= " ORDER BY " . " facility_name ASC ";
+	        $sql .= " ORDER BY " . " pa.id ASC ";
 	        	
 	        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'assessmentController searchAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	        var_dump("sql=", $sql, "END");
