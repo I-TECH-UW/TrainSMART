@@ -30,7 +30,7 @@ class PeoplefindController extends ITechController {
 		}
 		if(!$converted && (!empty($_POST) || !empty($_GET))){
 			$params_query = http_build_query($_POST);
-			header("Location:http://{$_SERVER['HTTP_HOST']}/peoplefind/peoplefind?{$params_query}");
+			header("Location://{$_SERVER['HTTP_HOST']}/peoplefind/peoplefind?{$params_query}");
 		}
 
 		$param = $_GET;

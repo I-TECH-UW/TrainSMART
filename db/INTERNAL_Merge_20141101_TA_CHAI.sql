@@ -8,7 +8,7 @@ drop table `commodity`;
 
 CREATE TABLE `commodity` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` int(11) NOT NULL,
+  `name_id` int(11) NOT NULL,
   `date` date NOT NULL,
   `consumption` int(11) DEFAULT NULL,
   `stock_out` char(1) NOT NULL DEFAULT 'N',

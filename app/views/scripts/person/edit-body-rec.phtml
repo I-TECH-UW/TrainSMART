@@ -46,7 +46,7 @@
       {key:"training_organizer_phrase", label: "<?php echo t('Training').' '.t('Organizer');?>", sortable:true, resizeable:true}
   ];
 
-    var caction = '<?php echo $this->base_url;?>/training/listByTrainingRecommendPerson/id/<?php echo $this->person['id'];?>/outputType/json';
+    var caction = '<?php echo $this->base_url;?>/training/list-by-training-recommend-person/id/<?php echo $this->person['id'];?>/outputType/json';
     makeJSONDataTable("classRecommend", null, caction, classColumnDefs);
   //    });
 //--><!]]> 

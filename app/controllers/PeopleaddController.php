@@ -28,11 +28,10 @@ class PeopleaddController extends ITechController {
 			if (isset ($params['addpeople'])){
 				$tutorid = $peopleadd->addTutor($params);
 
-				if ($tutorid) {// sucess
+				if ($tutorid) {
 					$status->setStatusMessage ( t ( 'The person was saved.' ) );
 					$_SESSION['status'] = t ( 'The person was saved.' );
 				}
-
 
 				switch ($params['type']){
 					case "key":
@@ -83,6 +82,8 @@ class PeopleaddController extends ITechController {
         $this->view->assign('personCriteria', getCriteriaValues(array(), 'person'));
         $this->view->assign('workplaceCriteria', getCriteriaValues(array(), 'workplace'));
         $this->view->assign('employerCriteria', getCriteriaValues(array(), 'employer'));
+	    $this->view->assign('formType', 'add');
+
         $this->view->assign('nationality_dropdown',
             DropDown::generateSelectionFromQuery(
                 'select id, nationality as val from lookup_nationalities order by val',

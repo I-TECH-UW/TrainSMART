@@ -74,8 +74,8 @@ class TrainingController extends ReportFilterHelpers {
 		}
 
 		// edittable ajax (remove/update/etc)
-		if ($this->_getParam ( 'edittable' )) {
-			$this->ajaxeditTable ();
+		if ($this->getParam ( 'edittable' )) {
+			$this->ajaxEditTable ();
 			return;
 		}
 
@@ -121,7 +121,7 @@ class TrainingController extends ReportFilterHelpers {
 			}
 		}
 
-		if (($this->_getParam ( 'action' ) != 'add') and ! $this->hasACL ( 'training_organizer_option_all' ) and ((! $allowIds) or (array_search ( $rowRay ['training_organizer_option_id'], $allowIds ) === false))) {
+		if (($this->getParam ( 'action' ) != 'add') and ! $this->hasACL ( 'training_organizer_option_all' ) and ((! $allowIds) or (array_search ( $rowRay ['training_organizer_option_id'], $allowIds ) === false))) {
 			$this->view->assign ( 'viewonly', 'disabled="disabled"' );
 			$this->view->assign ( 'pageTitle', t ( 'View' ).' '.t( 'Training' )); 
 		}
@@ -137,7 +137,7 @@ class TrainingController extends ReportFilterHelpers {
 		$rowRay ['training_title_option_id'] = ($courseRow) ? $courseRow->training_title_option_id : 0;
 
 		// does not exist
-		if (! $row->id && $this->_getParam ( 'action' ) != 'add') {
+		if (! $row->id && $this->getParam ( 'action' ) != 'add') {
 			$this->_redirect ( 'training/index' );
 		}
 
@@ -286,16 +286,16 @@ class TrainingController extends ReportFilterHelpers {
 
 			}
 
-			if (($this->_getParam ( 'action' ) == 'add') && $this->_countrySettings ['module_unknown_participants_enabled'] && (! $this->getSanParam ( 'has_known_participants' ))) {
+			if (($this->getParam ( 'action' ) == 'add') && $this->_countrySettings ['module_unknown_participants_enabled'] && (! $this->getSanParam ( 'has_known_participants' ))) {
 				$row->has_known_participants = 0;
-			} else if ($this->_getParam ( 'action' ) == 'add') {
+			} else if ($this->getParam ( 'action' ) == 'add') {
 				$row->has_known_participants = 1;
 			}
 
 			//approve by default if the approvals modules is not enabled
-			if (($this->_getParam ( 'action' ) == 'add') && $this->_countrySettings ['module_approvals_enabled'] && ! $this->hasACL ( 'approve_trainings' )) {
+			if (($this->getParam ( 'action' ) == 'add') && $this->_countrySettings ['module_approvals_enabled'] && ! $this->hasACL ( 'approve_trainings' )) {
 				$row->is_approved = 0;
-			} else if ($this->_getParam ( 'action' ) == 'add') {
+			} else if ($this->getParam ( 'action' ) == 'add') {
 				$row->is_approved = 1;
 			}
 
@@ -315,7 +315,7 @@ class TrainingController extends ReportFilterHelpers {
 			if ($status->hasError () && ! $row->is_deleted) {
 				$status->setStatusMessage ( t ( 'This' ).' '.t( 'Training' ).' '.t( 'session could not be saved.' ) );
 			} else {
-				$row = self::fillFromArray ( $row, $this->_getAllParams () );
+				$row = self::fillFromArray ( $row, $this->getAllParams () );
 
 				// format: categoryid_titleid
 				$ct_ids = $this->getSanParam ( 'training_category_and_title_option_id' );
@@ -444,13 +444,13 @@ class TrainingController extends ReportFilterHelpers {
 						}
 						$do_save_approval_history = true;
 					}
-					if (($this->_getParam ( 'action' ) == 'add') or (! $this->hasACL ( 'approve_trainings' ))) {
+					if (($this->getParam ( 'action' ) == 'add') or (! $this->hasACL ( 'approve_trainings' ))) {
 						$do_save_approval_history = true;
 					}
 
 				}
 
-				if ($this->_getParam ( 'action' ) == 'add') {
+				if ($this->getParam ( 'action' ) == 'add') {
 					$do_save_approval_history = true;
 				}
 				$row->training_refresher_option_id = 0; // refresher / bugfix - this col isnt used anymore
@@ -470,11 +470,11 @@ class TrainingController extends ReportFilterHelpers {
 					}
 
 					// redirects
-					if ($this->_getParam ( 'action' ) == 'add') {
+					if ($this->getParam ( 'action' ) == 'add') {
 						$status->redirect = Settings::$COUNTRY_BASE_URL . '/training/edit/id/' . $row->id . '/new/1';
 					}
-					if ($this->_getParam ( 'redirectUrl' )) {
-						$status->redirect = $this->_getParam ( 'redirectUrl' );
+					if ($this->getParam ( 'redirectUrl' )) {
+						$status->redirect = $this->getParam ( 'redirectUrl' );
 					}
 
 					// duplicate training
@@ -985,9 +985,9 @@ class TrainingController extends ReportFilterHelpers {
 
 
 		// mode
-		$this->view->assign ( 'mode', $this->_getParam ( 'action' ) );
+		$this->view->assign ( 'mode', $this->getParam ( 'action' ) );
 
-		switch ($this->_getParam ( 'msg' )) {
+		switch ($this->getParam ( 'msg' )) {
 			case 'duplicate' :
 			$this->view->assign ( 'msg', t ( 'Training' ).' '.t( 'session has been duplicated.<br>You can edit the duplicate session below.' ) );
 			break;
@@ -996,7 +996,7 @@ class TrainingController extends ReportFilterHelpers {
 		}
 
 		// edit variables
-		if ($this->_getParam ( 'action' ) != 'add') {
+		if ($this->getParam ( 'action' ) != 'add') {
 			//audit history
 			$creatorObj = new User ( );
 			$updaterObj = new User ( );
@@ -1100,29 +1100,29 @@ class TrainingController extends ReportFilterHelpers {
 	/**
 	* editTable ajax
 	*/
-	private function ajaxeditTable() {
+	private function ajaxEditTable() {
 
 		if (! $this->hasACL ( 'edit_course' )) {
 			$this->doNoAccessError ();
 		}
 
-		$training_id = $this->_getParam ( 'id' );
-		$do = $this->_getParam ( 'edittable' );
+		$training_id = $this->getParam ( 'id' );
+		$do = $this->getParam ( 'edittable' );
 		
 		if (! $training_id) { // user is adding a new session (which does not have an id yet)
 			$this->sendData ( array ('0' => 0 ) );
 			return;
 		}
 
-		$action = $this->_getParam ( 'a' );
-		$row_id = $this->_getParam ( 'row_id' );
+		$action = $this->getParam ( 'a' );
+		$row_id = $this->getParam ( 'row_id' );
 		
 		if ($do == 'trainer') { // update trainer table
 			require_once ('models/table/Training.php');
 
 			if ($action == 'add') {
 
-				$days = $this->_getParam ( 'days' );
+				$days = $this->getParam ( 'days' );
 				$result = TrainingToTrainer::addTrainerToTraining ( $row_id, $training_id, $days );
 				$sendRay ['insert'] = $result;
 				if ($result == - 1) {
@@ -1139,7 +1139,7 @@ class TrainingController extends ReportFilterHelpers {
 			} else { // update a row?
 
 
-				$days = $this->_getParam ( 'duration_days' );
+				$days = $this->getParam ( 'duration_days' );
 				if ($days) {
 					$tableObj = new TrainingToTrainer ( );
 					$result = $tableObj->update ( array ("duration_days" => $days ), "id=$row_id" );
@@ -1225,10 +1225,11 @@ class TrainingController extends ReportFilterHelpers {
 
 		}
 
-		// update "modified_by" field in training table
-		$tableObj = new Training ( );
-		$tableObj->update ( array (), "id = $training_id" );
-
+		if (!isset($sendRay['error'])) {
+			// update "modified_by" field in training table
+			$tableObj = new Training ();
+			$tableObj->update(array(), "id = $training_id");
+		}
 	}
 
 	/**
@@ -1830,7 +1831,7 @@ class TrainingController extends ReportFilterHelpers {
 
 			$tableObj = new TrainingLocation ( );
 
-			$location = $this->_getParam ( 'training_location_name' );
+			$location = $this->getParam ( 'training_location_name' );
 
 			list ( $location_params, $location_tier, $location_id ) = $this->getLocationCriteriaValues ( array () );
 			//validate
@@ -1903,30 +1904,30 @@ class TrainingController extends ReportFilterHelpers {
 
 				if ($location_id) {
 					// update or insert?
-					if ($this->_getParam ( 'update' )) {
+					if ($this->getParam ( 'update' )) {
 						$data = array ();
 						$data ['location_id'] = $location_id;
 						$data ['training_location_name'] = $location;
 
 						$tableObj = new TrainingLocation ( );
-						$tableObj->update ( $data, "id = " . $this->_getParam ( 'update' ) );
+						$tableObj->update ( $data, "id = " . $this->getParam ( 'update' ) );
 
 						$status->setStatusMessage ( t ( 'The' ).' '.t( 'Training Center' ).' '.t( 'has been updated.' ) );
 						$_SESSION['status'] = t ( 'The' ).' '.t( 'Training Center' ).' '.t( 'has been updated.' );
 
 						//refresh the page, so the picker dropdown is refreshed as well
-						$status->setRedirect ( '/facility/view-location/id/' . $this->_getParam ( 'update' ) );
+						$status->setRedirect ( '/facility/view-location/id/' . $this->getParam ( 'update' ) );
 					} else {
 						$id = TrainingLocation::insertIfNotFound ( $location, $location_id );
 						
-						if ($this->_getParam ( 'info' ) == 'extra') {
+						if ($this->getParam ( 'info' ) == 'extra') {
 							$status->setStatusMessage ( t ( 'The' ).' '.t( 'Training Center' ).' '.t( 'has been saved.' ) );
 							$_SESSION['status'] = t ( 'The' ).' '.t( 'Training Center' ).' '.t( 'has been saved.' );
 							$status->setRedirect ( '/facility/view-location/id/' . $id );
 						}
 					}
 
-					if ($this->_getParam ( 'info' ) == 'extra') {
+					if ($this->getParam ( 'info' ) == 'extra') {
 						$this->sendData ( $status );
 					} else {
 						$this->sendData ( array ('location_id' => $id ) );
@@ -1967,7 +1968,7 @@ class TrainingController extends ReportFilterHelpers {
 	*/
 	public function trainerLastListAction() {
 		require_once ('models/table/Trainer.php');
-		$rowArray = Trainer::suggestionList ( $this->_getParam ( 'query' ), 100, $this->setting ( 'display_middle_name_last' ) );
+		$rowArray = Trainer::suggestionList ( $this->getParam ( 'query' ), 100, $this->setting ( 'display_middle_name_last' ) );
 		$rowArray = $this->_attach_locations ( $rowArray );
 		$this->sendData ( $rowArray );
 	}
@@ -1976,7 +1977,7 @@ class TrainingController extends ReportFilterHelpers {
 	*/
 	public function trainerMiddleListAction() {
 		require_once ('models/table/Trainer.php');
-		$rowArray = Trainer::suggestionListByMiddleName ( $this->_getParam ( 'query' ), 100, $this->setting ( 'display_middle_name_last' ) );
+		$rowArray = Trainer::suggestionListByMiddleName ( $this->getParam ( 'query' ), 100, $this->setting ( 'display_middle_name_last' ) );
 		$rowArray = $this->_attach_locations ( $rowArray );
 		$this->sendData ( $rowArray );
 	}
@@ -1986,7 +1987,7 @@ class TrainingController extends ReportFilterHelpers {
 	*/
 	public function trainerFirstListAction() {
 		require_once ('models/table/Trainer.php');
-		$rowArray = Trainer::suggestionListByFirstName ( $this->_getParam ( 'query' ), 100, $this->setting ( 'display_middle_name_last' ) );
+		$rowArray = Trainer::suggestionListByFirstName ( $this->getParam ( 'query' ), 100, $this->setting ( 'display_middle_name_last' ) );
 		$rowArray = $this->_attach_locations ( $rowArray );
 		$this->sendData ( $rowArray );
 	}
@@ -1996,7 +1997,7 @@ class TrainingController extends ReportFilterHelpers {
 	*/
 	public function personLastListAction() {
 		require_once ('models/table/Person.php');
-		$rowArray = Person::suggestionList ( $this->_getParam ( 'query' ), 100, $this->setting ( 'display_middle_name_last' ) );
+		$rowArray = Person::suggestionList ( $this->getParam ( 'query' ), 100, $this->setting ( 'display_middle_name_last' ) );
 		$rowArray = $this->_attach_locations ( $rowArray );
 		$this->sendData ( $rowArray );
 	}
@@ -2006,7 +2007,7 @@ class TrainingController extends ReportFilterHelpers {
 	*/
 	public function personMiddleListAction() {
 		require_once ('models/table/Person.php');
-		$rowArray = Person::suggestionListByMiddleName ( $this->_getParam ( 'query' ), 100, $this->setting ( 'display_middle_name_last' ) );
+		$rowArray = Person::suggestionListByMiddleName ( $this->getParam ( 'query' ), 100, $this->setting ( 'display_middle_name_last' ) );
 		$rowArray = $this->_attach_locations ( $rowArray );
 		$this->sendData ( $rowArray );
 	}
@@ -2015,7 +2016,7 @@ class TrainingController extends ReportFilterHelpers {
 	*/
 	public function personFirstListAction() {
 		require_once ('models/table/Person.php');
-		$rowArray = Person::suggestionListByFirstName ( $this->_getParam ( 'query' ), 100, $this->setting ( 'display_middle_name_last' ) );
+		$rowArray = Person::suggestionListByFirstName ( $this->getParam ( 'query' ), 100, $this->setting ( 'display_middle_name_last' ) );
 		$rowArray = $this->_attach_locations ( $rowArray );
 		$this->sendData ( $rowArray );
 	}
@@ -2025,7 +2026,7 @@ class TrainingController extends ReportFilterHelpers {
 	*/
 	public function courseListAction() {
 		require_once ('models/table/TrainingTitleOption.php');
-		$rowArray = suggestionList::suggestionList ( $this->_getParam ( 'query' ) );
+		$rowArray = suggestionList::suggestionList ( $this->getParam ( 'query' ) );
 		$this->sendData ( $rowArray );
 	}
 
@@ -2037,7 +2038,7 @@ class TrainingController extends ReportFilterHelpers {
 		require_once ('models/table/PersonToTraining.php');
 
 		$pttObj = new PersonToTraining ( );
-		$personTrainingRow = $pttObj->findOrCreate ( $this->_getParam ( 'ptt_id' ) );
+		$personTrainingRow = $pttObj->findOrCreate ( $this->getParam ( 'ptt_id' ) );
 
 		$trainingObj = new Training ( );
 		$personObj = new Person ( );
@@ -2047,7 +2048,8 @@ class TrainingController extends ReportFilterHelpers {
 		$this->view->assign ( 'training_id', $personTrainingRow->training_id );
 
 		require_once ('EditTableController.php');
-		$editTable = new EditTableController ( $this );
+		$editTable = new EditTableController ($this->getRequest(), $this->getResponse());
+		$editTable->setParentController($this);
 		$editTable->table = 'score';
 		$editTable->fields = array ('score_label' => t ( 'Label' ), 'score_value' => t ( 'Score' ) ); // TODO: Label translations
 		$editTable->label = 'Score';
@@ -2058,7 +2060,7 @@ class TrainingController extends ReportFilterHelpers {
 		$editTable->customColDef = array('score_value' => 'formatter:fickle');/*Todo rename this*/
 
 
-		$editTable->execute ();
+		$editTable->execute ($this->getRequest());
 	}
 
 	/**
@@ -2208,7 +2210,7 @@ class TrainingController extends ReportFilterHelpers {
 	}
 
 	public function searchAction() {
-		return $this->_forward ( 'trainingSearch', 'reports' );
+		$this->forward ( 'training-search', 'reports' );
 	}
 
 	public function deletedAction() {
@@ -2219,7 +2221,7 @@ class TrainingController extends ReportFilterHelpers {
 	* Training Roster
 	*/
 	public function rosterAction() {
-		$training_id = $this->_getParam ( 'id' );
+		$training_id = $this->getParam ( 'id' );
 		$this->view->assign ( 'url', Settings::$COUNTRY_BASE_URL . "/training/roster/id/$training_id" );
 
 		$tableObj = new Training ( );
@@ -2304,22 +2306,22 @@ class TrainingController extends ReportFilterHelpers {
 		$html = EditTableHelper::generateHtmlTraining ( 'Persons', $persons, $personsFields, $colStatic, array (), $editLinkInfo );
 		$this->view->assign ( 'tablePersons', $html );
 
-		if ($this->_getParam ( 'outputType' ) && $this->_getParam ( 'trainers' ))
+		if ($this->getParam ( 'outputType' ) && $this->getParam ( 'trainers' ))
 		$this->sendData ( $trainers );
-		if ($this->_getParam ( 'outputType' ) && $this->_getParam ( 'persons' ))
+		if ($this->getParam ( 'outputType' ) && $this->getParam ( 'persons' ))
 		$this->sendData ( $persons );
 
 	}
 
 	public function topicListAction() {
-		$rowArray = OptionList::suggestionList ( 'training_topic_option', 'training_topic_phrase', $this->_getParam ( 'query' ) );
+		$rowArray = OptionList::suggestionList ( 'training_topic_option', 'training_topic_phrase', $this->getParam ( 'query' ) );
 		$this->sendData ( $rowArray );
 	}
 
-	public function listbytrainerAction() {
+	public function listByTrainerAction() {
 		//training info
 		$trainingObj = new Training ( );
-		$rowArray = $trainingObj->findFromTrainer ( $this->_getParam ( 'id' ) );
+		$rowArray = $trainingObj->findFromTrainer ( $this->getParam ( 'id' ) );
 		$this->sendData ( $rowArray );
 	}
 
@@ -2327,32 +2329,34 @@ class TrainingController extends ReportFilterHelpers {
 		// recommended classes based on primary qualification
 		require_once 'models/table/TrainingRecommend.php';
 		$trainingRecObj = new TrainingRecommend ( );
-		$rowArray = $trainingRecObj->getRecommendedClasses ( $this->_getParam ( 'id' ) ); // qualification id
+		$rowArray = $trainingRecObj->getRecommendedClasses ( $this->getParam ( 'id' ) ); // qualification id
 		$this->sendData ( $rowArray );
 	}
 
-	public function listbytrainingrecommendpersonAction() {
+	public function listByTrainingRecommendPersonAction() {
 		// recommended classes based on person id
+        // TODO: this looks unused BS 20150706
 		require_once 'models/table/TrainingRecommend.php';
 		$trainingRecObj = new TrainingRecommend ( );
-		$rowArray = $trainingRecObj->getRecommendedClassesforPerson ( $this->_getParam ( 'id' ) ); // person id
+		$rowArray = $trainingRecObj->getRecommendedClassesforPerson ( $this->getParam ( 'id' ) ); // person id
 		$this->sendData ( $rowArray );
 	}
 
-	public function listbyparticipantAction() {
+	public function listByParticipantAction() {
 		//organizer info
-		$orgAccessListAllowed = allowed_org_access_full_list($this) . "," . allowed_organizer_in_this_site($this);
+        // TODO: this looks unused BS 20150706
+        $orgAccessListAllowed = allowed_org_access_full_list($this) . "," . allowed_organizer_in_this_site($this);
 		if ($orgAccessListAllowed == ",")
 			$orgAccessListAllowed = "";
 		//class info
 		$trainingObj = new Training ( );
-		$rowArray = $trainingObj->findFromParticipant ( $this->_getParam ( 'id' ) , $orgAccessListAllowed);
+		$rowArray = $trainingObj->findFromParticipant ( $this->getParam ( 'id' ) , $orgAccessListAllowed);
 		$this->sendData ( $rowArray );
 	}
 
 	public function organizerListAction() {
 		require_once ('models/table/OptionList.php');
-		$rowArray = OptionList::suggestionList ( 'training_organizer_option', 'training_organizer_phrase', $this->_getParam ( 'query' ) );
+		$rowArray = OptionList::suggestionList ( 'training_organizer_option', 'training_organizer_phrase', $this->getParam ( 'query' ) );
 		$this->sendData ( $rowArray );
 	}
 

@@ -45,7 +45,7 @@
 
 </style>
 
-<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700"
+<link href="//fonts.googleapis.com/css?family=Droid+Sans:400,700"
 	rel="stylesheet" type="text/css">
 
 <?php
@@ -165,19 +165,10 @@ print ScriptContainer::$instance->renderJSHead();
 	  document.getElementById("allCharts").style.marginLeft="130px";
 
 	drawChart11();
-	//drawChart12();
-	//drawChart13();
-	//drawChart14();
-		
+
 	var currentLevel;
 	currentLevel = <?php echo '\'' . $this->location_data[0][name] . '\''; ?>;
 
-<?php  //file_put_contents('c:\wamp\logs\php_debug.log', 'dash3 193 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	   //var_dump("location_data=", $this->location_data[0],"END");
-	   //var_dump("facility_data=",$this->facility_data[0],"END");
-	   //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
-?>
-		 
   }
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->

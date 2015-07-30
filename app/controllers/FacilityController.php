@@ -21,7 +21,7 @@ class FacilityController extends ReportFilterHelpers {
 			
 			// we extend these controllers, lets redirect to their URL
 		if (strstr ( $_SERVER ['HTTP_REFERER'], '/site/' ) && strstr ( $_SERVER ['REQUEST_URI'], '/facility' ))
-			$this->_redirect ( str_replace ( '/facility/', '/site/', 'http://' . $_SERVER ['SERVER_NAME'] . $_SERVER ['REQUEST_URI'] ) );
+			$this->_redirect ( str_replace ( '/facility/', '/site/', '//' . $_SERVER ['SERVER_NAME'] . $_SERVER ['REQUEST_URI'] ) );
 	}
 	public function indexAction() {
 		$this->_redirect ( 'facility/search' );
@@ -29,7 +29,7 @@ class FacilityController extends ReportFilterHelpers {
 	public function cityListAction() {
 		require_once ('models/table/Location.php');
 		
-		$rowArray = Location::suggestionQuery ( $this->_getParam ( 'query' ), $this->setting ( 'num_location_tiers' ) );
+		$rowArray = Location::suggestionQuery ( $this->getParam ( 'query' ), $this->setting ( 'num_location_tiers' ) );
 		
 		$this->sendData ( $rowArray );
 	}
@@ -100,7 +100,7 @@ class FacilityController extends ReportFilterHelpers {
 		if ($checkName) {
 			$status->checkRequired ( $this, 'facility_name', 'Facility name' );
 			// check for unique
-			if ($this->_getParam ( 'facility_name' ) and ! Facility::isUnique ( $this->_getParam ( 'facility_name' ), $this->_getParam ( 'id' ) )) {
+			if ($this->getParam ( 'facility_name' ) and ! Facility::isUnique ( $this->getParam ( 'facility_name' ), $this->getParam ( 'id' ) )) {
 				$status->addError ( 'facility_name', t ( 'That name already exists.' ) );
 			}
 		}
@@ -141,7 +141,7 @@ class FacilityController extends ReportFilterHelpers {
 		
 		// validate locations
 		$city_id = false;
-		$values = $this->_getAllParams ();
+		$values = $this->getAllParams ();
 		require_once 'views/helpers/Location.php';
 		$facility_city_parent_id = regionFiltersGetLastID ( 'facility', $values );
 		
@@ -202,7 +202,7 @@ class FacilityController extends ReportFilterHelpers {
 				$facilityRow->facility_name = $this->getSanParam ( 'facility_name' );
 				$facilityRow->location_id = $location_id;
 				$facilityRow->type_option_id = ($this->getSanParam ( 'facility_type_id' ) ? $this->getSanParam ( 'facility_type_id' ) : null);
-				$facilityRow->facility_comments = $this->_getParam ( 'facility_comments' );
+				$facilityRow->facility_comments = $this->getParam ( 'facility_comments' );
 				$facilityRow->address_1 = $this->getSanParam ( 'facility_address1' );
 				$facilityRow->address_2 = $this->getSanParam ( 'facility_address2' );
 				$facilityRow->lat = $lat;
@@ -231,7 +231,7 @@ class FacilityController extends ReportFilterHelpers {
 					}
 					
 					//TA:17: 09/08/2014
-					$new_commodity_data = $this->_getParam ( 'commodity_new_data' );
+					$new_commodity_data = $this->getParam ( 'commodity_new_data' );
 					if($new_commodity_data){
 						$data_to_add = json_decode($new_commodity_data, true);
 						if (! Facility::saveCommodities ( $obj_id, $data_to_add['data'])) {
@@ -239,7 +239,7 @@ class FacilityController extends ReportFilterHelpers {
 							return false;
 						}
 					}
-					$delete_commodity_data = $this->_getParam ( 'commodity_delete_data' );
+					$delete_commodity_data = $this->getParam ( 'commodity_delete_data' );
 					if($delete_commodity_data){	
 						if (! Facility::deleteCommodities ( $delete_commodity_data)) {
 							$status->setStatusMessage ( t ( 'There was an error saving commodity data though.' ) );
@@ -262,11 +262,12 @@ class FacilityController extends ReportFilterHelpers {
 	}
 	public function listAction() {
 		require_once ('models/table/Facility.php');
-		$rowArray = Facility::suggestionList ( $this->_getParam ( 'query' ) );
+		$rowArray = Facility::suggestionList ( $this->getParam ( 'query' ) );
 		
 		$this->sendData ( $rowArray );
 	}
-	public function listwithunknownAction() {
+
+	public function listWithUnknownAction() {
 		$this->listAction ();
 	}
 	
@@ -419,7 +420,7 @@ class FacilityController extends ReportFilterHelpers {
 		// validate
 		$this->view->assign ( 'status', $status );
 	}
-	public function deletelocationAction() {
+	public function deleteLocationAction() {
 		if (! $this->hasACL ( 'edit_course' )) {
 			$this->doNoAccessError ();
 		}
@@ -445,7 +446,7 @@ class FacilityController extends ReportFilterHelpers {
 		// validate
 		$this->view->assign ( 'status', $status );
 	}
-	public function searchlocationAction() {
+	public function searchLocationAction() {
 		require_once ('models/table/OptionList.php');
 		
 		// location list
@@ -623,7 +624,7 @@ class FacilityController extends ReportFilterHelpers {
 		if ($id = $this->getSanParam ( 'id' )) {
 			if ($this->hasACL ( 'edit_people' )) {
 				// redirect to edit mode
-				$this->_redirect ( str_replace ( 'view', 'edit', 'http://' . $_SERVER ['SERVER_NAME'] . ':' . $_SERVER ['SERVER_PORT'] . $_SERVER ['REQUEST_URI'] ) );
+				$this->_redirect ( str_replace ( 'view', 'edit', '//' . $_SERVER ['SERVER_NAME'] . ':' . $_SERVER ['SERVER_PORT'] . $_SERVER ['REQUEST_URI'] ) );
 			}
 			
 			$facility = new Facility ();
@@ -671,26 +672,26 @@ class FacilityController extends ReportFilterHelpers {
 		$this->viewAssignEscaped ( 'facility', $facilityArray );
 		
 	}
-	function addlocationAction() {
+	function addLocationAction() {
 		require_once 'views/helpers/DropDown.php';
 		
 		// locations
 		$this->viewAssignEscaped ( 'locations', Location::getAll () );
 	}
 	
-	function viewlocationAction() {
+	function viewLocationAction() {
 		if (! $this->hasACL ( 'edit_course' )) {
 			$this->view->assign ( 'viewonly', 'disabled="disabled"' );
 		}
 		
 		require_once 'models/table/TrainingLocation.php';
 		
-		$this->view->assign ( 'id', $this->_getParam ( 'id' ) );
+		$this->view->assign ( 'id', $this->getParam ( 'id' ) );
 		
-		if ($this->_getParam ( 'id' )) {
+		if ($this->getParam ( 'id' )) {
 			require_once 'views/helpers/DropDown.php';
 			
-			$rowLocation = TrainingLocation::selectLocation ( $this->_getParam ( 'id' ) )->toArray ();
+			$rowLocation = TrainingLocation::selectLocation ( $this->getParam ( 'id' ) )->toArray ();
 			
 			// locations
 			$this->viewAssignEscaped ( 'locations', Location::getAll () );
@@ -702,7 +703,7 @@ class FacilityController extends ReportFilterHelpers {
 			$this->viewAssignEscaped ( 'rowLocation', $rowLocation );
 			
 			// see if it is referenced anywhere
-			$this->view->assign ( 'okToDelete', (! TrainingLocation::isReferenced ( $this->_getParam ( 'id' ) )) );
+			$this->view->assign ( 'okToDelete', (! TrainingLocation::isReferenced ( $this->getParam ( 'id' ) )) );
 		}
 		
 		// location drop-down

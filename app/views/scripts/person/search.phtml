@@ -63,13 +63,13 @@
 							<div class="fieldLabel"><?php echo (@$this->translation['First Name']); ?></div><div class="fieldInput"><input id="first_name" type="text" name="first_name" value="<?php echo $this->criteria['first_name'];?>" /><div class="clear"></div><div id="firstContainer" class="autoComplete"></div></div>
 						</div>
 						<script type="text/javascript">
-							var firstAuto = makeAutocomplete('first_name', 'firstContainer', '<?php echo $this->base_url;?>/person/firstList/outputType/text/' );
+							var firstAuto = makeAutocomplete('first_name', 'firstContainer', '<?php echo $this->base_url;?>/person/first-list/outputType/text/' );
 						</script>
 						<div id="lastAutoComplete">
 							<div class="fieldLabel"><?php echo (@$this->translation['Last Name']); ?></div><div class="fieldInput"><input id="last_name" type="text" name="last_name" value="<?php echo $this->criteria['last_name'];?>" /><div class="clear"></div><div id="lastContainer" class="autoComplete"></div></div>
 						</div>
 						<script type="text/javascript">
-							var lastAuto = makeAutocomplete('last_name', 'lastContainer', '<?php echo $this->base_url;?>/person/lastList/outputType/text/' );
+							var lastAuto = makeAutocomplete('last_name', 'lastContainer', '<?php echo $this->base_url;?>/person/last-list/outputType/text/' );
 						</script>
 						<div class="clear"></div>
       <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_trainer" value="is_trainer" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_trainer') echo 'CHECKED'; ?> /><?php echo t('Trainers').' '.t('only');?></div>

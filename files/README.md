@@ -1,0 +1,1 @@
+This directory needs to be write-able by the webserver. It is advisable to change its group to the web server group (sudo chgrp apache ./; sudo chmod 775 ./;), rather than make it world-writable.

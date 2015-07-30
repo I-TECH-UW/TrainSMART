@@ -26,7 +26,7 @@ var classColumnDefs = [
     {key:"training_location_name", label: "<?php tp('Location');?>", sortable:true, resizeable:true}
 ];
 
-  var taction = '<?php echo $this->base_url;?>/training/listByParticipant/id/<?php echo $this->person['id'];?>/outputType/json';
+  var taction = '<?php echo $this->base_url;?>/training/list-by-participant/id/<?php echo $this->person['id'];?>/outputType/json';
   makeJSONDataTable("classInfo", null, taction, classColumnDefs);
 //});
 //--><!]]

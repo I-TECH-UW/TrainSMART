@@ -57,12 +57,12 @@ if ( $this->isLoggedIn() ) {
 			}
 
 			if (   $this->hasACL('edit_course')  && $this->setting['display_training_location']) { //TA:17:14:
-     	$navMain['facility']['searchLocation']  = t('View/Edit').' '.t('Training Location');
+     	$navMain['facility']['search-location']  = t('View/Edit').' '.t('Training Location');
 			} else if ($this->hasACL('view_course')) {
-     	$navMain['facility']['searchLocation']  = t('View').' '.t('Training Location');
+     	$navMain['facility']['search-location']  = t('View').' '.t('Training Location');
 			}
 			if (   $this->hasACL('edit_course') && $this->setting['display_training_location']) { //TA:17:14:)
-      	$navMain['facility']['addLocation']  = t('Add').' '.t('Training Location');
+      	$navMain['facility']['add-location']  = t('Add').' '.t('Training Location');
 			}
 		}
 
@@ -104,7 +104,6 @@ if ( $this->isLoggedIn() ) {
 				$navMain['reports']['ps-institution-information']		= t('Institution Reports');
 				$navMain['reports']['ps-tutor-by-name']				= t('Tutor Reports');
 				$navMain['reports']['ps-facility-report']				= t('Facility Report');
-				$navMain['reports']['jasper-report']				= t('Jasper Report');
 			}
 		}
 

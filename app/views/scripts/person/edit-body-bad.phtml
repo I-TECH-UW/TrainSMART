@@ -128,7 +128,7 @@ function buildDupeTable(e) {
     if(last_name || first_name) {
       YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('duplicateCheckLabel'), "hidden");
       
-      var sUrl = "<?php echo $this->base_url;?>/person/dupeList/outputType/json?";
+      var sUrl = "<?php echo $this->base_url;?>/person/dupe-list/outputType/json?";
       sUrl += "last_name=" + last_name + "&";
       sUrl += "first_name=" + first_name + "&";      
       var request = YAHOO.util.Connect.asyncRequest('GET', sUrl, callback);  
@@ -432,7 +432,7 @@ YAHOO.util.Event.onDOMReady(init);
 		    {key:"training_location_name", label: "<?php tp('Location');?>", sortable:true, resizeable:true}
 		];
 
-		var action = '<?php echo $this->base_url;?>/training/listByTrainer/id/<?php echo $this->person['id'];?>/outputType/json';
+		var action = '<?php echo $this->base_url;?>/training/list-by-trainer/id/<?php echo $this->person['id'];?>/outputType/json';
 		makeJSONDataTable("trainerInfo", null, action, trainerColumnDefs);
 	</script>
 	<?php }?>
@@ -488,7 +488,7 @@ YAHOO.util.Event.onDOMReady(init);
       {key:"training_organizer_phrase", label: "<?php echo('Training').' '.t('Organizer');?>", sortable:true, resizeable:true}
   ];
 
-  	var action = '<?php echo $this->base_url;?>/training/listByTrainingRecommendPerson/id/<?php echo $this->person['id'];?>/outputType/json';
+  	var action = '<?php echo $this->base_url;?>/training/list-by-training-recommend-person/id/<?php echo $this->person['id'];?>/outputType/json';
   	makeJSONDataTable("classRecommend", null, action, classColumnDefs);
      </script>
 
@@ -531,7 +531,7 @@ var classColumnDefs = [
     {key:"training_location_name", label: "<?php tp('Location');?>", sortable:true, resizeable:true}
 ];
 
-	var action = '<?php echo $this->base_url;?>/training/listByParticipant/id/<?php echo $this->person['id'];?>/outputType/json';
+	var action = '<?php echo $this->base_url;?>/training/list-by-participant/id/<?php echo $this->person['id'];?>/outputType/json';
 	makeJSONDataTable("classInfo", null, action, classColumnDefs);
 </script>
 

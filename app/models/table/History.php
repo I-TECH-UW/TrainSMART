@@ -28,7 +28,7 @@ class History extends ITechTable {
 		if ($id) {
 			$data = array ();
 			foreach ( $source_table->_cols as $col ) {
-				if (array_search ( $col, $this->_cols ) !== false && ($col != 'timestamp_created'))
+				if (array_search ( $col, $this->_getCols() ) !== false && ($col != 'timestamp_created'))
 					$data [] = $col;
 			
 			}
@@ -56,19 +56,19 @@ class History extends ITechTable {
 			//this is all person specific stuff, will need to be modified for other tables
 			
 			$select = $this->select ()->from ( $this->_name, array ( 'person_history.*' ))->where ( $this->_parent_table."_history.".$this->_parent_table . "_id = ?", $id )->order ( 'person_history.vid ASC' );
-			if (array_search ( 'facility_id', $this->_cols ) !== false) {
+			if (array_search ( 'facility_id', $this->_getCols() ) !== false) {
 				$select->setIntegrityCheck ( false );
 				$select->joinLeft ( array ('f' => 'facility' ), "facility_id = f.id", array ('facility_name' ) );
 			}
-			if (array_search ( 'primary_qualification_option_id', $this->_cols ) !== false) {
+			if (array_search ( 'primary_qualification_option_id', $this->_getCols() ) !== false) {
 				$select->setIntegrityCheck ( false );
 				$select->joinLeft ( array ('pq' => 'person_qualification_option' ), "primary_qualification_option_id = pq.id", array ('qualification' => 'qualification_phrase' ) );
 			}
-			if (array_search ( 'primary_responsibility_option_id', $this->_cols ) !== false) {
+			if (array_search ( 'primary_responsibility_option_id', $this->_getCols() ) !== false) {
 				$select->setIntegrityCheck ( false );
 				$select->joinLeft ( array ('pr1' => 'person_primary_responsibility_option' ), "primary_responsibility_option_id = pr1.id", array ("primary responsibility" => 'responsibility_phrase'  ) );
 			}
-			if (array_search ( 'secondary_responsibility_option_id', $this->_cols ) !== false) {
+			if (array_search ( 'secondary_responsibility_option_id', $this->_getCols() ) !== false) {
 				$select->setIntegrityCheck ( false );
 				$select->joinLeft ( array ('pr2' => 'person_secondary_responsibility_option' ), "secondary_responsibility_option_id = pr2.id", array ("secondary responsibility" => 'responsibility_phrase'  ) );
 			}
@@ -82,19 +82,19 @@ class History extends ITechTable {
 			
 			//get current state
        $select = $this->select ()->from ( $this->_parent_table, array ('person.*' ) )->where ("person.id = ?", $id );
-      if (array_search ( 'facility_id', $this->_cols ) !== false) {
+      if (array_search ( 'facility_id', $this->_getCols() ) !== false) {
         $select->setIntegrityCheck ( false );
         $select->joinLeft ( array ('f' => 'facility' ), "facility_id = f.id", array ('facility_name' ) );
       }
-      if (array_search ( 'primary_qualification_option_id', $this->_cols ) !== false) {
+      if (array_search ( 'primary_qualification_option_id', $this->_getCols() ) !== false) {
         $select->setIntegrityCheck ( false );
         $select->joinLeft ( array ('pq' => 'person_qualification_option' ), "primary_qualification_option_id = pq.id", array ('qualification' => 'qualification_phrase') );
       }
-      if (array_search ( 'primary_responsibility_option_id', $this->_cols ) !== false) {
+      if (array_search ( 'primary_responsibility_option_id', $this->_getCols() ) !== false) {
         $select->setIntegrityCheck ( false );
         $select->joinLeft ( array ('pr1' => 'person_primary_responsibility_option' ), "primary_responsibility_option_id = pr1.id", array ("primary responsibility" => 'responsibility_phrase'  ) );
       }
-      if (array_search ( 'secondary_responsibility_option_id', $this->_cols ) !== false) {
+      if (array_search ( 'secondary_responsibility_option_id', $this->_getCols() ) !== false) {
         $select->setIntegrityCheck ( false );
         $select->joinLeft ( array ('pr2' => 'person_secondary_responsibility_option' ), "secondary_responsibility_option_id = pr2.id", array ("secondary responsibility" => 'responsibility_phrase'  ) );
       }

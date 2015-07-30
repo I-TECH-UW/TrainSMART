@@ -51,7 +51,7 @@ class Trainer extends ITechTable
 
       $select = $topicTable->select()->from(array('p'=>'person'),$fieldsSelect)->setIntegrityCheck(false);
   		$select->joinLeft(array('t' => 'trainer'),
-       						"p.id = t.person_id", array('is_trainer' => '!(ISNULL(t.type_option_id))'));
+       						"p.id = t.person_id", array('is_trainer' => '(!ISNULL(t.type_option_id))'));
 
     	//look for char start
     	if ( $match ) {

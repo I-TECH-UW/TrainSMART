@@ -349,7 +349,7 @@ if ($this->setting['display_mod_skillsmart']) {
         {key:"training_location_name", label: "<?php tp('Location');?>", sortable:true, resizeable:true}
     ];
 
-    var traction = '<?php echo $this->base_url;?>/training/listByTrainer/id/<?php echo $this->person['id'];?>/outputType/json';
+    var traction = '<?php echo $this->base_url;?>/training/list-by-trainer/id/<?php echo $this->person['id'];?>/outputType/json';
     makeJSONDataTable("trainerInfo", null, traction, trainerColumnDefs);
   </script>
   <?php }?>

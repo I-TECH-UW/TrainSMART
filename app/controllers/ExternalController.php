@@ -26,15 +26,15 @@ class ExternalController extends ITechController
 
     }
 
-   public function listbyparticipantAction() {
+   public function listByParticipantAction() {
 			//class info
 			$courseObj = new ExternalCourse();
-			$rowArray = $courseObj->findFromParticipant($this->_getParam('id'));
+			$rowArray = $courseObj->findFromParticipant($this->getParam('id'));
       		$this->sendData($rowArray);
 	  }
 
 	public function addAction() {
-		$person_id = $this->_getParam('id');
+		$person_id = $this->getParam('id');
 		
     	$request = $this->getRequest();
 		if ( $request->isPost() ) {

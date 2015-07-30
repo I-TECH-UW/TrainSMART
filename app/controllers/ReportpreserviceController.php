@@ -400,7 +400,7 @@ class ReportpreserviceController extends ReportFilterHelpers {
 				$count = count ( $rowArray );
 			}
 
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 				$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {

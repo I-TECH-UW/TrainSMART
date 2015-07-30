@@ -45,7 +45,7 @@
 
 </style>
 
-<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700"
+<link href="//fonts.googleapis.com/css?family=Droid+Sans:400,700"
 	rel="stylesheet" type="text/css">
 
 <?php
@@ -89,9 +89,9 @@ print ScriptContainer::$instance->renderJSHead();
 
 			<div>
 
-				<script src="http://code.highcharts.com/highcharts.js"></script>
-				<script src="http://code.highcharts.com/modules/data.js"></script>
-				<script src="http://code.highcharts.com/modules/drilldown.js"></script>
+				<script src="//code.highcharts.com/highcharts.js"></script>
+				<script src="//code.highcharts.com/modules/data.js"></script>
+				<script src="//code.highcharts.com/modules/drilldown.js"></script>
 
 				
 				<?php  require_once('views/scripts/dashboard/load_data.phtml');?>
@@ -183,23 +183,14 @@ print ScriptContainer::$instance->renderJSHead();
   function apiLoaded() {
 	  document.getElementById("allCharts").style.marginLeft="130px";
 
-	//drawChart11();
-	//drawChart12();
-		
+
 	var currentLevel;
 	currentLevel = <?php echo '\'' . $this->location_data[0][name] . '\''; ?>;
 
-<?php  //file_put_contents('c:\wamp\logs\php_debug.log', 'dash3 193 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	   //var_dump("location_data=", $this->location_data[0],"END");
-	   //var_dump("facility_data=",$this->facility_data[0],"END");
-	   //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX); 
-?>
-		 
+
 	drawHighchart(currentLevel);
 	drawChart11();
-	//drawChart12();
-    //generateBarChart();
-   
+
   }
 
   <!-------   /////////////////////////// script 1,1 ////////////////////// -->

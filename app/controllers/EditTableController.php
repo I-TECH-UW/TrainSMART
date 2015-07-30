@@ -29,20 +29,6 @@ class EditTableController extends ITechController { //Zend_Controller_Action
   
   private $controller;
 
-  public function __construct(Zend_Controller_Request_Abstract $request, Zend_Controller_Response_Abstract $response, array $invokeArgs = array() )
-  //public function __construct( &$partentController )
-  {
-      // moved to setParentController, ZF-1.8.0 requires constructor signature match, gnr
-      //$this->controller = $parentController;
-      //$this->view = $parentController->view;
-      
-      //file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'EditTableController constructor >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-      //var_dump("request=", $request,"END");
-      //$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
-         
-      parent::__construct($request, $response, $invokeArgs = array ());
-  }
-
   public function init()
   {
   }
@@ -55,7 +41,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
 
   public function execute(Zend_Controller_Request_Abstract $request) {
 
-    $params = $this->_getAllParams();
+    $params = $this->getAllParams();
 
     if(isset($params['merge']) && $this->allowMerge) {
       $this->merge();
@@ -264,7 +250,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
   public function merge() {
     require_once('models/table/EditTable.php');
 
-    $params = $this->_getAllParams();
+    $params = $this->getAllParams();
 
     if(!isset($params['mergeto']) && is_array($params['merge'])) {
       $fields = array_keys($this->fields);
@@ -296,7 +282,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
   public function setDefault() {
     require_once('models/table/EditTable.php');
     
-    $params = $this->_getAllParams();
+    $params = $this->getAllParams();
     
     if(is_numeric($params['default'])) {
       EditTable::setDefault($this->table, $params['default'], $this->where);

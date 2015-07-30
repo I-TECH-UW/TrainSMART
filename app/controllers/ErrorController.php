@@ -24,7 +24,7 @@ class ErrorController extends Zend_Controller_Action
       $this->_helper->viewRenderer->setViewSuffix('phtml');
    
       // Grab the error object from the request
-      $errors = $this->_getParam('error_handler');
+      $errors = $this->getParam('error_handler');
       $this->view->errors = $errors;
    
       switch ($errors->type) {

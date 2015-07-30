@@ -47,7 +47,7 @@ print ScriptContainer::$instance->renderJSHead();
 	    <div class="fieldInput"><input name="facility_city" id="facility_city" type="text" size="40" maxlength="128" value="<?php echo $this->facility['facility_city'];?>" /><input style="margin-left:10px;" type="checkbox" id="is_new_city" name="is_new_city" value="is_new_city" /><label class="label"><?php tp('New city'); ?></label><div class="clear"></div>
 	    <div id="cityContainer"  class="autocomplete"></div></div>
 	</div>
-	<?php renderCityAutocomplete('facility','cityContainer',$this->base_url.'/site/cityList/outputType/text/',$this->setting['num_location_tiers']);?>
+	<?php renderCityAutocomplete('facility','cityContainer',$this->base_url.'/site/city-list/outputType/text/',$this->setting['num_location_tiers']);?>
 
 <?php if ($this->setting['display_facility_postal_code'] ) { ?>
 	<div class="fieldLabel" id="facility_postal_code_lbl"><?php tp('Postal code');?></div>

@@ -57,18 +57,22 @@ if ( $this->isLoggedIn() ) {
 
 	if ( $this->hasACL('edit_people') && $this->hasACL('edit_studenttutorinst')){
 		$addLink = '../peopleadd/peopleadd';
-        if ($this->setting['site_style_id'] == 2) {
-            $addLink = '../peopleadd/skillsmart-chw-add';
-        }
-        $navMain['people'] = array(
-		'index' => t('People'),
-		'people' => t('View/Edit Person'),
-		$addLink => t('Add Person'),
+		if ($this->setting['site_style'] == 'skillsmart') {
+			$addLink = '../peopleadd/skillsmart-chw-add';
+		}
+		$navMain['people'] = array(
+			'index' => t('People'),
+			'people' => t('View/Edit Person'),
+			$addLink => t('Add Person'),
 		);
+		if ($this->setting['site_style'] == 'skillsmart') {
+			$navMain['people']['../peopleadd/peopleadd'] = t('Add') . ' ' . t('Tutor');
+		}
+
 	} else {
 		$navMain['people'] = array(
-		'index' => t('People'),
-		'people' => t('View Person'),
+			'index' => t('People'),
+			'people' => t('View Person'),
 		);
 	}
 
@@ -88,12 +92,12 @@ if ( $this->isLoggedIn() ) {
 		}
 
 		if (	$this->hasACL('edit_course') ) {
-			$navMain['psfacility']['searchLocation']	= t('View/Edit Training Location');
+			$navMain['psfacility']['search-location']	= t('View/Edit Training Location');
 		} else if ($this->hasACL('view_course')) {
-			$navMain['psfacility']['searchLocation']	= t('View Training Location');
+			$navMain['psfacility']['search-location']	= t('View Training Location');
 		}
 		if (	$this->hasACL('edit_course')) {
-			$navMain['psfacility']['addLocation']	= t('Add Training Location');
+			$navMain['psfacility']['add-location']	= t('Add Training Location');
 		}
 
 	}

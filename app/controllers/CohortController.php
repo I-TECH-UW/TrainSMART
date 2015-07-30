@@ -178,7 +178,7 @@ class CohortController extends ITechController {
 		$this->view->assign('fetchexams',$result);
 		//$this->view->assign('action','../cohort/cohortexamedit');
 		
-		$result = $cohort->ListClasses();	
+		$result = $cohort->ListClasses($this->setting('site_style'));
 		$this->view->assign('fetchclasses',$result);
 
 		$result = $helper->ListCurrentClasses($cohortid);	
@@ -404,10 +404,10 @@ class CohortController extends ITechController {
 			
 			if(!$converted){
 				$params_query = http_build_query($_POST);
-				header("Location:http://{$_SERVER['HTTP_HOST']}/cohort/cohortsearch?{$params_query}");
+				header("Location://{$_SERVER['HTTP_HOST']}/cohort/cohortsearch?{$params_query}");
 			}
 		}
-		#print_r ($cohorts);
+
 		$this->view->assign('cohort',$cohorts);
 
 		$helper = new Helper();

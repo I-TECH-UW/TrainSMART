@@ -11,11 +11,7 @@ class FileUpload {
    * @var $allowed_ext = allowed extensions (e.g., doc, docx, pdf)
    */ 
   public static function displayFiles(&$controller, $parent_table, $parent_id, $can_delete = TRUE) {
-      
-      //file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'FileUpload.php displayFiles >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-      //var_dump("controller=", $controller,"END");
-      //$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
-      
+
     if(!$parent_id) {
       return;
     }
@@ -28,7 +24,7 @@ class FileUpload {
     }
     
 	require_once ('controllers/EditTableController.php');
-	$editTable = new EditTableController ( $request, $response, $invokeArgs = array () );
+	$editTable = new EditTableController($request, $response);
 	$editTable->setParentController($controller);
 	$editTable->table = 'file';
     $editTable->viewVar = 'editTableFiles';

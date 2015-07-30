@@ -8,7 +8,6 @@
 */
 require_once ('ReportFilterHelpers.php');
 require_once ('models/table/OptionList.php');
-//require_once('models/table/Course.php');
 require_once ('views/helpers/CheckBoxes.php');
 require_once ('models/table/MultiAssignList.php');
 require_once ('models/table/TrainingTitleOption.php');
@@ -44,13 +43,14 @@ class ReportsController extends ReportFilterHelpers {
 	public function dataAction() { 	}
 
 	/**
-	* Converts or returns header labels. Since the export CSV must use header
-	* labels instead of database fields, define headers here.
-	*
-	* @param $fieldname = database field name to convert
-	* @param $rowRay = will add CSV headers to array
-	*
-	* @todo modify all report phtml files to use these headers
+	 * Converts or returns header labels. Since the export CSV must use header
+	 * labels instead of database fields, define headers here.
+	 *
+	 * @param $fieldname = database field name to convert
+	 * @param $rowRay = will add CSV headers to array
+	 *
+	 * @todo modify all report phtml files to use these headers
+	 * @return mixed
 	*/
 	public function reportHeaders($fieldname = false, $rowRay = false) {
 
@@ -115,8 +115,8 @@ class ReportsController extends ReportFilterHelpers {
 	}
 
 	public function compcsvAction() {
-		$v1=split("~",$this->getSanParam ( 'v1' ));
-		$v2=split("~",$this->getSanParam ( 'v2' ));
+		$v1=explode("~",$this->getSanParam ( 'v1' ));
+		$v2=explode("~",$this->getSanParam ( 'v2' ));
 		$p=$this->getSanParam ( 'p' );
 		$d=$this->getSanParam ( 'd' );
 		$s=$this->getSanParam ( 's' );
@@ -130,12 +130,12 @@ class ReportsController extends ReportFilterHelpers {
 	}
 
 	public function profcsvAction() {
-		$v1=split("~",$this->getSanParam ( 'v1' ));
-		$v2=split("~",$this->getSanParam ( 'v2' ));
-		$v3=split("~",$this->getSanParam ( 'v3' ));
-		$v4=split("~",$this->getSanParam ( 'v4' ));
-		$v5=split("~",$this->getSanParam ( 'v5' ));
-		$v6=split("~",$this->getSanParam ( 'v6' ));
+		$v1=explode("~",$this->getSanParam ( 'v1' ));
+		$v2=explode("~",$this->getSanParam ( 'v2' ));
+		$v3=explode("~",$this->getSanParam ( 'v3' ));
+		$v4=explode("~",$this->getSanParam ( 'v4' ));
+		$v5=explode("~",$this->getSanParam ( 'v5' ));
+		$v6=explode("~",$this->getSanParam ( 'v6' ));
 		$p=$this->getSanParam ( 'p' );
 		$d=$this->getSanParam ( 'd' );
 		$s=$this->getSanParam ( 's' );
@@ -179,7 +179,6 @@ class ReportsController extends ReportFilterHelpers {
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 			$num_locs = $this->setting('num_location_tiers');
 			list($field_name,$location_sub_query) = Location::subquery($num_locs, $location_tier, $location_id);
-#			$sql = 'select DISTINCT cmp.person, cmp.question, cmp.option from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l, comp as cmp, compres as cmpr';
 			$sql = 'select DISTINCT cmp.person, cmp.question, cmp.option from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l, comp as cmp';
 			if ( $criteria['training_title_option_id'] ) {
 				$sql .= ', person_to_training as ptt ';
@@ -187,9 +186,7 @@ class ReportsController extends ReportFilterHelpers {
 			}
 			$where = array('p.is_deleted = 0');
 			$whr = array();
-#			$where []= 'cmpr.person = p.id';
 			$where []= 'cmp.person = p.id';
-#			$where []= ' p.primary_qualification_option_id = q.id and p.facility_id = f.id and f.location_id = l.id ';
 			if ($criteria ['facilityInput']) {
 				$where []= ' p.facility_id = "' . $criteria ['facilityInput'] . '"';
 			}
@@ -199,37 +196,7 @@ class ReportsController extends ReportFilterHelpers {
 			if( isset($criteria ['qualification_id']) && $criteria ['qualification_id'] != ''){
 	 			$where []= ' primary_qualification_option_id IN (SELECT id FROM person_qualification_option WHERE parent_id = ' . $criteria ['qualification_id'] . ') ';
 			}
-#			$where []= 'cmpr.active = \'Y\'';
-#			$where []= 'cmpr.res = 1';
 			$where []= 'cmp.active = \'Y\'';
-
-			// OLD METHOD - FOR HARDCODED COMPETENCIES
-			/*
-				if($criteria ['qualification_id']=="6")
-				{
-					$whr []= 'cmp.question IN ('."'".str_replace(",","','",$this->getSanParam ( 'listcq' ))."'".')';
-				}
-				if($criteria ['qualification_id']=="7")
-				{
-					$qs=split(",",$this->getSanParam ( 'ques' ));
-					$nms=split("~",$this->getSanParam ( 'listdq' ));
-					foreach ( $qs as $kys => $vls ) {
-						$whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
-					}
-				}
-				if($criteria ['qualification_id']=="8")
-				{
-					$qs=split(",",$this->getSanParam ( 'ques' ));
-					$nms=split("~",$this->getSanParam ( 'listnq' ));
-					foreach ( $qs as $kys => $vls ) {
-						$whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
-					}
-				}
-				if($criteria ['qualification_id']=="9")
-				{
-					$whr []= 'cmp.question IN ('."'".str_replace(",","','",$this->getSanParam ( 'listpq' ))."'".')';
-				}
-			*/
 
 			// GETTING QUESTIONS TIED TO THE SELECTED COMPETENCIES
 			$questionids = $helper->getCompQuestions($this->getSanParam ( 'complist' ));
@@ -281,90 +248,14 @@ class ReportsController extends ReportFilterHelpers {
 			}
 			$this->viewAssignEscaped("reportoutput",$return);
 
-#echo $sql;
-#echo "<br><br>" . $sql . "<br><br>";
-
+// TODO: WTF?
 die ("OK");
 			$rowArray = $db->fetchAll ( $sql );
 			$qss=array();
 			$nmss=array();
-/*
-			if($criteria ['qualification_id']=="6")
-			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listcq' ));
-			}
-			if($criteria ['qualification_id']=="7")
-			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listdq' ));
-			}
-			if($criteria ['qualification_id']=="8")
-			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listnq' ));
-			}
-			if($criteria ['qualification_id']=="9")
-			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listpq' ));
-			}
-			$ct;
-			$ct=0;
-			$rss=array();
-			$ctt;
-			foreach ( $qss as $kys => $vls ) {
-				$rss[$ct]=0;
-				$ctt=0;
-				$wss=split(",",$nmss[$vls]);
-				foreach ( $wss as $kyss => $vlss ) {
-					foreach ( $rowArray as $kss => $vss ) {
-						if($vlss." " == $vss['question']." ")
-						{
-							if($vss['option']=="A")
-							{
-								$rss[$ct]=$rss[$ct]+4;
-							}
-							else
-							{
-								if($vss['option']=="B")
-								{
-									$rss[$ct]=$rss[$ct]+3;
-								}
-								else
-								{
-									if($vss['option']=="C")
-									{
-										$rss[$ct]=$rss[$ct]+2;
-									}
-									else
-									{
-										if($vss['option']=="D")
-										{
-											$rss[$ct]=$rss[$ct]+1;
-										}
-									}
-								}
-							}
-							$ctt=$ctt+1;
-						}
-					}
-				}
-				if($ctt>0)
-				$rss[$ct]=number_format((($rss[$ct]/(4*$ctt))*100),2);
-				$ct=$ct+1;
-			}
-			$this->viewAssignEscaped ( 'results', $rowArray );
-			$this->viewAssignEscaped ( 'rss', $rss );
-*/
 		}
 		$this->view->assign ( 'criteria', $criteria );
 		$this->viewAssignEscaped ( 'locations', Location::getAll() );
-#		require_once ('models/table/TrainingTitleOption.php');
-#		$titleArray = TrainingTitleOption::suggestionList ( false, 10000 );
-#		$this->viewAssignEscaped ( 'courses', $titleArray );
-#		$qualificationsArray = OptionList::suggestionListHierarchical ( 'person_qualification_option', 'qualification_phrase', false, false );
-#		$this->viewAssignEscaped ( 'qualifications', $qualificationsArray );
 		$this->viewAssignEscaped ( 'complist', $complist );
 		$rowArray = OptionList::suggestionList ( 'facility', array ('facility_name', 'id' ), false, 9999 );
 		$facilitiesArray = array ();
@@ -404,67 +295,24 @@ die ("OK");
 				$where []= ' p.facility_id = "' . $criteria ['facilityInput'] . '"';
 			}
 			//TA:29 fix bug, why should we take by parent_id????
-			//$where []= ' primary_qualification_option_id IN (SELECT id FROM person_qualification_option WHERE parent_id = ' . $criteria ['qualification_id'] . ') ';
 			$where []= ' primary_qualification_option_id IN (SELECT id FROM person_qualification_option) ';
-			//TA:29 fix bug $where []= 'cmpr.active = \'Y\'';
-			//TA:29 fix bug $where []= 'cmpr.res = 1';
 			$where []= 'cmp.active = \'Y\'';
 			
 			//TA:29 fixing bug
 			$questionids = $helper->getCompQuestions($this->getSanParam ( 'complist' ));
 			$whr []= 'cmp.question IN ('."'".str_replace(",","','", implode(",", $questionids)) ."'".')';
 			
-			//TA:29 fixing bug
-// 			if($criteria ['qualification_id']=="6"){
-// 				$whr []= 'cmp.question IN ('."'".str_replace(",","','",$this->getSanParam ( 'listcq' ))."'".')';
-// 			}
-// 			if($criteria ['qualification_id']=="7"){
-// 				$qs=split(",",$this->getSanParam ( 'ques' ));
-// 				$nms=split("~",$this->getSanParam ( 'listdq' ));
-// 				foreach ( $qs as $kys => $vls ) {
-// 					$whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
-// 				}
-// 			}
-// 			if($criteria ['qualification_id']=="8"){
-// 				$qs=split(",",$this->getSanParam ( 'ques' ));
-// 				$nms=split("~",$this->getSanParam ( 'listnq' ));
-// 				foreach ( $qs as $kys => $vls ) {
-// 					$whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
-// 				}
-// 			}
-// 			if($criteria ['qualification_id']=="9"){
-// 				$whr []= 'cmp.question IN ('."'".str_replace(",","','",$this->getSanParam ( 'listpq' ))."'".')';
-// 			}
 
 			$sql .= ' WHERE ' . implode(' AND ', $where);
 			if(!empty($whr)){ //TA:29 do not add if array is empty
 				$sql .= ' AND (' . implode(' OR ', $whr) . ')';
 			}
-			
-			//print $sql;
+
 			
 			$rowArray = $db->fetchAll ( $sql);
-			
-			//TA:29 it does not matter, take for any case
-// 			if($criteria ['qualification_id']=="6"){
-// 				$qss=split(",",$this->getSanParam ( 'ques' ));
-// 				$nmss=split("~",$this->getSanParam ( 'listcq' ));
-// 			}
-// 			if($criteria ['qualification_id']=="7"){
-// 				$qss=split(",",$this->getSanParam ( 'ques' ));
-// 				$nmss=split("~",$this->getSanParam ( 'listdq' ));
-// 			}
-// 			if($criteria ['qualification_id']=="8"){
-// 				$qss=split(",",$this->getSanParam ( 'ques' ));
-// 				$nmss=split("~",$this->getSanParam ( 'listnq' ));
-// 			}
-// 			if($criteria ['qualification_id']=="9"){
-// 				$qss=split(",",$this->getSanParam ( 'ques' ));
-// 				$nmss=split("~",$this->getSanParam ( 'listpq' ));
-// 			}
 
 			$qss = $this->getSanParam ( 'complist' ); 
-			$nmss=split("~",$this->getSanParam ( 'listpq' )); 
+			$nmss=explode("~",$this->getSanParam ( 'listpq' ));
 			
 			//TA:29 fix bug
 			$ct=0;
@@ -474,8 +322,8 @@ die ("OK");
 				$ct = $thiscomp['label'];
 				$rss[$ct]=0;
 				$ctt=0;
-				//TA:29 $wss=split(",",$nmss[$vls]);
-				$wss=split(",",$nmss[$kys]);
+				//TA:29
+				$wss=explode(",",$nmss[$kys]);
 				foreach ( $wss as $kyss => $vlss ) {
 					foreach ( $rowArray as $kss => $vss ) {
 						if($vlss." " == $vss['question']." "){
@@ -572,16 +420,15 @@ echo $sql . "<br>";
 				$rowArray = $db->fetchAll ( $sql );
 				$qss=array();
 				$nmss=array();
-				$qss=split(",","0,1,2,3,4,5,6,7");
-				$nmss=split("~","1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,200~01,02,03,04,05,06,07,08,09~31,32,33,34,35,36,37,38~41,42,43,44,45~51,52,53,54,55,56,57,58,59,510,511,512,513,514,515,516,517,518~61,62,63,64,65,66,67~71,72,73,74,75,76,77,78,79,710,711~21,22,23");
-				$ct;
+				$qss=explode(",","0,1,2,3,4,5,6,7");
+				$nmss=explode("~","1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,200~01,02,03,04,05,06,07,08,09~31,32,33,34,35,36,37,38~41,42,43,44,45~51,52,53,54,55,56,57,58,59,510,511,512,513,514,515,516,517,518~61,62,63,64,65,66,67~71,72,73,74,75,76,77,78,79,710,711~21,22,23");
+
 				$ct=0;
 				$rssA=array();
 				$rssB=array();
 				$rssC=array();
 				$rssD=array();
 				$rssE=array();
-				$ctt;
 				foreach ( $qss as $kys => $vls ) {
 					$rssA[$ct]=0;
 					$rssB[$ct]=0;
@@ -589,7 +436,7 @@ echo $sql . "<br>";
 					$rssD[$ct]=0;
 					$rssE[$ct]=0;
 					$ctt=0;
-					$wss=split(",",$nmss[$vls]);
+					$wss=explode(",",$nmss[$vls]);
 					foreach ( $wss as $kyss => $vlss ) {
 						foreach ( $rowArray as $kss => $vss ) {
 							if($vlss." " == $vss['question']." ")
@@ -755,23 +602,23 @@ echo $sql . "<br>";
 				$nmss=array();
 				if($criteria ['qualification_id']=="6")
 				{
-					$qss=split(",",$this->getSanParam ( 'ques' ));
-					$nmss=split("~",$this->getSanParam ( 'listcq' ));
+					$qss=explode(",",$this->getSanParam ( 'ques' ));
+					$nmss=explode("~",$this->getSanParam ( 'listcq' ));
 				}
 				if($criteria ['qualification_id']=="7")
 				{
-					$qss=split(",",$this->getSanParam ( 'ques' ));
-					$nmss=split("~",$this->getSanParam ( 'listdq' ));
+					$qss=explode(",",$this->getSanParam ( 'ques' ));
+					$nmss=explode("~",$this->getSanParam ( 'listdq' ));
 				}
 				if($criteria ['qualification_id']=="8")
 				{
-					$qss=split(",",$this->getSanParam ( 'ques' ));
-					$nmss=split("~",$this->getSanParam ( 'listnq' ));
+					$qss=explode(",",$this->getSanParam ( 'ques' ));
+					$nmss=explode("~",$this->getSanParam ( 'listnq' ));
 				}
 				if($criteria ['qualification_id']=="9")
 				{
-					$qss=split(",",$this->getSanParam ( 'ques' ));
-					$nmss=split("~",$this->getSanParam ( 'listpq' ));
+					$qss=explode(",",$this->getSanParam ( 'ques' ));
+					$nmss=explode("~",$this->getSanParam ( 'listpq' ));
 				}
 				$ct;
 				$ct=0;
@@ -788,7 +635,7 @@ echo $sql . "<br>";
 					$rssD[$ct]=0;
 					$rssE[$ct]=0;
 					$ctt=0;
-					$wss=split(",",$nmss[$vls]);
+					$wss=explode(",",$nmss[$vls]);
 					foreach ( $wss as $kyss => $vlss ) {
 						foreach ( $rowArray as $kss => $vss ) {
 							if($vlss." " == $vss['question']." ")
@@ -883,209 +730,7 @@ echo $sql . "<br>";
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 			$prsns=array();
 			$prsnscnt=0;
-			//TA:31 fixing bug. this part is not working
-// 			if($criteria ['qualification_id']=="6"){
-// 				$sql='SELECT `person`, SUM(-(ASCII(`option`)-69)) `sm` FROM `comp`';
-// 				$whr = array();
-// 				$whr []= '`question` IN ('."'".str_replace(",","','",$this->getSanParam ( 'listcq' ))."'".')';
-// 				$sql .= ' WHERE `active` = \'Y\' AND `option` <> \'E\' AND `option` <> \'F\' AND (' . implode(' OR ', $whr) . ')';
-// 				$sql .= ' GROUP BY `person`';
-// 				$rowArray = $db->fetchAll ( $sql );
-// 				$tlques=split(",",$this->getSanParam ( 'listcq' ));
-// 				$ttlques=count($tlques);
-// 				$qs=split('\$',$this->getSanParam ( 'Questions' ));
-// 				foreach ( $qs as $kys => $vls ) {
-// 					$fr=split('\^',$vls);
-// 					$min=0;
-// 					$max=0;
-// 					if($fr[2]=="100")
-// 					{
-// 						$min=90;
-// 						$max=100;
-// 					}
-// 					else
-// 					{
-// 						if($fr[2]=="89")
-// 						{
-// 							$min=75;
-// 							$max=90;
-// 						}
-// 						else
-// 						{
-// 							if($fr[2]=="74")
-// 							{
-// 								$min=60;
-// 								$max=75;
-// 							}
-// 							else
-// 							{
-// 								$min=1;
-// 								$max=60;
-// 							}
-// 						}
-// 					}
-// 					foreach ( $rowArray as $prsn => $mrk ) {
-// 						$prcnt=number_format((($mrk['sm']/(4*$ttlques))*100),2);
-// 						if($prcnt>$min && $prcnt<=$max)
-// 						{
-// 							$prsns[$prsnscnt]=$mrk['person'];
-// 							$prsnscnt=$prsnscnt+1;
-// 						}
-// 					}
-// 				}
-// 			}if($criteria ['qualification_id']=="7"){
-// 				$qs=split('\$',$this->getSanParam ( 'Questions' ));
-// 				$nms=split("~",$this->getSanParam ( 'listdq' ));
-// 				foreach ( $qs as $kys => $vls ) {
-// 					$sql='SELECT `person`, SUM(-(ASCII(`option`)-69)) `sm` FROM `comp`';
-// 					$whr = array();
-// 					$fr=split('\^',$vls);
-// 					$whr []= '`question` IN ('."'".str_replace(",","','",$nms[$fr[1]])."'".')';
-// 					$sql .= ' WHERE `active` = \'Y\' AND `option` <> \'E\' AND `option` <> \'F\' AND (' . implode(' OR ', $whr) . ')';
-// 					$sql .= ' GROUP BY `person`';
-// 					$rowArray = $db->fetchAll ( $sql );
-// 					$tlques=split(",",$nms[$fr[1]]);
-// 					$ttlques=count($tlques);
-// 					$min=0;
-// 					$max=0;
-// 					if($fr[2]=="100")
-// 					{
-// 						$min=90;
-// 						$max=100;
-// 					}
-// 					else
-// 					{
-// 						if($fr[2]=="89")
-// 						{
-// 							$min=75;
-// 							$max=90;
-// 						}
-// 						else
-// 						{
-// 							if($fr[2]=="74")
-// 							{
-// 								$min=60;
-// 								$max=75;
-// 							}
-// 							else
-// 							{
-// 								$min=1;
-// 								$max=60;
-// 							}
-// 						}
-// 					}
-// 					foreach ( $rowArray as $prsn => $mrk ) {
-// 						$prcnt=number_format((($mrk['sm']/(4*$ttlques))*100),2);
-// 						if($prcnt>$min && $prcnt<=$max)
-// 						{
-// 							$prsns[$prsnscnt]=$mrk['person'];
-// 							$prsnscnt=$prsnscnt+1;
-// 						}
-// 					}
-// 				}
-// 			}
-// 			if($criteria ['qualification_id']=="8"){
-// 				$qs=split('\$',$this->getSanParam ( 'Questions' ));
-// 				$nms=split("~",$this->getSanParam ( 'listnq' ));
-// 				foreach ( $qs as $kys => $vls ) {
-// 					$sql='SELECT `person`, SUM(-(ASCII(`option`)-69)) `sm` FROM `comp`';
-// 					$whr = array();
-// 					$fr=split('\^',$vls);
-// 					$whr []= '`question` IN ('."'".str_replace(",","','",$nms[$fr[1]])."'".')';
-// 					$sql .= ' WHERE `active` = \'Y\' AND `option` <> \'E\' AND `option` <> \'F\' AND (' . implode(' OR ', $whr) . ')';
-// 					$sql .= ' GROUP BY `person`';
-// 					$rowArray = $db->fetchAll ( $sql );
-// 					$tlques=split(",",$nms[$fr[1]]);
-// 					$ttlques=count($tlques);
-// 					$min=0;
-// 					$max=0;
-// 					if($fr[2]=="100")
-// 					{
-// 						$min=90;
-// 						$max=100;
-// 					}
-// 					else
-// 					{
-// 						if($fr[2]=="89")
-// 						{
-// 							$min=75;
-// 							$max=90;
-// 						}
-// 						else
-// 						{
-// 							if($fr[2]=="74")
-// 							{
-// 								$min=60;
-// 								$max=75;
-// 							}
-// 							else
-// 							{
-// 								$min=1;
-// 								$max=60;
-// 							}
-// 						}
-// 					}
-// 					foreach ( $rowArray as $prsn => $mrk ) {
-// 						$prcnt=number_format((($mrk['sm']/(4*$ttlques))*100),2);
-// 						if($prcnt>$min && $prcnt<=$max)
-// 						{
-// 							$prsns[$prsnscnt]=$mrk['person'];
-// 							$prsnscnt=$prsnscnt+1;
-// 						}
-// 					}
-// 				}
-// 			}
-// 			if($criteria ['qualification_id']=="9"){
-// 				$sql='SELECT `person`, SUM(-(ASCII(`option`)-69)) `sm` FROM `comp`';
-// 				$whr = array();
-// 				$whr []= '`question` IN ('."'".str_replace(",","','",$this->getSanParam ( 'listpq' ))."'".')';
-// 				$sql .= ' WHERE `active` = \'Y\' AND `option` <> \'E\' AND `option` <> \'F\' AND (' . implode(' OR ', $whr) . ')';
-// 				$sql .= ' GROUP BY `person`';
-// 				$rowArray = $db->fetchAll ( $sql );
-// 				$tlques=split(",",$this->getSanParam ( 'listpq' ));
-// 				$ttlques=count($tlques);
-// 				$qs=split('\$',$this->getSanParam ( 'Questions' ));
-// 				foreach ( $qs as $kys => $vls ) {
-// 					$fr=split('\^',$vls);
-// 					$min=0;
-// 					$max=0;
-// 					if($fr[2]=="100")
-// 					{
-// 						$min=90;
-// 						$max=100;
-// 					}
-// 					else
-// 					{
-// 						if($fr[2]=="89")
-// 						{
-// 							$min=75;
-// 							$max=90;
-// 						}
-// 						else
-// 						{
-// 							if($fr[2]=="74")
-// 							{
-// 								$min=60;
-// 								$max=75;
-// 							}
-// 							else
-// 							{
-// 								$min=1;
-// 								$max=60;
-// 							}
-// 						}
-// 					}
-// 					foreach ( $rowArray as $prsn => $mrk ) {
-// 						$prcnt=number_format((($mrk['sm']/(4*$ttlques))*100),2);
-// 						if($prcnt>$min && $prcnt<=$max)
-// 						{
-// 							$prsns[$prsnscnt]=$mrk['person'];
-// 							$prsnscnt=$prsnscnt+1;
-// 						}
-// 					}
-// 				}
-// 			}
-			
+
 			//TA:31 fixing bug, by some reason it was not taken for any qualification, let's do it
 			$sql='SELECT `person`, SUM(-(ASCII(`option`)-69)) `sm` FROM `comp`';
 			$whr = array();
@@ -1094,11 +739,10 @@ echo $sql . "<br>";
 			$sql .= ' GROUP BY `person`';
 			
 			$rowArray = $db->fetchAll ( $sql );
-			$tlques=split(",",$this->getSanParam ( 'listpq' ));
+			$tlques=explode(",",$this->getSanParam ( 'listpq' ));
 			$ttlques=count($tlques);
 			$qs=$this->getSanParam ( 'score_id' );
 			foreach ( $qs as $kys => $vls ) {
-				//$fr=split('\^',$vls);
 				$fr=$vls;
 				$min=0;
 				$max=0;
@@ -1204,7 +848,7 @@ echo $sql . "<br>";
 			$sql .= ' GROUP BY `person`';
 			
 			$rowArray = $db->fetchAll ( $sql );
-			$tlques=split(",",$this->getSanParam ( 'listpq' ));
+			$tlques=explode(",",$this->getSanParam ( 'listpq' ));
 			$ttlques=count($tlques);
 			$qs=$this->getSanParam ( 'score_id' );
 			foreach ( $qs as $kys => $vls ) {
@@ -1238,12 +882,12 @@ echo $sql . "<br>";
 			}
 			//TA:32 end
 			
-			//TA:32 fixing bug $qs=split('\$',$criteria ['Questions']);
+			//TA:32 fixing bug
 			$sql='SELECT `person` FROM `comp`';
 			$sql .= ' WHERE `active` = \'Y\'';
 			$whr = array();
 			foreach ( $qs as $k => $v ) {
-				$qss=split('\^',$v);
+				$qss=explode('^',$v);
 				$whr[]='(`question`=\''.$qss[2].'\' AND `option`=\''.$qss[3].'\')';
 			}
 			if( !empty($whr) )
@@ -1275,12 +919,6 @@ echo $sql . "<br>";
 		$qualificationsArray = OptionList::suggestionListHierarchical ( 'person_qualification_option', 'qualification_phrase', false, false );
 		$this->viewAssignEscaped ( 'qualifications', $qualificationsArray );
 	}
-	
-	public function jasperReportAction() {
-	    $this->view->assign ( 'mode', 'name' );
-	    return $this->trainingReport ();
-	    
-	}
 
 	public function trainingsAction() {
 		$this->view->assign ( 'mode', 'name' );
@@ -1288,7 +926,7 @@ echo $sql . "<br>";
 		return $this->trainingReport ();
 	}
 
-	public function trainingsearchAction() {
+	public function trainingSearchAction() {
 		$this->_countrySettings = array();
 		$this->_countrySettings = System::getAll();
 
@@ -1333,7 +971,7 @@ echo $sql . "<br>";
 		$sql = "SELECT MIN(training_start_date) as \"start\" FROM training WHERE is_deleted = 0";
 		$rowArray = $db->fetchAll ( $sql );
 		$start_default = $rowArray [0] ['start'];
-		$parts = explode ( '-', $start_default );
+		$parts = explode('-', $start_default );
 		$criteria ['start-year'] = @$parts [0];
 		$criteria ['start-month'] = @$parts [1];
 		$criteria ['start-day'] = @$parts [2];
@@ -1348,7 +986,7 @@ echo $sql . "<br>";
 			$sql = "SELECT MAX(training_start_date) as \"start\" FROM training ";
 			$rowArray = $db->fetchAll ( $sql );
 			$end_default = $rowArray [0] ['start'];
-			$parts = explode ( '-', $end_default );
+			$parts = explode('-', $end_default );
 			$criteria ['end-year'] = @$parts [0];
 			$criteria ['end-month'] = @$parts [1];
 			$criteria ['end-day'] = @$parts [2];
@@ -1790,13 +1428,6 @@ echo $sql . "<br>";
 			if ( $criteria['showCustom2'] || $criteria ['custom_2_id'] ) {
 				$sql .= ' LEFT JOIN training_custom_2_option as tqc2 ON pt.training_custom_2_option_id = tqc2.id  ';
 			}
-			#not multi opt fields yet - no join required
-			#if ( $criteria['showCustom3'] || $criteria ['custom_3_id'] ) {
-			#	//$sql .= ' LEFT JOIN training_custom_3_option as custom_3_id ON pt.training_custom_3_option_id = tq3c.id  ';
-			#}
-			#if ( $criteria['showCustom4'] || $criteria ['custom_4_id'] ) {
-			#	//$sql .= ' LEFT JOIN training_custom_4_option as tqc ON pt.training_custom_4_option_id = tqc4.id  ';
-			#}
 
 			if ( $criteria['showCreatedBy'] || $criteria ['created_by'] ) {
 				$sql .= ' LEFT JOIN user ON user.id = pt.created_by  ';
@@ -2070,7 +1701,7 @@ echo $sql . "<br>";
 				$count = count ( $rowArray );
 			}
 
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {
@@ -2218,7 +1849,7 @@ echo $sql . "<br>";
 		$sql = "SELECT MIN(training_start_date) as \"start\" FROM training WHERE is_deleted = 0";
 		$rowArray = $db->fetchAll ( $sql );
 		$start_default = $rowArray [0] ['start'];
-		$parts = explode ( '-', $start_default );
+		$parts = explode('-', $start_default );
 		$criteria ['start-year'] = @$parts [0];
 		$criteria ['start-month'] = @$parts [1];
 		$criteria ['start-day'] = @$parts [2];
@@ -2233,7 +1864,7 @@ echo $sql . "<br>";
 			$sql = "SELECT MAX(training_start_date) as \"start\" FROM training ";
 			$rowArray = $db->fetchAll ( $sql );
 			$end_default = $rowArray [0] ['start'];
-			$parts = explode ( '-', $end_default );
+			$parts = explode('-', $end_default );
 			$criteria ['end-year'] = @$parts [0];
 			$criteria ['end-month'] = @$parts [1];
 			$criteria ['end-day'] = @$parts [2];
@@ -2676,7 +2307,7 @@ echo $sql . "<br>";
 				$count = count ( $rowArray );
 			}
 
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {
@@ -2843,7 +2474,7 @@ echo $sql . "<br>";
 			$this->view->assign ( 'count' , count($rowArray) );
 
 			// output csv if necessary
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 				$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 
@@ -2875,7 +2506,7 @@ echo $sql . "<br>";
 		$start_default = '0000-00-00';
 		if ($rowArray and $rowArray [0] ['start'])
 		$start_default = $rowArray [0] ['start'];
-		$parts = explode ( '-', $start_default );
+		$parts = explode('-', $start_default );
 		$criteria ['start-year'] = $parts [0];
 		$criteria ['start-month'] = $parts [1];
 		$criteria ['start-day'] = $parts [2];
@@ -3162,7 +2793,10 @@ echo $sql . "<br>";
 			}
 
 			$sql .= ' FROM (';
-			$sql .= 'SELECT training.*, person.facility_id as "facility_id", person.id as "person_id", person.last_name, IFNULL(suffix_phrase, ' . "' '" . ') as suffix_phrase, ';
+			//TA:42 add person.is_delete column result
+			//$sql .= 'SELECT training.*, person.facility_id as "facility_id", person.id as "person_id", person.last_name, IFNULL(suffix_phrase, ' . "' '" . ') as suffix_phrase, ';
+			$sql .= 'SELECT training.*, person.facility_id as "facility_id", person.id as "person_id", person.is_deleted as person_is_deleted, person.last_name, IFNULL(suffix_phrase, ' . "' '" . ') as suffix_phrase, ';
+			
 			$sql .= 'person.first_name, person.middle_name, person.person_custom_1_option_id, person.person_custom_2_option_id, person.custom_3 as person_custom_3, person.custom_4 as person_custom_4, person.custom_5 as person_custom_5, ';
 			$sql .= 'CASE WHEN birthdate  IS NULL OR birthdate = \'0000-00-00\' THEN NULL ELSE ((date_format(now(),\'%Y\') - date_format(birthdate,\'%Y\')) - (date_format(now(),\'00-%m-%d\') < date_format(birthdate,\'00-%m-%d\')) ) END as "age", ';
 			$sql .= 'person.phone_work, person.phone_home, person.phone_mobile, person.email, ';
@@ -3248,8 +2882,11 @@ echo $sql . "<br>";
 			}
 
 			$where = array ();
-
+ 
 			$where [] = ' pt.is_deleted = 0 ';
+			
+			//TA:42 add condition for person.is_deleted condition
+			$where [] = ' person_is_deleted = 0 ';
 
 			//TA:33 this part is not working then to do it by different way
 // 			if($locWhere = $this->getLocationCriteriaWhereClause($criteria,  '', 'pt')) {
@@ -3489,6 +3126,7 @@ echo $sql . "<br>";
 				}
 			}
 			
+			
 			$rowArray = $db->fetchAll ( $sql);
 			
 
@@ -3500,7 +3138,7 @@ echo $sql . "<br>";
 			} else {
 				$count = count ( $rowArray );
 			}
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {
@@ -3683,7 +3321,7 @@ echo $sql . "<br>";
             $this->view->assign ( 'dateMMend', $dateMMend);
             $this->view->assign ( 'dateYYend', $dateYYend);
             
-            if ($this->_getParam ( 'outputType' )){
+            if ($this->getParam ( 'outputType' )){
             	$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
             }
             
@@ -3730,7 +3368,7 @@ echo $sql . "<br>";
 		$start_default = '0000-00-00';
 		if ($rowArray and $rowArray [0] ['start'])
 		$start_default = $rowArray [0] ['start'];
-		$parts = explode ( '-', $start_default );
+		$parts = explode('-', $start_default );
 		$criteria ['start-year'] = $parts [0];
 		$criteria ['start-month'] = $parts [1];
 		$criteria ['start-day'] = $parts [2];
@@ -3756,13 +3394,6 @@ echo $sql . "<br>";
 		$criteria ['end-day'] = $this->getSanParam ( 'end-day' );
 		
 		//TA:38 fixing bug to filter by geography
-// 		$criteria ['province_id'] = $this->getSanParam ( 'province_id' );
-// 		$criteria ['district_id'] = $this->getSanParam ( 'district_id' );
-// 		// level 2 location has parameter as [parent_location_id]_[location_id], we need to take only location_ids
-// 		if ( strstr($criteria ['district_id'], '_') !== false ) {
-// 				$parts = explode('_',$criteria ['district_id']);
-// 				$criteria ['district_id'] = $parts[1];
-// 		}
 		$criteria ['province_id'] = $this->getSanParam ( 'province_id' );
 		$arr_dist = $this->getSanParam ( 'district_id' );
 		// level 2 location has parameter as [parent_location_id]_[location_id], we need to take only location_ids
@@ -3881,11 +3512,7 @@ echo $sql . "<br>";
 			}
 
 			if ($criteria ['showFunding']) {
-				//if ( $criteria['doCount'] ) {
 				$sql .= ', tfund.funding_phrase ';
-				//} else {
-				//	$sql .= ', GROUP_CONCAT(DISTINCT tfund.funding_phrase ORDER BY funding_phrase) as "funding_phrase" ';
-				//}
 			}
 
 			if ($criteria ['showTopic']) {
@@ -4152,7 +3779,7 @@ echo $sql . "<br>";
 			} else {
 				$count = count ( $rowArray );
 			}
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {
@@ -4347,7 +3974,7 @@ echo $sql . "<br>";
 
 
 			$rowArray = $db->fetchAll ( $sql );
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {
@@ -4468,7 +4095,7 @@ echo $sql . "<br>";
 	$qDate = $rowArray[0]['next_quarter_start'];
 
 	}
-	if ( $this->_getParam('outputType')  ) $this->sendData($results);
+	if ( $this->getParam('outputType')  ) $this->sendData($results);
 	}
 
 	$this->view->assign('count',(isset($grandTotal)?$grandTotal:0) );
@@ -4487,7 +4114,7 @@ echo $sql . "<br>";
 		$sql = "SELECT MIN(training_start_date) as \"start\" FROM training WHERE is_deleted = 0 ";
 		$rowArray = $db->fetchAll ( $sql );
 		$start_default = $rowArray [0] ['start'];
-		$parts = explode ( '-', $start_default );
+		$parts = explode('-', $start_default );
 		$criteria ['start-year'] = $parts [0];
 		$criteria ['start-month'] = $parts [1];
 		$criteria ['start-day'] = $parts [2];
@@ -4662,7 +4289,7 @@ echo $sql . "<br>";
 				$total += $row ['cnt'];
 			}
 
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 				$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 		}
 
@@ -4711,7 +4338,7 @@ echo $sql . "<br>";
 		$sql = "SELECT MIN(training_start_date) as \"start\" FROM training WHERE is_deleted = 0";
 		$rowArray = $db->fetchAll ( $sql );
 		$start_default = $rowArray [0] ['start'];
-		$parts = explode ( '-', $start_default );
+		$parts = explode('-', $start_default );
 		$criteria ['start-year'] = $parts [0];
 		$criteria ['start-month'] = $parts [1];
 		$criteria ['start-day'] = $parts [2];
@@ -4726,7 +4353,7 @@ echo $sql . "<br>";
 			$sql = "SELECT MAX(training_start_date) as \"start\" FROM training ";
 			$rowArray = $db->fetchAll ( $sql );
 			$end_default = $rowArray [0] ['start'];
-			$parts = explode ( '-', $end_default );
+			$parts = explode('-', $end_default );
 			$criteria ['end-year'] = $parts [0];
 			$criteria ['end-month'] = $parts [1];
 			$criteria ['end-day'] = $parts [2];
@@ -5010,7 +4637,7 @@ echo $sql . "<br>";
 				$count = count ( $rowArray );
 			}
 
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {
@@ -5023,7 +4650,7 @@ echo $sql . "<br>";
 		//not sure why we are getting multiple PEPFARS
 		foreach ( $rowArray as $key => $row ) {
 			if (isset ( $row ['pepfar_category_phrase'] )) {
-				$rowArray [$key] ['pepfar_category_phrase'] = implode ( ',', array_unique ( explode ( ',', $row ['pepfar_category_phrase'] ) ) );
+				$rowArray [$key] ['pepfar_category_phrase'] = implode ( ',', array_unique ( explode(',', $row ['pepfar_category_phrase'] ) ) );
 			}
 		}
 
@@ -5103,7 +4730,7 @@ echo $sql . "<br>";
 		$start_default = '0000-00-00';
 		if ($rowArray and $rowArray [0] ['start'])
 		$start_default = $rowArray [0] ['start'];
-		$parts = explode ( '-', $start_default );
+		$parts = explode('-', $start_default );
 		$criteria ['start-year'] = $parts [0];
 		$criteria ['start-month'] = $parts [1];
 		$criteria ['start-day'] = $parts [2];
@@ -5510,7 +5137,7 @@ echo $sql . "<br>";
 					$rowArray = $db->fetchAll ( $sql );
 				}
 			}
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 		} else {
@@ -5596,237 +5223,12 @@ echo $sql . "<br>";
 	public function needsByPersonNameAction() {
 		return $this->needsReport ();
 	}
-	/*
-	function needsReportOLD() {
-	//find the first date in the database
-	$db = Zend_Db_Table_Abstract::getDefaultAdapter();
-
-	$criteria['province_id'] = $this->getSanParam('province_id');
-	$criteria['district_id'] = $this->getSanParam('district_id');
-	if ( strstr($criteria['district_id'], '_') !== false ) {
-	$parts = explode('_',$criteria['district_id']);
-	$criteria['district_id'] = $parts[1];
-	}
-
-	$criteria['facility_name'] = $this->getSanParam('facility_name');
-	$criteria['qualification_id'] = $this->getSanParam('qualification_id');
-	$criteria['qualification_secondary_id'] = $this->getSanParam('qualification_secondary_id');
-
-	$criteria['concatNames'] = $this->getSanParam('concatNames');
-
-
-	$criteria['doCount'] = ($this->view->mode == 'count');
-	$criteria['showProvince'] = ($this->getSanParam('showProvince') OR ($criteria['doCount'] and ($criteria['province_id'] or $criteria['province_id'] === '0') ));
-	$criteria['showDistrict'] = ($this->getSanParam('showDistrict') OR ($criteria['doCount'] and ($criteria['district_id'] or $criteria['district_id'] === '0') ));
-	//$criteria['showQualification'] = ($this->getSanParam('showQualification') OR ($criteria['doCount']  and ($criteria['qualification_id'] or $criteria['qualification_id'] === '0') ));
-
-	$criteria['showQualPrim'] = ($this->getSanParam('showQualPrim') OR ($criteria['doCount']  and ($criteria['qualification_id'] or $criteria['qualification_id'] === '0') ));
-	$criteria['showQualSecond'] = ($this->getSanParam('showQualSecond') OR ($criteria['doCount']  and ($criteria['qualification_secondary_id'] or $criteria['qualification_secondary_id'] === '0') ));
-
-	$criteria['showFacility'] = ($this->getSanParam('showFacility') OR ($criteria['doCount'] and $criteria['facility_name']));
-	$criteria['showEmail'] = ($this->getSanParam('showEmail'));
-	$criteria['showPhone'] = ($this->getSanParam('showPhone'));
-
-	$criteria['go'] = $this->getSanParam('go');
-	if ($criteria['go'] ) {
-
-	$sql = 'SELECT ';
-
-	if ( $criteria['doCount'] ) {
-	$distinct = ($criteria['distinctCount']) ? 'DISTINCT ' : '';
-	$sql .= ' COUNT('.$distinct.'person_id) as "cnt" ';
-	} else {
-	if ($criteria['concatNames'] )
-	$sql .= ' DISTINCT person_id as "id", CONCAT(first_name, '."' '".',last_name) as "name", pt.training_start_date  ';
-	else
-	$sql .= ' DISTINCT person_id as "id", last_name, first_name, middle_name, pt.training_start_date  ';
-	}
-	if ( $criteria['showPhone'] ) {
-	$sql .= ", CASE WHEN (pt.phone_work IS NULL OR pt.phone_work = '') THEN NULL ELSE pt.phone_work END as \"phone_work\", CASE WHEN (pt.phone_home IS NULL OR pt.phone_home = '') THEN NULL ELSE pt.phone_home END as \"phone_home\", CASE WHEN (pt.phone_mobile IS NULL OR pt.phone_mobile = '') THEN NULL ELSE pt.phone_mobile END as \"phone_mobile\" ";
-	}
-	if ( $criteria['showEmail'] ) {
-	$sql .= ', pt.email ';
-	}
-	if ( $criteria['showDistrict'] ) {
-	$sql .= ', tld.district_name ';
-	}
-	if ( $criteria['showProvince'] ) {
-	$sql .= ', tlp.province_name ';
-	}
-	if ( $criteria['showFacility'] ) {
-	$sql .= ', pt.facility_name ';
-	}
-	if ( $criteria['showQualPrim'] ) {
-	$sql .= ', pq.qualification_phrase ';
-	}
-	if ( $criteria['showQualSecond'] ) {
-	$sql .= ', pqs.qualification_phrase AS qualification_secondary_phrase';
-	}
-	$sql .=	' FROM (SELECT training.*, person.facility_id as "facility_id", person.id as "person_id", person.last_name, person.first_name, person.middle_name, person.phone_work, person.phone_home, person.phone_mobile, person.email, CASE WHEN person.active = \'deceased\' THEN \'inactive\' ELSE person.active END as "active", CASE WHEN person.gender IS NULL THEN \'na\' WHEN person.gender = \'\' THEN \'na\' ELSE person.gender END as "gender", primary_qualification_option_id, tto.training_title_phrase AS training_title, facility.province_id as "province_id", facility.district_id as "district_id",facility.facility_name FROM training,course,person_to_training,facility,person,training_title_option tto  WHERE training_title_option_id = tto.id AND training.id = person_to_training.training_id AND person.id = person_to_training.person_id AND training.training_title_option_id = course.id AND person.facility_id = facility.id) as pt ';
-
-
-	if ( $criteria['showDistrict'] ) {
-	$sql .= '	LEFT JOIN location_district as tld ON pt.district_id = tld.id ';
-	}
-	if ( $criteria['showProvince'] ) {
-	$sql .= '	JOIN location_province as tlp ON pt.province_id = tlp.id ';
-	}
-	if ( $criteria['showQualPrim'] || $criteria['showQualSecond']) {
-	//$sql .= '	JOIN person_qualification_option as pq ON pq.id = pt.primary_qualification_option_id ';
-	// primary qualifications
-	$sql .= '
-	LEFT JOIN person_qualification_option as pq ON (
-	(pt.primary_qualification_option_id = pq.id AND pq.parent_id IS NULL)
-	OR
-	pq.id = (SELECT parent_id FROM person_qualification_option WHERE id = pt.primary_qualification_option_id LIMIT 1)
-	)';
-
-	// secondary qualifications
-	$sql .= '
-	LEFT JOIN person_qualification_option as pqs ON (
-	pt.primary_qualification_option_id = pqs.id AND pqs.parent_id IS NOT NULL
-	)';
-	}
-
-
-	$where = '';
-
-
-	if ( $criteria['facility_name'] ) {
-	if ( strlen($where) ) $where .= ' AND ';
-	$where .= ' pt.facility_name = \''.$criteria['facility_name'].'\'' ;
-	}
-
-	if ( $criteria['district_id'] or $criteria['district_id'] === '0' ) {
-	if ( strlen($where) ) $where .= ' AND ';
-	$where .= ' pt.district_id = '.$criteria['district_id'] ;
-	} else if ( $criteria['province_id'] or $criteria['province_id'] === '0'  ) {
-	if ( strlen($where) ) $where .= ' AND ';
-	$where .= ' pt.province_id = '.$criteria['province_id'] ;
-	}
-
-	if ( $criteria['qualification_id'] ) {
-	if ( strlen($where) ) $where .= ' AND ';
-	$where .= ' (pq.id = '.$criteria['qualification_id'] . ' OR pqs.parent_id = ' . $criteria['qualification_id'] . ') ';
-	}
-	if ( $criteria['qualification_secondary_id'] ) {
-	if ( strlen($where) ) $where .= ' AND ';
-	$where .= ' pqs.id = '.$criteria['qualification_secondary_id'] ;
-	}
-
-
-	if ( $where )
-	$sql .= ' WHERE '.$where;
-
-	if ( $criteria['doCount'] ) {
-
-	$groupBy =  '';
-	if ( $criteria['showProvince']) {
-	if ( strlen($groupBy) ) $groupBy .= ' , ';
-	$groupBy .=	' pt.province_id';
-	}
-	if ( $criteria['showDistrict']) {
-	if ( strlen($groupBy) ) $groupBy .= ' , ';
-	$groupBy .=	'  pt.district_id';
-	}
-	if ( $criteria['showFacility']) {
-	if ( strlen($groupBy) ) $groupBy .= ' , ';
-	$groupBy .=	'  pt.facility_id';
-	}
-	if ( $criteria['showQualPrim']) {
-	if ( strlen($groupBy) ) $groupBy .= ' , ';
-	$groupBy .=	'  pq.id ';
-	}
-	if ( $criteria['showQualSecond']) {
-	if ( strlen($groupBy) ) $groupBy .= ' , ';
-	$groupBy .=	'  pqs.id ';
-	}
-
-	if ( $groupBy != '' )
-	$groupBy = ' GROUP BY '.$groupBy;
-	$sql .= $groupBy;
-	}
-	$rowArray = $db->fetchAll($sql);
-
-	if ( $criteria['doCount'] ) {
-	$count = 0;
-	foreach( $rowArray as $row ) {
-	$count += $row['cnt'];
-	}
-	} else {
-	$count = count($rowArray);
-	}
-	if ( $this->_getParam('outputType')  ) $this->sendData($this->reportHeaders(false, $rowArray));
-
-	} else {
-	$count = 0;
-	$rowArray  = array();
-	}
-
-	$criteria['go'] = $this->getSanParam('go');
-
-
-	$this->viewAssignEscaped('results',$rowArray);
-	if ( $rowArray ) {
-	$first = reset($rowArray);
-	if ( isset($first['phone_work'] ) ) {
-	foreach($rowArray as $key => $val) {
-	$phones = array();
-	if ( $val['phone_work'] )
-	$phones []= str_replace(' ','&nbsp;',trim($val['phone_work'])).'&nbsp;(w)';
-	if ( $val['phone_home'] )
-	$phones []= str_replace(' ','&nbsp;',trim($val['phone_home'])).'&nbsp;(h)';
-	if ( $val['phone_mobile'] )
-	$phones []= str_replace(' ','&nbsp;',trim($val['phone_mobile'])).'&nbsp;(m)';
-	$rowArray[$key]['phone'] = implode(', ',$phones);
-	}
-	$this->view->assign('results',$rowArray);
-	}
-	}
-
-	$this->view->assign('count',$count);
-	$this->view->assign('criteria',$criteria);
-
-	//province
-	$provinceArray = OptionList::suggestionList('location_province','province_name',false,false,false);
-	$this->viewAssignEscaped('provinces',$provinceArray);
-	//district
-	$districtArray = OptionList::suggestionList('location_district',array('district_name','parent_province_id'),false,false,false);
-	$this->viewAssignEscaped('districts',$districtArray);
-	//course
-	$courseArray = Course::suggestionList(false,10000);;
-	$this->viewAssignEscaped('courses',$courseArray);
-	//topics
-	$topicsArray = OptionList::suggestionList('training_topic_option','training_topic_phrase',false,false,false);
-	$this->viewAssignEscaped('topics',$topicsArray);
-	//qualifications (primary)
-	$qualsArray = OptionList::suggestionList('person_qualification_option','qualification_phrase',false,false,false,'parent_id IS NULL');
-	$this->viewAssignEscaped('qualifications_primary',$qualsArray);
-	//qualifications (secondary)
-	$qualsArray = OptionList::suggestionList('person_qualification_option','qualification_phrase',false,false,false,'parent_id IS NOT NULL');
-	$this->viewAssignEscaped('qualifications_secondary',$qualsArray);
-	//pepfar
-	$organizersArray = OptionList::suggestionList('training_pepfar_categories_option','pepfar_category_phrase',false,false,false);
-	$this->viewAssignEscaped('pepfars',$organizersArray);
-	//organizers
-	//$organizersArray = OptionList::suggestionList('training_organizer_option','training_organizer_phrase',false,false,false);
-	//$this->viewAssignEscaped('organizers',$organizersArray);
-	//funding
-	$fundingArray = OptionList::suggestionList('training_funding_option','funding_phrase',false,false,false);
-	$this->viewAssignEscaped('funding',$fundingArray);
-
-	//organizers
-	$this->view->assign('organizers_checkboxes', Checkboxes::generateHtml('training_organizer_option', 'training_organizer_phrase', $this->view));
-
-	}
-
-	*/
 
 	public function rosterAction() {
 		#ini_set('max_execution_time','120'); // these are now exceeded globally
 		#ini_set('memory_limit', '256M');
 		$criteria ['training_organizer_id'] = $this->getSanParam ( 'training_organizer_id' );
-		$criteria ['training_title_id'] = $this->_getParam ( 'training_title_id' );
+		$criteria ['training_title_id'] = $this->getParam ( 'training_title_id' );
 		$criteria ['is_extended'] = $is_extended = $this->getSanParam ( 'is_extended' );
 		$criteria ['add_additional'] = $add_additional = $this->getSanParam ( 'add_additional' );
 		$criteria ['go'] = $this->getSanParam('go');
@@ -5836,7 +5238,7 @@ echo $sql . "<br>";
 		$sql = "SELECT MIN(training_start_date) as \"start\" FROM training WHERE is_deleted = 0";
 		$rowArray = $db->fetchAll ( $sql );
 		$start_default = $rowArray [0] ['start'];
-		$parts = explode ( '-', $start_default );
+		$parts = explode('-', $start_default );
 		$criteria ['start-year'] = $parts [0];
 		$criteria ['start-month'] = $parts [1];
 		$criteria ['start-day'] = $parts [2];
@@ -5851,7 +5253,7 @@ echo $sql . "<br>";
 			$sql = "SELECT MAX(training_start_date) as \"start\" FROM training ";
 			$rowArray = $db->fetchAll ( $sql );
 			$end_default = $rowArray [0] ['start'];
-			$parts = explode ( '-', $end_default );
+			$parts = explode('-', $end_default );
 			$criteria ['end-year'] = $parts [0];
 			$criteria ['end-month'] = $parts [1];
 			$criteria ['end-day'] = $parts [2];
@@ -6252,8 +5654,8 @@ echo $sql . "<br>";
 		$sql = "SELECT MIN(timestamp_created) as \"start\" FROM evaluation_response WHERE is_deleted = 0";
 		$rowArray = $db->fetchAll ( $sql );
 		$start_default = $rowArray [0] ['start'];
-		$parts = explode ( ' ', $start_default );
-		$parts = explode ( '-', $parts [0] );
+		$parts = explode(' ', $start_default );
+		$parts = explode('-', $parts [0] );
 		$criteria ['start-year'] = $parts [0];
 		$criteria ['start-month'] = $parts [1];
 		$criteria ['start-day'] = $parts [2];
@@ -6268,8 +5670,8 @@ echo $sql . "<br>";
 			$sql = "SELECT MAX(timestamp_created) as \"start\" FROM evaluation_response ";
 			$rowArray = $db->fetchAll ( $sql );
 			$end_default = $rowArray [0] ['start'];
-			$parts = explode ( ' ', $start_default );
-			$parts = explode ( '-', $parts [0] );
+			$parts = explode(' ', $start_default );
+			$parts = explode('-', $parts [0] );
 			$criteria ['end-year'] = $parts [0];
 			$criteria ['end-month'] = $parts [1];
 			$criteria ['end-day'] = $parts [2];
@@ -6389,7 +5791,7 @@ echo $sql . "<br>";
 				$this->viewAssignEscaped('numColumns', $maxVisits);
 				$this->viewAssignEscaped('results', $rows);
 
-				if ($this->_getParam ( 'outputType' ))
+				if ($this->getParam ( 'outputType' ))
 					$this->sendData ( $this->reportHeaders ( false, $rows ) );
 
 			} else {
@@ -6706,7 +6108,7 @@ echo $sql . "<br>";
 			// end training lookup
 
 			// output csv if necessary
-			if ($this->_getParam ( 'outputType' ))
+			if ($this->getParam ( 'outputType' ))
 				$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
 
 			//done
@@ -10019,20 +9421,6 @@ echo $sql . "<br>";
 				$rows = $__rows;
 			}
 
-
-#			var_dump ($head);
-#			var_dump ($rows);
-
-/*
-		//locations
-		$this->viewAssignEscaped ( 'locations', $locations );
-		list ( $cname, $prov, $dist, $regc ) = Location::getCityInfo ( $facilityRow->location_id, $this->setting ( 'num_location_tiers' ) );
-		$facilityArray ['facility_city'] = $cname;
-		$facilityArray ['region_c_id'] = $regc;
-		$facilityArray ['district_id'] = $dist;
-		$facilityArray ['province_id'] = $prov;
-
-*/
 			$this->viewAssignEscaped("headers", $headers);
 			$this->viewAssignEscaped("output", $rows);
 		}
@@ -10050,6 +9438,28 @@ echo $sql . "<br>";
 	 *   ####  #   # # ##### ##### ####  #   # #   # #   #   #     *
 	 *                                                             *
 	 ***************************************************************/
+
+
+	public function ssChwStatementOfResultsAction() {
+		if (! $this->hasACL('view_people')) {
+			$this->doNoAccessError ();
+		}
+
+		if ($this->getRequest()->isPost()) {
+			$id = $this->getSanParam('id');
+			$db = $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+
+
+			// TODO: Finish query
+			$select = $db->select()
+				->from(array('p' => 'person'),
+					array('p.first_name', 'p.middle_name', 'p.last_name'))
+				->join(array('s' => 'student'), 'p.id = s.personid')
+				->join(array('lsc' => 'link_student_classes'), 's.id = lsc.studentid')
+				->where("p.id = $id");
+
+		}
+	}
 
 	public function ssCompAction() {
 		if (! $this->hasACL ( 'view_people' ) and ! $this->hasACL ( 'edit_people' )) {
@@ -10084,16 +9494,16 @@ echo $sql . "<br>";
 			}
 			if($criteria ['qualification_id']=="7")
 			{
-				$qs=split(",",$this->getSanParam ( 'ques' ));
-				$nms=split("~",$this->getSanParam ( 'listdq' ));
+				$qs=explode(",",$this->getSanParam ( 'ques' ));
+				$nms=explode("~",$this->getSanParam ( 'listdq' ));
 				foreach ( $qs as $kys => $vls ) {
 					$whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
 				}
 			}
 			if($criteria ['qualification_id']=="8")
 			{
-				$qs=split(",",$this->getSanParam ( 'ques' ));
-				$nms=split("~",$this->getSanParam ( 'listnq' ));
+				$qs=explode(",",$this->getSanParam ( 'ques' ));
+				$nms=explode("~",$this->getSanParam ( 'listnq' ));
 				foreach ( $qs as $kys => $vls ) {
 					$whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
 				}
@@ -10109,32 +9519,31 @@ echo $sql . "<br>";
 			$nmss=array();
 			if($criteria ['qualification_id']=="6")
 			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listcq' ));
+				$qss=explode(",",$this->getSanParam ( 'ques' ));
+				$nmss=explode("~",$this->getSanParam ( 'listcq' ));
 			}
 			if($criteria ['qualification_id']=="7")
 			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listdq' ));
+				$qss=explode(",",$this->getSanParam ( 'ques' ));
+				$nmss=explode("~",$this->getSanParam ( 'listdq' ));
 			}
 			if($criteria ['qualification_id']=="8")
 			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listnq' ));
+				$qss=explode(",",$this->getSanParam ( 'ques' ));
+				$nmss=explode("~",$this->getSanParam ( 'listnq' ));
 			}
 			if($criteria ['qualification_id']=="9")
 			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listpq' ));
+				$qss=explode(",",$this->getSanParam ( 'ques' ));
+				$nmss=explode("~",$this->getSanParam ( 'listpq' ));
 			}
-			$ct;
+
 			$ct=0;
 			$rss=array();
-			$ctt;
 			foreach ( $qss as $kys => $vls ) {
 				$rss[$ct]=0;
 				$ctt=0;
-				$wss=split(",",$nmss[$vls]);
+				$wss=explode(",",$nmss[$vls]);
 				foreach ( $wss as $kyss => $vlss ) {
 					foreach ( $rowArray as $kss => $vss ) {
 						if($vlss." " == $vss['question']." ")
@@ -10211,11 +9620,11 @@ echo $sql . "<br>";
 				$sql .= ' WHERE `active` = \'Y\' AND `option` <> \'E\' AND `option` <> \'F\' AND (' . implode(' OR ', $whr) . ')';
 				$sql .= ' GROUP BY `person`';
 				$rowArray = $db->fetchAll ( $sql );
-				$tlques=split(",",$this->getSanParam ( 'listcq' ));
+				$tlques=explode(",",$this->getSanParam ( 'listcq' ));
 				$ttlques=count($tlques);
-				$qs=split('\$',$this->getSanParam ( 'Questions' ));
+				$qs=explode('$',$this->getSanParam ( 'Questions' ));
 				foreach ( $qs as $kys => $vls ) {
-					$fr=split('\^',$vls);
+					$fr=explode('^',$vls);
 					$min=0;
 					$max=0;
 					if($fr[2]=="100")
@@ -10256,17 +9665,17 @@ echo $sql . "<br>";
 			}
 			if($criteria ['qualification_id']=="7")
 			{
-				$qs=split('\$',$this->getSanParam ( 'Questions' ));
-				$nms=split("~",$this->getSanParam ( 'listdq' ));
+				$qs=explode('$',$this->getSanParam ( 'Questions' ));
+				$nms=explode("~",$this->getSanParam ( 'listdq' ));
 				foreach ( $qs as $kys => $vls ) {
 					$sql='SELECT `person`, SUM(-(ASCII(`option`)-69)) `sm` FROM `comp`';
 					$whr = array();
-					$fr=split('\^',$vls);
+					$fr=explode('^',$vls);
 					$whr []= '`question` IN ('."'".str_replace(",","','",$nms[$fr[1]])."'".')';
 					$sql .= ' WHERE `active` = \'Y\' AND `option` <> \'E\' AND `option` <> \'F\' AND (' . implode(' OR ', $whr) . ')';
 					$sql .= ' GROUP BY `person`';
 					$rowArray = $db->fetchAll ( $sql );
-					$tlques=split(",",$nms[$fr[1]]);
+					$tlques=explode(",",$nms[$fr[1]]);
 					$ttlques=count($tlques);
 					$min=0;
 					$max=0;
@@ -10308,17 +9717,17 @@ echo $sql . "<br>";
 			}
 			if($criteria ['qualification_id']=="8")
 			{
-				$qs=split('\$',$this->getSanParam ( 'Questions' ));
-				$nms=split("~",$this->getSanParam ( 'listnq' ));
+				$qs=explode('$',$this->getSanParam ( 'Questions' ));
+				$nms=explode("~",$this->getSanParam ( 'listnq' ));
 				foreach ( $qs as $kys => $vls ) {
 					$sql='SELECT `person`, SUM(-(ASCII(`option`)-69)) `sm` FROM `comp`';
 					$whr = array();
-					$fr=split('\^',$vls);
+					$fr=explode('^',$vls);
 					$whr []= '`question` IN ('."'".str_replace(",","','",$nms[$fr[1]])."'".')';
 					$sql .= ' WHERE `active` = \'Y\' AND `option` <> \'E\' AND `option` <> \'F\' AND (' . implode(' OR ', $whr) . ')';
 					$sql .= ' GROUP BY `person`';
 					$rowArray = $db->fetchAll ( $sql );
-					$tlques=split(",",$nms[$fr[1]]);
+					$tlques=explode(",",$nms[$fr[1]]);
 					$ttlques=count($tlques);
 					$min=0;
 					$max=0;
@@ -10366,11 +9775,11 @@ echo $sql . "<br>";
 				$sql .= ' WHERE `active` = \'Y\' AND `option` <> \'E\' AND `option` <> \'F\' AND (' . implode(' OR ', $whr) . ')';
 				$sql .= ' GROUP BY `person`';
 				$rowArray = $db->fetchAll ( $sql );
-				$tlques=split(",",$this->getSanParam ( 'listpq' ));
+				$tlques=explode(",",$this->getSanParam ( 'listpq' ));
 				$ttlques=count($tlques);
-				$qs=split('\$',$this->getSanParam ( 'Questions' ));
+				$qs=explode('$',$this->getSanParam ( 'Questions' ));
 				foreach ( $qs as $kys => $vls ) {
-					$fr=split('\^',$vls);
+					$fr=explode('^',$vls);
 					$min=0;
 					$max=0;
 					if($fr[2]=="100")
@@ -10445,8 +9854,8 @@ echo $sql . "<br>";
 	}
 
 	public function ssCompcsvAction() {
-		$v1=split("~",$this->getSanParam ( 'v1' ));
-		$v2=split("~",$this->getSanParam ( 'v2' ));
+		$v1=explode("~",$this->getSanParam ( 'v1' ));
+		$v2=explode("~",$this->getSanParam ( 'v2' ));
         $p=$this->getSanParam ( 'p' );
         $d=$this->getSanParam ( 'd' );
         $s=$this->getSanParam ( 's' );
@@ -10507,16 +9916,16 @@ echo $sql . "<br>";
 			}
 			if($criteria ['qualification_id']=="7")
 			{
-				$qs=split(",",$this->getSanParam ( 'ques' ));
-				$nms=split("~",$this->getSanParam ( 'listdq' ));
+				$qs=explode(",",$this->getSanParam ( 'ques' ));
+				$nms=explode("~",$this->getSanParam ( 'listdq' ));
 				foreach ( $qs as $kys => $vls ) {
 					$whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
 				}
 			}
 			if($criteria ['qualification_id']=="8")
 			{
-				$qs=split(",",$this->getSanParam ( 'ques' ));
-				$nms=split("~",$this->getSanParam ( 'listnq' ));
+				$qs=explode(",",$this->getSanParam ( 'ques' ));
+				$nms=explode("~",$this->getSanParam ( 'listnq' ));
 				foreach ( $qs as $kys => $vls ) {
 					$whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
 				}
@@ -10533,32 +9942,31 @@ echo $sql . "<br>";
 			$nmss=array();
 			if($criteria ['qualification_id']=="6")
 			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listcq' ));
+				$qss=explode(",",$this->getSanParam ( 'ques' ));
+				$nmss=explode("~",$this->getSanParam ( 'listcq' ));
 			}
 			if($criteria ['qualification_id']=="7")
 			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listdq' ));
+				$qss=explode(",",$this->getSanParam ( 'ques' ));
+				$nmss=explode("~",$this->getSanParam ( 'listdq' ));
 			}
 			if($criteria ['qualification_id']=="8")
 			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listnq' ));
+				$qss=explode(",",$this->getSanParam ( 'ques' ));
+				$nmss=explode("~",$this->getSanParam ( 'listnq' ));
 			}
 			if($criteria ['qualification_id']=="9")
 			{
-				$qss=split(",",$this->getSanParam ( 'ques' ));
-				$nmss=split("~",$this->getSanParam ( 'listpq' ));
+				$qss=explode(",",$this->getSanParam ( 'ques' ));
+				$nmss=explode("~",$this->getSanParam ( 'listpq' ));
 			}
-			$ct;
+
 			$ct=0;
 			$rss=array();
-			$ctt;
 			foreach ( $qss as $kys => $vls ) {
 				$rss[$ct]=0;
 				$ctt=0;
-				$wss=split(",",$nmss[$vls]);
+				$wss=explode(",",$nmss[$vls]);
 				foreach ( $wss as $kyss => $vlss ) {
 					foreach ( $rowArray as $kss => $vss ) {
 						if($vlss." " == $vss['question']." ")
@@ -10659,8 +10067,8 @@ die (__LINE__ . " - " . $sql);
                 $rowArray = $db->fetchAll ( $sql );
                 $qss=array();
                 $nmss=array();
-                $qss=split(",","0,1,2,3,4,5,6,7");
-                $nmss=split("~","1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,200~01,02,03,04,05,06,07,08,09~31,32,33,34,35,36,37,38~41,42,43,44,45~51,52,53,54,55,56,57,58,59,510,511,512,513,514,515,516,517,518~61,62,63,64,65,66,67~71,72,73,74,75,76,77,78,79,710,711~21,22,23");
+                $qss=explode(",","0,1,2,3,4,5,6,7");
+                $nmss=explode("~","1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,200~01,02,03,04,05,06,07,08,09~31,32,33,34,35,36,37,38~41,42,43,44,45~51,52,53,54,55,56,57,58,59,510,511,512,513,514,515,516,517,518~61,62,63,64,65,66,67~71,72,73,74,75,76,77,78,79,710,711~21,22,23");
                 $ct;
                 $ct=0;
                 $rssA=array();
@@ -10676,7 +10084,7 @@ die (__LINE__ . " - " . $sql);
                     $rssD[$ct]=0;
                     $rssE[$ct]=0;
                     $ctt=0;
-                    $wss=split(",",$nmss[$vls]);
+                    $wss=explode(",",$nmss[$vls]);
                     foreach ( $wss as $kyss => $vlss ) {
                         foreach ( $rowArray as $kss => $vss ) {
                             if($vlss." " == $vss['question']." ")
@@ -10766,26 +10174,6 @@ die (__LINE__ . " - " . $sql);
                 }
                 $whr[] = 'cmp.question IN (' . implode(",", $_q) . ')';
 
-#                if($criteria ['qualification_id']=="6"){
-#                    $whr []= 'cmp.question IN ('."'".str_replace(",","','",$this->getSanParam ( 'listcq' ))."'".')';
-#                }
-#                if($criteria ['qualification_id']=="7"){
-#                    $qs=split(",",$this->getSanParam ( 'ques' ));
-#                    $nms=split("~",$this->getSanParam ( 'listdq' ));
-#                    foreach ( $qs as $kys => $vls ) {
-#                        $whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
-#                    }
-#                }
-#                if($criteria ['qualification_id']=="8"){
-#                    $qs=split(",",$this->getSanParam ( 'ques' ));
-#                    $nms=split("~",$this->getSanParam ( 'listnq' ));
-#                    foreach ( $qs as $kys => $vls ) {
-#                        $whr []= 'cmp.question IN ('."'".str_replace(",","','",$nms[$vls])."'".')';
-#                    }
-#                }
-#                if($criteria ['qualification_id']=="9"){
-#                    $whr []= 'cmp.question IN ('."'".str_replace(",","','",$this->getSanParam ( 'listpq' ))."'".')';
-#                }
             	if( !empty($where) ){ $sql .= ' WHERE ' . implode(' AND ', $where); }
 				if( !empty($whr) ){ $sql .= ' AND (' . implode(' OR ', $whr) . ')'; }
 				//todo check everything same here!
@@ -10794,32 +10182,31 @@ die (__LINE__ . " - " . $sql);
                 $nmss=array();
                 if($criteria ['qualification_id']=="6")
                 {
-                    $qss=split(",",$this->getSanParam ( 'ques' ));
-                    $nmss=split("~",$this->getSanParam ( 'listcq' ));
+                    $qss=explode(",",$this->getSanParam ( 'ques' ));
+                    $nmss=explode("~",$this->getSanParam ( 'listcq' ));
                 }
                 if($criteria ['qualification_id']=="7")
                 {
-                    $qss=split(",",$this->getSanParam ( 'ques' ));
-                    $nmss=split("~",$this->getSanParam ( 'listdq' ));
+                    $qss=explode(",",$this->getSanParam ( 'ques' ));
+                    $nmss=explode("~",$this->getSanParam ( 'listdq' ));
                 }
                 if($criteria ['qualification_id']=="8")
                 {
-                    $qss=split(",",$this->getSanParam ( 'ques' ));
-                    $nmss=split("~",$this->getSanParam ( 'listnq' ));
+                    $qss=explode(",",$this->getSanParam ( 'ques' ));
+                    $nmss=explode("~",$this->getSanParam ( 'listnq' ));
                 }
                 if($criteria ['qualification_id']=="9")
                 {
-                    $qss=split(",",$this->getSanParam ( 'ques' ));
-                    $nmss=split("~",$this->getSanParam ( 'listpq' ));
+                    $qss=explode(",",$this->getSanParam ( 'ques' ));
+                    $nmss=explode("~",$this->getSanParam ( 'listpq' ));
                 }
-                $ct;
                 $ct=0;
                 $rssA=array();
                 $rssB=array();
                 $rssC=array();
                 $rssD=array();
                 $rssE=array();
-                $ctt;
+
                 foreach ( $qss as $kys => $vls ) {
                     $rssA[$ct]=0;
                     $rssB[$ct]=0;
@@ -10827,7 +10214,7 @@ die (__LINE__ . " - " . $sql);
                     $rssD[$ct]=0;
                     $rssE[$ct]=0;
                     $ctt=0;
-                    $wss=split(",",$nmss[$vls]);
+                    $wss=explode(",",$nmss[$vls]);
                     foreach ( $wss as $kyss => $vlss ) {
                         foreach ( $rowArray as $kss => $vss ) {
                             if($vlss." " == $vss['question']." ")
@@ -10907,12 +10294,12 @@ die (__LINE__ . " - " . $sql);
 	}
 
 	public function ssProfcsvAction() {
-		$v1=split("~",$this->getSanParam ( 'v1' ));
-		$v2=split("~",$this->getSanParam ( 'v2' ));
-		$v3=split("~",$this->getSanParam ( 'v3' ));
-		$v4=split("~",$this->getSanParam ( 'v4' ));
-		$v5=split("~",$this->getSanParam ( 'v5' ));
-		$v6=split("~",$this->getSanParam ( 'v6' ));
+		$v1=explode("~",$this->getSanParam ( 'v1' ));
+		$v2=explode("~",$this->getSanParam ( 'v2' ));
+		$v3=explode("~",$this->getSanParam ( 'v3' ));
+		$v4=explode("~",$this->getSanParam ( 'v4' ));
+		$v5=explode("~",$this->getSanParam ( 'v5' ));
+		$v6=explode("~",$this->getSanParam ( 'v6' ));
         $p=$this->getSanParam ( 'p' );
         $d=$this->getSanParam ( 'd' );
         $s=$this->getSanParam ( 's' );
@@ -11197,10 +10584,6 @@ die (__LINE__ . " - " . $sql);
 	require_once ('views/helpers/TrainingViewHelper.php');
 
 	$criteria = $this->getAllParams();
-	
-	// file_put_contents('c:\wamp\logs\php_debug.log', 'repCont 10911>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	// var_dump($criteria);
-	// $result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 
 	if ($criteria['go'])
 	{

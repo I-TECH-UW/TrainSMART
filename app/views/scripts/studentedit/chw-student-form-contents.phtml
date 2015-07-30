@@ -1,371 +1,440 @@
-<script id="class_modules_data" type="application/json">
-    <?php
-        // The javascript code relies on the class_modules array indexes to be the class module id
-        echo json_encode($this->class_modules);
-    ?>
-</script>
-<script id="prior_learning_modules" type="application/json">
-<?php
-    // The javascript code relies on the class_modules array indexes to be the class module id
-    echo json_encode($this->prior_learning);
-?>
-</script>
+<form action="<?php echo $this->escape($this->action); ?>" method="post">
+	<div class="mainformholder" style="">
+		<script id="class_modules_data" type="application/json">
+			<?php
+			// The javascript code relies on the class_modules array indexes to be the class module id
+			echo json_encode($this->class_modules);
+			?>
+		</script>
+		<script id="prior_learning_modules" type="application/json">
+			<?php
+			// The javascript code relies on the class_modules array indexes to be the class module id
+			echo json_encode($this->prior_learning);
+			?>
+		</script>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        window.ITECH.modulesData = JSON.parse($("#class_modules_data").html());
-        window.ITECH.assignedModules = JSON.parse($("#prior_learning_modules").html());
-        $("#add_modules_ids").data("ids", []);
-        $("#remove_modules_ids").data("ids", []);
+		<script type="text/javascript">
+			$(document).ready(function () {
+				window.ITECH.modulesData = JSON.parse($("#class_modules_data").html());
+				window.ITECH.assignedModules = JSON.parse($("#prior_learning_modules").html());
+				$("#add_modules_ids").data("ids", []);
+				$("#remove_modules_ids").data("ids", []);
 
-        $('.datepicker').datepicker({
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: "dd/mm/yy",
-            yearRange: "-125:+0"
-        });
+				$('.datepicker').datepicker({
+					changeMonth: true,
+					changeYear: true,
+					dateFormat: "dd/mm/yy",
+					yearRange: "-125:+0"
+				});
 
-	    $('.calendarbtn').click(function () {
+				$('.calendarbtn').click(function () {
 
-		    var $picker = $(this).siblings('input.datepicker').first();
-		    var pickerId = $picker.attr('id');
+					var $picker = $(this).siblings('input.datepicker').first();
+					var pickerId = $picker.attr('id');
 
-		    // open calendar for joindate and dropdate only if cohort is selected
-            if ($('#cohort').val() === "") {
-			    if (!((pickerId === 'joindate') || (pickerId === 'dropdate'))) {
-				    $picker.datepicker("show");
-			    }
-		    }
-		    else {
-			    $picker.datepicker("show");
-		    }
-		    // override the browser scrolling to the top of the page by returning false
-		    return false;
-	    });
+					// open calendar for joindate and dropdate only if cohort is selected
+					if ($('#cohort').val() === "") {
+						if (!((pickerId === 'joindate') || (pickerId === 'dropdate'))) {
+							$picker.datepicker("show");
+						}
+					}
+					else {
+						$picker.datepicker("show");
+					}
+					// override the browser scrolling to the top of the page by returning false
+					return false;
+				});
 
-        $('input[type=submit]').click(function () {
-            $("#add_modules_ids").val($("#add_modules_ids").data("ids").join(','));
-            $("#remove_modules_ids").val($("#remove_modules_ids").data("ids").join(','));
+				$('input[type=submit]').click(function () {
+					$("#add_modules_ids").val($("#add_modules_ids").data("ids").join(','));
+					$("#remove_modules_ids").val($("#remove_modules_ids").data("ids").join(','));
 
-            return true;
-        });
+					return true;
+				});
 
-        if ($('#studenttype').val() === '1') {
-            $('#workplace').show();
-        }
-        else {
-            $('#workplace').hide();
-        }
+				if ($('#studenttype').val() === '1') {
+					$('#workplace').show();
+				}
+				else {
+					$('#workplace').hide();
+				}
 
-	    $('#studenttype').change(function () {
-		    var $elt = $(this);
-		    if ($elt.val() === '1') {
-			    $('#workplace').slideDown();
-		    }
-		    else {
-			    $('#workplace').slideUp();
-		    }
-	    });
+				$('#studenttype').change(function () {
+					var $elt = $(this);
+					if ($elt.val() === '1') {
+						$('#workplace').slideDown();
+					}
+					else {
+						$('#workplace').slideUp();
+					}
+				});
 
-	    toggleCohortFields();
-	    $('#cohort').change(function () {
-		    toggleCohortFields();
-	    });
+				toggleCohortFields();
+				$('#cohort').change(function () {
+					toggleCohortFields();
+				});
 
-        $(".tablegrid tbody").click(function (event) {
-            $(window.ITECH.oTable.fnSettings().aoData).each(function () {
-                $(this.nTr).removeClass('row_selected');
-            });
-            $(event.target.parentNode).addClass('row_selected');
-        });
+				window.ITECH.oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"bPaginate": false,
+					"bSort": true,
+					"bInfo": false,
+					"bFilter": false,
+					"bAutoWidth": false
+				});
 
-        window.ITECH.oTable = $('.tablegrid').dataTable({
-            "bJQueryUI": true,
-            "bPaginate": false,
-            "bSort": true,
-            "bInfo": false,
-            "bFilter": false,
-            "bAutoWidth": false
-        });
+				$("#prior_learning_modules_table tbody").click(function (event) {
+					$(window.ITECH.oTable.fnSettings().aoData).each(function () {
+						$(this.nTr).removeClass('row_selected');
+					});
+					$(event.target.parentNode).addClass('row_selected');
+				});
 
-        Array.prototype.removeIds = function(a) {
-            // return array of values in this array which are not in a
-            return this.filter(function(i) {
-                // return true for any i that's not in array a
-                return (a.indexOf(i) < 0);
-            });
-        };
+				Array.prototype.removeIds = function(a) {
+					// return array of values in this array which are not in array a
+					return this.filter(function(i) {
+						// return true for any i that's not in array a
+						return (a.indexOf(i) < 0);
+					});
+				};
 
-        $("#add-dialog-form").dialog({
-            autoOpen: false,
-            width: 600,
-            modal: true,
-            buttons: {
-                "Save": function () {
-                    var newIds = $("#class_modules_id").val();
-                    var addData = $("#add_modules_ids").data("ids");
-                    var removeData = $("#remove_modules_ids").data("ids");
+				$("#add-dialog-form").dialog({
+					autoOpen: false,
+					width: 600,
+					modal: true,
+					buttons: {
+						"Save": function () {
+							var newIds = $("#class_modules_id").val();
+							var addData = $("#add_modules_ids").data("ids");
+							var removeData = $("#remove_modules_ids").data("ids");
 
-                    // all newIds need to be taken out of the remove list so they're not submitted to the
-                    // backend as both add and remove
-                    var filtered = removeData.removeIds(newIds);
-                    $("#remove_modules_ids").data("ids", filtered);
+							// all newIds need to be taken out of the remove list so they're not submitted to the
+							// backend as both add and remove
+							var filtered = removeData.removeIds(newIds);
+							$("#remove_modules_ids").data("ids", filtered);
 
-                    // do the same on the addData ids to eliminate possible duplicates before adding new ones
-                    // (some of the newly added ids may be in the addData array already)
-                    filtered = addData.removeIds(newIds).concat(newIds);
+							// do the same on the addData ids to eliminate possible duplicates before adding new ones
+							// (some of the newly added ids may be in the addData array already)
+							filtered = addData.removeIds(newIds).concat(newIds);
 
-                    $("#add_modules_ids").data("ids", filtered);
+							$("#add_modules_ids").data("ids", filtered);
 
-                    $(this).dialog("close");
-                    for (var i = 0, len = newIds.length; i < len; ++i) {
-                        if (!document.getElementById("modulesTable_" + newIds[i])) {
-                            window.ITECH.oTable.fnAddData([window.ITECH.modulesData[newIds[i]]['external_id'], window.ITECH.modulesData[newIds[i]]['title']]);
-                        }
-                    }
-                },
-                Cancel: function () {
-                    $(this).dialog("close");
-                }
-            }
-        });
+							$(this).dialog("close");
+							for (var i = 0, len = newIds.length; i < len; ++i) {
+								if (!document.getElementById("modulesTable_" + newIds[i])) {
+									window.ITECH.oTable.fnAddData([window.ITECH.modulesData[newIds[i]]['external_id'], window.ITECH.modulesData[newIds[i]]['title']]);
+								}
+							}
+						},
+						Cancel: function () {
+							$(this).dialog("close");
+						}
+					}
+				});
 
-        $("#dialog-form").dialog({
-            autoOpen: false,
-            width: 600,
-            modal: true,
-            buttons: {
-                Delete: function () {
-                    var classModuleId = $("#single_class_module_id").val();
-                    if (confirm('Are you sure you want to remove ' + window.ITECH.modulesData[classModuleId]['title'] + '?')) {
-                        $("#remove_modules_ids").data("ids").push(classModuleId);
-                        $("#add_modules_ids").data("ids", $("#add_modules_ids").data("ids").removeIds([classModuleId]));
-                        window.ITECH.oTable.fnDeleteRow($("#modulesTable_" + classModuleId)[0]);
-                        $(this).dialog("close");
-                    }
-                },
-                Save: function () {
+				$("#dialog-form").dialog({
+					autoOpen: false,
+					width: 600,
+					modal: true,
+					buttons: {
+						Delete: function () {
+							var classModuleId = $("#single_class_module_id").val();
+							if (confirm('Are you sure you want to remove ' + window.ITECH.modulesData[classModuleId]['title'] + '?')) {
+								$("#remove_modules_ids").data("ids").push(classModuleId);
+								$("#add_modules_ids").data("ids", $("#add_modules_ids").data("ids").removeIds([classModuleId]));
+								window.ITECH.oTable.fnDeleteRow($("#modulesTable_" + classModuleId)[0]);
+								$(this).dialog("close");
+							}
+						},
+						Save: function () {
 
-                    var newId = $("#single_class_module_id").val(), currentId = $("#currentid").val();
+							var newId = $("#single_class_module_id").val(), currentId = $("#currentid").val();
 
-                    if (newId !== currentId) {
-                        // changing a module to a different one
-                        var addData = $("#add_modules_ids").data("ids");
-                        var removeData = $("#remove_modules_ids").data("ids");
+							if (newId !== currentId) {
+								// changing a module to a different one
+								var addData = $("#add_modules_ids").data("ids");
+								var removeData = $("#remove_modules_ids").data("ids");
 
-                        // remove former id from #add_modules_ids
-                        var i = addData.indexOf(currentId);
-                        if (i > -1) {
-                            addData.splice(i, 1);
-                        }
-                        // remove new id from #remove_modules_ids, if it's there
-                        i = removeData.indexOf(newId);
-                        if (i > -1) {
-                            removeData.splice(i, 1);
-                        }
+								// remove former id from #add_modules_ids
+								var i = addData.indexOf(currentId);
+								if (i > -1) {
+									addData.splice(i, 1);
+								}
+								// remove new id from #remove_modules_ids, if it's there
+								i = removeData.indexOf(newId);
+								if (i > -1) {
+									removeData.splice(i, 1);
+								}
 
-                        // add current id to #remove_modules_ids
-                        removeData.push(currentId);
+								// add current id to #remove_modules_ids
+								removeData.push(currentId);
 
-                        // add class_modules_id to add_modules_ids
-                        addData.push(newId);
-                        window.ITECH.oTable.fnDeleteRow($("#modulesTable_" + currentId)[0]);
+								// add class_modules_id to add_modules_ids
+								addData.push(newId);
+								window.ITECH.oTable.fnDeleteRow($("#modulesTable_" + currentId)[0]);
 
-                        if (!document.getElementById("modulesTable_" + newId)) {
-                            window.ITECH.oTable.fnAddData([window.ITECH.modulesData[newId]['external_id'], window.ITECH.modulesData[newId]['title']]);
-                        }
-                    }
+								if (!document.getElementById("modulesTable_" + newId)) {
+									window.ITECH.oTable.fnAddData([window.ITECH.modulesData[newId]['external_id'], window.ITECH.modulesData[newId]['title']]);
+								}
+							}
 
-                    $(this).dialog("close");
-                },
-                Cancel: function () {
-                    $(this).dialog("close");
-                }
-            }
-        });
-    });
+							$(this).dialog("close");
+						},
+						Cancel: function () {
+							$(this).dialog("close");
+						}
+					}
+				});
 
-    function addClassModules() {
-        $('#add-dialog-form').dialog('option', 'title', 'Add Class Modules');
-        $("#class_modules_id").val(0);
-        $("#currentid").val(0);
-        $("#add-dialog-form").dialog("open");
-    }
+				$( "#dialog-form-license" ).dialog({
+					autoOpen: false,
+					height: 460,
+					width: 750,
+					modal: true,
+					buttons: {
+						<?php echo t('Update')?>: function() {
+							document.getElementById('licenseform').submit();
+						},
+						<?php echo t('Cancel')?>: function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				});
 
-    function editTableItem(d){
-        $('#dialog-form').dialog('option', 'title', 'Edit Class Module');
-        $("#single_class_module_id").val(d['id']);
-        $("#currentid").val(d['id']);
-        $("#dialog-form" ).dialog("open");
-    };
+				$( "#dialog-form-class" ).dialog({
+					autoOpen: false,
+					height: 460,
+					width: 750,
+					modal: true,
+					buttons: {
+						<?php echo t('Update')?>: function() {
+							document.getElementById('classform').submit();
+						},
+						<?php echo t('Cancel')?>: function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				});
 
-	function toggleCohortFields() {
-		if ($('#cohort').val() === "") {
-			$('#joindate').attr('disabled', 'disabled');
-			$('#joinreason').attr('disabled', 'disabled');
-			$('#dropdate').attr('disabled', 'disabled');
-			$('#dropreason').attr('disabled', 'disabled');
-		}
-		else {
-			$('#joindate').removeAttr('disabled');
-			$('#joinreason').removeAttr('disabled');
-			$('#dropdate').removeAttr('disabled');
-			$('#dropreason').removeAttr('disabled');
-		}
-	}
+				$( "#dialog-form-practicum" ).dialog({
+					autoOpen: false,
+					height: 460,
+					width: 750,
+					modal: true,
+					buttons: {
+						<?php echo t('Update')?>: function() {
+							document.getElementById('practicumform').submit();
+						},
+						<?php echo t('Cancel')?>: function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				});
 
-</script>
+			});
 
-<div id="add-dialog-form" title="Select Class Modules">
-    <fieldset id="dialogform">
-        <label for="class_modules_id"><?php echo t('Class Module');?></label>
-        <select type="text" multiple="multiple" size="8" style='width: 80em;' name="class_modules_id" id="class_modules_id" class="text ui-widget-content ui-corner-all">
-            <?php
-            foreach ($this->class_modules as $cm){
-                echo "<option value=\"" . $cm['id'] . "\">" . $cm['external_id'] . " &mdash; " . $cm['title'] . "</option>\n";
-            }
-            ?>
-        </select>
-    </fieldset>
-</div>
+			function updateClasses() {
+				$("#dialog-form-class").dialog("open");
+			}
+
+			function updatePracticum() {
+				$("#dialog-form-practicum").dialog("open");
+			}
+
+			function updateLicense() {
+				$("#dialog-form-license").dialog("open");
+			}
+
+			function addClassModules() {
+				$('#add-dialog-form').dialog('option', 'title', 'Add Class Modules');
+				$("#class_modules_id").val(0);
+				$("#currentid").val(0);
+				$("#add-dialog-form").dialog("open");
+			}
+
+			function editTableItem(d){
+				$('#dialog-form').dialog('option', 'title', 'Edit Class Module');
+				$("#single_class_module_id").val(d['id']);
+				$("#currentid").val(d['id']);
+				$("#dialog-form" ).dialog("open");
+			};
+
+			function toggleCohortFields() {
+				if ($('#cohort').val() === "") {
+					$('#joindate').attr('disabled', 'disabled');
+					$('#joinreason').attr('disabled', 'disabled');
+					$('#dropdate').attr('disabled', 'disabled');
+					$('#dropreason').attr('disabled', 'disabled');
+				}
+				else {
+					$('#joindate').removeAttr('disabled');
+					$('#joinreason').removeAttr('disabled');
+					$('#dropdate').removeAttr('disabled');
+					$('#dropreason').removeAttr('disabled');
+				}
+			}
+
+		</script>
+
+		<div id="add-dialog-form" title="Select Class Modules">
+			<fieldset id="dialogform">
+				<label for="class_modules_id"><?php echo t('Class Module');?></label>
+				<select type="text" multiple="multiple" size="8" style='width: 80em;' name="class_modules_id" id="class_modules_id" class="text ui-widget-content ui-corner-all">
+					<?php
+					foreach ($this->class_modules as $cm){
+						echo "<option value=\"" . $cm['id'] . "\">" . $cm['external_id'] . " &mdash; " . $cm['title'] . "</option>\n";
+					}
+					?>
+				</select>
+			</fieldset>
+		</div>
 
 
-<div id="dialog-form" title="Change Class Module">
-    <fieldset id="dialogform">
-        <label for="class_modules_id"><?php echo t('Class Module');?></label>
-        <select type="text" name="single_class_module_id" id="single_class_module_id" class="text ui-widget-content ui-corner-all">
-            <?php
-            foreach ($this->class_modules as $cm){
-                echo "<option value=\"" . $cm['id'] . "\">" . $cm['external_id'] . " &mdash; " . $cm['title'] . "</option>\n";
-            }
-            ?>
-        </select>
-        <input type="hidden" name="currentid" id="currentid" value="0" class="text ui-widget-content ui-corner-all" />
-    </fieldset>
-</div>
+		<div id="dialog-form" title="Change Class Module">
+			<fieldset id="dialogform">
+				<label for="class_modules_id"><?php echo t('Class Module');?></label>
+				<select type="text" name="single_class_module_id" id="single_class_module_id" class="text ui-widget-content ui-corner-all">
+					<?php
+					foreach ($this->class_modules as $cm){
+						echo "<option value=\"" . $cm['id'] . "\">" . $cm['external_id'] . " &mdash; " . $cm['title'] . "</option>\n";
+					}
+					?>
+				</select>
+				<input type="hidden" name="currentid" id="currentid" value="0" class="text ui-widget-content ui-corner-all" />
+			</fieldset>
+		</div>
 
 
-<fieldset class="formSection">
+		<fieldset class="formSection">
 
-    <input type="hidden" name="person_id" value="<?php echo $this->personData['id']?>">
-    <input type="hidden" name="student_id" value="<?php echo $this->studentData['id']?>">
-    <input type="hidden" name="workplace_id" value="<?php echo $this->workplaceData['id']?>">
-    <input type="hidden" name="add_modules_ids" id="add_modules_ids" value="">
-    <input type="hidden" name="remove_modules_ids" id="remove_modules_ids" value="">
+			<input type="hidden" name="person_id" value="<?php echo $this->personData['id']?>">
+			<input type="hidden" name="student_id" value="<?php echo $this->studentData['id']?>">
+			<input type="hidden" name="workplace_id" value="<?php echo $this->workplaceData['id']?>">
+			<input type="hidden" name="add_modules_ids" id="add_modules_ids" value="">
+			<input type="hidden" name="remove_modules_ids" id="remove_modules_ids" value="">
 
-    <?php
-    require_once('views/helpers/FormHelper.php');
+			<?php
+			require_once('views/helpers/FormHelper.php');
 
-    echo '<legend>' . t('Enter details') . '</legend>';
-    echo labelAndField($this, t('Last Name'), 'text', 'last_name', $this->personData['last_name']);
-    echo labelAndField($this, t('First Name'), 'text', 'first_name', $this->personData['first_name']);
-    echo labelAndField($this, t('Cohort'), $this->cohorts);
-    echo labelAndField($this, t('ps nationality'), $this->nationality_dropdown); // Dropdown
-    echo labelAndField($this, t('ps national id'), 'text', 'national_id', $this->personData['national_id']);
-    echo labelAndField($this, t('Race'), $this->race_options);
-    echo labelAndField($this, t('Date of Birth'), 'date', 'dob', $this->personData['birthdate']);
+			echo '<legend>' . t('Enter details') . '</legend>';
+			echo labelAndField($this, t('Last Name'), 'text', 'last_name', $this->personData['last_name']);
+			echo labelAndField($this, t('First Name'), 'text', 'first_name', $this->personData['first_name']);
+			echo labelAndField($this, t('Cohort'), $this->cohorts);
+			echo labelAndField($this, t('ps nationality'), $this->nationality_dropdown); // Dropdown
+			echo labelAndField($this, t('ps national id'), 'text', 'national_id', $this->personData['national_id']);
+			echo labelAndField($this, t('Race'), $this->race_options);
+			echo labelAndField($this, t('Date of Birth'), 'date', 'dob', $this->personData['birthdate']);
 
-    ?>
+			?>
 
-	<div class="fieldLabel">
-    <?php echo t('Gender'); ?>
+			<div class="fieldLabel">
+				<?php echo t('Gender'); ?>
+			</div>
+			<div class="fieldInput">
+				<select name="gender">
+					<option value="na"><?php echo t('Select...'); ?></option>
+					<option value="female"<?php echo ($this->escape($this->personData['gender']) == "female" ? " selected" : "");?>><?php echo t('Female'); ?></option>
+					<option value="male"<?php echo ($this->escape($this->personData['gender']) == "male" ? " selected" : "");?>><?php echo t('Male'); ?></option>
+				</select>
+			</div>
+
+			<?php
+			echo labelAndField($this, t('ps spouse name'), 'text', 'spouse_name', $this->personData['spouse_name']);
+			echo labelAndField($this, t('Highest Qualification Achieved'), $this->primary_qualification, 'primary_qualification_option_id', $this->personData['primary_qualification_option_id']); // Dropdown
+			echo labelAndField($this, t('Address 1'), 'text', 'person_address_1', $this->personData['home_address_1']);
+			echo labelAndField($this, t('Address 2'), 'text', 'person_address_2', $this->personData['home_address_2']);
+			region_filters_dropdown($this, $this->locations, $this->personCriteria, false, false, 'person');
+			echo labelAndField($this, t('Phone'), 'text', 'phone_home', $this->personData['phone_home']);
+			echo labelAndField($this, t('Email'), 'text', 'email', $this->personData['email']);
+
+			echo label($this, t('ps marital status'), true);
+			?>
+
+			<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="prior_learning_modules_table" style="width:100%">
+				<thead>
+				<tr>
+					<th><?php echo t('Module Number'); ?></th>
+					<th><?php echo t('Module Name'); ?></th>
+				</tr>
+				</thead>
+				<tbody>
+
+				<?php
+				foreach ($this->prior_modules as $mod){
+					?>
+					<tr class="GradeA" style="cursor : pointer;" id="modulesTable_<?php echo $mod['id'];?>" onclick='editTableItem(<?php echo json_encode($mod); ?>);'>
+						<td><?php echo $mod['external_id']; ?></td>
+						<td><?php echo $mod['title']; ?></td>
+					</tr>
+				<?php
+				}
+				?>
+				</tbody>
+			</table>
+			<div style="text-align : right;">
+				<input type="button" name="addmodule" id="addmodule" value="Add Class Modules" onclick="addClassModules();" class="tsbutton green large">
+			</div>
+
+			<?php
+			echo labelAndField($this, t('ps religious denomination'), $this->student_employed); // Dropdown
+
+			?>
+		</fieldset>
+
+		<fieldset class="formSection" id="workplace">
+
+			<?php
+			echo '<legend>' . t('Work Place Information') . '</legend>';
+
+			echo labelAndField($this, t('Workplace Name'), 'text', 'workplace_name', $this->workplaceData['name']);
+			echo labelAndField($this, t('Workplace Address 1'), 'text', 'work_address_1', $this->workplaceData['work_address_1']);
+			echo labelAndField($this, t('Workplace Address 2'), 'text', 'work_address_1', $this->workplaceData['work_address_2']);
+
+			region_filters_dropdown($this, $this->locations, $this->workplaceCriteria, false, false, 'workplace');
+			echo labelAndField($this, t('ps person in charge'), 'text', 'work_phone', $this->workplaceData['work_phone']);
+			echo labelAndField($this, t('Commencing Date for Workplace'), 'date', 'start_date', $this->workplaceData['start_date']);
+			echo labelAndField($this, t('End Date for Workplace'), 'date', 'end_date', $this->workplaceData['end_date']);
+			echo labelAndField($this, t('Name of Employer'), 'text', 'employer_name', $this->workplaceData['employer_name']);
+			echo labelAndField($this, t('Address of Employer 1'), 'text', 'employer_address_1', $this->workplaceData['employer_address_1']);
+			echo labelAndField($this, t('Address of Employer 2'), 'text', 'employer_address_2', $this->workplaceData['employer_address_2']);
+			region_filters_dropdown($this, $this->locations, $this->employerCriteria, false, false, 'employer');
+			echo labelAndField($this, t('Telephone Number'), 'text', 'contact_phone', $this->workplaceData['contact_phone']);
+			echo labelAndField($this, t('Name of Contact Person'), 'text', 'contact_person', $this->workplaceData['contact_person']);
+			echo labelAndField($this, t('Email Address'), 'text', 'contact_email', $this->workplaceData['contact_email']);
+			?>
+
+		</fieldset>
+		<fieldset class="formSection">
+
+			<?php
+			echo '<legend>' . t('Qualification') . '</legend>';
+			echo labelAndField($this, t('Reason for Enrollment'), $this->qualification_name);
+			echo labelAndField($this, t('ps custom field 2'), 'text', 'custom_field2', $this->personData['custom_field2']); // Dropdown?
+			echo labelAndField($this, t('Reason for Separation'), $this->level); // Dropdown
+			echo labelAndField($this, t('Date of Enrollment'), 'date', 'joindate', $this->studentCohortData['joindate']);
+			echo labelAndField($this, t('Date of Separation'), 'date', 'dropdate', $this->studentCohortData['dropdate']);
+			echo labelAndField($this, t('Date of Final Integrated External Assessment'), 'date', 'examdate', $this->studentCohortData['examdate']);
+			echo labelAndField($this, t('ps program enrolled in'), $this->assessment_center); // Dropdown
+			echo labelAndField($this, t('ps last university attended'), 'text', 'lastunivatt', $this->studentData['lastunivatt']);
+			echo labelAndField($this, t('Contact Number of Assessment Centre/Site'), 'text', 'emergcontact', $this->studentData['emergcontact']);
+			?>
+		</fieldset>
+
+		<fieldset class="formSection">
+			<?php
+			echo '<legend>' . t('Qualified Learners') . '</legend>';
+			echo labelAndField($this, t('Date Certificate was Received From the AQP'), 'date', 'certificate_issue_date', $this->studentCohortData['certificate_issue_date']);
+			echo labelAndField($this, t('Certificate Number'), 'text', 'certificate_number', $this->studentCohortData['certificate_number']);
+			echo labelAndField($this, t('Date Learner Received Certificate'), 'date', 'certificate_received_date', $this->studentCohortData['certificate_received_date']);
+			?>
+		</fieldset>
+		<div class="rightdiv" style="padding-top:50px;margin-left:25px;;">
+			<?php if ($this->formType === 'add') { ?>
+				<input type="submit" border="0" class="tsbutton green large" name="addpeople" value="<?php echo t('Add person'); ?> &raquo;">
+			<?php } else { ?>
+				<input type="submit" name="update" value="Update Student &raquo;" class="tsbutton green large">
+			<?php } ?>
+		</div>
+
 	</div>
-	<div class="fieldInput">
-		<select name="gender">
-			<option value="na"><?php echo t('Select...'); ?></option>
-			<option value="female"<?php echo ($this->escape($this->personData['gender']) == "female" ? " selected" : "");?>><?php echo t('Female'); ?></option>
-			<option value="male"<?php echo ($this->escape($this->personData['gender']) == "male" ? " selected" : "");?>><?php echo t('Male'); ?></option>
-		</select>
-	</div>
-
-    <?php
-	echo labelAndField($this, t('ps spouse name'), 'text', 'spouse_name', $this->personData['spouse_name']);
-    echo labelAndField($this, t('Highest Qualification Achieved'), $this->primary_qualification, 'primary_qualification_option_id', $this->personData['primary_qualification_option_id']); // Dropdown
-    echo labelAndField($this, t('Address 1'), 'text', 'person_address_1', $this->personData['home_address_1']);
-    echo labelAndField($this, t('Address 2'), 'text', 'person_address_2', $this->personData['home_address_2']);
-    region_filters_dropdown($this, $this->locations, $this->personCriteria, false, false, 'person');
-    echo labelAndField($this, t('Phone'), 'text', 'phone_home', $this->personData['phone_home']);
-    echo labelAndField($this, t('Email'), 'text', 'email', $this->personData['email']);
-
-    echo label($this, t('ps marital status'), true);
-    ?>
-
-    <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="prior_learning_modules_table" style="width:100%">
-        <thead>
-        <tr>
-            <th><?php echo t('Module Number'); ?></th>
-            <th><?php echo t('Module Name'); ?></th>
-        </tr>
-        </thead>
-        <tbody>
-
-        <?php
-        foreach ($this->prior_modules as $mod){
-            ?>
-            <tr class="GradeA" style="cursor : pointer;" id="modulesTable_<?php echo $mod['id'];?>" onclick='editTableItem(<?php echo json_encode($mod); ?>);'>
-                <td><?php echo $mod['external_id']; ?></td>
-                <td><?php echo $mod['title']; ?></td>
-            </tr>
-        <?php
-        }
-        ?>
-        </tbody>
-    </table>
-    <div style="text-align : right;">
-        <input type="button" name="addmodule" id="addmodule" value="Add Class Modules" onclick="addClassModules();" class="tsbutton green large">
-    </div>
-
-
-    <?php
-    echo labelAndField($this, t('ps religious denomination'), $this->student_employed); // Dropdown
-
-    ?>
-</fieldset>
-
-<fieldset class="formSection" id="workplace">
-
-    <?php
-    echo '<legend>' . t('Work Place Information') . '</legend>';
-
-    echo labelAndField($this, t('Workplace Name'), 'text', 'workplace_name', $this->workplaceData['name']);
-    echo labelAndField($this, t('Workplace Address 1'), 'text', 'work_address_1', $this->workplaceData['work_address_1']);
-    echo labelAndField($this, t('Workplace Address 2'), 'text', 'work_address_1', $this->workplaceData['work_address_2']);
-
-    region_filters_dropdown($this, $this->locations, $this->workplaceCriteria, false, false, 'workplace');
-    echo labelAndField($this, t('ps person in charge'), 'text', 'work_phone', $this->workplaceData['work_phone']);
-    echo labelAndField($this, t('Commencing Date for Workplace'), 'date', 'start_date', $this->workplaceData['start_date']);
-    echo labelAndField($this, t('End Date for Workplace'), 'date', 'end_date', $this->workplaceData['end_date']);
-    echo labelAndField($this, t('Name of Employer'), 'text', 'employer_name', $this->workplaceData['employer_name']);
-    echo labelAndField($this, t('Address of Employer 1'), 'text', 'employer_address_1', $this->workplaceData['employer_address_1']);
-    echo labelAndField($this, t('Address of Employer 2'), 'text', 'employer_address_2', $this->workplaceData['employer_address_2']);
-    region_filters_dropdown($this, $this->locations, $this->employerCriteria, false, false, 'employer');
-    echo labelAndField($this, t('Telephone Number'), 'text', 'contact_phone', $this->workplaceData['contact_phone']);
-    echo labelAndField($this, t('Name of Contact Person'), 'text', 'contact_person', $this->workplaceData['contact_person']);
-    echo labelAndField($this, t('Email Address'), 'text', 'contact_email', $this->workplaceData['contact_email']);
-    ?>
-
-</fieldset>
-<fieldset class="formSection">
-
-    <?php
-    echo '<legend>' . t('Qualification') . '</legend>';
-    echo labelAndField($this, t('Reason for Enrollment'), $this->qualification_name);
-    echo labelAndField($this, t('ps custom field 2'), 'text', 'custom_field2', $this->personData['custom_field2']); // Dropdown?
-    echo labelAndField($this, t('Reason for Separation'), $this->level); // Dropdown
-    echo labelAndField($this, t('Date of Enrollment'), 'date', 'joindate', $this->studentCohortData['joindate']);
-    echo labelAndField($this, t('Date of Separation'), 'date', 'dropdate', $this->studentCohortData['dropdate']);
-    echo labelAndField($this, t('Date of Final Integrated External Assessment'), 'date', 'examdate', $this->studentClassData['examdate']);
-    echo labelAndField($this, t('ps program enrolled in'), $this->assessment_center); // Dropdown
-    echo labelAndField($this, t('ps last university attended'), 'text', 'lastunivatt', $this->studentData['lastunivatt']);
-    echo labelAndField($this, t('Contact Number of Assessment Centre/Site'), 'text', 'emergcontact', $this->studentData['emergcontact']);
-    ?>
-</fieldset>
-
-<fieldset class="formSection">
-    <?php
-    echo '<legend>' . t('Qualified Learners') . '</legend>';
-    echo labelAndField($this, t('Date Certificate was Received From the AQP'), 'date', 'certificate_issue_date', $this->studentClassData['certificate_issue_date']);
-    echo labelAndField($this, t('Certificate Number'), 'text', 'certificate_number', $this->studentClassData['certificate_number']);
-    echo labelAndField($this, t('Date Learner Received Certificate'), 'date', 'certificate_received_date', $this->studentClassData['certificate_received_date']);
-    ?>
-</fieldset>
+</form>

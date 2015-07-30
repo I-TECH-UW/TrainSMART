@@ -16,7 +16,7 @@
         {key:"training_funder", label: "<?php tp('Who Funded');?>", sortable:true, resizeable:true}
     ];
     
-      var eaction = '<?php echo $this->base_url;?>/external/listByParticipant/id/<?php echo $this->person['id'];?>/outputType/json';
+      var eaction = '<?php echo $this->base_url;?>/external/list-by-participant/id/<?php echo $this->person['id'];?>/outputType/json';
       makeJSONDataTable("externalclassInfo", null, eaction, exclassColumnDefs);
  //   });
     //--><!]]> 

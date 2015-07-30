@@ -360,41 +360,6 @@ class SyncCompare
     return $errors;
   }
 
-  /*
-   * Dump data in a file. Includes execution time and mem usage. File truncated on first run. 
-   */
-  /*
-  public static function scratchData()
-  {
-    static $startTime = 0;
-    $scratchFile = '/syncscratch.txt';
-    $scratchData = func_get_args();
-    $memoryUse = memory_get_usage();
-    
-    if(!$startTime) {
-      file_put_contents($scratchFile, '');
-      $startTime = (float)array_sum(explode(' ', microtime()));
-    }
-    
-    foreach((array)$scratchData as $k => $v) {
-      $scratchData[$k] = serialize($v) ? serialize($v) : $v;
-    }
-    
-    if($memoryUse < 1024) {
-      $memoryUse = $memoryUse .'bytes';
-    }
-    elseif($memoryUse < 1048576) {
-      $memoryUse = round($memoryUse / 1024, 2) .'kb';
-    }
-    else {
-      $memoryUse = round($memoryUse / 1048576, 2) .'mb';
-    }
-    
-    $endTime = ((float)array_sum(explode(' ', microtime())) - $startTime);
-    $scratchData = "\n\r" . implode('|', array_merge(array(date('j/n/Y H:i:s'), $endTime, $memoryUse), $scratchData));
-    file_put_contents($scratchFile, $scratchData, FILE_APPEND | LOCK_EX);
-    return $endTime;
-  }
-*/
+
 }
 
