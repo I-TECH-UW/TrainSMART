@@ -155,7 +155,7 @@ if (isset($this->setting['display_mod_skillsmart']) && ($this->setting['display_
 		"training"				=> t('Training received'),
 		"facilitydepartment"	=> t('Facility Departments'),
 		"competency"			=> t('Competencies'),
-	    "assessment"			=> t('Assessments'),
+	   
 		"occupationalcats"		=> t('Occupational Categories'),
         "chw-person-fields"     => t('CHW Field Labels'),
 	);
@@ -178,6 +178,12 @@ if ( $this->setting['module_employee_enabled'] ) {
 	    ,'subpartner-to-funder-to-mechanism'   => t('Delete Funding')
 		
 	);
+}
+if ( $this->setting['module_assessment_enabled'] ) {
+    $navAdmin['assessment'] = array(
+        'index'				=> t('Assessments'),
+        'settings'          => t('Build Assessments')
+    );
 }
 ?>
 

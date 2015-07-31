@@ -100,7 +100,20 @@
 						</div>
 					</div>
 						<?php endif; ?>
+						
+						<?php if ($this->setting['module_assessment_enabled']): ?>
+						<div class="fieldLabelThin"> <?php print(t('Assessment Module'));?></div>
+					<div class="fieldInput width100">
+						<div class="float50">
+							<input type="checkbox" name="assessments_module"
+								id="assessments_module"
+								<?php if ( array_search('assessments_module', $this->user['acls']) !== false) echo 'CHECKED'; ?> /><label
+								for=assessments_module> <?php print(t('Assessments Access'));?></label>
+						</div>
+					</div>
+						<?php endif; ?>
 						<br /> <br />
+						
 					<div class="fieldLabelThin"> <?php tp('Restrict Access');?></div>
 					<div class="fieldInput">
 						<div class="float50">
@@ -238,6 +251,20 @@
 							<?php if ( array_search('view_employee',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>
 					</div>
 						<?php endif; ?>
+						
+	                    <?php if ($this->setting['module_assessment_enabled']): ?>					
+						<div class="fieldLabelThin"> <?php tp('Assessmemts');?></div>
+					<div class="fieldInput">
+						<div class="float50">
+							<label for="edit_assessment"><input type="radio" id="edit_assessment"
+								name="edit_assessment" value="edit_assessment"
+								<?php if ( array_search('edit_assessment',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit/Delete');?></label>
+						</div>
+						<label for="view_assessment"><input type="radio" id="view_assessment"
+							name="edit_assessment" value="view_assessment"
+							<?php if ( array_search('view_assessment',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>
+					</div>
+						<?php endif; ?>						
 						
 						<div>
 						<div class="fieldLabelThin"> <?php tp('Files');?></div>

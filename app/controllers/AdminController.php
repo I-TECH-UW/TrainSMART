@@ -159,6 +159,7 @@ class AdminController extends UserController
 			'label_employee'         => 'Employee',
 			'label_employees'        => 'Employees',
 			'label_employer'         => 'Employer',
+		    'label_assessment'       => 'Assessment',
 		);
 
 		// _system settings
@@ -172,6 +173,7 @@ class AdminController extends UserController
 			'display_mod_skillsmart'   => 'display_mod_skillsmart',
 			'fiscal_year_start'        => 'fiscal_year_start',
 			'check_mod_employee'       => 'module_employee_enabled',
+		    'check_mod_assessment'     => 'module_assessment_enabled',
 			'check_country_reports' => 'display_country_reports',//TA:17: 9/11/2014
 		);
 
@@ -2845,7 +2847,7 @@ class AdminController extends UserController
 		$this->view->assign("header",t("Facility Departments"));
 	}
 	
-	public function skillsmartAssessmentAction(){
+	public function assessmentSettingsAction(){
 	    $helper = new Helper();
 	
 	    $assessid = $this->getSanParam('assess');

@@ -160,7 +160,7 @@ class UserController extends ReportFilterHelpers {
 		//BS:#3,#4: add edit_partners, edit_mechanisms 20141014
 		//RR:11/17/2014 add 'edit_studenttutorinst', 'acl_delete_ps_cohort', 'view_studenttutorinst', 'acl_delete_ps_student', 'acl_delete_ps_grades'
 		$checkboxes = array('training_organizer_all', 'in_service', 'edit_course', 'view_course', 'edit_people', 
-				'view_people', 'edit_facility', 'view_create_reports', 'employees_module', 'edit_country_options', 
+				'view_people', 'edit_facility', 'view_create_reports', 'employees_module', 'assessments_module', 'edit_country_options', 
 				'add_edit_users', 'training_organizer_option_all', 'training_title_option_all', 'approve_trainings', 
 				'admin_files', 'use_offline_app', 'pre_service', 'facility_and_person_approver', 'edit_evaluations', 
 				'duplicate_training', 'acl_editor_training_category', 'acl_editor_people_qualifications', 
@@ -173,7 +173,7 @@ class UserController extends ReportFilterHelpers {
 		        'acl_editor_ps_coursetypes', 'acl_editor_ps_religions', 'add_edit_users', 'acl_admin_training', 'acl_admin_people', 'acl_admin_facilities', 
 		        'acl_editor_refresher_course', 'import_training', 'import_training_location', 'import_facility', 'import_person', 'acl_editor_tutor_specialty', 
 		        'acl_editor_tutor_contract', 'acl_editor_commodityname', 'acl_editor_commoditytype', 'add_new_facility',
-		        'edit_employee', 'edit_partners', 'edit_mechanisms', 'edit_training_location','edit_studenttutorinst', 'acl_delete_ps_cohort', 'acl_delete_ps_grades', 'view_studenttutorinst',
+		        'edit_employee', 'edit_assessment', 'edit_partners', 'edit_mechanisms', 'edit_training_location','edit_studenttutorinst', 'acl_delete_ps_cohort', 'acl_delete_ps_grades', 'view_studenttutorinst',
 				'acl_delete_ps_student', 
 		); 
 		foreach ($checkboxes as $value) {
@@ -189,6 +189,7 @@ class UserController extends ReportFilterHelpers {
 		    'edit_facility'          => 'view_facility',
 		    // BS:#3,#4:20141015
 		    'edit_employee'          => 'view_employee',
+		    'edit_assessment'          => 'view_assessment',
 		    'edit_partners'          => 'view_partners',
 		    'edit_mechanisms'        => 'view_mechanisms',
 		    'edit_training_location' => 'view_training_location',

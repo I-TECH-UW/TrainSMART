@@ -147,6 +147,20 @@ if ( $this->isLoggedIn() ) {
     $navMain['reports']['employees'] = t('Employees');
     $navMain['reports']['partners'] = t('Partners');
   }
+  
+  if ( $this->hasACL('edit_assessment')  ){
+  	$navMain['assessment'] = array(
+  	'index' => t('Assessment'),
+  	'search'  => t('View/Edit Assessment'),
+  	'add' =>  t('Add New Assessment')
+  	);
+  } else {
+  	$navMain['assessment'] = array(
+  	'index' => t('Assessment'),
+  	'search'  => t('View Assessment'),
+  	);
+  }
+  
 
 	$navMain['user'] = array(
 	'index' => t('My Account'),
