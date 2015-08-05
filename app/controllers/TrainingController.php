@@ -1376,7 +1376,7 @@ class TrainingController extends ReportFilterHelpers {
 										$errs [] = "Error locating facility: '" . $mes_facility . "', Person: '" . $mes_person . "' will have no assigned facility.";
 									}
 									
-									$personrow = $personObj->createRow();
+									$personrow = $personObj->createTableRow();
 									$personrow = ITechController::fillFromArray($personrow, $values_person);
 									$trainer_id = $personrow->save();
 									if(!$trainer_id){
