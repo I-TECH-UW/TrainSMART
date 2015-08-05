@@ -133,7 +133,7 @@ class DesktopController extends ITechController {
 
 			// Always start with a fresh blank datbase file
 			$curFile = 'sqlite';
-			if (! copy (Globals::$BASE_PATH.'/app/desktop/trainsmart.template.sqlite', $this->package_dir.'/data/trainsmart.active.sqlite') ) throw('PHP copy function did not succeed');
+			if (! copy (Globals::$BASE_PATH.'/app/desktop/trainsmart.template.sqlite', $this->package_dir.'/data/trainsmart.active.sqlite') ) throw new Exception('PHP copy function did not succeed');
 		
 		} catch (Exception $e) {
 			$this->error_message = 'Failure copying '.$curFile.' file. The exact error was '.$e->getMessage();
