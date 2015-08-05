@@ -38,9 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision "file", source: "vagrant/bootstrap/zend-debugger.ini", destination: "/home/vagrant/php-debugger.ini"
   config.vm.provision "file", source: "vagrant/bootstrap/ZendDebugger-php5.6.so", destination: "/home/vagrant/ZendDebugger.so"
-  config.vm.provision "file", source: "vagrant/bootstrap/php-5.3-nobuffer.ini", destination: "/home/vagrant/php.ini"
-#  config.vm.provision "file", source: "vagrant/bootstrap/rc.local.append", destination: "/home/vagrant/rc.local.append"
-#  config.vm.provision "file", source: "vagrant/bootstrap/mysqld.init.d", destination: "/home/vagrant/mysqld.init"
+  config.vm.provision "file", source: "vagrant/bootstrap/php-5.6-debugging-settings.ini", destination: "/home/vagrant/php.ini"
   
   config.vm.provision "file", source: "vagrant/bootstrap/my-56.cnf", destination: "/home/vagrant/my.cnf"
   config.vm.provision "file", source: "vagrant/bootstrap/ius-archive.repo", destination: "/home/vagrant/ius-archive.repo"
