@@ -165,7 +165,7 @@ class Person extends ITechTable
 		$historyTable = new History('person');
 		//cheezy way to get the id
 		$parts = explode('=',$where[0]);
-		$historyTable->insert($this, trim($parts[1]));
+		$historyTable->tableInsert($this, trim($parts[1]));
 
 		$rslt = parent::update($data,$where);
 
