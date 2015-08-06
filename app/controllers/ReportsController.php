@@ -6859,7 +6859,7 @@ echo $sql . "<br>";
 				$headers[] = "Start Date";
 				if ($this->getSanParam('yearinschool')){
 					$db = Zend_Db_Table_Abstract::getDefaultAdapter();
-					$where[] = $db->quoteInto("c.startdate LIKE ?", substr($this->getSanParam('yearinschool'), 0, 4) . '%';
+					$where[] = $db->quoteInto("c.startdate LIKE ?", substr($this->getSanParam('yearinschool'), 0, 4) . '%');
 				}
 			}
 
