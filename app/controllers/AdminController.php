@@ -2866,7 +2866,7 @@ class AdminController extends UserController
 	                $helper->updateSkillsmartAssessment($_POST);
 	                break;
 	        }
-	        $this->_redirect ( 'admin/skillsmart-assessment' );
+	        $this->_redirect ( 'admin/assessment-settings' );
 	    } elseif (isset ($_POST['_actiondetail'])){
 	        switch ($_POST['_actiondetail']){
 	            case "addnew":
@@ -2876,10 +2876,10 @@ class AdminController extends UserController
 	                $helper->updateSkillsmartAssessmentQuestion($_POST,$assessid);
 	                break;
 	        }
-	        $this->_redirect ( 'admin/skillsmart-assessment/assess/' . $assessid );
+	        $this->_redirect ( 'admin/assessment-settings/assess/' . $assessid );
 	    } elseif (isset ($_POST['actionqual'])){
 	        $helper->skillsmartLinkQualAssess($_POST);
-	        $this->_redirect ( 'admin/skillsmart-assessment/assess/' . $assessid );
+	        $this->_redirect ( 'admin/assessment-settings/assess/' . $assessid );
 	        //			var_dump ($_POST['qual']);
 	        //			exit;
 	    }
