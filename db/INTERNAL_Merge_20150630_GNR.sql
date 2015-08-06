@@ -56,4 +56,5 @@ CREATE TABLE `assessments_questions` (
 
 -- admin
 alter table _system add column `module_assessment_enabled` tinyint(1) NOT NULL DEFAULT '0' after  `module_employee_enabled`;
-insert into acl values ('edit_employee','edit_employee'), ('employees_module','employees_module'), ('view_employee','view_employee');
+insert into acl values ('edit_assessment','edit_assessment'), ('assessments_module','assessments_module'), ('view_assessment','view_assessment');
+

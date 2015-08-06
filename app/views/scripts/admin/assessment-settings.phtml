@@ -314,7 +314,7 @@ ob_end_clean();
 						
 						<div style="float : left; width : 45%; height : 60px;">
 							<br>
-							<input type="button" name="" id="" value="Back" class="tsbutton green large" onclick="location='/admin/skillsmart-assessment'">
+							<input type="button" name="" id="" value="Back" class="tsbutton green large" onclick="location='/admin/assessment-settings'">
 						</div>
 						</form>
 					</div>
@@ -373,7 +373,7 @@ ob_end_clean();
 ?>
 									<tr class="GradeA" style="cursor : pointer;">
 										<td class=""><?php echo $lookup['label']; ?></td>
-										<td class="" style="text-align : right;"><input style="padding : 6px;" type="button" value="<?php echo t('Edit name')?>" onclick="edititem('<?php echo $lookup['id']; ?>','<?php echo (addslashes($lookup['label'])); ?>');" /> <input style="padding : 6px;" type="button" value="<?php tp('Add/edit questions')?>" onclick="location='/admin/skillsmart-assessment/assess/<?php echo($lookup['id']); ?>'" /></td>
+										<td class="" style="text-align : right;"><input style="padding : 6px;" type="button" value="<?php echo t('Edit name')?>" onclick="edititem('<?php echo $lookup['id']; ?>','<?php echo (addslashes($lookup['label'])); ?>');" /> <input style="padding : 6px;" type="button" value="<?php tp('Add/edit questions')?>" onclick="location='/admin/assessment-settings/assess/<?php echo($lookup['id']); ?>'" /></td>
 									</tr>
 <?php
 	}
