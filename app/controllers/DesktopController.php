@@ -270,8 +270,6 @@ class DesktopController extends ITechController {
 		
 		try {
       if ($fd = @fopen($this->package_dir.'/'.$this->zip_name, 'rb')) {
-				// Sean Smith: 10/26/2011 - Had to rework. Wasn't working in production. Super paranoid mode on.
-				ini_set('magic_quotes_runtime', 0);
 		    ob_end_clean();
 		    ob_start(); 
 		    $buffer = "";
