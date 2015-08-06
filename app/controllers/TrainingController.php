@@ -222,7 +222,7 @@ class TrainingController extends ReportFilterHelpers {
 					$pepfarTotal = 0;
 					foreach ( $this->getSanParam ( 'pepfar_days' ) as $key => $value ) {
 						if (! is_numeric ( $value ))
-						$value = ereg_replace ( "/^[.0-9]", "", $value );
+						$value = preg_replace ( "/\/^[.0-9]/", "", $value );
 						//$daysRay [$pepfar_array[$key]] = $value; //set the days key to  the pepfar id
 						$daysRay [$key] = $value; //set the days key to  the pepfar id
 						$pepfarTotal += $value;

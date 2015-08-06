@@ -123,7 +123,7 @@ Class Output_Csv extends Output_Abstract
 		      }
 		      
 	          // loic1 : always enclose fields
-	          $value = ereg_replace("\015(\012)?", "\012", $value);
+	          $value = preg_replace("/\015(\012)?/", "\012", $value);
 	           if ($enc_by == '') {
 	            $schema_insert .= $value;
 	          } else {
@@ -168,7 +168,7 @@ Class Output_Csv extends Output_Abstract
 		        } else if ($value == '0' || $value != '') {
 		          
 		          // loic1 : always enclose fields
-		          $value = ereg_replace("\015(\012)?", "\012", $value);
+		          $value = preg_replace("/\015(\012)?/", "\012", $value);
 		           if ($enc_by == '') {
 		            $schema_insert .= $value;
 		          } else {

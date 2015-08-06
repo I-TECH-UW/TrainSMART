@@ -563,7 +563,7 @@ protected function sendData($data) {
 
   protected function _money_to_int ($str)
   {
-    return ereg_replace("[^0-9]", "", $str);
+    return preg_replace("/[^0-9]/", "", $str);
   }
 
   /**
