@@ -469,7 +469,7 @@ class FacilityController extends ReportFilterHelpers {
 					'training_location.is_deleted = 0' 
 			);
 			if ($criteria ['training_location_name']) {
-				$where [] = " training_location_name='" . mysql_escape_string ( $criteria ['training_location_name'] ) . "'";
+				$where [] = $db->quoteInto(" training_location_name=?", $criteria ['training_location_name']);
 			}
 			$locationWhere = $this->getLocationCriteriaWhereClause ( $criteria, '', '' );
 			if ($locationWhere) {
@@ -506,7 +506,6 @@ class FacilityController extends ReportFilterHelpers {
 		$criteria = array ();
 		list ( $criteria, $location_tier, $location_id ) = $this->getLocationCriteriaValues ( $criteria );
         $criteria ['facility_name'] = $this->getSanParam ( 'facility_name' );
-		$criteria ['facility_name_text'] = $this->getSanParam ( 'facility_name_text' );
 		$criteria ['type_id'] = $this->getSanParam ( 'type_id' );
 		$criteria ['sponsor_id'] = $this->getSanParam ( 'sponsor_id' );
 		$criteria ['outputType'] = $this->getSanParam ( 'outputType' );
@@ -574,11 +573,7 @@ class FacilityController extends ReportFilterHelpers {
 				//$where [] = " facility_name = '" . mysql_escape_string ( $criteria ['facility_name'] ) . "'";//TA:17:14:
 				$where[] = " facility_name like '%{$criteria['facility_name']}%'"; //TA:17:14:
 			}
-			
-			if ($criteria ['facility_name_text']) {
-				$where [] = " facility_name LIKE '%" . mysql_escape_string ( $criteria ['facility_name_text'] ) . "%'";
-			}
-			
+
 			if ($where)
 				$sql .= ' WHERE ' . implode ( ' AND ', $where );
 			

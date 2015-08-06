@@ -242,7 +242,7 @@ class ReportsController extends ReportFilterHelpers {
 					}
 				}
 				if ($count > 0){
-					$total = number_format((($total/(4*$ount))*100),2);
+					$total = number_format((($total/(4*$count))*100),2);
 				}
 				$return[$thiscomp['label']] = $total;
 			}
@@ -4999,12 +4999,12 @@ echo $sql . "<br>";
 			if ($criteria ['first_name']) {
 				if (strlen ( $where ))
 				$where .= ' AND ';
-				$where .= " first_name = '" . mysql_escape_string ( $criteria ['first_name'] ) . "'";
+				$where .= $db->quoteInto(" first_name = ?", $criteria['first_name']);
 			}
 			if ($criteria ['last_name']) {
 				if (strlen ( $where ))
 				$where .= ' AND ';
-				$where .= " last_name = '" . mysql_escape_string ( $criteria ['last_name'] ) . "'";
+				$where .= $db->quoteInto(" last_name = ?", $criteria['last_name']);
 			}
 
 			if (intval ( $criteria ['end-year'] ) and $criteria ['start-year']) {
@@ -6398,7 +6398,8 @@ echo $sql . "<br>";
 				$select[] = "c.startdate";
 				$headers[] = "Start Date";
 				if ($this->getSanParam('yearinschool')){
-					$where[] = "c.startdate LIKE '" . mysql_real_escape_string(substr($this->getSanParam('yearinschool'), 0, 4)) . "%'";
+					$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+					$where[] = $db->quoteInto("c.startdate LIKE ?", substr($this->getSanParam('yearinschool'), 0, 4) . '%');
 				}
 			}
 
@@ -6857,7 +6858,8 @@ echo $sql . "<br>";
 				$select[] = "c.startdate";
 				$headers[] = "Start Date";
 				if ($this->getSanParam('yearinschool')){
-					$where[] = "c.startdate LIKE '" . mysql_real_escape_string(substr($this->getSanParam('yearinschool'), 0, 4)) . "%'";
+					$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+					$where[] = $db->quoteInto("c.startdate LIKE ?", substr($this->getSanParam('yearinschool'), 0, 4) . '%';
 				}
 			}
 
@@ -7671,7 +7673,8 @@ echo $sql . "<br>";
 				$select[] = "coh.startdate";
 				$headers[] = "Start Date";
 				if ($this->getSanParam('yearinschool')){
-					$where[] = "coh.startdate LIKE '" . mysql_real_escape_string(substr($this->getSanParam('yearinschool'), 0, 4)) . "%'";
+					$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+					$where[] = $db->quoteInto("coh.startdate LIKE ", substr($this->getSanParam('yearinschool'), 0, 4) . '%');
 				}
 			}
 
@@ -8005,16 +8008,10 @@ echo $sql . "<br>";
 				$select[] = "coh.startdate";
 				$headers[] = "Start Date";
 				if ($this->getSanParam('yearinschool')){
-					$where[] = "coh.startdate LIKE '" . mysql_real_escape_string(substr($this->getSanParam('yearinschool'), 0, 4)) . "%'";
+					$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+					$where[] = $db->quoteInto("coh.startdate LIKE ", substr($this->getSanParam('yearinschool'), 0, 4)) . '%';
 				}
 			}
-
-			/*
-			if ( $this->getSanParam('showcoursename') ){
-				$select[] = "class.classname";
-				$headers[] = "Course Name";
-			}
-			*/
 
 			if( $this->getSanParam('coursename') ){
 				$course_name = $this->getSanParam('coursename');
@@ -8037,22 +8034,6 @@ echo $sql . "<br>";
 			if( $this->getSanParam('coursetype') ){
 				$where[] = "ctype.id = ".$this->getSanParam('coursetype');
 			}
-
-			/*
-			if( $this->getSanParam('showgrades') || $this->getSanParam('grades') ){
-				///////
-			}
-
-			// grades
-			if( $this->getSanParam('showgrades') ){
-				$select[] = "lsclass.grade";
-				$headers[] = "Grade";
-			}
-			if( $this->getSanParam('grades') ){
-				$grade = $this->getSanParam('grades');
-				$where[] = "lsclass.grade LIKE '%{$grade}%'";
-			}
-			*/
 
 			// topic
 			if( $this->getSanParam('showtopic') ){

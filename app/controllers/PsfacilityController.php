@@ -398,7 +398,7 @@ class PsfacilityController extends ReportFilterHelpers {
 				$where[] = $locationWhere;
 			}
 			if ($criteria ['training_location_name']) {
-				$where [] = " training_location_name='" . mysql_escape_string ( $criteria ['training_location_name'] ) . "'";
+				$where[] = $db->quoteInto(" training_location_name=?", $criteria['training_location_name']);
 			}
 			
 			if ($where)
@@ -472,7 +472,7 @@ class PsfacilityController extends ReportFilterHelpers {
 			}
 			
 			if ($criteria ['facility_name']) {
-				$where [] = " facility_name = '" . mysql_escape_string ( $criteria ['facility_name'] ) . "'";
+				$where [] = $db->quoteInto(" facility_name = ?", $criteria ['facility_name']);
 			}
 			
 			if ($where)
