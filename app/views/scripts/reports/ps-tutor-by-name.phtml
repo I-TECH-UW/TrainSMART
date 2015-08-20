@@ -171,7 +171,7 @@
 						<div class="fieldshow"><input type="checkbox" name="showdegreeyear" id="showdegreeyear" value="1"<?php echo $_GET['showdegreeyear'] ? " checked" : "" ?>></div>
 						<div class="fieldselect"><select name="degreeyear" id="degreeyear" style="height : 25px;">
 <?php
-	echo "<option value=''>Select...</option>\n";
+	echo "<option value=''>" . t('Select') . "...</option>\n";
 	for ($i = 1970; $i <= date("Y"); $i++){
 		echo "<option value='" . $i . "'>" . $i . "</option>\n";
 	}
@@ -252,12 +252,12 @@ if (isset($this->output)) {
 		echo "				<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"display tablegrid\" id=\"\" style=\"width:100%\">\n";
 		echo "					<thead>\n";
 		echo "						<tr>\n";
-		echo "							<th>Output</th>\n";
+		echo "							<th>" . t('Output') . "</th>\n";
 		echo "						</tr>\n";
 		echo "					</thead>\n";
 		echo "					<tbody>\n";
 		echo "						<tr>\n";
-		echo "							<td>Your search criteria returned no results</td>\n";
+		echo "							<td>" . t('Your search criteria returned no results') . "</td>\n";
 		echo "						</tr>\n";
 		echo "					</tbody>\n";
 		echo "				</table>\n";
@@ -270,7 +270,7 @@ if (isset($this->output)) {
 						<tr>
 <?php
 		foreach ($this->headers as $key=>$value){
-			echo "							<th>" . $value . "</th>\n";
+			echo "							<th>" . t($value) . "</th>\n";
 		}
 ?>
 						</tr>

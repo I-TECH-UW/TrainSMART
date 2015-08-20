@@ -8,7 +8,7 @@ require_once('views/helpers/ScriptContainer.php');
 print ScriptContainer::$instance->renderCSSHead();
 print ScriptContainer::$instance->renderJSHead();
 
-$checkLabel = 'show';
+$checkLabel = t('show');
 if ( $this->mode == 'count' )
 	$checkLabel = 'group';
 
@@ -47,7 +47,8 @@ function setDistrictStatus(selectedIndex)  {
       	<div class="fieldLabel" ></div>
     	<div class="fieldInput  criteria-header"><div   class="criteria-label"><?php echo $checkLabel;?></div><div  class="criteria-label" style="padding-left: 20px;"><?php tp('filter');?></div></div>
 
-	<?php region_filters_dropdown($this, $this->locations, $this->criteria, false, true); ?>
+	<!--TA:38 change for multiple selection region_filters_dropdown($this, $this->locations, $this->criteria, false, true); -->
+	<?php region_filters_dropdown($this, $this->locations, $this->criteria, true, true); ?>
 
 	<div id="facilityAutoComplete">
 	    <div class="fieldLabel" id="facilityInput_lbl"><?php tp('Facility');?></div>
@@ -434,7 +435,7 @@ var trainingColumnDefs = [
 <?php if (isset($this->results[0]['cnt'])) { ?>
 {key:"cnt", label: "<?php tp('Participant Count');?>", sortable:false, resizeable:true}
 <?php } else { ?>
-	{key:"id", label: "ID", sortable:false, resizeable:true, formatter: formatViewUrl}
+	{key:"id", label: "<?php tp('ID')?>", sortable:false, resizeable:true, formatter: formatViewUrl}
 	<?php if ( !$this->criteria['concatNames'] ) { ?>
 		,{key:"first_name", label: "<?php echo (@$this->translation['First Name']); ?>", sortable:true, resizeable:true}
    <?php if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) { ?>

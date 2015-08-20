@@ -58,7 +58,7 @@ class PersonController extends ReportFilterHelpers {
 
 		$user_row->approved = 1;
 		$user_row->save();
-		$status->setStatusMessage ( t( 'That person has been approved.' ) );
+		$status->setStatusMessage ( t( 'That person has been approved' ) );
 		$this->_redirect( 'admin/people-new-people' );
 	}
 
@@ -86,7 +86,7 @@ class PersonController extends ReportFilterHelpers {
 		} else if (! $id) {
 			$status->setStatusMessage ( t ( 'That person could not be found.' ) );
 		} else {
-			$status->setStatusMessage ( t ( 'That person is an active').' '.t('participant').' '.t('or').' '.t('trainer').' '.t( 'and could not be deleted.' ) );
+			$status->setStatusMessage ( t ( 'That person is an active participant or trainer and could not be deleted.' ) );
 		}
 
 		//validate
@@ -518,7 +518,7 @@ class PersonController extends ReportFilterHelpers {
 				foreach ($status->messages as $k=>$v){
 					$errortext .= $v . "<br>";
 				}
-				$status->setStatusMessage ( t ( 'The person could not be saved. <br>' . $errortext ) );
+				$status->setStatusMessage ( t ( 'The person could not be saved.') .'<br>' . $errortext );
 			} else {
 
 				$personrow = self::fillFromArray ( $personrow, $this->_getAllParams () );
@@ -1294,11 +1294,12 @@ class PersonController extends ReportFilterHelpers {
 			$num_locs = $this->setting('num_location_tiers');
 			list($field_name,$location_sub_query) = Location::subquery($num_locs, $location_tier, $location_id, true);
 
+			//TA:28 fixing bug (fix query)
 			if ($criteria ['person_type'] == 'is_everyone') {
 				// left join instead of inner for everyone
 				$sql = '
 				SELECT DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).'
-				,q.parent_id, (SELECT COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.comments as "persal",IFNULL(cmpr.res,10) `res` FROM person as p
+				,q.parent_id, (SELECT COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.persal_number as "persal",IFNULL(cmpr.res,10) `res` FROM person as p
 				LEFT JOIN person_qualification_option as q ON p.primary_qualification_option_id = q.id
 				LEFT JOIN facility as f ON p.facility_id = f.id
 				LEFT JOIN compres as cmpr ON cmpr.person = p.id AND cmpr.active=\'Y\'
@@ -1309,7 +1310,7 @@ class PersonController extends ReportFilterHelpers {
 				#if($criteria ['is_complete']=='is_complete'){
 				#	$sql = 'select DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).',q.parent_id, (SELECT COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.comments as "persal", cmpr.res from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l, compres as cmpr';
 				#} else {
-					$sql = 'select DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).',q.parent_id, (SELECT COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.comments as "persal", IFNULL((SELECT `res` FROM `compres` WHERE `compres`.`person` = `p`.`id` AND `compres`.`active` = \'Y\'),10) `res` from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l';
+					$sql = 'select DISTINCT p.id, p.last_name, p.middle_name, p.first_name, p.gender, p.birthdate, q.qualification_phrase, '.implode(',',$field_name).',q.parent_id, (SELECT COUNT(`comp`.`id`) FROM `comp` WHERE `comp`.`person` = `p`.`id` AND `comp`.`active` = \'Y\') `cmp`,p.persal_number as "persal", IFNULL((SELECT `res` FROM `compres` WHERE `compres`.`person` = `p`.`id` AND `compres`.`active` = \'Y\'),10) `res` from person as p, person_qualification_option as q, facility as f, ('.$location_sub_query.') as l';
 				#}
 			}
 
@@ -1440,7 +1441,6 @@ class PersonController extends ReportFilterHelpers {
 					$rowArray[$key]['gender'] = t(trim($row['gender']));
 				}
 			}
-
 
 			$this->viewAssignEscaped ( 'results', $rowArray );
 			$this->view->assign ( 'count', count ( $rowArray ) );
@@ -1715,10 +1715,10 @@ class PersonController extends ReportFilterHelpers {
 					$result = $tableObj->addPersonToTraining ( $id, $training_id );
 				}
 
-				$status->setStatusMessage ( t ('The').' '.t('Training').t('(s) have been assigned.' ) );
+				$status->setStatusMessage ( t ('The Training (s) have been assigned.' ) );
 				$status->setRedirect ( '/person/edit/id/' . $id );
 			} else {
-				$status->setStatusMessage ( t ( 'No').' '.t('Trainings').' '.t('selected').'.' );
+				$status->setStatusMessage ( t ( 'No Trainings selected').'.' );
 			}
 
 			$this->sendData ( $status );

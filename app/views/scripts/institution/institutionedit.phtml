@@ -97,7 +97,7 @@
 	
 						<p style=""><?php echo t('Enter details'); ?></p><br>
 	
-						<label><?php echo t('Institution id'); ?></label>
+						<label><?php echo t('Institution ID'); ?></label>
 						<input readonly type="text" name="instutiton" value="<?php echo $this->escape($this->id);?>">	
 						
 						<label><?php echo t('Institution Name'); ?></label>
@@ -106,7 +106,7 @@
 						<label><?php echo t('Address 1'); ?></label>
 						<input type="text" name="address1" value="<?php echo $this->escape($this->address1);?>">
 						
-						<label><?php echo t('Address 2	'); ?></label>
+						<label><?php echo t('Address 2'); ?></label>
 						<input type="text" name="address2" value="<?php echo $this->escape($this->address2);?>">
 		
 						<label><?php echo t('City'); ?></label>
@@ -195,37 +195,37 @@
 						</div>
 	
 	
-						<label><?php echo t('# of Computers'); ?></label>
+						<label><?php echo t('Number of Computers'); ?></label>
 						<input type="text" name="computer" value="<?php echo $this->escape($this->computers);?>">
 						
-						<label><?php echo t('# of Tutors'); ?></label>
+						<label><?php echo t('Number of Tutors'); ?></label>
 						<input type="text" name="tutor" readonly value="<?php echo $this->escape($this->tutor);?>">
 						
-						<label><?php echo t('# of Students'); ?></label>
+						<label><?php echo t('Number of Students'); ?></label>
 						<input type="text" name="students" readonly value="<?php echo $this->escape($this->students);?>">
 						
 						<label><?php echo t('Tutor to Student Ratio'); ?></label>
 						<input type="text" name="tutorratio" value="<?php echo $this->escape($this->tutorratio);?>" readonly>
 		
-						<label><?php echo t('Dormitories?(y/n)'); ?></label>
+						<label><?php echo t('Dormitories') . '?('. t('y/n') . ')'; ?></label>
 						<select name="hasdormitories" id="hasdormitories" onchange="setselector('dorm',this.value)">
-							<option value="0">No</option>
-							<option value="1"<?php echo $this->escape($this->hasdormitories) ? " selected" : "" ?>>Yes</option>
+							<option value="0"><?php echo t('No'); ?></option>
+							<option value="1"<?php echo $this->escape($this->hasdormitories) ? " selected" : "" ?>><?php echo t('Yes'); ?></option>
 						</select>
 	
-						<label><?php echo t('# Dormitories'); ?></label>
+						<label><?php echo t('Number of Dormitories'); ?></label>
 						<input type="text" name="dormcount" id="dormcount" value="<?php echo $this->escape($this->dormcount);?>">
 						
-						<label><?php echo t('# of beds (students)'); ?></label>
+						<label><?php echo t('Number of beds (students)'); ?></label>
 						<input type="text" name="studbeds" id="studbeds" value="<?php echo $this->escape($this->studbeds);?>">
 						
-						<label><?php echo t('Tutor housing?(y/n)'); ?></label>
+						<label><?php echo t('Tutor housing') . '?(' . t('y/n') . ')'; ?></label>
 						<select name="tutorhousing" id="tutorhousing" onchange="setselector('housing',this.value)">
-							<option value="0">No</option>
-							<option value="1"<?php echo $this->escape($this->tutorhousing) ? " selected" : "" ?>>Yes</option>
+							<option value="0"><?php echo t('No'); ?></option>
+							<option value="1"<?php echo $this->escape($this->tutorhousing) ? " selected" : "" ?>><?php echo t('Yes'); ?></option>
 						</select>
 	
-						<label><?php echo t('# Tutor houses'); ?></label>
+						<label><?php echo t('Number of Tutor houses'); ?></label>
 						<input type="text" id="tutorhouses" name="tutorhouses" value="<?php echo $this->escape($this->tutorhouses);?>">
 						
 						<label><?php echo t('Year Founded'); ?></label>
@@ -275,7 +275,7 @@
 					</div>
 
 					<div style="text-align : right;">
-						<input type="button" value="<?php echo t('Add/Edit Staff members'); ?>" class="tsbutton green large" onclick="location='<?php echo Settings::$COUNTRY_BASE_URL ?>/institution/addstaff/id/<?php echo $this->id ?>'" >
+						<input type="button" value="<?php echo t('Add/Edit Staff Members'); ?>" class="tsbutton green large" onclick="location='<?php echo Settings::$COUNTRY_BASE_URL ?>/institution/addstaff/id/<?php echo $this->id ?>'" >
 					</div>
 					<div class="clear pad50"></div>
 

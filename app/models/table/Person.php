@@ -52,6 +52,7 @@ class Person extends ITechTable
 		return $this->fetchRow($select);
 	}
 
+	//TA: use in 'where' and
 	public static function tryFind ($first, $middle, $last)
 	{
 		$first = trim($first);

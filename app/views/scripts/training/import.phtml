@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+  <title><?php echo t($this->translation['Application Name']);?> | <?php echo t($this->pageTitle); ?></title>
 <?php
 require_once('views/helpers/ScriptContainer.php');
 print ScriptContainer::$instance->renderCSSHead();
@@ -13,7 +13,7 @@ print ScriptContainer::$instance->renderJSHead();
   <div id="pageHolder">
     <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
     <div id="content">
-      <h1><?php echo $this->pageTitle; ?></h1>
+      <h1><?php echo t($this->pageTitle); ?></h1>
       <p><?php tp('Select the file that contains the data in MS Excel format (*.xlsx) you want to import.'); ?></p>
       <p>&nbsp;</p>
       <p><a href="<?php echo $this->base_url; ?>/training/import/download/template/outputType/ImportTrainingTemplate.xlsx"><?php tp('Get sample template'); ?></a></p>
@@ -22,7 +22,7 @@ print ScriptContainer::$instance->renderJSHead();
       <div class="fieldIndent">
         <div class="fieldLabel"><?php tp('File to upload');?></div><input type="file" name="upload" /><br>
           <div class="fieldLabel"><?php tp('Max file upload size'); print ' '; print ini_get('upload_max_filesize')?></div>&nbsp;</div>
-        <div class="fieldLabel"><input type="submit" class="submitArrow" name="go" value="Continue" /></div>&nbsp;
+        <div class="fieldLabel"><input type="submit" class="submitArrow" name="go" value="<?php tp('Continue')?>" /></div>&nbsp;
         <br/><br/><br/>
         </div>
       </form>

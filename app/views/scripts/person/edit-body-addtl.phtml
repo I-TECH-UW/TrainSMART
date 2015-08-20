@@ -173,7 +173,7 @@ if ($this->setting['display_mod_skillsmart']) {
 
   <?php if ( $this->setting['display_attend_reason']  ) { ?>
 		<?php echo DropDown::render('attend_reason_option_id', $this->translation['Reason Attending'], $this->attendreasons, 'attend_reason_phrase', 'id', $this->person['attend_reason_option_id'], $onchange = 'initReasonOtherField();', false); ?><br/>
-	  <div class="fieldLabel" ><?php tp('Reason (if \'Other\' selected above)');?></div>
+	  <div class="fieldLabel" ><?php tp('Reason (if Other selected above)');?></div>
 	  <div class="fieldInput"><input type="text" id="attend_reason_other" name="attend_reason_other" size="32" maxlength="100" onfocus="initReasonOtherField();" value="<?php echo $this->person['attend_reason_other'];?>"/> </div>
 
 <script type="text/javascript">
@@ -343,7 +343,7 @@ if ($this->setting['display_mod_skillsmart']) {
 
 
     var trainerColumnDefs = [
-        {key:"training_id", label: "ID", sortable:false, resizeable:true, formatter: formatTrainingViewUrl},
+        {key:"training_id", label: "<?php tp('ID')?>", sortable:false, resizeable:true, formatter: formatTrainingViewUrl},
         {key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true},
         {key:"training_title", label: "<?php tp('Name');?>", sortable:true, resizeable:true},
         {key:"training_location_name", label: "<?php tp('Location');?>", sortable:true, resizeable:true}

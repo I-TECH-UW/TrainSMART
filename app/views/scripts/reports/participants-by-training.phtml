@@ -186,7 +186,6 @@ if ( $this->mode == 'count' )
 	</div>
 
 
-
   <?php if ( $this->setting['display_training_topic'] ) { ?>
 	<div class="fieldLabel" id="training_topic_id_lbl"><?php echo (@$this->translation['Training Topic']); ?></div>
 	<div class="fieldInput">
@@ -201,6 +200,24 @@ if ( $this->mode == 'count' )
 		?>
 	</select></div></div>
 	<?php } ?>
+	
+	<!-- TA:22 START -->
+	<?php if ( $this->setting['display_funding_options'] ) { ?>
+	<div class="fieldLabel" id="funding_option_id_lbl"><?php tp('Funding');?></div>
+	<div  class="leftBorderPad"><input type="checkbox" name="showFunding"  <?php  if ($this->criteria['showFunding']) echo 'checked="checked"';?> /></div>
+	<div  class="leftBorder">    
+	<select id="funding_id" name="funding_id">
+	<option value="">--<?php tp('All');?>--</option>
+	<?php
+	foreach ( $this->fundings as $vals ) {
+		echo '<option value="'.$vals['id'].'" '.((@$this->criteria['funding_id']) == $vals['id']? 'SELECTED':'').' >'.($vals['funding_phrase']).'</option>';
+	}
+	?>
+	</select></div>
+	<div class="fieldInput">
+	</div>
+	<?php } ?>
+	<!-- TA:22 END -->
 
 	<div class="fieldLabel" id="training_pepfar_id_lbl"><?php print $this->translation['PEPFAR Category'];?></div>
 	<div class="fieldInput">
@@ -398,11 +415,15 @@ if ( $this->setting['display_viewing_location'] && $this->mode != 'search' && ! 
 
 </div>
 
-<?php if(strstr($path[2], 'participantsByTraining') != FALSE ) { ?>
+<?php if(strstr($path[2], 'participantsByTraining') == TRUE or strstr($path[2], 'participantsByName') == TRUE) { ?>
   <div class="clear"></div>
 	<div class="fieldLabel">&nbsp;</div>
-   	<div class="fieldInput" style="margin-top:1em;"><input type="checkbox" name="distinctCount" id="distinctCount" <?php  if ($this->criteria['distinctCount']) echo 'checked="checked"';?> /><label for="distinctCount" > <?php tp('Return Unique Participants');?></label></div>
-<?php }; ?>
+   	<div class="fieldInput" style="margin-top:1em;"><input type="checkbox" name="distinctCount" id="distinctCount" 
+   	<?php  if ($this->criteria['distinctCount']) echo 'checked="checked"';?> /><label for="distinctCount" > 
+   	<?php if(strstr($path[2], 'participantsByTraining') == TRUE) tp('Return Unique Participants');?>
+   	<?php if(strstr($path[2], 'participantsByName') == TRUE) tp('Return Unique Participants By Training Names');?>
+   	
+   	</label></div><?php }; ?>
 
 
 	<div class="clear"></div><br /><br />
@@ -435,12 +456,12 @@ if ( $this->setting['display_viewing_location'] && $this->mode != 'search' && ! 
 
 	<div class="clear"></div>
 	<input type="hidden" name="limit" id="limit" value="1" />
-   	<input type="submit" class="submitNoArrow" name="go" value="Preview" />
+   	<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview')?>" />
    </fieldset>
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
 <div class="hrGrey"></div>
-    <div class="fieldIndentNoMargin">Participants <span class="total"><?php echo $this->count;?> <?php echo t('Trainings').' '.t('Attended');?></span><?php echo $this->printAndExport();?></div>
+    <div class="fieldIndentNoMargin"><?php tp('Participants')?> <span class="total"><?php echo $this->count;?> <?php echo t('Trainings Attended');?></span><?php echo $this->printAndExport();?></div>
 
     <div id="trainings"  class="itechTable"></div>
     <script type="text/javascript">
@@ -476,7 +497,7 @@ foreach($this->results as $row) {
 	if ( isset($row['id']) and $this->criteria['showPhone']){
 		if (! array_key_exists('phone', $row))
 			$row['phone'] = t('(no phone)');
-			echo ',"'. (isset ($row['phone']) ? $row['phone'] : "N/A") .'"';
+			echo ',"'. (isset ($row['phone']) ? $row['phone'] : t("N/A")) .'"';
 		}
 	if ( isset($row['id']) )
 		echo ',"'.$row['training_start_date'].'"';
@@ -597,7 +618,7 @@ var trainingColumnDefs = [
 <?php if (isset($this->results[0]['cnt'])) { ?>
 {key:"cnt", label: "<?php tp('Participant Count');?>", sortable:false, resizeable:true}
 <?php } else { ?>
-	{key:"id", label: "ID", sortable:false, resizeable:true, formatter: formatViewUrl},
+	{key:"id", label: "<?php tp('ID')?>", sortable:false, resizeable:true, formatter: formatViewUrl},
 	<?php if ( !$this->criteria['concatNames'] ) { ?>
 		{key:"first_name", label: "<?php echo (@$this->translation['First Name']); ?>", sortable:true, resizeable:true},
    <?php if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) { ?>
@@ -752,19 +773,19 @@ var trainingColumnDefs = [
 
 // uncheck return unique if training_title is used, they are not companitable
 $('document').ready(function () {
-	if ($('#training_title_id').val() != "") {
-		$('#distinctCount').removeAttr('checked');
-	}
-	$('#training_title_id').change(function () {
-		if ($('#training_title_id').val() != "") {
-			$('#distinctCount').removeAttr('checked');
-		}
-	})
-	$('#distinctCount').change(function (e) {
-		if ($(this).is(':checked') && $('#training_title_id').val() != "") {
-			alert('<?php echo @$this->translation["Training Name"].space.t("cannot be used with".space.t("Return Unique Participants")); ?>');
-			e.preventDefault();
-			$('#distinctCount').removeAttr('checked');
+	//if ($('#training_title_id').val() != "") {
+		//$('#distinctCount').removeAttr('checked');
+	//}
+	//$('#training_title_id').change(function () {
+		//if ($('#training_title_id').val() != "") {
+			//$('#distinctCount').removeAttr('checked');
+		//}
+	//})
+	//$('#distinctCount').change(function (e) {
+		//if ($(this).is(':checked') && $('#training_title_id').val() != "") {
+			//alert('<?php echo @$this->translation["Training Name"].space.t("cannot be used with".space.t("Return Unique Participants")); ?>');
+			//e.preventDefault();
+			//$('#distinctCount').removeAttr('checked');
 		}
 	})
 })

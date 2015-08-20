@@ -18,7 +18,7 @@ ob_end_clean();
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+  <title><?php echo t($this->translation['Application Name']);?> | <?php echo t($this->pageTitle); ?></title>
 <?php
 require_once('views/helpers/ScriptContainer.php');
 print ScriptContainer::$instance->renderCSSHead();
@@ -119,12 +119,12 @@ print ScriptContainer::$instance->renderJSHead();
       <input type="checkbox" name="check_training_post" <?php if(!$this->check_training_post) echo 'checked'; ?> id="check_training_post"><label for="check_training_post">Don't display</label>
     </div>
 
-    <div class="fieldLabel">Custom field 1</div>
+    <div class="fieldLabel"><?php echo t('Custom field');?> 1</div>
     <div class="fieldInput"><input type="text" name="label_training_custom1" value="<?php echo $this->label_training_custom1; ?>">
       <input type="checkbox" name="check_training_custom1" <?php if(!$this->check_training_custom1) echo 'checked'; ?> id="check_training_custom1"><label for="check_training_custom1">Don't display</label>
     </div>
 
-    <div class="fieldLabel">Custom field 2</div>
+    <div class="fieldLabel"><?php echo t('Custom field');?> 2</div>
     <div class="fieldInput"><input type="text" name="label_training_custom2" value="<?php echo $this->label_training_custom2; ?>">
       <input type="checkbox" name="check_training_custom2" <?php if(!$this->check_training_custom2) echo 'checked'; ?> id="check_training_custom2"><label for="check_training_custom2">Don't display</label>
     </div>
@@ -172,13 +172,13 @@ print ScriptContainer::$instance->renderJSHead();
       <input type="checkbox" name="check_people_fax" <?php if(!$this->check_people_fax) echo 'checked'; ?> id="check_people_fax"><label for="check_people_fax">Don't display</label>
     </div>
 
-     <div class="fieldLabel">Custom field 1</div>
+     <div class="fieldLabel"><?php echo t('Custom field');?> 1</div>
     <div class="fieldInput">
       <input type="text" name="label_people_custom1" value="<?php echo $this->label_people_custom1; ?>">
       <input type="checkbox" name="check_people_custom1" <?php if(!$this->check_people_custom1) echo 'checked'; ?> id="check_people_custom1"><label for="check_people_custom1">Don't display</label>
     </div>
 
-    <div class="fieldLabel">Custom field 2</div>
+    <div class="fieldLabel"><?php echo t('Custom field');?> 2</div>
     <div class="fieldInput">
       <input type="text" name="label_people_custom2" value="<?php echo $this->label_people_custom2; ?>">
       <input type="checkbox" name="check_people_custom2" <?php if(!$this->check_people_custom2) echo 'checked'; ?> id="label_people_custom2"><label for="label_people_custom2">Don't display</label>

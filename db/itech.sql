@@ -337,9 +337,11 @@ CREATE TABLE `facility` (
   KEY `sponsor_option_id` (`sponsor_option_id`),
   KEY `type_option_id` (`type_option_id`),
   KEY `facility_ibfk_5` (`location_id`),
-  CONSTRAINT `facility_ibfk_1` FOREIGN KEY (`sponsor_option_id`) REFERENCES `facility_sponsor_option` (`id`),
-  CONSTRAINT `facility_ibfk_2` FOREIGN KEY (`type_option_id`) REFERENCES `facility_type_option` (`id`),
-  CONSTRAINT `facility_ibfk_5` FOREIGN KEY (`location_id`) REFERENCES `location` (`id`)
+  KEY `facility_name` (`facility_name`,`location_id`)
+  -- gnr, must be able to insert regardless
+  -- CONSTRAINT `facility_ibfk_1` FOREIGN KEY (`sponsor_option_id`) REFERENCES `facility_sponsor_option` (`id`),
+  -- CONSTRAINT `facility_ibfk_2` FOREIGN KEY (`type_option_id`) REFERENCES `facility_type_option` (`id`),
+  -- CONSTRAINT `facility_ibfk_5` FOREIGN KEY (`location_id`) REFERENCES `location` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
@@ -2100,7 +2102,7 @@ ALTER TABLE `facility` DROP COLUMN `uuid`;
 ALTER TABLE `facility` ADD COLUMN `uuid` char(36) AFTER `id`;
 ALTER TABLE `facility` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `facility` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
-ALTER TABLE `facility` ADD COLUMN CUSTOM_1 varchar(255) DEFAULT '';
+ALTER TABLE `facility` ADD COLUMN custom_1 varchar(255) DEFAULT '';
 
 DELIMITER ;;
 CREATE TRIGGER `facility_insert` BEFORE INSERT ON `facility` FOR EACH ROW BEGIN
@@ -2727,7 +2729,7 @@ ALTER TABLE `person` CHANGE COLUMN `primary_responsibility_option_id` `primary_r
 
 ALTER TABLE `person_history` CHANGE COLUMN `primary_responsibility_option_id` `primary_responsibility_option_id` int(11) DEFAULT '0', CHANGE COLUMN `secondary_responsibility_option_id` `secondary_responsibility_option_id` int(11) DEFAULT '0';
 
-ALTER TABLE `facility` DROP INDEX `facility_name`, ADD UNIQUE `facility_name`(facility_name, location_id);
+ALTER TABLE `facility` DROP INDEX `facility_name`;
 
 CREATE TABLE `age_range_option` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

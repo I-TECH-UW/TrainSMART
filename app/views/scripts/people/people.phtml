@@ -117,7 +117,8 @@
 
                     <label>&nbsp;</label>
                     <!-- TA: added 7/30/2014 -->
-                    <input type="radio" name="type" value="tutor" style="margin-left : 30px;"> <?php echo $this->translation['ps tutor'] ?>
+                    <!-- TA:27 fixed bug, display default 'Tutor' if ps_tutor is undefined -->
+                    <input type="radio" name="type" value="tutor" style="margin-left : 30px;"> <?php echo $this->translation['ps tutor']?$this->translation['ps tutor']:t('Tutor') ?>
                     <p style="padding : 0px; margin : 0px; background-color : #FFFFFF;">&nbsp;</p>
 
                     <label>&nbsp;</label>

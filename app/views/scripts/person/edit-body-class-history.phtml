@@ -18,7 +18,7 @@ var classInfoData = [
     elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/training/view/id/" + oRecord.getData("training_id") + "' >" + sData + "</a>";
 }
 var classColumnDefs = [
-    {key:"training_id", label: "ID", sortable:false, resizeable:true,
+    {key:"training_id", label: "<?php tp('ID')?>", sortable:false, resizeable:true,
                   formatter: formatTrainingViewUrl},
     {key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true},
     {key:"training_title", label: "<?php tp('Name');?>", sortable:true, resizeable:true},

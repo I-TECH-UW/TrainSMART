@@ -41,70 +41,48 @@ class ITechController extends Zend_Controller_Action
      */
     public function __construct(Zend_Controller_Request_Abstract $request, Zend_Controller_Response_Abstract $response, array $invokeArgs = array())
     {
-		//$renderer = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer');
-		//$view = new ITechView(array('basePath' => Globals::$BASE_PATH.'/app/views'));
-		//$renderer->setView($view);
 
         parent::__construct($request, $response, $invokeArgs);
 
         //not sure if we need this stuff
-    	require_once('Zend/Filter/Digits.php');
-   		require_once('Zend/Filter/Alpha.php');
+        require_once('Zend/Filter/Digits.php');
+        require_once('Zend/Filter/Alpha.php');
         $this->digitsFilter = new Zend_Filter_Digits(false); //no whitespace
         $this->alphaFilter  = new Zend_Filter_Alpha(false); //no whitespace
 
-        //Zend_Json::$useBuiltinEncoderDecoder = false;
-
-         //set default template variables
-	    $this->view->assign('base_url',Settings::$COUNTRY_BASE_URL);
-	    $this->view->setHelperPath(Globals::$BASE_PATH.'/app/views/helpers');
+        //set default template variables
+        $this->view->assign('base_url',Settings::$COUNTRY_BASE_URL);
+        $this->view->setHelperPath(Globals::$BASE_PATH.'/app/views/helpers');
 
 
-		// get Country-specific settings
-		try {
+        $this->_countrySettings = array();
+        // get Country-specific settings
+        try {
 
-		  $this->_countrySettings = array();
-		  $this->_countrySettings = System::getAll();
+            $this->_countrySettings = System::getAll();
 
-		  $this->_countrySettings['num_location_tiers'] = 2 //including city
-        + $this->_countrySettings['display_region_b']
-        + $this->_countrySettings['display_region_c']
-        + $this->_countrySettings['display_region_d']
-        + $this->_countrySettings['display_region_e']
-        + $this->_countrySettings['display_region_f']
-        + $this->_countrySettings['display_region_g']
-        + $this->_countrySettings['display_region_h']
-        + $this->_countrySettings['display_region_i'];
-
-	    $this->view->assign('setting', $this->_countrySettings);
-	    $this->view->assign('languages', ITechTranslate::getLanguages());
-	    $this->view->assign('languages_enabled', ITechTranslate::getLocaleEnabled());
-
-		} catch (exception $e) {
-
-      throw new Exception('Could not connect to a database associated with this country. Please double check that you have the correct URL and that the site is configured correctly.');
-
-		}
+            $this->_countrySettings['num_location_tiers'] = 2 //including city
+                + $this->_countrySettings['display_region_b']
+                + $this->_countrySettings['display_region_c']
+                + $this->_countrySettings['display_region_d']
+                + $this->_countrySettings['display_region_e']
+                + $this->_countrySettings['display_region_f']
+                + $this->_countrySettings['display_region_g']
+                + $this->_countrySettings['display_region_h']
+                + $this->_countrySettings['display_region_i'];
 
 
-# TRY loop is not returning values on system::getall()
-# Adding settings outside loop
-# CDL, 5.25.2012
-		$sys = System::getAll();
-		foreach ($sys as $key=>$val){
-			$this->_countrySettings[$key] = $val;
-		}
-    $this->_countrySettings['num_location_tiers'] = 2 //including city
-      + $this->_countrySettings['display_region_b']
-      + $this->_countrySettings['display_region_c']
-      + $this->_countrySettings['display_region_d']
-      + $this->_countrySettings['display_region_e']
-      + $this->_countrySettings['display_region_f']
-      + $this->_countrySettings['display_region_g']
-      + $this->_countrySettings['display_region_h']
-      + $this->_countrySettings['display_region_i'];
+            $this->view->assign('setting', $this->_countrySettings);
+            $this->view->assign('languages', ITechTranslate::getLanguages());
+            $this->view->assign('languages_enabled', ITechTranslate::getLocaleEnabled());
 
-		$response->setHeader('Content-Type', 'text/html; charset=utf-8', true);
+        } catch (exception $e) {
+
+            throw new Exception('Could not connect to a database associated with this country. Please double check that you have the correct URL and that the site is configured correctly.');
+
+        }
+
+        $response->setHeader('Content-Type', 'text/html; charset=utf-8', true);
 
     }
 
@@ -120,6 +98,7 @@ class ITechController extends Zend_Controller_Action
   	if ( !isset($translations[$keyPhrase]) ) return $keyPhrase;
   	return str_replace("'",'\'',($translations[$keyPhrase]));
   }
+  
 
   //cached settings per request
   protected function setting($settingKey) {
@@ -281,50 +260,57 @@ protected function sendData($data) {
 
     public function preDispatch()
     {
-    	require_once('models/table/User.php');
+        require_once('models/table/User.php');
 
-        	//add identity to view variables
-        	$auth = Zend_Auth::getInstance();
-        	$identity = null;
-        	if ($auth->hasIdentity() ) {
-        		//get ACLs and add to identity
-        		$acls = User::getACLs($auth->getIdentity()->id);
-        		$identity = $auth->getIdentity();
-        		$identity->acls = $acls;
-	            $auth->getStorage()->write($identity);
-        		$this->view->assign('identity',$identity);
+        //add identity to view variables
+        $auth = Zend_Auth::getInstance();
+        $identity = null;
+        if ($auth->hasIdentity()) {
+            //get ACLs and add to identity
+            $acls = User::getACLs($auth->getIdentity()->id);
+            $identity = $auth->getIdentity();
+            $identity->acls = $acls;
+            $auth->getStorage()->write($identity);
+            $this->view->assign('identity', $identity);
+        }
 
-  	}
+        //set up localization
+        //get country default locale, then check user settings
+        if (isset($_COOKIE['locale']) and array_key_exists($_COOKIE['locale'], ITechTranslate::getLanguages())) {
+            $locale = $_COOKIE['locale'];
+        }
+        else {
+            $locale = $this->_countrySettings['locale'];
+        }
+        if (!$locale) {
+            $locale = 'en_EN.UTF-8';
+        }
+        if ( $auth->hasIdentity() and $auth->getIdentity()->locale ) {
+            $locale = $auth->getIdentity()->locale;
+        }
 
-   	//set up localization
-   	//get country default locale, then check user settings
-   	if ( isset($_COOKIE['locale']) and array_key_exists($_COOKIE['locale'], ITechTranslate::getLanguages()))
-   		$locale = $_COOKIE['locale'];
-   	else
-   		$locale = $this->_countrySettings['locale'];
+        //set up localization
+        ITechTranslate::init($locale);
 
-	if ( !$locale )
-		$locale = 'en_EN.UTF-8';
+        // get Country-specific phrases for fields
+        self::$_translations = Translation::getAll();
+        $this->view->assign('translation', self::translations());
 
-   	if ( $auth->hasIdentity() and $auth->getIdentity()->locale )
-   		$locale = $auth->getIdentity()->locale;
+        //look for any status messages in the session and put the validation container in the view scope
+        $statusObj = ValidationContainer::instance();
+        if ( isset($_SESSION['status']) ) {
+            $statusObj->setStatusMessage($_SESSION['status']);
+            unset($_SESSION['status']);
+        }
+        $this->view->assign('status',$statusObj);
+    }
 
-  		//set up localization
-		ITechTranslate::init($locale);
-
-		// get Country-specific phrases for fields
-	  self::$_translations = Translation::getAll();
-		$this->view->assign('translation', self::translations());
-
-
-		//look for any status messages in the session and put the validation container in the view scope
-  		$statusObj = ValidationContainer::instance();
- 		if ( isset($_SESSION['status']) ) {
- 			$statusObj->setStatusMessage($_SESSION['status']);
- 			unset($_SESSION['status']);
-		}
-		$this->view->assign('status',$statusObj);
-     }
+    public function updateTranslations()
+    {
+        // get Country-specific phrases for fields
+        self::$_translations = Translation::getAll();
+        $this->view->assign('translation', self::translations());
+    }
 
     public function _getACLs() {
         $auth = Zend_Auth::getInstance();
@@ -361,7 +347,13 @@ protected function sendData($data) {
   		$status->setStatusMessage(t('You do not have access rights to the requested action.'));
 
   		if ( !$this->isLoggedIn() ) {
-  			$this->_redirect('user/login/?redirect='.urlencode('http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']));
+            if ($_SERVER['SERVER_PORT'] !== '80') {
+                $redirect_target = urlencode('http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI']);
+            }
+            else {
+                $redirect_target = urlencode('http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
+            }
+  			$this->_redirect('user/login/?redirect='.$redirect_target);
   		}
 
   		$this->_redirect('index');
@@ -410,7 +402,8 @@ protected function sendData($data) {
   	// this might not work on arrays with arrays in them, TODO, might be a security flaw, sanitize() wont handle arrays we should array_walk_recursive here. (but will probably just say: ARRAY)
 		$ret = array_merge($_GET,$_POST,$this->getRequest()->getParams());
 		foreach ($ret as $key => $value) {
-			$ret[$key] = $this->getSanParam($key);
+            // BS 20150317 - strip leading and trailing whitespace from form values
+			$ret[$key] = trim($this->getSanParam($key));
 		}
 
 		return $ret;

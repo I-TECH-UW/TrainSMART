@@ -12,8 +12,29 @@ print ScriptContainer::$instance->renderJSHead();
 
 </style>
 
+<!-- TA:31 fixing bug -->
+		<script language="JavaScript">
+	var all = false;
+	function allcompetence(){
+		if ($('#complist').is(":disabled")){
+			alert("<?php tp('Please select an occupational category first')?>");
+			$("#qualification_id").focus();
+		} else {
+			if (!all){
+				$("#complist > option").attr("selected", true);
+				all = true;
+			} else {
+				$("#complist > option").removeAttr("selected");
+				all = false;
+			}
+			$('#complist').change();
+//			ShwHid(document.getElementById("complist"));
+		}
+	}
+</script>
+
 </head>
-<body class="yui-skin-sam" onload="RenderNow();SwHd(document.getElementById('qualification_id'))">
+<body class="yui-skin-sam" onload="document.getElementById('qualification_id').getElementsByTagName('option')[0].selected = 'selected'; document.getElementById('ques').value=''; ">
 
 <div id="pageHolder">
 
@@ -44,8 +65,9 @@ print ScriptContainer::$instance->renderJSHead();
 </select></div>
 	<div class="clear"></div>
     <div class="fieldLabel"><?php echo t('Occupational category'); ?></div><div class="fieldInput">
-	<select id="qualification_id" name="qualification_id" onchange="SwHd(this);document.getElementById('Questions').value='';RenderNow();">
-	<option value="">--choose--</option>
+	<!-- TA:31 fixing bug <select id="qualification_id" name="qualification_id" onchange="SwHd(this);document.getElementById('Questions').value='';RenderNow();">-->
+	<div class="fieldInput"><select id="qualification_id" name="qualification_id" onchange="showCompetencies(this)">
+	<option value="">--<?php tp('choose')?>--</option>
    <?php
     $lastParent = null;
     foreach ( $this->qualifications as $vals ) {
@@ -57,6 +79,21 @@ print ScriptContainer::$instance->renderJSHead();
    ?>
 	</select></div>
 	<script type="text/javascript">
+
+	// TA:31 
+	<?php
+		echo "var comptrans = new Array();\n";
+		foreach ($this->complist as $cl){
+			$comp = array();
+			if (count($cl['competencies']) > 0){
+				foreach ($cl['competencies'] as $c_arr){
+					$comp[] = "[" . $c_arr['id'] . ",'" . addslashes($c_arr['name']) . "']";
+				}
+			}
+			echo "comptrans['c" . $cl['id'] . "'] = [" . implode(",", $comp) . "];\n";
+		}
+		?>//TA
+		
 		function SwHd(obj)
 		{
 			document.getElementById("listc").style.display="none";
@@ -89,22 +126,39 @@ print ScriptContainer::$instance->renderJSHead();
 		{
 		}
 	</script>
-	<div class="fieldLabel"><?php echo t('Competence'); ?><br /><a href="javascript:void(0)" onclick="SelAll()"><?php echo t('Select All'); ?></a></div><div class="fieldInput" style="margin-left:251px">
+	<!-- TA:31 fixing bug,  by some reason "Competence" was undisplyed -->
+	<div class="fieldLabel" id="qualification_id_lbl"><?php echo t('Competence'); ?><br />
+	<a href="javascript:void(0)" onclick="allcompetence()">
+	<?php echo t('Select All'); ?></a></div>
+	<?php
+/*  TA:31: fixing bug
+	<div class="fieldInput" style="margin-left:251px">
 	<?php require_once('listcomn.phtml');?>
 	<?php require_once('listcomd.phtml');?>
 	<?php require_once('listcomp.phtml');?>
 	<?php require_once('listcomc.phtml');?>
 	</div>
+	*/?>
+	
+	<!-- TA:31 START fixing bug,  by some reason "Competence" was undisplyed -->
+					<div class="fieldInput">
+							<select name="complist[]" id="complist" style="width : 350px;" size="5" multiple="multiple" disabled onchange="ShwHid(this)">
+								<option><?php tp('Select an occupational category first')?></option>
+							</select>
+						</div>
+					<!-- TA:31 END -->
+					
     <div class="clear"></div>
     <div class="fieldLabel"><?php echo t('Score'); ?><br /><a href="javascript:void(0)" onclick="SelAllS()"><?php echo t('Select All'); ?></a></div><div class="fieldInput">
-	<select id="score_id" multiple="multiple">
+    <!-- TA:31 fixing bug: add name to the field to pass form parameter to the controller -->
+	<select name="score_id[]" id="score_id" multiple="multiple">
 	<option value="100">90 - 100%</option>
 	<option value="89">75 - 89%</option>
 	<option value="74">60 - 74%</option>
 	<option value="0"><?php echo t('Less than 60%'); ?></option>
 	</select></div>
     <div class="fieldLabel"></div>
-	<div class="fieldInput"><button type="button" onclick="Add_Question();return false"><?php echo t('Add Criteria'); ?></button></div>
+	<!-- TA:31 we do not need it for now <div class="fieldInput"><button type="button" onclick="Add_Question();return false"><?php echo t('Add Criteria'); ?></button></div>-->
 <script type="text/javascript">
  		document.getElementById("listc").setAttribute("multiple","multiple");
 		document.getElementById("listd").setAttribute("multiple","multiple");
@@ -185,8 +239,8 @@ function FindComp(obj)
    }
   }
  }
- function Add_Question()
- {
+ function Add_Question(){
+	 alert("AAAA");
   var Main1;
   Main1=document.getElementById("qualification_id");
   if(Main1.selectedIndex == 0)
@@ -293,6 +347,51 @@ function FindComp(obj)
                 document.write(document.getElementById("facilityInput").options[document.getElementById("facilityInput").selectedIndex].text);
             }
         }
+
+        //TA:31 bug fixing
+		function showCompetencies(selected){
+			//document.getElementById('ques').value = '';//TA:31 clean from preious selected value
+			all = false;
+			if ($("#qualification_id").val() != ""){
+				var items = comptrans['c'+$("#qualification_id").val()];
+				$("#complist").empty();
+				var ctr = 0;
+				if (items[ctr]){
+					while (items[ctr]){
+						$('#complist')
+							.append($("<option></option>")
+							.attr("value",items[ctr][0])
+							.text(items[ctr][1])); 
+						ctr++;
+					}
+					$("#complist").removeAttr("disabled");
+
+					if (is_array(selected)){
+						// highlighting selected elements
+						var ctr = 0;
+						while(selected[ctr]){
+							$("#complist option[value='" + selected[ctr] + "']").attr("selected", true);
+							ctr++;
+						}
+					}
+
+				} else {
+					$('#complist')
+						.append($("<option></option>")
+						.attr("value","")
+						.text("Category has no competencies")); 
+					$("#complist").attr("disabled",true);
+				}
+			} else {
+				$("#complist").empty();
+				$('#complist')
+					.append($("<option></option>")
+					.attr("value","")
+					.text("Select an occupational category first")); 
+				$("#complist").attr("disabled",true);
+				ctr++;
+			}
+		}
 </script>
 <div id="RenderInput"></div>
 	<input type="hidden" name="Questions" id="Questions" value="<?php echo $this->criteria['Questions']; ?>" />
@@ -301,14 +400,14 @@ function FindComp(obj)
 	<input type="hidden" name="listnq" id="listnq" value="~1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,200~01,02,03,04,05,06,07,08,09~31,32,33,34,35,36,37,38~41,42,43,44,45~51,52,53,54,55,56,57,58,59,510,511,512,513~61,62,63,64,65~71,72,73,74,75,76,77,78,79,710,711~21,22,23" />
 	<input type="hidden" name="listpq" id="listpq" value="1,2,3,4,5,6,7~8,9,10" />
 	<input type="hidden" name="limit" id="limit" value="1" />
-    <input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+    <input type="submit" onclick="if(document.getElementById('complist').value==''){alert('<?php tp('Please select a competence')?>');return false;}if(document.getElementById('score_id').value==''){alert('<?php tp('Please select a score')?>');return false;}" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
    </fieldset>
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
 		    <div class="hrGrey"></div>
     <div class="fieldIndentNoMargin"><?php tp('Results');?>  <?php echo $this->printAndExport();?></div>
 	<table cellpadding="0" cellspacing="0" border="0" style="width:40%;border:solid 1px #AAA">
-	<tr><td><div class="nwtxtbig">ID</div></td><td><div class="nwtxtbig"><?php echo t('First Name'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Surname'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Gender'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Province'); ?></div></td><td><div class="nwtxtbig"><?php echo t('District'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Sub-district'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Facility'); ?></div></td></tr>
+	<tr><td><div class="nwtxtbig"><?php echo t('ID'); ?></div></td><td><div class="nwtxtbig"><?php echo t('First Name'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Surname'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Gender'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Province'); ?></div></td><td><div class="nwtxtbig"><?php echo t('District'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Sub-district'); ?></div></td><td><div class="nwtxtbig"><?php echo t('Facility'); ?></div></td></tr>
 	<?php
 	foreach ( $this->results as $k => $y ) {
 		echo '<tr><td><div class="nwtxt">'.$y['id'].'</div></td><td><div class="nwtxt">'.$y['first_name'].'</div></td><td><div class="nwtxt">'.$y['last_name'].'</div></td><td><div class="nwtxt">'.$y['gender'].'</div></td>';

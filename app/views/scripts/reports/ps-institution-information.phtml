@@ -60,7 +60,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title><?php echo $this->translation['Application Name'];?> | <?php tp('Institution Information Report');?></title>
+		<title><?php echo $this->translation['Application Name'];?> | <?php tp('Institution Reports');?></title>
 		<?php
 		require_once('views/helpers/Location.php');
 		require_once('views/helpers/ScriptContainer.php');
@@ -118,7 +118,7 @@
 							?>
 							<div class="clear pad20">&nbsp;</div>
 
-							<div class="fieldquestion"><?php echo t('Institution name'); ?></div>
+							<div class="fieldquestion"><?php echo t('Institution Name'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="showinstitutionname" id="showinstitutionname" value="1"<?php echo $_GET['showinstitutionname'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="institutionname" id="institutionname" style="" size="10">
 	<?php
@@ -140,7 +140,7 @@
 							</select></div>
 							<div class="clear pad20">&nbsp;</div>
 	
-							<div class="fieldquestion"><?php echo t('Institution sponsors'); ?></div>
+							<div class="fieldquestion"><?php echo t('Institution Sponsor'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="showinstitutionsponsors" id="showinstitutionsponsors" value="1"<?php echo $_GET['showinstitutionsponsors'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="institutionsponsors" id="institutionsponsors" style="" size="10">
 	<?php
@@ -151,7 +151,7 @@
 							</select></div>
 							<div class="clear pad20">&nbsp;</div>
 	
-							<div class="fieldquestion"><?php echo t('Cadres trained'); ?></div>
+							<div class="fieldquestion"><?php echo t('Cadres Trained'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="showcadre" id="showcadre" value="1"<?php echo $_GET['showcadre'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="cadre" id="cadre" style="" size="10">
 	<?php
@@ -241,7 +241,7 @@ if (isset($this->output)) {
 						<tr>
 <?php
 		foreach ($this->headers as $key=>$value){
-			echo "							<th>" . $value . "</th>\n";
+			echo "							<th>" . t($value) . "</th>\n";
 		}
 ?>
 						</tr>

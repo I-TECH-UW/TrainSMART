@@ -1111,7 +1111,6 @@ class Helper extends ITechTable
 	################################
 
 	public function AdminLabels($labels){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("translation")
 			->where("key_phrase IN ('" . implode("','",$labels) . "')")
@@ -1121,7 +1120,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminClasses(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("classes")
 			->order('classname');
@@ -1138,17 +1136,18 @@ class Helper extends ITechTable
 		return $result;
 	}
 
+	//TA:35 
 	public function AdminDegrees(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
-		$select = $this->dbfunc()->select()
-			->from("lookup_degrees")
-			->order('degree');
+// 		$select = $this->dbfunc()->select()
+// 			->from("lookup_degrees")
+// 			->order('degree');
+		$select = "select lookup_degrees.id, lookup_degrees.degree,  link_institution_degrees.id as used from lookup_degrees
+		left join link_institution_degrees on link_institution_degrees.id_degree = lookup_degrees.id group by lookup_degrees.id";
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
 
 	public function AdminFunding(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_fundingsources")
 			->order('fundingname');
@@ -1157,7 +1156,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminInstitutionTypes(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_institutiontype")
 			->order('typename');
@@ -1166,7 +1164,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminLanguages(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_languages")
 			->order('language');
@@ -1175,7 +1172,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminNationalities(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_nationalities")
 			->order('nationality');
@@ -1184,7 +1180,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminJoinDropReasons(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_reasons")
 			->order('reason');
@@ -1193,7 +1188,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminSponsors(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_sponsors")
 			->where("status = 1")
@@ -1203,7 +1197,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminStudenttypes(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_studenttype")
 			->where("status = 1")
@@ -1213,7 +1206,6 @@ class Helper extends ITechTable
 	}
 
 	public function AdminTutortypes(){
-		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
 			->from("lookup_tutortype")
 			->where("status = 1")
@@ -1288,41 +1280,20 @@ class Helper extends ITechTable
 	#                      #
 	########################
 
+    /**
+     * update a course's info to the database
+     * @param $params - an array with keys matching the table 'classes' column names
+     */
 	public function updateClasses($params){
 		$linktable = "classes";
-		$maincolumn = "classname";
-		$col2 = "startdate";
-		$col3 = "enddate";
-		$col4 = "instructorid";
-		$col5 = "coursetypeid";
-		$col6 = "coursetopic";
-		$id = $_POST["_id"];
-		$value = $_POST['_classname'];
-		$value2 = date("Y-m-d", strtotime($_POST['_startdate']));
-		$value3 = date("Y-m-d", strtotime($_POST['_enddate']));
-		$value4 = $_POST['_instructorid'];
-		$value5 = $_POST['_coursetypeid'];
-		$value6 = $_POST['_coursetopic'];
 
-		$select = $this->dbfunc()->select()
-			->from($linktable)
-			->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)))
-			->where('id <> ?', $id);
-
-
-		$result = $this->dbfunc()->fetchAll($select);
-		if (count ($result) == 0){
-			# LINK NOT FOUND - ADDING
-			$i_arr = array(
-				$maincolumn	=> $value,
-				$col2		=> $value2,
-				$col3		=> $value3,
-				$col4		=> $value4,
-				$col5		=> $value5,
-				$col6		=> $value6
-			);
-			$instypeinsert = $this->dbfunc()->update($linktable,$i_arr,'id = ' . $id);
-		}
+        if (array_key_exists('startdate', $params)) {
+            $params['startdate'] = date("Y-m-d", strtotime($params['startdate']));
+        }
+        if (array_key_exists('enddate', $params)) {
+            $params['enddate'] = date("Y-m-d", strtotime($params['enddate']));
+        }
+        $this->dbfunc()->update($linktable, $params, 'id = ' . $params['id']);
 	}
 
 	public function updateCadres($params){
@@ -1385,6 +1356,13 @@ class Helper extends ITechTable
 			);
 			$instypeinsert = $this->dbfunc()->update($linktable,$i_arr,'id = ' . $id);
 		}
+	}
+	
+	//TA:35 able to delete a degree
+	public function deleteDegrees($params){
+		$db = $this->dbfunc();
+		$query = "DELETE FROM lookup_degrees WHERE id = " . $_POST["_id"];
+		$db->query($query);
 	}
 
 	public function updateReligion($params){
@@ -1580,40 +1558,21 @@ class Helper extends ITechTable
 	#                   #
 	#####################
 
+    /**
+     * add a course's info to the database
+     * @param $params - an array with keys matching the table 'classes' column names
+     */
 	public function addClasses($params){
 		$linktable = "classes";
-		$maincolumn = "classname";
-		$col2 = "startdate";
-		$col3 = "enddate";
-		$col4 = "instructorid";
-		$col5 = "coursetypeid";
-		$col6 = "coursetopic";
-		$id = $_POST["_id"];
-		$value = $_POST['_classname'];
-		$value2 = date("Y-m-d", strtotime($_POST['_startdate']));
-		$value3 = date("Y-m-d", strtotime($_POST['_enddate']));
-		$value4 = $_POST['_instructorid'];
-		$value5 = $_POST['_coursetypeid'];
-		$value6 = $_POST['_coursetopic'];
 
-		$select = $this->dbfunc()->select()
-			->from($linktable)
-			->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)));
+        if (array_key_exists('startdate', $params)) {
+            $params['startdate'] = date("Y-m-d", strtotime($params['startdate']));
+        }
+        if (array_key_exists('enddate', $params)) {
+            $params['enddate'] = date("Y-m-d", strtotime($params['enddate']));
+        }
+        $this->dbfunc()->insert($linktable, $params);
 
-
-		$result = $this->dbfunc()->fetchAll($select);
-		if (count ($result) == 0){
-			# LINK NOT FOUND - ADDING
-			$i_arr = array(
-				$maincolumn	=> $value,
-				$col2		=> $value2,
-				$col3		=> $value3,
-				$col4		=> $value4,
-				$col5		=> $value5,
-				$col6		=> $value6
-			);
-			$instypeinsert = $this->dbfunc()->insert($linktable,$i_arr);
-		}
 	}
 
 	public function addCadres($params){

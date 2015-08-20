@@ -64,7 +64,7 @@ YAHOO.util.Event.onDOMReady(setOrgAccessStatus);
 		<div class="fieldLabelThin"> <?php tp('In-Service');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="in_service" id="in_service" CHECKED /><label for="in_service"> <?php tp('In-service access');?></label></div></div>
 		<div class="fieldLabelThin"> <?php tp('Pre-Service');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="pre_service" id="pre_service"/><label for="pre_service"> <?php tp('Pre-service access');?></label></div></div>
 		<?php if ($this->setting['module_employee_enabled']): ?>
-		<div class="fieldLabelThin"> <?php print(t('Employee').space.t('Module'));?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="employees_module" id="employees_module" /><label for="employees_module"> <?php print(t('Access').space.t('Employees'));?></label></div></div>
+		<div class="fieldLabelThin"> <?php print(t('Employee Module'));?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="employees_module" id="employees_module" /><label for="employees_module"> <?php print(t('Access Employees'));?></label></div></div>
 		<?php endif; ?>
 		<br/><br/>
 
@@ -111,7 +111,7 @@ YAHOO.util.Event.onDOMReady(setOrgAccessStatus);
 
 	<?php
 	if ($this->showinstitutions){
-		echo "      <fieldset id=\"institutions\" ><legend>Institution access</legend>\n";
+		echo "      <fieldset id=\"institutions\" ><legend>" . t('Institution access') . "</legend>\n";
 		echo "        <div>\n";
 		echo "          <div class=\"fieldLabel\">\n";
 		echo "          </div>\n";
@@ -185,7 +185,7 @@ YAHOO.util.Event.onDOMReady(setOrgAccessStatus);
 	<div class="fieldLabelThin" for="spacer"></div>
 	<div class="fieldInput"><input type="checkbox" id="send_email" name="send_email"  CHECKED /><label for="send_email"> <?php tp('Send email with login information');?></label></div>
 	<div class="fieldLabelThin" for="spacer"></div>
-	<input type="submit" value="Next User" title="save and continue" class="submitArrow"/>
+	<input type="submit" value="<?php tp('Next User');?>" title="save and continue" class="submitArrow"/>
 	<div style="float:right;">&nbsp;</div>
 	<button type="button" id="Finished" title="save this record" class="submitNoArrow" /><?php tp('Finished');?></button>
 	<div class="clear"></div>

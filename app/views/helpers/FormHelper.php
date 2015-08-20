@@ -22,22 +22,24 @@
  * creates html string for a labelled input field, uses view object to control readonly/required data
  * @param  view   $view       - the view object
  * @param  string $label      - label text
- * @param  string $content    - 'text' or 'textarea' or any html blob
+ * @param  string $content    - 'text', 'textarea', 'date', '%' or any html blob
  * @param  string $id    = '' - html element id
  * @param  string $val   = '' - value to display for input tags
  * @return html string
- */
-
-/* returns:
- * @return string <div class="$class $id">$required$label</div>
- *	<div class="fieldInput">$reportcheck$content$cal1</div>
+ * returns:
+ * string <div class="$class $id">$required$label</div>
+ * <div class="fieldInput">$reportcheck$content$cal1</div>
 */
 
 function labelAndField($view, $label, $content, $id = '', $val = '')
 {
 	$class = $view->thin_labels ? 'fieldLabelThin' : 'fieldLabel';
 	$readonly = $view->viewonly ? 'readonly="readonly"' : '';
-	$required = ( array_search($id,$view->required_fields) !== false ) ? '<span class="required">*</span>' : '';
+    $required = '';
+    if (isset($view->required_fields) && (array_search($id, $view->required_fields) !== false)) {
+        $required = '<span class="required">*</span>';
+    }
+
 	$cal = '<a class="calendarbtn" href="#"><img src="'.$view->base_url.'/js/yui/assets/calbtn.gif"></a>';
 	if (!$view->calendar_fields) $view->calendar_fields = array();
 	$cal1 = (array_search($id, $view->calendar_fields) === false) ? '' : $cal;
@@ -48,7 +50,7 @@ function labelAndField($view, $label, $content, $id = '', $val = '')
 	if ($content == 'text')
 		$content = '<input type="text" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/>';
 	else if ($content == 'date')
-		$content = '<input type="text" class="datepicker id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/> '.$cal;
+		$content = '<input type="text" class="datepicker" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/> '.$cal;
 	else if ($content == 'textarea')
 		$content = '<textarea id="'.$id.'" name="'.$id.'" '.$readonly.'>'.$val.'</textarea>';
 	else if ($content == '%') //TA:20: 08/29/2014 
