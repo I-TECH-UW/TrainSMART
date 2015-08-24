@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# CentOS x86_64 6.6 PHP 5.6.xx with Zend Debugger
+# CentOS x86_64 6.7 PHP 5.6.xx with Zend Debugger
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
@@ -11,7 +11,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "chef/centos-6.6"
+  config.vm.box = "box-cutter/centos67"
   config.vm.hostname = "centos6-php56-zend"
   
   # forward http
