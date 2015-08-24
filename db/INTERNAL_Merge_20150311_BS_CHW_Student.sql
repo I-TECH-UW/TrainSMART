@@ -25,5 +25,5 @@ CREATE TABLE `workplace` (
   `contact_phone` varchar(255) default NULL,
   `contact_email` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

@@ -8,7 +8,7 @@ CREATE TABLE `site_styles` (
   `id` int(11) NOT NULL auto_increment,
   `site_style_name` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 INSERT INTO `site_styles` (`site_style_name`) VALUES ('default');
 INSERT INTO `site_styles` (`site_style_name`) VALUES ('skillsmart');

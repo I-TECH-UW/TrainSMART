@@ -11,14 +11,14 @@ CREATE TABLE `class_modules` (
   `lookup_coursetype_id` int(10) NOT NULL DEFAULT 0,
   `custom_1` varchar(255),
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `link_student_class_modules` (
   `id` int(11) NOT NULL auto_increment,
   `student_id` int(11) default NULL,
   `class_modules_id` int(11) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 INSERT IGNORE INTO `translation` (key_phrase, phrase) values ('ps class modules custom 1', 'ps class modules custom 1');
 
