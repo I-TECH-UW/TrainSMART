@@ -7,6 +7,7 @@
  *  
  */
 class Session {
+	private static $_settings = array();
 
 	public static function getCurrentUserId() {
         require_once('Zend/Auth.php');
@@ -16,5 +17,13 @@ class Session {
         	return $auth->getIdentity()->id;
 		
         return 0;
+	}
+
+	public static function setSettings($settings) {
+		self::$_settings = $settings;
+	}
+
+	public static function getSetting($theSetting) {
+		return self::$_settings[$theSetting];
 	}
 }

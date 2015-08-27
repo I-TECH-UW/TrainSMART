@@ -33,49 +33,61 @@ class Globals
 
         $countryLoaded = false;
 
-        if (($host == 'fpdashboard.ng') || ($host == 'www.fpdashboard.ng')) {
-            // BS 20141031 - add in fpdashboard.ng alias for chainigeria
-            Settings::$DB_DATABASE = 'itechweb_chainigeria';
-            Settings::$COUNTRY_BASE_URL = 'http://www.fpdashboard.ng';
-            $countryLoaded = true;
-        }
-        else if (($rparts[0] !== 'org') || ($rparts[1] !== 'trainingdata')) {
-            redirect_to_www();
-        }
-
-        if (count($parts) === 3) {
-            // we have a sitename.trainingdata.org address
-
-            if ($subMostDomain === 'www') {
-                // the web server should not be executing the current file to serve www.trainingdata.org
-                throw new Exception("Server configuration problem.");
-            }
-            Settings::$DB_DATABASE = 'itechweb_' . $subMostDomain;
-            self::$COUNTRY = $subMostDomain;
-
-            // use https for *.trainingdata.org sites
-            Settings::$COUNTRY_BASE_URL = 'https://' . $parts[0] . '.trainingdata.org';
-            $countryLoaded = true;
-        }
-
-        if ($subMostDomain === 'www') {
+        if ($subMostDomain === 'www' && ($rparts[1] === 'eventsmart' || $rparts[1] === 'trainingdata')) {
             // redirect to sitename.trainingdata.org if we get a request for www.sitename.trainingdata.org
             $newUrl = implode('.', array_slice($parts, 1));
             header("Location: //$newUrl");
             exit();
         }
 
-        if (count($parts) === 4 && $subMostDomain === 'jhpiego') {
-            // request was in the form of //jhpiego.country.trainingdata.org
+        if (count($parts) === 2) {
+            if ($host === 'eventsmart.info') {
+                Settings::$DB_DATABASE = 'itechweb_eventsmart';
+                self::$COUNTRY = $subMostDomain;
 
-            // database name should be itechweb_jhpiego_country
-            Settings::$DB_DATABASE = implode('_', array('itechweb', $rparts[0], $rparts[1]));
+                // eventsmart.info is a special case site
+                Settings::$COUNTRY_BASE_URL = 'http://eventsmart.info';
+                $countryLoaded = true;
+            }
+        }
+        else if (count($parts) === 3) {
+            if ($subMostDomain === 'www') {
+                // the web server should not be executing the current file to serve www.trainingdata.org or
+                // www.eventsmart.info (we don't host www.eventsmart.info anyway)
+                throw new Exception("Server configuration problem.");
+            }
 
-            // use http for *.*.trainingdata.org
-            Settings::$COUNTRY_BASE_URL = 'http://' . implode('.', $parts);
-            $countryLoaded = true;
-            // Note that the predecessor file leaves self::$COUNTRY set at 'jhpiego' for all of these sites,
-            // so this replacement is doing the same in order to not possibly break things
+            if (($rparts[1] === 'trainingdata') && ($rparts[0] === 'org')) {
+                // we have a sitename.trainingdata.org address
+
+                Settings::$DB_DATABASE = 'itechweb_' . $subMostDomain;
+                self::$COUNTRY = $subMostDomain;
+
+                // use https for *.trainingdata.org sites
+                Settings::$COUNTRY_BASE_URL = 'https://' . $parts[0] . '.trainingdata.org';
+                $countryLoaded = true;
+            }
+            else if (($rparts[1] === 'eventsmart') && ($rparts[0] === 'info')) {
+                // database name should be itechweb_eventsmart_subproject
+                Settings::$DB_DATABASE = 'itechweb_eventsmart_' . $subMostDomain;
+                self::$COUNTRY = $subMostDomain;
+                Settings::$COUNTRY_BASE_URL = 'http://' . $parts[0] . 'eventsmart.info';
+                $countryLoaded = true;
+            }
+        }
+        else if (count($parts) === 4) {
+            if ($subMostDomain === 'jhpiego') {
+                // request was in the form of //jhpiego.country.trainingdata.org
+
+                // database name should be itechweb_jhpiego_country
+                Settings::$DB_DATABASE = 'itechweb_jhpiego_' . $rparts[2];
+
+                // use http for *.*.trainingdata.org
+                Settings::$COUNTRY_BASE_URL = 'http://' . implode('.', $parts);
+                $countryLoaded = true;
+                // Note that the predecessor file leaves self::$COUNTRY set at 'jhpiego' for all of these sites,
+                // so this replacement is doing the same in order to not possibly break things
+            }
         }
 
         // redirect to front-facing, non-TrainSMART website

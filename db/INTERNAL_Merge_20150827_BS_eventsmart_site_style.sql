@@ -1,0 +1,1 @@
+INSERT INTO `site_styles` (`site_style_name`) VALUES ('eventsmart');

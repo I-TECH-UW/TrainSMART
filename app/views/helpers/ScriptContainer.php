@@ -42,8 +42,7 @@ class ScriptContainer {
 			//	$this->addCSSLink('/css/trainsmart/ts.css');
 			//	$this->addCSSLink('/css/media/trainsmart.css');
 
-			$url_parts = explode('.', $_SERVER['HTTP_HOST']);
-			if ( @$url_parts[0] == 'eventsmart' OR (isset($url_parts[1]) && (@$url_parts[1] == 'eventsmart')) ) {
+			if (Session::getSetting('site_style') === 'eventsmart') {
 				$this->addCSSLink('/css/style-engender.css');
 			}
 

@@ -198,14 +198,16 @@ if(isset(Settings::$CSS)) {
 
 <!-- login links -->
 <a href="<?php echo Settings::$COUNTRY_BASE_URL;?>"><img src="<?php
-	$url_parts = explode('.', $_SERVER['HTTP_HOST']);
 	$engender = false;
-	if ( isset($this->setting['logo_id']) ) {
-		echo Settings::$COUNTRY_BASE_URL.'/file/download/id/'.$this->setting['logo_id'];
-	} else if ( @$url_parts[0] == 'eventsmart' OR @$url_parts[1] == 'eventsmart' ) {
+
+	if ($this->setting['site_style'] === 'eventsmart') {
 		echo Settings::$COUNTRY_BASE_URL.'/images/engenderhealth-logo-v2.gif';
 		$engender = true;
-	} else {
+	}
+	else if ( isset($this->setting['logo_id']) ) {
+		echo Settings::$COUNTRY_BASE_URL.'/file/download/id/'.$this->setting['logo_id'];
+	}
+	else {
 		switch ( strtolower(Settings::$COUNTRY_NAME) ) {
 			case 'haiti':
 			echo Settings::$COUNTRY_BASE_URL.'/images/haiti_flag.jpg';

@@ -50,6 +50,8 @@ class System extends Zend_Db_Table_Abstract
             }
             $select = $db->select()->from('site_styles', 'site_style_name')->where('id = ?', $rtn['site_style_id']);
             $rtn['site_style'] = $db->fetchOne($select);
+            require_once('models/Session.php');
+            Session::setSettings($rtn);
             return $rtn;
         } catch(Zend_Exception $e) {
             error_log($e);
