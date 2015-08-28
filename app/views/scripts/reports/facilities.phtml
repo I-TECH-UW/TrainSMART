@@ -33,13 +33,13 @@ if ($this->mode == 'search' ) {
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
 
-    <h1><?php tp('Facility');?> <?php echo ($this->mode != 'search'? t('Reports'):t('Search') );  ?></h1>
+    <h1><?php tp('Facility ' . ($this->mode != 'search'? 'Reports':'Search' ) )?></h1>
  <?php if ($this->mode != 'search' ) { ?>
     	<div class="fieldLabel"><?php tp('Select facility report');?></div>
     	<select id="training" name="training" onchange="gotoPage('training');">
     		<option value="">--<?php tp('choose');?>--</option>
-    		<option value="/reports/trainingByFacility" <?php if ($this->mode == 'id') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('by').' '.t('Facility').' '.t('Name');?></option>
-    		<option value="/reports/trainingByFacilityCount" <?php if ($this->mode == 'count') echo 'selected="selected"';?>><?php echo t('Trainings').' '.t('by').' '.t('Facility').' '.t('Participant Count');?></option>
+    		<option value="/reports/training-by-facility" <?php if ($this->mode == 'id') echo 'selected="selected"';?>><?php echo t('Trainings by Facility Name');?></option>
+    		<option value="/reports/training-by-facility-count" <?php if ($this->mode == 'count') echo 'selected="selected"';?>><?php echo t('Trainings by Facility Participant Count');?></option>
    	</select>
    <?php } ?>
    <br clear="all" />
@@ -110,7 +110,7 @@ if ($this->mode == 'search' ) {
 		?>
 	</select></div></div>
 <?php } ?>
-	<div class="fieldLabel" id="training_location_id_lbl"><?php echo t('Training').' '.t('location');?></div>
+	<div class="fieldLabel" id="training_location_id_lbl"><?php echo t('Training location');?></div>
 	<div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showLocation" <?php echo $checkVisible;?> <?php  if ($this->criteria['showLocation'] or ($this->mode == 'search' )) echo 'CHECKED';?> /></div><label for="showLocation" <?php echo $checkVisible;?>></label>
 
 	<div  class="leftBorder">
@@ -261,7 +261,7 @@ if ($this->mode == 'search' ) {
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
 <div class="hrGrey"></div>
-    <div class="fieldIndentNoMargin"><?php echo t('Trainings').' '.t('matched with').' '.t('Facilities');?> <span class="total"><?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span><?php echo $this->printAndExport();?></div>
+    <div class="fieldIndentNoMargin"><?php echo t('Trainings matched with Facilities');?> <span class="total"><?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span><?php echo $this->printAndExport();?></div>
 <?php } ?>
     <div id="trainings" class="itechTable"></div>
     <script type="text/javascript">
@@ -333,7 +333,7 @@ var trainingColumnDefs = [
 <?php if (isset($this->results[0]['cnt'])) { ?>
 {key:"cnt", label: "Count", sortable:true, resizeable:true}
 <?php } else { ?>
-{key:"id", label: "ID", sortable:true, resizeable:true, formatter: formatViewUrl},
+{key:"id", label: "<?php tp('ID')?>", sortable:true, resizeable:true, formatter: formatViewUrl},
 {key:"training_start_date", label: "<?php tp('Date');?>", sortable:true, resizeable:true}
 <?php } ?>
 <?php if ( $this->criteria['showFacility'] ) { ?>

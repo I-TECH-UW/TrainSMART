@@ -24,9 +24,7 @@
 
 					<?php
 						$this->required_fields = array();
-						// echo labelAndField($this, t('First Name'), 'text', 'first_name', $this->criteria['first_name']);
-						// echo labelAndField($this, t('Last Name'), 'text', 'last_name', $this->criteria['last_name']);
-						
+
 						echo labelAndField($this, t('Employee').space.t('Code'), 'text', 'employee_code', $this->criteria['employee_code']);
 						
 						echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, false );
@@ -34,12 +32,9 @@
 						if ( $this->setting['display_employee_partner'] ) {
   						  echo labelAndField($this, t('Partner'), $this->partners);
 						
-						  //file_put_contents('c:\wamp\logs\php_debug.log', 'empSearch 37>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-						  //var_dump($this->subPartner);
-						  //$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
 						}
 						if ( $this->setting['display_employee_site_name'] ) 	
-						  echo labelAndField($this, t('Site'), renderFacilityDropDown($this->sites, $this->criteria['facilityInput']));
+						  echo labelAndField($this, t('Site'), renderFacilityDropDown($this->sites, $this->criteria['facilityInput'], $this->viewonly));
 						
 						echo labelAndField($this, t('Staff Cadre'),    $this->cadres);
 						

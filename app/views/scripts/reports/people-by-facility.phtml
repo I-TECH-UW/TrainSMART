@@ -155,9 +155,9 @@ function setDistrictStatus(selected="selected"Index)  {
   	<div  class="leftBorder">
 	<select id="training_gender" name="training_gender" >
 		<option value="">--<?php tp('All');?>--</option>
-		<option value="male" <?php echo (@$this->criteria['training_gender'] == 'male'? 'selected="selected"':''); ?> >male</option>
-		<option value="female"  <?php echo (@$this->criteria['training_gender'] == 'female'? 'selected="selected"':''); ?> >female</option>
-		<option value="na"  <?php echo (@$this->criteria['training_gender'] == 'na'? 'selected="selected"':''); ?> >na</option>
+		<option value="male" <?php echo (@$this->criteria['training_gender'] == 'male'? 'selected="selected"':''); ?> ><?php tp('Male')?></option>
+		<option value="female"  <?php echo (@$this->criteria['training_gender'] == 'female'? 'selected="selected"':''); ?> ><?php tp('Female')?></option>
+		<option value="na"  <?php echo (@$this->criteria['training_gender'] == 'na'? 'selected="selected"':''); ?> ><?php tp('N/A')?></option>
 	</select></div></div>
  <?php if ($this->setting['display_people_active']) { ?>
 	<div class="fieldLabel" id="training_active_lbl"><?php echo (@$this->translation['Is Active']); ?></div>
@@ -217,7 +217,7 @@ function setDistrictStatus(selected="selected"Index)  {
 <?php } ?>
 	<div class="clear"></div>
 	<input type="hidden" name="limit" id="limit" value="1" />
-   	<input type="submit" class="submitNoArrow" name="go" value="Preview" />
+   	<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview')?>" />
    </fieldset>
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
@@ -288,7 +288,7 @@ var trainingColumnDefs = [
 <?php if (isset($this->results[0]['cnt'])) { ?>
 {key:"cnt", label: "<?php tp('Participant Count');?>", sortable:false, resizeable:true}
 <?php } else { ?>
-	{key:"id", label: "ID", sortable:false, resizeable:true, formatter: formatViewUrl},
+	{key:"id", label: "<?php tp('ID')?>", sortable:false, resizeable:true, formatter: formatViewUrl},
 	<?php if ( !$this->criteria['concatNames'] ) { ?>
 		{key:"first_name", label: "<?php echo (@$this->translation['First Name']); ?>", sortable:true, resizeable:true},
    <?php if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) { ?>

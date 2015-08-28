@@ -15,7 +15,7 @@ class Person extends ITechTable
 	protected $_name = 'person';
 	protected $_primary = 'id';
 
-	public function createRow(array $data = array()) {
+	public function createTableRow( array $data = array() ) {
 		$row = parent::createRow($data);
 		if ( !isset($data['active']) ) {
 			$row->active = 'active';
@@ -52,6 +52,7 @@ class Person extends ITechTable
 		return $this->fetchRow($select);
 	}
 
+	//TA: use in 'where' and
 	public static function tryFind ($first, $middle, $last)
 	{
 		$first = trim($first);
@@ -164,7 +165,7 @@ class Person extends ITechTable
 		$historyTable = new History('person');
 		//cheezy way to get the id
 		$parts = explode('=',$where[0]);
-		$historyTable->insert($this, trim($parts[1]));
+		$historyTable->tableInsert($this, trim($parts[1]));
 
 		$rslt = parent::update($data,$where);
 

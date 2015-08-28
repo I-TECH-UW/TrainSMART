@@ -51,7 +51,7 @@ class Trainer extends ITechTable
 
       $select = $topicTable->select()->from(array('p'=>'person'),$fieldsSelect)->setIntegrityCheck(false);
   		$select->joinLeft(array('t' => 'trainer'),
-       						"p.id = t.person_id", array('is_trainer' => '!(ISNULL(t.type_option_id))'));
+       						"p.id = t.person_id", array('is_trainer' => '(!ISNULL(t.type_option_id))'));
 
     	//look for char start
     	if ( $match ) {
@@ -90,7 +90,7 @@ class Trainer extends ITechTable
     $personHistoryTable = new History('person');
     $hrow = $personHistoryTable->fetchAll( "person_id = $pid" ,"vid DESC" ,1);
     
-    $historyTable->insert($this, $hrow->current()->vid);
+    $historyTable->tableInsert($this, $hrow->current()->vid);
     
     $rslt = parent::update($data,$where);
 

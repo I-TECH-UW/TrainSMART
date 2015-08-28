@@ -6,6 +6,7 @@
 *	Fuse IQ -- todd@fuseiq.com
 *
 */
+
 function no_soft_space_str($v){
 	return str_replace(' ', '&nbsp;', $v);
 }
@@ -27,9 +28,9 @@ if ( $this->isLoggedIn() ) {
 	if ( $this->hasACL('edit_people') && $this->hasACL('edit_studenttutorinst')){
 		$navMain['institution'] = array(
 				//TA: added 7/25/2014 : automatic label changes
-		'index' => $this->translation['ps institution'], 
-		'institution'	=> t('View/Edit ') . $this->translation['ps institution'],
-		'institutionadd' =>	t('Add ') . $this->translation['ps institution'],
+		'index' => t($this->translation['ps institution']), 
+		'institution'	=> t('View/Edit') . ' ' . t($this->translation['ps institution']),
+		'institutionadd' =>	t('Add') . ' ' . t($this->translation['ps institution']),
 		);
 	} else {
 		$navMain['institution'] = array(
@@ -53,16 +54,25 @@ if ( $this->isLoggedIn() ) {
 	}
 
 	// PEOPLE LINK
+
 	if ( $this->hasACL('edit_people') && $this->hasACL('edit_studenttutorinst')){
+		$addLink = '../peopleadd/peopleadd';
+		if ($this->setting['site_style'] == 'skillsmart') {
+			$addLink = '../peopleadd/skillsmart-chw-add';
+		}
 		$navMain['people'] = array(
-		'index' => t('People'),
-		'people' => t('View/Edit Person'),
-		'../peopleadd/peopleadd' => t('Add Person'),
+			'index' => t('People'),
+			'people' => t('View/Edit Person'),
+			$addLink => t('Add Person'),
 		);
+		if ($this->setting['site_style'] == 'skillsmart') {
+			$navMain['people']['../peopleadd/peopleadd'] = t('Add') . ' ' . t('Tutor');
+		}
+
 	} else {
 		$navMain['people'] = array(
-		'index' => t('People'),
-		'people' => t('View Person'),
+			'index' => t('People'),
+			'people' => t('View Person'),
 		);
 	}
 
@@ -73,21 +83,21 @@ if ( $this->isLoggedIn() ) {
 		);
 
 		if (	$this->hasACL('edit_people')	) {
-			$navMain['psfacility']['search']	= t('View/Edit').' '.t('Facility');
+			$navMain['psfacility']['search']	= t('View/Edit Facility');
 		} else if ($this->hasACL('view_people')) {
-			$navMain['psfacility']['search']	= t('View').' '.t('facility');
+			$navMain['psfacility']['search']	= t('View Facility');
 		}
 		if (	$this->hasACL('edit_people') ) {
-			$navMain['psfacility']['add']	= t('Add').' '.t('Facility');
+			$navMain['psfacility']['add']	= t('Add Facility');
 		}
 
 		if (	$this->hasACL('edit_course') ) {
-			$navMain['psfacility']['searchLocation']	= t('View/Edit').' '.t('Training').' '.t('Location');
+			$navMain['psfacility']['search-location']	= t('View/Edit Training Location');
 		} else if ($this->hasACL('view_course')) {
-			$navMain['psfacility']['searchLocation']	= t('View').' '.t('Training').' '.t('Location');
+			$navMain['psfacility']['search-location']	= t('View Training Location');
 		}
 		if (	$this->hasACL('edit_course')) {
-			$navMain['psfacility']['addLocation']	= t('Add').' '.t('Training').' '.t('Location');
+			$navMain['psfacility']['add-location']	= t('Add Training Location');
 		}
 
 	}
@@ -96,12 +106,12 @@ if ( $this->isLoggedIn() ) {
 	if ( $this->hasACL('view_create_reports')) {
 		//TA: added 7/25/2014 : automatic label changes
 		$navMain['reports']['index']  =  t('Reports');
-		$navMain['reports']['psStudentsTrained']			= t('Student Reports');
-		$navMain['reports']['psCourseByName']				= t('Course Reports');
-		$navMain['reports']['psCohortByParticipantCount']	= t('Cohort Reports');
-		$navMain['reports']['psInstitutionInformation']		= $this->translation['ps institution']. t(' Reports');
-		$navMain['reports']['psTutorByName']				= $this->translation['ps tutor']. t(' Reports');
-		$navMain['reports']['psFacilityReport']             = t('Facility Report');
+		$navMain['reports']['ps-students-trained']			= t('Student Reports');
+		$navMain['reports']['ps-course-by-name']				= t('Course Reports');
+		$navMain['reports']['ps-cohort-by-participant-count']	= t('Cohort Reports');
+		$navMain['reports']['ps-institution-information']		= t($this->translation['ps institution']. ' Reports');
+		$navMain['reports']['ps-tutor-by-name']				= t($this->translation['ps tutor']. ' Reports');
+		$navMain['reports']['ps-facility-report']             = t('Facility Report');
 	}
 
 	// PRE-SERVICE LINK
@@ -132,23 +142,6 @@ if ( $this->isLoggedIn() ) {
 		$navMain['user']['../desktop/download-dotnet'] = no_soft_space_str( t('Get Required .NET') );
 		$navMain['user']['../sync/upload'] = t('Upload Data');
 	}
-	if (( $this->hasACL('admin_preservice')) || ( $this->hasACL('pre_service'))) {
-		$navMain['user']['../'] = '---------------';
-		$navMain['user']['../admin/preservice-labels'] = t('PS Field labels');
-		$navMain['user']['../admin/preservice-classes'] = t('PS Classes');
-		$navMain['user']['../admin/preservice-cadres'] = t('PS Cadres');
-		$navMain['user']['../admin/preservice-degrees'] = t('PS Degrees');
-		$navMain['user']['../admin/preservice-funding'] = t('PS Funding');
-		$navMain['user']['../admin/preservice-institutiontypes'] = t('PS Institution Types');
-		$navMain['user']['../admin/preservice-joindropreasons'] = t('PS Join & Drop Reasons');
-		$navMain['user']['../admin/preservice-languages'] = t('PS Languages');
-		$navMain['user']['../admin/preservice-nationalities'] = t('PS Nationalities');
-		$navMain['user']['../admin/preservice-sponsors'] = t('PS Sponsors');
-		//$navMain['user']['../admin/preservice-studenttypes'] = t('PS Student Types'); //TA: removed 7/28/2014: not using any more
-		$navMain['user']['../admin/preservice-tutortypes'] = t('PS Tutor Types');
-		$navMain['user']['../admin/preservice-coursetypes'] = t('PS Course Types');
-		$navMain['user']['../admin/preservice-religion'] = t('PS Religions');
-	}
 } else {
 	$navMain = array( // directory => array of nav items
 	'select/select' => array(
@@ -172,14 +165,16 @@ if(isset(Settings::$CSS)) {
 
 <!-- login links -->
 <a href="<?php echo Settings::$COUNTRY_BASE_URL;?>"><img src="<?php
-	$url_parts = explode('.', $_SERVER['HTTP_HOST']);
 	$engender = false;
-	if ( isset($this->setting['logo_id']) ) {
-		echo Settings::$COUNTRY_BASE_URL.'/file/download/id/'.$this->setting['logo_id'];
-	} else if ( @$url_parts[0] == 'eventsmart' OR @$url_parts[1] == 'eventsmart' ) {
+
+	if ($this->setting['site_style'] === 'eventsmart') {
 		echo Settings::$COUNTRY_BASE_URL.'/images/engenderhealth-logo-v2.gif';
 		$engender = true;
-	} else {
+	}
+	else if ( isset($this->setting['logo_id']) ) {
+		echo Settings::$COUNTRY_BASE_URL.'/file/download/id/'.$this->setting['logo_id'];
+	}
+	else {
 		switch ( strtolower(Settings::$COUNTRY_NAME) ) {
 			case 'haiti':
 			echo Settings::$COUNTRY_BASE_URL.'/images/haiti_flag.jpg';

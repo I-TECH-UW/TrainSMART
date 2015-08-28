@@ -1,118 +1,118 @@
 <?php require_once('views/helpers/DropDown.php'); ?>
 
 <script type="text/javascript">
-   <!--//--><![CDATA[//><!--
-function updateAge() {
-  if ( YAHOO.util.Dom.get( 'birth-year').value > 0 && YAHOO.util.Dom.get( 'birth-month').value > 0 && YAHOO.util.Dom.get( 'birth-day').value > 0) {
-    var bday = new Date ( YAHOO.util.Dom.get( 'birth-year').value, YAHOO.util.Dom.get( 'birth-month').value -1, YAHOO.util.Dom.get( 'birth-day').value -1);
-    var today = new Date ();
-        var age = today.getFullYear() - bday.getFullYear();
-        age -= 1;
-        bday.setFullYear(today.getFullYear ());
-        if ( bday.getMonth() < today.getMonth())
-          age += 1;
-        else if (bday.getMonth() == today.getMonth() && bday.getDay() < today.getDay())
-          age += 1;
-    var ageElement =  YAHOO.util.Dom.get( 'age');
-    if ( ageElement ) ageElement.value = age;
-  }
-}
+    <!--//--><![CDATA[//><!--
+    function updateAge() {
+        if ( YAHOO.util.Dom.get( 'birth-year').value > 0 && YAHOO.util.Dom.get( 'birth-month').value > 0 && YAHOO.util.Dom.get( 'birth-day').value > 0) {
+            var bday = new Date ( YAHOO.util.Dom.get( 'birth-year').value, YAHOO.util.Dom.get( 'birth-month').value -1, YAHOO.util.Dom.get( 'birth-day').value -1);
+            var today = new Date ();
+            var age = today.getFullYear() - bday.getFullYear();
+            age -= 1;
+            bday.setFullYear(today.getFullYear ());
+            if ( bday.getMonth() < today.getMonth())
+                age += 1;
+            else if (bday.getMonth() == today.getMonth() && bday.getDay() < today.getDay())
+                age += 1;
+            var ageElement =  YAHOO.util.Dom.get( 'age');
+            if ( ageElement ) ageElement.value = age;
+        }
+    }
 
-function updateBirthdate() {
-  var today = new Date ();
-  var age =  YAHOO.util.Dom.get( 'age').value;
-  if ( age > 0  )
-    YAHOO.util.Dom.get( 'birth-year').value = today.getFullYear() - age;
-    YAHOO.util.Dom.get( 'birth-month').value = 1;
-    YAHOO.util.Dom.get( 'birth-day').value = 1;
-}
+    function updateBirthdate() {
+        var today = new Date ();
+        var age =  YAHOO.util.Dom.get( 'age').value;
+        if ( age > 0  )
+            YAHOO.util.Dom.get( 'birth-year').value = today.getFullYear() - age;
+        YAHOO.util.Dom.get( 'birth-month').value = 1;
+        YAHOO.util.Dom.get( 'birth-day').value = 1;
+    }
 
-YAHOO.util.Event.onDOMReady(updateAge);
+    YAHOO.util.Event.onDOMReady(updateAge);
 
 
-// submit form, then redirect
-function submitThenRedirect(url) {
-	var fld = document.getElementById('redirectUrl');
-	fld.value = url;
-	document.getElementById('personForm').submit();
+    // submit form, then redirect
+    function submitThenRedirect(url) {
+        var fld = document.getElementById('redirectUrl');
+        fld.value = url;
+        document.getElementById('personForm').submit();
 //var redirectEl = YAHOO.util.Dom.get('redirectUrl');
 //redirectEl.value = url;
 //YAHOO.util.Dom.get('personForm').submit();
-window.location = url;
-}
-
-YAHOO.namespace("example.container");
-
-function init() {
-
-  // Define various event handlers for Dialog
-  var handleSubmit = function() {
-    //clear error text
-    var els = YAHOO.util.Dom.getElementsByClassName('errorText');
-    if ( els.length )
-      YAHOO.util.Dom.setStyle(els, 'display', 'none');
-    this.submit();
-  };
-  var handleCancel = function() {
-    this.cancel();
-  };
-  var handleSuccess = function(o) {
-    var response = o.responseText;
-    var responseObj = YAHOO.lang.JSON.parse(response);
-    displayStatus(responseObj.status);
-    var allGood = true;
-    if ( responseObj.messages ) {
-      for (var key in responseObj.messages) {
-        YAHOO.example.container.addFacility.show();
-        displayErrorMessage(key,responseObj.messages[key]);
-        allGood = false;
-      }
+        window.location = url;
     }
 
-    if ( allGood ) {
-      //var facilityEl =  YAHOO.util.Dom.get('facilityInput');
-      //var newName = YAHOO.util.Dom.get('facility_name').value;
-      //facilityEl.value = newName;
-      //alert(YAHOO.util.Dom.get('obj_id').value);
-      elProv = YAHOO.util.Dom.get('facility_province_id');
-      province_id = elProv.options[elProv.selectedIndex].value;
+    YAHOO.namespace("example.container");
 
-      elDist = YAHOO.util.Dom.get('facility_district_id');
-      district_id = (elDist) ? elDist.options[elDist.selectedIndex].value : "0";
+    function init() {
 
-      setSelected('person_facility_province_id', province_id);
-      filterSubTypeOptions('person_facility_province_id','person_facility_district_id');
-      setSelected('person_facility_district_id', district_id);
+        // Define various event handlers for Dialog
+        var handleSubmit = function() {
+            //clear error text
+            var els = YAHOO.util.Dom.getElementsByClassName('errorText');
+            if ( els.length )
+                YAHOO.util.Dom.setStyle(els, 'display', 'none');
+            this.submit();
+        };
+        var handleCancel = function() {
+            this.cancel();
+        };
+        var handleSuccess = function(o) {
+            var response = o.responseText;
+            var responseObj = YAHOO.lang.JSON.parse(response);
+            displayStatus(responseObj.status);
+            var allGood = true;
+            if ( responseObj.messages ) {
+                for (var key in responseObj.messages) {
+                    YAHOO.example.container.addFacility.show();
+                    displayErrorMessage(key,responseObj.messages[key]);
+                    allGood = false;
+                }
+            }
 
-      <?php if ( $this->setting['display_region_c']) { ?>
-      elC = YAHOO.util.Dom.get('facility_region_c_id');
-      region_c_id = (elC) ? elC.options[elC.selectedIndex].value : "0";
-      filterSubTypeOptions('person_facility_district_id','person_facility_region_c_id');
-      setSelected('person_facility_region_c_id', region_c_id);
-      <?php } ?>
+            if ( allGood ) {
+                //var facilityEl =  YAHOO.util.Dom.get('facilityInput');
+                //var newName = YAHOO.util.Dom.get('facility_name').value;
+                //facilityEl.value = newName;
+                //alert(YAHOO.util.Dom.get('obj_id').value);
+                elProv = YAHOO.util.Dom.get('facility_province_id');
+                province_id = elProv.options[elProv.selectedIndex].value;
 
-      var newOpt = document.createElement('option');
-      newOpt.text = YAHOO.util.Dom.get('facility_name').value;
-      newOpt.value = responseObj.obj_id;
-      newOpt.selected = true;
+                elDist = YAHOO.util.Dom.get('facility_district_id');
+                district_id = (elDist) ? elDist.options[elDist.selectedIndex].value : "0";
 
-      var facSel = document.getElementById('facilityInput');
-      try {
-        facSel.add(newOpt, null); // standards compliant; doesn't work in IE
-      } catch(ex) {
-        facSel.add(newOpt); // IE only
-      }
+                setSelected('person_facility_province_id', province_id);
+                filterSubTypeOptions('person_facility_province_id','person_facility_district_id');
+                setSelected('person_facility_district_id', district_id);
 
-    }
+                <?php if ( $this->setting['display_region_c']) { ?>
+                elC = YAHOO.util.Dom.get('facility_region_c_id');
+                region_c_id = (elC) ? elC.options[elC.selectedIndex].value : "0";
+                filterSubTypeOptions('person_facility_district_id','person_facility_region_c_id');
+                setSelected('person_facility_region_c_id', region_c_id);
+                <?php } ?>
 
-  };
-  var handleFailure = function(o) {
-    alert("<?php tp('Submission failed:');?> " + o.status);
-  };
+                var newOpt = document.createElement('option');
+                newOpt.text = YAHOO.util.Dom.get('facility_name').value;
+                newOpt.value = responseObj.obj_id;
+                newOpt.selected = true;
 
-  // Instantiate the Dialog
-  YAHOO.example.container.addFacility = new YAHOO.widget.Dialog("addFacility",
-              { width : "50em",
+                var facSel = document.getElementById('facilityInput');
+                try {
+                    facSel.add(newOpt, null); // standards compliant; doesn't work in IE
+                } catch(ex) {
+                    facSel.add(newOpt); // IE only
+                }
+
+            }
+
+        };
+        var handleFailure = function(o) {
+            alert("<?php tp('Submission failed:');?> " + o.status);
+        };
+
+        // Instantiate the Dialog
+        YAHOO.example.container.addFacility = new YAHOO.widget.Dialog("addFacility",
+            { width : "50em",
                 fixedcenter : false,
                 visible : false,
                 constraintoviewport : true,
@@ -120,183 +120,183 @@ function init() {
                 zIndex: 9100,
                 context : ["personForm", "tl", "bl"],
                 buttons : [ { text:"Submit", handler:handleSubmit, isDefault:true },
-                      { text:"Cancel", handler:handleCancel } ]
-              });
+                    { text:"Cancel", handler:handleCancel } ]
+            });
 
 
-  // Validate the entries in the form to require that both first and last name are entered
-  YAHOO.example.container.addFacility.validate = function() {
-    return true;//do all validation server side
-  };
+        // Validate the entries in the form to require that both first and last name are entered
+        YAHOO.example.container.addFacility.validate = function() {
+            return true;//do all validation server side
+        };
 
-  // Wire up the success and failure handlers
-  YAHOO.example.container.addFacility.callback = { success: handleSuccess,
-                 failure: handleFailure };
+        // Wire up the success and failure handlers
+        YAHOO.example.container.addFacility.callback = { success: handleSuccess,
+            failure: handleFailure };
 
-  // Render the Dialog
-  YAHOO.example.container.addFacility.render();
+        // Render the Dialog
+        YAHOO.example.container.addFacility.render();
 
-  // Show dialog and initialize region selects
-  YAHOO.util.Event.addListener("show", "click", YAHOO.example.container.addFacility.show, YAHOO.example.container.addFacility, true);
+        // Show dialog and initialize region selects
+        YAHOO.util.Event.addListener("show", "click", YAHOO.example.container.addFacility.show, YAHOO.example.container.addFacility, true);
 
- }
+    }
 
-YAHOO.util.Event.onDOMReady(init);
+    YAHOO.util.Event.onDOMReady(init);
 
-<?php if($this->mode == 'add') : ?>
-var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
-  var tredirect = '';
-<?php if($this->trainingredirect) { ?>
-  tredirect = "/trainingredirect/<?php echo $this->trainingredirect; ?>";
-<?php } ?>
-<?php if($this->maketrainer) { ?>
-  tredirect = tredirect + "/maketrainer/1";
-<?php } ?>
-  if ( (sData == null) || (sData.length == 0) )
-    sData = '&nbsp;&nbsp;&nbsp;';
-    elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/person/edit/id/" + oRecord.getData("person_id") + tredirect + "' >" + sData + "</a>";
-}
+    <?php if($this->mode == 'add') : ?>
+    var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
+        var tredirect = '';
+        <?php if($this->trainingredirect) { ?>
+        tredirect = "/trainingredirect/<?php echo $this->trainingredirect; ?>";
+        <?php } ?>
+        <?php if($this->maketrainer) { ?>
+        tredirect = tredirect + "/maketrainer/1";
+        <?php } ?>
+        if ( (sData == null) || (sData.length == 0) )
+            sData = '&nbsp;&nbsp;&nbsp;';
+        elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/person/edit/id/" + oRecord.getData("person_id") + tredirect + "' >" + sData + "</a>";
+    }
 
-//{key:"input", width:0, resizeable:true , label:"", hidden:"true", width:"0", className:"hidden"},
-var dupeColDefs =
-[ {key:"person_id", label: "ID", sortable:false, resizable:false, formatter: formatViewUrl},
-{key:"first_name", width:60, sortable:true, resizeable:true , label:"<?php tp("First Name"); ?>"},
-<?php if ( !$this->setting['display_middle_name_last'] ) { ?>
-{key:"middle_name", width:66, sortable:true, resizeable:true , label:"<?php echo (@$this->translation['Middle Name']); ?>"},
-<?php } ?>
-{key:"last_name", width:54, sortable:true, resizeable:true , label:"<?php echo (@$this->translation['Last Name']); ?>"},
-{key:"birthdate", width:78, sortable:true, resizeable:true , label:"<?php tp("Date of Birth"); ?>"},
-{key:"gender", width:40, sortable:true, resizeable:true , label:"<?php tp("Gender"); ?>"},
-{key:"facility_name", width:120, sortable:true, resizeable:true , label:"<?php tp("Facility");?>"},
-{key:"qualification_phrase", width:100, sortable:true, resizeable:true, label:"<?php tp("Qualification"); ?>"},
-{key:"national_id", width:60, sortable:true, resizeable:true , label:"<?php tp("National ID"); ?>"}
-<?php if ( $this->setting['display_people_file_num'] ) { ?>
-,{key:"file_number", width:60, sortable:true, resizeable:true, label:"<?php tp("File Number"); ?>"}
-<?php } ?>
- ];
+    //{key:"input", width:0, resizeable:true , label:"", hidden:"true", width:"0", className:"hidden"},
+    var dupeColDefs =
+        [ {key:"person_id", label: "<?php tp('ID')?>", sortable:false, resizable:false, formatter: formatViewUrl},
+            {key:"first_name", width:60, sortable:true, resizeable:true , label:"<?php tp("First Name"); ?>"},
+            <?php if ( !$this->setting['display_middle_name_last'] ) { ?>
+            {key:"middle_name", width:66, sortable:true, resizeable:true , label:"<?php echo (@$this->translation['Middle Name']); ?>"},
+            <?php } ?>
+            {key:"last_name", width:54, sortable:true, resizeable:true , label:"<?php echo (@$this->translation['Last Name']); ?>"},
+            {key:"birthdate", width:78, sortable:true, resizeable:true , label:"<?php tp("Date of Birth"); ?>"},
+            {key:"gender", width:40, sortable:true, resizeable:true , label:"<?php tp("Gender"); ?>"},
+            {key:"facility_name", width:120, sortable:true, resizeable:true , label:"<?php tp("Facility");?>"},
+            {key:"qualification_phrase", width:100, sortable:true, resizeable:true, label:"<?php tp("Qualification"); ?>"},
+            {key:"national_id", width:60, sortable:true, resizeable:true , label:"<?php tp("National ID"); ?>"}
+            <?php if ( $this->setting['display_people_file_num'] ) { ?>
+            ,{key:"file_number", width:60, sortable:true, resizeable:true, label:"<?php tp("File Number"); ?>"}
+            <?php } ?>
+        ];
 
-var dupeDataSource = { } // filled via ajaxDupeSuccess callback
+    var dupeDataSource = { } // filled via ajaxDupeSuccess callback
 
-var ajaxDupeSuccess = function(o) {
-if(o.responseText !== undefined){
-  if(!o.responseText) {
-    YAHOO.util.Dom.get('dupecheck').innerHTML = "<em><?php tp('No duplicates found.'); ?></em>";
-  } else {
-    dupeDataSource = eval(o.responseText);
-    makeDynamicDataTable("dupecheck", "<?php tp("If the person already exists, please select their name below."); ?>", dupeDataSource, dupeColDefs);
-    YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('submitAddContinue'), "hidden");
-    do_dupe_highlight();
-  }
-}
-}
+    var ajaxDupeSuccess = function(o) {
+        if(o.responseText !== undefined){
+            if(!o.responseText) {
+                YAHOO.util.Dom.get('dupecheck').innerHTML = "<em><?php tp('No duplicates found.'); ?></em>";
+            } else {
+                dupeDataSource = eval(o.responseText);
+                makeDynamicDataTable("dupecheck", "<?php tp("If the person already exists, please select their name below."); ?>", dupeDataSource, dupeColDefs);
+                YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('submitAddContinue'), "hidden");
+                do_dupe_highlight();
+            }
+        }
+    }
 
-function do_dupe_highlight(){
-	var checkval1 = $('#file_number').val() || -1;
-	var checkval2 = $('#national_id').val() || -1;
-	var style = {'border': '1px dotted pink','background': '#CAD'};
-	$('#dupecheck div.yui-dt-bd table td div').each(function(){
-		var val = $(this).html();
-		if (val == checkval1) $(this).parents('tr:first').css(style);
-		if (val == checkval2) $(this).parents('tr:first').css(style);
-	});
-}
+    function do_dupe_highlight(){
+        var checkval1 = $('#file_number').val() || -1;
+        var checkval2 = $('#national_id').val() || -1;
+        var style = {'border': '1px dotted pink','background': '#CAD'};
+        $('#dupecheck div.yui-dt-bd table td div').each(function(){
+            var val = $(this).html();
+            if (val == checkval1) $(this).parents('tr:first').css(style);
+            if (val == checkval2) $(this).parents('tr:first').css(style);
+        });
+    }
 
-var ajaxDupeFailure = function(o){
-if(o.responseText !== undefined){
-  YAHOO.util.Dom.get('dupecheck').innerHTML = o.status + "<br />" + o.statusText;
-}
-}
+    var ajaxDupeFailure = function(o){
+        if(o.responseText !== undefined){
+            YAHOO.util.Dom.get('dupecheck').innerHTML = o.status + "<br />" + o.statusText;
+        }
+    }
 
-var callback = {
-success:ajaxDupeSuccess,
-failure: ajaxDupeFailure
-};
+    var callback = {
+        success:ajaxDupeSuccess,
+        failure: ajaxDupeFailure
+    };
 
-var isTimeout = false;
+    var isTimeout = false;
 
-function buildDupeTable(e) {
-if(!isTimeout) {
-  var last_name   = $('#last_name').val()   || '';
-  var first_name  = $('#first_name').val()  || '';
-  var file_number = $('#file_number').val() || '';
-  var national_id = $('#national_id').val() || '';
-  var qualification = $('#primary_qualification_option_id').val() || '';
+    function buildDupeTable(e) {
+        if(!isTimeout) {
+            var last_name   = $('#last_name').val()   || '';
+            var first_name  = $('#first_name').val()  || '';
+            var file_number = $('#file_number').val() || '';
+            var national_id = $('#national_id').val() || '';
+            var qualification = $('#primary_qualification_option_id').val() || '';
 
-  if(last_name || first_name || national_id || file_number) {
-    YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('duplicateCheckLabel'), "hidden");
+            if(last_name || first_name || national_id || file_number) {
+                YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('duplicateCheckLabel'), "hidden");
 
-    var sUrl = "<?php echo $this->base_url;?>/person/dupeList/outputType/json?";
-    sUrl += "last_name=" + last_name + "&";
-    sUrl += "first_name=" + first_name + "&";
-    sUrl += "file_number=" + file_number + "&";
-    sUrl += "national_id=" + national_id + "&";
-    sUrl += "primary_qualification_option_id=" + qualification + "&";
-    var request = YAHOO.util.Connect.asyncRequest('GET', sUrl, callback);
+                var sUrl = "<?php echo $this->base_url;?>/person/dupe-list/outputType/json?";
+                sUrl += "last_name=" + last_name + "&";
+                sUrl += "first_name=" + first_name + "&";
+                sUrl += "file_number=" + file_number + "&";
+                sUrl += "national_id=" + national_id + "&";
+                sUrl += "primary_qualification_option_id=" + qualification + "&";
+                var request = YAHOO.util.Connect.asyncRequest('GET', sUrl, callback);
 
-    isTimeout = true;
-    setTimeout(function() {
-      isTimeout = false;
-      if(e) {
-        buildDupeTable(false);
-      }
-    }, 300);
-  } else {
-    YAHOO.util.Dom.get('dupecheck').innerHTML = "";
-  }
-}
-}
+                isTimeout = true;
+                setTimeout(function() {
+                    isTimeout = false;
+                    if(e) {
+                        buildDupeTable(false);
+                    }
+                }, 300);
+            } else {
+                YAHOO.util.Dom.get('dupecheck').innerHTML = "";
+            }
+        }
+    }
 
-function continueClick() {
+    function continueClick() {
 
-	// find checked radio
-	var elChecked = YAHOO.util.Dom.getElementsBy( function(el) {
-  return el.checked;
-		}, 'input',YAHOO.util.Dom.get('dupecheck'));
+        // find checked radio
+        var elChecked = YAHOO.util.Dom.getElementsBy( function(el) {
+            return el.checked;
+        }, 'input',YAHOO.util.Dom.get('dupecheck'));
 
-	if(elChecked && elChecked.length) {
-  elChecked.form.submit();
-	} else {
-  last_name = YAHOO.util.Dom.get('last_name').value;
-  first_name = YAHOO.util.Dom.get('first_name').value;
+        if(elChecked && elChecked.length) {
+            elChecked.form.submit();
+        } else {
+            last_name = YAHOO.util.Dom.get('last_name').value;
+            first_name = YAHOO.util.Dom.get('first_name').value;
 
-  if(!last_name || !first_name) {
-    alert("<?php tp("Please enter a first and last name."); ?>");
-  } else {
-    YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('personAddHide'), "hidden");
-    YAHOO.util.Dom.addClass(YAHOO.util.Dom.get('submitAddContinue'), "hidden");
-    $('#dupecheck,#duplicateCheckLabel').hide();
-  }
-	}
+            if(!last_name || !first_name) {
+                alert("<?php tp("Please enter a first and last name."); ?>");
+            } else {
+                YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('personAddHide'), "hidden");
+                YAHOO.util.Dom.addClass(YAHOO.util.Dom.get('submitAddContinue'), "hidden");
+                $('#dupecheck,#duplicateCheckLabel').hide();
+            }
+        }
 
-	return false;
-}
+        return false;
+    }
 
-YAHOO.util.Event.onDOMReady(function() {
-	  YAHOO.util.Event.addListener(YAHOO.util.Dom.get('last_name'), "keyup", buildDupeTable);
-	  YAHOO.util.Event.addListener(YAHOO.util.Dom.get('first_name'), "keyup", buildDupeTable);
-	  YAHOO.util.Event.addListener(YAHOO.util.Dom.get('primary_qualification_option_id'), "change", buildDupeTable);
-	  YAHOO.util.Event.addListener(YAHOO.util.Dom.get('national_id'), "keyup", buildDupeTable);
-	  YAHOO.util.Event.addListener(YAHOO.util.Dom.get('file_number'), "keyup", buildDupeTable);
-});
+    YAHOO.util.Event.onDOMReady(function() {
+        YAHOO.util.Event.addListener(YAHOO.util.Dom.get('last_name'), "keyup", buildDupeTable);
+        YAHOO.util.Event.addListener(YAHOO.util.Dom.get('first_name'), "keyup", buildDupeTable);
+        YAHOO.util.Event.addListener(YAHOO.util.Dom.get('primary_qualification_option_id'), "change", buildDupeTable);
+        YAHOO.util.Event.addListener(YAHOO.util.Dom.get('national_id'), "keyup", buildDupeTable);
+        YAHOO.util.Event.addListener(YAHOO.util.Dom.get('file_number'), "keyup", buildDupeTable);
+    });
 
-<?php endif; //add only dupe check ?>
+    <?php endif; //add only dupe check ?>
 
-YAHOO.util.Event.onDOMReady(function() {
-	<?php if ( $this->mode == 'edit' ) { ?>
-	addAjaxSubmit('submitPerson','personForm','<?php echo $this->base_url;?>/person/edit/id/<?php echo $this->person['id'];?>/outputType/json');
-	<?php } else { ?>
-	addAjaxSubmit('submitPerson','personForm','<?php echo $this->base_url;?>/person/add/outputType/json');
-	<?php } ?>
-	<?php if ( $this->mode == 'edit' ) { ?>
-	addAjaxSubmit('submitPersonTop','personForm','<?php echo $this->base_url;?>/person/edit/id/<?php echo $this->person['id'];?>/outputType/json');
-	<?php } else { ?>
-	//addAjaxSubmit('submitPersonTop','personForm','<?php echo $this->base_url;?>/person/add/outputType/json');
-	<?php } ?>
-	<?php if ( $this->mode == 'edit' && $this->maketrainer) { ?>
-	displayStatus("<?php echo t('Please add or verify the').' '.t('trainer').' '.t('information below.'); ?>");
-	<?php } ?>
-});
-//--><!]]>
+    YAHOO.util.Event.onDOMReady(function() {
+        <?php if ( $this->mode == 'edit' ) { ?>
+        addAjaxSubmit('submitPerson','personForm','<?php echo $this->base_url;?>/person/edit/id/<?php echo $this->person['id'];?>/outputType/json');
+        <?php } else { ?>
+        addAjaxSubmit('submitPerson','personForm','<?php echo $this->base_url;?>/person/add/outputType/json');
+        <?php } ?>
+        <?php if ( $this->mode == 'edit' ) { ?>
+        addAjaxSubmit('submitPersonTop','personForm','<?php echo $this->base_url;?>/person/edit/id/<?php echo $this->person['id'];?>/outputType/json');
+        <?php } else { ?>
+        //addAjaxSubmit('submitPersonTop','personForm','<?php echo $this->base_url;?>/person/add/outputType/json');
+        <?php } ?>
+        <?php if ( $this->mode == 'edit' && $this->maketrainer) { ?>
+        displayStatus("<?php echo t('Please add or verify the').' '.t('trainer').' '.t('information below.'); ?>");
+        <?php } ?>
+    });
+    //--><!]]>
 </script>
 
 
@@ -304,550 +304,530 @@ YAHOO.util.Event.onDOMReady(function() {
 
 
 <div id="pageHolder">
-  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
-  <div id="content">
-<?php if ( $this->mode != 'add' )  { ?>
-<div class="actionBtn">
- <button type="button" id="submitPersonTop"><?php tp('Save changes');?></button><br/>
-</div>
-<?php } ?>
-	<?php if ( $this->mode != 'add' ) { ?>
-<h1><?php tp('Edit person\'s record');?></h1>
-<?php } else { ?>
-<h1><?php tp('Add person\'s record');?></h1>
-<?php } ?>
+    <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+    <div id="content">
+        <?php if ( $this->mode != 'add' )  { ?>
+            <div class="actionBtn">
+                <button type="button" id="submitPersonTop"><?php tp('Save changes');?></button><br/>
+            </div>
+        <?php } ?>
+        <?php if ( $this->mode != 'add' ) { ?>
+            <h1><?php tp('Edit person\'s record');?></h1>
+        <?php } else { ?>
+            <h1><?php tp('Add person\'s record');?></h1>
+        <?php } ?>
 
-<form action="" id="personForm" method="post">
-<?php if ( $this->mode != 'add' ) { require_once('history.phtml'); }  ?>
+        <form action="" id="personForm" method="post">
+            <?php if ( $this->mode != 'add' ) { require_once('history.phtml'); }  ?>
 
-<div class="fieldIndentNoMargin"><?php tp('Personal Information');?></div>
+            <div class="fieldIndentNoMargin"><?php tp('Personal Information');?></div>
 
- <?php if ($this->setting['display_people_active']) { ?>
- <div class="fieldLabel"><label for="active"><?php echo (@$this->translation['Is Active']); ?></label></div>
-  <div class="fieldInput" style="clear:none;"><input type="checkbox" id="active" name="active" <?php echo ( $this->person['active'] !== 'active' ? '': 'checked="checked"');?> /></div>
- <?php } ?>
-<br/>
+            <?php if ($this->setting['display_people_active']) { ?>
+                <div class="fieldLabel"><label for="active"><?php echo (@$this->translation['Is Active']); ?></label></div>
+                <div class="fieldInput" style="clear:none;"><input type="checkbox" id="active" name="active" <?php echo ( $this->person['active'] !== 'active' ? '': 'checked="checked"');?> /></div>
+            <?php } ?>
+            <br/>
 
-<?php if ($this->setting['display_people_title']) {
-  echo DropDown::render('title_option_id', $this->translation['Title'], $this->titles, 'title_phrase', 'id', $this->person['title_option_id'] );
- } ?>
-  <div class="fieldLabel" id="first_name_lbl"><span class="required">*</span><?php echo (@$this->translation['First Name']); ?></div>
-  <div class="fieldInput"><input type="text" name="first_name" id="first_name" size="32" maxlength="32" value="<?php echo $this->person['first_name'];?>"/></div>
-   <?php if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) { ?>
-  <div class="fieldLabel" id="middle_name_lbl"><?php echo (@$this->translation['Middle Name']); ?></div>
-  <div class="fieldInput"><input type="text" name="middle_name" size="32" maxlength="32" value="<?php echo $this->person['middle_name'];?>"/></div>
-  <?php }?>
-  <div class="fieldLabel" id="last_name_lbl"><span class="required">*</span><?php echo (@$this->translation['Last Name']); ?></div>
-  <div class="fieldInput"><input type="text" name="last_name" id="last_name" size="32" maxlength="32" value="<?php echo $this->person['last_name'];?>"/></div>
-  <?php if ( $this->setting['display_middle_name'] && $this->setting['display_middle_name_last'] ) { ?>
-  <div class="fieldLabel" id="middle_name_lbl"><?php echo (@$this->translation['Middle Name']); ?></div>
-  <div class="fieldInput"><input type="text" name="middle_name" size="32" maxlength="32" value="<?php echo $this->person['middle_name'];?>"/></div>
-  <?php }?>
- <?php if ($this->setting['display_people_suffix']) {
-  echo DropDown::render('suffix_option_id', $this->translation['Suffix'], $this->suffixes, 'suffix_phrase', 'id', $this->person['suffix_option_id'] );
- } ?>
+            <?php if ($this->setting['display_people_title']) {
+                echo DropDown::render('title_option_id', $this->translation['Title'], $this->titles, 'title_phrase', 'id', $this->person['title_option_id'] );
+            } ?>
+            <div class="fieldLabel" id="first_name_lbl"><span class="required">*</span><?php echo (@$this->translation['First Name']); ?></div>
+            <div class="fieldInput"><input type="text" name="first_name" id="first_name" size="32" maxlength="32" value="<?php echo $this->person['first_name'];?>"/></div>
+            <?php if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) { ?>
+                <div class="fieldLabel" id="middle_name_lbl"><?php echo (@$this->translation['Middle Name']); ?></div>
+                <div class="fieldInput"><input type="text" name="middle_name" size="32" maxlength="32" value="<?php echo $this->person['middle_name'];?>"/></div>
+            <?php }?>
+            <div class="fieldLabel" id="last_name_lbl"><span class="required">*</span><?php echo (@$this->translation['Last Name']); ?></div>
+            <div class="fieldInput"><input type="text" name="last_name" id="last_name" size="32" maxlength="32" value="<?php echo $this->person['last_name'];?>"/></div>
+            <?php if ( $this->setting['display_middle_name'] && $this->setting['display_middle_name_last'] ) { ?>
+                <div class="fieldLabel" id="middle_name_lbl"><?php echo (@$this->translation['Middle Name']); ?></div>
+                <div class="fieldInput"><input type="text" name="middle_name" size="32" maxlength="32" value="<?php echo $this->person['middle_name'];?>"/></div>
+            <?php }?>
+            <?php if ($this->setting['display_people_suffix']) {
+                echo DropDown::render('suffix_option_id', $this->translation['Suffix'], $this->suffixes, 'suffix_phrase', 'id', $this->person['suffix_option_id'] );
+            } ?>
 
 
- <?php /* if ($this->setting['display_mod_skillsmart'] && $this->setting['display_occupational_category']) { ?>
-	<!-- OCCUPATIONAL CATEGORY FIELD -->
-	<div class="fieldLabel" id="occupational_category_id_lbl"><span class="required">*</span><?php tp('Occupational Category');?></div>
-	<div class="fieldInput">
-		<select id="occupational_category_id" name="occupational_category_id"<?php if( isset($this->setting['display_mod_skillsmart']) && ($this->setting['display_mod_skillsmart'] == 1) ) echo ' onchange="ShowHideSpecify(this)"'; ?>>
-			<option value="">--<?php tp('choose');?>--</option>
-			<?php
-			$lastParent = null;
-			foreach ( $this->occupationalcats as $vals ) {
-				if ( !$vals['id'] ) {
-					$lastParent = ($vals['parent_phrase']);
-	      echo '<option value="'.$vals['parent_id'].'" '.($this->person['primary_qualification_option_id'] == $vals['parent_id'] || (!$this->id && $vals['is_default']  ) ?'selected="selected"':'').'>'.htmlspecialchars($vals['parent_phrase']).'</option>';
-				} else {
-	      echo '<option value="'.$vals['id'].'" '.($this->person['primary_qualification_option_id'] == $vals['id'] || (!$this->id && $vals['is_default']  ) ?'selected="selected"':'').'>&nbsp;&nbsp;'. htmlspecialchars($vals['category_phrase']).'</option>';
-				}
-			}
-			?>
-		</select>
-		<span id="MainProfession"></span>
-	</div>
- <?php } */?>
+            <?php if ($this->setting['display_mod_skillsmart'] && $this->setting['display_government_employee']) { ?>
+                <div class="fieldLabel"><label for="govemp_option_id"><?php tp('Government employee'); ?></label></div>
+                <div class="fieldInput" style="clear:none;"><input value="1" type="checkbox" id="govemp_option_id" name="govemp_option_id" <?php echo ($this->person['govemp_option_id'] == 1) ? 'checked="checked"' : ''; ?> /></div>
+            <?php } ?>
 
- <?php if ($this->setting['display_mod_skillsmart'] && $this->setting['display_government_employee']) { ?>
-	<div class="fieldLabel"><label for="govemp_option_id"><?php tp('Government employee'); ?></label></div>
-	<div class="fieldInput" style="clear:none;"><input value="1" type="checkbox" id="govemp_option_id" name="govemp_option_id" <?php echo ($this->person['govemp_option_id'] == 1) ? 'checked="checked"' : ''; ?> /></div>
- <?php } ?>
+            <?php if ($this->setting['display_mod_skillsmart']) { ?>
+                <div class="persal_number_element">
+                    <div class="fieldLabel"><label for="persal_number"><span class="required">*</span><?php echo @$this->translation['Persal Number'] != '' ? @$this->translation['Persal Number'] : 'Persal Number'; ?></label></div>
+                    <div class="fieldInput" style="clear:none;"><input type="text" size="24" id="persal_number" name="persal_number" value="<?php echo ($this->person['persal_number'] != '') ? $this->person['persal_number'] : ''; ?>" /></div>
+                </div>
+            <?php } ?>
 
- <?php if ($this->setting['display_mod_skillsmart']) { ?>
- 	<div class="persal_number_element">
-		<div class="fieldLabel"><label for="persal_number"><span class="required">*</span><?php echo @$this->translation['Persal Number'] != '' ? @$this->translation['Persal Number'] : 'Persal Number'; ?></label></div>
-		<div class="fieldInput" style="clear:none;"><input type="text" size="24" id="persal_number" name="persal_number" value="<?php echo ($this->person['persal_number'] != '') ? $this->person['persal_number'] : ''; ?>" /></div>
- 	</div>
- <?php } ?>
+            <?php if ($this->setting['display_mod_skillsmart'] && $this->setting['display_professional_bodies']) { ?>
+                <!-- PROFESSIONAL BODIES FIELD -->
+                <div class="fieldLabel"><?php tp('Professional bodies');?></div>
+                <div class="fieldInput">
+                    <select id="professionalbodies_id" name="professionalbodies_id">
+                        <option value="">--<?php tp('choose');?>--</option>
+                        <?php
+                        if (isset ($this->skillsmart['professionalbodies']) ){
+                            foreach ($this->skillsmart['professionalbodies'] as $ss){
+                                echo "<option value=\"" . $ss['id'] . "\"" . (($this->person['bodies_id'] == $ss['id']) ? " selected=\"selected\"" : "") . ">" . $ss['label'] . "</option>\n";
+                            }
+                        }
+                        ?>
+                    </select>
+                </div>
+            <?php } ?>
 
- <?php if ($this->setting['display_mod_skillsmart'] && $this->setting['display_professional_bodies']) { ?>
-	<!-- PROFESSIONAL BODIES FIELD -->
-	<div class="fieldLabel"><?php tp('Professional bodies');?></div>
-	<div class="fieldInput">
-		<select id="professionalbodies_id" name="professionalbodies_id">
-			<option value="">--<?php tp('choose');?>--</option>
-			<?php
-				if (isset ($this->skillsmart['professionalbodies']) ){
-					foreach ($this->skillsmart['professionalbodies'] as $ss){
-						echo "<option value=\"" . $ss['id'] . "\"" . (($this->person['bodies_id'] == $ss['id']) ? " selected=\"selected\"" : "") . ">" . $ss['label'] . "</option>\n";
-					}
-				}
-			?>
-		</select>
-	</div>
- <?php } ?>
+            <?php if ($this->setting['display_mod_skillsmart']) { ?>
+                <div class="fieldLabel"><label for="professional_reg_number"><?php echo @$this->translation['Professional Registration Number'] != '' ? @$this->translation['Professional Registration Number'] : t('Professional Registration Number'); ?></label></div>
+                <div class="fieldInput" style="clear:none;"><input type="text" size="24" id="professional_reg_number" name="professional_reg_number" value="<?php echo ($this->person['professional_reg_number'] != '') ? $this->person['professional_reg_number'] : ''; ?>" /></div>
+            <?php } ?>
 
- <?php if ($this->setting['display_mod_skillsmart']) { ?>
-	<div class="fieldLabel"><label for="professional_reg_number"><?php echo @$this->translation['Professional Registration Number'] != '' ? @$this->translation['Professional Registration Number'] : 'Professional Registration Number'; ?></label></div>
-	<div class="fieldInput" style="clear:none;"><input type="text" size="24" id="professional_reg_number" name="professional_reg_number" value="<?php echo ($this->person['professional_reg_number'] != '') ? $this->person['professional_reg_number'] : ''; ?>" /></div>
- <?php } ?>
+            <?php if ($this->setting['display_mod_skillsmart']) { ?>
+                <div class="fieldLabel"><label for="nationality_id"><?php echo @$this->translation['Nationality'] != '' ? @$this->translation['Nationality'] : t('Nationality'); ?></label></div>
+                <div class="fieldInput" style="clear:none;">
+                    <select id="nationality_id" name="nationality_id">
+                        <option value="0"><?php echo t('Select...'); ?></option>
+                        <?php
+                        foreach ($this->lookupnationalities as $nationality){
+                            ?>
+                            <option value="<?php echo $nationality['id']; ?>"<?php echo ($nationality['id'] == $this->person['nationality_id']) ? " selected" : ""; ?>><?php echo $nationality['nationality']; ?></option>
+                        <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+            <?php } ?>
 
- <?php if ($this->setting['display_mod_skillsmart']) { ?>
-	<div class="fieldLabel"><label for="nationality_id"><?php echo @$this->translation['Nationality'] != '' ? @$this->translation['Nationality'] : 'Nationality'; ?></label></div>
- <div class="fieldInput" style="clear:none;">
-   <select id="nationality_id" name="nationality_id">
-     <option value="0"><?php echo t('Select...'); ?></option>
-     <?php
-       foreach ($this->lookupnationalities as $nationality){
-         ?>
-         <option value="<?php echo $nationality['id']; ?>"<?php echo ($nationality['id'] == $this->person['nationality_id']) ? " selected" : ""; ?>><?php echo $nationality['nationality']; ?></option>
-         <?php
-       }
-     ?>
-   </select>
- </div>
-<?php } ?>
+            <?php if ( $this->setting['display_national_id'] ) { ?>
+                <div class="fieldLabel" id="national_id_lbl"><?php echo (@$this->translation['National ID']); ?></div>
+                <div class="fieldInput"><input type="text" id="national_id" name="national_id" size="24" maxlength="32" value="<?php echo $this->person['national_id'];?>"/></div>
+            <?php } ?>
 
-<?php if ( $this->setting['display_national_id'] ) { ?>
-	<div class="fieldLabel" id="national_id_lbl"><?php echo (@$this->translation['National ID']); ?></div>
-	<div class="fieldInput"><input type="text" id="national_id" name="national_id" size="24" maxlength="32" value="<?php echo $this->person['national_id'];?>"/></div>
-<?php } ?>
+            <?php if ( $this->setting['display_people_file_num'] ) { ?>
+                <div class="fieldLabel" id="file_number_lbl"><?php echo (@$this->translation['File Number']); ?></div>
+                <div class="fieldInput"><input type="text" id="file_number" name="file_number" size="24" maxlength="64" value="<?php echo $this->person['file_number'];?>"/></div>
+            <?php } ?>
 
-<?php if ( $this->setting['display_people_file_num'] ) { ?>
-	<div class="fieldLabel" id="file_number_lbl"><?php echo (@$this->translation['File Number']); ?></div>
-	<div class="fieldInput"><input type="text" id="file_number" name="file_number" size="24" maxlength="64" value="<?php echo $this->person['file_number'];?>"/></div>
-<?php } ?>
+            <br/>
 
-<br/>
+            <?php if ($this->setting['display_gender']) {?>
+                <div class="fieldLabel" id="gender_lbl"><span class="required">*</span><?php tp('Gender');?></div>
+                <div class="fieldInput">
+                    <label for="female"><?php tp('Female');?><input type="radio" id="female" name="gender" value="female" <?php echo ( $this->person['gender'] == 'female' ? 'checked="checked"' :'');?> ></input></label>
+                    <label for="male"><?php tp('Male');?><input type="radio" id="male" name="gender" value="male" <?php echo ( $this->person['gender'] == 'male' ? 'checked="checked"' :'');?>></input></label>
+                    <label for="na"><?php tp('Unknown');?><input type="radio" id="na" name="gender" value="na"
+                            <?php echo ( ($this->person['gender'] != 'female' && $this->person['gender'] != 'male') || $this->person['gender'] == 'na' ? 'checked="checked"' :'');?>></input></label>
+                    <!-- TA:17:16: automatically check gender UKNOWN if no female or male -->
+                </div>
+            <?php }?>
 
-<?php if ($this->setting['display_gender']) {?>
-<div class="fieldLabel" id="gender_lbl"><span class="required">*</span><?php tp('Gender');?></div>
-<div class="fieldInput">
-    <label for="female"><?php tp('Female');?><input type="radio" id="female" name="gender" value="female" <?php echo ( $this->person['gender'] == 'female' ? 'checked="checked"' :'');?> ></input></label>
-    <label for="male"><?php tp('Male');?><input type="radio" id="male" name="gender" value="male" <?php echo ( $this->person['gender'] == 'male' ? 'checked="checked"' :'');?>></input></label>
-     <label for="na"><?php tp('Unknown');?><input type="radio" id="na" name="gender" value="na" <?php echo ( $this->person['gender'] == 'na' ? 'checked="checked"' :'');?>></input></label>
-</div>
-<?php }?>
+            <?php if ( $this->setting['display_people_birthdate'] ) { ?>
+                <div class="clear"></div>
+                <div class="fieldLabel"><?php tp('Birth date');?></div>
+                <div class="fieldInput">
+                    <?php tp('Day');?> <input id="birth-day" onchange="updateAge()" class="dayfield" type="text" value="<?php echo $this->person['birthdate-day'];?>" name="birth-day" />
+                    / <?php tp('Month');?> <input id="birth-month" onchange="updateAge()" class="monthfield" type="text" value="<?php echo $this->person['birthdate-month'];?>" name="birth-month" />
+                    / <?php tp('Year');?> <input id="birth-year" onchange="updateAge()" class="yearfield" type="text" value="<?php echo $this->person['birthdate-year'];?>" name="birth-year" />
+                </div>
+            <?php }?>
+            <?php if ( $this->setting['display_people_age'] ) : ?>
+                <div class="clear"></div>
+                <div class="fieldLabel"><?php tp('Age');?></div>
+                <input type="text" class="fieldInput" id="age" style="width:40px;" onchange="updateBirthdate();"></input>
+            <?php endif; //age ?>
 
-<?php if ( $this->setting['display_people_birthdate'] ) { ?>
-<div class="clear"></div>
-<div class="fieldLabel"><?php tp('Birth date');?></div>
-    <div class="fieldInput">
-	<?php tp('Day');?> <input id="birth-day" onchange="updateAge()" class="dayfield" type="text" value="<?php echo $this->person['birthdate-day'];?>" name="birth-day" />
-	/ <?php tp('Month');?> <input id="birth-month" onchange="updateAge()" class="monthfield" type="text" value="<?php echo $this->person['birthdate-month'];?>" name="birth-month" />
-	/ <?php tp('Year');?> <input id="birth-year" onchange="updateAge()" class="yearfield" type="text" value="<?php echo $this->person['birthdate-year'];?>" name="birth-year" />
-</div>
-<?php }?>
-<?php if ( $this->setting['display_people_age'] ) : ?>
-	<div class="clear"></div>
-	<div class="fieldLabel"><?php tp('Age');?></div>
-	<input type="text" class="fieldInput" id="age" style="width:40px;" onchange="updateBirthdate();"></input>
-<?php endif; //age ?>
+            <?php if ($this->setting['display_mod_skillsmart'] && $this->setting['display_race']) { ?>
+                <div class="fieldLabel" id="race_option_id_lbl"><?php tp('Race'); ?></div>
+                <div class="fieldInput">
+                    <select id="race_option_id" name="race_option_id">
+                        <option value="">--<?php echo t('choose'); ?>--</option>
+                        <?php
+                        if (isset ($this->skillsmart['race'])){
+                            foreach ($this->skillsmart['race'] as $ss){
+                                echo "<option value=\"" . $ss['id'] . "\"" . (($this->person['race_option_id'] == $ss['id']) ? " selected=\"selected\"" : "") . ">" . $ss['label'] . "</option>\n";
+                            }
+                        }
+                        ?>
+                    </select>
+                </div>
+            <?php } ?>
 
- <?php if ($this->setting['display_mod_skillsmart'] && $this->setting['display_race']) { ?>
-	 <div class="fieldLabel" id="race_option_id_lbl"><?php tp('Race'); ?></div>
-	 <div class="fieldInput">
-		<select id="race_option_id" name="race_option_id">
-			<option value="">--<?php echo t('choose'); ?>--</option>
-			<?php
-				if (isset ($this->skillsmart['race'])){
-					foreach ($this->skillsmart['race'] as $ss){
-						echo "<option value=\"" . $ss['id'] . "\"" . (($this->person['race_option_id'] == $ss['id']) ? " selected=\"selected\"" : "") . ">" . $ss['label'] . "</option>\n";
-					}
-				}
-			?>
-		</select>
-	 </div>
- <?php } ?>
+            <?php if ($this->setting['display_mod_skillsmart'] && $this->setting['display_disability']) { ?>
+                <div class="fieldLabel" id="disability_option_id_lbl"><?php tp('Disability'); ?></div>
+                <div class="fieldInput">
+                    <select id="disability_option_id" name="disability_option_id" onchange="ShowHideDisability(this)">
+                        <option value="">--<?php echo t('choose'); ?>--</option>
+                        <?php
+                        if (isset ($this->skillsmart['disability'])){
+                            foreach ($this->skillsmart['disability'] as $ss){
+                                echo "<option value=\"" . $ss['id'] . "\"" . (($this->person['disability_option_id'] == $ss['id']) ? " selected=\"selected\"" : "") . ">" . $ss['label'] . "</option>\n";
+                            }
+                        }
+                        ?>
+                    </select>
+                </div>
+            <?php } ?>
 
- <?php if ($this->setting['display_mod_skillsmart'] && $this->setting['display_disability']) { ?>
-	<div class="fieldLabel" id="disability_option_id_lbl"><?php tp('Disability'); ?></div>
-	<div class="fieldInput">
-		<select id="disability_option_id" name="disability_option_id" onchange="ShowHideDisability(this)">
-			<option value="">--<?php echo t('choose'); ?>--</option>
-			<?php
-				if (isset ($this->skillsmart['disability'])){
-					foreach ($this->skillsmart['disability'] as $ss){
-						echo "<option value=\"" . $ss['id'] . "\"" . (($this->person['disability_option_id'] == $ss['id']) ? " selected=\"selected\"" : "") . ">" . $ss['label'] . "</option>\n";
-					}
-				}
-			?>
-		</select>
-	</div>
- <?php } ?>
+            <?php if ($this->setting['display_mod_skillsmart'] && $this->setting['display_nurse_trainer_type']) { ?>
+                <div class="fieldLabel" id="nurse_training_id_lbl"><?php tp('Nurse Trainer Type'); ?></div>
+                <div class="fieldInput">
+                    <select id="nurse_training_id" name="nurse_training_id" onchange="ShowHideDisability(this)">
+                        <option value="">--<?php echo t('choose'); ?>--</option>
+                        <?php
+                        if (isset ($this->skillsmart['training'])){
+                            foreach ($this->skillsmart['training'] as $ss){
+                                echo "<option value=\"" . $ss['id'] . "\"" . (($this->person['nurse_training_id'] == $ss['id']) ? " selected=\"selected\"" : "") . ">" . $ss['label'] . "</option>\n";
+                            }
+                        }
+                        ?>
+                    </select>
+                </div>
+            <?php } ?>
 
- <?php if ($this->setting['display_mod_skillsmart'] && $this->setting['display_nurse_trainer_type']) { ?>
-	<div class="fieldLabel" id="nurse_training_id_lbl"><?php tp('Nurse Trainer Type'); ?></div>
-	<div class="fieldInput">
-		<select id="nurse_training_id" name="nurse_training_id" onchange="ShowHideDisability(this)">
-			<option value="">--<?php echo t('choose'); ?>--</option>
-			<?php
-				if (isset ($this->skillsmart['training'])){
-					foreach ($this->skillsmart['training'] as $ss){
-						echo "<option value=\"" . $ss['id'] . "\"" . (($this->person['nurse_training_id'] == $ss['id']) ? " selected=\"selected\"" : "") . ">" . $ss['label'] . "</option>\n";
-					}
-				}
-			?>
-		</select>
-	</div>
- <?php } ?>
+            <?php if ( $this->setting['display_mod_skillsmart'] && $this->setting['display_provider_start'] ) { ?>
+                <div class="fieldLabel" id="care_start_year_lbl"><?php tp('Year you started providing care'); ?></div>
+                <div class="fieldInput" style="padding-left:2px;"><input type="text" id="care_start_year" name="care_start_year" size="8" maxlength="6" value="<?php echo $this->person['care_start_year'];?>"/></div>
+            <?php } ?>
 
- <?php if ( $this->setting['display_mod_skillsmart'] && $this->setting['display_provider_start'] ) { ?>
-	<div class="fieldLabel" id="care_start_year_lbl"><?php tp('Year you started providing care'); ?></div>
-	<div class="fieldInput" style="padding-left:2px;"><input type="text" id="care_start_year" name="care_start_year" size="8" maxlength="6" value="<?php echo $this->person['care_start_year'];?>"/></div>
- <?php } ?>
+            <?php if ( $this->setting['display_mod_skillsmart'] && $this->setting['display_rank_groups'] ) { ?>
+                <div class="fieldLabel" id="care_start_year_lbl">
+                    <?php tp('Rank patient groups based on time'); ?>
+                </div>
+                <div class="fieldInput">
+                    <div style="float:left;">
+                        <div style="float:left; width:140px; padding-left:2px;">
+                            <span class="fieldLabel" style="float:left; display:block; width:auto; margin-bottom:4px;"><?php echo t('Pregnant women'); ?></span>
+                            <select id="timespent_rank_pregnant" name="timespent_rank_pregnant" style="margin:0; margin-bottom:4px;">
+                                <option value="">--<?php echo t('choose'); ?>--</option>
+                                <?php for($rank = 1; $rank <= 3; $rank++){ ?>
+                                    <option value="<?php echo $rank; ?>" <?php echo ($rank == $this->person['timespent_rank_pregnant']) ? 'SELECTED' : ''; ?>><?php echo $rank; ?></option>
+                                <?php } ?>
+                            </select>
+                            <input type="text" size="4" id="timespent_rank_pregnant_pct" name="timespent_rank_pregnant_pct" value="<?php echo $this->person['timespent_rank_pregnant_pct']; ?>" />%
+                        </div>
+                        <div style="float:left; width:140px;">
+                            <span class="fieldLabel" style="float:left; display:block; width:auto; margin-bottom:4px;"><?php echo t('Adults'); ?></span>
+                            <select id="timespent_rank_adults" name="timespent_rank_adults" style="margin:0; margin-bottom:4px;">
+                                <option value="">--<?php echo t('choose'); ?>--</option>
+                                <?php for($rank = 1; $rank <= 3; $rank++){ ?>
+                                    <option value="<?php echo $rank; ?>" <?php echo ($rank == $this->person['timespent_rank_adults']) ? 'SELECTED' : ''; ?>><?php echo $rank; ?></option>
+                                <?php } ?>
+                            </select>
+                            <input type="text" size="4" id="timespent_rank_adults_pct" name="timespent_rank_adults_pct" value="<?php echo $this->person['timespent_rank_adults_pct']; ?>" />%
+                        </div>
+                        <div style="float:left; width:140px;">
+                            <span class="fieldLabel" style="float:left; display:block; width:auto; margin-bottom:4px;"><?php echo t('Children'); ?></span>
+                            <select id="timespent_rank_children" name="timespent_rank_children" style="margin:0; margin-bottom:4px;">
+                                <option value="">--<?php echo t('choose'); ?>--</option>
+                                <?php for($rank = 1; $rank <= 3; $rank++){ ?>
+                                    <option value="<?php echo $rank; ?>" <?php echo ($rank == $this->person['timespent_rank_children']) ? 'SELECTED' : ''; ?>><?php echo $rank; ?></option>
+                                <?php } ?>
+                            </select>
+                            <input type="text" size="4" id="timespent_rank_children_pct" name="timespent_rank_children_pct" value="<?php echo $this->person['timespent_rank_children_pct']; ?>" />%
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
 
- <?php if ( $this->setting['display_mod_skillsmart'] && $this->setting['display_rank_groups'] ) { ?>
- 	<div class="fieldLabel" id="care_start_year_lbl">
- 		<?php tp('Rank patient groups based on time'); ?>
- 	</div>
- 	<div class="fieldInput">
- 		<div style="float:left;">
-	 		<div style="float:left; width:140px; padding-left:2px;">
-	 			<span class="fieldLabel" style="float:left; display:block; width:auto; margin-bottom:4px;"><?php echo t('Pregnant women'); ?></span>
-	 			<select id="timespent_rank_pregnant" name="timespent_rank_pregnant" style="margin:0; margin-bottom:4px;">
-	 				<option value="">--<?php echo t('choose'); ?>--</option>
-	 				<?php for($rank = 1; $rank <= 3; $rank++){ ?>
-	 					<option value="<?php echo $rank; ?>" <?php echo ($rank == $this->person['timespent_rank_pregnant']) ? 'SELECTED' : ''; ?>><?php echo $rank; ?></option>
-	 				<?php } ?>
-	 			</select>
-	 			<input type="text" size="4" id="timespent_rank_pregnant_pct" name="timespent_rank_pregnant_pct" value="<?php echo $this->person['timespent_rank_pregnant_pct']; ?>" />%
-	 		</div>
-	 		<div style="float:left; width:140px;">
-	 			<span class="fieldLabel" style="float:left; display:block; width:auto; margin-bottom:4px;"><?php echo t('Adults'); ?></span>
-	 			<select id="timespent_rank_adults" name="timespent_rank_adults" style="margin:0; margin-bottom:4px;">
-	 				<option value="">--<?php echo t('choose'); ?>--</option>
-	 				<?php for($rank = 1; $rank <= 3; $rank++){ ?>
-	 					<option value="<?php echo $rank; ?>" <?php echo ($rank == $this->person['timespent_rank_adults']) ? 'SELECTED' : ''; ?>><?php echo $rank; ?></option>
-	 				<?php } ?>
-	 			</select>
-	 			<input type="text" size="4" id="timespent_rank_adults_pct" name="timespent_rank_adults_pct" value="<?php echo $this->person['timespent_rank_adults_pct']; ?>" />%
-	 		</div>
-	 		<div style="float:left; width:140px;">
-	 			<span class="fieldLabel" style="float:left; display:block; width:auto; margin-bottom:4px;"><?php echo t('Children'); ?></span>
-	 			<select id="timespent_rank_children" name="timespent_rank_children" style="margin:0; margin-bottom:4px;">
-	 				<option value="">--<?php echo t('choose'); ?>--</option>
-	 				<?php for($rank = 1; $rank <= 3; $rank++){ ?>
-	 					<option value="<?php echo $rank; ?>" <?php echo ($rank == $this->person['timespent_rank_children']) ? 'SELECTED' : ''; ?>><?php echo $rank; ?></option>
-	 				<?php } ?>
-	 			</select>
-	 			<input type="text" size="4" id="timespent_rank_children_pct" name="timespent_rank_children_pct" value="<?php echo $this->person['timespent_rank_children_pct']; ?>" />%
-	 		</div>
-	 	</div>
- 	</div>
- <?php } ?>
+            <div class="clear" style="height:12px;"></div>
 
- <div class="clear" style="height:12px;"></div>
+            <?php if ($this->setting['display_mod_skillsmart'] && $this->setting['display_supervised']) { ?>
+                <div class="fieldLabel" id="supervised_id_lbl"><?php tp('Supervised'); ?></div>
+                <div class="fieldInput">
+                    <select id="supervised_id" name="supervised_id">
+                        <?php
+                        if (isset ($this->skillsmart['supervised'])){
+                            foreach ($this->skillsmart['supervised'] as $ss){
+                                echo "<option value=\"" . (($ss['label'] != 'NONE' && $ss['label'] != 'No supervision') ? $ss['id'] : '') . "\"" . (($this->person['supervised_id'] == $ss['id']) ? " selected=\"selected\"" : "") . ">" . $ss['label'] . "</option>\n";
+                            }
+                        }
+                        ?>
+                    </select>
+                </div>
+            <?php } ?>
 
- <?php if ($this->setting['display_mod_skillsmart'] && $this->setting['display_supervised']) { ?>
-	 <div class="fieldLabel" id="supervised_id_lbl"><?php tp('Supervised'); ?></div>
-	 <div class="fieldInput">
-		<select id="supervised_id" name="supervised_id">
-			<?php
-				if (isset ($this->skillsmart['supervised'])){
-					foreach ($this->skillsmart['supervised'] as $ss){
-						echo "<option value=\"" . (($ss['label'] != 'NONE' && $ss['label'] != 'No supervision') ? $ss['id'] : '') . "\"" . (($this->person['supervised_id'] == $ss['id']) ? " selected=\"selected\"" : "") . ">" . $ss['label'] . "</option>\n";
-					}
-				}
-			?>
-		</select>
-	 </div>
- <?php } ?>
+            <?php if ($this->setting['display_mod_skillsmart']) { ?>
+                <div class="supervision_extras_element">
+                    <div class="fieldLabel" id="supervision_frequency_id_lbl"><?php tp('Supervision Frequency'); ?></div>
+                    <div class="fieldInput">
+                        <select id="supervision_frequency_id" name="supervision_frequency_id">
+                            <?php
+                            if (isset ($this->skillsmart['supervisedfrequency'])){
+                                foreach ($this->skillsmart['supervisedfrequency'] as $ss){
+                                    echo "<option value=\"" . $ss['id'] . "\"" . (($this->person['supervised_id'] == $ss['id']) ? " selected=\"selected\"" : "") . ">" . $ss['label'] . "</option>\n";
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+            <?php } ?>
 
-  <?php if ($this->setting['display_mod_skillsmart']) { ?>
-	  <div class="supervision_extras_element">
-		 <div class="fieldLabel" id="supervision_frequency_id_lbl"><?php tp('Supervision Frequency'); ?></div>
-		 <div class="fieldInput">
-			<select id="supervision_frequency_id" name="supervision_frequency_id">
-				<?php
-					if (isset ($this->skillsmart['supervisedfrequency'])){
-						foreach ($this->skillsmart['supervisedfrequency'] as $ss){
-							echo "<option value=\"" . $ss['id'] . "\"" . (($this->person['supervised_id'] == $ss['id']) ? " selected=\"selected\"" : "") . ">" . $ss['label'] . "</option>\n";
-						}
-					}
-				?>
-			</select>
-		 </div>
-	 </div>
- <?php } ?>
+            <?php if ($this->setting['display_mod_skillsmart']) { ?>
+                <div class="supervision_extras_element">
+                    <div class="fieldLabel" id="supervisors_profession_lbl"><?php tp('Supervisors Profession'); ?></div>
+                    <div class="fieldInput"><input type="text" id="supervisors_profession" name="supervisors_profession" size="18" maxlength="64" value="<?php echo $this->person['supervisors_profession']; ?>"/></div>
+                </div>
+            <?php } ?>
 
- <?php if ($this->setting['display_mod_skillsmart']) { ?>
- 	<div class="supervision_extras_element">
-		<div class="fieldLabel" id="supervisors_profession_lbl"><?php tp('Supervisors Profession'); ?></div>
-		<div class="fieldInput"><input type="text" id="supervisors_profession" name="supervisors_profession" size="18" maxlength="64" value="<?php echo $this->person['supervisors_profession']; ?>"/></div>
- 	</div>
- <?php } ?>
+            <?php if ($this->setting['display_mod_skillsmart'] && $this->setting['display_training_received']) {
 
- <?php if ($this->setting['display_mod_skillsmart'] && $this->setting['display_training_received']) {
+                $recv_data_str = html_entity_decode($this->person['training_recieved_data']);
+                $training_recieved_arr = json_decode($recv_data_str, true);
+                ?>
 
- 	$recv_data_str = html_entity_decode($this->person['training_recieved_data']);
- 	$training_recieved_arr = json_decode($recv_data_str, true);
- 	?>
+                <div>
+                    <div class="fieldLabel" id="supervision_frequency_id_lbl"><?php tp('Indicate the training you received'); ?></div>
+                    <div class="fieldInput">
+                        <table style="width:auto; font-size:11px;" cellspacing="3" cellpadding="0" border="1">
+                            <tr style="font-weight:bold; color:dimGray;">
+                                <td align="center" style="padding:2px;" width="280"><?php echo t('Training'); ?></td>
+                                <td align="center" style="padding:2px;" width="20"><?php echo t('Yes'); ?></td>
+                                <td align="center" style="padding:2px;" width="40"><?php echo t('Year'); ?></td>
+                                <td align="center" style="padding:2px;" width="60"><?php echo t('Training Institution'); ?></td>
+                            </tr>
+                            <?php foreach ($this->skillsmart['training'] as $ss){
+                                $training_rec = "trainingrecieved_{$ss['id']}";
 
- 	<div>
- 		<div class="fieldLabel" id="supervision_frequency_id_lbl"><?php tp('Indicate the training you received'); ?></div>
- 		<div class="fieldInput">
- 			<table style="width:auto; font-size:11px;" cellspacing="3" cellpadding="0" border="1">
- 				<tr style="font-weight:bold; color:dimGray;">
- 					<td align="center" style="padding:2px;" width="280"><?php echo t('Training'); ?></td>
- 					<td align="center" style="padding:2px;" width="20"><?php echo t('Yes'); ?></td>
- 					<td align="center" style="padding:2px;" width="40"><?php echo t('Year'); ?></td>
- 					<td align="center" style="padding:2px;" width="60"><?php echo t('Training Institution'); ?></td>
- 				</tr>
-	 			<?php foreach ($this->skillsmart['training'] as $ss){
-	 				$training_rec = "trainingrecieved_{$ss['id']}";
-
-	 				?>
-					<tr>
-						<td style="padding:2px;"><?php echo $ss['label']; ?></td>
-						<td style="padding:2px; text-align:center;">
-							<input type="checkbox" id="" name="<?php echo $training_rec; ?>_on" <?php echo isset($training_recieved_arr[$ss['label']]['on']) ? 'CHECKED' : ''; ?> />
-						</td>
-						<td style="padding:2px;">
-							<input type="text" size="6" maxlength="6" id="" name="<?php echo $training_rec; ?>_year" value="<?php echo isset($training_recieved_arr[$ss['label']]['year']) ? $training_recieved_arr[$ss['label']]['year'] : ''; ?>" />
-						</td>
-						<td style="padding:2px;">
-							<input type="text" size="20" id="" name="<?php echo $training_rec; ?>_institution" value="<?php echo isset($training_recieved_arr[$ss['label']]['institution']) ? $training_recieved_arr[$ss['label']]['institution'] : ''; ?>" />
-						</td>
-					</tr>
-				<?php } ?>
-			</table>
- 		</div>
- 	</div>
- <?php } ?>
+                                ?>
+                                <tr>
+                                    <td style="padding:2px;"><?php echo $ss['label']; ?></td>
+                                    <td style="padding:2px; text-align:center;">
+                                        <input type="checkbox" id="" name="<?php echo $training_rec; ?>_on" <?php echo isset($training_recieved_arr[$ss['label']]['on']) ? 'CHECKED' : ''; ?> />
+                                    </td>
+                                    <td style="padding:2px;">
+                                        <input type="text" size="6" maxlength="6" id="" name="<?php echo $training_rec; ?>_year" value="<?php echo isset($training_recieved_arr[$ss['label']]['year']) ? $training_recieved_arr[$ss['label']]['year'] : ''; ?>" />
+                                    </td>
+                                    <td style="padding:2px;">
+                                        <input type="text" size="20" id="" name="<?php echo $training_rec; ?>_institution" value="<?php echo isset($training_recieved_arr[$ss['label']]['institution']) ? $training_recieved_arr[$ss['label']]['institution'] : ''; ?>" />
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </table>
+                    </div>
+                </div>
+            <?php } ?>
 
 
 
-<?php if($this->mode == 'add') { ?>
+            <?php if($this->mode == 'add') { ?>
 
-  <div class="clear"></div>
-  <div class="fieldIndentNoMargin hidden" id="duplicateCheckLabel"><?php tp('Duplicate Check');?></div>
-  <div id="dupecheck"></div>
-  <?php if( $this->hasACL('import_person') ) : ?>
-  <!-- import person button -->
-  <span id="importperson" class="yui-button yui-push-button" style="float:left;">
+            <div class="clear"></div>
+            <div class="fieldIndentNoMargin hidden" id="duplicateCheckLabel"><?php tp('Duplicate Check');?></div>
+            <div id="dupecheck"></div>
+            <?php if( $this->hasACL('import_person') ) : ?>
+                <!-- import person button -->
+                <span id="importperson" class="yui-button yui-push-button" style="float:left;">
     <span class="first-child">
       <button onclick="location.href='<?php echo $this->base_url; ?>/person/import';return false;" type="button" tabindex=1 id="personImportBtn" class="yui-button yui-push-button"><?php tp('Import person from Excel');?></button>
     </span>
   </span>
-  <?php endif; ?>
-  <input type="submit" id="submitAddContinue" class="submitArrow" value="<?php tp('Continue');?>" onclick="return continueClick();" />
-  <div class="clear"></div>
-  <div id="personAddHide" class="hidden" >
-		<?php } ?>
+            <?php endif; ?>
+            <input type="submit" id="submitAddContinue" class="submitArrow" value="<?php tp('Continue');?>" onclick="return continueClick();" />
+            <div class="clear"></div>
+            <div id="personAddHide" class="hidden" >
+                <?php } ?>
 
-		<div class="clear"></div>
-		<div class="hrGrey"></div>
-		<div class="clear"></div>
+                <div class="clear"></div>
+                <div class="hrGrey"></div>
+                <div class="clear"></div>
 
-		<?php require_once('edit-body-addtl.phtml'); ?>
-		<?php require_once('edit-body-rec.phtml');?>
-		<?php if($this->mode == 'edit') require_once('edit-body-class-history.phtml');?>
+                <?php require_once('edit-body-addtl.phtml'); ?>
+                <?php require_once('edit-body-rec.phtml');?>
+                <?php if($this->mode == 'edit') require_once('edit-body-class-history.phtml');?>
 
-		<?php if($this->trainingredirect) : ?>
-				  <input type="hidden" name="trainingredirect" value="<?php echo $this->trainingredirect; ?>">
-				<?php endif; ?>
-				<?php if($this->maketrainer) : ?>
-				  <input type="hidden" name="maketrainer" value="<?php echo $this->maketrainer; ?>">
-				<?php endif; ?>
-				<?php if($this->days) : ?>
-				  <input type="hidden" name="days" value="<?php echo $this->days; ?>">
-		<?php endif; ?>
-		<div class="clear"></div>
-		<br/>
+                <?php if($this->trainingredirect) : ?>
+                    <input type="hidden" name="trainingredirect" value="<?php echo $this->trainingredirect; ?>">
+                <?php endif; ?>
+                <?php if($this->maketrainer) : ?>
+                    <input type="hidden" name="maketrainer" value="<?php echo $this->maketrainer; ?>">
+                <?php endif; ?>
+                <?php if($this->days) : ?>
+                    <input type="hidden" name="days" value="<?php echo $this->days; ?>">
+                <?php endif; ?>
+                <div class="clear"></div>
+                <br/>
 
-		<?php if($this->mode == 'edit' && $this->setting['display_external_classes']) require_once('edit-body-exclass-history.phtml'); ?>
+                <?php if($this->mode == 'edit' && $this->setting['display_external_classes']) require_once('edit-body-exclass-history.phtml'); ?>
 
-		<?php if($this->mode == 'edit' && $this->setting['module_historical_data_enabled']) require_once('edit-body-history-table.phtml');?>
+                <?php if($this->mode == 'edit' && $this->setting['module_historical_data_enabled']) require_once('edit-body-history-table.phtml');?>
 
-		<div class="clear"></div>
-		<div class="actionBtn">
-		<button type="button" id="submitPerson"><?php tp('Save changes');?></button><br />
-		</div>
+                <div class="clear"></div>
+                <div class="actionBtn">
+                    <button type="button" id="submitPerson"><?php tp('Save changes');?></button><br />
+                </div>
 
-		<?php if($this->mode == 'add')
-	echo '</div>'; // personAddHide
- ?>
+                <?php if($this->mode == 'add')
+                    echo '</div>'; // personAddHide
+                ?>
 
-<input type="hidden" name="redirectUrl" id="redirectUrl" value="" />
+                <input type="hidden" name="redirectUrl" id="redirectUrl" value="" />
 
-</form>
-<div class="clear"></div>
-</div> <!-- content -->
+        </form>
+        <div class="clear"></div>
+    </div> <!-- content -->
 
-<div id="addFacility" >
-<div class="hd"><?php tp('Add New Facility');?></div>
-<div class="bd">
-<h1><?php tp('Please enter facility information');?></h1>
-<form action="<?php echo $this->base_url;?>/facility/add/outputType/json" method="post">
-<?php require_once('views/scripts/facility/addfacility-form.phtml');?>
+    <div id="addFacility" >
+        <div class="hd"><?php tp('Add New Facility');?></div>
+        <div class="bd">
+            <h1><?php tp('Please enter facility information');?></h1>
+            <form action="<?php echo $this->base_url;?>/facility/add/outputType/json" method="post">
+                <?php require_once('views/scripts/facility/addfacility-form.phtml');?>
 
-</form>
-</div> <!-- bd -->
-<div class="clear"></div>
-</div> <!--  addFacility -->
+            </form>
+        </div> <!-- bd -->
+        <div class="clear"></div>
+    </div> <!--  addFacility -->
 
-<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+    <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
 
 
 </div> <!--  page holder -->
 
 <script type="text/javascript">
-function persal_number_showhide(){
-	if( $('#govemp_option_id').is(':checked') ){
-		$('.persal_number_element').css('display', 'block');
-	} else {
-		$('.persal_number_element').css('display', 'none');
-	}
-}
-$('#govemp_option_id').click(persal_number_showhide);
-persal_number_showhide();
+    function persal_number_showhide(){
+        if( $('#govemp_option_id').is(':checked') ){
+            $('.persal_number_element').css('display', 'block');
+        } else {
+            $('.persal_number_element').css('display', 'none');
+        }
+    }
+    $('#govemp_option_id').click(persal_number_showhide);
+    persal_number_showhide();
 
-function supervision_extras_showhide(){
-	if( $('#supervised_id').val() != '' ){
-		$('.supervision_extras_element').css('display', 'block');
-	} else {
-		$('.supervision_extras_element').css('display', 'none');
-	}
-}
-$('#supervised_id').change(supervision_extras_showhide);
-supervision_extras_showhide();
+    function supervision_extras_showhide(){
+        if( $('#supervised_id').val() != '' ){
+            $('.supervision_extras_element').css('display', 'block');
+        } else {
+            $('.supervision_extras_element').css('display', 'none');
+        }
+    }
+    $('#supervised_id').change(supervision_extras_showhide);
+    supervision_extras_showhide();
 
 
 
-	function ShowHideDisability(obj)
-	{
-		if(obj.value == "Y")
-		{
-			YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('ifyesdisability'), "hidden");
-		}
-		else
-			{
-				YAHOO.util.Dom.addClass(YAHOO.util.Dom.get('ifyesdisability'), "hidden");
-				document.getElementById("disability").value="";
-			}
-		}
-		function CheckRanks(num)
-		{
-			if(num==1 && document.getElementById("rank1_option_id").value != "")
-			{
-				if(document.getElementById("rank2_option_id").value == document.getElementById("rank1_option_id").value)
-				{
-					alert("You have already chosen this rank");
-					document.getElementById("rank1_option_id").selectedIndex=0;
-					return;
-				}
-				if(document.getElementById("rank3_option_id").value == document.getElementById("rank1_option_id").value)
-				{
-					alert("You have already chosen this rank");
-					document.getElementById("rank1_option_id").selectedIndex=0;
-					return;
-				}
-			}
-			if(num==2 && document.getElementById("rank2_option_id").value != "")
-			{
-				if(document.getElementById("rank1_option_id").value == document.getElementById("rank2_option_id").value)
-				{
-					alert("You have already chosen this rank");
-					document.getElementById("rank2_option_id").selectedIndex=0;
-					return;
-				}
-				if(document.getElementById("rank3_option_id").value == document.getElementById("rank2_option_id").value)
-				{
-					alert("You have already chosen this rank");
-					document.getElementById("rank2_option_id").selectedIndex=0;
-					return;
-				}
-			}
-			if(num==3 && document.getElementById("rank3_option_id").value != "")
-			{
-				if(document.getElementById("rank2_option_id").value == document.getElementById("rank3_option_id").value)
-				{
-					alert("You have already chosen this rank");
-					document.getElementById("rank3_option_id").selectedIndex=0;
-					return;
-				}
-				if(document.getElementById("rank1_option_id").value == document.getElementById("rank3_option_id").value)
-				{
-					alert("You have already chosen this rank");
-					document.getElementById("rank3_option_id").selectedIndex=0;
-					return;
-				}
-			}
-		}
-		function ShowHideSpecify(obj)
-		{
-			if(obj.options[obj.selectedIndex].text.indexOf("ther (Please")>0)
-			{
-				YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('specifyoccupation'), "hidden");
-			}
-			else
-				{
-					YAHOO.util.Dom.addClass(YAHOO.util.Dom.get('specifyoccupation'), "hidden");
-					if(obj.options[obj.selectedIndex].style.backgroundColor.toLowerCase().indexOf("204")>0)
-					{
-						alert("Please select from sub-options");
-						obj.selectedIndex=0;
-						return;
-					}
-					document.getElementById("specifyoccupationinput").value="";
-				}
-				if(obj.value!="")
-				{
-					var i;
-					for(i=obj.selectedIndex;i>=0;i--)
-					{
-						if(obj.options[i].style.backgroundColor.toLowerCase().indexOf("204")>0)
-						{
-							document.getElementById("MainProfession").innerHTML=" ("+obj.options[i].text+")";
-							var DD = document.getElementById("ward_option_id");
-							var j;
-							var k;
-							k=0;
-							for(j=0;j<DD.options.length-1;j++)
-							{
-								if(DD.options[j].value.toLowerCase()=="dispensary")
-								{
-									k=1;
-									break;
-								}
-							}
-							if(k==1)
-							{
-								DD.options.remove(DD.options.length-2);
-								DD.options.remove(DD.options.length-2);
-							}
-							if(obj.options[i].text.toLowerCase()=="pharmacy")
-							{
-								DD.options.remove(DD.options.length-1);
-								DD.options.add(new Option("Pharmacy","Pharmacy"));
-								DD.options.add(new Option("Dispensary","Dispensary"));
-								DD.options.add(new Option("Other (Please specify)","Other (Please specify)"));
-							}
-							if(obj.options[i].text.toLowerCase()=="nurse")
-							{
-								YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('NurseTrainerType'), "hidden");
-							}
-							else
-								{
-									YAHOO.util.Dom.addClass(YAHOO.util.Dom.get('NurseTrainerType'), "hidden");
-									document.getElementById("trainer_type_option_id1").selectedIndex=0;
-								}
-								break;
-							}
-						}
-					}
-				}
+    function ShowHideDisability(obj)
+    {
+        if(obj.value == "Y")
+        {
+            YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('ifyesdisability'), "hidden");
+        }
+        else
+        {
+            YAHOO.util.Dom.addClass(YAHOO.util.Dom.get('ifyesdisability'), "hidden");
+            document.getElementById("disability").value="";
+        }
+    }
+    function CheckRanks(num)
+    {
+        if(num==1 && document.getElementById("rank1_option_id").value != "")
+        {
+            if(document.getElementById("rank2_option_id").value == document.getElementById("rank1_option_id").value)
+            {
+                alert("You have already chosen this rank");
+                document.getElementById("rank1_option_id").selectedIndex=0;
+                return;
+            }
+            if(document.getElementById("rank3_option_id").value == document.getElementById("rank1_option_id").value)
+            {
+                alert("You have already chosen this rank");
+                document.getElementById("rank1_option_id").selectedIndex=0;
+                return;
+            }
+        }
+        if(num==2 && document.getElementById("rank2_option_id").value != "")
+        {
+            if(document.getElementById("rank1_option_id").value == document.getElementById("rank2_option_id").value)
+            {
+                alert("You have already chosen this rank");
+                document.getElementById("rank2_option_id").selectedIndex=0;
+                return;
+            }
+            if(document.getElementById("rank3_option_id").value == document.getElementById("rank2_option_id").value)
+            {
+                alert("You have already chosen this rank");
+                document.getElementById("rank2_option_id").selectedIndex=0;
+                return;
+            }
+        }
+        if(num==3 && document.getElementById("rank3_option_id").value != "")
+        {
+            if(document.getElementById("rank2_option_id").value == document.getElementById("rank3_option_id").value)
+            {
+                alert("You have already chosen this rank");
+                document.getElementById("rank3_option_id").selectedIndex=0;
+                return;
+            }
+            if(document.getElementById("rank1_option_id").value == document.getElementById("rank3_option_id").value)
+            {
+                alert("You have already chosen this rank");
+                document.getElementById("rank3_option_id").selectedIndex=0;
+                return;
+            }
+        }
+    }
+    function ShowHideSpecify(obj)
+    {
+        if(obj.options[obj.selectedIndex].text.indexOf("ther (Please")>0)
+        {
+            YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('specifyoccupation'), "hidden");
+        }
+        else
+        {
+            YAHOO.util.Dom.addClass(YAHOO.util.Dom.get('specifyoccupation'), "hidden");
+            if(obj.options[obj.selectedIndex].style.backgroundColor.toLowerCase().indexOf("204")>0)
+            {
+                alert("Please select from sub-options");
+                obj.selectedIndex=0;
+                return;
+            }
+            document.getElementById("specifyoccupationinput").value="";
+        }
+        if(obj.value!="")
+        {
+            var i;
+            for(i=obj.selectedIndex;i>=0;i--)
+            {
+                if(obj.options[i].style.backgroundColor.toLowerCase().indexOf("204")>0)
+                {
+                    document.getElementById("MainProfession").innerHTML=" ("+obj.options[i].text+")";
+                    var DD = document.getElementById("ward_option_id");
+                    var j;
+                    var k;
+                    k=0;
+                    for(j=0;j<DD.options.length-1;j++)
+                    {
+                        if(DD.options[j].value.toLowerCase()=="dispensary")
+                        {
+                            k=1;
+                            break;
+                        }
+                    }
+                    if(k==1)
+                    {
+                        DD.options.remove(DD.options.length-2);
+                        DD.options.remove(DD.options.length-2);
+                    }
+                    if(obj.options[i].text.toLowerCase()=="pharmacy")
+                    {
+                        DD.options.remove(DD.options.length-1);
+                        DD.options.add(new Option("Pharmacy","Pharmacy"));
+                        DD.options.add(new Option("Dispensary","Dispensary"));
+                        DD.options.add(new Option("Other (Please specify)","Other (Please specify)"));
+                    }
+                    if(obj.options[i].text.toLowerCase()=="nurse")
+                    {
+                        YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('NurseTrainerType'), "hidden");
+                    }
+                    else
+                    {
+                        YAHOO.util.Dom.addClass(YAHOO.util.Dom.get('NurseTrainerType'), "hidden");
+                        document.getElementById("trainer_type_option_id1").selectedIndex=0;
+                    }
+                    break;
+                }
+            }
+        }
+    }
 </script>

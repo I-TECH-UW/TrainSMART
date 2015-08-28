@@ -137,7 +137,7 @@ class DropDown {
 		return $html;
 	}
 
-	/**
+    /**
 	 * @param string     $table - a string for the table name, or an array of rows to be used as the option values
 	 * @param string     $column
 	 * @param bool       $id - option value to select as default
@@ -150,109 +150,132 @@ class DropDown {
 	 * @param bool       $multiple_choice
 	 * @param int        $size
 	 * @return string
+        }
+
+        $return_html = '<select ';
+        foreach($elementAttributes as $k => $v) {
+            $return_html .= "$k=$v ";
+        }
+        $return_html .= ">\n";
+
+        $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+        $options = $db->fetchAll($query);
+
+        if ($show_select_option) {
+            $return_html .= '<option value="">&mdash; ' . t('select') . " &mdash;</option>\n";
+        }
+
+        foreach($options as $option) {
+            $return_html .= "<option value={$option['id']}" . ($option['id'] == $selected_value ? ' selected="selected"' : '') . '>' . $option['val'] . "</option>\n";
+        }
+        $return_html .= "</select>\n";
+
+        return $return_html;
+    }
+
+	/**
 	 */
-	public static function generateHtml($table, $column, $id = false, $jsonUrl = false, $disabled = false, $allowIds = false, 
-			$multiple = false, $attributes = array(), $set_default = true, $multiple_choice = false, $size = 0) {
-		
+    public static function generateHtml($table, $column, $id = false, $jsonUrl = false, $disabled = false, $allowIds = false,
+                                        $multiple = false, $attributes = array(), $set_default = true, $multiple_choice = false, $size = 0) {
 
-		
-		$mutliple_id = false;
-		if ( is_int($multiple) or ($multiple === 0) )
-      $mutliple_id = $multiple;
+        $mutliple_id = false;
+        if ( is_int($multiple) or ($multiple === 0) ) {
+            $mutliple_id = $multiple;
+        }
 
-		$multiple = ( $multiple !== false ? '[]' : ''); // allow multiple drop-downs w/same table
+        $multiple = ( $multiple !== false ? '[]' : ''); // allow multiple drop-downs w/same table
 
-		if (is_string ( $table )) {
-			$tableObj = new ITechTable ( array ('name' => $table ) );
-			$info = $tableObj->info ();
-			$cols = array ($column );
+        if (is_string ( $table )) {
+            $tableObj = new ITechTable ( array ('name' => $table ) );
+            $info = $tableObj->info ();
+            $cols = array ($column );
 
-			if ( $set_default ) {
-				if (array_search ( 'is_default', $info ['cols'] )) {
-					$cols = array ($column, 'is_default' );
-				}
-			}
-			$rows = $tableObj->fetchAll ( $tableObj->select ( $cols ) );
-		} else if (is_array ( $table ) or is_object ( $table )) {
-			$rows = $table;
-			//$info = ($rows->getTable()->info ());
+            if ( $set_default ) {
+                if (array_search ( 'is_default', $info ['cols'] )) {
+                    $cols = array ($column, 'is_default' );
+                }
+            }
+            $rows = $tableObj->fetchAll ( $tableObj->select ( $cols ) );
+        } else if (is_array ( $table ) or is_object ( $table )) {
+            $rows = $table;
+            //$info = ($rows->getTable()->info ());
 			$table = null;
-		}
+        }
 
-		$name = $table . '_id' . $multiple;
-		if (isset ( $attributes ['name'] )) {
-			$name = $attributes ['name'] ;
-			unset ( $attributes ['name'] );
-		}
+        $name = $table . '_id' . $multiple;
+        if (isset ( $attributes ['name'] )) {
+            $name = $attributes ['name'] ;
+            unset ( $attributes ['name'] );
+        }
 
-		$html = '<select name="' . $name . '" id="select_' . $table . ($multiple && ($mutliple_id !== false) ?'_'.$mutliple_id:'').'"' . (($disabled) ? ' disabled="disabled" ' : ' ');
+        $html = '<select name="' . $name . '" id="select_' . $table . ($multiple && ($mutliple_id !== false) ?'_'.$mutliple_id:'').'"' . (($disabled) ? ' disabled="disabled" ' : ' ');
 
-		if ($multiple_choice) {
-			$html .= ' multiple="multiple" ';
-		}
-		
-		if ($size) {
-			$html .= ' size=' . $size;
-		}
-		
-		
-		foreach ( $attributes as $k => $v ) {
-			$html .= " {$k}=\"$v\"";
-		}
+        if ($multiple_choice) {
+            $html .= ' multiple="multiple" ';
+        }
 
-		$html .= ' >';
+        if ($size) {
+            $html .= ' size=' . $size;
+        }
+
+        foreach ( $attributes as $k => $v ) {
+            $html .= " {$k}=\"$v\"";
+        }
+
+        $html .= ' >';
 
 
 		 $html .= "\t<option value=\"\">&mdash; " . t ( 'select' ) . " &mdash;</option>\n";
 
-			 
-		foreach ( $rows as $r ) {
-			if (($allowIds === false) or (array_search ( $r->id, $allowIds ) !== false)) {
-				$isSelected = '';
+        foreach ( $rows as $r ) {
+            if (($allowIds === false) or (array_search ( $r->id, $allowIds ) !== false)) {
+                $isSelected = '';
 
-				//check for default value in table
-				if ($set_default && isset ( $r->is_default ) && $r->is_default && ($id === false || $id === null)) {
-					$isSelected = ' selected="selected" ';
-				} else if ( $r->id === $id ) { //assign default value
-					$isSelected = ' selected="selected" ';
+                //check for default value in table
+                if ($set_default && isset ( $r->is_default ) && $r->is_default && ($id === false || $id === null)) {
+                    $isSelected = ' selected="selected" ';
+                } else if ( $r->id === $id ) { //assign default value
+                    $isSelected = ' selected="selected" ';
 
-				}
+                }
 
-				$html .= "\t<option value=\"{$r->id}\"$isSelected>{$r->$column}</option>\n";
-			}
-		}
-		$html .= "</select>\n\n";
+                $html .= "\t<option value=\"{$r->id}\"$isSelected>{$r->$column}</option>\n";
+            }
+        }
+        $html .= "</select>\n\n";
 
-		// add edit link
-		if ($jsonUrl && ! $disabled) {
-			$fieldlabel = explode ( '_', str_replace ( '_phrase', '', $column ) );
-			$label = $fieldlabel [0];
-			if(isset($fieldlabel[1])){ $label .= ' ' . $fieldlabel [1]; }
+        // add edit link
+        if ($jsonUrl && ! $disabled) {
+            $fieldlabel = explode ( '_', str_replace ( '_phrase', '', $column ) );
+            $label = $fieldlabel [0];
+            if(isset($fieldlabel[1])){
+                $label .= ' ' . $fieldlabel [1];
+            }
 
+            if (trim ( $label )) {
+                switch ($label) { // modify so label translates nicely, if needed
+                    case 'training got' :
+                        $label = "GOT Curriculum";
+                        break;
+                    default :
+                        break;
+                }
 
-			if (trim ( $label )) {
-				switch ($label) { // modify so label translates nicely, if needed
-					case 'training got' :
-						$label = "GOT Curriculum";
-						break;
-					default :
-						break;
-				}
+                require_once ('models/table/Translation.php');
+                $translate = @Translation::translate ( ucwords ( $label ) );
+                if ($translate) {
+                    $label = $translate;
+                }
+            }
 
-				require_once ('models/table/Translation.php');
-				$translate = @Translation::translate ( ucwords ( $label ) );
-				if ($translate)
-					$label = $translate;
-			}
+            $jsonUrl = "$jsonUrl/table/$table/column/$column";
+            $jsonUrl = Settings::$COUNTRY_BASE_URL . '/' . $jsonUrl . '/outputType/json';
 
-			$jsonUrl = "$jsonUrl/table/$table/column/$column";
-			$jsonUrl = Settings::$COUNTRY_BASE_URL . '/' . $jsonUrl . '/outputType/json';
+            $html .= " <a href=\"#\" onclick=\"addToSelect('" . str_replace("'", "\\"."'",t ( 'Please enter your new' )) . " {$label}:', 'select_{$table}', '{$jsonUrl}'); return false;\">" . t ( 'Insert new' ) . "</a>";
+        }
 
-			$html .= " <a href=\"#\" onclick=\"addToSelect('" . str_replace("'", "\\"."'",t ( 'Please enter your new' )) . " {$label}:', 'select_{$table}', '{$jsonUrl}'); return false;\">" . t ( 'Insert new' ) . "</a>";
-		}
-
-		return $html;
-	}
+        return $html;
+    }
 
 	/**
 	 * A generic helper function for rendering HTML for a dropdown widget
@@ -305,7 +328,6 @@ class DropDown {
 	 * @return string
 	 */
 
-	function render_report_filter($id, $show_id, $label, $options, $value_key, $selected_id, $show_selected, $set_default = false, $fixedWidth = false, $multiple = false) {
 		$html = "<div class='fieldLabel' id='" . $id . "_lbl'>$label</div>\n";
 		$html .= "<div class='fieldInput'><div  class='leftBorderPad'>\n";
 		$html .= "<input type='checkbox' name='$show_id' " . ($show_selected ? 'checked="checked"' : '') . " />\n";

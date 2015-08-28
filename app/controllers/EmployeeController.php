@@ -79,7 +79,7 @@ class EmployeeController extends ReportFilterHelpers {
 	{
 		try {
 			if (! $this->hasACL ( 'employees_module' )) {
-				if($this->_getParam('outputType') == 'json') {
+				if($this->getParam('outputType') == 'json') {
 					$this->sendData(array('msg'=>'Not Authorized'));
 					exit();
 					return;
@@ -127,7 +127,7 @@ class EmployeeController extends ReportFilterHelpers {
 
 		}
 		catch (Exception $e) {
-			if($this->_getParam('outputType') == 'json') {
+			if($this->getParam('outputType') == 'json') {
 				$this->sendData(array('errored' => true, 'msg'=>'Error: ' . $e->getMessage()));
 				return;
 			} else {
@@ -146,6 +146,12 @@ class EmployeeController extends ReportFilterHelpers {
 		return $rows ? $rows : array();
 	}
 
+	    /*
+	    */
+	    $mechanisms = $this->generateMechanismList($employee_id);
+	    $this->view->assign("mechanismList", $mechanisms);
+	    
+    				if($this->getParam('outputType') == 'json') {
 	public function addAction() {
 		$this->view->assign('mode', 'add');
 		$this->view->assign ( 'pageTitle', t ( 'Add New' ).' '.t( 'Employee' ) );
@@ -495,7 +501,6 @@ class EmployeeController extends ReportFilterHelpers {
 		
 		$this->view->assign ( 'partners',    DropDown::generateHtml   ( 'partner', 'partner', $params['partner_id'], false, !$this->hasACL("edit_employee"), $this->getAvailablePartners(), false, array("onchange" => "availableMechanisms();") ) );
 		
-		//$this->view->assign ( 'subpartners', DropDown::generateHtml   ( 'partner', 'partner', $params['subpartner_id'], false, $this->view->viewonly, false, false, array('name' => 'subpartner_id'), true ) );
 		$this->view->assign ( 'bases',       DropDown::generateHtml   ( 'employee_base_option', 'base_phrase', $params['employee_base_option_id'], false, !$this->hasACL("edit_employee")) );
 		$this->view->assign ( 'site_types',  DropDown::generateHtml   ( 'employee_site_type_option', 'site_type_phrase', $params['facility_type_option_id'], false, !$this->hasACL("edit_employee")) );
 		$this->view->assign ( 'cadres',      DropDown::generateHtml   ( 'employee_qualification_option', 'qualification_phrase', $params['employee_qualification_option_id'], false, !$this->hasACL("edit_employee")) );

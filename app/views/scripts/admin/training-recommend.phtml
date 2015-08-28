@@ -19,7 +19,7 @@ ob_end_clean();
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+  <title><?php echo t($this->translation['Application Name']);?> | <?php echo t($this->pageTitle); ?></title>
 <?php
 require_once('views/helpers/ScriptContainer.php');
 print ScriptContainer::$instance->renderCSSHead();
@@ -36,8 +36,8 @@ print ScriptContainer::$instance->renderJSHead();
     <div id="navAdmin"><?php echo $nav;?></div>
 
     <div id="contentAdmin">
-    <h1><?php echo $this->pageTitle; ?></h1>
-    <div style="font-style:italic;">Add/edit Recommended Training Topics</div>
+    <h1><?php echo t($this->pageTitle); ?></h1>
+    <div style="font-style:italic;"><?php echo t('Add/edit Recommended Training Topics'); ?></div>
     <br/>
 
     <?php
@@ -51,12 +51,12 @@ print ScriptContainer::$instance->renderJSHead();
 	<div id="trainingRecommend"></div>
 	<script type="text/javascript">
 		var trainerColumnDefs = [
-		    {key:"qualification_phrase", label: "Qualification", sortable:true, resizeable:true},
-		    {key:"topics", label: "Topics", sortable:true, resizeable:true},
-		    {key:"edit", label: "Edit", sortable:true, resizeable:true}
+		    {key:"qualification_phrase", label:"<?php echo t("Qualification")?>", sortable:true, resizeable:true},
+		    {key:"topics", label: "<?php echo t("Topics")?>", sortable:true, resizeable:true},
+		    {key:"edit", label: "<?php echo t("Edit")?>", sortable:true, resizeable:true}
 		];
 
-		var action = '<?php echo $this->base_url;?>/admin/listByRecommend/outputType/json';
+		var action = '<?php echo $this->base_url;?>/admin/list-by-recommend/outputType/json';
 		makeJSONDataTable("trainingRecommend", null, action, trainerColumnDefs);
 	</script>
 
@@ -64,13 +64,13 @@ print ScriptContainer::$instance->renderJSHead();
 
   <div class="hrGrey"></div>
 
-  Select the recommended topics for this qualification:
+  <?php echo t("Select the recommended topics for this qualification")?>:
   <br><br>
 
-  <div class="fieldLabel" id="qual_lbl">Qualification</div>
+  <div class="fieldLabel" id="qual_lbl"><?php echo t("Qualification")?></div>
   <div class="fieldInput">
     <select id="person_qualification_option_id" name="person_qualification_option_id">
-    	<option value="">&mdash; select &mdash;</option>
+    	<option value="">&mdash;<?php echo t("select")?> &mdash;</option>
     	<?php
     		$lastParent = null;
     		foreach ( $this->qualifications as $vals ) {
@@ -87,7 +87,7 @@ print ScriptContainer::$instance->renderJSHead();
 
 
   <?php for($j = 1; $j <= $this->NUM_TOPICS; $j++) { ?>
-    <div class="fieldLabel" id="topic_lbl">Topic <?php print $j; ?></div>
+    <div class="fieldLabel" id="topic_lbl"><?php echo t("Topic")?> <?php print $j; ?></div>
     <div class="fieldInput">
       <?php print $this->{"dropDownTopic{$j}"}; ?>
     </div>
@@ -99,8 +99,8 @@ print ScriptContainer::$instance->renderJSHead();
     <br>
 
     <input type="hidden" name="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>">
-    <input type="submit" value="Save & Continue" class="submitArrow">
-    <input type="submit" value="Save" name="saveonly" class="submitNoArrow" onclick="document.adminForm.redirect.value=''" style="margin-right:1em;">
+    <input type="submit" value="<?php echo t("Save & Continue")?>" class="submitArrow">
+    <input type="submit" value="<?php echo t("Save")?>" name="saveonly" class="submitNoArrow" onclick="document.adminForm.redirect.value=''" style="margin-right:1em;">
     </form>
 
 

@@ -1,0 +1,48 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# CentOS x86_64 6.6 PHP 5.3.29 with XDebug Debugger
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # All Vagrant configuration is done here. The most common configuration
+  # options are documented and commented below. For a complete reference,
+  # please see the online documentation at vagrantup.com.
+
+  # Every Vagrant virtual environment requires a box to build off of.
+  config.vm.box = "chef/centos-6.6"
+  config.vm.hostname = "centos6-php53-xdebug"
+  
+  # forward http
+  config.vm.network "forwarded_port", host: 62326, guest: 80
+  
+  # forward mysql
+  config.vm.network "forwarded_port", host: 3306, guest: 3306
+  
+  # we'll put all the custom files in the vagrant user's home directory as we 
+  # can't write to system locations without root, we'll move them in 
+  # bootstrap-xx.sh when we're root
+
+  config.vm.provision "file", source: "vagrant/bootstrap/vagrant-trainsmart-httpd.conf", destination: "/home/vagrant/vagrant-trainsmart-httpd.conf"
+  config.vm.provision "file", source: "vagrant/bootstrap/selinux-config", destination: "/home/vagrant/selinux-config"
+
+  config.vm.provision "file", source: "vagrant/bootstrap/data.sql", destination: "/home/vagrant/data.sql"
+  config.vm.provision "file", source: "vagrant/bootstrap/grant-privileges.sql", destination: "/home/vagrant/grant-privileges.sql"
+
+  config.vm.provision "file", source: "vagrant/bootstrap/xdebug-debugger.ini", destination: "/home/vagrant/php-debugger.ini"
+  config.vm.provision "file", source: "vagrant/bootstrap/xdebug-php5.3-centos6-x64.so", destination: "/home/vagrant/xdebug.so"
+  config.vm.provision "file", source: "vagrant/bootstrap/php-5.3-nobuffer.ini", destination: "/home/vagrant/php.ini"
+#  config.vm.provision "file", source: "vagrant/bootstrap/rc.local.append", destination: "/home/vagrant/rc.local.append"
+#  config.vm.provision "file", source: "vagrant/bootstrap/mysqld.init.d", destination: "/home/vagrant/mysqld.init"
+  
+  config.vm.provision "file", source: "vagrant/bootstrap/my-56.cnf", destination: "/home/vagrant/my.cnf"
+  config.vm.provision "file", source: "vagrant/bootstrap/ius-archive.repo", destination: "/home/vagrant/ius-archive.repo"
+  config.vm.provision :shell, path: "vagrant/bootstrap/bootstrap-centos6-xdebug-debugger.sh"
+  
+  # these two commands restart the httpd and mysql processes after the vagrant folder is mounted
+  # so log files can be written in the shared vagrant folder
+  config.vm.provision :shell, :inline => "sudo service httpd restart", run: "always"
+  config.vm.provision :shell, :inline => "sudo service mysqld restart", run: "always"
+end

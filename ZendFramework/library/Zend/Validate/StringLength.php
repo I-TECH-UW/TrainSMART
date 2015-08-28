@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Zend Framework
  *
@@ -15,27 +14,25 @@
  *
  * @category   Zend
  * @package    Zend_Validate
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: StringLength.php 6404 2007-09-18 19:14:07Z darby $
+ * @version    $Id$
  */
-
 
 /**
  * @see Zend_Validate_Abstract
  */
 require_once 'Zend/Validate/Abstract.php';
 
-
 /**
  * @category   Zend
  * @package    Zend_Validate
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Validate_StringLength extends Zend_Validate_Abstract
 {
-
+    const INVALID   = 'stringLengthInvalid';
     const TOO_SHORT = 'stringLengthTooShort';
     const TOO_LONG  = 'stringLengthTooLong';
 
@@ -43,8 +40,9 @@ class Zend_Validate_StringLength extends Zend_Validate_Abstract
      * @var array
      */
     protected $_messageTemplates = array(
+        self::INVALID   => "Invalid type given. String expected",
         self::TOO_SHORT => "'%value%' is less than %min% characters long",
-        self::TOO_LONG  => "'%value%' is greater than %max% characters long"
+        self::TOO_LONG  => "'%value%' is more than %max% characters long",
     );
 
     /**
@@ -72,16 +70,47 @@ class Zend_Validate_StringLength extends Zend_Validate_Abstract
     protected $_max;
 
     /**
+     * Encoding to use
+     *
+     * @var string|null
+     */
+    protected $_encoding;
+
+    /**
      * Sets validator options
      *
-     * @param  integer $min
-     * @param  integer $max
-     * @return void
+     * @param integer|array|Zend_Config $options
      */
-    public function __construct($min = 0, $max = null)
+    public function __construct($options = array())
     {
-        $this->setMin($min);
-        $this->setMax($max);
+        if ($options instanceof Zend_Config) {
+            $options = $options->toArray();
+        } else if (!is_array($options)) {
+            $options     = func_get_args();
+            $temp['min'] = array_shift($options);
+            if (!empty($options)) {
+                $temp['max'] = array_shift($options);
+            }
+
+            if (!empty($options)) {
+                $temp['encoding'] = array_shift($options);
+            }
+
+            $options = $temp;
+        }
+
+        if (!array_key_exists('min', $options)) {
+            $options['min'] = 0;
+        }
+
+        $this->setMin($options['min']);
+        if (array_key_exists('max', $options)) {
+            $this->setMax($options['max']);
+        }
+
+        if (array_key_exists('encoding', $options)) {
+            $this->setEncoding($options['encoding']);
+        }
     }
 
     /**
@@ -151,6 +180,50 @@ class Zend_Validate_StringLength extends Zend_Validate_Abstract
     }
 
     /**
+     * Returns the actual encoding
+     *
+     * @return string
+     */
+    public function getEncoding()
+    {
+        return $this->_encoding;
+    }
+
+    /**
+     * Sets a new encoding to use
+     *
+     * @param string $encoding
+     * @throws Zend_Validate_Exception
+     * @return Zend_Validate_StringLength
+     */
+    public function setEncoding($encoding = null)
+    {
+        if ($encoding !== null) {
+            $orig = PHP_VERSION_ID < 50600
+                        ? iconv_get_encoding('internal_encoding')
+                        : ini_get('default_charset');
+            if (PHP_VERSION_ID < 50600) {
+                $result = iconv_set_encoding('internal_encoding', $encoding);
+            } else {
+                $result = ini_set('default_charset', $encoding);
+            }
+            if (!$result) {
+                require_once 'Zend/Validate/Exception.php';
+                throw new Zend_Validate_Exception('Given encoding not supported on this OS!');
+            }
+
+            if (PHP_VERSION_ID < 50600) {
+                iconv_set_encoding('internal_encoding', $orig);
+            } else {
+                ini_set('default_charset', $orig);
+            }
+        }
+
+        $this->_encoding = $encoding;
+        return $this;
+    }
+
+    /**
      * Defined by Zend_Validate_Interface
      *
      * Returns true if and only if the string length of $value is at least the min option and
@@ -161,20 +234,30 @@ class Zend_Validate_StringLength extends Zend_Validate_Abstract
      */
     public function isValid($value)
     {
-        $valueString = (string) $value;
-        $this->_setValue($valueString);
-        $length = iconv_strlen($valueString);
+        if (!is_string($value)) {
+            $this->_error(self::INVALID);
+            return false;
+        }
+
+        $this->_setValue($value);
+        if ($this->_encoding !== null) {
+            $length = iconv_strlen($value, $this->_encoding);
+        } else {
+            $length = iconv_strlen($value);
+        }
+
         if ($length < $this->_min) {
             $this->_error(self::TOO_SHORT);
         }
+
         if (null !== $this->_max && $this->_max < $length) {
             $this->_error(self::TOO_LONG);
         }
+
         if (count($this->_messages)) {
             return false;
         } else {
             return true;
         }
     }
-
 }

@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Technorati
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Utils.php 7333 2008-01-02 23:22:23Z weppos $
+ * @version    $Id$
  */
 
 
@@ -27,7 +27,7 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Technorati
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Service_Technorati_Utils
@@ -64,7 +64,7 @@ class Zend_Service_Technorati_Utils
                  * @see Zend_Service_Technorati_Exception
                  */
                 require_once 'Zend/Service/Technorati/Exception.php';
-                throw new Zend_Service_Technorati_Exception($e->getMessage());
+                throw new Zend_Service_Technorati_Exception($e->getMessage(), 0, $e);
             }
         }
 
@@ -73,20 +73,20 @@ class Zend_Service_Technorati_Utils
             /**
              * @see Zend_Service_Technorati_Exception
              */
-            require_once 'Zend/Service/Technorati/Exception.php'; 
+            require_once 'Zend/Service/Technorati/Exception.php';
             throw new Zend_Service_Technorati_Exception(
                 "Invalid URL $uri, only HTTP(S) protocols can be used");
         }
-        
+
         return $uri;
     }
     /**
      * Parses, validates and returns a valid Zend_Date object
      * from given $input.
-     * 
+     *
      * $input can be either a string, an integer or a Zend_Date object.
      * If $input is string or int, it will be provided to Zend_Date as it is.
-     * If $input is a Zend_Date object, the object instance will be returned. 
+     * If $input is a Zend_Date object, the object instance will be returned.
      *
      * @param   mixed|Zend_Date $input
      * @return  null|Zend_Date
@@ -99,23 +99,29 @@ class Zend_Service_Technorati_Utils
          * @see Zend_Date
          */
         require_once 'Zend/Date.php';
-        
+        /**
+         * @see Zend_Locale
+         */
+        require_once 'Zend/Locale.php';
+
         // allow null as value and return valid Zend_Date objects
         if (($input === null) || ($input instanceof Zend_Date)) {
             return $input;
         }
-        
-        if (!Zend_Date::isDate($input)) {
+
+        // due to a BC break as of ZF 1.5 it's not safe to use Zend_Date::isDate() here
+        // see ZF-2524, ZF-2334
+        if (@strtotime($input) !== FALSE) {
+            return new Zend_Date($input);
+        } else {
             /**
              * @see Zend_Service_Technorati_Exception
              */
             require_once 'Zend/Service/Technorati/Exception.php';
             throw new Zend_Service_Technorati_Exception("'$input' is not a valid Date/Time");
         }
-
-        return new Zend_Date($input);
     }
-    
+
     /**
      * @todo public static function xpathQueryAndSet() {}
      */

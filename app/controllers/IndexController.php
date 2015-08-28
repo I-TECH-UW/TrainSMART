@@ -17,7 +17,7 @@ class IndexController extends ITechController {
 
 	public function indexAction() {
 
-		if($this->hasACL('edit_employee') && $this->setting('module_employee_enabled')){
+		if($this->hasACL('edit_employee') && $this->setting('employees_module')){
 			if($this->hasACL('in_service') == false && $this->hasACL('pre_service') == false) {
 				$this->_redirect('employee');
 				exit();
@@ -48,7 +48,7 @@ class IndexController extends ITechController {
 		$rowsArray = $db->fetchAll ( $sql );
 		$NIMART = 0;
 		foreach($rowsArray as $key => $row) {
-			$NIMARTsplit=split("§",$rowsArray[$key]['comments']);
+			$NIMARTsplit=preg_split("/ï¿½/",$rowsArray[$key]['comments']);
 			if(strlen($NIMARTsplit[21])>0) {
 				if($NIMARTsplit[21] = "Nurse Initiating ART") {
 					$NIMART = $NIMART + 1;
@@ -98,17 +98,17 @@ class IndexController extends ITechController {
 
 			// Incomplete
 			$tableObj = new Training ( );
-			$rowsPast = $tableObj->getIncompleteTraining ( $uid, 'training_start_date < NOW() '.$allowedWhereClause )->toArray();
+			$rowsPast = $tableObj->getIncompleteTraining ( $uid, $this->setting('display_budget_code'), 'training_start_date < NOW() '.$allowedWhereClause );
 			if ($rowsPast) {
-				$html = EditTableHelper::generateHtmlTraining ( 'TrainingPast', $rowsPast, $trainingFields, $colStatic, $linkInfo, $editLinkInfo, $colCustom );
+				$html = EditTableHelper::generateHtmlTraining ( 'TrainingPast', $rowsPast->toArray(), $trainingFields, $colStatic, $linkInfo, $editLinkInfo, $colCustom );
 				$this->view->assign ( 'tableTrainingPast', $html );
 			}
 
 			// Future
 			$tableObj = new Training ( );
-			$rowsFuture = $tableObj->getIncompleteTraining ( $uid, 'training_start_date >= NOW()'.$allowedWhereClause, '' )->toArray();
+			$rowsFuture = $tableObj->getIncompleteTraining ( $uid, $this->setting('display_budget_code'), 'training_start_date >= NOW()'.$allowedWhereClause, '' );
 			if ($rowsFuture) {
-				$html = EditTableHelper::generateHtmlTraining ( 'TrainingFuture', $rowsFuture, $trainingFields, $colStatic, $linkInfo, $editLinkInfo, $colCustom );
+				$html = EditTableHelper::generateHtmlTraining ( 'TrainingFuture', $rowsFuture->toArray(), $trainingFields, $colStatic, $linkInfo, $editLinkInfo, $colCustom );
 				$this->view->assign ( 'tableTrainingFuture', $html );
 			}
 
@@ -216,7 +216,8 @@ class IndexController extends ITechController {
 	public function languageAction() {
 		require_once ('models/Session.php');
 		require_once ('models/table/User.php');
-		if ($this->isLoggedIn () and array_key_exists ( $this->getSanParam ( 'opt' ), ITechTranslate::getLanguages () )) {
+		if (array_key_exists ( $this->getSanParam ( 'opt' ), ITechTranslate::getLanguages () )) { //TA:24 allow change language even though loged out
+		//if ($this->isLoggedIn () and array_key_exists ( $this->getSanParam ( 'opt' ), ITechTranslate::getLanguages () )) {
 			$user = new User ( );
 			$userRow = $user->find ( Session::getCurrentUserId () )->current ();
 			$user->updateLocale ( $this->getSanParam ( 'opt' ), Session::getCurrentUserId () );

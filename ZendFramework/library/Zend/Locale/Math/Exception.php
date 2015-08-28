@@ -14,8 +14,8 @@
  *
  * @category   Zend
  * @package    Zend_Locale
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: Exception.php 6493 2007-09-23 18:22:29Z thomas $
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id$
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -23,16 +23,16 @@
 /**
  * Zend_Exception
  */
-require_once 'Zend/Exception.php';
+require_once 'Zend/Locale/Exception.php';
 
 
 /**
  * @category   Zend
  * @package    Zend_Locale
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Locale_Math_Exception extends Zend_Exception
+class Zend_Locale_Math_Exception extends Zend_Locale_Exception
 {
     protected $op1 = null;
     protected $op2 = null;

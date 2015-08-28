@@ -8,7 +8,7 @@ drop table `commodity`;
 
 CREATE TABLE `commodity` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` int(11) NOT NULL,
+  `name_id` int(11) NOT NULL,
   `date` date NOT NULL,
   `consumption` int(11) DEFAULT NULL,
   `stock_out` char(1) NOT NULL DEFAULT 'N',
@@ -18,7 +18,7 @@ CREATE TABLE `commodity` (
   `modified_by` int(11) DEFAULT NULL,
   `timestamp_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `commodity_type_option` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -30,7 +30,7 @@ CREATE TABLE `commodity_type_option` (
   `is_deleted` tinyint(1) NOT NULL,
   `uuid` varchar(36) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 
 ALTER TABLE `commodity_name_option` ADD COLUMN `commodity_type_id` int(11) DEFAULT NULL;

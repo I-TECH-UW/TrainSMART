@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><?php echo $this->translation['Application Name'];?> | <?php tp('Roster Reports');?></title>
+    <?php
+    require_once('views/helpers/ScriptContainer.php');
+    print ScriptContainer::$instance->renderCSSHead();
+    print ScriptContainer::$instance->renderJSHead();
+    ?>
+</head>
+<body class="yui-skin-sam">
+<div id="pageHolder">
+    <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+    <div id="content">
+        <pre>
+        <?php
+            echo print_r($this->report, true);
+        ?>
+        </pre>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -44,9 +44,12 @@ class DashviewEmployee extends Dashview
 	public function fetchEmployeeCounts()
 	{
 		$db = $this->dbfunc();
-		$select = $db->select()->distinct()->from('employee',array('partner_id,count(id) as cnt'));
-		$select = $select->group('partner_id');
-		$result = $db->fetchAll($select);
+		//$select = $db->select()->distinct()->from('employee',array('partner_id,count(id) as cnt'));
+		//$select = $select->group('partner_id');
+		
+		$sql_string = 'SELECT DISTINCT `employee`.`partner_id`, count(id) AS `cnt` FROM `employee` GROUP BY `partner_id`';
+		
+		$result = $db->fetchAll($sql_string);
 		$ret = array();
 		if (! count($result))
 			return array();

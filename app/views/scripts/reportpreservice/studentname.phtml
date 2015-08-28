@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title><?php echo $this->escape($this->title);?></title>
-		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+		<link href="//fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
 
 	<?php
 	require_once('views/helpers/Location.php');
@@ -303,9 +303,9 @@ foreach($this->results as $row) {
 
 var trainingColumnDefs = [
 <?php if (isset($this->results[0]['cnt'])) { ?>
-{key:"cnt", label: "Count", sortable:true, resizeable:true}
+{key:"cnt", label: "<?php tp('Count')?>", sortable:true, resizeable:true}
 <?php } else { ?>
-{key:"id", label: "ID", sortable:true, resizeable:true, formatter: formatViewUrl},
+{key:"id", label: "<?php tp('ID')?>", sortable:true, resizeable:true, formatter: formatViewUrl},
 {key:"training_start_date", label: "<?php tp('Date');?>", sortable:true, resizeable:true}
 <?php } ?>
 <?php if ( $this->criteria['showFacility'] ) { ?>

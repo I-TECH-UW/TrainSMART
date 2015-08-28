@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title><?php echo $this->escape($this->title);?></title>
-		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+		<link href="//fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
 
 <?php
     require_once('views/helpers/ScriptContainer.php');
@@ -24,14 +24,14 @@
 					width: 750,
 					modal: true,
 					buttons: {
-						"Update": function() {
+						<?php echo t('Update')?>: function() {
 							$('#dialog-form-student select[name="_length"]')
 								.append('<option value="1000">1000</option>')
 								.val(1000)
 								.change();
 							document.getElementById('studentform').submit();
 						},
-						Cancel: function() {
+						<?php echo t('Cancel')?>: function() {
 							$( this ).dialog( "close" );
 						}
 					},
@@ -53,10 +53,10 @@
 					width: 400,
 					modal: true,
 					buttons: {
-						"Save": function() {
+						<?php echo t('Save')?>: function() {
 							document.getElementById('licenseform').submit();
 						},
-						Cancel: function() {
+						<?php echo t('Cancel')?>: function() {
 							$( this ).dialog( "close" );
 						}
 					},
@@ -83,10 +83,10 @@
 					width: 750,
 					modal: true,
 					buttons: {
-						"Update": function() {
+						<?php echo t('Update')?>: function() {
 							document.getElementById('classform').submit();
 						},
-						Cancel: function() {
+						<?php echo t('Cancel')?>: function() {
 							$( this ).dialog( "close" );
 						}
 					},
@@ -108,10 +108,10 @@
 					width: 400,
 					modal: true,
 					buttons: {
-						"Save": function() {
+						<?php echo t('Save')?>: function() {
 							document.getElementById('practicumform').submit();
 						},
-						Cancel: function() {
+						<?php echo t('Cancel')?>: function() {
 							$( this ).dialog( "close" );
 						}
 					},
@@ -208,7 +208,7 @@
 	</head>
 	<body>
 
-<div id="dialog-form-student" title="Update students">
+<div id="dialog-form-student" title="<?php echo t("Update students")?>">
 	<form method="post" name="studentform" id="studentform">
 		<input type="hidden" name="action" id="action" value="students">
 		<input type="hidden" name="id" id="id" value="<?php echo $this->id; ?>">
@@ -237,7 +237,7 @@
 						<td><input type="checkbox" name="students[<?php echo($row['sid']);?>]" id="students[<?php echo($row['sid']);?>]" value="<?php echo $row['sid']; ?>"<?php echo ($found ? " checked" : "") ?>> <?php echo $row['id']; ?></td>
 						<td class=""><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
 						<td class=""><?php echo $row['gender']; ?></td>
-						<td class=""><?php echo trim($row['birthdate']) != "" ? date("m/d/Y", strtotime($row['birthdate'])) : "N/A"; ?></td>
+						<td class=""><?php echo trim($row['birthdate']) != "" ? date("m/d/Y", strtotime($row['birthdate'])) : t("N/A"); ?></td>
 					</tr>
 					<?php
 				}
@@ -247,11 +247,11 @@
 	</form>
 </div>
 
-<div id="dialog-form-license" title="Add license">
+<div id="dialog-form-license" title="<?php echo t('Add license')?>">
 	<form method="post" name="licenseform" id="licenseform">
 		<input type="hidden" name="licenseaction" id="licenseaction" value="license">
 		<input type="hidden" name="licenseid" id="licenseid" value="<?php echo $this->id; ?>">
-	<p class="validateTips"><?php echo t('All form fields are required.'); ?></p>
+	<p class="validateTips"><?php echo t('All form fields are required'); ?></p>
 
 	<form method="post">
 		<fieldset>
@@ -264,14 +264,14 @@
 	</form>
 </div>
 
-<div id="dialog-form-class" title="Update classes">
+<div id="dialog-form-class" title="<?php echo t('Update classes')?>">
 	<form method="post" name="classform" id="classform">
 		<input type="hidden" name="classaction" id="classaction" value="classaction">
 		<input type="hidden" name="classid" id="classid" value="<?php echo $this->id; ?>">
 		<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 			<thead>
 				<tr>
-					<th><?php echo t('Class name'); ?></th>
+					<th><?php echo t('Class Name'); ?></th>
 					<th><?php echo t('Instructor'); ?></th>
 					<th><?php echo t('Start date'); ?></th>
 					<th><?php echo t('End date'); ?></th>
@@ -288,10 +288,14 @@
 						}
 						?>
 						<tr class="GradeA">
-							<td><input type="checkbox" name="class[<?php echo $classes['id']; ?>][id]" id="class[<?php echo $classes['id']; ?>][id]" value="<?php echo $classes['id']; ?>"<?php echo ($found ? " checked" : "") ?>> <?php echo $classes['classname']; ?></td>
+							<?php if ($this->setting['site_style'] == 'skillsmart') { ?>
+								<td><input type="checkbox" name="class[<?php echo $classes['id']; ?>][id]" id="class[<?php echo $classes['id']; ?>][id]" value="<?php echo $classes['id']; ?>"<?php echo ($found ? " checked" : "") ?>> <?php echo $classes['custom_1']; ?></td>
+							<?php } else { ?>
+								<td><input type="checkbox" name="class[<?php echo $classes['id']; ?>][id]" id="class[<?php echo $classes['id']; ?>][id]" value="<?php echo $classes['id']; ?>"<?php echo ($found ? " checked" : "") ?>> <?php echo $classes['classname']; ?></td>
+							<?php } ?>
 							<td class=""><?php echo $classes['first_name'] . " " . $classes['last_name']; ?></td>
-							<td class=""><?php echo date("m/d/Y", strtotime($classes['startdate'])); ?></td>
-							<td class=""><?php echo date("m/d/Y", strtotime($classes['enddate'])); ?></td>
+							<td class=""><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); } ?></td>
+							<td class=""><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); } ?></td>
 						</tr>
 						<?php
 					}
@@ -305,7 +309,7 @@
 	<form method="post" name="practicumform" id="practicumform">
 		<input type="hidden" name="practicumaction" id="practicumaction" value="practicumaction">
 		<input type="hidden" name="practicumid" id="practicumid" value="0">
-	<p class="validateTips"><?php echo t('All form fields are required.'); ?></p>
+	<p class="validateTips"><?php echo t('All form fields are required'); ?></p>
 
 	<form method="post">
 		<fieldset>
@@ -335,7 +339,7 @@
 	}
 ?>
 			</select>
-			<label for="name"><?php echo t('Hours required'); ?></label>
+			<label for="name"><?php echo t('Hours Required'); ?></label>
 			<input type="text" name="hoursrequired" id="hoursrequired" class="text ui-widget-content ui-corner-all" />
 		</fieldset>
 	</form>
@@ -359,7 +363,7 @@
 							<label><?php echo t('Cohort ID'); ?></label>
 							<input type="text" class="required" name="cohortid" readonly  value="<?php echo $this->escape($this->cohortid);?>">
 
-							<label><?php echo t('Cohort name'); ?></label>
+							<label><?php echo t('Cohort Name'); ?></label>
 							<input type="text" class="required" name="cohortname"  value="<?php echo $this->escape($this->cohortname);?>">
 
 							<label><?php echo t('Degree Information'); ?></label>
@@ -412,7 +416,9 @@
 							<input type="text" name="graddate" readonly value="<?php echo $this->escape($this->studentsgraduating);?>">
 
 							<div class="rightdiv" style="margin-top:10px; margin-right:12px;">
-								<input type="submit" name="deletecohort" value="<?php echo t('Delete'); ?>" class="tsbutton green large" style="display:none;">
+							<!-- TA:44 add button Delete -->
+								<input type="submit" name="deletecohort" value="<?php echo t('Delete'); ?>" class="tsbutton green large" 
+								onclick="<?php if(sizeof($this->cohortStudents) !=0 ) echo 'alert(\'Please remove all Students associated with the cohort first\'); return false;'; ?>">
 								<input type="submit" name="updatecohort" value="<?php echo t('Update'); ?> &raquo;" class="tsbutton green large">
 							</div>
 						</div>
@@ -427,7 +433,7 @@
 						<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 							<thead>
 								<tr>
-									<th><?php echo t('Student Id'); ?></th>
+									<th><?php echo t('Student ID'); ?></th>
 									<th><?php echo t('Name'); ?></th>
 									<th><?php echo t('Gender'); ?></th>
 									<th><?php echo t('DOB'); ?></th>
@@ -442,7 +448,7 @@
 									<td style=" width : 120px;"><?php echo $row['id']; ?></td>
 									<td class="" style=""><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
 									<td class="" style="width : 120px;"><?php echo $row['gender']; ?></td>
-									<td class="" style="width : 120px;"><?php echo trim($row['birthdate']) != "" ? date("m/d/Y", strtotime($row['birthdate'])) : "N/A"; ?></td>
+									<td class="" style="width : 120px;"><?php echo trim($row['birthdate']) != "" ? date("m/d/Y", strtotime($row['birthdate'])) : t("N/A"); ?></td>
 									<td class="" style="width : 120px;"><?php
 										if ($row['isgraduated']){
 											echo t("Graduated");
@@ -487,7 +493,7 @@
 								<tr class="GradeA">
 									<td style="cursor : pointer;" onclick="licenseedititem('<?php echo $license['id'] . "','" . $license['licensename'] . "','" . $license['licensedate']; ?>');"><?php echo $license['licensename'];?></td>
 									<td style="cursor : pointer; width : 120px;" onclick="licenseedititem('<?php echo $license['id'] . "','" . $license['licensename'] . "','" . $license['licensedate']; ?>');"><?php echo date("m/d/Y", strtotime($license['licensedate']));?></td>
-									<td style="cursor : pointer; width : 80px;"><form method="post"><input type="submit" value="Delete" style="width : 100%; padding : 3px;"><input type="hidden" name="dellicense" id="dellicense" value="<?php echo $license['id'] ?>"></form></td>
+									<td style="cursor : pointer; width : 80px;"><form method="post"><input type="submit" value="<?php echo t('Delete'); ?>" style="width : 100%; padding : 3px;"><input type="hidden" name="dellicense" id="dellicense" value="<?php echo $license['id'] ?>"></form></td>
 								</tr>
 <?php
 	}
@@ -521,10 +527,15 @@
 								foreach ($this->fetchcurrentclasses as $classes){
 									?>
 									<tr class="GradeA">
-										<td class=""><?php echo $classes['classname'];?></td>
+										<td class="">
+											<?php if ($this->setting['site_style'] == 'skillsmart') {
+												echo $classes['custom_1'];
+											} else {
+												echo $classes['classname'];
+											}?></td>
 										<td class="" style=" width : 160px;"><?php echo $classes['first_name'] . " " . $classes['last_name'];?></td>
-										<td class="" style=" width : 120px;"><?php echo date("m/d/Y", strtotime($classes['startdate']));?></td>
-										<td class="" style=" width : 120px;"><?php echo date("m/d/Y", strtotime($classes['enddate']));?></td>
+										<td class="" style=" width : 120px;"><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); }?></td>
+										<td class="" style=" width : 120px;"><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); }?></td>
 									</tr>
 									<?php
 								}
@@ -565,7 +576,7 @@
 									<td style="cursor : pointer; width : 120px;" onclick="practicumedititem('<?php echo addslashes($practicum['id']) . "','" . addslashes($practicum['practicumname']) . "','" . addslashes($practicum['practicumdate']) . "','" . addslashes($practicum['facilityid']) . "','" . addslashes($practicum['advisorid']) . "','" . addslashes($practicum['hoursrequired']); ?>');"><?php echo $practicum['facilityid'];?></td>
 									<td style="cursor : pointer; width : 120px;" onclick="practicumedititem('<?php echo addslashes($practicum['id']) . "','" . addslashes($practicum['practicumname']) . "','" . addslashes($practicum['practicumdate']) . "','" . addslashes($practicum['facilityid']) . "','" . addslashes($practicum['advisorid']) . "','" . addslashes($practicum['hoursrequired']); ?>');"><?php echo $practicum['advisorid'];?></td>
 									<td style="cursor : pointer; width : 120px;" onclick="practicumedititem('<?php echo addslashes($practicum['id']) . "','" . addslashes($practicum['practicumname']) . "','" . addslashes($practicum['practicumdate']) . "','" . addslashes($practicum['facilityid']) . "','" . addslashes($practicum['advisorid']) . "','" . addslashes($practicum['hoursrequired']); ?>');"><?php echo $practicum['hoursrequired'];?></td>
-									<td style="cursor : pointer; width : 80px;"><form method="post"><input type="submit" value="Delete" style="width : 100%; padding : 3px;"><input type="hidden" name="delpracticum" id="delpracticum" value="<?php echo $practicum['id'] ?>"></form></td>
+									<td style="cursor : pointer; width : 80px;"><form method="post"><input type="submit" value="<?php echo t('Delete'); ?>" style="width : 100%; padding : 3px;"><input type="hidden" name="delpracticum" id="delpracticum" value="<?php echo $practicum['id'] ?>"></form></td>
 								</tr>
 <?php
 	}

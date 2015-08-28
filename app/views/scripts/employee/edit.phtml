@@ -95,7 +95,6 @@
 						if($this->setting['display_employee_partner'])	
 						echo labelAndField($this, t('Employer'),     $this->partners, 'partner_id');
 
-						
 						if($this->setting['display_employee_base'])
 						echo labelAndField($this, t('Employee Based at'), $this->bases, 'based_at');
 						region_filters_dropdown( $this, $this->locations, $this->employee, false, false, '', true );
@@ -109,7 +108,6 @@
 						}
 						if($this->setting['display_employee_site_type'])
 						echo labelAndField($this,t('Site').space.t('Type'),   $this->site_types);
-
 						if($this->setting['display_employee_staff_category'])
 						echo labelAndField($this, t('Staff Category'), $this->categories);
 						if($this->setting['display_employee_registration_number'])

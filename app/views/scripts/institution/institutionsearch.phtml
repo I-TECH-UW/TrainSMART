@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title><?php echo $this->escape($this->title);?></title>
-		<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+		<link href="//fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
 
 	<?php
 	require_once('views/helpers/Location.php');
@@ -59,15 +59,15 @@
 			<div id="content">
 			<div id="subcontent">
 				<div id="contentheader">
-					<h2>Institution Search</h2><br>
+					<h2><?php echo t('Institution Search'); ?></h2><br>
 			
 				</div>
 				<div class="pad50 clear"></div>
 				<form  action="" id="peopleadd" method="post">
 				<div class="mainformholder">
 					
-			  <p style="">Select Criteria</p><br>
- 					<label>Institution Name</label>
+			  <p style=""><?php echo t('Select Criteria'); ?></p><br>
+ 					<label><?php echo t('Institution Name'); ?></label>
 					<input type="text" name="name" size="32" maxlength="32" value="<?php echo $this->escape($_POST['name']);?>">
 
 							<!-- geographical area-->
@@ -94,19 +94,19 @@
 	}
 ?>
 
-                     <label>Institution Sponsor</label>
+                     <label><?php echo t('Institution Sponsor'); ?></label>
 					<select name="sponsor">
 <?php
-	echo "<option value=\"0\">Any</option>\n";
+	echo "<option value=\"0\">" . t('Any') . "</option>\n";
 	foreach ($this->sponsors as $sponsor){
 		echo "<option value=\"" . $sponsor['id'] . "\"" . ($sponsor['id'] == $_POST['sponsor'] ? " selected" : "") . ">" . $sponsor['sponsorname'] . "</option>\n";
 	}
 ?>
 					</select>
 					
-					<label>Institution Type</label>
+					<label><?php echo t('Institution Type'); ?></label>
 					<select name="instype" id="instype">
-						<option value="0">Select...</option>
+						<option value="0"><?php echo t('Select'); ?>...</option>
 <?php
 	foreach ($this->institutiontypes as $instype){
 ?>
@@ -117,7 +117,7 @@
 					</select>
 					
 					<div class="rightdiv">
-					<input type="submit" name="submit" value="Search &raquo;" class="tsbutton green large"></div>
+					<input type="submit" name="submit" value="<?php echo t('Search');?>&raquo;" class="tsbutton green large"></div>
 
 					<div class="pad50 clear"></div>
 					<?php /*?><a href="<?php  echo Settings::$COUNTRY_BASE_URL.'/institution/institutionadd'; ?>" style="float:left;font-size:14px;">Add New Institution</a><?php */?>
@@ -129,12 +129,12 @@
 <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 	<thead>
 		<tr>
-			<th>ID</th>
-			<th>Name</th>
+			<th><?php echo t('ID');?></th>
+			<th><?php echo t('Institution Name');?></th>
 			<th><?php echo (@$this->translation['Region A (Province)']); ?> </th>
 			<th><?php echo (@$this->translation['Region B (Health District)']); ?></th>
 			<th><?php echo (@$this->translation['Region C (Local Region)']); ?></th>
-			<th>Type</th>
+			<th><?php echo t('Institution Type');?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -142,9 +142,9 @@
 		<tr style="cursor : pointer;" class="GradeA" onClick="window.location.href='<?php echo Settings::$COUNTRY_BASE_URL; ?>/institution/institutionedit/id/<?php echo $fetchins[id]; ?>' ">
 			<td><?php echo $fetchins['id'];?></td>
 			<td class=""><?php echo $fetchins['institutionname'];?></td>
-			<td class=""><?php echo !is_null($fetchins['geo1']) ? $fetchins['geo1'] : "N/A";?></td>
-			<td class=""><?php echo !is_null($fetchins['geo2']) ? $fetchins['geo2'] : "N/A";?></td>
-			<td class=""><?php echo !is_null($fetchins['geo3']) ? $fetchins['geo3'] : "N/A";?></td>
+			<td class=""><?php echo !is_null($fetchins['geo1']) ? $fetchins['geo1'] : t("N/A");?></td>
+			<td class=""><?php echo !is_null($fetchins['geo2']) ? $fetchins['geo2'] : t("N/A");?></td>
+			<td class=""><?php echo !is_null($fetchins['geo3']) ? $fetchins['geo3'] : t("N/A");?></td>
 			<td class=""><?php echo $fetchins['typename'];?></td>
 		</tr>
 	<?php } ?>
@@ -163,7 +163,7 @@
 </table>
 					<div class="pad50 clear"></div>
  <a href="../institution/institutionadd" style="">
-				 <input type="submit" name="institution" value="Add New Institution" class="tsbutton green large"></a>
+				 <input type="submit" name="institution" value="<?php echo t('Add New Institution');?>" class="tsbutton green large"></a>
 </div>
 			
 

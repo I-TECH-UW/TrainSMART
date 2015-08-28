@@ -11,23 +11,26 @@ class FileUpload {
    * @var $allowed_ext = allowed extensions (e.g., doc, docx, pdf)
    */ 
   public static function displayFiles(&$controller, $parent_table, $parent_id, $can_delete = TRUE) {
+
     if(!$parent_id) {
       return;
     }
     
     // Only allow delete 
     $request = $controller->getRequest ();    
+    $response = $controller->getResponse ();
     if ($request->isPost () && !$controller->getSanParam('edittabledelete')) {
       return;  
     }
     
-		require_once ('controllers/EditTableController.php');
-		$editTable = new EditTableController ( $controller );
-		$editTable->table = 'file';
+	require_once ('controllers/EditTableController.php');
+	$editTable = new EditTableController($request, $response);
+	$editTable->setParentController($controller);
+	$editTable->table = 'file';
     $editTable->viewVar = 'editTableFiles';
-		$editTable->fields = array ('filename' => t ( 'Filename' ), 'filesize' => t ( 'Size' ), 'creator_name' => t ( 'Author' ), /*'filemime' => t('Type') ,*/ 'timestamp_created' => t('Upload Date') );
-		$editTable->label = t('Attached Documents');
-		$editTable->where = "parent_table = '$parent_table' AND parent_id = $parent_id";
+	$editTable->fields = array ('filename' => t ( 'Filename' ), 'filesize' => t ( 'Size' ), 'creator_name' => t ( 'Author' ), /*'filemime' => t('Type') ,*/ 'timestamp_created' => t('Upload Date') );
+	$editTable->label = t('Attached Documents');
+	$editTable->where = "parent_table = '$parent_table' AND parent_id = $parent_id";
     $editTable->noEdit = true;
     
     if(!$can_delete) {
@@ -35,7 +38,7 @@ class FileUpload {
     }    
     
     $editTable->rowHook = "FileUpload::modifyRows";
-		$editTable->execute ();
+		$editTable->execute ($request);
   }
   
   public static function modifyRows($rowRay) {

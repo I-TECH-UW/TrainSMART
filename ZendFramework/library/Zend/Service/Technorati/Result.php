@@ -15,23 +15,23 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Technorati
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Result.php 7334 2008-01-02 23:25:56Z weppos $
+ * @version    $Id$
  */
 
 
 /**
- * Represents a single Technorati Search query result object. 
- * It is never returned as a standalone object, 
+ * Represents a single Technorati Search query result object.
+ * It is never returned as a standalone object,
  * but it always belongs to a valid Zend_Service_Technorati_SearchResultSet object.
- * 
+ *
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Technorati
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @abstract 
+ * @abstract
  */
 abstract class Zend_Service_Technorati_Result
 {
@@ -56,7 +56,6 @@ abstract class Zend_Service_Technorati_Result
      *
      * @var     DOMXpath
      * @access  protected
-     * @todo    XPath and DOM elements cannot be serialized, don't cache them
      */
     protected $_xpath;
 
@@ -72,7 +71,7 @@ abstract class Zend_Service_Technorati_Result
     {
         $this->_xpath = new DOMXPath($dom->ownerDocument);
         $this->_dom = $dom;
-        
+
         // default fields for all search results
         $fields = array();
 
@@ -88,10 +87,10 @@ abstract class Zend_Service_Technorati_Result
             }
         }
     }
-    
+
     /**
      * Parses weblog node and sets weblog object.
-     * 
+     *
      * @return  void
      */
     protected function _parseWeblog()
@@ -107,5 +106,16 @@ abstract class Zend_Service_Technorati_Result
         } else {
             $this->_weblog = null;
         }
+    }
+
+    /**
+     * Returns the document fragment for this object as XML string.
+     *
+     * @return string   the document fragment for this object
+     *                  converted into XML format
+     */
+    public function getXml()
+    {
+        return $this->_dom->ownerDocument->saveXML($this->_dom);
     }
 }

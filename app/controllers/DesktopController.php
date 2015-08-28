@@ -133,7 +133,7 @@ class DesktopController extends ITechController {
 
 			// Always start with a fresh blank datbase file
 			$curFile = 'sqlite';
-			if (! copy (Globals::$BASE_PATH.'/app/desktop/trainsmart.template.sqlite', $this->package_dir.'/data/trainsmart.active.sqlite') ) throw('PHP copy function did not succeed');
+			if (! copy (Globals::$BASE_PATH.'/app/desktop/trainsmart.template.sqlite', $this->package_dir.'/data/trainsmart.active.sqlite') ) throw new Exception('PHP copy function did not succeed');
 		
 		} catch (Exception $e) {
 			$this->error_message = 'Failure copying '.$curFile.' file. The exact error was '.$e->getMessage();
@@ -215,7 +215,7 @@ class DesktopController extends ITechController {
 				$data = $optRow->toArray ();
 				
 				foreach ( array_keys ( $data ) as $k ) {
-					if ($opt == 'age_range_option') echo "@@: $k";
+					// if ($opt == 'age_range_option') echo "@@: $k";
 					if (! array_key_exists ( $k, $liteKeys ))
 						unset ( $data [$k] );
 				}
@@ -270,8 +270,6 @@ class DesktopController extends ITechController {
 		
 		try {
       if ($fd = @fopen($this->package_dir.'/'.$this->zip_name, 'rb')) {
-				// Sean Smith: 10/26/2011 - Had to rework. Wasn't working in production. Super paranoid mode on.
-				ini_set('magic_quotes_runtime', 0);
 		    ob_end_clean();
 		    ob_start(); 
 		    $buffer = "";

@@ -40,11 +40,7 @@ class MechanismController extends ReportFilterHelpers {
 		$db     = $this->dbfunc();
 		$status = ValidationContainer::instance ();
 		$params = $this->getAllParams();
-		
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'mechCont 44>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($params);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-			
+
 		if ($params['id']) {
 			$recArr = explode('_', $params['id']);
 
@@ -56,7 +52,6 @@ class MechanismController extends ReportFilterHelpers {
 			$row = $db->fetchRow( $sql );
 			if ($row){
 				$status->setStatusMessage ( t('That record is in use.') );
-				//file_put_contents('c:\wamp\logs\php_debug.log', 'That record is in use.'.PHP_EOL, FILE_APPEND | LOCK_EX);
 			}
 			else { // not in use
 	
@@ -68,22 +63,18 @@ class MechanismController extends ReportFilterHelpers {
 				$row = $db->fetchRow( $sql );
 				if (! $row){
 					$status->setStatusMessage ( t('Cannot find that record in the database.') );
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'That record could not be found.'.PHP_EOL, FILE_APPEND | LOCK_EX);
 				}
 					
 				else { // found, safe to delete
 	
-					//file_put_contents('c:\wamp\logs\php_debug.log', 'Ready to delete '.$row['id'].PHP_EOL, FILE_APPEND | LOCK_EX);
 					$update_result = $db->update('subpartner_to_funder_to_mechanism', array('is_deleted' => 1), 'id = '.$row['id']);
 					var_dump($update_result);
 	
 					if($update_result){
 						$status->setStatusMessage ( t ( 'That mechanism was deleted.' ) );
-						//file_put_contents('c:\wamp\logs\php_debug.log', 'That record was deleted.'.PHP_EOL, FILE_APPEND | LOCK_EX);
 					}
 					else{
 						$status->setStatusMessage ( t ( 'That mechanism was not deleted.' ) );
-						//file_put_contents('c:\wamp\logs\php_debug.log', 'That record was not deleted.'.PHP_EOL, FILE_APPEND | LOCK_EX);
 					}
 				}
 			}
@@ -103,10 +94,6 @@ class MechanismController extends ReportFilterHelpers {
 		$params = $this->getAllParams();
 		$id     = $params['id'];
 		
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'mechCont 106> isPost'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($params);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-
 		if ( $this->getRequest()->isPost() )
 		{
 		  $db     = $this->dbfunc();
@@ -174,29 +161,6 @@ class MechanismController extends ReportFilterHelpers {
 		
 		
 		
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'mechCont 130>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($id);
-		//var_dump($sfm);
-		//var_dump($subPartner);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-		
-	
-		/*
-		$subPartner = $helper->getAllSubPartners();
-		$this->viewAssignEscaped ( 'subPartner', $subPartner );
-		
-		$partnerFunder = $helper->getAllFunders();
-		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-		
-		$mechanism = $helper->getAllMechanisms();
-		$this->viewAssignEscaped ( 'mechanism', $mechanism );
-		*/
-		
-		//file_put_contents('c:\wamp\logs\php_debug.log', 'mechCont 140>'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		//var_dump($subPartner);
-		//$result = ob_get_clean(); file_put_contents('c:\wamp\logs\php_debug.log', $result .PHP_EOL, FILE_APPEND | LOCK_EX);
-		
-			
 	}
 
 	public function searchAction()
@@ -240,9 +204,6 @@ class MechanismController extends ReportFilterHelpers {
 				#$where[] = $locationWhere;
 				$where[] = "($locationWhere OR parent_loc.parent_id = $location_id)"; #todo the subquery and parent_id is not working
 			}
-
-#			if ($location_id && $alsoCheckMultiRegions = Location::southAfrica_get_multi_region($location_id)) //#SAONLY - check if they are using the *Multiple Regions* items
-#				$where[] = " partner.location_id in ($alsoCheckMultiRegions)";
 
 			if ($criteria['subpartner_id'])     $where[] = 'subpartners.subpartner_id = '.$criteria['subpartner_id'];
 			if ($criteria['partner_id'])        $where[] = 'partner.id = '.$criteria['partner_id'];

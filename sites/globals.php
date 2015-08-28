@@ -21,6 +21,7 @@ class Globals {
 	public function __construct() {
 
 		require_once('settings.php');
+		
 		// PATH_SEPARATOR =  ; for windows, : for *nix
 		$iReturn = ini_set( 'include_path',
 					(Globals::$BASE_PATH).PATH_SEPARATOR.
@@ -37,10 +38,12 @@ class Globals {
 			'host'     => Settings::$DB_SERVER,
 			'username' => Settings::$DB_USERNAME,
 			'password' => Settings::$DB_PWD,
-			'dbname'   => Settings::$DB_DATABASE
+			'dbname'   => Settings::$DB_DATABASE,
+			'charset'  => 'utf8'
 		));
 		 require_once 'Zend/Db/Table/Abstract.php';
 		Zend_Db_Table_Abstract::setDefaultAdapter($db);
+		date_default_timezone_set('UTC');
 		}
 }
 

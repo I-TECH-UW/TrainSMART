@@ -70,7 +70,7 @@ echo '<option value="'.$vals['id'].'" '.((@$this->criteria['qualification_id']) 
     }
    ?>
 	</select></div>
-	<div class="fieldLabel" id="persal_id_lbl"><?php echo t('Persal number'); ?></div>
+	<div class="fieldLabel" id="persal_id_lbl"><?php echo t('Personal number'); ?></div>
 	<div class="fieldInput">
 	<input id="persal" name="persal" type="text" size="20" maxlength="128" value="<?php if(isset($this->criteria ['persal'])){echo $this->criteria ['persal'];}?>" />
 	</div>
@@ -86,13 +86,13 @@ echo '<option value="'.$vals['id'].'" '.((@$this->criteria['qualification_id']) 
 	    <div class="fieldLabel"><?php echo (@$this->translation['First Name']); ?></div><div class="fieldInput"><input id="first_name" type="text" name="first_name" value="<?php echo $this->criteria['first_name'];?>" /><div class="clear"></div><div id="firstContainer" class="autoComplete"></div></div>
 	</div>
 <script type="text/javascript">
-	var firstAuto = makeAutocomplete('first_name', 'firstContainer', '<?php echo $this->base_url;?>/person/firstList/outputType/text/' );
+	var firstAuto = makeAutocomplete('first_name', 'firstContainer', '<?php echo $this->base_url;?>/person/first-list/outputType/text/' );
 </script>
 	<div id="lastAutoComplete">
 	    <div class="fieldLabel"><?php echo (@$this->translation['Last Name']); ?></div><div class="fieldInput"><input id="last_name" type="text" name="last_name" value="<?php echo $this->criteria['last_name'];?>" /><div class="clear"></div><div id="lastContainer" class="autoComplete"></div></div>
 	</div>
 <script type="text/javascript">
-	var lastAuto = makeAutocomplete('last_name', 'lastContainer', '<?php echo $this->base_url;?>/person/lastList/outputType/text/' );
+	var lastAuto = makeAutocomplete('last_name', 'lastContainer', '<?php echo $this->base_url;?>/person/last-list/outputType/text/' );
 </script>
 	<div class="clear"></div>
       <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_trainer" value="is_trainer" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_trainer') echo 'CHECKED'; ?> /><?php tp('Trainers only');?></div>
@@ -108,8 +108,10 @@ echo '<option value="'.$vals['id'].'" '.((@$this->criteria['qualification_id']) 
 		    <div class="fieldIndentNoMargin"><?php tp('People');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
 		    <div id="people"></div>
 		    <script type="text/javascript">
+		    //TA:28 fixing bug - report table is not displayed because of wrong array format, not closing ]
 		var peopleData = [
 		<?php
+	
 		$cnt = 0;
 		 	$isFirstRow = true;
 			foreach($this->results as $row) {
@@ -121,38 +123,41 @@ echo '<option value="'.$vals['id'].'" '.((@$this->criteria['qualification_id']) 
 			   if ( $this->setting['display_middle_name'] &&  !$this->setting['display_middle_name_last'] ) {
 			   	echo $row['middle_name'].'","';
 			   }
-				echo $row['last_name'].'","';
+				echo $row['last_name'].'"';
 			   if ( $this->setting['display_middle_name'] && $this->setting['display_middle_name_last'] ) {
-			   	echo $row['middle_name'].'","';
+			   	echo ',"' . $row['middle_name'].'","';
 			   }
-				if($row['parent_id']=="6")
-				{
+				if($row['parent_id']=="6"){
 				 if($row['cmp']=="0")
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""';
 				 else
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomc/id/'.$row['id'].'\'>View</a>"]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomc/id/'.$row['id'].'\'>View</a>"';
 				}
-				if($row['parent_id']=="7")
-				{
+				if($row['parent_id']=="7"){
 				 if($row['cmp']=="0")
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""';
 				 else
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomd/id/'.$row['id'].'\'>View</a>"]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomd/id/'.$row['id'].'\'>View</a>"';
 				}
-				if($row['parent_id']=="8")
-				{
+				if($row['parent_id']=="8"){
 				 if($row['cmp']=="0")
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""';
 				 else
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomn/id/'.$row['id'].'\'>View</a>"]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomn/id/'.$row['id'].'\'>View</a>"';
 				}
-				if($row['parent_id']=="9")
-				{
+				if($row['parent_id']=="9"){
 				 if($row['cmp']=="0")
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""';
 				 else
-				  echo $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomp/id/'.$row['id'].'\'>View</a>"]';
+				  echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomp/id/'.$row['id'].'\'>View</a>"';
+				}else{ //TA:28 fixin bug
+					if($row['cmp']=="0")
+	echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'",""';
+else
+	echo ',"' . $row['gender'].'","'.$row['birthdate'].'","'.$row['qualification_phrase'].'","'.$row['persal'].'","'.$row['province_name'].'","<a href=\''.$this->base_url.'/person/viewcomp/id/'.$row['id'].'\'>View</a>"';
+
 				}
+				echo ']';
 				$cnt++;
 			}
 			}
@@ -165,7 +170,7 @@ echo '<option value="'.$vals['id'].'" '.((@$this->criteria['qualification_id']) 
 		}
 
 		var peopleColumnDefs = [
-			{key:"id", label: "ID", sortable:false, resizable:false,
+			{key:"id", label: "<?php tp('ID')?>", sortable:false, resizable:false,
 			                formatter: formatViewUrl},
 		    {key:"first_name", label: "<?php echo (@$this->translation['First Name']); ?>", sortable:true, resizeable:true},
    <?php if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) { ?>
@@ -178,7 +183,7 @@ echo '<option value="'.$vals['id'].'" '.((@$this->criteria['qualification_id']) 
 		    {key:"gender", label: "<?php tp('Gender');?>", sortable:true, resizeable:true},
 		    {key:"birthdate", label: "DOB", sortable:true, resizeable:true},
 		    {key:"qualification_phrase", label: "<?php tp('Occupational category');?>", sortable:true, resizeable:true},
-		    {key:"persal", label: "<?php tp('Persal number');?>", sortable:true, resizeable:true},
+		    {key:"persal", label: "<?php tp('Personal number');?>", sortable:true, resizeable:true},
 		    {key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true},
 			{key:"rpt", label: "<?php tp('Report');?>", sortable:false, resizeable:false}
 		];

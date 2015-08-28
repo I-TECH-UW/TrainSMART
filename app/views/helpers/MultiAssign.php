@@ -72,13 +72,13 @@ class MultiAssign {
   		var multiColumnDefs = [
   		    {key:"'.key($this->parent_field).'", label: "'.current($this->parent_field).'", sortable:true, resizeable:true},
   		    {key:"'.key($this->option_field).'", label: "'.current($this->option_field).'", sortable:true, resizeable:true},
-  		    {key:"edit", label: "Edit", sortable:true, resizeable:true}
+  		    {key:"edit", label: "' . t('Edit') . '", sortable:true, resizeable:true}
   		];
   		var action = "'. $this->url.'/outputType/json";
   		makeJSONDataTable("jsonTableHolder", null, action, multiColumnDefs);
   	</script>
   	<a name="edit"></a>
-  	<div class="hrGrey"></div>        
+  	<div class="hrGrey"></div>       
     ';   
     
     // drop-down
@@ -102,8 +102,8 @@ class MultiAssign {
       key($this->option_field));
         
     foreach($rowArray as $key => $row) {
-      $rowArray[$key]['edit'] = '<a href="' . $this->url . '/edit/'. $row["{$this->parent_table}_id"] . '#edit">edit</a>&nbsp;' .
-      '<a href="' . $this->url . '/delete/'. $row["{$this->parent_table}_id"] . '" onclick="return confirm(\'Are you sure you wish to unasign this?\')">delete</a>';
+      $rowArray[$key]['edit'] = '<a href="' . $this->url . '/edit/'. $row["{$this->parent_table}_id"] . '#edit">' . t('edit') . '</a>&nbsp;' .
+      '<a href="' . $this->url . '/delete/'. $row["{$this->parent_table}_id"] . '" onclick="return confirm(\'' . t('Are you sure you wish to unasign this?') . '\')">' . t('delete') . '</a>';
     }
     
     return $rowArray;    

@@ -14,9 +14,9 @@ print ScriptContainer::$instance->renderJSHead();
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
 
-		<h1><?php print t('Add').' '.t('Training').' '.t('Location'); ?></h1>
+		<h1><?php print t('Add Training Location'); ?></h1>
 
-    <p><?php print t('Please enter').' '.t('Training').' '.t('location information'); ?>:</p>
+    <p><?php print t('Please enter Training location information'); ?>:</p>
     <br>
 
 		<?php require_once('views/scripts/training/_template_locationform.phtml'); ?>
@@ -25,7 +25,7 @@ print ScriptContainer::$instance->renderJSHead();
     <!-- import location button -->
     <span id="importlocation" class="yui-button yui-push-button" style="float:left;">
       <span class="first-child">
-        <button onclick="location.href='<?php echo $this->base_url; ?>/facility/importLocation';return false;" type="button" tabindex=1 id="locationImportBtn" class="yui-button yui-push-button"><?php tp('Import location from Excel');?></button>
+        <button onclick="location.href='<?php echo $this->base_url; ?>/facility/import-location';return false;" type="button" tabindex=1 id="locationImportBtn" class="yui-button yui-push-button"><?php tp('Import location from Excel');?></button>
       </span>
     </span>
     <?php endif; ?>

@@ -15,32 +15,32 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Technorati
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: ResultSet.php 7333 2008-01-02 23:22:23Z weppos $
+ * @version    $Id$
  */
 
 
-/** 
- * @see Zend_Service_Technorati_Result 
+/**
+ * @see Zend_Service_Technorati_Result
  */
 require_once 'Zend/Service/Technorati/Result.php';
 
 
 /**
- * This is the most essential result set. 
- * The scope of this class is to be extended by a query-specific child result set class, 
- * and it should never be used to initialize a standalone object. 
- * 
+ * This is the most essential result set.
+ * The scope of this class is to be extended by a query-specific child result set class,
+ * and it should never be used to initialize a standalone object.
+ *
  * Each of the specific result sets represents a collection of query-specific
  * Zend_Service_Technorati_Result objects.
- * 
+ *
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Technorati
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @abstract 
+ * @abstract
  */
 abstract class Zend_Service_Technorati_ResultSet implements SeekableIterator
 {
@@ -64,9 +64,8 @@ abstract class Zend_Service_Technorati_ResultSet implements SeekableIterator
      * The offset in the total result set of this search set
      *
      * @var     int
-     * @todo
      */
-    // public $firstResultPosition;
+    //TODO public $firstResultPosition;
 
 
     /**
@@ -82,7 +81,6 @@ abstract class Zend_Service_Technorati_ResultSet implements SeekableIterator
      *
      * @var     DomDocument
      * @access  protected
-     * @todo    XPath and DOM elements cannot be serialized, don't cache them
      */
     protected $_dom;
 
@@ -91,9 +89,16 @@ abstract class Zend_Service_Technorati_ResultSet implements SeekableIterator
      *
      * @var     DOMXpath
      * @access  protected
-     * @todo    XPath and DOM elements cannot be serialized, don't cache them
      */
     protected $_xpath;
+
+    /**
+     * XML string representation for $this->_dom
+     *
+     * @var     string
+     * @access  protected
+     */
+    protected $_xml;
 
     /**
      * Current Item
@@ -112,31 +117,47 @@ abstract class Zend_Service_Technorati_ResultSet implements SeekableIterator
      */
     public function __construct(DomDocument $dom, $options = array())
     {
-        $this->_dom = $dom;
-        $this->_xpath = new DOMXPath($dom);
+        $this->_init($dom, $options);
 
         // Technorati loves to make developer's life really hard
         // I must read query options in order to normalize a single way
         // to display start and limit.
         // The value is printed out in XML using many different tag names,
         // too hard to get it from XML
-        
+
         // Additionally, the following tags should be always available
         // according to API documentation but... this is not the truth!
         // - querytime
         // - limit
         // - start (sometimes rankingstart)
-        
-        // query tag is only available for some requests, the same for url. 
+
+        // query tag is only available for some requests, the same for url.
         // For now ignore them.
 
         //$start = isset($options['start']) ? $options['start'] : 1;
         //$limit = isset($options['limit']) ? $options['limit'] : 20;
         //$this->_firstResultPosition = $start;
+    }
+
+    /**
+     * Initializes this object from a DomDocument response.
+     *
+     * Because __construct and __wakeup shares some common executions,
+     * it's useful to group them in a single initialization method.
+     * This method is called once each time a new instance is created
+     * or a serialized object is unserialized.
+     *
+     * @param   DomDocument $dom the ReST fragment for this object
+     * @param   array $options   query options as associative array
+     *      * @return  void
+     */
+    protected function _init(DomDocument $dom, $options = array())
+    {
+        $this->_dom     = $dom;
+        $this->_xpath   = new DOMXPath($dom);
 
         $this->_results = $this->_xpath->query("//item");
     }
-
 
     /**
      * Number of results returned.
@@ -164,7 +185,7 @@ abstract class Zend_Service_Technorati_ResultSet implements SeekableIterator
      *
      * @return  void
      * @throws  Zend_Service_Exception
-     * @abstract 
+     * @abstract
      */
     // abstract public function current();
 
@@ -198,7 +219,7 @@ abstract class Zend_Service_Technorati_ResultSet implements SeekableIterator
         $this->_currentIndex = 0;
         return true;
     }
-    
+
     /**
      * Implement SeekableIterator::seek().
      *
@@ -227,12 +248,42 @@ abstract class Zend_Service_Technorati_ResultSet implements SeekableIterator
     }
 
     /**
-     * Returns the response XML document.
+     * Returns the response document as XML string.
      *
      * @return string   the response document converted into XML format
      */
-    function getXml()
+    public function getXml()
     {
-        return $this->_dom->saveXML($this->_dom);
+        return $this->_dom->saveXML();
+    }
+
+    /**
+     * Overwrites standard __sleep method to make this object serializable.
+     *
+     * DomDocument and DOMXpath objects cannot be serialized.
+     * This method converts them back to an XML string.
+     *
+     * @return void
+     */
+    public function __sleep() {
+        $this->_xml     = $this->getXml();
+        $vars = array_keys(get_object_vars($this));
+        return array_diff($vars, array('_dom', '_xpath'));
+    }
+
+    /**
+     * Overwrites standard __wakeup method to make this object unserializable.
+     *
+     * Restores object status before serialization.
+     * Converts XML string into a DomDocument object and creates a valid
+     * DOMXpath instance for given DocDocument.
+     *
+     * @return void
+     */
+    public function __wakeup() {
+        $dom = new DOMDocument();
+        $dom->loadXml($this->_xml);
+        $this->_init($dom);
+        $this->_xml = null; // reset XML content
     }
 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><?php echo $this->escape($this->title); ?></title>
+	<link href="//fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+	<?php
+	require_once('views/helpers/Location.php');
+	require_once('views/helpers/ScriptContainer.php');
+	print ScriptContainer::$instance->renderCSSHead();
+	print ScriptContainer::$instance->renderJSHead();
+	?>
+	<style type="text/css">
+		fieldset.formSection {float: left; width: 100%; border: 0; margin: 0; padding: 0;}
+		fieldset.formSection legend { margin-bottom: 2em; }
+		.calendarbtn img {float: left;}
+		.dataTables_wrapper {min-height:24px;}
+		.large.tsbutton, .large.tsbutton:visited { margin: 10px;}
+	</style>
+
+</head>
+<body>
+
+<div id="pageHolder">
+	<div id="header"><?php require_once('views/scripts/preheader.phtml'); ?></div>
+	<div id="content">
+		<div id="subcontent">
+			<div id="contentheader">
+				<h2><?php echo t('Add a new Learner'); ?></h2><br>
+			</div>
+
+			<div class="pad50 clear"></div>
+
+			<?php require_once('views/scripts/studentedit/chw-student-form-contents.phtml'); ?>
+
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div id="footer"><?php require_once('views/scripts/footer.phtml'); ?></div>
+</div>
+</body>
+</html>

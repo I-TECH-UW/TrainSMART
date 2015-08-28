@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><?php echo $this->escape($this->title); ?></title>
+    <link href="//fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+    <?php
+    require_once('views/helpers/Location.php');
+    require_once('views/helpers/ScriptContainer.php');
+    print ScriptContainer::$instance->renderCSSHead();
+    print ScriptContainer::$instance->renderJSHead();
+    ?>
+    <style type="text/css">
+        fieldset.formSection {float: left; width: 100%; border: 0; margin: 0; padding: 0;}
+        fieldset.formSection legend { margin-bottom: 2em; }
+        .calendarbtn img {float: left;}
+        .dataTables_wrapper {min-height:24px;}
+        .large.tsbutton, .large.tsbutton:visited { margin: 10px;}
+
+    </style>
+
+</head>
+<body>
+<div id="pageHolder">
+    <div id="header"><?php require_once('views/scripts/preheader.phtml'); ?></div>
+    <div id="content">
+        <div id="subcontent">
+            <div id="contentheader">
+                <h2><?php echo t('Edit Learner'); ?></h2><br>
+            </div>
+            <script type="text/javascript">
+                $(document).ready(function () {
+
+                    $("#dialog-form-license").dialog({
+                        autoOpen: false,
+                        height: 460,
+                        width: 750,
+                        modal: true,
+                        buttons: {
+                            <?php echo t('Update')?>: function () {
+                                document.getElementById('licenseform').submit();
+                            },
+                            <?php echo t('Cancel')?>: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+
+                    $("#dialog-form-class").dialog({
+                        autoOpen: false,
+                        height: 460,
+                        width: 750,
+                        modal: true,
+                        buttons: {
+                            <?php echo t('Update')?>: function () {
+                                document.getElementById('classform').submit();
+                            },
+                            <?php echo t('Cancel')?>: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+
+                    $("#dialog-form-practicum").dialog({
+                        autoOpen: false,
+                        height: 460,
+                        width: 750,
+                        modal: true,
+                        buttons: {
+                            <?php echo t('Update')?>: function () {
+                                document.getElementById('practicumform').submit();
+                            },
+                            <?php echo t('Cancel')?>: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                });
+            </script>
+
+            <div class="pad50 clear"></div>
+
+	        <?php require_once('views/scripts/studentedit/chw-student-form-contents.phtml'); ?>
+
+            <!--
+            ######################################
+            #                                    #
+            #  POPUP DIALOG FOR LICENSE DETAILS  #
+            #                                    #
+            ######################################
+            -->
+
+
+            <div id="dialog-form-license" title="<?php echo t('Update exams')?>">
+                <form method="post" name="licenseform" id="licenseform">
+                    <input type="hidden" name="licenseaction" id="licenseaction" value="license">
+                    <input type="hidden" name="licenseid" id="licenseid" value="<?php echo $this->personData['id']; ?>">
+                    <input type="hidden" name="cohortid" id="cohortid" value="<?php echo $this->studentCohortData['id_cohort'] ?>">
+                    <input type="hidden" name="sid" value="<?php echo $this->escape($this->studentData['id']); ?>">
+                    <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th><?php echo t('License name'); ?></th>
+                            <th><?php echo t('Date'); ?></th>
+                            <th><?php echo t('Grade'); ?></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        foreach ($this->currentlicenses as $classes){
+                            ?>
+                            <tr class="GradeA">
+                                <td><?php echo $classes['licensename']; ?></td>
+                                <td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($classes['licensedate'])); ?></td>
+                                <td class="" style="width : 120px;"><input type="text" name="grade[<?php echo $classes['id'] ?>]" id="grade[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['grade'])) != "n/a" ? $classes['grade'] : ""; ?>" style="width : 100%;"></td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+
+            <!--
+            ####################################
+            #                                  #
+            #  POPUP DIALOG FOR CLASS DETAILS  #
+            #                                  #
+            ####################################
+            -->
+
+
+            <div id="dialog-form-class" title="<?php echo t('Update classes'); ?>">
+                <form method="post" name="classform" id="classform">
+                    <input type="hidden" name="classaction" id="classaction" value="classaction">
+                    <input type="hidden" name="licenseid" id="licenseid" value="<?php echo $this->personData['id']; ?>">
+                    <input type="hidden" name="cohortid" id="cohortid" value="<?php echo $this->studentCohortData['id_cohort'] ?>">
+                    <input type="hidden" name="sid" value="<?php echo $this->escape($this->studentData['id']); ?>">
+
+                    <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th><?php echo t('Class Name'); ?></th>
+                            <th><?php echo t('Instructor'); ?></th>
+                            <th><?php echo t('Start date'); ?></th>
+                            <th><?php echo t('End date'); ?></th>
+                            <?php if($this->setting['ps_display_ca_mark']) : ?>
+                                <th><?php echo t($this->translation['ps ca mark']); ?></th>
+                            <?php endif; ?>
+                            <?php if($this->setting['ps_display_exam_mark']) : ?>
+                                <th><?php echo t($this->translation['ps exam mark']); ?></th>
+                            <?php endif; ?>
+                            <th><?php echo t('Grade'); ?></th>
+                            <?php if($this->setting['ps_display_credits']) : ?>
+                                <th><?php echo t($this->translation['ps credits']); ?></th>
+                            <?php endif; ?>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        foreach ($this->currentclasses as $classes){
+                            ?>
+                            <tr class="GradeA">
+                                <td><?php echo $classes['custom_1']; ?></td>
+                                <td class="" style="width : 200px;"><?php echo $classes['first_name'] . " " . $classes['last_name']; ?></td>
+                                <td class="" style="width : 120px;"><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); } ?></td>
+                                <td class="" style="width : 120px;"><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); } ?></td>
+                                <?php if($this->setting['ps_display_ca_mark']) : ?>
+                                    <td class="" style="width : 120px;"><input type="text" name="camark[<?php echo $classes['id'] ?>]" id="camark[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['camark'])) != "n/a" ? $classes['camark'] : ""; ?>" style="width : 100%;"></td>
+                                <?php endif; ?>
+                                <?php if($this->setting['ps_display_exam_mark']) : ?>
+                                    <td class="" style="width : 120px;"><input type="text" name="exammark[<?php echo $classes['id'] ?>]" id="exammark[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['exammark'])) != "n/a" ? $classes['exammark'] : ""; ?>" style="width : 100%;"></td>
+                                <?php endif; ?>
+                                <td class="" style="width : 120px;"><input type="text" name="grade[<?php echo $classes['id'] ?>]" id="grade[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['grade'])) != "n/a" ? $classes['grade'] : ""; ?>" style="width : 100%;"></td>
+                                <?php if($this->setting['ps_display_credits']) : ?>
+                                    <td class="" style="width : 120px;"><input type="text" name="credits[<?php echo $classes['id'] ?>]" id="credits[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['credits'])) != "n/a" ? $classes['credits'] : ""; ?>" style="width : 100%;"></td>
+                                <?php endif; ?>
+                            </tr>
+                        <?php
+
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+
+            <!--
+            ########################################
+            #                                      #
+            #  POPUP DIALOG FOR practicum DETAILS  #
+            #                                      #
+            ########################################
+            -->
+
+            <div id="dialog-form-practicum" title="<?php echo t('Update clinical allocation')?>">
+                <form method="post" name="practicumform" id="practicumform">
+                    <input type="hidden" name="practicumaction" id="practicumaction" value="practicumaction">
+                    <input type="hidden" name="practicumid" id="practicumid" value="0">
+                    <input type="hidden" name="cohortid" id="cohortid" value="<?php echo $this->studentCohortData['id_cohort'] ?>">
+                    <input type="hidden" name="sid" value="<?php echo $this->escape($this->studentData['id']); ?>">
+                    <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th><?php echo t('Practicum name'); ?></th>
+                            <th><?php echo t('Practicum date'); ?></th>
+                            <th><?php echo t('Hours required'); ?></th>
+                            <th><?php echo t('Hours completed'); ?></th>
+                            <th><?php echo t('Grade'); ?></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        foreach ($this->currentpracticum as $classes){
+                            ?>
+                            <tr class="GradeA">
+                                <td><?php echo $classes['practicumname']; ?></td>
+                                <td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($classes['practicumdate'])); ?></td>
+                                <td class="" style="width : 120px;"><?php echo $classes['hoursrequired']; ?></td>
+                                <td class="" style="width : 150px;"><input type="text" name="practicum[<?php echo $classes['id'] ?>][completed]" id="practicum[<?php echo $classes['id'] ?>][completed]" value="<?php echo is_numeric($classes['hourscompleted']) ? $classes['hourscompleted'] : "0"; ?>" style="width : 100%;"></td>
+                                <td class="" style="width : 120px;"><input type="text" name="practicum[<?php echo $classes['id'] ?>][grade]" id="practicum[<?php echo $classes['id'] ?>][grade]" value="<?php echo trim(strtolower($classes['grade'])) != "n/a" ? $classes['grade'] : ""; ?>" style="width : 100%;"></td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+
+
+            <div class="clear"></div>
+            <?php echo label($this, t('Class History'), true); ?>
+            <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+                <thead>
+                <tr>
+                    <th><?php echo t('Class Name'); ?></th>
+                    <th><?php echo t('Topic'); ?></th>
+                    <th><?php echo t('Start date'); ?></th>
+                    <th><?php echo t('End date'); ?></th>
+                    <th><?php echo t('Instructor'); ?></th>
+                    <th><?php echo t('Course type'); ?></th>
+                    <?php if($this->setting['ps_display_ca_mark']) : ?>
+                        <th><?php echo t($this->translation['ps ca mark']); ?></th>
+                    <?php endif; ?>
+                    <?php if($this->setting['ps_display_exam_mark']) : ?>
+                        <th><?php echo t($this->translation['ps exam mark']); ?></th>
+                    <?php endif; ?>
+                    <th><?php echo t('Grade'); ?></th>
+                    <?php if($this->setting['ps_display_credits']) : ?>
+                        <th class=""><?php echo t($this->translation['ps credits']); ?></th>
+                    <?php endif; ?>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                foreach ($this->currentclasses as $row){
+                    ?>
+                    <tr class="GradeA" style="">
+                        <td class="" style="width : 250px;"><?php echo $row['classname']; ?></td>
+                        <td class="" style=""><?php echo $row['coursetopic']; ?></td>
+                        <td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($row['startdate'])); ?></td>
+                        <td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($row['enddate'])); ?></td>
+                        <td class="" style="width : 120px;"><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
+                        <td class="" style="width : 120px;"><?php echo $row['coursetype']; ?></td>
+                        <?php if($this->setting['ps_display_ca_mark']) : ?>
+                            <td class="" style="width : 120px;"><?php echo $row['camark']; ?></td>
+                        <?php endif; ?>
+
+                        <?php if($this->setting['ps_display_exam_mark']) : ?>
+                            <td class="" style="width : 120px;"><?php echo $row['exammark']; ?></td>
+                        <?php endif; ?>
+
+                        <td class="" style="width : 120px;"><?php echo $row['grade']; ?></td>
+
+                        <?php if($this->setting['ps_display_credits']) : ?>
+                            <td class="" style="width : 120px;"><?php echo $row['credits']; ?></td>
+                        <?php endif; ?>
+                    </tr>
+                <?php
+                }
+                ?>
+                </tbody>
+            </table>
+            <div style="text-align : right;">
+                <br>
+                <?php if ( $this->hasACL( 'acl_delete_ps_grades' )){?>
+                    <input type="button" name="classpopupbutton" id="classpopupbutton" onclick="updateClasses();" value="<?php echo t('Update classes') ?>" class="tsbutton green large">
+                <?php }?>
+            </div>
+
+            <?php echo label($this, t('ps clinical allocation'), true); ?>
+            <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+                <thead>
+                <tr>
+                    <th class=""><?php echo t('Practicum name'); ?></th>
+                    <th class=""><?php echo t('Date'); ?></th>
+                    <th class=""><?php echo t('Facility'); ?></th>
+                    <th class=""><?php echo t('Advisor'); ?></th>
+                    <th class=""><?php echo t('Hours required'); ?></th>
+                    <th class=""><?php echo t('Hours completed'); ?></th>
+                    <th class=""><?php echo t('Grade'); ?></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                foreach ($this->currentpracticum as $row){
+                    ?>
+                    <tr class="GradeA" style="">
+                        <td class="" style=""><?php echo $row['practicumname']; ?></td>
+                        <td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($row['practicumdate'])); ?></td>
+                        <td class="" style="width : 200px;"><?php echo $row['facility_name']; ?></td>
+                        <td class="" style="width : 200px;"><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
+                        <td class="" style="width : 120px;"><?php echo $row['hoursrequired']; ?></td>
+                        <td class="" style="width : 150px;"><?php echo $row['hourscompleted']; ?></td>
+                        <td class="" style="width : 120px;"><?php echo $row['grade']; ?></td>
+                    </tr>
+                <?php
+                }
+                ?>
+                </tbody>
+            </table>
+            <div style="text-align : right;">
+                <br>
+                <?php
+                echo "<input type='button' name='practicumpopupbutton' id='practicumpopupbutton' onclick='updatePracticum();' value='" . t('Update') . ' ' . t($this->translation['ps clinical allocation']) . "' class='tsbutton green large'>";
+                ?>
+            </div>
+
+            <?php echo label($this, t('Exams') . "(" . t($this->translation['ps license and registration']) . ")", true); ?>
+            <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+                <thead>
+                <tr>
+                    <th class=""><?php echo t('License name'); ?></th>
+                    <th class=""><?php echo t('Date'); ?></th>
+                    <th class=""><?php echo t('Grade'); ?></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                foreach ($this->currentlicenses as $row){
+                    ?>
+                    <tr class="GradeA" style="">
+                        <td class="" style=""><?php echo $row['licensename']; ?></td>
+                        <td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($row['licensedate'])); ?></td>
+                        <td class="" style="width : 120px;"><?php echo $row['grade']; ?></td>
+                    </tr>
+                <?php
+                }
+                ?>
+                </tbody>
+            </table>
+            <div style="text-align : right;">
+                <br>
+                <input type="button" name="licensepopupbutton" id="licensepopupbutton" onclick="updateLicense();"value="<?php echo t('Update exams'); ?>" class="tsbutton green large">
+            </div>
+
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div id="footer"><?php require_once('views/scripts/footer.phtml'); ?></div>
+</div>
+</body>
+</html>

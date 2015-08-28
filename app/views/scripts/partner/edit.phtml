@@ -75,7 +75,7 @@
 					  echo labelAndField($this, t('Partner').space.t('ID'),  'text', 'id',      $this->partner['id']);
 					}
 					echo labelAndField($this, t('Partner').space.t('Name'),'text', 'partner', $this->partner['partner']);
-					
+
                     $organizers = $this->organizers;
 				    $organizers .= hasACLEdit('acl_editor_training_organizer', 'admin/training-organizer', $this); // give them an insert and edit link if they have rights to this stuff
 				    $organizers .= $this->hasACL('acl_editor_training_organizer') ? "<a href=\"#\" onclick=\"addToSelect('" . str_replace ( "'", "\\" . "'", t ( 'Please enter your new' ) ) . " " . strtolower ( t('Organizer') ) . ":', 'select_training_organizer_option', '" . Settings::$COUNTRY_BASE_URL . "/training/insert-table/table/training_organizer_option/column/training_organizer_phrase/outputType/json'); return false;\">" . t ( 'Insert new' ) . "</a>" : ""; // copied from training edit form

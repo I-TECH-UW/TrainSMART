@@ -212,7 +212,7 @@ $(document).ready(function () {
 		if (isset($this->results[0]['id'])) {
 			if (isset($this->results[0]['cnt']))
 				echo ',';
-			echo '{key:"id", label: "ID", sortable:true, resizeable:true, formatter: formatViewUrl},';
+			echo '{key:"id", label: "' . t("ID") . '", sortable:true, resizeable:true, formatter: formatViewUrl},';
 			echo '{key:"training_start_date", label: "'.t('Start Date').'", sortable:true, resizeable:true}';
 		}
 		if ( $this->criteria['showProvince'] )

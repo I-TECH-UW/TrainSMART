@@ -26,26 +26,22 @@ class EditTableController extends ITechController { //Zend_Controller_Action
 
   public $allowMerge = false; // add "merge" checkbox
   public $allowDefault = false; // add "default" radio
-
   
   private $controller;
-
-  public function __construct(&$parentController)
-  {
-      $this->controller = $parentController;
-      $this->view = $parentController->view;
-
-      parent::__construct($parentController->getRequest(), $parentController->getResponse());
-  }
-
 
   public function init()
   {
   }
+  
+  public function setParentController($parentController)
+  {
+      $this->controller = $parentController;
+      $this->view = $parentController->view;
+  }
 
-  public function execute() {
+  public function execute(Zend_Controller_Request_Abstract $request) {
 
-    $params = $this->_getAllParams();
+    $params = $this->getAllParams();
 
     if(isset($params['merge']) && $this->allowMerge) {
       $this->merge();
@@ -61,13 +57,13 @@ class EditTableController extends ITechController { //Zend_Controller_Action
       exit;
     } elseif(isset($params['saveonly'])) {
       $status = ValidationContainer::instance();
-      $status->setStatusMessage('Your settings have been updated.');
+      $status->setStatusMessage(t('Your settings have been updated.'));
     }
 
     require_once('models/table/EditTable.php');
     $editTable = new EditTable(array('name' => $this->table));
 
-  	$request = $this->controller->getRequest();
+  	//$request = $this->controller->getRequest();
   	$validateOnly = $request->isXmlHttpRequest();
 
     // Delete, insert, or update?
@@ -111,8 +107,8 @@ class EditTableController extends ITechController { //Zend_Controller_Action
           }
 
           $sendRay['insert'] = "$insert";
-          if($insert == -1) $sendRay['error'] = 'A record already exists with this value.';
-          if($insert == -2) $sendRay['error'] = '"%s" already exists, but was deleted.  Would you like to undelete?';
+          if($insert == -1) $sendRay['error'] = t('A record already exists with this value.');
+          if($insert == -2) $sendRay['error'] = t('"%s" already exists, but was deleted.  Would you like to undelete?');
 
           $this->sendData($sendRay);
 
@@ -142,7 +138,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
 
             } catch(Zend_Exception $e) {
 
-              if(strpos($e->getMessage(),'Duplicate entry') !== false) {
+              if(strpos($e->getMessage(),t('Duplicate entry')) !== false) {
                 $this->sendData(array("update" => 0, 'error' => t('A record already exists with this value.')));
               } else {
                 $this->sendData(array("update" => 0, 'error' => $e->getMessage()));
@@ -210,7 +206,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
           <input type="checkbox" name="merge[]" value="'.$row['id'].'" id="merge'.$row['id'].'">';
         }
         $this->customColDef['merge'] = 'editor:false';
-        $this->fields['merge'] = 'Merge?';
+        $this->fields['merge'] = t('Merge?');
       }
       
       // default radio
@@ -221,7 +217,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
           <input type="radio" name="default" value="'.$row['id'].'" id="merge'.$row['id'].'"'.$isChecked.'>';
         }
         $this->customColDef['default'] = 'editor:false';
-        $this->fields['default'] = 'Default?';
+        $this->fields['default'] = t('Default') . '?';
       }
 
       
@@ -231,7 +227,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
         $mergehtml = '
         <input type="hidden" name="table_option" value="'.$this->table.'">
         <input type="hidden" name="table_dependent" value="'.implode(',',$this->dependencies).'">
-        <input type="submit" name="mergesubmit" value="Merge Selected" class="submitArrow">';
+        <input type="submit" name="mergesubmit" value="' . t('Merge Selected') . '" class="submitArrow">';
         $html .= $mergehtml;  
       }  
       
@@ -254,20 +250,20 @@ class EditTableController extends ITechController { //Zend_Controller_Action
   public function merge() {
     require_once('models/table/EditTable.php');
 
-    $params = $this->_getAllParams();
+    $params = $this->getAllParams();
 
     if(!isset($params['mergeto']) && is_array($params['merge'])) {
       $fields = array_keys($this->fields);
 
       $rows = EditTable::getRowsSingle($this->table, $fields, 'id IN('.implode(',', $params['merge']).')');
 
-      $html = 'The phrases below will be merged into one.  Please select the primary phrase you wish to use:<br><br>';
+      $html = t('The phrases below will be merged into one.  Please select the primary phrase you wish to use:') . '<br><br>';
       foreach($rows as $row) {
         $html .= '<p><input type="radio" name="mergeto" value="'.$row['id'].'" id="merge'.$row['id'].'"><label for="merge'.$row['id'].'">' . $row[$fields[0]] .'</label></p>';
       }
       $html .= '
       <input type="hidden" name="merge" value="'.implode(',', $params['merge']).'">
-      <input type="submit" class="submitNoArrow" value="Merge into one" style="float:none;">
+      <input type="submit" class="submitNoArrow" value="' . t('Merge into one') . '" style="float:none;">
       ';
     } elseif(isset($params['mergeto'])) {
       $mergeids = explode(',', $params['merge']);
@@ -275,7 +271,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
       EditTable::merge($this->table, $this->dependencies[0], $mergeids, $params['mergeto']);
       header("Location: " . $_SERVER['REQUEST_URI']);
     } else {
-      $html = 'Unable to merge phrases.';
+      $html = t('Unable to merge phrases.');
     }
 
 
@@ -286,7 +282,7 @@ class EditTableController extends ITechController { //Zend_Controller_Action
   public function setDefault() {
     require_once('models/table/EditTable.php');
     
-    $params = $this->_getAllParams();
+    $params = $this->getAllParams();
     
     if(is_numeric($params['default'])) {
       EditTable::setDefault($this->table, $params['default'], $this->where);

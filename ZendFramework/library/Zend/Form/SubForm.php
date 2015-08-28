@@ -14,7 +14,7 @@
  *
  * @category   Zend
  * @package    Zend_Form
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -23,28 +23,39 @@ require_once 'Zend/Form.php';
 
 /**
  * Zend_Form_SubForm
- * 
+ *
  * @category   Zend
  * @package    Zend_Form
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: SubForm.php 7565 2008-01-22 17:26:47Z matthew $
+ * @version    $Id$
  */
 class Zend_Form_SubForm extends Zend_Form
 {
     /**
-     * Constructor
-     * 
-     * @param  array|Zend_Config $options 
-     * @return void
+     * Whether or not form elements are members of an array
+     * @var bool
      */
-    public function __construct($options = null)
-    {
-        $this->addDecorator('FormElements')
-             ->addDecorator('HtmlTag', array('tag' => 'dl'))
-             ->addDecorator('Fieldset')
-             ->addDecorator('DtDdWrapper');
+    protected $_isArray = true;
 
-        parent::__construct($options);
+    /**
+     * Load the default decorators
+     *
+     * @return Zend_Form_SubForm
+     */
+    public function loadDefaultDecorators()
+    {
+        if ($this->loadDefaultDecoratorsIsDisabled()) {
+            return $this;
+        }
+
+        $decorators = $this->getDecorators();
+        if (empty($decorators)) {
+            $this->addDecorator('FormElements')
+                 ->addDecorator('HtmlTag', array('tag' => 'dl'))
+                 ->addDecorator('Fieldset')
+                 ->addDecorator('DtDdWrapper');
+        }
+        return $this;
     }
 }

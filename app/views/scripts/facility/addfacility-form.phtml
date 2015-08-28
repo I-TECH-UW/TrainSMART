@@ -1,7 +1,7 @@
 <?php require_once('views/helpers/Location.php');
       require_once('views/helpers/TrainingViewHelper.php'); ?>
 <div class="fieldLabelThin" id="facility_name_lbl">
-	<span class="required">*</span><?php echo('Facility').space.t('name');?></div>
+	<span class="required">*</span><?php echo t('Facility Name');?></div>
 <div class="fieldInput">
 	<input type="text" name="facility_name" id="facility_name" value=""
 		size="40" maxlength="128" />
@@ -80,7 +80,7 @@
 	</div>
 
 </div>
-<?php renderCityAutocomplete('facility','facilityCityContainer',$this->base_url.'/facility/cityList/outputType/text/', $this->setting['num_location_tiers']);?>
+<?php renderCityAutocomplete('facility','facilityCityContainer',$this->base_url.'/facility/city-list/outputType/text/', $this->setting['num_location_tiers']);?>
 <?php }?>
 
 <?php if ($this->setting['display_facility_postal_code'] ) { ?>
@@ -130,7 +130,7 @@
 
 
 <?php if($this->setting['display_facility_type']) { ?>
-<div class="fieldLabelThin" id="facility_type_id_lbl"><?php tp('Facility'); echo ' '; tp('type');?></div>
+<div class="fieldLabelThin" id="facility_type_id_lbl"><?php tp('Facility type');?></div>
 <div class="fieldInput">
 	<select id="facility_type_id" name="facility_type_id">
 		<option value="">--<?php tp('choose');?>--</option>
@@ -143,7 +143,7 @@
 </div>
 <?php }?>
 <?php if($this->setting['display_facility_sponsor']) { ?>
-<div class="fieldLabelThin" id="facility_sponsor_id_lbl"><?php tp('Facility'); echo ' '; tp('sponsor');?></div>
+<div class="fieldLabelThin" id="facility_sponsor_id_lbl"><?php tp('Facility sponsor');?></div>
 <div class="fieldInput" id="facility_sponsor_wrapper">
 	<select id="facility_sponsor_id" name="facility_sponsor_id[]">
 		<option value="">--<?php tp('choose');?>--</option>

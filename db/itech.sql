@@ -72,7 +72,7 @@ CREATE TABLE `_system` (
   `display_middle_name` tinyint(1) NOT NULL DEFAULT '1',
   `display_funding_amounts` tinyint(1) NOT NULL DEFAULT '1',
   `display_region_c` tinyint(1) unsigned NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -337,9 +337,11 @@ CREATE TABLE `facility` (
   KEY `sponsor_option_id` (`sponsor_option_id`),
   KEY `type_option_id` (`type_option_id`),
   KEY `facility_ibfk_5` (`location_id`),
-  CONSTRAINT `facility_ibfk_1` FOREIGN KEY (`sponsor_option_id`) REFERENCES `facility_sponsor_option` (`id`),
-  CONSTRAINT `facility_ibfk_2` FOREIGN KEY (`type_option_id`) REFERENCES `facility_type_option` (`id`),
-  CONSTRAINT `facility_ibfk_5` FOREIGN KEY (`location_id`) REFERENCES `location` (`id`)
+  KEY `facility_name` (`facility_name`,`location_id`)
+  -- gnr, must be able to insert regardless
+  -- CONSTRAINT `facility_ibfk_1` FOREIGN KEY (`sponsor_option_id`) REFERENCES `facility_sponsor_option` (`id`),
+  -- CONSTRAINT `facility_ibfk_2` FOREIGN KEY (`type_option_id`) REFERENCES `facility_type_option` (`id`),
+  -- CONSTRAINT `facility_ibfk_5` FOREIGN KEY (`location_id`) REFERENCES `location` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
@@ -900,7 +902,7 @@ CREATE TABLE `score` (
   `timestamp_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `timestamp_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1256,7 +1258,7 @@ CREATE TABLE `training_approval_history` (
   KEY `time_idx` (`timestamp_created`),
   CONSTRAINT `training_idx` FOREIGN KEY (`training_id`) REFERENCES `training` (`id`),
   CONSTRAINT `user_idx` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1702,7 +1704,7 @@ CREATE TABLE `training_to_person_qualification_option` (
   KEY `person_qualification_option_id` (`person_qualification_option_id`),
   CONSTRAINT `training_to_person_qualification_option_ibfk_2` FOREIGN KEY (`person_qualification_option_id`) REFERENCES `person_qualification_option` (`id`),
   CONSTRAINT `training_to_person_qualification_option_ibfk_3` FOREIGN KEY (`training_id`) REFERENCES `training` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2100,7 +2102,7 @@ ALTER TABLE `facility` DROP COLUMN `uuid`;
 ALTER TABLE `facility` ADD COLUMN `uuid` char(36) AFTER `id`;
 ALTER TABLE `facility` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `facility` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
-ALTER TABLE `facility` ADD COLUMN CUSTOM_1 varchar(255) DEFAULT '';
+ALTER TABLE `facility` ADD COLUMN custom_1 varchar(255) DEFAULT '';
 
 DELIMITER ;;
 CREATE TRIGGER `facility_insert` BEFORE INSERT ON `facility` FOR EACH ROW BEGIN
@@ -2702,7 +2704,7 @@ CREATE TABLE `synclog` (
   `timestamp_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `timestamp_completed` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `syncalias` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -2720,14 +2722,14 @@ CREATE TABLE `syncalias` (
   KEY `syncfile_id_3` (`syncfile_id`),
   KEY `syncfile_id_4` (`syncfile_id`),
   CONSTRAINT `file_fk` FOREIGN KEY (`syncfile_id`) REFERENCES `syncfile` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 ALTER TABLE `person` CHANGE COLUMN `primary_responsibility_option_id` `primary_responsibility_option_id` int(11) DEFAULT '0', CHANGE COLUMN `secondary_responsibility_option_id` `secondary_responsibility_option_id` int(11) DEFAULT '0';
 
 ALTER TABLE `person_history` CHANGE COLUMN `primary_responsibility_option_id` `primary_responsibility_option_id` int(11) DEFAULT '0', CHANGE COLUMN `secondary_responsibility_option_id` `secondary_responsibility_option_id` int(11) DEFAULT '0';
 
-ALTER TABLE `facility` DROP INDEX `facility_name`, ADD UNIQUE `facility_name`(facility_name, location_id);
+ALTER TABLE `facility` DROP INDEX `facility_name`;
 
 CREATE TABLE `age_range_option` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2742,7 +2744,7 @@ CREATE TABLE `age_range_option` (
   UNIQUE KEY `name_unique` (`age_range_phrase`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 insert into `age_range_option` values('1',0x756e6b6e6f776e,'1',null,null,'0','2011-03-31 15:58:37','0000-00-00 00:00:00'),
  ('2',0x3c3130,'0',null,null,'0','2011-03-31 15:58:53','0000-00-00 00:00:00'),
@@ -2976,7 +2978,7 @@ CREATE TABLE IF NOT EXISTS `acl` (
   `id` varchar(32) NOT NULL default '',
   `acl` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -2998,7 +3000,7 @@ CREATE TABLE IF NOT EXISTS `addresses` (
   PRIMARY KEY  (`id`),
   KEY `idx2` (`address2`,`id_geog1`,`id_addresstype`,`id_geog2`,`country`,`city`,`id_geog3`,`state`,`postalcode`,`address1`),
   KEY `idxlookups` (`locationid`,`id_geog3`,`id_geog2`,`id_geog1`,`id_addresstype`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3017,7 +3019,7 @@ CREATE TABLE IF NOT EXISTS `age_range_option` (
   UNIQUE KEY `name_unique` (`age_range_phrase`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- Data exporting was unselected.
 
@@ -3030,7 +3032,7 @@ CREATE TABLE IF NOT EXISTS `cadres` (
   `status` tinyint(3) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`status`,`cadrename`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3046,7 +3048,7 @@ CREATE TABLE IF NOT EXISTS `classes` (
   `coursetopic` varchar(150) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`coursetypeid`,`instructorid`,`enddate`,`startdate`,`classname`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3063,7 +3065,7 @@ CREATE TABLE IF NOT EXISTS `cohort` (
   `cadreid` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`degree`,`cohortname`,`graddate`,`startdate`,`cohortid`,`institutionid`,`cadreid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3088,7 +3090,7 @@ CREATE TABLE IF NOT EXISTS `course` (
   `customfield2` varchar(255) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`startdate`,`examid`,`practicumid`,`courselength`,`degreeid`,`examdate`,`coursename`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3107,7 +3109,7 @@ CREATE TABLE IF NOT EXISTS `evaluation` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3130,7 +3132,7 @@ CREATE TABLE IF NOT EXISTS `evaluation_question` (
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`),
   KEY `evaluation_id` (`evaluation_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3153,7 +3155,7 @@ CREATE TABLE IF NOT EXISTS `evaluation_question_response` (
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`),
   KEY `evaluation_id` (`evaluation_response_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3173,7 +3175,7 @@ CREATE TABLE IF NOT EXISTS `evaluation_response` (
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`),
   KEY `evaluation_to_training_id` (`evaluation_to_training_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3192,7 +3194,7 @@ CREATE TABLE IF NOT EXISTS `evaluation_to_training` (
   KEY `created_by` (`created_by`),
   KEY `training_id` (`training_id`),
   KEY `e_id` (`evaluation_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3206,7 +3208,7 @@ CREATE TABLE IF NOT EXISTS `exams` (
   `cohortid` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`cohortid`,`examgrade`,`examname`,`examdate`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3226,7 +3228,7 @@ CREATE TABLE IF NOT EXISTS `external_course` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uuid_idx` (`uuid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- Data exporting was unselected.
 
@@ -3258,7 +3260,7 @@ CREATE TABLE IF NOT EXISTS `facility` (
   KEY `type_option_id` (`type_option_id`),
   KEY `facility_ibfk_5` (`location_id`),
   KEY `facility_name` (`facility_name`,`location_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3277,7 +3279,7 @@ CREATE TABLE IF NOT EXISTS `facility_partner` (
   `modified_by` int(11) default NULL,
   `is_deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3297,7 +3299,7 @@ CREATE TABLE IF NOT EXISTS `facility_sponsor_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3317,7 +3319,7 @@ CREATE TABLE IF NOT EXISTS `facility_type_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3339,7 +3341,7 @@ CREATE TABLE IF NOT EXISTS `file` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `parent_key` (`parent_table`,`parent_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- Data exporting was unselected.
 
@@ -3348,7 +3350,7 @@ CREATE TABLE IF NOT EXISTS `file` (
 CREATE TABLE IF NOT EXISTS `Helper` (
   `id` int(10) unsigned NOT NULL auto_increment,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3384,7 +3386,7 @@ CREATE TABLE IF NOT EXISTS `institution` (
   `geography3` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`degreetypeid`,`hasdormitories`,`computercount`,`studentcount`,`tutorcount`,`dormcount`,`tutorhousing`,`yearfounded`,`tutorhouses`,`bedcount`,`institutionname`,`geography1`,`geography2`,`geography3`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3399,7 +3401,7 @@ CREATE TABLE IF NOT EXISTS `licenses` (
   KEY `licensename` (`licensename`),
   KEY `licensedate` (`licensedate`),
   KEY `cohortid` (`cohortid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3411,7 +3413,7 @@ CREATE TABLE IF NOT EXISTS `link_cadre_institution` (
   `id_institution` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`id_institution`,`id_cadre`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3423,7 +3425,7 @@ CREATE TABLE IF NOT EXISTS `link_cadre_tutor` (
   `id_tutor` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`id_tutor`,`id_cadre`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3436,7 +3438,7 @@ CREATE TABLE IF NOT EXISTS `link_cohorts_classes` (
   `status` tinyint(3) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`cohortid`,`classid`,`status`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3449,7 +3451,7 @@ CREATE TABLE IF NOT EXISTS `link_facility_addresses` (
   PRIMARY KEY  (`id`),
   KEY `idx2` (`id_facility`,`id_address`),
   KEY `FK_link_facility_addresses_addresses` (`id_address`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3462,7 +3464,7 @@ CREATE TABLE IF NOT EXISTS `link_institution_address` (
   PRIMARY KEY  (`id`),
   KEY `idx2` (`id_institution`,`id_address`),
   KEY `FK_link_institution_address_addresses` (`id_address`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3474,7 +3476,7 @@ CREATE TABLE IF NOT EXISTS `link_institution_institutiontype` (
   `id_institutiontype` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`id_institution`,`id_institutiontype`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3487,7 +3489,7 @@ CREATE TABLE IF NOT EXISTS `link_student_addresses` (
   PRIMARY KEY  (`id`),
   KEY `idx2` (`id_student`,`id_address`),
   KEY `FK_link_student_addresses_addresses` (`id_address`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3502,7 +3504,7 @@ CREATE TABLE IF NOT EXISTS `link_student_classes` (
   `grade` varchar(50) collate utf8_unicode_ci NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`studentid`,`classid`,`cohortid`,`linkclasscohortid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3521,7 +3523,7 @@ CREATE TABLE IF NOT EXISTS `link_student_cohort` (
   KEY `FK_link_student_cohort_cohort` (`id_cohort`),
   KEY `datekeys` (`joindate`,`dropdate`),
   KEY `idx2` (`isgraduated`,`id_student`,`id_cohort`,`joinreason`,`dropreason`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3535,7 +3537,7 @@ CREATE TABLE IF NOT EXISTS `link_student_contacts` (
   PRIMARY KEY  (`id`),
   KEY `idx2` (`id_student`,`id_contact`),
   KEY `FK_link_student_contacts_lookup_contacts` (`id_contact`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3547,7 +3549,7 @@ CREATE TABLE IF NOT EXISTS `link_student_facility` (
   `id_facility` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`id_student`,`id_facility`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3560,7 +3562,7 @@ CREATE TABLE IF NOT EXISTS `link_student_funding` (
   `fundingamount` decimal(10,2) unsigned NOT NULL default '0.00',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`studentid`,`fundingsource`,`fundingamount`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3573,7 +3575,7 @@ CREATE TABLE IF NOT EXISTS `link_student_institution` (
   PRIMARY KEY  (`id`),
   KEY `idx2` (`id_student`,`id_institution`),
   KEY `FK_link_student_institution_institution` (`id_institution`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3588,7 +3590,7 @@ CREATE TABLE IF NOT EXISTS `link_student_licenses` (
   `grade` varchar(50) collate utf8_unicode_ci NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`studentid`,`licenseid`,`cohortid`,`linkclasslicenseid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3604,7 +3606,7 @@ CREATE TABLE IF NOT EXISTS `link_student_practicums` (
   `grade` varchar(50) collate utf8_unicode_ci NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`studentid`,`practicumid`,`cohortid`,`linkcohortpracticumid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3617,7 +3619,7 @@ CREATE TABLE IF NOT EXISTS `link_tutor_addresses` (
   PRIMARY KEY  (`id`),
   KEY `idx2` (`id_tutor`,`id_address`),
   KEY `FK_link_tutor_addresses_addresses` (`id_address`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3631,7 +3633,7 @@ CREATE TABLE IF NOT EXISTS `link_tutor_contacts` (
   PRIMARY KEY  (`id`),
   KEY `idx2` (`id_contact`,`id_tutor`),
   KEY `FK_link_tutor_contacts_tutor` (`id_tutor`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3643,7 +3645,7 @@ CREATE TABLE IF NOT EXISTS `link_tutor_institution` (
   `id_institution` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`id_tutor`,`id_institution`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3656,7 +3658,7 @@ CREATE TABLE IF NOT EXISTS `link_tutor_languages` (
   PRIMARY KEY  (`id`),
   KEY `idx2` (`id_tutor`,`id_language`),
   KEY `FK_link_tutor_languages_lookup_languages` (`id_language`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3668,7 +3670,7 @@ CREATE TABLE IF NOT EXISTS `link_tutor_tutortype` (
   `id_tutortype` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`id_tutor`,`id_tutortype`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3691,7 +3693,7 @@ CREATE TABLE IF NOT EXISTS `location` (
   KEY `parent_id` (`parent_id`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3711,7 +3713,7 @@ CREATE TABLE IF NOT EXISTS `location_city` (
   PRIMARY KEY  (`id`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3731,7 +3733,7 @@ CREATE TABLE IF NOT EXISTS `location_district` (
   PRIMARY KEY  (`id`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3750,7 +3752,7 @@ CREATE TABLE IF NOT EXISTS `location_province` (
   PRIMARY KEY  (`id`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3762,7 +3764,7 @@ CREATE TABLE IF NOT EXISTS `lookup_addresstype` (
   `addresstypeorder` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`addresstypename`,`addresstypeorder`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3774,7 +3776,7 @@ CREATE TABLE IF NOT EXISTS `lookup_contacts` (
   `contactorder` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`contactorder`,`contactname`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3785,7 +3787,7 @@ CREATE TABLE IF NOT EXISTS `lookup_coursetype` (
   `coursetype` varchar(50) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`coursetype`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3796,7 +3798,7 @@ CREATE TABLE IF NOT EXISTS `lookup_degrees` (
   `degree` varchar(255) collate utf8_unicode_ci NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`degree`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3808,7 +3810,7 @@ CREATE TABLE IF NOT EXISTS `lookup_degreetypes` (
   `status` tinyint(3) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`title`,`status`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3819,7 +3821,7 @@ CREATE TABLE IF NOT EXISTS `lookup_facilitytype` (
   `facilitytypename` varchar(50) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`facilitytypename`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3832,7 +3834,7 @@ CREATE TABLE IF NOT EXISTS `lookup_fundingsources` (
   `status` tinyint(3) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`status`,`fundingname`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3842,7 +3844,7 @@ CREATE TABLE IF NOT EXISTS `lookup_gender` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `gendername` varchar(50) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3854,7 +3856,7 @@ CREATE TABLE IF NOT EXISTS `lookup_geog` (
   `geogparent` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`geogname`,`geogparent`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3866,7 +3868,7 @@ CREATE TABLE IF NOT EXISTS `lookup_institutiontype` (
   `status` tinyint(3) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`typename`,`status`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3878,7 +3880,7 @@ CREATE TABLE IF NOT EXISTS `lookup_languages` (
   `abbreviation` varchar(50) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`abbreviation`,`language`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -3889,7 +3891,7 @@ CREATE TABLE IF NOT EXISTS `lookup_nationalities` (
   `nationality` varchar(50) collate utf8_unicode_ci NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`nationality`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3900,7 +3902,7 @@ CREATE TABLE IF NOT EXISTS `lookup_reasons` (
   `reason` text collate utf8_unicode_ci NOT NULL,
   `reasontype` enum('join','drop') collate utf8_unicode_ci NOT NULL default 'join',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3913,7 +3915,7 @@ CREATE TABLE IF NOT EXISTS `lookup_sponsors` (
   `status` tinyint(3) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   KEY `sponsorname` (`sponsorname`,`status`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3925,7 +3927,7 @@ CREATE TABLE IF NOT EXISTS `lookup_studenttype` (
   `status` tinyint(3) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`studenttype`,`status`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3937,7 +3939,7 @@ CREATE TABLE IF NOT EXISTS `lookup_tutortype` (
   `status` tinyint(3) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   KEY `typename` (`typename`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -3989,7 +3991,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   KEY `created_by` (`created_by`),
   KEY `facility_id` (`facility_id`),
   KEY `home_location_ibfk_9` (`home_location_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4009,7 +4011,7 @@ CREATE TABLE IF NOT EXISTS `person_active_trainer_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- Data exporting was unselected.
 
@@ -4029,7 +4031,7 @@ CREATE TABLE IF NOT EXISTS `person_attend_reason_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4049,7 +4051,7 @@ CREATE TABLE IF NOT EXISTS `person_custom_1_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4069,7 +4071,7 @@ CREATE TABLE IF NOT EXISTS `person_custom_2_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4089,7 +4091,7 @@ CREATE TABLE IF NOT EXISTS `person_education_level_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4133,7 +4135,7 @@ CREATE TABLE IF NOT EXISTS `person_history` (
   KEY `modified_by` (`modified_by`),
   KEY `facility_id` (`facility_id`),
   KEY `person_id` (`person_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- Data exporting was unselected.
 
@@ -4153,7 +4155,7 @@ CREATE TABLE IF NOT EXISTS `person_primary_responsibility_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4175,7 +4177,7 @@ CREATE TABLE IF NOT EXISTS `person_qualification_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4195,7 +4197,7 @@ CREATE TABLE IF NOT EXISTS `person_secondary_responsibility_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4215,7 +4217,7 @@ CREATE TABLE IF NOT EXISTS `person_suffix_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- Data exporting was unselected.
 
@@ -4235,7 +4237,7 @@ CREATE TABLE IF NOT EXISTS `person_title_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- Data exporting was unselected.
 
@@ -4255,7 +4257,7 @@ CREATE TABLE IF NOT EXISTS `person_to_training` (
   KEY `created_by` (`created_by`),
   KEY `person_id` (`person_id`),
   KEY `training_id` (`training_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4274,7 +4276,7 @@ CREATE TABLE IF NOT EXISTS `person_to_training_topic_option` (
   KEY `created_by` (`created_by`),
   KEY `person_id` (`person_id`),
   KEY `training_topic_option_id` (`training_topic_option_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4291,7 +4293,7 @@ CREATE TABLE IF NOT EXISTS `practicum` (
   PRIMARY KEY  (`id`),
   KEY `textindex` (`practicumname`,`practicumdate`),
   KEY `numberindex` (`advisorid`,`hoursrequired`,`cohortid`,`facilityid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -4311,7 +4313,7 @@ CREATE TABLE IF NOT EXISTS `score` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uuid_idx` (`uuid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4325,7 +4327,7 @@ CREATE TABLE IF NOT EXISTS `security` (
   `hasinservice` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`hasinservice`,`hasinstitution`,`haspreservice`,`studentid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4352,7 +4354,7 @@ CREATE TABLE IF NOT EXISTS `student` (
   `postfacilityname` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`nationalityid`,`advisorid`,`personid`,`studentid`,`cadre`,`geog1`,`geog2`,`geog3`,`isgraduated`,`postgeo1`,`postgeo2`,`postgeo3`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4373,7 +4375,7 @@ CREATE TABLE IF NOT EXISTS `syncalias` (
   KEY `syncfile_id_2` (`syncfile_id`),
   KEY `syncfile_id_3` (`syncfile_id`),
   KEY `syncfile_id_4` (`syncfile_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4392,7 +4394,7 @@ CREATE TABLE IF NOT EXISTS `syncfile` (
   `timestamp_last_sync` timestamp NOT NULL default '0000-00-00 00:00:00',
   `timestamp_completed` timestamp NULL default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4415,7 +4417,7 @@ CREATE TABLE IF NOT EXISTS `synclog` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   `timestamp_completed` timestamp NULL default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4440,7 +4442,7 @@ CREATE TABLE IF NOT EXISTS `trainer` (
   KEY `created_by` (`created_by`),
   KEY `type_option_id` (`type_option_id`),
   KEY `affiliation_option_id` (`affiliation_option_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4460,7 +4462,7 @@ CREATE TABLE IF NOT EXISTS `trainer_affiliation_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4484,7 +4486,7 @@ CREATE TABLE IF NOT EXISTS `trainer_history` (
   KEY `type_option_id` (`type_option_id`),
   KEY `affiliation_option_id` (`affiliation_option_id`),
   KEY `trainer_history_ibfk_1` (`person_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4504,7 +4506,7 @@ CREATE TABLE IF NOT EXISTS `trainer_language_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4524,7 +4526,7 @@ CREATE TABLE IF NOT EXISTS `trainer_skill_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4543,7 +4545,7 @@ CREATE TABLE IF NOT EXISTS `trainer_to_trainer_language_option` (
   KEY `created_by` (`created_by`),
   KEY `trainer_language_option_id` (`trainer_language_option_id`),
   KEY `trainer_id` (`trainer_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4561,7 +4563,7 @@ CREATE TABLE IF NOT EXISTS `trainer_to_trainer_skill_option` (
   KEY `created_by` (`created_by`),
   KEY `trainer_id` (`trainer_id`),
   KEY `trainer_skill_option_id` (`trainer_skill_option_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4581,7 +4583,7 @@ CREATE TABLE IF NOT EXISTS `trainer_type_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4623,7 +4625,7 @@ CREATE TABLE IF NOT EXISTS `training` (
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
   KEY `training_title_option_id` (`training_title_option_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4644,7 +4646,7 @@ CREATE TABLE IF NOT EXISTS `training_approval_history` (
   KEY `created_by` (`created_by`),
   KEY `created_by_2` (`created_by`),
   KEY `time_idx` (`timestamp_created`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- Data exporting was unselected.
 
@@ -4664,7 +4666,7 @@ CREATE TABLE IF NOT EXISTS `training_category_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4682,7 +4684,7 @@ CREATE TABLE IF NOT EXISTS `training_category_option_to_training_title_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `training_category_option_id` (`training_category_option_id`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4702,7 +4704,7 @@ CREATE TABLE IF NOT EXISTS `training_custom_1_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4722,7 +4724,7 @@ CREATE TABLE IF NOT EXISTS `training_custom_2_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4743,7 +4745,7 @@ CREATE TABLE IF NOT EXISTS `training_funding_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4763,7 +4765,7 @@ CREATE TABLE IF NOT EXISTS `training_got_curriculum_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4784,7 +4786,7 @@ CREATE TABLE IF NOT EXISTS `training_level_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4805,7 +4807,7 @@ CREATE TABLE IF NOT EXISTS `training_location` (
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`),
   KEY `training_location_ibfk_9` (`location_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4825,7 +4827,7 @@ CREATE TABLE IF NOT EXISTS `training_method_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- Data exporting was unselected.
 
@@ -4846,7 +4848,7 @@ CREATE TABLE IF NOT EXISTS `training_organizer_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4869,7 +4871,7 @@ CREATE TABLE IF NOT EXISTS `training_pepfar_categories_option` (
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
   KEY `id_training_method_option_id` (`id_training_method_option_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4890,7 +4892,7 @@ CREATE TABLE IF NOT EXISTS `training_recommend` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4910,7 +4912,7 @@ CREATE TABLE IF NOT EXISTS `training_title_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4931,7 +4933,7 @@ CREATE TABLE IF NOT EXISTS `training_topic_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4952,7 +4954,7 @@ CREATE TABLE IF NOT EXISTS `training_to_person_qualification_option` (
   UNIQUE KEY `training_qual_uniq` (`training_id`,`person_qualification_option_id`,`age_range_option_id`),
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `person_qualification_option_id` (`person_qualification_option_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- Data exporting was unselected.
 
@@ -4972,7 +4974,7 @@ CREATE TABLE IF NOT EXISTS `training_to_trainer` (
   KEY `created_by` (`created_by`),
   KEY `trainer_id` (`trainer_id`),
   KEY `training_id` (`training_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -4991,7 +4993,7 @@ CREATE TABLE IF NOT EXISTS `training_to_training_funding_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `training_id` (`training_id`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -5011,7 +5013,7 @@ CREATE TABLE IF NOT EXISTS `training_to_training_pepfar_categories_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `training_id` (`training_id`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -5029,7 +5031,7 @@ CREATE TABLE IF NOT EXISTS `training_to_training_topic_option` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `training_id` (`training_id`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -5049,7 +5051,7 @@ CREATE TABLE IF NOT EXISTS `translation` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -5071,7 +5073,7 @@ CREATE TABLE IF NOT EXISTS `tutor` (
   `nationalityid` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx2` (`facilityid`,`personid`,`cadreid`,`nationalityid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -5099,7 +5101,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -5114,7 +5116,7 @@ CREATE TABLE IF NOT EXISTS `user_to_acl` (
   PRIMARY KEY  (`id`),
   KEY `created_by` (`created_by`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -5129,7 +5131,7 @@ CREATE TABLE IF NOT EXISTS `user_to_organizer_access` (
   PRIMARY KEY  (`id`),
   KEY `created_by` (`created_by`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -5139,7 +5141,7 @@ CREATE TABLE IF NOT EXISTS `_location_missing_links` (
   `id` int(10) unsigned NOT NULL,
   `parent_id` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -5148,7 +5150,7 @@ CREATE TABLE IF NOT EXISTS `_location_missing_links` (
 CREATE TABLE IF NOT EXISTS `_location_ref` (
   `id` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -5209,7 +5211,7 @@ CREATE TABLE IF NOT EXISTS `_system` (
   `display_attend_reason` tinyint(1) NOT NULL default '0',
   `display_primary_responsibility` tinyint(1) NOT NULL default '0',
   `display_secondary_responsibility` tinyint(1) NOT NULL default '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -5321,7 +5323,7 @@ CREATE TABLE `comp` (
   `active` char(1) NOT NULL DEFAULT 'N',
   PRIMARY KEY (`id`),
   KEY `person` (`person`,`active`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `competencies`;
 CREATE TABLE `competencies` (
@@ -5330,7 +5332,7 @@ CREATE TABLE `competencies` (
   `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `idx2` (`competencyname`,`status`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `competencies_answers`;
 CREATE TABLE `competencies_answers` (
@@ -5344,7 +5346,7 @@ CREATE TABLE `competencies_answers` (
   `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `idx2` (`personid`,`competencyid`,`questionid`,`answer`,`addedon`,`status`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `competencies_questions`;
 CREATE TABLE `competencies_questions` (
@@ -5356,7 +5358,7 @@ CREATE TABLE `competencies_questions` (
   `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `idx2` (`itemtype`,`competencyid`,`itemorder`,`status`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `compres`;
 CREATE TABLE `compres` (
@@ -5366,7 +5368,7 @@ CREATE TABLE `compres` (
   `active` char(1) NOT NULL DEFAULT 'N',
   PRIMARY KEY (`SNo`),
   KEY `person` (`person`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `facs`;
 CREATE TABLE `facs` (
@@ -5377,19 +5379,19 @@ CREATE TABLE `facs` (
   `active` char(1) NOT NULL DEFAULT 'N',
   PRIMARY KEY (`sno`),
   KEY `person` (`person`,`facility`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `helper`;
 CREATE TABLE `helper` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `jobtitles`;
 CREATE TABLE `jobtitles` (
   `Title` varchar(45) DEFAULT NULL,
   `Option` varchar(12) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `link_institution_degrees`;
 CREATE TABLE `link_institution_degrees` (
@@ -5398,7 +5400,7 @@ CREATE TABLE `link_institution_degrees` (
   `id_degree` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx2` (`id_institution`,`id_degree`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `link_occupational_competencies`;
 CREATE TABLE `link_occupational_competencies` (
@@ -5408,7 +5410,7 @@ CREATE TABLE `link_occupational_competencies` (
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `idx2` (`competencyid`,`occupationalid`,`status`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `link_person_training`;
 CREATE TABLE `link_person_training` (
@@ -5422,7 +5424,7 @@ CREATE TABLE `link_person_training` (
   KEY `idx2` (`personid`,`trainingid`,`year`),
   KEY `institution` (`institution`),
   KEY `othername` (`othername`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `link_qualification_competency`;
 CREATE TABLE `link_qualification_competency` (
@@ -5431,7 +5433,7 @@ CREATE TABLE `link_qualification_competency` (
   `qualificationid` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx2` (`competencyid`,`qualificationid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `link_user_institution`;
 CREATE TABLE `link_user_institution` (
@@ -5440,7 +5442,7 @@ CREATE TABLE `link_user_institution` (
   `institutionid` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx2` (`userid`,`institutionid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `lookup_skillsmart`;
 CREATE TABLE `lookup_skillsmart` (
@@ -5452,7 +5454,7 @@ CREATE TABLE `lookup_skillsmart` (
   KEY `idx2` (`status`),
   KEY `idx3` (`lookupgroup`),
   KEY `idx4` (`lookupvalue`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `occupational_categories`;
 CREATE TABLE `occupational_categories` (
@@ -5471,7 +5473,7 @@ CREATE TABLE `occupational_categories` (
   UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `person_responsibility_option`;
 CREATE TABLE `person_responsibility_option` (
@@ -5486,7 +5488,7 @@ CREATE TABLE `person_responsibility_option` (
   UNIQUE KEY `name_unique` (`responsibility_phrase`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sheet1`;
 CREATE TABLE `sheet1` (
@@ -5503,7 +5505,7 @@ CREATE TABLE `sheet1` (
   `Sub_District` varchar(18) DEFAULT NULL,
   `Facility_Name` varchar(45) DEFAULT NULL,
   `Facility_Type` varchar(25) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `tracking`;
 CREATE TABLE `tracking` (
@@ -5511,7 +5513,7 @@ CREATE TABLE `tracking` (
   `URL` text NOT NULL,
   `On` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   KEY `IDX` (`UID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `trans`;
 CREATE TABLE `trans` (
@@ -5524,7 +5526,7 @@ CREATE TABLE `trans` (
   `active` char(1) NOT NULL DEFAULT 'N',
   PRIMARY KEY (`sno`),
   KEY `person` (`person`,`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `user_to_acl_province`;
 CREATE TABLE `user_to_acl_province` (
@@ -5536,7 +5538,7 @@ CREATE TABLE `user_to_acl_province` (
   PRIMARY KEY (`id`),
   KEY `created_by` (`created_by`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `student`
   ADD COLUMN `institutionid` int(10) unsigned NULL DEFAULT '0';

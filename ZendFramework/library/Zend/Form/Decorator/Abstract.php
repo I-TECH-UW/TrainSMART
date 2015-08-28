@@ -14,7 +14,7 @@
  *
  * @category   Zend
  * @package    Zend_Form
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -23,23 +23,21 @@ require_once 'Zend/Form/Decorator/Interface.php';
 
 /**
  * Zend_Form_Decorator_Abstract
- * 
+ *
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Decorator
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Abstract.php 7565 2008-01-22 17:26:47Z matthew $
+ * @version    $Id$
  */
 abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Interface
 {
-    /**#@+
+    /**
      * Placement constants
-     * @const string
      */
     const APPEND  = 'APPEND';
     const PREPEND = 'PREPEND';
-    /**#@-*/
 
     /**
      * Default placement: append
@@ -47,7 +45,7 @@ abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Inter
      */
     protected $_placement = 'APPEND';
 
-    /** 
+    /**
      * @var Zend_Form_Element|Zend_Form
      */
     protected $_element;
@@ -66,8 +64,8 @@ abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Inter
 
     /**
      * Constructor
-     * 
-     * @param  array|Zend_Config $options 
+     *
+     * @param  array|Zend_Config $options
      * @return void
      */
     public function __construct($options = null)
@@ -81,8 +79,8 @@ abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Inter
 
     /**
      * Set options
-     * 
-     * @param  array $options 
+     *
+     * @param  array $options
      * @return Zend_Form_Decorator_Abstract
      */
     public function setOptions(array $options)
@@ -93,8 +91,8 @@ abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Inter
 
     /**
      * Set options from config object
-     * 
-     * @param  Zend_Config $config 
+     *
+     * @param  Zend_Config $config
      * @return Zend_Form_Decorator_Abstract
      */
     public function setConfig(Zend_Config $config)
@@ -104,9 +102,9 @@ abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Inter
 
     /**
      * Set option
-     * 
-     * @param  string $key 
-     * @param  mixed $value 
+     *
+     * @param  string $key
+     * @param  mixed $value
      * @return Zend_Form_Decorator_Abstract
      */
     public function setOption($key, $value)
@@ -117,8 +115,8 @@ abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Inter
 
     /**
      * Get option
-     * 
-     * @param  string $key 
+     *
+     * @param  string $key
      * @return mixed
      */
     public function getOption($key)
@@ -133,7 +131,7 @@ abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Inter
 
     /**
      * Retrieve options
-     * 
+     *
      * @return array
      */
     public function getOptions()
@@ -143,8 +141,8 @@ abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Inter
 
     /**
      * Remove single option
-     * 
-     * @param mixed $key 
+     *
+     * @param mixed $key
      * @return void
      */
     public function removeOption($key)
@@ -159,7 +157,7 @@ abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Inter
 
     /**
      * Clear all options
-     * 
+     *
      * @return Zend_Form_Decorator_Abstract
      */
     public function clearOptions()
@@ -170,8 +168,8 @@ abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Inter
 
     /**
      * Set current form element
-     * 
-     * @param  Zend_Form_Element|Zend_Form $element 
+     *
+     * @param  Zend_Form_Element|Zend_Form $element
      * @return Zend_Form_Decorator_Abstract
      * @throws Zend_Form_Decorator_Exception on invalid element type
      */
@@ -191,7 +189,7 @@ abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Inter
 
     /**
      * Retrieve current element
-     * 
+     *
      * @return Zend_Form_Element|Zend_Form
      */
     public function getElement()
@@ -201,7 +199,7 @@ abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Inter
 
     /**
      * Determine if decorator should append or prepend content
-     * 
+     *
      * @return string
      */
     public function getPlacement()
@@ -228,7 +226,7 @@ abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Inter
 
     /**
      * Retrieve separator to use between old and new content
-     * 
+     *
      * @return string
      */
     public function getSeparator()
@@ -243,10 +241,10 @@ abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Inter
 
     /**
      * Decorate content and/or element
-     * 
+     *
      * @param  string $content
      * @return string
-     * @throws Zend_Dorm_Decorator_Exception when unimplemented
+     * @throws Zend_Form_Decorator_Exception when unimplemented
      */
     public function render($content)
     {

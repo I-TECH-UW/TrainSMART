@@ -15,12 +15,12 @@ require_once('views/helpers/DropDown.php');
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
 
-		<h1><?php echo t('Search for').' '.t('Training').' '.t('Partner');?></h1>
+		<h1><?php echo t('Search for Training Partner');?></h1>
 
 		<form id="search" action="" method="get">
 		<fieldset><legend><?php tp('Select Criteria');?></legend>
 
-		<div class="fieldLabel" id="	lbl"><?php echo t('Training').' '.t('Partner').' '.t('Name');?></div>
+		<div class="fieldLabel" id="	lbl"><?php echo t('Training Partner Name');?></div>
 		<div class="fieldInput"><select id="partner_name" name="partner_name">
 			<option value="">--<?php tp('All');?>--</option>
 			<?php
@@ -53,8 +53,8 @@ require_once('views/helpers/DropDown.php');
 
 <?php if ( $this->criteria['go'] ) { ?>
 		    <div class="hrGrey"></div>
-		    <div class="fieldIndentNoMargin"><?php echo t('Training').' '.t('Partners');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
-			<a href="<?php echo $this->base_url;?>/training-partner/add"><?php echo t('Add').' '.t('new').' '.t('Training').' '.t('Partner');?></a><br/><br/>
+		    <div class="fieldIndentNoMargin"><?php echo t('Training Partners');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+			<a href="<?php echo $this->base_url;?>/training-partner/add"><?php echo t('Add new Training Partner');?></a><br/><br/>
 		    <div id="partners"></div>
 		    <script type="text/javascript">
 		var partnersData = [
@@ -83,9 +83,9 @@ require_once('views/helpers/DropDown.php');
 		}
 
 			var partnersColumnDefs = [
-				{key:"id", label: "ID", sortable:false, resizable:false, formatter: formatViewUrl},
-			    {key:"organizer_id", label: "<?php echo t('Training').' '.t('Partner').' '.t('Name'); ?>", sortable:true, resizeable:true},
-			    {key:"subpartner", label: "<?php echo t('Training').' '.t('Sub').' '.t('Partner'); ?>", sortable:true, resizeable:true},
+				{key:"id", label: "<?php tp('ID')?>", sortable:false, resizable:false, formatter: formatViewUrl},
+			    {key:"organizer_id", label: "<?php echo t('Training Partner Name'); ?>", sortable:true, resizeable:true},
+			    {key:"subpartner", label: "<?php echo t('Training Sub Partner'); ?>", sortable:true, resizeable:true},
 			    {key:"mechanism_id", label: "<?php tp('Mechanism ID'); ?>", sortable:true, resizeable:true},
 			    {key:"funder_name", label: "<?php tp('Funder Name'); ?>", sortable:true, resizeable:true},
 			    {key:"funder_id", label: "<?php tp('Funder ID'); ?>", sortable:true, resizeable:true},

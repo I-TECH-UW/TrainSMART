@@ -15,10 +15,15 @@
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id$
  */
 
+/**
+ * @see Zend_View_Helper_HtmlElement
+ */
+require_once 'Zend/View/Helper/HtmlElement.php';
 
 /**
  * Base helper for form elements.  Extend this, don't use it on its own.
@@ -26,38 +31,47 @@
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-abstract class Zend_View_Helper_FormElement
+abstract class Zend_View_Helper_FormElement extends Zend_View_Helper_HtmlElement
 {
     /**
-     * @var Zend_View_Interface
+     * @var Zend_Translate_Adapter|null
      */
-    public $view;
+    protected $_translator;
 
     /**
-     * Converts an associative array to a string of tag attributes.
+     * Get translator
      *
-     * @access public
-     *
-     * @param array $attribs From this array, each key-value pair is
-     * converted to an attribute name and value.
-     *
-     * @return string The XHTML for the attributes.
+     * @return Zend_Translate_Adapter|null
      */
-    protected function _htmlAttribs($attribs)
+    public function getTranslator()
     {
-        $xhtml = '';
-        foreach ((array) $attribs as $key => $val) {
-            $key = $this->view->escape($key);
-            if (is_array($val)) {
-                $val = implode(' ', $val);
-            }
-            $val = $this->view->escape($val);
-            $xhtml .= " $key=\"$val\"";
+         return $this->_translator;
+    }
+
+    /**
+     * Set translator
+     *
+     * @param  Zend_Translate|Zend_Translate_Adapter|null $translator
+     * @return Zend_View_Helper_FormElement
+     */
+    public function setTranslator($translator = null)
+    {
+        if (null === $translator) {
+            $this->_translator = null;
+        } elseif ($translator instanceof Zend_Translate_Adapter) {
+            $this->_translator = $translator;
+        } elseif ($translator instanceof Zend_Translate) {
+            $this->_translator = $translator->getAdapter();
+        } else {
+            require_once 'Zend/View/Exception.php';
+            $e = new Zend_View_Exception('Invalid translator specified');
+            $e->setView($this->view);
+            throw $e;
         }
-        return $xhtml;
+         return $this;
     }
 
     /**
@@ -72,11 +86,11 @@ abstract class Zend_View_Helper_FormElement
      * @access protected
      *
      * @return array An element info array with keys for name, value,
-     * attribs, options, listsep, and disable.
+     * attribs, options, listsep, disable, and escape.
      */
     protected function _getInfo($name, $value = null, $attribs = null,
-        $options = null, $listsep = null)
-    {
+        $options = null, $listsep = null
+    ) {
         // the baseline info.  note that $name serves a dual purpose;
         // if an array, it's an element info array that will override
         // these baseline values.  as such, ignore it for the 'name'
@@ -89,6 +103,7 @@ abstract class Zend_View_Helper_FormElement
             'options' => $options,
             'listsep' => $listsep,
             'disable' => false,
+            'escape'  => true,
         );
 
         // override with named args
@@ -99,39 +114,67 @@ abstract class Zend_View_Helper_FormElement
                     $info[$key] = $name[$key];
                 }
             }
+
+            // If all helper options are passed as an array, attribs may have
+            // been as well
+            if (null === $attribs) {
+                $attribs = $info['attribs'];
+            }
         }
 
-        // force attribs to an array, per note from Orjan Persson.
-        settype($info['attribs'], 'array');
+        $attribs = (array)$attribs;
 
-        // disable if readonly
-        if (isset($info['attribs']['readonly']) &&
-            $info['attribs']['readonly'] == 'readonly') {
+        // Normalize readonly tag
+        if (array_key_exists('readonly', $attribs)) {
+            $attribs['readonly'] = 'readonly';
         }
 
-        // normal disable, overrides readonly
-        if (isset($info['attribs']['disable']) &&
-            $info['attribs']['disable']) {
-            // disable the element
-            $info['disable'] = true;
-            unset($info['attribs']['disable']);
+        // Disable attribute
+        if (array_key_exists('disable', $attribs)) {
+           if (is_scalar($attribs['disable'])) {
+                // disable the element
+                $info['disable'] = (bool)$attribs['disable'];
+            } else if (is_array($attribs['disable'])) {
+                $info['disable'] = $attribs['disable'];
+            }
         }
 
         // Set ID for element
-        if (isset($info['attribs']['id'])) {
-            $info['id'] = (string) $info['attribs']['id'];
-        } elseif (!isset($info['attribs']['id']) && !empty($info['name'])) {
-            $info['id'] = $info['name'];
+        if (array_key_exists('id', $attribs)) {
+            $info['id'] = (string)$attribs['id'];
+        } else if ('' !== $info['name']) {
+            $info['id'] = trim(strtr($info['name'],
+                                     array('[' => '-', ']' => '')), '-');
+        }
+        
+        // Remove NULL name attribute override
+        if (array_key_exists('name', $attribs) && is_null($attribs['name'])) {
+        	unset($attribs['name']);
+        }
+        
+        // Override name in info if specified in attribs
+        if (array_key_exists('name', $attribs) && $attribs['name'] != $info['name']) {
+            $info['name'] = $attribs['name'];
         }
 
-        // remove attribs that might overwrite the other keys.
-        // we do this LAST because we needed the other attribs
-        // values earlier.
+        // Determine escaping from attributes
+        if (array_key_exists('escape', $attribs)) {
+            $info['escape'] = (bool)$attribs['escape'];
+        }
+
+        // Determine listsetp from attributes
+        if (array_key_exists('listsep', $attribs)) {
+            $info['listsep'] = (string)$attribs['listsep'];
+        }
+
+        // Remove attribs that might overwrite the other keys. We do this LAST
+        // because we needed the other attribs values earlier.
         foreach ($info as $key => $val) {
-            if (isset($info['attribs'][$key])) {
-                unset($info['attribs'][$key]);
+            if (array_key_exists($key, $attribs)) {
+                unset($attribs[$key]);
             }
         }
+        $info['attribs'] = $attribs;
 
         // done!
         return $info;
@@ -145,11 +188,9 @@ abstract class Zend_View_Helper_FormElement
      *
      * @access protected
      *
-     * @param $name The element name.
-     *
-     * @param $value The element value.
-     *
-     * @param $attribs Attributes for the element.
+     * @param string $name The element name.
+     * @param string $value The element value.
+     * @param array  $attribs Attributes for the element.
      *
      * @return string A hidden element.
      */
@@ -158,17 +199,6 @@ abstract class Zend_View_Helper_FormElement
         return '<input type="hidden"'
              . ' name="' . $this->view->escape($name) . '"'
              . ' value="' . $this->view->escape($value) . '"'
-             . $this->_htmlAttribs($attribs) . ' />';
-    }
-
-    /**
-     * Set the view object
-     *
-     * @param Zend_View_Interface $view
-     * @return void
-     */
-    public function setView(Zend_View_Interface $view)
-    {
-        $this->view = $view;
+             . $this->_htmlAttribs($attribs) . $this->getClosingBracket();
     }
 }

@@ -15,9 +15,9 @@
  *
  * @category   Zend
  * @package    Zend_Feed
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Entry.php 7182 2007-12-18 11:58:36Z weppos $
+ * @version    $Id$
  */
 
 
@@ -29,7 +29,7 @@
  *
  * @category   Zend
  * @package    Zend_Feed
- * @copyright  Copyright (c) 2005-2007 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Feed_Builder_Entry extends ArrayObject
@@ -99,6 +99,18 @@ class Zend_Feed_Builder_Entry extends ArrayObject
         if ($this->offsetExists($key)) {
             $this->offsetUnset($key);
         }
+    }
+
+    /**
+     * Sets the author of the entry
+     *
+     * @param  string $author
+     * @return Zend_Feed_Builder_Entry
+     */
+    public function setAuthor($author)
+    {
+        $this->offsetSet('author', $author);
+        return $this;
     }
 
     /**

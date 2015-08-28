@@ -134,27 +134,31 @@ class Training extends ITechTable
 	* Returns rows of a user's incomplete trainings (i.e., no trainers or no participants)
 	* May also return all trainings user has created
 	*/
-	public function getIncompleteTraining($user_id, $where = false, $having = "countTrainer = 0 OR countPerson = 0") {
+	public function getIncompleteTraining($user_id, $showBudgetCode = false, $where = false, $having = "countTrainer = 0 OR countPerson = 0") {
 
 		$select = $this->select()
-		->from($this->_name, array('*'))
-		->setIntegrityCheck(false)
-	//      ->join(array('c' => 'course'), "$this->_name.training_title_option_id = c.id",'training_title_option_id')
-		->join(array('t' => 'training_title_option'), "training_title_option_id = t.id",array('training_title' => 'training_title_phrase'))
-		->joinLeft(array('tl' => 'training_location'), "$this->_name.training_location_id = tl.id",'training_location_name')
-		->joinLeft(array('to' => 'training_organizer_option'), "$this->_name.training_organizer_option_id = to.id", array('training_organizer_phrase'))
-		->joinLeft(array('tt' => 'training_to_trainer'), "$this->_name.id = tt.training_id", array('countTrainer' => 'COUNT(tt.trainer_id)'))
-		->joinLeft(array('pt' => 'person_to_training'), "$this->_name.id = pt.training_id", array('countPerson' => 'COUNT(pt.person_id)'))
-		->joinLeft(array('bc' => 'person_to_training_budget_option'), "bc.id = pt.budget_code_option_id", array('budget_code' => 'GROUP_CONCAT(DISTINCT budget_code_phrase)'))
-		->joinLeft(array('uc' => 'user'), "$this->_name.created_by = uc.id", array('creator' =>"CASE WHEN uc.id IS NULL THEN 'system' ELSE CONCAT(uc.first_name, ' ', uc.last_name) END "))
-		->group("$this->_name.id")
-	//	->where("($this->_name.modified_by = $user_id OR $this->_name.created_by = $user_id) AND $this->_name.is_deleted = 0")
-		->where("$this->_name.is_deleted = 0 AND has_known_participants = 1 " . (($where) ? " AND $where" : ''))
-		->order("$this->_name.training_start_date DESC");
+			->from($this->_name, array('id', 'training_start_date'))
+			->setIntegrityCheck(false)
+			->join(array('tto' => 'training_title_option'), "training_title_option_id = tto.id",array('training_title' => 'training_title_phrase'))
+			->joinLeft(array('tl' => 'training_location'), "$this->_name.training_location_id = tl.id",'training_location_name')
+			->joinLeft(array('tt' => 'training_to_trainer'), "$this->_name.id = tt.training_id", array('countTrainer' => 'COUNT(tt.trainer_id)'))
+			->joinLeft(array('pt' => 'person_to_training'), "$this->_name.id = pt.training_id", array('countPerson' => 'COUNT(pt.person_id)'))
+			->joinLeft(array('uc' => 'user'), "$this->_name.created_by = uc.id", array('creator' =>"COALESCE(CONCAT(uc.first_name, ' ', uc.last_name), 'system')"))
+			->group("$this->_name.id")
+			->where("$this->_name.is_deleted = 0 AND has_known_participants = 1 " . (($where) ? " AND $where" : ''))
+			->order("$this->_name.training_start_date DESC");
 
+		if ($showBudgetCode) {
+			// the group concat adds 5 seconds to a 6 second query on the tanzaniapartners database, so only query
+			// for it when a site is using it (tanzaniapartners does not)
+			$select->joinLeft(array('bc' => 'person_to_training_budget_option'), "bc.id = pt.budget_code_option_id", array('budget_code' => 'GROUP_CONCAT(DISTINCT budget_code_phrase)'));
+		}
+
+		$sql = $select->__toString();
 		if($having) {
 			$select->having($having);
 		}
+
 		return $this->fetchAll($select);
 	}
 
