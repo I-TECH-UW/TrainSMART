@@ -48,7 +48,7 @@ class IndexController extends ITechController {
 		$rowsArray = $db->fetchAll ( $sql );
 		$NIMART = 0;
 		foreach($rowsArray as $key => $row) {
-			$NIMARTsplit=preg_split("/§/",$rowsArray[$key]['comments']);
+			$NIMARTsplit=preg_split("/ï¿½/",$rowsArray[$key]['comments']);
 			if(strlen($NIMARTsplit[21])>0) {
 				if($NIMARTsplit[21] = "Nurse Initiating ART") {
 					$NIMART = $NIMART + 1;
@@ -98,7 +98,7 @@ class IndexController extends ITechController {
 
 			// Incomplete
 			$tableObj = new Training ( );
-			$rowsPast = $tableObj->getIncompleteTraining ( $uid, 'training_start_date < NOW() '.$allowedWhereClause );
+			$rowsPast = $tableObj->getIncompleteTraining ( $uid, $this->setting('display_budget_code'), 'training_start_date < NOW() '.$allowedWhereClause );
 			if ($rowsPast) {
 				$html = EditTableHelper::generateHtmlTraining ( 'TrainingPast', $rowsPast->toArray(), $trainingFields, $colStatic, $linkInfo, $editLinkInfo, $colCustom );
 				$this->view->assign ( 'tableTrainingPast', $html );
@@ -106,7 +106,7 @@ class IndexController extends ITechController {
 
 			// Future
 			$tableObj = new Training ( );
-			$rowsFuture = $tableObj->getIncompleteTraining ( $uid, 'training_start_date >= NOW()'.$allowedWhereClause, '' );
+			$rowsFuture = $tableObj->getIncompleteTraining ( $uid, $this->setting('display_budget_code'), 'training_start_date >= NOW()'.$allowedWhereClause, '' );
 			if ($rowsFuture) {
 				$html = EditTableHelper::generateHtmlTraining ( 'TrainingFuture', $rowsFuture->toArray(), $trainingFields, $colStatic, $linkInfo, $editLinkInfo, $colCustom );
 				$this->view->assign ( 'tableTrainingFuture', $html );
