@@ -636,10 +636,7 @@ function training_location_dropdown_as_a_return_value(&$tlocations, $selectedVal
   return "<select $selectContainerAttrs>$options</select>";
 }
 
-
     // TODO: These github links no longer exist:
-		<div class="fieldLabel" id="partner_lbl"><?php echo t('Subpartner'); ?></div>
-		<div class="fieldLabel" id="mechanism_lbl"><?php echo t('Mechanism'); ?></div>
 /**
  * 
  * @param unknown $fieldIndex

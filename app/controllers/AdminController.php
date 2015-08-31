@@ -3591,9 +3591,11 @@ class AdminController extends UserController
 
     public function employeeBuildFundingAction()
     {
+
         require_once('models/table/Partner.php');
 
         if ( $this->getRequest()->isPost() ) {
+			$db     = $this->dbfunc();
             $status = ValidationContainer::instance();
             $params = $this->getAllParams();
 
