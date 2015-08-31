@@ -146,12 +146,6 @@ class EmployeeController extends ReportFilterHelpers {
 		return $rows ? $rows : array();
 	}
 
-	    /*
-	    */
-	    $mechanisms = $this->generateMechanismList($employee_id);
-	    $this->view->assign("mechanismList", $mechanisms);
-	    
-    				if($this->getParam('outputType') == 'json') {
 	public function addAction() {
 		$this->view->assign('mode', 'add');
 		$this->view->assign ( 'pageTitle', t ( 'Add New' ).' '.t( 'Employee' ) );
