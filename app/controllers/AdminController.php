@@ -3490,7 +3490,7 @@ class AdminController extends UserController
             IFNULL(partner.partner, "0") as partner
             FROM
             mechanism_option
-            INNER JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id
+            LEFT JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id
             LEFT JOIN partner ON mechanism_option.owner_id = partner.id
             ORDER BY mechanism_phrase ASC
             ';
