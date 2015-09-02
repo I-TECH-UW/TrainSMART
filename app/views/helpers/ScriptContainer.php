@@ -41,7 +41,7 @@ class ScriptContainer {
 			$this->addCSSLink('/css/jquery.tabledrag.css');
 			//	$this->addCSSLink('/css/trainsmart/ts.css');
 			//	$this->addCSSLink('/css/media/trainsmart.css');
-
+			require_once('models/Session.php');
 			if (Session::getSetting('site_style') === 'eventsmart') {
 				$this->addCSSLink('/css/style-engender.css');
 			}
