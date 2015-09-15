@@ -41,7 +41,7 @@ class CalendarController extends ITechController
 
         // Future trainings
         $tableObj = new Training();
-        $rows = $tableObj->getIncompleteTraining($uid, $allowedWhereClause, '');
+        $rows = $tableObj->getIncompleteTraining($uid, false, $allowedWhereClause, '');
 
         if($rows) {
             require_once 'views/helpers/Calendar.php';

@@ -398,16 +398,21 @@ protected function sendData($data) {
     *
     * do not use this on post or get variables with names: action,controller or module
     */
-	public function getAllParams() {
-  	// this might not work on arrays with arrays in them, TODO, might be a security flaw, sanitize() wont handle arrays we should array_walk_recursive here. (but will probably just say: ARRAY)
-		$ret = array_merge($_GET,$_POST,$this->getRequest()->getParams());
-		foreach ($ret as $key => $value) {
-            // BS 20150317 - strip leading and trailing whitespace from form values
-			$ret[$key] = trim($this->getSanParam($key));
-		}
+    public function getAllParams() {
+        // BS20150915 note: changed from array_merge($_GET, $_POST, $this->getRequest()->getParams()); because
+        // it does nearly the same thing as getParams alone, but may change the precedence of GET and POST data
+        // code that relied on that precedence should be updated
+        // see http://framework.zend.com/manual/1.12/en/zend.controller.request.html#zend.controller.request.http
+        // in the Note: Superglobal Data section
 
-		return $ret;
-	}
+        $ret = $this->getRequest()->getParams();
+        if (!array_walk_recursive($ret, function(&$value) {
+            $value = $this->sanitize(trim($value));
+        })) {
+            throw new Exception('Unable to sanitize request parameters');
+        }
+        return $ret;
+    }
 
    /**
     * Putting this here since we can't get the Zend function to work correctly
