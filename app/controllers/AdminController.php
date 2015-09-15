@@ -3640,7 +3640,7 @@ class AdminController extends UserController
                     $status->setStatusMessage(t('That funding mechanism could not be saved.'));
                 } else {
                     $status->setStatusMessage(t('Mechanism data saved.'));
-                    $this->_redirect("admin/employee-build_funding");
+                    $this->_redirect("admin/employee-build-funding");
                 }
             }
         }
@@ -3700,7 +3700,7 @@ class AdminController extends UserController
 
 				$insert_result = $sfm->insert($data);
 				$status->setStatusMessage( t('The funding mechanism was saved.') );
-				$this->_redirect("admin/employee-build_funding");
+				$this->_redirect("admin/employee-build-funding");
 			}
 		}
 
@@ -3766,7 +3766,7 @@ class AdminController extends UserController
 
 				$insert_result = $sfm->insert($data);
 				$status->setStatusMessage( t('The funding mechanism was saved.') );
-				$this->_redirect("admin/employee-build_funding");
+				$this->_redirect("admin/employee-build-funding");
 			}
 		}
 
@@ -3829,7 +3829,7 @@ class AdminController extends UserController
 
 				$insert_result = $sfm->insert($data);
 				$status->setStatusMessage( t('The funding mechanism was saved.') );
-				$this->_redirect("admin/employee-build_funding");
+				$this->_redirect("admin/employee-build-funding");
 			}
 		}
 
@@ -3896,7 +3896,7 @@ class AdminController extends UserController
 
 				$insert_result = $sfm->insert($data);
 				$status->setStatusMessage( t('The funding mechanism was saved.') );
-				$this->_redirect("admin/employee-build_funding");
+				$this->_redirect("admin/employee-build-funding");
 			}
 		}
 
