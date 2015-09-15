@@ -137,10 +137,11 @@ class Training extends ITechTable
 	public function getIncompleteTraining($user_id, $showBudgetCode = false, $where = false, $having = "countTrainer = 0 OR countPerson = 0") {
 
 		$select = $this->select()
-			->from($this->_name, array('id', 'training_start_date'))
+			->from($this->_name, array('id', 'training_start_date', 'training_organizer_option_id', 'training_length_value', 'training_length_interval'))
 			->setIntegrityCheck(false)
 			->join(array('tto' => 'training_title_option'), "training_title_option_id = tto.id",array('training_title' => 'training_title_phrase'))
 			->joinLeft(array('tl' => 'training_location'), "$this->_name.training_location_id = tl.id",'training_location_name')
+			->joinLeft(array('to' => 'training_organizer_option'), "$this->_name.training_organizer_option_id = to.id", array('training_organizer_phrase'))
 			->joinLeft(array('tt' => 'training_to_trainer'), "$this->_name.id = tt.training_id", array('countTrainer' => 'COUNT(tt.trainer_id)'))
 			->joinLeft(array('pt' => 'person_to_training'), "$this->_name.id = pt.training_id", array('countPerson' => 'COUNT(pt.person_id)'))
 			->joinLeft(array('uc' => 'user'), "$this->_name.created_by = uc.id", array('creator' =>"COALESCE(CONCAT(uc.first_name, ' ', uc.last_name), 'system')"))
