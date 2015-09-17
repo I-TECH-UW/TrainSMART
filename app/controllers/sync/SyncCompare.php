@@ -57,8 +57,34 @@ class SyncCompare
   // Last sync time to compare since 
   static public  $lastSyncCompleted = null;
   
-  // Our items to work on 
+  // Our items to work on, // assumed to be modified (21 tables)
   static public $compareTypes = array(
+      'person',
+     'institution',
+      'student',
+      'tutor',
+      'cohort',
+      'link_student_cohort',
+      'licenses',
+      'link_cohorts_classes',
+      'practicum',
+      'link_cadre_institution',
+      'link_institution_degrees',
+      'link_tutor_languages',
+      'link_tutor_tutortype',
+      'addresses',
+      'link_student_addresses',
+      'link_student_funding',
+      'link_student_classes',
+      'link_student_practicums',
+      'link_student_licenses',
+      'link_tutor_institution',
+      'link_tutor_addresses',
+  );
+  
+  // Our items to work on 
+  //TA:50 old version does not work
+  static public $compareTypesOld = array(
     'location',
     'facility_sponsor_option',
     'facility_type_option',
@@ -171,14 +197,16 @@ class SyncCompare
     $this->syncLog->truncate(); // delete unfinished items for db file 
     foreach(self::$compareTypes as $tableType) 
     {
-      
+    //TA:50 print "" . $tableType . "=>[ ";
       $set = SyncSetFactory::create($tableType, SyncCompare::getDesktopConnectionParams($tableType,$this->desktopFilePath), $this->desktopFileId);
+      //TA:50 print "=0;";
       if ( $set ) {
+          //TA:50 print "=11;";
         $leftItems = $set->fetchLeftPool(); //desktop db
         $meta_done = false;
         $pk = 'id';
-        foreach($leftItems as $ld) 
-        { 
+        //TA:50 print "=1;";
+        foreach($leftItems as $ld) { 
           $rItem = $actions = array();
           try {
             $ldata = null;
@@ -190,6 +218,8 @@ class SyncCompare
             }     
             
               $userMessage = '';
+              
+              //TA:50 print "=2;";
               
               if ( $has_uuid && $ld->uuid )
                 $rItem = $set->fetchRightItemByUuid($ld->uuid);
@@ -209,11 +239,15 @@ class SyncCompare
                   }
                 }
               } else { //no exact uuid match on item, look for field level match
+                  //TA:50print "=3;";
                 $rItem = $set->fetchFieldMatch($ld);
+                //TA:50print "=4;";
+                
                 if ($rItem) {
+                    //TA:50print "=5;";
                   if ($set->usesAlias())
                     $actions[] = 'add-alias';
-                  if ( $set->isDirty($ld, $rItem) ) {           
+                  if ( $set->isDirty($ld, $rItem) ) { 
                     if ( $set->isConflict($ld, $rItem) ) {
                       $userMessage = "Update (with conflict)";
                       $actions[] = 'update-conflict';
@@ -224,7 +258,7 @@ class SyncCompare
                       $userMessage = 'Update';
                       $actions[] = 'update';
                     }
-                  }
+                  } 
                 } else { //no right match 
                   
                     //do we insert deleted rows? no
@@ -261,10 +295,12 @@ class SyncCompare
           
         }
         
+        
         try {
           $deletables = $set->fetchHardDeletes(); 
           if ( $deletables ) {
             foreach($deletables as $d) {
+                //TA:50print "DELETE: " . $tableType . ";";//TA:50
               $pk = $d->getTable()->PK();
               $this->syncLog->add($tableType, null, $d->$pk, 'delete'); 
             }
@@ -276,6 +312,7 @@ class SyncCompare
       }
       $this->syncLog->addTableCompleteMessage($tableType);
       
+    //TA:50print "];\n";
     } 
     return $errors;
   }

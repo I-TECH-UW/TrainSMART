@@ -119,7 +119,9 @@ class SyncSetSimple
 	 */
 	public function fetchLeftPool()
 	{
-		$rows = $this->getLeftTable()->fetchAll('(timestamp_updated > "' . SyncCompare::$lastSyncCompleted . '")');
+	    //TA:50 remove condition by 'timestamp_updated'
+		//$rows = $this->getLeftTable()->fetchAll('(timestamp_updated > "' . SyncCompare::$lastSyncCompleted . '")');
+		$rows = $this->getLeftTable()->fetchAll();
 		return $rows;
 	}
 	
@@ -184,8 +186,12 @@ class SyncSetSimple
 	{
 		$table = $this->getRightTable($refTableName);
 				
+		$table_PK = $table->PK(); //TA:50 this part is not working
+		if(!$table_PK) //TA:50 do trick to fix it, by default usually primary key id 'id'
+		    $table_PK = "id";
+		
 		// we have a uuid, return the unique match 
-		$row = $table->fetchRow( $table->PK()." = ".$id);
+		$row = $table->fetchRow( $table_PK ." = ".$id);
 		
 		if ( $row ) return $row;
 		
@@ -210,8 +216,24 @@ class SyncSetSimple
 		
 		return null;
 	}
+	
+	//TA:50 
+	function fetchLeftItemById($id, $refTableName = null){
+	    
+	    $table = $this->getLeftTable($refTableName);
+	
+	    $table_PK = $table->PK(); //TA:50 this part is not working 
+	    if(!$table_PK) //TA:50 do trick to fix it, by default usually primary key id 'id'
+	        $table_PK = "id";
+	    
+	    if($id) {
+	        return $table->fetchRow('(' . $table_PK . '=' . $id . ')');
+	    }
+	
+	    return null;
+	}
 
-	function fetchLeftItemById($id, $refTableName = null)
+	function fetchLeftItemByIdOld($id, $refTableName = null)
 	{
 		$table = $this->getLeftTable($refTableName);
 				
@@ -253,7 +275,6 @@ class SyncSetSimple
 	 */
 	public function isConflict($ld, $rd)
 	{
-		
 		if ( !array_key_exists('timestamp_updated',$ld->toArray()) || !array_key_exists('timestamp_updated',$rd->toArray()))
 			return true;
 		
@@ -316,7 +337,7 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 		
 		foreach($this->getColumns() as $col) {
 			if(is_array($col)) {
-				list($fk, $type) = $col;
+			    list($fk, $type) = $col;
 				$rItem->$fk = $this->_map_fk($lItem, $fk, $type);
 			} else {
 				//update value
@@ -364,7 +385,8 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 			if ( ($type == 'location') && !intval($lref->is_created_offline)) {
         $rref = $this->fetchRightItemById($lref->id, $type);
 			} else {
- 			  $rref = $this->fetchRightItemByUuid($lref->uuid, $type);
+ 			  //TA:50 do not take by UUID, only by id $rref = $this->fetchRightItemByUuid($lref->uuid, $type);
+			    $rref = $this->fetchRightItemById($lref->id, $type);
 			}
  			if(!$rref) {
 				throw new Exception('FK lookup failed. Could not find required reference item. '. $type . ':'.$lref->uuid.' It is possible that the referenced item was deleted from the website.');
@@ -395,14 +417,18 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 		$lItem = $this->fetchLeftItemById($left_id, $this->tableName);
 		$rItem = $this->fetchRightItemById($right_id, $this->tableName);
 		
-		if ( !$lItem OR !$rItem OR !$lItem->uuid OR !$rItem->uuid )
+// TA:50 we do not use uuid		
+//if ( !$lItem OR !$rItem OR !$lItem->uuid OR !$rItem->uuid )
+		if ( !$lItem OR !$rItem)
 			throw new Exception('Alias failed @'. $left_id .' @'. $right_id .' Could not alias item.');
 		
-		if ( $lItem->uuid == $rItem->uuid ) {
-			throw new Exception('Alias not needed. Uuids match @'. $lItem->uuid);
-		}
+// TA:50 we do not use uuid		
+//if ( $lItem->uuid == $rItem->uuid ) {
+// 			throw new Exception('Alias not needed. Uuids match @'. $lItem->uuid);
+// 		}
 				
-		$alias = array('syncfile_id'=>$this->syncfile_id, 'right_id'=> $right_id, 'right_uuid'=>$rItem->uuid, 'item_type'=> $this->tableName, 'left_uuid'=> $lItem->uuid, 'left_id'=>$left_id); 
+//TA:50 we do not use uuid 		$alias = array('syncfile_id'=>$this->syncfile_id, 'right_id'=> $right_id, 'right_uuid'=>$rItem->uuid, 'item_type'=> $this->tableName, 'left_uuid'=> $lItem->uuid, 'left_id'=>$left_id); 
+		$alias = array('syncfile_id'=>$this->syncfile_id, 'right_id'=> $right_id, 'right_uuid'=>'', 'item_type'=> $this->tableName, 'left_uuid'=> '', 'left_id'=>$left_id);
 		if(!self::$aliasTable->insert($alias)) {
 			throw new Exception('Alias failed @'. $left_id .' @'. $right_id .' Could not alias item.');
 		}
@@ -434,7 +460,7 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
       }
       
     } catch(Exception $e) {
-       throw new Exception('Foreign key verification failed. The '.$this->tableName.' reference to '.$fk.' '.$lItem->$fk.' does not exist.' );
+       throw new Exception('Foreign key verification failed. The '.$this->tableName.' reference to '.$fk.' '.$lItem->$fk.' does not exist.' . $e->getTraceAsString());
     }		
 	}
 	
@@ -465,7 +491,9 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 			} else if ( $rTable->has_uuid_col() ) {
 				$rItem->uuid = uniqid();
 			}
-			$rItem->timestamp_created = $lItem->timestamp_created;
+			if($lTable->has_time_created_col() && $rTable->has_time_created_col()){//TA:50
+			     $rItem->timestamp_created = $lItem->timestamp_created;
+			}
 			if ( $rTable->has_is_default_col() )
 				$rItem->is_default = 0;
 					

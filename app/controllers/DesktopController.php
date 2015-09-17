@@ -27,7 +27,6 @@ class DesktopController extends ITechController {
 	public function init() {
 		// Site specific files go here (/app/desktop/distro/data/settings.xml + copy of emtpy sqlite db file)
 		$this->package_dir = Globals::$BASE_PATH.'sites/'.str_replace(' ', '_', Globals::$COUNTRY).'/desktop';
-	
 	}
 	
 	public function preDispatch() {
@@ -79,7 +78,8 @@ class DesktopController extends ITechController {
 
 		// Gather up all files in distro directory
 		// initialize an iterator pass it the directory to be processed
-		$iterator = new RecursiveIteratorIterator ( new RecursiveDirectoryIterator ( Globals::$BASE_PATH.'app/desktop/distro' ) );
+		$DISTRO_PATH = '/app/desktop/distro';//TA:50
+		$iterator = new RecursiveIteratorIterator ( new RecursiveDirectoryIterator ( Globals::$BASE_PATH.$DISTRO_PATH ) );
 		// iterate over the directory add each file found to the archive
 		foreach ( $iterator as $key => $value ) {
 			// Exclude the zip file itself (if exists from a previous creation)
@@ -98,7 +98,7 @@ class DesktopController extends ITechController {
 		// Files added in two stages because there are two paths to remove 
 		// (app/desktop/distro and package_dir) but zip procs will only take one path to remove per call
 		$archive->create($site_file_collection,array('remove_path'=>$this->package_dir, 'add_path'=>'TS'));	
-		$archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.'app/desktop/distro', 'add_path'=>'TS'));
+		$archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DISTRO_PATH, 'add_path'=>'TS'));
 		
 	}
 	
@@ -128,8 +128,8 @@ class DesktopController extends ITechController {
 		try {
 			// Create settings file in the site's desktop directory (/sites/<countryName>/data)
 			//copy (Globals::$BASE_PATH.Globals::$WEB_FOLDER.'/Settings.xml', $dp.'data/Settings.xml') 
-			$curFile = 'settings';
-			$this->settingsAction ($this->package_dir.'/data/');	
+			//$curFile = 'settings';
+			//$this->settingsAction ($this->package_dir.'/data/');	
 
 			// Always start with a fresh blank datbase file
 			$curFile = 'sqlite';
@@ -188,8 +188,30 @@ class DesktopController extends ITechController {
 		//$liteSysTable = new System(array( Zend_Db_Table_Abstract::ADAPTER => $litedb));
 		//$liteSysTable->select('*');
 		
+		//TA:50 needed as a lookup tables and configuration, not assumed to be modified by app (18 tables)
+		$optionTypes = array(
+		    'lookup_degrees',
+		    'cadres',
+		    'lookup_coursetype',
+		    'classes',
+		    'lookup_institutiontype',
+		    'lookup_sponsors',
+		    'lookup_languages',
+		    'lookup_tutortype',
+		    'location',
+		    'translation',
+		    'person_qualification_option',
+		    'person_title_option',
+		    'lookup_reasons',
+		    'lookup_studenttype',
+		    'lookup_nationalities',
+		    'lookup_fundingsources',
+		    'facility_sponsor_option',
+		    'facility'
+		);
+		
 		require_once 'sync/SyncCompare.php';
-		$option_tables = SyncCompare::$compareTypes;
+		$option_tables = array_merge(SyncCompare::$compareTypes,$optionTypes);
 		
 		// require_once('models/table/System.php');
 		foreach ( $option_tables as $opt ) {
@@ -252,10 +274,10 @@ class DesktopController extends ITechController {
 		}
 		
 		// If no zip file, then Create App never performed (do this first)
-		if (! file_exists($this->package_dir.'/'.$this->zip_name)) 
-		{
+		//TA:50 create new (overwrite if exist) every time 
+		//if (! file_exists($this->package_dir.'/'.$this->zip_name)) {
 			$this->createAction();
-		}
+		//}
 				
 		// Assumes createAction called every hour by cron job
 		// Allows slow net link users to only download a prepackaged zip file

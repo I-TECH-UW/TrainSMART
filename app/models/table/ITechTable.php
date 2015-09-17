@@ -51,6 +51,16 @@ class ITechTable extends Zend_Db_Table_Abstract
 
       return false;
 	}
+	
+	//TA:50
+	public function has_time_created_col() {
+	    $info = $this->info();
+	    if ( (array_search('timestamp_created',$info['cols']) !== false) ) {
+	        return  true;
+	    }
+	
+	    return false;
+	}
 
   public function get_uuid($pkOrID)
   {

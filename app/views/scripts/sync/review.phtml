@@ -22,9 +22,9 @@ function conflict_table($li) {
 		    		
 		    		?>
 		    	<tr>
-		    	<td ><?php foreach($larray as $k=>$v){ echo '['.$k.'] '.$v.'<br/>';}?></td>
-		    	<td ><?php foreach($rarray as $k=>$v){ echo '['.$k.'] '.$v.'<br/>';}?></td>
-		    	<td ><?php echo implode('<br/>',array_keys(array_diff($rarray, $larray)))?></td>
+		    	<td ><?php foreach($larray as $k=>$v){ echo '['.$k.'] ='.$v.'<br/>';}?></td>
+		    	<td ><?php foreach($rarray as $k=>$v){ echo '['.$k.'] ='.$v.'<br/>';}?></td>
+		    	<td ><?php echo implode('<br/>',array_keys(array_diff_assoc($rarray, $larray)))?></td> <!-- array_keys(array_diff($rarray, $larray)) -->
 		    	<td width="200px"><input type="radio" name="id[<?php echo $item['id'];?>]" value="" <?php echo ( !$item['is_skipped']? ' checked="checked" ':'');?> /> Use uploaded data<br/>
 					<input type="radio" name="id[<?php echo $item['id'];?>]" value="skip" <?php echo ( $item['is_skipped']? ' checked="checked" ':'');?>/> Use existing data<br/>
 		    	</td>
@@ -88,15 +88,18 @@ table.sync tbody td {
 				<input type="submit" class="submitArrow" name="go" value="Commit Changes" />
 		    <br/>
 			<br/>
-			<h2><?php echo t('Training').' '.t('Conflicts');?></h2>
-			<?php conflict_table(@$this->items['training']);?><br/>
-			<h2><?php echo t('People').' '.t('Conflicts');?></h2>
+			<!-- TA:50  -->
+			<h2><?php echo t('People Conflicts');?></h2>
 			<?php conflict_table(@$this->items['person']);?><br/>
-			<h2><?php echo t('Facility').' '.t('Conflicts');?></h2>
-			<?php conflict_table(@$this->items['facility']);?><br/>
-			<h2><?php tp('Training Location').' '.t('Conflicts');?></h2>
-			<?php conflict_table(@$this->items['training_location']);?><br/>
 			
+			<h2><?php echo t('Cohort Conflicts');?></h2>
+			<?php conflict_table(@$this->items['cohort']);?><br/>
+			
+			<h2><?php echo t('Licenses Conflicts');?></h2>
+			<?php conflict_table(@$this->items['licenses']);?><br/>
+			
+			<h2><?php echo t('Institution Conflicts');?></h2>
+			<?php conflict_table(@$this->items['institution']);?><br/>
 			
 			</form>
 	  </div>
