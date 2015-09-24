@@ -233,8 +233,8 @@ class PartnerController extends ReportFilterHelpers {
 
 			if ($criteria['subpartner_id'])     $where[] = 'subpartners.subpartner_id = '.$criteria['subpartner_id'];
 			if ($criteria['partner_id'])        $where[] = 'partner.id = '.$criteria['partner_id'];
-			if ($criteria['start_date'])        $where[] = 'funding_end_date >= \''.$this->_euro_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
-			if ($criteria['end_date'])          $where[] = 'funding_end_date <= \''.$this->_euro_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
+			if ($criteria['start_date'])        $where[] = 'mo.end_date >= \''.$this->_euro_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
+			if ($criteria['end_date'])          $where[] = 'mo.end_date <= \''.$this->_euro_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
 			if ( count ($where)) {
 				$sql .= ' WHERE ' . implode(' AND ', $where);
 			}
