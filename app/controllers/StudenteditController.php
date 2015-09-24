@@ -1138,7 +1138,7 @@ class StudenteditController extends ITechController
 					'certificate_issue_date' => $this->_euro_date_to_sql($params['certificate_issue_date']),
 					'certificate_number' => $params['certificate_number'],
 					'certificate_received_date' => $this->_euro_date_to_sql($params['certificate_received_date']),
-
+					'certificate_issuer' => $params['certificate_issuer']
 				));
 			}
 
@@ -1207,7 +1207,6 @@ class StudenteditController extends ITechController
         $studentCohortData['examdate'] = formhelperdate($studentCohortData['examdate'], "d/m/y");
         $studentCohortData['certificate_issue_date'] = formhelperdate($studentCohortData['certificate_issue_date'], "d/m/y");
         $studentCohortData['certificate_received_date'] = formhelperdate($studentCohortData['certificate_received_date'], "d/m/y");
-
 
 		$this->view->assign('locations', Location::getAll());
 		$this->view->assign('personCriteria', locationIDTo3TierCriteriaArray($personData['home_location_id'], 'person'));

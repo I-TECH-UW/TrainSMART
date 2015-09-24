@@ -425,6 +425,7 @@
 			echo '<legend>' . t('Qualified Learners') . '</legend>';
 			echo labelAndField($this, t('Date Certificate was Received From the AQP'), 'date', 'certificate_issue_date', $this->studentCohortData['certificate_issue_date']);
 			echo labelAndField($this, t('Certificate Number'), 'text', 'certificate_number', $this->studentCohortData['certificate_number']);
+			echo labelAndField($this, t('AQP'), 'text', 'certificate_issuer', $this->studentCohortData['certificate_issuer']);
 			echo labelAndField($this, t('Date Learner Received Certificate'), 'date', 'certificate_received_date', $this->studentCohortData['certificate_received_date']);
 			?>
 		</fieldset>
