@@ -66,7 +66,8 @@ class SyncLog extends ITechTable
 	 * The search can run several times, if we already have a log entry update it instead. 
 	 * @return log entry id
 	 */
-	public function add($itemType = null, $leftItemId = null, $rightItemId = null, $action = null, $userMessage = null, $ldata = null, $rdata = null)
+	public function add($itemType = null, $leftItemId = null, $rightItemId = null, $action = null, $userMessage = null, $ldata = null, 
+	    $rdata = null, $time_completed = null)
 	{
 		$save = array(
 			'fid' => $this->_fid, 
@@ -77,6 +78,7 @@ class SyncLog extends ITechTable
 			'message' => $userMessage,
 			'left_data' => serialize($ldata),
 			'right_data' => serialize($rdata),
+		    'timestamp_completed' => $time_completed,
 		);
 
 		$result = $this->insert($save);

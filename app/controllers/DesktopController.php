@@ -258,6 +258,32 @@ class DesktopController extends ITechController {
 			
 			}
 		}
+// 		//TA:50 add virtual primary id start for each download user
+// 		/*
+// 		 *_app_start_ids table to keep start primary id for some tables when desktop user inserts new data. 
+// 		 *Max primary key for those tables is int(10)=1000000000. If we give each download 10,000 ids range it will allow 100,000 downloads. 
+// 		 *Every time when user downloads app start_id +10,000. It will help avoid overlapping of the ids when users will upload data to TS.
+// 		 */
+// 		$db_opt = Zend_Db_Table_Abstract::getDefaultAdapter();
+// 		foreach ( SyncCompare::$compareTypes as $opt ) {
+// 		    $template_liteTable = new OptionList ( array ('name' => '_vpk', Zend_Db_Table_Abstract::ADAPTER =>
+// 		        Zend_Db::factory ( 'PDO_SQLITE', array ('dbname' => Globals::$BASE_PATH.'/app/desktop/trainsmart.template.sqlite' )))) ;
+//  			$row = $template_liteTable->fetchRow("table_name = '" . $opt . "'");
+//  			$last_id = $row['vpk'];
+//  			if($last_id == 0){
+//  			    $optTable = new OptionList ( array ('name' =>'" . $opt . "' ) );
+//  			   $next_vpk = $db_opt->fetchRow("select max(id) from " . $opt)['max(id)'];
+//  			}else{
+//  			    $next_vpk = $last_id + 10000;
+//  			}
+//  			$next_vpk = $next_vpk+1;
+//  			//write to template sqlite
+//  		    $template_liteTable->update(array('vpk'=>$next_vpk),"table_name = '" . $opt . "'");
+// 		    //write to user sqlite
+// 		    $liteTable = new OptionList ( array ('name' => '_vpk', Zend_Db_Table_Abstract::ADAPTER => $litedb ) );
+// 		    $liteTable->update(array('vpk'=>$next_vpk),"table_name = '" . $opt . "'");
+// 		}
+		
 	}
 
 	public function downloadAction() {

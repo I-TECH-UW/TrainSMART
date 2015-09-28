@@ -161,8 +161,7 @@ class SyncController extends ReportFilterHelpers
 	/*
 	 * Search server db for differences
 	 */
-	public function searchAction()
-	{
+	public function searchAction(){
 		$fid = $this->getSanParam('fid');
 		
 		// check for file 
@@ -190,10 +189,10 @@ class SyncController extends ReportFilterHelpers
 			}
 			
 			if($has_errors) {
-				$this->sendData ( array("Done with errors \n".print_r($has_errors,true)) );
+				$this->sendData ( array("Uploading process is completed with errors \n".print_r($has_errors,true)) );
 				
 			} else {
-				$this->sendData ( array('Done.') );
+				$this->sendData ( array('Uploading process is completed with folowing database tables:') );
 			}
 			return;
 		}

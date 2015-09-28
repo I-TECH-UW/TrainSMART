@@ -17,6 +17,11 @@ class SyncSetSimple
 	public $tableName = null;
 	public $syncfile_id = null;
 	
+	public $log = ""; //TA:50
+	public $last_id = null;
+	
+	//public static $used_ids = array();//TA:50
+	
 	/**
 	 * Use getLeftTable or getRightTable to access these 
 	 */
@@ -328,8 +333,8 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 	 * @param (string) $rightUuid right-uuid from log table 
 	 * @return results of an insert or update OR, false if failed 
 	 */
-	public function updateMember($left_id, $right_id)
-	{
+	public function updateMember($left_id, $right_id){
+	    $this->log = $this->log . "UPDATE: id:" . $right_id . ", ";
 		$lItem = $this->fetchLeftItemById($left_id, $this->tableName);
 		$rItem = $this->fetchRightItemById($right_id, $this->tableName);
 		$lTable = $this->getLeftTable();
@@ -341,9 +346,14 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 				$rItem->$fk = $this->_map_fk($lItem, $fk, $type);
 			} else {
 				//update value
+				if($rItem->$col !== $lItem->$col){
+	                $this->log = $this->log . $col . ":" . $rItem->$col . "=>" . $lItem->$col . ", ";
+	            }
 				$rItem->$col = $lItem->$col;
 			}
 		}
+		
+		$this->log = $this->log . "\n";
 		
 		//undelete right side if necessary
 		if ( $lTable->has_is_deleted_col() && $rTable->has_is_deleted_col()) {
@@ -354,7 +364,8 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 		// update existing item 
 		$result = $rItem->save();
 		if(!$result) {
-			throw new Exception('Update failed @'. $left_id .' @'. $right_id .' Could not update item.');
+		    $this->log = $this->log .  "UPDATE ERROR: id=" . $lItem->id . "\n";
+			//throw new Exception("Update failed for table'" . $this->tableName . "':" . $left_id .'=>'. $right_id .' Could not update item.');
 		}
 		
 		return $result;
@@ -401,9 +412,21 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 		return $rref->$pk;
 	}
 	
-	public function deleteMember($right_id) {
-		$rtable = $this->getRightTable();
-		$rtable->delete($rtable->PK().' = '.$right_id);
+	public function deleteMember($right_id, $commit=false) {
+	    if($commit){
+		  $rtable = $this->getRightTable();
+		  $rtable->delete($rtable->PK().' = '.$right_id);
+	    }
+	}
+	
+	//TA:50
+	public function getNextId(){
+	    if(!$this->last_id){
+	        $db_opt = Zend_Db_Table_Abstract::getDefaultAdapter();
+	        $this->last_id = $db_opt->fetchRow("select max(id) from " . $this->tableName)['max(id)'];
+	    }
+	    $this->last_id = $this->last_id +1;
+	    return $this->last_id;
 	}
 	
 	/**
@@ -465,7 +488,7 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 	}
 	
 	
-	public function insertMember($left_id) {
+	public function insertMember($left_id, $path= null, $field=null, $commit= false) {
 
 		//check for insert of deleted item
 		try {
@@ -484,6 +507,9 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 					$rItem->$col = $lItem->$col;
 				}
 			}
+			
+// 			//TA:50 also copy id
+// 			$rItem->id = $lItem->id;
 			
 			//also copy uuid and timestamp_created
 			if ( $lTable->has_uuid_col() && $rTable->has_uuid_col() ) {
@@ -507,6 +533,11 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 			if ( strstr($e->getMessage(),'Integrity constraint violation: 1062 Duplicate entry') === false)
 			 throw $e;
 		}
+	}
+	
+	//TA:50
+	public function getLog() {
+	    return $this->log;
 	}
 	
 }
