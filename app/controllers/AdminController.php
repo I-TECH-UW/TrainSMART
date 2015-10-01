@@ -173,6 +173,7 @@ class AdminController extends UserController
 			'fiscal_year_start'        => 'fiscal_year_start',
 			'check_mod_employee'       => 'module_employee_enabled',
 			'check_country_reports' => 'display_country_reports',//TA:17: 9/11/2014
+			'display_use_offline_app' => 'display_use_offline_app' //TA:50:1
 		);
 
 

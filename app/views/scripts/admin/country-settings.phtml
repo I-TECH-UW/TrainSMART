@@ -18,7 +18,7 @@ ob_end_clean();
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title><?php echo $this->translation['Application Name']; ?> | <?php echo $this->pageTitle; ?></title>
+		<!--  <title><?php echo $this->translation['Application Name.']; ?> | <?php echo $this->pageTitle; ?></title>-->
 		<?php
 		require_once('views/helpers/ScriptContainer.php');
 		print ScriptContainer::$instance->renderCSSHead();
@@ -206,6 +206,13 @@ ob_end_clean();
 							<div>
 								<div class="fieldInput"><div class="fieldLabel"><?php tp('Reports');?></div>
 									<input type="checkbox" name="check_country_reports" id="check_country_reports" <?php if($this->check_country_reports == 1) echo 'checked'; ?>><label for="check_country_reports"><?php tp('Enable');?></label>
+								</div>
+								<div style="clear : both;"></div>
+							</div>
+							<!-- TA:50:1 -->
+							<div>
+								<div class="fieldInput"><div class="fieldLabel"><?php tp('Use offline app');?></div>
+									<input type="checkbox" name="display_use_offline_app" id="display_use_offline_app" <?php if($this->display_use_offline_app == 1) echo 'checked'; ?>><label for="display_use_offline_app"><?php tp('Enable');?></label>
 								</div>
 								<div style="clear : both;"></div>
 							</div>
