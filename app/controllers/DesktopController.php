@@ -79,6 +79,8 @@ class DesktopController extends ITechController {
 		// Gather up all files in distro directory
 		// initialize an iterator pass it the directory to be processed
 		$DISTRO_PATH = '/app/desktop/distro';//TA:50
+		
+		/*TA:50 RecursiveIteratorIterator DOES NOT WORK on the server, we have to use hard coded file names
 		$iterator = new RecursiveIteratorIterator ( new RecursiveDirectoryIterator ( Globals::$BASE_PATH.$DISTRO_PATH ) );
 		// iterate over the directory add each file found to the archive
 		foreach ( $iterator as $key => $value ) {
@@ -91,15 +93,22 @@ class DesktopController extends ITechController {
 		$iterator = new RecursiveIteratorIterator ( new RecursiveDirectoryIterator ( $this->package_dir ) );
 		foreach ( $iterator as $key => $value ) {
 			// Exclude the zip file itself
-			if (substr($key, $zipNameLen * -1, $zipNameLen) != $this->zip_name)
-				$site_file_collection []= realpath ( $key );
-		}	
+			if (substr($key, $zipNameLen * -1, $zipNameLen) != $this->zip_name){
+				$site_file_collection []= realpath ( $key ); 
+			}
+		}
 
 		// Files added in two stages because there are two paths to remove 
 		// (app/desktop/distro and package_dir) but zip procs will only take one path to remove per call
 		$archive->create($site_file_collection,array('remove_path'=>$this->package_dir, 'add_path'=>'TS'));	
 		$archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DISTRO_PATH, 'add_path'=>'TS'));
-		
+		*/
+		//TA:50 file names are hard coded for now
+                 $site_file_collection []= realpath ( $this->package_dir . '/data/trainsmart.active.sqlite' );
+                $core_file_collection [] = realpath (Globals::$BASE_PATH.$DISTRO_PATH . '/_READ_ME.txt' );
+                 $core_file_collection [] = realpath (Globals::$BASE_PATH.$DISTRO_PATH . '/_trainsmart.jar' );
+$archive->create($site_file_collection,array('remove_path'=>$this->package_dir, 'add_path'=>'TS'));
+$archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DISTRO_PATH, 'add_path'=>'TS'));	
 	}
 	
 	private function _prepareSiteDirectory() {
