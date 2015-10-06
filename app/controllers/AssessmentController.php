@@ -19,7 +19,7 @@ class AssessmentController extends ITechController {
 			
 			// we extend these controllers, lets redirect to their URL
 		if (strstr ( $_SERVER ['HTTP_REFERER'], '/site/' ) && strstr ( $_SERVER ['REQUEST_URI'], '/assessment' ))
-			$this->_redirect ( str_replace ( '/assessment/', '/site/', 'http://' . $_SERVER ['SERVER_NAME'] . $_SERVER ['REQUEST_URI'] ) );
+			$this->_redirect ( str_replace ( '/assessment/', '/site/', '//' . $_SERVER ['SERVER_NAME'] . $_SERVER ['REQUEST_URI'] ) );
 	}
 	
 	public function indexAction() {
@@ -66,7 +66,7 @@ class AssessmentController extends ITechController {
         $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
         
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
-        $link = mysqli_connect("localhost", "root", "", "");
+        $link = mysqli_connect(Settings::$DB_SERVER, Settings::$DB_USERNAME, Settings::$DB_PWD, "");
         
         /* check connection */
         if (mysqli_connect_errno()) {
@@ -216,7 +216,7 @@ where ';
 	
 	    if ($this->hasACL ( 'edit_assessment' ) or true ) {
 	        //redirect to edit mode
-	        $this->_redirect ( str_replace ( 'view', 'edit', 'http://' . $_SERVER ['SERVER_NAME'] . ':' . $_SERVER ['SERVER_PORT'] . $_SERVER ['REQUEST_URI'] ) );
+	        $this->_redirect ( str_replace ( 'view', 'edit', '//' . $_SERVER ['SERVER_NAME'] . ':' . $_SERVER ['SERVER_PORT'] . $_SERVER ['REQUEST_URI'] ) );
 	    }
 	
 	    $this->view->assign ( 'mode', 'view' );
@@ -273,7 +273,7 @@ where';
 	        //$where [] = ' assessment.is_deleted = 0 ';
 	        $where [] = ' 0 = 0 ';
 	        
-	        $link = mysqli_connect("localhost", "root", "", "");
+	        $link = mysqli_connect(Settings::$DB_SERVER, Settings::$DB_USERNAME, Settings::$DB_PWD, "");
 	        
 	        /* check connection */
 	        if (mysqli_connect_errno()) {
