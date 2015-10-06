@@ -32,13 +32,14 @@ class StudenteditController extends ITechController
 		$this->view->assign('title', $this->view->translation['Application Name']);
 		$status = ValidationContainer::instance();
 
-		if (isset($_POST['addpeople'])) {
+		$params = $this->getAllParams();
+		if (isset($params['addpeople'])) {
 
 			$peopleadd = new Peopleadd();
-			$pupiladd = $peopleadd->peopleadd($_POST);
+			$pupiladd = $peopleadd->peopleadd($params);
 
 			if ($pupiladd) {// sucess
-				if ($_POST['type'] == 'tutor' || $_POST['type'] == 'key') {
+				if ($params['type'] == 'tutor' || $params['type'] == 'key') {
 					$this->_redirect('tutoredit/tutoredit/id/' . $pupiladd);
 					exit;
 				}
@@ -119,12 +120,12 @@ class StudenteditController extends ITechController
 		}
 
 
-		if (isset($_POST['update'])) {
+		if (isset($params['update'])) {
 			$studentupdate = new Studentedit();
-			$update = $studentupdate->UpdatePerson($_POST);
+			$update = $studentupdate->UpdatePerson($params);
 
-			$pupiladd = $_POST['id'];
-			$sid = $_POST['sid'];
+			$pupiladd = $params['id'];
+			$sid = $params['sid'];
 
 			$this->viewAssignEscaped('locations', Location::getAll());
 			$studentedit = new Studentedit();
@@ -135,7 +136,6 @@ class StudenteditController extends ITechController
 			$this->view->assign('getgeo', $listgeo);
 
 
-#			$sid = $studentedit->addfunding($_POST);
 			$studid = $listgeo[0]['id'];
 			$this->view->assign('stdid', $studid);
 
@@ -201,22 +201,9 @@ class StudenteditController extends ITechController
 			$city = $fetchcity[0]['city_name'];
 			$this->view->assign('selcity', $city);
 
-
 			$cadre = $listgeo[0]['cadre'];
 
-
-#		if($cadre=="0"){
-#			$cadreid = $studentupdate->AddCadre($_POST);
-#		}else{
-#
-#		$cid = $_POST['cadreid'];
-#		//$updatecare=$studentupdate->ViewCadre($cid);
-#		//$this->view->assign('cadrename',$updatecare[0]['cadrename']);
-#		}
-
-#		$this->view->assign('cadreid',$cadreid);
-
-			$updatestud = $studentupdate->UpdateStudent($_POST);
+			$updatestud = $studentupdate->UpdateStudent($params);
 
 			$enroll = $updatestud['enrollmentdate'];
 			$enrolldate = date("d-m-Y", strtotime($enroll));
@@ -236,7 +223,7 @@ class StudenteditController extends ITechController
 
 			#print_r($updatehttps://www.google.com/webhp?tab=ww&ei=f-EkU5C1B9HmoAS864LoCg&ved=0CBQQ1S4stud);
 
-			$updatecadre = $studentupdate->UpdateCadre($_POST);
+			$updatecadre = $studentupdate->UpdateCadre($params);
 			$this->view->assign('id', $pupiladd);
 			$this->view->assign('cadrename', $updatecadre['cadrename']);
 
@@ -261,34 +248,31 @@ class StudenteditController extends ITechController
 		require_once('models/table/Studentedit.php');
 		$request = $this->getRequest();
 		$helper = new Helper();
-
-		if (isset($_POST['licenseaction'])) {
-			$helper->updateStudentLicense($request->getparam('sid'), $_POST);
-#exit;
+		$params = $this->getAllParams();
+		if (isset($params['licenseaction'])) {
+			$helper->updateStudentLicense($request->getparam('sid'), $params);
 			$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personview/id/' . $request->getparam('id'));
 		}
-		if (isset($_POST['classaction'])) {
-			$helper->updateStudentClass($request->getparam('sid'), $_POST);
-#exit;
+		if (isset($params['classaction'])) {
+			$helper->updateStudentClass($request->getparam('sid'), $params);
 			$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personview/id/' . $request->getparam('id'));
 		}
-		if (isset($_POST['practicumaction'])) {
-			$helper->updateStudentPracticum($request->getparam('sid'), $_POST);
-#exit;
+		if (isset($params['practicumaction'])) {
+			$helper->updateStudentPracticum($request->getparam('sid'), $params);
 			$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personview/id/' . $request->getparam('id'));
 		}
 
 
 		// UPDATING FIRST, SO WE WILL LATER RETRIEVE UPDATED VALUES
-		if (isset($_POST['personupdate'])) {
+		if (isset($params['personupdate'])) {
 			require_once('models/table/Studentedit.php');
 
 			$studentupdate = new Studentedit();
-			$update = $studentupdate->UpdatePerson($_POST);                        # STORING PERSON RECORD
-			$update = $studentupdate->UpdateStudent($_POST);                    # STORING STUDENT RECORD
-			$update = $studentupdate->UpdateStudentCohort($_POST);                # STORING COHORT LINK
-			$update = $studentupdate->UpdatePermanentAddress($_POST);            # STORING PERMANENT ADDRESS
-			$update = $studentupdate->UpdateFunding($_POST);                    # STORING FUNDING
+			$update = $studentupdate->UpdatePerson($params);                        # STORING PERSON RECORD
+			$update = $studentupdate->UpdateStudent($params);                    # STORING STUDENT RECORD
+			$update = $studentupdate->UpdateStudentCohort($params);                # STORING COHORT LINK
+			$update = $studentupdate->UpdatePermanentAddress($params);            # STORING PERMANENT ADDRESS
+			$update = $studentupdate->UpdateFunding($params);                    # STORING FUNDING
 
 			ValidationContainer::instance()->setStatusMessage(t('The person was saved.'));
 			$_SESSION['status'] = t('The person was saved');
@@ -305,9 +289,6 @@ class StudenteditController extends ITechController
 		$details = $studentedit->EditStudent($pupiladd);
 		$sid = $details['student'][0]['id'];
 		$this->view->assign('id', $sid);
-
-
-		#print_r ($details);
 
 		$date = $details['person'][0]['birthdate'];
 		$dob = date("d-m-Y", strtotime($date));
@@ -544,33 +525,31 @@ class StudenteditController extends ITechController
 		$request = $this->getRequest();
 		$helper = new Helper();
 
-		if (isset($_POST['licenseaction'])) {
-			$helper->updateStudentLicense($request->getparam('sid'), $_POST);
-			#exit;
+		$params = $this->getAllParams();
+		if (isset($params['licenseaction'])) {
+			$helper->updateStudentLicense($request->getparam('sid'), $params);
 			$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personedit/id/' . $request->getparam('id'));
 		}
-		if (isset($_POST['classaction'])) {
-			$helper->updateStudentClass($request->getparam('sid'), $_POST);
-			#exit;
+		if (isset($params['classaction'])) {
+			$helper->updateStudentClass($request->getparam('sid'), $params);
 			$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personedit/id/' . $request->getparam('id'));
 		}
-		if (isset($_POST['practicumaction'])) {
-			$helper->updateStudentPracticum($request->getparam('sid'), $_POST);
-			#exit;
+		if (isset($params['practicumaction'])) {
+			$helper->updateStudentPracticum($request->getparam('sid'), $params);
 			$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personedit/id/' . $request->getparam('id'));
 		}
 
 
 		// UPDATING FIRST, SO WE WILL LATER RETRIEVE UPDATED VALUES
-		if (isset($_POST['personupdate'])) {
+		if (isset($params['personupdate'])) {
 			require_once('models/table/Studentedit.php');
 
 			$studentupdate = new Studentedit();
-			$update = $studentupdate->UpdatePerson($_POST);                        # STORING PERSON RECORD
-			$update = $studentupdate->UpdateStudent($_POST);                    # STORING STUDENT RECORD
-			$update = $studentupdate->UpdateStudentCohort($_POST);                # STORING COHORT LINK
-			$update = $studentupdate->UpdatePermanentAddress($_POST);            # STORING PERMANENT ADDRESS
-			$update = $studentupdate->UpdateFunding($_POST);                    # STORING FUNDING
+			$update = $studentupdate->UpdatePerson($params);                        # STORING PERSON RECORD
+			$update = $studentupdate->UpdateStudent($params);                    # STORING STUDENT RECORD
+			$update = $studentupdate->UpdateStudentCohort($params);                # STORING COHORT LINK
+			$update = $studentupdate->UpdatePermanentAddress($params);            # STORING PERMANENT ADDRESS
+			$update = $studentupdate->UpdateFunding($params);                    # STORING FUNDING
 
 			ValidationContainer::instance()->setStatusMessage(t('The person was saved.'));
 			$_SESSION['status'] = t('The person was saved');
@@ -822,31 +801,31 @@ class StudenteditController extends ITechController
 		$helper = new Helper();
 
 		$this->viewAssignEscaped('locations', Location::getAll());
-
-		if (isset($_POST['licenseaction'])) {
-			$helper->updateStudentLicense($request->getparam('id'), $_POST);
-			$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personview/id/' . $request->getparam('id'));
+		$params = $this->getAllParams();
+		if (isset($params['licenseaction'])) {
+			$helper->updateStudentLicense($request->getparam('id'), $params);
+			$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personview/id/' . $params['id']);
 		}
-		if (isset($_POST['classaction'])) {
-			$helper->updateStudentClass($request->getparam('id'), $_POST);
-			$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personview/id/' . $request->getparam('id'));
+		if (isset($params['classaction'])) {
+			$helper->updateStudentClass($request->getparam('id'), $params);
+			$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personview/id/' . $params['id']);
 		}
-		if (isset($_POST['practicumaction'])) {
-			$helper->updateStudentPracticum($request->getparam('id'), $_POST);
-			$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personview/id/' . $request->getparam('id'));
+		if (isset($params['practicumaction'])) {
+			$helper->updateStudentPracticum($request->getparam('id'), $params);
+			$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personview/id/' . $params['id']);
 		}
 
 
 		// UPDATING FIRST, SO WE WILL LATER RETRIEVE UPDATED VALUES
-		if (isset($_POST['personupdate'])) {
+		if (isset($params['personupdate'])) {
 			require_once('models/table/Studentedit.php');
 
 			$studentupdate = new Studentedit();
-			$update = $studentupdate->UpdatePerson($_POST);                        # STORING PERSON RECORD
-			$update = $studentupdate->UpdateStudent($_POST);                    # STORING STUDENT RECORD
-			$update = $studentupdate->UpdateStudentCohort($_POST);                # STORING COHORT LINK
-			$update = $studentupdate->UpdatePermanentAddress($_POST);            # STORING PERMANENT ADDRESS
-			$update = $studentupdate->UpdateFunding($_POST);                    # STORING FUNDING
+			$update = $studentupdate->UpdatePerson($params);                        # STORING PERSON RECORD
+			$update = $studentupdate->UpdateStudent($params);                    # STORING STUDENT RECORD
+			$update = $studentupdate->UpdateStudentCohort($params);                # STORING COHORT LINK
+			$update = $studentupdate->UpdatePermanentAddress($params);            # STORING PERMANENT ADDRESS
+			$update = $studentupdate->UpdateFunding($params);                    # STORING FUNDING
 		}
 
 
@@ -1022,19 +1001,15 @@ class StudenteditController extends ITechController
 		$params = $this->getAllParams();
 		if ($request->isPost()) {
 			if (isset($params['licenseaction'])) {
-				// TODO: Using $_POST isn't great, but getAllParams doesn't do nested data structures ($params['grades'] gets turned into the text string "Array")
-				$helper->updateStudentLicense($params['sid'], $_POST);
-				#exit;
+				$helper->updateStudentLicense($params['sid'], $params);
 				$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/skillsmart-chw-student-edit/id/' . $params['id']);
 			}
-			if (isset($_POST['classaction'])) {
-				$helper->updateStudentClass($params['sid'], $_POST);
-				#exit;
+			if (isset($params['classaction'])) {
+				$helper->updateStudentClass($params['sid'], $params);
 				$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/skillsmart-chw-student-edit/id/' . $params['id']);
 			}
-			if (isset($_POST['practicumaction'])) {
-				$helper->updateStudentPracticum($params['sid'], $_POST);
-				#exit;
+			if (isset($params['practicumaction'])) {
+				$helper->updateStudentPracticum($params['sid'], $params);
 				$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/skillsmart-chw-student-edit/id/' . $params['id']);
 			}
 
@@ -1229,7 +1204,7 @@ class StudenteditController extends ITechController
 		}
 
 		if ($studentCohortData['id_cohort'] != 0) {
-			$this->view->assign('currentclasses', $helper->listcurrentclasses($studentCohortData['id_cohort'], $studentData['id']));
+			$this->view->assign('currentclasses', $helper->ListCurrentClasses($studentCohortData['id_cohort'], $studentData['id']));
 			$this->view->assign('currentpracticum', $helper->ListCurrentPracticum($studentCohortData['id_cohort'], $studentData['id']));
 			$this->view->assign('currentlicenses', $helper->ListCurrentLicenses($studentCohortData['id_cohort'], $studentData['id']));
 		} else {
@@ -1297,7 +1272,7 @@ class StudenteditController extends ITechController
 			)
 		);
 
-		$this->view->assign('assessment_center',
+		$this->view->assign('cadre',
 			DropDown::generateSelectionFromQuery(
 				'select id, cadrename as val from cadres order by val',
 				array('name' => 'cadre'),
@@ -1315,4 +1290,3 @@ class StudenteditController extends ITechController
 
 	}
 }
-?>
