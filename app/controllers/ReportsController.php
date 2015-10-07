@@ -9433,25 +9433,25 @@ echo $sql . "<br>";
 		$id = $this->getSanParam('id');
 		$db = $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 
-
 		$select = $db->select()
 			->from(array('p' => 'person'),
 				array('p.first_name', 'p.last_name', 'p.birthdate', 'p.national_id', 'saqa_id' => 'p.custom_field2'))
 			->join(array('s' => 'student'), 'p.id = s.personid',
-				array('student_id' => 's.id', 'institution_id' => 's.institutionid', 'cadre' => 's.cadre', 'assessment_contact' => 's.emergcontact'))
-			->where("p.id = $id");
+				array('student_id' => 's.id', 'institution_id' => 's.institutionid', 'cadre' => 's.cadre'))
+			->join(array('lscl' => 'link_student_classes'), 's.id = lscl.studentid', array('grade'))
+			->join(array('c' => 'classes'), 'c.id = lscl.classid', array('maxcredits'))
+			->join(array('cm' => 'class_modules'), 'c.class_modules_id = cm.id',
+				array('external_id', 'title', 'custom_1'))
+			->join(array('lc' => 'lookup_coursetype'), 'lc.id = cm.lookup_coursetype_id', array('coursetype'))
+			->join(array('lsco' => 'link_student_cohort'), 's.id = lsco.id_student',
+				array('examdate', 'certificate_issuer_id'))
+			->group('c.id')
+			->where("p.id = ?", $id);
 
 		$sql = $select->__toString();
 		$bioData = $db->query($select)->fetchAll();
 
-		// TODO: link_student_class_modules is not being populated.
-		$select = $db->select()
-			->from(array('cm' => 'class_modules'),
-				array('cm.title', 'cm.custom_1'))
-			->join(array('lscm' => 'link_student_class_modules'), $bioData['student_id'] = 'lscm');
-
-
-		$this->view->assign('report', $bioData[0]);
+		$this->view->assign('report', $bioData);
 
 	}
 
