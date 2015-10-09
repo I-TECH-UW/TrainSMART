@@ -1113,7 +1113,7 @@ class StudenteditController extends ITechController
 					'certificate_issue_date' => $this->_euro_date_to_sql($params['certificate_issue_date']),
 					'certificate_number' => $params['certificate_number'],
 					'certificate_received_date' => $this->_euro_date_to_sql($params['certificate_received_date']),
-					'certificate_issuer' => $params['certificate_issuer']
+//					'certificate_issuer' => $params['certificate_issuer']
 				));
 			}
 
