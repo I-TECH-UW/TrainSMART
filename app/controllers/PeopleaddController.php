@@ -134,7 +134,7 @@ class PeopleaddController extends ITechController {
             )
         );
 
-        $this->view->assign('assessment_center',
+        $this->view->assign('cadre',
             DropDown::generateSelectionFromQuery(
                 'select id, cadrename as val from cadres order by val',
                 array('name' => 'cadre')
@@ -149,4 +149,3 @@ class PeopleaddController extends ITechController {
         );
     }
 }
-?>
