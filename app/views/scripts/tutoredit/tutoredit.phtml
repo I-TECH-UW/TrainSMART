@@ -50,6 +50,15 @@
 				}
 				return aReturn;
 			}
+ 
+			//TA:51 10/05/2015
+			function deleteConfirm(){
+				var res = confirm("Do you want to delete this tutor?");
+				if(res){
+					return true;
+				}
+				return false;
+			}
 		</script>
 	</head>
 	<body>
@@ -406,6 +415,8 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
 
 							<div class="rightdiv">
 								<div class="pad20"></div>
+								<!-- TA:51 10/05/2015-->
+							    <input type="submit" name="delete" value="<?php echo t('Delete Tutor')?> &raquo;" class="tsbutton green large" onClick="return deleteConfirm();">
 								<input type="submit" name="update" value="<?php echo t('Update Tutor'); ?> &raquo;" class="tsbutton green large">
 							</div>
 							<div class="clear"></div>

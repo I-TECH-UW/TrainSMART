@@ -141,6 +141,15 @@
 					$("#studenttype").removeAttr('disabled');
 				}
 			}
+
+			//TA:51 10/05/2015
+			function deleteConfirm(){
+				var res = confirm("Do you want to delete this student?");
+				if(res){
+					return true;
+				}
+				return false;
+			}
 		</script>
 	</head>
 	<body>
@@ -770,6 +779,8 @@
 						<div class="pad20 clear"></div>
 						<div class="mainformholder" style="height : 100px; margin-top:30px;">
 							<div  style="float : right; margin-right:12px;" >
+							     <!-- TA:51  10/05/2015-->
+							    <input type="submit" name="persondelete" value="<?php echo t('Delete')?> &raquo;" class="tsbutton green large" onClick="return deleteConfirm();">
 								<input type="submit" name="personupdate" value="<?php echo t('Update')?> &raquo;" class="tsbutton green large">
 								<a href="../../../people/people"> <input type="button"  value="<?php echo t('Back')?>" class="tsbutton green large"></a>
 							</div>

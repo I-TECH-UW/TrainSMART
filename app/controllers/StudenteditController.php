@@ -555,6 +555,16 @@ class StudenteditController extends ITechController
 			$_SESSION['status'] = t('The person was saved');
 		}
 
+//TA:51 10/05/2015
+		if (isset($_POST['persondelete'])) {
+		    require_once('models/table/Studentedit.php');
+		    $studentupdate = new Studentedit();
+		    $studentupdate->DeleteStudent($request->getParams());
+		    ValidationContainer::instance()->setStatusMessage(t('The student was deleted.'));
+		    $_SESSION['status'] = t('The student was deleted');
+		    $this->_redirect(Settings::$COUNTRY_BASE_URL . '/people/people');
+		}
+
 
 		$pupiladd = $request->getParam('id'); // Sean: This is personid, not student id !!!!!!!!
 

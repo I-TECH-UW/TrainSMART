@@ -607,6 +607,45 @@ class Studentedit extends ITechTable
 		return $result;
 
 	}
+//TA:51 10/05/2015
+	public function DeleteStudent($param){
+	    $person_id = $param['id'];
+	    $student_primary_id = $param['sid'];
+	    
+	    // remove student
+	    $sql = "DELETE FROM student WHERE personid = {$person_id}";
+	    $result = $this->dbfunc()->query($sql);
+	    
+	    // set person as deleted
+	    $sql = "UPDATE person SET is_deleted=1 where id = {$person_id}";
+	    $result = $this->dbfunc()->query($sql);
+	
+	    // remove student cohort link
+	    $sql = "DELETE FROM link_student_cohort WHERE id_student = {$student_primary_id}";
+	    $result = $this->dbfunc()->query($sql);
+	    
+	    // remove student classes link
+	    $sql = "DELETE FROM link_student_classes WHERE studentid = {$student_primary_id}";
+	    $result = $this->dbfunc()->query($sql);
+	    
+	    // remove student practicums link
+	    $sql = "DELETE FROM link_student_practicums WHERE studentid = {$person_id}";
+	    $result = $this->dbfunc()->query($sql);
+	    
+	    // remove student licenses link
+	    $sql = "DELETE FROM link_student_licenses WHERE studentid = {$student_primary_id}";
+	    $result = $this->dbfunc()->query($sql);
+	
+	    // remove student licenses link
+	    $sql = "DELETE FROM link_student_funding WHERE studentid = {$student_primary_id}";
+	    $result = $this->dbfunc()->query($sql);
+	    
+	    // remove student licenses link
+	    $sql = "DELETE FROM link_student_addresses WHERE id_student = {$student_primary_id}";
+	    $result = $this->dbfunc()->query($sql);
+	    
+	    return true;
+	}
 
  }
 

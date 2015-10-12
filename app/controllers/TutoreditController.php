@@ -73,6 +73,15 @@ class TutoreditController extends ITechController
              */
             $this->_redirect("/tutoredit/tutoredit/id/" . $tutorid);
         }
+
+//TA:51 10/05/2015
+        if (isset($params['delete'])) {
+             $tutoredit = new Tutoredit();
+             $tutoredit->DeleteTutor($params);
+            ValidationContainer::instance()->setStatusMessage(t('The tutor was deleted.'));
+            $_SESSION['status'] = t('The tutor was deleted');
+            $this->_redirect(Settings::$COUNTRY_BASE_URL . '/people/people');
+        }
         
         if (isset($params['update'])) {
             $tutoredit = new Tutoredit();
