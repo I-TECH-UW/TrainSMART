@@ -1595,6 +1595,7 @@ class AdminController extends UserController
 			if(!$db->fetchCol ( 'SELECT trainer_id FROM training_to_trainer WHERE trainer_id=?', $mergeToID)){
 				$db->query ("UPDATE training_to_trainer SET trainer_id= $mergeToID WHERE trainer_id = $mergeFromID");
 			}
+			$db->query ("DELETE from training_to_trainer WHERE trainer_id = $mergeFromID");
 
 			$table = 'trainer_history';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT vid FROM trainer_history WHERE person_id = ?', $mergeFromID ) );
