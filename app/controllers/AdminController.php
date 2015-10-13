@@ -1592,7 +1592,9 @@ class AdminController extends UserController
 			
 			//TA:52 10/06/2015
 			$table = 'training_to_trainer';
-			$db->query ("UPDATE training_to_trainer SET trainer_id= $mergeToID WHERE trainer_id = $mergeFromID");
+			if(!$db->fetchCol ( 'SELECT trainer_id FROM training_to_trainer WHERE trainer_id=?', $mergeToID)){
+				$db->query ("UPDATE training_to_trainer SET trainer_id= $mergeToID WHERE trainer_id = $mergeFromID");
+			}
 
 			$table = 'trainer_history';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT vid FROM trainer_history WHERE person_id = ?', $mergeFromID ) );
