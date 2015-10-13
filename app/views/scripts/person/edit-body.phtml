@@ -159,7 +159,8 @@
 
     //{key:"input", width:0, resizeable:true , label:"", hidden:"true", width:"0", className:"hidden"},
     var dupeColDefs =
-        [ {key:"person_id", label: "<?php tp('ID')?>", sortable:false, resizable:false, formatter: formatViewUrl},
+        [{key:"input", width:15, resizeable:true , label:""}, //TA:57 10/08/2015 
+         {key:"person_id", label: "<?php tp('ID')?>", sortable:false, resizable:false, formatter: formatViewUrl},
             {key:"first_name", width:60, sortable:true, resizeable:true , label:"<?php tp("First Name"); ?>"},
             <?php if ( !$this->setting['display_middle_name_last'] ) { ?>
             {key:"middle_name", width:66, sortable:true, resizeable:true , label:"<?php echo (@$this->translation['Middle Name']); ?>"},

@@ -251,8 +251,11 @@ class DataController extends ITechController {
   				$new_row[$translation['Address 2']] = $row['home_address_2'];
   			}
   			if($settings['display_people_home_phone']){$new_row[$translation['Home phone']] = $row['phone_home'];}
+  			$new_row['Work phone'] = $row['phone_work']; //TA:55 10/7/2015 
+  			$new_row['Mobile phone'] = $row['phone_mobile']; //TA:55 10/7/2015
   			if($settings['display_people_fax']){$new_row['Fax'] = $row['fax'];}
   			$new_row['Email'] = $row['email'];
+  			$new_row['Secondary email'] = $row['email_secondary']; //TA:55 10/7/2015
   			
   			if($settings['display_national_id']){$new_row[$translation['National ID']] = $row['national_id'];}
   			if($settings['display_people_file_num']){$new_row[$translation['File Number']] = $row['file_number'];}
@@ -345,20 +348,34 @@ class DataController extends ITechController {
   			$sorted[$pid]['courses'][] = $ra;
   		}
   			
-  		//fill trainers
-  			
+  		//fill trainers	
   		$select = $personTable->select()->from('trainer', array('person_id'))->setIntegrityCheck(false)
   		->join(array('pt'=>'training_to_trainer'), "pt.trainer_id = trainer.person_id", array('training_id'))
   		->join(array('t'=>'training'), "pt.training_id = t.id", array())
   		->join(array('tt'=>'training_title_option'), "t.training_title_option_id = tt.id", array('training_title_phrase'));
   		$rows = $personTable->fetchAll($select);
-  
+  		
   		foreach($rows as $row) {
-  			$pid = $row->person_id;
-  			$ra = $row->toArray();
-  			unset($ra['person_id']);
-  			$sorted[$pid]['trained'][] = $ra;
+  		    $pid = $row->person_id;
+  		    $ra = $row->toArray();
+  		    unset($ra['person_id']);
+  		    $sorted[$pid]['trained'][] = $ra;
   		}
+  		
+  		//TA:55 10/7/2015 fill tutor language spoken
+  		$select = $personTable->select()->from('tutor', array('personid'))->setIntegrityCheck(false)
+  		->join(array('pt'=>'link_tutor_languages'), "pt.id_tutor = tutor.id", array('id_language'))
+  		->join(array('tt'=>'lookup_languages'), "pt.id_language = tt.id", array('language'));
+  		$rows = $personTable->fetchAll($select);
+  		foreach($rows as $row) {
+  		    $pid = $row->personid;
+  		    $ra = $row->toArray();
+  		    unset($ra['personid']);
+  		    $sorted[$pid]['Languages spoken'][] = $ra;
+  		}
+  		
+  
+  		
   			
   		if ($this->getSanParam('outputType') == 'csv')
   			$this->sendData ( $this->reportHeaders ( false, $sorted ) );
