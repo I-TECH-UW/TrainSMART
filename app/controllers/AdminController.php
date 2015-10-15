@@ -1592,8 +1592,16 @@ class AdminController extends UserController
 			
 			//TA:52 10/06/2015
 			$table = 'training_to_trainer';
-			if(!$db->fetchCol ( 'SELECT trainer_id FROM training_to_trainer WHERE trainer_id=?', $mergeToID)){
-				$db->query ("UPDATE training_to_trainer SET trainer_id= $mergeToID WHERE trainer_id = $mergeFromID");
+ 			$from_trainer_training = $db->fetchCol ( 'SELECT training_id FROM training_to_trainer WHERE trainer_id=?', $mergeFromID);
+ 			$to_trainer_training = $db->fetchCol ( 'SELECT training_id FROM training_to_trainer WHERE trainer_id=?', $mergeToID);
+ 			$arr = array();
+			for($i=0; $i<count($from_trainer_training); $i++){
+				if(!in_array($from_trainer_training[$i], $to_trainer_training)){
+					array_push($arr, $from_trainer_training[$i]);
+				}
+			}
+			for($i=0; $i<count($arr); $i++){// training ids list to update
+				$db->query ("UPDATE training_to_trainer SET trainer_id = $mergeToID WHERE trainer_id = $mergeFromID and training_id=$arr[$i]");
 			}
 			$db->query ("DELETE from training_to_trainer WHERE trainer_id = $mergeFromID");
 
