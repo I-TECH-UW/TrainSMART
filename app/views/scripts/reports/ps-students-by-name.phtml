@@ -84,13 +84,9 @@
 			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
 			<div id="content">
 				<div id="subcontent">
-					<div class="fieldLabel" id="training_lbl"><?php tp('Select student report');?></div>
-					<select id="pstraining" name="pstraining" onchange="gotoPage('pstraining');">
-						<option value="">--<?php tp('choose');?>--</option>
-						<option value="/reports/ps-students-trained"             ><?php tp('Students Trained');?></option>
-						<option value="/reports/ps-students-by-name"    selected  ><?php tp('Students By Name');?></option>
-						<option value="/reports/ps-graduated-students"           ><?php tp('Graduated Students');?></option>
-					</select><br/><br/>
+					<?php
+					echo $this->partial('reports/student-reports-partial.phtml', array('site_style' => $this->site_style));
+					?>
 					<div class="clear"></div>
 					<div id="contentheader">
 						<h2><?php tp('Students By Name');?></h2><br>

@@ -7,11 +7,25 @@
     print ScriptContainer::$instance->renderCSSHead();
     print ScriptContainer::$instance->renderJSHead();
     ?>
+    <script type="text/javascript" charset="utf-8">
+        function gotoPage(objId) {
+            var reportSelector = YAHOO.util.Dom.get(objId);
+            if ( reportSelector[reportSelector.selectedIndex].value ) {
+                window.location = '<?php echo $this->base_url;?>' + reportSelector[reportSelector.selectedIndex].value + '?<?php echo $_SERVER['QUERY_STRING'];?>';
+            }
+        }
+    </script>
+
 </head>
 <body class="yui-skin-sam">
 <div id="pageHolder">
     <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
     <div id="content">
+        <div id="subcontent">
+            <?php
+            echo $this->partial('reports/student-reports-partial.phtml', array('site_style' => $this->site_style));
+            ?>
+        </div>
         <pre>
         <?php
             echo print_r($this->bio, true);

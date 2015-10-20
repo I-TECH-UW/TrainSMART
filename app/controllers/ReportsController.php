@@ -6241,6 +6241,7 @@ echo $sql . "<br>";
 		$this->view->assign ( 'facilities', $helper->getFacilities());
 		$this->view->assign ( 'coursetypes', $helper->AdminCourseTypes());
 		$this->view->assign ( 'degrees', $helper->getDegrees());
+		$this->view->assign('site_style', $this->setting('site_style'));
 
 		if ($this->getSanParam ( 'process' )){
 
@@ -6700,6 +6701,7 @@ echo $sql . "<br>";
 		$this->view->assign ( 'facilities', $helper->getFacilities());
 		$this->view->assign ( 'coursetypes', $helper->AdminCourseTypes());
 		$this->view->assign ( 'degrees', $helper->getDegrees());
+		$this->view->assign('site_style', $this->setting('site_style'));
 		#		return $this->trainingReport ();
 
 		if ($this->getSanParam ( 'process' )){
@@ -7147,6 +7149,7 @@ echo $sql . "<br>";
 		$this->view->assign ( 'facilities', $helper->getFacilities());
 		$this->view->assign ( 'coursetypes', $helper->AdminCourseTypes());
 		$this->view->assign ( 'degrees', $helper->getDegrees());
+		$this->view->assign('site_style', $this->setting('site_style'));
 		#		return $this->trainingReport ();
 		if ($this->getSanParam ( 'process' )){
 
@@ -9461,6 +9464,7 @@ echo $sql . "<br>";
 		// post-process to determine pass/fail
 		$this->view->assign('bio', $bioData);
 		$this->view->assign('classes', $classData);
+		$this->view->assign('site_style', $this->setting('site_style'));
 
 	}
 
