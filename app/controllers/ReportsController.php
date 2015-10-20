@@ -9437,21 +9437,30 @@ echo $sql . "<br>";
 			->from(array('p' => 'person'),
 				array('p.first_name', 'p.last_name', 'p.birthdate', 'p.national_id', 'saqa_id' => 'p.custom_field2'))
 			->join(array('s' => 'student'), 'p.id = s.personid',
-				array('student_id' => 's.id', 'institution_id' => 's.institutionid', 'cadre' => 's.cadre'))
-			->join(array('lscl' => 'link_student_classes'), 's.id = lscl.studentid', array('grade'))
-			->join(array('c' => 'classes'), 'c.id = lscl.classid', array('maxcredits'))
-			->join(array('cm' => 'class_modules'), 'c.class_modules_id = cm.id',
-				array('external_id', 'title', 'custom_1'))
-			->join(array('lc' => 'lookup_coursetype'), 'lc.id = cm.lookup_coursetype_id', array('coursetype'))
+				array('student_id' => 's.id'))
+			->join(array('i' => 'institution'), 's.institutionid = i.id', array('institutionname'))
+			->join(array('cadres'), 's.cadre = cadres.id', array('cadrename'))
 			->join(array('lsco' => 'link_student_cohort'), 's.id = lsco.id_student',
 				array('examdate', 'certificate_issuer_id'))
-			->group('c.id')
 			->where("p.id = ?", $id);
 
 		$sql = $select->__toString();
 		$bioData = $db->query($select)->fetchAll();
 
-		$this->view->assign('report', $bioData);
+		$select = $db->select()
+			->from(array('lscl' => 'link_student_classes'), array('grade'))
+			->join(array('c' => 'classes'), 'c.id = lscl.classid', array('maxcredits'))
+			->join(array('cm' => 'class_modules'), 'c.class_modules_id = cm.id',
+				array('external_id', 'title', 'nqf_level' => 'custom_1'))
+			->join(array('lc' => 'lookup_coursetype'), 'lc.id = cm.lookup_coursetype_id', array('coursetype'))
+			->where('lscl.studentid = ?', $bioData[0]['student_id']);
+
+		$sql = $select->__toString();
+		$classData = $db->query($select)->fetchAll();
+
+		// post-process to determine pass/fail
+		$this->view->assign('bio', $bioData);
+		$this->view->assign('classes', $classData);
 
 	}
 

@@ -1171,6 +1171,8 @@ class StudenteditController extends ITechController
 		require_once('views/helpers/DropDown.php');
 		require_once('views/helpers/Location.php');
 
+
+		// Since this form is only intended for use by South Africa, I hard coded the date format.
 		$q = "SELECT * FROM person WHERE id = {$params['id']}";
 		$personData = $db->fetchRow($q);
 		$personData['birthdate'] = formhelperdate($personData['birthdate'], "d/m/y");
