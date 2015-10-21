@@ -1,6 +1,5 @@
 <?php
 	if (isset ($_GET['csv'])){
-
 		$data = array();
 		
 		$_row = array();
@@ -17,7 +16,6 @@
 			$data[] = $_row;
 		}
 		
-
 
 		$delimiter = ',';
 		$enclosure = '"';
@@ -84,7 +82,6 @@
 				}
 			}
 		</script>
-
 	</head>
 	<body class="yui-skin-sam" >
 		<div id="pageHolder">
@@ -92,7 +89,7 @@
 			<div id="content">
 				<div id="subcontent">
 					<?php
-					echo $this->partial('reports/student-reports-partial.phtml', array('site_style' => $this->site_style));
+					echo $this->partial('reports/student-report-types-partial.phtml', array('site_style' => $this->site_style));
 					?>
 
 					<div class="clear"></div>
@@ -105,7 +102,6 @@
 						<div class="mainformholder" style="height:100%;">
 					<input type="hidden" name="process" id="process" value="1">
 					<?php tp('Select Criteria');?><br>
-
 
 							<div class="fieldquestion"><?php echo (@$this->translation['Region A (Province)']); ?> (<?php tp('training location');?>)</div>
 							<div class="fieldshow"><input type="checkbox" name="showProvince" <?php  if ($this->criteria['showProvince']) echo 'checked="checked"';?> /></div>
@@ -236,7 +232,13 @@
 							
 							<div class="fieldquestion"><?php echo t('Start date between'); ?></div>
 							<div class="fieldshow">&nbsp;</div>
-							<div class="fieldselect"><input type="text" name="startday" id="startday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"><input type="text" name="startmonth" id="startmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> <input type="text" name="startyear" id="startyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;"><br><br><?php tp('and')?><br><br><input type="text" name="endday" id="endday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> <input type="text" name="endmonth" id="endmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> <input type="text" name="endyear" id="endyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;"></div>
+						<div class="fieldselect"><input type="text" name="startday" id="startday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;">
+						<input type="text" name="startmonth" id="startmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
+						<input type="text" name="startyear" id="startyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;"><br><br>
+						<?php tp('and')?><br><br>
+						<input type="text" name="endday" id="endday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
+						<input type="text" name="endmonth" id="endmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
+						<input type="text" name="endyear" id="endyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;"></div>
 							<div class="clear pad20">&nbsp;</div>
 
 						</div>
@@ -269,7 +271,6 @@ if (isset($this->output)) {
 		echo "				</table>\n";
 	} else {
 ?>
-
 				<br>
 				<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 					<thead>
@@ -300,7 +301,6 @@ $url = $_SERVER['REQUEST_URI'] . "&csv=1";
 #	$url .= $key . "=" . $value . "&";
 #}
 echo $url;  ?>')">
-
 <?php
 	}
 }
@@ -318,9 +318,6 @@ echo $url;  ?>')">
 		</div>
 	</body>
 </html>
-
-
-
 
 
 

@@ -26,6 +26,7 @@
 		$enclosure_esc = preg_quote($enclosure, '/');
 	
 		$output = array();
+
 		foreach ($data as $row){
 			$outputrow = array();
 			foreach ($row as $field){
@@ -45,6 +46,7 @@
 			$output[] = implode($delimiter,$outputrow);
 		}
 		$output = implode("\n", $output);
+
 		header("Content-type: text/csv");
 		header("Content-Disposition: attachment; filename=students-by-name-" . date("d.m.Y.H.m.s") . ".csv");
 		header("Pragma: no-cache");
@@ -62,6 +64,7 @@
 		require_once('views/helpers/ScriptContainer.php');
 		print ScriptContainer::$instance->renderCSSHead();
 		print ScriptContainer::$instance->renderJSHead();
+
 		?>
 		<script type="text/javascript" charset="utf-8">
 			$(document).ready(function() {
@@ -71,6 +74,7 @@
 					"sPaginationType": "full_numbers"
 				});
 			} );
+
 			function gotoPage(objId) {
 				var reportSelector = YAHOO.util.Dom.get(objId);
 				if ( reportSelector[reportSelector.selectedIndex].value ) {
@@ -85,9 +89,11 @@
 			<div id="content">
 				<div id="subcontent">
 					<?php
-					echo $this->partial('reports/student-reports-partial.phtml', array('site_style' => $this->site_style));
+					echo $this->partial('reports/student-report-types-partial.phtml', array('site_style' => $this->site_style));
 					?>
+
 					<div class="clear"></div>
+
 					<div id="contentheader">
 						<h2><?php tp('Students By Name');?></h2><br>
 					</div>
@@ -96,9 +102,11 @@
 						<div class="mainformholder" style="height:100%;">
 					<input type="hidden" name="process" id="process" value="1">
 					<?php tp('Select Criteria');?><br>
+
 						<div class="fieldquestion"><?php echo (@$this->translation['Region A (Province)']); ?> (<?php tp('training location');?>)</div>
 						<div class="fieldshow"><input type="checkbox" name="showProvince" <?php  if ($this->criteria['showProvince']) echo 'checked="checked"';?> /></div>
 						<div class="fieldselect"><?php renderFilter($this->locations, 1, 'province_id', $this->criteria['province_id'], 'district_id', true); ?></div>
+							<div class="clear pad20">&nbsp;</div>
 						<?php
 							if ( $this->setting['display_region_b'] ) {
 						?>
@@ -106,6 +114,7 @@
 						<div class="fieldquestion"><?php echo (@$this->translation['Region B (Health District)']); ?> (<?php tp('training location');?>)</div>
 						<div class="fieldshow"><input type="checkbox" name="showDistrict"   <?php  if ($this->criteria['showDistrict']) echo 'checked="checked"';?> /></div>
 						<div class="fieldselect"><?php renderFilter($this->locations, 2, 'district_id', $this->criteria['district_id'], ($this->setting['display_region_c']?'region_c_id':false), true); ?></div>
+								<div class="clear pad20">&nbsp;</div>
 						<?php
 							}
 							if ( $this->setting['display_region_c'] ) {
@@ -114,6 +123,7 @@
 						<div class="fieldquestion"><?php echo (@$this->translation['Region C (Local Region)']); ?> (<?php tp('training location');?>)</div>
 						<div class="fieldshow"><input type="checkbox" name="showRegionC"   <?php  if ($this->criteria['showRegionC']) echo 'checked="checked"';?> /></div>
 						<div class="fieldselect"><?php renderFilter($this->locations, 3, 'region_c_id', $this->criteria['region_c_id'], false, true); ?></div>
+								<div class="clear pad20">&nbsp;</div>
 						<?php
 							}
 						?>
@@ -128,6 +138,7 @@
 ?>
 						</select></div>
 						<div class="clear pad20">&nbsp;</div>
+	
 						<div class="fieldquestion"><?php echo t('Cadre'); ?></div>
 						<div class="fieldshow"><input type="checkbox" name="showcadre" id="showcadre" value="1"<?php echo $_GET['showcadre'] ? " checked" : "" ?>></div>
 						<div class="fieldselect"><select name="cadre" id="cadre" style="" size="10">
@@ -138,6 +149,7 @@
 ?>
 						</select></div>
 						<div class="clear pad20">&nbsp;</div>
+	
 						<div class="fieldquestion"><?php echo t('Cohort'); ?></div>
 						<div class="fieldshow"><input type="checkbox" name="showcohort" id="showcohort" value="1"<?php echo $_GET['showcohort'] ? " checked" : "" ?>></div>
 						<div class="fieldselect"><select name="cohort" id="cohort" style="" size="10">
@@ -148,6 +160,7 @@
 ?>
 						</select></div>
 						<div class="clear pad20">&nbsp;</div>
+	
 						<div class="fieldquestion"><?php echo t('Gender'); ?></div>
 						<div class="fieldshow"><input type="checkbox" name="showgender" id="showgender" value="1"<?php echo $_GET['showgender'] ? " checked" : "" ?>></div>
 						<div class="fieldselect"><select name="gender" id="gender" style="" size="10">
@@ -157,6 +170,7 @@
 ?>
 						</select></div>
 						<div class="clear pad20">&nbsp;</div>
+	
 						<div class="fieldquestion"><?php echo t('Nationality'); ?></div>
 						<div class="fieldshow"><input type="checkbox" name="shownationality" id="shownationality" value="1"<?php echo $_GET['shownationality'] ? " checked" : "" ?>></div>
 						<div class="fieldselect"><select name="nationality" id="nationality" style="" size="10">
@@ -167,6 +181,7 @@
 ?>
 						</select></div>
 						<div class="clear pad20">&nbsp;</div>
+	
 						<div class="fieldquestion"><?php echo t('Age'); ?></div>
 						<div class="fieldshow"><input type="checkbox" name="showage" id="showage" value="1"<?php echo $_GET['showage'] ? " checked" : "" ?>></div>
 						<div class="fieldselect"><input type="text" name="age" id="age" value="" style=""></div>
@@ -179,14 +194,17 @@
 						<div class="fieldshow"><input type="checkbox" name="showactive" id="showactive" value="1"<?php echo $_GET['showactive'] ? " checked" : "" ?>></div>
 						<div class="fieldselect"></div>
 						<div class="clear pad20">&nbsp;</div>
+	
 						<div class="fieldquestion"><?php echo t('Terminated early'); ?></div>
 						<div class="fieldshow"><input type="checkbox" name="showterminated" id="showterminated" value="1"<?php echo $_GET['showterminated'] ? " checked" : "" ?>></div>
 						<div class="fieldselect"></div>
 						<div class="clear pad20">&nbsp;</div>
+	
 						<div class="fieldquestion"><?php echo t('Graduated'); ?></div>
 						<div class="fieldshow"><input type="checkbox" name="showgraduated" id="showgraduated" value="1"<?php echo $_GET['showgraduated'] ? " checked" : "" ?>></div>
 						<div class="fieldselect"></div>
 						<div class="clear pad20">&nbsp;</div>
+	
 						<div class="fieldquestion"><?php echo t('Funding source'); ?></div>
 						<div class="fieldshow"><input type="checkbox" name="showfunding" id="showfunding" value="1"<?php echo $_GET['showfunding'] ? " checked" : "" ?>></div>
 						<div class="fieldselect"></div>
@@ -211,8 +229,11 @@
 						<input type="text" name="endmonth" id="endmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
 						<input type="text" name="endyear" id="endyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;"></div>
 						<div class="clear pad20">&nbsp;</div>
+
 						</div>
+
 						<div class="pad20 clear"></div>
+
 						<div class="mainformholder" style="height : 100px;">
 							<div  style="float : right;" >
 								<input type="submit" name="go" value="<?php tp('Preview');?> &raquo;" class="tsbutton green large"> 				
@@ -221,6 +242,7 @@
 						</div>
 						<div class="clear pad20">&nbsp;</div>
 					</form>
+
 <?php
 if (isset($this->output)) {
 	if (count ($this->output) == 0){
