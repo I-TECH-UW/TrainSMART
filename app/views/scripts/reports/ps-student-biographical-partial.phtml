@@ -1,0 +1,58 @@
+<div class="fieldquestion"><?php echo t('Active'); ?></div>
+<div class="fieldshow">
+    <input type="checkbox" name="showactive" id="showactive"
+           value="1"<?php echo $_GET['showactive'] ? " checked" : "" ?>></div>
+<div class="fieldselect"></div>
+<div class="clear pad20">&nbsp;</div>
+
+<div class="fieldquestion"><?php echo t('Terminated early'); ?></div>
+<div class="fieldshow">
+    <input type="checkbox" name="showterminated" id="showterminated"
+           value="1"<?php echo $_GET['showterminated'] ? " checked" : "" ?>></div>
+<div class="fieldselect"></div>
+<div class="clear pad20">&nbsp;</div>
+
+<div class="fieldquestion"><?php echo t('Graduated'); ?></div>
+<div class="fieldshow">
+    <input type="checkbox" name="showgraduated" id="showgraduated"
+           value="1"<?php echo $_GET['showgraduated'] ? " checked" : "" ?>></div>
+<div class="fieldselect"></div>
+<div class="clear pad20">&nbsp;</div>
+
+<div class="fieldquestion"><?php echo t('Funding source'); ?></div>
+<div class="fieldshow">
+    <input type="checkbox" name="showfunding" id="showfunding"
+           value="1"<?php echo $_GET['showfunding'] ? " checked" : "" ?>></div>
+<div class="fieldselect"></div>
+<div class="clear pad20">&nbsp;</div>
+
+<div class="fieldquestion"><?php echo t('Tutor advisor'); ?></div>
+<div class="fieldshow">
+    <input type="checkbox" name="showtutor" id="showtutor"
+           value="1"<?php echo $_GET['showtutor'] ? " checked" : "" ?>></div>
+<div class="fieldselect"><select name="tutor" id="tutor" style="" size="10">
+        <?php
+        foreach ($this->tutors as $item) {
+            echo "<option value=\"" . $item['id'] . "\">" . $item['first_name'] . " " . $item['last_name'] . "</option>\n";
+        }
+        ?>
+    </select></div>
+<div class="clear pad20">&nbsp;</div>
+
+<div class="fieldquestion"><?php echo t('Start date between'); ?></div>
+<div class="fieldshow">&nbsp;</div>
+<div class="fieldselect">
+    <input type="text" name="startday" id="startday" value="" placeholder="<?php tp('Day') ?>"
+           style="width : 30px; margin-right : 10px; margin-left : 0px;">
+    <input type="text" name="startmonth" id="startmonth" value="" placeholder="<?php tp('Month') ?>"
+           style="width : 30px; margin-right : 10px; margin-left : 0px;">
+    <input type="text" name="startyear" id="startyear" value="" placeholder="<?php tp('Year') ?>"
+           style="width : 50px; margin-right : 10px; margin-left : 0px;"><br><br>
+    <?php tp('and') ?><br><br>
+    <input type="text" name="endday" id="endday" value="" placeholder="<?php tp('Day') ?>"
+           style="width : 30px; margin-right : 10px; margin-left : 0px;">
+    <input type="text" name="endmonth" id="endmonth" value="" placeholder="<?php tp('Month') ?>"
+           style="width : 30px; margin-right : 10px; margin-left : 0px;">
+    <input type="text" name="endyear" id="endyear" value="" placeholder="<?php tp('Year') ?>"
+           style="width : 50px; margin-right : 10px; margin-left : 0px;"></div>
+<div class="clear pad20">&nbsp;</div>
