@@ -1,0 +1,10 @@
+<div class="fieldquestion"><?php echo t('Gender'); ?></div>
+<div class="fieldshow"><input type="checkbox" name="showgender" id="showgender" value="1"<?php echo $_GET['showgender'] ? " checked" : "" ?>></div>
+<div class="fieldselect"><select name="gender" id="gender" style="" size="10">
+        <?php
+        echo "<option value=\"0\"" . ($_GET['gender'] == 0 ? " checked" : "") . ">All</option>\n";
+        echo "<option value=\"1\"" . ($_GET['gender'] == 1 ? " checked" : "") . ">Male</option>\n";
+        echo "<option value=\"2\"" . ($_GET['gender'] == 2 ? " checked" : "") . ">Female</option>\n";
+        ?>
+    </select></div>
+<div class="clear pad20">&nbsp;</div>

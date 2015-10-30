@@ -9465,7 +9465,13 @@ echo $sql . "<br>";
 		$this->view->assign('bio', $bioData);
 		$this->view->assign('classes', $classData);
 		$this->view->assign('site_style', $this->setting('site_style'));
-
+		$this->viewAssignEscaped('locations', Location::getAll());
+		$helper = new Helper();
+		$this->view->assign('institutions', $helper->getInstitutions());
+		$this->view->assign('cadres', $helper->getCadres());
+		$this->view->assign('cohorts', $helper->getCohorts());
+		$this->view->assign('tutors', $helper->getTutors());
+		$this->view->assign('nationalities', $helper->getNationalities());
 	}
 
 	public function ssCompAction() {

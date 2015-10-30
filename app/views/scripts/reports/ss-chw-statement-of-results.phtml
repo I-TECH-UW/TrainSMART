@@ -25,11 +25,43 @@
             <?php
             echo $this->partial('reports/student-report-types-partial.phtml', array('site_style' => $this->site_style));
             ?>
+            <div class="clear"></div>
+            <div id="contentheader">
+                <h2><?php tp('CHW Statement of Results'); ?></h2><br/>
+            </div>
+            <div class="pad50 clear"></div>
+            <form action="" method="get">
+                <div class="mainformholder" style="height:100%;">
+                    <input type="hidden" name="process" id="process" value="1">
+                    <?php tp('Select Criteria'); ?><br>
+
+                    <?php
+                    echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
+                        array('translation' => $this->translation, 'locations' => $this->locations,
+                            'criteria' => $this->criteria, 'setting' => $this->setting));
+
+                    echo $this->partial('reports/ps-institution-cadre-cohort-search-form-elements.phtml',
+                        array('institutions' => $this->institutions, 'cadres' => $this->cadres,
+                            'cohorts' => $this->cohorts));
+
+                    echo $this->partial('reports/gender-search-form-elements-partial.phtml');
+
+                    echo $this->partial('reports/ps-nationality-search-form-elements.phtml',
+                        array('nationalities' => $this->nationalities));
+
+                    echo $this->partial('reports/age-range-form-elements-partial.phtml');
+
+                    echo $this->partial('reports/ps-student-data-search-form-elements-partial.phtml',
+                        array('tutors' => $this->tutors));
+                    ?>
+                </div>
+                <?php echo $this->partial('reports/ps-search-preview-button-partial.phtml'); ?>
+            </form>
         </div>
         <pre>
         <?php
-            echo print_r($this->bio, true);
-            echo print_r($this->classes, true);
+        echo print_r($this->bio, true);
+        echo print_r($this->classes, true);
         ?>
         </pre>
     </div>

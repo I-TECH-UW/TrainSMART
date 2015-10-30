@@ -103,155 +103,50 @@
 					<input type="hidden" name="process" id="process" value="1">
 					<?php tp('Select Criteria');?><br>
 
-							<div class="fieldquestion"><?php echo (@$this->translation['Region A (Province)']); ?> (<?php tp('training location');?>)</div>
-							<div class="fieldshow"><input type="checkbox" name="showProvince" <?php  if ($this->criteria['showProvince']) echo 'checked="checked"';?> /></div>
-							<div class="fieldselect"><?php renderFilter($this->locations, 1, 'province_id', $this->criteria['province_id'], 'district_id', true); ?></div>
-							<div class="clear pad20">&nbsp;</div>
-							<?php
-								if ( $this->setting['display_region_b'] ) {
-							?>
+					<?php
+					echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
+						array('translation' => $this->translation, 'locations' => $this->locations,
+							'criteria' => $this->criteria, 'setting' => $this->setting));
 
-								<div class="fieldquestion"><?php echo (@$this->translation['Region B (Health District)']); ?> (<?php tp('training location');?>)</div>
-								<div class="fieldshow"><input type="checkbox" name="showDistrict"   <?php  if ($this->criteria['showDistrict']) echo 'checked="checked"';?> /></div>
-								<div class="fieldselect"><?php renderFilter($this->locations, 2, 'district_id', $this->criteria['district_id'], ($this->setting['display_region_c']?'region_c_id':false), true); ?></div>
-								<div class="clear pad20">&nbsp;</div>
-							<?php
-								}
-								if ( $this->setting['display_region_c'] ) {
-							?>
-								<div class="fieldquestion"><?php echo (@$this->translation['Region C (Local Region)']); ?> (<?php tp('training location');?>)</div>
-								<div class="fieldshow"><input type="checkbox" name="showRegionC"   <?php  if ($this->criteria['showRegionC']) echo 'checked="checked"';?> /></div>
-								<div class="fieldselect"><?php renderFilter($this->locations, 3, 'region_c_id', $this->criteria['region_c_id'], false, true); ?></div>
-								<div class="clear pad20">&nbsp;</div>
-							<?php
-								}
-							?>
+					echo $this->partial('reports/ps-institution-cadre-cohort-search-form-elements.phtml',
+						array('institutions' => $this->institutions, 'cadres' => $this->cadres,
+							'cohorts' => $this->cohorts));
+					?>
+
+							<?php echo $this->partial('reports/gender-search-form-elements-partial.phtml'); ?>
 	
-							<div class="fieldquestion"><?php echo t('Institution'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="showinstitution" id="showinstitution" value="1"<?php echo $_GET['showinstitution'] ? " checked" : "" ?>></div>
-							<div class="fieldselect"><select name="institution" id="institution" style="" size="10">
-	<?php
-		foreach ($this->institutions as $item){
-			echo "<option value=\"" . $item['id'] . "\">" . $item['institutionname'] . "</option>\n";
-		}
-	?>
-							</select></div>
-							<div class="clear pad20">&nbsp;</div>
-	
-							<div class="fieldquestion"><?php echo t('Cadre'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="showcadre" id="showcadre" value="1"<?php echo $_GET['showcadre'] ? " checked" : "" ?>></div>
-							<div class="fieldselect"><select name="cadre" id="cadre" style="" size="10">
-	<?php
-		foreach ($this->cadres as $item){
-			echo "<option value=\"" . $item['id'] . "\">" . $item['cadrename'] . "</option>\n";
-		}
-	?>
-							</select></div>
-							<div class="clear pad20">&nbsp;</div>
-	
-							<div class="fieldquestion"><?php echo t('Cohort'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="showcohort" id="showcohort" value="1"<?php echo $_GET['showcohort'] ? " checked" : "" ?>></div>
-							<div class="fieldselect"><select name="cohort" id="cohort" style="" size="10">
-	<?php
-		foreach ($this->cohorts as $item){
-			echo "<option value=\"" . $item['id'] . "\">" . $item['cohortname'] . "</option>\n";
-		}
-	?>
-							</select></div>
-							<div class="clear pad20">&nbsp;</div>
-	
-							<div class="fieldquestion"><?php echo t('Gender'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="showgender" id="showgender" value="1"<?php echo $_GET['showgender'] ? " checked" : "" ?>></div>
-							<div class="fieldselect"><select name="gender" id="gender" style="" size="10">
-	<?php
-			echo "<option value=\"0\"" . ($_GET['gender'] == 0 ? " checked" : "") . ">All</option>\n";
-			echo "<option value=\"1\"" . ($_GET['gender'] == 1 ? " checked" : "") . ">Male</option>\n";
-			echo "<option value=\"2\"" . ($_GET['gender'] == 2 ? " checked" : "") . ">Female</option>\n";
-	?>
-							</select></div>
-							<div class="clear pad20">&nbsp;</div>
-	
-							<div class="fieldquestion"><?php echo t('Nationality'); ?></div>
+							<div class="fieldquestion"><?php echo t('ps nationality'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="shownationality" id="shownationality" value="1"<?php echo $_GET['shownationality'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"></div>
 							<div class="clear pad20">&nbsp;</div>
 	
-							<div class="fieldquestion"><?php echo t('Age'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="showage" id="showage" value="1"<?php echo $_GET['showage'] ? " checked" : "" ?>></div>
-							<div class="fieldselect"><input type="text" name="agemin" id="agemin" value="" style="width : 50px;" placeholder="<?php tp('Min')?>"> 
-							<input type="text" name="agemax" id="agemax" value="" style="width : 50px;" placeholder="<?php tp('Max')?>"></div>
-							<div class="clear pad20">&nbsp;</div>
-	
-							<div class="fieldquestion"><?php echo t('Active'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="showactive" id="showactive" value="1"<?php echo $_GET['showactive'] ? " checked" : "" ?>></div>
-							<div class="fieldselect"></div>
-							<div class="clear pad20">&nbsp;</div>
-	
-							<div class="fieldquestion"><?php echo t('Terminated early'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="showterminated" id="showterminated" value="1"<?php echo $_GET['showterminated'] ? " checked" : "" ?>></div>
-							<div class="fieldselect"></div>
-							<div class="clear pad20">&nbsp;</div>
-	
-							<div class="fieldquestion"><?php echo t('Graduated'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="showgraduated" id="showgraduated" value="1"<?php echo $_GET['showgraduated'] ? " checked" : "" ?>></div>
-							<div class="fieldselect"></div>
-							<div class="clear pad20">&nbsp;</div>
-	
-							<div class="fieldquestion"><?php echo t('Funding source'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="showfunding" id="showfunding" value="1"<?php echo $_GET['showfunding'] ? " checked" : "" ?>></div>
-							<div class="fieldselect"></div>
-							<div class="clear pad20">&nbsp;</div>
-	
+							<?php
+							echo $this->partial('reports/age-range-form-elements-partial.phtml');
+
+							echo $this->partial('reports/ps-student-data-search-form-elements-partial.phtml',
+								array('tutors' => $this->tutors));
+							?>
 							<div class="fieldquestion"><?php echo t('Facility @ graduation'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="showfacility" id="showfacility" value="1"<?php echo $_GET['showfacility'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="facility" id="facility" style="" size="10">
-	<?php
-		foreach ($this->facilities as $item){
-			echo "<option value=\"" . $item['id'] . "\">" . $item['facility_name'] . "</option>\n";
-		}
-	?>
-							</select></div>
+									<?php
+									foreach ($this->facilities as $item){
+										echo "<option value=\"" . $item['id'] . "\">" . $item['facility_name'] . "</option>\n";
+									}
+									?>
+								</select></div>
+
 							<div class="clear pad20">&nbsp;</div>
-	
-	
-							<div class="fieldquestion"><?php echo t('Tutor advisor'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="showtutor" id="showtutor" value="1"<?php echo $_GET['showtutor'] ? " checked" : "" ?>></div>
-							<div class="fieldselect"><select name="tutor" id="tutor" style="" size="10">
-	<?php
-		foreach ($this->tutors as $item){
-			echo "<option value=\"" . $item['id'] . "\">" . $item['first_name'] . " " . $item['last_name'] . "</option>\n";
-		}
-	?>
-							</select></div>
-							<div class="clear pad20">&nbsp;</div>
-	
 							<div class="fieldquestion"><?php echo t('Return unique participants'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="showunique" id="showunique" value="1"<?php echo $_GET['showunique'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"></div>
-							<div class="clear pad20">&nbsp;</div>
-							
-							<div class="fieldquestion"><?php echo t('Start date between'); ?></div>
-							<div class="fieldshow">&nbsp;</div>
-						<div class="fieldselect"><input type="text" name="startday" id="startday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;">
-						<input type="text" name="startmonth" id="startmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
-						<input type="text" name="startyear" id="startyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;"><br><br>
-						<?php tp('and')?><br><br>
-						<input type="text" name="endday" id="endday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
-						<input type="text" name="endmonth" id="endmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
-						<input type="text" name="endyear" id="endyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;"></div>
 							<div class="clear pad20">&nbsp;</div>
 
 						</div>
 
 						<div class="pad20 clear"></div>
 
-						<div class="mainformholder" style="height : 100px;">
-							<div  style="float : right;" >
-								<input type="submit" name="go" value="<?php tp('Preview');?> &raquo;" class="tsbutton green large">
-							</div>
-							<div class="clear pad20">&nbsp;</div>
-						</div>
-						<div class="clear pad20">&nbsp;</div>
+						<?php echo $this->partial('reports/ps-search-preview-button-partial.phtml'); ?>
 					</form>
 
 <?php
