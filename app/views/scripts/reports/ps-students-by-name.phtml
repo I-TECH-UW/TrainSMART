@@ -110,11 +110,11 @@
 
 							echo $this->partial('reports/ps-institution-cadre-cohort-search-form-elements.phtml',
 								array('institutions' => $this->institutions, 'cadres' => $this->cadres,
-									'cohorts' => $this->cohorts));
+									'cohorts' => $this->cohorts, 'criteria' => $this->criteria));
 							?>
 
 							<div class="fieldquestion"><?php echo t('Gender'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="showgender" id="showgender" value="1"<?php echo $_GET['showgender'] ? " checked" : "" ?>></div>
+							<div class="fieldshow"><input type="checkbox" name="showgender" id="showgender" value="1"<?php echo $this->criteria['showgender'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="gender" id="gender" style="" size="10">
 									<?php
 									echo "<option value=\"male\">Male</option>\n";
@@ -124,20 +124,20 @@
 							<div class="clear pad20">&nbsp;</div>
 
 							<?php echo $this->partial('reports/ps-nationality-search-form-elements.phtml',
-								array('nationalities' => $this->nationalities));
+								array('nationalities' => $this->nationalities, 'criteria' => $this->criteria));
 							?>
 
 							<div class="fieldquestion"><?php echo t('Age'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="showage" id="showage" value="1"<?php echo $_GET['showage'] ? " checked" : "" ?>></div>
+							<div class="fieldshow"><input type="checkbox" name="showage" id="showage" value="1"<?php echo $this->criteria['showage'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><input type="text" name="age" id="age" value="" style=""></div>
 							<div class="clear pad20">&nbsp;</div>
 
 							<?php echo $this->partial('reports/ps-student-data-search-form-elements-partial.phtml',
-								array('tutors' => $this->tutors));
+								array('tutors' => $this->tutors, 'criteria' => $this->criteria));
 							?>
 
 							<div class="fieldquestion"><?php echo t('Course Name And Exam Scores To Date'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="shownamedate" id="shownamedate" value="1"<?php echo $_GET['shownamedate'] ? " checked" : "" ?>></div>
+							<div class="fieldshow"><input type="checkbox" name="shownamedate" id="shownamedate" value="1"<?php echo $this->criteria['shownamedate'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"></div>
 							<div class="clear pad20">&nbsp;</div>
 
@@ -145,14 +145,14 @@
 
 						<div class="pad20 clear"></div>
 
-						<?php echo $this->partial('reports/ps-search-preview-button-partial.phtml'); ?>
+						<?php echo $this->partial('reports/ps-search-preview-button-partial.phtml', array('criteria' => $this->criteria)); ?>
 					</form>
 					<?php if (isset($this->output)) {
 					echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
 						array('output' => $this->output, 'headers' => $this->headers));
 					?>
 					<input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large" onclick="window.open('<?php
-					$_GET['csv'] = 1;
+					$this->criteria['csv'] = 1;
 					$url = $_SERVER['REQUEST_URI'] . "&csv=1";
 					echo $url . ')">';
 					} ?>

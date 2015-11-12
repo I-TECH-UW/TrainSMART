@@ -6663,7 +6663,8 @@ echo $sql . "<br>";
 		$this->view->assign('site_style', $this->setting('site_style'));
 
 		if ($this->getSanParam('process')) {
-			$queryParams = $this->psStudentReportsBuildQuery($this->getAllParams(), $helper);
+			$criteria = $this->getAllParams();
+			$queryParams = $this->psStudentReportsBuildQuery($criteria, $helper);
 
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 			$rowArray = $db->fetchAll ($queryParams['query']);
@@ -6673,7 +6674,7 @@ echo $sql . "<br>";
 			$this->viewAssignEscaped("headers", $queryParams['headers']);
 			$this->viewAssignEscaped("output", $rowArray);
 
-			$this->view->criteria = $_GET;
+			$this->view->assign('criteria', $criteria);
 		}
 	}
 
@@ -6696,7 +6697,8 @@ echo $sql . "<br>";
 		$this->view->assign('site_style', $this->setting('site_style'));
 
 		if ($this->getSanParam('process')) {
-			$queryParams = $this->psStudentReportsBuildQuery($this->getAllParams(), $helper);
+			$criteria = $this->getAllParams();
+			$queryParams = $this->psStudentReportsBuildQuery($criteria, $helper);
 
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 			$rowArray = $db->fetchAll ($queryParams['query']);
@@ -6706,7 +6708,7 @@ echo $sql . "<br>";
 			$this->viewAssignEscaped("headers", $queryParams['headers']);
 			$this->viewAssignEscaped("output", $rowArray);
 
-			$this->view->criteria = $_GET;
+			$this->view->assign('criteria', $criteria);
 		}
 	}
 
@@ -9025,7 +9027,8 @@ echo $sql . "<br>";
 			$this->view->assign('site_style', $this->setting('site_style'));
 
 			if ($this->getSanParam('process')) {
-				$queryParams = $this->psStudentReportsBuildQuery($this->getAllParams(), $helper);
+				$criteria = $this->getAllParams();
+				$queryParams = $this->psStudentReportsBuildQuery($criteria, $helper);
 
 				$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 				$rowArray = $db->fetchAll ($queryParams['query']);
@@ -9035,7 +9038,7 @@ echo $sql . "<br>";
 				$this->viewAssignEscaped("headers", $queryParams['headers']);
 				$this->viewAssignEscaped("output", $rowArray);
 
-				$this->view->criteria = $_GET;
+				$this->view->assign('criteria', $criteria);
 			}
 		}
 

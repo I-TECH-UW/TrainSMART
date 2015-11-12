@@ -42,17 +42,17 @@
 
                     echo $this->partial('reports/ps-institution-cadre-cohort-search-form-elements.phtml',
                         array('institutions' => $this->institutions, 'cadres' => $this->cadres,
-                            'cohorts' => $this->cohorts));
+                            'cohorts' => $this->cohorts, 'criteria' => $this->criteria));
 
-                    echo $this->partial('reports/gender-search-form-elements-partial.phtml');
+                    echo $this->partial('reports/gender-search-form-elements-partial.phtml', array('criteria' => $this->criteria));
 
                     echo $this->partial('reports/ps-nationality-search-form-elements.phtml',
-                        array('nationalities' => $this->nationalities));
+                        array('nationalities' => $this->nationalities, 'criteria' => $this->criteria));
 
-                    echo $this->partial('reports/age-range-form-elements-partial.phtml');
+                    echo $this->partial('reports/age-range-form-elements-partial.phtml', array('criteria' => $this->criteria));
 
                     echo $this->partial('reports/ps-student-data-search-form-elements-partial.phtml',
-                        array('tutors' => $this->tutors));
+                        array('tutors' => $this->tutors, 'criteria' => $this->criteria));
                     ?>
                     
                 </div>

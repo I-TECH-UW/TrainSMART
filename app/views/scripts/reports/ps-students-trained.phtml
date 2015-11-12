@@ -110,24 +110,24 @@
 
 					echo $this->partial('reports/ps-institution-cadre-cohort-search-form-elements.phtml',
 						array('institutions' => $this->institutions, 'cadres' => $this->cadres,
-							'cohorts' => $this->cohorts));
+							'cohorts' => $this->cohorts, 'criteria' => $this->criteria));
 					?>
 
-							<?php echo $this->partial('reports/gender-search-form-elements-partial.phtml'); ?>
+							<?php echo $this->partial('reports/gender-search-form-elements-partial.phtml', array('criteria' => $this->criteria)); ?>
 	
 							<div class="fieldquestion"><?php echo t('ps nationality'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="shownationality" id="shownationality" value="1"<?php echo $_GET['shownationality'] ? " checked" : "" ?>></div>
+							<div class="fieldshow"><input type="checkbox" name="shownationality" id="shownationality" value="1"<?php echo $this->criteria['shownationality'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"></div>
 							<div class="clear pad20">&nbsp;</div>
 	
 							<?php
-							echo $this->partial('reports/age-range-form-elements-partial.phtml');
+							echo $this->partial('reports/age-range-form-elements-partial.phtml', array('criteria', $this->criteria));
 
 							echo $this->partial('reports/ps-student-data-search-form-elements-partial.phtml',
-								array('tutors' => $this->tutors));
+								array('tutors' => $this->tutors, 'criteria' => $this->criteria));
 							?>
 							<div class="fieldquestion"><?php echo t('Facility @ graduation'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="showfacility" id="showfacility" value="1"<?php echo $_GET['showfacility'] ? " checked" : "" ?>></div>
+							<div class="fieldshow"><input type="checkbox" name="showfacility" id="showfacility" value="1"<?php echo $this->criteria['showfacility'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="facility" id="facility" style="" size="10">
 									<?php
 									foreach ($this->facilities as $item){
@@ -149,7 +149,7 @@
 							array('output' => $this->output, 'headers' => $this->headers));
 						?>
 						<input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large" onclick="window.open('<?php
-						$_GET['csv'] = 1;
+						$this->criteria['csv'] = 1;
 						$url = $_SERVER['REQUEST_URI'] . "&csv=1";
 						echo $url . ')">';
 						} ?>
