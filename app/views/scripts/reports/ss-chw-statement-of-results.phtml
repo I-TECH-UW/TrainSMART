@@ -54,10 +54,20 @@
                     echo $this->partial('reports/ps-student-data-search-form-elements-partial.phtml',
                         array('tutors' => $this->tutors));
                     ?>
+                    
                 </div>
                 <?php echo $this->partial('reports/ps-search-preview-button-partial.phtml'); ?>
             </form>
-        </div>
+            <?php if (isset($this->output)) {
+            echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
+                array('output' => $this->output, 'headers' => $this->headers));
+            ?>
+            <input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large" onclick="window.open('<?php
+            $_GET['csv'] = 1;
+            $url = $_SERVER['REQUEST_URI'] . "&csv=1";
+            echo $url . ')">';
+            } ?>
+
         <pre>
         <?php
         echo print_r($this->bio, true);

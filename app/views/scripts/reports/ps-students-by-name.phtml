@@ -147,58 +147,15 @@
 
 						<?php echo $this->partial('reports/ps-search-preview-button-partial.phtml'); ?>
 					</form>
-
-<?php
-if (isset($this->output)) {
-	if (count ($this->output) == 0){
-		echo "				<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"display tablegrid\" id=\"\" style=\"width:100%\">\n";
-		echo "					<thead>\n";
-		echo "						<tr>\n";
-		echo "							<th>" . t('Output') . "</th>\n";
-		echo "						</tr>\n";
-		echo "					</thead>\n";
-		echo "					<tbody>\n";
-		echo "						<tr>\n";
-		echo "							<td>" . t('Your search criteria returned no results') . "</td>\n";
-		echo "						</tr>\n";
-		echo "					</tbody>\n";
-		echo "				</table>\n";
-	} else {
-?>
-				<br>
-				<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
-					<thead>
-						<tr>
-<?php
-		foreach ($this->headers as $key=>$value){
-			echo "							<th>" . t($value) . "</th>\n";
-		}
-?>
-						</tr>
-					</thead>
-					<tbody>
-<?php
-		foreach ($this->output as $row){
-			echo "						<tr style=\"cursor : pointer;\" class=\"GradeA\">\n";
-			foreach ($row as $key=>$value){
-				echo "				   			<td>" . $value . "</td>\n";
-			}
-			echo "						</tr>\n";
-		}
-?>
-					</tbody>
-				</table>
-				<input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large" onclick="window.open('<?php
-$_GET['csv'] = 1;
-$url = $_SERVER['REQUEST_URI'] . "&csv=1";
-#foreach ($_GET as $key=>$value){
-#	$url .= $key . "=" . $value . "&";
-#}
-echo $url;  ?>')">
-<?php
-	}
-}
-?>
+					<?php if (isset($this->output)) {
+					echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
+						array('output' => $this->output, 'headers' => $this->headers));
+					?>
+					<input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large" onclick="window.open('<?php
+					$_GET['csv'] = 1;
+					$url = $_SERVER['REQUEST_URI'] . "&csv=1";
+					echo $url . ')">';
+					} ?>
 					<div class="clear" style=""></div>
 				</div>
 				<div class="clear" style=""></div>
