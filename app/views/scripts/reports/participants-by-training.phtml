@@ -23,7 +23,8 @@ if ( $this->mode == 'count' )
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
 
-<?php if( strstr($path[2], 'trainers-by-name') === FALSE ):?>
+<?php   
+if( strstr($path[2], 'trainers-by-name') === FALSE ):?>
     <h1><?php tp('Participant Reports');?></h1>
     	<?php require_once('peopleReportsPicker.phtml'); ?>
 <?php else :?>
@@ -134,7 +135,7 @@ if ( $this->mode == 'count' )
 
 	<?php
 
-	if (( strstr($path[2], 'trainers-by-name') !== FALSE ) OR ( strstr($path[2], 'participantsByName') !== FALSE )) { ?>
+	if (( strstr($path[2], 'trainers-by-name') !== FALSE ) OR ( strstr($path[2], 'participantsByName') !== FALSE ) OR ( strstr($path[2], 'participants-by-name') !== FALSE )) { //TA:63?>
 
 		<!-- Highest Education Level -->
 		<?php if ($this->setting['display_highest_ed_level']) { ?>
@@ -354,7 +355,7 @@ if ( $this->setting['display_viewing_location'] && $this->mode != 'search' && ! 
 	</select></div></div>
 <?php } ?>
 
-<?php if (( strstr($path[2], 'trainers-by-name') !== FALSE ) OR ( strstr($path[2], 'participantsByName') !== FALSE )) { ?>
+<?php if (( strstr($path[2], 'trainers-by-name') !== FALSE ) OR ( strstr($path[2], 'participantsByName') !== FALSE ) OR ( strstr($path[2], 'participants-by-name') !== FALSE )) { //TA:63?>
 
 	<?php if ($this->setting['display_people_suffix']) { ?>
 		<div class="fieldLabel" id="person_suffix_lbl"><?php echo (@$this->translation['Suffix']); ?></div>
@@ -415,13 +416,13 @@ if ( $this->setting['display_viewing_location'] && $this->mode != 'search' && ! 
 
 </div>
 
-<?php if(strstr($path[2], 'participantsByTraining') == TRUE or strstr($path[2], 'participantsByName') == TRUE) { ?>
+<?php if(strstr($path[2], 'participantsByTraining') == TRUE or strstr($path[2], 'participantsByName') == TRUE OR ( strstr($path[2], 'participants-by-name') == TRUE )) { //TA:63?>
   <div class="clear"></div>
 	<div class="fieldLabel">&nbsp;</div>
    	<div class="fieldInput" style="margin-top:1em;"><input type="checkbox" name="distinctCount" id="distinctCount" 
    	<?php  if ($this->criteria['distinctCount']) echo 'checked="checked"';?> /><label for="distinctCount" > 
    	<?php if(strstr($path[2], 'participantsByTraining') == TRUE) tp('Return Unique Participants');?>
-   	<?php if(strstr($path[2], 'participantsByName') == TRUE) tp('Return Unique Participants By Training Names');?>
+   	<?php if(strstr($path[2], 'participantsByName') == TRUE OR ( strstr($path[2], 'participants-by-name') == TRUE )) tp('Return Unique Participants By Training Names'); //TA:63?>
    	
    	</label></div><?php }; ?>
 
