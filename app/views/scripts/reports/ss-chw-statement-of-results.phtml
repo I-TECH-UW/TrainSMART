@@ -8,6 +8,14 @@
     print ScriptContainer::$instance->renderJSHead();
     ?>
     <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+            /* Init the table */
+            var oTable = $('.tablegrid').dataTable({
+                "bJQueryUI": true,
+                "sPaginationType": "full_numbers"
+            });
+        } );
+
         function gotoPage(objId) {
             var reportSelector = YAHOO.util.Dom.get(objId);
             if ( reportSelector[reportSelector.selectedIndex].value ) {
@@ -19,7 +27,7 @@
 </head>
 <body class="yui-skin-sam">
 <div id="pageHolder">
-    <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+    <div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
     <div id="content">
         <div id="subcontent">
             <?php
@@ -62,20 +70,13 @@
             echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
                 array('output' => $this->output, 'headers' => $this->headers));
             ?>
-            <input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large" onclick="window.open('<?php
-            $_GET['csv'] = 1;
-            $url = $_SERVER['REQUEST_URI'] . "&csv=1";
-            echo $url . ')">';
-            } ?>
-
-        <pre>
-        <?php
-        echo print_r($this->bio, true);
-        echo print_r($this->classes, true);
-        ?>
-        </pre>
+            <input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large"
+                   onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&outputType=csv"?>')">
+            <input type="button" name="chwbutton" value="<?php tp('CHW Report');?> &raquo;" class="tsbutton green large"
+                   onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&outputType=chwreport"?>')">
+            <?php } ?>
+        </div>
     </div>
-
 </div>
 
 </body>

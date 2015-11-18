@@ -6574,10 +6574,6 @@ echo $sql . "<br>";
 			);
 		}
 
-		// return unique participants
-		// ..
-		// BS20151105 - TODO: This part appears to be missing, though it is part of the ps-students-trained form
-
 		// start date between
 		$start_date = '';
 		if($params['startday'] && $params['startmonth'] && $params['startyear']) {
@@ -6668,7 +6664,6 @@ echo $sql . "<br>";
 
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 			$rowArray = $db->fetchAll ($queryParams['query']);
-			$this->view->assign('output',$rowArray);
 			$this->view->assign('query', $queryParams['query']);
 
 			$this->viewAssignEscaped("headers", $queryParams['headers']);
@@ -6702,7 +6697,6 @@ echo $sql . "<br>";
 
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 			$rowArray = $db->fetchAll ($queryParams['query']);
-			$this->view->assign('output',$rowArray);
 			$this->view->assign('query', $queryParams['query']);
 
 			$this->viewAssignEscaped("headers", $queryParams['headers']);
@@ -9007,41 +9001,36 @@ echo $sql . "<br>";
 		if (!$this->hasACL('view_people') and !$this->hasACL('edit_people')) {
 			$this->doNoAccessError ();
 		}
+		$this->viewAssignEscaped ('locations', Location::getAll());
 
-		// TODO: need search capabilities
-		if ($this->getRequest()->isPost()) {
-			$this->viewAssignEscaped ('locations', Location::getAll());
+		$helper = new Helper();
+		$this->view->assign('mode', 'id');
+		$this->view->assign('institutions', $helper->getInstitutions());
+		$this->view->assign('cadres', $helper->getCadres());
+		$this->view->assign('institutiontypes', $helper->AdminInstitutionTypes());
+		$this->view->assign('cohorts', $helper->getCohorts());
+		$this->view->assign('nationalities', $helper->getNationalities());
+		$this->view->assign('funding', $helper->getFunding());
+		$this->view->assign('tutors', $helper->getTutors());
+		$this->view->assign('facilities', $helper->getFacilities());
+		$this->view->assign('coursetypes', $helper->AdminCourseTypes());
+		$this->view->assign('degrees', $helper->getDegrees());
+		$this->view->assign('site_style', $this->setting('site_style'));
 
-			$helper = new Helper();
-			$this->view->assign('mode', 'id');
-			$this->view->assign('institutions', $helper->getInstitutions());
-			$this->view->assign('cadres', $helper->getCadres());
-			$this->view->assign('institutiontypes', $helper->AdminInstitutionTypes());
-			$this->view->assign('cohorts', $helper->getCohorts());
-			$this->view->assign('nationalities', $helper->getNationalities());
-			$this->view->assign('funding', $helper->getFunding());
-			$this->view->assign('tutors', $helper->getTutors());
-			$this->view->assign('facilities', $helper->getFacilities());
-			$this->view->assign('coursetypes', $helper->AdminCourseTypes());
-			$this->view->assign('degrees', $helper->getDegrees());
-			$this->view->assign('site_style', $this->setting('site_style'));
+		if ($this->getSanParam('process')) {
+			$criteria = $this->getAllParams();
+			$queryParams = $this->psStudentReportsBuildQuery($criteria, $helper);
 
-			if ($this->getSanParam('process')) {
-				$criteria = $this->getAllParams();
-				$queryParams = $this->psStudentReportsBuildQuery($criteria, $helper);
+			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+			$rowArray = $db->fetchAll ($queryParams['query']);
+			$this->view->assign('query', $queryParams['query']);
 
-				$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
-				$rowArray = $db->fetchAll ($queryParams['query']);
-				$this->view->assign('output',$rowArray);
-				$this->view->assign('query', $queryParams['query']);
+			$this->viewAssignEscaped("headers", $queryParams['headers']);
+			$this->viewAssignEscaped("output", $rowArray);
 
-				$this->viewAssignEscaped("headers", $queryParams['headers']);
-				$this->viewAssignEscaped("output", $rowArray);
-
-				$this->view->assign('criteria', $criteria);
-			}
+			$this->view->assign('criteria', $criteria);
 		}
-
+/*
 		$id = $this->getSanParam('id');
 		$db = $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 
@@ -9081,6 +9070,7 @@ echo $sql . "<br>";
 		$this->view->assign('cohorts', $helper->getCohorts());
 		$this->view->assign('tutors', $helper->getTutors());
 		$this->view->assign('nationalities', $helper->getNationalities());
+*/
 	}
 
 	public function ssCompAction() {
