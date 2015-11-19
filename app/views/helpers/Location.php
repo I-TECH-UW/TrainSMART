@@ -149,6 +149,7 @@ function renderFilter(&$locations, $tier, $widget_id, $default_val_id = false, $
                 $default_val_id = $val['id'];
         }
     }
+    $also_match_id = false;
     if ( !is_array($default_val_id) && strpos($default_val_id, '_')){ // bugfix - print_all_region_filters() might get actual option value="123_123" from some controllers (partnerController)
         $also_match_id = array_pop(explode('_', $default_val_id));
     }
@@ -165,7 +166,7 @@ function renderFilter(&$locations, $tier, $widget_id, $default_val_id = false, $
                     $selected = 'selected="selected"';
                 } else if ( !is_array($default_val_id) && $val['id'] === $default_val_id ) {
                     $selected = 'selected="selected"';
-                } else if ( $also_match_id === $val['id'] ) {
+                } else if ($also_match_id === $val['id']) {
                     $selected = 'selected="selected"';
                 }
                 echo '<option value="'.buildId($tier, $locations, $val['id']).'" '.$selected.'>'.$val['name'].'</option>';

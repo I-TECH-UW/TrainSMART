@@ -1,35 +1,35 @@
 <div class="fieldquestion"><?php echo t('Active'); ?></div>
 <div class="fieldshow">
     <input type="checkbox" name="showactive" id="showactive"
-           value="1"<?php echo $this->criteria['showactive'] ? " checked" : "" ?>></div>
+           value="1"<?php if (isset($this->criteria['showactive']) && $this->criteria['showactive']) { echo " checked"; } ?>></div>
 <div class="fieldselect"></div>
 <div class="clear pad20">&nbsp;</div>
 
 <div class="fieldquestion"><?php echo t('Terminated early'); ?></div>
 <div class="fieldshow">
     <input type="checkbox" name="showterminated" id="showterminated"
-           value="1"<?php echo $this->criteria['showterminated'] ? " checked" : "" ?>></div>
+           value="1"<?php if (isset($this->criteria['showterminated']) && $this->criteria['showterminated']) { echo " checked"; } ?>></div>
 <div class="fieldselect"></div>
 <div class="clear pad20">&nbsp;</div>
 
 <div class="fieldquestion"><?php echo t('Graduated'); ?></div>
 <div class="fieldshow">
     <input type="checkbox" name="showgraduated" id="showgraduated"
-           value="1"<?php echo $this->criteria['showgraduated'] ? " checked" : "" ?>></div>
+           value="1"<?php if (isset($this->criteria['showgraduated']) && $this->criteria['showgraduated']) { echo " checked"; } ?>></div>
 <div class="fieldselect"></div>
 <div class="clear pad20">&nbsp;</div>
 
 <div class="fieldquestion"><?php echo t('Funding source'); ?></div>
 <div class="fieldshow">
     <input type="checkbox" name="showfunding" id="showfunding"
-           value="1"<?php echo $this->criteria['showfunding'] ? " checked" : "" ?>></div>
+           value="1"<?php if (isset($this->criteria['showfunding']) && $this->criteria['showfunding']) { echo " checked"; } ?>></div>
 <div class="fieldselect"></div>
 <div class="clear pad20">&nbsp;</div>
 
 <div class="fieldquestion"><?php echo t('Tutor advisor'); ?></div>
 <div class="fieldshow">
     <input type="checkbox" name="showtutor" id="showtutor"
-           value="1"<?php echo $this->criteria['showtutor'] ? " checked" : "" ?>></div>
+           value="1"<?php if (isset($this->criteria['showtutor']) && $this->criteria['showtutor']) { echo " checked"; } ?>></div>
 <div class="fieldselect"><select name="tutor" id="tutor" style="" size="10">
         <?php
         foreach ($this->tutors as $item) {
