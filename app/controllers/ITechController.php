@@ -82,7 +82,17 @@ class ITechController extends Zend_Controller_Action
 
         }
 
-        $response->setHeader('Content-Type', 'text/html; charset=utf-8', true);
+        // XXX: BS20151124 this following code forced the content type to html all the time, which some parts of the
+        // application were overriding with php's lower-level header() function instead of through Zend Framework.
+        // This made it difficult to correctly send non-html files (such as csv and json) over the wire and breaks parts
+        // of Zend Framework capabilities.
+
+        // If removing this hack hasn't had any negative consequences after six months of deployment, it's safe to just
+        // delete. Any problems it does cause should be fixed by correct using Zend Framework tools (using setHeader or
+        // addHeader to responses when needed, instead of here in a parent class that forces the response to every
+        // request to be html content)
+
+        // $response->setHeader('Content-Type', 'text/html; charset=utf-8', true);
 
     }
 
