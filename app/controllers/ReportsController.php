@@ -20,6 +20,37 @@ class ReportsController extends ReportFilterHelpers {
 	}
 
 	/**
+	 * set up ZF's ContextSwitch functionality to use for generating CSV output and other output types
+	 * assign CSV output type to actions that prepare data in a compatible way for this output method
+	 * (see postCsvCallback())
+	 * assign other output types to actions where relevant.
+	 */
+
+	public function init() {
+
+		$contextSwitch = $this->_helper->getHelper('contextSwitch');
+
+		$contextSwitch->addContext('csv', array(
+						'headers' => array('Content-Type' => 'text/csv'),
+						'callbacks' => array(
+								'post' => array($this, 'postCsvCallback'),
+								'init' => array($this, 'preCsvCallback')
+						)
+				)
+		);
+		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'csv');
+		$contextSwitch->addActionContext('ps-students-by-name', 'csv');
+		$contextSwitch->addActionContext('ps-students-trained', 'csv');
+
+		$contextSwitch->addContext('chwreport', array('suffix' => 'chwreport'));
+		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'chwreport');
+
+		$contextSwitch->initContext();
+
+	}
+
+
+	/**
 	 * Creates a data dump in a CSV format. Using a real, tested 3rd-party CSV library that handles edge cases and
 	 * UTF-8 would be better. This code was pulled from the preservice reports .phtml files and tightened up a bit
 	 *
@@ -118,28 +149,6 @@ class ReportsController extends ReportFilterHelpers {
 		}
 	}
 
-	public function init() {
-
-		$contextSwitch = $this->_helper->getHelper('contextSwitch');
-
-		$contextSwitch->addContext('csv', array(
-						'headers' => array('Content-Type' => 'text/csv'),
-						'callbacks' => array(
-								'post' => array($this, 'postCsvCallback'),
-								'init' => array($this, 'preCsvCallback')
-						)
-				)
-		);
-		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'csv');
-		$contextSwitch->addActionContext('ps-students-by-name', 'csv');
-		$contextSwitch->addActionContext('ps-students-trained', 'csv');
-
-		$contextSwitch->addContext('chwreport', array('suffix' => 'chwreport'));
-		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'chwreport');
-
-		$contextSwitch->initContext();
-
-	}
 
 	public function indexAction() {
 
