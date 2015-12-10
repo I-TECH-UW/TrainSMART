@@ -71,9 +71,9 @@
                 array('output' => $this->output, 'headers' => $this->headers));
             ?>
             <input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large"
-                   onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&outputType=csv"?>')">
+                   onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=csv"?>')">
             <input type="button" name="chwbutton" value="<?php tp('CHW Report');?> &raquo;" class="tsbutton green large"
-                   onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&outputType=chwreport"?>')">
+                   onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=chwreport"?>')">
             <?php } ?>
         </div>
     </div>

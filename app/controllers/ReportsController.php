@@ -19,7 +19,117 @@ class ReportsController extends ReportFilterHelpers {
 		parent::__construct ( $request, $response, $invokeArgs );
 	}
 
+	public static function generateCSV($headers, $content) {
+		$data = array();
+
+		$_row = array();
+		foreach ($headers as $key => $value) {
+			$_row[] = $value;
+		}
+		$data[] = $_row;
+
+		foreach ($content as $row) {
+			$_row = array();
+			foreach ($row as $key => $value) {
+				$_row[] = $value;
+			}
+			$data[] = $_row;
+		}
+
+		$delimiter = ',';
+		$enclosure = '"';
+		$encloseAll = false;
+		$nullToMysqlNull = false;
+
+		$delimiter_esc = preg_quote($delimiter, '/');
+		$enclosure_esc = preg_quote($enclosure, '/');
+
+		$output = array();
+
+		foreach ($data as $row){
+			$outputrow = array();
+			foreach ($row as $field){
+				if ($field === null && $nullToMysqlNull) {
+					$outputrow[] = 'NULL';
+					continue;
+				}
+
+				// Enclose fields containing $delimiter, $enclosure or whitespace
+				if ( $encloseAll || preg_match( "/(?:${delimiter_esc}|${enclosure_esc}|\s)/", $field ) ) {
+					$outputrow[] = $enclosure . str_replace($enclosure, $enclosure . $enclosure, $field) . $enclosure;
+				}
+				else {
+					$outputrow[] = $field;
+				}
+			}
+			$output[] = implode($delimiter,$outputrow);
+		}
+		$output = implode("\n", $output);
+
+		return $output;
+	}
+
+	public function preCsvCallback() {
+
+		// See ZendFramework/library/Zend/Controller/Action/Helper/ContextSwitch.php::initJsonContext() to see how to do this with Zend Framework static methods
+		if ($this->view instanceof Zend_View_Interface) {
+			$this->setNoRenderer();
+		}
+	}
+
+	public function postCsvCallback() {
+
+		// See ZendFramework/library/Zend/Controller/Action/Helper/ContextSwitch.php::postJsonContext() to see how to do this with Zend Framework static methods
+
+		if ($this->view instanceof Zend_View_Interface) {
+			if (property_exists($this->view, 'headers') && property_exists($this->view, 'output')) {
+
+				// set the output file name
+				$fn = $this->getRequest()->getActionName() . "-" . date('Y-m-d.H.m.s') . '.csv';
+				$response = $this->getResponse();
+				$response->setHeader('Content-Disposition', 'attachment; filename=' . $fn);
+
+				$output = $this->generateCSV($this->view->headers, $this->view->output);
+				$response->setBody($output);
+			} else {
+				/**
+				 * @see Zend_Controller_Action_Exception
+				 */
+				require_once 'Zend/Controller/Action/Exception.php';
+				throw new Zend_Controller_Action_Exception('Missing required data member "headers" or "output" for CSV output on view object.');
+
+			}
+		} else {
+			/**
+			 * @see Zend_Controller_Action_Exception
+			 */
+			require_once 'Zend/Controller/Action/Exception.php';
+			throw new Zend_Controller_Action_Exception('Unexpected class used for CSV output.');
+
+		}
+	}
+
 	public function init() {
+
+		$contextSwitch = $this->_helper->getHelper('contextSwitch');
+
+		$contextSwitch->addContext('csv', array(
+						'headers' => array('Content-Type' => 'text/csv'),
+						'callbacks' => array(
+								'post' => array($this, 'postCsvCallback'),
+								'init' => array($this, 'preCsvCallback')
+						)
+				)
+		);
+		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'csv');
+		$contextSwitch->addActionContext('ps-students-by-name', 'csv');
+		$contextSwitch->addActionContext('ps-students-trained', 'csv');
+
+		$contextSwitch->addContext('chwreport', array('suffix' => 'chwreport'));
+		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'chwreport');
+
+		$contextSwitch->initContext();
+
 	}
 
 	public function indexAction() {
@@ -9013,7 +9123,6 @@ echo $sql . "<br>";
 			$this->doNoAccessError ();
 		}
 		$this->viewAssignEscaped ('locations', Location::getAll());
-
 		$helper = new Helper();
 		$this->view->assign('mode', 'id');
 		$this->view->assign('institutions', $helper->getInstitutions());
@@ -9032,7 +9141,7 @@ echo $sql . "<br>";
 			$criteria = $this->getAllParams();
 			$queryParams = $this->psStudentReportsBuildQuery($criteria, $helper);
 
-			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 			$rowArray = $db->fetchAll ($queryParams['query']);
 			$this->view->assign('query', $queryParams['query']);
 

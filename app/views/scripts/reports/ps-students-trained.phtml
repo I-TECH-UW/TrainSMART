@@ -1,62 +1,5 @@
-<?php
-	if (isset ($_GET['csv'])){
-		$data = array();
-		
-		$_row = array();
-		foreach ($this->headers as $key=>$value){
-			$_row[] = $value;
-		}
-		$data[] = $_row;
-		
-		foreach ($this->output as $row){
-			$_row = array();
-			foreach ($row as $key=>$value){
-				$_row[] = $value;
-			}
-			$data[] = $_row;
-		}
-		
-
-		$delimiter = ',';
-		$enclosure = '"';
-		$encloseAll = false;
-		$nullToMysqlNull = false;
-	
-		$delimiter_esc = preg_quote($delimiter, '/');
-		$enclosure_esc = preg_quote($enclosure, '/');
-	
-		$output = array();
-
-		foreach ($data as $row){
-			$outputrow = array();
-			foreach ($row as $field){
-				if ($field === null && $nullToMysqlNull) {
-					$outputrow[] = 'NULL';
-					continue;
-				}
-		
-				// Enclose fields containing $delimiter, $enclosure or whitespace
-				if ( $encloseAll || preg_match( "/(?:${delimiter_esc}|${enclosure_esc}|\s)/", $field ) ) {
-					$outputrow[] = $enclosure . str_replace($enclosure, $enclosure . $enclosure, $field) . $enclosure;
-				}
-				else {
-					$outputrow[] = $field;
-				}
-			}
-			$output[] = implode($delimiter,$outputrow);
-		}
-		$output = implode("\n", $output);
-
-		header("Content-type: text/csv");
-		header("Content-Disposition: attachment; filename=students-trained-" . date("d.m.Y.H.m.s") . ".csv");
-		header("Pragma: no-cache");
-		header("Expires: 0");
-		echo $output;
-		exit;
-	}
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 	<head>
 		<title><?php echo $this->translation['Application Name'];?> | <?php tp('Students Trained Report');?></title>
 		<?php
@@ -148,11 +91,9 @@
 						echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
 							array('output' => $this->output, 'headers' => $this->headers));
 						?>
-						<input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large" onclick="window.open('<?php
-						$this->criteria['csv'] = 1;
-						$url = $_SERVER['REQUEST_URI'] . "&csv=1";
-						echo $url . "')\">";
-						} ?>
+						<input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large"
+						       onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=csv"?>')">
+					<?php } ?>
 
 					<div class="clear" style=""></div>
 				</div>
@@ -167,6 +108,3 @@
 		</div>
 	</body>
 </html>
-
-
-
