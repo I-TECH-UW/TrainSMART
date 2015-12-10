@@ -19,21 +19,21 @@ class ReportsController extends ReportFilterHelpers {
 		parent::__construct ( $request, $response, $invokeArgs );
 	}
 
+	/**
+	 * Creates a data dump in a CSV format. Using a real, tested 3rd-party CSV library that handles edge cases and
+	 * UTF-8 would be better. This code was pulled from the preservice reports .phtml files and tightened up a bit
+	 *
+	 * @param $headers - the names that appear as the first row
+	 * @param $content - array of arrays(rows) for the result
+	 * @return array|string - a string of newline-and-comma-separated values
+	 */
 	public static function generateCSV($headers, $content) {
 		$data = array();
 
-		$_row = array();
-		foreach ($headers as $key => $value) {
-			$_row[] = $value;
-		}
-		$data[] = $_row;
+		$data[] = array_values($headers);
 
 		foreach ($content as $row) {
-			$_row = array();
-			foreach ($row as $key => $value) {
-				$_row[] = $value;
-			}
-			$data[] = $_row;
+			$data[] = array_values($row);
 		}
 
 		$delimiter = ',';
@@ -69,6 +69,10 @@ class ReportsController extends ReportFilterHelpers {
 		return $output;
 	}
 
+	/**
+	 * Disable .phtml rendering process for CSV files that use ZF's ContextSwitch functionality
+	 * used by CSV ContextSwitch object to provide generic CSV output
+	 */
 	public function preCsvCallback() {
 
 		// See ZendFramework/library/Zend/Controller/Action/Helper/ContextSwitch.php::initJsonContext() to see how to do this with Zend Framework static methods
@@ -77,6 +81,11 @@ class ReportsController extends ReportFilterHelpers {
 		}
 	}
 
+	/**
+	 * used by ZF's ContextSwitch functionality to generate CSV output files
+	 * relies on view object to have data members called 'headers' and 'output' containing data for CSV output
+	 * @throws Zend_Controller_Action_Exception
+	 */
 	public function postCsvCallback() {
 
 		// See ZendFramework/library/Zend/Controller/Action/Helper/ContextSwitch.php::postJsonContext() to see how to do this with Zend Framework static methods
