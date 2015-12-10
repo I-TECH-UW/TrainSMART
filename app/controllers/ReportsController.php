@@ -15,10 +15,6 @@ require_once ('models/table/Helper.php');
 
 class ReportsController extends ReportFilterHelpers {
 
-	public function __construct(Zend_Controller_Request_Abstract $request, Zend_Controller_Response_Abstract $response, array $invokeArgs = array()) {
-		parent::__construct ( $request, $response, $invokeArgs );
-	}
-
 	/**
 	 * set up ZF's ContextSwitch functionality to use for generating CSV output and other output types
 	 * assign CSV output type to actions that prepare data in a compatible way for this output method
