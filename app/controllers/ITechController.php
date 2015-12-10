@@ -79,13 +79,13 @@ class ITechController extends Zend_Controller_Action
         } catch (exception $e) {
 
             throw new Exception('Could not connect to a database associated with this country. Please double check that you have the correct URL and that the site is configured correctly.');
-
         }
 
-        // XXX: BS20151124 this following code forced the content type to html all the time, which some parts of the
-        // application were overriding with php's lower-level header() function instead of through Zend Framework.
+        // NOTE 20151124 BS: The following commented-out line of code code forced the content type all output to the
+        // html content-type, which other parts of the application were overriding with php's lower-level header()
+        // function instead of through Zend Framework.
         // This made it difficult to correctly send non-html files (such as csv and json) over the wire and breaks parts
-        // of Zend Framework capabilities.
+        // of Zend Framework capabilities with regard to HTTP responses
 
         // If removing this hack hasn't had any negative consequences after six months of deployment, it's safe to just
         // delete. Any problems it does cause should be fixed by correct using Zend Framework tools (using setHeader or
