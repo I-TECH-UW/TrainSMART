@@ -1,0 +1,1 @@
+ALTER TABLE _system ADD display_use_offline_app tinyint(1) NOT NULL DEFAULT '0';

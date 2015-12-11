@@ -16,18 +16,21 @@ print ScriptContainer::$instance->renderJSHead();
 	  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
 	  <div id="content">
 			<h1>Search for Differences</h1>
-			<p>Please do not close your browser window. We are now searching for desktop data diffrences. When the process is complete, you'll have a chance to review and/or commit these changes. The search operation can take five minutes or more depending on your last upload date.</p>
+			<p>Please do not close your browser window.
+			We are now searching for desktop data diffrences.<br>
+			When the process is complete, you'll have a chance to review and/or commit these changes.<br>
+			The search operation can take five minutes or more depending on uploading total data volume.
+			</p>
 			<p>&nbsp;</p>
 			<p class="status" id="status-box">&nbsp;</p>
-			<p class="status" id="status-box2">&nbsp;</p>
 			
-			<form style="display:none; width:50%;" id="continue" action="<?php echo $this->base_url;?>/sync/review/fid/<?php echo $this->fid;?>" method="get">
-				<input type="submit" class="submitArrow" name="go" value="<?php tp('Continue')?>" />
+			 <form style="display:none; width:50%;" id="continue" action="<?php echo $this->base_url;?>/sync/review/fid/<?php echo $this->fid;?>" method="get">
+				  <input type="submit" class="submitArrow" name="go" value="<?php tp('Continue')?>" />
 			</form>
 			
 			<br/><br/><br/>
 			
-			<iframe width="90%" src="<?php echo $this->base_url;?>/sync/search/fid/<?php echo $this->fid;?>/startjob/1/outputType/text';?>"></iframe>
+			<iframe width="90%" height="600px" src="<?php echo $this->base_url;?>/sync/search/fid/<?php echo $this->fid;?>/startjob/1/outputType/text';?>"></iframe>
 	  </div>
 	  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
 	</div>
@@ -52,7 +55,10 @@ print ScriptContainer::$instance->renderJSHead();
 		},
 		handleFailure: function(o) {
 			// Failure handler
-			o.argument.messageContainer.innerHTML = o.argument.messageContainer.innerHTML + '.';
+			var str = "***************************************************************************";
+			if(o.argument.messageContainer.innerHTML.lastIndexOf(str) > -1)
+				o.argument.messageContainer.innerHTML = o.argument.messageContainer.innerHTML.replace(str, "");
+			o.argument.messageContainer.innerHTML = o.argument.messageContainer.innerHTML + '*';
 		},
 		processResult: function(o) {
 			var m = o.responseText;

@@ -1530,7 +1530,8 @@ class PersonController extends ReportFilterHelpers
 
         foreach ($rowArray as $key => $row) {
             //$rowArray [$key] = array_merge ( array ('input' => '<a href="'.Settings::$COUNTRY_BASE_URL.'/person/edit/id/'.$rowArray [$key] ['id'].'">'.$rowArray[$key]['id'].'</a>' ), $row );
-            $rowArray [$key] = array_merge(array('input' => '<input type="radio" name="dupe_id" value="' . $rowArray [$key] ['id'] . '">'), $row);
+            //$rowArray [$key] = array_merge(array('input' => '<input type="radio" name="dupe_id" value="' . $rowArray [$key] ['id'] . '">'), $row);
+        	$rowArray [$key] = array_merge(array('input' => '<input type="radio" name="dupe_id" value="' . $rowArray [$key] ['person_id'] . '">'), $row); //TA:57
         }
 
         $this->sendData($rowArray);

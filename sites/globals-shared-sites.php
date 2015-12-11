@@ -71,7 +71,7 @@ class Globals
                 // database name should be itechweb_eventsmart_subproject
                 Settings::$DB_DATABASE = 'itechweb_eventsmart_' . $subMostDomain;
                 self::$COUNTRY = $subMostDomain;
-                Settings::$COUNTRY_BASE_URL = 'http://' . $parts[0] . 'eventsmart.info';
+                Settings::$COUNTRY_BASE_URL = 'http://' . $parts[0] . '.eventsmart.info';
                 $countryLoaded = true;
             }
         }

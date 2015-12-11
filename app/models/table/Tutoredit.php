@@ -310,6 +310,40 @@ class Tutoredit extends ITechTable
 		$db->update('link_cadre_tutor',$cadre,"id_tutor = '".$param['tutorid']."'");
 		return $cadre;
 	}
+//TA:51 10/05/2015
+	public function DeleteTutor($param){
+	    $person_id = $param['id'];
+	    
+	    //get tutor primary id
+	    $select = $this->dbfunc()->select()->from('tutor')->where('personid = ?',$person_id);
+	    $tutor_primary_id = $this->dbfunc()->fetchAll($select)[0]['id'];
+	     
+	    // remove tutor
+	    $sql = "DELETE FROM tutor WHERE personid = {$person_id}";
+	    $result = $this->dbfunc()->query($sql);
+	     
+	    // set person as deleted
+	    $sql = "UPDATE person SET is_deleted=1 where id = {$person_id}";
+	    $result = $this->dbfunc()->query($sql);
+	
+	    // remove tutor languages link
+	    $sql = "DELETE FROM link_tutor_languages WHERE id_tutor = {$tutor_primary_id}";
+	    $result = $this->dbfunc()->query($sql);
+	    
+	    // remove tutor from classes link
+	    $sql = "update classes set instructorid=0 where instructorid = {$tutor_primary_id}";
+	    $result = $this->dbfunc()->query($sql);
+	    
+	    // remove tutor type link
+	    $sql = "DELETE FROM link_tutor_tutortype WHERE id_tutor = {$tutor_primary_id}";
+	    $result = $this->dbfunc()->query($sql);
+	    
+	    // remove tutor from student link
+	    $sql = "update student set advisorid=0 where advisorid = {$tutor_primary_id}";
+	    $result = $this->dbfunc()->query($sql);
+	     
+	    return true;
+	}
 
 }
 

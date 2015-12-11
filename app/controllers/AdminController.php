@@ -170,6 +170,7 @@ class AdminController extends UserController
 			'fiscal_year_start'        => 'fiscal_year_start',
 			'check_mod_employee'       => 'module_employee_enabled',
 			'check_country_reports' => 'display_country_reports',//TA:17: 9/11/2014
+			'display_use_offline_app' => 'display_use_offline_app' //TA:50:1
 		);
 
 
@@ -1583,6 +1584,23 @@ class AdminController extends UserController
 			if(!$db->fetchCol ( 'SELECT person_id FROM trainer WHERE person_id=?', $mergeToID)){ //TA:21: 09/26/2014
 				$db->query ("UPDATE trainer SET person_id = $mergeToID WHERE person_id = $mergeFromID");
 			}
+			//TA:52 10/06/2015
+			$db->query ("UPDATE trainer SET is_deleted=1 WHERE person_id = $mergeFromID");
+			
+			//TA:52 10/06/2015
+			$table = 'training_to_trainer';
+ 			$from_trainer_training = $db->fetchCol ( 'SELECT training_id FROM training_to_trainer WHERE trainer_id=?', $mergeFromID);
+ 			$to_trainer_training = $db->fetchCol ( 'SELECT training_id FROM training_to_trainer WHERE trainer_id=?', $mergeToID);
+ 			$arr = array();
+			for($i=0; $i<count($from_trainer_training); $i++){
+				if(!in_array($from_trainer_training[$i], $to_trainer_training)){
+					array_push($arr, $from_trainer_training[$i]);
+				}
+			}
+			for($i=0; $i<count($arr); $i++){// training ids list to update
+				$db->query ("UPDATE training_to_trainer SET trainer_id = $mergeToID WHERE trainer_id = $mergeFromID and training_id=$arr[$i]");
+			}
+			$db->query ("DELETE from training_to_trainer WHERE trainer_id = $mergeFromID");
 
 			$table = 'trainer_history';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT vid FROM trainer_history WHERE person_id = ?', $mergeFromID ) );
@@ -1971,6 +1989,7 @@ class AdminController extends UserController
 		$this->viewAssignEscaped ( 'facility_sponsors', $sponsorsArray );
 	}
 
+	
 	protected function facilityMerge($mergeFromID, $mergeToID)
 	{
 		$status = ValidationContainer::instance();
@@ -2003,6 +2022,16 @@ class AdminController extends UserController
 
 			$table = 'facility';
 			$db->query ("UPDATE facility SET is_deleted = 1 WHERE id = $mergeFromID");
+			
+			//TA:54 10/06/2015
+			$table = 'facility_sponsors';
+			$db->query ("UPDATE facility_sponsors SET facility_id = $mergeToID WHERE facility_id = $mergeFromID");
+			//TA:54 10/06/2015
+			$table = 'commodity';
+			$db->query ("UPDATE commodity SET facility_id = $mergeToID WHERE facility_id = $mergeFromID");
+			//TA:54 10/06/2015
+			$table = 'link_facility_addresses';
+			$db->query ("UPDATE link_facility_addresses SET id_facility = $mergeToID WHERE id_facility = $mergeFromID");
 
 		} catch (Exception $e) {
 			$status->addError( null, t('Error updating facilities. Table:').space.$table );

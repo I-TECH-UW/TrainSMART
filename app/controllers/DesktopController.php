@@ -27,7 +27,6 @@ class DesktopController extends ITechController {
 	public function init() {
 		// Site specific files go here (/app/desktop/distro/data/settings.xml + copy of emtpy sqlite db file)
 		$this->package_dir = Globals::$BASE_PATH.'sites/'.str_replace(' ', '_', Globals::$COUNTRY).'/desktop';
-	
 	}
 	
 	public function preDispatch() {
@@ -79,7 +78,10 @@ class DesktopController extends ITechController {
 
 		// Gather up all files in distro directory
 		// initialize an iterator pass it the directory to be processed
-		$iterator = new RecursiveIteratorIterator ( new RecursiveDirectoryIterator ( Globals::$BASE_PATH.'app/desktop/distro' ) );
+		$DISTRO_PATH = '/app/desktop/distro';//TA:50
+		
+		/*TA:50 RecursiveIteratorIterator DOES NOT WORK on the server, we have to use hard coded file names
+		$iterator = new RecursiveIteratorIterator ( new RecursiveDirectoryIterator ( Globals::$BASE_PATH.$DISTRO_PATH ) );
 		// iterate over the directory add each file found to the archive
 		foreach ( $iterator as $key => $value ) {
 			// Exclude the zip file itself (if exists from a previous creation)
@@ -91,15 +93,22 @@ class DesktopController extends ITechController {
 		$iterator = new RecursiveIteratorIterator ( new RecursiveDirectoryIterator ( $this->package_dir ) );
 		foreach ( $iterator as $key => $value ) {
 			// Exclude the zip file itself
-			if (substr($key, $zipNameLen * -1, $zipNameLen) != $this->zip_name)
-				$site_file_collection []= realpath ( $key );
-		}	
+			if (substr($key, $zipNameLen * -1, $zipNameLen) != $this->zip_name){
+				$site_file_collection []= realpath ( $key ); 
+			}
+		}
 
 		// Files added in two stages because there are two paths to remove 
 		// (app/desktop/distro and package_dir) but zip procs will only take one path to remove per call
 		$archive->create($site_file_collection,array('remove_path'=>$this->package_dir, 'add_path'=>'TS'));	
-		$archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.'app/desktop/distro', 'add_path'=>'TS'));
-		
+		$archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DISTRO_PATH, 'add_path'=>'TS'));
+		*/
+		//TA:50 file names are hard coded for now
+                 $site_file_collection []= realpath ( $this->package_dir . '/data/trainsmart.active.sqlite' );
+                $core_file_collection [] = realpath (Globals::$BASE_PATH.$DISTRO_PATH . '/_READ_ME.txt' );
+                 $core_file_collection [] = realpath (Globals::$BASE_PATH.$DISTRO_PATH . '/_trainsmart.jar' );
+$archive->create($site_file_collection,array('remove_path'=>$this->package_dir, 'add_path'=>'TS'));
+$archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DISTRO_PATH, 'add_path'=>'TS'));	
 	}
 	
 	private function _prepareSiteDirectory() {
@@ -128,8 +137,8 @@ class DesktopController extends ITechController {
 		try {
 			// Create settings file in the site's desktop directory (/sites/<countryName>/data)
 			//copy (Globals::$BASE_PATH.Globals::$WEB_FOLDER.'/Settings.xml', $dp.'data/Settings.xml') 
-			$curFile = 'settings';
-			$this->settingsAction ($this->package_dir.'/data/');	
+			//$curFile = 'settings';
+			//$this->settingsAction ($this->package_dir.'/data/');	
 
 			// Always start with a fresh blank datbase file
 			$curFile = 'sqlite';
@@ -188,8 +197,30 @@ class DesktopController extends ITechController {
 		//$liteSysTable = new System(array( Zend_Db_Table_Abstract::ADAPTER => $litedb));
 		//$liteSysTable->select('*');
 		
+		//TA:50 needed as a lookup tables and configuration, not assumed to be modified by app (18 tables)
+		$optionTypes = array(
+		    'lookup_degrees',
+		    'cadres',
+		    'lookup_coursetype',
+		    'classes',
+		    'lookup_institutiontype',
+		    'lookup_sponsors',
+		    'lookup_languages',
+		    'lookup_tutortype',
+		    'location',
+		    'translation',
+		    'person_qualification_option',
+		    'person_title_option',
+		    'lookup_reasons',
+		    'lookup_studenttype',
+		    'lookup_nationalities',
+		    'lookup_fundingsources',
+		    'facility_sponsor_option',
+		    'facility'
+		);
+		
 		require_once 'sync/SyncCompare.php';
-		$option_tables = SyncCompare::$compareTypes;
+		$option_tables = array_merge(SyncCompare::$compareTypes,$optionTypes);
 		
 		// require_once('models/table/System.php');
 		foreach ( $option_tables as $opt ) {
@@ -236,6 +267,32 @@ class DesktopController extends ITechController {
 			
 			}
 		}
+// 		//TA:50 add virtual primary id start for each download user
+// 		/*
+// 		 *_app_start_ids table to keep start primary id for some tables when desktop user inserts new data. 
+// 		 *Max primary key for those tables is int(10)=1000000000. If we give each download 10,000 ids range it will allow 100,000 downloads. 
+// 		 *Every time when user downloads app start_id +10,000. It will help avoid overlapping of the ids when users will upload data to TS.
+// 		 */
+// 		$db_opt = Zend_Db_Table_Abstract::getDefaultAdapter();
+// 		foreach ( SyncCompare::$compareTypes as $opt ) {
+// 		    $template_liteTable = new OptionList ( array ('name' => '_vpk', Zend_Db_Table_Abstract::ADAPTER =>
+// 		        Zend_Db::factory ( 'PDO_SQLITE', array ('dbname' => Globals::$BASE_PATH.'/app/desktop/trainsmart.template.sqlite' )))) ;
+//  			$row = $template_liteTable->fetchRow("table_name = '" . $opt . "'");
+//  			$last_id = $row['vpk'];
+//  			if($last_id == 0){
+//  			    $optTable = new OptionList ( array ('name' =>'" . $opt . "' ) );
+//  			   $next_vpk = $db_opt->fetchRow("select max(id) from " . $opt)['max(id)'];
+//  			}else{
+//  			    $next_vpk = $last_id + 10000;
+//  			}
+//  			$next_vpk = $next_vpk+1;
+//  			//write to template sqlite
+//  		    $template_liteTable->update(array('vpk'=>$next_vpk),"table_name = '" . $opt . "'");
+// 		    //write to user sqlite
+// 		    $liteTable = new OptionList ( array ('name' => '_vpk', Zend_Db_Table_Abstract::ADAPTER => $litedb ) );
+// 		    $liteTable->update(array('vpk'=>$next_vpk),"table_name = '" . $opt . "'");
+// 		}
+		
 	}
 
 	public function downloadAction() {
@@ -252,10 +309,10 @@ class DesktopController extends ITechController {
 		}
 		
 		// If no zip file, then Create App never performed (do this first)
-		if (! file_exists($this->package_dir.'/'.$this->zip_name)) 
-		{
+		//TA:50 create new (overwrite if exist) every time 
+		//if (! file_exists($this->package_dir.'/'.$this->zip_name)) {
 			$this->createAction();
-		}
+		//}
 				
 		// Assumes createAction called every hour by cron job
 		// Allows slow net link users to only download a prepackaged zip file

@@ -149,7 +149,7 @@ class TrainingController extends ReportFilterHelpers {
 		if ($request->isPost () && ! $this->getSanParam ( 'edittabledelete' )) {
 
 			//$status->checkRequired($this, 'training_title_option_id',t('Training Name'));
-			//$status->checkRequired($this, 'training_category_and_title_option_id',t('Training Name'));
+			$status->checkRequired($this, 'training_category_and_title_option_id',t('Training Name')); //TA:53 10/06/2015 
 			//$status->checkRequired ( $this, 'training_length_value', t ( 'Training' ).' '.t( 'Length' ) );//TA:17: 09/3/2014
 			//$status->checkRequired ( $this, 'training_length_interval', t ( 'Training' ).' '.t( 'Interval' ) ); //TA:17: 09/3/2014
 			//$status->checkRequired($this, 'training_organizer_option_id',t('Training Organizer'));

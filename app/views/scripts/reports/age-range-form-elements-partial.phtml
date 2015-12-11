@@ -1,0 +1,5 @@
+<div class="fieldquestion"><?php echo t('Age'); ?></div>
+<div class="fieldshow"><input type="checkbox" name="showage" id="showage" value="1"<?php if (isset($this->criteria['showage']) && $this->criteria['showage']) { echo " checked"; } ?>></div>
+<div class="fieldselect"><input type="text" name="agemin" id="agemin" value="" style="width : 50px;" placeholder="<?php tp('Min')?>">
+    <input type="text" name="agemax" id="agemax" value="" style="width : 50px;" placeholder="<?php tp('Max')?>"></div>
+<div class="clear pad20">&nbsp;</div>

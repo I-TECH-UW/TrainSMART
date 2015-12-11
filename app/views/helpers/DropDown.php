@@ -195,7 +195,11 @@ class DropDown {
                     $cols = array ($column, 'is_default' );
                 }
             }
-            $rows = $tableObj->fetchAll ( $tableObj->select ( $cols ) );
+            
+            //TA:59 add ordering
+            $select = $tableObj->select()->order($column);
+            $rows = $tableObj->fetchAll ($select);
+           // $rows = $tableObj->fetchAll ( $tableObj->select ( $cols ));
         } else if (is_array ( $table ) or is_object ( $table )) {
             $rows = $table;
             //$info = ($rows->getTable()->info ());
