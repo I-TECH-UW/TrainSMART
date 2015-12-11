@@ -275,7 +275,7 @@ function setDistrictStatus(selectedIndex)  {
 		<option value="inactive"  <?php echo (@$this->criteria['training_active'] == 'inactive'? 'SELECTED':''); ?> ><?php tp('inactive');?></option>
 	</select></div></div>
 <?php } ?>
-<?php if ( strstr($path[2], 'participantsByName') !== FALSE ) { ?>
+<?php if ( strstr($path[2], 'participantsByName') !== FALSE  OR ( strstr($path[2], 'participants-by-name') !== FALSE )) { //TA:63?>
 	<div class="fieldLabel" id="training_phone_lbl"><?php tp('Email');?></div>
 	<div class="fieldInput">
 	<div  class="leftBorderPad"><input type="checkbox" name="showEmail" <?php  if ($this->criteria['showEmail']) echo 'CHECKED';?> /></div>

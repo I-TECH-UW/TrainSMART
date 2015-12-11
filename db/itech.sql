@@ -521,7 +521,6 @@ CREATE TABLE `person` (
   `modified_by` int(11) DEFAULT NULL,
   `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`),
   KEY `facility_id` (`facility_id`),
@@ -2026,7 +2025,6 @@ ALTER TABLE `user_to_acl` CHANGE COLUMN `acl_id` `acl_id` enum('edit_course','vi
 -- Desktop
 #evaluation
 ALTER TABLE `evaluation` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `evaluation` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `evaluation` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 
@@ -2039,7 +2037,6 @@ UPDATE evaluation
 SET uuid = UUID();
 #evaluation_question
 ALTER TABLE `evaluation_question` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `evaluation_question` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `evaluation_question` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2051,7 +2048,6 @@ UPDATE evaluation_question
 SET uuid = UUID();
 #evaluation_question_response
 ALTER TABLE `evaluation_question_response` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `evaluation_question_response` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `evaluation_question_response` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2063,7 +2059,6 @@ UPDATE evaluation_question_response
 SET uuid = UUID();
 #evaluation_response
 ALTER TABLE `evaluation_response` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `evaluation_response` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `evaluation_response` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2075,7 +2070,6 @@ UPDATE evaluation_response
 SET uuid = UUID();
 #evaluation_to_training
 ALTER TABLE `evaluation_to_training` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `evaluation_to_training` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `evaluation_to_training` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2087,7 +2081,6 @@ UPDATE evaluation_to_training
 SET uuid = UUID();
 #external_course
 ALTER TABLE `external_course` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `external_course` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `external_course` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2100,7 +2093,6 @@ SET uuid = UUID();
 #facility
 ALTER TABLE `facility` DROP COLUMN `uuid`;
 ALTER TABLE `facility` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `facility` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `facility` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 ALTER TABLE `facility` ADD COLUMN custom_1 varchar(255) DEFAULT '';
 
@@ -2113,7 +2105,6 @@ UPDATE facility
 SET uuid = UUID();
 #facility_sponsor_option
 ALTER TABLE `facility_sponsor_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `facility_sponsor_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `facility_sponsor_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2125,7 +2116,6 @@ UPDATE facility_sponsor_option
 SET uuid = UUID();
 #facility_type_option
 ALTER TABLE `facility_type_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `facility_type_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `facility_type_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2137,7 +2127,6 @@ UPDATE facility_type_option
 SET uuid = UUID();
 #file
 ALTER TABLE `file` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `file` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `file` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2150,7 +2139,6 @@ SET uuid = UUID();
 #location
 ALTER TABLE `location` DROP COLUMN `uuid`;
 ALTER TABLE `location` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `location` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `location` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2163,7 +2151,6 @@ SET uuid = UUID();
 #person
 ALTER TABLE `person` DROP COLUMN `uuid`;
 ALTER TABLE `person` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `person` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `person` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2175,7 +2162,6 @@ UPDATE person
 SET uuid = UUID();
 #person_active_trainer_option
 ALTER TABLE `person_active_trainer_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `person_active_trainer_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `person_active_trainer_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2187,7 +2173,6 @@ UPDATE person_active_trainer_option
 SET uuid = UUID();
 #person_custom_1_option
 ALTER TABLE `person_custom_1_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `person_custom_1_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `person_custom_1_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2199,7 +2184,6 @@ UPDATE person_custom_1_option
 SET uuid = UUID();
 #person_custom_2_option
 ALTER TABLE `person_custom_2_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `person_custom_2_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `person_custom_2_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2217,7 +2201,6 @@ ALTER TABLE `person_history` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 #person_qualification_option
 ALTER TABLE `person_qualification_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `person_qualification_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `person_qualification_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2229,7 +2212,6 @@ UPDATE person_qualification_option
 SET uuid = UUID();
 #person_responsibility_option
 ALTER TABLE `person_responsibility_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `person_responsibility_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `person_responsibility_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2241,7 +2223,6 @@ UPDATE person_responsibility_option
 SET uuid = UUID();
 #person_suffix_option
 ALTER TABLE `person_suffix_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `person_suffix_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `person_suffix_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2253,7 +2234,6 @@ UPDATE person_suffix_option
 SET uuid = UUID();
 #person_title_option
 ALTER TABLE `person_title_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `person_title_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `person_title_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2265,7 +2245,6 @@ UPDATE person_title_option
 SET uuid = UUID();
 #person_to_training
 ALTER TABLE `person_to_training` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `person_to_training` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `person_to_training` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2277,7 +2256,6 @@ UPDATE person_to_training
 SET uuid = UUID();
 #person_to_training_topic_option
 ALTER TABLE `person_to_training_topic_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `person_to_training_topic_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `person_to_training_topic_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2289,7 +2267,6 @@ UPDATE person_to_training_topic_option
 SET uuid = UUID();
 #score
 ALTER TABLE `score` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `score` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `score` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2301,7 +2278,6 @@ UPDATE score
 SET uuid = UUID();
 #trainer
 ALTER TABLE `trainer` ADD COLUMN `uuid` char(36) AFTER `person_id`;
-ALTER TABLE `trainer` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `trainer` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2313,7 +2289,6 @@ UPDATE trainer
 SET uuid = UUID();
 #trainer_affiliation_option
 ALTER TABLE `trainer_affiliation_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `trainer_affiliation_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `trainer_affiliation_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2330,7 +2305,6 @@ ALTER TABLE `trainer_history` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 #trainer_language_option
 ALTER TABLE `trainer_language_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `trainer_language_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `trainer_language_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2342,7 +2316,6 @@ UPDATE trainer_language_option
 SET uuid = UUID();
 #trainer_skill_option
 ALTER TABLE `trainer_skill_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `trainer_skill_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `trainer_skill_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2354,7 +2327,6 @@ UPDATE trainer_skill_option
 SET uuid = UUID();
 #trainer_to_trainer_language_option
 ALTER TABLE `trainer_to_trainer_language_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `trainer_to_trainer_language_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `trainer_to_trainer_language_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2366,7 +2338,6 @@ UPDATE trainer_to_trainer_language_option
 SET uuid = UUID();
 #trainer_to_trainer_skill_option
 ALTER TABLE `trainer_to_trainer_skill_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `trainer_to_trainer_skill_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `trainer_to_trainer_skill_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2378,7 +2349,6 @@ UPDATE trainer_to_trainer_skill_option
 SET uuid = UUID();
 #trainer_type_option
 ALTER TABLE `trainer_type_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `trainer_type_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `trainer_type_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2391,7 +2361,6 @@ SET uuid = UUID();
 #training
 ALTER TABLE `training` DROP COLUMN `uuid`;
 ALTER TABLE `training` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2403,7 +2372,6 @@ UPDATE training
 SET uuid = UUID();
 #training_approval_history
 ALTER TABLE `training_approval_history` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_approval_history` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_approval_history` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2415,7 +2383,6 @@ UPDATE training_approval_history
 SET uuid = UUID();
 #training_category_option
 ALTER TABLE `training_category_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_category_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_category_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2427,7 +2394,6 @@ UPDATE training_category_option
 SET uuid = UUID();
 #training_category_option_to_training_title_option
 ALTER TABLE `training_category_option_to_training_title_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_category_option_to_training_title_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_category_option_to_training_title_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2439,7 +2405,6 @@ UPDATE training_category_option_to_training_title_option
 SET uuid = UUID();
 #training_custom_1_option
 ALTER TABLE `training_custom_1_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_custom_1_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_custom_1_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2451,7 +2416,6 @@ UPDATE training_custom_1_option
 SET uuid = UUID();
 #training_custom_2_option
 ALTER TABLE `training_custom_2_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_custom_2_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_custom_2_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2463,7 +2427,6 @@ UPDATE training_custom_2_option
 SET uuid = UUID();
 #training_funding_option
 ALTER TABLE `training_funding_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_funding_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_funding_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2475,7 +2438,6 @@ UPDATE training_funding_option
 SET uuid = UUID();
 #training_got_curriculum_option
 ALTER TABLE `training_got_curriculum_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_got_curriculum_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_got_curriculum_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2487,7 +2449,6 @@ UPDATE training_got_curriculum_option
 SET uuid = UUID();
 #training_level_option
 ALTER TABLE `training_level_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_level_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_level_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2499,7 +2460,6 @@ UPDATE training_level_option
 SET uuid = UUID();
 #training_location
 ALTER TABLE `training_location` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_location` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_location` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2511,7 +2471,6 @@ UPDATE training_location
 SET uuid = UUID();
 #training_method_option
 ALTER TABLE `training_method_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_method_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_method_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2523,7 +2482,6 @@ UPDATE training_method_option
 SET uuid = UUID();
 #training_organizer_option
 ALTER TABLE `training_organizer_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_organizer_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_organizer_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2535,7 +2493,6 @@ UPDATE training_organizer_option
 SET uuid = UUID();
 #training_pepfar_categories_option
 ALTER TABLE `training_pepfar_categories_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_pepfar_categories_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_pepfar_categories_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2547,7 +2504,6 @@ UPDATE training_pepfar_categories_option
 SET uuid = UUID();
 #training_recommend
 ALTER TABLE `training_recommend` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_recommend` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_recommend` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2559,7 +2515,6 @@ UPDATE training_recommend
 SET uuid = UUID();
 #training_title_option
 ALTER TABLE `training_title_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_title_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_title_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2571,7 +2526,6 @@ UPDATE training_title_option
 SET uuid = UUID();
 #training_to_person_qualification_option
 ALTER TABLE `training_to_person_qualification_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_to_person_qualification_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_to_person_qualification_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2583,7 +2537,6 @@ UPDATE training_to_person_qualification_option
 SET uuid = UUID();
 #training_to_trainer
 ALTER TABLE `training_to_trainer` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_to_trainer` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_to_trainer` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2595,7 +2548,6 @@ UPDATE training_to_trainer
 SET uuid = UUID();
 #training_to_training_funding_option
 ALTER TABLE `training_to_training_funding_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_to_training_funding_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_to_training_funding_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2607,7 +2559,6 @@ UPDATE training_to_training_funding_option
 SET uuid = UUID();
 #training_to_training_pepfar_categories_option
 ALTER TABLE `training_to_training_pepfar_categories_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_to_training_pepfar_categories_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_to_training_pepfar_categories_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2619,7 +2570,6 @@ UPDATE training_to_training_pepfar_categories_option
 SET uuid = UUID();
 #training_to_training_topic_option
 ALTER TABLE `training_to_training_topic_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_to_training_topic_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_to_training_topic_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2631,7 +2581,6 @@ UPDATE training_to_training_topic_option
 SET uuid = UUID();
 #training_topic_option
 ALTER TABLE `training_topic_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_topic_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_topic_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2643,7 +2592,6 @@ UPDATE training_topic_option
 SET uuid = UUID();
 #translation
 ALTER TABLE `translation` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `translation` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `translation` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2655,7 +2603,6 @@ UPDATE translation
 SET uuid = UUID();
 #user
 ALTER TABLE `user` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `user` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `user` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -2770,7 +2717,6 @@ delimiter |
 create procedure sync_schema () begin
 if not exists(select * from information_schema.columns where table_schema = database() and table_name = 'translation' and column_name = 'uuid') then
   alter table translation add column uuid char(36) default null after id;
-  alter table translation add unique key uuid_idx (uuid);
 end if;
 end|
 delimiter ;
@@ -2800,7 +2746,6 @@ CREATE TABLE  `person_education_level_option` (
   `timestamp_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_unique` (`education_level_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
@@ -2816,7 +2761,6 @@ CREATE TABLE  `person_attend_reason_option` (
   `timestamp_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_unique` (`attend_reason_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
@@ -2890,7 +2834,6 @@ IF EXISTS(SELECT * FROM information_schema.columns WHERE table_schema = database
 END IF;
 IF NOT EXISTS(SELECT * FROM information_schema.columns WHERE table_schema = database() AND table_name = 'person_responsibility_option' AND column_name = 'uuid') THEN
   ALTER TABLE person_responsibility_option add column UUID CHAR(36) default null after id;
-  ALTER TABLE person_responsibility_option add unique key uuid_idx (UUID);
 END IF;
 END|
 DELIMITER ;
@@ -2911,7 +2854,6 @@ CREATE TABLE  `person_secondary_responsibility_option` (
   `timestamp_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_unique` (`responsibility_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
@@ -3106,7 +3048,6 @@ CREATE TABLE IF NOT EXISTS `evaluation` (
   `timestamp_updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3128,7 +3069,6 @@ CREATE TABLE IF NOT EXISTS `evaluation_question` (
   `timestamp_updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`),
   KEY `evaluation_id` (`evaluation_id`)
@@ -3151,7 +3091,6 @@ CREATE TABLE IF NOT EXISTS `evaluation_question_response` (
   `timestamp_updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`),
   KEY `evaluation_id` (`evaluation_response_id`)
@@ -3171,7 +3110,6 @@ CREATE TABLE IF NOT EXISTS `evaluation_response` (
   `timestamp_updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`),
   KEY `evaluation_to_training_id` (`evaluation_to_training_id`)
@@ -3190,7 +3128,6 @@ CREATE TABLE IF NOT EXISTS `evaluation_to_training` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `unique_idx` (`evaluation_id`,`training_id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `training_id` (`training_id`),
   KEY `e_id` (`evaluation_id`)
@@ -3227,7 +3164,6 @@ CREATE TABLE IF NOT EXISTS `external_course` (
   `is_deleted` tinyint(1) NOT NULL default '0',
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- Data exporting was unselected.
@@ -3253,7 +3189,6 @@ CREATE TABLE IF NOT EXISTS `facility` (
   `timestamp_updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
   KEY `sponsor_option_id` (`sponsor_option_id`),
@@ -3296,7 +3231,6 @@ CREATE TABLE IF NOT EXISTS `facility_sponsor_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`facility_sponsor_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3316,7 +3250,6 @@ CREATE TABLE IF NOT EXISTS `facility_type_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`facility_type_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3339,7 +3272,6 @@ CREATE TABLE IF NOT EXISTS `file` (
   `timestamp_updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `parent_key` (`parent_table`,`parent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
@@ -3689,7 +3621,6 @@ CREATE TABLE IF NOT EXISTS `location` (
   `timestamp_updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `parent_id` (`parent_id`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
@@ -3986,7 +3917,6 @@ CREATE TABLE IF NOT EXISTS `person` (
   `attend_reason_other` varchar(255) default NULL,
   `highest_level_option_id` int(11) default NULL,
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`),
   KEY `facility_id` (`facility_id`),
@@ -4008,7 +3938,6 @@ CREATE TABLE IF NOT EXISTS `person_active_trainer_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`active_trainer_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
@@ -4028,7 +3957,6 @@ CREATE TABLE IF NOT EXISTS `person_attend_reason_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`attend_reason_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4048,7 +3976,6 @@ CREATE TABLE IF NOT EXISTS `person_custom_1_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`custom1_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4068,7 +3995,6 @@ CREATE TABLE IF NOT EXISTS `person_custom_2_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`custom2_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4088,7 +4014,6 @@ CREATE TABLE IF NOT EXISTS `person_education_level_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`education_level_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4152,7 +4077,6 @@ CREATE TABLE IF NOT EXISTS `person_primary_responsibility_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`responsibility_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4174,7 +4098,6 @@ CREATE TABLE IF NOT EXISTS `person_qualification_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`qualification_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4194,7 +4117,6 @@ CREATE TABLE IF NOT EXISTS `person_secondary_responsibility_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`responsibility_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4214,7 +4136,6 @@ CREATE TABLE IF NOT EXISTS `person_suffix_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`suffix_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
@@ -4234,7 +4155,6 @@ CREATE TABLE IF NOT EXISTS `person_title_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`title_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
@@ -4253,7 +4173,6 @@ CREATE TABLE IF NOT EXISTS `person_to_training` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `unique_idx` (`person_id`,`training_id`),
   UNIQUE KEY `training_person_uniq_2` (`training_id`,`person_id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `person_id` (`person_id`),
   KEY `training_id` (`training_id`)
@@ -4272,7 +4191,6 @@ CREATE TABLE IF NOT EXISTS `person_to_training_topic_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `unique_idx` (`person_id`,`training_topic_option_id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `person_id` (`person_id`),
   KEY `training_topic_option_id` (`training_topic_option_id`)
@@ -4311,8 +4229,7 @@ CREATE TABLE IF NOT EXISTS `score` (
   `is_deleted` tinyint(1) NOT NULL default '0',
   `timestamp_updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`)
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -4437,7 +4354,6 @@ CREATE TABLE IF NOT EXISTS `trainer` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`person_id`),
   UNIQUE KEY `person_idx` (`person_id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`),
   KEY `type_option_id` (`type_option_id`),
@@ -4459,7 +4375,6 @@ CREATE TABLE IF NOT EXISTS `trainer_affiliation_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`trainer_affiliation_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4503,7 +4418,6 @@ CREATE TABLE IF NOT EXISTS `trainer_language_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`language_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4523,7 +4437,6 @@ CREATE TABLE IF NOT EXISTS `trainer_skill_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`trainer_skill_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4541,7 +4454,6 @@ CREATE TABLE IF NOT EXISTS `trainer_to_trainer_language_option` (
   `created_by` int(11) default NULL,
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `trainer_language_option_id` (`trainer_language_option_id`),
   KEY `trainer_id` (`trainer_id`)
@@ -4559,7 +4471,6 @@ CREATE TABLE IF NOT EXISTS `trainer_to_trainer_skill_option` (
   `created_by` int(11) default NULL,
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `trainer_id` (`trainer_id`),
   KEY `trainer_skill_option_id` (`trainer_skill_option_id`)
@@ -4580,7 +4491,6 @@ CREATE TABLE IF NOT EXISTS `trainer_type_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`trainer_type_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4621,7 +4531,6 @@ CREATE TABLE IF NOT EXISTS `training` (
   `timestamp_updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
   KEY `training_title_option_id` (`training_title_option_id`)
@@ -4641,7 +4550,6 @@ CREATE TABLE IF NOT EXISTS `training_approval_history` (
   `created_by` int(11) NOT NULL,
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `training_id` (`training_id`),
   KEY `created_by` (`created_by`),
   KEY `created_by_2` (`created_by`),
@@ -4663,7 +4571,6 @@ CREATE TABLE IF NOT EXISTS `training_category_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`training_category_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4681,7 +4588,6 @@ CREATE TABLE IF NOT EXISTS `training_category_option_to_training_title_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `unique_training_cat` (`training_category_option_id`,`training_title_option_id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `training_category_option_id` (`training_category_option_id`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4701,7 +4607,6 @@ CREATE TABLE IF NOT EXISTS `training_custom_1_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`custom1_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4721,7 +4626,6 @@ CREATE TABLE IF NOT EXISTS `training_custom_2_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`custom2_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4742,7 +4646,6 @@ CREATE TABLE IF NOT EXISTS `training_funding_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`funding_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4762,7 +4665,6 @@ CREATE TABLE IF NOT EXISTS `training_got_curriculum_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`training_got_curriculum_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4783,7 +4685,6 @@ CREATE TABLE IF NOT EXISTS `training_level_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`training_level_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4803,7 +4704,6 @@ CREATE TABLE IF NOT EXISTS `training_location` (
   `timestamp_updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`),
   KEY `training_location_ibfk_9` (`location_id`)
@@ -4824,7 +4724,6 @@ CREATE TABLE IF NOT EXISTS `training_method_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`training_method_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
@@ -4845,7 +4744,6 @@ CREATE TABLE IF NOT EXISTS `training_organizer_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`training_organizer_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4867,7 +4765,6 @@ CREATE TABLE IF NOT EXISTS `training_pepfar_categories_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`pepfar_category_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`),
   KEY `id_training_method_option_id` (`id_training_method_option_id`)
@@ -4889,7 +4786,6 @@ CREATE TABLE IF NOT EXISTS `training_recommend` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `person_qualification_option_id` (`person_qualification_option_id`,`training_topic_option_id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4909,7 +4805,6 @@ CREATE TABLE IF NOT EXISTS `training_title_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`training_title_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4930,7 +4825,6 @@ CREATE TABLE IF NOT EXISTS `training_topic_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`training_topic_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4952,7 +4846,6 @@ CREATE TABLE IF NOT EXISTS `training_to_person_qualification_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `training_qual_uniq` (`training_id`,`person_qualification_option_id`,`age_range_option_id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `person_qualification_option_id` (`person_qualification_option_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
@@ -4970,7 +4863,6 @@ CREATE TABLE IF NOT EXISTS `training_to_trainer` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `unique_training` (`trainer_id`,`training_id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `created_by` (`created_by`),
   KEY `trainer_id` (`trainer_id`),
   KEY `training_id` (`training_id`)
@@ -4990,7 +4882,6 @@ CREATE TABLE IF NOT EXISTS `training_to_training_funding_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `unique_training_cat` (`training_funding_option_id`,`training_id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `training_id` (`training_id`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5010,7 +4901,6 @@ CREATE TABLE IF NOT EXISTS `training_to_training_pepfar_categories_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `unique_training_cat` (`training_pepfar_categories_option_id`,`training_id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `training_id` (`training_id`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5028,7 +4918,6 @@ CREATE TABLE IF NOT EXISTS `training_to_training_topic_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `unique_training_cat` (`training_topic_option_id`,`training_id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `training_id` (`training_id`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5048,7 +4937,6 @@ CREATE TABLE IF NOT EXISTS `translation` (
   `timestamp_updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5098,7 +4986,6 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username_idx` (`username`),
   UNIQUE KEY `email_idx` (`email`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5294,10 +5181,8 @@ CREATE TABLE `training_to_training_refresher_option` (
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ALTER TABLE `training_refresher_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_refresher_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_refresher_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 ALTER TABLE `training_to_training_refresher_option` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `training_to_training_refresher_option` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `training_to_training_refresher_option` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 
 DELIMITER ;;
@@ -5470,7 +5355,6 @@ CREATE TABLE `occupational_categories` (
   `timestamp_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_unique` (`category_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -6041,7 +5925,6 @@ CREATE TABLE `datashare_sites` (
   KEY `created_by` (`created_by`),
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-ALTER TABLE `datashare_sites` ADD UNIQUE `uuid_idx`(uuid);
 DELIMITER ;;
 CREATE TRIGGER `datashare_sites_insert` BEFORE INSERT ON `datashare_sites` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
@@ -6071,7 +5954,6 @@ CREATE TABLE `facility_sponsors` (
   KEY `modified_by` (`modified_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ALTER TABLE `facility_sponsors` ADD COLUMN `uuid` char(36) AFTER `id`;
-ALTER TABLE `facility_sponsors` ADD UNIQUE `uuid_idx`(uuid);
 ALTER TABLE `facility_sponsors` CHANGE COLUMN `uuid` `uuid` char(36) DEFAULT NULL;
 DELIMITER ;;
 CREATE TRIGGER `facility_sponsors_insert` BEFORE INSERT ON `facility_sponsors` FOR EACH ROW BEGIN
@@ -6273,7 +6155,6 @@ CREATE TABLE IF NOT EXISTS `person_to_training_viewing_loc_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`location_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) DEFAULT CHARSET=utf8 ;
@@ -6295,7 +6176,6 @@ CREATE TABLE IF NOT EXISTS `person_to_training_budget_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`budget_code_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) DEFAULT CHARSET=utf8 ;
@@ -6334,7 +6214,6 @@ CREATE TABLE IF NOT EXISTS `person_to_training_award_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`award_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) DEFAULT CHARSET=utf8 ;
@@ -6399,7 +6278,6 @@ CREATE TABLE IF NOT EXISTS `person_race_option` (
   `timestamp_created` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`race_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) DEFAULT CHARSET=utf8 ;
@@ -6422,7 +6300,6 @@ CREATE TABLE IF NOT EXISTS `employee_qualification_option` (
   `timestamp_created`    timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`qualification_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) DEFAULT CHARSET=utf8 ;
@@ -6456,7 +6333,6 @@ CREATE TABLE IF NOT EXISTS `employee_fulltime_option` (
   `timestamp_created`    timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name_unique` (`fulltime_phrase`),
-  UNIQUE KEY `uuid_idx` (`uuid`),
   KEY `modified_by` (`modified_by`),
   KEY `created_by` (`created_by`)
 ) DEFAULT CHARSET=utf8 ;
