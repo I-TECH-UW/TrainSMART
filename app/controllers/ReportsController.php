@@ -1817,8 +1817,6 @@ echo $sql . "<br>";
 				$sql .= ' ORDER BY training_start_date DESC';
 			}
 			
-
-			print $sql;
 			$rowArray = $db->fetchAll ( $sql );
 
 			if ($criteria ['doCount']) {
