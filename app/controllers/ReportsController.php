@@ -1490,10 +1490,14 @@ echo $sql . "<br>";
 				'         LEFT JOIN training_location ON training.training_location_id = training_location.id ' .
 				'         LEFT JOIN ('.$location_sub_query.') as l ON training_location.location_id = l.id ' .
 				'  WHERE training.is_deleted=0) as pt ';
-				$sql .= " LEFT JOIN (SELECT COUNT(id) as `pcnt`,training_id FROM person_to_training GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
+ 				//$sql .= " LEFT JOIN (SELECT COUNT(id) as `pcnt`,training_id FROM person_to_training GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
+                //TA:64 12/18/2015 take only persons which are not deleted
+				$sql .= " LEFT JOIN (SELECT COUNT(person_to_training.id) as `pcnt`,training_id FROM person_to_training left join person on person.id=person_to_training.person_id where person.is_deleted=0 GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
 			}
 			if ($criteria ['doName']) {
-				$sql .= " LEFT JOIN (SELECT COUNT(id) as `pcnt`,training_id FROM person_to_training GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
+ 				//$sql .= " LEFT JOIN (SELECT COUNT(id) as `pcnt`,training_id FROM person_to_training GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
+			    //TA:64 12/18/2015 take only persons which are not deleted
+			    $sql .= " LEFT JOIN (SELECT COUNT(person_to_training.id) as `pcnt`,training_id FROM person_to_training left join person on person.id=person_to_training.person_id where person.is_deleted=0 GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
 			}
 			if (!($criteria['doCount'] || $criteria['doName']) && ($criteria['showViewingLoc'] || $criteria['person_to_training_viewing_loc_option_id'])) {
 				$sql .= ' LEFT JOIN person_to_training ON person_id = person_to_training.person_id AND person_to_training.training_id = pt.id ';
@@ -1814,6 +1818,7 @@ echo $sql . "<br>";
 			}
 			
 
+			print $sql;
 			$rowArray = $db->fetchAll ( $sql );
 
 			if ($criteria ['doCount']) {
