@@ -10063,6 +10063,36 @@ die (__LINE__ . " - " . $sql);
 	}
 
 
+	public function employeeReportOccupationalCategoryAction() {
+		$locations = Location::getAll();
+		$criteria = $this->getAllParams();
+
+		$db = $this->dbfunc();
+
+		$funders = $db->fetchPairs($db->select()
+				->from('partner_funder_option', array('id', 'funder_phrase'))
+				->order('funder_phrase ASC')
+		);
+		$mechanisms = $db->fetchPairs($db->select()
+				->from('mechanism_option', array('id', 'mechanism_phrase'))
+				->order('mechanism_phrase ASC')
+		);
+		$transitions = $db->fetchPairs($db->select()
+				->from('employee_transition_option', array('id', 'transition_phrase'))
+				->order('transition_phrase ASC')
+		);
+		$categories = $db->fetchPairs($db->select()
+				->from('employee_category_option', array('id', 'category_phrase'))
+				->order('category_phrase ASC')
+		);
+		$this->view->assign('locations', $locations);
+		$this->view->assign('categories', $categories);
+		$this->view->assign('transitions', $transitions);
+		$this->view->assign('criteria', $criteria);
+		$this->view->assign('funders', $funders);
+		$this->view->assign('mechanisms', $mechanisms);
+	}
+
 	public function employeesAction() {
 		require_once ('models/table/Helper.php');
 		require_once ('views/helpers/FormHelper.php');
@@ -10172,8 +10202,7 @@ die (__LINE__ . " - " . $sql);
 			$rowArray = $db->fetchAll( $sql );
 			$this->viewAssignEscaped ('results', $rowArray );
 
-			$locations = Location::getAll();
-			// hack #TODO - seems Region A -> ASDF, Region B-> *Multiple Province*, Region C->null Will not produce valid locations with Location::subquery
+			$locations = Location::getAll();			// hack #TODO - seems Region A -> ASDF, Region B-> *Multiple Province*, Region C->null Will not produce valid locations with Location::subquery
 			// the proper solution is to add "Default" districts under these subdistricts, not sure if i can at this point the table is 12000 rows, todo later
 			foreach ($rowArray as $i => $row) {
 				if ($row['province_name'] == "" && $row['location_id']){ // empty province
