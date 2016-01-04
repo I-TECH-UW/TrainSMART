@@ -7,10 +7,22 @@ require_once('views/helpers/ScriptContainer.php');
 print ScriptContainer::$instance->renderCSSHead();
 print ScriptContainer::$instance->renderJSHead();
 ?>
-    <script type="text/javascript">
+    <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
             $('.datepicker').datepicker( {dateFormat: "dd/mm/yy"} );
+/*            var oTable = $('.tablegrid').dataTable({
+                "bJQueryUI": true,
+                "sPaginationType": "full_numbers"
+            }); */
         });
+        $(document).ready(function() {
+            /* Init the table */
+            var oTable = $('.tablegrid').dataTable({
+                "bJQueryUI": true,
+                "sPaginationType": "full_numbers"
+            });
+        } );
+
     </script>
 
 </head>

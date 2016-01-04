@@ -10069,6 +10069,122 @@ die (__LINE__ . " - " . $sql);
 
 		$db = $this->dbfunc();
 
+		if ($criteria['go']) {
+			$select = $db->select();
+
+			// limit data to user's access to mechanisms only available to partners and
+			// subpartners that the user account can access
+
+			if (!$this->hasACL('training_organizer_option_all')) {
+				$uid = $this->isLoggedIn();
+				//where 'user_to_organizer_access', 'user_id'
+			}
+			if ($criteria['showProvince']) {
+			}
+			if ($criteria['province_id']) {
+			}
+
+			if ($criteria['showDistrict']) {
+			}
+			if ($criteria['district_id']) {
+			}
+
+			if ($criteria['showRegionC']) {
+			}
+			if ($criteria['region_c_id']) {
+			}
+
+			if ($criteria['periodshowdate']) {
+
+			}
+			if ($criteria['periodstartdate']) {
+
+			}
+			if ($criteria['periodenddate']) {
+
+			}
+
+			if ($criteria['showfunder'] || $criteria['funder']) {
+				$cols = array();
+				if ($criteria['showfunder']) {
+					$cols[] = 'pfo.funder_phrase';
+				}
+				if ($criteria['funder']) {
+					if (count($criteria['funder']) > 1) {
+						$select->where('pfo.id in (?)', implode(',', $criteria['funder']));
+					} elseif (count($criteria['funder']) == 1) {
+						$select->where('pfo.id = ?', $criteria['funder']);
+					}
+				}
+				$select->join(array('pfo' => 'partner_funder_option'), 'pfo.id = blahblah', $cols);
+			}
+
+			if ($criteria['showmechanism'] || $criteria['mechanism']) {
+				$cols = array();
+				if ($criteria['showmechanism']) {
+					$cols[] = 'mo.mechanism_phrase';
+				}
+				if ($criteria['mechanism']) {
+					if (count($criteria['mechanism']) > 1) {
+						$select->where('mo.id in (?)', implode(',', $criteria['mechanism']));
+					}
+					elseif (count($criteria['mechanism']) == 1) {
+						$select->where('mo.id = ?', $criteria['mechanism']);
+					}
+				}
+				$select->join(array('mo' => 'mechanism_option'), 'mo.id = blahblah', $cols);
+			}
+
+			if ($criteria['showcategory'] || $criteria['category']) {
+				$cols = array();
+				if ($criteria['showcategory']) {
+					$cols[] = 'eco.category_phrase';
+				}
+				if ($criteria['category']) {
+					$select->where('eco.id = ?', $criteria['category']);
+				}
+				$select->join(array('eco' => 'employee_category_option'), 'eco.id = blahblah', $cols);
+			}
+
+			if ($criteria['showtransitiontype'] || $criteria['transition'] ||
+					$criteria['showtransitiondescription'] || $criteria['transition_description']) {
+
+				$cols = array();
+				if ($criteria['showtransitiontype'] || $criteria['showtransitiondescription']) {
+					$cols[] = 'eto.transition_phrase';
+				}
+				if ($criteria['transition']) {
+					$select->where('eto.id = ?', $criteria['transition']);
+				}
+				if ($criteria['transition_description']) {
+					$select->orWhere('eto.id = ?', $criteria['transition_description']);
+				}
+				$select->join(array('eto' => 'employee_transition_option'), 'eto.id = blahblah', $cols);
+			}
+
+			if ($criteria['contractshowdate']) {}
+			if ($criteria['contractstartdate']) {}
+			if ($criteria['contractenddate']) {}
+
+			$q = $select->__toString();
+
+			$headers = array(
+					'Province & Occupational Category',
+
+					'AgriAIDS SA(A) - Full Time Staff',
+					'AgriAIDS SA(A) - Part Time Staff',
+					'AgriAIDS SA(A) - Annual Cost to Company (Rands)',
+			);
+			$output = array(
+					array('Gauteng', '&nbsp;', '&nbsp;', '&nbsp;'),
+					array('J2000000 Computer Programmers',
+							'2', '3', '30,000',
+					)
+			);
+			$this->view->assign('headers', $headers);
+			$this->view->assign('output', $output);
+		}
+
 		$funders = $db->fetchPairs($db->select()
 				->from('partner_funder_option', array('id', 'funder_phrase'))
 				->order('funder_phrase ASC')
