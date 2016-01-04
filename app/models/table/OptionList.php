@@ -67,6 +67,11 @@ class OptionList extends ITechTable
     		$select->limit($limit,0);
     	
      	$rows = $topicTable->fetchAll($select);
+     	
+
+     	
+     	
+     	
     	$rowArray = $rows->toArray();
     		//	unset 'unknown'
     	if ( $removeUnknown ) {
@@ -75,6 +80,8 @@ class OptionList extends ITechTable
 	    			unset($rowArray[$key]);
 	    	}
     	}
+    	
+  
     	
     	return $rowArray;
 	}
@@ -106,7 +113,18 @@ class OptionList extends ITechTable
 				'FROM (SELECT * FROM '.$table.' WHERE parent_id IS NULL AND is_deleted = 0  ) as parent JOIN '.$table.' as child ON child.parent_id = parent.id WHERE child.is_deleted = 0) as un  '.
 				'ORDER BY un.parent_phrase ASC, un.'.$col.' ASC';
         
+
+//         file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'optionlist0 >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+//         var_dump("sql=", $sql, "END");
+//         $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+        
         $rowArray = $db->fetchAll($sql);
+        
+//         file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'optionlist1 >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+//         var_dump("rowArray=", $rowArray, "END");
+//         $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+        
+        
     		//	unset 'unknown'
     	foreach($rowArray as $key => $row) {
     		if ( $row[$col] == 'unknown' )

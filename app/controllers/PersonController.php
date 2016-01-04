@@ -986,6 +986,12 @@ class PersonController extends ReportFilterHelpers
 
     public function searchAction()
     {
+        
+        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'personController save0 >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+        //var_dump("criteria=", $criteria, "END");
+        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+        
+        
         require_once('models/table/Person.php');
         if ($this->setting('display_mod_skillsmart')) {
             // SKILLSMART-ENABLED SYSTEM USES DIFFERENT SEARCH FOR ADDITIONAL FIELDS
@@ -1158,10 +1164,11 @@ class PersonController extends ReportFilterHelpers
         require_once('models/table/TrainingTitleOption.php');
         $titleArray = TrainingTitleOption::suggestionList(false, 10000);
         $this->viewAssignEscaped('courses', $titleArray);
-        //types
-        $qualificationsArray = OptionList::suggestionListHierarchical('person_qualification_option', 'qualification_phrase', false, false);
-        $this->viewAssignEscaped('qualifications', $qualificationsArray);
 
+        //types
+        $qualificationsArray = OptionList::suggestionListHierarchical('person_qualification_option', 'qualification_phrase', false, 9999);                 
+        $this->viewAssignEscaped('qualifications', $qualificationsArray);
+        
         //facilities list
         $rowArray = OptionList::suggestionList('facility', array('facility_name', 'id'), false, 9999);
         $facilitiesArray = array();

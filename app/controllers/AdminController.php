@@ -925,17 +925,30 @@ class AdminController extends UserController
 		$editTable->execute($controller->getRequest());
 	}
 
-	public function trainingTitleAction()
+	public function primaryQualificationAction()
 	{
 		$controller = &$this;
 		$editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
 		$editTable->setParentController($controller);
-		$editTable->table   = 'training_title_option';
-		$editTable->fields  = array('training_title_phrase' => t('Training Title'));
-		$editTable->label   = t('Training Title');
+		$editTable->table   = 'person_qualification_option';
+		$editTable->fields  = array('qualification_phrase' => t('Primary Qualification'));
+		$editTable->label   = t('Primary Qualification');
 		$editTable->allowMerge = true;
-		$editTable->dependencies = array('training');
+		//$editTable->dependencies = array('person');
 		$editTable->execute($controller->getRequest());
+	}
+	
+	public function trainingTitleAction()
+	{
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'training_title_option';
+	    $editTable->fields  = array('training_title_phrase' => t('Training Title'));
+	    $editTable->label   = t('Training Title');
+	    $editTable->allowMerge = true;
+	    $editTable->dependencies = array('training');
+	    $editTable->execute($controller->getRequest());
 	}
 
 	public function trainingOrganizerAction()
@@ -2899,11 +2912,6 @@ class AdminController extends UserController
 	        $this->view->assign("header","Update assessment '" . $assessment['label'] . "'");
 	        $this->view->assign("questions",$questions);
 	
-	        // GETTING QUALIFICATIONS
-	        //$quals = $helper->skillsmartGetQualifications($assessid);
-	        //$this->view->assign("quals",$quals);
-	        //$this->view->assign("assessid",$assessid);
-	        //$this->view->assign("currentlinks",$helper->skillsmartGetAssessmentLinks($assessid));
 	    }
 	}
 	

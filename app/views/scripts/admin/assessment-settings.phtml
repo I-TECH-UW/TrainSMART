@@ -221,7 +221,7 @@ ob_end_clean();
 		<fieldset>
 			<label for="name"><?php echo t('Assessment') ?></label>
 			<input type="text" name="titledetail" id="titledetail" class="text ui-widget-content ui-corner-all" /><br>
-
+			
 			<label for="name"><?php echo t('Field order') ?></label>
 			<select name="orderdetail" id="orderdetail" class="text ui-widget-content ui-corner-all" style="display : block; width : 100%; padding : .4em;" />
 <?php
@@ -239,9 +239,16 @@ ob_end_clean();
 				<option value="questionyesno"><?php echo t('Question, yes/no options') ?></option>
 				<option value="questiontext"><?php echo t('Question, textbox') ?></option>
 				<option value="questiontextarea"><?php echo t('Question, textarea') ?></option>
+				<option value="questiondropdown"><?php echo t('Question, dropdown') ?></option>
+				<option value="questiondate"><?php echo t('Question, date') ?></option>
 			</select>
+			
+			<label for="name"><?php echo t('Dropdown Id') ?></label>
+		    <input type="text" name="dropdownid" id="dropdownid" class="text ui-widget-content ui-corner-all" /><br>
+		    
 		</fieldset>
 		<input type="hidden" name="currentiddetail" id="currentiddetail" class="text ui-widget-content ui-corner-all" />
+		
 	</form>
 </div>
 		<div id="pageHolder">
@@ -292,8 +299,14 @@ ob_end_clean();
 		case "questionmulti":
 		    $tp = "A-E";
 		break;
+		case "questiondropdown":
+		    $tp = "Dropdown";
+		break;
+		case "questiondate":
+		    $tp = "Date";
+		break;
 		default:
-			$tp = "A-E";
+			$tp = "unknown";
 		break;
 	}
 ?>

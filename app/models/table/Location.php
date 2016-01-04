@@ -77,6 +77,12 @@ class Location extends ITechTable
             $output []= array('id' => 0, 'name' => t('unknown'), 'tier'=>$t-1 ,'is_default'=>0, 'parent_id'=>0);
             }
             */
+            
+            file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'location0 >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+            var_dump("output=", $output, "END");
+            $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+            
+            
             self::$_locations = $output;
             return self::$_locations;
 

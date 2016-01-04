@@ -328,6 +328,7 @@ function renderFacilityDropDown($facilities, $selected_index, $readonly)
       LEFT JOIN location l2 ON l1.parent_id = l2.id
       ';
   $rowArray = $db->fetchAll($sql); // get 3 tiers of parent ids
+  
   $location_classes = array();
   foreach($rowArray as $row){
     // store parent location ids in a hash. hash[id] = "zone1id zone2id zone3id"
