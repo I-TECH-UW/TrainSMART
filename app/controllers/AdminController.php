@@ -156,9 +156,6 @@ class AdminController extends UserController
 			'label_training_center'  => 'Training Center',
 			'label_participant'      => 'Participant',
 			'label_participants'     => 'Participants',
-			'label_employee'         => 'Employee',
-			'label_employees'        => 'Employees',
-			'label_employer'         => 'Employer',
 		);
 
 		// _system settings
@@ -3082,6 +3079,10 @@ class AdminController extends UserController
 		// same logic as other Settings pages - except the employee_header setting below
 		require_once('models/table/Translation.php');
 		$labelNames = array( // input name => key_phrase
+			'label_employee'                 => 'Employee',
+			'label_employees'                => 'Employees',
+			'label_employer'                 => 'Employer',
+			'label_employee_code'            => 'Employee Code',
 			'label_partner'                  => 'Partner',
 			'label_sub_partner'              => 'Sub Partner',
 			'label_type'                     => 'Type of Partner',
@@ -3424,19 +3425,182 @@ class AdminController extends UserController
 
 	public function employeeMechanismAction()
 	{
+        $db = $this->dbfunc();
 
-		/* edit table */
-		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
-        $editTable->setParentController($controller);
-		$editTable->table   = 'mechanism_option';
-		$editTable->fields  = array('mechanism_phrase' => t('Mechanism'));
-		$editTable->label   = t('Mechanism');
-		$editTable->dependencies = array('mechanism_option_id' => 'subpartner_to_funder_to_mechanism');
-		$editTable->execute($controller->getRequest());
+        if ($this->getRequest()->isPost()) {
+            $params = $this->getAllParams();
+
+            if ($params['outputType'] == 'json') {
+                $id = $this->getSanParam('id');
+
+                $ret = array();
+                if (!$id)
+                {
+                    $ret['error'] = "No record id %s found.";
+                }
+                elseif ($id == 'undefined') {
+
+                    // This is a create - mechanism add
+                    $data = array('mechanism_phrase' => $this->getSanParam('mechanism_phrase'));
+                    if ($data['mechanism_phrase']) {
+                        $rv = $db->insert("mechanism_option", $data);
+                        if (!$rv) {
+                            $ret['error'] = "Could not insert %s";
+                        } else {
+                            $ret['insert'] = $db->lastInsertId();
+                        }
+                    } else {
+                        $ret['error'] = "Could not create %s";
+                    }
+                }
+                elseif ($this->getSanParam('delete') == 1) {
+
+                    // delete
+                    $rv = $db->delete('mechanism_option', "id = $id");
+                    if (!$rv) {
+                        $ret['error'] = "Could not delete %s";
+                    } else {
+                        $ret['msg'] = 'ok';
+                    }
+                }
+                else {
+
+                    // update
+                    $update_data = array();
+
+                    // this is a graceless and plodding approach
+                    if (isset($params['funder_phrase'])) {
+                        $update_data['funder_id'] = $this->getSanParam('funder_phrase');
+                    } elseif (isset($params['mechanism_phrase'])) {
+                        $update_data['mechanism_phrase'] = $this->getSanParam('mechanism_phrase');
+                    } elseif (isset($params['partner'])) {
+                        $update_data['owner_id'] = $this->getSanParam('partner');
+                    } elseif (isset($params['external_id'])) {
+                        $update_data['external_id'] = $this->getSanParam('external_id');
+                    } elseif (isset($params['end_date'])) {
+                        $update_data['end_date'] = $this->getSanParam('end_date');
+                    }
+
+                    if (count($update_data) > 0) {
+                        $rv = $db->update('mechanism_option', $update_data, "id = $id");
+                        if ($rv == 1) {
+                            $ret['msg'] = 'ok';
+                        } elseif ($rv < 1) {
+                            $ret['error'] = "Could not update %s";
+                        }
+                        else {
+                            $ret['error'] = "Multiple records updated with %s";
+                        }
+                    } else {
+                        $ret['error'] = "Could not update %s";
+                    }
+                }
+                $this->sendData($ret);
+            }
+        }
+
+        // and read
+        $sql = 'SELECT partner as text, id as value from partner ORDER BY partner ASC';
+        $partners = json_encode($db->fetchAll($sql));
+
+        $sql = 'SELECT funder_phrase as text, id as value from partner_funder_option';
+        $funders = json_encode($db->fetchAll($sql));
+
+        // fill in null values in the partner column so the edittable visibly updates when a user selects a
+        // value for a field that came in null - probably a YUI DataTable beta quirk
+        $sql = 'SELECT
+            partner_funder_option.funder_phrase,
+            mechanism_option.mechanism_phrase,
+            mechanism_option.owner_id,
+            mechanism_option.funder_id,
+            mechanism_option.id,
+            mechanism_option.external_id,
+            mechanism_option.end_date,
+            IFNULL(partner.partner, "0") as partner
+            FROM
+            mechanism_option
+            LEFT JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id
+            LEFT JOIN partner ON mechanism_option.owner_id = partner.id
+            ORDER BY mechanism_phrase ASC
+            ';
+        $tableRows = $db->fetchAll($sql);
+
+        require_once 'views/helpers/EditTableHelper.php';
+
+        $customColDefs = array(
+            'mechanism_phrase' => "sortable:true",
+            'partner'          => "sortable:true, editor:'dropdown', editorOptions: {dropdownOptions:$partners}",
+            'funder_phrase'    => "sortable:true, editor:'dropdown', editorOptions: {dropdownOptions:$funders}",
+            'external_id'      => "sortable:true",
+            // formatDate is defined in the view file
+            'end_date'         => "sortable:true, formatter:formatDate, editor:'date'"
+        );
+
+        $this->view->assign('pageTitle', t('Mechanism'));
+        $columnNames = array('mechanism_phrase' => t('Mechanism'), 'partner' => t('Prime').space.t('Partner'),
+            'funder_phrase' => t('Funder'), 'external_id' => t('Mechanism')." ID", 'end_date' => t('Funding End Date'));
+        $this->view->assign('editTable', EditTableHelper::generateHtml('mechanism', $tableRows, $columnNames, $customColDefs, array()));
+
 	}
 
-	//$editTable->dependencies = array('partner_importance_option_id' => 'partner');
+	public function employeeMechanismToSubpartnerAction()
+    {
+        $db = $this->dbfunc();
+
+        if ($this->getRequest()->isPost()) {
+            $params = $this->getAllParams();
+
+            if ($params['outputType'] == 'json') {
+                $id = $this->getSanParam('id');
+                $ret = array();
+
+                if (!$id) {
+                    $ret['error'] = "No record id %s found.";
+                }
+                elseif ($this->getSanParam('delete') == 1) {
+                    $rv = $db->delete('link_mechanism_partner', "id = $id");
+                    if (!$rv) {
+                        $ret['error'] = "Could not delete %s";
+                    } else {
+                        $ret['msg'] = 'ok';
+                    }
+                }
+                $this->sendData($ret);
+            }
+        }
+
+        // fill in null values in the partner column so the edittable visibly updates when a user selects a
+        // value for a field that came in null - probably a YUI DataTable beta quirk
+        $sql = 'SELECT
+            link_mechanism_partner.id,
+            mechanism_option.mechanism_phrase,
+            partner.partner,
+            link_mechanism_partner.end_date
+            FROM
+            link_mechanism_partner
+            INNER JOIN mechanism_option ON link_mechanism_partner.mechanism_option_id = mechanism_option.id
+            INNER JOIN partner ON link_mechanism_partner.partner_id = partner.id
+            WHERE mechanism_option.owner_id != link_mechanism_partner.partner_id
+            ORDER BY mechanism_phrase ASC;
+            ';
+        $tableRows = $db->fetchAll($sql);
+
+        require_once 'views/helpers/EditTableHelper.php';
+
+        $customColDefs = array(
+            'mechanism_phrase' => "sortable:true",
+            'partner'          => "sortable:true",
+            // formatDate is defined in the view file
+            'end_date'         => "sortable:true, formatter:formatDate"
+        );
+
+        $this->view->assign('pageTitle', t('Sub-Partner').space.t('Mechanism'));
+        $columnNames = array('mechanism_phrase' => t('Mechanism'), 'partner' => t('Sub-Partner'),
+            'end_date' => t('Funding End Date'));
+        $this->view->assign('editTable', EditTableHelper::generateHtml('SubPartner', $tableRows, $columnNames,
+            $customColDefs, array(), true));
+
+    }
 
 	public function employeeSubpartnerToFunderToMechanismAction()
 	{
@@ -3453,70 +3617,72 @@ class AdminController extends UserController
 
 	}
 
-	public function employeeBuildFundingAction()
-	{
 
-		require_once('views/helpers/Location.php'); // funder stuff
-		require_once('models/table/Partner.php');
+    public function employeeBuildFundingAction()
+    {
 
-		if ( $this->getRequest()->isPost() ) {
+        require_once('models/table/Partner.php');
+
+        if ( $this->getRequest()->isPost() ) {
 			$db     = $this->dbfunc();
-			$status = ValidationContainer::instance ();
-			$params = $this->getAllParams();
-
-			// prepare date for database
-			$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-
-			foreach ($params['funding_end_date'] as $i => $value)
-				$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
+            $status = ValidationContainer::instance();
+            $params = $this->getAllParams();
 
 			// test for all values
-			if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
-				$status->addError('', t ( 'All fields' ) . space . t('are required'));
-			else {
-				// test for existing record
-				$recArr = array(0 => $params['subPartner'],  1 => $params['partnerFunder'], 2 => $params['mechanism'],);
+            if (!($params['subPartner'] && $params['mechanism'] && $params['end_date'])) {
+                $status->addError('', t('All fields') . space . t('are required'));
+            }
+            else {
+                // prepare date for database
+                $params['end_date'] = $this->_euro_date_to_sql($params['end_date']);
 
-				$sql = 'SELECT * FROM subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
-				$where = "subpartner_id = $recArr[0] and partner_funder_option_id = $recArr[1] and mechanism_option_id = $recArr[2] and is_deleted = false";
-				$sql .= $where;
+                $subpartnerMechanismTable = new ITechTable(array('name' => 'link_mechanism_partner'));
 
-				$row = $db->fetchRow( $sql );
-				if ($row){
-					$status->addError('', t('Record exists'));
-				}
+                foreach ($params['subPartner'] as $value) {
 
-				if ( $status->hasError() )
-					$status->setStatusMessage( t('That funding mechanism could not be saved.') );
-				else {	//save
-					$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
+                    $query = $subpartnerMechanismTable->select()
+                        ->where('partner_id = ?', $value)
+                        ->where('mechanism_option_id = ?', $params['mechanism']);
 
-					$data = array(
-						'subpartner_id'  => $params['subPartner'],
-						'partner_funder_option_id' => $params['partnerFunder'],
-						'mechanism_option_id' => $params['mechanism'],
-						'funding_end_date' => $params['funding_end_date'][0],
-					);
+                    $row = $subpartnerMechanismTable->fetchRow($query);
+                    if ($row) {
+                        $data = array('end_date' => $params['end_date']);
+                        $subpartnerMechanismTable->update($data, "id = $row->id");
 
-					$insert_result = $sfm->insert($data);
-					$status->setStatusMessage( t('The funding mechanism was saved.') );
-					$this->_redirect("admin/employee-build_funding");
-				}
-			}
-		}
+                    }
+                    else {
+                        $data = array(
+                            'partner_id' => $value,
+                            'mechanism_option_id' => $params['mechanism'],
+                            'end_date' => $params['end_date']
+                        );
+                        $result = $subpartnerMechanismTable->insert($data);
 
-		$helper = new Helper();
+                        if (!$result) {
+                            $status->addError('', t('Unable to store all subpartners.'));
+                            break;
+                        }
+                    }
+                }
 
-		$subPartner = $helper->getAllSubPartners();
-		$this->viewAssignEscaped ( 'subPartner', $subPartner );
+                if ( $status->hasError() ) {
+                    $status->setStatusMessage(t('That funding mechanism could not be saved.'));
+                } else {
+                    $status->setStatusMessage(t('Mechanism data saved.'));
+                    $this->_redirect("admin/employee-build-funding");
+                }
+            }
+        }
 
-		$partnerFunder = $helper->getAllFunders();
-		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+        $helper = new Helper();
 
-		$mechanism = $helper->getAllMechanisms();
-		$this->viewAssignEscaped ( 'mechanism', $mechanism );
+        $subPartner = $helper->getAllSubPartners();
+        $this->viewAssignEscaped ( 'subPartner', $subPartner );
 
-	} //employeeBuildFundingAction
+        $mechanism = $helper->getAllMechanisms();
+        $this->viewAssignEscaped ( 'mechanism', $mechanism );
+
+    } //employeeBuildFundingAction
 
 	public function employeeFunderFilterAction()
 	{
@@ -3563,7 +3729,7 @@ class AdminController extends UserController
 
 				$insert_result = $sfm->insert($data);
 				$status->setStatusMessage( t('The funding mechanism was saved.') );
-				$this->_redirect("admin/employee-build_funding");
+				$this->_redirect("admin/employee-build-funding");
 			}
 		}
 
@@ -3629,7 +3795,7 @@ class AdminController extends UserController
 
 				$insert_result = $sfm->insert($data);
 				$status->setStatusMessage( t('The funding mechanism was saved.') );
-				$this->_redirect("admin/employee-build_funding");
+				$this->_redirect("admin/employee-build-funding");
 			}
 		}
 
@@ -3692,7 +3858,7 @@ class AdminController extends UserController
 
 				$insert_result = $sfm->insert($data);
 				$status->setStatusMessage( t('The funding mechanism was saved.') );
-				$this->_redirect("admin/employee-build_funding");
+				$this->_redirect("admin/employee-build-funding");
 			}
 		}
 
@@ -3759,7 +3925,7 @@ class AdminController extends UserController
 
 				$insert_result = $sfm->insert($data);
 				$status->setStatusMessage( t('The funding mechanism was saved.') );
-				$this->_redirect("admin/employee-build_funding");
+				$this->_redirect("admin/employee-build-funding");
 			}
 		}
 

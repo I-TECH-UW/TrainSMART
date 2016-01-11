@@ -161,19 +161,19 @@ if (isset($this->setting['display_mod_skillsmart']) && ($this->setting['display_
 
 if ( $this->setting['module_employee_enabled'] ) {
 	$navAdmin['employee'] = array(
-		'index'				=> t('Employees'),
+		'index'				      => t('Employees'),
 		'settings'          => t('Employee Settings'),
-		'category'          => t('Staff Category'),
-		'role'              => t('Primary Role'),
-		'transition'        => t('Intended Transitions'),
-		'relationship'      => t('Relationship'),
-		'referral'          => t('Referral Mechanism'),
-		'training-provided' => t('Training Provided'),
+		'category'                => t('Staff Category'),
+		'role'                    => t('Primary Role'),
+		'transition'              => t('Intended Transitions'),
+		'relationship'            => t('Relationship'),
+		'referral'                => t('Referral Mechanism'),
+		'training-provided'       => t('Training Provided'),
 		'partner-importance'=> t('Partner Importance'),
-		'partner-funder'   => t('Funder'),	
-		'mechanism'   => t('Mechanism'),
-		'build-funding' => t('Build Funding')
-	    ,'subpartner-to-funder-to-mechanism'   => t('Delete Funding')
+		'partner-funder'          => t('Funder'),
+		'mechanism'               => t('Mechanism'),
+		'build-funding'           => t('Build Funding'),
+	    'mechanism-to-subpartner' => t('Delete Funding')
 		
 	);
 }

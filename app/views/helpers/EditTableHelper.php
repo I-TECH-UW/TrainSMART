@@ -18,7 +18,7 @@ class EditTableHelper {
 	}
 	
 	/**
-	 * Generate HTML & JavaScript for our EditTable
+	 * Generate HTML & JavaScript string for an EditTable
 	 *
 	 * @param  string  $label                   - label for the table
 	 * @param  array   $rowRay                  - array of column-indexed arrays of data from the database
@@ -26,7 +26,7 @@ class EditTableHelper {
 	 * @param  array   $customColDefs = array() - column formatting and settings for the table display
 	 * @param  array   $noDelete      = array() - array of ids that are not allowed to be deleted (default is to allow deletion)
 	 * @param  boolean $noEdit        = false   - is this table read-only?
-	 * @return string containing HTML & JavaScript table
+	 * @return string                           - string containing HTML & JavaScript table
 	 */
 	
 	public static function generateHtml($label, array $rowRay, array $colDefs, array $customColDefs = array(), array $noDelete = array(), $noEdit = false) {
@@ -43,7 +43,7 @@ class EditTableHelper {
 				$def .= ', editor:"textbox"';
 			}
 
-			$colDefs[$key] = "{{$def}}";
+            $colDefs[$key] = '{' . $def .'}';
 		}
 		if (isset($customColDefs['id'])) {
 			$colDefs[] = '{key:"id",'.$customColDefs['id'].'}';
@@ -60,7 +60,6 @@ class EditTableHelper {
 
 		$noEdit = ($noEdit) ? 'true' : 'false';
 
-		$js = '';
 		$js = "<div id=\"{$labelSafe}Table\"></div>\n\n";
 		$js .= "<script type='text/javascript'>\n\n";
 		$js .= "<!--//--><![CDATA[//><!-- \n\n";

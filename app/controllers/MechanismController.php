@@ -133,7 +133,7 @@ class MechanismController extends ReportFilterHelpers {
       		
       		  $insert_result = $sfm->insert($data);
       		  $status->setStatusMessage( t('The funding mechanism was saved.') );
-      		  $this->_redirect("admin/employee-build_funding");
+      		  $this->_redirect("admin/employee-build-funding");
 	        }
 		}
 		

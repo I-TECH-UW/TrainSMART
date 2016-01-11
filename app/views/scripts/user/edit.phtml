@@ -206,13 +206,19 @@
 						<div class="float50">
 							<label for="edit_partners"><input type="radio" id="edit_partners"
 								name="edit_partners" value="edit_partners"
-								<?php if ( array_search('edit_partners',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit/Delete');?></label>
+								<?php if ( array_search('edit_partners',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit');?></label>
 						</div>
 						<label for="view_partners"><input type="radio" id="view_partners"
 							name="edit_partners" value="view_partners"
 							<?php if ( array_search('view_partners',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>
 					</div>
-					<div class="fieldLabelThin"> <?php tp('Mechanisms');?></div>
+                    <div class="fieldLabelThin"></div>
+                    <div class="fieldInput float50">
+                        <label for="delete_partners"><input type="checkbox" id="delete_partners" name="delete_partners" value="delete_partners"
+                                <?php if ( array_search('delete_partners',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><?php tp('Delete');?></label>
+                    </div>
+
+                    <div class="fieldLabelThin"> <?php tp('Mechanisms');?></div>
 					<div class="fieldInput">
 						<div class="float50">
 							<label for="edit_mechanisms"><input type="radio"
@@ -231,15 +237,21 @@
 						<div class="float50">
 							<label for="edit_employee"><input type="radio" id="edit_employee"
 								name="edit_employee" value="edit_employee"
-								<?php if ( array_search('edit_employee',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit/Delete');?></label>
+								<?php if ( array_search('edit_employee',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('Add/Edit');?></label>
 						</div>
 						<label for="view_employee"><input type="radio" id="view_employee"
 							name="edit_employee" value="view_employee"
 							<?php if ( array_search('view_employee',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>
 					</div>
 						<?php endif; ?>
-						
-						<div>
+
+                    <div class="fieldLabelThin"></div>
+                    <div class="fieldInput float50">
+                        <label for="delete_employee"><input type="checkbox" id="delete_employee" name="delete_employee" value="delete_employee"
+                            <?php if ( array_search('delete_employee',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><?php tp('Delete');?></label>
+                    </div>
+
+                    <div>
 						<div class="fieldLabelThin"> <?php tp('Files');?></div>
 						<div class="fieldInput width100">
 							<div class="float50">

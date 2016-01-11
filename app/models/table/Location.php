@@ -541,7 +541,7 @@ class Location extends ITechTable
    */
   public static function southAfrica_get_multi_region($idToCheck = null)
   {
-	if ( $_SERVER['HTTP_HOST'] != "localhost" && $_SERVER['HTTP_HOST'] != 'pepfarskillsmart.trainingdata.org')
+	if ( $_SERVER['HTTP_HOST'] != "localhost" && (strpos(strtolower($_SERVER['HTTP_HOST']), "pepfarskillsmart.trainingdata.org") < 0))
 		return null;
     $db = self::dbfunc();
     $rgns = '"*Multiple SD*","*Multiple Districts*","*Multiple Provinces*"';

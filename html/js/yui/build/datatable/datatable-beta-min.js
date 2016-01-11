@@ -13131,8 +13131,20 @@ saveCellEditor : function() {
             }
         }
 
+        // editor type dropdown was filling the table with an ID rather than editor value
+        // BS:2014/12/17
+        var actualValue = this._oCellEditor.value;
+        if (this._oCellEditor.column.editor === "dropdown") {
+            var opts = this._oCellEditor.column.editorOptions.dropdownOptions;
+            for (var i = 0; i < opts.length; i++) {
+                if (opts[i].value === actualValue) {
+                    actualValue = opts[i].text;
+                    break;
+                }
+            }
+        }
         // Update the Record
-        this._oRecordSet.updateRecordValue(this._oCellEditor.record, this._oCellEditor.column.key, this._oCellEditor.value);
+        this._oRecordSet.updateRecordValue(this._oCellEditor.record, this._oCellEditor.column.key, actualValue);
 
         // Update the UI
         this.formatCell(this._oCellEditor.cell.firstChild);

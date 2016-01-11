@@ -192,6 +192,12 @@ function renderFilter(&$locations, $tier, $widget_id, $default_val_id = false, $
     <?php }
 }
 
+/**
+ * @param $prefix
+ * @param $container
+ * @param $data_url
+ * @param $num_tiers
+ */
 function renderCityAutocomplete($prefix, $container, $data_url, $num_tiers) {
 	if($prefix)
 	$prefix = $prefix.'_';
@@ -336,7 +342,7 @@ function renderFacilityDropDown($facilities, $selected_index, $readonly)
   }
   $dupe = '';
   // lets build a visible <select> and also a display:none <select> with all locations
-  $output .= '<select id="facilityInput" name="facilityInput"';
+  $output = '<select id="facilityInput" name="facilityInput"';
   if ($readonly) 
   {
       $output .= ' disabled="disabled"';
@@ -391,7 +397,6 @@ function renderFacilityDropDown($facilities, $selected_index, $readonly)
   $output .= '<script type="text/JavaScript">'.$js.'</script>';
   return $output;
 
-
 }
 
 
@@ -428,7 +433,7 @@ function regionFiltersGetLastID($prefix, $criteria)
 
 /**
  * region filters (Dropdown style) - heavily uses renderFilter
- *
+ * @param $view
  * @param &$view                     - the view object, by reference
  * @param array &$locations          - reference to an array of location arrays, often from Location::getAll. passed to renderFilter
  * @param array &$criteria           - reference to an array returned by ReportFilterHelpers::getLocationCriteriaValues
@@ -497,18 +502,17 @@ function region_filters_dropdown(&$view, &$locations, &$criteria, $is_multiple =
         <div  class="leftBorder <?php echo $class; ?>"><?php renderFilter($locations, 9, $prefix.'region_i_id', @$criteria[$prefix.'region_i_id'], ($view->setting['display_region_i']?'region_i_id':false), $is_multiple, $view->viewonly); ?></div><?php if (!$middleColumn) echo '</div>'; ?>
     <?php }
 
-    // done
 }
-
 
 /**
  * region filters (Dropdown style)
  *
- * @param $is_multiple = multiple select box
- *
  * preservice uses a prefix-geo123 field name and a template / view name of prefixgeo123, call with prefix= local or permanent etc for field names local-geo1 2 3, or permanent-geo123 and assign default values to view->localgeo1 = 123; etc
  * this is just a helper function to render the same drop downs used in 4 pages.
  * ex: region_filters_dropdown_ps($this, 'local');
+ * @param $view
+ * @param string $prefix
+ * @param bool $readonly
  */
 function region_filters_dropdown_ps(&$view, $prefix = '', $readonly = false) {
   if ($prefix) $prefix2 = $prefix . '_';
@@ -557,69 +561,13 @@ function region_filters_dropdown_ps(&$view, $prefix = '', $readonly = false) {
 		renderFilter($view->locations, 9, $prefix2.'geo9', $view->escape( $view->{$prefix.'geo9'} ), false,'',$readonly);
 	}
 
-// done
 }
 
 /**
- * region filters (Dropdown style)
- *
- * @param $is_multiple = multiple select box
- *
- * preservice uses a prefix-geo123 field name and a template / view name of prefixgeo123, call with prefix= local or permanent etc for field names local-geo1 2 3, or permanent-geo123 and assign default values to view->localgeo1 = 123; etc
- * this is just a helper function to render the same drop downs used in 4 pages.
- * ex: region_filters_dropdown_ps($this, 'local');
+ * @param $tlocations
+ * @param $selectedValue
+ * @param $selectContainerAttrs
  */
-function region_filters_dropdown_ps2(&$view, &$defaultvalues = array(), $prefix = '') {
-
-    if ($prefix) $prefix = $prefix . '_';
-  ?>
-
-  <label id="<?php echo $prefix; ?>province_id_lbl"><?php echo (@$view->translation['Region A (Province)']); ?></label>
-  <?php renderFilter($view->locations, 1, $prefix.'province_id', $view->escape( $defaultvalues[$prefix.'province_id'] ), ($view->setting['display_region_b']?$prefix.'region_b_id':false));
-
-  if ( $view->setting['display_region_b'] ) {
-    echo "\t <label id=\"".$prefix."district_id_lbl\">" . @$view->translation['Region B (Health District)'] . '</label>';
-    renderFilter($view->locations, 2, $prefix.'region_b_id', $view->escape( $defaultvalues[$prefix.'region_b_id'] ), ($view->setting['display_region_c']?$prefix.'region_c_id':false));
-  }
-
-  if ( $view->setting['display_region_c'] ) {
-    echo "\t <label id=\"".$prefix."region_c_id_lbl\">" . @$view->translation['Region C (Local Region)'] . '</label>';
-    renderFilter($view->locations, 3, $prefix.'region_c_id', $view->escape( $defaultvalues[$prefix.'region_c_id'] ), ($view->setting['display_region_d']?$prefix.'region_d_id':false));
-  }
-
-  if ( $view->setting['display_region_d'] ) {
-    echo "\t <label id=\"".$prefix."region_d_id_lbl\">" . @$view->translation['Region D'] . '</label>';
-    renderFilter($view->locations, 4, $prefix.'region_d_id', $view->escape( $defaultvalues[$prefix.'region_d_id'] ), ($view->setting['display_region_e']?$prefix.'region_e_id':false));
-  }
-
-  if ( $view->setting['display_region_e'] ) {
-    echo "\t <label id=\"".$prefix."region_e_id_lbl\">" . @$view->translation['Region E'] . '</label>';
-    renderFilter($view->locations, 5, $prefix.'region_e_id', $view->escape( $defaultvalues[$prefix.'region_e_id'] ), ($view->setting['display_region_f']?$prefix.'region_f_id':false));
-  }
-
-  if ( $view->setting['display_region_f'] ) {
-    echo "\t <label id=\"".$prefix."region_f_id_lbl\">" . @$view->translation['Region F'] . '</label>';
-    renderFilter($view->locations, 6, $prefix.'region_f_id', $view->escape( $defaultvalues[$prefix.'region_f_id'] ), ($view->setting['display_region_g']?$prefix.'region_g_id':false));
-  }
-
-  if ( $view->setting['display_region_g'] ) {
-    echo "\t <label id=\"".$prefix."region_g_id_lbl\">" . @$view->translation['Region G'] . '</label>';
-    renderFilter($view->locations, 7, $prefix.'region_g_id', $view->escape( $defaultvalues[$prefix.'region_g_id'] ), ($view->setting['display_region_h']?$prefix.'region_h_id':false));
-  }
-
-  if ( $view->setting['display_region_h'] ) {
-    echo "\t <label id=\"".$prefix."region_h_id_lbl\">" . @$view->translation['Region H'] . '</label>';
-    renderFilter($view->locations, 8, $prefix.'region_h_id', $view->escape( $defaultvalues[$prefix.'region_h_id'] ), ($view->setting['display_region_i']?$prefix.'region_i_id':false));
-  }
-
-  if ( $view->setting['display_region_i'] ) {
-    echo "\t <label id=\"".$prefix."region_i_id_lbl\">" . @$view->translation['Region I'] . '</label>';
-    renderFilter($view->locations, 9, $prefix.'region_i_id', $view->escape( $defaultvalues[$prefix.'region_i_id'] ), false);
-  }
-
-// done
-}
-
 function training_location_dropdown(&$tlocations, $selectedValue, $selectContainerAttrs)
 {
 	?>
@@ -654,10 +602,14 @@ function training_location_dropdown(&$tlocations, $selectedValue, $selectContain
   <?php
 }
 
+/**
+ * @param $tlocations
+ * @param $selectedValue
+ * @param $selectContainerAttrs
+ * @return string
+ */
 function training_location_dropdown_as_a_return_value(&$tlocations, $selectedValue, $selectContainerAttrs) // todo refactor these
 {
-  $opts   = array();
-  $output = array();
   $opts = array ('<option value="">&mdash; ',t('select'),' &mdash;</option>');
   foreach($tlocations as $r) {
     if(!isset($lastProv) || $lastProv != $r['province_name']) {
@@ -685,120 +637,7 @@ function training_location_dropdown_as_a_return_value(&$tlocations, $selectedVal
   return "<select $selectContainerAttrs>$options</select>";
 }
 
-function make_page_select2()
-{
-
     // TODO: These github links no longer exist:
-	?>
-      <link href="http://ivaynberg.github.com/select2/select2-3.2/select2.css" rel="stylesheet"/>
-      <script src="http://ivaynberg.github.com/select2/select2-3.2/select2.js"></script>
-      <script type="text/javascript">
-      $(document).ready( function() {
-        $('select').css('min-width','400px').css('text-align','left').select2().css('min-width','400px').css('text-align','left');
-      });
-      </script>
-
-     <?php
-}
-function build_funding_dropdown(&$view, &$subPartner, &$partnerFunder, &$mechanism, $val_partner = null, $val_subpartner = null, $val_partnerFunder = null, $val_mechanism = null, $is_multiple = false, $required = false) {
-
-	$required = $required ? '<span class="required">*</span>' : '';
-	$class = $is_multiple ? 'autoHeight' : '';
-	?>
-
-		<div class="fieldLabel" id="partner_lbl"><?php echo t('Subpartner'); ?></div>
-		<div class="fieldInput">
-	
-		<?php renderFunder($subPartner, 'subPartner', $val_partner, 'partnerFunder', $is_multiple); ?></div>
-		<?php //echo '</div>'; ?>
-
-	
-		<div class="fieldLabel" id="partnerFunder_lbl"><?php echo t('Funder'); ?></div>
-		<div  class="fieldInput">
-		<?php 
-
-		renderFunder($partnerFunder, 'partnerFunder', $val_partnerFunder, 'mechanism', $is_multiple); ?></div>
-		<?php //echo '</div>'; ?>
-		
-		<div class="fieldLabel" id="mechanism_lbl"><?php echo t('Mechanism'); ?></div>
-		<div  class="fieldInput">
-		<?php 
-
-		renderFunder($mechanism, 'mechanism', $val_mechanism, false, $is_multiple); ?></div>
-		<?php //echo '</div>'; ?>
-			
-		<?php 
-
-	// done
-}
-
-
-
-function partner_funder_dropdown(&$view, &$subPartner, &$partnerFunder, &$mechanism, $val_subPartner = null, $val_partnerFunder = null, $val_mechanism = null, $is_multiple = false, $required = false) {
-	
-    $readonly = $view->viewonly ? ' readonly="readonly"' : '';	
-    $required = $required ? '<span class="required">*</span>' : '';
-	$class = $is_multiple ? 'autoHeight' : '';
-	?>
-
-		<div class="fieldLabel subPartner_lbl"><?php echo t('Partner'); ?></div>
-		<div class="fieldInput">
-	
-		<?php renderFunder($subPartner, 'subPartner[]', $val_subPartner, 'partnerFunder', $is_multiple, $readonly); ?></div>
-		<?php //echo '</div>'; ?>
-
-	
-		<div class="fieldLabel partnerFunder_lbl"><?php echo t('Funder'); ?></div>
-		<div  class="fieldInput">
-		<?php 
-
-		renderFunder($partnerFunder, 'partnerFunder[]', $val_partnerFunder, 'mechanism', $is_multiple, $readonly); ?></div>
-		<?php //echo '</div>'; ?>
-		
-		<div class="fieldLabel mechanism_lbl"><?php echo 'Mechanism'; ?></div>
-		<div  class="fieldInput">
-		<?php 
-
-		renderFunder($mechanism, 'mechanism[]', $val_mechanism, false, $is_multiple, $readonly); ?></div>
-		<?php //echo '</div>'; ?>
-			
-		<?php 
-
-	// done
-}
-
-function employee_funder_dropdown(&$view, &$subPartner, &$partnerFunder, &$mechanism, $val_subPartner = null, $val_partnerFunder = null, $val_mechanism = null, $is_multiple = false, $required = false) {
-
-	$required = $required ? '<span class="required">*</span>' : '';
-	$class = $is_multiple ? 'autoHeight' : '';
-	?>
-
-		<div class="fieldLabel subPartner_lbl"><?php echo t('Partner'); ?></div>
-		<div class="fieldInput">
-	
-		<?php renderFunder($subPartner, 'subPartner[]', $val_subPartner, 'partnerFunder', $is_multiple); ?></div>
-		<?php //echo '</div>'; ?>
-
-	
-		<div class="fieldLabel partnerFunder_lbl"><?php echo t('Funder'); ?></div>
-		<div  class="fieldInput">
-		<?php 
-
-		renderFunder($partnerFunder, 'partnerFunder[]', $val_partnerFunder, 'mechanism', $is_multiple); ?></div>
-		<?php //echo '</div>'; ?>
-		
-		<div class="fieldLabel mechanism_lbl"><?php echo 'Mechanism'; ?></div>
-		<div  class="fieldInput">
-		<?php 
-
-		renderFunder($mechanism, 'mechanism[]', $val_mechanism, false, $is_multiple); ?></div>
-		<?php //echo '</div>'; ?>
-			
-		<?php 
-
-	// done
-}
-
 /**
  * 
  * @param unknown $fieldIndex
@@ -823,7 +662,6 @@ function partner_sfm_dropdown($fieldIndex, &$view, &$subPartner, &$partnerFunder
   $required = $required ? '<span class="required">*</span>' : '';
   $class = $is_multiple ? 'autoHeight' : '';
   ?>
-  
 		<div class="fieldLabel" id="subPartner_lbl"><?php echo t('Partner'); ?></div>
 		<div class="fieldInput">
 	
@@ -867,81 +705,37 @@ function partner_sfm_dropdown($fieldIndex, &$view, &$subPartner, &$partnerFunder
 		?>
 		
 		</a></div>
-		<?php //echo '</div>'; ?>
 
-	
 		<div class="fieldLabel" id="partnerFunder_lbl"><?php echo t('Funder'); ?></div>
 		<div  class="fieldInput">
-		<?php 
+		<?php partnerRenderFunder($partnerFunder, 'partnerFunder' . strval($fieldIndex), $val_partnerFunder, 'mechanism' . strval($fieldIndex), $is_multiple, $required, $disabled); ?>
+        </div>
 
-		partnerRenderFunder($partnerFunder, 'partnerFunder' . strval($fieldIndex), $val_partnerFunder, 'mechanism' . strval($fieldIndex), $is_multiple, $required, $disabled); ?></div>
-		<?php //echo '</div>'; ?>
-		
 		<div class="fieldLabel" id="mechanism_lbl"><?php echo 'Mechanism'; ?></div>
 		<div  class="fieldInput">
+		<?php partnerRenderFunder($mechanism, 'mechanism' . strval($fieldIndex), $val_mechanism, false, $is_multiple, $required, $disabled); ?>
+        </div>
+
 		<?php 
 
-		partnerRenderFunder($mechanism, 'mechanism' . strval($fieldIndex), $val_mechanism, false, $is_multiple, $required, $disabled); ?></div>
-		<?php //echo '</div>'; ?>
-			
-		<?php 
-
-	// done
 }
 
 /**
- * Outputs four dropdown select boxes in-line 
- * 
- * @param unknown $fieldIndex               - unused
- * @param unknown $view                     - the Zend view object
- * @param unknown $partner                  - 
- * @param unknown $subPartner               - 
- * @param unknown $partnerFunder            - 
- * @param unknown $mechanism                - 
- * @param unknown $val_employee             - 
- * @param unknown $val_partner              - 
- * @param string $val_subPartner    = null  - 
- * @param string $val_partnerFunder = null  - 
- * @param string $val_mechanism     = null  - 
- * @param string $is_multiple       = false - 
- * @param string $required          = false - 
- * @param string $disabled          = ''    - 
+ * TODO: This function calls a non-existent function gnrtestrenderFunder so doesn't work - find out what it was supposed to do
+ * @param $view
+ * @param $employee
+ * @param $partner
+ * @param $subPartner
+ * @param $partnerFunder
+ * @param $mechanism
+ * @param null $val_employee
+ * @param null $val_partner
+ * @param null $val_subPartner
+ * @param null $val_partnerFunder
+ * @param null $val_mechanism
+ * @param bool $is_multiple
+ * @param bool $required
  */
-
-function employee_psfm_dropdown($fieldIndex, &$view, &$partner, &$subPartner, &$partnerFunder, &$mechanism, $val_employee, $val_partner, $val_subPartner = null,
-     $val_partnerFunder = null, $val_mechanism = null, $is_multiple = false, $required = false, $disabled = '') {
-
-	$required = $required ? '<span class="required">*</span>' : '';
-	$class = $is_multiple ? 'autoHeight' : '';
-	?>
-	
-		<div class="fieldLabel" id="subPartner_lbl"><?php echo t('Partner'); ?></div>
-		<div  class="fieldInput"> 
-		<?php 
-		
-		partnerRenderFunder($subPartner, 'subPartner', $val_subPartner, 'partnerFunder', $is_multiple); ?></div>
-		<?php //echo '</div>'; ?>
-
-	
-		<div class="fieldLabel" id="partnerFunder_lbl"><?php echo t('Funder'); ?></div>
-		<div  class="fieldInput">
-		<?php 
-
-		partnerRenderFunder($partnerFunder, 'partnerFunder', $val_partnerFunder, 'mechanism', $is_multiple); ?></div>
-		<?php //echo '</div>'; ?>
-		
-		<div class="fieldLabel" id="mechanism_lbl"><?php echo 'Mechanism'; ?></div>
-		<div  class="fieldInput">
-		<?php 
-
-		partnerRenderFunder($mechanism, 'mechanism', $val_mechanism, false, $is_multiple); ?></div>
-		<?php //echo '</div>'; ?>
-			
-		<?php 
-
-	// done
-}
-
 function gnrtest_epsfm_dropdown(&$view, &$employee, &$partner, &$subPartner, &$partnerFunder, &$mechanism, $val_employee = null, $val_partner = null, $val_subPartner = null, $val_partnerFunder = null, $val_mechanism = null, $is_multiple = false, $required = false) {
 
 	$required = $required ? '<span class="required">*</span>' : '';
@@ -950,38 +744,31 @@ function gnrtest_epsfm_dropdown(&$view, &$employee, &$partner, &$subPartner, &$p
 
 		<div class="fieldLabel" id="employee_lbl"><?php echo t('Employee'); ?></div>
 		<div class="fieldInput">
-		
-		<?php gnrtestrenderFunder($employee, 'employee', false, 'partner', $is_multiple); ?></div>
-		<?php //echo '</div>'; ?>
-		
+		<?php gnrtestrenderFunder($employee, 'employee', false, 'partner', $is_multiple); ?>
+        </div>
+
 		<div class="fieldLabel" id="partner_lbl"><?php echo 'Partner'; ?></div>
 		<div class="fieldInput">
-		
-		<?php gnrtestrenderFunder($partner, 'partner', $val_employee, 'subPartner', $is_multiple); ?></div>
-		<?php //echo '</div>'; ?>
-		
+		<?php gnrtestrenderFunder($partner, 'partner', $val_employee, 'subPartner', $is_multiple); ?>
+        </div>
+
 		<div class="fieldLabel" id="subPartner_lbl"><?php echo t('Partner'); ?></div>
 		<div  class="fieldInput">
-		 
-		<?php gnrtestrenderFunder($subPartner, 'subPartner', $val_subPartner, 'partnerFunder', $is_multiple); ?></div>
-		<?php //echo '</div>'; ?>
+		<?php gnrtestrenderFunder($subPartner, 'subPartner', $val_subPartner, 'partnerFunder', $is_multiple); ?>
+        </div>
 
-	
 		<div class="fieldLabel" id="partnerFunder_lbl"><?php echo t('Funder'); ?></div>
 		<div  class="fieldInput">
-		
-		<?php gnrtestrenderFunder($partnerFunder, 'partnerFunder', $val_partnerFunder, 'mechanism', $is_multiple); ?></div>
-		<?php //echo '</div>'; ?>
-		
+        <?php gnrtestrenderFunder($partnerFunder, 'partnerFunder', $val_partnerFunder, 'mechanism', $is_multiple); ?>
+        </div>
+
 		<div class="fieldLabel" id="mechanism_lbl"><?php echo 'Mechanism'; ?></div>
 		<div  class="fieldInput">
-		
-		<?php gnrtestrenderFunder($mechanism, 'mechanism', $val_mechanism, false, $is_multiple); ?></div>
-		<?php //echo '</div>'; ?>
-			
+		<?php gnrtestrenderFunder($mechanism, 'mechanism', $val_mechanism, false, $is_multiple); ?>
+        </div>
+
 		<?php 
 
-	// done
 }
 
 /**
@@ -995,7 +782,6 @@ function gnrtest_epsfm_dropdown(&$view, &$employee, &$partner, &$subPartner, &$p
  * @param boolean $required        = false - is a required element?
  * @param string  $disabled        = ''    - is read-only? 
  */
-
 function partnerRenderFunder(&$widget_array, $widget_id, $default_val_id = false, $child_widget_id = false, $is_multiple = false, $required = false, $disabled = '') {
 
 ?>
@@ -1097,43 +883,3 @@ YAHOO.util.Event.onDOMReady(function () {
 </script>
 <?php }
 }
-
-
-function renderFunder(&$widget_array, $widget_id, $default_val_id = false, $child_widget_id = false, $is_multiple = false, $readonly = '' ) {
-
-	?>
-  <select id="<?php echo $widget_id;?>" name="<?php echo $widget_id;?><?php if ($is_multiple) echo '[]';?>" <?php echo $readonly;?><?php if ( $is_multiple) echo 'multiple="multiple" size="10"';?>
-  <?php if ($child_widget_id) { ?>onchange="setStatus_<?php echo str_replace('-', '_', $widget_id);?>();" <?php }?>>
-    <option value="">--<?php tp('choose');?>--</option>
-   
-    <?php
-    
-      foreach ( $widget_array as $val ) {
-             
-        	  $selected = '';
-        	  if ( $default_val_id == $val['id']) {
-        	     $selected = 'selected="selected"';
-           	  }
-          	  if ($val['partner']) {	 
-                echo ('<option value="' . $val['id'] . '" ' . $selected . '>' . $val['partner'] . '</option>');
-              }
-           	  else if ($val['funder_phrase']) {
-           	  	echo ('<option value="' . $val['id'] . '" ' . $selected . '>' . $val['funder_phrase'] . '</option>');
-           	  }
-           	  else if ($val['mechanism_phrase']) {
-           	  	echo ('<option value="' . $val['id'] . '" ' . $selected . '>' . $val['mechanism_phrase'] . '</option>');
-           	  }
-      }
-    ?>
-  </select>
-  <?php
-if ( $child_widget_id ) {?>
-<script type="text/javascript">
-<!--//--><![CDATA[//><!--
-
-
-//--><!]]>
-</script>
-<?php }
-}
-
