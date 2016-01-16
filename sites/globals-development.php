@@ -7,6 +7,12 @@
 *
 */
 
+/*
+ * This file can be used for single website configurations. Copy it to a file named globals.php to do so.
+ * Multiple domain configurations should use globals-shared-sites.php instead, to determine the database name
+ * from the web server's request.
+ */
+
 ini_set('max_execution_time','300');
 ini_set('memory_limit', '1024M');
 
@@ -20,7 +26,12 @@ class Globals {
 
 	public function __construct() {
 
-		require_once('settings.php');
+		$fn = realpath(getcwd() . "/../sites/settings.php");
+		if (!$fn)
+		{
+			echo "Configuration file 'settings.php' not found.";
+		}
+		require_once($fn);
 		
 		// PATH_SEPARATOR =  ; for windows, : for *nix
 		$iReturn = ini_set( 'include_path',

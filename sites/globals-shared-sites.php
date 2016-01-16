@@ -2,6 +2,11 @@
 
 define('space', " ");
 
+/*
+ * This file is used for multiple-domain configurations of TrainSMART. Copy it to a file named 'globals.php' for
+ * TrainSMART to use it.
+ */
+
 function redirect_to_www() {
     header("Location: //www.trainingdata.org/home/");
     exit();
@@ -29,7 +34,12 @@ class Globals
         $subMostDomain = $parts[0];
         self::$COUNTRY = $subMostDomain;
 
-        require_once('settings.php');
+        $fn = realpath(getcwd() . "/../sites/settings.php");
+        if (!$fn)
+        {
+            echo "Configuration file 'settings.php' not found.";
+        }
+        require_once($fn);
 
         $countryLoaded = false;
 

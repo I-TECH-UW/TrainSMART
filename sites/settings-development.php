@@ -1,12 +1,11 @@
 <?php
 /*
- * Created on Feb 11, 2008
+ * Copy this file to the name 'settings.php' and customize for TrainSMART configuration.
  *
- * To change the template for this generated file go to
- * Window - Preferences - PHPeclipse - PHP - Code Templates
+ * For multi-domain configurations, the database name is determined in the globals.php file, copied from
+ * globals-shared-sites.php, but database credentials are still set here.
  */
 
-//DB connection
 class Settings {
 
 	public static $COUNTRY_NAME = 'test';

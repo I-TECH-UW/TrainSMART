@@ -38,7 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision "file", source: "vagrant/bootstrap/zend-debugger.ini", destination: "/home/vagrant/php-debugger.ini"
   config.vm.provision "file", source: "vagrant/bootstrap/ZendDebugger-php5.6.so", destination: "/home/vagrant/ZendDebugger.so"
-  config.vm.provision "file", source: "vagrant/bootstrap/php-5.3-nobuffer.ini", destination: "/home/vagrant/php.ini"
+  config.vm.provision "file", source: "vagrant/bootstrap/php-5.6-debugging-settings.ini", destination: "/home/vagrant/php.ini"
 #  config.vm.provision "file", source: "vagrant/bootstrap/rc.local.append", destination: "/home/vagrant/rc.local.append"
 #  config.vm.provision "file", source: "vagrant/bootstrap/mysqld.init.d", destination: "/home/vagrant/mysqld.init"
   
@@ -50,4 +50,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # so log files can be written in the shared vagrant folder
   config.vm.provision :shell, :inline => "sudo service httpd restart", run: "always"
   config.vm.provision :shell, :inline => "sudo service mysqld restart", run: "always"
+  config.vm.provision :shell, :inline => "if [ ! -f /vagrant/sites/settings.php ]; then cp /vagrant/sites/settings-development.php /vagrant/sites/settings.php; fi"
+  config.vm.provision :shell, :inline => "if [ ! -f /vagrant/sites/globals.php ]; then cp /vagrant/sites/globals-development.php /vagrant/sites/globals.php; fi"
 end
