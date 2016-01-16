@@ -4,7 +4,11 @@
  * Fuse IQ
  * 
  */
-require_once('../sites/globals.php');
+$fn = realpath(getcwd() . '/../sites/globals.php');
+if (!$fn) {
+    echo "Configuration file 'globals.php' not found";
+}
+require_once($fn);
 
 // FIX FOR apache_request_headers() function missing
 

@@ -66,8 +66,8 @@ chkconfig mysqld on
 service mysqld start
 mysql -u root </home/vagrant/grant-privileges.sql
 mysql -u admin </home/vagrant/data.sql
-rm /home/vagrant/data.sql
-rm /home/vagrant/grant-privileges.sql
+#rm /home/vagrant/data.sql
+#rm /home/vagrant/grant-privileges.sql
 service mysqld restart
 
 # let's make it so we can look at the log files without being root
