@@ -46,7 +46,7 @@ ob_end_clean();
 			$(function() {
 				$( "#dialog-form-detail" ).dialog({
 					autoOpen: false,
-					height: 350,
+					height: 400,
 					width: 350,
 					modal: true,
 					buttons: {
@@ -55,6 +55,7 @@ ob_end_clean();
 							$("#_iddetail").val($("#currentiddetail").val());
 							$("#_orderdetail").val($("#orderdetail").val());
 							$("#_qtypedetail").val($("#typedetail").val());
+							$("#_dropdowndetail").val($("#dropdowndetail").val());
 							if ($("#currentiddetail").val() == 0){
 								$("#_actiondetail").val("addnew");
 							} else {
@@ -80,6 +81,7 @@ ob_end_clean();
 						$("#titledetail").val("");
 						$("#orderdetail").val("<?php echo(count($this->questions) + 1) ?>");
 						$("#typedetail").val('questionmulti');
+						$("#dropdowndetail").val("0");
 
 						$( "#dialog-form-detail" ).dialog( "open" );
 					});
@@ -92,12 +94,13 @@ ob_end_clean();
 
 			});
 
-			function edititemdetail(iid,itxt,iorder,itp){
+			function edititemdetail(iid,itxt,iorder,itp,idd){
 				$('#dialog-form-detail').dialog('option', 'title', '<?php echo t('Update') ?>');
 				$("#currentiddetail").val(iid);
 				$("#titledetail").val(itxt);
 				$("#orderdetail").val(iorder);
 				$("#typedetail").val(itp);
+				$("#dropdowndetail").val(idd);
 				$( "#dialog-form-detail" ).dialog( "open" );
 			}
 <?php
@@ -243,8 +246,16 @@ ob_end_clean();
 				<option value="questiondate"><?php echo t('Question, date') ?></option>
 			</select>
 			
-			<label for="name"><?php echo t('Dropdown Id') ?></label>
-		    <input type="text" name="dropdownid" id="dropdownid" class="text ui-widget-content ui-corner-all" /><br>
+			<label for="name"><?php echo t('Dropdown type') ?></label>
+			<select name="dropdowndetail" id="dropdowndetail" class="text ui-widget-content ui-corner-all" style="display : block; width : 100%; padding : .4em;" />
+<?php
+    $i = 0;
+    foreach($this->dropdowngroups as $ddgrps){
+        echo "<option value=\"" . ($i + 1) . "\">" . $ddgrps['dropdowngroup_phrase'] . "</option>\n";
+        $i++;
+    }
+?>
+			</select>
 		    
 		</fieldset>
 		<input type="hidden" name="currentiddetail" id="currentiddetail" class="text ui-widget-content ui-corner-all" />
@@ -312,7 +323,7 @@ ob_end_clean();
 ?>
 									<td class=""><?php echo $tp; ?></td>
 									<td class=""><?php echo $lookup['question']; ?></td>
-									<td class="" style="text-align : right;"><input style="padding : 6px;" type="button" value="Edit" onclick="edititemdetail('<?php echo $lookup['id']; ?>','<?php echo (addslashes($lookup['question'])); ?>','<?php echo($lookup['itemorder']); ?>','<?php echo($lookup['itemtype']); ?>');" /></td>
+									<td class="" style="text-align : right;"><input style="padding : 6px;" type="button" value="Edit" onclick="edititemdetail('<?php echo $lookup['id']; ?>','<?php echo (addslashes($lookup['question'])); ?>','<?php echo($lookup['itemorder']); ?>','<?php echo($lookup['itemtype']); ?>','<?php echo($lookup['dropdown']); ?>');" /></td>
 								</tr>
 <?php
 	}
@@ -339,6 +350,7 @@ ob_end_clean();
 <input type="hidden" name="_fieldtoupdatedetail" id="_fieldtoupdatedetail" value="">
 <input type="hidden" name="_orderdetail" id="_orderdetail" value="0">
 <input type="hidden" name="_qtypedetail" id="_qtypedetail" value="questionmulti">
+<input type="hidden" name="_dropdowndetail" id="_dropdowndetail" value="0">
 </form>
 
 				</div>

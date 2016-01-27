@@ -2830,6 +2830,30 @@ class Helper extends ITechTable
 		}
 	}
 	
+	public function getDropdownGroups(){
+	
+	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper getDropdownGroups >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+	
+	    $db = $this->dbfunc();
+	    $select = $db->select()
+	    ->from("assessment_dropdowngroup_option")
+	    ->order('id');
+	    $result = $db->fetchAll($select);
+	    $return = array();
+	    if (count ($result) > 0){
+	        foreach ($result as $row){
+	            $return[] = array(
+	                "id"			=> $row['id'],
+	                "dropdowngroup_phrase"	=> $row['dropdowngroup_phrase'],
+	            );
+	        }
+	    }
+	    
+	    return $return;
+	
+	}
+	
 	public function getSkillSmartAssessmentsQuestions($cid = 0){
 	    
 	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper getSkillSmartAssessmentsQuestions >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
@@ -2855,6 +2879,7 @@ class Helper extends ITechTable
 	                "itemtype"		=> $row['itemtype'],
 	                "status"		=> $row['status'],
 	                "questiontype"	=> $row['questiontype'],
+	                "dropdown" => $row['dropdowngroup_id'],
 	            );
 	        }
 	    }
@@ -2894,12 +2919,14 @@ class Helper extends ITechTable
 	}
 	
 	public function updateSkillsmartAssessmentQuestion($params,$assessid){
+	    
 	    $db = $this->dbfunc();
 	
 	    $id = $_POST['_iddetail'];
 	    $question = $_POST['_fieldtoupdatedetail'];
 	    $itemorder = $_POST['_orderdetail'];
 	    $itemtype = $_POST['_qtypedetail'];
+	    $dropdown = $_POST['_dropdowndetail'];
 	
 	    // MAKING A GAP IN THE NUMBERING FOR THE NEW ITEM
 	    $query = "SELECT * FROM assessments_questions WHERE assessment_id = " . $assessid . " AND id <> " . $id . " AND itemorder >= " . $itemorder;
@@ -2919,9 +2946,16 @@ class Helper extends ITechTable
 	    $query = "UPDATE assessments_questions SET
 			question = '" . addslashes($question) . "',
 			itemorder = '" . addslashes($itemorder) . "',
-			itemtype = '" . addslashes($itemtype) . "'
+			itemtype = '" . addslashes($itemtype) . "',
+			dropdowngroup_id = '" . addslashes($dropdown) . "'
 			WHERE id = " . $id;
 	    #die($query);
+	    
+	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'updateSkillsmartAssessmentQuestion>' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+	    var_dump("query", $query);
+	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+	     
+	    
 	    $db->query($query);
 	    $this->skillsmartAssessmentCloseGaps($assessid);
 	}

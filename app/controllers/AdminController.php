@@ -2860,7 +2860,158 @@ class AdminController extends UserController
 		$this->view->assign("header",t("Facility Departments"));
 	}
 	
+	public function assessmentDropdowngroupAction()
+	{
+	    $controller = &$this;  //gnr, Call-time pass-by-reference has been removed and EditTableController constructor signature must match Zend_Controller_Action_Interface
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'assessment_dropdowngroup_option';
+	    $editTable->fields  = array('dropdowngroup_phrase' => t('Dropdown Group'));
+	    $editTable->label   = t('Dropdown Group');
+	    $editTable->execute($controller->getRequest());
+	}
+	
+	public function assessmentDropdownAction()
+	{
+	    $controller = &$this;  //gnr, Call-time pass-by-reference has been removed and EditTableController constructor signature must match Zend_Controller_Action_Interface
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'assessment_dropdown_option';
+	    $editTable->fields  = array('dropdown_phrase' => t('Dropdown Option'));
+	    $editTable->label   = t('Dropdown Option');
+	    $editTable->execute($controller->getRequest());
+	}
+	
+	public function assessmentAssignDropdownAction()
+	{
+	
+	    require_once('views/helpers/MultiAssign.php');
+	
+	    $multiAssign = new multiAssign();
+	    $multiAssign->table = 'assessment_dropdowngroup_to_assessment_dropdown_option';
+	
+	    $multiAssign->option_table = 'assessment_dropdown_option';
+	    $multiAssign->option_field = array('dropdown_phrase' => t('Option'));
+	
+	    $multiAssign->parent_table = 'assessment_dropdowngroup_option';
+	    $multiAssign->parent_field = array('dropdowngroup_phrase' => t('Dropdown'));
+	
+	    $output = $multiAssign->init($this);
+	    if(is_array($output)) { // json
+	        $this->sendData($output);
+	    } else {
+	        $this->view->assign('multiAssign', $output);
+	    }
+	
+	    if($this->getRequest()->isPost()) { // Redirect
+	        // redirect to next page
+	        if($this->getParam('redirect')) {
+	            header("Location: " . $this->getParam('redirect'));
+	            exit;
+	        } else if($this->getParam('saveonly')) {
+	            $status = ValidationContainer::instance();
+	            $status->setStatusMessage('Your dropdowns have been saved.');
+	        }
+	    }
+	
+	    return;
+	    
+	
+	    /*
+	    $NUM_TOPICS = 20;
+	    $this->view->assign('NUM_TOPICS', $NUM_TOPICS);
+	
+	    // checkbox 
+	    $fieldSystem = 'display_training_recommend';
+	
+	    if($this->getRequest()->isPost() && !$this->getParam("id")) { // Update db
+	        $this->putSetting($fieldSystem, $this->getParam($fieldSystem));
+	    }
+	
+	    $checkbox = array(
+	        'name'  => $fieldSystem,
+	        'label' => t('Display recommended trainings per individual'),
+	        'value' => $this->getSetting($fieldSystem),
+	    );
+	    $this->view->assign('checkbox', $checkbox);
+	
+	    require_once('models/table/TrainingRecommend.php');
+	
+	    // Save POST
+	    if($this->getRequest()->isPost()) { // Update db
+	        if(is_numeric($this->getParam('person_qualification_option_id'))) {
+	            TrainingRecommend::saveRecommendations(
+	            $this->getParam('person_qualification_option_id'),
+	            $this->getParam('training_topic_option_id')
+	            );
+	
+	            // Remove current, then redirect to clean page
+	            if($this->getParam('edit') && $this->getParam('edit') != $this->getParam('person_qualification_option_id')) {
+	                TrainingRecommend::saveRecommendations($this->getParam('edit'), array());
+	                header("Location: " . Settings::$COUNTRY_BASE_URL . '/admin/training-recommend');
+	                exit;
+	            }
+	
+	        }
+	
+	        // redirect to next page
+	        if($this->getParam('redirect')) {
+	            header("Location: " . $this->getParam('redirect'));
+	            exit;
+	        } else if($this->getParam('saveonly')) {
+	            $status = ValidationContainer::instance();
+	            $status->setStatusMessage('Your recommended trainings have been saved.');
+	        }
+	    }
+	
+	    // Edting
+	    if($this->getParam('edit') || $this->getParam('edit') === '0' ) {
+	        $qualId = $this->getParam('edit');
+	        $topicId = array_fill(1, $NUM_TOPICS, '');
+	        $topics = TrainingRecommend::getRecommendations($this->getParam('edit'));
+	        $pos = 0;
+	        foreach($topics->ToArray() as $row) {
+	            $topicId[++$pos] = $row['training_topic_option_id'];
+	        }
+	    } else { // New
+	        $qualId = 0;
+	        $topicId = array_fill(1, $NUM_TOPICS, '');
+	    }
+	
+	    // Delete
+	    if($delete = $this->getParam('delete')) {
+	        TrainingRecommend::saveRecommendations($this->getParam('delete'), array());
+	    }
+	
+	    require_once 'views/helpers/DropDown.php';
+	    require_once 'models/table/OptionList.php';
+	    //$allowIds = TrainingRecommend::getQualificationIds(); // primary qualifications only
+	    //$this->view->assign('dropDownQuals', DropDown::generateHtml('person_qualification_option','qualification_phrase',$qualId, false, false, $allowIds));
+	
+	    $qualificationsArray = OptionList::suggestionListHierarchical('person_qualification_option','qualification_phrase',false,false);
+	    // remove children qualifications and unknown as an option
+	    foreach($qualificationsArray as $k => $qualArray) {
+	        if  ($qualArray['id'] || $qualArray['parent_phrase'] == 'unknown') {
+	            unset($qualificationsArray[$k]);
+	        }
+	    }
+	    $this->viewAssignEscaped('qualifications',$qualificationsArray);
+	    $this->viewAssignEscaped('qualId',$qualId);
+	
+	    for($j = 1; $j <= $NUM_TOPICS; $j++) {
+	        $this->view->assign('dropDownTopic' . $j, DropDown::generateHtml('training_topic_option','training_topic_phrase',$topicId[$j], false, false, false, true));
+	    }
+	    */
+	    
+	
+	}
+	
 	public function assessmentSettingsAction(){
+	    
+	    
+	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'adminController assessmentSettingsAction start >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+	    
 	    $helper = new Helper();
 	
 	    $assessid = $this->getSanParam('assess');
@@ -2876,6 +3027,8 @@ class AdminController extends UserController
 	                $helper->addSkillsmartAssessment($_POST);
 	                break;
 	            case "update":
+	                
+	                 
 	                $helper->updateSkillsmartAssessment($_POST);
 	                break;
 	        }
@@ -2886,6 +3039,9 @@ class AdminController extends UserController
 	                $helper->addSkillsmartAssessmentQuestion($_POST,$assessid);
 	                break;
 	            case "update":
+	                file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'adminController assessmentSettingsAction call updateSkillsmartAssessmentQuestion >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+	                $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+	                 
 	                $helper->updateSkillsmartAssessmentQuestion($_POST,$assessid);
 	                break;
 	        }
@@ -2906,11 +3062,16 @@ class AdminController extends UserController
 	    } else {
 	        
 	        // ASSESSMENT SPECIFIC OUTPUT
+	        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'adminController assessmentSettingsAction >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+	        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+	        
 	        $assessment = $helper->getSkillSmartAssessments($assessid);
 	        $questions = $helper->getSkillSmartAssessmentsQuestions($assessid);
+	        $dropdowngroups = $helper->getDropdownGroups();
 	
 	        $this->view->assign("header","Update assessment '" . $assessment['label'] . "'");
 	        $this->view->assign("questions",$questions);
+	        $this->view->assign("dropdowngroups",$dropdowngroups);
 	
 	    }
 	}
@@ -3362,6 +3523,21 @@ class AdminController extends UserController
 		$editTable->dependencies = array('race_option_id' => 'employee');
 		$editTable->execute($controller->getRequest());
 	}
+	
+	public function peopleQualificationAction()
+	{
+	
+	    /* edit table */
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'person_qualification_option';
+	    $editTable->fields  = array('qualification_phrase' => t('Qualification'));
+	    $editTable->label   = t('Qualification');
+	    // $editTable->dependencies = array('race_option_id' => 'employee');
+	    $editTable->execute($controller->getRequest());
+	}
+	
 
 	public function employeeQualificationAction()
 	{
