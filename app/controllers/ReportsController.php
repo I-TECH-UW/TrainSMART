@@ -10073,32 +10073,21 @@ die (__LINE__ . " - " . $sql);
 		$db = $this->dbfunc();
 
 		if ($criteria['go']) {
+
 			$select = $db->select();
 			$select->from(array('emp' => 'employee'),
-				array('cost' => 'SUM(annual_cost)',	'count' => 'COUNT(emp.id)'));
+				array('cost' => 'SUM(annual_cost * lme.percentage/100)',
+					'fulltimecount' => 'SUM(case when lme.percentage = 100 then 1 else 0 end)',
+					'parttimecount' => 'SUM(case when (lme.percentage < 100) and (lme.percentage > 0) then 1 else 0 end)')
+			);
 			$select->join(array('lme' => 'link_mechanism_employee'), 'emp.id = lme.employee_id', array());
-			$select->join(array('eqo' => 'employee_qualification_option'), 'eqo.id = emp.employee_qualification_option_id', array('eqo.qualification_phrase'));
+			$select->join(array('eqo' => 'employee_qualification_option'),
+				'eqo.id = emp.employee_qualification_option_id', array('eqo.qualification_phrase'));
 			$select->join(array('p' => 'partner'), 'p.id = emp.partner_id', array('p.partner'));
 			$select->group('emp.employee_qualification_option_id');
 			$select->group('emp.partner_id');
 			$select->order('emp.employee_qualification_option_id');
 			$select->order('p.partner ASC');
-			$select->where('lme.percentage = 100');
-
-			$q = $select->__toString();
-
-			$select = $db->select();
-			$select->from(array('emp' => 'employee'),
-				array('cost' => 'SUM(annual_cost * (lme.percentage/100.0))',	'count' => 'COUNT(emp.id)'));
-			$select->join(array('lme' => 'link_mechanism_employee'), 'emp.id = lme.employee_id', array());
-			$select->join(array('eqo' => 'employee_qualification_option'), 'eqo.id = emp.employee_qualification_option_id', array('eqo.qualification_phrase'));
-			$select->join(array('p' => 'partner'), 'p.id = emp.partner_id', array('p.partner'));
-			$select->group('emp.employee_qualification_option_id');
-			$select->group('emp.partner_id');
-			$select->order('emp.employee_qualification_option_id');
-			$select->order('p.partner ASC');
-			$select->where('lme.percentage < 100');
-			$select->where('lme.percentage > 0');
 
 			$q = $select->__toString();
 
