@@ -10075,13 +10075,7 @@ die (__LINE__ . " - " . $sql);
 		if ($criteria['go']) {
 			$select = $db->select();
 
-			// limit data to user's access to mechanisms only available to partners and
-			// subpartners that the user account can access
 
-			if (!$this->hasACL('training_organizer_option_all')) {
-				$uid = $this->isLoggedIn();
-				//where 'user_to_organizer_access', 'user_id'
-			}
 			if ($criteria['showProvince']) {
 			}
 			if ($criteria['province_id']) {
@@ -10192,10 +10186,31 @@ die (__LINE__ . " - " . $sql);
 				->from('partner_funder_option', array('id', 'funder_phrase'))
 				->order('funder_phrase ASC')
 		);
-		$mechanisms = $db->fetchPairs($db->select()
+
+		if (!$this->hasACL('training_organizer_option_all')) {
+			// limit data to user's access to mechanisms only available to partners and
+			// subpartners that the user account can access
+			$uid = $this->isLoggedIn();
+
+			$mechanismFilter = $db->select();
+			$mechanismFilter->from(array('mo' => 'mechanism_option'), array('mo.id', 'mo.mechanism_phrase'));
+			$mechanismFilter->join(array('lmp' => 'link_mechanism_partner'), 'mo.id = lmp.mechanism_option_id', array());
+			$mechanismFilter->join(array('p' => 'partner'), 'p.id = lmp.partner_id', array());
+			$mechanismFilter->join(array('utoa' => 'user_to_organizer_access'),
+				'utoa.training_organizer_option_id = p.organizer_option_id', array());
+
+			$mechanismFilter->where('utoa.user_id = ?', $uid);
+			$mechanismFilter->order('mechanism_phrase ASC');
+
+			$q = $mechanismFilter->__toString();
+
+			$mechanisms = $db->fetchPairs($mechanismFilter);
+		} else {
+			$mechanisms = $db->fetchPairs($db->select()
 				->from('mechanism_option', array('id', 'mechanism_phrase'))
 				->order('mechanism_phrase ASC')
-		);
+			);
+		}
 		$transitions = $db->fetchPairs($db->select()
 				->from('employee_transition_option', array('id', 'transition_phrase'))
 				->order('transition_phrase ASC')
