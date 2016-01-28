@@ -42,11 +42,11 @@
 				<h1><?php echo t('Edit Assessment'); ?></h1>
 				<div style="height:54px">
 					<div style="width:486px;text-align:left;float:right">
-						<div><b>A</b> - <?php echo t('fully competent and confident; able to teach others (mentor'); ?>)</div>
-						<div><b>B</b> - <?php echo t('fully competent; not able to teach others (not able to be a mentor'); ?>)</div>
-						<div><b>C</b> - <?php echo t('capable'); ?></div>
-						<div><b>D</b> - <?php echo t('not capable'); ?></div>
-						<div><b>E</b> - <?php echo t('not currently in my job description/duties'); ?></div>
+						<div><b></b>  <?php echo t(''); ?></div>
+						<div><b></b>  <?php echo t(''); ?></div>
+						<div><b></b>  <?php echo t(''); ?></div>
+						<div><b></b>  <?php echo t(''); ?></div>
+						<div><b></b>  <?php echo t(''); ?></div>
 					</div>
 				</div>
 				<form action="" id="personCompForm" method="post">
@@ -70,10 +70,64 @@
 								switch ($question['itemtype']){
 									case "text":
 									echo "						<tr>\n";
-									echo "							<td colspan=\"7\">\n";
+									echo '							<td style="width:68%">';
 									echo "								<div class=\"nwtxtbig\">" . $question['question'] . "</div>\n";
 									echo "							</td>\n";
 									echo "						</tr>\n";
+									break;
+									case "questiondate":
+									    $counter++;
+									    $answer = "";
+									    $gnrtest = $this->criteria['question'];
+									    echo "						<tr>\n";
+									    echo "							<td colspan=\"7\">";
+									    echo '								<div class="nwtxt">'; echo $question['question']; echo '</div>';
+									    echo '							</td>';
+									    echo '							<td colspan="6" style="text-align:center">';
+									    
+									    echo "						<tr>";
+									    echo '							<td colspan="6" style="text-align:right">';
+									    echo "<div class='fieldInput' id='answerdate'>";
+									    tp('Day'); 
+									    echo "  <input id='answer-day' class='dayfield' type='text' name='answer-day' maxlength='2' value="; 
+									    echo $this->criteria['answer-day']; echo "  > ";
+									    tp('Month'); 
+									    echo " <input id='answer-month' class='monthfield' type='text' name='answer-month' maxlength='2' value="; 
+									    echo $this->criteria['answer-month']; echo "  > ";
+									    tp('Year');  
+									    echo " <input id='answer-year' class='yearfield' type='text' name='answer-year' maxlength='4' value="; 
+									    echo $this->criteria['answer-year']; echo " > ";
+									    echo "						</td></tr>";
+									    
+									    
+									    echo "<script  type='text/javascript'>";
+									    echo "YAHOO.util.Event.onDOMReady(function () {";
+									    echo "makeCalendar('answerdate','answer-day','answer-month','answer-year');";
+									    echo "});";
+									    echo "</script>";
+									    
+									    echo "							</td>\n";
+									    echo "						</tr>\n";
+									break;
+									case "questiondropdown":
+									    $counter++;
+									    
+									    $answer = "";
+									    foreach ($assessment['answers'] as $a){
+									        if ($a['question'] == $question['id']){
+									            $answer = $a['option'];
+									        }
+									    }
+									    
+									    echo '						<tr>';
+									    echo '							<td style="width:68%">';
+									    //echo '								<div class="nwtxt">' . $counter . ')&nbsp;' . $question['question'] . '</div>';
+									    echo '								<div class="nwtxt">' . $question['question'] . '</div>';
+									    echo '							</td>';
+									    echo '							<td colspan="6" style="text-align:center">';
+									    echo '								<input type="text" id="question' . $question['id'] . '" name="question[' . $question['id'] . ']" maxlength="128" style="width : 99%;" value="' . substr($answer,0,128) . '" />';
+									    echo '							</td>';
+									    echo '						</tr>';
 									break;
 									case "questionyesno":
 										$counter++;

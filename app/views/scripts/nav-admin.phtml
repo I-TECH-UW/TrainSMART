@@ -181,8 +181,11 @@ if ( $this->setting['module_employee_enabled'] ) {
 }
 if ( $this->setting['module_assessment_enabled'] ) {
     $navAdmin['assessment'] = array(
-        'index'				=> t('Assessments'),
-        'settings'          => t('Build Assessments')
+        'index'				=> t('Build Assessments'),
+        'settings'          => t('Assessments'),
+        'dropdown'          => t('Dropdown'),
+        'dropdowngroup'     => t('Dropdown Groups'),
+        'assign-dropdown'   => t('Dropdown Assign')
     );
 }
 ?>
