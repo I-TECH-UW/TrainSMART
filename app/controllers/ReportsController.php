@@ -10089,10 +10089,9 @@ die (__LINE__ . " - " . $sql);
 			$select->order('emp.employee_qualification_option_id');
 			$select->order('p.partner ASC');
 
-			$q = $select->__toString();
-
 			if ($criteria['showProvince']) {
 			}
+
 			if ($criteria['province_id']) {
 			}
 
@@ -10116,21 +10115,7 @@ die (__LINE__ . " - " . $sql);
 
 			}
 
-			if ($criteria['showfunder'] || $criteria['funder']) {
-				$cols = array();
-				if ($criteria['showfunder']) {
-					$cols[] = 'pfo.funder_phrase';
-				}
-				if ($criteria['funder']) {
-					if (count($criteria['funder']) > 1) {
-						$select->where('pfo.id in (?)', implode(',', $criteria['funder']));
-					} elseif (count($criteria['funder']) == 1) {
-						$select->where('pfo.id = ?', $criteria['funder']);
-					}
-				}
-				$select->join(array('pfo' => 'partner_funder_option'), 'pfo.id = blahblah', $cols);
-			}
-
+			$mechanismJoined = false;
 			if ($criteria['showmechanism'] || $criteria['mechanism']) {
 				$cols = array();
 				if ($criteria['showmechanism']) {
@@ -10144,7 +10129,26 @@ die (__LINE__ . " - " . $sql);
 						$select->where('mo.id = ?', $criteria['mechanism']);
 					}
 				}
-				$select->join(array('mo' => 'mechanism_option'), 'mo.id = blahblah', $cols);
+				$select->join(array('mo' => 'mechanism_option'), 'mo.id = lme.mechanism_option_id', $cols);
+				$mechanismJoined = true;
+			}
+
+			if ($criteria['showfunder'] || $criteria['funder']) {
+				$cols = array();
+				if ($criteria['showfunder']) {
+					$cols[] = 'pfo.funder_phrase';
+				}
+				if ($criteria['funder']) {
+					if (count($criteria['funder']) > 1) {
+						$select->where('pfo.id in (?)', implode(',', $criteria['funder']));
+					} elseif (count($criteria['funder']) == 1) {
+						$select->where('pfo.id = ?', $criteria['funder']);
+					}
+				}
+				if (!$mechanismJoined) {
+					$select->join(array('mo' => 'mechanism_option'), 'mo.id = lme.mechanism_option_id', $cols);
+				}
+				$select->join(array('pfo' => 'partner_funder_option'), 'pfo.id = mo.funder_id', $cols);
 			}
 
 			if ($criteria['showcategory'] || $criteria['category']) {
@@ -10155,7 +10159,7 @@ die (__LINE__ . " - " . $sql);
 				if ($criteria['category']) {
 					$select->where('eco.id = ?', $criteria['category']);
 				}
-				$select->join(array('eco' => 'employee_category_option'), 'eco.id = blahblah', $cols);
+				$select->join(array('eco' => 'employee_category_option'), 'eco.id = emp.employee_category_option_id', $cols);
 			}
 
 			if ($criteria['showtransitiontype'] || $criteria['transition'] ||
@@ -10171,7 +10175,7 @@ die (__LINE__ . " - " . $sql);
 				if ($criteria['transition_description']) {
 					$select->orWhere('eto.id = ?', $criteria['transition_description']);
 				}
-				$select->join(array('eto' => 'employee_transition_option'), 'eto.id = blahblah', $cols);
+				$select->join(array('eto' => 'employee_transition_option'), 'eto.id = emp.employee_transition_option_id', $cols);
 			}
 
 			if ($criteria['contractshowdate']) {}
@@ -10197,10 +10201,7 @@ die (__LINE__ . " - " . $sql);
 			$this->view->assign('output', $output);
 		}
 
-		$funders = $db->fetchPairs($db->select()
-				->from('partner_funder_option', array('id', 'funder_phrase'))
-				->order('funder_phrase ASC')
-		);
+		$choose = array("0" => '--' . t("choose") . '--');
 
 		if (!$this->hasACL('training_organizer_option_all')) {
 			// limit data to user's access to mechanisms only available to partners and
@@ -10217,23 +10218,29 @@ die (__LINE__ . " - " . $sql);
 			$mechanismFilter->where('utoa.user_id = ?', $uid);
 			$mechanismFilter->order('mechanism_phrase ASC');
 
-			$q = $mechanismFilter->__toString();
-
-			$mechanisms = $db->fetchPairs($mechanismFilter);
+			$mechanisms = $choose + $db->fetchPairs($mechanismFilter);
 		} else {
-			$mechanisms = $db->fetchPairs($db->select()
+			$mechanisms = $choose + $db->fetchPairs($db->select()
 				->from('mechanism_option', array('id', 'mechanism_phrase'))
 				->order('mechanism_phrase ASC')
 			);
 		}
-		$transitions = $db->fetchPairs($db->select()
+
+		$funders = $choose + $db->fetchPairs($db->select()
+				->from('partner_funder_option', array('id', 'funder_phrase'))
+				->order('funder_phrase ASC')
+		);
+
+		$transitions = $choose + $db->fetchPairs($db->select()
 				->from('employee_transition_option', array('id', 'transition_phrase'))
 				->order('transition_phrase ASC')
 		);
-		$categories = $db->fetchPairs($db->select()
+
+		$categories = $choose + $db->fetchPairs($db->select()
 				->from('employee_category_option', array('id', 'category_phrase'))
 				->order('category_phrase ASC')
 		);
+
 		$this->view->assign('locations', $locations);
 		$this->view->assign('categories', $categories);
 		$this->view->assign('transitions', $transitions);
