@@ -66,6 +66,7 @@
 						<table cellpadding="0" cellspacing="0" border="0" style="width:100%;border:solid 1px #AAA">
                     <?php
 							$lasttype = "";
+							$first_calender = "true";
 							foreach ($assessment['questions'] as $question){
 								switch ($question['itemtype']){
 									case "text":
@@ -77,38 +78,67 @@
 									break;
 									case "questiondate":
 									    $counter++;
+									    
 									    $answer = "";
-									    $gnrtest = $this->criteria['question'];
+									    
+									    foreach ($assessment['answers'] as $a){
+									        if ($a['question'] == $question['id']){
+									            $answer = $a['option'];
+									        }
+									    }
+									    
+									    $date_array = explode('-', $answer);
+									    $vday = $date_array[0];
+									    $vmonth = $date_array[1];
+									    $vyear = $date_array[2];
+									    
+                                        $date_id = $question['id'] . '"';
+                                        $adate = '"answer' . $date_id;
+                                        $adate_sub = 'questions[' . $question['id'] . ']';
+                                        $aday = '"answer_day' . $date_id;
+                                        $amonth = '"answer_month' . $date_id;
+                                        $ayear = '"answer_year' . $date_id;
+                                        
+									    
 									    echo "						<tr>\n";
 									    echo "							<td colspan=\"7\">";
 									    echo '								<div class="nwtxt">'; echo $question['question']; echo '</div>';
 									    echo '							</td>';
 									    echo '							<td colspan="6" style="text-align:center">';
-									    
 									    echo "						<tr>";
 									    echo '							<td colspan="6" style="text-align:right">';
-									    echo "<div class='fieldInput' id='answerdate'>";
+									    echo "<div class='input' id=" . $adate . ' name="answer' . $question['id'] . '" >';
 									    tp('Day'); 
-									    echo "  <input id='answer-day' class='dayfield' type='text' name='answer-day' maxlength='2' value="; 
+									    echo "  <input id=" . $aday . " class='dayfield' type='text' name=" . $aday . " maxlength='2' value=" . $vday;
 									    echo $this->criteria['answer-day']; echo "  > ";
 									    tp('Month'); 
-									    echo " <input id='answer-month' class='monthfield' type='text' name='answer-month' maxlength='2' value="; 
+									    echo "  <input id=" . $amonth . " class='monthfield' type='text' name=" . $amonth . " maxlength='2' value=" . $vmonth;
 									    echo $this->criteria['answer-month']; echo "  > ";
 									    tp('Year');  
-									    echo " <input id='answer-year' class='yearfield' type='text' name='answer-year' maxlength='4' value="; 
+									    echo "  <input id=" . $ayear . " class='yearfield' type='text' name=" . $ayear . " maxlength='4' value=" . $vyear;
 									    echo $this->criteria['answer-year']; echo " > ";
 									    echo "						</td></tr>";
-									    
-									    
 									    echo "<script  type='text/javascript'>";
 									    echo "YAHOO.util.Event.onDOMReady(function () {";
-									    echo "makeCalendar('answerdate','answer-day','answer-month','answer-year');";
+									    if ($first_calender == 'true'){
+									        echo "makeCalendar($adate,$aday,$amonth,$ayear);";
+									        $first_calender = "false";
+									    } else {
+									        echo "makeAdditionalCalendar($adate,$aday,$amonth,$ayear);";
+									    }
 									    echo "});";
 									    echo "</script>";
+									    echo "							</td>";
+									    echo "						</tr>";
 									    
-									    echo "							</td>\n";
-									    echo "						</tr>\n";
+									    echo '						<tr>';
+									    echo '							<td style="width:68%">';
+									    echo '								<div class="nwtxtbig">&nbsp;</div>';
+									    echo '							</td>';
+									    echo '						</tr>';
+									    
 									break;
+									
 									case "questiondropdown":
 									    $counter++;
 									    
@@ -124,11 +154,36 @@
 									    //echo '								<div class="nwtxt">' . $counter . ')&nbsp;' . $question['question'] . '</div>';
 									    echo '								<div class="nwtxt">' . $question['question'] . '</div>';
 									    echo '							</td>';
-									    echo '							<td colspan="6" style="text-align:center">';
-									    echo '								<input type="text" id="question' . $question['id'] . '" name="question[' . $question['id'] . ']" maxlength="128" style="width : 99%;" value="' . substr($answer,0,128) . '" />';
+									    echo '							<td colspan="6" style="text-align:right">';
+									    ?>
+
+									    <div class="fieldLabel" id="type_id_lbl"><?php echo t('');?></div>
+									    		<div class="fieldInput">
+									    		<?php echo '<select id="dropdown' . $question['id'] . '" name="dropdown' . $question['id'] . '" >' ?>
+									    		<option value="--N/A--">--N/A--</option>
+									    		<?php
+									    		foreach ( $this->dropdowns as $k=>$vals ) {
+									    		    if($question['id'] == $vals['id']) {
+
+echo '<option value="'.$vals['dropdown_phrase'].'" '.(($answer) == $vals['dropdown_phrase']? 'SELECTED':'').' >'.$vals['dropdown_phrase'].'</option>';
+									    		    }
+									    		}
+									    		?>
+									    		</select></div>
+									    
+									    
+									    <?php 
+									    
 									    echo '							</td>';
 									    echo '						</tr>';
 									break;
+									
+									
+									
+									
+									
+									
+									
 									case "questionyesno":
 										$counter++;
 										if ($lasttype != $question['itemtype']){
@@ -222,6 +277,13 @@ echo '<textarea id="question' . $question['id'] . '" name="question[' . $questio
 										echo '							</td>';
 									   
 									    echo '						</tr>';
+									    
+									    echo '						<tr>';
+									    echo '							<td style="width:68%">';
+									    echo '								<div class="nwtxt">&nbsp;</div>';
+									    echo '							</td>';
+									    echo '						</tr>';
+									    
 									    break;
 									case "question110":
 									    // question 1 to 10

@@ -247,9 +247,9 @@ where ';
 	    $criteria ['outputType'] = $this->getSanParam ( 'outputType' );
 	    $criteria ['go'] = $this->getSanParam ( 'go' );
 
-	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'assessmentController searchAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    var_dump("criteria=", $criteria, "END");
-	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+// 	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'assessmentController searchAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	    var_dump("criteria=", $criteria, "END");
+// 	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	    
 	    if ($criteria ['go']) {
 	        $db = Zend_Db_Table_Abstract::getDefaultAdapter ();
@@ -312,9 +312,9 @@ where';
 	        	
 	        $sql .= " ORDER BY " . " pa.id ASC ";
 	        	
-	        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'assessmentController searchAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	        var_dump("sql=", $sql, "END");
-	        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+// 	        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'assessmentController searchAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	        var_dump("sql=", $sql, "END");
+// 	        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	        
 	        $rowArray = $db->fetchAll ( $sql );
 	        
@@ -513,24 +513,114 @@ where';
 	
 	public function doEditView(){
 	    
-	    $person_to_assessment_id = $this->getSanParam ( 'id' );
 	    
-	    //file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'doAddEditView >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	    //var_dump("pa.id=", $person_to_assessment_id, "END");
-	    //$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	    $person_to_assessment_id = $this->getSanParam ( 'id' );
 	    
 	    $helper		= new Helper();
 	    $request	= $this->getRequest ();
 	    if ($request->isPost ()) {
-	        $helper->saveAssessmentAnswers($this->getSanParam ('question'), $person_to_assessment_id);
+	        
+	        $assessments = $helper->getPersonAssessmentsDetailed($person_to_assessment_id);
+	        $assessment_key = $helper->getPersonAssessmentsKey($person_to_assessment_id);
+	        $question = $this->getSanParam ('question');
+	        
+// 	        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'doAddEditView0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	        var_dump("day=", $this->getSanParam ( 'answer_day16' ), $this->getSanParam ( 'answer_month16' ), $this->getSanParam ( 'answer_year16' ), $this->getSanParam ( 'answer16' ), "END");
+// 	        var_dump("q's", $assessments[0]['questions']);
+// 	        var_dump("a's", $assessments[0]['answers']);
+// 	        var_dump("assessment_key", $assessment_key);
+// 	        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	        
+	        // special handling for dates/dropdowns
+	        foreach ($assessments[0]['questions'] as $k=>$v){
+	            if($v['itemtype'] == 'questiondate'){
+	              
+	              $answer = [];
+	              $answer['id'] =  $v['id'];
+	              $answer['person'] =  $assessment_key['person_id'];
+	              $answer['facility'] =  $assessment_key['facility_id'];
+	              $answer['date_created'] =  $assessment_key['date_created'];
+	              $answer['assessment_id'] =  $assessment_key['assessment_id'];
+	              $answer['question'] =  $v['id'];
+	              $answer['option'] = $this->getSanParam ('answer_day'.$v['id']) .'-'. $this->getSanParam ('answer_month'.$v['id']) .'-'. $this->getSanParam ('answer_year'.$v['id']);
+	              $answer['action'] = '1';
+	              
+	              $assessments[0]['answers'][] = $answer;
+	              
+	              $question[$v['id']] = $answer['option'];
+	              
+	              //file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'doAddEditView2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	              //var_dump("day=", $this->getSanParam ( 'answer_day16' ), $this->getSanParam ( 'answer_month16' ), $this->getSanParam ( 'answer_year16' ), $this->getSanParam ( 'answer16' ), "END");
+	              //var_dump("q's", $assessments[0]['questions']);
+	              //var_dump("a's", $assessments[0]['answers']);
+	              //var_dump("v=", $v);
+	              //$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	              
+	            } elseif ($v['itemtype'] == 'questiondropdown'){
+	              $answer = [];
+	              $answer['id'] =  $v['id'];
+	              $answer['person'] =  $assessment_key['person_id'];
+	              $answer['facility'] =  $assessment_key['facility_id'];
+	              $answer['date_created'] =  $assessment_key['date_created'];
+	              $answer['assessment_id'] =  $assessment_key['assessment_id'];
+	              $answer['question'] =  $v['id'];
+                  // value of dropdowns = option = dropdown_phrase
+	              $answer['option'] = $this->getSanParam ('dropdown'.$v['id']);
+	              $answer['action'] = '1';
+	               
+	              $assessments[0]['answers'][] = $answer;
+	               
+	              $question[$v['id']] = $answer['option'];
+	               
+// 	              file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'doAddEditView2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	              //var_dump("day=", $this->getSanParam ( 'answer_day16' ), $this->getSanParam ( 'answer_month16' ), $this->getSanParam ( 'answer_year16' ), $this->getSanParam ( 'answer16' ), "END");
+	              //var_dump("q's", $assessments[0]['questions']);
+	              //var_dump("a's", $assessments[0]['answers']);
+// 	              var_dump("v id =", $v['id']);
+// 	              $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	            }
+	        }
+	        
+	        $helper->saveAssessmentAnswers($question, $person_to_assessment_id);
 	        $this->_redirect (  'assessment/edit/id/' . $person_to_assessment_id );
 	    }
 	
-	    $person_to_assessment_id = $this->getSanParam ( 'id' );
 	    $this->view->assign ( 'person_to_assessemnt_id', $person_to_assessment_id );
 	
+	    $dropdowns = $helper->getDropdowns($person_to_assessment_id);
+	    
+// 	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'doAddEditView2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	    var_dump("dropdowns=", $dropdowns);
+// 	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	    
+	    $this->view->assign ( 'dropdowns', $dropdowns );
+	    
+	    
 	    $assessments = $helper->getPersonAssessmentsDetailed($person_to_assessment_id);
 	    $this->view->assign ( 'assessments', $assessments );
+	    
+//  	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'doAddEditView0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+	    // 	        var_dump("day=", $this->getSanParam ( 'answer_day16' ), $this->getSanParam ( 'answer_month16' ), $this->getSanParam ( 'answer_year16' ), $this->getSanParam ( 'answer16' ), "END");
+	    // 	        var_dump("q's", $assessments[0]['questions']);
+//  	    var_dump("a's", $assessments[0]['answers']);
+	    // 	        var_dump("assessment_key", $assessment_key);
+//  	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	    
+	    $current_year = date("Y");
+	    $current_month = date("m");
+	    $current_day = date("d");
+	     
+	    $start_date = date_create(date("Y-m-d"));
+	    date_sub($start_date, date_interval_create_from_date_string("6 weeks"));
+	     
+	    $start_year = date_format($start_date, "Y");
+	    $start_month = date_format($start_date, "m");
+	    $start_day = date_format($start_date, "d");
+	     
+	    if ( !$criteria['start-year'] ) { $criteria['start-year'] = $start_year; }
+	    if ( !$criteria['start-month'] ) { $criteria['start-month'] = $start_month; }
+	    if ( !$criteria['start-day'] ) { $criteria['start-day'] = $start_day; }
+	    
 	}
 	
 	public function viewassessmentAction(){

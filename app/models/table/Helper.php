@@ -3021,6 +3021,48 @@ class Helper extends ITechTable
 	
 	// assessment begin
 	
+	function getPersonAssessmentsKey($pa_id){
+	    $db = $this->dbfunc();
+	    $query = "SELECT * FROM person_to_assessments WHERE id = " . $pa_id;
+	    $result = $db->query($query);
+	    $rows = $result->fetchAll();
+	    $row = $rows[0];
+	    $pid = $row['person_id'];
+	    $fid = $row['facility_id'];
+	     
+	    $date_created = str_replace(' ', '', $row['date_created']);
+	     
+	    $aid = $row['assessment_id'];
+	    
+	    $return['person_id'] = $pid; 
+	    $return['facility_id'] = $pid;
+	    $return['date_created'] = $date_created;
+	    $return['assessment_id'] = $aid;
+	    
+	    return $return;
+	    
+	}
+	
+	function getDropdowns(){
+	    $db = $this->dbfunc();
+	    $query = 
+	    
+	    "select
+	    aq.id,
+	    ado.dropdown_phrase
+	    from assessments_questions aq
+	    join assessment_dropdowngroup_to_assessment_dropdown_option addo on aq.dropdowngroup_id = addo.assessment_dropdowngroup_option_id
+	    join assessment_dropdown_option ado on ado.id = addo.assessment_dropdown_option_id
+	    order by aq.id, addo.assessment_dropdown_option_id";
+	        
+	    $result = $db->query($query);
+	    $return = $result->fetchAll();
+	    
+	     
+	    return $return;
+	     
+	}
+	
 	function getPersonAssessments($pid, $get_secondary = false){
 	    $db = $this->dbfunc();
 	    $query = "SELECT * FROM person WHERE id = " . $pid;
@@ -3171,6 +3213,13 @@ class Helper extends ITechTable
 	    " AND `assessment_id` = " . $aid .
 	    " AND `active` = 'Y'";
 	    $result = $db->query($query);
+	    
+// 	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'getPersonAssessmentsDetailed >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	    var_dump("getPersonAssessmentsDetailed query=", $query, "END");
+// 	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	    	  
+	    
+	    
 	    $rows = $result->fetchAll();
 	    $_str['answers'] = array();
 	    foreach ($rows as $a){
@@ -3188,7 +3237,9 @@ class Helper extends ITechTable
 	}
 	
 	public function saveAssessmentAnswers($questions,$pa_id){
-	    
+// 	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'saveAssessmentAnswers start >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	    var_dump("saveAssessmentAnswers:questions =", $questions, "END");
+// 	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	    	  
 	    $db = $this->dbfunc();
 	    $query = "SELECT * FROM person_to_assessments WHERE id = " . $pa_id;
@@ -3215,6 +3266,9 @@ class Helper extends ITechTable
 	    $db = $this->dbfunc();
 	    $parsed = array();
 	    foreach ($questions as $k=>$v){
+// 	        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'saveAssessmentAnswers >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	        var_dump("saveAssessmentAnswers=", $k, $v, "END");
+// 	        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	        if (trim ($v) != ""){
 	            $query = "SELECT * FROM assess WHERE
 					`question` = '" . addslashes($k) . "' AND
@@ -3224,15 +3278,16 @@ class Helper extends ITechTable
 	            $result = $db->query($query);
 	            $rows = $result->fetchAll();
 	            
-	            file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'saveAssessmentAnswers >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	            file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'saveAssessmentAnswers >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
 	            //var_dump("saveAssessmentAnswers rows=", $rows, $query, "END");
-	            $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+// 	            $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	            	      
 	            
 	            if (count ($rows) == 0){
-	                file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'INSERT >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	                //var_dump("saveAssessmentAnswers rows=", $rows, "END");
-	                $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+// 	                file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'INSERT >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	                var_dump("saveAssessmentAnswers rows=", $rows, "END");
+// 	                var_dump("v=", $v, "END");
+// 	                $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	                 
 	                $query = "INSERT INTO assess SET
 						`person` = '" . addslashes($pid) . "',
@@ -3245,9 +3300,9 @@ class Helper extends ITechTable
 	                $db->query($query);
 	                $parsed[] = $this->dbfunc()->lastInsertId();
 	            } else {
-	                file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'UPDATE >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-	                //var_dump("v=", $v, "END");
-	                $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+// 	                file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'UPDATE >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+//  	                var_dump("v=", $v, "END");
+// 	                $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 	                $row = $rows[0];
 	                $query = "UPDATE assess SET
 						`option` = '" . addslashes($v) . "'
