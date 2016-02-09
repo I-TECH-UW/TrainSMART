@@ -17,74 +17,76 @@ class Location extends ITechTable
 	static protected $_locations = null;//cache
 
     /**
+     * returns an array of all non-deleted locations
+     *
      * @return array|null
      */
     public static function getAll() {
 
-        if ( self::$_locations ) return self::$_locations;
+	    if (self::$_locations) return self::$_locations;
 
-        //$region_b = System::getSetting('display_region_b');
-        //$region_c = System::getSetting('display_region_c');
+	    $tableObj = new Location();
 
-        $tableObj = new Location();
+	    $select = $tableObj->select()
+		    ->from(array('l' => 'location'))->where('is_deleted = 0')->order('location_name');
 
-        $select = $tableObj->select()
-            ->from(array('l' => 'location'))->where('is_deleted = 0')->order('location_name');
+	    $output = array();
+	    try {
+		    $rows = $tableObj->fetchAll($select);
+		    // reindex with id
+		    $indexed = array();
+		    while ($rows->current()) {
+			    $indexed [$rows->current()->id] = $rows->current()->toArray();
+			    $rows->next();
+		    }
 
-        $output = array();
-        try {
-            $rows = $tableObj->fetchAll($select);
-            //reindex with id
-            $indexed = array();
-            while($rows->current()) {
-                $indexed [$rows->current()->id]= $rows->current()->toArray();
-                $rows->next();
-            }
+		    $num_tiers = 1;
+		    foreach ($indexed as $row) {
 
-            $num_tiers = 1;
+			    // check that the hierarchy works
+			    // if the parent is more than one tier higher, then no good unless the middle region is off
+			    $is_good = true;
+			    $parent_tier = (!$row['parent_id'] ? 0 : $indexed[$row['parent_id']]['tier']);
+			    if ($row['tier'] > 1 && !$parent_tier) {
+				    $is_good = false;
+			    } else if ((($parent_tier + 1) != $row['tier'])) {
+				    $is_good = false;
+			    }
 
-            foreach($indexed as $row) {
+			    $output[$row['id']] = array('id' => $row['id'],
+				    'uuid'       => $row['uuid'],
+				    'name'       => $row['location_name'],
+				    'parent_id'  => ($row['parent_id'] ? $row['parent_id'] : 0),
+				    'tier'       => $row['tier'],
+				    'is_default' => $row['is_default'],
+				    'is_good'    => $is_good
+			    );
+			    if ($row['tier'] > $num_tiers) {
+				    $num_tiers = $row['tier'];
+			    }
+		    }
 
-                //check that the hierarchy works
-                //if the parent is more than one tier higher, then no good unless the middle region is off
-                $is_good = true;
-                $parent_tier = (!$row['parent_id'] ? 0: $indexed[$row['parent_id']]['tier']);
-                if ( $row['tier'] > 1 && !$parent_tier) {
-                    $is_good = false;
-                } else if ( (($parent_tier + 1) != $row['tier']) ) {
-                    $is_good = false;
-                }
+		    // check for null parents and add 'unknown' option
+		    $has_parents = array();
+		    for ($t = 2; $t <= $num_tiers; $t++) {
+			    $has_parents [$t] = true;
+		    }
+		    for ($t = 2; $t <= $num_tiers; $t++) {
+			    foreach ($output as $l) {
+				    if (!$l['parent_id']) {
+					    $has_parents[$t] = false;
+				    }
+			    }
+		    }
 
-                $output[$row['id']] = array('id'=>$row['id'],'uuid'=>$row['uuid'],'name'=>$row['location_name'], 'parent_id'=>($row['parent_id']?$row['parent_id']:0), 'tier'=>$row['tier'], 'is_default' =>$row['is_default'], 'is_good'=>$is_good);
-                if ( $row['tier'] > $num_tiers) {
-                    $num_tiers = $row['tier'];
-                }
-            }
+		    self::$_locations = $output;
+		    return self::$_locations;
 
-            //check for null parents and add 'unknown' option
-            $has_parents = array();
-            for($t = 2; $t <= $num_tiers; $t++) {
-                $has_parents [$t]= true;
-            }
-            for($t = 2; $t <= $num_tiers; $t++) {
-                foreach($output as $l) {
-                    if ( !$l['parent_id'] ) $has_parents[$t] = false;
-                }
-            }
-            /*
-            foreach($has_parents as $t=>$has) {
-            if ( !$has )
-            $output []= array('id' => 0, 'name' => t('unknown'), 'tier'=>$t-1 ,'is_default'=>0, 'parent_id'=>0);
-            }
-            */
-            self::$_locations = $output;
-            return self::$_locations;
+	    } catch (Zend_Exception $e) {
+		    error_log($e);
+	    }
 
-        } catch(Zend_Exception $e) {
-            error_log($e);
-        }
-
-        return null;
+	    return null;
     }
 
 
