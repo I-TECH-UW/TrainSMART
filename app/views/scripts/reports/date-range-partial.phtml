@@ -8,7 +8,6 @@
     $startname = $prefix . 'startdate';
     $endname = $prefix . 'enddate';
 
-
     $startval = "";
     $endval = "";
 
@@ -24,7 +23,7 @@
         echo $this->formLabel("", $this->label, array('class' => 'fieldLabel'));
     }
 
-    if (property_exists($this, 'showvalue')) {
+    if (property_exists($this, 'showvalue') && $this->showvalue) {
         echo $this->formCheckbox($prefix . 'showdate');
     }
     echo $this->formText($startname, $startval, array('id' => $startname, 'class' => 'datepicker'));
