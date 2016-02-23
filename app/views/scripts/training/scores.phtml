@@ -16,7 +16,7 @@ print ScriptContainer::$instance->renderJSHead();
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
 
-    <h1>Test scores</h1>
+    <h1><?php echo t('Test scores')?></h1> <!-- TA:66 translation -->
 
     <div class="simpleLabel"><?php tp('Course');?></div>
     <div class="simpleValue"><?php echo $this->courseName; ?></div>
@@ -50,7 +50,7 @@ print ScriptContainer::$instance->renderJSHead();
 
     <form method="get" action="<?php echo $this->base_url;?>/training/edit/id/<?php echo $this->training_id; ?>">
     <input type="hidden">
-    <input type="submit" value="<?php echo t('Return to').' '.t('Training');?>" class="submitArrow">
+    <input type="submit" value="<?php echo t('Return to training');?>" class="submitArrow"> <!-- TA:66 translation -->
     </form>
 
     <div class="clear"></div>

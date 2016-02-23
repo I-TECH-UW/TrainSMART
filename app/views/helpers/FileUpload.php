@@ -58,6 +58,7 @@ class FileUpload {
     return $rowRay;
   }
   
+  //TA:66 translation
   public static function displayUploadForm($parent_table, $parent_id, $allowed_ext = array(), $showUploadMax = true) {
 
     $html = '
@@ -66,7 +67,7 @@ class FileUpload {
       <input type="file" name="upload" />
       <input type="hidden" name="parent_table" value="'.$parent_table.'" />
       <input type="hidden" name="parent_id" value="'.$parent_id.'" />
-      <input type="button" id="uploadButton" value="Upload"/><br>
+      <input type="button" id="uploadButton" value="' . t("Upload") . '"/><br>
       ' .       
        ($allowed_ext ? t('Allowed file extensions').': &nbsp;<i>' . implode(' &nbsp;', $allowed_ext) . '</i><br>' : '') .
         ($showUploadMax?t('Max upload size: ') . ini_get('upload_max_filesize'):'') .      

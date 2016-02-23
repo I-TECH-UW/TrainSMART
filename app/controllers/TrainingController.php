@@ -2052,7 +2052,7 @@ class TrainingController extends ReportFilterHelpers {
 		$editTable->setParentController($this);
 		$editTable->table = 'score';
 		$editTable->fields = array ('score_label' => t ( 'Label' ), 'score_value' => t ( 'Score' ) ); // TODO: Label translations
-		$editTable->label = 'Score';
+		$editTable->label = t('Score'); //TA:66
 		$editTable->where = "person_to_training_id = {$personTrainingRow->id}";
 		$editTable->insertExtra = array ('person_to_training_id' => $personTrainingRow->id );
 		//$editTable->customColDef = array('training_date' => 'formatter:YAHOO.widget.DataTable.formatDate, editor:"date"');

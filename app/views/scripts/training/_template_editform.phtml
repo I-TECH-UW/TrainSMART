@@ -48,7 +48,7 @@
         <!-- "add new" training location pop-up modal -->
 
         <div id="addLocation">
-            <div class="hd"><?php echo t('Add new') . ' ' . t('Training') . ' ' . t('Location'); ?></div>
+            <div class="hd"><?php echo t('Add new') . ' ' . t('Training Location'); ?></div>
             <div class="bd">
 
                 <h1><?php echo t('Please enter') . ' ' . t('Training') . ' ' . t('location') . ' ' . t('information' . ':'); ?></h1>
@@ -198,7 +198,7 @@
                         <?php if ($this->setting['module_evaluation_enabled']) { ?>
                             <?php if (!@$this->evaluation_id) { ?><a
                                 href="javascript:submitThenRedirect('<?php echo $this->base_url; ?>/evaluation/assign-training/id/<?php echo $this->row['id']; ?>');"
-                                onclick=""><?php echo t('Assign Evaluation to') . ' ' . t('Training'); ?></a>&nbsp;&nbsp;&nbsp;<?php } ?>
+                                onclick=""><?php echo t('Assign Evaluation to Training'); ?></a>&nbsp;&nbsp;&nbsp;<?php } ?>
                             <?php if (@$this->evaluation_id) : ?><a
                                 href="javascript:submitThenRedirect('<?php echo $this->base_url; ?>/evaluation/data/id/<?php echo $this->evaluation_to_training_id; ?>');"
                                 onclick=""><?php tp('Enter Evaluation Data'); ?></a>&nbsp;&nbsp;&nbsp;<a
@@ -360,7 +360,7 @@
 
                 <!-- TA:17:14: -->
                 <?php if ($this->setting['display_training_location']) { ?>
-                    <div class="fieldLabel"><?php echo t('Training') . ' ' . t('Location'); ?></div>
+                    <div class="fieldLabel"><?php echo t('Training location'); ?></div>
                     <div class="fieldInput">
                         <?php
                         training_location_dropdown($this->tlocations, $this->row['training_location_id'], 'name="training_location_id" id="select_training_location" ' . $this->viewonly);

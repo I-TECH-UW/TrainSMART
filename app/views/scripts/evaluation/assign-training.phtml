@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title><?php echo $this->translation['Application Name'];?> | <?php echo t('Assign Evaluation to').' '.t('Training');?></title>
+  <title><?php echo $this->translation['Application Name'];?> | <?php echo t('Assign Evaluation to Training');?></title>
 <?php
 require_once('views/helpers/ScriptContainer.php');
 require_once('views/helpers/DropDown.php');
@@ -18,7 +18,7 @@ print ScriptContainer::$instance->renderJSHead();
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
 
-    <h1><?php echo t('Assign Evaluation to').' '.t('Training');?></h1>
+    <h1><?php echo t('Assign Evaluation to Training');?></h1> <!-- TA:66 translation -->
     <label><?php echo $this->training_name; ?></label><br/><br/>
 
    	   <form action="" method="post" id="assignForm">
