@@ -1237,7 +1237,7 @@ class TrainingController extends ReportFilterHelpers {
 	* Import a training
 	*/
 	
-	public function importAction() {
+	public function importActionExcel() {
 		$errs = array();
 		$this->view->assign('pageTitle', t( 'Import a training' ));
 		
@@ -1416,8 +1416,8 @@ class TrainingController extends ReportFilterHelpers {
 			
 		}	
 	}
-	
-	public function importActionOld() {
+	//TA:66:1 return CSV import
+	public function importAction() {
 	
 		//ini_set('max_execution_time','300');
 		$errs = array();
