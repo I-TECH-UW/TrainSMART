@@ -5,7 +5,7 @@ require_once 'views/helpers/EditTableHelper.php';
 
 class FileUpload {   
   
-	public static $FILETYPES = array ('doc', 'docx', 'xls', 'xlsx', 'pdf' );
+	public static $FILETYPES = array ('doc', 'docx', 'xls', 'xlsx', 'xlsm', 'pdf' );
 	
   /**
    * @var $allowed_ext = allowed extensions (e.g., doc, docx, pdf)

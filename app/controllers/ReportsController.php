@@ -10687,4 +10687,279 @@ left join mechanism_option m on m.id = epsfm.mechanism_option_id
 	$this->view->assign ( 'subpartners', DropDown::generateHtml ( 'partner', 'partner', $criteria['subpartner_id'], false, $this->view->viewonly, false, true, array('name' => 'subpartner_id'), true ) );
 	
   }
+  
+  public function assessmentAction() {
+ 	    require_once ('models/table/OptionList.php');
+	    
+	    // assessemnts list
+	    $criteria = array ();
+	    $criteria ['first_name'] = $this->getSanParam ( 'first_name' );
+	    $criteria ['last_name'] = $this->getSanParam ( 'last_name' );
+	    $criteria ['facility_id'] = $this->getSanParam ( 'facility_id' );
+	    $criteria ['assessment_type_id'] = $this->getSanParam ( 'assessment_type_id' );
+	    
+	    $criteria['start-day'] = $this->getSanParam ( 'start-day' );
+        $criteria['start-month'] = $this->getSanParam ( 'start-month' );
+        $criteria['start-year'] = $this->getSanParam ( 'start-year' );
+        $criteria['end-day'] = $this->getSanParam ( 'end-day' );
+        $criteria['end-month'] = $this->getSanParam ( 'end-month' );
+        $criteria['end-year'] = $this->getSanParam ( 'end-year' );
+
+        $criteria ['start_date'] = $this->getSanParam ( 'start-year' ) . '-' . $this->getSanParam ( 'start-month' ) . '-' . $this->getSanParam ( 'start-day' );
+        $criteria ['end_date'] = $this->getSanParam ( 'end-year' ) . '-' . $this->getSanParam ( 'end-month' ) . '-' . $this->getSanParam ( 'end-day' );
+        
+	    $criteria ['outputType'] = $this->getSanParam ( 'outputType' );
+	    $criteria ['go'] = $this->getSanParam ( 'go' );
+
+// 	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'assessmentController searchAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	    var_dump("criteria=", $criteria, "END");
+// 	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	    
+	    if ($criteria ['go']) {
+	        $db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+	        
+	        $where = array ();
+	        $where [] = ' 0 = 0 ';
+	         
+	        $link = mysqli_connect(Settings::$DB_SERVER, Settings::$DB_USERNAME, Settings::$DB_PWD, "");
+	         
+	        /* check connection */
+	        if (mysqli_connect_errno()) {
+	            printf("Connect failed: %s\n", mysqli_connect_error());
+	            exit();
+	        }
+	         
+	        if ($criteria ['first_name']) {
+	            $where [] = " P_first_name LIKE '%" . mysqli_real_escape_string ( $link, $criteria ['first_name'] ) . "%'";
+	        }
+	        
+	        if ($criteria ['last_name']) {
+	            $where [] = " P_last_name LIKE '%" . mysqli_real_escape_string ($link,  $criteria ['last_name'] ) . "%'";
+	        }
+	        
+	        if ($criteria ['assessment_type_id']) {
+	            $where [] = ' A_assessment_type_id = ' . $criteria ['assessment_type_id'];
+	        }
+	        
+	        if ($criteria ['facility_id']) {
+	            $where[] = ' A_facility_id = ' . $criteria['facility_id'];
+	        }
+	         
+// 	        if ($criteria ['start_date'] && $criteria ['start_date'] != '--') {
+// 	            $where [] = ' A_date_created  >= ' . "'" . $criteria['start_date'] . "'";
+// 	        }
+	         
+// 	        if ($criteria ['end_date'] && $criteria ['end_date'] != '--') {
+// 	            $where [] = ' A_date_created  <= ' . "'" . $criteria['end_date'] . "'";
+// 	        }
+	        if ($where)
+	            $where_sql .= implode ( ' AND ', $where );
+	        
+	        $create_view = $db->select()
+	        ->from(array('a' => 'assess'),
+	            array(
+	                'a.id as A_id',
+	                'a.person as A_person',
+	                'p.first_name as P_first_name',
+	                'p.last_name as P_last_name',
+	                'a.facility as A_facility', 
+	                'f.facility_name as F_facility_name',
+	                'a.date_created as  A_date_created',
+	                'a.assessment_id as  A_assessment_type_id',
+	                'lat.assessment_type as  LAT_assessment_type',
+	                
+	                'a.option as A_option',
+	                'a.active as A_active',
+	                'aq.question as AQ_question',
+	                'aq.itemorder as AQ_itemorder',
+	                'a.question as A_question'))
+	                ->joinLeft(array("aq" => "assessments_questions"), 'aq.id = a.question')
+	                ->joinLeft(array("p" => "person"), 'p.id = a.person')
+	                ->joinLeft(array("f" => "facility"), 'f.id = a.facility')
+	                
+	                ->joinLeft(array("as" => "assessments"), 'as.id = a.assessment_id')
+	                ->joinLeft(array("lat" => "lookup_assessment_types"), 'lat.id = as.assessment_type_id')
+	                
+	                ->group(array('a.person', 'a.facility', 'a.assessment_id', 'a.date_created', 'a.question'))
+	                ->order(array('a.person', 'a.facility'));
+	         
+	        $sql = $create_view->__toString();
+	        $sql = str_replace('`A_question`,', '`A_question`', $sql);
+	        $sql = str_replace('`aq`.*,', '', $sql);
+	        $sql = str_replace('`p`.*,', '', $sql);
+	        $sql = str_replace('`f`.*,', '', $sql);
+	        $sql = str_replace('`as`.*,', '', $sql);
+	        $sql = str_replace('`lat`.*', '', $sql);
+	         
+	        try{
+	            $sql='create or replace view assess_view as ('.$sql.')';
+	            
+// 	            file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'reportsController assessmentAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	            var_dump("create assess_view=", $sql, "END");
+// 	            $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	             
+	            
+	            $db->fetchOne( $sql );
+	        }
+	        catch (Exception $e) {
+	            
+// 	            file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'reportsController assessmentAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	            var_dump("EXCEPTION=", $e->getMessage(), "END");
+// 	            $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	             
+	            
+	            //echo $e->getMessage();
+	            //var_dump('error', $e->getMessage());
+	             
+	        }
+	        
+	        // Plan:
+	        // select distinct date_created from assess_view where date criteria
+	        // create view assess_view_pivot
+	        // select from assess_view_pivot where other than data criteria
+	         
+	        $select_dates_sql =
+'select A_date_created
+from (select distinct A_date_created from assess_view
+where';
+	        
+	        // where A_date_created between '2016-02-03' and '2016-02-05'
+	        
+	        $order_dates_sql =
+' order by A_date_created desc limit 5 ) q
+order by A_date_created asc';
+	        	       	
+	        if ($where)
+	            $select_dates_sql .= implode ( ' AND ', $where );
+	        	
+	        // $order_dates_sql .= " ORDER BY " . " pa.id ASC ";
+	        $select_dates_sql .= $order_dates_sql;
+	        	
+	        
+	        $resultDates = $db->fetchAll ( $select_dates_sql );
+	        
+	        $create_view_sql = 
+'create or replace view assess_view_pivot as
+(select
+A_id,
+A_person,
+P_first_name,
+P_last_name,
+A_facility,
+F_facility_name,
+A_assessment_type_id,
+LAT_assessment_type,
+AQ_question,
+AQ_itemorder,
+A_question,';
+	        
+	        foreach ($resultDates as $i => $row) {
+	          $create_view_sql .= " case when A_date_created = '" . $row['A_date_created'] . "' then A_option end as '" . $row['A_date_created']. "',";    
+	        }
+	        $create_view_sql .= "from assess_view order by A_date_created);";
+	         
+	    	$create_view_sql = str_replace(",from assess_view"," from assess_view", $create_view_sql);
+	        
+// 	    	file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'reportsController assessmentAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	    	var_dump("create_view_sql=", $create_view_sql, "END");
+// 	    	$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	         
+	        try{
+	            $db->fetchOne( $create_view_sql );
+	        }
+	        catch (Exception $e) {
+	            
+// 	            file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'reportsController assessmentAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	            var_dump("EXCEPTION=", $e->getMessage(), "END");
+// 	            var_dump("create_view_sql=", $create_view_sql, "END");
+// 	            $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+	            //echo $e->getMessage();
+	            //var_dump('error', $e->getMessage());
+	        }
+	        
+	        $select_from_pivot_sql = 
+'select
+ A_id,	             
+ A_person,
+ P_first_name,
+ P_last_name,
+ F_facility_name,
+ A_assessment_type_id,
+ LAT_assessment_type,
+ AQ_question,';
+	        
+	        foreach ($resultDates as $i => $row) {
+	            $select_from_pivot_sql .= " group_concat(`assess_view_pivot`.`" . $row['A_date_created'] . "`) as '" . $row['A_date_created']. "',";
+	        }
+	        $select_from_pivot_sql .= " from assess_view_pivot where ";
+	        if ($where)
+	            $select_from_pivot_sql .= implode ( ' AND ', $where );
+	            
+	        $select_from_pivot_sql .= " group by A_person, A_question order by AQ_itemorder;";
+	        
+	        $select_from_pivot_sql = str_replace(", from assess_view_pivot"," from assess_view_pivot", $select_from_pivot_sql);
+	         
+	        
+// 	        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'reportsController assessmentAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	        var_dump("select_from_pivot_sql=", $select_from_pivot_sql, "END");
+// 	        var_dump("where=", $where, "END");
+// 	        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+	        $rowArray = $db->fetchAll ( $select_from_pivot_sql );
+	        
+// 	        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'reportsController assessmentAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	        var_dump("rowArray=", $rowArray, "END");
+// 	        var_dump("resultDates=", $resultDates, "END");
+// 	        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	        
+	        if ($criteria ['outputType']) {
+	            $this->sendData ( $rowArray );
+	        }
+	        
+	        $resultDatesFixed = array();
+	        foreach($resultDates as $i=>$row){
+	            $resultDatesFixed[] = $row['A_date_created'];
+	        }
+	        
+// 	        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'reportsController assessmentAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 	        var_dump("rdf=", $resultDatesFixed, "END");
+// 	        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+	        
+	        $this->viewAssignEscaped ( 'resultDates', $resultDatesFixed );
+	        $this->viewAssignEscaped ( 'results', $rowArray );
+	        $this->view->assign ( 'count', count ( $rowArray ) );
+	    }
+	    
+	    $helper = new Helper();
+
+	    $facilities = $helper->getFacilities();
+	    $assessment_types = $helper->getAssessmentTypes();
+	
+	    $this->view->assign('title',$this->view->translation['Application Name']);
+	    $this->view->assign('facilities',$facilities);
+	    $this->view->assign('assessment_types',$assessment_types);
+	    
+	    $current_year = date("Y");
+	    $current_month = date("m");
+	    $current_day = date("d");
+	    
+	    $start_date = date_create(date("Y-m-d"));
+	    date_sub($start_date, date_interval_create_from_date_string("6 weeks"));
+	    
+	    $start_year = date_format($start_date, "Y");
+	    $start_month = date_format($start_date, "m");
+	    $start_day = date_format($start_date, "d");
+	    
+	    if ( !$criteria['start-year'] ) { $criteria['start-year'] = $start_year; } 
+	    if ( !$criteria['start-month'] ) { $criteria['start-month'] = $start_month; }
+	    if ( !$criteria['start-day'] ) { $criteria['start-day'] = $start_day; }
+	   
+	    if( !$criteria['end-year'] ) { $criteria['end-year'] = $current_year; }
+	    if( !$criteria['end-month'] ) { $criteria['end-month'] = $current_month; }
+	    if( !$criteria['end-day'] ) { $criteria['end-day'] = $current_day; }
+	    
+	    $this->view->assign ( 'criteria', $criteria );
+  }
+  
 }

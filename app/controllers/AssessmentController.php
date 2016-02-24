@@ -429,8 +429,8 @@ where';
 			//$this->doNoAccessError ();
 		//}
 		
-		file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'assessmentController testaddAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+// 		file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'assessmentController testaddAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 		$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 		
 		$criteria = array ();
 		$criteria ['first_name'] = $this->getSanParam ( 'first_name' );

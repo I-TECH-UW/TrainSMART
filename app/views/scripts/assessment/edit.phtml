@@ -160,7 +160,7 @@
 									    <div class="fieldLabel" id="type_id_lbl"><?php echo t('');?></div>
 									    		<div class="fieldInput">
 									    		<?php echo '<select id="dropdown' . $question['id'] . '" name="dropdown' . $question['id'] . '" >' ?>
-									    		<option value="--N/A--">--N/A--</option>
+									    		<option value="NA">NA</option>
 									    		<?php
 									    		foreach ( $this->dropdowns as $k=>$vals ) {
 									    		    if($question['id'] == $vals['id']) {
