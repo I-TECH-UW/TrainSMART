@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title><?php echo $this->translation['Application Name'];?> | <?php echo t('Search').space.t('Assessment');?></title>
+<?php
+require_once('views/helpers/Location.php');
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+?>
+
+</head>
+<body class="yui-skin-sam"  >
+
+<div id="pageHolder">
+
+	<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+	<div id="content">
+
+	<h1><?php echo t('Assessments').space.t('Report');?></h1>
+
+	<form action="" method="get">
+		<fieldset><legend><?php tp('Select Criteria');?></legend>
+		
+		<div  id="firstAutoComplete">
+		<div class="fieldLabel"><?php echo (@$this->translation['First Name']); ?></div><div class="fieldInput"><input id="first_name" type="text" name="first_name" value="<?php echo $this->criteria['first_name'];?>" /><div class="clear"></div><div id="firstContainer" class="autoComplete"></div></div>
+		</div>
+		<script type="text/javascript">
+			var firstAuto = makeAutocomplete('first_name', 'firstContainer', '<?php echo $this->base_url;?>/person/first-list/outputType/text/' );
+		</script>
+		
+		
+		
+		<div id="lastAutoComplete">
+			<div class="fieldLabel"><?php echo (@$this->translation['Last Name']); ?></div>
+			<div class="fieldInput"><input id="last_name" type="text" name="last_name" value="<?php echo $this->criteria['last_name'];?>" />
+			<div class="clear"></div><div id="lastContainer" class="autoComplete"></div></div>
+		</div>
+		<script type="text/javascript">
+			var lastAuto = makeAutocomplete('last_name', 'lastContainer', '<?php echo $this->base_url;?>/person/last-list/outputType/text/' );
+		</script>
+		
+		
+
+		
+
+		
+		
+		
+		<div class="clear"></div>
+		
+		
+	    <div class="fieldLabel" id="type_id_lbl"><?php echo t('Facility');?></div>
+		<div class="fieldInput">
+		<select id="facility_id" name="facility_id" >
+		<option value="">--<?php tp('All');?>--</option>
+		<?php
+		foreach ( $this->facilities as $vals ) {
+						echo '<option value="'.$vals['id'].'" '.((@$this->criteria['facility_id']) == $vals['id']? 'SELECTED':'').' >'.$vals['facility_name'].'</option>';
+		}
+		?>
+		</select></div>
+	
+
+		<div class="fieldLabel" id="type_id_lbl"><?php echo t('Assessment Type');?></div>
+		<div class="fieldInput">
+		<select id="assessment_type_id" name="assessment_type_id" >
+		<option value="">--<?php tp('All');?>--</option>
+		<?php
+		foreach ( $this->assessment_types as $vals ) {
+						echo '<option value="'.$vals['id'].'" '.((@$this->criteria['assessment_type_id']) == $vals['id']? 'SELECTED':'').' >'.$vals['assessment_type'].'</option>';
+		}
+		?>
+		</select></div>
+		
+		
+							<div class="clear"></div><br/><br/>
+					<div class="fieldLabel"><?php tp('Start date');?></div>
+					<div class="fieldInput" id="startdate">
+						<?php tp('Day');?> <input id="start-day" class="dayfield" type="text" name="start-day" maxlength="2" value="<?php echo $this->criteria['start-day']; ?>"  />
+						/ <?php tp('Month');?> <input id="start-month" class="monthfield" type="text" name="start-month" maxlength="2" value="<?php echo $this->criteria['start-month']; ?>"  />
+						/ <?php tp('Year');?> <input id="start-year" class="yearfield" type="text" name="start-year" maxlength="4" value="<?php echo $this->criteria['start-year'];  ?>" />
+						<script  type="text/javascript">
+							YAHOO.util.Event.onDOMReady(function () {
+								makeCalendar("startdate","start-day", "start-month", "start-year");
+							});
+						</script>
+					</div>
+					
+					
+					<div class="fieldLabel" style="padding-top:1em;"><?php tp('End date');?></div>
+					<div class="fieldInput" id="enddate" style="margin-top:1em;">
+						<?php tp('Day');?> <input id="end-day" class="dayfield" type="text" name="end-day" maxlength="2" value="<?php echo $this->criteria['end-day']; ?>"  />
+						/ <?php tp('Month');?> <input id="end-month" class="monthfield" type="text" name="end-month" maxlength="2" value="<?php echo $this->criteria['end-month']; ?>"  />
+						/ <?php tp('Year');?> <input id="end-year" class="yearfield" type="text" name="end-year" maxlength="4" value="<?php echo $this->criteria['end-year'];  ?>" />
+						<script  type="text/javascript">
+							YAHOO.util.Event.onDOMReady(function () {
+								makeAdditionalCalendar("enddate","end-day", "end-month", "end-year");
+							});
+						</script>
+					</div>
+		
+		<div class="clear"></div>
+		<input type="hidden" name="limit" id="limit" value="1" />
+		<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+	</fieldset>
+	</form>
+
+
+<?php 
+
+
+//file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'search >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+//var_dump("criteria=", $criteria, "END");
+//$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+
+
+if ( $this->criteria['go'] ) { ?>
+		    <div class="hrGrey"></div>
+		    <div class="fieldIndentNoMargin"><?php tp('Assessments');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+		    
+<?php if ($this->hasACL('add_new_assessment' || true) ) { ?>
+			<a href="<?php echo $this->base_url;?>/assessment/add"><?php tp('Add New Assessment');?></a><br/><br/>
+			<?php }?>
+		    <div id="assessments"></div>
+		    <script type="text/javascript">
+		var assessmentsData = [
+		<?php
+		$cnt = 0;
+		 	$isFirstRow = true;
+			foreach($this->results as $row) {
+
+		if ( ( $cnt < 100 ) or ( isset($_REQUEST['limit']) AND !$_REQUEST['limit'] ) ) {
+			if ( !$isFirstRow ) {
+					echo ',';
+			}
+				$isFirstRow = false;
+
+			echo '[';
+				echo '"'.$row['A_id'];
+				echo '","'.$row['AQ_question'];
+				echo '","'.$row['P_first_name'];
+				echo '","'.$row['P_last_name'];
+				echo '","'.$row['LAT_assessment_type'];
+				echo '","'.$row['F_facility_name'];
+				echo '","'. $row[$this->resultDates[0]];
+				echo '","'. $row[$this->resultDates[1]];
+				echo '","'. $row[$this->resultDates[2]];
+				echo '","'. $row[$this->resultDates[3]];
+				echo '","'. $row[$this->resultDates[4]].'"';
+			echo ']';
+				$cnt++;
+			}
+			
+// 			file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'search >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
+// 			var_dump("resultDates=", $this->resultDates[0], "END");
+// 			$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+			
+			}
+?>];
+
+var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
+			if ( (sData == null) || (sData.length == 0) )
+				sData = '&nbsp;&nbsp;&nbsp;';
+		    elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/assessment/search/" +  oRecord.getData("id") + "' >" + sData + "</a>";
+}
+
+var assessmentsColumnDefs = [
+			{key:"id", label: "<?php tp("ID");?>", sortable:false, resizable:false, formatter: formatViewUrl},
+			{key:"aq_question", label:         "<?php echo t('Question').space.t('');?>", sortable:true, resizeable:true},
+		    {key:"first_name", label:         "<?php echo t('First').space.t('Name');?>", sortable:true, resizeable:true},
+		    {key:"last_name", label:          "<?php echo t('Last').space.t('Name');?>", sortable:true, resizeable:true},
+		    {key:"assessment_type", label:    "<?php echo t('Type'); ?>", sortable:true, resizeable:true},
+		    {key:"facility_name", label:           "<?php echo t('Facility') ?>", sortable:true, resizeable:true},
+		    
+		    <?php //loop resultDates 
+
+            foreach($this->resultDates as $row){
+                echo '{key:"' . $row . '", label: "' . $row . '", sortable:true, resizeable:true},';
+            }
+             
+		    ?>
+];
+
+makeDataTable("assessments", null, assessmentsData, assessmentsColumnDefs);
+</script>
+<?php if ($cnt < count($this->results)) { ?>
+[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a>
+<?php } ?>
+<?php } ?>
+</div>
+
+</body>
+</html>
