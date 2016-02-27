@@ -10104,8 +10104,7 @@ die (__LINE__ . " - " . $sql);
 			$select->joinLeft(array('l' => new Zend_Db_Expr('(' . $locationSubquery . ')')), 'l.id = emp.location_id');
 
 			if (!$this->hasACL('training_organizer_option_all')) {
-				// limit data to user's access to mechanisms only available to partners and
-				// subpartners that the user account can access
+				// limit results to only mechanisms owned by partners and subpartners that the user account can access
 				$uid = $this->isLoggedIn();
 
 				$select->join(array('lmp' => 'link_mechanism_partner'), 'p.id = lmp.partner_id', array());
@@ -10204,40 +10203,117 @@ die (__LINE__ . " - " . $sql);
 			}
 
 			$q = $select->__toString();
-			$rows = $db->fetchAll($select);
 
-			$lastProvince = $rows[0]['province_id'];
-			$lastIndex = 0;
-			$splitIndexes = array();
-			for ($i = 0; $i < count($rows); $i++) {
-				if ($lastProvince !== $rows[$i]['province_id']) {
-					$splitIndexes[] = array('index' => $lastIndex, 'count' => $i - $lastIndex,
-						'id' => $rows[$i - 1]['province_id'], 'name' => $rows[$i - 1]['province_name']);
-					$lastIndex = $i;
-					$lastProvince = $rows[$i]['province_id'];
+			$allData = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => $db->fetchAll($select));
+			$rows = &$allData['rows'];
+
+			$allData['byPartner'] = array();
+			$byPartner = &$allData['byPartner'];
+
+			$allData['byCategory'] = array();
+			$byCategory = &$allData['byCategory'];
+			$allData['byProvince'] = array();
+			$byProvince = &$allData['byProvince'];
+
+			foreach($rows as $r) {
+
+				$partner = $r['partner'];
+				$province = $r['province_name'] ? $r['province_name'] : 'unknown';
+				$category = $r['qualification_phrase'];
+
+				$allData['fulltimecount'] += $r['fulltimecount'];
+				$allData['parttimecount'] += $r['parttimecount'];
+				$allData['cost'] += $r['cost'];
+
+				// by Province
+				if (!array_key_exists($province, $byProvince)) {
+					$byProvince[$province] = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => array(),
+						'byPartner' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => array()),
+						'byCategory' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => array())
+					);
 				}
-			}
-			$splitIndexes[] = array('index' => $lastIndex, 'count' => $i - $lastIndex,
-				'id' => $rows[$i - 1]['province_id'], 'name' => $rows[$i - 1]['province_name']);
+				$p = &$byProvince[$province];
+				$p['fulltimecount'] += $r['fulltimecount'];
+				$p['parttimecount'] += $r['parttimecount'];
+				$p['cost'] += $r['cost'];
+				$p['rows'][] = &$r;
 
-			$byprovince = array();
-			foreach ($splitIndexes as $splitter) {
-				$byprovince[] = array_slice($rows, $splitter['index'], $splitter['count']);
-			}
-			$xyz = 22;
-			$headers = array(
-					'Province & Occupational Category',
+				// organize by partner per province also
+				$p = &$p['byPartner'];
+				$p['fulltimecount'] += $r['fulltimecount'];
+				$p['parttimecount'] += $r['parttimecount'];
+				$p['cost'] += $r['cost'];
+				$p['rows'][] = &$r;
 
-					'AgriAIDS SA(A) - Full Time Staff',
-					'AgriAIDS SA(A) - Part Time Staff',
-					'AgriAIDS SA(A) - Annual Cost to Company (Rands)',
-			);
-			$output = array(
-					array('Gauteng', ' ', ' ', ' '),
-					array('J2000000 Computer Programmers',
-							'2', '3', '30,000',
-					)
-			);
+				// get partner province totals
+				if (!array_key_exists($partner, $p)) {
+					$p[$partner] = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => array());
+				}
+				$p = &$p[$partner];
+				$p['fulltimecount'] += $r['fulltimecount'];
+				$p['parttimecount'] += $r['parttimecount'];
+				$p['cost'] += $r['cost'];
+				$p['rows'][] = &$r;
+
+				// organize by category per province also
+				$p = &$byProvince[$province]['byCategory'];
+				$p['fulltimecount'] += $r['fulltimecount'];
+				$p['parttimecount'] += $r['parttimecount'];
+				$p['cost'] += $r['cost'];
+				$p['rows'][] = &$r;
+
+				// get category province totals
+				if (!array_key_exists($category, $p)) {
+					$p[$category] = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => array());
+				}
+				$p = &$p[$category];
+				$p['fulltimecount'] += $r['fulltimecount'];
+				$p['parttimecount'] += $r['parttimecount'];
+				$p['cost'] += $r['cost'];
+				$p['rows'][] = &$r;
+
+
+				// by partner
+				if (!array_key_exists($partner, $byPartner)) {
+					$byPartner[$partner] = array('fulltimecount' => 0, 'parttimecount' => 0,
+						'cost' => 0, 'rows' => array());
+				}
+				$p = &$byPartner[$partner];
+				$p['fulltimecount'] += $r['fulltimecount'];
+				$p['parttimecount'] += $r['parttimecount'];
+				$p['cost'] += $r['cost'];
+				$p['rows'][] = &$r;
+/*
+				// by occupational category
+				if (!array_key_exists($category, $byCategory)) {
+					$byCategory[$category] = array('fulltimecount' => 0, 'parttimecount' => 0,
+						'cost' => 0, 'rows' => array());
+				}
+
+				$p = &$byCategory[$category];
+				$p['fulltimecount'] += $r['fulltimecount'];
+				$p['parttimecount'] += $r['parttimecount'];
+				$p['cost'] += $r['cost'];
+				$p['rows'][] = &$r;
+*/
+			}
+
+			$headers = array(t('Province & Occupational Category'));
+
+			foreach (array_keys($byPartner) as $partner) {
+				$headers[] = $partner . ' - ' . t('Full Time Staff');
+				$headers[] = $partner . ' - ' . t('Part Time Staff');
+				$headers[] = $partner . ' - ' . t('Annual Cost');
+			}
+			$headers[] = t('Total') . ' ' . t('Full Time Staff');
+			$headers[] = t('Total') . ' ' . t('Part Time Staff');
+			$headers[] = t('Total') . ' ' . t('Annual Cost');
+
+			$output = array();
+			foreach ($byProvince as $province => $provinceData) {
+				array_push($output, array($province, ' ', ' ', ' '));
+				array_push($output, array($province . ' ' . t('Total'), $provinceData['fulltimecount'], $provinceData['parttimecount'], $provinceData['cost']));
+			}
 			$this->view->assign('headers', $headers);
 			$this->view->assign('output', $output);
 		}
