@@ -960,7 +960,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `datashare_sites_insert` BEFORE INSERT ON `datashare_sites` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `datashare_sites_insert` BEFORE INSERT ON `datashare_sites` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
   END */;;
 DELIMITER ;
@@ -1084,7 +1084,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `employee_base_insert` BEFORE INSERT ON `employee_base_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `employee_base_insert` BEFORE INSERT ON `employee_base_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -1134,7 +1134,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `employee_category_insert` BEFORE INSERT ON `employee_category_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `employee_category_insert` BEFORE INSERT ON `employee_category_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -1184,7 +1184,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `employee_fulltime_insert` BEFORE INSERT ON `employee_fulltime_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `employee_fulltime_insert` BEFORE INSERT ON `employee_fulltime_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -1235,7 +1235,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `employee_qualification_insert` BEFORE INSERT ON `employee_qualification_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `employee_qualification_insert` BEFORE INSERT ON `employee_qualification_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -1285,7 +1285,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `employee_referral_insert` BEFORE INSERT ON `employee_referral_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `employee_referral_insert` BEFORE INSERT ON `employee_referral_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -1335,7 +1335,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `employee_relationship_insert` BEFORE INSERT ON `employee_relationship_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `employee_relationship_insert` BEFORE INSERT ON `employee_relationship_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -1385,7 +1385,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `employee_role_insert` BEFORE INSERT ON `employee_role_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `employee_role_insert` BEFORE INSERT ON `employee_role_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -1433,7 +1433,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `employee_site_type_insert` BEFORE INSERT ON `employee_site_type_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `employee_site_type_insert` BEFORE INSERT ON `employee_site_type_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -1626,7 +1626,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `employee_training_provided_insert` BEFORE INSERT ON `employee_training_provided_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `employee_training_provided_insert` BEFORE INSERT ON `employee_training_provided_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -1676,7 +1676,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `employee_transition_insert` BEFORE INSERT ON `employee_transition_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `employee_transition_insert` BEFORE INSERT ON `employee_transition_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -1725,7 +1725,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `evaluation_insert` BEFORE INSERT ON `evaluation` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `evaluation_insert` BEFORE INSERT ON `evaluation` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -1776,7 +1776,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `evaluation_custom_answers_insert` BEFORE INSERT ON `evaluation_custom_answers` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `evaluation_custom_answers_insert` BEFORE INSERT ON `evaluation_custom_answers` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -1829,7 +1829,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `evaluation_question_insert` BEFORE INSERT ON `evaluation_question` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `evaluation_question_insert` BEFORE INSERT ON `evaluation_question` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -1882,7 +1882,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `evaluation_question_response_insert` BEFORE INSERT ON `evaluation_question_response` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `evaluation_question_response_insert` BEFORE INSERT ON `evaluation_question_response` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -1934,7 +1934,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `evaluation_response_insert` BEFORE INSERT ON `evaluation_response` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `evaluation_response_insert` BEFORE INSERT ON `evaluation_response` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -1983,7 +1983,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `evaluation_to_training_insert` BEFORE INSERT ON `evaluation_to_training` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `evaluation_to_training_insert` BEFORE INSERT ON `evaluation_to_training` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -2060,7 +2060,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `external_course_insert` BEFORE INSERT ON `external_course` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `external_course_insert` BEFORE INSERT ON `external_course` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -2126,7 +2126,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `facility_insert` BEFORE INSERT ON `facility` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `facility_insert` BEFORE INSERT ON `facility` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -2175,7 +2175,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `facility_partner_insert` BEFORE INSERT ON `facility_partner` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `facility_partner_insert` BEFORE INSERT ON `facility_partner` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -2225,7 +2225,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `facility_sponsor_option_insert` BEFORE INSERT ON `facility_sponsor_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `facility_sponsor_option_insert` BEFORE INSERT ON `facility_sponsor_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -2278,7 +2278,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `facility_sponsors_insert` BEFORE INSERT ON `facility_sponsors` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `facility_sponsors_insert` BEFORE INSERT ON `facility_sponsors` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
   END */;;
 DELIMITER ;
@@ -2328,7 +2328,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `facility_type_option_insert` BEFORE INSERT ON `facility_type_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `facility_type_option_insert` BEFORE INSERT ON `facility_type_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -2407,7 +2407,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `file_insert` BEFORE INSERT ON `file` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `file_insert` BEFORE INSERT ON `file` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -3316,7 +3316,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `uuid_insert` BEFORE INSERT ON `location` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `uuid_insert` BEFORE INSERT ON `location` FOR EACH ROW BEGIN
 SET NEW.`uuid` = UUID();
 END */;;
 DELIMITER ;
@@ -4024,7 +4024,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `organizer_partners_insert` BEFORE INSERT ON `organizer_partners` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `organizer_partners_insert` BEFORE INSERT ON `organizer_partners` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -4160,7 +4160,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `partner_insert` BEFORE INSERT ON `partner` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `partner_insert` BEFORE INSERT ON `partner` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -4210,7 +4210,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `partner_funder_insert` BEFORE INSERT ON `partner_funder_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `partner_funder_insert` BEFORE INSERT ON `partner_funder_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -4260,7 +4260,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `partner_importance_insert` BEFORE INSERT ON `partner_importance_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `partner_importance_insert` BEFORE INSERT ON `partner_importance_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -4399,7 +4399,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `partner_type_insert` BEFORE INSERT ON `partner_type_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `partner_type_insert` BEFORE INSERT ON `partner_type_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -4516,7 +4516,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `person_insert` BEFORE INSERT ON `person` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `person_insert` BEFORE INSERT ON `person` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -4566,7 +4566,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `person_active_trainer_option_insert` BEFORE INSERT ON `person_active_trainer_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `person_active_trainer_option_insert` BEFORE INSERT ON `person_active_trainer_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -4649,7 +4649,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `person_custom_1_option_insert` BEFORE INSERT ON `person_custom_1_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `person_custom_1_option_insert` BEFORE INSERT ON `person_custom_1_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -4699,7 +4699,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `person_custom_2_option_insert` BEFORE INSERT ON `person_custom_2_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `person_custom_2_option_insert` BEFORE INSERT ON `person_custom_2_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -4840,7 +4840,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `person_responsibility_option_insert` BEFORE INSERT ON `person_primary_responsibility_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `person_responsibility_option_insert` BEFORE INSERT ON `person_primary_responsibility_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -4892,7 +4892,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `person_qualification_option_insert` BEFORE INSERT ON `person_qualification_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `person_qualification_option_insert` BEFORE INSERT ON `person_qualification_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -4942,7 +4942,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `person_race_insert` BEFORE INSERT ON `person_race_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `person_race_insert` BEFORE INSERT ON `person_race_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -5057,7 +5057,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `person_suffix_option_insert` BEFORE INSERT ON `person_suffix_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `person_suffix_option_insert` BEFORE INSERT ON `person_suffix_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -5107,7 +5107,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `person_title_option_insert` BEFORE INSERT ON `person_title_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `person_title_option_insert` BEFORE INSERT ON `person_title_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -5161,7 +5161,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `person_to_training_insert` BEFORE INSERT ON `person_to_training` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `person_to_training_insert` BEFORE INSERT ON `person_to_training` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -5211,7 +5211,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `person_to_training_award_insert` BEFORE INSERT ON `person_to_training_award_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `person_to_training_award_insert` BEFORE INSERT ON `person_to_training_award_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -5261,7 +5261,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `person_to_training_budget_insert` BEFORE INSERT ON `person_to_training_budget_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `person_to_training_budget_insert` BEFORE INSERT ON `person_to_training_budget_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -5310,7 +5310,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `person_to_training_topic_option_insert` BEFORE INSERT ON `person_to_training_topic_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `person_to_training_topic_option_insert` BEFORE INSERT ON `person_to_training_topic_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -5360,7 +5360,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `person_to_training_viewing_loc_insert` BEFORE INSERT ON `person_to_training_viewing_loc_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `person_to_training_viewing_loc_insert` BEFORE INSERT ON `person_to_training_viewing_loc_option` FOR EACH ROW BEGIN
   SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -5455,7 +5455,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `score_insert` BEFORE INSERT ON `score` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `score_insert` BEFORE INSERT ON `score` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -5802,7 +5802,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `trainer_insert` BEFORE INSERT ON `trainer` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `trainer_insert` BEFORE INSERT ON `trainer` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -5852,7 +5852,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `trainer_affiliation_option_insert` BEFORE INSERT ON `trainer_affiliation_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `trainer_affiliation_option_insert` BEFORE INSERT ON `trainer_affiliation_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -5940,7 +5940,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `trainer_language_option_insert` BEFORE INSERT ON `trainer_language_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `trainer_language_option_insert` BEFORE INSERT ON `trainer_language_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -5990,7 +5990,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `trainer_skill_option_insert` BEFORE INSERT ON `trainer_skill_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `trainer_skill_option_insert` BEFORE INSERT ON `trainer_skill_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6039,7 +6039,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `trainer_to_trainer_language_option_insert` BEFORE INSERT ON `trainer_to_trainer_language_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `trainer_to_trainer_language_option_insert` BEFORE INSERT ON `trainer_to_trainer_language_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6087,7 +6087,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `trainer_to_trainer_skill_option_insert` BEFORE INSERT ON `trainer_to_trainer_skill_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `trainer_to_trainer_skill_option_insert` BEFORE INSERT ON `trainer_to_trainer_skill_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6137,7 +6137,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `trainer_type_option_insert` BEFORE INSERT ON `trainer_type_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `trainer_type_option_insert` BEFORE INSERT ON `trainer_type_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6213,7 +6213,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_insert` BEFORE INSERT ON `training` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_insert` BEFORE INSERT ON `training` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6264,7 +6264,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_approval_history_insert` BEFORE INSERT ON `training_approval_history` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_approval_history_insert` BEFORE INSERT ON `training_approval_history` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6314,7 +6314,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_category_option_insert` BEFORE INSERT ON `training_category_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_category_option_insert` BEFORE INSERT ON `training_category_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6362,7 +6362,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_category_option_to_training_title_option_insert` BEFORE INSERT ON `training_category_option_to_training_title_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_category_option_to_training_title_option_insert` BEFORE INSERT ON `training_category_option_to_training_title_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6412,7 +6412,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_custom_1_option_insert` BEFORE INSERT ON `training_custom_1_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_custom_1_option_insert` BEFORE INSERT ON `training_custom_1_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6462,7 +6462,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_custom_2_option_insert` BEFORE INSERT ON `training_custom_2_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_custom_2_option_insert` BEFORE INSERT ON `training_custom_2_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6513,7 +6513,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_funding_option_insert` BEFORE INSERT ON `training_funding_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_funding_option_insert` BEFORE INSERT ON `training_funding_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6563,7 +6563,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_got_curriculum_option_insert` BEFORE INSERT ON `training_got_curriculum_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_got_curriculum_option_insert` BEFORE INSERT ON `training_got_curriculum_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6614,7 +6614,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_level_option_insert` BEFORE INSERT ON `training_level_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_level_option_insert` BEFORE INSERT ON `training_level_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6665,7 +6665,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_location_insert` BEFORE INSERT ON `training_location` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_location_insert` BEFORE INSERT ON `training_location` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6715,7 +6715,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_method_option_insert` BEFORE INSERT ON `training_method_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_method_option_insert` BEFORE INSERT ON `training_method_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6766,7 +6766,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_organizer_option_insert` BEFORE INSERT ON `training_organizer_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_organizer_option_insert` BEFORE INSERT ON `training_organizer_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6819,7 +6819,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_pepfar_categories_option_insert` BEFORE INSERT ON `training_pepfar_categories_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_pepfar_categories_option_insert` BEFORE INSERT ON `training_pepfar_categories_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6870,7 +6870,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_recommend_insert` BEFORE INSERT ON `training_recommend` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_recommend_insert` BEFORE INSERT ON `training_recommend` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -6921,7 +6921,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_refresher_option_insert` BEFORE INSERT ON `training_refresher_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_refresher_option_insert` BEFORE INSERT ON `training_refresher_option` FOR EACH ROW BEGIN
 	SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 	END */;;
 DELIMITER ;
@@ -6971,7 +6971,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_title_option_insert` BEFORE INSERT ON `training_title_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_title_option_insert` BEFORE INSERT ON `training_title_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -7022,7 +7022,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_to_person_qualification_option_insert` BEFORE INSERT ON `training_to_person_qualification_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_to_person_qualification_option_insert` BEFORE INSERT ON `training_to_person_qualification_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -7072,7 +7072,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_to_trainer_insert` BEFORE INSERT ON `training_to_trainer` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_to_trainer_insert` BEFORE INSERT ON `training_to_trainer` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -7121,7 +7121,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_to_training_funding_option_insert` BEFORE INSERT ON `training_to_training_funding_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_to_training_funding_option_insert` BEFORE INSERT ON `training_to_training_funding_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -7171,7 +7171,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_to_training_pepfar_categories_option_insert` BEFORE INSERT ON `training_to_training_pepfar_categories_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_to_training_pepfar_categories_option_insert` BEFORE INSERT ON `training_to_training_pepfar_categories_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -7219,7 +7219,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_to_training_refresher_option_insert` BEFORE INSERT ON `training_to_training_refresher_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_to_training_refresher_option_insert` BEFORE INSERT ON `training_to_training_refresher_option` FOR EACH ROW BEGIN
 	SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 	END */;;
 DELIMITER ;
@@ -7267,7 +7267,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_to_training_topic_option_insert` BEFORE INSERT ON `training_to_training_topic_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_to_training_topic_option_insert` BEFORE INSERT ON `training_to_training_topic_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -7318,7 +7318,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `training_topic_option_insert` BEFORE INSERT ON `training_topic_option` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `training_topic_option_insert` BEFORE INSERT ON `training_topic_option` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -7398,7 +7398,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `translation_insert` BEFORE INSERT ON `translation` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `translation_insert` BEFORE INSERT ON `translation` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;
@@ -7556,7 +7556,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`ben`@`localhost`*/ /*!50003 TRIGGER `user_insert` BEFORE INSERT ON `user` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`localhost`*/ /*!50003 TRIGGER `user_insert` BEFORE INSERT ON `user` FOR EACH ROW BEGIN
 SET NEW.`uuid` = IFNULL(NEW.`uuid`,UUID());
 END */;;
 DELIMITER ;

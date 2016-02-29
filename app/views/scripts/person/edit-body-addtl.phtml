@@ -267,7 +267,7 @@ if ($this->setting['display_mod_skillsmart']) {
   <?php
   print DropDown::render('active_trainer_option_id', t('Active trainer'), $this->active_trainer,'active_trainer_phrase','id', $this->person['active_trainer_option_id']  );
   ?>
-  <div class="fieldLabel" id="trainer_type_option_id_lbl"><span class="required">*</span><?php echo t('Trainer').' '.t('type');?></div>
+  <div class="fieldLabel" id="trainer_type_option_id_lbl"><span class="required">*</span><?php echo t('Trainer type');?></div>
   <div class="fieldInput">
   <select id="trainer_type_option_id" name="trainer_type_option_id" >
     <option value="">--<?php tp('choose');?>--</option>
@@ -301,7 +301,7 @@ if ($this->setting['display_mod_skillsmart']) {
       if($this->setting['require_trainer_skill']) {
         echo '<span class="required">*</span>';
       }
-      echo t('Trainer').' '.t('skills');?>
+      echo t('Trainer skills');?>
     </div>
   <div class="fieldInput">
         (<?php tp('check all that apply');?>)<br/><br/>

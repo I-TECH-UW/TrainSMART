@@ -16,7 +16,7 @@ print ScriptContainer::$instance->renderJSHead();
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
 
-    <h1><?php echo t('Test scores')?>Test scores</h1>
+    <h1><?php echo t('Test scores')?></h1> <!-- TA:66 translation -->
 
     <div class="simpleLabel"><?php tp('Course');?></div>
     <div class="simpleValue"><?php echo $this->courseName; ?></div>

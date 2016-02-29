@@ -36,7 +36,7 @@
 
 			var formatActionsUrl = function(elCell, oRecord, oColumn, sData) {
 				var contents = "";
-				contents = "<a href='<?php echo $this->base_url;?>/evaluation/add_copy/id/" + sData + "' ><?php tp('Copy'); ?></a>";
+				contents = "<a href='<?php echo $this->base_url;?>/evaluation/add-copy/id/" + sData + "' ><?php tp('Copy'); ?></a>";
 				contents = contents + "&nbsp;&nbsp;<a href='<?php echo $this->base_url;?>/evaluation/assign-evaluation/id/" + sData + "' ><?php tp('Assign'); ?></a>";
 				contents = contents + "&nbsp;&nbsp;<a target='_blank' href='<?php echo $this->base_url;?>/evaluation/print/id/" + sData + "' ><?php tp('Print'); ?></a>";
 				<?php if($this->hasACL('edit_evaluations')) : ?>contents = contents + "&nbsp;&nbsp;<a href='<?php echo $this->base_url;?>/evaluation/edit/id/" + sData + "' ><?php tp('Edit'); ?></a>"; <?php endif; ?>
@@ -54,7 +54,7 @@
 			makeDataTable("evaluations", null, evaluationInfoData, evColumnDefs);
 			</script>
 
-			<a href="<?php echo $this->base_url;?>/evaluation/add_copy"><?php tp('Add New Evaluation');?></a><br/><br/>
+			<a href="<?php echo $this->base_url;?>/evaluation/add-copy"><?php tp('Add New Evaluation');?></a><br/><br/>
 
 
 		</div>

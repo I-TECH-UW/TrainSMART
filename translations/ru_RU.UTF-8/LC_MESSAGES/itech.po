@@ -762,7 +762,7 @@ msgid "Method"
 msgstr "Метод"
 
 msgid "Qualifications"
-msgstr "Квалификации"
+msgstr "Категории персонала"
 
 msgid "Trainer Types"
 msgstr "Тип инструктора"

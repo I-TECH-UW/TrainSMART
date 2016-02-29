@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Trainsmart\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-09-24 16:51-0800\n"
-"PO-Revision-Date: 2015-05-18 11:45-0800\n"
+"PO-Revision-Date: 2016-02-23 11:14-0800\n"
 "Last-Translator: DB\n"
 "Language-Team: Fuse IQ <todd@fuseiq.com>\n"
 "Language: uk_UA\n"
@@ -434,7 +434,7 @@ msgid "select"
 msgstr "обрати"
 
 msgid "Preview"
-msgstr "Попередній пкрегляд"
+msgstr "Попередній перегляд"
 
 msgid "That partner could not be found."
 msgstr "Не вдалося знайти партнера."
@@ -767,7 +767,7 @@ msgid "Method"
 msgstr "Метод"
 
 msgid "Qualifications"
-msgstr "Кваліфікації"
+msgstr "Категорії персоналу"
 
 msgid "Trainer Types"
 msgstr "Тип інструктора"
@@ -1037,7 +1037,7 @@ msgid "Add Evaluation"
 msgstr "Додати  процес визначення якості"
 
 msgid "Assign Evaluation to Training"
-msgstr "Призначити процес визначення якості для тренінгу"
+msgstr "Призначити оцінку до тренінгу"
 
 msgid "Assign"
 msgstr "Призначити"
@@ -1493,7 +1493,7 @@ msgid "Trainings matched with Facilities"
 msgstr "Тренінги, зіставлені із закладами"
 
 msgid "Training Location"
-msgstr "Місцезнаходження тренінгу"
+msgstr "Місце проведення тренінгу"
 
 msgid "PEPFAR"
 msgstr "ПЕПФАР"
@@ -2014,7 +2014,10 @@ msgstr "Будь ласка, виберіть зі списку або дода�
 msgid "Please enter the number of days for this trainer."
 msgstr "Будь ласка, введіть кількість днів для даного інструктора."
 
-msgid "You must edit this person's trainer profile before adding them to this session.\\n\\nWould you like to do this now?"
+msgid ""
+"You must edit this person's trainer profile before adding them to this session.\\n"
+"\\n"
+"Would you like to do this now?"
 msgstr "Ви повинні відредагувати інформацію про даного інструктора перед тим як додати його до цієї сессіі.Ви хочете зробити це зараз?"
 
 msgid "Participant Information"
@@ -3368,7 +3371,7 @@ msgid "Import Scores"
 msgstr "Імпортувати результати"
 
 msgid "Test scores"
-msgstr "Результати тесту"
+msgstr "Бали тестування"
 
 msgid "Score Import"
 msgstr "Імпорт результатів"
@@ -4140,3 +4143,13 @@ msgstr "Записів не знайдено."
 
 msgid "County"
 msgstr "Oкруг"
+
+msgid "Facilities Awaiting Approval"
+msgstr "Заклади, що чекають затвердження"
+
+msgid "Upload"
+msgstr "Завантажити"
+
+msgid "Trainer type"
+msgstr "Категорія інструктора"
+

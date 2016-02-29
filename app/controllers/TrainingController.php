@@ -1237,7 +1237,7 @@ class TrainingController extends ReportFilterHelpers {
 	* Import a training
 	*/
 	
-	public function importAction() {
+	public function importActionExcel() {
 		$errs = array();
 		$this->view->assign('pageTitle', t( 'Import a training' ));
 		
@@ -1416,8 +1416,8 @@ class TrainingController extends ReportFilterHelpers {
 			
 		}	
 	}
-	
-	public function importActionOld() {
+	//TA:66:1 return CSV import
+	public function importAction() {
 	
 		//ini_set('max_execution_time','300');
 		$errs = array();
@@ -2052,7 +2052,7 @@ class TrainingController extends ReportFilterHelpers {
 		$editTable->setParentController($this);
 		$editTable->table = 'score';
 		$editTable->fields = array ('score_label' => t ( 'Label' ), 'score_value' => t ( 'Score' ) ); // TODO: Label translations
-		$editTable->label = 'Score';
+		$editTable->label = t('Score'); //TA:66
 		$editTable->where = "person_to_training_id = {$personTrainingRow->id}";
 		$editTable->insertExtra = array ('person_to_training_id' => $personTrainingRow->id );
 		//$editTable->customColDef = array('training_date' => 'formatter:YAHOO.widget.DataTable.formatDate, editor:"date"');
