@@ -37,6 +37,7 @@ class ReportsController extends ReportFilterHelpers {
 		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'csv');
 		$contextSwitch->addActionContext('ps-students-by-name', 'csv');
 		$contextSwitch->addActionContext('ps-students-trained', 'csv');
+		$contextSwitch->addActionContext('employee-report-occupational-category', 'csv');
 
 		$contextSwitch->addContext('chwreport', array('suffix' => 'chwreport'));
 		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'chwreport');
@@ -10210,16 +10211,14 @@ die (__LINE__ . " - " . $sql);
 			$allData['byPartner'] = array();
 			$byPartner = &$allData['byPartner'];
 
-			$allData['byCategory'] = array();
-			$byCategory = &$allData['byCategory'];
 			$allData['byProvince'] = array();
 			$byProvince = &$allData['byProvince'];
 
 			foreach($rows as $r) {
 
-				$partner = $r['partner'];
-				$province = $r['province_name'] ? $r['province_name'] : 'unknown';
-				$category = $r['qualification_phrase'];
+				$partner = $r['partner'] ? $r['partner'] : 'unknown partner';
+				$province = $r['province_name'] ? $r['province_name'] : 'unknown province';
+				$category = $r['qualification_phrase'] ? $r['qualification_phrase'] : 'unknown qualification';
 
 				$allData['fulltimecount'] += $r['fulltimecount'];
 				$allData['parttimecount'] += $r['parttimecount'];
@@ -10227,51 +10226,57 @@ die (__LINE__ . " - " . $sql);
 
 				// by Province
 				if (!array_key_exists($province, $byProvince)) {
-					$byProvince[$province] = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => array(),
-						'byPartner' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => array()),
-						'byCategory' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => array())
+					$byProvince[$province] = array(
+						'totals' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0),
+						'rows' => array(),
+						'byPartner' => array(),
+						'byCategory' => array()
 					);
 				}
 				$p = &$byProvince[$province];
+				$p['rows'][] = &$r;
+				$p = &$p['totals'];
 				$p['fulltimecount'] += $r['fulltimecount'];
 				$p['parttimecount'] += $r['parttimecount'];
 				$p['cost'] += $r['cost'];
-				$p['rows'][] = &$r;
-
-				// organize by partner per province also
-				$p = &$p['byPartner'];
-				$p['fulltimecount'] += $r['fulltimecount'];
-				$p['parttimecount'] += $r['parttimecount'];
-				$p['cost'] += $r['cost'];
-				$p['rows'][] = &$r;
 
 				// get partner province totals
+				$p = &$byProvince[$province]['byPartner'];
 				if (!array_key_exists($partner, $p)) {
-					$p[$partner] = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => array());
+					$p[$partner] = array(
+						'totals' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0),
+						'byCategory' => array(),
+						'rows' => array()
+					);
 				}
 				$p = &$p[$partner];
+				$p['rows'][] = $r;
+
+				if (!array_key_exists($category, $p['byCategory'])) {
+					$p['byCategory'][$category] = array();
+				}
+				$p['byCategory'][$category][] = $r;
+
+				$p = &$p['totals'];
 				$p['fulltimecount'] += $r['fulltimecount'];
 				$p['parttimecount'] += $r['parttimecount'];
 				$p['cost'] += $r['cost'];
-				$p['rows'][] = &$r;
 
 				// organize by category per province also
 				$p = &$byProvince[$province]['byCategory'];
-				$p['fulltimecount'] += $r['fulltimecount'];
-				$p['parttimecount'] += $r['parttimecount'];
-				$p['cost'] += $r['cost'];
-				$p['rows'][] = &$r;
-
-				// get category province totals
 				if (!array_key_exists($category, $p)) {
-					$p[$category] = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => array());
+					$p[$category] = array(
+						'totals' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0),
+						'rows'   => array()
+					);
 				}
 				$p = &$p[$category];
+
+				$p['rows'][] = $r;
+				$p = &$p['totals'];
 				$p['fulltimecount'] += $r['fulltimecount'];
 				$p['parttimecount'] += $r['parttimecount'];
 				$p['cost'] += $r['cost'];
-				$p['rows'][] = &$r;
-
 
 				// by partner
 				if (!array_key_exists($partner, $byPartner)) {
@@ -10282,38 +10287,70 @@ die (__LINE__ . " - " . $sql);
 				$p['fulltimecount'] += $r['fulltimecount'];
 				$p['parttimecount'] += $r['parttimecount'];
 				$p['cost'] += $r['cost'];
-				$p['rows'][] = &$r;
-/*
-				// by occupational category
-				if (!array_key_exists($category, $byCategory)) {
-					$byCategory[$category] = array('fulltimecount' => 0, 'parttimecount' => 0,
-						'cost' => 0, 'rows' => array());
-				}
+				$p['rows'][] = $r;
 
-				$p = &$byCategory[$category];
-				$p['fulltimecount'] += $r['fulltimecount'];
-				$p['parttimecount'] += $r['parttimecount'];
-				$p['cost'] += $r['cost'];
-				$p['rows'][] = &$r;
-*/
 			}
 
+			// now we have all partners and categories, we can build the report output
 			$headers = array(t('Province & Occupational Category'));
 
+			$grandTotals = array(t('Grand Total'));
 			foreach (array_keys($byPartner) as $partner) {
-				$headers[] = $partner . ' - ' . t('Full Time Staff');
-				$headers[] = $partner . ' - ' . t('Part Time Staff');
-				$headers[] = $partner . ' - ' . t('Annual Cost');
+				array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
+					$partner . ' - ' . t('Annual Cost'));
+				array_push($grandTotals, number_format($byPartner[$partner]['fulltimecount']),
+					number_format($byPartner[$partner]['parttimecount']), number_format($byPartner[$partner]['cost']));
 			}
-			$headers[] = t('Total') . ' ' . t('Full Time Staff');
-			$headers[] = t('Total') . ' ' . t('Part Time Staff');
-			$headers[] = t('Total') . ' ' . t('Annual Cost');
+			array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
+				t('Total') . ' ' . t('Annual Cost'));
+			array_push($grandTotals, number_format($allData['fulltimecount']), number_format($allData['parttimecount']),
+				number_format($allData['cost']));
 
 			$output = array();
+
 			foreach ($byProvince as $province => $provinceData) {
-				array_push($output, array($province, ' ', ' ', ' '));
-				array_push($output, array($province . ' ' . t('Total'), $provinceData['fulltimecount'], $provinceData['parttimecount'], $provinceData['cost']));
+				$provinceHead = array($province);
+				$provinceTail = array($province . ' ' . t('Totals'));
+
+				foreach (array_keys($byPartner) as $partner) {
+					array_push($provinceHead, ' ', ' ', ' ');
+					if (array_key_exists($partner, $provinceData['byPartner'])) {
+						$p = &$provinceData['byPartner'][$partner]['totals'];
+						array_push($provinceTail, number_format($p['fulltimecount']),
+							number_format($p['parttimecount']), number_format($p['cost']));
+					}
+					else {
+						array_push($provinceTail, 0, 0, 0);
+					}
+				}
+				array_push($provinceHead, ' ', ' ', ' ');
+				array_push($provinceTail, number_format($provinceData['totals']['fulltimecount']),
+					number_format($provinceData['totals']['parttimecount']),
+					number_format($provinceData['totals']['cost']));
+
+				$output[] = $provinceHead;
+				foreach($provinceData['byCategory'] as $category => $categoryValues) {
+					$categoryRow = array($category);
+					foreach (array_keys($byPartner) as $partner) {
+						if (array_key_exists($partner, $provinceData['byPartner']) &&
+							array_key_exists($category, $provinceData['byPartner'][$partner]['byCategory'])) {
+							$p = &$provinceData['byPartner'][$partner]['byCategory'][$category][0];
+							array_push($categoryRow, number_format($p['fulltimecount']),
+								number_format($p['parttimecount']), number_format($p['cost']));
+						}
+						else {
+							array_push($categoryRow, 0, 0, 0);
+						}
+					}
+					array_push($categoryRow, number_format($categoryValues['totals']['fulltimecount']),
+						number_format($categoryValues['totals']['parttimecount']),
+						number_format($categoryValues['totals']['cost']));
+					$output[] = $categoryRow;
+				}
+
+				$output[] = $provinceTail;
 			}
+			$output[] = $grandTotals;
 			$this->view->assign('headers', $headers);
 			$this->view->assign('output', $output);
 		}
