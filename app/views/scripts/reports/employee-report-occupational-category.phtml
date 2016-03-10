@@ -44,7 +44,7 @@ print ScriptContainer::$instance->renderJSHead();
                             'criteria' => $this->criteria, 'setting' => $this->setting));
                     echo $this->partial('reports/employee-reports-partial.phtml',
                         array('mechanisms' => $this->mechanisms, 'funders' => $this->funders,
-                            'categories' => $this->categories, 'transitions' => $this->transitions));
+                            'classifications' => $this->classifications, 'transitions' => $this->transitions));
                     echo $this->partial('reports/ps-search-preview-button-partial.phtml', array());
                 ?>
 

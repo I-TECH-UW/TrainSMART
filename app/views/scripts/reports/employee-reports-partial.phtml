@@ -25,9 +25,9 @@ echo $this->partial('/reports/date-range-partial.phtml',
 
 <span>
 <?php
-    // Occupational Category
-    echo $this->formLabel("", t('Occupational category'), array('class' => 'fieldLabel'));
-    echo $this->formSelect('category', "", array(), $this->categories);
+    // Occupational Classifcation
+    echo $this->formLabel("", t('Occupational Classification'), array('class' => 'fieldLabel'));
+    echo $this->formSelect('classification', "", array(), $this->classifications);
 ?>
 </span>
 <div class="clear pad20">&nbsp;</div>

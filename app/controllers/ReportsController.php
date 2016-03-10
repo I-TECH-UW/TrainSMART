@@ -10185,9 +10185,8 @@ die (__LINE__ . " - " . $sql);
 				$select->join(array('pfo' => 'partner_funder_option'), 'pfo.id = mo.funder_id');
 			}
 
-			if ($criteria['category']) {
-				$select->join(array('eco' => 'employee_category_option'), 'eco.id = emp.employee_category_option_id');
-				$select->where('eco.id = ?', $criteria['category']);
+			if ($criteria['classification']) {
+				$select->where('eqo.id = ?', $criteria['classification']);
 			}
 
 			if ($criteria['transition']) {
@@ -10390,13 +10389,13 @@ die (__LINE__ . " - " . $sql);
 				->order('transition_phrase ASC')
 		);
 
-		$categories = $choose + $db->fetchPairs($db->select()
-				->from('employee_category_option', array('id', 'category_phrase'))
-				->order('category_phrase ASC')
+		$classifications = $choose + $db->fetchPairs($db->select()
+				->from('employee_qualification_option', array('id', 'qualification_phrase'))
+				->order('qualification_phrase ASC')
 		);
 
 		$this->view->assign('locations', $locations);
-		$this->view->assign('categories', $categories);
+		$this->view->assign('classifications', $classifications);
 		$this->view->assign('transitions', $transitions);
 		$this->view->assign('criteria', $criteria);
 		$this->view->assign('funders', $funders);
