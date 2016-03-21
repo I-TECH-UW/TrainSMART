@@ -3523,6 +3523,7 @@ echo $sql . "<br>";
 		//TA:38 fixing bug to filter by geography
 		$criteria ['province_id'] = $this->getSanParam ( 'province_id' );
 		$arr_dist = $this->getSanParam ( 'district_id' );
+		//print "+" . $criteria ['province_id'] . "+"; // this is array of ids
 		// level 2 location has parameter as [parent_location_id]_[location_id], we need to take only location_ids
 		for($i=0;$i<sizeof($arr_dist); $i++){
 			if ( strstr($arr_dist[$i], '_') !== false ) {
@@ -3769,6 +3770,11 @@ echo $sql . "<br>";
 // 			}
 			if($criteria['district_id'] && !empty($criteria['district_id']) && $criteria['district_id'][0]){
 				$where [] = "pt.district_id IN (" . implode(',', $criteria['district_id']) . ")";
+			}
+			
+			//TA:67 filter by province
+			if ($criteria ['province_id'] && ! empty ( $criteria ['province_id'] )) {
+			    $where [] = ' pt.province_id IN (' . implode ( ',', $criteria ['province_id'] ) . ')';
 			}
 
 			if ($criteria ['age_min']) {
