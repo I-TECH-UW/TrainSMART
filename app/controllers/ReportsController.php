@@ -3773,7 +3773,7 @@ echo $sql . "<br>";
 			}
 			
 			//TA:67 filter by province
-			if ($criteria ['province_id'] && ! empty ( $criteria ['province_id'] )) {
+			if ($criteria ['province_id'] && ! empty ( $criteria ['province_id'] && $criteria['province_id'][0])) {
 			    $where [] = ' pt.province_id IN (' . implode ( ',', $criteria ['province_id'] ) . ')';
 			}
 
