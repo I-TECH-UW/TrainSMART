@@ -15,6 +15,9 @@ class Location extends ITechTable
 
 	//return [id,uuid,name,parent_id, tier, is_default, is_good]
 	static protected $_locations = null;//cache
+	static protected $_numLocationTiers = null;
+	static protected $_locationsByTier = null;
+	static protected $_locationDataStructure = null;
 
     /**
      * @return array|null
@@ -87,6 +90,181 @@ class Location extends ITechTable
         return null;
     }
 
+	/**
+	 * resets the location caches so that location information will be updated from the database in the event
+	 * of changes to the data in the location table.
+	 */
+	public static function flushCachedLocations() {
+		self::$_locations = null;
+		self::$_locationsByTier = null;
+		self::$_numLocationTiers = null;
+		self::$_locationDataStructure = null;
+	}
+
+	/**
+	 * gets an array of locations with valid parent locations ordered by hierarchical location tier
+	 * also populates the cache variable of the same data
+	 *
+	 * @return array|null
+	 * @throws Zend_Db_Select_Exception
+	 */
+	public static function getValidLocationsByTier() {
+		if (self::$_locationsByTier) {
+			return self::$_locationsByTier;
+		}
+
+		$tableObj = new Location();
+
+		$provinceSelect = $tableObj->select()
+			->from(array('location'))
+			->where('location.tier = 1')
+			->where('location.parent_id IS NULL')
+			->where('is_deleted = 0')
+		;
+
+		$subRegionsSelect = $tableObj->select()
+			->from(array('location'))
+			->join(array('parent_location' => 'location'), 'location.parent_id = parent_location.id', array())
+			->where('location.tier > 0')
+			->where('parent_location.tier = location.tier - 1')
+			->where('location.is_deleted = 0')
+			->where('parent_location.is_deleted = 0')
+		;
+
+		$locationSelect = $tableObj->select()
+			->union(array($provinceSelect, $subRegionsSelect))
+			->order('tier')
+			->order('location_name');
+
+		try {
+			self::$_locationsByTier  = $tableObj->fetchAll($locationSelect)->toArray();
+			return self::$_locationsByTier;
+		} catch (Zend_Exception $e) {
+			error_log($e);
+		}
+
+		return null;
+	}
+
+	/**
+	 * get the number of user-activated location tiers, plus the top tier and the bottom "city" tier
+	 * 
+	 * @return int
+	 */
+	public static function getNumLocationTiers() {
+		if (self::$_numLocationTiers) {
+			return self::$_numLocationTiers;
+		}
+
+		$q = 'select 
+				case when display_region_b = 1 then 1 else 0 end +
+				case when display_region_c = 1 then 1 else 0 end +
+				case when display_region_d = 1 then 1 else 0 end +
+				case when display_region_e = 1 then 1 else 0 end +
+				case when display_region_f = 1 then 1 else 0 end +
+				case when display_region_g = 1 then 1 else 0 end +
+				case when display_region_h = 1 then 1 else 0 end +
+				case when display_region_i = 1 then 1 else 0 end +
+				2 as num_location_tiers from _system';
+
+		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+		self::$_numLocationTiers = $db->fetchOne($q);
+		return self::$_numLocationTiers;
+	}
+
+	/**
+	 * processes locations into an array of arrays by tier for easier front-end use
+	 * 
+	 * @return array|null
+	 */
+	public static function getLocationDataStructure() {
+		if (self::$_locationDataStructure) {
+			return self::$_locationDataStructure;
+		}
+
+		if (!self::$_locationsByTier) {
+			self::getValidLocationsByTier();
+		}
+
+		self::$_locationDataStructure = array();
+
+		$ds = &self::$_locationDataStructure;
+		$locations = &self::$_locationsByTier;
+		foreach ($locations as $location) {
+			$t = $location['tier'];
+			if (!array_key_exists($t, $ds)) {
+				$ds[$t] = array();
+			}
+			$ds[$t][] = $location;
+		}
+		return self::$_locationDataStructure;
+	}
+
+	/**
+	 * gets an array of all of the locations that contain data with missing parents or invalid tiers
+	 * 
+	 * @return array|null
+	 */
+	public static function getInvalidLocations() {
+		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+
+		$q =
+			'SELECT
+				`location`.*
+			FROM
+				`location`
+			INNER JOIN `location` AS `parent_location` ON location.parent_id = parent_location.id
+			WHERE
+				(location.tier > 0)
+			AND (
+				parent_location.tier != location.tier - 1
+			)
+			AND (location.is_deleted = 0)
+			UNION
+				SELECT
+					*
+				FROM
+					location
+				WHERE
+					parent_id IS NOT NULL
+				AND tier < 1
+				AND (location.is_deleted = 0)
+			UNION
+				SELECT
+					*
+				FROM
+					location
+				WHERE
+					tier > 1
+				AND parent_id IS NULL
+				AND (location.is_deleted = 0)
+			UNION
+				SELECT
+					*
+				FROM
+					location
+				WHERE
+					parent_id NOT IN (SELECT id FROM location)
+				AND (location.is_deleted = 0)
+			UNION
+				SELECT
+					*
+				FROM
+					location
+				WHERE
+					tier > ?
+				AND (location.is_deleted = 0)
+			ORDER BY
+				`tier` ASC,
+				`location_name` ASC';
+		try {
+			return $db->fetchAll($q, self::getNumLocationTiers());
+		} catch (Zend_Exception $e) {
+			error_log($e);
+		}
+
+		return null;
+	}
 
 	public static function moveLocation($location_id, $new_parent) {
 		//caller should make sure it's in the correct tier
