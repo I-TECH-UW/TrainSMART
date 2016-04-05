@@ -13,11 +13,12 @@ class Location extends ITechTable
 	protected $_primary = 'id';
 	protected $_name = 'location';
 
-	//return [id,uuid,name,parent_id, tier, is_default, is_good]
-	static protected $_locations = null;//cache
-	static protected $_numLocationTiers = null;
-	static protected $_locationsByTier = null;
+	// cache for lookups and processed results.
 	static protected $_locationDataStructure = null;
+	static protected $_locationHierarchy = null;
+	static protected $_locations = null;
+	static protected $_locationsByTier = null;
+	static protected $_numLocationTiers = null;
 
     /**
      * returns an array of all non-deleted locations
@@ -97,10 +98,11 @@ class Location extends ITechTable
 	 * of changes to the data in the location table.
 	 */
 	public static function flushCachedLocations() {
+		self::$_locationDataStructure = null;
+		self::$_locationHierarchy = null;
 		self::$_locations = null;
 		self::$_locationsByTier = null;
 		self::$_numLocationTiers = null;
-		self::$_locationDataStructure = null;
 	}
 
 	/**
@@ -200,6 +202,46 @@ class Location extends ITechTable
 			$ds[$t][] = $location;
 		}
 		return self::$_locationDataStructure;
+	}
+
+	/**
+	 * get a tree of all validly linked locations
+	 *
+	 * @return null
+	 */
+	public static function getLocationHierarchy() {
+		if (self::$_locationHierarchy) {
+			return self::$_locationHierarchy;
+		}
+
+		if (!self::$_locationsByTier) {
+			self::getValidLocationsByTier();
+		}
+
+		$locs = &self::$_locationsByTier;
+		self::$_locationHierarchy = array();
+		$h = &self::$_locationHierarchy;
+
+		// make a temporary lookup array to link children with parents
+		$temp = array();
+		foreach ($locs as $loc) {
+
+			$temp[$loc['id']] = array('data' => $loc, 'children' => array());
+			if ($loc['parent_id']) {
+				$temp[$loc['parent_id']]['children'][$loc['id']] = &$temp[$loc['id']];
+			}
+		}
+
+		// grab the top tier out of the lookup array, children are linked in appropriately
+		// locations are sorted by tier and this logic depends on it
+		foreach ($locs as $loc) {
+			if ($loc['tier'] > 1) {
+				break;
+			}
+			$h[$loc['id']] = &$temp[$loc['id']];
+		}
+
+		return self::$_locationHierarchy;
 	}
 
 	/**
