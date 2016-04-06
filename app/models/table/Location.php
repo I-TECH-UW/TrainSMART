@@ -219,16 +219,19 @@ class Location extends ITechTable
 		}
 
 		$locs = &self::$_locationsByTier;
-		self::$_locationHierarchy = array();
+		self::$_locationHierarchy = array('full' => array(), 'simple' => array());
 		$h = &self::$_locationHierarchy;
 
-		// make a temporary lookup array to link children with parents
+		// make a temporary lookup array to link children with parents, relies on data being ordered by tier
 		$temp = array();
+		$basic = array();
 		foreach ($locs as $loc) {
 
 			$temp[$loc['id']] = array('data' => $loc, 'children' => array());
+			$basic[$loc['id']] = array('id' => $loc['id'], 'name' => $loc['location_name'], 'children' => array());
 			if ($loc['parent_id']) {
 				$temp[$loc['parent_id']]['children'][$loc['id']] = &$temp[$loc['id']];
+				$basic[$loc['parent_id']]['children'][$loc['id']] = &$basic[$loc['id']];
 			}
 		}
 
@@ -238,7 +241,8 @@ class Location extends ITechTable
 			if ($loc['tier'] > 1) {
 				break;
 			}
-			$h[$loc['id']] = &$temp[$loc['id']];
+			$h['full'][$loc['id']] = &$temp[$loc['id']];
+			$h['simple'][$loc['id']] = &$basic[$loc['id']];
 		}
 
 		return self::$_locationHierarchy;
