@@ -4713,6 +4713,11 @@ echo $sql . "<br>";
 			if ($criteria ['is_tot'] or $criteria ['is_tot'] === '0') {
 				$where []= ' pt.is_tot = ' . $criteria ['is_tot'];
 			}
+			
+			//TA:71
+			if ($criteria ['showProvince']) {
+			    $where []= ' pt.province_name IS NOT NULL ';
+			}
 
 			// restricted access?? only show trainings we have the ACL to view
 			require_once('views/helpers/TrainingViewHelper.php');
@@ -4758,6 +4763,8 @@ echo $sql . "<br>";
 					$sql .= ' GROUP BY pt.id';
 				}
 			}
+			
+		//	print $sql;
 
 			$rowArray = $db->fetchAll ( $sql . ' ORDER BY facility_name ASC ' );
 
