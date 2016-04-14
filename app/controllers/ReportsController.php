@@ -4659,7 +4659,9 @@ echo $sql . "<br>";
 				$sql .= '	LEFT JOIN (SELECT training_id, ttpco.training_pepfar_categories_option_id, pepfar_category_phrase FROM training_to_training_pepfar_categories_option as ttpco JOIN training_pepfar_categories_option as tpco ON ttpco.training_pepfar_categories_option_id = tpco.id) as tpep ON tpep.training_id = pt.id ';
 			}
 
-			if ($criteria ['showTopic']) {
+			//TA:72
+			//if ($criteria ['showTopic']) {
+			if ($criteria ['showTopic'] or $criteria ['training_topic_id'] or $criteria ['training_topic_id'] === '0') {
 				$sql .= '	LEFT JOIN (SELECT training_id, ttto.training_topic_option_id, training_topic_phrase FROM training_to_training_topic_option as ttto JOIN training_topic_option as tto ON ttto.training_topic_option_id = tto.id) as ttopic ON ttopic.training_id = pt.id ';
 			}
 
