@@ -57,15 +57,21 @@ if( strstr($path[2], 'trainers-by-name') === FALSE ):?>
 
 	<div class="fieldLabel" id="training_title_option_id_lbl"><?php echo (@$this->translation['Training Name']); ?></div>
 	<div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showTrainingTitle" <?php  if ($this->criteria['showTrainingTitle']) echo 'CHECKED';?> /></div>
-  	<div  class="leftBorder autoHeight">
-	<select id="training_title_id" name="training_title_id[]" multiple="multiple" size="10">
+	
+  	<div  class="leftBorder autoHeight autoWidth">
+  	<!-- TA:69 expend to ??? style="min-width:780px;" -->
+	<select id="training_title_id" name="training_title_id[]" multiple="multiple" size="10" style="min-width:600px;">
 		<option value="" <?php if (is_array($this->criteria['training_title_id']) && in_array("", $this->criteria['training_title_id'])) echo "selected"; ?>>--<?php tp('All');?>--</option>
 		<?php
+		//TA:69 remove trancate values, show whole values, display titles=item value as mouse over
 			foreach ( $this->courses as $vals ) {
-				echo '<option value="'.$vals['id'].'" '.(@$this->criteria['training_title_id'] == $vals['id'] || @in_array($vals['id'], $this->criteria['training_title_id'])? 'SELECTED':'').' >'.$this->truncate($vals['training_title_phrase']).'</option>';
+				echo '<option value="'.$vals['id'].'" '.(@$this->criteria['training_title_id'] == $vals['id'] || @in_array($vals['id'], $this->criteria['training_title_id'])? 'SELECTED':'').' >'.
+				$vals['training_title_phrase'].'</option>';
 		}
 		?>
 	</select></div></div>
+	
+	
 
 <!--
 	<div class="fieldLabel" id="qualification_id_lbl"><?php tp('Qualification');?></div>
