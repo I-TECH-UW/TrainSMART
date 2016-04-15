@@ -1817,7 +1817,11 @@ echo $sql . "<br>";
 				$sql .= ' ORDER BY training_start_date DESC';
 			}
 			
+			//print $sql;
+			
 			$rowArray = $db->fetchAll ( $sql );
+			
+			//print_r($rowArray);
 
 			if ($criteria ['doCount']) {
 				$count = 0;
@@ -2910,7 +2914,6 @@ echo $sql . "<br>";
 			$num_locs = $this->setting('num_location_tiers');
 			list($field_name,$location_sub_query) = Location::subquery($num_locs, $location_tier, $location_id, true);
 
-
 			$intersection_table = 'person_to_training';
 			$intersection_person_id = 'person_id';
 
@@ -2937,6 +2940,9 @@ echo $sql . "<br>";
 			$sql .= '    INNER JOIN facility ON person.facility_id = facility.id ';
 			$sql .= '    LEFT JOIN ('.$location_sub_query.') AS l ON facility.location_id = l.id ';
 			$sql .= '    LEFT  JOIN person_suffix_option suffix ON person.suffix_option_id = suffix.id ';
+			if($criteria ['province_id'] && $criteria ['province_id'][0] !== ''){  //TA:74 filtering by province name is fixed
+			     $sql .= ' where l.id IN ( ' . implode(",", $criteria ['province_id']) . ") ";
+			}
 			$sql .= ' ) as pt ';
 
 			if ($criteria ['showPepfar'] || $criteria ['training_pepfar_id'] || $criteria ['training_pepfar_id'] === '0') {
@@ -4516,6 +4522,7 @@ echo $sql . "<br>";
 		$criteria ['facility_sponsor_id'] = $this->getSanParam ( 'facility_sponsor_id' );
 		$criteria ['facilityInput'] = $this->getSanParam ( 'facilityInput' );
 		$criteria ['is_tot'] = $this->getSanParam ( 'is_tot' );
+		$criteria ['qualification_id'] = $this->getSanParam ( 'qualification_id' );//TA:75 fixing filtering by qualification
 
 		$criteria ['go'] = $this->getSanParam ( 'go' );
 		$criteria ['doCount'] = ($this->view->mode == 'count');
@@ -4628,8 +4635,13 @@ echo $sql . "<br>";
 					            FROM person
 				               JOIN person_to_training ON person_to_training.person_id = person.id
 				               JOIN facility as f ON person.facility_id = f.id
-				               JOIN person_qualification_option qual ON qual.id = person.primary_qualification_option_id
-				               ) as fac ON training.id = fac.training_id
+				               JOIN person_qualification_option qual ON qual.id = person.primary_qualification_option_id ';
+				    //TA:75 fixing filtering by qualification
+				    if($criteria ['qualification_id'] && $criteria ['qualification_id'] !== ''){
+				        $sql .=  ' where qual.id = ' . $criteria ['qualification_id'];
+				    }
+				
+				   $sql .= ' ) as fac ON training.id = fac.training_id
 				         LEFT JOIN ('.$location_sub_query.') as l ON fac.location_id = l.id WHERE training.is_deleted=0) as pt ';
 			} else {
 				$sql .= ' FROM (SELECT training.*, fac.facility_id as "facility_id", fac.type_option_id, fac.sponsor_option_id ,fac.facility_name as "facility_name" , tto.training_title_phrase AS training_title,training_location.training_location_name, l.'.implode(', l.',$field_name).
@@ -4766,7 +4778,7 @@ echo $sql . "<br>";
 				}
 			}
 			
-		//	print $sql;
+			//print $sql;
 
 			$rowArray = $db->fetchAll ( $sql . ' ORDER BY facility_name ASC ' );
 

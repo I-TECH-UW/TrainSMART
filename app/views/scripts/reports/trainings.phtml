@@ -612,7 +612,9 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 																	,{key:"custom4_phrase", label: "<?php echo (@$this->translation['Training Custom 4']); ?>", sortable:true, resizeable:true}
 																<?php } ?>
 																//TA:17: 09/09/2014  
-																<?php if ($this->results[0] && array_key_exists('pcnt', $this->results[0]) !== false && $this->setting['display_training_pepfar']) { ?>
+																<?php if ($this->results[0] && array_key_exists('pcnt', $this->results[0]) !== false 
+																/*TA:75 should we have this condition???? I removed it beacuse it did not displayed for Ukraine, but should be 
+																 && $this->setting['display_training_pepfar']*/) { ?>
 																	,{key:"pcnt", label: "<?php tp('Participants');?>", sortable:true, resizeable:true}
 																<?php } ?>
 																<?php   if ( $this->criteria['showCreatedBy'] ) { ?>
