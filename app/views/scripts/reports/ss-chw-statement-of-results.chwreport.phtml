@@ -1,2 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        @page {
+            size: auto;
+            margin: 50pt 50pt 50pt 50pt;
+        }
+
+        @media screen {
+            body {
+                margin: 50pt 50pt 50pt 50pt;
+            }
+        }
+
+        @media print {
+            .SORFooter {
+                page-break-after: always;
+            }
+        }
+        .resultsTable {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 5pt auto;
+        }
+
+        .AQPTable {
+            border-collapse: collapse;
+            margin: 5pt auto;
+        }
+        .lightGrayBackground {
+            background-color: #DDDDDD;
+        }
+        .cellBorders th, .cellBorders td {
+            border: 1px solid black;
+        }
+        .resultsTable tr {
+            page-break-inside: avoid;
+        }
+        .center {
+            text-align: center;
+        }
+        .signatureTable {
+            margin: 5pt auto;
+        }
+        .sigline {
+            width: 200px;
+            border-bottom: 1px solid black;
+        }
+    </style>
+</head>
+<body>
 <?php
-echo "In Progress";
+$stud = array(
+    'skillsProviderName' => 'fake',
+    'skillsProviderAddress' => 'fake2',
+    'skillsProviderNumber' => 'fake3',
+
+    'certificateTitle' => 'Health Promotion Officer',
+    'certificateID' => 'SAQA ID 94597 (NQF Level 3',
+    'idNumber' => "5501010005008",
+
+    'AQPName' => 'HWSETA',
+    'AQPEmail' => 'hwseta@hwseta.org.za',
+    'AQPPhone' => '(011) 607 6900',
+    'AQPImage' => 'IMAGE',
+
+    'modules' => array(
+        'Knowledge' => array(
+            array(
+                'date' => '16/03/2016',
+                'type' => 'Knowledge',
+                'number' => '325301-001-KS-01',
+                'name' => 'Public and Community health support.',
+                'nqflevel' => '3',
+                'credits' => '22',
+                'achievement' => 'Pass',
+            ),
+            array(
+                'date' => '23/03/2016',
+                'type' => 'Knowledge',
+                'number' => '325301-001-KS-02',
+                'name' => 'Family and Community Services',
+                'nqflevel' => '3',
+                'credits' => '22',
+                'achievement' => 'Pass',
+            ),
+        ),
+        'Practical' => array(
+            array(
+                'date' => '16/03/2016',
+                'type' => 'Practical',
+                'number' => '325301-001-PM-01',
+                'name' => 'Mobilize community to address community health issues',
+                'nqflevel' => '3',
+                'credits' => '22',
+                'achievement' => 'Pass',
+            ),
+            array(
+                'date' => '23/03/2016',
+                'type' => 'Practical',
+                'number' => '325301-001-PM-02',
+                'name' => 'Identify the service needs and ease of access to health and social services',
+                'nqflevel' => '3',
+                'credits' => '22',
+                'achievement' => 'Pass',
+            ),
+        ),
+        'Workplace' => array(
+            array(
+                'date' => '16/03/2016',
+                'type' => 'Workplace',
+                'number' => '325301-001-WM-01',
+                'name' => 'Operations and dynamics of communities',
+                'nqflevel' => '3',
+                'credits' => '22',
+                'achievement' => 'Pass',
+            ),
+            array(
+                'date' => '23/03/2016',
+                'type' => 'Workplace',
+                'number' => '325301-001-WM-02',
+                'name' => 'Identify the service needs and ease of access to health and social services',
+                'nqflevel' => '3',
+                'credits' => '22',
+                'achievement' => 'Pass',
+            ),
+        ),
+    ),
+);
+
+$this->skillsProviderName = "fake";
+$this->skillsProviderAddress = "fake";
+$this->skillsProviderNumber = "fake";
+$this->certificateTitle = "Health Promotion Officer";
+$this->certificateID = "SAQA ID 94597 (NQF Level 3";
+$this->gradName = "Paul Smith";
+$this->idNumber = "5501010005008";
+
+$this->AQPName = "HWSETA";
+$this->AQPEmail = "hwseta@hwseta.org.za";
+$this->AQPPhone = "(011) 607 6900";
+$this->AQPImage = "IMAGE";
+?>
+
+<?php foreach ($this->output as $student) { ?>
+    <div>
+        <span>
+            <strong>Skills Development Provider (SDP):</strong>
+            <?php echo $stud['skillsProviderName']; ?>
+        </span>
+        <br>
+        <span>
+            <strong>Address:</strong>
+            <?php echo $stud['skillsProviderAddress']; ?>
+        </span>
+        <br>
+        <span>
+            <strong>Contact Number:</strong>
+            <?php echo $stud['skillsProviderNumber']; ?>
+        </span>
+        <br>
+    </div>
+    <div class="center">
+        <strong>STATEMENT OF RESULTS</strong>
+        <br>
+        OCCUPATIONAL CERTIFICATE: <?php echo strtoupper($stud['certificateTitle']) . ": " . $stud['certificateID']; ?>
+        <br>
+        Issued to
+        <br>
+        <strong><?php echo $student['first_name'] . ' ' . $student['last_name'];?></strong>
+        <br>
+        ID / Passport number: <?php echo $stud['idNumber']; ?>
+    </div>
+    <div>
+    <table class="resultsTable cellBorders">
+        <thead>
+            <tr>
+                <th><?php echo t('Date Assessed');?></th>
+                <th><?php echo t('Module type');?></th>
+                <th><?php echo t('Module number');?></th>
+                <th><?php echo t('Module');?></th>
+                <th><?php echo t('NQF Level');?></th>
+                <th><?php echo t('Credits');?></th>
+                <th><?php echo t('Achievement Pass/Fail');?></th>
+            </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <td colspan="7">The learner has successfully completed the knowledge, workplace and practical requirements as
+                stipulated in the Occupational Certificate: <?php echo $stud['certificateTitle'] . ": " . $stud['certificateID']; ?> qualification.
+                The learner is now ready to apply for the external summative assessment component to complete the
+                qualification.</td>
+        </tr>
+        </tfoot>
+        <tbody>
+        <?php
+        foreach ($stud['modules'] as $k => $mod) {
+            echo "<tr><td colspan='7' class='lightGrayBackground center'><strong>" . t($k) . "</strong></td></tr>";
+            foreach ($mod as $module) { ?>
+            <tr>
+                <td><?php echo $module['date']; ?></td>
+                <td><?php echo $module['type']; ?></td>
+                <td><?php echo $module['number']; ?></td>
+                <td><?php echo $module['name']; ?></td>
+                <td><?php echo $module['nqflevel']; ?></td>
+                <td><?php echo $module['credits']; ?></td>
+                <td><?php echo $module['achievement']; ?></td>
+            </tr>
+            <?php }
+        }
+        ?>
+        </tbody>
+    </table>
+    </div>
+    <div>
+    <table class="cellBorders AQPTable">
+        <tbody>
+        <tr>
+            <td rowspan="2" class="lightGrayBackground"><?php echo t('Assesment Quality Partner');?></td>
+            <td class="lightGrayBackground">Name</td>
+            <td class="lightGrayBackground">E-mail</td>
+            <td class="lightGrayBackground">Phone</td>
+            <td class="lightGrayBackground">Logo</td>
+        </tr>
+        <tr>
+            <td><?php echo $stud['AQPName']; ?></td>
+            <td><?php echo $stud['AQPEmail']; ?></td>
+            <td><?php echo $stud['AQPPhone']; ?></td>
+            <td><?php echo $stud['AQPImage']; ?></td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+    <div>
+        <table class="signatureTable">
+            <tr>
+                <td>Signature:</td>
+                <td class="sigline">&nbsp;</td>
+                <td>Date:</td>
+                <td class="sigline">&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+    <div class="SORFooter">
+    <strong><em>This Statement of Results is not an Occupational Certificate. The learner has complied with the requirement of the practical, workplace and knowledge components of the qualification.  The Quality Council for Trades and Occupations may issue the Occupational Certificate after the candidate has successfully completed the External Summative Assessment requirements.</em></strong>
+    </div>
+<?php } ?>
+</body>
+</html>
+
