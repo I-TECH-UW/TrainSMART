@@ -502,10 +502,10 @@ foreach($this->results as $row) {
 	if ( isset($row['id']) and $this->criteria['showEmail'])
 		echo ',"'.$row['email'].'"';
 	if ( isset($row['id']) and $this->criteria['showPhone']){
-	    //TA:72 it can be phone_home or phone_work or phone_mobile
-		if (! array_key_exists('phone_home', $row))
+	    //TA:73 it can be phone_home or phone_work or phone_mobile
+		if (! array_key_exists('phone', $row))
 			$row['phone'] = t('(no phone)');
-			echo ',"'. (isset ($row['phone_mobile']) ? $row['phone_mobile'] : t("N/A")) .'"';
+			echo ',"'. (isset ($row['phone']) ? $row['phone'] : t("N/A")) .'"';
 		}
 	if ( isset($row['id']) )
 		echo ',"'.$row['training_start_date'].'"';

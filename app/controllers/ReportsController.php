@@ -3280,25 +3280,46 @@ echo $sql . "<br>";
 		}
 
 		$criteria ['go'] = $this->getSanParam ( 'go' );
+		
+		//TA_73 show all phones
+		if ($rowArray) {
+		    $first = reset ( $rowArray );
+// 		    if (isset ( $first ['phone_work'] )) {
+		        foreach ( $rowArray as $key => $val ) {
+		            $phones = array ();
+		            if ($val ['phone_work'])
+		                $phones [] = str_replace ( ' ', '', trim ( $val ['phone_work'] ) ) . ' (w)';
+		            if ($val ['phone_home'])
+		                $phones [] = str_replace ( ' ', '', trim ( $val ['phone_home'] ) ) . ' (h)';
+		            if ($val ['phone_mobile'])
+		                $phones [] = str_replace ( ' ', '', trim ( $val ['phone_mobile'] ) ) . ' (m)';
+		            $rowArray [$key] ['phone'] = implode ( ', ', $phones );
+		        }
+		        $this->view->assign ( 'results', $rowArray );
+//		    }
+		}
 
 		$this->viewAssignEscaped ( 'results', $rowArray );
 		
-		if ($rowArray) {
-			$first = reset ( $rowArray );
-			if (isset ( $first ['phone_work'] )) {
-				foreach ( $rowArray as $key => $val ) {
-					$phones = array ();
-					if ($val ['phone_work'])
-					$phones [] = str_replace ( ' ', '&nbsp;', trim ( $val ['phone_work'] ) ) . '&nbsp;(w)';
-					if ($val ['phone_home'])
-					$phones [] = str_replace ( ' ', '&nbsp;', trim ( $val ['phone_home'] ) ) . '&nbsp;(h)';
-					if ($val ['phone_mobile'])
-					$phones [] = str_replace ( ' ', '&nbsp;', trim ( $val ['phone_mobile'] ) ) . '&nbsp;(m)';
-					$rowArray [$key] ['phone'] = implode ( ', ', $phones );
-				}
-				$this->view->assign ( 'results', $rowArray );
-			}
-		}
+//		print_r($rowArray);
+		
+// 		if ($rowArray) {
+// 			$first = reset ( $rowArray );
+// 		   if (isset ( $first ['phone_work'] )) {
+// 				foreach ( $rowArray as $key => $val ) {
+// 					$phones = array ();
+// 					if ($val ['phone_work'])
+// 					$phones [] = str_replace ( ' ', '&nbsp;', trim ( $val ['phone_work'] ) ) . '&nbsp;(w)';
+// 					if ($val ['phone_home'])
+// 					$phones [] = str_replace ( ' ', '&nbsp;', trim ( $val ['phone_home'] ) ) . '&nbsp;(h)';
+// 					if ($val ['phone_mobile'])
+// 					$phones [] = str_replace ( ' ', '&nbsp;', trim ( $val ['phone_mobile'] ) ) . '&nbsp;(m)';
+// 					$rowArray [$key] ['phone'] = implode ( ', ', $phones );
+// 				}
+// 				$this->view->assign ( 'results', $rowArray );
+// 			}
+// 		}
+		
 		
 		$this->view->assign ( 'count', $count );
 		$this->view->assign ( 'criteria', $criteria );
