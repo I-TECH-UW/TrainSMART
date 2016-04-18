@@ -6781,7 +6781,7 @@ echo $sql . "<br>";
 		if (count ($where) > 0) {
 			$query .= "WHERE " . implode(" AND ", $where) . "\n";
 		}
-		return(array('query' => $query, 'headers' => $headers));
+		return(array($query, $headers));
 	}
 
 	protected function psStudentReportsBuildQuery($db, $params, $helper) {
@@ -6791,8 +6791,8 @@ echo $sql . "<br>";
 		$headers[] = "Last Name";
 
 		$s = $db->select()
-			->from(array('p' => 'person'), array('p.first_name', 'p.last_name)'))
-			->joinInner(array('s' => 'student'), 's.personid = p.id')
+			->from(array('p' => 'person'), array('p.first_name', 'p.last_name'))
+			->joinInner(array('s' => 'student'), 's.personid = p.id', array())
 			->where('p.is_deleted = 0');
 
 		$f = $s->__toString();
@@ -6800,7 +6800,7 @@ echo $sql . "<br>";
 		if ((isset($params['showProvince']) && $params['showProvince']) ||
 			(isset($params['province_id']) && $params['province_id'])) {
 
-			$s->joinLeft(array('loc' => 'location'), 'loc.id = s.geog1');
+			$s->joinLeft(array('loc' => 'location'), 'loc.id = s.geog1', array());
 			if (isset($params['showProvince']) && $params['showProvince']) {
 				$headers[] = "Province";
 				$s->columns('loc.location_name');
@@ -6815,7 +6815,7 @@ echo $sql . "<br>";
 		if ((isset($params['showDistrict']) && $params['showDistrict']) ||
 			(isset($params['district_id']) && $params['district_id'])) {
 
-			$s->joinLeft(array('locd' => 'location_district'), 'locd.id = s.geog2');
+			$s->joinLeft(array('locd' => 'location_district'), 'locd.id = s.geog2', array());
 			if (isset($params['showDistrict']) && $params['showDistrict']) {
 				$headers[] = "District";
 				$s->columns('locd.district_name');
@@ -6829,7 +6829,7 @@ echo $sql . "<br>";
 		if (isset($params['institution']) && $params['institution'] ||
 			isset($params['showinstitution']) && $params['showinstitution']) {
 
-			$s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid');
+			$s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
 			if (isset($params['showinstitution']) && $params['showinstitution']) {
 				$headers[] = "Institution";
 				$s->columns('i.institutionname');
@@ -6844,8 +6844,8 @@ echo $sql . "<br>";
 		if (isset($params['cohort']) && $params['cohort'] ||
 			isset($params['showcohort']) && $params['showcohort']) {
 
-			$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id');
-			$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort');
+			$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+			$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
 			$cohortJoined = true;
 			if (isset($params['showcohort']) && $params['showcohort']) {
 				$headers[] = "Cohort";
@@ -6857,11 +6857,10 @@ echo $sql . "<br>";
 			$f = $s->__toString();
 		}
 
-		// TODO: Verify correctness
 		if (isset($params['cadre']) && $params['cadre'] ||
 			isset($params['showcadre']) && $params['showcadre']) {
 
-			$s->joinLeft(array('ca' => 'cadre'), 'ca.id = s.cadre');
+			$s->joinLeft(array('ca' => 'cadres'), 'ca.id = s.cadre', array());
 			if (isset($params['showcadre']) && $params['showcadre']) {
 				$headers[] = "Cadre";
 				$s->columns('ca.cadrename');
@@ -6874,8 +6873,8 @@ echo $sql . "<br>";
 
 		if (isset($params['showyearinschool']) && $params['showyearinschool']) {
 			if (!$cohortJoined) {
-				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id');
-				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort');
+				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
 				$cohortJoined = true;
 			}
 			$s->columns('c.startdate');
@@ -6902,7 +6901,7 @@ echo $sql . "<br>";
 		if ((isset($params['shownationality'])) && $params['shownationality'] ||
 			(isset($params['nationality']) && $params['nationality'])) {
 
-			$s->joinLeft(array('ln' => 'lookup_nationalities'), 'ln.id = s.nationalityid');
+			$s->joinLeft(array('ln' => 'lookup_nationalities'), 'ln.id = s.nationalityid', array());
 			if (isset($params['shownationality']) && $params['shownationality']) {
 				$headers[] = "Nationality";
 				$s->columns('ln.nationality');
@@ -6913,28 +6912,33 @@ echo $sql . "<br>";
 			$f = $s->__toString();
 		}
 
-		// TODO: Verify correctness
-		if (isset($params['showage']) && $params['showage']) {
-			$headers[] = "Age";
-			$s->columns(new Zend_Db_Expr("DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(p.birthdate)), '%Y')+0 AS age"));
+		if ((isset($params['showage']) && $params['showage']) ||
+			(isset($params['agemin']) && $params['agemin']) ||
+			(isset($params['agemax']) && $params['agemax'])) {
+			
+			if (isset($params['showage']) && $params['showage']) {
+				$headers[] = "Age";
+				$s->columns(new Zend_Db_Expr("DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(p.birthdate)), '%Y')+0 AS age"));
+	
+				if (isset($params['agemin']) && $params['agemin']) {
+					$s->having('age >= ?', $params['agemin']);
+				}
+				if (isset($params['agemax']) && $params['agemax']) {
+					$s->having('age <= ?', $params['agemax']);
+				}
 
-			if (isset($params['agemin']) && $params['agemin']) {
-				$s->where('age >= ?', $params['agemin']);
+				$f = $s->__toString();
 			}
-			if (isset($params['agemax']) && $params['agemax']) {
-				$s->where('age <= ?', $params['agemax']);
+			else {
+				$ageExpr = new Zend_Db_Expr("DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(p.birthdate)), '%Y')+0");
+				if (isset($params['agemin']) && $params['agemin']) {
+					$s->where($ageExpr . ' >= ?', $params['agemin']);
+				}
+				if (isset($params['agemax']) && $params['agemax']) {
+					$s->where($ageExpr . ' <= ?', $params['agemax']);
+				}
+				$f = $s->__toString();
 			}
-			$f = $s->__toString();
-		}
-		else {
-			$ageExpr = new Zend_Db_Expr("DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(p.birthdate)), '%Y')+0");
-			if (isset($params['agemin']) && $params['agemin']) {
-				$s->where($ageExpr . ' >= ?', $params['agemin']);
-			}
-			if (isset($params['agemax']) && $params['agemax']) {
-				$s->where($ageExpr . ' <= ?', $params['agemax']);
-			}
-			$f = $s->__toString();
 		}
 
 		if (isset($params['showactive']) && $params['showactive']) {
@@ -6943,11 +6947,10 @@ echo $sql . "<br>";
 			$f = $s->__toString();
 		}
 
-		// TODO: verify
 		if (isset($params['showterminated']) && $params['showterminated']) {
 			if (!$cohortJoined) {
-				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id');
-				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort');
+				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
 				$cohortJoined = true;
 			}
 			$s->columns("IF(lsc.isgraduated = 0 AND lsc.dropdate != '0000-00-00', 'Terminated Early', '')");
@@ -6958,11 +6961,10 @@ echo $sql . "<br>";
 			$f = $s->__toString();
 		}
 
-		// TODO: verify
 		if (isset($params['showgraduated']) && $params['showgraduated']) {
 			if (!$cohortJoined) {
-				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id');
-				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort');
+				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
 				$cohortJoined = true;
 			}
 			$s->columns("IF(lsc.isgraduated = 1, 'Graduated', '')");
@@ -6972,8 +6974,8 @@ echo $sql . "<br>";
 		}
 
 		if (isset($params['showfunding']) && $params['showfunding']) {
-			$s->joinLeft(array('lsf' => 'link_student_funding'), 'lsf.studentid = s.id');
-			$s->joinLeft(array('lf' => 'lookup_fundingsources'), 'lf.id = lsf.fundingsource');
+			$s->joinLeft(array('lsf' => 'link_student_funding'), 'lsf.studentid = s.id', array());
+			$s->joinLeft(array('lf' => 'lookup_fundingsources'), 'lf.id = lsf.fundingsource', array());
 			$s->columns('lf.fundingname');
 			$headers[] = "Funding";
 			$f = $s->__toString();
@@ -6981,8 +6983,8 @@ echo $sql . "<br>";
 
 		if ((isset($params['showfacility']) && $params['showfacility']) ||
 			(isset($params['facility']) && $params['facility'])) {
-			$s->joinLeft(array('lsfac' => 'link_student_facility'), 'lsfac.id_student = s.id');
-			$s->joinLeft(array('fac' => 'facility'), 'fac.id = lsfac.id_facility');
+			$s->joinLeft(array('lsfac' => 'link_student_facility'), 'lsfac.id_student = s.id', array());
+			$s->joinLeft(array('fac' => 'facility'), 'fac.id = lsfac.id_facility', array());
 
 			if ((isset($params['showfacility']) && $params['showfacility'])) {
 				$s->columns('fac.facility_name');
@@ -6997,13 +6999,13 @@ echo $sql . "<br>";
 		if ((isset($params['showtutor']) && $params['showtutor']) ||
 			(isset($params['tutor']) && $params['tutor'])) {
 			if (!$cohortJoined) {
-				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id');
-				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort');
+				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
 				$cohortJoined = true;
 			}
-			$s->joinLeft(array('lct' => 'link_cadre_tutor'), 'lct.id_cadre = c.cadreid');
-			$s->joinLeft(array('tut' => 'tutor'), 'tut.id = lct.id_tutor');
-			$s->joinLeft(array('tutp' => 'person'), 'tutp.id = tut.personid');
+			$s->joinLeft(array('lct' => 'link_cadre_tutor'), 'lct.id_cadre = c.cadreid', array());
+			$s->joinLeft(array('tut' => 'tutor'), 'tut.id = lct.id_tutor', array());
+			$s->joinLeft(array('tutp' => 'person'), 'tutp.id = tut.personid', array());
 
 			if (isset($params['tutor']) && $params['tutor']) {
 				$s->where('tut.id = ?', $params['tutor']);
@@ -7021,8 +7023,8 @@ echo $sql . "<br>";
 			(isset($params['startmonth']) && $params['startmonth']) &&
 			(isset($params['startyear']) && $params['startyear'])) {
 			if (!$cohortJoined) {
-				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id');
-				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort');
+				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
 				$cohortJoined = true;
 			}
 			$start_date = $params['startyear'].'-'.$params['startmonth'].'-'.$params['startday'];
@@ -7033,8 +7035,8 @@ echo $sql . "<br>";
 			(isset($params['endmonth']) && $params['endmonth']) &&
 			(isset($params['endyear']) && $params['endyear'])) {
 			if (!$cohortJoined) {
-				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id');
-				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort');
+				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
 				$cohortJoined = true;
 			}
 			$end_date = $params['endyear'].'-'.$params['endmonth'].'-'.$params['endday'];
@@ -7059,7 +7061,7 @@ echo $sql . "<br>";
 			$s->where("s.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
 		}
 		$f = $s->__toString();
-		return(array('query' => $s, 'headers' => $headers));
+		return(array($s, $headers));
 	}
 
 
@@ -9442,9 +9444,25 @@ echo $sql . "<br>";
 			$criteria = $this->getAllParams();
 
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
-			list($oldquery, $oldheaders) = $this->psStudentReportsBuildQueryOld($db, $criteria, $helper);
+
+			$criteria['showinstitution'] = true;
+			$criteria['showcadre'] = true;
+			$criteria['showcohort'] = true;
+
+			list($oldquery, $oldheaders) = $this->psStudentReportsBuildQueryOld($criteria, $helper);
 			list($query, $headers) = $this->psStudentReportsBuildQuery($db, $criteria, $helper);
 
+			$f = $query->__toString();
+
+			$query->columns(array('p.national_id', 'p.custom_field2', 'lsc.examdate', 'lsc.certificate_issuer_id'));
+			$headers[] = "National ID";
+			$headers[] = "NQF Level";
+			$headers[] = "Exam Date";
+			$headers[] = "Certificate Issuer";
+
+			$f = $query->__toString();
+
+			$oldRows = $db->fetchAll($oldquery);
 			$rowArray = $db->fetchAll($query);
 			$this->view->assign('query', $query->__toString());
 
