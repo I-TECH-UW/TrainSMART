@@ -9452,16 +9452,65 @@ echo $sql . "<br>";
 			list($oldquery, $oldheaders) = $this->psStudentReportsBuildQueryOld($criteria, $helper);
 			list($query, $headers) = $this->psStudentReportsBuildQuery($db, $criteria, $helper);
 
-			$f = $query->__toString();
+			$query->joinLeft(array('ci' => 'certificate_issuers'), 'lsc.certificate_issuer_id = ci.id',
+				array('issuer_name', 'issuer_email', 'issuer_phone_number', 'issuer_logo_url')
+			);
+			
+			$query->joinLeft(array('lscl' => 'link_student_classes'), 'lscl.studentid = s.id', array('grade'))
+				->joinLeft(array('classes'), 'classes.id = lscl.classid', array())
+				->joinLeft(array('cm' => 'class_modules'), 'classes.class_modules_id = cm.id',
+					array('nqf_level' => 'custom_1', 'title'))
+				->joinLeft(array('lc' => 'lookup_coursetype'), 'lc.id = cm.lookup_coursetype_id', array('coursetype'))
+			;
 
-			$query->columns(array('p.national_id', 'p.custom_field2', 'lsc.examdate', 'lsc.certificate_issuer_id'));
-			$headers[] = "National ID";
+			// subquery to include the maximum nqf level associated with student
+			$nqfMax = $db->select()
+				->from(array('nqf_cm' => 'class_modules'), array('MAX(nqf_cm.custom_1)'))
+				->joinInner(array('nqf_classes' => 'classes'), 'nqf_classes.class_modules_id = nqf_cm.id', array())
+				->joinInner(array('nqf_lscl' => 'link_student_classes'),
+					'nqf_lscl.classid = nqf_classes.id', array())
+			;
+			$nqfMax = new Zend_Db_Expr($nqfMax);
+
+			$query->columns(array(
+					'p.national_id',
+					'lsc.examdate',
+					'lsc.certificate_issuer_id',
+					'i.address1',
+					'i.address2',
+					'i.city',
+					'i.postalcode',
+					'i.phone',
+					'i.fax',
+					'ca.cadrename',
+					'saqa_id' => 'p.custom_field2',
+					'nqf_max' => '(' . $nqfMax . ')',
+				)
+			);
+
+			$headers[] = "AQP";
+			$headers[] = "AQP E-mail";
+			$headers[] = "AQP Phone";
+			$headers[] = "AQP Logo";
+
+			$headers[] = "Grade";
 			$headers[] = "NQF Level";
+			$headers[] = "Course Type";
+			$headers[] = "National ID";
 			$headers[] = "Exam Date";
 			$headers[] = "Certificate Issuer";
+			$headers[] = "Institution Address 1";
+			$headers[] = "Institution Address 2";
+			$headers[] = "Institution City";
+			$headers[] = "Institution Postal Code";
+			$headers[] = "Phone Number";
+			$headers[] = "Fax Number";
+			$headers[] = "Certificate Type";
+			$headers[] = "SAQA ID";
 
-			$f = $query->__toString();
+			$query->order(array('p.last_name', 'p.first_name', 'p.national_id', 'lc.coursetype'));
 
+			$o = $query->__toString();
 			$oldRows = $db->fetchAll($oldquery);
 			$rowArray = $db->fetchAll($query);
 			$this->view->assign('query', $query->__toString());
@@ -9471,47 +9520,6 @@ echo $sql . "<br>";
 
 			$this->view->assign('criteria', $criteria);
 		}
-/*
-		$id = $this->getSanParam('id');
-		$db = $db = Zend_Db_Table_Abstract::getDefaultAdapter();
-
-		$select = $db->select()
-			->from(array('p' => 'person'),
-				array('p.first_name', 'p.last_name', 'p.birthdate', 'p.national_id', 'saqa_id' => 'p.custom_field2'))
-			->join(array('s' => 'student'), 'p.id = s.personid',
-				array('student_id' => 's.id'))
-			->join(array('i' => 'institution'), 's.institutionid = i.id', array('institutionname'))
-			->join(array('cadres'), 's.cadre = cadres.id', array('cadrename'))
-			->join(array('lsco' => 'link_student_cohort'), 's.id = lsco.id_student',
-				array('examdate', 'certificate_issuer_id'))
-			->where("p.id = ?", $id);
-
-		$sql = $select->__toString();
-		$bioData = $db->query($select)->fetchAll();
-
-		$select = $db->select()
-			->from(array('lscl' => 'link_student_classes'), array('grade'))
-			->join(array('c' => 'classes'), 'c.id = lscl.classid', array('maxcredits'))
-			->join(array('cm' => 'class_modules'), 'c.class_modules_id = cm.id',
-				array('external_id', 'title', 'nqf_level' => 'custom_1'))
-			->join(array('lc' => 'lookup_coursetype'), 'lc.id = cm.lookup_coursetype_id', array('coursetype'))
-			->where('lscl.studentid = ?', $bioData[0]['student_id']);
-
-		$sql = $select->__toString();
-		$classData = $db->query($select)->fetchAll();
-
-		// post-process to determine pass/fail
-		$this->view->assign('bio', $bioData);
-		$this->view->assign('classes', $classData);
-		$this->view->assign('site_style', $this->setting('site_style'));
-		$this->viewAssignEscaped('locations', Location::getAll());
-		$helper = new Helper();
-		$this->view->assign('institutions', $helper->getInstitutions());
-		$this->view->assign('cadres', $helper->getCadres());
-		$this->view->assign('cohorts', $helper->getCohorts());
-		$this->view->assign('tutors', $helper->getTutors());
-		$this->view->assign('nationalities', $helper->getNationalities());
-*/
 	}
 
 	public function ssCompAction() {

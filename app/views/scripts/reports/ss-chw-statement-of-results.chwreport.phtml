@@ -12,6 +12,9 @@
             body {
                 margin: 50pt 50pt 50pt 50pt;
             }
+            .SORFooter {
+                padding-bottom: 100px;
+            }
         }
 
         @media print {
@@ -130,48 +133,62 @@ $stud = array(
     ),
 );
 
-$this->skillsProviderName = "fake";
-$this->skillsProviderAddress = "fake";
-$this->skillsProviderNumber = "fake";
-$this->certificateTitle = "Health Promotion Officer";
-$this->certificateID = "SAQA ID 94597 (NQF Level 3";
-$this->gradName = "Paul Smith";
-$this->idNumber = "5501010005008";
-
-$this->AQPName = "HWSETA";
-$this->AQPEmail = "hwseta@hwseta.org.za";
-$this->AQPPhone = "(011) 607 6900";
-$this->AQPImage = "IMAGE";
 ?>
 
 <?php foreach ($this->output as $student) { ?>
     <div>
         <span>
             <strong>Skills Development Provider (SDP):</strong>
-            <?php echo $stud['skillsProviderName']; ?>
+            <?php echo $student['institutionname']; ?>
         </span>
         <br>
         <span>
             <strong>Address:</strong>
-            <?php echo $stud['skillsProviderAddress']; ?>
+            <?php
+            $iaddress = '';
+            if ($student['address1']) {
+                $iaddress .= $student['address1'];
+            }
+            if ($student['address2']) {
+                $iaddress .= ', ' . $student['address2'];
+            }
+            if ($student['city']) {
+                $iaddress .= ', ' . $student['city'];
+            }
+            if ($student['postalcode']) {
+                $iaddress .= ', ' . $student['postalcode'];
+            }
+
+            echo $iaddress;
+            ?>
         </span>
         <br>
         <span>
             <strong>Contact Number:</strong>
-            <?php echo $stud['skillsProviderNumber']; ?>
+            <?php
+            $iphone = '';
+            if ($student['phone']) {
+                $iphone = $student['phone'];
+            }
+            if ($student['phone'] && $student['fax']) {
+                $iphone .= ' / ' . $student['fax'];
+            }
+            echo $iphone;
+            ?>
         </span>
         <br>
     </div>
     <div class="center">
         <strong>STATEMENT OF RESULTS</strong>
         <br>
-        OCCUPATIONAL CERTIFICATE: <?php echo strtoupper($stud['certificateTitle']) . ": " . $stud['certificateID']; ?>
+        OCCUPATIONAL CERTIFICATE: <?php echo strtoupper($student['cadrename']) . ": SAQA ID " .
+            $student['saqa_id'] . " (NQF Level {$student['nqf_max']})"; ?>
         <br>
         Issued to
         <br>
         <strong><?php echo $student['first_name'] . ' ' . $student['last_name'];?></strong>
         <br>
-        ID / Passport number: <?php echo $stud['idNumber']; ?>
+        ID / Passport number: <?php echo $student['national_id']; ?>
     </div>
     <div>
     <table class="resultsTable cellBorders">
@@ -189,7 +206,7 @@ $this->AQPImage = "IMAGE";
         <tfoot>
         <tr>
             <td colspan="7">The learner has successfully completed the knowledge, workplace and practical requirements as
-                stipulated in the Occupational Certificate: <?php echo $stud['certificateTitle'] . ": " . $stud['certificateID']; ?> qualification.
+                stipulated in the Occupational Certificate: <?php echo $student['cadrename'] . ": SAQA ID " . $student['custom_field2']; ?> qualification.
                 The learner is now ready to apply for the external summative assessment component to complete the
                 qualification.</td>
         </tr>
@@ -225,10 +242,10 @@ $this->AQPImage = "IMAGE";
             <td class="lightGrayBackground">Logo</td>
         </tr>
         <tr>
-            <td><?php echo $stud['AQPName']; ?></td>
-            <td><?php echo $stud['AQPEmail']; ?></td>
-            <td><?php echo $stud['AQPPhone']; ?></td>
-            <td><?php echo $stud['AQPImage']; ?></td>
+            <td><?php echo $student['issuer_name']; ?></td>
+            <td><?php echo $student['issuer_email']; ?></td>
+            <td><?php echo $student['issuer_phone_number']; ?></td>
+            <td><?php echo $student['issuer_logo_url']; ?></td>
         </tr>
         </tbody>
     </table>
