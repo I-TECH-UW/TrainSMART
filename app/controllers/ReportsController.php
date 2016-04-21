@@ -6357,432 +6357,6 @@ echo $sql . "<br>";
 
 		return $found;
 	}
-	protected function psStudentReportsBuildQueryOld($params, $helper) {
-
-		$maintable = "person p";
-		$select = array();
-		$select[] = "p.first_name";
-		$select[] = "p.last_name";
-
-		$headers[] = "First Name";
-		$headers[] = "Last Name";
-
-		$join = array();
-		$join[] = array(
-			"table" => "student",
-			"abbreviation" => "s",
-			"compare" => "s.personid = p.id",
-			"type" => "inner"
-		);
-
-		$where = array();
-		$where[] = "p.is_deleted = 0";
-
-
-		// region
-		if ((isset($params['showProvince']) && $params['showProvince']) ||
-			(isset($params['province_id']) && $params['province_id']) ||
-			(isset($params['showDistrict']) && $params['showDistrict']) ||
-			(isset($params['district_id']) && $params['district_id'])) {
-			$join[] = array(
-				"table" => "location",
-				"abbreviation" => "loc",
-				"compare" => "loc.id = s.geog1",
-				"type" => "left"
-			);
-			$join[] = array(
-				"table" => "location_district",
-				"abbreviation" => "locd",
-				"compare" => "locd.id = s.geog2",
-				"type" => "left"
-			);
-
-			if (isset($params['showProvince']) && $params['showProvince']) {
-				$select[] = "loc.location_name";
-				$headers[] = "Province";
-			}
-			if (isset($params['showDistrict']) && $params['showDistrict']) {
-				$select[] = "locd.district_name";
-				$headers[] = "District";
-			}
-		}
-		$province_arr = isset($params['province_id']) ? $params['province_id'] : array();
-		if (!empty($province_arr)) {
-			$clause = ''; $or_str = '';
-			foreach($province_arr as $item) {
-				$clause .= "{$or_str}loc.id = '{$item}'";
-				$or_str = " OR ";
-			}
-			$clause = "({$clause})";
-			$where[] = $clause;
-		}
-		$district_arr = isset($params['district_id']) ? $params['district_id'] : array();
-		if (!empty($district_arr)) {
-			$clause = ''; $or_str = '';
-			foreach($district_arr as $item) {
-				$clause .= "{$or_str}locd.id = '{$item}'";
-				$or_str = " OR ";
-			}
-			$clause = "({$clause})";
-			$where[] = $clause;
-		}
-
-		// institution
-		if (isset($params['showinstitution']) && $params['showinstitution']) {
-			$select[] = "i.institutionname";
-			$headers[] = "Institution";
-
-			$join[] = array(
-				"table" => "institution",
-				"abbreviation" => "i",
-				"compare" => "i.id = s.institutionid",
-				"type" => "left"
-			);
-			if (isset($params['institution']) && $params['institution']) {
-				$where[] = "i.id = " . $params['institution'];
-			}
-		}
-
-		// cohort
-		if (isset($params['showcohort']) && $params['showcohort']) {
-			$select[] = "c.cohortname";
-			$headers[] = "Cohort";
-
-			$join[] = array(
-				"table" => "link_student_cohort",
-				"abbreviation" => "lsc",
-				"compare" => "lsc.id_student = s.id",
-				"type" => "left"
-			);
-
-			$join[] = array(
-				"table" => "cohort",
-				"abbreviation" => "c",
-				"compare" => "c.id = lsc.id_cohort",
-				"type" => "left"
-			);
-
-			if (isset($params['cohort']) && $params['cohort']) {
-				$where[] = "c.id = " . $params['cohort'];
-			}
-		}
-
-		// cadre
-		if (isset($params['showcadre']) && $params['showcadre']) {
-			$select[] = "ca.cadrename";
-			$headers[] = "Cadre";
-
-			$join[] = array(
-				"table" => "cadres",
-				"abbreviation" => "ca",
-				"compare" => "ca.id = s.cadre",
-				"type" => "left"
-			);
-
-			if (isset($params['cadre']) && $params['cadre']) {
-				$where[] = "ca.id = " . $params['cadre'];
-			}
-		}
-
-		// year in school
-		if (isset($params['showyearinschool']) && $params['showyearinschool']) {
-			# REQUIRES COHORT LINK
-			$found = false;
-			foreach ($join as $j) {
-				if ($j['table'] == "cohort") {
-					$found = true;
-				}
-			}
-			if (!$found) {
-				$join[] = array(
-					"table" => "link_student_cohort",
-					"abbreviation" => "lsc",
-					"compare" => "lsc.id_student = s.id",
-					"type" => "left"
-				);
-
-				$join[] = array(
-					"table" => "cohort",
-					"abbreviation" => "c",
-					"compare" => "c.id = lsc.id_cohort",
-					"type" => "left"
-				);
-			}
-
-			$select[] = "c.startdate";
-			$headers[] = "Start Date";
-			if (isset($params['yearinschool']) && $params['yearinschool']) {
-				$db = Zend_Db_Table_Abstract::getDefaultAdapter();
-				$where[] = $db->quoteInto("c.startdate LIKE ?", substr($params['yearinschool'], 0, 4) . '%');
-			}
-		}
-
-		// gender
-		if (isset($params['showgender']) && $params['showgender']) {
-			$select[] = "p.gender";
-			$headers[] = "Gender";
-		}
-		if (isset($params['gender']) && $params['gender']) {
-			$gender_id = $params['gender'];
-			if($gender_id > 0) {
-				$gender_arr = array(1 => 'male', 2 => 'female');
-				$where[] = "p.gender = '{$gender_arr[$gender_id]}'";
-			}
-		}
-
-		// nationalities
-		if ((isset($params['shownationality']) && $params['shownationality']) ||
-			(isset($params['nationality']) && $params['nationality'])) {
-
-			$join[] = array(
-				"table" => "lookup_nationalities",
-				"abbreviation" => "ln",
-				"compare" => "ln.id = s.nationalityid",
-				"type" => "left"
-			);
-
-			if (isset($params['shownationality']) && $params['shownationality']) {
-				$select[] = "ln.nationality";
-				$headers[] = "Nationality";
-			}
-			if (isset($params['nationality']) && $params['nationality']) {
-				$where[] = "ln.id = ".$params['nationality'];
-			}
-		}
-
-		// age
-		if (isset($params['showage']) && $params['showage']) {
-			$select[] = "DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(p.birthdate)), '%Y')+0 AS age";
-			$headers[] = "Age";
-		}
-		if ((isset($params['agemin']) && $params['agemin']) ||
-			(isset($params['agemax']) && $params['agemax'])) {
-			$year_secs = 60 * 60 * 24 * 365;
-			if ((isset($params['agemin']) && $params['agemin']) && (isset($params['agemax']) && $params['agemax'])) {
-				$min_age_birthdate = date('Y-m-d', (time() - ($params['agemin'] * $year_secs)));
-				$max_age_birthdate = date('Y-m-d', (time() - ($params['agemax'] * $year_secs)));
-				$where[] = "p.birthdate BETWEEN '{$max_age_birthdate}' AND '{$min_age_birthdate}'";
-			} else {
-				if ( $params['agemin']) {
-					$min_age_birthdate = date('Y-m-d', (time() - ($params['agemin'] * $year_secs)));
-					$where[] = "p.birthdate <= '{$min_age_birthdate}'";
-				}
-				if ( $params['agemax']) {
-					$max_age_birthdate = date('Y-m-d', (time() - ($params['agemax'] * $year_secs)));
-					$where[] = "p.birthdate >= '{$max_age_birthdate}'";
-				}
-			}
-		}
-
-		// Course Name And Exam Scores To Date
-		// ..
-
-		// active
-		if (isset($params['showactive']) && $params['showactive']) {
-			$select[] = "p.active";
-			$headers[] = "Active";
-			$where[] = "p.active = 'active'";
-		}
-
-		// terminated early
-		if (isset($params['showterminated']) && $params['showterminated']) {
-			$select[] = "IF(lsc.isgraduated = 0 AND lsc.dropdate != '0000-00-00', 'Terminated Early', '')";
-			$headers[] = "Terminated Early";
-
-			$where[] = "lsc.isgraduated = 0";
-			$where[] = "lsc.dropdate != '0000-00-00'";
-
-			# REQUIRES COHORT LINK
-			$found = false;
-			foreach ($join as $j) { if ($j['table'] == "cohort") { $found = true; } }
-			if (!$found) {
-				$join[] = array("table" => "link_student_cohort", "abbreviation" => "lsc", "compare" => "lsc.id_student = s.id", "type" => "left");
-				$join[] = array("table" => "cohort", "abbreviation" => "c", "compare" => "c.id = lsc.id_cohort", "type" => "left");
-			}
-		}
-
-		// graduated
-		if (isset($params['showgraduated']) && $params['showgraduated']) {
-			$select[] = "IF(lsc.isgraduated = 1, 'Graduated', '')";
-			$headers[] = "Graduated";
-			$where[] = "lsc.isgraduated = 1";
-
-			// REQUIRES COHORT LINK
-			$found = false;
-			foreach ($join as $j) { if ($j['table'] == "cohort") { $found = true; } }
-			if (!$found) {
-				$join[] = array("table" => "link_student_cohort", "abbreviation" => "lsc", "compare" => "lsc.id_student = s.id", "type" => "left");
-				$join[] = array("table" => "cohort", "abbreviation" => "c", "compare" => "c.id = lsc.id_cohort", "type" => "left");
-			}
-		}
-
-		// funding source
-		if (isset($params['showfunding']) && $params['showfunding']) {
-			$select[] = "lf.fundingname";
-			$headers[] = "Funding";
-
-			$join[] = array(
-				"table" => "link_student_funding",
-				"abbreviation" => "lsf",
-				"compare" => "lsf.studentid = s.id",
-				"type" => "left"
-			);
-			$join[] = array(
-				"table" => "lookup_fundingsources",
-				"abbreviation" => "lf",
-				"compare" => "lf.id = lsf.fundingsource",
-				"type" => "left"
-			);
-		}
-
-		// facility
-		if (isset($params['showfacility']) && $params['showfacility']) {
-			$select[] = "fac.facility_name";
-			$headers[] = "Facility";
-		}
-		if (isset($params['facility']) && $params['facility']) {
-			$where[] = "fac.id = ".$params['facility'];
-		}
-		if ((isset($params['showfacility']) && $params['showfacility']) ||
-			(isset($params['facility']) && $params['facility'])) {
-			$join[] = array(
-				"table" => "link_student_facility",
-				"abbreviation" => "lsfac",
-				"compare" => "lsfac.id_student = s.id",
-				"type" => "left"
-			);
-			$join[] = array(
-				"table" => "facility",
-				"abbreviation" => "fac",
-				"compare" => "fac.id = lsfac.id_facility",
-				"type" => "left"
-			);
-		}
-
-		// tutor advisor
-		if (isset($params['showtutor']) && $params['showtutor']) {
-			$select[] = "CONCAT(tutp.first_name,' ',tutp.last_name) AS tutor_name";
-			$headers[] = "Tutor Advisor";
-		}
-		if (isset($params['tutor']) && $params['tutor']) {
-			$where[] = "tut.id = ".$params['tutor'];
-		}
-		if ((isset($params['showtutor']) && $params['showtutor']) ||
-			(isset($params['tutor']) && $params['tutor'])) {
-
-			// REQUIRES COHORT LINK
-			$found = false;
-			foreach ($join as $j) {
-				if ($j['table'] == "cohort") {
-					$found = true;
-				}
-			}
-			if (!$found) {
-				$join[] = array(
-					"table" => "link_student_cohort",
-					"abbreviation" => "lsc",
-					"compare" => "lsc.id_student = s.id",
-					"type" => "left"
-				);
-
-				$join[] = array(
-					"table" => "cohort",
-					"abbreviation" => "c",
-					"compare" => "c.id = lsc.id_cohort",
-					"type" => "left"
-				);
-			}
-
-			$join[] = array(
-				"table" => "link_cadre_tutor",
-				"abbreviation" => "lct",
-				"compare" => "lct.id_cadre = c.cadreid",
-				"type" => "left"
-			);
-			$join[] = array(
-				"table" => "tutor",
-				"abbreviation" => "tut",
-				"compare" => "tut.id = lct.id_tutor",
-				"type" => "left"
-			);
-			$join[] = array(
-				"table" => "person",
-				"abbreviation" => "tutp",
-				"compare" => "tutp.id = tut.personid",
-				"type" => "left"
-			);
-		}
-
-		// start date between
-		$start_date = '';
-		if ((isset($params['startday']) && $params['startday']) &&
-			(isset($params['startmonth']) && $params['startmonth']) &&
-			(isset($params['startyear']) && $params['startyear'])) {
-			$start_date = $params['startyear'].'-'.$params['startmonth'].'-'.$params['startday'];
-		}
-		$end_date = '';
-		if ((isset($params['endday']) && $params['endday']) &&
-			(isset($params['endmonth']) && $params['endmonth']) &&
-			(isset($params['endyear']) && $params['endyear'])) {
-			$end_date = $params['endyear'].'-'.$params['endmonth'].'-'.$params['endday'];
-		}
-		if(($start_date != '') || ($end_date != '')) {
-			$select[] = "c.startdate";
-			$headers[] = "Start Date";
-
-			// REQUIRES COHORT LINK
-			$found = false;
-			foreach ($join as $j) {
-				if ($j['table'] == "cohort") {
-					$found = true;
-				}
-			}
-			if (!$found) {
-				$join[] = array(
-					"table" => "link_student_cohort",
-					"abbreviation" => "lsc",
-					"compare" => "lsc.id_student = s.id",
-					"type" => "left"
-				);
-
-				$join[] = array(
-					"table" => "cohort",
-					"abbreviation" => "c",
-					"compare" => "c.id = lsc.id_cohort",
-					"type" => "left"
-				);
-			}
-		}
-		if(($start_date != '') && ($end_date != '')) {
-			$where[] = "c.startdate BETWEEN '{$start_date}' AND '{$end_date}'";
-		} else {
-			if ($start_date != '') {
-				$where[] = "c.startdate >= '{$start_date}'";
-			}
-			if ($end_date != '') {
-				$where[] = "c.startdate <= '{$end_date}'";
-			}
-		}
-
-		// filter by user institution
-		$login_user_id = $helper->myid();
-		$ins_results = $helper->getUserInstitutions($login_user_id);
-		if (!empty($ins_results)) {
-			$where[] = "s.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = {$login_user_id})";
-		}
-
-		$query = "SELECT " . implode(", ", $select) . "\n";
-		$query .= " FROM " . $maintable . "\n";
-		if (count ($join) > 0) {
-			foreach ($join as $j) {
-				$query .= strtoupper($j['type']) . " JOIN " . $j['table'] . " " . $j['abbreviation'] . " ON " . $j['compare'] . "\n";
-			}
-		}
-		if (count ($where) > 0) {
-			$query .= "WHERE " . implode(" AND ", $where) . "\n";
-		}
-		return(array($query, $headers));
-	}
 
 	protected function psStudentReportsBuildQuery($db, $params, $helper) {
 
@@ -9449,7 +9023,6 @@ echo $sql . "<br>";
 			$criteria['showcadre'] = true;
 			$criteria['showcohort'] = true;
 
-			list($oldquery, $oldheaders) = $this->psStudentReportsBuildQueryOld($criteria, $helper);
 			list($query, $headers) = $this->psStudentReportsBuildQuery($db, $criteria, $helper);
 
 			$query->joinLeft(array('ci' => 'certificate_issuers'), 'lsc.certificate_issuer_id = ci.id',
@@ -9469,6 +9042,7 @@ echo $sql . "<br>";
 				->joinInner(array('nqf_classes' => 'classes'), 'nqf_classes.class_modules_id = nqf_cm.id', array())
 				->joinInner(array('nqf_lscl' => 'link_student_classes'),
 					'nqf_lscl.classid = nqf_classes.id', array())
+				->where('s.id = nqf_lscl.studentid')
 			;
 			$nqfMax = new Zend_Db_Expr($nqfMax);
 
@@ -9482,7 +9056,6 @@ echo $sql . "<br>";
 					'i.postalcode',
 					'i.phone',
 					'i.fax',
-					'ca.cadrename',
 					'saqa_id' => 'p.custom_field2',
 					'nqf_max' => '(' . $nqfMax . ')',
 				)
@@ -9495,7 +9068,9 @@ echo $sql . "<br>";
 
 			$headers[] = "Grade";
 			$headers[] = "NQF Level";
+			$headers[] = "Module Name";
 			$headers[] = "Course Type";
+
 			$headers[] = "National ID";
 			$headers[] = "Exam Date";
 			$headers[] = "Certificate Issuer";
@@ -9503,15 +9078,13 @@ echo $sql . "<br>";
 			$headers[] = "Institution Address 2";
 			$headers[] = "Institution City";
 			$headers[] = "Institution Postal Code";
-			$headers[] = "Phone Number";
-			$headers[] = "Fax Number";
-			$headers[] = "Certificate Type";
+			$headers[] = "Institution Phone Number";
+			$headers[] = "Institution Fax Number";
 			$headers[] = "SAQA ID";
+			$headers[] = "NQF Max";
 
 			$query->order(array('p.last_name', 'p.first_name', 'p.national_id', 'lc.coursetype'));
 
-			$o = $query->__toString();
-			$oldRows = $db->fetchAll($oldquery);
 			$rowArray = $db->fetchAll($query);
 			$this->view->assign('query', $query->__toString());
 
