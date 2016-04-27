@@ -9029,10 +9029,11 @@ echo $sql . "<br>";
 				array('issuer_name', 'issuer_email', 'issuer_phone_number', 'issuer_logo_url')
 			);
 			
-			$query->joinLeft(array('lscl' => 'link_student_classes'), 'lscl.studentid = s.id', array('grade'))
-				->joinLeft(array('classes'), 'classes.id = lscl.classid', array())
+			$query->joinLeft(array('lscl' => 'link_student_classes'), 'lscl.studentid = s.id',
+				array("grades" => "(CASE WHEN AVG(grade) > 50.0 then '" . t('Pass') . "' else '" . t('Fail') . "' end)"))
+				->joinLeft(array('classes'), 'classes.id = lscl.classid', array('credits' => 'SUM(maxcredits)'))
 				->joinLeft(array('cm' => 'class_modules'), 'classes.class_modules_id = cm.id',
-					array('nqf_level' => 'custom_1', 'title'))
+					array('nqf_level' => 'custom_1', 'title', 'external_id'))
 				->joinLeft(array('lc' => 'lookup_coursetype'), 'lc.id = cm.lookup_coursetype_id', array('coursetype'))
 			;
 
@@ -9061,15 +9062,18 @@ echo $sql . "<br>";
 				)
 			);
 
+			$query->group('cm.id');
 			$headers[] = "AQP";
 			$headers[] = "AQP E-mail";
 			$headers[] = "AQP Phone";
 			$headers[] = "AQP Logo";
 
 			$headers[] = "Grade";
+			$headers[] = "Credits";
 			$headers[] = "NQF Level";
 			$headers[] = "Module Name";
 			$headers[] = "Course Type";
+			$headers[] = "Module Number";
 
 			$headers[] = "National ID";
 			$headers[] = "Exam Date";
@@ -9085,6 +9089,7 @@ echo $sql . "<br>";
 
 			$query->order(array('p.last_name', 'p.first_name', 'p.national_id', 'lc.coursetype'));
 
+			$o = $query->__toString();
 			$rowArray = $db->fetchAll($query);
 			$this->view->assign('query', $query->__toString());
 

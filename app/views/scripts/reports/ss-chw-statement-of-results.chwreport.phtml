@@ -5,12 +5,12 @@
     <style>
         @page {
             size: auto;
-            margin: 50pt 50pt 50pt 50pt;
+            margin: 64pt 64pt 64pt 64pt;
         }
 
         @media screen {
             body {
-                margin: 50pt 50pt 50pt 50pt;
+                margin: 64pt 64pt 64pt 64pt;
             }
             .SORFooter {
                 padding-bottom: 100px;
@@ -21,25 +21,30 @@
             .SORFooter {
                 page-break-after: always;
             }
+            table tr td, table tr th {
+                page-break-inside: avoid;
+                page-break-after: auto;
+                page-break-before: auto;
+            }
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+                page-break-before: auto;
+            }
         }
         .resultsTable {
-            border-collapse: collapse;
             width: 100%;
             margin: 5pt auto;
         }
 
         .AQPTable {
-            border-collapse: collapse;
             margin: 5pt auto;
         }
         .lightGrayBackground {
             background-color: #DDDDDD;
         }
-        .cellBorders th, .cellBorders td {
+        .cellBorders {
             border: 1px solid black;
-        }
-        .resultsTable tr {
-            page-break-inside: avoid;
         }
         .center {
             text-align: center;
@@ -54,88 +59,15 @@
     </style>
 </head>
 <body>
+
 <?php
-$stud = array(
-    'skillsProviderName' => 'fake',
-    'skillsProviderAddress' => 'fake2',
-    'skillsProviderNumber' => 'fake3',
-
-    'certificateTitle' => 'Health Promotion Officer',
-    'certificateID' => 'SAQA ID 94597 (NQF Level 3',
-    'idNumber' => "5501010005008",
-
-    'AQPName' => 'HWSETA',
-    'AQPEmail' => 'hwseta@hwseta.org.za',
-    'AQPPhone' => '(011) 607 6900',
-    'AQPImage' => 'IMAGE',
-
-    'modules' => array(
-        'Knowledge' => array(
-            array(
-                'date' => '16/03/2016',
-                'type' => 'Knowledge',
-                'number' => '325301-001-KS-01',
-                'name' => 'Public and Community health support.',
-                'nqflevel' => '3',
-                'credits' => '22',
-                'achievement' => 'Pass',
-            ),
-            array(
-                'date' => '23/03/2016',
-                'type' => 'Knowledge',
-                'number' => '325301-001-KS-02',
-                'name' => 'Family and Community Services',
-                'nqflevel' => '3',
-                'credits' => '22',
-                'achievement' => 'Pass',
-            ),
-        ),
-        'Practical' => array(
-            array(
-                'date' => '16/03/2016',
-                'type' => 'Practical',
-                'number' => '325301-001-PM-01',
-                'name' => 'Mobilize community to address community health issues',
-                'nqflevel' => '3',
-                'credits' => '22',
-                'achievement' => 'Pass',
-            ),
-            array(
-                'date' => '23/03/2016',
-                'type' => 'Practical',
-                'number' => '325301-001-PM-02',
-                'name' => 'Identify the service needs and ease of access to health and social services',
-                'nqflevel' => '3',
-                'credits' => '22',
-                'achievement' => 'Pass',
-            ),
-        ),
-        'Workplace' => array(
-            array(
-                'date' => '16/03/2016',
-                'type' => 'Workplace',
-                'number' => '325301-001-WM-01',
-                'name' => 'Operations and dynamics of communities',
-                'nqflevel' => '3',
-                'credits' => '22',
-                'achievement' => 'Pass',
-            ),
-            array(
-                'date' => '23/03/2016',
-                'type' => 'Workplace',
-                'number' => '325301-001-WM-02',
-                'name' => 'Identify the service needs and ease of access to health and social services',
-                'nqflevel' => '3',
-                'credits' => '22',
-                'achievement' => 'Pass',
-            ),
-        ),
-    ),
-);
-
-?>
-
-<?php foreach ($this->output as $student) { ?>
+    $lastid = $this->output[0]['saqa_id'];
+    $lastmodule = null;
+    $numrows = count($this->output);
+    $i = 0;
+    while ($i < $numrows) {
+        $student = &$this->output[$i];
+    ?>
     <div>
         <span>
             <strong>Skills Development Provider (SDP):</strong>
@@ -191,55 +123,64 @@ $stud = array(
         ID / Passport number: <?php echo $student['national_id']; ?>
     </div>
     <div>
-    <table class="resultsTable cellBorders">
+    <table class="resultsTable" cellspacing="0">
         <thead>
             <tr>
-                <th><?php echo t('Date Assessed');?></th>
-                <th><?php echo t('Module type');?></th>
-                <th><?php echo t('Module number');?></th>
-                <th><?php echo t('Module');?></th>
-                <th><?php echo t('NQF Level');?></th>
-                <th><?php echo t('Credits');?></th>
-                <th><?php echo t('Achievement Pass/Fail');?></th>
+                <th class="cellBorders"><?php echo t('Date Assessed');?></th>
+                <th class="cellBorders"><?php echo t('Module type');?></th>
+                <th class="cellBorders"><?php echo t('Module number');?></th>
+                <th class="cellBorders"><?php echo t('Module');?></th>
+                <th class="cellBorders"><?php echo t('NQF Level');?></th>
+                <th class="cellBorders"><?php echo t('Credits');?></th>
+                <th class="cellBorders"><?php echo t('Achievement Pass/Fail');?></th>
             </tr>
         </thead>
-        <tfoot>
+        <tbody>
+
+        <?php
+        while (($i < $numrows) && $lastid == $student['saqa_id']) {
+
+            if ($lastmodule != $student['coursetype']) {
+                $lastmodule = $student['coursetype'];
+                echo "<tr><td colspan='7' class='lightGrayBackground center cellBorders'><strong>" . t($lastmodule) . "</strong></td></tr>";
+            }
+        ?>
+
+        <tr>
+            <td class="cellBorders"><?php echo $student['examdate']; ?></td>
+            <td class="cellBorders"><?php echo $student['coursetype']; ?></td>
+            <td class="cellBorders"><?php echo $student['external_id']; ?></td>
+            <td class="cellBorders"><?php echo $student['title']; ?></td>
+            <td class="cellBorders"><?php echo $student['nqf_level']; ?></td>
+            <td class="cellBorders"><?php echo $student['credits']; ?></td>
+            <td class="cellBorders"><?php echo $student['grades']; ?></td>
+        </tr>
+            
+
+        <?php
+            $i += 1;
+            $student = &$this->output[$i];
+        }
+        ?>
         <tr>
             <td colspan="7">The learner has successfully completed the knowledge, workplace and practical requirements as
-                stipulated in the Occupational Certificate: <?php echo $student['cadrename'] . ": SAQA ID " . $student['custom_field2']; ?> qualification.
+                stipulated in the Occupational Certificate: <?php echo $student['cadrename'] . ": SAQA ID " . $student['saqa_id']; ?> qualification.
                 The learner is now ready to apply for the external summative assessment component to complete the
                 qualification.</td>
         </tr>
-        </tfoot>
-        <tbody>
-        <?php
-        foreach ($stud['modules'] as $k => $mod) {
-            echo "<tr><td colspan='7' class='lightGrayBackground center'><strong>" . t($k) . "</strong></td></tr>";
-            foreach ($mod as $module) { ?>
-            <tr>
-                <td><?php echo $module['date']; ?></td>
-                <td><?php echo $module['type']; ?></td>
-                <td><?php echo $module['number']; ?></td>
-                <td><?php echo $module['name']; ?></td>
-                <td><?php echo $module['nqflevel']; ?></td>
-                <td><?php echo $module['credits']; ?></td>
-                <td><?php echo $module['achievement']; ?></td>
-            </tr>
-            <?php }
-        }
-        ?>
+
         </tbody>
     </table>
     </div>
     <div>
-    <table class="cellBorders AQPTable">
+    <table class="cellBorders AQPTable" cellspacing="0">
         <tbody>
         <tr>
-            <td rowspan="2" class="lightGrayBackground"><?php echo t('Assesment Quality Partner');?></td>
-            <td class="lightGrayBackground">Name</td>
-            <td class="lightGrayBackground">E-mail</td>
-            <td class="lightGrayBackground">Phone</td>
-            <td class="lightGrayBackground">Logo</td>
+            <td rowspan="2" class="lightGrayBackground cellBorders"><?php echo t('Assesment Quality Partner');?></td>
+            <td class="lightGrayBackground cellBorders">Name</td>
+            <td class="lightGrayBackground cellBorders">E-mail</td>
+            <td class="lightGrayBackground cellBorders">Phone</td>
+            <td class="lightGrayBackground cellBorders">Logo</td>
         </tr>
         <tr>
             <td><?php echo $student['issuer_name']; ?></td>
@@ -263,7 +204,11 @@ $stud = array(
     <div class="SORFooter">
     <strong><em>This Statement of Results is not an Occupational Certificate. The learner has complied with the requirement of the practical, workplace and knowledge components of the qualification.  The Quality Council for Trades and Occupations may issue the Occupational Certificate after the candidate has successfully completed the External Summative Assessment requirements.</em></strong>
     </div>
-<?php } ?>
+    <?php
+        $i += 1;
+        $student = &$this->output[$i];
+        $lastid = $student['saqa_id'];
+    } ?>
 </body>
 </html>
 
