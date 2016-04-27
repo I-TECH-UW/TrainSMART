@@ -158,6 +158,10 @@
             
 
         <?php
+            if (($i + 1 > $numrows) || ($lastid != $this->output[$i + 1]['saqa_id'])) {
+                // exit the while loop while we still have the current student data to populate the remainder of the page
+                break;
+            }
             $i += 1;
             $student = &$this->output[$i];
         }
