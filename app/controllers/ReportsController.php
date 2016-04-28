@@ -3281,7 +3281,7 @@ echo $sql . "<br>";
 
 		$criteria ['go'] = $this->getSanParam ( 'go' );
 		
-		//TA_73 show all phones
+		//TA:73 show all phones
 		if ($rowArray) {
 		    $first = reset ( $rowArray );
 // 		    if (isset ( $first ['phone_work'] )) {

@@ -49,11 +49,15 @@ Class Output_Csv extends Output_Abstract
 		
 
 		$now       = gmdate('D, d M Y H:i:s') . ' GMT';
-		$mime_type = 'text/x-csv';
+		//TA:78
+		//$mime_type = 'text/x-csv';
+		$mime_type = 'text/x-csv; charset=utf-8';
+		
 		$ext       = 'csv';
 		
 		// send the write header statements to the browser
 		$this->headers['Content-Type'] = $mime_type;
+		
 		$this->headers['Expires'] = $now;
 		
 		// lem9 & loic1: IE need specific headers
