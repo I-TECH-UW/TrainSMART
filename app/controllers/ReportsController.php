@@ -5863,6 +5863,14 @@ echo $sql . "<br>";
 			list($locationFlds, $locationsubquery) = Location::subquery($this->setting('num_location_tiers'), $location_tier, $location_id, true);
 			
 			$helper = new Helper();
+			
+			//TA:79 make filtering by orginizer
+			$user_orginizer_sql = " join training_organizer_option on training_organizer_option.id=training.training_organizer_option_id
+join user_to_organizer_access on user_to_organizer_access.training_organizer_option_id = training.training_organizer_option_id and user_to_organizer_access.user_id=" . $helper->myid();
+			
+			if ( array_search('training_organizer_option_all',User::getACLs ( $helper->myid() )) !== false ){
+			    $user_orginizer_sql = "";
+			}
 
 			$sql = " SELECT
 						tl.training_location_name,
@@ -5891,8 +5899,7 @@ echo $sql . "<br>";
 						INNER JOIN evaluation_to_training ett ON  ett.id = er.evaluation_to_training_id AND ett.training_id IS NOT NULL
 						INNER JOIN training                   ON  training.id = ett.training_id AND training.is_deleted = 0 " .
 						//TA:79 make filtering by orginizer 
-						    " join training_organizer_option on training_organizer_option.id=training.training_organizer_option_id
-join user_to_organizer_access on user_to_organizer_access.training_organizer_option_id = training.training_organizer_option_id and user_to_organizer_access.user_id=" . $helper->myid() .
+						    $user_orginizer_sql .
 						    
 						" LEFT JOIN training_location tl        ON  tl.id = training.training_location_id
 						LEFT JOIN training_title_option tto   ON  training.training_title_option_id = tto.id
