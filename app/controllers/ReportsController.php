@@ -5861,6 +5861,8 @@ echo $sql . "<br>";
 
 			list($a, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
 			list($locationFlds, $locationsubquery) = Location::subquery($this->setting('num_location_tiers'), $location_tier, $location_id, true);
+			
+			$helper = new Helper();
 
 			$sql = " SELECT
 						tl.training_location_name,
@@ -5887,8 +5889,12 @@ echo $sql . "<br>";
 						evaluation_question_response eqr
 						LEFT JOIN evaluation_response er      ON  eqr.evaluation_response_id = er.id
 						INNER JOIN evaluation_to_training ett ON  ett.id = er.evaluation_to_training_id AND ett.training_id IS NOT NULL
-						INNER JOIN training                   ON  training.id = ett.training_id AND training.is_deleted = 0
-						LEFT JOIN training_location tl        ON  tl.id = training.training_location_id
+						INNER JOIN training                   ON  training.id = ett.training_id AND training.is_deleted = 0 " .
+						//TA:79 make filtering by orginizer 
+						    " join training_organizer_option on training_organizer_option.id=training.training_organizer_option_id
+join user_to_organizer_access on user_to_organizer_access.training_organizer_option_id = training.training_organizer_option_id and user_to_organizer_access.user_id=" . $helper->myid() .
+						    
+						" LEFT JOIN training_location tl        ON  tl.id = training.training_location_id
 						LEFT JOIN training_title_option tto   ON  training.training_title_option_id = tto.id
 						LEFT JOIN evaluation                  ON  evaluation.id = ett.evaluation_id
 						LEFT JOIN evaluation_question eq      ON  eq.id = eqr.evaluation_question_id
@@ -5920,7 +5926,7 @@ echo $sql . "<br>";
 
 			$sql .= " GROUP BY eq.id,evaluation.id,training_id,person_full_name, trainer_full_name";
 			$sql .= " ORDER BY ett.training_id, ett.evaluation_id, er.timestamp_created, weight";
-
+			
 			$rows = $db->fetchAll($sql);
 			if ($rows) {
 
