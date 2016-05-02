@@ -352,7 +352,9 @@ if ( $this->criteria['showTrainingTitle'] or $this->criteria['showTopic'] or $th
 
 ?>
 <div class="hrGrey"></div>
-    <div class="fieldIndentNoMargin"><?php tp('Participants');?> <span class="total"><?php echo $this->count;?> <?php tp('Participants');?> </span><?php echo $this->printAndExport();?>
+<!-- TA:80 -->
+    <div class="fieldIndentNoMargin"><?php tp('Participants');?> <span class="total"><?php echo $this->count;?> <?php tp('Participants');?> </span>
+    <?php echo $this->printAndExport("trainings");?>
     <?php echo ($hasTrainingInfo? '<br/><span class="total">*'.t('Note: This report may contain multiple rows for participants who attended multiple').' '.t('trainings').'.</span>':''); ?>
     </div>
 

@@ -261,7 +261,8 @@ if ($this->mode == 'search' ) {
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
 <div class="hrGrey"></div>
-    <div class="fieldIndentNoMargin"><?php echo t('Trainings matched with Facilities');?> <span class="total"><?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span><?php echo $this->printAndExport();?></div>
+<!-- TA:80 print only trainings part -->
+    <div class="fieldIndentNoMargin"><?php echo t('Trainings matched with Facilities');?> <span class="total"><?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span><?php echo $this->printAndExport("trainings");?></div>
 <?php } ?>
     <div id="trainings" class="itechTable"></div>
     <script type="text/javascript">

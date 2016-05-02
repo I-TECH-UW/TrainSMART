@@ -65,7 +65,9 @@ if ( $this->mode == 'count' )
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
 <div class="hrGrey"></div>
-    <div class="fieldIndentNoMargin"><?php echo t('Total Commodities')?> <span class="total"><?php echo $this->count;?></span><?php echo $this->printAndExport();?></div>
+<!-- TA:80 print only report part -->
+    <div class="fieldIndentNoMargin"><?php echo t('Total Commodities')?> <span class="total"><?php echo $this->count;?></span>
+    <?php echo $this->printAndExport("commodity");?></div>
 
     <div id="commodity"  class="itechTable"></div>
   

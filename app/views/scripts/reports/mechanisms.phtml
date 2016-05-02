@@ -63,7 +63,8 @@
 
 			<?php if ( $this->criteria['go'] ) { ?>
 			<div class="hrGrey"></div>
-			<div class="fieldIndentNoMargin"><?php tp('Partners');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div><br/>
+			<!-- TA:80 print only partners part -->
+			<div class="fieldIndentNoMargin"><?php tp('Partners');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport("partners");?></div><br/>
 			<div id="partners"></div>
 			<script type="text/javascript">
 			var partnersData = [

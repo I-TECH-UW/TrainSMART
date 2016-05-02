@@ -403,7 +403,8 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 													</form>
 													<?php if ( $this->criteria['go'] ) { ?>
 													<div class="hrGrey"></div>
-													<div class="fieldIndentNoMargin"><?php tp('Trainings');?> <span class="total"><?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span><?php echo $this->printAndExport();?><span class="datadownload" style="float:right;"><?php if(count($this->results)) { ?><a href="<?php echo $this->base_url; ?>/data/trainings/outputType/csv/<?php echo implode_ids($this->results); ?>"><?php tp('Download Complete Excel Data for these trainings'); ?></a><?php } ?></span></div>
+													 <!-- TA:80 print only trainings part -->
+													<div class="fieldIndentNoMargin"><?php tp('Trainings');?> <span class="total"><?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span><?php echo $this->printAndExport("trainings");?><span class="datadownload" style="float:right;"><?php if(count($this->results)) { ?><a href="<?php echo $this->base_url; ?>/data/trainings/outputType/csv/<?php echo implode_ids($this->results); ?>"><?php tp('Download Complete Excel Data for these trainings'); ?></a><?php } ?></span></div>
 														<?php if ($this->mode == 'search' ) { ?>
 														<a href="<?php echo $this->base_url;?>/training/add"><?php echo t('Add').' '.t('New').' '.t('Training');?></a><br/><br/>
 														<?php } ?>

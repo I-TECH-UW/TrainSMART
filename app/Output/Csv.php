@@ -50,8 +50,8 @@ Class Output_Csv extends Output_Abstract
 
 		$now       = gmdate('D, d M Y H:i:s') . ' GMT';
 		//TA:78
-		//$mime_type = 'text/x-csv';
-		$mime_type = 'text/x-csv; charset=utf-8';
+		//$mime_type = 'text/x-csv; charset=utf-8'; it does not help
+		$mime_type = 'text/x-csv'; 
 		
 		$ext       = 'csv';
 		
