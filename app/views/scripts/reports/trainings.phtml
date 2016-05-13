@@ -81,7 +81,9 @@
 											
 											<div class="fieldLabel" id="training_title_option_id_lbl"><?php echo (@$this->translation['Training Name']); ?></div>
 											<div class="fieldInput"><div class="leftBorderPad" ><input type="checkbox" name="showTrainingTitle"  <?php  if ($this->criteria['showTrainingTitle']) echo 'checked="checked"';?> /></div><label for="showTrainingTitle" ></label>
-												<div  class="leftBorder"><select <?php echo ($this->expand_lists?'multiple="multiple" size="10"':'class="fixed"'); ?> id="select_training_title_option" name="training_category_and_title_id<?php if ($this->expand_lists) echo '[]'; ?>" >
+												<div  class="leftBorder">
+												<select <?php echo ($this->expand_lists?'multiple="multiple" size="10"':'class="fixed"'); ?> 
+												id="select_training_title_option" name="training_category_and_title_id<?php if ($this->expand_lists) echo '[]'; ?>"  style="min-width:600px;">
 													<option value="">--<?php tp('All');?>--</option>
 													<?php
 													$lastId = NULL;
@@ -91,10 +93,10 @@
 
 														// Also list empty prefix to allow all titles to be displayed
 														if($vals['training_category_option_id'] && $vals['id'] != $lastId) {
-															echo '<option value="_'.$vals['id'].'"'.$isselected.'>'.$vals['training_title_phrase'].'</option>';
+															echo '<option value="_'.$vals['id'].'" '.$isselected.'>'.$vals['training_title_phrase'].'</option>';
 														}
 
-														echo '<option value="'. $vals['training_category_option_id'].'_'.$vals['id'].'"'.$isselected.'>'.$vals['training_title_phrase'].'</option>';
+														echo '<option value="'. $vals['training_category_option_id'].'_'.$vals['id'].'" '.$isselected.'>'.$vals['training_title_phrase'].' </option>';
 														$lastId = $vals['id'];
 													}
 													?>
