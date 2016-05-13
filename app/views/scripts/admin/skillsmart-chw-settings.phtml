@@ -13,8 +13,8 @@ $nav = ob_get_contents();
 ob_end_clean();
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
     <title><?php echo $this->translation['Application Name'];?> | <?php echo $pageTitle; ?></title>
     <?php
@@ -29,15 +29,80 @@ ob_end_clean();
         h1 { font-size: 1.2em; margin: .6em 0; }
         .ui-dialog .ui-state-error { padding: .3em; }
         .validateTips { border: 1px solid transparent; padding: 0.3em; }
+        .settings {margin-top: 16px;}
+        .clear {
+            clear: both;
+        }
+        .issuerLabels {
+            font-size: 11px;
+            font-weight: bold;
+            color: #696969;
+        }
+        #logo_img {
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
     </style>
-    <script>
-        $(function() {
+    <script type="text/javascript" charset="utf-8">
+
+        // ugly use of a global, but allows a response to image uploads
+        ITECH.uploadCallback = function(id, fn) {
+            $('#issuer_logo').append('<option value="' + id + '">' + fn + '</option>');
+            $('#issuer_logo').val(id);
+        };
+
+        YAHOO.util.Event.on(window, 'load', initSettingsUploadButton);
+        
+        var issuers = <?php echo json_encode($this->issuers); ?>;
+
+        $(document).ready(function() {
+            var issuerOptions = '';
+            var $issuerSelect = $('#issuer_id');
+            var $issuerLogoSelect = $('#issuer_logo');
+
+            for (var issuer in issuers) {
+                if (!issuers.hasOwnProperty(issuer)) {
+                    //The current property is not a direct property of p
+                    continue;
+                }
+
+                var issuerData = issuers[issuer];
+                issuerOptions += '<option value="' + issuerData['id'] + '">' + issuerData['issuer_name'] + '</option>';
+            }
+
+            $issuerSelect.append(issuerOptions);
+
+            $issuerSelect.change(function() {
+                var s = $('#issuer_id').val();
+                if (s !== "0") {
+                    $('#issuer_name').val(issuers[s]['issuer_name']);
+                    $('#issuer_phone_number').val(issuers[s]['issuer_phone_number']);
+                    $('#issuer_email').val(issuers[s]['issuer_email']);
+                    $('#issuer_logo').val(issuers[s]['issuer_logo_url']);
+                }
+                else {
+                    $('#issuer_name').val('');
+                    $('#issuer_phone_number').val('');
+                    $('#issuer_email').val('');
+                    $('#issuer_logo').val(0);
+                }
+                $issuerLogoSelect.change();
+            })
+            .change();
+
+            $issuerLogoSelect.change(function() {
+                var logoval = $('#issuer_logo').val();
+                if (logoval !== "0") {
+                    $('#logo_img').attr('src', "<?php echo Settings::$COUNTRY_BASE_URL . '/file/download/id/' ?>" + logoval);
+                }
+            })
+            .change();
+            
         });
 
+
     </script>
 
-    <script type="text/javascript" charset="utf-8">
-    </script>
 </head>
 <body  class="yui-skin-sam">
 <div id="pageHolder">
@@ -50,6 +115,49 @@ ob_end_clean();
                 <h2><?php echo $this->header; ?></h2>
             </div>
             <br><br>
+
+            <form action="" method="POST" id="issuerform">
+                <table border="1" cellpadding="2" cellspacing="2">
+                    <tr>
+                        <td><?php echo $this->formLabel("", t("Certificate Issuer"), array('class' => 'issuerLabels')); ?></td>
+                        <td><?php echo $this->formSelect('issuer_id', "", array(), array('0' => t('New Certificate Issuer'))); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $this->formLabel("", t("Certificate Issuer Name"), array('class' => 'issuerLabels')); ?></td>
+                        <td><?php echo $this->formText('issuer_name', "", array()); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $this->formLabel("", t("Certificate Issuer Phone Number"), array('class' => 'issuerLabels')); ?></td>
+                        <td><?php echo $this->formText('issuer_phone_number', "", array()); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $this->formLabel("", t("Certificate Issuer Email"), array('class' => 'issuerLabels')); ?></td>
+                        <td><?php echo $this->formText('issuer_email', "", array()); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $this->formLabel("", t("Certificate Issuer Logo"), array('class' => 'issuerLabels')); ?></td>
+                        <td><?php echo $this->formSelect('issuer_logo', "", array(), $this->issuer_images); ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $this->formButton("save_issuer_button", t('Save Certificate Issuer'), array('onclick' => '$("#op").val("save"); document.getElementById("issuerform").submit();')); ?></td>
+                        <td><?php echo $this->formButton("delete_issuer_button", t('Delete Certificate Issuer'), array('onclick' => '$("#op").val("delete"); document.getElementById("issuerform").submit();')); ?></td>
+                    </tr>
+
+                </table>
+                <input type="hidden" id="op" name="operation" value="">
+            </form>
+
+            <div id="imagePreview">
+                <img id="logo_img"/>
+            </div>
+
+            <?php
+            require_once 'views/helpers/FileUpload.php';
+            echo FileUpload::displayUploadForm('certificate_issuers', 0, array('jpg', 'gif', 'png'), true);
+            ?>
 
             <form  action="" id="peopleadd" method="post">
                 <div class="pad20"></div>
@@ -65,12 +173,13 @@ ob_end_clean();
                                 $addEditLink = '<a href="' . $this->base_url . $this->dropdownLinks[$label] . '" onclick="return submitAdminForm(this);">Add/Edit</a>';
                                 $label = trim($label, ".");
                             }
-                            $key_phrase = $this->labelNames[$label];
                             if ($label[0] === '-') { ?>
                                 <tr><td colspan="4">&nbsp;</td></tr>
                                 <tr><td colspan="4"><?php echo trim($label, "-");?></td></tr>
                                 <tr><td colspan="4">&nbsp;</td></tr>
-                            <?php } else { ?>
+                            <?php } else {
+                                $key_phrase = $this->labelNames[$label];
+                                ?>
                                 <tr><td class="fieldTitle"><?php echo $key_phrase;?></td>
                                     <td></td>
                                     <td><input type="text" name="<?php echo $label;?>" value="<?php echo t($key_phrase); ?>"></td>
@@ -85,7 +194,7 @@ ob_end_clean();
                 </div>
                 <div class="rightdiv">
                     <div class="pad20"></div>
-                    <br></br>
+                    <br/>
                     <input type="submit" name="update" value="Update Labels &raquo;" class="tsbutton green large">
                 </div>
                 <div class="clear"></div>
