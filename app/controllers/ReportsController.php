@@ -9142,9 +9142,8 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			$headers[] = "SAQA ID";
 			$headers[] = "NQF Max";
 
-			$query->order(array('p.last_name', 'p.first_name', 'p.national_id', 'lc.coursetype'));
+			$query->order(array('p.last_name', 'p.first_name', 'p.national_id', 'lc.coursetype', 'cm.external_id'));
 
-			$o = $query->__toString();
 			$rowArray = $db->fetchAll($query);
 			$this->view->assign('query', $query->__toString());
 

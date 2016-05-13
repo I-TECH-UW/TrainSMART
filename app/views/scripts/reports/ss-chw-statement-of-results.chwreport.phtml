@@ -5,7 +5,7 @@
     <style>
         @page {
             size: auto;
-            margin: 64pt 64pt 64pt 64pt;
+            /*margin: 32pt 32pt 32pt 32pt;*/
         }
 
         @media screen {
@@ -34,11 +34,13 @@
         }
         .resultsTable {
             width: 100%;
-            margin: 5pt auto;
         }
-
+        .SORHeader {
+            margin-top: 20pt;
+            margin-bottom: 20pt;
+        }
         .AQPTable {
-            margin: 5pt auto;
+            margin: 20pt auto;
         }
         .lightGrayBackground {
             background-color: #DDDDDD;
@@ -50,7 +52,7 @@
             text-align: center;
         }
         .signatureTable {
-            margin: 5pt auto;
+            margin: 20pt auto;
         }
         .sigline {
             width: 200px;
@@ -110,7 +112,7 @@
         </span>
         <br>
     </div>
-    <div class="center">
+    <div class="center SORHeader">
         <strong>STATEMENT OF RESULTS</strong>
         <br>
         OCCUPATIONAL CERTIFICATE: <?php echo strtoupper($student['cadrename']) . ": SAQA ID " .
@@ -126,13 +128,13 @@
     <table class="resultsTable" cellspacing="0">
         <thead>
             <tr>
-                <th class="cellBorders"><?php echo t('Date Assessed');?></th>
-                <th class="cellBorders"><?php echo t('Module type');?></th>
-                <th class="cellBorders"><?php echo t('Module number');?></th>
-                <th class="cellBorders"><?php echo t('Module');?></th>
-                <th class="cellBorders"><?php echo t('NQF Level');?></th>
-                <th class="cellBorders"><?php echo t('Credits');?></th>
-                <th class="cellBorders"><?php echo t('Achievement Pass/Fail');?></th>
+                <th class="cellBorders center"><?php echo t('Date Assessed');?></th>
+                <th class="cellBorders center"><?php echo t('Module type');?></th>
+                <th class="cellBorders center"><?php echo t('Module number');?></th>
+                <th class="cellBorders center"><?php echo t('Module');?></th>
+                <th class="cellBorders center"><?php echo t('NQF Level');?></th>
+                <th class="cellBorders center"><?php echo t('Credits');?></th>
+                <th class="cellBorders center"><?php echo t('Achievement Pass/Fail');?></th>
             </tr>
         </thead>
         <tbody>
@@ -147,13 +149,13 @@
         ?>
 
         <tr>
-            <td class="cellBorders"><?php echo $student['examdate']; ?></td>
-            <td class="cellBorders"><?php echo $student['coursetype']; ?></td>
-            <td class="cellBorders"><?php echo $student['external_id']; ?></td>
-            <td class="cellBorders"><?php echo $student['title']; ?></td>
-            <td class="cellBorders"><?php echo $student['nqf_level']; ?></td>
-            <td class="cellBorders"><?php echo $student['credits']; ?></td>
-            <td class="cellBorders"><?php echo $student['grades']; ?></td>
+            <td class="cellBorders center"><?php echo $student['examdate']; ?></td>
+            <td class="cellBorders center"><?php echo $student['coursetype']; ?></td>
+            <td class="cellBorders center"><?php echo $student['external_id']; ?></td>
+            <td class="cellBorders center"><?php echo $student['title']; ?></td>
+            <td class="cellBorders center"><?php echo $student['nqf_level']; ?></td>
+            <td class="cellBorders center"><?php echo $student['credits']; ?></td>
+            <td class="cellBorders center"><?php echo $student['grades']; ?></td>
         </tr>
             
 
@@ -180,17 +182,17 @@
     <table class="cellBorders AQPTable" cellspacing="0">
         <tbody>
         <tr>
-            <td rowspan="2" class="lightGrayBackground cellBorders"><?php echo t('Assesment Quality Partner');?></td>
-            <td class="lightGrayBackground cellBorders">Name</td>
-            <td class="lightGrayBackground cellBorders">E-mail</td>
-            <td class="lightGrayBackground cellBorders">Phone</td>
-            <td class="lightGrayBackground cellBorders">Logo</td>
+            <td rowspan="2" class="lightGrayBackground cellBorders center"><?php echo t('Assesment Quality Partner');?></td>
+            <td class="lightGrayBackground cellBorders center">Name</td>
+            <td class="lightGrayBackground cellBorders center">E-mail</td>
+            <td class="lightGrayBackground cellBorders center">Phone</td>
+            <td class="lightGrayBackground cellBorders center">Logo</td>
         </tr>
         <tr>
-            <td><?php echo $student['issuer_name']; ?></td>
-            <td><?php echo $student['issuer_email']; ?></td>
-            <td><?php echo $student['issuer_phone_number']; ?></td>
-            <td><?php echo $student['issuer_logo_url']; ?></td>
+            <td class="cellBorders center"><?php echo $student['issuer_name']; ?></td>
+            <td class="cellBorders center"><?php echo $student['issuer_email']; ?></td>
+            <td class="cellBorders center"><?php echo $student['issuer_phone_number']; ?></td>
+            <td class="cellBorders center"><?php echo $student['issuer_logo_url']; ?></td>
         </tr>
         </tbody>
     </table>

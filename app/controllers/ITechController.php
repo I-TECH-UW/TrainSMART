@@ -139,10 +139,7 @@ class ITechController extends Zend_Controller_Action
 
              $response->setHeader($header,$value);
         } // foreach($this->processor->getHeaders() as $header)
-            
-        //TA:78 Excel does not recognizes CSV file, try to add BOM ("\xEF\xBB\xBF") at the beginning of the body content 
-      //  $response->appendBody($processor->getPayload());
-         $response->appendBody("\xEF\xBB\xBF" . $processor->getPayload()); 
+         $response->appendBody($processor->getPayload());
         return;
     } // protected function send($payload, $type)
 
