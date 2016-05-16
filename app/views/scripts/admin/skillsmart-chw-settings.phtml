@@ -24,12 +24,18 @@ ob_end_clean();
     ?>
 
     <style>
-        fieldset input[type=text], fieldset select { margin-bottom:12px; width:95%; padding: .4em; }
-        fieldset { padding:0; border:0; margin-top:25px; text-align : left; font-size : .9em }
+
         h1 { font-size: 1.2em; margin: .6em 0; }
         .ui-dialog .ui-state-error { padding: .3em; }
         .validateTips { border: 1px solid transparent; padding: 0.3em; }
-        .settings {margin-top: 16px;}
+        .settings {
+            margin-top: 24px;
+        }
+        .settings th {
+            text-align: center;
+            font-weight: bold;
+            color: #696969;
+        }
         .clear {
             clear: both;
         }
@@ -38,9 +44,19 @@ ob_end_clean();
             font-weight: bold;
             color: #696969;
         }
+        .issuerField {
+            width: 250px;
+            padding: 2px;
+        }
+        #issuerform td {
+            padding: 2px;
+            width: 250px;
+        }
         #logo_img {
-            margin-top: 24px;
-            margin-bottom: 24px;
+            margin: 12px;
+        }
+        #translations {
+            margin-top: 64px;
         }
     </style>
     <script type="text/javascript" charset="utf-8">
@@ -100,7 +116,6 @@ ob_end_clean();
             
         });
 
-
     </script>
 
 </head>
@@ -116,50 +131,58 @@ ob_end_clean();
             </div>
             <br><br>
 
+            <table class="settings">
+                <thead><tr><th>Upload <?php echo t('Certificate Issuer'); ?> Logo</th></tr></thead>
+                <tr><td>
+                        <?php
+                        require_once 'views/helpers/FileUpload.php';
+                        echo FileUpload::displayUploadForm('certificate_issuers', 0, array('jpg', 'gif', 'png'), true);
+                        ?>
+                    </td></tr>
+            </table>
+
+            <div id="imagePreview">
+                <img id="logo_img"/>
+            </div>
+
             <form action="" method="POST" id="issuerform">
-                <table border="1" cellpadding="2" cellspacing="2">
+                <table class="settings">
+                    <thead>
+                    <tr><th colspan="2"><?php echo t('Certificate Issuer') . ' Settings'; ?></th></tr>
+                    </thead>
                     <tr>
                         <td><?php echo $this->formLabel("", t("Certificate Issuer"), array('class' => 'issuerLabels')); ?></td>
-                        <td><?php echo $this->formSelect('issuer_id', "", array(), array('0' => t('New Certificate Issuer'))); ?></td>
+                        <td><?php echo $this->formSelect('issuer_id', "", array('class' => 'issuerField'), array()); ?></td>
                     </tr>
                     <tr>
                         <td><?php echo $this->formLabel("", t("Certificate Issuer Name"), array('class' => 'issuerLabels')); ?></td>
-                        <td><?php echo $this->formText('issuer_name', "", array()); ?></td>
+                        <td><?php echo $this->formText('issuer_name', "", array('class' => 'issuerField')); ?></td>
                     </tr>
                     <tr>
                         <td><?php echo $this->formLabel("", t("Certificate Issuer Phone Number"), array('class' => 'issuerLabels')); ?></td>
-                        <td><?php echo $this->formText('issuer_phone_number', "", array()); ?></td>
+                        <td><?php echo $this->formText('issuer_phone_number', "", array('class' => 'issuerField')); ?></td>
                     </tr>
                     <tr>
                         <td><?php echo $this->formLabel("", t("Certificate Issuer Email"), array('class' => 'issuerLabels')); ?></td>
-                        <td><?php echo $this->formText('issuer_email', "", array()); ?></td>
+                        <td><?php echo $this->formText('issuer_email', "", array('class' => 'issuerField')); ?></td>
                     </tr>
                     <tr>
                         <td><?php echo $this->formLabel("", t("Certificate Issuer Logo"), array('class' => 'issuerLabels')); ?></td>
-                        <td><?php echo $this->formSelect('issuer_logo', "", array(), $this->issuer_images); ?></td>
+                        <td><?php echo $this->formSelect('issuer_logo', "", array('class' => 'issuerField'), $this->issuer_images); ?></td>
                     </tr>
                     <tr>
                         <td colspan="4">&nbsp;</td>
                     </tr>
                     <tr>
-                        <td><?php echo $this->formButton("save_issuer_button", t('Save Certificate Issuer'), array('onclick' => '$("#op").val("save"); document.getElementById("issuerform").submit();')); ?></td>
-                        <td><?php echo $this->formButton("delete_issuer_button", t('Delete Certificate Issuer'), array('onclick' => '$("#op").val("delete"); document.getElementById("issuerform").submit();')); ?></td>
+                        <td><?php echo $this->formButton("save_issuer_button", t('Save') . ' ' . t('Certificate Issuer'), array('class' => 'tsbutton green large', 'onclick' => '$("#op").val("save"); document.getElementById("issuerform").submit();')); ?></td>
+                        <td><?php echo $this->formButton("delete_issuer_button", t('Delete') . ' ' . t('Certificate Issuer'), array('class' => 'tsbutton green large', 'onclick' => '$("#op").val("delete"); document.getElementById("issuerform").submit();')); ?></td>
                     </tr>
 
                 </table>
                 <input type="hidden" id="op" name="operation" value="">
             </form>
 
-            <div id="imagePreview">
-                <img id="logo_img"/>
-            </div>
-
-            <?php
-            require_once 'views/helpers/FileUpload.php';
-            echo FileUpload::displayUploadForm('certificate_issuers', 0, array('jpg', 'gif', 'png'), true);
-            ?>
-
-            <form  action="" id="peopleadd" method="post">
+            <form  action="" id="translations" method="post">
                 <div class="pad20"></div>
                 <div style="width :100%;">
 

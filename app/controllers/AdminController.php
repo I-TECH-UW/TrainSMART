@@ -2980,6 +2980,12 @@ class AdminController extends UserController
 			'label_date_certificate_was_received_from_the_aqp',
 			'label_certificate_number',
 			'label_date_learner_received_certificate',
+			'-Certificate Issuers-',
+			'label_certificate_issuer',
+			'label_certificate_issuer_name',
+			'label_certificate_issuer_phone',
+			'label_certificate_issuer_email',
+			'label_certificate_issuer_logo',
 		);
 
 		$dropdownLinks = array(
@@ -3039,6 +3045,13 @@ class AdminController extends UserController
             'label_date_certificate_was_received_from_the_aqp'   => 'Date Certificate was Received From the AQP',
 			'label_certificate_number'                           => 'Certificate Number',
 			'label_date_learner_received_certificate'            => 'Date Learner Received Certificate',
+
+			'label_certificate_issuer'                           => 'Certificate Issuer',
+			'label_certificate_issuer_name'                      => 'Certificate Issuer Name',
+			'label_certificate_issuer_phone'                     => 'Certificate Issuer Phone Number',
+			'label_certificate_issuer_email'                     => 'Certificate Issuer Email',
+			'label_certificate_issuer_logo'                      => 'Certificate Issuer Logo',
+
 		);
 
 
@@ -3052,6 +3065,7 @@ class AdminController extends UserController
 				$op = null;
 				if ($params['operation'] === "save") {
 					if ($params['issuer_id'] === "0") {
+						# TODO: update database column id to be auto-increment
 						$db->insert('certificate_issuers',
 							array('issuer_name' => $params['issuer_name'],
 								'issuer_email' => $params['issuer_email'],
@@ -3104,7 +3118,8 @@ class AdminController extends UserController
 		$db = $this->dbfunc();
 		$s = $db->select()
 			->from('certificate_issuers');
-		$issuers = $db->fetchAssoc($s);
+		$issuers = array('0' => array('id' => "0", 'issuer_name' => t('New') . ' ' . t('Certificate Issuer'))) + $db->fetchAssoc($s);
+
 
 		$s = $db->select()
 			->from('file', array('id', 'filename'))
