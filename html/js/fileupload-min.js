@@ -11,8 +11,8 @@ function initUploadButton(){
 		if (typeof fileupload_allowed != "undefined") {
 			is_valid = false;
 			for (i in fileupload_allowed) {
-				ext = fileupload_allowed[i];
-				if (ext == uploadField.value.substring(uploadField.value.length - ext.length)) {
+				ext = fileupload_allowed[i].toLocaleLowerCase();
+				if (ext == uploadField.value.substring(uploadField.value.length - ext.length).toLocaleLowerCase()) {
 					is_valid = true;
 					break;
 				}
@@ -59,7 +59,7 @@ function initUploadButton(){
 	YAHOO.util.Event.on('uploadButton', 'click', onUploadButtonClick);
 }
 
-function initSettingsUploadButton(uploadCallback){
+function initSettingsUploadButton(){
 	var onUploadButtonClick = function(e){
 
 		uploadForm = YAHOO.util.Dom.get('uploadFileForm');
@@ -69,8 +69,8 @@ function initSettingsUploadButton(uploadCallback){
 		if (typeof fileupload_allowed != "undefined") {
 			is_valid = false;
 			for (i in fileupload_allowed) {
-				ext = fileupload_allowed[i];
-				if (ext == uploadField.value.substring(uploadField.value.length - ext.length)) {
+				ext = fileupload_allowed[i].toLocaleLowerCase();
+				if (ext == uploadField.value.substring(uploadField.value.length - ext.length).toLocaleLowerCase()) {
 					is_valid = true;
 					break;
 				}
