@@ -192,7 +192,7 @@
             <td class="cellBorders center"><?php echo $student['issuer_name']; ?></td>
             <td class="cellBorders center"><?php echo $student['issuer_email']; ?></td>
             <td class="cellBorders center"><?php echo $student['issuer_phone_number']; ?></td>
-            <td class="cellBorders center"><?php echo $student['issuer_logo_url']; ?></td>
+            <td class="cellBorders center"><img src="<?php echo Settings::$COUNTRY_BASE_URL . '/file/download/id/' . $student['issuer_logo_url']; ?>" /></td>
         </tr>
         </tbody>
     </table>
