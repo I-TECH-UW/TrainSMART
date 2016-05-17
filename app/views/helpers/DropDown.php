@@ -138,14 +138,15 @@ class DropDown {
      */
 
     public static function generateSelectionFromQuery($query, $elementAttributes, $selected_value = '', $show_select_option = true) {
-        if (!is_string($query) || !isset($elementAttributes['name']))
+
+		if (!(is_string($query) || (is_object($query) && (get_class($query) === "Zend_Db_Select"))) || !isset($elementAttributes['name']))
         {
             return '';
         }
 
         $return_html = '<select ';
         foreach($elementAttributes as $k => $v) {
-            $return_html .= "$k=$v ";
+            $return_html .= "$k=\"$v\" ";
         }
         $return_html .= ">\n";
 
@@ -157,7 +158,7 @@ class DropDown {
         }
 
         foreach($options as $option) {
-            $return_html .= "<option value={$option['id']}" . ($option['id'] == $selected_value ? ' selected="selected"' : '') . '>' . $option['val'] . "</option>\n";
+            $return_html .= "<option value=\"{$option['id']}\"" . ($option['id'] == $selected_value ? ' selected="selected"' : '') . '>' . $option['val'] . "</option>\n";
         }
         $return_html .= "</select>\n";
 

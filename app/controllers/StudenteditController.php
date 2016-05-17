@@ -1123,7 +1123,7 @@ class StudenteditController extends ITechController
 					'certificate_issue_date' => $this->_euro_date_to_sql($params['certificate_issue_date']),
 					'certificate_number' => $params['certificate_number'],
 					'certificate_received_date' => $this->_euro_date_to_sql($params['certificate_received_date']),
-//					'certificate_issuer' => $params['certificate_issuer']
+					'certificate_issuer_id' => $params['certificate_issuer']
 				));
 			}
 
@@ -1297,6 +1297,15 @@ class StudenteditController extends ITechController
 				'select id, studenttype as val from lookup_studenttype order by val',
 				array('name' => 'studenttype', 'id' => 'studenttype'),
 				$studentData['studenttype']
+			)
+		);
+
+		$s = $db->select()->from('certificate_issuers', array('id', 'val' => 'issuer_name'));
+
+		$this->view->assign('certificate_issuer',
+			DropDown::generateSelectionFromQuery($s,
+				array('name' => 'certificate_issuer', 'id' => 'certificate_issuer'),
+				$studentCohortData['certificate_issuer_id']
 			)
 		);
 
