@@ -9081,7 +9081,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			list($query, $headers) = $this->psStudentReportsBuildQuery($db, $criteria, $helper);
 
 			$query->joinLeft(array('ci' => 'certificate_issuers'), 'lsc.certificate_issuer_id = ci.id',
-				array('issuer_name', 'issuer_email', 'issuer_phone_number', 'issuer_logo_url')
+				array('issuer_name', 'issuer_email', 'issuer_phone_number', 'issuer_logo_file_id')
 			);
 			
 			$query->joinLeft(array('lscl' => 'link_student_classes'), 'lscl.studentid = s.id',

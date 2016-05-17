@@ -3071,7 +3071,7 @@ class AdminController extends UserController
 								'issuer_email' => $params['issuer_email'],
 								'issuer_phone_number' => $params['issuer_phone_number'],
 								# TODO: change database column name to issuer_logo_id
-								'issuer_logo_url' => $params['issuer_logo']
+								'issuer_logo_file_id' => $params['issuer_logo']
 							)
 						);
 					}
@@ -3081,7 +3081,7 @@ class AdminController extends UserController
 								'issuer_email' => $params['issuer_email'],
 								'issuer_phone_number' => $params['issuer_phone_number'],
 								# TODO: change database column name to issuer_logo_id
-								'issuer_logo_url' => $params['issuer_logo']
+								'issuer_logo_file_id' => $params['issuer_logo']
 							),
 							array('id = ?' => $params['issuer_id'])
 						);
