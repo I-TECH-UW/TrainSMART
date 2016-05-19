@@ -6413,18 +6413,26 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		return $found;
 	}
 
-	protected function psStudentReportsBuildQuery($db, $params, $helper) {
+	/**
+	 * @param $params - query criteria
+	 * @return array containing a Zend_Db_Select object and the column headers for output
+	 */
+
+	protected function psStudentReportsBuildQuery($params) {
 
 		$headers = array();
 		$headers[] = "First Name";
 		$headers[] = "Last Name";
+		$cohortJoined = false;
+		$institutionJoined = false;
+
+		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+		$helper = new Helper();
 
 		$s = $db->select()
 			->from(array('p' => 'person'), array('p.first_name', 'p.last_name'))
 			->joinInner(array('s' => 'student'), 's.personid = p.id', array())
 			->where('p.is_deleted = 0');
-
-		$f = $s->__toString();
 
 		if ((isset($params['showProvince']) && $params['showProvince']) ||
 			(isset($params['province_id']) && $params['province_id'])) {
@@ -6437,7 +6445,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			if (isset($params['province_id']) && $params['province_id']) {
 				$s->where('loc.id IN (?)', $params['province_id']);
 			}
-			$f = $s->__toString();
 		}
 
 		// location_district is a standalone location table - what the heck?
@@ -6452,13 +6459,13 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			if (isset($params['district_id']) && $params['district_id']) {
 				$s->where('locd.id IN (?)', $params['district_id']);
 			}
-			$f = $s->__toString();
 		}
 
 		if (isset($params['institution']) && $params['institution'] ||
 			isset($params['showinstitution']) && $params['showinstitution']) {
 
 			$s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
+			$institutionJoined = true;
 			if (isset($params['showinstitution']) && $params['showinstitution']) {
 				$headers[] = "Institution";
 				$s->columns('i.institutionname');
@@ -6466,10 +6473,8 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			if (isset($params['institution']) && $params['institution']) {
 				$s->where('i.id = ?', $params['institution']);
 			}
-			$f = $s->__toString();
 		}
 
-		$cohortJoined = false;
 		if (isset($params['cohort']) && $params['cohort'] ||
 			isset($params['showcohort']) && $params['showcohort']) {
 
@@ -6483,7 +6488,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			if (isset($params['cohort']) && $params['cohort']) {
 				$s->where('c.id = ?', $params['cohort']);
 			}
-			$f = $s->__toString();
 		}
 
 		if (isset($params['cadre']) && $params['cadre'] ||
@@ -6497,7 +6501,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			if (isset($params['cadre']) && $params['cadre']) {
 				$s->where('ca.id = ?', $params['cadre']);
 			}
-			$f = $s->__toString();
 		}
 
 		if (isset($params['showyearinschool']) && $params['showyearinschool']) {
@@ -6511,7 +6514,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			if (isset($params['yearinschool']) && $params['yearinschool']) {
 				$s->where($db->quoteInto("c.startdate LIKE ?", substr($params['yearinschool'], 0, 4) . '%'));
 			}
-			$f = $s->__toString();
 		}
 
 		if (isset($params['showgender']) && $params['showgender']) {
@@ -6524,7 +6526,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				$gender_arr = array(1 => 'male', 2 => 'female');
 				$s->where('p.gender = ?', $gender_arr[$gender_id]);
 			}
-			$f = $s->__toString();
 		}
 
 		if ((isset($params['shownationality'])) && $params['shownationality'] ||
@@ -6538,7 +6539,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			if (isset($params['nationality']) && $params['nationality']) {
 				$s->where('ln.id = ?', $params['nationality']);
 			}
-			$f = $s->__toString();
 		}
 
 		if ((isset($params['showage']) && $params['showage']) ||
@@ -6556,7 +6556,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					$s->having('age <= ?', $params['agemax']);
 				}
 
-				$f = $s->__toString();
 			}
 			else {
 				$ageExpr = new Zend_Db_Expr("DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(p.birthdate)), '%Y')+0");
@@ -6566,14 +6565,12 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				if (isset($params['agemax']) && $params['agemax']) {
 					$s->where($ageExpr . ' <= ?', $params['agemax']);
 				}
-				$f = $s->__toString();
 			}
 		}
 
 		if (isset($params['showactive']) && $params['showactive']) {
 			$headers[] = "Active";
 			$s->where("p.active = 'active'");
-			$f = $s->__toString();
 		}
 
 		if (isset($params['showterminated']) && $params['showterminated']) {
@@ -6587,7 +6584,26 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 			$s->where("lsc.isgraduated = 0");
 			$s->where("lsc.dropdate != '0000-00-00'");
-			$f = $s->__toString();
+		}
+
+		if ((isset($params['showdegrees'])) && $params['showdegrees'] ||
+			(isset($params['degrees']) && $params['degrees'])) {
+
+			if (!$institutionJoined) {
+				$s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
+				$institutionJoined = true;
+			}
+
+			$s->joinLeft(array('liddeg' => 'link_institution_degrees'), 'liddeg.id_institution = i.id', array());
+			$s->joinLeft(array('ldeg' => 'lookup_degrees'), 'ldeg.id = liddeg.id_degree', array());
+
+			if ((isset($params['showdegrees'])) && $params['showdegrees']) {
+				$headers[] = "Degree";
+				$s->columns('ldeg.degree');
+			}
+			if (isset($params['degrees']) && $params['degrees']) {
+				$s->where('ldeg.id = ?', $params['degrees']);
+			}
 		}
 
 		if (isset($params['showgraduated']) && $params['showgraduated']) {
@@ -6598,8 +6614,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			}
 			$s->columns("IF(lsc.isgraduated = 1, 'Graduated', '')");
 			$headers[] = "Graduated";
-			$s->where("lsc.isgraduated = 1");
-			$f = $s->__toString();
+			$s->where("lsc.isgraduated = 1");;
 		}
 
 		if (isset($params['showfunding']) && $params['showfunding']) {
@@ -6607,7 +6622,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			$s->joinLeft(array('lf' => 'lookup_fundingsources'), 'lf.id = lsf.fundingsource', array());
 			$s->columns('lf.fundingname');
 			$headers[] = "Funding";
-			$f = $s->__toString();
 		}
 
 		if ((isset($params['showfacility']) && $params['showfacility']) ||
@@ -6622,7 +6636,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			if (isset($params['facility']) && $params['facility']) {
 				$s->where('fac.id = ?', $params['facility']);
 			}
-			$f = $s->__toString();
 		}
 
 		if ((isset($params['showtutor']) && $params['showtutor']) ||
@@ -6644,7 +6657,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				$s->columns("CONCAT(tutp.first_name,' ',tutp.last_name) AS tutor_name");
 				$headers[] = "Tutor Advisor";
 			}
-			$f = $s->__toString();
 		}
 
 		$start_date = '';
@@ -6680,7 +6692,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			if ($end_date !== '') {
 				$s->where('c.startdate <= ?', $end_date);
 			}
-			$f = $s->__toString();
 		}
 
 		// filter by user institution
@@ -6689,7 +6700,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		if (!empty($user_institutions)) {
 			$s->where("s.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
 		}
-		$f = $s->__toString();
 		return(array($s, $headers));
 	}
 
@@ -6713,9 +6723,10 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 		if ($this->getSanParam('process')) {
 			$criteria = $this->getAllParams();
-			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
-			list($query, $headers) = $this->psStudentReportsBuildQuery($db, $criteria, $helper);
 
+			list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
+
+			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 			$rowArray = $db->fetchAll($query);
 			$this->view->assign('query', $query->__toString());
 
@@ -6746,9 +6757,10 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 		if ($this->getSanParam('process')) {
 			$criteria = $this->getAllParams();
-			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
-			list($query, $headers) = $this->psStudentReportsBuildQuery($db, $criteria, $helper);
 
+			list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
+
+			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 			$rowArray = $db->fetchAll($query);
 			$this->view->assign('query', $query->__toString());
 
@@ -6776,351 +6788,18 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$this->view->assign ( 'coursetypes', $helper->AdminCourseTypes());
 		$this->view->assign ( 'degrees', $helper->getDegrees());
 		$this->view->assign('site_style', $this->setting('site_style'));
-		#		return $this->trainingReport ();
-		if ($this->getSanParam ( 'process' )){
 
-			$maintable = "person p";
-			$select = array();
-			//$select[] = "p.id as personid";
-			$select[] = "p.first_name";
-			$select[] = "p.last_name";
-
-			$headers[] = "First Name";
-			$headers[] = "Last Name";
-
-			$join = array();
-			$join[] = array(
-				"table" => "student",
-				"abbreviation" => "s",
-				"compare" => "s.personid = p.id",
-				"type" => "inner"
-			);
-
-			$where = array();
-			$where[] = "p.is_deleted = 0";
-
-			$sort = array();
-			$locations = Location::getAll ();
-			$translation = Translation::getAll ();
-
-			// institution
-			if ($this->getSanParam ( 'showinstitution' )){
-				$select[] = "i.institutionname";
-				$headers[] = "Institution";
-
-				$join[] = array(
-					"table" => "institution",
-					"abbreviation" => "i",
-					"compare" => "i.id = s.institutionid",
-					"type" => "left"
-				);
-				if ($this->getSanParam('institution')){
-					$where[] = "i.id = " . $this->getSanParam('institution');
-				}
-			}
-
-			// cadre
-			if ($this->getSanParam ('showcadre')){
-				$select[] = "ca.cadrename";
-				$headers[] = "Cadre";
-
-				$join[] = array(
-					"table" => "cadres",
-					"abbreviation" => "ca",
-					"compare" => "ca.id = s.cadre",
-					"type" => "left"
-				);
-
-				if ($this->getSanParam('cadre')){
-					$where[] = "ca.id = " . $this->getSanParam('cadre');
-				}
-			}
-
-			// cohort
-			if ($this->getSanParam ( 'showcohort' )){
-				$select[] = "c.cohortname";
-				$headers[] = "Cohort";
-
-				$join[] = array(
-					"table" => "link_student_cohort",
-					"abbreviation" => "lsc",
-					"compare" => "lsc.id_student = s.id",
-					"type" => "left"
-				);
-
-				$join[] = array(
-					"table" => "cohort",
-					"abbreviation" => "c",
-					"compare" => "c.id = lsc.id_cohort",
-					"type" => "left"
-				);
-
-				if ($this->getSanParam('cohort')){
-					$where[] = "c.id = " . $this->getSanParam('cohort');
-				}
-			}
-
-			// degree
-			if($this->getSanParam('showdegrees') || $this->getSanParam('degrees')){
-				# REQUIRES INSTITUTION LINK
-				$found = false;
-				foreach ($join as $j){
-					if ($j['table'] == "institution"){
-						$found = true;
-					}
-				}
-				if (!$found){
-					$join[] = array(
-						"table" => "institution",
-						"abbreviation" => "i",
-						"compare" => "i.id = s.institutionid",
-						"type" => "left"
-					);
-				}
-
-				$join[] = array(
-					"table" => "link_institution_degrees",
-					"abbreviation" => "liddeg",
-					"compare" => "liddeg.id_institution = i.id",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "lookup_degrees",
-					"abbreviation" => "ldeg",
-					"compare" => "ldeg.id = liddeg.id_degree",
-					"type" => "left"
-				);
-			}
-			if( $this->getSanParam('showdegrees') ){
-				$select[] = "ldeg.degree";
-				$headers[] = "Degree";
-			}
-			if( $this->getSanParam('degrees') ){
-				$where[] = "ldeg.id = ".$this->getSanParam('degrees');
-			}
-
-			// gender
-			if( $this->getSanParam('showgender') ){
-				$select[] = "p.gender";
-				$headers[] = "Gender";
-			}
-			if ( $this->getSanParam('gender') ){
-				$gender_id = $this->getSanParam('gender');
-				if($gender_id > 0){
-					$gender_arr = array(1 => 'male', 2 => 'female');
-					$where[] = "p.gender = '{$gender_arr[$gender_id]}'";
-				}
-			}
-
-			// nationalities
-			if($this->getSanParam('shownationality') || $this->getSanParam('nationality')){
-				$join[] = array(
-					"table" => "lookup_nationalities",
-					"abbreviation" => "ln",
-					"compare" => "ln.id = s.nationalityid",
-					"type" => "left"
-				);
-			}
-			if( $this->getSanParam('shownationality') ){
-				$select[] = "ln.nationality";
-				$headers[] = "Nationality";
-			}
-			if( $this->getSanParam('nationality') ){
-				$where[] = "ln.id = ".$this->getSanParam('nationality');
-			}
-
-			// age
-			if( $this->getSanParam('showage') ){
-				$select[] = "DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(p.birthdate)), '%Y')+0 AS age";
-				$headers[] = "Age";
-			}
-			if($this->getSanParam('agemin') || $this->getSanParam('agemax')){
-				$year_secs = 60 * 60 * 24 * 365;
-				if($this->getSanParam('agemin') && $this->getSanParam('agemax')){
-					$min_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemin') * $year_secs)));
-					$max_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemax') * $year_secs)));
-					$where[] = "p.birthdate BETWEEN '{$max_age_birthdate}' AND '{$min_age_birthdate}'";
-				} else {
-					if ( $this->getSanParam('agemin') ){
-						$min_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemin') * $year_secs)));
-						$where[] = "p.birthdate <= '{$min_age_birthdate}'";
-					}
-					if ( $this->getSanParam('agemax') ){
-						$max_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemax') * $year_secs)));
-						$where[] = "p.birthdate >= '{$max_age_birthdate}'";
-					}
-				}
-			}
-
-			// graduation date
-			if($this->getSanParam('showgraduation')){
-				$select[] = "c.graddate";
-				$headers[] = "Graduation Date";
-				$where[] = "lsc.isgraduated = 1";
-
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){ if ($j['table'] == "cohort"){ $found = true; } }
-				if (!$found){
-					$join[] = array("table" => "link_student_cohort", "abbreviation" => "lsc", "compare" => "lsc.id_student = s.id", "type" => "left");
-					$join[] = array("table" => "cohort", "abbreviation" => "c", "compare" => "c.id = lsc.id_cohort", "type" => "left");
-				}
-			}
-
-			// facility
-			if( $this->getSanParam('showfacility') ){
-				$select[] = "fac.facility_name";
-				$headers[] = "Facility";
-			}
-			if( $this->getSanParam('facility') ){
-				$where[] = "fac.id = ".$this->getSanParam('facility');
-			}
-			if( $this->getSanParam('showfacility') || $this->getSanParam('facility') ){
-				$join[] = array(
-					"table" => "link_student_facility",
-					"abbreviation" => "lsfac",
-					"compare" => "lsfac.id_student = s.id",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "facility",
-					"abbreviation" => "fac",
-					"compare" => "fac.id = lsfac.id_facility",
-					"type" => "left"
-				);
-			}
-
-			// tutor advisor
-			if( $this->getSanParam('showtutor') ){
-				$select[] = "CONCAT(tutp.first_name,' ',tutp.last_name) AS tutor_name";
-				$headers[] = "Tutor Advisor";
-			}
-			if( $this->getSanParam('tutor') ){
-				$where[] = "tut.id = ".$this->getSanParam('tutor');
-			}
-			if( $this->getSanParam('showtutor') || $this->getSanParam('tutor') ){
-
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){
-					if ($j['table'] == "cohort"){
-						$found = true;
-					}
-				}
-				if (!$found){
-					$join[] = array(
-					"table" => "link_student_cohort",
-					"abbreviation" => "lsc",
-					"compare" => "lsc.id_student = s.id",
-					"type" => "left"
-					);
-
-					$join[] = array(
-					"table" => "cohort",
-					"abbreviation" => "c",
-					"compare" => "c.id = lsc.id_cohort",
-					"type" => "left"
-					);
-				}
-
-				$join[] = array(
-					"table" => "link_cadre_tutor",
-					"abbreviation" => "lct",
-					"compare" => "lct.id_cadre = c.cadreid",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "tutor",
-					"abbreviation" => "tut",
-					"compare" => "tut.id = lct.id_tutor",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "person",
-					"abbreviation" => "tutp",
-					"compare" => "tutp.id = tut.personid",
-					"type" => "left"
-				);
-			}
-
-			// start date between
-			$start_date = '';
-			if($this->getSanParam('startday') && $this->getSanParam('startmonth') && $this->getSanParam('startyear')){
-				$start_date = $this->getSanParam('startyear').'-'.$this->getSanParam('startmonth').'-'.$this->getSanParam('startday');
-			}
-			$end_date = '';
-			if($this->getSanParam('endday') && $this->getSanParam('endmonth') && $this->getSanParam('endyear')){
-				$end_date = $this->getSanParam('endyear').'-'.$this->getSanParam('endmonth').'-'.$this->getSanParam('endday');
-			}
-			if(($start_date != '') || ($end_date != '')){
-				$select[] = "c.startdate";
-				$headers[] = "Start Date";
-
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){
-					if ($j['table'] == "cohort"){
-						$found = true;
-					}
-				}
-				if (!$found){
-					$join[] = array(
-						"table" => "link_student_cohort",
-						"abbreviation" => "lsc",
-						"compare" => "lsc.id_student = s.id",
-						"type" => "left"
-					);
-
-					$join[] = array(
-						"table" => "cohort",
-						"abbreviation" => "c",
-						"compare" => "c.id = lsc.id_cohort",
-						"type" => "left"
-					);
-				}
-			}
-			if(($start_date != '') && ($end_date != '')){
-				$where[] = "c.startdate BETWEEN '{$start_date}' AND '{$end_date}'";
-			} else {
-				if ($start_date != ''){
-					$where[] = "c.startdate >= '{$start_date}'";
-				}
-				if ($end_date != ''){
-					$where[] = "c.startdate <= '{$end_date}'";
-				}
-			}
-
-			// filter by user institution
-			$login_user_id = $helper->myid();
-			$ins_results = $helper->getUserInstitutions($login_user_id);
-			if( !empty($ins_results) ){
-				$where[] = "s.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = {$login_user_id})";
-			}
-
-			$query = "SELECT " . implode(", ", $select) . "\n";
-			$query .= " FROM " . $maintable . "\n";
-			if (count ($join) > 0){
-				foreach ($join as $j){
-					$query .= strtoupper($j['type']) . " JOIN " . $j['table'] . " " . $j['abbreviation'] . " ON " . $j['compare'] . "\n";
-				}
-			}
-			if (count ($where) > 0){
-				$query .= "WHERE " . implode(" AND ", $where) . "\n";
-			}
-
-			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
-			$rowArray = $db->fetchAll ($query);
-			$this->view->assign('output',$rowArray);
-			$this->view->assign('query',$query);
-
-			//echo $query;
-			# exit;
+		if ($this->getSanParam ('process')) {
+			$criteria = $this->getAllParams();
+			list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
+			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+			$rowArray = $db->fetchAll($query);
+			$this->view->assign('query', $query->__toString());
 
 			$this->viewAssignEscaped("headers", $headers);
-			$this->view->assign('output', $rowArray);
-			$this->view->assign('query', "");
+			$this->viewAssignEscaped("output", $rowArray);
 
-			$this->view->criteria = $_GET;
+			$this->view->assign('criteria', $criteria);
 		}
 	}
 
@@ -9072,13 +8751,11 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		if ($this->getSanParam('process')) {
 			$criteria = $this->getAllParams();
 
-			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
-
 			$criteria['showinstitution'] = true;
 			$criteria['showcadre'] = true;
 			$criteria['showcohort'] = true;
 
-			list($query, $headers) = $this->psStudentReportsBuildQuery($db, $criteria, $helper);
+			list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
 
 			$query->joinLeft(array('ci' => 'certificate_issuers'), 'lsc.certificate_issuer_id = ci.id',
 				array('issuer_name', 'issuer_email', 'issuer_phone_number', 'issuer_logo_file_id')
@@ -9091,6 +8768,8 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					array('nqf_level' => 'custom_1', 'title', 'external_id'))
 				->joinLeft(array('lc' => 'lookup_coursetype'), 'lc.id = cm.lookup_coursetype_id', array('coursetype'))
 			;
+
+			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 
 			// subquery to include the maximum nqf level associated with student
 			$nqfMax = $db->select()
