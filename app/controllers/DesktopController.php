@@ -194,6 +194,11 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 		$this->desktop_db = $db;
 		$litedb = $this->desktop_db;
 		
+		require_once('models/table/Helper.php');
+		$helper = new Helper();
+		
+		$litedb->update('_app', array('user_id' => $helper->myid()), 'id = 0');
+		
 		//$liteSysTable = new System(array( Zend_Db_Table_Abstract::ADAPTER => $litedb));
 		//$liteSysTable->select('*');
 		
@@ -228,16 +233,27 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 			try {
 				$step = 1;
 			$optTable = new OptionList ( array ('name' => $opt ) );
-
 				$step = 2;
 			$liteTable = new OptionList ( array ('name' => $opt, Zend_Db_Table_Abstract::ADAPTER => $litedb ) );
 			} catch (Exception $e) {
 				echo "--- err matching/finding tables $opt, step $step [".($step==1?"db":"sqlite")."] --- <BR>";
 				echo $e->getMessage();
 			}
+			
+			
+		//TA:81 filter institution only for login user
+			if($opt === 'institution'){
+			    $institutions = $helper->getUserInstitutions($helper->myid(), false);
+			    if ((is_array($institutions)) && (count($institutions) > 0)) {
+			        $insids = implode(",", $institutions);
+			        $optTable->select('*');
+			        $rowset = $optTable->fetchAll('id IN (' . $insids . ')');
+			    }    
+			}else{
+			    $optTable->select ( '*' );
+			    $rowset = $optTable->fetchAll ();
+			}
 
-			$optTable->select ( '*' );
-			$rowset = $optTable->fetchAll ();
 			$liteKeys = $liteTable->createRow ()->toArray ();
 #			if ($opt == 'age_range_option') echo "!!keys:: ".print_r($liteKeys, true);
 #			if ($opt == 'age_range_option') echo "!!data:: ".count($rowset);
@@ -258,15 +274,18 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 #					if ($opt == 'age_range_option') {
 #						echo " adding row @ '$opt': ".print_r($data,true).PHP_EOL;
 #					}
-				$liteTable->insert ( $data );
+					
+				//TA:82 it was inserted wrongly $liteTable->insert ( $data );
+			     $liteTable->insertAllAsItIS( $data );
 				} catch (Exception $e) {
-					echo "############## skipping data ($opt)";
-					echo '<br><pre>'.$e->getMessage()."\n";
-					print_r($data);
-				}
-			
+				    //TA:82 uncoment later and understand why this Ecxeption occurs
+// 					echo "############## skipping data ($opt)";
+// 					echo '<br><pre>'.$e->getMessage()."\n";
+// 					print_r($data);
+				}	
 			}
 		}
+		
 // 		//TA:50 add virtual primary id start for each download user
 // 		/*
 // 		 *_app_start_ids table to keep start primary id for some tables when desktop user inserts new data. 
@@ -309,16 +328,18 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 		}
 		
 		// If no zip file, then Create App never performed (do this first)
-		//TA:50 create new (overwrite if exist) every time 
-		//if (! file_exists($this->package_dir.'/'.$this->zip_name)) {
-			$this->createAction();
-		//}
-				
+		//TA:50 create new (overwrite if exist) every time 	
+	//	if (! file_exists($this->package_dir.'/'.$this->zip_name)) {
+			$this->createAction(); //TA:82 uncomment later
+	//	}
+	
+		//$this->dbAction (); //TA:82 remove later
+	
 		// Assumes createAction called every hour by cron job
 		// Allows slow net link users to only download a prepackaged zip file
 		// instead of having to wait for the entire package event and then the
 		// entire download (combined time was breaking in remote locations)
-		$this->_pushZip();
+		$this->_pushZip(); //TA:82 uncomment later
 	}
 		
 	

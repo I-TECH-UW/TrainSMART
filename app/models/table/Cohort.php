@@ -26,7 +26,10 @@ class Cohortedit extends ITechTable
 			'institutionid'	 => $param['institution'],
 		);
 		
-		$rowArray = $this->dbfunc()->insert($this->_name,$insert);
+		//TA:82 use this function to insert 'created_by' and 'timestamp_created' fields
+		//        $rowArray = $this->dbfunc()->insert($this->_name,$insert);
+		$rowArray = $this->insert($insert);
+		
 		$id = $this->dbfunc()->lastInsertId(); 
 		return $id;
 	}
@@ -82,7 +85,10 @@ class Cohortedit extends ITechTable
 			$db->query("UPDATE student SET cadre = {$param['cadre']} WHERE id = {$student['id_student']}");
 		}
 		
-		$db->update('cohort',$data,'id = ' . $param['id']);
+		//TA:82 use this function to insert 'modified_by' and 'timestamp_updated' fields
+		//         $db->update('cohort',$data,'id = ' . $param['id']);
+		$this->update($data, "id = '" . $param['id'] . "'");
+		
 		return $data;
 	}
 	 

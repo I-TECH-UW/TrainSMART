@@ -113,6 +113,12 @@ class ITechTable extends Zend_Db_Table_Abstract
 
 		return parent::insert($data);
 	}
+	
+	//TA:81 inserts exactly with data as it is
+	public function insertAllAsItIS(array $data) {
+	    require_once('models/Session.php');
+	    return parent::insert($data);
+	}
 
 	public function update(array $data,$where) {
 		require_once('models/Session.php');
