@@ -241,14 +241,60 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 			}
 			
 			
-		//TA:81 filter institution only for login user
-			if($opt === 'institution'){
+		//TA:81 filter institution, cohort, and people only for login user
+// 			if($opt === 'institution'){
+// 			    $institutions = $helper->getUserInstitutions($helper->myid(), false);
+// 			    if ((is_array($institutions)) && (count($institutions) > 0)) {
+// 			        $insids = implode(",", $institutions);
+// 			        $optTable->select('*');
+// 			        $rowset = $optTable->fetchAll('id IN (' . $insids . ')');
+// 			    }else{
+// 			        $optTable->select('*');
+// 			        $rowset = $optTable->fetchAll();
+// 			    }
+// 			}
+			
+			if($opt === 'institution' || $opt === 'cohort' || $opt === 'person'){
 			    $institutions = $helper->getUserInstitutions($helper->myid(), false);
 			    if ((is_array($institutions)) && (count($institutions) > 0)) {
 			        $insids = implode(",", $institutions);
 			        $optTable->select('*');
-			        $rowset = $optTable->fetchAll('id IN (' . $insids . ')');
-			    }    
+			        if($opt === 'institution'){
+			             $rowset = $optTable->fetchAll('id IN (' . $insids . ')');
+// 			             print "<br><br>========================= " . $opt . " =============================<br>";
+// 			             print_r($rowset);
+			        }else if($opt === 'cohort'){
+			            $rowset = $optTable->fetchAll('institutionid IN (' . $insids . ')');
+// 			            print "<br><br>========================= " . $opt . " =============================<br>";
+// 			             print_r($rowset);
+			        }else if($opt === 'person'){
+			            $rowset = $optTable->fetchAll(' is_deleted=0 AND (id in (
+select personid from tutor where personid in 
+(select id_tutor from link_tutor_institution where id_institution in 
+(' . $insids . ')))
+or 
+id in (
+select personid from student where id in(
+select id_student from link_student_cohort where id_cohort in (
+select id from cohort where institutionid in 
+(' . $insids . '))))
+or
+id in (
+select personid from tutor where personid not in 
+(select id_tutor from link_tutor_institution))
+or
+id in (
+select personid from student where id not in 
+(select id_student from link_student_cohort)))');
+//  			            print "<br><br>========================= " . $opt . " =============================<br>";
+//  			             print_r($rowset);
+			        }
+			    }else{
+			        $optTable->select('*');
+			        $rowset = $optTable->fetchAll();
+// 			        print "<br><br>========================= " . $opt . " =============================<br>";
+// 			        print_r($rowset);
+			    }  
 			}else{
 			    $optTable->select ( '*' );
 			    $rowset = $optTable->fetchAll ();
@@ -330,16 +376,16 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 		// If no zip file, then Create App never performed (do this first)
 		//TA:50 create new (overwrite if exist) every time 	
 	//	if (! file_exists($this->package_dir.'/'.$this->zip_name)) {
-			$this->createAction(); //TA:82 uncomment later
+			$this->createAction(); //TA:81 comment for debug and uncomment later !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	//	}
 	
-		//$this->dbAction (); //TA:82 remove later
+		//$this->dbAction (); //TA:81 remove later use only for debug  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
 		// Assumes createAction called every hour by cron job
 		// Allows slow net link users to only download a prepackaged zip file
 		// instead of having to wait for the entire package event and then the
 		// entire download (combined time was breaking in remote locations)
-		$this->_pushZip(); //TA:82 uncomment later
+		$this->_pushZip(); //TA:81 comment for debug and  uncomment later !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
 		
 	
