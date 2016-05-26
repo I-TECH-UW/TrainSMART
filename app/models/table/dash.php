@@ -73,6 +73,7 @@ class Dashview extends ITechTable
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 		$select = $db->select()
 			->from("cohort")
+			->where("graddate>now()") //TA:86 take only those cohorts that are active: graduation date > today’s date
 			->where("institutionid = ?",$iid);
 		$result = $db->fetchAll($select);
 		foreach ($result as $row){
