@@ -160,11 +160,12 @@ class InstitutionController extends ITechController
 		$this->view->assign('lookupsponsors',$sponsors);
 
 
-		if (($details['tutorcount'] != 0) && (is_numeric($details['tutorcount'])) && ($details['studentcount'] != 0) && (is_numeric($details['studentcount']))){
-			$this->view->assign('tutorratio',"1 : " . round(($details['studentcount'] / $details['tutorcount']),2));
-		} else {
-			$this->view->assign('tutorratio',t("N/A"));
-		}
+		//TA:85 fix bug with ratio calculations (see below)
+// 		if (($details['tutorcount'] != 0) && (is_numeric($details['tutorcount'])) && ($details['studentcount'] != 0) && (is_numeric($details['studentcount']))){
+// 			$this->view->assign('tutorratio',"1 : " . round(($details['studentcount'] / $details['tutorcount']),2));
+// 		} else {
+// 			$this->view->assign('tutorratio',t("N/A"));
+// 		}
 
 
 		# GETTING LOOKUPS
@@ -182,6 +183,13 @@ class InstitutionController extends ITechController
 
 		$this->view->assign('tutor',$tutorcount);
 		$this->view->assign('students',$studentcount);
+		
+		//TA:85 fix bug with ratio calculations
+		if (($tutorcount != 0) && (is_numeric($tutorcount)) && ($studentcount != 0) && (is_numeric($studentcount))){
+		    $this->view->assign('tutorratio',"1 : " . round(($studentcount / $tutorcount),2));
+		} else {
+		    $this->view->assign('tutorratio',t("N/A"));
+		}
 	}
 
 	public function institutionviewAction(){
@@ -264,12 +272,12 @@ class InstitutionController extends ITechController
 	$sponsors = $helper->getSponsors();
 	$this->view->assign('lookupsponsors',$sponsors);
 	
-	
-	if (($details['tutorcount'] != 0) && (is_numeric($details['tutorcount'])) && ($details['studentcount'] != 0) && (is_numeric($details['studentcount']))){
-	    $this->view->assign('tutorratio',"1 : " . round(($details['studentcount'] / $details['tutorcount']),2));
-	} else {
-			$this->view->assign('tutorratio',t("N/A"));
-	}
+	//TA:85 fix bug with ratio calculations see below
+// 	if (($details['tutorcount'] != 0) && (is_numeric($details['tutorcount'])) && ($details['studentcount'] != 0) && (is_numeric($details['studentcount']))){
+// 	    $this->view->assign('tutorratio',"1 : " . round(($details['studentcount'] / $details['tutorcount']),2));
+// 	} else {
+// 			$this->view->assign('tutorratio',t("N/A"));
+// 	}
 	
 	
 	# GETTING LOOKUPS
@@ -287,6 +295,14 @@ class InstitutionController extends ITechController
 	
 	$this->view->assign('tutor',$tutorcount);
 	$this->view->assign('students',$studentcount);
+	
+	//TA:85 fix bug with ratio calculations
+	if (($tutorcount != 0) && (is_numeric($tutorcount)) && ($studentcount != 0) && (is_numeric($studentcount))){
+	    $this->view->assign('tutorratio',"1 : " . round(($studentcount / $tutorcount),2));
+	} else {
+	    $this->view->assign('tutorratio',t("N/A"));
+	}
+	
 	}
 	
 	
