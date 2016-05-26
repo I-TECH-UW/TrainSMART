@@ -8,6 +8,7 @@
  */
 require_once ('models/table/OptionList.php');
 require_once ('controllers/ITechController.php');
+require_once('models/table/Helper.php');
 
 class DesktopController extends ITechController {
 	
@@ -19,6 +20,8 @@ class DesktopController extends ITechController {
 	
 	private $error_message = "";
 	
+	private $sqlite_db = "trainsmart.active.sqlite";
+	
 	public function __construct(Zend_Controller_Request_Abstract $request, Zend_Controller_Response_Abstract $response, array $invokeArgs = array()) {
 		parent::__construct ( $request, $response, $invokeArgs );
 		
@@ -27,6 +30,17 @@ class DesktopController extends ITechController {
 	public function init() {
 		// Site specific files go here (/app/desktop/distro/data/settings.xml + copy of emtpy sqlite db file)
 		$this->package_dir = Globals::$BASE_PATH.'sites/'.str_replace(' ', '_', Globals::$COUNTRY).'/desktop';
+		
+		//TA:81 fix bug for each user generate own [user_id]_trainsmart.active.sqlite and [user_id]_trainsmart.zip
+		// sites/[county]/desktop/[user_id]_trainsmart.zip is overwritten by new user zip file
+		// sites/[county]/desktop/data/[user_id]_trainsmart.active.sqlite is overwritten by new user sql file
+		//
+		// in folder sites/[county]/desktop/data we can see who and when last time downloaded data
+		// in future if we will want to save all copies of downloaded data we can add date to the beginning of the file name like 
+		//sites/[county]/desktop/[user_id]_[date]_trainsmart.zip OR sites/[county]/desktop/data/[user_id]_[date]_trainsmart.active.sqlite
+		$helper = new Helper();
+		$this->sqlite_db = $helper->myid() . "_trainsmart.active.sqlite";
+		$this->zip_name = $helper->myid() . "_trainsmart.zip";
 	}
 	
 	public function preDispatch() {
@@ -71,6 +85,7 @@ class DesktopController extends ITechController {
 		//zip up
 		require_once('app/desktop/Zip.php');
 		$file_collection = array();
+		
 		$zipNameLen = strlen($this->zip_name);
 
 		unlink($this->package_dir.'/'.$this->zip_name);
@@ -104,7 +119,7 @@ class DesktopController extends ITechController {
 		$archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DISTRO_PATH, 'add_path'=>'TS'));
 		*/
 		//TA:50 file names are hard coded for now
-                 $site_file_collection []= realpath ( $this->package_dir . '/data/trainsmart.active.sqlite' );
+                 $site_file_collection []= realpath ( $this->package_dir . '/data/' . $this->sqlite_db );
                 $core_file_collection [] = realpath (Globals::$BASE_PATH.$DISTRO_PATH . '/_READ_ME.txt' );
                  $core_file_collection [] = realpath (Globals::$BASE_PATH.$DISTRO_PATH . '/_trainsmart.jar' );
 $archive->create($site_file_collection,array('remove_path'=>$this->package_dir, 'add_path'=>'TS'));
@@ -142,7 +157,7 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 
 			// Always start with a fresh blank datbase file
 			$curFile = 'sqlite';
-			if (! copy (Globals::$BASE_PATH.'/app/desktop/trainsmart.template.sqlite', $this->package_dir.'/data/trainsmart.active.sqlite') ) throw new Exception('PHP copy function did not succeed');
+			if (! copy (Globals::$BASE_PATH.'/app/desktop/trainsmart.template.sqlite', $this->package_dir.'/data/' . $this->sqlite_db) ) throw new Exception('PHP copy function did not succeed');
 		
 		} catch (Exception $e) {
 			$this->error_message = 'Failure copying '.$curFile.' file. The exact error was '.$e->getMessage();
@@ -183,8 +198,8 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 		require_once 'Zend/Db.php';
 		//set a default database adaptor
 		//$db = Zend_Db::factory ( 'PDO_SQLITE', array ('dbname' => Globals::$BASE_PATH . 'app/desktop/trainsmart.active.sqlite' ) );
-		$db = Zend_Db::factory ( 'PDO_SQLITE', array ('dbname' => $this->package_dir .'/data/trainsmart.active.sqlite' ) );
-		$GLOBALS['debug'] = $this->package_dir .'/data/trainsmart.active.sqlite';
+		$db = Zend_Db::factory ( 'PDO_SQLITE', array ('dbname' => $this->package_dir .'/data/' . $this->sqlite_db ) );
+		$GLOBALS['debug'] = $this->package_dir .'/data/' . $this->sqlite_db;
 		
 		require_once 'Zend/Db/Adapter/Abstract.php';
 		if (! $db instanceof Zend_Db_Adapter_Abstract) {
