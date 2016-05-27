@@ -8771,16 +8771,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 
-			// subquery to include the maximum nqf level associated with student
-			$nqfMax = $db->select()
-				->from(array('nqf_cm' => 'class_modules'), array('MAX(nqf_cm.custom_1)'))
-				->joinInner(array('nqf_classes' => 'classes'), 'nqf_classes.class_modules_id = nqf_cm.id', array())
-				->joinInner(array('nqf_lscl' => 'link_student_classes'),
-					'nqf_lscl.classid = nqf_classes.id', array())
-				->where('s.id = nqf_lscl.studentid')
-			;
-			$nqfMax = new Zend_Db_Expr($nqfMax);
-
 			$query->columns(array(
 					'p.national_id',
 					'lsc.examdate',
@@ -8792,7 +8782,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					'i.phone',
 					'i.fax',
 					'saqa_id' => 'p.custom_field2',
-					'nqf_max' => '(' . $nqfMax . ')',
+					'nqf_max' => new Zend_Db_Expr($db->quote('3')),
 				)
 			);
 
