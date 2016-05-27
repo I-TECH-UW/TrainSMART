@@ -72,10 +72,8 @@
             ?>
             <input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large"
                    onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=csv"?>')">
-                <?php if (false) { // disable chw report button until the report format is implemented ?>
             <input type="button" name="chwbutton" value="<?php tp('CHW Report');?> &raquo;" class="tsbutton green large"
                    onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=chwreport"?>')">
-                    <?php } ?>
             <?php } ?>
         </div>
     </div>

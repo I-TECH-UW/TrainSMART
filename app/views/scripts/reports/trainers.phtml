@@ -69,7 +69,8 @@ print ScriptContainer::$instance->renderJSHead();
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
     <div class="hrGrey"></div>
-    <div class="fieldIndentNoMargin"><?php tp('Trainers');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+    <!-- TA:80 print only trainers part -->
+    <div class="fieldIndentNoMargin"><?php tp('Trainers');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport('trainers');?></div>
 
     <div id="trainers"></div>
     <script type="text/javascript">

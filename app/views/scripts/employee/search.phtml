@@ -50,7 +50,8 @@
 
 			<?php if ( $this->criteria['go'] ) { ?>
 			<div class="hrGrey"></div>
-			<div class="fieldIndentNoMargin"><?php tp('Employees');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+			<!-- TA:80 print only employees report part -->
+			<div class="fieldIndentNoMargin"><?php tp('Employees');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport("employees");?></div>
 			<a href="<?php echo $this->base_url;?>/employee/add"><?php echo t('Add New').space.t('employee');?></a><br/><br/>
 			<div id="employees"></div>
 			<script type="text/javascript">

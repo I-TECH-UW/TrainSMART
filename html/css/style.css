@@ -207,7 +207,9 @@ table.tableChoices td { padding-bottom:0.5em; } /* checkbox choices */
 
 }
 
-#criteria .autoHeight { height: auto; padding-bottom:1em; }
+#criteria .autoHeight { height: auto; padding-bottom:1em;}
+
+#criteria .autoWidth { width:auto;}
 
 #criteria.multiselect_report .leftBorder { height:auto; padding-bottom:1em; }
 

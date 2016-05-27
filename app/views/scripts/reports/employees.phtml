@@ -84,7 +84,8 @@
 
 			<?php if ( $this->criteria['go'] ) { ?>
 			<div class="hrGrey"></div>
-			<div class="fieldIndentNoMargin"><?php tp('Employees');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+			<!-- TA:80 print only report part -->
+			<div class="fieldIndentNoMargin"><?php tp('Employees');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport("employees");?></div>
 			<div id="employees"></div>
 			
 			<?php // BS:8:20141013 

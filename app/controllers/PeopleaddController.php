@@ -117,6 +117,8 @@ class PeopleaddController extends ITechController {
             )
         );
 
+		$db = $this->dbfunc();
+
         // doc says this field is for SAQA ID but I don't understand how that can be a dropdown
         //$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
 
@@ -147,5 +149,13 @@ class PeopleaddController extends ITechController {
                 array('name' => 'studenttype', 'id' => 'studenttype')
             )
         );
-    }
+		$s = $db->select()->from('certificate_issuers', array('id', 'val' => 'issuer_name'));
+
+		$this->view->assign('certificate_issuer',
+			DropDown::generateSelectionFromQuery($s,
+				array('name' => 'certificate_issuer', 'id' => 'certificate_issuer')
+			)
+		);
+
+	}
 }

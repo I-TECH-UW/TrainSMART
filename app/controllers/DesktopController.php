@@ -8,6 +8,7 @@
  */
 require_once ('models/table/OptionList.php');
 require_once ('controllers/ITechController.php');
+require_once('models/table/Helper.php');
 
 class DesktopController extends ITechController {
 	
@@ -19,6 +20,8 @@ class DesktopController extends ITechController {
 	
 	private $error_message = "";
 	
+	private $sqlite_db = "trainsmart.active.sqlite";
+	
 	public function __construct(Zend_Controller_Request_Abstract $request, Zend_Controller_Response_Abstract $response, array $invokeArgs = array()) {
 		parent::__construct ( $request, $response, $invokeArgs );
 		
@@ -27,6 +30,17 @@ class DesktopController extends ITechController {
 	public function init() {
 		// Site specific files go here (/app/desktop/distro/data/settings.xml + copy of emtpy sqlite db file)
 		$this->package_dir = Globals::$BASE_PATH.'sites/'.str_replace(' ', '_', Globals::$COUNTRY).'/desktop';
+		
+		//TA:81 fix bug for each user generate own [user_id]_trainsmart.active.sqlite and [user_id]_trainsmart.zip
+		// sites/[county]/desktop/[user_id]_trainsmart.zip is overwritten by new user zip file
+		// sites/[county]/desktop/data/[user_id]_trainsmart.active.sqlite is overwritten by new user sql file
+		//
+		// in folder sites/[county]/desktop/data we can see who and when last time downloaded data
+		// in future if we will want to save all copies of downloaded data we can add date to the beginning of the file name like 
+		//sites/[county]/desktop/[user_id]_[date]_trainsmart.zip OR sites/[county]/desktop/data/[user_id]_[date]_trainsmart.active.sqlite
+		$helper = new Helper();
+		$this->sqlite_db = $helper->myid() . "_trainsmart.active.sqlite";
+		$this->zip_name = $helper->myid() . "_trainsmart.zip";
 	}
 	
 	public function preDispatch() {
@@ -71,6 +85,7 @@ class DesktopController extends ITechController {
 		//zip up
 		require_once('app/desktop/Zip.php');
 		$file_collection = array();
+		
 		$zipNameLen = strlen($this->zip_name);
 
 		unlink($this->package_dir.'/'.$this->zip_name);
@@ -104,7 +119,7 @@ class DesktopController extends ITechController {
 		$archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DISTRO_PATH, 'add_path'=>'TS'));
 		*/
 		//TA:50 file names are hard coded for now
-                 $site_file_collection []= realpath ( $this->package_dir . '/data/trainsmart.active.sqlite' );
+                 $site_file_collection []= realpath ( $this->package_dir . '/data/' . $this->sqlite_db );
                 $core_file_collection [] = realpath (Globals::$BASE_PATH.$DISTRO_PATH . '/_READ_ME.txt' );
                  $core_file_collection [] = realpath (Globals::$BASE_PATH.$DISTRO_PATH . '/_trainsmart.jar' );
 $archive->create($site_file_collection,array('remove_path'=>$this->package_dir, 'add_path'=>'TS'));
@@ -142,7 +157,7 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 
 			// Always start with a fresh blank datbase file
 			$curFile = 'sqlite';
-			if (! copy (Globals::$BASE_PATH.'/app/desktop/trainsmart.template.sqlite', $this->package_dir.'/data/trainsmart.active.sqlite') ) throw new Exception('PHP copy function did not succeed');
+			if (! copy (Globals::$BASE_PATH.'/app/desktop/trainsmart.template.sqlite', $this->package_dir.'/data/' . $this->sqlite_db) ) throw new Exception('PHP copy function did not succeed');
 		
 		} catch (Exception $e) {
 			$this->error_message = 'Failure copying '.$curFile.' file. The exact error was '.$e->getMessage();
@@ -183,8 +198,8 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 		require_once 'Zend/Db.php';
 		//set a default database adaptor
 		//$db = Zend_Db::factory ( 'PDO_SQLITE', array ('dbname' => Globals::$BASE_PATH . 'app/desktop/trainsmart.active.sqlite' ) );
-		$db = Zend_Db::factory ( 'PDO_SQLITE', array ('dbname' => $this->package_dir .'/data/trainsmart.active.sqlite' ) );
-		$GLOBALS['debug'] = $this->package_dir .'/data/trainsmart.active.sqlite';
+		$db = Zend_Db::factory ( 'PDO_SQLITE', array ('dbname' => $this->package_dir .'/data/' . $this->sqlite_db ) );
+		$GLOBALS['debug'] = $this->package_dir .'/data/' . $this->sqlite_db;
 		
 		require_once 'Zend/Db/Adapter/Abstract.php';
 		if (! $db instanceof Zend_Db_Adapter_Abstract) {
@@ -193,6 +208,11 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 		}
 		$this->desktop_db = $db;
 		$litedb = $this->desktop_db;
+		
+		require_once('models/table/Helper.php');
+		$helper = new Helper();
+		
+		$litedb->update('_app', array('user_id' => $helper->myid()), 'id = 0');
 		
 		//$liteSysTable = new System(array( Zend_Db_Table_Abstract::ADAPTER => $litedb));
 		//$liteSysTable->select('*');
@@ -228,16 +248,73 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 			try {
 				$step = 1;
 			$optTable = new OptionList ( array ('name' => $opt ) );
-
 				$step = 2;
 			$liteTable = new OptionList ( array ('name' => $opt, Zend_Db_Table_Abstract::ADAPTER => $litedb ) );
 			} catch (Exception $e) {
 				echo "--- err matching/finding tables $opt, step $step [".($step==1?"db":"sqlite")."] --- <BR>";
 				echo $e->getMessage();
 			}
+			
+			
+		//TA:81 filter institution, cohort, and people only for login user
+// 			if($opt === 'institution'){
+// 			    $institutions = $helper->getUserInstitutions($helper->myid(), false);
+// 			    if ((is_array($institutions)) && (count($institutions) > 0)) {
+// 			        $insids = implode(",", $institutions);
+// 			        $optTable->select('*');
+// 			        $rowset = $optTable->fetchAll('id IN (' . $insids . ')');
+// 			    }else{
+// 			        $optTable->select('*');
+// 			        $rowset = $optTable->fetchAll();
+// 			    }
+// 			}
+			
+			if($opt === 'institution' || $opt === 'cohort' || $opt === 'person'){
+			    $institutions = $helper->getUserInstitutions($helper->myid(), false);
+			    if ((is_array($institutions)) && (count($institutions) > 0)) {
+			        $insids = implode(",", $institutions);
+			        $optTable->select('*');
+			        if($opt === 'institution'){
+			             $rowset = $optTable->fetchAll('id IN (' . $insids . ')');
+// 			             print "<br><br>========================= " . $opt . " =============================<br>";
+// 			             print_r($rowset);
+			        }else if($opt === 'cohort'){
+			            $rowset = $optTable->fetchAll('institutionid IN (' . $insids . ')');
+// 			            print "<br><br>========================= " . $opt . " =============================<br>";
+// 			             print_r($rowset);
+			        }else if($opt === 'person'){
+			            $rowset = $optTable->fetchAll(' is_deleted=0 AND (id in (
+select personid from tutor where personid in 
+(select id_tutor from link_tutor_institution where id_institution in 
+(' . $insids . ')))
+or 
+id in (
+select personid from student where id in(
+select id_student from link_student_cohort where id_cohort in (
+select id from cohort where institutionid in 
+(' . $insids . '))))
+or
+id in (
+select personid from tutor where personid not in 
+(select id_tutor from link_tutor_institution))
+or
+id in (
+select personid from student where id not in 
+(select id_student from link_student_cohort)))');
+//  			            print "<br><br>========================= " . $opt . " =============================<br>";
+//  			             print_r($rowset);
+			        }
+			    }else{
+			        $optTable->select('*');
+			        $rowset = $optTable->fetchAll();
+// 			        print "<br><br>========================= " . $opt . " =============================<br>";
+// 			        print_r($rowset);
+			    }  
+			}else{
+			    $optTable->select ( '*' );
+			    $rowset = $optTable->fetchAll ();
+			}
 
-			$optTable->select ( '*' );
-			$rowset = $optTable->fetchAll ();
 			$liteKeys = $liteTable->createRow ()->toArray ();
 #			if ($opt == 'age_range_option') echo "!!keys:: ".print_r($liteKeys, true);
 #			if ($opt == 'age_range_option') echo "!!data:: ".count($rowset);
@@ -258,15 +335,18 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 #					if ($opt == 'age_range_option') {
 #						echo " adding row @ '$opt': ".print_r($data,true).PHP_EOL;
 #					}
-				$liteTable->insert ( $data );
+					
+				//TA:82 it was inserted wrongly $liteTable->insert ( $data );
+			     $liteTable->insertAllAsItIS( $data );
 				} catch (Exception $e) {
-					echo "############## skipping data ($opt)";
-					echo '<br><pre>'.$e->getMessage()."\n";
-					print_r($data);
-				}
-			
+				    //TA:82 uncoment later and understand why this Ecxeption occurs
+// 					echo "############## skipping data ($opt)";
+// 					echo '<br><pre>'.$e->getMessage()."\n";
+// 					print_r($data);
+				}	
 			}
 		}
+		
 // 		//TA:50 add virtual primary id start for each download user
 // 		/*
 // 		 *_app_start_ids table to keep start primary id for some tables when desktop user inserts new data. 
@@ -309,16 +389,18 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 		}
 		
 		// If no zip file, then Create App never performed (do this first)
-		//TA:50 create new (overwrite if exist) every time 
-		//if (! file_exists($this->package_dir.'/'.$this->zip_name)) {
-			$this->createAction();
-		//}
-				
+		//TA:50 create new (overwrite if exist) every time 	
+	//	if (! file_exists($this->package_dir.'/'.$this->zip_name)) {
+			$this->createAction(); //TA:81 comment for debug and uncomment later !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	//	}
+	
+		//$this->dbAction (); //TA:81 remove later use only for debug  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
 		// Assumes createAction called every hour by cron job
 		// Allows slow net link users to only download a prepackaged zip file
 		// instead of having to wait for the entire package event and then the
 		// entire download (combined time was breaking in remote locations)
-		$this->_pushZip();
+		$this->_pushZip(); //TA:81 comment for debug and  uncomment later !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
 		
 	

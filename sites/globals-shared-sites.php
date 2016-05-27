@@ -8,7 +8,7 @@ define('space', " ");
  */
 
 function redirect_to_www() {
-    header("Location: //www.trainingdata.org/home/");
+    header("Location: //www.trainingdata.org");
     exit();
 }
 

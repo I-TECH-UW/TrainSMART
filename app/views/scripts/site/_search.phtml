@@ -47,7 +47,8 @@ foreach ( $this->facility_types as $vals ) {
 </form>
 <?php if ( $this->criteria['go'] ) { ?>
 <div class="hrGrey"></div>
-<div class="fieldIndentNoMargin"><?php tp('Facility');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+<div class="fieldIndentNoMargin"><?php tp('Facility');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span>
+<?php echo $this->printAndExport("facilities");?></div><!-- TA:80 -->
 <a href="<?php echo $this->base_url;?>/site/add"><?php echo t('Add New').space.t('Facility');?></a><br/><br/>
 <div id="facilities"></div>
 <script type="text/javascript">

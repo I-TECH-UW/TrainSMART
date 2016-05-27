@@ -2929,7 +2929,7 @@ class AdminController extends UserController
 		$this->view->assign('parent', $parent);
 	}
 
-	public function skillsmartChwPersonFieldsAction() {
+	public function skillsmartChwSettingsAction() {
 
 		$labelOrder = array(
 			'label_last_name',
@@ -2977,6 +2977,12 @@ class AdminController extends UserController
 			'label_date_certificate_was_received_from_the_aqp',
 			'label_certificate_number',
 			'label_date_learner_received_certificate',
+			'-Certificate Issuers-',
+			'label_certificate_issuer',
+			'label_certificate_issuer_name',
+			'label_certificate_issuer_phone',
+			'label_certificate_issuer_email',
+			'label_certificate_issuer_logo',
 		);
 
 		$dropdownLinks = array(
@@ -3036,34 +3042,91 @@ class AdminController extends UserController
             'label_date_certificate_was_received_from_the_aqp'   => 'Date Certificate was Received From the AQP',
 			'label_certificate_number'                           => 'Certificate Number',
 			'label_date_learner_received_certificate'            => 'Date Learner Received Certificate',
+
+			'label_certificate_issuer'                           => 'Certificate Issuer',
+			'label_certificate_issuer_name'                      => 'Certificate Issuer Name',
+			'label_certificate_issuer_phone'                     => 'Certificate Issuer Phone Number',
+			'label_certificate_issuer_email'                     => 'Certificate Issuer Email',
+			'label_certificate_issuer_logo'                      => 'Certificate Issuer Logo',
+
 		);
 
+
+		# TODO: add Certificate Issuer translation
 		if ($this->getRequest()->isPost()) {
 			$params = $this->getAllParams();
 
-			require_once('models/table/Translation.php');
+			if (isset($params['operation']) && $params['operation']) {
+				$db = $this->dbfunc();
 
-			$tranTable = new Translation();
-			$translations = $tranTable->getAll();
-
-			foreach($params as $k => $v) {
-				if (strpos($k, 'label_') === 0) {
-					try {
-						if (!array_key_exists($labelNames[$k], $translations)) {
-							// This key_phrase is not in the translation table, so add it
-							$tranTable->insert(array('phrase' => $v, 'key_phrase' => $labelNames[$k]));
-						} else {
-							$tranTable->update(array('phrase' => $v), "key_phrase = '{$labelNames[$k]}'");
-						}
+				$op = null;
+				if ($params['operation'] === "save") {
+					if ($params['issuer_id'] === "0") {
+						# TODO: update database column id to be auto-increment
+						$db->insert('certificate_issuers',
+							array('issuer_name' => $params['issuer_name'],
+								'issuer_email' => $params['issuer_email'],
+								'issuer_phone_number' => $params['issuer_phone_number'],
+								# TODO: change database column name to issuer_logo_id
+								'issuer_logo_file_id' => $params['issuer_logo']
+							)
+						);
 					}
-					catch(Zend_Exception $e) {
-						error_log($e);
+					else {
+						$db->update('certificate_issuers',
+							array('issuer_name' => $params['issuer_name'],
+								'issuer_email' => $params['issuer_email'],
+								'issuer_phone_number' => $params['issuer_phone_number'],
+								# TODO: change database column name to issuer_logo_id
+								'issuer_logo_file_id' => $params['issuer_logo']
+							),
+							array('id = ?' => $params['issuer_id'])
+						);
 					}
 				}
+				else if ($params['operation'] === "delete") {
+					$db->delete('certificate_issuers', array('id = ?' => $params['issuer_id']));
+				}
+			} 
+			else {
+				require_once('models/table/Translation.php');
+
+				$tranTable = new Translation();
+				$translations = $tranTable->getAll();
+
+				foreach ($params as $k => $v) {
+					if (strpos($k, 'label_') === 0) {
+						try {
+							if (!array_key_exists($labelNames[$k], $translations)) {
+								// This key_phrase is not in the translation table, so add it
+								$tranTable->insert(array('phrase' => $v, 'key_phrase' => $labelNames[$k]));
+							} else {
+								$tranTable->update(array('phrase' => $v), "key_phrase = '{$labelNames[$k]}'");
+							}
+						} catch (Zend_Exception $e) {
+							error_log($e);
+						}
+					}
+				}
+				$this->updateTranslations();
 			}
-			$this->updateTranslations();
 		}
 
+		$db = $this->dbfunc();
+		$s = $db->select()
+			->from('certificate_issuers');
+		$issuers = array('0' => array('id' => "0", 'issuer_name' => t('New') . ' ' . t('Certificate Issuer'))) + $db->fetchAssoc($s);
+
+
+		$s = $db->select()
+			->from('file', array('id', 'filename'))
+			->where("parent_table = 'certificate_issuers' AND filemime IN ('image/png', 'image/jpeg', 'image/gif')");
+
+		$o = $s->__toString();
+		$images = array('0' => '--' . t('choose') . '--') + $db->fetchPairs($s);
+
+		$this->view->assign('issuers', $issuers);
+		$this->view->assign('issuer_images', $images);
 		$this->view->assign('labelOrder', $labelOrder);
 		$this->view->assign('labelNames', $labelNames);
 		$this->view->assign('dropdownLinks', $dropdownLinks);

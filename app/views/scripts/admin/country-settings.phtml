@@ -15,236 +15,486 @@ $nav = ob_get_contents();
 ob_end_clean();
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<!--  <title><?php echo $this->translation['Application Name']; ?> | <?php echo $this->pageTitle; ?></title>-->
-		<?php
-		require_once('views/helpers/ScriptContainer.php');
-		print ScriptContainer::$instance->renderCSSHead();
-		print ScriptContainer::$instance->renderJSHead();
-		?>
-	</head>
-	<body  class="yui-skin-sam">
-		<div id="pageHolder">
-			<div id="header"><?php echo $header; ?></div>
-			<div id="content" class="adminDiv">
+<head>
+    <!--  <title><?php echo $this->translation['Application Name']; ?> | <?php echo $this->pageTitle; ?></title>-->
+    <?php
+    require_once('views/helpers/ScriptContainer.php');
+    print ScriptContainer::$instance->renderCSSHead();
+    print ScriptContainer::$instance->renderJSHead();
+    ?>
+</head>
+<body class="yui-skin-sam">
+<div id="pageHolder">
+    <div id="header"><?php echo $header; ?></div>
+    <div id="content" class="adminDiv">
 
 
-				<div id="navAdmin"><?php echo $nav;?></div>
+        <div id="navAdmin"><?php echo $nav; ?></div>
 
-				<div id="contentAdmin">
-					<h1><?php echo t($this->pageTitle); ?></h1>
+        <div id="contentAdmin">
+            <h1><?php echo t($this->pageTitle); ?></h1>
 
-					<fieldset class="settings"><legend><?php echo t('Appearance'); ?></legend>
-						<div class="fieldLabel"><?php echo t('Application name'); ?></div>
-						<script type="text/javascript">
-							function update_app_name(newval) {
-								var app_name = YAHOO.util.Dom.get('label_application_name');
-								app_name.value = newval;
-							}
-							function  confirmRegionDelete(control) {
-								if ( confirm("Are you sure you want to remove this region level? All locations in this level will be erased.") ) {
-									window.location = "<?php echo Settings::$COUNTRY_BASE_URL; ?>/admin/delete-region";
-								}
-							}
-							function  confirmRegionAddTop(control) {
-								if ( confirm(tr("Are you sure you want to add a region level? A new default location will be created at this level, and all child locations will be added to this default.")) ) {
-									window.location = "<?php echo Settings::$COUNTRY_BASE_URL; ?>/admin/add-region-top";
-								}
-							}
-							function  confirmRegionAddBottom(control) {
-								if ( confirm(tr("Are you sure you want to add a region level? A new default location will be created at this level, and all child locations will be added to this default.")) ) {
-									window.location = "<?php echo Settings::$COUNTRY_BASE_URL; ?>/admin/add-region-bottom";
-								}
-							}
-						</script>
-						<div class="fieldInput"><input type="text" name="application_name_clone" value="<?php echo $this->translation['Application Name'];?>" onchange="return update_app_name(this.value);"></input>
-					</div><br/>
-					<?php if (isset($this->setting['logo_id']))   { ?>
-					<img id="logo_img" src="<?php echo Settings::$COUNTRY_BASE_URL.'/file/download/id/'.$this->setting['logo_id'];?>" />
+            <fieldset class="settings">
+                <legend><?php echo t('Appearance'); ?></legend>
+                <div class="fieldLabel"><?php echo t('Application name'); ?></div>
+                <script type="text/javascript">
+                    function update_app_name(newval) {
+                        var app_name = YAHOO.util.Dom.get('label_application_name');
+                        app_name.value = newval;
+                    }
+                    function confirmRegionDelete(control) {
+                        if (confirm("Are you sure you want to remove this region level? All locations in this level will be erased.")) {
+                            window.location = "<?php echo Settings::$COUNTRY_BASE_URL; ?>/admin/delete-region";
+                        }
+                    }
+                    function confirmRegionAddTop(control) {
+                        if (confirm(tr("Are you sure you want to add a region level? A new default location will be created at this level, and all child locations will be added to this default."))) {
+                            window.location = "<?php echo Settings::$COUNTRY_BASE_URL; ?>/admin/add-region-top";
+                        }
+                    }
+                    function confirmRegionAddBottom(control) {
+                        if (confirm(tr("Are you sure you want to add a region level? A new default location will be created at this level, and all child locations will be added to this default."))) {
+                            window.location = "<?php echo Settings::$COUNTRY_BASE_URL; ?>/admin/add-region-bottom";
+                        }
+                    }
+                </script>
+                <div class="fieldInput"><input type="text" name="application_name_clone"
+                                               value="<?php echo $this->translation['Application Name']; ?>"
+                                               onchange="return update_app_name(this.value);" />
+                </div>
+                <br/>
+                <?php if (isset($this->setting['logo_id'])) { ?>
+                    <img id="logo_img"
+                         src="<?php echo Settings::$COUNTRY_BASE_URL . '/file/download/id/' . $this->setting['logo_id']; ?>"/>
 
-					<?php } ?>
-					<div class="fieldLabel"><?php echo t('Logo'); ?></div>
-					<div class="fieldInput">
-						<?php
-						require_once 'views/helpers/FileUpload.php';
-						echo FileUpload::displayUploadForm('_system', 0, array('jpg','gif','png'),false);
-						
-						echo t('Approximate image dimensions') . ' 120x120';
-						?>
+                <?php } ?>
+                <div class="fieldLabel"><?php echo t('Logo'); ?></div>
+                <div class="fieldInput">
+                    <?php
+                    require_once 'views/helpers/FileUpload.php';
+                    echo FileUpload::displayUploadForm('_system', 0, array('jpg', 'gif', 'png'), false);
 
-					</div>
-					<div class="fieldInput" style="font-size:80%; padding: .5em;">(<?php echo t('Refresh this page, or go to the home page to see changes applied.'); ?>)</div>
-				</fieldset>
-				<script type="text/javascript">
-					YAHOO.util.Event.on(window, 'load', initSettingsUploadButton);
-				</script>
-				<fieldset class="settings"><legend><?php echo t('Settings'); ?></legend>
-					<br/>
+                    echo t('Approximate image dimensions') . ' 120x120';
+                    ?>
 
-					<form method="post" name="adminForm">
-						<input type="hidden" name="label_application_name" id="label_application_name" value="<?php echo $this->translation['Application Name'];?>" />
-						<table class="settings">
-							<thead>
-								<tr><th><?php echo t('Field'); ?></th><th><?php echo t('Actions'); ?></th><th><?php echo t('Label'); ?></th><th><?php echo t('Options'); ?></th></tr>
-							</thead>
-							<tr><td class="fieldTitle"><?php echo t('Country'); ?></td><td></td><td><input type="text" name="country" value="<?php echo $this->country; ?>"></td><td></td></tr>
-							<tr><td class="fieldTitle"></td><td><a href="#" onclick="return confirmRegionAddTop();" ><?php echo t('Add region'); ?></a></td><td></td><td></td>
-								<tr><td class="fieldTitle"><?php echo t('Region'); ?> A</td><td></td><td><input type="text" name="label_regiona" value="<?php echo $this->label_regiona; ?>"></td><td><a href="<?php echo $this->base_url;?>/admin/country-region/tier/1" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit');?></a></td>
-							<tr><td class="fieldTitle"></td><td><a href="#" onclick="return confirmRegionAddBottom();" ><?php echo t('Add region'); ?></a></td><td></td><td></td>
-<?php if ($this->setting['display_region_b'] ) { ?>
-							<tr><td class="fieldTitle"><?php echo t('Region'); ?> B</td><td><a href="#" onclick="return confirmRegionDelete();" ><?php echo t('Delete region'); ?></a></td><td><input type="text" name="label_regionb" value="<?php echo $this->label_regionb; ?>"></td><td><a href="<?php echo $this->base_url;?>/admin/country-region/tier/2" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit');?></a></td>
-											<tr><td class="fieldTitle"></td><td><a href="#" onclick="return confirmRegionAddBottom();" ><?php echo t('Add region'); ?></a></td><td></td><td></td>
-<?php } ?>
-<?php if ($this->setting['display_region_c'] ) { ?>
-							<tr><td class="fieldTitle"><?php echo t('Region'); ?> C</td><td><a href="#" onclick="return confirmRegionDelete();" ><?php echo t('Delete region'); ?></a></td><td><input type="text" name="label_regionc" value="<?php echo $this->label_regionc; ?>"></td><td><a href="<?php echo $this->base_url;?>/admin/country-region/tier/3" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit');?></a></td>
-							<tr><td class="fieldTitle"></td><td><a href="#" onclick="return confirmRegionAddBottom();" ><?php echo t('Add region'); ?></a></td><td></td><td></td>
-<?php } ?>
-<?php if ($this->setting['display_region_d'] ) { ?>
-							<tr><td class="fieldTitle"><?php echo t('Region'); ?> D</td><td><a href="#" onclick="return confirmRegionDelete();" ><?php echo t('Delete region'); ?></a></td><td><input type="text" name="label_regiond" value="<?php echo $this->label_regiond; ?>"></td><td><a href="<?php echo $this->base_url;?>/admin/country-region/tier/4" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit');?></a></td>
-							<tr><td class="fieldTitle"></td><td><a href="#" onclick="return confirmRegionAddBottom();" ><?php echo t('Add region'); ?></a></td><td></td><td></td>
-<?php } ?>
-<?php if ($this->setting['display_region_e'] ) { ?>
-							<tr><td class="fieldTitle"><?php echo t('Region'); ?> E</td><td><a href="#" onclick="return confirmRegionDelete();" ><?php echo t('Delete region'); ?></a></td><td><input type="text" name="label_regione" value="<?php echo $this->label_regione; ?>"></td><td><a href="<?php echo $this->base_url;?>/admin/country-region/tier/5" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit');?></a></td>
-							<tr><td class="fieldTitle"></td><td><a href="#" onclick="return confirmRegionAddBottom();" ><?php echo t('Add region'); ?></a></td><td></td><td></td>
-<?php } ?>
-<?php if ($this->setting['display_region_f'] ) { ?>
-							<tr><td class="fieldTitle"><?php echo t('Region'); ?> F</td><td><a href="#" onclick="return confirmRegionDelete();" ><?php echo t('Delete region'); ?></a></td><td><input type="text" name="label_regionf" value="<?php echo $this->label_regionf; ?>"></td><td><a href="<?php echo $this->base_url;?>/admin/country-region/tier/6" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit');?></a></td>
-							<tr><td class="fieldTitle"></td><td><a href="#" onclick="return confirmRegionAddBottom();" ><?php echo t('Add region'); ?></a></td><td></td><td></td>
-<?php } ?>
-<?php if ($this->setting['display_region_g'] ) { ?>
-							<tr><td class="fieldTitle"><?php echo t('Region'); ?> G</td><td><a href="#" onclick="return confirmRegionDelete();" ><?php echo t('Delete region'); ?></a></td><td><input type="text" name="label_regiong" value="<?php echo $this->label_regiong; ?>"></td><td><a href="<?php echo $this->base_url;?>/admin/country-region/tier/7" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit');?></a></td>
-							<tr><td class="fieldTitle"></td><td><a href="#" onclick="return confirmRegionAddBottom();" ><?php echo t('Add region'); ?></a></td><td></td><td></td>
-<?php } ?>
-<?php if ($this->setting['display_region_h'] ) { ?>
-							<tr><td class="fieldTitle"><?php echo t('Region'); ?> H</td><td><a href="#" onclick="return confirmRegionDelete();" ><?php echo t('Delete region'); ?></a></td><td><input type="text" name="label_regionh" value="<?php echo $this->label_regionh; ?>"></td><td><a href="<?php echo $this->base_url;?>/admin/country-region/tier/8" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit');?></a></td>
-							<tr><td class="fieldTitle"></td><td><a href="#" onclick="return confirmRegionAddBottom();" ><?php echo t('Add region'); ?></a></td><td></td><td></td>
-<?php } ?>
-<?php if ($this->setting['display_region_i'] ) { ?>
-							<tr><td class="fieldTitle"><?php echo t('Region'); ?> I</td><td><a href="#" onclick="return confirmRegionDelete();" ><?php echo t('Delete region'); ?></a></td><td><input type="text" name="label_regioni" value="<?php echo $this->label_regioni; ?>"></td><td><a href="<?php echo $this->base_url;?>/admin/country-region/tier/9" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit');?></a></td>
-							<tr><td class="fieldTitle"></td><td><a href="#" onclick="return confirmRegionAddBottom();" ><?php echo t('Add region'); ?></a></td><td></td><td></td>
-<?php } ?>
-												<tr><td class="fieldTitle"><?php tp('City/Town');?></td><td></td><td><input type="text" name="label_citytown" value="<?php echo $this->label_citytown; ?>"></td><td></td>
+                </div>
+                <div class="fieldInput" style="font-size:80%; padding: .5em;">
+                    (<?php echo t('Refresh this page, or go to the home page to see changes applied.'); ?>)
+                </div>
+            </fieldset>
+            <script type="text/javascript">
+                YAHOO.util.Event.on(window, 'load', initSettingsUploadButton);
+            </script>
+            <fieldset class="settings">
+                <legend><?php echo t('Settings'); ?></legend>
+                <br/>
 
-							<tr><td class="fieldTitle"><?php tp('Fiscal Year Start');?></td><td></td><td><input type="text" name="fiscal_year_start" class="datepicker" value="<?php echo $this->fiscal_year_start; ?>">
+                <form method="post" name="adminForm">
+                    <input type="hidden" name="label_application_name" id="label_application_name"
+                           value="<?php echo $this->translation['Application Name']; ?>"/>
+                    <table class="settings">
+                        <thead>
+                        <tr>
+                            <th><?php echo t('Field'); ?></th>
+                            <th><?php echo t('Actions'); ?></th>
+                            <th><?php echo t('Label'); ?></th>
+                            <th><?php echo t('Options'); ?></th>
+                        </tr>
+                        </thead>
+                        <tr>
+                            <td class="fieldTitle"><?php echo t('Country'); ?></td>
+                            <td></td>
+                            <td><input type="text" name="country" value="<?php echo $this->country; ?>"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldTitle"></td>
+                            <td><a href="#" onclick="return confirmRegionAddTop();"><?php echo t('Add region'); ?></a>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        <tr>
+                            <td class="fieldTitle"><?php echo t('Region'); ?> A</td>
+                            <td></td>
+                            <td><input type="text" name="label_regiona" value="<?php echo $this->label_regiona; ?>">
+                            </td>
+                            <td><a href="<?php echo $this->base_url; ?>/admin/country-region/tier/1"
+                                   onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
+                        <tr>
+                            <td class="fieldTitle"></td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionAddBottom();"><?php echo t('Add region'); ?></a></td>
+                            <td></td>
+                            <td></td>
+                            <?php if ($this->setting['display_region_b']) { ?>
+                        <tr>
+                            <td class="fieldTitle"><?php echo t('Region'); ?> B</td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionDelete();"><?php echo t('Delete region'); ?></a></td>
+                            <td><input type="text" name="label_regionb" value="<?php echo $this->label_regionb; ?>">
+                            </td>
+                            <td><a href="<?php echo $this->base_url; ?>/admin/country-region/tier/2"
+                                   onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
+                        <tr>
+                            <td class="fieldTitle"></td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionAddBottom();"><?php echo t('Add region'); ?></a></td>
+                            <td></td>
+                            <td></td>
+                            <?php } ?>
+                            <?php if ($this->setting['display_region_c']) { ?>
+                        <tr>
+                            <td class="fieldTitle"><?php echo t('Region'); ?> C</td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionDelete();"><?php echo t('Delete region'); ?></a></td>
+                            <td><input type="text" name="label_regionc" value="<?php echo $this->label_regionc; ?>">
+                            </td>
+                            <td><a href="<?php echo $this->base_url; ?>/admin/country-region/tier/3"
+                                   onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
+                        <tr>
+                            <td class="fieldTitle"></td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionAddBottom();"><?php echo t('Add region'); ?></a></td>
+                            <td></td>
+                            <td></td>
+                            <?php } ?>
+                            <?php if ($this->setting['display_region_d']) { ?>
+                        <tr>
+                            <td class="fieldTitle"><?php echo t('Region'); ?> D</td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionDelete();"><?php echo t('Delete region'); ?></a></td>
+                            <td><input type="text" name="label_regiond" value="<?php echo $this->label_regiond; ?>">
+                            </td>
+                            <td><a href="<?php echo $this->base_url; ?>/admin/country-region/tier/4"
+                                   onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
+                        <tr>
+                            <td class="fieldTitle"></td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionAddBottom();"><?php echo t('Add region'); ?></a></td>
+                            <td></td>
+                            <td></td>
+                            <?php } ?>
+                            <?php if ($this->setting['display_region_e']) { ?>
+                        <tr>
+                            <td class="fieldTitle"><?php echo t('Region'); ?> E</td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionDelete();"><?php echo t('Delete region'); ?></a></td>
+                            <td><input type="text" name="label_regione" value="<?php echo $this->label_regione; ?>">
+                            </td>
+                            <td><a href="<?php echo $this->base_url; ?>/admin/country-region/tier/5"
+                                   onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
+                        <tr>
+                            <td class="fieldTitle"></td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionAddBottom();"><?php echo t('Add region'); ?></a></td>
+                            <td></td>
+                            <td></td>
+                            <?php } ?>
+                            <?php if ($this->setting['display_region_f']) { ?>
+                        <tr>
+                            <td class="fieldTitle"><?php echo t('Region'); ?> F</td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionDelete();"><?php echo t('Delete region'); ?></a></td>
+                            <td><input type="text" name="label_regionf" value="<?php echo $this->label_regionf; ?>">
+                            </td>
+                            <td><a href="<?php echo $this->base_url; ?>/admin/country-region/tier/6"
+                                   onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
+                        <tr>
+                            <td class="fieldTitle"></td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionAddBottom();"><?php echo t('Add region'); ?></a></td>
+                            <td></td>
+                            <td></td>
+                            <?php } ?>
+                            <?php if ($this->setting['display_region_g']) { ?>
+                        <tr>
+                            <td class="fieldTitle"><?php echo t('Region'); ?> G</td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionDelete();"><?php echo t('Delete region'); ?></a></td>
+                            <td><input type="text" name="label_regiong" value="<?php echo $this->label_regiong; ?>">
+                            </td>
+                            <td><a href="<?php echo $this->base_url; ?>/admin/country-region/tier/7"
+                                   onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
+                        <tr>
+                            <td class="fieldTitle"></td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionAddBottom();"><?php echo t('Add region'); ?></a></td>
+                            <td></td>
+                            <td></td>
+                            <?php } ?>
+                            <?php if ($this->setting['display_region_h']) { ?>
+                        <tr>
+                            <td class="fieldTitle"><?php echo t('Region'); ?> H</td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionDelete();"><?php echo t('Delete region'); ?></a></td>
+                            <td><input type="text" name="label_regionh" value="<?php echo $this->label_regionh; ?>">
+                            </td>
+                            <td><a href="<?php echo $this->base_url; ?>/admin/country-region/tier/8"
+                                   onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
+                        <tr>
+                            <td class="fieldTitle"></td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionAddBottom();"><?php echo t('Add region'); ?></a></td>
+                            <td></td>
+                            <td></td>
+                            <?php } ?>
+                            <?php if ($this->setting['display_region_i']) { ?>
+                        <tr>
+                            <td class="fieldTitle"><?php echo t('Region'); ?> I</td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionDelete();"><?php echo t('Delete region'); ?></a></td>
+                            <td><input type="text" name="label_regioni" value="<?php echo $this->label_regioni; ?>">
+                            </td>
+                            <td><a href="<?php echo $this->base_url; ?>/admin/country-region/tier/9"
+                                   onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
+                        <tr>
+                            <td class="fieldTitle"></td>
+                            <td><a href="#"
+                                   onclick="return confirmRegionAddBottom();"><?php echo t('Add region'); ?></a></td>
+                            <td></td>
+                            <td></td>
+                            <?php } ?>
+                        <tr>
+                            <td class="fieldTitle"><?php tp('City/Town'); ?></td>
+                            <td></td>
+                            <td><input type="text" name="label_citytown" value="<?php echo $this->label_citytown; ?>">
+                            </td>
+                            <td></td>
 
-								<span id="calendarpicker" class="yui-button yui-menu-button"><span class="first-child"><button type="button" title="<?php tp('Pick a Date'); ?>"></button></span></span>
-								<script type="text/javascript">
-										$(document).ready(function () {
-									    	$('.datepicker').datepicker( {dateFormat: "yy-mm-dd 00:00:01"} );
-									    	$('#calendarpicker button').click(function() { $('.datepicker').focus(); })
-								    });
-								</script>
-								</td><td></td></tr>
-							<tr><td class="fieldTitle"><?php tp('Training');?></td>       <td></td><td><input type="text" name="label_training"  value="<?php echo $this->label_training; ?>"></td>              <td></td></tr>
-							<tr><td class="fieldTitle"><?php tp('Trainings');?></td>      <td></td><td><input type="text" name="label_trainings" value="<?php echo $this->label_trainings; ?>"></td>             <td></td></tr>
-							<tr><td class="fieldTitle"><?php tp('Trainer');?></td>        <td></td><td><input type="text" name="label_trainer"   value="<?php echo $this->label_trainer; ?>"></td>               <td></td></tr>
-							<tr><td class="fieldTitle"><?php tp('Trainers');?></td>       <td></td><td><input type="text" name="label_trainers"  value="<?php echo $this->label_trainers; ?>"></td>              <td></td></tr>
-							<tr><td class="fieldTitle"><?php tp('Training Center');?></td><td></td><td><input type="text" name="label_training_center" value="<?php echo $this->label_training_center; ?>"></td> <td></td></tr>
-							<tr><td class="fieldTitle"><?php tp('Participant');?></td>    <td></td><td><input type="text" name="label_participant"     value="<?php echo $this->label_participant; ?>"></td>     <td></td></tr>
-							<tr><td class="fieldTitle"><?php tp('Participants');?></td>   <td></td><td><input type="text" name="label_participants"    value="<?php echo $this->label_participants; ?>"></td>    <td></td></tr>
+                        <tr>
+                            <td class="fieldTitle"><?php tp('Fiscal Year Start'); ?></td>
+                            <td></td>
+                            <td><input type="text" name="fiscal_year_start" class="datepicker"
+                                       value="<?php echo $this->fiscal_year_start; ?>">
+
+                                <span id="calendarpicker" class="yui-button yui-menu-button"><span class="first-child"><button
+                                            type="button" title="<?php tp('Pick a Date'); ?>"></button></span></span>
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                        $('.datepicker').datepicker({dateFormat: "yy-mm-dd 00:00:01"});
+                                        $('#calendarpicker button').click(function () {
+                                            $('.datepicker').focus();
+                                        })
+                                    });
+                                </script>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldTitle"><?php tp('Training'); ?></td>
+                            <td></td>
+                            <td><input type="text" name="label_training" value="<?php echo $this->label_training; ?>">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldTitle"><?php tp('Trainings'); ?></td>
+                            <td></td>
+                            <td><input type="text" name="label_trainings" value="<?php echo $this->label_trainings; ?>">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldTitle"><?php tp('Trainer'); ?></td>
+                            <td></td>
+                            <td><input type="text" name="label_trainer" value="<?php echo $this->label_trainer; ?>">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldTitle"><?php tp('Trainers'); ?></td>
+                            <td></td>
+                            <td><input type="text" name="label_trainers" value="<?php echo $this->label_trainers; ?>">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldTitle"><?php tp('Training Center'); ?></td>
+                            <td></td>
+                            <td><input type="text" name="label_training_center"
+                                       value="<?php echo $this->label_training_center; ?>"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldTitle"><?php tp('Participant'); ?></td>
+                            <td></td>
+                            <td><input type="text" name="label_participant"
+                                       value="<?php echo $this->label_participant; ?>"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldTitle"><?php tp('Participants'); ?></td>
+                            <td></td>
+                            <td><input type="text" name="label_participants"
+                                       value="<?php echo $this->label_participants; ?>"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldTitle"><?php tp('Employee'); ?></td>
+                            <td></td>
+                            <td><input type="text" name="label_employee" value="<?php echo $this->label_employee; ?>">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldTitle"><?php tp('Employees'); ?></td>
+                            <td></td>
+                            <td><input type="text" name="label_employees" value="<?php echo $this->label_employees; ?>">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fieldTitle"><?php tp('Employer'); ?></td>
+                            <td></td>
+                            <td><input type="text" name="label_employer" value="<?php echo $this->label_employer; ?>">
+                            </td>
+                            <td></td>
+                        </tr>
 
 
-							</table>
-											</fieldset>
+                    </table>
+            </fieldset>
 
-											<fieldset class="settings"><legend><?php tp('Modules');?></legend><br/>
+            <fieldset class="settings">
+                <legend><?php tp('Modules'); ?></legend>
+                <br/>
 
-												<div>
-													<div class="fieldInput"><div class="fieldLabel"><?php tp('Evaluation');?></div>
-														<input type="checkbox" name="check_mod_eval" <?php if($this->check_mod_eval) echo 'checked'; ?> id="check_mod_eval"><label for="check_mod_eval"><?php tp('Enable');?></label>
-													</div>
-													<div style="clear : both;"></div>
-												</div>
-												<div>
-													<div class="fieldInput"><div class="fieldLabel"><?php tp('Approvals');?></div>
-														<input type="checkbox" name="check_mod_approvals" <?php if($this->check_mod_approvals) echo 'checked'; ?> id="check_mod_approvals"><label for="check_mod_approvals"><?php tp('Enable');?></label>
-													</div>
-													<div style="clear : both;"></div>
-												</div>
-												<div>
-													<div class="fieldInput"><div class="fieldLabel"><?php tp('Change History');?></div>
-														<input type="checkbox" name="check_mod_historical" <?php if($this->check_mod_historical) echo 'checked'; ?> id="check_mod_historical"><label for="check_mod_historical"><?php tp('Enable');?></label>
-													</div>
-													<div style="clear : both;"></div>
-												</div>
-												<div>
-													<div class="fieldInput"><div class="fieldLabel"><?php tp('Unknown Participants');?></div>
-														<input type="checkbox" name="check_mod_unknown" <?php if($this->check_mod_unknown) echo 'checked'; ?> id="check_mod_unknown"><label for="check_mod_unknown"><?php tp('Enable');?></label>
-													</div>
-													<div style="clear : both;"></div>
-												</div>
-												<div>
-													<div class="fieldInput"><div class="fieldLabel"><?php tp('Attendance Tracking');?></div>
-														<input type="checkbox" name="check_mod_attendance" <?php if($this->check_mod_attendance) echo 'checked'; ?> id="check_mod_attendance"><label for="check_mod_attendance"><?php tp('Enable');?></label>
-													</div>
-													<div style="clear : both;"></div>
-												</div>
-												<div>
-													<div class="fieldInput"><div class="fieldLabel"><?php tp('Training Organizer Partners');?></div>
-														<input type="checkbox" name="display_training_partner" id="display_training_partner" <?php if($this->display_training_partner == 1) echo 'checked'; ?>><label for="display_training_partner"><?php tp('Enable');?></label>
-													</div>
-													<div style="clear : both;"></div>
-												</div>
-												<div>
-													<div class="fieldInput"><div class="fieldLabel"><?php tp('SkillSmart');?></div>
-														<input type="checkbox" name="display_mod_skillsmart" id="display_mod_skillsmart" <?php if($this->display_mod_skillsmart == 1) echo 'checked'; ?>><label for="display_mod_skillsmart"><?php tp('Enable');?></label>
-													</div>
-													<div style="clear : both;"></div>
-												</div>
-							<div>
-								<div class="fieldInput"><div class="fieldLabel"><?php tp('Employee Tracking');?></div>
-									<input type="checkbox" name="check_mod_employee" id="check_mod_employee" <?php if($this->check_mod_employee == 1) echo 'checked'; ?>><label for="check_mod_employee"><?php tp('Enable');?></label>
-								</div>
-								<div style="clear : both;"></div>
-							</div>
-							<!-- TA:17: 09/11/2014 -->
-							<div>
-								<div class="fieldInput"><div class="fieldLabel"><?php tp('Reports');?></div>
-									<input type="checkbox" name="check_country_reports" id="check_country_reports" <?php if($this->check_country_reports == 1) echo 'checked'; ?>><label for="check_country_reports"><?php tp('Enable');?></label>
-								</div>
-								<div style="clear : both;"></div>
-							</div>
-							<!-- TA:50:1 -->
-							<div>
-								<div class="fieldInput"><div class="fieldLabel"><?php tp('Use offline app');?></div>
-									<input type="checkbox" name="display_use_offline_app" id="display_use_offline_app" <?php if($this->display_use_offline_app == 1) echo 'checked'; ?>><label for="display_use_offline_app"><?php tp('Enable');?></label>
-								</div>
-								<div style="clear : both;"></div>
-							</div>
-							
-											</fieldset>
+                <div>
+                    <div class="fieldInput">
+                        <div class="fieldLabel"><?php tp('Evaluation'); ?></div>
+                        <input type="checkbox" name="check_mod_eval" <?php if ($this->check_mod_eval) echo 'checked'; ?>
+                               id="check_mod_eval"><label for="check_mod_eval"><?php tp('Enable'); ?></label>
+                    </div>
+                    <div style="clear : both;"></div>
+                </div>
+                <div>
+                    <div class="fieldInput">
+                        <div class="fieldLabel"><?php tp('Approvals'); ?></div>
+                        <input type="checkbox"
+                               name="check_mod_approvals" <?php if ($this->check_mod_approvals) echo 'checked'; ?>
+                               id="check_mod_approvals"><label for="check_mod_approvals"><?php tp('Enable'); ?></label>
+                    </div>
+                    <div style="clear : both;"></div>
+                </div>
+                <div>
+                    <div class="fieldInput">
+                        <div class="fieldLabel"><?php tp('Change History'); ?></div>
+                        <input type="checkbox"
+                               name="check_mod_historical" <?php if ($this->check_mod_historical) echo 'checked'; ?>
+                               id="check_mod_historical"><label
+                            for="check_mod_historical"><?php tp('Enable'); ?></label>
+                    </div>
+                    <div style="clear : both;"></div>
+                </div>
+                <div>
+                    <div class="fieldInput">
+                        <div class="fieldLabel"><?php tp('Unknown Participants'); ?></div>
+                        <input type="checkbox"
+                               name="check_mod_unknown" <?php if ($this->check_mod_unknown) echo 'checked'; ?>
+                               id="check_mod_unknown"><label for="check_mod_unknown"><?php tp('Enable'); ?></label>
+                    </div>
+                    <div style="clear : both;"></div>
+                </div>
+                <div>
+                    <div class="fieldInput">
+                        <div class="fieldLabel"><?php tp('Attendance Tracking'); ?></div>
+                        <input type="checkbox"
+                               name="check_mod_attendance" <?php if ($this->check_mod_attendance) echo 'checked'; ?>
+                               id="check_mod_attendance"><label
+                            for="check_mod_attendance"><?php tp('Enable'); ?></label>
+                    </div>
+                    <div style="clear : both;"></div>
+                </div>
+                <div>
+                    <div class="fieldInput">
+                        <div class="fieldLabel"><?php tp('Training Organizer Partners'); ?></div>
+                        <input type="checkbox" name="display_training_partner"
+                               id="display_training_partner" <?php if ($this->display_training_partner == 1) echo 'checked'; ?>><label
+                            for="display_training_partner"><?php tp('Enable'); ?></label>
+                    </div>
+                    <div style="clear : both;"></div>
+                </div>
+                <div>
+                    <div class="fieldInput">
+                        <div class="fieldLabel"><?php tp('SkillSmart'); ?></div>
+                        <input type="checkbox" name="display_mod_skillsmart"
+                               id="display_mod_skillsmart" <?php if ($this->display_mod_skillsmart == 1) echo 'checked'; ?>><label
+                            for="display_mod_skillsmart"><?php tp('Enable'); ?></label>
+                    </div>
+                    <div style="clear : both;"></div>
+                </div>
+                <div>
+                    <div class="fieldInput">
+                        <div class="fieldLabel"><?php tp('Employee Tracking'); ?></div>
+                        <input type="checkbox" name="check_mod_employee"
+                               id="check_mod_employee" <?php if ($this->check_mod_employee == 1) echo 'checked'; ?>><label
+                            for="check_mod_employee"><?php tp('Enable'); ?></label>
+                    </div>
+                    <div style="clear : both;"></div>
+                </div>
+                <!-- TA:17: 09/11/2014 -->
+                <div>
+                    <div class="fieldInput">
+                        <div class="fieldLabel"><?php tp('Reports'); ?></div>
+                        <input type="checkbox" name="check_country_reports"
+                               id="check_country_reports" <?php if ($this->check_country_reports == 1) echo 'checked'; ?>><label
+                            for="check_country_reports"><?php tp('Enable'); ?></label>
+                    </div>
+                    <div style="clear : both;"></div>
+                </div>
+                <!-- TA:50:1 -->
+                <div>
+                    <div class="fieldInput">
+                        <div class="fieldLabel"><?php tp('Use offline app'); ?></div>
+                        <input type="checkbox" name="display_use_offline_app"
+                               id="display_use_offline_app" <?php if ($this->display_use_offline_app == 1) echo 'checked'; ?>><label
+                            for="display_use_offline_app"><?php tp('Enable'); ?></label>
+                    </div>
+                    <div style="clear : both;"></div>
+                </div>
 
-											<fieldset class="settings"><legend><?php tp('Languages');?></legend><br/>
+            </fieldset>
 
-												<?php foreach($this->languages as $key => $label) { ?>
-												<div class="fieldLabel"><?php tp($label); ?></div>
-												<div class="fieldInput">
-													<input type="checkbox" name="locales[]" value="<?php echo $key; ?>" id="<?php echo $key;?>"<?php if(in_array($key, $this->locale_enabled) || $key == $this->locale) print 'checked'; ?>><label for="<?php echo $key;?>"><?php tp('Enable');?></label>
-														&nbsp;
-														<input type="radio" name="locale_default" value="<?php echo $key; ?>" id="d<?php echo $key;?>" <?php if($this->locale == $key) print 'checked'; ?>><label for="d<?php echo $key;?>"><?php tp('Default');?></label>
-														</div>
+            <fieldset class="settings">
+                <legend><?php tp('Languages'); ?></legend>
+                <br/>
 
-														<?php } ?>
+                <?php foreach ($this->languages as $key => $label) { ?>
+                    <div class="fieldLabel"><?php tp($label); ?></div>
+                    <div class="fieldInput">
+                        <input type="checkbox" name="locales[]" value="<?php echo $key; ?>"
+                               id="<?php echo $key; ?>"<?php if (in_array($key, $this->locale_enabled) || $key == $this->locale) print 'checked'; ?>><label
+                            for="<?php echo $key; ?>"><?php tp('Enable'); ?></label>
+                        &nbsp;
+                        <input type="radio" name="locale_default" value="<?php echo $key; ?>"
+                               id="d<?php echo $key; ?>" <?php if ($this->locale == $key) print 'checked'; ?>><label
+                            for="d<?php echo $key; ?>"><?php tp('Default'); ?></label>
+                    </div>
 
-													</fieldset>
-													<br/>
+                <?php } ?>
+
+            </fieldset>
+            <br/>
 
 
-													<input type="hidden" name="redirect" value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>">
-													<input type="submit" value="<?php tp('Save & Continue');?>" class="submitArrow">
-													<input type="submit" value="<?php tp('Save');?>" name="saveonly" class="submitNoArrow" style="margin-right:1em;">
-												</form>
+            <input type="hidden" name="redirect"
+                   value="<?php echo Settings::$COUNTRY_BASE_URL . '/admin/' . $nextUri; ?>">
+            <input type="submit" value="<?php tp('Save & Continue'); ?>" class="submitArrow">
+            <input type="submit" value="<?php tp('Save'); ?>" name="saveonly" class="submitNoArrow"
+                   style="margin-right:1em;">
+            </form>
 
 
-											</div>
+        </div>
 
-											<div class="clear"></div>
+        <div class="clear"></div>
 
-										</div>
-										<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
-									</div>
+    </div>
+    <div id="footer"><?php require_once('views/scripts/footer.phtml'); ?></div>
+</div>
 
-								</body>
-							</html>
+</body>
+</html>
