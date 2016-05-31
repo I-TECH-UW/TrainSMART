@@ -243,7 +243,8 @@
             <div class="pad50 clear"></div>
 
             <div class="mainformholder" style="">
-                <form action="<?php echo $this->escape($this->action); ?>" method="post" name="second" id="second">
+            <!-- TA:92 add validation to select Type -->
+                <form action="<?php echo $this->escape($this->action); ?>" method="post" name="second" id="second" onsubmit="if($('#type_id option:selected').val() == ''){alert('Please select Type');return false;}">
                     <label><?php echo t('Title'); ?></label>
                     <select name="title">
                         <option value="0"><?php echo t('Select...'); ?></option>
@@ -358,11 +359,13 @@
                     <label style="display : none;"><?php echo t('Postal code / ZIP'); ?></label>
                     <input type="text" name="zip" value="" style="display : none;">
 
-                    <label><?php echo t('Type'); ?></label>
+                    <!-- TA:92 -->
+                    <label><span class="required">*</span><?php echo t('Type'); ?></label>
                     <select name="type" id="type_id">
                         <?php if ($this->setting['site_style'] == 'skillsmart') { ?>
                             <option value="tutor"><?php echo t('Tutor'); ?></option>
                         <?php } else { ?>
+                            <option value=""><?php echo t('Select'); ?></option>
                             <option value="student"><?php echo t('Student'); ?></option>
                             <option value="tutor"><?php echo t('Tutor'); ?></option>
                             <option value="key"><?php echo t('Personal'); ?></option>
