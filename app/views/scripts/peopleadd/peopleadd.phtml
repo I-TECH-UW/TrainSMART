@@ -5,6 +5,8 @@
     <?php
     require_once('views/helpers/Location.php');
     require_once('views/helpers/ScriptContainer.php');
+    require_once('views/helpers/DropDown.php'); 
+    
     print ScriptContainer::$instance->renderCSSHead();
     print ScriptContainer::$instance->renderJSHead();
     ?>
@@ -67,12 +69,168 @@
                 document.forms['second'].action = "../studentedit/studentedit/";
             }
         }
+
+        //TA:87 people duplicate check
+        <?php //if($this->mode == 'add') : ?>
+        var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
+            var tredirect = '';
+            <?php if($this->trainingredirect) { ?>
+            tredirect = "/trainingredirect/<?php echo $this->trainingredirect; ?>";
+            <?php } ?>
+            <?php if($this->maketrainer) { ?>
+            tredirect = tredirect + "/maketrainer/1";
+            <?php } ?>
+            if ( (sData == null) || (sData.length == 0) )
+                sData = '&nbsp;&nbsp;&nbsp;';
+            elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/person/edit/id/" + oRecord.getData("person_id") + tredirect + "' >" + sData + "</a>";
+        }
+        
+        //{key:"input", width:0, resizeable:true , label:"", hidden:"true", width:"0", className:"hidden"},
+        var dupeColDefs =
+            [{key:"input", width:15, resizeable:true , label:""}, //TA:57 10/08/2015 
+             {key:"person_id", label: "<?php tp('ID')?>", sortable:false, resizable:false, formatter: formatViewUrl},
+                {key:"first_name", width:60, sortable:true, resizeable:true , label:"<?php tp("First Name"); ?>"},
+                <?php if ( !$this->setting['display_middle_name_last'] ) { ?>
+                {key:"middle_name", width:66, sortable:true, resizeable:true , label:"<?php echo (@$this->translation['Middle Name']); ?>"},
+                <?php } ?>
+                {key:"last_name", width:54, sortable:true, resizeable:true , label:"<?php echo (@$this->translation['Last Name']); ?>"},
+                {key:"birthdate", width:78, sortable:true, resizeable:true , label:"<?php tp("Date of Birth"); ?>"},
+                {key:"gender", width:40, sortable:true, resizeable:true , label:"<?php tp("Gender"); ?>"},
+                {key:"facility_name", width:120, sortable:true, resizeable:true , label:"<?php tp("Facility");?>"},
+                {key:"qualification_phrase", width:100, sortable:true, resizeable:true, label:"<?php tp("Qualification"); ?>"},
+                {key:"national_id", width:60, sortable:true, resizeable:true , label:"<?php tp("National ID"); ?>"}
+                <?php if ( $this->setting['display_people_file_num'] ) { ?>
+                ,{key:"file_number", width:60, sortable:true, resizeable:true, label:"<?php tp("File Number"); ?>"}
+                <?php } ?>
+            ];
+
+        var dupeDataSource = { } // filled via ajaxDupeSuccess callback
+
+        var ajaxDupeSuccess = function(o) {
+            if(o.responseText !== undefined){
+                if(!o.responseText) {
+                    YAHOO.util.Dom.get('dupecheck').innerHTML = "<em><?php tp('No duplicates found.'); ?></em>";
+                } else {
+                    dupeDataSource = eval(o.responseText);
+                    makeDynamicDataTable("dupecheck", "<?php tp("If the person already exists, please select their name below."); ?>", dupeDataSource, dupeColDefs);
+                    YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('submitAddContinue'), "hidden");
+                    do_dupe_highlight();
+                }
+            }
+        }
+
+        function do_dupe_highlight(){
+            var checkval1 = $('#file_number').val() || -1;
+            var checkval2 = $('#national_id').val() || -1;
+            var style = {'border': '1px dotted pink','background': '#CAD'};
+            $('#dupecheck div.yui-dt-bd table td div').each(function(){
+                var val = $(this).html();
+                if (val == checkval1) $(this).parents('tr:first').css(style);
+                if (val == checkval2) $(this).parents('tr:first').css(style);
+            });
+        }
+
+        var ajaxDupeFailure = function(o){
+            if(o.responseText !== undefined){
+                YAHOO.util.Dom.get('dupecheck').innerHTML = o.status + "<br />" + o.statusText;
+            }
+        }
+
+        var callback = {
+            success:ajaxDupeSuccess,
+            failure: ajaxDupeFailure
+        };
+
+        var isTimeout = false;
+
+        function buildDupeTable(e) {
+            if(!isTimeout) {
+                var last_name   = $('#last_name').val()   || '';
+                var first_name  = $('#first_name').val()  || '';
+                var file_number = $('#file_number').val() || '';
+                var national_id = $('#national_id').val() || '';
+                var qualification = $('#primary_qualification_option_id').val() || '';
+
+                if(last_name || first_name || national_id || file_number) {
+                    YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('duplicateCheckLabel'), "hidden");
+
+                    var sUrl = "<?php echo $this->base_url;?>/person/dupe-list/outputType/json?";
+                    sUrl += "last_name=" + last_name + "&";
+                    sUrl += "first_name=" + first_name + "&";
+                    sUrl += "file_number=" + file_number + "&";
+                    sUrl += "national_id=" + national_id + "&";
+                    sUrl += "primary_qualification_option_id=" + qualification + "&";
+                    var request = YAHOO.util.Connect.asyncRequest('GET', sUrl, callback);
+
+                    isTimeout = true;
+                    setTimeout(function() {
+                        isTimeout = false;
+                        if(e) {
+                            buildDupeTable(false);
+                        }
+                    }, 300);
+                } else {
+                    YAHOO.util.Dom.get('dupecheck').innerHTML = "";
+                }
+            }
+        }
+
+        function continueClick() {
+
+            // find checked radio
+            var elChecked = YAHOO.util.Dom.getElementsBy( function(el) {
+                return el.checked;
+            }, 'input',YAHOO.util.Dom.get('dupecheck'));
+
+            if(elChecked && elChecked.length) {
+                elChecked.form.submit();
+            } else {
+                last_name = YAHOO.util.Dom.get('last_name').value;
+                first_name = YAHOO.util.Dom.get('first_name').value;
+
+                if(!last_name || !first_name) {
+                    alert("<?php tp("Please enter a first and last name."); ?>");
+                } else {
+                    YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('personAddHide'), "hidden");
+                    YAHOO.util.Dom.addClass(YAHOO.util.Dom.get('submitAddContinue'), "hidden");
+                    $('#dupecheck,#duplicateCheckLabel').hide();
+                }
+            }
+
+            return false;
+        }
+
+        YAHOO.util.Event.onDOMReady(function() {
+            YAHOO.util.Event.addListener(YAHOO.util.Dom.get('last_name'), "keyup", buildDupeTable);
+            YAHOO.util.Event.addListener(YAHOO.util.Dom.get('first_name'), "keyup", buildDupeTable);
+            YAHOO.util.Event.addListener(YAHOO.util.Dom.get('primary_qualification_option_id'), "change", buildDupeTable);
+            YAHOO.util.Event.addListener(YAHOO.util.Dom.get('national_id'), "keyup", buildDupeTable);
+            YAHOO.util.Event.addListener(YAHOO.util.Dom.get('file_number'), "keyup", buildDupeTable);
+        });
+
+        <?php //endif; //add only dupe check ?>
+
+        YAHOO.util.Event.onDOMReady(function() {
+            <?php if ( $this->mode == 'edit' ) { ?>
+            addAjaxSubmit('submitPerson','personForm','<?php echo $this->base_url;?>/person/edit/id/<?php echo $this->person['id'];?>/outputType/json');
+            <?php } else { ?>
+            addAjaxSubmit('submitPerson','personForm','<?php echo $this->base_url;?>/person/add/outputType/json');
+            <?php } ?>
+            <?php if ( $this->mode == 'edit' ) { ?>
+            addAjaxSubmit('submitPersonTop','personForm','<?php echo $this->base_url;?>/person/edit/id/<?php echo $this->person['id'];?>/outputType/json');
+            <?php } else { ?>
+            //addAjaxSubmit('submitPersonTop','personForm','<?php echo $this->base_url;?>/person/add/outputType/json');
+            <?php } ?>
+            <?php if ( $this->mode == 'edit' && $this->maketrainer) { ?>
+            displayStatus("<?php echo t('Please add or verify the').' '.t('trainer').' '.t('information below.'); ?>");
+            <?php } ?>
+        });
     </script>
 
     <!--<input type="radio' name="student" value="student" onclick=click(this.value);>
     <input type="radio' name="tutor" value="tutor" onclick=click(this.value);>-->
 </head>
-<body>
+<body class="yui-skin-sam">
 <div id="pageHolder">
     <div id="header"><?php require_once('views/scripts/preheader.phtml'); ?></div>
     <div id="content">
@@ -85,7 +243,8 @@
             <div class="pad50 clear"></div>
 
             <div class="mainformholder" style="">
-                <form action="<?php echo $this->escape($this->action); ?>" method="post" name="second" id="second">
+            <!-- TA:92 add validation to select Type -->
+                <form action="<?php echo $this->escape($this->action); ?>" method="post" name="second" id="second" onsubmit="if($('#type_id option:selected').val() == ''){alert('Please select Type');return false;}">
                     <label><?php echo t('Title'); ?></label>
                     <select name="title">
                         <option value="0"><?php echo t('Select...'); ?></option>
@@ -100,13 +259,13 @@
                     </select>
 
                     <label><span class="required">*</span> <?php echo t('First name'); ?></label>
-                    <input type="text" name="firstname" value="" class="required">
+                    <input type="text" name="first_name" id="first_name" value="" class="required">
 
                     <label><?php echo t('Middle name'); ?></label>
                     <input type="text" name="middlename" value="" class="">
 
                     <label><span class="required">*</span> <?php echo t('Last name'); ?></label>
-                    <input type="text" name="lastname" value="" class="required">
+                    <input type="text" name="last_name" id="last_name" value="" class="required">
 
                     <label><?php echo t('Gender'); ?></label>
                     <select name="gender" id="gender">
@@ -200,16 +359,27 @@
                     <label style="display : none;"><?php echo t('Postal code / ZIP'); ?></label>
                     <input type="text" name="zip" value="" style="display : none;">
 
-                    <label><?php echo t('Type'); ?></label>
+                    <!-- TA:92 -->
+                    <label><span class="required">*</span><?php echo t('Type'); ?></label>
                     <select name="type" id="type_id">
                         <?php if ($this->setting['site_style'] == 'skillsmart') { ?>
                             <option value="tutor"><?php echo t('Tutor'); ?></option>
                         <?php } else { ?>
+                            <option value=""><?php echo t('Select'); ?></option>
                             <option value="student"><?php echo t('Student'); ?></option>
                             <option value="tutor"><?php echo t('Tutor'); ?></option>
                             <option value="key"><?php echo t('Personal'); ?></option>
                         <?php } ?>
                     </select>
+                    
+                    <!-- TA:87 -->
+                     <?php //if($this->mode == 'add') { ?>
+
+            <div class="clear"></div>
+            <div class="fieldIndentNoMargin hidden" id="duplicateCheckLabel"><?php tp('Duplicate Check');?></div>
+            <div id="dupecheck"></div>
+            
+            <?php //endif; ?>
 
                     <div class="rightdiv" style="padding-top:50px;margin-left:25px;;">
                         <input type="submit" border="0" class="tsbutton green large" onclick="clickform();"

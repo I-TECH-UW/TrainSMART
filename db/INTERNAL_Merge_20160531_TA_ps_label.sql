@@ -1,0 +1,1 @@
+insert into translation (key_phrase, phrase) values ('ps inst sponsor', 'Institution Sponsor');
