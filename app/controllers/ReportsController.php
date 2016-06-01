@@ -8761,7 +8761,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				array('issuer_name', 'issuer_email', 'issuer_phone_number', 'issuer_logo_file_id')
 			);
 			
-			$query->joinLeft(array('lscl' => 'link_student_classes'), 'lscl.studentid = s.id',
+			$query->joinInner(array('lscl' => 'link_student_classes'), 'lscl.studentid = s.id',
 				array("grades" => "(CASE WHEN AVG(grade) >= 60.0 then '" . t('Pass') . "' else '" . t('Fail') . "' end)"))
 				->joinLeft(array('classes'), 'classes.id = lscl.classid', array('credits' => 'SUM(maxcredits)'))
 				->joinLeft(array('cm' => 'class_modules'), 'classes.class_modules_id = cm.id',
@@ -8783,10 +8783,11 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					'i.fax',
 					'saqa_id' => 'p.custom_field2',
 					'nqf_max' => new Zend_Db_Expr($db->quote('3')),
+					's.id',
 				)
 			);
 
-			$query->group('cm.id');
+			$query->group(array('cm.id', 's.id'));
 			$headers[] = "AQP";
 			$headers[] = "AQP E-mail";
 			$headers[] = "AQP Phone";
@@ -8810,6 +8811,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			$headers[] = "Institution Fax Number";
 			$headers[] = "SAQA ID";
 			$headers[] = "NQF Max";
+			$headers[] = "Student ID";
 
 			$query->order(array('p.last_name', 'p.first_name', 'p.national_id', 'lc.coursetype', 'cm.external_id'));
 
