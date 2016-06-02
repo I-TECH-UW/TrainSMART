@@ -283,24 +283,31 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 // 			            print "<br><br>========================= " . $opt . " =============================<br>";
 // 			             print_r($rowset);
 			        }else if($opt === 'person'){
-			            $rowset = $optTable->fetchAll(' is_deleted=0 AND (id in (
-select personid from tutor where personid in 
-(select id_tutor from link_tutor_institution where id_institution in 
-(' . $insids . ')))
+			            
+// 			            $rowset = $optTable->fetchAll(' is_deleted=0 AND (id in (
+// select personid from tutor where id in 
+// (select id_tutor from link_tutor_institution where id_institution in 
+// (' . $insids . ')))
+// or 
+// id in (
+// select personid from student where id in(
+// select id_student from link_student_cohort where id_cohort in (
+// select id from cohort where institutionid in 
+// (' . $insids . '))))
+// or (
+// id in (
+// select personid from tutor where personid not in 
+// (select id_tutor from link_tutor_institution))
+// or
+// id in (
+// select personid from student where id not in 
+// (select id_student from link_student_cohort))))');
+
+			            $rowset = $optTable->fetchAll(
+			                ' is_deleted=0 and (
+id in (select personid from tutor where institutionid in (' . $insids . ')) 
 or 
-id in (
-select personid from student where id in(
-select id_student from link_student_cohort where id_cohort in (
-select id from cohort where institutionid in 
-(' . $insids . '))))
-or
-id in (
-select personid from tutor where personid not in 
-(select id_tutor from link_tutor_institution))
-or
-id in (
-select personid from student where id not in 
-(select id_student from link_student_cohort)))');
+id in (select personid from student where institutionid in (' . $insids . ')))');
 //  			            print "<br><br>========================= " . $opt . " =============================<br>";
 //  			             print_r($rowset);
 			        }
