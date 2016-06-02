@@ -123,7 +123,8 @@ class Person extends ITechTable
 			;
 		}
         if (array_search('q.qualification_phrase', $fieldsSelect))
-            $select->setIntegrityCheck(false)->join(array('q' => 'person_qualification_option'), 'p.primary_qualification_option_id = q.id');
+            //TA:87 use left join to retrieve duplicate persons list, otherwise it works for 'demo', but does not work for 'cham'
+            $select->setIntegrityCheck(false)->joinLeft(array('q' => 'person_qualification_option'), 'p.primary_qualification_option_id = q.id');
 
 		$select->where(' p.is_deleted = 0');
 
@@ -154,7 +155,6 @@ class Person extends ITechTable
 		$select->limit($limit,0);
 
 		$rows = $topicTable->fetchAll($select);
-
 		return $rows;
 	}
 
