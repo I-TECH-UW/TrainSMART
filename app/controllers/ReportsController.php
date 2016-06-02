@@ -7799,7 +7799,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			}
 
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
-			print $query; //TA:100
 			$rowArray = $db->fetchAll ($query);
 			$this->viewAssignEscaped("headers", $headers);
 			$this->view->assign('output',$rowArray);
