@@ -7564,18 +7564,24 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					);
 					$institution_set = true;
 				}
-
+//TA:94 fixing bugs because it displays all cadres of institution, but should display only one
+// 				$join[] = array(
+// 					"table" => "link_cadre_institution",
+// 					"abbreviation" => "cai",
+// 					"compare" => "cai.id_institution = i.id",
+// 					"type" => "left"
+// 				);
+// 				$join[] = array(
+// 					"table" => "cadres",
+// 					"abbreviation" => "cad",
+// 					"compare" => "cad.id = cai.id_cadre",
+// 					"type" => "left"
+// 				);
 				$join[] = array(
-					"table" => "link_cadre_institution",
-					"abbreviation" => "cai",
-					"compare" => "cai.id_institution = i.id",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "cadres",
-					"abbreviation" => "cad",
-					"compare" => "cad.id = cai.id_cadre",
-					"type" => "left"
+				    "table" => "cadres",
+				    "abbreviation" => "cad",
+				    "compare" => "cad.id = coh.cadreid",
+				    "type" => "left"
 				);
 
 				if ($this->getSanParam('cadre')){
@@ -7793,6 +7799,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			}
 
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+			print $query; //TA:100
 			$rowArray = $db->fetchAll ($query);
 			$this->viewAssignEscaped("headers", $headers);
 			$this->view->assign('output',$rowArray);
