@@ -361,7 +361,7 @@
 
                     <!-- TA:92 -->
                     <label><span class="required">*</span><?php echo t('Type'); ?></label>
-                    <select name="type" id="type_id">
+                    <select name="type" id="type_id" class="required">
                         <?php if ($this->setting['site_style'] == 'skillsmart') { ?>
                             <option value="tutor"><?php echo t('Tutor'); ?></option>
                         <?php } else { ?>
