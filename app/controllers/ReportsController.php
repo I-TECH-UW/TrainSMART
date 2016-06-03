@@ -8163,17 +8163,24 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					}
 				}
 				if (!$found){
+				    //TA:95 fix bug with institution for tutor (link_tutor_institution does not have info about all tutors)
+// 					$join[] = array(
+// 						"table" => "link_tutor_institution",
+// 						"abbreviation" => "lti",
+// 						"compare" => "lti.id_tutor = tut.id",
+// 						"type" => "left"
+// 					);
+// 					$join[] = array(
+// 						"table" => "institution",
+// 						"abbreviation" => "i",
+// 						"compare" => "i.id = lti.id_institution",
+// 						"type" => "left"
+// 					);
 					$join[] = array(
-						"table" => "link_tutor_institution",
-						"abbreviation" => "lti",
-						"compare" => "lti.id_tutor = tut.id",
-						"type" => "left"
-					);
-					$join[] = array(
-						"table" => "institution",
-						"abbreviation" => "i",
-						"compare" => "i.id = lti.id_institution",
-						"type" => "left"
+					    "table" => "institution",
+					    "abbreviation" => "i",
+					    "compare" => "i.id = tut.institutionid",
+					    "type" => "left"
 					);
 				}
 
@@ -8448,6 +8455,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			//echo $query; exit;
 
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+			//print $query;
 			$rowArray = $db->fetchAll ($query);
 			$this->viewAssignEscaped("headers", $headers);
 			$this->view->assign('output',$rowArray);
