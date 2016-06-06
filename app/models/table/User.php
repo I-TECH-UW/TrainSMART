@@ -125,4 +125,12 @@ class User extends ITechTable
 		return $rtn;
 
  	}
+ 	
+ 	//TA:97
+ 	public function getUserFullName($user_id) {
+ 	    $select = $this->select()
+ 	    ->from($this->_name, array('first_name','last_name'))
+ 	    ->where("id = $user_id");
+ 	    return $this->fetchRow($select);
+ 	}
 }

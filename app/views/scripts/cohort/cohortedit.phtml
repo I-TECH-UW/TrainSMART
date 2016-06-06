@@ -356,7 +356,11 @@
 					</div>
 					<div class="pad50 clear"></div>
 					<form  id="cohortedit" method="post" class="formvalidate">
-						<input type="hidden" name="id" value="<?php echo $this->escape($this->id);?>">
+					
+					<!-- TA:97 -->
+	<table style="width:100%">
+				<tr><td>
+				<input type="hidden" name="id" value="<?php echo $this->escape($this->id);?>">
 						<div class="mainformholder">
 							<p style=""><?php echo t('Cohort details'); ?></p><br>
 
@@ -422,6 +426,21 @@
 								<input type="submit" name="updatecohort" value="<?php echo t('Update'); ?> &raquo;" class="tsbutton green large">
 							</div>
 						</div>
+				</td>
+				<td style="width:20%" valign='top' align='left'>
+				<div class="historyDiv">
+						<b><?php echo t('ID'); ?></b>&nbsp;<?php echo $this->escape($this->id);?><br>
+						<b><?php echo t('Date created'); ?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>						
+						<b><?php echo t('Created by'); ?></b>&nbsp;<?php echo ($this->creator == "N/A" ? t("N/A") : "{$this->creator->first_name} {$this->creator->last_name}") ?><br>
+						<b><?php echo t('Date updated'); ?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
+						<b><?php echo t('Updated by'); ?></b>&nbsp;<?php echo ($this->updater == "N/A" ? t("N/A") : "{$this->updater->first_name} {$this->updater->last_name}") ?><br>
+						
+						</div>
+				</td>
+				</td></tr>
+				</table>
+				
+						
 					</form>
 
 					<div class="clear50"></div>

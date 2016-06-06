@@ -190,6 +190,20 @@ class InstitutionController extends ITechController
 		} else {
 		    $this->view->assign('tutorratio',t("N/A"));
 		}
+		
+		//TA:97
+		$dc = strtotime($details['timestamp_created']);
+		$dateCreated = $dc != '' && $dc > 0 ? date("d-m-Y",$dc) : t("N/A");
+		$this->view->assign('dateCreated', $dateCreated);
+		$dm = strtotime($details['timestamp_updated']);
+		$dateModified = $dm != '' && $dm >0 ? date("d-m-Y",$dm): t("N/A");
+		$this->view->assign('dateModified', $dateModified);
+		require_once('models/table/User.php');
+		$userObj = new User ();
+		$created_by = $details['created_by'] ? $userObj->getUserFullName($details['created_by']) : t("N/A");
+		$this->viewAssignEscaped('creator', $created_by);
+		$update_by = $details['modified_by'] ? $userObj->getUserFullName($details['modified_by']) : t("N/A");
+		$this->viewAssignEscaped('updater', $update_by);
 	}
 
 	public function institutionviewAction(){
@@ -302,6 +316,20 @@ class InstitutionController extends ITechController
 	} else {
 	    $this->view->assign('tutorratio',t("N/A"));
 	}
+	
+	//TA:97
+	$dc = strtotime($details['timestamp_created']);
+	$dateCreated = $dc != '' && $dc > 0 ? date("d-m-Y",$dc) : t("N/A");
+	$this->view->assign('dateCreated', $dateCreated);
+	$dm = strtotime($details['timestamp_updated']);
+	$dateModified = $dm != '' && $dm >0 ? date("d-m-Y",$dm): t("N/A");
+	$this->view->assign('dateModified', $dateModified);
+	require_once('models/table/User.php');
+	$userObj = new User ();
+	$created_by = $details['created_by'] ? $userObj->getUserFullName($details['created_by']) : t("N/A");
+	$this->viewAssignEscaped('creator', $created_by);
+	$update_by = $details['modified_by'] ? $userObj->getUserFullName($details['modified_by']) : t("N/A");
+	$this->viewAssignEscaped('updater', $update_by);
 	
 	}
 	
