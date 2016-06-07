@@ -269,7 +269,7 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 // 			    }
 // 			}
 			
-			if($opt === 'institution' || $opt === 'cohort' || $opt === 'person'){
+			if($opt === 'institution' || $opt === 'cohort' || $opt === 'person' || $opt === 'practicum'){
 			    $institutions = $helper->getUserInstitutions($helper->myid(), false);
 			    if ((is_array($institutions)) && (count($institutions) > 0)) {
 			        $insids = implode(",", $institutions);
@@ -310,6 +310,10 @@ or
 id in (select personid from student where institutionid in (' . $insids . ')))');
 //  			            print "<br><br>========================= " . $opt . " =============================<br>";
 //  			             print_r($rowset);
+			        }else if($opt === 'practicum'){
+			            $rowset = $optTable->fetchAll(' cohortid in (select id from cohort where institutionid in (' . $insids . '))');
+// 			            print "<br><br>========================= " . $opt . " =============================<br>";
+// 			             print_r($rowset);
 			        }
 			    }else{
 			        $optTable->select('*');
