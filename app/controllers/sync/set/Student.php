@@ -39,7 +39,7 @@ class SyncSetStudent extends SyncSetSimple
 			);
 	}
 	
-	protected function getTable($isLeft = true)
+	public function getTable($isLeft = true)
 	{
 		if($isLeft) {
 			return new Student($this->sourceDbParams);

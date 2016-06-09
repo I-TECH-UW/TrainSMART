@@ -2,6 +2,7 @@
 
 require_once ('app/controllers/sync/set/Simple.php');
 require_once ('app/models/table/Person.php');
+require_once ('app/models/table/Student.php');
 
 class SyncSetPerson extends SyncSetSimple
 {
@@ -70,7 +71,7 @@ class SyncSetPerson extends SyncSetSimple
 		return new Person();
 	}
 	
-	public function fetchFieldMatch($ld)
+	public function fetchFieldMatchOld($ld)
 	{
 	   //TA:50  print " fetchFieldMatch: " . @$ld->id . "; ";//TA:50
 		//get uuid of facility
@@ -86,12 +87,78 @@ class SyncSetPerson extends SyncSetSimple
 		  $where .= " AND birthdate = '". @$ld->birthdate . "' ";
 		if(@$ld->facility_id)
 	       $where .= " AND facility_id = ". @$ld->facility_id;
+        
  		$row = $this->getRightTable()->fetchRow($where);
 		if($row) {
 			return $row;
 		}
 		
-		return null;
+ 		return null;
+	}
+	
+	/*
+	 * Match by five fields first_name, last_name, middle_name, datebirth, institutionid. If any of three are the same then return.
+	 */
+	public function fetchFieldMatch($ld, $inst_id){
+	    
+	    $row = null;
+	    
+	    $fn = " (trim(lcase(CONCAT(IFNULL(first_name,'')))))='".trim(strtolower((@$ld->first_name))) . "' ";
+	    $ln = " (trim(lcase(CONCAT(IFNULL(last_name,'')))))='".trim(strtolower((@$ld->last_name))) . "' ";
+	    $mn = " (trim(lcase(CONCAT(IFNULL(middle_name,'')))))='".trim(strtolower((@$ld->middle_name))) . "' ";
+	    $dob = " birthdate = '". @$ld->birthdate . "' ";
+	    $inst = " (
+id in (select personid from student where institutionid=" . $inst_id . ")
+or
+id in (select personid from tutor where institutionid=" . $inst_id . ")) " ;
+	    
+	    if($inst_id){
+	        $where = $fn . " and " . $ln . " and " . $inst;
+	        $row = $this->getRightTable()->fetchRow($where);
+	        if(!$row) {
+	            $where = $fn . " and " . $mn . " and " . $inst;
+	            $row = $this->getRightTable()->fetchRow($where);
+	        }
+	        if(!$row) {
+	            $where = $ln . " and " . $mn . " and " . $inst;
+	            $row = $this->getRightTable()->fetchRow($where);
+	        }
+	        if(!$row) {
+	            $where = $fn . " and " . $dob . " and " . $inst;
+	            $row = $this->getRightTable()->fetchRow($where);
+	        }
+	        if(!$row) {
+	            $where = $ln . " and " . $dob . " and " . $inst;
+	            $row = $this->getRightTable()->fetchRow($where);
+	        }
+	        if(!$row) {
+	            $where = $mn . " and " . $dob . " and " . $inst;
+	            $row = $this->getRightTable()->fetchRow($where);
+	        }
+	    }else{
+	        if(!$row) {
+	           $where = $fn . " and " . $ln . " and " . $mn;
+	           $row = $this->getRightTable()->fetchRow($where);
+	        }
+	        if(!$row) {
+	            $where = $fn . " and " . $ln . " and " . $dob;
+	            $row = $this->getRightTable()->fetchRow($where);
+	        }
+	        if(!$row) {
+	            $where = $fn . " and " . $mn . " and " . $dob;
+	            $row = $this->getRightTable()->fetchRow($where);
+	        }
+	        if(!$row) {
+	            $where = $ln . " and " . $mn . " and " . $dob;
+	            $row = $this->getRightTable()->fetchRow($where);
+	        }
+	    }
+	    
+	    if($row) {
+	        return $row;
+	    }
+	
+	    return null;
 	}
 	
 	public function isDirty($ld,$rd) {
