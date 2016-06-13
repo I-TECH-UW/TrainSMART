@@ -279,9 +279,10 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 // 			             print "<br><br>========================= " . $opt . " =============================<br>";
 // 			             print_r($rowset);
 			        }else if($opt === 'cohort'){
-			            $rowset = $optTable->fetchAll('institutionid IN (' . $insids . ')');
-// 			            print "<br><br>========================= " . $opt . " =============================<br>";
-// 			             print_r($rowset);
+			            $rowset = $optTable->fetchAll('institutionid IN (' . $insids . ') and graddate>now()');
+			           // $rowset = $optTable->fetchAll('institutionid IN (' . $insids . ')');
+ 			           // print "<br><br>========================= " . $opt . "+" . $insids . " =============================<br>";
+ 			           //  print_r($rowset);
 			        }else if($opt === 'person'){
 			            
 // 			            $rowset = $optTable->fetchAll(' is_deleted=0 AND (id in (
