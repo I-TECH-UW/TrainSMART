@@ -304,11 +304,25 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 // select personid from student where id not in 
 // (select id_student from link_student_cohort))))');
 
+			            
+// 			            $rowset = $optTable->fetchAll(
+// 			                ' is_deleted=0 and (
+// id in (select personid from tutor where institutionid in (' . $insids . ')) 
+// or 
+// id in (select personid from student where institutionid in (' . $insids . ')))');
+
+//TA:100 filter students by cohort institution access as well
 			            $rowset = $optTable->fetchAll(
 			                ' is_deleted=0 and (
-id in (select personid from tutor where institutionid in (' . $insids . ')) 
-or 
-id in (select personid from student where institutionid in (' . $insids . ')))');
+id in (select personid from tutor where institutionid in (' . $insids . '))
+or
+id in (
+SELECT person.id FROM person
+INNER JOIN student ON student.personid = person.id 
+LEFT JOIN institution ON institution.id = student.institutionid 
+LEFT JOIN link_student_cohort ON link_student_cohort.id_student = student.id 
+LEFT JOIN cohort ON cohort.id = link_student_cohort.id_cohort where cohort.institutionid in (' . $insids . ')
+))');
 //  			            print "<br><br>========================= " . $opt . " =============================<br>";
 //  			             print_r($rowset);
 			        }else if($opt === 'practicum'){

@@ -6699,7 +6699,10 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$user_institutions = $helper->getUserInstitutions($uid);
 		if (!empty($user_institutions)) {
 			$s->where("s.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
+			//TA:100 filter cohort by institution access as well
+			$s->where("c.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
 		}
+		
 		return(array($s, $headers));
 	}
 
