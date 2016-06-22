@@ -103,9 +103,9 @@ class SyncSetPerson extends SyncSetSimple
 	    
 	    $row = null;
 	    
-	    $fn = " (trim(lcase(CONCAT(IFNULL(first_name,'')))))='".trim(strtolower((@$ld->first_name))) . "' ";
-	    $ln = " (trim(lcase(CONCAT(IFNULL(last_name,'')))))='".trim(strtolower((@$ld->last_name))) . "' ";
-	    $mn = " (trim(lcase(CONCAT(IFNULL(middle_name,'')))))='".trim(strtolower((@$ld->middle_name))) . "' ";
+	    $fn = " (trim(lcase(CONCAT(IFNULL(first_name,'')))))='".trim(strtolower((str_replace("'", "\'",@$ld->first_name)))) . "' ";
+	    $ln = " (trim(lcase(CONCAT(IFNULL(last_name,'')))))='".trim(strtolower((str_replace("'", "\'", @$ld->last_name)))) . "' ";
+	    $mn = " (trim(lcase(CONCAT(IFNULL(middle_name,'')))))='".trim(strtolower((str_replace("'", "\'", @$ld->middle_name)))) . "' ";
 	    $dob = " birthdate = '". @$ld->birthdate . "' ";
 	    $inst = " (
 id in (select personid from student where institutionid=" . $inst_id . ")

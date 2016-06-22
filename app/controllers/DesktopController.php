@@ -273,7 +273,7 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 			    || $opt === 'link_student_funding' || $opt === 'link_student_classes' || $opt ==='link_student_practicums' || $opt === 'link_student_licenses'
 			    || $opt === 'link_student_addresses' || $opt ==='link_tutor_addresses' || $opt === 'link_tutor_languages' 
 			    || $opt === 'link_tutor_tutortype' || $opt ==='link_tutor_institution' || $opt === 'link_cohorts_classes'
-			    || $opt === 'link_institution_degrees' || $opt === 'link_cadre_institution'){
+			    || $opt === 'link_institution_degrees' || $opt === 'link_cadre_institution' || $opt === 'student' || $opt === 'tutor'){
 			    $institutions = $helper->getUserInstitutions($helper->myid(), false);
 			    if ((is_array($institutions)) && (count($institutions) > 0)) {
 			        $insids = implode(",", $institutions);
@@ -366,6 +366,10 @@ LEFT JOIN cohort ON cohort.id = link_student_cohort.id_cohort where cohort.insti
 			            $rowset = $optTable->fetchAll(' id_institution in (' . $insids . ')');
 			        }else if($opt === 'link_cadre_institution'){
 			            $rowset = $optTable->fetchAll(' id_institution in (' . $insids . ')');
+			        }else if($opt === 'student'){
+			            $rowset = $optTable->fetchAll(' institutionid in (' . $insids . ')');
+			        }else if($opt === 'tutor'){
+			            $rowset = $optTable->fetchAll(' institutionid in (' . $insids . ')');
 			        }else if($opt === 'practicum'){
 			            $rowset = $optTable->fetchAll(' cohortid in (select id from cohort where institutionid in (' . $insids . '))');
 // 			            print "<br><br>========================= " . $opt . " =============================<br>";
