@@ -269,7 +269,11 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 // 			    }
 // 			}
 			
-			if($opt === 'institution' || $opt === 'cohort' || $opt === 'person' || $opt === 'practicum'){
+			if($opt === 'institution' || $opt === 'cohort' || $opt === 'person' || $opt === 'practicum' || $opt === 'link_student_cohort'
+			    || $opt === 'link_student_funding' || $opt === 'link_student_classes' || $opt ==='link_student_practicums' || $opt === 'link_student_licenses'
+			    || $opt === 'link_student_addresses' || $opt ==='link_tutor_addresses' || $opt === 'link_tutor_languages' 
+			    || $opt === 'link_tutor_tutortype' || $opt ==='link_tutor_institution' || $opt === 'link_cohorts_classes'
+			    || $opt === 'link_institution_degrees' || $opt === 'link_cadre_institution'){
 			    $institutions = $helper->getUserInstitutions($helper->myid(), false);
 			    if ((is_array($institutions)) && (count($institutions) > 0)) {
 			        $insids = implode(",", $institutions);
@@ -279,8 +283,8 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 // 			             print "<br><br>========================= " . $opt . " =============================<br>";
 // 			             print_r($rowset);
 			        }else if($opt === 'cohort'){
-			            $rowset = $optTable->fetchAll('institutionid IN (' . $insids . ') and graddate>now()');
-			           // $rowset = $optTable->fetchAll('institutionid IN (' . $insids . ')');
+			            //$rowset = $optTable->fetchAll('institutionid IN (' . $insids . ') and graddate>now()');//download only active cohorts
+			            $rowset = $optTable->fetchAll('institutionid IN (' . $insids . ')');
  			           // print "<br><br>========================= " . $opt . "+" . $insids . " =============================<br>";
  			           //  print_r($rowset);
 			        }else if($opt === 'person'){
@@ -325,6 +329,43 @@ LEFT JOIN cohort ON cohort.id = link_student_cohort.id_cohort where cohort.insti
 ))');
 //  			            print "<br><br>========================= " . $opt . " =============================<br>";
 //  			             print_r($rowset);
+			        }else if($opt === 'link_student_cohort'){
+			            $rowset = $optTable->fetchAll(' id_student in (select student.id from student 
+			                JOIN institution ON institution.id = student.institutionid where institution.id in (' . $insids . '))');
+			        }else if($opt === 'link_student_funding'){
+			            $rowset = $optTable->fetchAll(' studentid in (select student.id from student 
+			                JOIN institution ON institution.id = student.institutionid where institution.id in (' . $insids . '))');
+			        }else if($opt === 'link_student_classes'){
+			            $rowset = $optTable->fetchAll(' studentid in (select student.id from student 
+			                JOIN institution ON institution.id = student.institutionid where institution.id in (' . $insids . '))');
+			        }else if($opt === 'link_student_practicums'){
+			            $rowset = $optTable->fetchAll(' studentid in (select student.id from student 
+			                JOIN institution ON institution.id = student.institutionid where institution.id in (' . $insids . '))');
+			        }else if($opt === 'link_student_licenses'){
+			            $rowset = $optTable->fetchAll(' studentid in (select student.id from student 
+			                JOIN institution ON institution.id = student.institutionid where institution.id in (' . $insids . '))');
+			        }else if($opt === 'link_student_addresses'){
+			            $rowset = $optTable->fetchAll(' id_student in (select student.id from student 
+			                JOIN institution ON institution.id = student.institutionid where institution.id in (' . $insids . '))');
+			        }else if($opt === 'link_tutor_addresses'){
+			            $rowset = $optTable->fetchAll(' id_tutor in (select tutor.id from tutor 
+			                JOIN institution ON institution.id = tutor.institutionid where institution.id in (' . $insids . '))');
+			        }else if($opt === 'link_tutor_languages'){
+			            $rowset = $optTable->fetchAll(' id_tutor in (select tutor.id from tutor 
+			                JOIN institution ON institution.id = tutor.institutionid where institution.id in (' . $insids . '))');
+			        }else if($opt === 'link_tutor_tutortype'){
+			            $rowset = $optTable->fetchAll(' id_tutor in (select tutor.id from tutor 
+			                JOIN institution ON institution.id = tutor.institutionid where institution.id in (' . $insids . '))');
+			        }else if($opt === 'link_tutor_institution'){
+			            $rowset = $optTable->fetchAll(' id_tutor in (select tutor.id from tutor 
+			                JOIN institution ON institution.id = tutor.institutionid where institution.id in (' . $insids . '))');
+			        }else if($opt === 'link_cohorts_classes'){
+			            $rowset = $optTable->fetchAll(' cohortid in (select cohort.id from cohort 
+			                JOIN institution ON institution.id = cohort.institutionid where institution.id in (' . $insids . '))');
+			        }else if($opt === 'link_institution_degrees'){
+			            $rowset = $optTable->fetchAll(' id_institution in (' . $insids . ')');
+			        }else if($opt === 'link_cadre_institution'){
+			            $rowset = $optTable->fetchAll(' id_institution in (' . $insids . ')');
 			        }else if($opt === 'practicum'){
 			            $rowset = $optTable->fetchAll(' cohortid in (select id from cohort where institutionid in (' . $insids . '))');
 // 			            print "<br><br>========================= " . $opt . " =============================<br>";
