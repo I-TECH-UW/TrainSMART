@@ -256,7 +256,7 @@ id in (select personid from tutor where institutionid=" . $inst_id . ")) " ;
 	        if (! $commit) {
 	            $new_person_id = $this->getNextId();
 	        } else {
-	        $new_person_id = $rItem->save();
+	        $new_person_id = $rItem->save();//TA:100 it seems that here did not take next 
 	        }
 	        $this->log = $this->log . "INSERT: id=" . $lItem->id . "=>" . $new_person_id . 
 	        ", first_name=" .$lItem->first_name . ", middle_name=" . $lItem->middle_name . ", last_name=" .$lItem->last_name . "\n";

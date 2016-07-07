@@ -19,7 +19,7 @@ class SyncSetCohort extends SyncSetSimple
 				'startdate', 
 				'graddate', 
 				'degree', 
-				//'institutionid', 
+				'institutionid', 
 				'cadreid', 
 			);
 	}
