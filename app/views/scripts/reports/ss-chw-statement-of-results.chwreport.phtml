@@ -63,10 +63,11 @@
 <body>
 
 <?php
-    $lastid = $this->output[0]['saqa_id'];
+    $lastid = $this->output[0]['id'];
     $lastmodule = null;
     $numrows = count($this->output);
     $i = 0;
+    $studentcount = 0;
     while ($i < $numrows) {
         $student = &$this->output[$i];
     ?>
@@ -140,7 +141,8 @@
         <tbody>
 
         <?php
-        while (($i < $numrows) && $lastid == $student['saqa_id']) {
+        $lastmodule = null;
+        while (($i < $numrows) && $lastid == $student['id']) {
 
             if ($lastmodule != $student['coursetype']) {
                 $lastmodule = $student['coursetype'];
@@ -160,8 +162,9 @@
             
 
         <?php
-            if (($i + 1 > $numrows) || ($lastid != $this->output[$i + 1]['saqa_id'])) {
+            if (($i + 1 > $numrows) || ($lastid != $this->output[$i + 1]['id'])) {
                 // exit the while loop while we still have the current student data to populate the remainder of the page
+                $studentcount += 1;
                 break;
             }
             $i += 1;
@@ -213,8 +216,9 @@
     <?php
         $i += 1;
         $student = &$this->output[$i];
-        $lastid = $student['saqa_id'];
-    } ?>
+        $lastid = $student['id'];
+    }
+?>
 </body>
 </html>
 

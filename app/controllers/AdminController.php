@@ -2277,6 +2277,7 @@ class AdminController extends UserController
 			'label_ps_ca_mark' => 'ps ca mark',
 			'label_ps_credits' => 'ps credits',
 			'label_ps_class_modules_custom_1' => 'ps class modules custom 1',
+		    'label_ps_inst_sponsor' => 'ps inst sponsor',//TA:88
 
 		);
 
@@ -2940,6 +2941,7 @@ class AdminController extends UserController
 			'label_age',
 			'label_gender',
 			'label_ps_spouse_name',
+		    'label_ps_inst_sponsor',//TA:88
 			'.label_highest_qualification_achieved.',
 			'label_ps_local_address',
 			'label_province',
@@ -3005,6 +3007,7 @@ class AdminController extends UserController
 			'label_age'                                          => 'Age',
 			'label_gender'                                       => 'Gender',
 			'label_ps_spouse_name'                               => 'ps spouse name',
+		    'label_ps_inst_sponsor'                              => 'ps inst sponsor',//TA:88
 			'label_highest_qualification_achieved'               => 'Highest Qualification Achieved',
 			'label_ps_local_address'                             => 'ps local address',
 			'label_province'                                     => 'Province',

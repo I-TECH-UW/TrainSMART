@@ -92,6 +92,10 @@
 
 					<form action="" id="peopleadd" method="post" name="inspost" class="formvalidate">
 					
+					<!-- TA:97 -->
+	<table style="width:100%">
+				<tr><td>
+					
 					<input type="hidden" name="editid" id="editid" value="<?php echo $this->escape($this->id);?>">
 					<div class="mainformholder">
 	
@@ -201,7 +205,7 @@
 						<label><?php echo t('Number of Tutors'); ?></label>
 						<input type="text" name="tutor" readonly value="<?php echo $this->escape($this->tutor);?>">
 						
-						<label><?php echo t('Number of Students'); ?></label>
+						<label><?php echo t('Active Students'); ?></label>
 						<input type="text" name="students" readonly value="<?php echo $this->escape($this->students);?>">
 						
 						<label><?php echo t('Tutor to Student Ratio'); ?></label>
@@ -241,6 +245,19 @@
 						<div class="clear pad50"></div>
 				</div>
 				<div>
+				</td>
+				<td style="width:20%" valign='top' align='left'>
+				<div class="historyDiv">
+						<b><?php echo t('ID'); ?></b>&nbsp;<?php echo $this->escape($this->id);?><br>
+						<b><?php echo t('Date created'); ?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>						
+						<b><?php echo t('Created by'); ?></b>&nbsp;<?php echo ($this->creator == "N/A" ? t("N/A") : "{$this->creator->first_name} {$this->creator->last_name}") ?><br>
+						<b><?php echo t('Date updated'); ?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
+						<b><?php echo t('Updated by'); ?></b>&nbsp;<?php echo ($this->updater == "N/A" ? t("N/A") : "{$this->updater->first_name} {$this->updater->last_name}") ?><br>
+						
+						</div>
+				</td>
+				</td></tr>
+				</table>
 					</form>
 					<div class="clear pad50"></div>
 					<p style="" ><?php echo t('Principal/Key Staff Members'); ?></p>

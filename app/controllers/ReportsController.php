@@ -6700,7 +6700,10 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$user_institutions = $helper->getUserInstitutions($uid);
 		if (!empty($user_institutions)) {
 			$s->where("s.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
+			//TA:100 filter cohort by institution access as well
+			$s->where("c.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
 		}
+		
 		return(array($s, $headers));
 	}
 
@@ -7565,18 +7568,24 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					);
 					$institution_set = true;
 				}
-
+//TA:94 fixing bugs because it displays all cadres of institution, but should display only one
+// 				$join[] = array(
+// 					"table" => "link_cadre_institution",
+// 					"abbreviation" => "cai",
+// 					"compare" => "cai.id_institution = i.id",
+// 					"type" => "left"
+// 				);
+// 				$join[] = array(
+// 					"table" => "cadres",
+// 					"abbreviation" => "cad",
+// 					"compare" => "cad.id = cai.id_cadre",
+// 					"type" => "left"
+// 				);
 				$join[] = array(
-					"table" => "link_cadre_institution",
-					"abbreviation" => "cai",
-					"compare" => "cai.id_institution = i.id",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "cadres",
-					"abbreviation" => "cad",
-					"compare" => "cad.id = cai.id_cadre",
-					"type" => "left"
+				    "table" => "cadres",
+				    "abbreviation" => "cad",
+				    "compare" => "cad.id = coh.cadreid",
+				    "type" => "left"
 				);
 
 				if ($this->getSanParam('cadre')){
@@ -8158,17 +8167,24 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					}
 				}
 				if (!$found){
+				    //TA:95 fix bug with institution for tutor (link_tutor_institution does not have info about all tutors)
+// 					$join[] = array(
+// 						"table" => "link_tutor_institution",
+// 						"abbreviation" => "lti",
+// 						"compare" => "lti.id_tutor = tut.id",
+// 						"type" => "left"
+// 					);
+// 					$join[] = array(
+// 						"table" => "institution",
+// 						"abbreviation" => "i",
+// 						"compare" => "i.id = lti.id_institution",
+// 						"type" => "left"
+// 					);
 					$join[] = array(
-						"table" => "link_tutor_institution",
-						"abbreviation" => "lti",
-						"compare" => "lti.id_tutor = tut.id",
-						"type" => "left"
-					);
-					$join[] = array(
-						"table" => "institution",
-						"abbreviation" => "i",
-						"compare" => "i.id = lti.id_institution",
-						"type" => "left"
+					    "table" => "institution",
+					    "abbreviation" => "i",
+					    "compare" => "i.id = tut.institutionid",
+					    "type" => "left"
 					);
 				}
 
@@ -8443,6 +8459,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			//echo $query; exit;
 
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+			//print $query;
 			$rowArray = $db->fetchAll ($query);
 			$this->viewAssignEscaped("headers", $headers);
 			$this->view->assign('output',$rowArray);
@@ -8762,7 +8779,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				array('issuer_name', 'issuer_email', 'issuer_phone_number', 'issuer_logo_file_id')
 			);
 			
-			$query->joinLeft(array('lscl' => 'link_student_classes'), 'lscl.studentid = s.id',
+			$query->joinInner(array('lscl' => 'link_student_classes'), 'lscl.studentid = s.id',
 				array("grades" => "(CASE WHEN AVG(grade) >= 60.0 then '" . t('Pass') . "' else '" . t('Fail') . "' end)"))
 				->joinLeft(array('classes'), 'classes.id = lscl.classid', array('credits' => 'SUM(maxcredits)'))
 				->joinLeft(array('cm' => 'class_modules'), 'classes.class_modules_id = cm.id',
@@ -8771,16 +8788,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			;
 
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
-
-			// subquery to include the maximum nqf level associated with student
-			$nqfMax = $db->select()
-				->from(array('nqf_cm' => 'class_modules'), array('MAX(nqf_cm.custom_1)'))
-				->joinInner(array('nqf_classes' => 'classes'), 'nqf_classes.class_modules_id = nqf_cm.id', array())
-				->joinInner(array('nqf_lscl' => 'link_student_classes'),
-					'nqf_lscl.classid = nqf_classes.id', array())
-				->where('s.id = nqf_lscl.studentid')
-			;
-			$nqfMax = new Zend_Db_Expr($nqfMax);
 
 			$query->columns(array(
 					'p.national_id',
@@ -8793,11 +8800,12 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					'i.phone',
 					'i.fax',
 					'saqa_id' => 'p.custom_field2',
-					'nqf_max' => '(' . $nqfMax . ')',
+					'nqf_max' => new Zend_Db_Expr($db->quote('3')),
+					's.id',
 				)
 			);
 
-			$query->group('cm.id');
+			$query->group(array('cm.id', 's.id'));
 			$headers[] = "AQP";
 			$headers[] = "AQP E-mail";
 			$headers[] = "AQP Phone";
@@ -8821,6 +8829,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			$headers[] = "Institution Fax Number";
 			$headers[] = "SAQA ID";
 			$headers[] = "NQF Max";
+			$headers[] = "Student ID";
 
 			$query->order(array('p.last_name', 'p.first_name', 'p.national_id', 'lc.coursetype', 'cm.external_id'));
 

@@ -174,7 +174,8 @@ if ( $this->isLoggedIn() ) {
 	}
 	//TA:50:1 display use offline app only for some sites
 // 	if ( $this->setting['display_use_offline_app'] && ($this->hasACL('edit_country_options') || $this->hasACL('use_offline_app'))) {
-	if ( $this->setting['display_use_offline_app'] && $this->hasACL('use_offline_app')) {
+	//TA:95 remove offline access from in-service, show only for pre-service 
+	if ( $this->setting['display_use_offline_app'] && $this->hasACL('use_offline_app') && $this->hasACL('pre_service')) {
 		$navMain['user'][''] = '---------------';
 		//$navMain['user']['../desktop/create'] = no_soft_space_str( t('Create App Now') );
 		$navMain['user']['../desktop/download'] = no_soft_space_str( t('Download PS Application') );

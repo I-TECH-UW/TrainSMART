@@ -26,6 +26,11 @@ class PeopleaddController extends ITechController {
 
 		if ( $this->getRequest()->isPost() ){
 			if (isset ($params['addpeople'])){
+			    
+			    //TA:87 !!!! DO NOT REMOVE: in PS add people for duplicat chjeck used first_name and last_name
+			    $params['firstname'] = $params['first_name'];
+			    $params['lastname'] = $params['last_name'];
+			    
 				$tutorid = $peopleadd->addTutor($params);
 
 				if ($tutorid) {

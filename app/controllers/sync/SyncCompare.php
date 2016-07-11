@@ -68,7 +68,7 @@ class SyncCompare
         'practicum', // after cohort
         'link_cohorts_classes', // after cohort
         'person',
-        'student', // after person
+         'student', // after person
         'link_student_cohort', // after student and cohort
         'link_student_funding', // after student
         'link_student_classes', // after student and cohort
@@ -188,6 +188,126 @@ class SyncCompare
     return false;
   }
   
+  //TA:50 Search for left db and right db differences
+  function doSyncProcessOld($sqlite_file, $commit=false){
+  
+      $errors = array();
+      $log_text = "";
+      $this->syncLog->truncate(); // delete unfinished items for db file
+      foreach (self::$compareTypes as $tableType) {
+          $log_text = $log_text . "\n" . $tableType . "=>[\n";
+          $set = SyncSetFactory::create($tableType, SyncCompare::getDesktopConnectionParams($tableType, $sqlite_file), $this->desktopFileId);
+          if ($set) {
+              $leftItems = $set->fetchLeftPool();
+              foreach ($leftItems as $ld) {
+                  $actions = array();
+                  $userMessage = '';
+                  try {
+                      $rItem = $set->fetchFieldMatch($ld);
+                      if ($rItem) {
+                          if ($set->isDirty($ld, $rItem)) {
+                              $isConflict = $set->isConflict($ld, $rItem);
+                              if ($isConflict) {
+                                  // write message and skip action
+                                  //if(!$commit){
+                                  $userMessage = $isConflict;
+                                  $actions[] = 'conflict';
+                                  // }
+                              } else {
+                                  // print "ID:" . $ld->id . "=" . $rItem->id . ", personid:" . $ld->personid . "=" . $rItem->personid . "\n";
+                                  $set->updateMember($ld->id, $rItem->id, $commit);
+                                  $userMessage = 'Update';
+                                  $actions[] = 'update';
+                              }
+                          }
+                      } else{
+                          $set->insertMember($ld->id, $sqlite_file, $this->desktopFileId, $commit);
+                          $userMessage = 'Insert';
+                          $actions[] = 'insert';
+                      }
+                       
+                      foreach($actions as $action) {
+                          if($commit){
+                              //to keep for log
+                              //we need this line
+                              $lid=null;
+                              $ldata = null;
+                              if($ld){
+                                  $lid = $ld->id;
+                                  $ldata = $ld->toArray();
+                              }
+                              $rid=null;
+                              $rdata = null;
+                              if($rItem){
+                                  $rid = $rItem->id;
+                                  $rdata = $rItem->toArray();
+                              }
+                              $this->syncLog->add($tableType, $lid, $rid, $action . "-done", $userMessage,$ldata, $rdata,
+                                  $this->syncLog->now_expr());
+                          }else{
+                              //to shaw user to review before commit
+                              $this->syncLog->add($tableType, null, null, $action, $userMessage,null, null);
+                          }
+                      }
+  
+                  } catch (Exception $e) {
+                      $errors[] = print_r($e->getMessage(), true);
+                  }
+              }
+  
+              try {
+                  //TODO: now it returns array of ids, may be we can return array of items, then we could save in log file full info about deleted item
+                  // like $this->syncLog->add($tableType, null, $d,"delete-done", null, null, $d); where $d - row item , noyt just id.
+                  $deletables = $set->fetchHardDeletes($sqlite_file, $this->desktopFileId);
+                  if ($deletables) {
+                      foreach ($deletables as $d) {
+                          $set->deleteMember($d, $commit);
+                          if($commit){
+                              //to keep for log
+                              $this->syncLog->add($tableType, null, $d,"delete-done", "Delete", null, null, $this->syncLog->now_expr());
+                          }else{
+                              //$pk = $d->getTable()->PK();
+                              //to shaw user to review before commit
+                              $this->syncLog->add($tableType, null, $d, 'delete', "Delete");
+                          }
+                      }
+                  }
+              } catch (Exception $e) {
+                  $errors[] = print_r($e->getMessage(), true);
+              }
+  
+              $log_text = $log_text . $set->getLog();
+          }
+          // do not remove this line (to show that process is done)
+          $this->syncLog->addTableCompleteMessage($tableType);
+          //$save = array('fid' => $this->_fid, 'item_type'=> $table, 'action' => 'table-diff-complete');
+          //$result = $this->insert($save);
+  
+          // TA:50
+          $log_text = $log_text . "];\n";
+      }
+      if(!$commit)
+          print $log_text;
+  
+      //clean up synclog table after commit
+      if($commit){
+          $this->syncLog->delete("action='table-diff-complete' and fid=" . $this->desktopFileId);
+      }
+      return $errors;
+  }
+  
+  //TA:99 get value from reference table
+  function getRefrenceTableValue($sqlite_file, $ref_table, $key){
+      $log_text = "";
+          $set_ref = SyncSetFactory::create($ref_table, SyncCompare::getDesktopConnectionParams($ref_table, $sqlite_file), $this->desktopFileId);
+          if ($set_ref) {
+              $leftItems = $set_ref->fetchLeftPool();
+              foreach ($leftItems as $ld) {
+                  $log_text = $log_text . @$ld->personid . "**";
+              }
+          }
+          return $log_text;
+  }
     
     //TA:50 Search for left db and right db differences
     function doSyncProcess($sqlite_file, $commit=false){
@@ -195,16 +315,35 @@ class SyncCompare
         $errors = array();
         $log_text = "";
         $this->syncLog->truncate(); // delete unfinished items for db file
+        
+        //TA:99 to match person we have to take insitutionid from 'student' or 'tutor' table
+         $set_link_student = SyncSetFactory::create('student', SyncCompare::getDesktopConnectionParams('student',$sqlite_file), $this->desktopFileId);
+         $left_table_link_student = $set_link_student->getTable()->getAdapter();
+         $set_link_tutor = SyncSetFactory::create('tutor', SyncCompare::getDesktopConnectionParams('tutor',$sqlite_file), $this->desktopFileId);
+         $left_table_link_tutor = $set_link_student->getTable()->getAdapter();
+        
+        
         foreach (self::$compareTypes as $tableType) {
+            
             $log_text = $log_text . "\n" . $tableType . "=>[\n";
-            $set = SyncSetFactory::create($tableType, SyncCompare::getDesktopConnectionParams($tableType, $sqlite_file), $this->desktopFileId);
+            $set = SyncSetFactory::create($tableType, SyncCompare::getDesktopConnectionParams($tableType, $sqlite_file), $this->desktopFileId); 
             if ($set) {
                 $leftItems = $set->fetchLeftPool();
                 foreach ($leftItems as $ld) {
+              
                     $actions = array();
                     $userMessage = '';
+                    
+                    //TA:99 to match person we have to take insitutionid from 'student' or 'tutor' table
+                    if($tableType === 'person'){
+                        $inst_id = $left_table_link_student->fetchRow("select institutionid from student where personid=" . $ld->id)['institutionid'];
+                        if(!$inst_id){
+                            $inst_id = $left_table_link_tutor->fetchRow("select institutionid from tutor where personid=" . $ld->id)['institutionid'];
+                        }
+                    }
+                    
                     try {
-                        $rItem = $set->fetchFieldMatch($ld);
+                        $rItem = $set->fetchFieldMatch($ld, $inst_id);
                         if ($rItem) {
                             if ($set->isDirty($ld, $rItem)) {
                                 $isConflict = $set->isConflict($ld, $rItem);
