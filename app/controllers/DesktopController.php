@@ -280,7 +280,7 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 			        $optTable->select('*');
 			        if($opt === 'institution'){
 			             $rowset = $optTable->fetchAll('id IN (' . $insids . ')');
-// 			             print "<br><br>========================= " . $opt . " =============================<br>";
+ //			             print "<br><br>========================= " . $opt . " =============================<br>";
 // 			             print_r($rowset);
 			        }else if($opt === 'cohort'){
 			            //$rowset = $optTable->fetchAll('institutionid IN (' . $insids . ') and graddate>now()');//download only active cohorts
@@ -315,17 +315,29 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 // or 
 // id in (select personid from student where institutionid in (' . $insids . ')))');
 
-//TA:100 filter students by cohort institution access as well
+//TA:100 filter students by cohort institution access as well - it works???????
+// 			            $rowset = $optTable->fetchAll(
+// 			                ' is_deleted=0 and (
+// id in (select personid from tutor where institutionid in (' . $insids . '))
+// or
+// id in (
+// SELECT person.id FROM person
+// INNER JOIN student ON student.personid = person.id 
+// LEFT JOIN institution ON institution.id = student.institutionid 
+// LEFT JOIN link_student_cohort ON link_student_cohort.id_student = student.id 
+// LEFT JOIN cohort ON cohort.id = link_student_cohort.id_cohort 
+//  where cohort.institutionid in (' . $insids . ') and student.institutionid in (' . $insids . ')
+// ))');
+//TA:100 filter students not by cohort institution access but institutionid only		            
 			            $rowset = $optTable->fetchAll(
 			                ' is_deleted=0 and (
 id in (select personid from tutor where institutionid in (' . $insids . '))
 or
 id in (
 SELECT person.id FROM person
-INNER JOIN student ON student.personid = person.id 
-LEFT JOIN institution ON institution.id = student.institutionid 
-LEFT JOIN link_student_cohort ON link_student_cohort.id_student = student.id 
-LEFT JOIN cohort ON cohort.id = link_student_cohort.id_cohort where cohort.institutionid in (' . $insids . ')
+INNER JOIN student ON student.personid = person.id
+LEFT JOIN institution ON institution.id = student.institutionid
+ where student.institutionid in (' . $insids . ')
 ))');
 //  			            print "<br><br>========================= " . $opt . " =============================<br>";
 //  			             print_r($rowset);
@@ -462,17 +474,27 @@ LEFT JOIN cohort ON cohort.id = link_student_cohort.id_cohort where cohort.insti
 		// If no zip file, then Create App never performed (do this first)
 		//TA:50 create new (overwrite if exist) every time 	
 	//	if (! file_exists($this->package_dir.'/'.$this->zip_name)) {
-			$this->createAction(); //TA:81 comment for debug and uncomment later !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			$this->createAction(); 
 	//	}
-	
-		//$this->dbAction (); //TA:81 remove later use only for debug  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
 		// Assumes createAction called every hour by cron job
 		// Allows slow net link users to only download a prepackaged zip file
 		// instead of having to wait for the entire package event and then the
 		// entire download (combined time was breaking in remote locations)
-		$this->_pushZip(); //TA:81 comment for debug and  uncomment later !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		$this->_pushZip(); 
 	}
+	
+	//DO NOT REMOVE: use for debug
+// 	public function downloadAction() {
+// 	    $this->init();
+// 	    if (! $this->isLoggedIn ())
+// 	        $this->doNoAccessError ();
+	
+// 	    if (! $this->hasACL ( 'edit_country_options' ) && ! $this->hasACL ( 'use_offline_app' )) {
+// 	        $this->doNoAccessError ();
+// 	    }
+// 	    $this->dbAction (); //TA:81 remove later use only for debug  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// 	}
 		
 	
 	function _pushZip() {
