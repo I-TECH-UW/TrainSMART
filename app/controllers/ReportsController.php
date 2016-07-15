@@ -8779,7 +8779,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			);
 			
 			$query->joinInner(array('lscl' => 'link_student_classes'), 'lscl.studentid = s.id',
-				array("grades" => "(CASE WHEN AVG(grade) >= 60.0 then '" . t('Pass') . "' else '" . t('Fail') . "' end)"))
+				array("grades" => "(CASE WHEN SUM(camark * classes.custom_2 / 100.0) >= 50.0 then '" . t('Pass') . "' else '" . t('Fail') . "' end)"))
 				->joinLeft(array('classes'), 'classes.id = lscl.classid', array('credits' => 'SUM(maxcredits)'))
 				->joinLeft(array('cm' => 'class_modules'), 'classes.class_modules_id = cm.id',
 					array('nqf_level' => 'custom_1', 'title', 'external_id'))
