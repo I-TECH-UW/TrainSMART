@@ -6418,7 +6418,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	 * @return array containing a Zend_Db_Select object and the column headers for output
 	 */
 
-	protected function psStudentReportsBuildQuery($params) {
+	protected function psStudentReportsBuildQuery(&$params) {
 
 		$headers = array();
 		$headers[] = "First Name";
@@ -6461,7 +6461,13 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			}
 		}
 
-		if (isset($params['institution']) && $params['institution'] ||
+        // TODO: hack - student locations are not being set properly for using as sql criteria ignore them as criteria for now
+        // TODO: institution location is what we should be using, not student location
+        unset($params['province_id']);
+        unset($params['district_id']);
+        unset($params['region_c_id']);
+
+        if (isset($params['institution']) && $params['institution'] ||
 			isset($params['showinstitution']) && $params['showinstitution']) {
 
 			$s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
@@ -8765,6 +8771,10 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$this->view->assign('degrees', $helper->getDegrees());
 		$this->view->assign('site_style', $this->setting('site_style'));
 
+        $criteria = array();
+        $criteria['showinstitution'] = true;
+        $criteria['showcadre'] = true;
+        $criteria['showcohort'] = true;
 		if ($this->getSanParam('process')) {
 			$criteria = $this->getAllParams();
 
@@ -8838,8 +8848,8 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			$this->viewAssignEscaped("headers", $headers);
 			$this->viewAssignEscaped("output", $rowArray);
 
-			$this->view->assign('criteria', $criteria);
 		}
+        $this->view->assign('criteria', $criteria);
 	}
 
 	public function ssCompAction() {
