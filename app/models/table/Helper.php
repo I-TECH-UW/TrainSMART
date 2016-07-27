@@ -2069,7 +2069,10 @@ class Helper extends ITechTable
 
 	function updateStudentClass($sid,$param){
 		$db = $this->dbfunc();
-		foreach (array_keys($param['grade']) as $cid) {
+
+		$allclasses = array();
+		$allclasses = array_unique(array_merge($allclasses, array_keys($param['camark']), array_keys($param['exammark']), array_keys($param['grade']), array_keys($param['credits'])));
+		foreach ($allclasses as $cid) {
 			$query = "SELECT * FROM link_student_classes WHERE
 				studentid = " . $sid . " AND
 				classid = " . $cid . " AND
