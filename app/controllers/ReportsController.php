@@ -9699,6 +9699,38 @@ die (__LINE__ . " - " . $sql);
 	}
 
 
+	public function employeeReportCustomAction() {
+        $locations = Location::getAll();
+        $criteria = $this->getAllParams();
+
+        $db = $this->dbfunc();
+
+        if ($criteria['go']) {
+
+        }
+
+        $choose = array("0" => '--' . t("choose") . '--');
+
+        $transitions = $choose + $db->fetchPairs($db->select()
+                ->from('employee_transition_option', array('id', 'transition_phrase'))
+                ->order('transition_phrase ASC')
+            );
+
+        $classifications = $choose + $db->fetchPairs($db->select()
+                ->from('employee_qualification_option', array('id', 'qualification_phrase'))
+                ->order('qualification_phrase ASC')
+            );
+
+
+        $this->view->assign('locations', $locations);
+        $this->view->assign('classifications', $classifications);
+        $this->view->assign('transitions', $transitions);
+        $this->view->assign('showRegionCheckboxes', true);
+
+    }
+
+
+
 	public function employeeReportOccupationalCategoryAction() {
 		$locations = Location::getAll();
 		$criteria = $this->getAllParams();
@@ -9706,6 +9738,8 @@ die (__LINE__ . " - " . $sql);
 		$db = $this->dbfunc();
 
 		if ($criteria['go']) {
+		    $f = Location::fluentSubquery();
+            $s = $f->__toString();
 			$num_locs = $this->setting('num_location_tiers');
 
 			$locationSelectWithCity = $db->select()->distinct()
@@ -9755,7 +9789,7 @@ die (__LINE__ . " - " . $sql);
 			$select->order('p.partner ASC');
 
 			if ($criteria['province_id'] && count($criteria['province_id'])) {
-				// This messy incoming data processing needs to happen because we're using renderFilter()
+				// This incoming data processing needs to happen because we're using renderFilter()
 				$ids = array_filter($criteria['province_id']);
 				if (count($ids)) {
 					$select->where('province_id IN (' . implode(',', $ids) . ')');
@@ -9763,7 +9797,7 @@ die (__LINE__ . " - " . $sql);
 			}
 
 			if ($criteria['district_id'] && count($criteria['district_id'])) {
-				// This messy incoming data processing needs to happen because we're using renderFilter()
+				// This incoming data processing needs to happen because we're using renderFilter()
 				$ids = array_filter($criteria['district_id']);
 				$ids = array_map(function($item) {
 						$item = end(explode('_', $item));
@@ -9775,7 +9809,7 @@ die (__LINE__ . " - " . $sql);
 			}
 
 			if ($criteria['region_c_id'] && count($criteria['region_c_id'])) {
-				// This messy incoming data processing needs to happen because we're using renderFilter()
+				// This incoming data processing needs to happen because we're using renderFilter()
 				$ids = array_filter($criteria['region_c_id']);
 				$ids = array_map(function($item) {
 					$item = end(explode('_', $item));
@@ -9834,8 +9868,7 @@ die (__LINE__ . " - " . $sql);
 				$select->where('emp.end_date <= ?', $criteria['contractenddate']);
 			}
 
-			$q = $select->__toString();
-
+			$s = $select->__toString();
 			$allData = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => $db->fetchAll($select));
 			$rows = &$allData['rows'];
 
@@ -9847,6 +9880,7 @@ die (__LINE__ . " - " . $sql);
 
 			foreach($rows as $r) {
 
+			    // post-process the data into a more useful model for the report and add up the costs.
 				$partner = $r['partner'] ? $r['partner'] : 'unknown partner';
 				$province = $r['province_name'] ? $r['province_name'] : 'unknown province';
 				$category = $r['qualification_phrase'] ? $r['qualification_phrase'] : 'unknown qualification';
@@ -9923,7 +9957,9 @@ die (__LINE__ . " - " . $sql);
 			}
 
 			// now we have all partners and categories, we can build the report output
-			$headers = array(t('Province & Occupational Category'));
+			// the rows and columns are not static and dependent on the contents of the data, so we need to build a
+            // data structure for the table.
+            $headers = array(t('Province & Occupational Category'));
 
 			$grandTotals = array(t('Grand Total'));
 			foreach (array_keys($byPartner) as $partner) {
