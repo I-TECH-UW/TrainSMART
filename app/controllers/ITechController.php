@@ -403,7 +403,41 @@ protected function sendData($data) {
    	return $dataRow;
    }
 
-   /**
+    /**
+     * @param $arr - array of things that needs to be filtered
+     * @param $remove - single item or array of items to remove from $arr
+     *
+     * Sanitizes form input data
+     * Recursively removes empty array elements and any specified in $remove from $arr
+     *
+     * This does not actually need to be a method on a class
+     */
+    public function array_unset_recursive(&$arr, $remove) {
+        if (!is_array($remove)) {
+            $remove = array($remove);
+        }
+        foreach ($arr as $key => &$value) {
+            if (is_array($value)) {
+                $this->array_unset_recursive($value, $remove);
+                if (count($value) < 1) {
+                    unset($arr[$key]);
+                }
+            }
+            else {
+                if (in_array($value, $remove)) {
+                    unset($arr[$key]);
+                }
+                else {
+                    $value = $this->sanitize(trim($value));
+                    if (count($value) < 1) {
+                        unset($arr[$key]);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
     * Return an array of sanitized data, post and get.
     *
     * do not use this on post or get variables with names: action,controller or module
@@ -411,16 +445,14 @@ protected function sendData($data) {
     public function getAllParams() {
         // BS20150915 note: changed from array_merge($_GET, $_POST, $this->getRequest()->getParams()); because
         // it does nearly the same thing as getParams alone, but may change the precedence of GET and POST data
+        //
         // code that relied on that precedence should be updated
         // see http://framework.zend.com/manual/1.12/en/zend.controller.request.html#zend.controller.request.http
         // in the Note: Superglobal Data section
 
         $ret = $this->getRequest()->getParams();
-        if (!array_walk_recursive($ret, function(&$value) {
-            $value = $this->sanitize(trim($value));
-        })) {
-            throw new Exception('Unable to sanitize request parameters');
-        }
+        $this->array_unset_recursive($ret, "");
+
         return $ret;
     }
 

@@ -6419,7 +6419,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	 * @return array containing a Zend_Db_Select object and the column headers for output
 	 */
 
-	protected function psStudentReportsBuildQuery($params) {
+	protected function psStudentReportsBuildQuery(&$params) {
 
 		$headers = array();
 		$headers[] = "First Name";
@@ -6438,35 +6438,75 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		if ((isset($params['showProvince']) && $params['showProvince']) ||
 			(isset($params['province_id']) && $params['province_id'])) {
 
-			$s->joinLeft(array('loc' => 'location'), 'loc.id = s.geog1', array());
+		    if (!$institutionJoined) {
+                $s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
+                $institutionJoined = true;
+            }
+
+            $s->joinLeft(array('loc1' => 'location'), 'loc1.id = i.geography1', array());
+
 			if (isset($params['showProvince']) && $params['showProvince']) {
-				$headers[] = "Province";
-				$s->columns('loc.location_name');
+				$headers[] = t("Region A (Province)");
+				$s->columns('loc1.location_name');
 			}
 			if (isset($params['province_id']) && $params['province_id']) {
-				$s->where('loc.id IN (?)', $params['province_id']);
+				$s->where('loc1.id IN (?)', $params['province_id']);
 			}
 		}
 
-		// location_district is a standalone location table - what the heck?
 		if ((isset($params['showDistrict']) && $params['showDistrict']) ||
 			(isset($params['district_id']) && $params['district_id'])) {
+            if (!$institutionJoined) {
+                $s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
+                $institutionJoined = true;
+            }
 
-			$s->joinLeft(array('locd' => 'location_district'), 'locd.id = s.geog2', array());
-			if (isset($params['showDistrict']) && $params['showDistrict']) {
-				$headers[] = "District";
-				$s->columns('locd.district_name');
-			}
-			if (isset($params['district_id']) && $params['district_id']) {
-				$s->where('locd.id IN (?)', $params['district_id']);
-			}
+            $s->joinLeft(array('loc2' => 'location'), 'loc2.id = i.geography2', array());
+
+            if (isset($params['showDistrict']) && $params['showDistrict']) {
+                $headers[] = t("Region B (Health District)");
+                $s->columns('loc2.location_name');
+            }
+            if (isset($params['district_id']) && $params['district_id']) {
+                $ids = "";
+                foreach ($params['district_id'] as $l) {
+                    $ids .= array_pop(explode('_', $l)) .", ";
+                }
+                $ids = trim($ids, ', ');
+                $s->where('loc2.id IN (?)', $ids);
+            }
 		}
 
-		if (isset($params['institution']) && $params['institution'] ||
+        if ((isset($params['showRegionC']) && $params['showRegionC']) ||
+            (isset($params['region_c_id']) && $params['region_c_id'])) {
+            if (!$institutionJoined) {
+                $s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
+                $institutionJoined = true;
+            }
+
+            $s->joinLeft(array('loc3' => 'location'), 'loc3.id = i.geography3', array());
+
+            if (isset($params['showRegionC']) && $params['showRegionC']) {
+                $headers[] = t("Region C (Local Region)");
+                $s->columns('loc3.location_name');
+            }
+            if (isset($params['region_c_id']) && $params['region_c_id']) {
+                $ids = "";
+                foreach ($params['region_c_id'] as $l) {
+                    $ids .= array_pop(explode('_', $l)) .", ";
+                }
+                $ids = trim($ids, ', ');
+                $s->where('loc3.id IN (?)', $ids);
+            }
+        }
+
+        if (isset($params['institution']) && $params['institution'] ||
 			isset($params['showinstitution']) && $params['showinstitution']) {
 
-			$s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
-			$institutionJoined = true;
+            if (!$institutionJoined) {
+                $s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
+                $institutionJoined = true;
+            }
 			if (isset($params['showinstitution']) && $params['showinstitution']) {
 				$headers[] = "Institution";
 				$s->columns('i.institutionname');
@@ -8766,6 +8806,11 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$this->view->assign('degrees', $helper->getDegrees());
 		$this->view->assign('site_style', $this->setting('site_style'));
 
+        $criteria = array();
+        $criteria['showinstitution'] = true;
+        $criteria['showcadre'] = true;
+        $criteria['showcohort'] = true;
+
 		if ($this->getSanParam('process')) {
 			$criteria = $this->getAllParams();
 
@@ -8839,8 +8884,8 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			$this->viewAssignEscaped("headers", $headers);
 			$this->viewAssignEscaped("output", $rowArray);
 
-			$this->view->assign('criteria', $criteria);
 		}
+        $this->view->assign('criteria', $criteria);
 	}
 
 	public function ssCompAction() {
