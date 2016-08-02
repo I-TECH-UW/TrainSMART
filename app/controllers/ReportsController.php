@@ -6528,6 +6528,9 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			if (isset($params['cohort']) && $params['cohort']) {
 				$s->where('c.id = ?', $params['cohort']);
 			}
+			//TA filter cohort by institution access as well
+			$uid = $helper->myid();
+			$s->where("c.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
 		}
 
 		if (isset($params['cadre']) && $params['cadre'] ||
@@ -6739,8 +6742,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$user_institutions = $helper->getUserInstitutions($uid);
 		if (!empty($user_institutions)) {
 			$s->where("s.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
-			//TA:100 filter cohort by institution access as well
-			$s->where("c.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
 		}
 		
 		return(array($s, $headers));
@@ -6768,7 +6769,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			$criteria = $this->getAllParams();
 
 			list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
-
+		
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 			$rowArray = $db->fetchAll($query);
 			$this->view->assign('query', $query->__toString());
