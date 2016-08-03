@@ -760,41 +760,60 @@ class Location extends ITechTable
 		return array($output_field_name, $location_sub_query);
 	}
 
+    /**
+     * creates a ZF select query object suited for querying locations in our hierarchical location table, based on
+     * the number of location tiers available
+     *
+     * This query object can be modified in the calling code to customize result output.
+     *
+     * @return Zend_Db_Select
+     */
+
 	public static function fluentSubquery() {
         $db = new Location();
 
         $num_locs = Location::getNumLocationTiers();
 
-        $s = "location$num_locs";
+        $joinTableA = "location$num_locs";
+        $joinTableB = $joinTableA;
 
         $locationSelectWithCity = $db->select()->distinct();
         $locationSelect = $db->select()->distinct();
-        $prevLocationJoin = "location$num_locs";
 
-        $locationSelectWithCity->from(array("location$num_locs" => 'location'), array('id' => "location$num_locs.id",
-            'city_id' => "location$num_locs.id", 'city_name' => "location$num_locs.location_name"));
+        $locationSelectWithCity->from(array($joinTableA => 'location'), array('id' => "$joinTableA.id",
+            'city_id' => "$joinTableA.id", 'city_name' => "$joinTableA.location_name"));
 
-        $num_locs--;
-        $locationSelect->from(array("location$num_locs" => 'location'), array('id' => "location$num_locs.id", 'city_id' => new Zend_Db_Expr($db->getAdapter()->quote(0)),
-            'city_name' => new Zend_Db_Expr($db->getAdapter()->quote('unknown')), 'region_c_id' => "location$num_locs.id"));
-        $locationSelectWithCity->joinLeft
-
-
-        $i = $num_locs - 1;
-        while ($i > 0) {
-            $joinName = "location$i";
+        $locationIndex = $num_locs - 1;
+        $joinTableA = "location$locationIndex";
+        $locationSelect->from(array($joinTableA => 'location'), array('id' => "$joinTableA.id", 'city_id' => new Zend_Db_Expr($db->getAdapter()->quote(0)),
+            'city_name' => new Zend_Db_Expr($db->getAdapter()->quote('unknown')), 'region_c_id' => "$joinTableA.id"));
+        $locationSelect->where("$joinTableA.tier = $num_locs");
+        $locationSelectWithCity->joinLeft(array($joinTableA => 'location'),
+            "$joinTableB.parent_id = $joinTableA.id AND $joinTableA.tier = $locationIndex", array()); #array('region_c_id' => 'l3.id')
 
 
-            $i--;
+        $locationIndex = $locationIndex - 1;
+        while ($locationIndex > 0) {
+            $joinTableB = $joinTableA;
+            $joinTableA = "location$locationIndex";
+
+            $locationSelectWithCity->joinLeft(array($joinTableA => 'location'),
+                "$joinTableB.parent_id = $joinTableA.id AND $joinTableA.tier = $locationIndex", array()); #array('region_c_id' => 'l3.id')
+            $locationSelect->joinLeft(array($joinTableA => 'location'),
+                "$joinTableB.parent_id = $joinTableA.id AND $joinTableA.tier = $locationIndex", array()); #array('region_c_id' => 'l3.id')
+
+
+            $locationIndex = $locationIndex - 1;
         }
-        $locationSelectWithCity = $db->select()->distinct()
+
+        $locationSelectWithCityA = $db->select()->distinct()
             ->from(array('l4' => 'location'), array('id' => 'l4.id', 'city_id' => 'l4.id', 'city_name' => 'l4.location_name'))
             ->joinLeft(array('l3' => 'location'), 'l4.parent_id = l3.id AND l3.tier = 3', array('region_c_id' => 'l3.id'))
             ->joinLeft(array('l2' => 'location'), 'l2.parent_id = l3.id AND l2.tier = 2', array('district_id' => 'l2.id'))
             ->joinLeft(array('l1' => 'location'), 'l1.parent_id = l2.id AND l1.tier = 1', array('province_id' => 'l1.id', 'province_name' => 'l1.location_name'))
             ->where('l4.tier = 4');
 
-        $locationSelect = $db->select()->distinct()
+        $locationSelectA = $db->select()->distinct()
             ->from(array('l3' => 'location'), array('id' => 'l3.id', 'city_id' => new Zend_Db_Expr($db->getAdapter()->quote(0)),
                 'city_name' => new Zend_Db_Expr($db->getAdapter()->quote('unknown')), 'region_c_id' => 'l3.id'))
             ->joinLeft(array('l2' => 'location'), 'l2.id = l3.parent_id AND l2.tier = 2', array('district_id' => 'l2.id'))
@@ -802,6 +821,10 @@ class Location extends ITechTable
             ->where('l3.tier = 3');
 
         $locationSubquery = $db->select()->union(array($locationSelectWithCity, $locationSelect));
+        $locationSubqueryA = $db->select()->union(array($locationSelectWithCityA, $locationSelectA));
+
+        $g = $locationSubquery->__toString();
+        $A = $locationSubqueryA->__toString();
 
         return $locationSubquery;
     }
