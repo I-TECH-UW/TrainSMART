@@ -6663,7 +6663,11 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		if (isset($params['showfunding']) && $params['showfunding']) {
 			$s->joinLeft(array('lsf' => 'link_student_funding'), 'lsf.studentid = s.id', array());
 			$s->joinLeft(array('lf' => 'lookup_fundingsources'), 'lf.id = lsf.fundingsource', array());
-			$s->columns('lf.fundingname');
+			//$s->columns('lf.fundingname');
+			//TA:103 to display multiple sources for one person in one row
+			$s->columns('GROUP_CONCAT(lf.fundingname)');
+			$s->group('p.id');
+			
 			$headers[] = "Funding";
 		}
 
@@ -6743,6 +6747,8 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		if (!empty($user_institutions)) {
 			$s->where("s.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
 		}
+		
+		print $s;
 		
 		return(array($s, $headers));
 	}

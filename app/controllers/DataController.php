@@ -215,7 +215,7 @@ class DataController extends ITechController {
   		$personTable = new Person();
   		$select = $personTable->select()
   		->from('person', array('*'))
-  		//->where('first_name', '=', 'Emily')
+  		->where('is_deleted=0') //TA:104
   		->setIntegrityCheck(false);
   		$rowRay = $personTable->fetchAll($select);
   		$rowRay = @$rowRay->toArray();
