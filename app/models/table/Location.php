@@ -782,15 +782,17 @@ class Location extends ITechTable
 
         $locationSelectWithCity->from(array($joinTableA => 'location'), array('id' => "$joinTableA.id",
             'city_id' => "$joinTableA.id", 'city_name' => "$joinTableA.location_name"));
+        $locationSelectWithCity->where("$joinTableA.tier = $num_locs");
 
         $locationIndex = $num_locs - 1;
         $joinTableA = "location$locationIndex";
+
         $locationSelect->from(array($joinTableA => 'location'), array('id' => "$joinTableA.id", 'city_id' => new Zend_Db_Expr($db->getAdapter()->quote(0)),
             'city_name' => new Zend_Db_Expr($db->getAdapter()->quote('unknown')), 'region_c_id' => "$joinTableA.id"));
-        $locationSelect->where("$joinTableA.tier = $num_locs");
+        $locationSelect->where("$joinTableA.tier = $locationIndex");
+
         $locationSelectWithCity->joinLeft(array($joinTableA => 'location'),
             "$joinTableB.parent_id = $joinTableA.id AND $joinTableA.tier = $locationIndex", array()); #array('region_c_id' => 'l3.id')
-
 
         $locationIndex = $locationIndex - 1;
         while ($locationIndex > 0) {
@@ -801,8 +803,7 @@ class Location extends ITechTable
                 "$joinTableB.parent_id = $joinTableA.id AND $joinTableA.tier = $locationIndex", array()); #array('region_c_id' => 'l3.id')
             $locationSelect->joinLeft(array($joinTableA => 'location'),
                 "$joinTableB.parent_id = $joinTableA.id AND $joinTableA.tier = $locationIndex", array()); #array('region_c_id' => 'l3.id')
-
-
+            
             $locationIndex = $locationIndex - 1;
         }
 
