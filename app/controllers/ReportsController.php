@@ -6748,8 +6748,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			$s->where("s.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
 		}
 		
-		print $s;
-		
 		return(array($s, $headers));
 	}
 
