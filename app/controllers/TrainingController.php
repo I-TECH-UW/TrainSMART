@@ -731,8 +731,55 @@ class TrainingController extends ReportFilterHelpers {
 
 		/****************************************************************************************************************
 		* Trainers */
+		$locations = Location::getAll ();
 		if ($training_id) {
 			$trainers = TrainingToTrainer::getTrainers ( $training_id )->toArray ();
+			
+			//TA:107
+			foreach ( $trainers as $pid => $p ) {
+			    $region_ids = Location::getCityInfo ( $p ['location_id'], $this->setting ( 'num_location_tiers' ) ); // todo expensive call, getcityinfo loads all locations each time??
+			    $trainers [$pid] ['province_name'] = ($region_ids[1] ? $locations [$region_ids['1']] ['name'] : 'unknown');
+			    if ($region_ids[2])
+			        $trainers [$pid] ['district_name'] = $locations [$region_ids[2]] ['name'];
+			    else
+			        $trainers [$pid] ['district_name'] = 'unknown';
+			
+			    if ($region_ids[3])
+			        $trainers [$pid] ['region_c_name'] = $locations [$region_ids[3]] ['name'];
+			    else
+			        $trainers [$pid] ['region_c_name'] = 'unknown';
+			
+			    if ($region_ids[4])
+			        $trainers [$pid] ['region_d_name'] = $locations [$region_ids[4]] ['name'];
+			    else
+			        $trainers [$pid] ['region_d_name'] = 'unknown';
+			
+			    if ($region_ids[5])
+			        $trainers [$pid] ['region_e_name'] = $locations [$region_ids[5]] ['name'];
+			    else
+			        $trainers [$pid] ['region_e_name'] = 'unknown';
+			
+			    if ($region_ids[6])
+			        $trainers [$pid] ['region_f_name'] = $locations [$region_ids[6]] ['name'];
+			    else
+			        $trainers [$pid] ['region_f_name'] = 'unknown';
+			
+			    if ($region_ids[7])
+			        $trainers [$pid] ['region_g_name'] = $locations [$region_ids[7]] ['name'];
+			    else
+			        $trainers [$pid] ['region_g_name'] = 'unknown';
+			
+			    if ($region_ids[8])
+			        $trainers [$pid] ['region_h_name'] = $locations [$region_ids[8]] ['name'];
+			    else
+			        $trainers [$pid] ['region_h_name'] = 'unknown';
+			
+			    if ($region_ids[9])
+			        $trainers [$pid] ['region_i_name'] = $locations [$region_ids[9]] ['name'];
+			    else
+			        $trainers [$pid] ['region_i_name'] = 'unknown';
+			}
+			/////
 		} else {
 			$trainers = array ();
 		}
@@ -755,6 +802,41 @@ class TrainingController extends ReportFilterHelpers {
 
 			$colStatic = array ('first_name', 'middle_name', 'last_name' );
 		}
+		
+		//TA:107
+		$trainerFields ['birthdate'] = $this->tr ( 'Date of Birth' );
+		$trainerFields ['facility_name'] = $this->tr ( 'Facility Name' );
+		///
+		
+		//TA:107
+		if ( $this->setting ( 'display_region_i' )) {
+		    $trainerFields ['region_i_name'] = $this->tr ( 'Region I' );
+		}
+		else if ( $this->setting ( 'display_region_h' )) {
+		    $trainerFields ['region_h_name'] = $this->tr ( 'Region H' );
+		}
+		else if ( $this->setting ( 'display_region_g' )) {
+		    $trainerFields ['region_g_name'] = $this->tr ( 'Region G' );
+		}
+		else if ( $this->setting ( 'display_region_f' )) {
+		    $trainerFields ['region_f_name'] = $this->tr ( 'Region F' );
+		}
+		else if ( $this->setting ( 'display_region_e' )) {
+		    $trainerFields ['region_e_name'] = $this->tr ( 'Region E' );
+		}
+		else if ( $this->setting ( 'display_region_d' )) {
+		    $trainerFields ['region_d_name'] = $this->tr ( 'Region D' );
+		}
+		else if ( $this->setting ( 'display_region_c' )) {
+		    $trainerFields ['region_c_name'] = $this->tr ( 'Region C (Local Region)' );
+		}
+		else if ($this->setting ( 'display_region_b' )) {
+		    $trainerFields ['district_name'] = $this->tr ( 'Region B (Health District)' );
+		}
+		else {
+		    $trainerFields ['province_name'] = $this->tr ( 'Region A (Province)' );
+		}
+		//////
 
 		if ($this->view->viewonly) {
 			$editLinkInfo ['disabled'] = 1;
@@ -769,7 +851,7 @@ class TrainingController extends ReportFilterHelpers {
 		}
 
 		$html = EditTableHelper::generateHtmlTraining ( 'Trainer', $trainers, $trainerFields, $colStatic, $linkInfo, $editLinkInfo );
-		$this->view->assign ( 'tableTrainers', $html );
+		$this->view->assign ( 'tableTrainers', $html ); 
 
 		/****************************************************************************************************************
 		* Participants */
@@ -2274,7 +2356,8 @@ class TrainingController extends ReportFilterHelpers {
 
 		if ( $this->setting('module_attendance_enabled') ) {
 			if( strtotime( $rowRay ['training_start_date'] ) < time() ) {
-				$personsFields = array_merge($personsFields, array ( 'duration_days' => t ( 'Days' ) )); // already had class(es) - show the days attended
+			    //TA:106
+				$personsFields = array_merge($personsFields, array ( 'duration_days' => t ( 'Duration' ) )); // already had class(es) - show the days attended
 			}
 			$personsFields['award_phrase']  = $this->tr ( 'Complete' );
 		}
