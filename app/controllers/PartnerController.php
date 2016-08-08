@@ -30,7 +30,7 @@ class PartnerController extends ReportFilterHelpers {
 	}
 
 	public function deleteAction() {
-		if (! $this->hasACL ( 'employees_module' )) {
+		if (! $this->hasACL ( 'employees_module' ) || !($this->hasACL("delete_partners"))) {
 			$this->doNoAccessError ();
 		}
 
@@ -54,127 +54,7 @@ class PartnerController extends ReportFilterHelpers {
 		$this->view->assign ( 'status', $status );
 
 	}
-	
-	public function deleteFunderAction() {
-		if (! $this->hasACL ( 'employees_module' )) {
-			$this->doNoAccessError ();
-		}
-	
-		require_once('models/table/Partner.php');
-		require_once('views/helpers/Location.php'); // funder stuff
-	
-		$db     = $this->dbfunc();
-		$status = ValidationContainer::instance ();
-		$params = $this->getAllParams();
-			
-		if ($params['id']) {
-			$recArr = explode('_', $params['id']); 
 
-			//find in epsfm, should not find to delete
-			$sql = 'SELECT * FROM employee_to_partner_to_subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
-			$where = "partner_id = $recArr[0] and subpartner_id = $recArr[1] and partner_funder_option_id = $recArr[2] and mechanism_option_id = $recArr[3] and is_deleted = false";
-			$sql .= $where;
-			
-			$row = $db->fetchRow( $sql );
-			if ($row){
-				$status->setStatusMessage ( t('That record is in use.') );
-			}
-			else { // not in use
-				
-			  //find in psfm, should find to delete
-			  $sql = 'SELECT * FROM partner_to_subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
-			  $where = "partner_id = $recArr[0] and subpartner_id = $recArr[1] and partner_funder_option_id = $recArr[2] and mechanism_option_id = $recArr[3] and is_deleted = false";
-			  $sql .= $where;
-			
-			  $row = $db->fetchRow( $sql );
-			  if (! $row){
-				$status->setStatusMessage ( t('Cannot find that record in the database.') );
-			  }
-			  
-			  else { // found, safe to delete
-			  	
-                $update_result = $db->update('partner_to_subpartner_to_funder_to_mechanism', array('is_deleted' => 1), 'id = '.$row['id']);
-
-				if($update_result){
-					$status->setStatusMessage ( t ( 'That mechanism was deleted.' ) );
-				}
-				else{
-					$status->setStatusMessage ( t ( 'That mechanism was not deleted.' ) );
-				}
-			  }
-			}			
-			 	
-		}
-		$this->_redirect("partner/edit/id/" . $recArr[0]);
-	}
-	
-	
-	public function addFunderToPartnerAction() {
-		if (! $this->hasACL ( 'employees_module' )) {
-			$this->doNoAccessError ();
-		}
-	
-		require_once('models/table/Partner.php');
-		require_once('views/helpers/Location.php'); // funder stuff
-	
-		$db     = $this->dbfunc();
-		$status = ValidationContainer::instance ();
-		$params = $this->getAllParams();
-		$id     = $params['id'];
-			
-		if ($id) {
-			$helper = new Helper();
-			
-			if ( $this->getRequest()->isPost() ) {
-
-		      $params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-		      foreach ($params['funding_end_date'] as $i => $value) $params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
-		  
-				// test for all values
-				if(!($params['subPartner0'] && $params['partnerFunder0'] && $params['mechanism0'] && $params['funding_end_date'][0]))
-					$status->addError('', t ( 'All fields' ) . space . t('are required'));
-				
-				if ( $status->hasError() )
-					$status->setStatusMessage( t('That funding mechanism could not be saved.') );
-			
-				else {
-					//save
-					$psfm = new ITechTable(array('name' => 'partner_to_subpartner_to_funder_to_mechanism'));
-					$sfmArr = explode('_', $params[mechanism0]); // eg: 13_3_106
-					$sfm_id = $helper->getSfmId($sfmArr);
-					$data = array(
-							'subpartner_to_funder_to_mechanism_id' => $sfm_id['id'],
-							'partner_id' => $params['id'],
-							'subpartner_id'  => $sfmArr[0],
-							'partner_funder_option_id' => $sfmArr[1],
-							'mechanism_option_id' => $sfmArr[2],
-							'funding_end_date' => $params['funding_end_date'][0],
-					);
-
-					$insert_result = $psfm->insert($data);
-					$status->setStatusMessage( t('The funding mechanism was saved.') );
-				}
-			}
-			
-			//exclude current funders
-			$partner = $helper->getPartner($id);
-			$this->viewAssignEscaped ( 'partner', $partner );
-			
-			$subPartner = $helper->getSfmSubPartnerExclude($id);
-			$this->viewAssignEscaped ( 'subPartner', $subPartner );
-			
-			$partnerFunder = $helper->getSfmFunderExclude($id);
-			$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-			
-			$mechanism = $helper->getSfmMechanismExclude($id);
-			$this->viewAssignEscaped ( 'mechanism', $mechanism );
-
-		} // if ($id)
-	
-		//validate
-		$this->view->assign ( 'status', $status );
-	
-	}
 
 	public function addAction() {
 		$this->view->assign ( 'mode', 'add' );
@@ -203,49 +83,21 @@ class PartnerController extends ReportFilterHelpers {
 
 		if ( $this->getRequest()->isPost() )
 		{
-		    if (!$this->hasACL("edit_partner"))
+		    if (!$this->hasACL("edit_partners"))
 		    {
 		        $this->doNoAccessError();
 		    }
-		    else 
-		    {
-    			//validate then save
-    			$status->checkRequired ( $this, 'partner', t ( 'Partner' ) );
-    			$status->checkRequired ( $this, 'address1',                           t ( 'Address 1' ) );
-    			$status->checkRequired ( $this, 'city',                               t ( 'City' ) );
-    			$status->checkRequired ( $this, 'province_id',                        t ( 'Region A (Province)' ) );
-    			if ($this->setting('display_employee_agreement_end_date'))
-    				$status->checkRequired ( $this, 'agreement_end_date',             t ( 'Agreement End Date' ) );
-    			if ($this->setting('display_employee_importance'))
-    				$status->checkRequired ( $this, 'partner_importance_option_id',   t ( 'Importance' ) );
-    			$status->checkRequired ( $this, 'hr_contact_name',                    t ( 'HR Contact Person Name' ) );
-    			$status->checkRequired ( $this, 'hr_contact_phone',                   t ( 'HR Contact Office Phone' ) );
-    			$status->checkRequired ( $this, 'hr_contact_email',                   t ( 'HR Contact Email' ) );
-    			
-    			
-    			
-    			$params['subPartner'] = $this->_array_me($params['subPartner']);
-    			
-    			$params['subpartner_id'] = $this->_array_me($params['subpartner_id']);
-    			foreach ($params['subpartner_id'] as $i => $value) { // strip empty values (it breaks MultiOptionList apparently)
-    				if (empty($value))
-    					unset($params['subpartner_id'][$i]);
-    			}
-    				
-    			$params['partnerFunder'] = $this->_array_me($params['partnerFunder']);
-    			$params['mechanism'] = $this->_array_me($params['mechanism']);
-    			
-        		$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-    			
-    			foreach ($params['funding_end_date'] as $i => $value) 
-    			  $params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
-    			
-    			
-    			
-    			$params['transition_confirmed'] = $params['transition_confirmed'] == 'on' ? 1 : 0;
-    			$params['agreement_end_date'] = $this->_euro_date_to_sql($params['agreement_end_date']);
-    			
-    			
+		    else {
+                //validate then save
+                $status->checkRequired($this, 'partner', t('Partner'));
+                $status->checkRequired($this, 'address1', t('Address 1'));
+                $status->checkRequired($this, 'city', t('City'));
+                $status->checkRequired($this, 'province_id', t('Region A (Province)'));
+                $status->checkRequired($this, 'hr_contact_name', t('HR Contact Person Name'));
+                $status->checkRequired($this, 'hr_contact_phone', t('HR Contact Office Phone'));
+                $status->checkRequired($this, 'hr_contact_email', t('HR Contact Email'));
+
+
     			//location save stuff
     			$params['location_id'] = regionFiltersGetLastID(null, $params); // formprefix, criteria
     			if ( $params['city'] ) {
@@ -273,7 +125,7 @@ class PartnerController extends ReportFilterHelpers {
 			$orgWhere = ($org_allowed_ids) ? " AND partner.organizer_option_id in ($org_allowed_ids) " : "";
 			// restricted access?? only show organizers that belong to this site if its a multi org site
 			$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
-			$allowedWhereClause .= $site_orgs ? " AND partner.organizer_option_id in ($site_orgs) " : "";
+			$allowedWhereClause = $site_orgs ? " AND partner.organizer_option_id in ($site_orgs) " : "";
 
 			// continue reading data
 			$sql = 'SELECT * FROM partner WHERE id = '.$id.space.$orgWhere;
@@ -289,34 +141,34 @@ class PartnerController extends ReportFilterHelpers {
 				$region_ids = Location::regionsToHash($region_ids);
 				$params = array_merge($params, $region_ids);
 
-				//get linked table data from option tables
-				$sql = "SELECT subpartner_to_funder_to_mechanism_id, partner_id, subpartner_id, partner_funder_option_id, mechanism_option_id, funding_end_date 
-				        FROM partner_to_subpartner_to_funder_to_mechanism WHERE is_deleted = false and partner_id = $id";
-				$params['funder'] = $db->fetchAll($sql);
+                require_once 'views/helpers/EditTableHelper.php';
 
-				
-				$helper = new Helper();
-				
-				$subPartner = $helper->getPartnerSubpartner($id); 
-				$this->viewAssignEscaped ( 'subPartner', $subPartner );
-				
-				$partnerFunder = $helper->getPartnerFunder($id);
-				$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-				
-				$mechanism = $helper->getPartnerMechanism($id);
-				$this->viewAssignEscaped ( 'mechanism', $mechanism );
-				
+                $sql = "SELECT mechanism_option.id, mechanism_option.mechanism_phrase, mechanism_option.end_date, partner_funder_option.funder_phrase
+                        FROM mechanism_option
+                        INNER JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id
+                        WHERE mechanism_option.owner_id = $id";
+                $primeMechanisms = $db->fetchAll($sql);
+
+                foreach($primeMechanisms as &$mech) {
+                    $sql = "SELECT partner.partner FROM partner INNER JOIN link_mechanism_partner on link_mechanism_partner.partner_id = partner.id
+                            WHERE link_mechanism_partner.mechanism_option_id = {$mech['id']} AND link_mechanism_partner.partner_id != $id";
+
+                    $mech['subpartners'] = $db->fetchCol($sql);
+                }
+                $this->view->assign('primeMechanisms', $primeMechanisms);
+
+                $sql = "SELECT link_mechanism_partner.id, mechanism_option.mechanism_phrase, link_mechanism_partner.end_date, partner.partner
+						FROM
+						link_mechanism_partner
+						INNER JOIN mechanism_option ON link_mechanism_partner.mechanism_option_id = mechanism_option.id
+						LEFT JOIN partner ON mechanism_option.owner_id = partner.id
+                        WHERE owner_id != $id AND partner_id = $id";
+
+                $secondaryMechanisms = $db->fetchAll($sql);
+                $this->view->assign('secondaryMechanisms', $secondaryMechanisms);
 			}
 		}
 
-		// make sure form data is valid for display
-		if (empty($params['subpartner']))
-			$params['subpartner'] = array(array());
-		if (empty($params['funder']))
-			$params['funder'] = array(array());
-		if (empty($params['mechanism_option_id']))
-			$params['mechanism_option_id'] = array(array());
-		
         if (!$this->hasACL("edit_partners"))
         {
             $this->view->viewonly = true;
@@ -356,36 +208,36 @@ class PartnerController extends ReportFilterHelpers {
 					,GROUP_CONCAT(sub.partner) as subPartner
 					,GROUP_CONCAT(pfo.funder_phrase) as partnerFunder
 					,GROUP_CONCAT(mo.mechanism_phrase) as mechanism
-					,GROUP_CONCAT(psfm.funding_end_date) as funding_end_date
+					,GROUP_CONCAT(mo.end_date) as funding_end_date
 					FROM partner 
 					LEFT JOIN ($locationsubquery) as l  ON l.id = partner.location_id
-					LEFT JOIN partner_to_subpartner_to_funder_to_mechanism psfm  ON partner.id = psfm.partner_id
-					LEFT JOIN partner_funder_option pfo         ON psfm.partner_funder_option_id = pfo.id
-					LEFT JOIN mechanism_option mo        		ON psfm.mechanism_option_id = mo.id
-					LEFT JOIN partner sub                       ON sub.id = psfm.subpartner_id 
+					LEFT JOIN link_mechanism_partner    ON partner.id = link_mechanism_partner.partner_id
+					LEFT JOIN mechanism_option mo        		ON link_mechanism_partner.mechanism_option_id = mo.id
+					LEFT JOIN partner_funder_option pfo         ON mo.funder_id = pfo.id
+					LEFT JOIN partner sub                       ON sub.id = link_mechanism_partner.partner_id
 					LEFT JOIN location parent_loc               ON parent_loc.id = partner.location_id";
 
 			// restricted access?? only show partners by organizers that we have the ACL to view
 			$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'
-			if($org_allowed_ids)
+			if($org_allowed_ids) {
 				$where[] = " partner.organizer_option_id in ($org_allowed_ids) ";
+			}
 			// restricted access?? only show organizers that belong to this site if its a multi org site
 			$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
-			if ($site_orgs)
+			if ($site_orgs) {
 				$where[] = " partner.organizer_option_id in ($site_orgs) ";
-
+			}
 			if ($locationWhere = $this->getLocationCriteriaWhereClause($criteria, '', '')) {
-				#$where[] = $locationWhere;
 				$where[] = "($locationWhere OR parent_loc.parent_id = $location_id)"; #todo the subquery and parent_id is not working
 			}
 
 			if ($criteria['subpartner_id'])     $where[] = 'subpartners.subpartner_id = '.$criteria['subpartner_id'];
 			if ($criteria['partner_id'])        $where[] = 'partner.id = '.$criteria['partner_id'];
-			if ($criteria['start_date'])        $where[] = 'funding_end_date >= \''.$this->_euro_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
-			if ($criteria['end_date'])          $where[] = 'funding_end_date <= \''.$this->_euro_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
-			if ( count ($where))
-  			  $sql .= ' WHERE ' . implode(' AND ', $where);
-			
+			if ($criteria['start_date'])        $where[] = 'mo.end_date >= \''.$this->_euro_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
+			if ($criteria['end_date'])          $where[] = 'mo.end_date <= \''.$this->_euro_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
+			if ( count ($where)) {
+				$sql .= ' WHERE ' . implode(' AND ', $where);
+			}
 			    
 			$sql .= ' GROUP BY partner.id ';
 
@@ -422,11 +274,9 @@ class PartnerController extends ReportFilterHelpers {
 			}
 		}
 		// assign form drop downs
-		$this->view->assign('status', $status);
 		$this->viewAssignEscaped ( 'criteria', $criteria );
 		$this->viewAssignEscaped ( 'locations', $locations );
-		$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'subpartners', DropDown::generateHtml ( 'partner', 'partner', $criteria['subpartner_id'], false, $this->view->viewonly, false, true, array('name' => 'subpartner_id'), true ) );
+		$this->view->assign ( 'partners', DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, $this->getAvailablePartners() ) );
 	}
 }
 

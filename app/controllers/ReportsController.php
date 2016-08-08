@@ -37,6 +37,7 @@ class ReportsController extends ReportFilterHelpers {
 		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'csv');
 		$contextSwitch->addActionContext('ps-students-by-name', 'csv');
 		$contextSwitch->addActionContext('ps-students-trained', 'csv');
+		$contextSwitch->addActionContext('employee-report-occupational-category', 'csv');
 
 		$contextSwitch->addContext('chwreport', array('suffix' => 'chwreport'));
 		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'chwreport');
@@ -9751,6 +9752,377 @@ die (__LINE__ . " - " . $sql);
 	}
 
 
+	public function employeeReportCustomAction() {
+        $locations = Location::getAll();
+        $criteria = $this->getAllParams();
+
+        $db = $this->dbfunc();
+
+        if ($criteria['go']) {
+
+        }
+
+        $choose = array("0" => '--' . t("choose") . '--');
+
+        $transitions = $choose + $db->fetchPairs($db->select()
+                ->from('employee_transition_option', array('id', 'transition_phrase'))
+                ->order('transition_phrase ASC')
+            );
+
+        $classifications = $choose + $db->fetchPairs($db->select()
+                ->from('employee_qualification_option', array('id', 'qualification_phrase'))
+                ->order('qualification_phrase ASC')
+            );
+
+
+        $this->view->assign('locations', $locations);
+        $this->view->assign('classifications', $classifications);
+        $this->view->assign('transitions', $transitions);
+        $this->view->assign('showRegionCheckboxes', true);
+
+    }
+
+
+
+	public function employeeReportOccupationalCategoryAction() {
+		$locations = Location::getAll();
+		$criteria = $this->getAllParams();
+
+		$db = $this->dbfunc();
+
+		if ($criteria['go']) {
+		    $f = Location::fluentSubquery();
+            $s = $f->__toString();
+			$num_locs = $this->setting('num_location_tiers');
+
+			$locationSelectWithCity = $db->select()->distinct()
+				->from(array('l4' => 'location'), array('id' => 'l4.id', 'city_id' => 'l4.id', 'city_name' => 'l4.location_name'))
+				->joinLeft(array('l3' => 'location'), 'l4.parent_id = l3.id AND l3.tier = 3', array('region_c_id' => 'l3.id'))
+				->joinLeft(array('l2' => 'location'), 'l2.parent_id = l3.id AND l2.tier = 2', array('district_id' => 'l2.id'))
+				->joinLeft(array('l1' => 'location'), 'l1.parent_id = l2.id AND l1.tier = 1', array('province_id' => 'l1.id', 'province_name' => 'l1.location_name'))
+				->where('l4.tier = 4');
+
+			$locationSelect = $db->select()->distinct()
+				->from(array('l3' => 'location'), array('id' => 'l3.id', 'city_id' => new Zend_Db_Expr($db->quote(0)),
+					'city_name' => new Zend_Db_Expr($db->quote('unknown')), 'region_c_id' => 'l3.id'))
+				->joinLeft(array('l2' => 'location'), 'l2.id = l3.parent_id AND l2.tier = 2', array('district_id' => 'l2.id'))
+				->joinLeft(array('l1' => 'location'), 'l1.id = l2.parent_id AND l1.tier = 1', array('province_id' => 'l1.id', 'province_name' => 'l1.location_name'))
+				->where('l3.tier = 3');
+
+			$locationSubquery = $db->select()->union(array($locationSelectWithCity, $locationSelect));
+
+			$select = $db->select();
+			$select->from(array('emp' => 'employee'),
+				array('cost' => 'ROUND(SUM(annual_cost * lme.percentage/100), 0)',
+					'fulltimecount' => 'SUM(case when lme.percentage = 100 then 1 else 0 end)',
+					'parttimecount' => 'SUM(case when (lme.percentage < 100) and (lme.percentage > 0) then 1 else 0 end)')
+			);
+			$select->join(array('lme' => 'link_mechanism_employee'), 'emp.id = lme.employee_id', array());
+			$select->join(array('eqo' => 'employee_qualification_option'),
+				'eqo.id = emp.employee_qualification_option_id', array('eqo.qualification_phrase'));
+			$select->join(array('p' => 'partner'), 'p.id = emp.partner_id', array('p.partner'));
+			$select->joinLeft(array('l' => new Zend_Db_Expr('(' . $locationSubquery . ')')), 'l.id = emp.location_id');
+
+			if (!$this->hasACL('training_organizer_option_all')) {
+				// limit results to only mechanisms owned by partners and subpartners that the user account can access
+				$uid = $this->isLoggedIn();
+
+				$select->join(array('lmp' => 'link_mechanism_partner'), 'p.id = lmp.partner_id', array());
+				$select->join(array('utoa' => 'user_to_organizer_access'),
+					'utoa.training_organizer_option_id = p.organizer_option_id', array());
+
+				$select->where('utoa.user_id = ?', $uid);
+			}
+
+			$select->group('province_id');
+			$select->group('emp.employee_qualification_option_id');
+			$select->group('emp.partner_id');
+			$select->order('province_id');
+			$select->order('emp.employee_qualification_option_id');
+			$select->order('p.partner ASC');
+
+			if ($criteria['province_id'] && count($criteria['province_id'])) {
+				// This incoming data processing needs to happen because we're using renderFilter()
+				$ids = array_filter($criteria['province_id']);
+				if (count($ids)) {
+					$select->where('province_id IN (' . implode(',', $ids) . ')');
+				}
+			}
+
+			if ($criteria['district_id'] && count($criteria['district_id'])) {
+				// This incoming data processing needs to happen because we're using renderFilter()
+				$ids = array_filter($criteria['district_id']);
+				$ids = array_map(function($item) {
+						$item = end(explode('_', $item));
+						return $item;
+					}, $ids);
+				if (count($ids)) {
+					$select->where('district_id IN (' . implode(',', $ids) . ')');
+				}
+			}
+
+			if ($criteria['region_c_id'] && count($criteria['region_c_id'])) {
+				// This incoming data processing needs to happen because we're using renderFilter()
+				$ids = array_filter($criteria['region_c_id']);
+				$ids = array_map(function($item) {
+					$item = end(explode('_', $item));
+					return $item;
+				}, $ids);
+				if (count($ids)) {
+					$select->where('region_c_id IN (' . implode(',', $ids) . ')');
+				}
+			}
+
+			if ($criteria['periodstartdate']) {
+
+			}
+			if ($criteria['periodenddate']) {
+
+			}
+
+			$mechanismJoined = false;
+			if ($criteria['mechanism']) {
+				if (count($criteria['mechanism']) > 1) {
+					$select->where('mo.id in (?)', implode(',', $criteria['mechanism']));
+				}
+				elseif (count($criteria['mechanism']) == 1) {
+					$select->where('mo.id = ?', $criteria['mechanism']);
+				}
+				$select->join(array('mo' => 'mechanism_option'), 'mo.id = lme.mechanism_option_id');
+				$mechanismJoined = true;
+			}
+
+			if ($criteria['funder']) {
+				if (count($criteria['funder']) > 1) {
+					$select->where('pfo.id in (?)', implode(',', $criteria['funder']));
+				} elseif (count($criteria['funder']) == 1) {
+					$select->where('pfo.id = ?', $criteria['funder']);
+				}
+				if (!$mechanismJoined) {
+					$select->join(array('mo' => 'mechanism_option'), 'mo.id = lme.mechanism_option_id');
+				}
+				$select->join(array('pfo' => 'partner_funder_option'), 'pfo.id = mo.funder_id');
+			}
+
+			if ($criteria['classification']) {
+				$select->where('eqo.id = ?', $criteria['classification']);
+			}
+
+			if ($criteria['transition']) {
+				$select->join(array('eto' => 'employee_transition_option'), 'eto.id = emp.employee_transition_option_id');
+				$select->where('eto.id = ?', $criteria['transition']);
+			}
+
+			if ($criteria['contractstartdate']) {
+				$select->where('emp.agreement_end_date >= ?', $criteria['contractstartdate']);
+			}
+
+			if ($criteria['contractenddate']) {
+				$select->where('emp.end_date <= ?', $criteria['contractenddate']);
+			}
+
+			$s = $select->__toString();
+			$allData = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => $db->fetchAll($select));
+			$rows = &$allData['rows'];
+
+			$allData['byPartner'] = array();
+			$byPartner = &$allData['byPartner'];
+
+			$allData['byProvince'] = array();
+			$byProvince = &$allData['byProvince'];
+
+			foreach($rows as $r) {
+
+			    // post-process the data into a more useful model for the report and add up the costs.
+				$partner = $r['partner'] ? $r['partner'] : 'unknown partner';
+				$province = $r['province_name'] ? $r['province_name'] : 'unknown province';
+				$category = $r['qualification_phrase'] ? $r['qualification_phrase'] : 'unknown qualification';
+
+				$allData['fulltimecount'] += $r['fulltimecount'];
+				$allData['parttimecount'] += $r['parttimecount'];
+				$allData['cost'] += $r['cost'];
+
+				// by Province
+				if (!array_key_exists($province, $byProvince)) {
+					$byProvince[$province] = array(
+						'totals' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0),
+						'rows' => array(),
+						'byPartner' => array(),
+						'byCategory' => array()
+					);
+				}
+				$p = &$byProvince[$province];
+				$p['rows'][] = &$r;
+				$p = &$p['totals'];
+				$p['fulltimecount'] += $r['fulltimecount'];
+				$p['parttimecount'] += $r['parttimecount'];
+				$p['cost'] += $r['cost'];
+
+				// get partner province totals
+				$p = &$byProvince[$province]['byPartner'];
+				if (!array_key_exists($partner, $p)) {
+					$p[$partner] = array(
+						'totals' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0),
+						'byCategory' => array(),
+						'rows' => array()
+					);
+				}
+				$p = &$p[$partner];
+				$p['rows'][] = $r;
+
+				if (!array_key_exists($category, $p['byCategory'])) {
+					$p['byCategory'][$category] = array();
+				}
+				$p['byCategory'][$category][] = $r;
+
+				$p = &$p['totals'];
+				$p['fulltimecount'] += $r['fulltimecount'];
+				$p['parttimecount'] += $r['parttimecount'];
+				$p['cost'] += $r['cost'];
+
+				// organize by category per province also
+				$p = &$byProvince[$province]['byCategory'];
+				if (!array_key_exists($category, $p)) {
+					$p[$category] = array(
+						'totals' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0),
+						'rows'   => array()
+					);
+				}
+				$p = &$p[$category];
+
+				$p['rows'][] = $r;
+				$p = &$p['totals'];
+				$p['fulltimecount'] += $r['fulltimecount'];
+				$p['parttimecount'] += $r['parttimecount'];
+				$p['cost'] += $r['cost'];
+
+				// by partner
+				if (!array_key_exists($partner, $byPartner)) {
+					$byPartner[$partner] = array('fulltimecount' => 0, 'parttimecount' => 0,
+						'cost' => 0, 'rows' => array());
+				}
+				$p = &$byPartner[$partner];
+				$p['fulltimecount'] += $r['fulltimecount'];
+				$p['parttimecount'] += $r['parttimecount'];
+				$p['cost'] += $r['cost'];
+				$p['rows'][] = $r;
+
+			}
+
+			// now we have all partners and categories, we can build the report output
+			// the rows and columns are not static and dependent on the contents of the data, so we need to build a
+            // data structure for the table.
+            $headers = array(t('Province & Occupational Category'));
+
+			$grandTotals = array(t('Grand Total'));
+			foreach (array_keys($byPartner) as $partner) {
+				array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
+					$partner . ' - ' . t('Annual Cost'));
+				array_push($grandTotals, number_format($byPartner[$partner]['fulltimecount']),
+					number_format($byPartner[$partner]['parttimecount']), number_format($byPartner[$partner]['cost']));
+			}
+			array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
+				t('Total') . ' ' . t('Annual Cost'));
+			array_push($grandTotals, number_format($allData['fulltimecount']), number_format($allData['parttimecount']),
+				number_format($allData['cost']));
+
+			$output = array();
+
+			foreach ($byProvince as $province => $provinceData) {
+				$provinceHead = array($province);
+				$provinceTail = array($province . ' ' . t('Totals'));
+
+				foreach (array_keys($byPartner) as $partner) {
+					array_push($provinceHead, ' ', ' ', ' ');
+					if (array_key_exists($partner, $provinceData['byPartner'])) {
+						$p = &$provinceData['byPartner'][$partner]['totals'];
+						array_push($provinceTail, number_format($p['fulltimecount']),
+							number_format($p['parttimecount']), number_format($p['cost']));
+					}
+					else {
+						array_push($provinceTail, 0, 0, 0);
+					}
+				}
+				array_push($provinceHead, ' ', ' ', ' ');
+				array_push($provinceTail, number_format($provinceData['totals']['fulltimecount']),
+					number_format($provinceData['totals']['parttimecount']),
+					number_format($provinceData['totals']['cost']));
+
+				$output[] = $provinceHead;
+				foreach($provinceData['byCategory'] as $category => $categoryValues) {
+					$categoryRow = array($category);
+					foreach (array_keys($byPartner) as $partner) {
+						if (array_key_exists($partner, $provinceData['byPartner']) &&
+							array_key_exists($category, $provinceData['byPartner'][$partner]['byCategory'])) {
+							$p = &$provinceData['byPartner'][$partner]['byCategory'][$category][0];
+							array_push($categoryRow, number_format($p['fulltimecount']),
+								number_format($p['parttimecount']), number_format($p['cost']));
+						}
+						else {
+							array_push($categoryRow, 0, 0, 0);
+						}
+					}
+					array_push($categoryRow, number_format($categoryValues['totals']['fulltimecount']),
+						number_format($categoryValues['totals']['parttimecount']),
+						number_format($categoryValues['totals']['cost']));
+					$output[] = $categoryRow;
+				}
+
+				$output[] = $provinceTail;
+			}
+			$output[] = $grandTotals;
+			$this->view->assign('headers', $headers);
+			$this->view->assign('output', $output);
+		}
+
+		$choose = array("0" => '--' . t("choose") . '--');
+
+		if (!$this->hasACL('training_organizer_option_all')) {
+			// limit data to user's access to mechanisms only available to partners and
+			// subpartners that the user account can access
+			$uid = $this->isLoggedIn();
+
+			$mechanismFilter = $db->select();
+			$mechanismFilter->from(array('mo' => 'mechanism_option'), array('mo.id', 'mo.mechanism_phrase'));
+			$mechanismFilter->join(array('lmp' => 'link_mechanism_partner'), 'mo.id = lmp.mechanism_option_id', array());
+			$mechanismFilter->join(array('p' => 'partner'), 'p.id = lmp.partner_id', array());
+			$mechanismFilter->join(array('utoa' => 'user_to_organizer_access'),
+				'utoa.training_organizer_option_id = p.organizer_option_id', array());
+
+			$mechanismFilter->where('utoa.user_id = ?', $uid);
+			$mechanismFilter->order('mechanism_phrase ASC');
+
+			$mechanisms = $choose + $db->fetchPairs($mechanismFilter);
+		} else {
+			$mechanisms = $choose + $db->fetchPairs($db->select()
+				->from('mechanism_option', array('id', 'mechanism_phrase'))
+				->order('mechanism_phrase ASC')
+			);
+		}
+
+		$funders = $choose + $db->fetchPairs($db->select()
+				->from('partner_funder_option', array('id', 'funder_phrase'))
+				->order('funder_phrase ASC')
+		);
+
+		$transitions = $choose + $db->fetchPairs($db->select()
+				->from('employee_transition_option', array('id', 'transition_phrase'))
+				->order('transition_phrase ASC')
+		);
+
+		$classifications = $choose + $db->fetchPairs($db->select()
+				->from('employee_qualification_option', array('id', 'qualification_phrase'))
+				->order('qualification_phrase ASC')
+		);
+
+		$this->view->assign('locations', $locations);
+		$this->view->assign('classifications', $classifications);
+		$this->view->assign('transitions', $transitions);
+		$this->view->assign('criteria', $criteria);
+		$this->view->assign('funders', $funders);
+		$this->view->assign('mechanisms', $mechanisms);
+	}
+
 	public function employeesAction() {
 		require_once ('models/table/Helper.php');
 		require_once ('views/helpers/FormHelper.php');
@@ -9860,8 +10232,7 @@ die (__LINE__ . " - " . $sql);
 			$rowArray = $db->fetchAll( $sql );
 			$this->viewAssignEscaped ('results', $rowArray );
 
-			$locations = Location::getAll();
-			// hack #TODO - seems Region A -> ASDF, Region B-> *Multiple Province*, Region C->null Will not produce valid locations with Location::subquery
+			$locations = Location::getAll();			// hack #TODO - seems Region A -> ASDF, Region B-> *Multiple Province*, Region C->null Will not produce valid locations with Location::subquery
 			// the proper solution is to add "Default" districts under these subdistricts, not sure if i can at this point the table is 12000 rows, todo later
 			foreach ($rowArray as $i => $row) {
 				if ($row['province_name'] == "" && $row['location_id']){ // empty province
@@ -10009,116 +10380,164 @@ die (__LINE__ . " - " . $sql);
 	}
 
 
-  public function mechanismsAction() {
-	require_once ('models/table/Helper.php');
-	require_once ('views/helpers/FormHelper.php');
-	require_once ('views/helpers/DropDown.php');
-	require_once ('views/helpers/Location.php');
-	require_once ('views/helpers/CheckBoxes.php');
-	require_once ('views/helpers/TrainingViewHelper.php');
+	public function mechanismsAction() {
+		require_once ('models/table/Helper.php');
+		require_once ('views/helpers/FormHelper.php');
+		require_once ('views/helpers/DropDown.php');
+		require_once ('views/helpers/Location.php');
+		require_once ('views/helpers/CheckBoxes.php');
+		require_once ('views/helpers/TrainingViewHelper.php');
 
-	$criteria = $this->getAllParams();
-
-	if ($criteria['go'])
-	{
-
-		$where = array();
-		
-		switch ($criteria['report']) {
-			case "defined":
-				
-				$sql = "
-select sfm.id, subp.partner as subpartner, funder_phrase, mechanism_phrase, sfm.funding_end_date
-from subpartner_to_funder_to_mechanism sfm
-left join partner subp on subp.id = sfm.subpartner_id
-left join partner_funder_option pf on pf.id = sfm.partner_funder_option_id
-left join mechanism_option m on m.id = sfm.mechanism_option_id
-";
-				break;
-				
-			case "definedByPartner":
-				
-				$sql = "
-select psfm.id, p.partner, subp.partner as subpartner, funder_phrase, mechanism_phrase, psfm.funding_end_date
-from partner_to_subpartner_to_funder_to_mechanism psfm
-left join partner p on p.id = psfm.partner_id
-left join partner subp on subp.id = psfm.subpartner_id
-left join partner_funder_option pf on pf.id = psfm.partner_funder_option_id
-left join mechanism_option m on m.id = psfm.mechanism_option_id
-";
-				break;
-				
-			case "definedByEmployee":
-				
-				$sql = "
-select epsfm.id, e.employee_code, p.partner, subp.partner as subpartner, funder_phrase, mechanism_phrase, epsfm.percentage
-from employee_to_partner_to_subpartner_to_funder_to_mechanism epsfm
-left join employee e on e.id = epsfm.employee_id
-left join partner p on p.id = epsfm.partner_id
-left join partner subp on subp.id = epsfm.subpartner_id
-left join partner_funder_option pf on pf.id = epsfm.partner_funder_option_id
-left join mechanism_option m on m.id = epsfm.mechanism_option_id
-";
-				break;
-		}
-		
-		
-				// criteria
-		if ($criteria['partner_id'] && $criteria['report'] != 'defined' ) $where[] = 'p.id = '.$criteria['partner_id'];
-		if ($criteria['subpartner_id'])                   $where[] = 'subp.id = '.$criteria['subpartner_id'];
-
-		if ($criteria['start_date'])                      $where[] = 'funding_end_date >= \''.$this->_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
-
-		if ($criteria['end_date'])                        $where[] = 'funding_end_date <= \''.$this->_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
-
-
-		
-		switch ($criteria['report']) {
-			case "defined":
-				if ( count ($where) ){
-					$sql .= ' WHERE ' . implode(' AND ', $where);
-					$sql .= ' AND sfm.is_deleted = false ';
-				}
-				else  $sql .= ' WHERE sfm.is_deleted = false ';
-				$sql .= ' order by subp.partner, funder_phrase, mechanism_phrase ';
-				break;
-			case "definedByPartner":
-				if ( count ($where) ){
-					$sql .= ' WHERE ' . implode(' AND ', $where);
-					$sql .= ' AND psfm.is_deleted = false ';
-				}
-				else  $sql .= ' WHERE psfm.is_deleted = false ';
-				$sql .= ' order by p.partner, subp.partner, funder_phrase, mechanism_phrase ';
-				break;
-			case "definedByEmployee":
-				if ( count ($where) ){
-					$sql .= ' WHERE ' . implode(' AND ', $where);
-					$sql .= ' AND epsfm.is_deleted = false ';
-				}
-				else  $sql .= ' WHERE epsfm.is_deleted = false ';
-				$sql .= ' order by e.employee_code, p.partner, subp.partner, funder_phrase, mechanism_phrase ';
-				break;
-		}
-
+		$criteria = $this->getAllParams();
 		$db = $this->dbfunc();
-		$rowArray = $db->fetchAll( $sql );
-		$this->viewAssignEscaped ('results', $rowArray );
-		$this->view->assign ('count', count($rowArray) );
 
-		if ($criteria ['outputType']) {
-			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
+		if ($criteria['go'])
+		{
+
+			$where = array();
+
+			// TODO: This special case report is bad
+			if($criteria['report'] == "subpartnerEmployees") {
+				$sql = "SELECT partner.partner, link_mechanism_partner.partner_id
+						FROM link_mechanism_partner
+						INNER JOIN partner ON link_mechanism_partner.partner_id = partner.id
+						WHERE link_mechanism_partner.mechanism_option_id = {$criteria['mechanism_id']}";
+				$sql = "SELECT
+partner.partner,
+link_mechanism_partner.partner_id,
+mechanism_option.mechanism_phrase
+FROM
+link_mechanism_partner
+INNER JOIN partner ON link_mechanism_partner.partner_id = partner.id
+INNER JOIN mechanism_option ON link_mechanism_partner.mechanism_option_id = mechanism_option.id
+WHERE link_mechanism_partner.mechanism_option_id = {$criteria['mechanism_id']}";
+				$rowArray = $db->fetchAll($sql);
+				foreach($rowArray as &$row) {
+					$sql = "SELECT COUNT(*) as numberEmployees
+							FROM employee
+							INNER JOIN link_mechanism_employee ON link_mechanism_employee.employee_id = employee.id
+							WHERE employee.partner_id = {$row['partner_id']} AND
+							link_mechanism_employee.mechanism_option_id = {$criteria['mechanism_id']}";
+					$row['numberEmployees'] = $db->fetchOne($sql);
+				}
+				$this->viewAssignEscaped('results', $rowArray);
+				$this->view->assign('count', count($rowArray));
+
+				if ($criteria ['outputType']) {
+					$this->sendData($this->reportHeaders(false, $rowArray));
+				}
+
+			}
+
+			switch ($criteria['report']) {
+				case "defined":
+
+					$sql = "
+							select sfm.id, subp.partner as subpartner, funder_phrase, mechanism_phrase, sfm.funding_end_date
+							from subpartner_to_funder_to_mechanism sfm
+							left join partner subp on subp.id = sfm.subpartner_id
+							left join partner_funder_option pf on pf.id = sfm.partner_funder_option_id
+							left join mechanism_option m on m.id = sfm.mechanism_option_id
+							";
+					break;
+
+				case "definedByPartner":
+
+					$sql = "
+							select psfm.id, p.partner, subp.partner as subpartner, funder_phrase, mechanism_phrase, psfm.funding_end_date
+							from partner_to_subpartner_to_funder_to_mechanism psfm
+							left join partner p on p.id = psfm.partner_id
+							left join partner subp on subp.id = psfm.subpartner_id
+							left join partner_funder_option pf on pf.id = psfm.partner_funder_option_id
+							left join mechanism_option m on m.id = psfm.mechanism_option_id
+							";
+					break;
+
+				case "definedByEmployee":
+
+					$sql = "
+							select epsfm.id, e.employee_code, p.partner, subp.partner as subpartner, funder_phrase, mechanism_phrase, epsfm.percentage
+							from employee_to_partner_to_subpartner_to_funder_to_mechanism epsfm
+							left join employee e on e.id = epsfm.employee_id
+							left join partner p on p.id = epsfm.partner_id
+							left join partner subp on subp.id = epsfm.subpartner_id
+							left join partner_funder_option pf on pf.id = epsfm.partner_funder_option_id
+							left join mechanism_option m on m.id = epsfm.mechanism_option_id
+							";
+					break;
+			}
+
+			// criteria
+			if ($criteria['partner_id'] && $criteria['report'] != 'defined' ) {
+				$where[] = 'p.id = '.$criteria['partner_id'];
+			}
+
+			if ($criteria['subpartner_id']) {
+				$where[] = 'subp.id = '.$criteria['subpartner_id'];
+			}
+
+			if ($criteria['start_date']) {
+				$where[] = 'funding_end_date >= \'' . $this->_date_to_sql($criteria['start_date']) . ' 00:00:00\'';
+			}
+			if ($criteria['end_date']) {
+				$where[] = 'funding_end_date <= \'' . $this->_date_to_sql($criteria['end_date']) . ' 23:59:59\'';
+			}
+
+			switch ($criteria['report']) {
+
+				case "defined":
+					if ( count ($where) ){
+						$sql .= ' WHERE ' . implode(' AND ', $where);
+						$sql .= ' AND sfm.is_deleted = false ';
+					}
+					else  {
+						$sql .= ' WHERE sfm.is_deleted = false ';
+					}
+					$sql .= ' order by subp.partner, funder_phrase, mechanism_phrase ';
+					break;
+				case "definedByPartner":
+					if ( count ($where) ){
+						$sql .= ' WHERE ' . implode(' AND ', $where);
+						$sql .= ' AND psfm.is_deleted = false ';
+					}
+					else {
+						$sql .= ' WHERE psfm.is_deleted = false ';
+					}
+					$sql .= ' order by p.partner, subp.partner, funder_phrase, mechanism_phrase ';
+					break;
+				case "definedByEmployee":
+					if ( count ($where) ){
+						$sql .= ' WHERE ' . implode(' AND ', $where);
+						$sql .= ' AND epsfm.is_deleted = false ';
+					}
+					else {
+						$sql .= ' WHERE epsfm.is_deleted = false ';
+					}
+					$sql .= ' order by e.employee_code, p.partner, subp.partner, funder_phrase, mechanism_phrase ';
+					break;
+			}
+			// TODO: This special case is bad.
+			if($criteria['report'] != "subpartnerEmployees") {
+				$rowArray = $db->fetchAll($sql);
+				$this->viewAssignEscaped('results', $rowArray);
+				$this->view->assign('count', count($rowArray));
+
+				if ($criteria ['outputType']) {
+					$this->sendData($this->reportHeaders(false, $rowArray));
+				}
+			}
 		}
-	}
 
-    $sql = '';
-	// assign form drop downs
-	$this->view->assign ( 'status',   $status );
-	$this->view->assign ( 'criteria', $criteria );
-	$this->view->assign ( 'pageTitle', t('Reports'));
-	$this->view->assign ( 'report', $criteria['report']);
-	
-	$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false ) ); //table, col, selected_value
-	$this->view->assign ( 'subpartners', DropDown::generateHtml ( 'partner', 'partner', $criteria['subpartner_id'], false, $this->view->viewonly, false, true, array('name' => 'subpartner_id'), true ) );
-	
-  }
+		$sql = "SELECT id, mechanism_phrase from mechanism_option where is_deleted = 0 order by mechanism_phrase ASC";
+		$mechanisms = $db->fetchAll($sql);
+
+		// assign form drop downs
+		$this->view->assign('criteria', $criteria);
+		$this->view->assign('pageTitle', t('Reports'));
+		$this->view->assign('report', $criteria['report']);
+		$this->view->assign('mechanisms', $mechanisms);
+
+		$this->view->assign ('partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false)); //table, col, selected_value
+		$this->view->assign ('subpartners', DropDown::generateHtml ( 'partner', 'partner', $criteria['subpartner_id'], false, $this->view->viewonly, false, true, array('name' => 'subpartner_id'), true));
+	}
 }

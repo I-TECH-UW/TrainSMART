@@ -22,32 +22,20 @@
 
 			<h1><?php $this->mode == 'add' ? print(t('Add').space.t('Employee')) : tp('Build Funding'); ?></h1>
 			
- <form action="" method="post" class="form_employee">
+            <form action="" method="post" class="form_employee">
 
-<?php
-// suppress warning in labelAndField
-$this->required_fields = array();
+            <?php require_once("views/helpers/DropDown.php");?>
+            <fieldset>
+            <div id="funwrapper">
 
+                <?php
+                    echo DropDown::render('mechanism', t('Mechanism'), $this->mechanism, 'mechanism_phrase', 'id', false, false, true) . "\n";
+                    echo DropDown::render('subPartner', t('Subpartner'), $this->subPartner, 'partner', 'id', false, false, true, true, true) . "\n";
+                    echo labelAndField($this, t('Funding End Date'), 'date','end_date', '');
+                ?>
 
-// examples:
-// labelAndField($this, t('Input 1'), $myDropDown, 'input_1');
-// labelAndField($this, t('Input 2'), 'text', 'field2', $values['field2']);
-//echo labelAndField ( $this, t ( 'Partner' ), $this->partner, 'partner_id' );
-
-?>
-<fieldset>
-<div id="funwrapper">
-<?php 
-  // funder_filter_dropdown is cascading fields 
-  //funder_filter_dropdown($this, $this->partners, $this->partnerFunder, $this->mechanism);
-  // build_funding_dropdown builds cascading with all options
-  build_funding_dropdown($this, $this->subPartner, $this->partnerFunder, $this->mechanism);
-  echo labelAndField($this, t('Funding End Date'), 'date','funding_end_date[]', '');
-  
-?>
-
-</div>
-</fieldset>
+            </div>
+            </fieldset>
 
 				<script type="text/javascript">
 

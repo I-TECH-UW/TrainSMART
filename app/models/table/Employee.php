@@ -12,52 +12,61 @@ require_once ('ITechTable.php');
 class Employee extends ITechTable {
 	protected $_name = 'employee';
 	protected $_primary = 'id';
-	
-	public static function disassociateMechanismFromEmployee($mechanism_ids)
+
+    /**
+     * deletes mechanism associations from an employee
+     * @param $employee_id     - employee id
+     * @param $association_ids - the ids to remove
+     * @return bool
+     */
+    public static function disassociateMechanismsFromEmployee($employee_id, $association_ids)
 	{
-	    if ($mechanism_ids === "")
-		  return false;
+	    if ((!$association_ids) || (!$employee_id) ||
+            (!preg_match('/^\d+[,\d+]*$/', $association_ids))) {
+            return false;
+        }
 	    
-	    $table = new ITechTable ( array ('name' => 'employee_to_partner_to_subpartner_to_funder_to_mechanism' ) );
-	    try{
-	        $table->delete("id in ($mechanism_ids)");
-	    }catch(Exception $e){
-	        print $e;
+	    $table = new ITechTable ( array ('name' => 'link_mechanism_employee' ) );
+	    try {
+	        $table->delete("id IN ($association_ids) AND employee_id = $employee_id");
+	    } catch(Exception $e) {
+	        error_log($e);
 	        return false;
 	    }
 	    return true;
 	     
 	}
-	
-	public static function saveMechanismAssociation ( $id, $mechanism_association)
+
+    /**
+     * associate mechanisms and percentages with an employee
+     * @param int    $employee_id           - employee id
+     * @param string $mechanism_ids         - comma-delimited string of ids to associate with the employee
+     * @param string $mechanism_percentages - comma-delimited string of percentages to associate with each id in $mechanism_ids
+     * @return bool
+     */
+	public static function saveMechanismAssociations ( $employee_id, $mechanism_ids, $mechanism_percentages)
 	{
-	    if (empty($mechanism_association))
-	        return false;
-	
-	    $psfmTable = new ITechTable(array('name' => 'partner_to_subpartner_to_funder_to_mechanism'));
-	    $stable = new ITechTable ( array ('name' => 'employee_to_partner_to_subpartner_to_funder_to_mechanism' ) );
-	    foreach($mechanism_association as $i => $mech){
-	        try{
-	            $ids = explode('_', $mech['combined_id']);
-	            $mechanism_id = $ids[0];
-	            $psfm_id = $ids[1];
-        	    $psfm = $psfmTable->fetchRow($psfmTable->select()->where("id = ?", $psfm_id));
-        	    	            	
-	            $row = $stable->createRow();
-	            $row->partner_to_subpartner_to_funder_to_mechanism_id = $psfm->id;
-	            $row->employee_id = $id;
-	            $row->partner_id = $psfm->partner_id;
-	            $row->subpartner_id = $psfm->subpartner_id;
-	            $row->partner_funder_option_id = $psfm->partner_funder_option_id;
-	            $row->mechanism_option_id = $psfm->mechanism_option_id;
-	            $row->percentage = $mech['percentage'];
-	            $row->created_by = $psfm->created_by;
-	            $row->is_deleted = 0;
-	            $row->timestamp_created = $psfm->timestamp_created;
-	            
-	            $row->save();
-	        }catch(Exception $e){
-	            print $e;
+	    if ((!$mechanism_ids) || (!$employee_id) ||
+            (!preg_match('/^\d+[,\d+]*$/', $mechanism_ids)) ||
+            (!preg_match('/^\d+[,\d+]*$/', $mechanism_percentages))) {
+            return false;
+        }
+
+        $ids = explode(',', $mechanism_ids);
+        $percentages = explode(',', $mechanism_percentages);
+
+        if (count($ids) != count($percentages)) {
+            return false;
+        }
+
+        $linkTable = new ITechTable ( array ('name' => 'link_mechanism_employee' ) );
+	    foreach($ids as $i => $mechID) {
+	        try {
+                $row = $linkTable->createRow(array('employee_id' => $employee_id, 'mechanism_option_id' => $ids[$i], 'percentage' => $percentages[$i]));
+                $row->save();
+
+	        } catch(Exception $e) {
+	            error_log($e);
 	            return false;
 	        }
 	    }

@@ -1350,8 +1350,8 @@ table {
 	-webkit-border-radius	: 3px;
 }
 
-.form_employee input:not([type="submit"]):not([type="checkbox"]),
-.form_styled input:not([type="submit"]):not([type="checkbox"]) {
+.form_employee input:not([type="submit"]):not([type="checkbox"]):not([type="button"]),
+.form_styled input:not([type="submit"]):not([type="checkbox"]):not([type="button"]) {
 	width:250px;
 }
 

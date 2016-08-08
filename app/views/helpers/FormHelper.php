@@ -19,6 +19,7 @@
  */
 
 /**
+ * creates html string for a labelled input field, uses view object to control readonly/required data
  * @param  view   $view       - the view object
  * @param  string $label      - label text
  * @param  string $content    - 'text', 'textarea', 'date', '%' or any html blob

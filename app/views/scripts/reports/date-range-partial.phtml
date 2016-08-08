@@ -1,0 +1,35 @@
+<?php
+
+    $prefix = "";
+    if (property_exists($this, 'prefix')) {
+        $prefix = $this->prefix;
+    }
+
+    $startname = $prefix . 'startdate';
+    $endname = $prefix . 'enddate';
+
+    $startval = "";
+    $endval = "";
+
+    if (property_exists($this, 'startdate')) {
+        $startval = $this->startdate;
+    }
+    if (property_exists($this, 'enddate')) {
+        $endval = $this->enddate;
+    }
+
+    echo '<span>';
+    if (property_exists($this, 'label')) {
+        echo $this->formLabel("", $this->label, array('class' => 'fieldLabel'));
+    }
+
+    if (property_exists($this, 'showvalue') && $this->showvalue) {
+        echo $this->formCheckbox($prefix . 'showdate');
+    }
+    echo $this->formText($startname, $startval, array('id' => $startname, 'class' => 'datepicker'));
+    echo " " . t('to') . " ";
+    echo $this->formText($endname, $endval, array('id' => $endname, 'class' => 'datepicker'));
+    echo "</span>";
+    ?>
+
+    <div class="clear pad20">&nbsp;</div>

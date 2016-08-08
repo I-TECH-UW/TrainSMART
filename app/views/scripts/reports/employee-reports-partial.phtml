@@ -1,0 +1,48 @@
+<?php
+// Period (Date Range)
+echo $this->partial('/reports/date-range-partial.phtml',
+    array('label' => t('Period'), 'prefix' => 'period', 'startval' => '', 'endval' => '', 'showvalue' => false));
+?>
+
+
+<span>
+    <?php
+    // Implementing Agency (multiselect)
+    echo $this->formLabel("", t('Funder'), array('class' => 'fieldLabel'));
+    echo $this->formSelect('funder', "", array('multiple' => true), $this->funders);
+    ?>
+</span>
+<div class="clear pad20">&nbsp;</div>
+
+<span>
+<?php
+    // Mechanism (multiselect)
+    echo $this->formLabel("", t('Mechanism'), array('class' => 'fieldLabel'));
+    echo $this->formSelect('mechanism', "", array('multiple' => true), $this->mechanisms);
+?>
+</span>
+<div class="clear pad20">&nbsp;</div>
+
+<span>
+<?php
+    // Occupational Classifcation
+    echo $this->formLabel("", t('Occupational Classification'), array('class' => 'fieldLabel'));
+    echo $this->formSelect('classification', "", array(), $this->classifications);
+?>
+</span>
+<div class="clear pad20">&nbsp;</div>
+
+<span>
+<?php
+    // Transition type
+    echo $this->formLabel("", t('Transition Type'), array('class' => 'fieldLabel'));
+    echo $this->formSelect('transition', "", array(), $this->transitions);
+?>
+</span>
+<div class="clear pad20">&nbsp;</div>
+
+<?php
+// Contract end date
+echo $this->partial('/reports/date-range-partial.phtml',
+    array('label' => t('Contract end date'), 'prefix' => 'contract', 'startval' => '', 'endval' => '', 'showvalue' => false));
+?>

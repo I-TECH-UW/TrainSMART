@@ -340,6 +340,10 @@ protected function sendData($data) {
     	return false;
     }
 
+    /**
+     * returns user id if logged in, false if not
+     * @return bool|int
+     */
     public function isLoggedIn() {
         $auth = Zend_Auth::getInstance();
         if ($auth->hasIdentity() )

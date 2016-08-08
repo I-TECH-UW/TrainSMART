@@ -62,6 +62,28 @@ class ReportFilterHelpers extends ITechController {
 	{
 		return (! $this->_is_filter_all($arrOrStr));
 	}
+
+	/**
+	 * returns an array of partner ids that the logged in user can edit
+	 * @return array
+	 */
+	public function getAvailablePartners() {
+		$db = $this->dbfunc();
+		$user_id = $this->isLoggedIn();
+		if ($this->hasACL('training_organizer_option_all')) {
+			$sql = 'SELECT id from partner';
+		} else {
+			$sql = 'SELECT partner.id FROM partner ' .
+				'INNER JOIN training_organizer_option ON partner.organizer_option_id = training_organizer_option.id ' .
+				'INNER JOIN user_to_organizer_access ON ' .
+				'user_to_organizer_access.training_organizer_option_id = training_organizer_option.id ' .
+				"WHERE user_id = $user_id";
+		}
+		$editablePartners = $db->fetchCol($sql);
+
+		return $editablePartners;
+	}
+
 }
 
 ?>

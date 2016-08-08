@@ -11,6 +11,11 @@
 	$report = 'defined';
 	?>
 
+	<style>
+		.form_employee_report select {
+			min-width: 250px;
+		}
+	</style>
 </head>
 <body class="yui-skin-sam"  >
 
@@ -21,12 +26,31 @@
 
 			<h1><?php tp('Mechanism Reports');?></h1>
 
-			<form action="" method="get" class="form_employee">
-			
+			<form action="" method="get" class="form_employee_report">
+
+				<script type="text/javascript">
+					$( document ).ready(function() {
+						$("#report").change(function() {
+							var optVal = $("#report").val();
+							if (optVal === 'subpartnerEmployees') {
+								$('#mechanismOptionContainer').show();
+								$('#partnerSubpartnerOptionContainer').hide();
+							}
+							else {
+								$('#mechanismOptionContainer').hide();
+								$('#partnerSubpartnerOptionContainer').show();
+
+							}
+						});
+						$("#report").trigger("change");
+					});
+				</script>
+
 			<div id="content">
 				<div id="subcontent">
 					<div class="fieldLabel" id="report_lbl">Select Mechanism Report</div>
-					<select id="report" name="report" >
+					<select id="report" name="report">
+						<option value="subpartnerEmployees" <?php if (@$this->report == 'subpartnerEmployees') echo 'SELECTED';?> > Mechanism Employees By Subpartner</option>
 						<option value="defined" <?php if ( @$this->report == 'defined' ) echo 'SELECTED';?> >Mechanisms Defined</option>
 						<option value="definedByPartner" <?php if ( @$this->report == 'definedByPartner' ) echo 'SELECTED';?> >Mechanisms Defined by Partner</option>
 						<option value="definedByEmployee" <?php if ( @$this->report == 'definedByEmployee' ) echo 'SELECTED';?> >Mechanisms Defined by <?php tp('Employee');?></option>
@@ -35,17 +59,32 @@
 			
 				<fieldset id=""><legend><?php tp('Select Criteria');?></legend>
 
-					<?php
-						$cal = '<a class="calendarbtn" href="#"><img src="'.$this->base_url.'/js/yui/assets/calbtn.gif"></a>';
-						$this->required_fields = array();
-						$this->calendar_fields = array('start_date','end_date');
 
-						if($this->setting['display_employee_partner'])
-							echo labelAndField($this, t('Partner'), $this->partners, 'partner');
-						if($this->setting['display_employee_sub_partner'])
-							echo labelAndField($this, t('Sub Partner'), $this->subpartners, 'sub_partner');
-						
-					?>
+					<div id="mechanismOptionContainer">
+						<div class="fieldLabel partner">Mechanism</div>
+						<div class="fieldInput">
+							<select name="mechanism_id" id="mechanismSelect">
+								<option value="">&mdash; <?php tp('select')?> &mdash;</option>
+
+								<?php
+									foreach($this->mechanisms as $mech) {
+										echo '<option value="' . $mech{'id'} . '">' . $mech{'mechanism_phrase'} . '</option>';
+									}
+								?>
+							</select>
+						</div>
+					</div>
+
+					<div id="partnerSubpartnerOptionContainer">
+						<?php
+
+							if($this->setting['display_employee_partner'])
+								echo labelAndField($this, t('Partner'), $this->partners, 'partner');
+							if($this->setting['display_employee_sub_partner'])
+								echo labelAndField($this, t('Sub Partner'), $this->subpartners, 'sub_partner');
+
+						?>
+					</div>
 					<div class="clear"></div>
 					<input type="hidden" name="limit" id="limit" value="1" />
 					<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
@@ -61,11 +100,12 @@
 				});
 			</script>
 
-			<?php if ( $this->criteria['go'] ) { ?>
+			<?php if ( $this->criteria['go'] && $this->report != 'subpartnerEmployees') { ?>
 			<div class="hrGrey"></div>
 			<!-- TA:80 print only partners part -->
 			<div class="fieldIndentNoMargin"><?php tp('Partners');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport("partners");?></div><br/>
 			<div id="partners"></div>
+
 			<script type="text/javascript">
 			var partnersData = [
 			<?php
@@ -118,6 +158,55 @@
 			<?php if ($cnt < count($this->results)) { ?>
 			[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a>
 			<?php } ?>
+			<?php } elseif ($this->criteria['go'] && $this->report == 'subpartnerEmployees') {?>
+			<div class="hrGrey"></div>
+			<div class="fieldIndentNoMargin"><?php tp('Partners');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div><br/>
+			<div id="partners"></div>
+
+			<script type="text/javascript">
+			var partnersData = [
+				<?php
+				$cnt = 0;
+				$isFirstRow = true;
+				foreach($this->results as $row) {
+
+					if ( ( $cnt < 100 ) or ( isset($_REQUEST['limit']) AND !$_REQUEST['limit'] ) ) {
+						if ( !$isFirstRow ) {
+							echo ',';
+						}
+						$isFirstRow = false;
+
+						echo '[';
+							$data = array();
+							$data[] = $row['mechanism_phrase'];
+							$data[] = $row['partner'];
+							$data[] = $row['numberEmployees'];
+							echo '"'.implode('","', $data).'"';
+						echo ']';
+						$cnt++;
+					}
+				}
+				?>];
+
+			var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
+				if ( (sData == null) || (sData.length == 0) )
+					sData = '&nbsp;&nbsp;&nbsp;';
+				elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/mechanism/edit/id/" + oRecord.getData("id") + "' >" + sData + "</a>";
+			}
+
+			var partnersColumnDefs = [
+
+				{key:"mechanism_phrase", label: "<?php tp("Mechanism");?>", sortable:true, resizable:false <?php if ( @$this->report == 'defined' ) echo ', formatter: formatViewUrl';?>}
+				,{key:"partner",       label: "<?php tp('Partner');?>",         sortable:true, resizeable:true}
+				,{key:"numberEmployees",       label: "<?php tp('Number of Employees');?>",         sortable:true, resizeable:true}
+			];
+
+			makeDataTable("partners", null, partnersData, partnersColumnDefs);
+		</script>
+			<?php if ($cnt < count($this->results)) { ?>
+				[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a>
+			<?php } ?>
+
 			<?php } ?>
 		</div>
 	</body>
