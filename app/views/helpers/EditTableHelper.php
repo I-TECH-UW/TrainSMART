@@ -102,8 +102,16 @@ class EditTableHelper {
 		foreach($colDefs as $key => $lbl) {
 
 			$customDef = (isset($customColDefs[$key])) ? ', ' . $customColDefs[$key] : '';
-
-			$colDefsClone[$key] = '{key:"' . htmlspecialchars($key) . '", width:'.($key == 'facility_name'?80:$key == 'training_title'?120:(strlen($lbl)*6)).', resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+            //TA:106 set width for some columns
+            if($key == 'id'){
+                $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) .
+                '", width:15, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+                
+            }else{
+			 $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) . 
+			 '", width:'.($key == 'first_name'?80:$key == 'last_name'?80:$key == 'facility_name'?80:$key == 'training_title'?120:(strlen($lbl)*6)).', resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+            }
+            print $colDefsClone[$key] . "***";
 		}
 
 		// Format data

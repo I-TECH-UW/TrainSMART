@@ -622,12 +622,13 @@ class StudenteditController extends ITechController
 		$dateModified = $dm != '' && $dm >0 ? date("d-m-Y",$dm): t("N/A");
 		$this->view->assign('dateModified', $dateModified);
 		$this->view->assign('uuid', $details['person'][0]['uuid']);
-		require_once('models/table/Person.php');
-		$personObj = new Person ();
-		$created_by = $details['person'][0]['created_by'] ? $personObj->getPersonName($details['person'][0]['created_by']) : t("N/A");
-		$this->viewAssignEscaped('creator', $created_by);
-		$update_by = $details['person'][0]['modified_by'] ? $personObj->getPersonName($details['person'][0]['modified_by']) : t("N/A");
-		$this->viewAssignEscaped('updater', $update_by);
+		//TA:105 display audit box
+ 		require_once('models/table/User.php');
+  		$userObj = new User ();
+   		$created_by = $details['person'][0]['created_by'] ? $userObj->getUserFullName($details['person'][0]['created_by']) : t("N/A");
+   		$this->viewAssignEscaped('creator', $created_by);
+   		$update_by = $details['person'][0]['modified_by'] ? $userObj->getUserFullName($details['person'][0]['modified_by']) : t("N/A");
+  		$this->viewAssignEscaped('updater', $update_by);
 
 		$this->view->assign('facilities', $helper->getFacilities());
 
