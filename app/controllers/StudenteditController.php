@@ -629,6 +629,7 @@ class StudenteditController extends ITechController
    		$this->viewAssignEscaped('creator', $created_by);
    		$update_by = $details['person'][0]['modified_by'] ? $userObj->getUserFullName($details['person'][0]['modified_by']) : t("N/A");
   		$this->viewAssignEscaped('updater', $update_by);
+  		//print_r($details['person']);
 
 		$this->view->assign('facilities', $helper->getFacilities());
 

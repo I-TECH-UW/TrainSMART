@@ -240,7 +240,10 @@ class Studentedit extends ITechTable
 			'custom_field3'	=>	$param['custom_field3'], //TA: added 7/22/2014
 			'marital_status'	=>	$param['marital_status'], //TA: added 7/22/2014
 			'spouse_name'	=>	$param['spouse_name'], //TA: added 7/22/2014
-
+			
+		    'timestamp_updated' => $this->now_expr(), //TA:105
+		    'modified_by' => Session::getCurrentUserId(),//TA:105
+		    
 			//'home_location_id'=>"$param[city]"
 		);
 
