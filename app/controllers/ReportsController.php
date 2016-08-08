@@ -2941,7 +2941,7 @@ echo $sql . "<br>";
 			$sql .= '    LEFT JOIN ('.$location_sub_query.') AS l ON facility.location_id = l.id ';
 			$sql .= '    LEFT  JOIN person_suffix_option suffix ON person.suffix_option_id = suffix.id ';
 			if($criteria ['province_id'] && $criteria ['province_id'][0] !== ''){  //TA:74 filtering by province name is fixed
-			     $sql .= ' where l.id IN ( ' . implode(",", $criteria ['province_id']) . ") ";
+			     $sql .= ' where l.province_id IN ( ' . implode(",", $criteria ['province_id']) . ") ";
 			}
 			$sql .= ' ) as pt ';
 
@@ -3259,7 +3259,7 @@ echo $sql . "<br>";
 				}
 			}
 			
-			
+
 			$rowArray = $db->fetchAll ( $sql);
 			
 
