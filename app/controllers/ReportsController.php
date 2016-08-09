@@ -9791,25 +9791,7 @@ die (__LINE__ . " - " . $sql);
 		$db = $this->dbfunc();
 
 		if ($criteria['go']) {
-		    $f = Location::fluentSubquery();
-            $s = $f->__toString();
-			$num_locs = $this->setting('num_location_tiers');
-
-			$locationSelectWithCity = $db->select()->distinct()
-				->from(array('l4' => 'location'), array('id' => 'l4.id', 'city_id' => 'l4.id', 'city_name' => 'l4.location_name'))
-				->joinLeft(array('l3' => 'location'), 'l4.parent_id = l3.id AND l3.tier = 3', array('region_c_id' => 'l3.id'))
-				->joinLeft(array('l2' => 'location'), 'l2.parent_id = l3.id AND l2.tier = 2', array('district_id' => 'l2.id'))
-				->joinLeft(array('l1' => 'location'), 'l1.parent_id = l2.id AND l1.tier = 1', array('province_id' => 'l1.id', 'province_name' => 'l1.location_name'))
-				->where('l4.tier = 4');
-
-			$locationSelect = $db->select()->distinct()
-				->from(array('l3' => 'location'), array('id' => 'l3.id', 'city_id' => new Zend_Db_Expr($db->quote(0)),
-					'city_name' => new Zend_Db_Expr($db->quote('unknown')), 'region_c_id' => 'l3.id'))
-				->joinLeft(array('l2' => 'location'), 'l2.id = l3.parent_id AND l2.tier = 2', array('district_id' => 'l2.id'))
-				->joinLeft(array('l1' => 'location'), 'l1.id = l2.parent_id AND l1.tier = 1', array('province_id' => 'l1.id', 'province_name' => 'l1.location_name'))
-				->where('l3.tier = 3');
-
-			$locationSubquery = $db->select()->union(array($locationSelectWithCity, $locationSelect));
+		    $locationSubquery = Location::fluentSubquery();
 
 			$select = $db->select();
 			$select->from(array('emp' => 'employee'),
@@ -9821,7 +9803,7 @@ die (__LINE__ . " - " . $sql);
 			$select->join(array('eqo' => 'employee_qualification_option'),
 				'eqo.id = emp.employee_qualification_option_id', array('eqo.qualification_phrase'));
 			$select->join(array('p' => 'partner'), 'p.id = emp.partner_id', array('p.partner'));
-			$select->joinLeft(array('l' => new Zend_Db_Expr('(' . $locationSubquery . ')')), 'l.id = emp.location_id');
+			$select->joinLeft(array('location' => new Zend_Db_Expr('(' . $locationSubquery . ')')), 'location.id = emp.location_id');
 
 			if (!$this->hasACL('training_organizer_option_all')) {
 				// limit results to only mechanisms owned by partners and subpartners that the user account can access

@@ -791,15 +791,18 @@ class Location extends ITechTable
         $joinTableA = "location$num_locs";
         $joinTableB = $joinTableA;
 
+        $joinNames = array("$joinTableA.id");
+
         $locationSelectWithCity = $db->select()->distinct();
         $locationSelect = $db->select()->distinct();
 
-        $locationSelectWithCity->from(array($joinTableA => 'location'), array('city_id' => "$joinTableA.id",
-            'city_name' => "$joinTableA.location_name"));
+        $locationSelectWithCity->from(array($joinTableA => 'location'),
+            array('city_id' => "$joinTableA.id", 'city_name' => "$joinTableA.location_name"));
         $locationSelectWithCity->where("$joinTableA.tier = $num_locs");
 
         $locationIndex = $num_locs - 1;
         $joinTableA = "location$locationIndex";
+        $joinNames[] = "$joinTableA.id";
 
         $locationSelect->from(array($joinTableA => 'location'),
             array('city_id' => new Zend_Db_Expr($db->quote(0)),
@@ -820,6 +823,7 @@ class Location extends ITechTable
         while ($locationIndex > 0) {
             $joinTableB = $joinTableA;
             $joinTableA = "location$locationIndex";
+            $joinNames[] = "$joinTableA.id";
 
             $locationSelectWithCity->joinLeft(array($joinTableA => 'location'),
                 "$joinTableB.parent_id = $joinTableA.id AND $joinTableA.tier = $locationIndex",
@@ -836,8 +840,11 @@ class Location extends ITechTable
             $locationIndex = $locationIndex - 1;
         }
 
-        $locationSubquery = $db->select()
-            ->from(array('location' => $db->select()->union(array($locationSelectWithCity, $locationSelect))));
+        $locationSelectWithCity->columns(array('location_id' => 'COALESCE(' . implode(", ", $joinNames) .")"));
+        array_shift($joinNames);
+        $locationSelect->columns(array('location_id' => 'COALESCE(' . implode(", ", $joinNames) .")"));
+
+        $locationSubquery = $db->select()->union(array($locationSelectWithCity, $locationSelect));
 
         return $locationSubquery;
     }
