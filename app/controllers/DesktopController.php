@@ -275,7 +275,7 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 			    || $opt === 'link_tutor_tutortype' || $opt ==='link_tutor_institution' || $opt === 'link_cohorts_classes'
 			    || $opt === 'link_institution_degrees' || $opt === 'link_cadre_institution' || $opt === 'student' || $opt === 'tutor'){
 			    $institutions = $helper->getUserInstitutions($helper->myid(), false);
-			    if ((is_array($institutions)) && (count($institutions) > 0)) {
+			    if ((is_array($institutions)) && (count($institutions) > 0)){
 			        $insids = implode(",", $institutions);
 			        $optTable->select('*');
 			        if($opt === 'institution'){
@@ -485,7 +485,7 @@ LEFT JOIN institution ON institution.id = student.institutionid
 		$this->_pushZip(); 
 	}
 	
-	//DO NOT REMOVE: use for debug
+	//TA:TEST DO NOT REMOVE: use for debug
 // 	public function downloadAction() {
 // 	    $this->init();
 // 	    if (! $this->isLoggedIn ())
@@ -494,7 +494,7 @@ LEFT JOIN institution ON institution.id = student.institutionid
 // 	    if (! $this->hasACL ( 'edit_country_options' ) && ! $this->hasACL ( 'use_offline_app' )) {
 // 	        $this->doNoAccessError ();
 // 	    }
-// 	    $this->dbAction (); //TA:81 remove later use only for debug  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// 	    $this->dbAction (); 
 // 	}
 		
 	
