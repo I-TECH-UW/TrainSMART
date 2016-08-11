@@ -36,6 +36,7 @@ class Dashview extends ITechTable
 			$dropped	= $helper->getInstitutionStudents($row['id'],"dropped","count");
 			$tutors		= $helper->getInstitutionTutorCount($row['id']);
 			$active_students = $students - $dropped - $grads; //TA:85 active students
+			//print $active_students."=". $students ."-". $grads ."-". $dropped . "<br>"; 
 
 			$output[] = array(
 				"col1" => $row['institutionname'],
