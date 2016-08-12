@@ -343,8 +343,11 @@ LEFT JOIN institution ON institution.id = student.institutionid
 //  			             print_r($rowset);
 			        }else if($opt === 'link_student_cohort'){
 			            //download only students belonging to the user's institution
-			            $rowset = $optTable->fetchAll(' id_student in (select student.id from student 
-			                JOIN institution ON institution.id = student.institutionid where institution.id in (' . $insids . '))');
+			            //wrong result
+// 			            $rowset = $optTable->fetchAll(' id_student in (select student.id from student 
+// 			                JOIN institution ON institution.id = student.institutionid where institution.id in (' . $insids . '))');
+                        //more correct result??
+			            $rowset = $optTable->fetchAll(' id_cohort in (select id from cohort where institutionid in (' . $insids . '))');
 			        }else if($opt === 'link_student_funding'){
 			            $rowset = $optTable->fetchAll(' studentid in (select student.id from student 
 			                JOIN institution ON institution.id = student.institutionid where institution.id in (' . $insids . '))');
