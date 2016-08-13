@@ -37,7 +37,6 @@ class Dashview extends ITechTable
 			$tutors		= $helper->getInstitutionTutorCount($row['id']);
 			$active_students = $students - $dropped - $grads; //TA:85 active students
 			//print $active_students."=". $students ."-". $grads ."-". $dropped . "<br>"; 
-
 			$output[] = array(
 				"col1" => $row['institutionname'],
 				"col2" => $students,
@@ -52,6 +51,9 @@ class Dashview extends ITechTable
 			);
 			$cohorts = $this->fetchCohorts($row['id']);
 			foreach ($cohorts as $cohort){
+			    if($cohort['active_student'] <=0){//TA:show only cohorts with active students
+			        continue;
+			    }
 				$output[] = array(
 					"col1" => $cohort['name'],
 					"col2" => $cohort['count'],
