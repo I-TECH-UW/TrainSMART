@@ -6745,13 +6745,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			}
 		}
 
-		// filter by user institution
-		$uid = $helper->myid();
-		$user_institutions = $helper->getUserInstitutions($uid);
-		if (!empty($user_institutions)) {
-			$s->where("s.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
-		}
-		
 		return(array($s, $headers));
 	}
 
