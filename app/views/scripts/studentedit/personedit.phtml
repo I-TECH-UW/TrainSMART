@@ -635,8 +635,8 @@
 								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
 	foreach ($this->gettutors as $tutor){
-?>
-								<option value="<?php echo $tutor['id']; ?>"<?php echo ($this->escape($this->advisor) == $tutor['id'] ? " selected" : "") ?>><?php echo $tutor['first_name'] . " " . $tutor['last_name']; ?></option>
+?>                              
+								<option value="<?php echo $tutor['personid']; ?>"<?php echo ($this->escape($this->advisor) == $tutor['personid'] ? " selected" : "") ?>><?php echo $tutor['first_name'] . " " . $tutor['last_name']; ?></option>
 <?php
 	}
 ?>
