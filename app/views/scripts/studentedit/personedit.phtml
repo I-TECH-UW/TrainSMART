@@ -399,7 +399,8 @@
 							</select>
 
 							<label><?php echo t('Date of birth'); ?></label>
-							<input type="text" class="calendarbox" name="dob" id="dob" value="<?php echo ($this->escape($this->dob) != "31-12-1969" ? $this->escape($this->dob) : "");?>">
+							<!--  <input type="text" class="calendarbox" name="dob" id="dob" value="<?php //echo ($this->escape($this->dob) != "31-12-1969" ? $this->escape($this->dob) : "");?>">-->
+							<input type="text" class="calendarbox" name="dob" id="dob" value="<?php echo $this->dob;?>">
 
 							<label><?php echo t('Age'); ?></label>
 <?php

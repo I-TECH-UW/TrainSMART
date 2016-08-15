@@ -6745,7 +6745,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			}
 		}
 
-		print $s;//TA:TEST
 		return(array($s, $headers));
 	}
 
