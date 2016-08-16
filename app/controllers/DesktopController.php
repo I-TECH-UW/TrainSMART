@@ -393,7 +393,11 @@ LEFT JOIN institution ON institution.id = student.institutionid
 			        }
 			    }else{
 			        $optTable->select('*');
-			        $rowset = $optTable->fetchAll();
+			        if($opt === 'person'){
+			            $rowset = $optTable->fetchAll(' is_deleted=0');
+			        }else{
+			            $rowset = $optTable->fetchAll();
+			        }
 // 			        print "<br><br>========================= " . $opt . " =============================<br>";
 // 			        print_r($rowset);
 			    }  
