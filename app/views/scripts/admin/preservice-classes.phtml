@@ -60,19 +60,22 @@ ob_end_clean();
 						}
 
 						// TODO: Enforce data validation on new fields when fields stop changing
-						if ($("#startdate").val() == ""){
-							alert ('Please enter a start date');
-							$("#startdate").focus();
-						} else if ($("#enddate").val() == ""){
-							alert ('Please enter an end date');
-							$("#enddate").focus();
-						} else if (Date.parse($("#enddate").val()) <= Date.parse($("#startdate").val())){
-							alert ('<?php echo t('The end date cannot be before the start date')?>');
-							$("#enddate").focus();
-						} else {
-							$( this ).dialog( "close" );
-							document.getElementById("adminform").submit();
-						}
+// 						if ($("#startdate").val() == ""){
+// 							alert ('Please enter a start date');
+// 							$("#startdate").focus();
+// 						} else if ($("#enddate").val() == ""){
+// 							alert ('Please enter an end date');
+// 							$("#enddate").focus();
+// 						} else if (Date.parse($("#enddate").val()) <= Date.parse($("#startdate").val())){
+//							alert ('<?php //echo t('The end date cannot be before the start date')?>');
+// 							$("#enddate").focus();
+// 						} else {
+// 							$( this ).dialog( "close" );
+// 							document.getElementById("adminform").submit();
+// 						}
+						
+						   $( this ).dialog( "close" );
+						document.getElementById("adminform").submit();
 					},
 					"<?php echo t('Cancel') ?>": function() {
 						$( this ).dialog( "close" );
@@ -254,8 +257,8 @@ ob_end_clean();
 							<td><?php echo $lookup['classname']; ?></td>
 							<td><?php echo $this->coursetypes[$lookup['coursetypeid']]['coursetype']; ?></td>
 							<td><?php echo addslashes($lookup['coursetopic']); ?></td>
-							<td><?php echo addslashes(date("m/d/Y", strtotime($lookup['startdate']))); ?></td>
-							<td><?php echo addslashes(date("m/d/Y", strtotime($lookup['enddate']))); ?></td>
+							<td><?php echo addslashes(date("m/d/Y", $lookup['startdate'])); ?></td>
+							<td><?php echo addslashes(date("m/d/Y", $lookup['enddate'])); ?></td>
 							<td><?php echo addslashes($lookup['instructorid']); ?></td>
 							<?php if ($this->setting['site_style'] == 'skillsmart') { ?>
 								<td><?php echo $this->modules[$lookup['class_modules_id']]['title'] ?></td>
