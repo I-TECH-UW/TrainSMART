@@ -1039,7 +1039,7 @@ class Helper extends ITechTable
 			->from(array ("s" => "student"),
 					array("id"))
 			->join(array ("t" => "tutor"),
-					"s.advisorid = t.id",
+					"s.advisorid = t.personid", //"s.advisorid = t.id",
 					array())
 			->join(array ("p2" => "person"),
 					"s.personid = p2.id",
