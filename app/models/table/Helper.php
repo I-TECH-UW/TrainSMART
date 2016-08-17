@@ -1051,7 +1051,7 @@ class Helper extends ITechTable
 			    array())
 			 ->join(array ("c" => "cohort"),
 			        "c.id = lsc.id_cohort",
-			        array("cohortname"))
+			        array("cohortname", "graddate"))
 			 //   
 			->where('s.isgraduated = 0')
 			->where('t.personid = ?',$tid)
