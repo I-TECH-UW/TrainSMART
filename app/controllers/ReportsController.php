@@ -8377,11 +8377,21 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 			// # of students advised
 			if( $this->getSanParam('showstudentsadvised') ){
-				$select[] = "(SELECT COUNT(*) FROM student sub_s
-									   INNER JOIN cadres sub_c ON sub_c.id = sub_s.cadre
-									   INNER JOIN link_cadre_tutor sub_lct ON sub_lct.id_cadre = sub_c.id
-									   INNER JOIN tutor sub_t ON sub_t.id = sub_lct.id_tutor
-									   WHERE sub_t.id = tut.id) AS students_advised";
+			    //TA:109 fixed student advised results
+// 				$select[] = "(SELECT COUNT(*) FROM student sub_s
+// 									   INNER JOIN cadres sub_c ON sub_c.id = sub_s.cadre
+// 									   INNER JOIN link_cadre_tutor sub_lct ON sub_lct.id_cadre = sub_c.id
+// 									   INNER JOIN tutor sub_t ON sub_t.id = sub_lct.id_tutor
+// 									   WHERE sub_t.id = tut.id) AS students_advised";
+
+			    $select[] = "IFNULL(temp.students_advised, 0)";
+			    $join[] = array(
+			        "table" => "(select count(*) as students_advised, student.advisorid as adid from student join tutor on tutor.personid=student.advisorid group by advisorid)",
+			        "abbreviation" => "temp",
+			        "compare" => "temp.adid=p.id",
+			        "type" => "left"
+			    );
+			    
 				$headers[] = "Students Advised";
 			}
 
@@ -8500,7 +8510,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			//echo $query; exit;
 
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
-			//print $query;
 			$rowArray = $db->fetchAll ($query);
 			$this->viewAssignEscaped("headers", $headers);
 			$this->view->assign('output',$rowArray);
