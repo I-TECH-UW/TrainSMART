@@ -404,8 +404,7 @@
 
 							<label><?php echo t('Age'); ?></label>
 <?php
-	if ($this->escape($this->dob) != "31-12-1969"){
-
+	if ($this->escape($this->dob) != ""){
 		$birthDate = date("m/d/Y", strtotime($this->dob));
 		//explode the date to get month, day and year
 		$birthDate = explode("/", $birthDate);
