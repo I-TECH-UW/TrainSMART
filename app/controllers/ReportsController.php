@@ -10209,7 +10209,8 @@ die (__LINE__ . " - " . $sql);
         if (isset($criteria['go']) && $criteria['go']) {
             $select = self::employeeFilterQuery($criteria);
             $s = $select->__toString();
-            $c = $select->getPart(Zend_Db_Select::COLUMNS);
+            $c = array_map(function($item) { return $item[1]; }, $select->getPart(Zend_Db_Select::COLUMNS));
+
             $this->view->assign('headers', $c);
             $f = $db->fetchAll($select);
             $this->view->assign('output', $f);

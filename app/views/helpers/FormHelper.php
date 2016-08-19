@@ -126,7 +126,7 @@ function labelTwoFields($view, $label1, $label2, $id1, $id2, $val1 = '', $val2 =
 	$reportcheck = $view->is_report ? '<div class="leftBorderPad"><input type="checkbox" name="show_'.$id1.'"'. (($view->criteria['show_'.$id1]) ? 'CHECKED' : '').'/></div></div><div class="leftBorder">' : '';
 
 	$o = <<< EOF
-	<div class="$class $id">$required$label1</div>
+	<div class="$class $id1">$required$label1</div>
 	<div class="fieldInput">$reportcheck
 		<input type="text" id="$id1" name="$id1" value="$val1" $class1 $readonly/> $cal1
 		<span class="$id2">
