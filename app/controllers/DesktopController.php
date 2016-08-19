@@ -275,7 +275,7 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 			    || $opt === 'link_tutor_tutortype' || $opt ==='link_tutor_institution' || $opt === 'link_cohorts_classes'
 			    || $opt === 'link_institution_degrees' || $opt === 'link_cadre_institution' || $opt === 'student' || $opt === 'tutor'){
 			    $institutions = $helper->getUserInstitutions($helper->myid(), false);
-			    if ((is_array($institutions)) && (count($institutions) > 0)) {
+			    if ((is_array($institutions)) && (count($institutions) > 0)){
 			        $insids = implode(",", $institutions);
 			        $optTable->select('*');
 			        if($opt === 'institution'){
@@ -342,10 +342,12 @@ LEFT JOIN institution ON institution.id = student.institutionid
 //  			            print "<br><br>========================= " . $opt . " =============================<br>";
 //  			             print_r($rowset);
 			        }else if($opt === 'link_student_cohort'){
-			            $rowset = $optTable->fetchAll(); //TA:109 they want to see all cohorts
 			            //download only students belonging to the user's institution
+			            //wrong result
 // 			            $rowset = $optTable->fetchAll(' id_student in (select student.id from student 
 // 			                JOIN institution ON institution.id = student.institutionid where institution.id in (' . $insids . '))');
+                        //more correct result??
+			            $rowset = $optTable->fetchAll(' id_cohort in (select id from cohort where institutionid in (' . $insids . '))');
 			        }else if($opt === 'link_student_funding'){
 			            $rowset = $optTable->fetchAll(' studentid in (select student.id from student 
 			                JOIN institution ON institution.id = student.institutionid where institution.id in (' . $insids . '))');
@@ -391,7 +393,11 @@ LEFT JOIN institution ON institution.id = student.institutionid
 			        }
 			    }else{
 			        $optTable->select('*');
-			        $rowset = $optTable->fetchAll();
+			        if($opt === 'person'){
+			            $rowset = $optTable->fetchAll(' is_deleted=0');
+			        }else{
+			            $rowset = $optTable->fetchAll();
+			        }
 // 			        print "<br><br>========================= " . $opt . " =============================<br>";
 // 			        print_r($rowset);
 			    }  
@@ -486,7 +492,7 @@ LEFT JOIN institution ON institution.id = student.institutionid
 		$this->_pushZip(); 
 	}
 	
-	//DO NOT REMOVE: use for debug
+	//TA:TEST DO NOT REMOVE: use for debug
 // 	public function downloadAction() {
 // 	    $this->init();
 // 	    if (! $this->isLoggedIn ())
@@ -495,7 +501,7 @@ LEFT JOIN institution ON institution.id = student.institutionid
 // 	    if (! $this->hasACL ( 'edit_country_options' ) && ! $this->hasACL ( 'use_offline_app' )) {
 // 	        $this->doNoAccessError ();
 // 	    }
-// 	    $this->dbAction (); //TA:81 remove later use only for debug  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// 	    $this->dbAction (); 
 // 	}
 		
 	

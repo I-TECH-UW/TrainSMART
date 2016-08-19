@@ -399,12 +399,12 @@
 							</select>
 
 							<label><?php echo t('Date of birth'); ?></label>
-							<input type="text" class="calendarbox" name="dob" id="dob" value="<?php echo ($this->escape($this->dob) != "31-12-1969" ? $this->escape($this->dob) : "");?>">
+							<!--  <input type="text" class="calendarbox" name="dob" id="dob" value="<?php //echo ($this->escape($this->dob) != "31-12-1969" ? $this->escape($this->dob) : "");?>">-->
+							<input type="text" class="calendarbox" name="dob" id="dob" value="<?php echo $this->dob;?>">
 
 							<label><?php echo t('Age'); ?></label>
 <?php
-	if ($this->escape($this->dob) != "31-12-1969"){
-
+	if ($this->escape($this->dob) != ""){
 		$birthDate = date("m/d/Y", strtotime($this->dob));
 		//explode the date to get month, day and year
 		$birthDate = explode("/", $birthDate);
@@ -635,8 +635,8 @@
 								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
 	foreach ($this->gettutors as $tutor){
-?>
-								<option value="<?php echo $tutor['id']; ?>"<?php echo ($this->escape($this->advisor) == $tutor['id'] ? " selected" : "") ?>><?php echo $tutor['first_name'] . " " . $tutor['last_name']; ?></option>
+?>                              
+								<option value="<?php echo $tutor['personid']; ?>"<?php echo ($this->escape($this->advisor) == $tutor['personid'] ? " selected" : "") ?>><?php echo $tutor['first_name'] . " " . $tutor['last_name']; ?></option>
 <?php
 	}
 ?>

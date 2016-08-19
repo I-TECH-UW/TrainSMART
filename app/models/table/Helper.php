@@ -1039,11 +1039,20 @@ class Helper extends ITechTable
 			->from(array ("s" => "student"),
 					array("id"))
 			->join(array ("t" => "tutor"),
-					"s.advisorid = t.id",
+					"s.advisorid = t.personid", //TA:109 "s.advisorid = t.id",
 					array())
 			->join(array ("p2" => "person"),
 					"s.personid = p2.id",
 					array("first_name","last_name"))
+			
+			//TA:109
+			->join(array ("lsc" => "link_student_cohort"),
+			    "s.id = lsc.id_student",
+			    array())
+			 ->join(array ("c" => "cohort"),
+			        "c.id = lsc.id_cohort",
+			        array("cohortname", "graddate"))
+			 //   
 			->where('s.isgraduated = 0')
 			->where('t.personid = ?',$tid)
 			->order('first_name');

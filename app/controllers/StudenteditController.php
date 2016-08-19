@@ -585,7 +585,7 @@ class StudenteditController extends ITechController
 		#print_r ($details);
 
 		$date = $details['person'][0]['birthdate'];
-		$dob = date("d-m-Y", strtotime($date));
+		$dob = $date?date("d-m-Y", strtotime($date)):'';
 
 		$this->view->assign('id', $pupiladd);
 		$this->view->assign('sid', $sid);

@@ -211,7 +211,50 @@ class ReportsController extends ReportFilterHelpers {
 			$headersSpecific = array ('peopleByFacility' => array ('qualification_phrase' => t ( 'Qualification' ) ), 'participantsByCategory' => array ('cnt' => t ( 'Participants' ), 'person_cnt' => t ( 'Unique participants' ) ) );
 		} else {
 			$headers = array (// fieldname => label
-			'id' => 'ID', 'cnt' => t ( 'Count' ), 'active' => @$translation ['Is Active'], 'first_name' => @$translation ['First Name'], 'middle_name' => @$translation ['Middle Name'], 'last_name' => @$translation ['Last Name'], 'training_title' => t('Training').' '.t('Name'), 'province_name' => @$translation ['Region A (Province)'], 'district_name' => @$translation ['Region B (Health District)'], 'pepfar_category_phrase' => @$translation ['PEPFAR Category'], 'training_organizer_phrase' => t('Training').' '.t('Organizer'), 'training_level_phrase' => t('Training').' '.t('Level'), 'trainer_language_phrase' => t ( 'Language' ), 'training_location_name' => t ( 'Location' ), 'training_start_date' => t ( 'Date' ), 'training_topic_phrase' => t ('Training').' '.t('Topic'), 'funding_phrase' => t ( 'Funding' ), 'is_tot' => t ( 'TOT' ), 'facility_name' => t ('Facility').' '.t('Name'), 'facility_type_phrase' => t ('Facility').' '.t('Type'), 'facility_sponsor_phrase' => t ('Facility').' '.t('Sponsor'), 'course_recommended' => t ( 'Recommended classes' ), 'recommended' => t ( 'Recommended' ), 'qualification_phrase' => t ( 'Qualification' ) . ' ' . t ( '(primary)' ), 'qualification_secondary_phrase' => t ( 'Qualification' ) . ' ' . t ( '(secondary)' ), 'gender' => t ( 'Gender' ), 'name' => t ( 'Name' ), 'email' => t ( 'Email' ), 'phone' => t ( 'Phone' ), 'cat' => t ( 'Category' ), 'language_phrase' => t ( 'Language' ), 'trainer_type_phrase' => t ( 'Type' ), 'trainer_skill_phrase' => t ( 'Skill' ), 'trainer_language_phrase' => t ( 'Language' ), 'trainer_topic_phrase' => t ( 'Topics Taught' ), 'phone_work' => t ( 'Work Phone' ), 'phone_home' => t ( 'Home Phone' ), 'phone_mobile' => t ( 'Mobile Phone' ), 'type_option_id' => 'Type' );
+			'id' => 'ID', 
+			'cnt' => t ( 'Count' ), 
+			'active' => @$translation ['Is Active'], 
+			'first_name' => @$translation ['First Name'], 
+			'middle_name' => @$translation ['Middle Name'], 
+			    'last_name' => @$translation ['Last Name'], 
+			    'training_title' => t('Training').' '.t('Name'), 
+			    'province_name' => @$translation ['Region A (Province)'], 
+			    'district_name' => @$translation ['Region B (Health District)'], 
+			    'pepfar_category_phrase' => @$translation ['PEPFAR Category'], 
+			    'training_organizer_phrase' => t('Training').' '.t('Organizer'), 
+			    'training_level_phrase' => t('Training').' '.t('Level'), 
+			    'trainer_language_phrase' => t ( 'Language' ), 
+			    'training_location_name' => t ( 'Location' ), 
+			    'training_topic_phrase' => t ('Training').' '.t('Topic'), 
+			    'funding_phrase' => t ( 'Funding' ), 'is_tot' => t ( 'TOT' ), 
+			    'facility_name' => t ('Facility').' '.t('Name'), 
+			    'facility_type_phrase' => t ('Facility').' '.t('Type'), 
+			    'facility_sponsor_phrase' => t ('Facility').' '.t('Sponsor'), 
+			    'course_recommended' => t ( 'Recommended classes' ), 
+			    'recommended' => t ( 'Recommended' ), 
+			    'qualification_phrase' => t ( 'Qualification' ) . ' ' . t ( '(primary)' ), 
+			    'qualification_secondary_phrase' => t ( 'Qualification' ) . ' ' . t ( '(secondary)' ), 
+			    'gender' => t ( 'Gender' ), 
+			    'name' => t ( 'Name' ), 
+			    'email' => t ( 'Email' ), 
+			    'phone' => t ( 'Phone' ), 
+			    'cat' => t ( 'Category' ), 
+			    'language_phrase' => t ( 'Language' ), 
+			    'trainer_type_phrase' => t ( 'Type' ), 
+			    'trainer_skill_phrase' => t ( 'Skill' ), 
+			    'trainer_language_phrase' => t ( 'Language' ), 
+			    'trainer_topic_phrase' => t ( 'Topics Taught' ), 
+			    'phone_work' => t ( 'Work Phone' ), 
+			    'phone_home' => t ( 'Home Phone' ), 
+			    'phone_mobile' => t ( 'Mobile Phone' ), 
+			    'type_option_id' => 'Type',
+			    //TA:110 change titles
+			    'pcnt' => 'Participants', 
+			    'training_start_date' => t ( 'Start Date' ),
+			    'training_end_date' => t ( 'End Date' ),
+			    'training_category_phrase' => 'Training Category',
+			    'has_known_participants' => 'Has known participants'
+			 );
 
 			// action => array(field => label)
 			$headersSpecific = array ('peopleByFacility' => array ('qualification_phrase' => t ( 'Qualification' ) ), 'participantsByCategory' => array ('cnt' => t ( 'Participants' ), 'person_cnt' => t ( 'Unique Participants' ) ) );
@@ -1465,6 +1508,8 @@ echo $sql . "<br>";
 			if (($criteria['doCount'] && $criteria ['showQualSecond']) || ($criteria['doName'] && $criteria ['showQualSecond'])) {
 				$sql .= ', pqs.qualification_phrase AS qualification_secondary_phrase';
 			}
+			
+			//print $sql;//TA:110
 
 			// prepare the location sub query
 			$num_locs = $this->setting('num_location_tiers');
@@ -1834,8 +1879,9 @@ echo $sql . "<br>";
 				$count = count ( $rowArray );
 			}
 
-			if ($this->getParam ( 'outputType' ))
-			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
+			if ($this->getParam ( 'outputType' )){
+			   $this->sendData ( $this->reportHeaders ( false, $rowArray ) ); //TA:110
+			}
 
 		} else {
 			$count = 0;
@@ -6746,13 +6792,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			}
 		}
 
-		// filter by user institution
-		$uid = $helper->myid();
-		$user_institutions = $helper->getUserInstitutions($uid);
-		if (!empty($user_institutions)) {
-			$s->where("s.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
-		}
-		
 		return(array($s, $headers));
 	}
 
@@ -8385,11 +8424,21 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 			// # of students advised
 			if( $this->getSanParam('showstudentsadvised') ){
-				$select[] = "(SELECT COUNT(*) FROM student sub_s
-									   INNER JOIN cadres sub_c ON sub_c.id = sub_s.cadre
-									   INNER JOIN link_cadre_tutor sub_lct ON sub_lct.id_cadre = sub_c.id
-									   INNER JOIN tutor sub_t ON sub_t.id = sub_lct.id_tutor
-									   WHERE sub_t.id = tut.id) AS students_advised";
+			    //TA:109 fixed student advised results
+// 				$select[] = "(SELECT COUNT(*) FROM student sub_s
+// 									   INNER JOIN cadres sub_c ON sub_c.id = sub_s.cadre
+// 									   INNER JOIN link_cadre_tutor sub_lct ON sub_lct.id_cadre = sub_c.id
+// 									   INNER JOIN tutor sub_t ON sub_t.id = sub_lct.id_tutor
+// 									   WHERE sub_t.id = tut.id) AS students_advised";
+
+			    $select[] = "IFNULL(temp.students_advised, 0)";
+			    $join[] = array(
+			        "table" => "(select count(*) as students_advised, student.advisorid as adid from student join tutor on tutor.personid=student.advisorid group by advisorid)",
+			        "abbreviation" => "temp",
+			        "compare" => "temp.adid=p.id",
+			        "type" => "left"
+			    );
+			    
 				$headers[] = "Students Advised";
 			}
 
@@ -8508,7 +8557,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			//echo $query; exit;
 
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
-			//print $query;
 			$rowArray = $db->fetchAll ($query);
 			$this->viewAssignEscaped("headers", $headers);
 			$this->view->assign('output',$rowArray);
