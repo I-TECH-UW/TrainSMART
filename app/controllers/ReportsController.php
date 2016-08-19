@@ -9751,6 +9751,405 @@ die (__LINE__ . " - " . $sql);
 		$this->viewAssignEscaped ( 'f',  $f);
 	}
 
+    /**
+     * creates a Zend_Db_Select object for querying employee module data and applies filters specified in form data
+     *
+     * @param $criteria - form input filter criteria
+     * @return Zend_Db_Select - the query object with form filters to use/customize for reporting
+     */
+	protected function employeeFilterQuery($criteria) {
+        $joined = array();
+
+	    $db = $this->dbfunc();
+
+        $select = $db->select()
+            ->from(array('employee'), array());
+
+        if (isset($criteria['show_partner']) && $criteria['show_partner']) {
+            if (!array_key_exists('partner', $joined)) {
+                $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+                $joined['partner'] = 1;
+            }
+            $select->columns('partner.partner');
+        }
+
+        if (isset($criteria['partner']) && $criteria['partner']) {
+            if (!array_key_exists('partner', $joined)) {
+                $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+                $joined['partner'] = 1;
+            }
+            $select->where('partner.id = ?', $criteria['partner']);
+        }
+
+        // TODO: support n-tiers of regions.
+        if (isset($criteria['show_province']) && $criteria['show_province']) {
+            if (!array_key_exists('location', $joined)) {
+                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
+                $joined['location'] = 1;
+            }
+            $select->columns('location.province_name');
+        }
+
+        if ($criteria['province_id'] && count($criteria['province_id'])) {
+            $ids = $criteria['province_id'];
+            if (!array_key_exists('location', $joined)) {
+                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
+                $joined['location'] = 1;
+            }
+            if (count($ids) > 1) {
+                $select->where('province_id IN (?)', $ids);
+            }
+            elseif (count($ids) === 1) {
+                $select->where('province_id = ?', $ids[0]);
+            }
+        }
+
+        if (isset($criteria['show_district']) && $criteria['show_district']) {
+            if (!array_key_exists('location', $joined)) {
+                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
+                $joined['location'] = 1;
+            }
+            $select->columns('location.district_name');
+        }
+
+        if ($criteria['district_id'] && count($criteria['district_id'])) {
+            // This incoming data processing needs to happen because we're using renderFilter()
+            $ids = array_map(function($item) {
+                $item = end(explode('_', $item));
+                return $item;
+            }, $criteria['district_id']);
+
+            if (!array_key_exists('location', $joined)) {
+                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
+                $joined['location'] = 1;
+            }
+
+            if (count($ids) > 1) {
+                $select->where('district_id IN (?)', $ids);
+            }
+            elseif (count($ids) === 1) {
+                $select->where('district_id = ?', $ids);
+            }
+        }
+
+        if (isset($criteria['show_region_c']) && $criteria['show_region_c']) {
+            if (!array_key_exists('location', $joined)) {
+                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
+                $joined['location'] = 1;
+            }
+            $select->columns('location.region_c_name');
+        }
+
+        if ($criteria['region_c_id'] && count($criteria['region_c_id'])) {
+            // This incoming data processing needs to happen because we're using renderFilter()
+            $ids = array_map(function($item) {
+                $item = end(explode('_', $item));
+                return $item;
+            }, $criteria['region_c_id']);
+            if (!array_key_exists('location', $joined)) {
+                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
+                $joined['location'] = 1;
+            }
+
+            if (count($ids) > 1) {
+                $select->where('region_c_id IN (?)', $ids);
+            }
+            elseif (count($ids) === 1) {
+                $select->where('region_c_id = ?', $ids);
+            }
+        }
+
+        // based at
+        if (isset($criteria['show_based_at']) && $criteria['show_based_at']) {
+            if (!array_key_exists('employee_base_option', $joined)) {
+                $select->joinInner('employee_base_option', 'employee_base_option.id = employee.base_option_id', array());
+                $joined['employee_base_option'] = 1;
+            }
+            $select->columns('employee_base_option.base_phrase');
+        }
+
+        if (isset($criteria['based_at']) && $criteria['based_at']) {
+            if (!array_key_exists('employee_base_option', $joined)) {
+                $select->joinInner('employee_base_option', 'employee_base_option.id = employee.base_option_id', array());
+                $joined['employee_base_option'] = 1;
+            }
+            $select->where('employee_base_option = ?', $criteria['based_at']);
+        }
+
+        // site
+        if (isset($criteria['show_site']) && $criteria['show_site']) {
+            if (!array_key_exists('facility', $joined)) {
+                $select->joinInner('facility', 'facility.id = employee.site_id', array());
+                $joined['facility'] = 1;
+            }
+            $select->columns('facility.facility_name');
+        }
+        if (isset($criteria['site']) && $criteria['site']) {
+            if (!array_key_exists('facility', $joined)) {
+                $select->joinInner('facility', 'facility.id = employee.site_id', array());
+                $joined['facility'] = 1;
+            }
+            $select->where('facility.id = ?', $criteria['site']);
+        }
+
+        // facility type
+        if (isset($criteria['show_facility_type']) && $criteria['show_facility_type']) {
+            if (!array_key_exists('facility_type_option', $joined)) {
+                $select->joinLeft('facility_type_option', 'facility_type_option.id = employee.facility_type_option_id', array());
+                $joined['facility_type_option'] = 1;
+            }
+            $select->columns('facility_type_option.facility_type_phrase');
+        }
+        if (isset($criteria['facility_type']) && $criteria['facility_type']) {
+            $select->where('facility_type_option_id = ?', $criteria['facility_type']);
+        }
+
+        // classification
+        if (isset($criteria['show_classification']) && $criteria['show_classification']) {
+            if (!array_key_exists('employee_qualification_option', $joined)) {
+                $select->join('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
+                $joined['employee_qualification_option'] = 1;
+            }
+            $select->columns('employee_qualification_option.qualification_phrase');
+        }
+        if (isset($criteria['classification']) && $criteria['classification']) {
+            if (!array_key_exists('employee_qualification_option', $joined)) {
+                $select->joinLeft('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
+                $joined['employee_qualification_option'] = 1;
+            }
+            $select->where('employee_qualification_option_id = ?', $criteria['classification']);
+        }
+
+        // funded hours per week
+        if (isset($criteria['show_hours']) && $criteria['show_hours']) {
+            $select->columns('funded_hours_per_week');
+        }
+        if (isset($criteria['hours_min']) && $criteria['hours_min'] >= 0) {
+            $select->where('funded_hours_per_week >= ?', $criteria['hours_min']);
+        }
+        if (isset($criteria['hours_max']) && $criteria['hours_max']) {
+            $select->where('funded_hours_per_week <= ?', $criteria['hours_max']);
+        }
+
+        // cost
+        if (isset($criteria['show_cost']) && $criteria['show_cost']) {
+            $select->columns('annual_cost');
+        }
+        if (isset($criteria['cost_min']) && $criteria['cost_min'] >= 0) {
+            $select->where('annual_cost >= ?', $criteria['cost_min']);
+        }
+        if (isset($criteria['cost_max']) && $criteria['cost_max']) {
+            $select->where('annual_cost <= ?', $criteria['cost_max']);
+        }
+
+        // role
+        if (isset($criteria['show_primary_role']) && $criteria['show_primary_role']) {
+            if (!array_key_exists('employee_role_option', $joined)) {
+                $select->join('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
+                $joined['employee_role_option'] = 1;
+            }
+            $select->columns('employee_role_option.role_phrase');
+        }
+        if (isset($criteria['primary_role']) && $criteria['primary_role']) {
+            $select->where('employee_role_option.id = ?', $criteria['primary_role']);
+        }
+
+        // intended transition
+        if (isset($criteria['show_transition']) && $criteria['show_transition']) {
+            if (!array_key_exists('employee_transition_option', $joined)) {
+                $select->join('employee_transition_option', 'employee_transition_option.id = employee.employee_transition_option_id', array());
+                $joined['employee_transition_option'] = 1;
+            }
+            $select->columns('employee_transition_option.transition_phrase');
+        }
+        if (isset($criteria['intended_transition']) && $criteria['intended_transition']) {
+            if (!array_key_exists('employee_transition_option', $joined)) {
+                $select->join('employee_transition_option', 'employee_transition_option.id = employee.employee_transition_option_id', array());
+                $joined['employee_transition_option'] = 1;
+            }
+            $select->where('employee_transition_option.id = ?', $criteria['intended_transition']);
+        }
+
+        // transition outcome
+        if (isset($criteria['show_actual_transition']) && $criteria['show_actual_transition']) {
+            if (!array_key_exists('employee_transition_option2', $joined)) {
+                $select->join(array('employee_transition_option2' => 'employee_transition_option'),
+                    'employee_transition_option2.id = employee.employee_transition_complete_option_id', array());
+                $joined['employee_transition_option2'] = 1;
+            }
+            $select->columns('employee_transition_option2.transition_phrase');
+
+        }
+        if (isset($criteria['actual_transition']) && $criteria['actual_transition']) {
+            if (!array_key_exists('employee_transition_option2', $joined)) {
+                $select->join(array('employee_transition_option2' => 'employee_transition_option'),
+                    'employee_transition_option2.id = employee.employee_transition_complete_option_id', array());
+                $joined['employee_transition_option2'] = 1;
+            }
+            $select->where('employee_transition_option2.id = ?', $criteria['actual_transition']);
+
+        }
+
+        // transition date
+        if (isset($criteria['show_transition_date']) && $criteria['show_transition_date']) {
+            $select->columns('transition_complete_date');
+        }
+        if (isset($criteria['transition_start_date_range']) && $criteria['transition_start_date_range']) {
+            $select->where('transition_complete_date >= ?', $criteria['transition_start_date_range']);
+        }
+        if (isset($criteria['transition_end_date_range']) && $criteria['transition_end_date_range']) {
+            $select->where('transition_complete_date <= ?', $criteria['transition_end_date_range']);
+        }
+
+        // benefits
+        if (isset($criteria['show_benefits']) && $criteria['show_benefits']) {
+            $select->columns('benefits');
+        }
+        if (isset($criteria['benefits_min']) && $criteria['benefits_min'] >= 0) {
+            $select->where('benefits >= ?', $criteria['benefits_min']);
+        }
+        if (isset($criteria['benefits_max']) && $criteria['benefits_max']) {
+            $select->where('benefits <= ?', $criteria['benefits_max']);
+        }
+
+        // expenses
+        if (isset($criteria['show_expenses']) && $criteria['show_expenses']) {
+            $select->columns('additional_expenses');
+        }
+        if (isset($criteria['expenses_min']) && $criteria['expenses_min'] >= 0) {
+            $select->where('additional_expenses >= ?', $criteria['expenses_min']);
+        }
+
+        if (isset($criteria['expenses_max']) && $criteria['expenses_max']) {
+            $select->where('additional_expenses <= ?', $criteria['expenses_max']);
+        }
+
+        // stipend
+        if (isset($criteria['show_stipend']) && $criteria['show_stipend']) {
+            $select->columns('stipend');
+        }
+        if (isset($criteria['stipend_min']) && $criteria['stipend_min'] >= 0) {
+            $select->where('stipend >= ?', $criteria['stipend_min']);
+        }
+        if (isset($criteria['stipend_max']) && $criteria['stipend_max']) {
+            $select->where('stipend <= ?', $criteria['stipend_max']);
+        }
+
+        if (isset($criteria['show_period']) && $criteria['show_period']) {
+
+        }
+        if ($criteria['periodstartdate']) {
+
+        }
+        if ($criteria['periodenddate']) {
+
+        }
+
+        if (isset($criteria['show_mechanism']) && $criteria['show_mechanism']) {
+            if (!array_key_exists('link_mechanism_employee', $joined)) {
+                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                $joined['link_mechanism_employee'] = 1;
+            }
+            if (!array_key_exists('mechanism_option', $joined)) {
+                $select->join('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $joined['mechanism_option'] = 1;
+            }
+            $select->columns('mechanism_phrase');
+
+        }
+        if (isset($criteria['mechanism']) && $criteria['mechanism']) {
+            if (!array_key_exists('link_mechanism_employee', $joined)) {
+                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                $joined['link_mechanism_employee'] = 1;
+            }
+            if (!array_key_exists('mechanism_option', $joined)) {
+                $select->join('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $joined['mechanism_option'] = 1;
+            }
+            if (count($criteria['mechanism']) > 1) {
+                $select->where('mechanism_option.id in (?)', $criteria['mechanism']);
+            }
+            elseif (count($criteria['mechanism']) == 1) {
+                $select->where('mechanism_option.id = ?', $criteria['mechanism']);
+            }
+        }
+
+        if (isset($criteria['show_funder']) && $criteria['show_funder']) {
+            if (!array_key_exists('link_mechanism_employee', $joined)) {
+                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                $joined['link_mechanism_employee'] = 1;
+            }
+            if (!array_key_exists('mechanism_option', $joined)) {
+                $select->join('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $joined['mechanism_option'] = 1;
+            }
+            if (!array_key_exists('partner_funder_option', $joined)) {
+                $select->join('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array());
+                $joined['partner_funder_option'] = 1;
+            }
+
+            $select->columns('funder_phrase');
+        }
+        if ($criteria['funder']) {
+            if (!array_key_exists('link_mechanism_employee', $joined)) {
+                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                $joined['link_mechanism_employee'] = 1;
+            }
+            if (!array_key_exists('mechanism_option', $joined)) {
+                $select->join('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $joined['mechanism_option'] = 1;
+            }
+            if (!array_key_exists('partner_funder_option', $joined)) {
+                $select->join('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array());
+                $joined['partner_funder_option'] = 1;
+            }
+
+            if (count($criteria['funder']) > 1) {
+                $select->where('partner_funder_option.id in (?)', $criteria['funder']);
+            }
+            elseif (count($criteria['funder']) == 1) {
+                $select->where('partner_funder_option.id = ?', $criteria['funder']);
+            }
+        }
+
+        if (isset($criteria['show_contractstartdate']) && $criteria['show_contractstartdate']) {
+            $select->columns('employee.agreement_end_date');
+        }
+        if (isset($criteria['contractstartdate']) && $criteria['contractstartdate'] >= 0) {
+            $select->where('employee.agreement_end_date >= ?', $criteria['contractstartdate']);
+        }
+
+        if ($criteria['contractenddate']) {
+            $select->where('employee.agreement_end_date <= ?', $criteria['contractenddate']);
+        }
+
+        if (!$this->hasACL('training_organizer_option_all')) {
+            // limit results to only mechanisms owned by partners and subpartners that the user account can access
+            $uid = $this->isLoggedIn();
+
+            if (!array_key_exists('partner', $joined)) {
+                $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+                $joined['partner'] = 1;
+            }
+
+            if (!array_key_exists('link_mechanism_partner', $joined)) {
+                $select->join(array('link_mechanism_partner'), 'partner.id = link_mechanism_partner.partner_id', array());
+                $joined['link_mechanism_partner'] = 1;
+            }
+
+            if (!array_key_exists('user_to_organizer_access', $joined)) {
+                $select->join(array('user_to_organizer_access'),
+                    'user_to_organizer_access.training_organizer_option_id = partner.organizer_option_id', array());
+                $joined['user_to_organizer_access'] = 1;
+            }
+
+            $select->where('user_to_organizer_access.user_id = ?', $uid);
+        }
+
+        $f = $select->__toString();
+
+        return $select;
+    }
 
 	public function employeeReportCustomAction() {
         $locations = Location::getAll();
@@ -9758,15 +10157,25 @@ die (__LINE__ . " - " . $sql);
 
         $db = $this->dbfunc();
 
-        if ($criteria['go']) {
-
+        if (isset($criteria['go']) && $criteria['go']) {
+            $select = self::employeeFilterQuery($criteria);
         }
 
         $choose = array("0" => '--' . t("choose") . '--');
 
-        $transitions = $choose + $db->fetchPairs($db->select()
-                ->from('employee_transition_option', array('id', 'transition_phrase'))
-                ->order('transition_phrase ASC')
+        $partners = $choose + $db->fetchPairs($db->select()
+                ->from('partner', array('id', 'partner'))
+                ->order('partner ASC')
+            );
+
+        $facilities = $choose + $db->fetchPairs($db->select()
+                ->from('facility', array('id', 'facility_name'))
+                ->order('facility_name ASC')
+            );
+
+        $facilityTypes = $choose + $db->fetchPairs($db->select()
+                ->from('facility_type_option', array('id', 'facility_type_phrase'))
+                ->order('facility_type_phrase ASC')
             );
 
         $classifications = $choose + $db->fetchPairs($db->select()
@@ -9774,15 +10183,30 @@ die (__LINE__ . " - " . $sql);
                 ->order('qualification_phrase ASC')
             );
 
+        $roles = $choose + $db->fetchPairs($db->select()
+                ->from('employee_role_option', array('id', 'role_phrase'))
+                ->order('role_phrase ASC')
+            );
 
-        $this->view->assign('locations', $locations);
+        $transitions = $choose + $db->fetchPairs($db->select()
+                ->from('employee_transition_option', array('id', 'transition_phrase'))
+                ->order('transition_phrase ASC')
+            );
+
+        $bases = $choose + $db->fetchPairs($db->select()
+                ->from('employee_base_option', array('id', 'base_phrase'))
+                ->order('base_phrase ASC')
+            );
+
+        $this->view->assign('partners', $partners);
+        $this->view->assign('facilities', $facilities);
+        $this->view->assign('facilityTypes', $facilityTypes);
         $this->view->assign('classifications', $classifications);
+        $this->view->assign('roles', $roles);
         $this->view->assign('transitions', $transitions);
-        $this->view->assign('showRegionCheckboxes', true);
-
+        $this->view->assign('locations', $locations);
+        $this->view->assign('bases', $bases);
     }
-
-
 
 	public function employeeReportOccupationalCategoryAction() {
 		$locations = Location::getAll();
@@ -9815,6 +10239,85 @@ die (__LINE__ . " - " . $sql);
 
 				$select->where('utoa.user_id = ?', $uid);
 			}
+            if ($criteria['province_id'] && count($criteria['province_id'])) {
+                // This incoming data processing needs to happen because we're using renderFilter()
+                $ids = array_filter($criteria['province_id']);
+                if (count($ids)) {
+                    $select->where('province_id IN (' . implode(',', $ids) . ')');
+                }
+            }
+
+            if ($criteria['district_id'] && count($criteria['district_id'])) {
+                // This incoming data processing needs to happen because we're using renderFilter()
+                $ids = array_filter($criteria['district_id']);
+                $ids = array_map(function($item) {
+                    $id = end(explode('_', $item));
+                    return $id;
+                }, $ids);
+                if (count($ids)) {
+                    $select->where('district_id IN (' . implode(',', $ids) . ')');
+                }
+            }
+
+            if ($criteria['region_c_id'] && count($criteria['region_c_id'])) {
+                // This incoming data processing needs to happen because we're using renderFilter()
+                $ids = array_filter($criteria['region_c_id']);
+                $ids = array_map(function($item) {
+                    $id = end(explode('_', $item));
+                    return $id;
+                }, $ids);
+                if (count($ids)) {
+                    $select->where('region_c_id IN (' . implode(',', $ids) . ')');
+                }
+            }
+
+            if ($criteria['periodstartdate']) {
+
+            }
+            if ($criteria['periodenddate']) {
+
+            }
+
+            $mechanismJoined = false;
+            if ($criteria['mechanism']) {
+                if (count($criteria['mechanism']) > 1) {
+                    $select->where('mo.id in (?)', implode(',', $criteria['mechanism']));
+                }
+                elseif (count($criteria['mechanism']) == 1) {
+                    $select->where('mo.id = ?', $criteria['mechanism']);
+                }
+                $select->join(array('mo' => 'mechanism_option'), 'mo.id = lme.mechanism_option_id');
+                $mechanismJoined = true;
+            }
+
+            if ($criteria['funder']) {
+                if (count($criteria['funder']) > 1) {
+                    $select->where('pfo.id in (?)', implode(',', $criteria['funder']));
+                } elseif (count($criteria['funder']) == 1) {
+                    $select->where('pfo.id = ?', $criteria['funder']);
+                }
+                if (!$mechanismJoined) {
+                    $select->join(array('mo' => 'mechanism_option'), 'mo.id = lme.mechanism_option_id');
+                }
+                $select->join(array('pfo' => 'partner_funder_option'), 'pfo.id = mo.funder_id');
+            }
+
+            if ($criteria['classification']) {
+                $select->where('eqo.id = ?', $criteria['classification']);
+            }
+
+            if ($criteria['transition']) {
+                $select->join(array('eto' => 'employee_transition_option'), 'eto.id = emp.employee_transition_option_id');
+                $select->where('eto.id = ?', $criteria['transition']);
+            }
+
+            if ($criteria['contractstartdate']) {
+                $select->where('emp.agreement_end_date >= ?', $criteria['contractstartdate']);
+            }
+
+            if ($criteria['contractenddate']) {
+                $select->where('emp.agreement_end_date <= ?', $criteria['contractenddate']);
+            }
 
 			$select->group('province_id');
 			$select->group('emp.employee_qualification_option_id');
@@ -9823,89 +10326,43 @@ die (__LINE__ . " - " . $sql);
 			$select->order('emp.employee_qualification_option_id');
 			$select->order('p.partner ASC');
 
-			if ($criteria['province_id'] && count($criteria['province_id'])) {
-				// This incoming data processing needs to happen because we're using renderFilter()
-				$ids = array_filter($criteria['province_id']);
-				if (count($ids)) {
-					$select->where('province_id IN (' . implode(',', $ids) . ')');
-				}
-			}
+            $select2 = self::employeeFilterQuery($criteria);
 
-			if ($criteria['district_id'] && count($criteria['district_id'])) {
-				// This incoming data processing needs to happen because we're using renderFilter()
-				$ids = array_filter($criteria['district_id']);
-				$ids = array_map(function($item) {
-						$item = end(explode('_', $item));
-						return $item;
-					}, $ids);
-				if (count($ids)) {
-					$select->where('district_id IN (' . implode(',', $ids) . ')');
-				}
-			}
+            $parts = $select2->getPart(Zend_Db_Select::FROM);
+            if (!array_key_exists('link_mechanism_employee', $parts)) {
+                $select2->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id', array());
+            }
+            if (!array_key_exists('partner', $parts)) {
+                $select2->join(array('partner'), 'partner.id = employee.partner_id', array());
+            }
+            if (!array_key_exists('location', $parts)) {
+                $select2->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
+            }
+            if (!array_key_exists('employee_qualification_option', $parts)) {
+                $select2->join('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
+            }
+            $select2->columns(
+                array(
+                    'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
+                    'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
+                    'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
+                    'partner.partner', 'employee_qualification_option.qualification_phrase', 'location.province_name'
+                )
+            );
 
-			if ($criteria['region_c_id'] && count($criteria['region_c_id'])) {
-				// This incoming data processing needs to happen because we're using renderFilter()
-				$ids = array_filter($criteria['region_c_id']);
-				$ids = array_map(function($item) {
-					$item = end(explode('_', $item));
-					return $item;
-				}, $ids);
-				if (count($ids)) {
-					$select->where('region_c_id IN (' . implode(',', $ids) . ')');
-				}
-			}
+            $select2->group('province_id');
+            $select2->group('employee_qualification_option_id');
+            $select2->group('employee.partner_id');
+            $select2->order('province_id');
+            $select2->order('employee_qualification_option_id');
+            $select2->order('partner.partner ASC');
 
-			if ($criteria['periodstartdate']) {
+            $s = $select->__toString();
+            $s2 = $select2->__toString();
 
-			}
-			if ($criteria['periodenddate']) {
-
-			}
-
-			$mechanismJoined = false;
-			if ($criteria['mechanism']) {
-				if (count($criteria['mechanism']) > 1) {
-					$select->where('mo.id in (?)', implode(',', $criteria['mechanism']));
-				}
-				elseif (count($criteria['mechanism']) == 1) {
-					$select->where('mo.id = ?', $criteria['mechanism']);
-				}
-				$select->join(array('mo' => 'mechanism_option'), 'mo.id = lme.mechanism_option_id');
-				$mechanismJoined = true;
-			}
-
-			if ($criteria['funder']) {
-				if (count($criteria['funder']) > 1) {
-					$select->where('pfo.id in (?)', implode(',', $criteria['funder']));
-				} elseif (count($criteria['funder']) == 1) {
-					$select->where('pfo.id = ?', $criteria['funder']);
-				}
-				if (!$mechanismJoined) {
-					$select->join(array('mo' => 'mechanism_option'), 'mo.id = lme.mechanism_option_id');
-				}
-				$select->join(array('pfo' => 'partner_funder_option'), 'pfo.id = mo.funder_id');
-			}
-
-			if ($criteria['classification']) {
-				$select->where('eqo.id = ?', $criteria['classification']);
-			}
-
-			if ($criteria['transition']) {
-				$select->join(array('eto' => 'employee_transition_option'), 'eto.id = emp.employee_transition_option_id');
-				$select->where('eto.id = ?', $criteria['transition']);
-			}
-
-			if ($criteria['contractstartdate']) {
-				$select->where('emp.agreement_end_date >= ?', $criteria['contractstartdate']);
-			}
-
-			if ($criteria['contractenddate']) {
-				$select->where('emp.end_date <= ?', $criteria['contractenddate']);
-			}
-
-			$s = $select->__toString();
-			$allData = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => $db->fetchAll($select));
-			$rows = &$allData['rows'];
+			//$allData = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => $db->fetchAll($select));
+            $allData = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => $db->fetchAll($select2));
+            $rows = &$allData['rows'];
 
 			$allData['byPartner'] = array();
 			$byPartner = &$allData['byPartner'];
