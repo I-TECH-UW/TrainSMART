@@ -44,12 +44,12 @@ print ScriptContainer::$instance->renderJSHead();
 	foreach ($this->getins as $getresult){
 ?>
 						<tr style="cursor : pointer;" class="GradeA" onclick="location='<?php echo $getresult['link'];?>'">
-				   			<td<?php echo ($getresult['type'] == 2 ? " style=\"padding-left : 50px;\"" : "") ?>><?php echo $getresult['col1'];?></td>
-							<td class=""><?php echo $getresult['col2'];?></td>
-							<td class=""><?php echo $getresult['col3'];?></td>
-							<td class=""><?php echo $getresult['col4'];?></td>
-							<td class=""><?php echo $getresult['col5'];?></td>
-							<td class=""><?php echo $getresult['col6'];?></td>
+				   			<td<?php echo ($getresult['type'] == 2 ? " style=\"padding-left : 50px;\"" : "") ?>><?php if (isset($getresult['col1'])) { echo $getresult['col1']; } ?></td>
+							<td class=""><?php if (isset($getresult['col2'])) { echo $getresult['col2']; } ?></td>
+							<td class=""><?php if (isset($getresult['col3'])) { echo $getresult['col3']; } ?></td>
+							<td class=""><?php if (isset($getresult['col4'])) { echo $getresult['col4']; } ?></td>
+							<td class=""><?php if (isset($getresult['col5'])) { echo $getresult['col5']; } ?></td>
+							<td class=""><?php if (isset($getresult['col6'])) { echo $getresult['col6']; } ?></td>
 						</tr>
 <?php
 	}
