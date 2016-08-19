@@ -18,7 +18,7 @@ class Settings {
     public static $DB_DATABASE = 'itechweb_demo';
     
     public static $EMAIL_NAME = "ITECH Administrator";
-    public static $EMAIL_ADDRESS = "admin@localhost";
+    public static $EMAIL_ADDRESS = "noreply@trainingdata.org";
 }
 
 
