@@ -10211,9 +10211,11 @@ die (__LINE__ . " - " . $sql);
             $s = $select->__toString();
             $c = array_map(function($item) { return $item[1]; }, $select->getPart(Zend_Db_Select::COLUMNS));
 
-            $this->view->assign('headers', $c);
-            $f = $db->fetchAll($select);
-            $this->view->assign('output', $f);
+            if (count($c)) {
+                $this->view->assign('headers', $c);
+                $f = $db->fetchAll($select);
+                $this->view->assign('output', $f);
+            }
             $xyz = 123;
         }
 
