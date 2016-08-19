@@ -38,6 +38,7 @@ class ReportsController extends ReportFilterHelpers {
 		$contextSwitch->addActionContext('ps-students-by-name', 'csv');
 		$contextSwitch->addActionContext('ps-students-trained', 'csv');
 		$contextSwitch->addActionContext('employee-report-occupational-category', 'csv');
+        $contextSwitch->addActionContext('employee-report-custom', 'csv');
 
 		$contextSwitch->addContext('chwreport', array('suffix' => 'chwreport'));
 		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'chwreport');
@@ -9790,7 +9791,7 @@ die (__LINE__ . " - " . $sql);
             $select->columns('location.province_name');
         }
 
-        if ($criteria['province_id'] && count($criteria['province_id'])) {
+        if (isset($criteria['province_id']) && count($criteria['province_id'])) {
             $ids = $criteria['province_id'];
             if (!array_key_exists('location', $joined)) {
                 $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
@@ -9812,7 +9813,7 @@ die (__LINE__ . " - " . $sql);
             $select->columns('location.district_name');
         }
 
-        if ($criteria['district_id'] && count($criteria['district_id'])) {
+        if (isset($criteria['district_id']) && count($criteria['district_id'])) {
             // This incoming data processing needs to happen because we're using renderFilter()
             $ids = array_map(function($item) {
                 $item = end(explode('_', $item));
@@ -9840,7 +9841,7 @@ die (__LINE__ . " - " . $sql);
             $select->columns('location.region_c_name');
         }
 
-        if ($criteria['region_c_id'] && count($criteria['region_c_id'])) {
+        if (isset($criteria['region_c_id']) && count($criteria['region_c_id'])) {
             // This incoming data processing needs to happen because we're using renderFilter()
             $ids = array_map(function($item) {
                 $item = end(explode('_', $item));
@@ -9862,7 +9863,7 @@ die (__LINE__ . " - " . $sql);
         // based at
         if (isset($criteria['show_based_at']) && $criteria['show_based_at']) {
             if (!array_key_exists('employee_base_option', $joined)) {
-                $select->joinInner('employee_base_option', 'employee_base_option.id = employee.base_option_id', array());
+                $select->joinInner('employee_base_option', 'employee_base_option.id = employee.employee_base_option_id', array());
                 $joined['employee_base_option'] = 1;
             }
             $select->columns('employee_base_option.base_phrase');
@@ -9870,7 +9871,7 @@ die (__LINE__ . " - " . $sql);
 
         if (isset($criteria['based_at']) && $criteria['based_at']) {
             if (!array_key_exists('employee_base_option', $joined)) {
-                $select->joinInner('employee_base_option', 'employee_base_option.id = employee.base_option_id', array());
+                $select->joinInner('employee_base_option', 'employee_base_option.id = employee.employee_base_option_id', array());
                 $joined['employee_base_option'] = 1;
             }
             $select->where('employee_base_option = ?', $criteria['based_at']);
@@ -10038,10 +10039,10 @@ die (__LINE__ . " - " . $sql);
         if (isset($criteria['show_period']) && $criteria['show_period']) {
 
         }
-        if ($criteria['periodstartdate']) {
+        if (isset($criteria['periodstartdate']) && $criteria['periodstartdate']) {
 
         }
-        if ($criteria['periodenddate']) {
+        if (isset($criteria['periodenddate']) && $criteria['periodenddate']) {
 
         }
 
@@ -10090,7 +10091,7 @@ die (__LINE__ . " - " . $sql);
 
             $select->columns('funder_phrase');
         }
-        if ($criteria['funder']) {
+        if (isset($criteria['funder']) && ($criteria['funder'])) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
                 $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                 $joined['link_mechanism_employee'] = 1;
@@ -10119,7 +10120,7 @@ die (__LINE__ . " - " . $sql);
             $select->where('employee.agreement_end_date >= ?', $criteria['contractstartdate']);
         }
 
-        if ($criteria['contractenddate']) {
+        if (isset($criteria['contractenddate']) && $criteria['contractenddate']) {
             $select->where('employee.agreement_end_date <= ?', $criteria['contractenddate']);
         }
 
@@ -10159,6 +10160,12 @@ die (__LINE__ . " - " . $sql);
 
         if (isset($criteria['go']) && $criteria['go']) {
             $select = self::employeeFilterQuery($criteria);
+            $s = $select->__toString();
+            $c = $select->getPart(Zend_Db_Select::COLUMNS);
+            $this->view->assign('headers', $c);
+            $f = $db->fetchAll($select);
+            $this->view->assign('output', $f);
+            $xyz = 123;
         }
 
         $choose = array("0" => '--' . t("choose") . '--');

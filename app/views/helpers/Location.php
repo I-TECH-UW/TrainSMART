@@ -15,7 +15,7 @@ function buildId($tier, &$locations, $id) {
     while($tier > 1 ) {
         if ($parent_id) {
             $parents = $parent_id.'_'.$parents;
-            $parent_id = $locations[$parent_id]['parent_id'];
+            $parent_id = array_key_exists($parent_id, $locations) ? $locations[$parent_id]['parent_id'] : 0;
         } else {
             $parents = '0_'.$parents;
         }
