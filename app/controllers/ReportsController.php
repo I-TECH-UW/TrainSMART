@@ -10215,133 +10215,23 @@ die (__LINE__ . " - " . $sql);
 		$db = $this->dbfunc();
 
 		if ($criteria['go']) {
-		    $locationSubquery = Location::fluentSubquery();
 
-			$select = $db->select();
-			$select->from(array('emp' => 'employee'),
-				array('cost' => 'ROUND(SUM(annual_cost * lme.percentage/100), 0)',
-					'fulltimecount' => 'SUM(case when lme.percentage = 100 then 1 else 0 end)',
-					'parttimecount' => 'SUM(case when (lme.percentage < 100) and (lme.percentage > 0) then 1 else 0 end)')
-			);
-			$select->join(array('lme' => 'link_mechanism_employee'), 'emp.id = lme.employee_id', array());
-			$select->join(array('eqo' => 'employee_qualification_option'),
-				'eqo.id = emp.employee_qualification_option_id', array('eqo.qualification_phrase'));
-			$select->join(array('p' => 'partner'), 'p.id = emp.partner_id', array('p.partner'));
-			$select->joinLeft(array('location' => new Zend_Db_Expr('(' . $locationSubquery . ')')), 'location.id = emp.location_id');
+            $select = self::employeeFilterQuery($criteria);
 
-			if (!$this->hasACL('training_organizer_option_all')) {
-				// limit results to only mechanisms owned by partners and subpartners that the user account can access
-				$uid = $this->isLoggedIn();
-
-				$select->join(array('lmp' => 'link_mechanism_partner'), 'p.id = lmp.partner_id', array());
-				$select->join(array('utoa' => 'user_to_organizer_access'),
-					'utoa.training_organizer_option_id = p.organizer_option_id', array());
-
-				$select->where('utoa.user_id = ?', $uid);
-			}
-            if ($criteria['province_id'] && count($criteria['province_id'])) {
-                // This incoming data processing needs to happen because we're using renderFilter()
-                $ids = array_filter($criteria['province_id']);
-                if (count($ids)) {
-                    $select->where('province_id IN (' . implode(',', $ids) . ')');
-                }
-            }
-
-            if ($criteria['district_id'] && count($criteria['district_id'])) {
-                // This incoming data processing needs to happen because we're using renderFilter()
-                $ids = array_filter($criteria['district_id']);
-                $ids = array_map(function($item) {
-                    $id = end(explode('_', $item));
-                    return $id;
-                }, $ids);
-                if (count($ids)) {
-                    $select->where('district_id IN (' . implode(',', $ids) . ')');
-                }
-            }
-
-            if ($criteria['region_c_id'] && count($criteria['region_c_id'])) {
-                // This incoming data processing needs to happen because we're using renderFilter()
-                $ids = array_filter($criteria['region_c_id']);
-                $ids = array_map(function($item) {
-                    $id = end(explode('_', $item));
-                    return $id;
-                }, $ids);
-                if (count($ids)) {
-                    $select->where('region_c_id IN (' . implode(',', $ids) . ')');
-                }
-            }
-
-            if ($criteria['periodstartdate']) {
-
-            }
-            if ($criteria['periodenddate']) {
-
-            }
-
-            $mechanismJoined = false;
-            if ($criteria['mechanism']) {
-                if (count($criteria['mechanism']) > 1) {
-                    $select->where('mo.id in (?)', implode(',', $criteria['mechanism']));
-                }
-                elseif (count($criteria['mechanism']) == 1) {
-                    $select->where('mo.id = ?', $criteria['mechanism']);
-                }
-                $select->join(array('mo' => 'mechanism_option'), 'mo.id = lme.mechanism_option_id');
-                $mechanismJoined = true;
-            }
-
-            if ($criteria['funder']) {
-                if (count($criteria['funder']) > 1) {
-                    $select->where('pfo.id in (?)', implode(',', $criteria['funder']));
-                } elseif (count($criteria['funder']) == 1) {
-                    $select->where('pfo.id = ?', $criteria['funder']);
-                }
-                if (!$mechanismJoined) {
-                    $select->join(array('mo' => 'mechanism_option'), 'mo.id = lme.mechanism_option_id');
-                }
-                $select->join(array('pfo' => 'partner_funder_option'), 'pfo.id = mo.funder_id');
-            }
-
-            if ($criteria['classification']) {
-                $select->where('eqo.id = ?', $criteria['classification']);
-            }
-
-            if ($criteria['transition']) {
-                $select->join(array('eto' => 'employee_transition_option'), 'eto.id = emp.employee_transition_option_id');
-                $select->where('eto.id = ?', $criteria['transition']);
-            }
-
-            if ($criteria['contractstartdate']) {
-                $select->where('emp.agreement_end_date >= ?', $criteria['contractstartdate']);
-            }
-
-            if ($criteria['contractenddate']) {
-                $select->where('emp.agreement_end_date <= ?', $criteria['contractenddate']);
-            }
-
-			$select->group('province_id');
-			$select->group('emp.employee_qualification_option_id');
-			$select->group('emp.partner_id');
-			$select->order('province_id');
-			$select->order('emp.employee_qualification_option_id');
-			$select->order('p.partner ASC');
-
-            $select2 = self::employeeFilterQuery($criteria);
-
-            $parts = $select2->getPart(Zend_Db_Select::FROM);
+            $parts = $select->getPart(Zend_Db_Select::FROM);
             if (!array_key_exists('link_mechanism_employee', $parts)) {
-                $select2->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id', array());
+                $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id', array());
             }
             if (!array_key_exists('partner', $parts)) {
-                $select2->join(array('partner'), 'partner.id = employee.partner_id', array());
+                $select->join(array('partner'), 'partner.id = employee.partner_id', array());
             }
             if (!array_key_exists('location', $parts)) {
-                $select2->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
+                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
             }
             if (!array_key_exists('employee_qualification_option', $parts)) {
-                $select2->join('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
+                $select->join('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
             }
-            $select2->columns(
+            $select->columns(
                 array(
                     'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
                     'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
@@ -10350,18 +10240,16 @@ die (__LINE__ . " - " . $sql);
                 )
             );
 
-            $select2->group('province_id');
-            $select2->group('employee_qualification_option_id');
-            $select2->group('employee.partner_id');
-            $select2->order('province_id');
-            $select2->order('employee_qualification_option_id');
-            $select2->order('partner.partner ASC');
+            $select->group('province_id');
+            $select->group('employee_qualification_option_id');
+            $select->group('employee.partner_id');
+            $select->order('province_id');
+            $select->order('employee_qualification_option_id');
+            $select->order('partner.partner ASC');
 
             $s = $select->__toString();
-            $s2 = $select2->__toString();
 
-			//$allData = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => $db->fetchAll($select));
-            $allData = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => $db->fetchAll($select2));
+            $allData = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => $db->fetchAll($select));
             $rows = &$allData['rows'];
 
 			$allData['byPartner'] = array();
