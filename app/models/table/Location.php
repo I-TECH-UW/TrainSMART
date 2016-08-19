@@ -33,76 +33,30 @@ class Location extends ITechTable
     );
 
     /**
-     * returns an array of all non-deleted locations
+     * gets all non-deleted locations from database, flags locations that do not have a valid parent in 'is_good' field
+     *
+     * this is a rewrite of the getAll() function (see version history) that does not need to post-process
+     * the data in php after it is retrieved from the database.
      *
      * @return array|null
      */
+
     public static function getAll() {
+        if (self::$_locations) return self::$_locations;
 
-	    if (self::$_locations) return self::$_locations;
+        $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 
-	    $tableObj = new Location();
+        $select = $db->select()
+            ->from(array('l' => 'location'),
+                array('id', 'uuid', 'name' => 'location_name', 'parent_id', 'tier', 'is_default',
+                'is_good' => new Zend_Db_Expr('IF ((l2.is_deleted = 0) AND (l2.tier + 1 = l.tier), 1, IF(l.tier = 1, 1, 0))')
+                ))
+            ->joinLeft(array('l2' => 'location'), 'l.parent_id = l2.id', array())
+            ->where('l.is_deleted = 0')
+            ->order('l.location_name');
 
-	    $select = $tableObj->select()
-		    ->from(array('l' => 'location'))->where('is_deleted = 0')->order('location_name');
-
-	    $output = array();
-	    try {
-		    $rows = $tableObj->fetchAll($select);
-		    // reindex with id
-		    $indexed = array();
-		    while ($rows->current()) {
-			    $indexed [$rows->current()->id] = $rows->current()->toArray();
-			    $rows->next();
-		    }
-
-		    $num_tiers = 1;
-		    foreach ($indexed as $row) {
-
-			    // check that the hierarchy works
-			    // if the parent is more than one tier higher, then no good unless the middle region is off
-			    $is_good = true;
-			    $parent_tier = (!$row['parent_id'] ? 0 : $indexed[$row['parent_id']]['tier']);
-			    if ($row['tier'] > 1 && !$parent_tier) {
-				    $is_good = false;
-			    } else if ((($parent_tier + 1) != $row['tier'])) {
-				    $is_good = false;
-			    }
-
-			    $output[$row['id']] = array('id' => $row['id'],
-				    'uuid'       => $row['uuid'],
-				    'name'       => $row['location_name'],
-				    'parent_id'  => ($row['parent_id'] ? $row['parent_id'] : 0),
-				    'tier'       => $row['tier'],
-				    'is_default' => $row['is_default'],
-				    'is_good'    => $is_good
-			    );
-			    if ($row['tier'] > $num_tiers) {
-				    $num_tiers = $row['tier'];
-			    }
-		    }
-
-		    // check for null parents and add 'unknown' option
-		    $has_parents = array();
-		    for ($t = 2; $t <= $num_tiers; $t++) {
-			    $has_parents [$t] = true;
-		    }
-		    for ($t = 2; $t <= $num_tiers; $t++) {
-			    foreach ($output as $l) {
-				    if (!$l['parent_id']) {
-					    $has_parents[$t] = false;
-				    }
-			    }
-		    }
-
-		    self::$_locations = $output;
-		    return self::$_locations;
-
-	    } catch (Zend_Exception $e) {
-		    error_log($e);
-	    }
-
-	    return null;
+        self::$_locations = $db->fetchAssoc($select);
+        return self::$_locations;
     }
 
 	/**
@@ -116,6 +70,40 @@ class Location extends ITechTable
 		self::$_locationsByTier = null;
 		self::$_numLocationTiers = null;
 	}
+
+    /**
+     * creates a query that will get all non-deleted locations that have valid parents
+     *
+     * @return null|Zend_Db_Select
+     */
+	public static function createValidLocationQuery() {
+        if (self::$_locationsByTier) {
+            return self::$_locationsByTier;
+        }
+
+        $tableObj = new Location();
+
+        $provinceSelect = $tableObj->select()
+            ->from(array('location'))
+            ->where('location.tier = 1')
+            ->where('location.parent_id IS NULL')
+            ->where('is_deleted = 0')
+        ;
+
+        $subRegionsSelect = $tableObj->select()
+            ->from(array('location'))
+            ->join(array('parent_location' => 'location'), 'location.parent_id = parent_location.id', array())
+            ->where('location.tier > 0')
+            ->where('parent_location.tier = location.tier - 1')
+            ->where('location.is_deleted = 0')
+            ->where('parent_location.is_deleted = 0')
+        ;
+
+        $locationSelect = $tableObj->select()->union(array($provinceSelect, $subRegionsSelect));
+
+        return $locationSelect;
+    }
+
 
 	/**
 	 * gets an array of locations with valid parent locations ordered by hierarchical location tier
@@ -131,26 +119,9 @@ class Location extends ITechTable
 
 		$tableObj = new Location();
 
-		$provinceSelect = $tableObj->select()
-			->from(array('location'))
-			->where('location.tier = 1')
-			->where('location.parent_id IS NULL')
-			->where('is_deleted = 0')
-		;
-
-		$subRegionsSelect = $tableObj->select()
-			->from(array('location'))
-			->join(array('parent_location' => 'location'), 'location.parent_id = parent_location.id', array())
-			->where('location.tier > 0')
-			->where('parent_location.tier = location.tier - 1')
-			->where('location.is_deleted = 0')
-			->where('parent_location.is_deleted = 0')
-		;
-
-		$locationSelect = $tableObj->select()
-			->union(array($provinceSelect, $subRegionsSelect))
-			->order('tier')
-			->order('location_name');
+        $locationSelect = self::createValidLocationQuery();
+        $locationSelect->order('tier')
+            ->order('location_name');
 
 		try {
 			self::$_locationsByTier  = $tableObj->fetchAll($locationSelect)->toArray();
@@ -266,7 +237,7 @@ class Location extends ITechTable
 	 * @return array|null
 	 */
 	public static function getInvalidLocations() {
-		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 
 		$q =
 			'SELECT
@@ -840,9 +811,9 @@ class Location extends ITechTable
             $locationIndex = $locationIndex - 1;
         }
 
-        $locationSelectWithCity->columns(array('location_id' => 'COALESCE(' . implode(", ", $joinNames) .")"));
+        $locationSelectWithCity->columns(array('id' => 'COALESCE(' . implode(", ", $joinNames) .")"));
         array_shift($joinNames);
-        $locationSelect->columns(array('location_id' => 'COALESCE(' . implode(", ", $joinNames) .")"));
+        $locationSelect->columns(array('id' => 'COALESCE(' . implode(", ", $joinNames) .")"));
 
         $locationSubquery = $db->select()->union(array($locationSelectWithCity, $locationSelect));
 
