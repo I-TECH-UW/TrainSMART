@@ -9831,7 +9831,7 @@ die (__LINE__ . " - " . $sql);
         }
 
         // TODO: support n-tiers of regions.
-        if (isset($criteria['show_province']) && $criteria['show_province']) {
+        if (isset($criteria['showProvince']) && $criteria['showProvince']) {
             if (!array_key_exists('location', $joined)) {
                 $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
                 $joined['location'] = 1;
@@ -9853,7 +9853,7 @@ die (__LINE__ . " - " . $sql);
             }
         }
 
-        if (isset($criteria['show_district']) && $criteria['show_district']) {
+        if (isset($criteria['showDistrict']) && $criteria['showDistrict']) {
             if (!array_key_exists('location', $joined)) {
                 $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
                 $joined['location'] = 1;
@@ -9881,7 +9881,7 @@ die (__LINE__ . " - " . $sql);
             }
         }
 
-        if (isset($criteria['show_region_c']) && $criteria['show_region_c']) {
+        if (isset($criteria['showRegionC']) && $criteria['showRegionC']) {
             if (!array_key_exists('location', $joined)) {
                 $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
                 $joined['location'] = 1;
@@ -9970,25 +9970,27 @@ die (__LINE__ . " - " . $sql);
         }
 
         // funded hours per week
-        if (isset($criteria['show_hours']) && $criteria['show_hours']) {
+        // labelTwoFields uses the name of the first field for the 'show' checkbox
+        if (isset($criteria['show_hours_min']) && $criteria['show_hours_min']) {
             $select->columns('funded_hours_per_week');
         }
-        if (isset($criteria['hours_min']) && $criteria['hours_min'] >= 0) {
-            $select->where('funded_hours_per_week >= ?', $criteria['hours_min']);
+        if (isset($criteria['hours_min']) && intval($criteria['hours_min']) >= 0) {
+            $select->where('funded_hours_per_week >= ?', intval($criteria['hours_min']));
         }
         if (isset($criteria['hours_max']) && $criteria['hours_max']) {
-            $select->where('funded_hours_per_week <= ?', $criteria['hours_max']);
+            $select->where('funded_hours_per_week <= ?', intval($criteria['hours_max']));
         }
 
         // cost
-        if (isset($criteria['show_cost']) && $criteria['show_cost']) {
+        // labelTwoFields uses the name of the first field for the 'show' checkbox
+        if (isset($criteria['show_cost_min']) && $criteria['show_cost_min']) {
             $select->columns('annual_cost');
         }
         if (isset($criteria['cost_min']) && $criteria['cost_min'] >= 0) {
-            $select->where('annual_cost >= ?', $criteria['cost_min']);
+            $select->where('annual_cost >= ?', intval($criteria['cost_min']));
         }
         if (isset($criteria['cost_max']) && $criteria['cost_max']) {
-            $select->where('annual_cost <= ?', $criteria['cost_max']);
+            $select->where('annual_cost <= ?', intval($criteria['cost_max']));
         }
 
         // role
@@ -10004,12 +10006,12 @@ die (__LINE__ . " - " . $sql);
         }
 
         // intended transition
-        if (isset($criteria['show_transition']) && $criteria['show_transition']) {
+        if (isset($criteria['show_intended_transition']) && $criteria['show_intended_transition']) {
             if (!array_key_exists('employee_transition_option', $joined)) {
                 $select->join('employee_transition_option', 'employee_transition_option.id = employee.employee_transition_option_id', array());
                 $joined['employee_transition_option'] = 1;
             }
-            $select->columns('employee_transition_option.transition_phrase');
+            $select->columns('employee_transition_option.transition_phrase AS intended_transition');
         }
         if (isset($criteria['intended_transition']) && $criteria['intended_transition']) {
             if (!array_key_exists('employee_transition_option', $joined)) {
@@ -10026,7 +10028,7 @@ die (__LINE__ . " - " . $sql);
                     'employee_transition_option2.id = employee.employee_transition_complete_option_id', array());
                 $joined['employee_transition_option2'] = 1;
             }
-            $select->columns('employee_transition_option2.transition_phrase');
+            $select->columns('employee_transition_option2.transition_phrase AS actual_transition');
 
         }
         if (isset($criteria['actual_transition']) && $criteria['actual_transition']) {
@@ -10040,7 +10042,8 @@ die (__LINE__ . " - " . $sql);
         }
 
         // transition date
-        if (isset($criteria['show_transition_date']) && $criteria['show_transition_date']) {
+        // labelTwoFields uses the name of the first field for the 'show' checkbox
+        if (isset($criteria['show_transition_start_date']) && $criteria['show_transition_start_date']) {
             $select->columns('transition_complete_date');
         }
         if (isset($criteria['transition_start_date_range']) && $criteria['transition_start_date_range']) {
@@ -10050,41 +10053,56 @@ die (__LINE__ . " - " . $sql);
             $select->where('transition_complete_date <= ?', $criteria['transition_end_date_range']);
         }
 
+        // salary
+        // labelTwoFields uses the name of the first field for the 'show' checkbox
+        if (isset($criteria['show_salary_min']) && $criteria['show_salary_min']) {
+            $select->columns('salary');
+        }
+        if (isset($criteria['salary_min']) && intval($criteria['salary_min']) >= 0) {
+            $select->where('salary >= ?', intval($criteria['salary_min']));
+        }
+        if (isset($criteria['salary_max']) && $criteria['salary_max']) {
+            $select->where('salary <= ?', intval($criteria['salary_max']));
+        }
+
         // benefits
-        if (isset($criteria['show_benefits']) && $criteria['show_benefits']) {
+        // labelTwoFields uses the name of the first field for the 'show' checkbox
+        if (isset($criteria['show_benefits_min']) && $criteria['show_benefits_min']) {
             $select->columns('benefits');
         }
-        if (isset($criteria['benefits_min']) && $criteria['benefits_min'] >= 0) {
-            $select->where('benefits >= ?', $criteria['benefits_min']);
+        if (isset($criteria['benefits_min']) && intval($criteria['benefits_min']) >= 0) {
+            $select->where('benefits >= ?', intval($criteria['benefits_min']));
         }
         if (isset($criteria['benefits_max']) && $criteria['benefits_max']) {
-            $select->where('benefits <= ?', $criteria['benefits_max']);
+            $select->where('benefits <= ?', intval($criteria['benefits_max']));
         }
 
         // expenses
-        if (isset($criteria['show_expenses']) && $criteria['show_expenses']) {
+        // labelTwoFields uses the name of the first field for the 'show' checkbox
+        if (isset($criteria['show_expenses_min']) && $criteria['show_expenses_min']) {
             $select->columns('additional_expenses');
         }
         if (isset($criteria['expenses_min']) && $criteria['expenses_min'] >= 0) {
-            $select->where('additional_expenses >= ?', $criteria['expenses_min']);
+            $select->where('additional_expenses >= ?', intval($criteria['expenses_min']));
         }
 
         if (isset($criteria['expenses_max']) && $criteria['expenses_max']) {
-            $select->where('additional_expenses <= ?', $criteria['expenses_max']);
+            $select->where('additional_expenses <= ?', intval($criteria['expenses_max']));
         }
 
         // stipend
-        if (isset($criteria['show_stipend']) && $criteria['show_stipend']) {
+        // labelTwoFields uses the name of the first field for the 'show' checkbox
+        if (isset($criteria['show_stipend_min']) && $criteria['show_stipend_min']) {
             $select->columns('stipend');
         }
         if (isset($criteria['stipend_min']) && $criteria['stipend_min'] >= 0) {
-            $select->where('stipend >= ?', $criteria['stipend_min']);
+            $select->where('stipend >= ?', intval($criteria['stipend_min']));
         }
         if (isset($criteria['stipend_max']) && $criteria['stipend_max']) {
-            $select->where('stipend <= ?', $criteria['stipend_max']);
+            $select->where('stipend <= ?', intval($criteria['stipend_max']));
         }
 
-        if (isset($criteria['show_period']) && $criteria['show_period']) {
+        if (isset($criteria['show_periodstartdate']) && $criteria['show_periodstartdate']) {
 
         }
         if (isset($criteria['periodstartdate']) && $criteria['periodstartdate']) {
@@ -10161,6 +10179,7 @@ die (__LINE__ . " - " . $sql);
             }
         }
 
+        // labelTwoFields uses the name of the first field for the 'show' checkbox
         if (isset($criteria['show_contractstartdate']) && $criteria['show_contractstartdate']) {
             $select->columns('employee.agreement_end_date');
         }
@@ -10209,14 +10228,42 @@ die (__LINE__ . " - " . $sql);
         if (isset($criteria['go']) && $criteria['go']) {
             $select = self::employeeFilterQuery($criteria);
             $s = $select->__toString();
-            $c = array_map(function($item) { return $item[1]; }, $select->getPart(Zend_Db_Select::COLUMNS));
+
+            $c = array_map(
+                function($item) {
+                    $header_names = array(
+                        'partner' => t('Partner'),
+                        'province_name' => t('Region A (Province)'),
+                        'district_name' => t('Region B (Health District)'),
+                        'region_c_name' => t('Region C (Local Region)'),
+                        'base_phrase' => t('Employee Based at'),
+                        'facility_name' => t('Facility') . ' ' . t('Name'),
+                        'facility_type_phrase' => t('Facility Type'),
+                        'qualification_phrase' => t('Staff Cadre'),
+                        'funded_hours_per_week' => t('Funded hours per week'),
+                        'annual_cost' => t('Annual Cost'),
+                        'role_phrase' => t('Primary Role'),
+                        'intended_transition' => t('Intended Transition'),
+                        'actual_transition' => t('Actual Transition'),
+                        'transition_complete_date' => t('Actual Transition Date'),
+                        'salary' => t('Salary'),
+                        'benefits' => t('Benefits'),
+                        'additional_expenses' => t('Additional Expenses'),
+                        'stipend' => t('Stipend'),
+                    );
+                    if ($item[2] !== null) {
+                        return $header_names[$item[2]];
+                    }
+                    return $header_names[$item[1]];
+                },
+                $select->getPart(Zend_Db_Select::COLUMNS)
+            );
 
             if (count($c)) {
                 $this->view->assign('headers', $c);
                 $f = $db->fetchAll($select);
                 $this->view->assign('output', $f);
             }
-            $xyz = 123;
         }
 
         $choose = array("0" => '--' . t("choose") . '--');
@@ -10264,6 +10311,7 @@ die (__LINE__ . " - " . $sql);
         $this->view->assign('transitions', $transitions);
         $this->view->assign('locations', $locations);
         $this->view->assign('bases', $bases);
+        $this->view->assign('criteria', $criteria);
     }
 
 	public function employeeReportOccupationalCategoryAction() {

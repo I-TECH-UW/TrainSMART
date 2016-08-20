@@ -21,7 +21,7 @@
             /* Init the table */
             var oTable = $('.tablegrid').dataTable({
                 "bJQueryUI": true,
-                "bSort": false,
+                "bSort": true,
                 "sPaginationType": "full_numbers"
             });
         });
@@ -71,9 +71,9 @@
                             $this->formSelect('facility_type', "", array(), $this->facilityTypes), 'facility_type');
 
                         echo labelAndField($this, t('Staff Cadre'),
-                            $this->formSelect('classification', "", array(), $this->classifications), 'staff_category');
+                            $this->formSelect('classification', "", array(), $this->classifications), 'classification');
 
-                        echo labelTwoFields($this, t('Funded Hours per week'), t('to'), 'hours_min', 'hours_max',
+                        echo labelTwoFields($this, t('Funded hours per week'), t('to'), 'hours_min', 'hours_max',
                             $this->criteria['hours_min'], $this->criteria['hours_max']);
 
                         echo labelTwoFields($this, t('Annual Cost'), t('to'), 'cost_min', 'cost_max',
@@ -91,13 +91,16 @@
                         echo labelTwoFields($this, t('Actual Transition Date'), t('to'), 'transition_start_date', 'transition_end_date',
                             $this->criteria['transition_start_date'], $this->criteria['transition_end_date']);
 
-                        echo labelTwoFields($this, t('Annual Benefits'), t('to'), 'benefits_min', 'benefits_max',
+                        echo labelTwoFields($this, t('Salary'), t('to'), 'salary_min', 'salary_max',
+                            $this->criteria['salary_min'], $this->criteria['salary_max']);
+
+                        echo labelTwoFields($this, t('Benefits'), t('to'), 'benefits_min', 'benefits_max',
                             $this->criteria['benefits_min'], $this->criteria['benefits_max']);
 
                         echo labelTwoFields($this, t('Additional Expenses'), t('to'), 'expenses_min', 'expenses_max',
                             $this->criteria['expenses_min'], $this->criteria['expenses_max']);
 
-                        echo labelTwoFields($this, t('Annual Stipend'), t('to'), 'stipend_min', 'stipend_max',
+                        echo labelTwoFields($this, t('Stipend'), t('to'), 'stipend_min', 'stipend_max',
                             $this->criteria['stipend_min'], $this->criteria['stipend_max']);
 
                         echo $this->partial('reports/ps-search-preview-button-partial.phtml', array());
