@@ -126,8 +126,12 @@ class Tutoredit extends ITechTable
 	}
 
 	public function UpdatePerson($param){
-		$datepick=$param['dob'];
-		$dobymd=date("Y-m-d",strtotime($datepick));
+	   $datepick=$param['dob'];
+		if($datepick == ''){
+		    $dobymd = null;
+		}else{
+		  $dobymd=date("Y-m-d",strtotime($datepick));
+		}
 		$db = $this->dbfunc();
 		$data = array(
 			"title_option_id"	=>	$param['title'],

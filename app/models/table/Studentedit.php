@@ -212,7 +212,11 @@ class Studentedit extends ITechTable
 	public function UpdatePerson($param){
 
 		$datepick=$param['dob'];
-		$dobymd=date("Y-m-d",strtotime($datepick));
+		if($datepick == ''){
+		    $dobymd = null;
+		}else{
+		  $dobymd=date("Y-m-d",strtotime($datepick));
+		}
 		$db = $this->dbfunc();
 		$data = array(
 			"title_option_id"	=>	$param['title'],
