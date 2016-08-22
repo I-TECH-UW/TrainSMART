@@ -11,7 +11,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "centos-6.7"
+  config.vm.box = "box-cutter/centos67"
   config.vm.hostname = "centos6-php56-zend"
   
   # forward http
@@ -41,6 +41,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "file", source: "vagrant/bootstrap/php-5.6-debugging-settings.ini", destination: "/home/vagrant/php.ini"
 #  config.vm.provision "file", source: "vagrant/bootstrap/rc.local.append", destination: "/home/vagrant/rc.local.append"
 #  config.vm.provision "file", source: "vagrant/bootstrap/mysqld.init.d", destination: "/home/vagrant/mysqld.init"
+  
+  config.vm.provider "virtualbox" do |v|
+	v.memory = 1024
+	v.cpus = 2
+  end
   
   config.vm.provision "file", source: "vagrant/bootstrap/my-56.cnf", destination: "/home/vagrant/my.cnf"
   config.vm.provision "file", source: "vagrant/bootstrap/ius-archive.repo", destination: "/home/vagrant/ius-archive.repo"

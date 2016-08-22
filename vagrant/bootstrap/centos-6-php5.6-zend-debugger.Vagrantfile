@@ -42,6 +42,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 #  config.vm.provision "file", source: "vagrant/bootstrap/rc.local.append", destination: "/home/vagrant/rc.local.append"
 #  config.vm.provision "file", source: "vagrant/bootstrap/mysqld.init.d", destination: "/home/vagrant/mysqld.init"
   
+  config.vm.provider "virtualbox" do |v|
+	v.memory = 1024
+	v.cpus = 2
+  end
+  
   config.vm.provision "file", source: "vagrant/bootstrap/my-56.cnf", destination: "/home/vagrant/my.cnf"
   config.vm.provision "file", source: "vagrant/bootstrap/ius-archive.repo", destination: "/home/vagrant/ius-archive.repo"
   config.vm.provision :shell, path: "vagrant/bootstrap/bootstrap-centos6-php56-zend-debugger.sh"
