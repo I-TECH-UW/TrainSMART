@@ -9922,7 +9922,7 @@ die (__LINE__ . " - " . $sql);
                 $select->joinInner('employee_base_option', 'employee_base_option.id = employee.employee_base_option_id', array());
                 $joined['employee_base_option'] = 1;
             }
-            $select->where('employee_base_option = ?', $criteria['based_at']);
+            $select->where('employee_base_option.id = ?', $criteria['based_at']);
         }
 
         // site
@@ -10227,7 +10227,6 @@ die (__LINE__ . " - " . $sql);
 
         if (isset($criteria['go']) && $criteria['go']) {
             $select = self::employeeFilterQuery($criteria);
-            $s = $select->__toString();
 
             $c = array_map(
                 function($item) {
