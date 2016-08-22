@@ -10217,7 +10217,7 @@ die (__LINE__ . " - " . $sql);
         return $select;
     }
 
-	public function employeeReportCustomAction() {
+	public function employeesAction() {
         $locations = Location::getAll();
         $criteria = $this->getAllParams();
 
