@@ -9922,7 +9922,7 @@ die (__LINE__ . " - " . $sql);
                 $select->joinInner('employee_base_option', 'employee_base_option.id = employee.employee_base_option_id', array());
                 $joined['employee_base_option'] = 1;
             }
-            $select->where('employee_base_option = ?', $criteria['based_at']);
+            $select->where('employee_base_option.id = ?', $criteria['based_at']);
         }
 
         // site
@@ -10214,8 +10214,6 @@ die (__LINE__ . " - " . $sql);
             $select->where('user_to_organizer_access.user_id = ?', $uid);
         }
 
-        $f = $select->__toString();
-
         return $select;
     }
 
@@ -10227,7 +10225,6 @@ die (__LINE__ . " - " . $sql);
 
         if (isset($criteria['go']) && $criteria['go']) {
             $select = self::employeeFilterQuery($criteria);
-            $s = $select->__toString();
 
             $c = array_map(
                 function($item) {
@@ -10352,8 +10349,6 @@ die (__LINE__ . " - " . $sql);
             $select->order('province_id');
             $select->order('employee_qualification_option_id');
             $select->order('partner.partner ASC');
-
-            $s = $select->__toString();
 
             $allData = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => $db->fetchAll($select));
             $rows = &$allData['rows'];

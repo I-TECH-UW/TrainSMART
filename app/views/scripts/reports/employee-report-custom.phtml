@@ -57,21 +57,21 @@
 
 
                         echo labelAndField($this, t('Partner'),
-                            $this->formSelect('partner', "", array(), $this->partners), 'partner');
+                            $this->formSelect('partner', $this->criteria['partner'], array(), $this->partners), 'partner');
 
                         echo region_filters_dropdown($this, $this->locations, $this->criteria, false, true);
 
                         echo labelAndField($this, t('Based at'),
-                            $this->formSelect('based_at', "", array(), $this->bases), 'based_at');
+                            $this->formSelect('based_at', $this->criteria['based_at'], array(), $this->bases), 'based_at');
 
                         echo labelAndField($this, t('Site') . space . t('Name'),
-                            $this->formSelect('site', "", array(), $this->facilities), 'site');
+                            $this->formSelect('site', $this->criteria['site'], array(), $this->facilities), 'site');
 
                         echo labelAndField($this, t('Facility Type'),
-                            $this->formSelect('facility_type', "", array(), $this->facilityTypes), 'facility_type');
+                            $this->formSelect('facility_type', $this->criteria['facility_type'], array(), $this->facilityTypes), 'facility_type');
 
                         echo labelAndField($this, t('Staff Cadre'),
-                            $this->formSelect('classification', "", array(), $this->classifications), 'classification');
+                            $this->formSelect('classification', $this->criteria['classification'], array(), $this->classifications), 'classification');
 
                         echo labelTwoFields($this, t('Funded hours per week'), t('to'), 'hours_min', 'hours_max',
                             $this->criteria['hours_min'], $this->criteria['hours_max']);
@@ -80,13 +80,13 @@
                             $this->criteria['cost_min'], $this->criteria['cost_max']);
 
                         echo labelAndField($this, t('Primary Role'),
-                            $this->formSelect('primary_role', "", array(), $this->roles), 'primary_role');
+                            $this->formSelect('primary_role', $this->criteria['primary_role'], array(), $this->roles), 'primary_role');
 
                         echo labelAndField($this, t('Intended Transition'),
-                            $this->formSelect('intended_transition', "", array(), $this->transitions), 'intended_transition');
+                            $this->formSelect('intended_transition', $this->criteria['intended_transition'], array(), $this->transitions), 'intended_transition');
 
                         echo labelAndField($this, t('Actual Transition Outcome'),
-                            $this->formSelect('actual_transition', "", array(), $this->transitions), 'actual_transition');
+                            $this->formSelect('actual_transition', $this->criteria['actual_transition'], array(), $this->transitions), 'actual_transition');
 
                         echo labelTwoFields($this, t('Actual Transition Date'), t('to'), 'transition_start_date', 'transition_end_date',
                             $this->criteria['transition_start_date'], $this->criteria['transition_end_date']);
