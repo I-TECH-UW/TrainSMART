@@ -10,10 +10,12 @@ print ScriptContainer::$instance->renderJSHead();
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
             $('.datepicker').datepicker( {dateFormat: "dd/mm/yy"} );
-/*            var oTable = $('.tablegrid').dataTable({
-                "bJQueryUI": true,
-                "sPaginationType": "full_numbers"
-            }); */
+            $('#employee-reports').change(function(){
+                <?php // #employee-reports is part of employee-report-types-partial template ?>
+
+                window.location = '<?php echo $this->base_url;?>' + $(this).val();
+            });
+
         });
         $(document).ready(function() {
             /* Init the table */
@@ -24,12 +26,6 @@ print ScriptContainer::$instance->renderJSHead();
             });
         } );
 
-        function gotoPage(objId) {
-            var reportSelector = YAHOO.util.Dom.get(objId);
-            if ( reportSelector[reportSelector.selectedIndex].value ) {
-                window.location = '<?php echo $this->base_url;?>' + reportSelector[reportSelector.selectedIndex].value + '?<?php echo $_SERVER['QUERY_STRING'];?>';
-            }
-        }
 
     </script>
 

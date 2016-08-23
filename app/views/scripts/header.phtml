@@ -128,7 +128,7 @@ if ( $this->isLoggedIn() ) {
 
   // employee header (override other menus)
   $controller = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
-  if ($controller == 'employee' || strstr($_SERVER['REQUEST_URI'] , 'reports/employees') || strstr($_SERVER['REQUEST_URI'] , 'reports/partners') || $controller == 'site' || $controller == 'partner')
+  if ($controller == 'employee' || strstr($_SERVER['REQUEST_URI'] , 'reports/employee') || strstr($_SERVER['REQUEST_URI'] , 'reports/partners') || $controller == 'site' || $controller == 'partner')
   {
     $navMain = array( // directory => array of nav items
     'index' => array(

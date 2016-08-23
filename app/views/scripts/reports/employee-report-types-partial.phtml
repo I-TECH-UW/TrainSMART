@@ -11,5 +11,5 @@ $options = array(
 
 $r = Zend_Controller_Front::getInstance()->getRequest();
 $selected = "/" . $r->getControllerName() . "/" .$r->getActionName();
-echo $this->formSelect('employees', $selected, array('id' => 'employees', 'onchange' => "gotoPage('employees');"), $options);
+echo $this->formSelect('employees', $selected, array('id' => 'employee-reports', 'onchange' => "gotoPage();"), $options);
 echo "<br/><br>";
