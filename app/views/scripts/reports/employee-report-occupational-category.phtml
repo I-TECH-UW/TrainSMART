@@ -46,12 +46,15 @@ print ScriptContainer::$instance->renderJSHead();
             <div class="pad50 clear"></div>
             <form action="" method="get" class="form_employee">
                 <?php
+                    echo $this->partial('reports/employee-reports-occupational-category-partial.phtml',
+                        array('classifications' => $this->classifications));
                     echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
                         array('translation' => $this->translation, 'locations' => $this->locations,
                             'criteria' => $this->criteria, 'setting' => $this->setting));
-                    echo $this->partial('reports/employee-reports-partial.phtml',
+                    echo $this->partial('reports/employee-reports-common.phtml',
                         array('mechanisms' => $this->mechanisms, 'funders' => $this->funders,
-                            'classifications' => $this->classifications, 'transitions' => $this->transitions));
+                            'transitions' => $this->transitions, 'transition_types' => $this->transition_types));
+                    echo $this->partial('reports/employee-reports-contract-end-date-partial.phtml');
                     echo $this->partial('reports/ps-search-preview-button-partial.phtml', array());
                 ?>
 
