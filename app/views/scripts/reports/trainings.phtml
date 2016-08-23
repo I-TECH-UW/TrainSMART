@@ -492,7 +492,10 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 																	if ( $this->criteria['showCustom4'] )
 																	echo ',"'.$row['custom_4'].'"';
 																	if (array_key_exists('pcnt', $row) !== false )
-																	echo ','.( ($row['has_known_participants']? ($row['pcnt'] ? $row['pcnt'] :0):'"-"') );
+																	//TA:110 Malawi does not wnat to show 'has_known_participants' in the Export Excel report
+																	// that is why we do not get it from query
+																	//echo ','.( ($row['has_known_participants']? ($row['pcnt'] ? $row['pcnt'] :0):'"-"') );
+																	echo ',"'.$row['pcnt'].'"';
 																	if ( $this->criteria['showCreatedBy'] )
 																	echo ',"'.$row['created_by_user'].'"';
 																	if ( $this->criteria['showCreationDate'] )

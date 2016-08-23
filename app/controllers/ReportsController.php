@@ -222,10 +222,10 @@ class ReportsController extends ReportFilterHelpers {
 			    'district_name' => @$translation ['Region B (Health District)'], 
 			    'pepfar_category_phrase' => @$translation ['PEPFAR Category'], 
 			    'training_organizer_phrase' => t('Training').' '.t('Organizer'), 
-			    'training_level_phrase' => t('Training').' '.t('Level'), 
+			    'training_level_phrase' => t('Training Mathod'),  
 			    'trainer_language_phrase' => t ( 'Language' ), 
 			    'training_location_name' => t ( 'Location' ), 
-			    'training_topic_phrase' => t ('Training').' '.t('Topic'), 
+			    'training_topic_phrase' => t('Topic'), 
 			    'funding_phrase' => t ( 'Funding' ), 'is_tot' => t ( 'TOT' ), 
 			    'facility_name' => t ('Facility').' '.t('Name'), 
 			    'facility_type_phrase' => t ('Facility').' '.t('Type'), 
@@ -252,15 +252,14 @@ class ReportsController extends ReportFilterHelpers {
 			    'pcnt' => 'Participants', 
 			    'training_start_date' => t ( 'Start Date' ),
 			    'training_end_date' => t ( 'End Date' ),
-			    'training_category_phrase' => 'Training Category',
-			    'has_known_participants' => 'Has known participants'
+			    'training_category_phrase' => t('Program Area'),  
+			    'has_known_participants' => 'Has known participants',
 			 );
 
 			// action => array(field => label)
 			$headersSpecific = array ('peopleByFacility' => array ('qualification_phrase' => t ( 'Qualification' ) ), 'participantsByCategory' => array ('cnt' => t ( 'Participants' ), 'person_cnt' => t ( 'Unique Participants' ) ) );
 		}
-
-		if ($rowRay) {
+        if ($rowRay) {
 			$keys = array_keys ( reset ( $rowRay ) );
 			foreach ( $keys as $k ) {
 				$csvheaders [] = $this->reportHeaders ( $k );
@@ -1367,12 +1366,11 @@ echo $sql . "<br>";
 			if ($criteria ['doCount']) {
 				$sql .= ' COUNT(pt.person_id) as "cnt" ';
 			} else {
-				$sql .= ' DISTINCT pt.id as "id", ptc.pcnt, pt.training_start_date, pt.training_end_date, pt.has_known_participants  ';
+				//TA:110 show only those column in export Excel report
+ 		//		$sql .= ' DISTINCT pt.id as "id", ptc.pcnt, pt.training_start_date, pt.training_end_date, pt.has_known_participants  ';
+			    $sql .= ' DISTINCT pt.id as "id", pt.training_start_date  ';
 			}
 
-			if ($criteria ['showTrainingTitle']) {
-				$sql .= ', training_title ';
-			}
 			if ($criteria ['showRegionI']) {
 				$sql .= ', pt.region_i_name ';
 			}
@@ -1394,12 +1392,21 @@ echo $sql . "<br>";
 			if ($criteria ['showRegionC']) {
 				$sql .= ', pt.region_c_name ';
 			}
+			if ($criteria ['showProvince']) {
+			    $sql .= ', pt.province_name ';
+			}
 			if ($criteria ['showDistrict']) {
 				$sql .= ', pt.district_name ';
 			}
-			if ($criteria ['showProvince']) {
-				$sql .= ', pt.province_name ';
+			
+		    if ($criteria ['showCategory']) {
+				$sql .= ', tcat.training_category_phrase ';
 			}
+			
+			if ($criteria ['showTrainingTitle']) {
+			    $sql .= ', training_title ';
+			}
+			
 
 			if ($criteria ['showLocation']) {
 				$sql .= ', pt.training_location_name ';
@@ -1416,9 +1423,9 @@ echo $sql . "<br>";
 			if ($criteria ['showLevel']) {
 				$sql .= ', tlev.training_level_phrase ';
 			}
-
-			if ($criteria ['showCategory']) {
-				$sql .= ', tcat.training_category_phrase ';
+			
+			if ($criteria ['showMethod']) {
+			    $sql .= ', tmeth.training_method_phrase ';
 			}
 
 			if ($criteria ['showPepfar'] || $criteria ['training_pepfar_id'] || $criteria ['training_pepfar_id'] === '0') {
@@ -1427,10 +1434,6 @@ echo $sql . "<br>";
 				} else {
 					$sql .= ', GROUP_CONCAT(DISTINCT tpep.pepfar_category_phrase) as "pepfar_category_phrase" ';
 				}
-			}
-
-			if ($criteria ['showMethod']) {
-				$sql .= ', tmeth.training_method_phrase ';
 			}
 
 			if ($criteria ['showTopic']) {
@@ -1509,7 +1512,12 @@ echo $sql . "<br>";
 				$sql .= ', pqs.qualification_phrase AS qualification_secondary_phrase';
 			}
 			
-			//print $sql;//TA:110
+			//TA:110 show participant column as a last
+			if ($criteria ['doCount']) {
+			} else {
+			    $sql .= ', ptc.pcnt  ';
+			}
+			
 
 			// prepare the location sub query
 			$num_locs = $this->setting('num_location_tiers');
@@ -1864,8 +1872,6 @@ echo $sql . "<br>";
 				$sql .= ' ORDER BY training_start_date DESC';
 			}
 			
-			//print $sql;
-			
 			$rowArray = $db->fetchAll ( $sql );
 			
 			//print_r($rowArray);
@@ -1880,7 +1886,7 @@ echo $sql . "<br>";
 			}
 
 			if ($this->getParam ( 'outputType' )){
-			   $this->sendData ( $this->reportHeaders ( false, $rowArray ) ); //TA:110
+			   $this->sendData ( $this->reportHeaders ( false, $rowArray ) ); //TA:110 export Excel/csv report
 			}
 
 		} else {
