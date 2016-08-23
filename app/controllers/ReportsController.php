@@ -1368,7 +1368,7 @@ echo $sql . "<br>";
 			} else {
 				//TA:110 show only those column in export Excel report
  		//		$sql .= ' DISTINCT pt.id as "id", ptc.pcnt, pt.training_start_date, pt.training_end_date, pt.has_known_participants  ';
-			    $sql .= ' DISTINCT pt.id as "id", pt.training_start_date  ';
+			    $sql .= ' DISTINCT pt.id as "id", pt.training_start_date, pt.training_end_date ';
 			}
 
 			if ($criteria ['showRegionI']) {
