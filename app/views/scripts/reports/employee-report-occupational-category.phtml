@@ -24,6 +24,13 @@ print ScriptContainer::$instance->renderJSHead();
             });
         } );
 
+        function gotoPage(objId) {
+            var reportSelector = YAHOO.util.Dom.get(objId);
+            if ( reportSelector[reportSelector.selectedIndex].value ) {
+                window.location = '<?php echo $this->base_url;?>' + reportSelector[reportSelector.selectedIndex].value + '?<?php echo $_SERVER['QUERY_STRING'];?>';
+            }
+        }
+
     </script>
 
 </head>
@@ -32,6 +39,10 @@ print ScriptContainer::$instance->renderJSHead();
     <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
     <div id="content">
         <div id="subcontent">
+            <?php
+            echo $this->partial('reports/employee-report-types-partial.phtml', array('site_style' => $this->site_style));
+            ?>
+
             <div class="clear"></div>
             <div id="contentheader">
                 <h2><?php echo t("Employee") . " " . t("Reports"); ?></h2><br/>

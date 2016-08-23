@@ -1,0 +1,15 @@
+<div class="fieldLabel" id="training_lbl">
+<?php echo t('Employee') . ' ' . t('Reports');?>
+</div>
+
+<?php
+$options = array(
+    "" => "--" . t('choose') . "--",
+    "/reports/employees" => t('Customizable'),
+    "/reports/employee-report-occupational-category" => t('Occupational Category'),
+);
+
+$r = Zend_Controller_Front::getInstance()->getRequest();
+$selected = "/" . $r->getControllerName() . "/" .$r->getActionName();
+echo $this->formSelect('employees', $selected, array('id' => 'employees', 'onchange' => "gotoPage('employees');"), $options);
+echo "<br/><br>";
