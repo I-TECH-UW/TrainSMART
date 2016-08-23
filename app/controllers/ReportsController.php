@@ -38,7 +38,7 @@ class ReportsController extends ReportFilterHelpers {
 		$contextSwitch->addActionContext('ps-students-by-name', 'csv');
 		$contextSwitch->addActionContext('ps-students-trained', 'csv');
 		$contextSwitch->addActionContext('employee-report-occupational-category', 'csv');
-        $contextSwitch->addActionContext('employee-report-custom', 'csv');
+        $contextSwitch->addActionContext('employees', 'csv');
 
 		$contextSwitch->addContext('chwreport', array('suffix' => 'chwreport'));
 		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'chwreport');
@@ -10225,6 +10225,7 @@ die (__LINE__ . " - " . $sql);
 
         if (isset($criteria['go']) && $criteria['go']) {
             $select = self::employeeFilterQuery($criteria);
+            $select->distinct();
 
             $c = array_map(
                 function($item) {
