@@ -10,12 +10,6 @@ print ScriptContainer::$instance->renderJSHead();
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
             $('.datepicker').datepicker( {dateFormat: "dd/mm/yy"} );
-            $('#employee-reports').change(function(){
-                <?php // #employee-reports is part of employee-report-types-partial template ?>
-
-                window.location = '<?php echo $this->base_url;?>' + $(this).val();
-            });
-
         });
         $(document).ready(function() {
             /* Init the table */
@@ -36,7 +30,7 @@ print ScriptContainer::$instance->renderJSHead();
     <div id="content">
         <div id="subcontent">
             <?php
-            echo $this->partial('reports/employee-report-types-partial.phtml', array('site_style' => $this->site_style));
+            echo $this->partial('reports/employee-reports-report-types-partial.phtml', array('site_style' => $this->site_style, 'base_url' => $this->base_url));
             ?>
 
             <div class="clear"></div>
@@ -55,7 +49,7 @@ print ScriptContainer::$instance->renderJSHead();
                     echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
                         array('translation' => $this->translation, 'locations' => $this->locations,
                             'criteria' => $this->criteria, 'setting' => $this->setting));
-                    echo $this->partial('reports/employee-reports-common.phtml',
+                    echo $this->partial('reports/employee-reports-common-partial.phtml',
                         array('mechanisms' => $this->mechanisms, 'funders' => $this->funders,
                             'transitions' => $this->transitions, 'transition_types' => $this->transition_types));
                     echo $this->partial('reports/ps-search-preview-button-partial.phtml', array());

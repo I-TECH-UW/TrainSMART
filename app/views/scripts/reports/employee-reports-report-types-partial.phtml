@@ -14,5 +14,5 @@ $options = array(
 
 $r = Zend_Controller_Front::getInstance()->getRequest();
 $selected = "/" . $r->getControllerName() . "/" .$r->getActionName();
-echo $this->formSelect('employees', $selected, array('id' => 'employee-reports', 'onchange' => "gotoPage();"), $options);
+echo $this->formSelect('employees', $selected, array('id' => 'employee-reports', 'onchange' => "window.location = '$this->base_url' + $(this).val();"), $options);
 echo "<br/><br>";

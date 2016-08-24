@@ -9759,6 +9759,7 @@ die (__LINE__ . " - " . $sql);
 		}
 
 		$choose = array("0" => '--' . t("choose") . '--');
+        $transition_types = $choose + array("1" => t("Intended Transition"), "2" => t("Actual Transition"));
 
 		if (!$this->hasACL('training_organizer_option_all')) {
 			// limit data to user's access to mechanisms only available to partners and
@@ -9801,10 +9802,199 @@ die (__LINE__ . " - " . $sql);
 		$this->view->assign('locations', $locations);
 		$this->view->assign('classifications', $classifications);
 		$this->view->assign('transitions', $transitions);
+        $this->view->assign('transition_types', $transition_types);
 		$this->view->assign('criteria', $criteria);
 		$this->view->assign('funders', $funders);
 		$this->view->assign('mechanisms', $mechanisms);
 	}
+
+	public function employeeReportMechanismTransitionDescriptionAction() {
+        $locations = Location::getAll();
+        $criteria = $this->getAllParams();
+
+        $db = $this->dbfunc();
+
+        if ($criteria['go']) {
+
+            $select = self::employeeFilterQuery($criteria);
+        }
+
+        $choose = array("0" => '--' . t("choose") . '--');
+        $transition_types = $choose + array("1" => t("Intended Transition"), "2" => t("Actual Transition"));
+
+        if (!$this->hasACL('training_organizer_option_all')) {
+            // limit data to user's access to mechanisms only available to partners and
+            // subpartners that the user account can access
+            $uid = $this->isLoggedIn();
+
+            $mechanismFilter = $db->select();
+            $mechanismFilter->from(array('mo' => 'mechanism_option'), array('mo.id', 'mo.mechanism_phrase'));
+            $mechanismFilter->join(array('lmp' => 'link_mechanism_partner'), 'mo.id = lmp.mechanism_option_id', array());
+            $mechanismFilter->join(array('p' => 'partner'), 'p.id = lmp.partner_id', array());
+            $mechanismFilter->join(array('utoa' => 'user_to_organizer_access'),
+                'utoa.training_organizer_option_id = p.organizer_option_id', array());
+
+            $mechanismFilter->where('utoa.user_id = ?', $uid);
+            $mechanismFilter->order('mechanism_phrase ASC');
+
+            $mechanisms = $choose + $db->fetchPairs($mechanismFilter);
+        } else {
+            $mechanisms = $choose + $db->fetchPairs($db->select()
+                    ->from('mechanism_option', array('id', 'mechanism_phrase'))
+                    ->order('mechanism_phrase ASC')
+                );
+        }
+
+        $funders = $choose + $db->fetchPairs($db->select()
+                ->from('partner_funder_option', array('id', 'funder_phrase'))
+                ->order('funder_phrase ASC')
+            );
+
+        $transitions = $choose + $db->fetchPairs($db->select()
+                ->from('employee_transition_option', array('id', 'transition_phrase'))
+                ->order('transition_phrase ASC')
+            );
+
+        $classifications = $choose + $db->fetchPairs($db->select()
+                ->from('employee_qualification_option', array('id', 'qualification_phrase'))
+                ->order('qualification_phrase ASC')
+            );
+
+        $roles = $choose + $db->fetchPairs($db->select()
+                ->from('employee_role_option', array('id', 'role_phrase'))
+                ->order('role_phrase ASC')
+            );
+
+        $this->view->assign('roles', $roles);
+        $this->view->assign('locations', $locations);
+        $this->view->assign('classifications', $classifications);
+        $this->view->assign('transitions', $transitions);
+        $this->view->assign('transition_types', $transition_types);
+        $this->view->assign('criteria', $criteria);
+        $this->view->assign('funders', $funders);
+        $this->view->assign('mechanisms', $mechanisms);
+    }
+
+    public function employeeReportMechanismTransitionAction() {
+        $criteria = $this->getAllParams();
+
+        $db = $this->dbfunc();
+
+        if ($criteria['go']) {
+            $select = self::employeeFilterQuery($criteria);
+        }
+
+        $choose = array("0" => '--' . t("choose") . '--');
+        $transition_types = $choose + array("1" => t("Intended Transition"), "2" => t("Actual Transition"));
+
+        if (!$this->hasACL('training_organizer_option_all')) {
+            // limit data to user's access to mechanisms only available to partners and
+            // subpartners that the user account can access
+            $uid = $this->isLoggedIn();
+
+            $mechanismFilter = $db->select();
+            $mechanismFilter->from(array('mo' => 'mechanism_option'), array('mo.id', 'mo.mechanism_phrase'));
+            $mechanismFilter->join(array('lmp' => 'link_mechanism_partner'), 'mo.id = lmp.mechanism_option_id', array());
+            $mechanismFilter->join(array('p' => 'partner'), 'p.id = lmp.partner_id', array());
+            $mechanismFilter->join(array('utoa' => 'user_to_organizer_access'),
+                'utoa.training_organizer_option_id = p.organizer_option_id', array());
+
+            $mechanismFilter->where('utoa.user_id = ?', $uid);
+            $mechanismFilter->order('mechanism_phrase ASC');
+
+            $mechanisms = $choose + $db->fetchPairs($mechanismFilter);
+        } else {
+            $mechanisms = $choose + $db->fetchPairs($db->select()
+                    ->from('mechanism_option', array('id', 'mechanism_phrase'))
+                    ->order('mechanism_phrase ASC')
+                );
+        }
+
+        $funders = $choose + $db->fetchPairs($db->select()
+                ->from('partner_funder_option', array('id', 'funder_phrase'))
+                ->order('funder_phrase ASC')
+            );
+
+        $transitions = $choose + $db->fetchPairs($db->select()
+                ->from('employee_transition_option', array('id', 'transition_phrase'))
+                ->order('transition_phrase ASC')
+            );
+
+        $this->view->assign('transitions', $transitions);
+        $this->view->assign('transition_types', $transition_types);
+        $this->view->assign('criteria', $criteria);
+        $this->view->assign('funders', $funders);
+        $this->view->assign('mechanisms', $mechanisms);
+
+    }
+
+    public function employeeReportPrimaryRoleAction() {
+        $locations = Location::getAll();
+        $criteria = $this->getAllParams();
+
+        $db = $this->dbfunc();
+
+        if ($criteria['go']) {
+
+            $select = self::employeeFilterQuery($criteria);
+        }
+
+        $choose = array("0" => '--' . t("choose") . '--');
+        $transition_types = $choose + array("1" => t("Intended Transition"), "2" => t("Actual Transition"));
+
+        if (!$this->hasACL('training_organizer_option_all')) {
+            // limit data to user's access to mechanisms only available to partners and
+            // subpartners that the user account can access
+            $uid = $this->isLoggedIn();
+
+            $mechanismFilter = $db->select();
+            $mechanismFilter->from(array('mo' => 'mechanism_option'), array('mo.id', 'mo.mechanism_phrase'));
+            $mechanismFilter->join(array('lmp' => 'link_mechanism_partner'), 'mo.id = lmp.mechanism_option_id', array());
+            $mechanismFilter->join(array('p' => 'partner'), 'p.id = lmp.partner_id', array());
+            $mechanismFilter->join(array('utoa' => 'user_to_organizer_access'),
+                'utoa.training_organizer_option_id = p.organizer_option_id', array());
+
+            $mechanismFilter->where('utoa.user_id = ?', $uid);
+            $mechanismFilter->order('mechanism_phrase ASC');
+
+            $mechanisms = $choose + $db->fetchPairs($mechanismFilter);
+        } else {
+            $mechanisms = $choose + $db->fetchPairs($db->select()
+                    ->from('mechanism_option', array('id', 'mechanism_phrase'))
+                    ->order('mechanism_phrase ASC')
+                );
+        }
+
+        $funders = $choose + $db->fetchPairs($db->select()
+                ->from('partner_funder_option', array('id', 'funder_phrase'))
+                ->order('funder_phrase ASC')
+            );
+
+        $transitions = $choose + $db->fetchPairs($db->select()
+                ->from('employee_transition_option', array('id', 'transition_phrase'))
+                ->order('transition_phrase ASC')
+            );
+
+        $classifications = $choose + $db->fetchPairs($db->select()
+                ->from('employee_qualification_option', array('id', 'qualification_phrase'))
+                ->order('qualification_phrase ASC')
+            );
+
+        $roles = $choose + $db->fetchPairs($db->select()
+                ->from('employee_role_option', array('id', 'role_phrase'))
+                ->order('role_phrase ASC')
+            );
+
+        $this->view->assign('roles', $roles);
+        $this->view->assign('locations', $locations);
+        $this->view->assign('classifications', $classifications);
+        $this->view->assign('transitions', $transitions);
+        $this->view->assign('transition_types', $transition_types);
+        $this->view->assign('criteria', $criteria);
+        $this->view->assign('funders', $funders);
+        $this->view->assign('mechanisms', $mechanisms);
+
+    }
 
 	public function partnersAction() {
 		require_once ('models/table/Helper.php');

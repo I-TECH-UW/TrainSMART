@@ -16,10 +16,6 @@
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
             $('.datepicker').datepicker({dateFormat: "dd/mm/yy"});
-            $('#employee-reports').change(function(){
-                <?php // #employee-reports is part of employee-report-types-partial template ?>
-                window.location = '<?php echo $this->base_url;?>' + $(this).val();
-            });
         });
         $(document).ready(function () {
             /* Init the table */
@@ -29,7 +25,6 @@
                 "sPaginationType": "full_numbers"
             });
         });
-
     </script>
 
 </head>
@@ -39,7 +34,7 @@
     <div id="content">
         <div id="subcontent">
             <?php
-            echo $this->partial('reports/employee-report-types-partial.phtml', array('site_style' => $this->site_style));
+            echo $this->partial('reports/employee-reports-report-types-partial.phtml', array('site_style' => $this->site_style, 'base_url' => $this->base_url));
             ?>
 
             <div class="clear"></div>
