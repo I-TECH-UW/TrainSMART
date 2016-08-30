@@ -91,17 +91,30 @@ class DataController extends ITechController {
    //fill participants
    require_once('models/table/Person.php');
    $personTable = new Person();
-   $select = $personTable->select()->from('person', array('id', 'first_name', 'middle_name', 'last_name'))->setIntegrityCheck(false)->join(array('pt'=>'person_to_training'), "pt.person_id = person.id", array('training_id'));
+   $select = $personTable->select()
+   ->from('person', array('count(*) as count')) //TA:#245 NEW code, if we need just participants count for each training
+  // ->from('person', array('id', 'first_name', 'middle_name', 'last_name')) 
+   ->setIntegrityCheck(false)
+   ->join(array('pt'=>'person_to_training'), "pt.person_id = person.id", array('training_id'))
+   ->where("training_id in (" . $this->getSanParam('ids') . ")")//new, it makes sence to leave it to take just trainings from the list not all of them
+   ->group("training_id");//new
+   
    $rows = $table->fetchAll($select);
    
-   foreach($rows as $row) {
-    $tid = $row->training_id;
-    if ($ids && array_search ($tid, $ids) === false)
-      continue; // dont print this training, the user has filtered by the url param ('ids')
-    $ra = $row->toArray();
-    unset($ra['training_id']);
-    $sorted[$tid]['participants'][] = $ra;
-   }
+   //TA:#245 OLD code
+//    foreach($rows as $row) {
+//     $tid = $row->training_id;
+//     if ($ids && array_search ($tid, $ids) === false)
+//       continue; // dont print this training, the user has filtered by the url param ('ids')
+//     $ra = $row->toArray();
+//     unset($ra['training_id']);
+//     $sorted[$tid]['participants'][] = $ra;
+//    }
+//
+//TA:#245  NEW code - if they wnat to show just count
+foreach($rows as $row) {
+    $sorted[$row->training_id]['participants'] = $row->count;
+}
    
    //fill participants
    require_once('models/table/OptionList.php');
@@ -125,22 +138,33 @@ class DataController extends ITechController {
    //fill trainers
    require_once('models/table/TrainingToTrainer.php');
    $personTable = new TrainingToTrainer();
-   $select = $personTable->select()->from('training_to_trainer', array('training_id'))->setIntegrityCheck(false)->join(array('p'=>'person'), "training_to_trainer.trainer_id = p.id", array('id', 'first_name', 'middle_name', 'last_name'));
+   $select = $personTable->select()
+   ->from('training_to_trainer', array('training_id'))
+   ->setIntegrityCheck(false)
+   //->join(array('p'=>'person'), "training_to_trainer.trainer_id = p.id", array('id', 'first_name', 'middle_name', 'last_name'))
+   ->join(array('p'=>'person'), "training_to_trainer.trainer_id = p.id", array('count(*) as count')) //TA:#245
+   ->where("training_id in (" . $this->getSanParam('ids') . ")")//TA:#245 it makes sence to leave it to take just trainings from the list not all of them
+   ->group("training_id");//TA:#245 remove it if they want to show persons names;
    $rows = $table->fetchAll($select);
    
+//    foreach($rows as $row) {
+//     $tid = $row->training_id;
+//     if ($ids && array_search ($tid, $ids) === false)
+//       continue; // dont print this training, the user has filtered by the url param ('ids')
+//     $ra = $row->toArray();
+//     unset($ra['training_id']);
+//     $sorted[$tid]['trainers'][] = $ra;
+//    }
+   //TA:#245  NEW code - if they wnat to show just count
    foreach($rows as $row) {
-    $tid = $row->training_id;
-    if ($ids && array_search ($tid, $ids) === false)
-      continue; // dont print this training, the user has filtered by the url param ('ids')
-    $ra = $row->toArray();
-    unset($ra['training_id']);
-    $sorted[$tid]['trainers'][] = $ra;
+       $sorted[$row->training_id]['trainers'] = $row->count;
    }
    
    $this->view->assign('data', $sorted);
 
-   if ($this->getSanParam('outputType') == 'csv') 
-      $this->sendData ( $this->reportHeaders ( false, $sorted ) );    
+   if ($this->getSanParam('outputType') == 'csv'){
+     $this->sendData ( $this->reportHeaders ( false, $sorted ) );  
+   }
        
     } catch (Exception $e) {
       echo $e->getMessage();
