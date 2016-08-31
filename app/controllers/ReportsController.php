@@ -6556,17 +6556,25 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
         if (isset($params['institution']) && $params['institution'] ||
 			isset($params['showinstitution']) && $params['showinstitution']) {
 
-            if (!$institutionJoined) {
-                $s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
-                $institutionJoined = true;
-            }
+			//TA:#247 use link_student_cohort to get institution
+ 			$s->joinLeft(array('lsc2' => 'link_student_cohort'), 'lsc2.id_student = s.id', array());
+ 			$s->joinLeft(array('c2' => 'cohort'), 'c2.id = lsc2.id_cohort', array());
+			///////
+			if (!$institutionJoined) {
+			    //TA:#247 use link_student_cohort to get institution
+			    //$s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
+			    $s->joinLeft(array('i' => 'institution'), 'i.id = c2.institutionid', array());
+			    $institutionJoined = true;
+			}
+			
 			if (isset($params['showinstitution']) && $params['showinstitution']) {
-				$headers[] = "Institution";
-				$s->columns('i.institutionname');
+			    $headers[] = "Institution";
+			    $s->columns('i.institutionname');
 			}
 			if (isset($params['institution']) && $params['institution']) {
-				$s->where('i.id = ?', $params['institution']);
+			    $s->where('i.id = ?', $params['institution']);
 			}
+			
 		}
 
 		if (isset($params['cohort']) && $params['cohort'] ||
