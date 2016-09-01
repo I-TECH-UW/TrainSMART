@@ -902,6 +902,9 @@ if ($this->setting ['display_region_c']) {
                         oTrainerBday.value = oTrainerBday.alt;
                         oTrainerFacility.value = oTrainerFacility.alt;
                         OTrainerHealth.value = OTrainerHealth.alt;
+
+         
+
                     }
 
                     ITECH.trainerTable.addRow(jsonAdd, successCallback);
@@ -1187,7 +1190,8 @@ if ($this->setting ['display_region_c']) {
                     }
                 }
 
-                var totalElement = YAHOO.util.Dom.get('total');
+               // var totalElement = YAHOO.util.Dom.get('total');
+                var totalElement = YAHOO.util.Dom.get('persons_total');
                 totalElement.innerHTML = num;
 
             }

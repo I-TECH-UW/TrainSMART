@@ -37,7 +37,9 @@ function makeEditTableTraining(labelAdd, tableData, columnDefs, jsonUrl, linkInf
 		//for some reason, this function never return, so set our global table objects here
 		ITECH[ITECH.curtablecontainer] = this;
 		
-		ITECH.labelTotal = document.getElementById(labelSafe + "_total");
+		//TA:113 do not use static variable, count will not working with two tables in one page
+		//ITECH.labelTotal = document.getElementById(labelSafe + "_total");
+		var labelTotal = document.getElementById(labelSafe + "_total");
 
 		// Dynamic edit links onClick event handled here
 		this.onTableClick = function(type, args, me) {
@@ -242,8 +244,13 @@ function makeEditTableTraining(labelAdd, tableData, columnDefs, jsonUrl, linkInf
 		this.myDataTable.config = this.config;
 
 		this.myDataTable.updateCount = function() {
-			if ((ITECH.labelTotal != undefined) && (ITECH.labelTotal != null))
-				ITECH.labelTotal.innerHTML = this.getRecordSet().getLength();
+			//TA:113 do not use static variable, count will not working with two tables in one page
+//			if ((ITECH.labelTotal != undefined) && (ITECH.labelTotal != null)){
+//				ITECH.labelTotal.innerHTML = this.getRecordSet().getLength();
+//			}
+			if ((labelTotal != undefined) && (labelTotal != null)){
+				labelTotal.innerHTML = this.getRecordSet().getLength();
+			}
 		}
 		this.myDataTable.updateCount();
 
