@@ -717,6 +717,22 @@ if ($this->row['has_known_participants']) :
                            value="<?php echo $this->translation['Middle Name']; ?>" onfocus="middleNameOnFocus(this)"
                            onblur="middleNameOnBlur(this)">
                 <?php } ?>
+                <!-- TA:113 add birthday, facility, distyrict fields as well -->
+                <input type="text" id="trainer_birthdate" size="9" disabled="true" value="<?php tp('Birthdate'); ?>" alt="Birthdate">
+<input type="text" id="trainer_facility" size="15" disabled="true" value="<?php tp('Facility'); ?>" alt="Facility">
+<?php
+if ($this->setting ['display_region_c']) {
+    $location_title = $this->translation['Region C (Local Region)'];
+    $location_idx = 10;
+} else if ($this->setting ['display_region_b']) {
+    $location_title = $this->translation['Region B (Health District)'];
+    $location_idx = 9;
+} else {
+    $location_title = $this->translation['Region A (Province)'];
+    $location_idx = 8;
+}
+?>
+<input type="text" id="trainer_health" size="15" disabled="true" value="<?php echo $location_title; ?>" alt="Location">
                 <input type="hidden" id="trainer_days" value="0">
                 <!--<input type="text" id="trainer_days" size="3" value="" >&nbsp;<?php tp('days'); ?>-->
                 &nbsp;&nbsp;&nbsp;
@@ -761,22 +777,34 @@ if ($this->row['has_known_participants']) :
                     YAHOO.util.Dom.get('trainerContainerMiddle').style.top = '0px';
                     <?php } ?>
 
+                    var oTrainerFirst = YAHOO.util.Dom.get('trainer_first_name');
+                    var oTrainerLast = YAHOO.util.Dom.get('trainer_last_name');
+                    var oTrainerMiddle = YAHOO.util.Dom.get('trainer_middle_name');
+                    var oTrainerId = YAHOO.util.Dom.get('trainer_id');
+                    var oIsTrainer = YAHOO.util.Dom.get('is_trainer');
+                    var oTrainerBday = YAHOO.util.Dom.get('trainer_birthdate');
+                    var oTrainerFacility = YAHOO.util.Dom.get('trainer_facility');
+                    var OTrainerHealth = YAHOO.util.Dom.get('trainer_health');
+
                     // array can contain object references, element ids, or both
                     function suggestTrainerName(oSelf, elItem, oData) {
-                        var oTrainerFirst = YAHOO.util.Dom.get('trainer_first_name');
-                        var oTrainerLast = YAHOO.util.Dom.get('trainer_last_name');
-                        var oTrainerMiddle = YAHOO.util.Dom.get('trainer_middle_name');
-                        var oTrainerId = YAHOO.util.Dom.get('trainer_id');
-                        var oIsTrainer = YAHOO.util.Dom.get('is_trainer');
+             
+                        //TA:113
+                        oTrainerId.value = elItem[2][4];
+                        oIsTrainer.value = elItem[2][8];
+                        oTrainerBday.value = elItem[2][7];
+                         oTrainerFacility.value = elItem[2][5];
+                         OTrainerHealth.value = elItem[2][<?php echo $location_idx;?>];
 
-                        var midNameIdx = 2;
-                        var lastNameIdx = 3;
+                        //TA:113
+//                         var midNameIdx = 2;
+//                         var lastNameIdx = 3;
+                        var midNameIdx = 1;
+                        var lastNameIdx = 2;
                         <?php if ( $this->setting['display_middle_name'] ) { ?>
                         midNameIdx =    <?php echo ( $this->setting['display_middle_name_last'] ? 3:2);?>;
                         lastNameIdx =    <?php echo ( $this->setting['display_middle_name_last'] ? 2:3);?>;
                         <?php }?>
-                        oTrainerId.value = elItem[2][4];
-                        oIsTrainer.value = elItem[2][5];
                         if (elItem[0]._elTextbox == oTrainerLast) {
                             oTrainerFirst.value = elItem[2][1];
                             <?php if ( $this->setting['display_middle_name'] ) {?>
@@ -815,6 +843,9 @@ if ($this->row['has_known_participants']) :
                     var oTrainerDays = YAHOO.util.Dom.get('trainer_days');
                     var oTrainerId = YAHOO.util.Dom.get('trainer_id');
                     var oIsTrainer = YAHOO.util.Dom.get('is_trainer');
+                    var oTrainerBday = YAHOO.util.Dom.get('trainer_birthdate');
+                    var oTrainerFacility = YAHOO.util.Dom.get('trainer_facility');
+                    var OTrainerHealth = YAHOO.util.Dom.get('trainer_health');
 
                     if (oTrainerId.value == 0) {
                         alert("<?php echo t('The entered trainer name could not be found.') . '\n' . t('Please select one from the list or add a new person.');?>");
@@ -845,6 +876,10 @@ if ($this->row['has_known_participants']) :
                     <?php } ?>
                     jsonAdd.last_name = oTrainerLast.value;
                     jsonAdd.duration_days = oTrainerDays.value;
+                    //TA:113
+                    jsonAdd.birthdate = oTrainerBday.value;
+                    jsonAdd.facility_name = oTrainerFacility.value;
+                    jsonAdd.district_name = OTrainerHealth.value;
 
                     var successCallback = function () {
                         oTrainerId.value = "0";
@@ -863,6 +898,10 @@ if ($this->row['has_known_participants']) :
                         oTrainerDays.focus();
                         oTrainerDays.blur();
                         //oButton.disabled = false;
+                        //TA:113
+                        oTrainerBday.value = oTrainerBday.alt;
+                        oTrainerFacility.value = oTrainerFacility.alt;
+                        OTrainerHealth.value = OTrainerHealth.alt;
                     }
 
                     ITECH.trainerTable.addRow(jsonAdd, successCallback);
@@ -879,7 +918,7 @@ if ($this->row['has_known_participants']) :
 <?php } ?>
 
 
-<?php /************ PARTICIPANTS ******************************************************************************/ ?>
+<?php /************ PARTICIPANTS TA:113 ******************************************************************************/ ?>
 
     <div class="clear"></div>
     <div class="hrGrey"></div>
