@@ -363,9 +363,10 @@
                     <div class="fieldLabel"><?php echo t('Training location'); ?></div>
                     <div class="fieldInput">
                         <?php
-                        training_location_dropdown($this->tlocations, $this->row['training_location_id'], 'name="training_location_id" id="select_training_location" ' . $this->viewonly);
-                        if (!$this->viewonly)
+                        training_location_dropdown($this->tlocations, $this->row['training_location_id'], 'name="training_location_id" id="select_training_location" ' . $this->viewonly); 
+                        if ($this->hasACL ( 'edit_training_location' )){//TA:114
                             echo $this->insertLocationLink;
+                        }
                         ?>
                     </div><br/>
                 <?php } ?>
