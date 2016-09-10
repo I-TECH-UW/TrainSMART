@@ -1526,8 +1526,8 @@ class TrainingController extends ReportFilterHelpers {
 	
 			$trainingObj = new Training ();
 			$personToTraining = new PersonToTraining();
-			while ($row = $this->_csv_get_row($filename) )
-			{
+			while ($row = $this->_csv_get_row($filename) ){
+			    $row = array_map("utf8_encode", $row); //TA:#213 to work with special characterists as well
 				$values = array();
 				if (! is_array($row) )
 					continue;
@@ -2190,6 +2190,7 @@ class TrainingController extends ReportFilterHelpers {
 				$ppl = $db->fetchAll($sql);
 
 				while ($row = $this->_csv_get_row($filename) ) {
+				    $row = array_map("utf8_encode", $row); //TA:#213 to work with special characterists as well
 					if ( is_array($row) ) {
 						if ( isset($row[0]) && isset($row[4]) && !empty($row[0]) && !empty($row[4]) ) {
 

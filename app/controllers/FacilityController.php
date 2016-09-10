@@ -723,6 +723,7 @@ class FacilityController extends ReportFilterHelpers {
 			$facilityObj = new Facility ();
 			$errs = array ();
 			while ( $row = $this->_csv_get_row ( $filename ) ) {
+			    $row = array_map("utf8_encode", $row); //TA:#213 to work with special characterists as well
 				$values = array ();
 				if (! is_array ( $row ))
 					continue; // sanity?
@@ -947,6 +948,7 @@ class FacilityController extends ReportFilterHelpers {
 			$trainingLocationObj = new TrainingLocation ();
 			$errs = array ();
 			while ( $row = $this->_csv_get_row ( $filename ) ) {
+			    $row = array_map("utf8_encode", $row); //TA:#213 to work with special characterists as well
 				$values = array ();
 				if (! is_array ( $row ))
 					continue; // sanity?

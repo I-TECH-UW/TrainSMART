@@ -1662,6 +1662,7 @@ class PersonController extends ReportFilterHelpers
             $personObj = new Person ();
             $errs = array();
             while ($row = $this->_csv_get_row($filename)) {
+                $row = array_map("utf8_encode", $row); //TA:#213 to work with special characterists as well
                 $values = array();
                 if (!is_array($row))
                     continue;           // sanity?
@@ -1684,6 +1685,7 @@ class PersonController extends ReportFilterHelpers
                             $values[$cols[$i]] = $this->sanitize($v);
                     }
                 }
+        
                 // done now all fields are named and in $values[my_field]
                 if ($countValidFields) {
                     //validate

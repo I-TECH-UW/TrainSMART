@@ -513,24 +513,26 @@ protected function sendData($data) {
  		$xlsx = new SimpleXLSX( $filepath);
  		return $xlsx->rows(); //take all rows
  	}
+ 	
+ 	protected function _csv_get_row($filepath, $reset = FALSE) {
+ 	    ini_set('auto_detect_line_endings',true);
+ 	
+ 	    if ($filepath == '') {
+ 	        $this->_csvHandle = null;
+ 	        return FALSE;
+ 	    }
+ 	
+ 	    if (!$this->_csvHandle || $reset) {
+ 	        if ($this->_csvHandle) {
+ 	            fclose($this->_csvHandle);
+ 	        }
+ 	        $this->_csvHandle = fopen($filepath, 'r');
+ 	    }
+ 	
+ 	    return fgetcsv($this->_csvHandle, 10000, ',');
+ 	    
+ 	}
 
-  protected function _csv_get_row($filepath, $reset = FALSE) {
-    ini_set('auto_detect_line_endings',true);
-
-    if ($filepath == '') {
-      $this->_csvHandle = null;
-      return FALSE;
-    }
-
-    if (!$this->_csvHandle || $reset) {
-      if ($this->_csvHandle) {
-        fclose($this->_csvHandle);
-      }
-      $this->_csvHandle = fopen($filepath, 'r');
-    }
-
-    return fgetcsv($this->_csvHandle, 10000, ',');
-  }
 
   /**
    * string or comma seperated list to array
