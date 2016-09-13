@@ -6557,13 +6557,16 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			isset($params['showinstitution']) && $params['showinstitution']) {
 
 			//TA:#247 use link_student_cohort to get institution
- 			$s->joinLeft(array('lsc2' => 'link_student_cohort'), 'lsc2.id_student = s.id', array());
- 			$s->joinLeft(array('c2' => 'cohort'), 'c2.id = lsc2.id_cohort', array());
+			    if (!$cohortJoined) {
+ 			$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+ 			$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+ 			$cohortJoined = true;
+			    }
 			///////
 			if (!$institutionJoined) {
 			    //TA:#247 use link_student_cohort to get institution
 			    //$s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
-			    $s->joinLeft(array('i' => 'institution'), 'i.id = c2.institutionid', array());
+			    $s->joinLeft(array('i' => 'institution'), 'i.id = c.institutionid', array());
 			    $institutionJoined = true;
 			}
 			
@@ -6579,10 +6582,12 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 		if (isset($params['cohort']) && $params['cohort'] ||
 			isset($params['showcohort']) && $params['showcohort']) {
-
-			$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
-			$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
-			$cohortJoined = true;
+			    //TA:#247 use table joinonly ones
+			if (!$cohortJoined) {
+			     $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+			 $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+			 $cohortJoined = true;
+			}
 			if (isset($params['showcohort']) && $params['showcohort']) {
 				$headers[] = "Cohort";
 				$s->columns('c.cohortname');
@@ -6605,9 +6610,12 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			// do not use to get cadre by student table, beacuse when new student is added cadre is 0 by defualt 
 			//and when we assign student to cohort new record in added only to link_student_cohort table, but student.cadre value is not updated
 			//$s->joinLeft(array('ca' => 'cadres'), 'ca.id = s.cadre', array());
-			$s->joinLeft(array('lsc3' => 'link_student_cohort'), 'lsc3.id_student = s.id', array());
-			$s->joinLeft(array('c3' => 'cohort'), 'c3.id = lsc3.id_cohort', array());
-			$s->joinLeft(array('ca' => 'cadres'), 'ca.id = c3.cadreid', array());
+			if (!$cohortJoined) {
+			     $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+			     $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+			     $cohortJoined = true;
+			}
+			$s->joinLeft(array('ca' => 'cadres'), 'ca.id = c.cadreid', array());
 			
 			if (isset($params['showcadre']) && $params['showcadre']) {
 				$headers[] = "Cadre";
@@ -6812,7 +6820,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				$s->where('c.startdate <= ?', $end_date);
 			}
 		}
-
 		return(array($s, $headers));
 	}
 
