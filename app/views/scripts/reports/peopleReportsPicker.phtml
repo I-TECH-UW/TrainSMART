@@ -9,9 +9,11 @@
     	<div class="fieldLabel" id="peopleSelect_lbl" ><?php print str_replace(' ','&nbsp;', t('Select participant report'));?></div>
     	<select id="peopleSelect" name="peopleSelect" onchange="gotoPeoplePage('peopleSelect');">
     		<option value="">--<?php tp('choose');?>--</option>
+    		<!-- TA:#253 
     		<option value="/reports/participants-by-category/cat/pepfar" <?php if ( @$this->criteria['cat'] == 'pepfar' ) echo 'SELECTED';?> ><?php tp('Unique Participants by ');?> <?php echo (@$this->translation['PEPFAR Category']); ?></option>
      		<option value="/reports/participants-by-category/cat/level" <?php if ( @$this->criteria['cat'] == 'level' ) echo 'SELECTED';?> ><?php tp('Unique Participants by');?> <?php echo (@$this->translation['Training Level']); ?></option>
     		<option value="/reports/participants-by-category/cat/qualification" <?php if ( @$this->criteria['cat'] == 'qualification' ) echo 'SELECTED';?> ><?php tp('Unique Participants by Qualification');?></option>
+     		-->
      		<option value="/reports/participants-by-training" <?php if ( strstr($_SERVER['REQUEST_URI'],'participants-by-training')) echo 'SELECTED';?>><?php tp('Participants Trained');?></option>
      		<option value="/reports/participants-by-facility-type" <?php if ( strstr($_SERVER['REQUEST_URI'],'participants-by-facility-type')) echo 'SELECTED';?>><?php tp('Participants by Facility');?></option>
      		<option value="/reports/participants-by-name" <?php if ( strstr($_SERVER['REQUEST_URI'],'participants-by-name')) echo 'SELECTED';?>><?php tp('Participants by Name');?></option>
