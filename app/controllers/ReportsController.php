@@ -8582,7 +8582,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			if (count ($where) > 0){
 				$query .= "WHERE " . implode(" AND ", $where) . "\n";
 			}
-			//echo $query; exit;
 
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 			$rowArray = $db->fetchAll ($query);
