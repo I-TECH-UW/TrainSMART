@@ -1527,7 +1527,13 @@ class TrainingController extends ReportFilterHelpers {
 			$trainingObj = new Training ();
 			$personToTraining = new PersonToTraining();
 			while ($row = $this->_csv_get_row($filename) ){
-			    $row = array_map("utf8_encode", $row); //TA:#213 to work with special characterists as well
+			    //TA:#213
+			    //INFORCE user to create files only in UTF-8 encoded:
+			    //Option 1: Excel:Save as Unicode Text -> Notepad: replace tabs with commas, save as csv UTF-8
+			    //Option 2: OpenOffice
+			    //It is not required for english, but absolutelly required for special characteristics.
+			    //If files saved in UTF-8 encoded, so we do not need this line
+			    // $row = array_map("utf8_encode", $row); 
 				$values = array();
 				if (! is_array($row) )
 					continue;
@@ -2190,7 +2196,13 @@ class TrainingController extends ReportFilterHelpers {
 				$ppl = $db->fetchAll($sql);
 
 				while ($row = $this->_csv_get_row($filename) ) {
-				    $row = array_map("utf8_encode", $row); //TA:#213 to work with special characterists as well
+				    //TA:#213
+			    //INFORCE user to create files only in UTF-8 encoded:
+			    //Option 1: Excel:Save as Unicode Text -> Notepad: replace tabs with commas, save as csv UTF-8
+			    //Option 2: OpenOffice
+			    //It is not required for english, but absolutelly required for special characteristics.
+			    //If files saved in UTF-8 encoded, so we do not need this line
+			    // $row = array_map("utf8_encode", $row); 
 					if ( is_array($row) ) {
 						if ( isset($row[0]) && isset($row[4]) && !empty($row[0]) && !empty($row[4]) ) {
 
