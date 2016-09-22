@@ -229,8 +229,6 @@ class Tutoredit extends ITechTable
 			$addressid = $db->lastInsertId();
 		}
 
-		echo "updrow: $addressid <br>";
-
 		# LINKING ADDRESS TO TUTOR
 		$link = array(
 			"id_tutor"		=>	$tutorid,

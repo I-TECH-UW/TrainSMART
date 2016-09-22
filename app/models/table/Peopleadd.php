@@ -71,13 +71,13 @@ class Peopleadd extends ITechTable
 		$tutorid = $db->lastInsertId();
 		# ADDING PERM ADDRESS
 		$address = array(
-			'address1'			=>	$param['address1'],
-			'address2'			=>	$param['address2'],
-			'postalcode'		=>	$param['zip'],
+			'address1'			=>	$param['address1'] == null?'':$param['address1'], //TA:#252
+			'address2'			=>	$param['address2'] == null?'':$param['address2'],//TA:#252
+			'postalcode'		=>	$param['zip'] == null?'':$param['zip'],//TA:#252
 			"id_geog1"			=>	$this->getRegionLastValue($param['province_id']),
 			"id_geog2"			=>	$this->getRegionLastValue($param['district_id']),
 			"id_geog3"			=>	$this->getRegionLastValue($param['region_c_id']),
-			'locationid'		=>	$param['city'],
+			'locationid'		=>	$param['city'] == null?'':$param['city'],//TA:#252
 			'id_addresstype'	=>	1,
 		);
 		$result = $db->insert("addresses", $address);
