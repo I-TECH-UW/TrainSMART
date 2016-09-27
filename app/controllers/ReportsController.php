@@ -9566,11 +9566,230 @@ die (__LINE__ . " - " . $sql);
         $this->view->assign('criteria', $criteria);
     }
 
+    /**
+     * @param $rows - reference to database roles returned by filtered query
+     * @param $column - the database column to use for data collection
+     * @param bool $regional - whether results should be organized by province or not
+     * @return array - nested array with processed data and totals
+     */
+
+    protected function organizeEmployeeResults(&$rows, $column, $regional = false) {
+        $allData = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => $rows);
+
+        $allData['byPartner'] = array();
+        $byPartner = &$allData['byPartner'];
+
+        $allData[$column] = array();
+        $byColumn = &$allData[$column];
+
+        $allData['byProvince'] = array();
+        $byProvince = &$allData['byProvince'];
+
+        foreach($rows as $r) {
+
+            // post-process the data into a more useful model for the report and add up the costs.
+            $partner = $r['partner'] ? $r['partner'] : 'unknown partner';
+            $province = $r['province_name'] ? $r['province_name'] : 'unknown province';
+            $key = $r[$column] ? $r[$column] : 'unknown ' . $column;
+
+            $allData['fulltimecount'] += $r['fulltimecount'];
+            $allData['parttimecount'] += $r['parttimecount'];
+            $allData['cost'] += $r['cost'];
+
+            if ($regional) {
+                // by Province
+                if (!array_key_exists($province, $byProvince)) {
+                    $byProvince[$province] = array(
+                        'totals' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0),
+                        'rows' => array(),
+                        'byPartner' => array(),
+                        $column => array(),
+                    );
+                }
+                $p = &$byProvince[$province];
+                $p['rows'][] = &$r;
+                $p = &$p['totals'];
+                $p['fulltimecount'] += $r['fulltimecount'];
+                $p['parttimecount'] += $r['parttimecount'];
+                $p['cost'] += $r['cost'];
+
+                // get partner province totals
+                $p = &$byProvince[$province]['byPartner'];
+                if (!array_key_exists($partner, $p)) {
+                    $p[$partner] = array(
+                        'totals' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0),
+                        $column => array(),
+                        'rows' => array()
+                    );
+                }
+                $p = &$p[$partner];
+                $p['rows'][] = $r;
+
+                $p = &$p['totals'];
+                $p['fulltimecount'] += $r['fulltimecount'];
+                $p['parttimecount'] += $r['parttimecount'];
+                $p['cost'] += $r['cost'];
+
+                $p = &$byProvince[$province]['byPartner'][$partner][$column];
+                if (!array_key_exists($key, $p)) {
+                    $p[$key] = $r;
+                }
+
+                // organize by category per province
+                $p = &$byProvince[$province][$column];
+                if (!array_key_exists($key, $p)) {
+                    $p[$key] = array(
+                        'totals' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0),
+                        'rows' => array()
+                    );
+                }
+                $p = &$p[$key];
+
+                $p['rows'][] = $r;
+                $p = &$p['totals'];
+                $p['fulltimecount'] += $r['fulltimecount'];
+                $p['parttimecount'] += $r['parttimecount'];
+                $p['cost'] += $r['cost'];
+            }
+
+            // by partner
+            if (!array_key_exists($partner, $byPartner)) {
+                $byPartner[$partner] = array(
+                    'fulltimecount' => 0,
+                    'parttimecount' => 0,
+                    'cost' => 0,
+                    'rows' => array()
+                );
+                $byPartner[$partner][$column] = array();
+            }
+            $p = &$byPartner[$partner];
+            $p['fulltimecount'] += $r['fulltimecount'];
+            $p['parttimecount'] += $r['parttimecount'];
+            $p['cost'] += $r['cost'];
+            $p['rows'][] = $r;
+
+            // by province partner category
+            if (!array_key_exists($key, $p[$column])) {
+                $p[$column][$key] = array(
+                    'fulltimecount' => 0,
+                    'parttimecount' => 0,
+                    'cost' => 0,
+                    'rows' => array()
+                );
+            }
+            $p = &$p[$column][$key];
+            $p['fulltimecount'] += $r['fulltimecount'];
+            $p['parttimecount'] += $r['parttimecount'];
+            $p['cost'] += $r['cost'];
+            $p['rows'][] = $r;
+
+            // by column totals
+            $p = &$byColumn;
+            if (!array_key_exists($key, $p)) {
+                $p[$key] = array(
+                    'fulltimecount' => 0,
+                    'parttimecount' => 0,
+                    'cost' => 0,
+                    'rows' => array()
+                );
+            }
+            $p = &$p[$key];
+            $p['fulltimecount'] += $r['fulltimecount'];
+            $p['parttimecount'] += $r['parttimecount'];
+            $p['cost'] += $r['cost'];
+            $p['rows'][] = $r;
+        }
+        return ($allData);
+    }
+
+    /**
+     * creates an array of output rows for report tables
+     * relies on incoming data rows to be ordered by province and by partner
+     *
+     * @param $data - a data structure processed by organizeEmployeeResults
+     * @param $column - the column to group by
+     * @param $columnValues - the possible values for the columns, can vary by region
+     * @param $partners - a list of partners for the table, cannot vary per region
+     * @param bool $regional - whether to sort by region also
+     * @return array
+     */
+    protected function formatEmployeeResultsForTable(&$data, $column, $columnValues, $partners, $regional = false) {
+
+        if ($regional) {
+            $outputRows = array();
+            $numPartnerColumns = (count($data['byPartner']) + 1) * 3 + 1;
+            foreach ($data['byProvince'] as $province => $provinceData) {
+
+                $outputRows[] = array_pad(array($province), $numPartnerColumns, ' ');
+                $provinceTail = array($province . ' ' . t('Totals'));
+
+                $outputRows = array_merge($outputRows,
+                    $this->formatEmployeeResultsForTable($provinceData, $column, array_keys($provinceData[$column]), $partners, false));
+
+                $lastRow = count($outputRows) - 1;
+                $outputRows[$lastRow][0] = $province . ' ' . t('Total');
+                array_push($outputRows[$lastRow], number_format($provinceData['totals']['fulltimecount']),
+                    number_format($provinceData['totals']['parttimecount']),
+                    number_format($provinceData['totals']['cost']));
+            }
+            $grandTotals = array(t('Grand Total'));
+            foreach ($data['byPartner'] as $partner => $partnerValues) {
+                array_push($grandTotals, number_format($partnerValues['fulltimecount']),
+                    number_format($partnerValues['parttimecount']), number_format($partnerValues['cost']));
+            }
+            array_push($grandTotals, number_format($data['fulltimecount']), number_format($data['parttimecount']),
+                number_format($data['cost']));
+            $outputRows[] = $grandTotals;
+        }
+        else {
+            $outputRows = array_combine(array_flip($columnValues), array_map(function($v) { return array($v); }, $columnValues));
+            $outputRows[] = array(t('Totals'));
+            $lastRow = count($outputRows) - 1;
+            $columnIndexes = array_flip($columnValues);
+
+            // partner category totals
+            foreach ($partners as $partner) {
+                foreach ($columnValues as $v) {
+                    if (array_key_exists($partner, $data['byPartner']) && array_key_exists($v, $data['byPartner'][$partner][$column])) {
+                        array_push($outputRows[$columnIndexes[$v]], number_format($data['byPartner'][$partner][$column][$v]['fulltimecount']),
+                            number_format($data['byPartner'][$partner][$column][$v]['parttimecount']),
+                            number_format($data['byPartner'][$partner][$column][$v]['cost']));
+                    }
+                    else {
+                        array_push($outputRows[$columnIndexes[$v]], 0, 0, 0);
+                    }
+                }
+                array_push($outputRows[$lastRow], number_format($data['byPartner'][$partner]['totals']['fulltimecount']),
+                    number_format($data['byPartner'][$partner]['totals']['parttimecount']),
+                    number_format($data['byPartner'][$partner]['totals']['cost']));
+            }
+
+            // category totals
+            foreach ($columnValues as $v) {
+                if (array_key_exists($v, $data[$column])) {
+                    array_push($outputRows[$columnIndexes[$v]], number_format($data[$column][$v]['fulltimecount']),
+                        number_format($data[$column][$v]['parttimecount']),
+                        number_format($data[$column][$v]['cost']));
+                }
+                else {
+                    array_push($outputRows[$columnIndexes[$v]], 0, 0, 0);
+                }
+            }
+        }
+        return $outputRows;
+    }
+
 	public function employeeReportOccupationalCategoryAction() {
 		$locations = Location::getAll();
 		$criteria = $this->getAllParams();
 
 		$db = $this->dbfunc();
+
+        $choose = array("0" => '--' . t("choose") . '--');
+        $classifications = $choose + $db->fetchPairs($db->select()
+                ->from('employee_qualification_option', array('id', 'qualification_phrase'))
+                ->order('qualification_phrase ASC')
+            );
 
 		if ($criteria['go']) {
 
@@ -9602,7 +9821,7 @@ die (__LINE__ . " - " . $sql);
             $select->group('employee_qualification_option_id');
             $select->group('employee.partner_id');
             $select->order('province_id');
-            $select->order('employee_qualification_option_id');
+            $select->order('employee_qualification_option.qualification_phrase');
             $select->order('partner.partner ASC');
 
             $allData = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => $db->fetchAll($select));
@@ -9692,6 +9911,9 @@ die (__LINE__ . " - " . $sql);
 
 			}
 
+			$foo = $this->organizeEmployeeResults($allData['rows'], 'qualification_phrase', true);
+            $bar = $this->formatEmployeeResultsForTable($foo, 'qualification_phrase', array_keys($foo['qualification_phrase']), array_keys($foo['byPartner']), true);
+
 			// now we have all partners and categories, we can build the report output
 			// the rows and columns are not static and dependent on the contents of the data, so we need to build a
             // data structure for the table.
@@ -9755,11 +9977,11 @@ die (__LINE__ . " - " . $sql);
 			}
 			$output[] = $grandTotals;
 			$this->view->assign('headers', $headers);
-			$this->view->assign('output', $output);
+			$this->view->assign('output', $bar);
 		}
 
 		$choose = array("0" => '--' . t("choose") . '--');
-        $transition_types = $choose + array("1" => t("Intended Transition"), "2" => t("Actual Transition"));
+        $transition_types = $choose + array("1" => t("Actual Transition"), "2" => t("Intended Transition"));
 
 		if (!$this->hasACL('training_organizer_option_all')) {
 			// limit data to user's access to mechanisms only available to partners and
@@ -9815,12 +10037,58 @@ die (__LINE__ . " - " . $sql);
         $db = $this->dbfunc();
 
         if ($criteria['go']) {
-
             $select = self::employeeFilterQuery($criteria);
+
+            $parts = $select->getPart(Zend_Db_Select::FROM);
+            if (!array_key_exists('link_mechanism_employee', $parts)) {
+                $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id',
+                    array());
+            }
+            if (!array_key_exists('employee_transition_option', $parts)) {
+                $select->join(array('employee_transition_option'),
+                    'employee.employee_transition_option_id = employee_transition_option.id', array());
+            }
+            if (!array_key_exists('partner', $parts)) {
+                $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+            }
+
+            $select->columns(
+                array(
+                    'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
+                    'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
+                    'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
+                    'partner.partner', 'employee_transition_option.transition_phrase'
+                )
+            );
+
+            $select->group('employee_transition_option.id');
+            $select->group('partner.id');
+            $select->order('employee_transition_option.transition_phrase');
+
+            $rows = $db->fetchAll($select);
+            $descriptions = array_keys($db->fetchAssoc($db->select()->from('employee_transition_option', array('transition_phrase'))->order('transition_phrase')));
+            $data = $this->organizeEmployeeResults($rows, 'transition_phrase');
+            $output = $this->formatEmployeeResultsForTable($data, 'transition_phrase', $descriptions);
+            $headers = array(t('Transition Description'));
+            $grandTotals = array(t('Grand Total'));
+            foreach(array_keys($data['byPartner']) as $partner) {
+                array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
+                    $partner . ' - ' . t('Annual Cost'));
+                array_push($grandTotals, number_format($data['byPartner'][$partner]['fulltimecount']),
+                    number_format($data['byPartner'][$partner]['parttimecount']), number_format($data['byPartner'][$partner]['cost']));
+            }
+            array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
+                t('Total') . ' ' . t('Annual Cost'));
+            array_push($grandTotals, number_format($data['fulltimecount']), number_format($data['parttimecount']),
+                number_format($data['cost']));
+
+            $output[] = $grandTotals;
+            $this->view->assign('headers', $headers);
+            $this->view->assign('output', $output);
         }
 
         $choose = array("0" => '--' . t("choose") . '--');
-        $transition_types = $choose + array("1" => t("Intended Transition"), "2" => t("Actual Transition"));
+        $transition_types = $choose + array("1" => t("Actual Transition"), "2" => t("Intended Transition"));
 
         if (!$this->hasACL('training_organizer_option_all')) {
             // limit data to user's access to mechanisms only available to partners and
@@ -9882,10 +10150,43 @@ die (__LINE__ . " - " . $sql);
 
         if ($criteria['go']) {
             $select = self::employeeFilterQuery($criteria);
+
+            $parts = $select->getPart(Zend_Db_Select::FROM);
+            if (!array_key_exists('link_mechanism_employee', $parts)) {
+                $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id',
+                    array());
+            }
+            if (!array_key_exists('mechanism_option', $parts)) {
+                $select->join(array('mechanism_option'),
+                    'mechanism_option.id = link_mechanism_employee.mechanism_option_id',
+                    array());
+            }
+            if (!array_key_exists('partner', $parts)) {
+                $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+            }
+
+            $select->columns(
+                array(
+                    'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
+                    'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
+                    'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
+                    'partner.partner',
+                    'mechanism_option.mechanism_phrase',
+                )
+            );
+            $select->group('mechanism_option.id');
+            $select->group('partner.id');
+            $select->order('mechanism_option.mechanism_phrase');
+
+            $xyz = $select->__toString();
+            $rows = $db->fetchAll($select);
+
+            $data = $this->organizeEmployeeResults($rows, 'mechanism_phrase');
+            $abc = 123;
         }
 
         $choose = array("0" => '--' . t("choose") . '--');
-        $transition_types = $choose + array("1" => t("Intended Transition"), "2" => t("Actual Transition"));
+        $transition_types = $choose + array("1" => t("Actual Transition"), "2" => t("Intended Transition"));
 
         if (!$this->hasACL('training_organizer_option_all')) {
             // limit data to user's access to mechanisms only available to partners and
@@ -9937,10 +10238,46 @@ die (__LINE__ . " - " . $sql);
         if ($criteria['go']) {
 
             $select = self::employeeFilterQuery($criteria);
+
+            $parts = $select->getPart(Zend_Db_Select::FROM);
+            if (!array_key_exists('link_mechanism_employee', $parts)) {
+                $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id', array());
+            }
+            if (!array_key_exists('partner', $parts)) {
+                $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+            }
+            if (!array_key_exists('location', $parts)) {
+                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
+            }
+            if (!array_key_exists('employee_role_option', $parts)) {
+                $select->join('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
+            }
+            $select->columns(
+                array(
+                    'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
+                    'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
+                    'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
+                    'partner.partner', 'employee_role_option.role_phrase', 'location.province_name'
+                )
+            );
+
+            $select->group('location.province_id');
+            $select->group('employee.employee_role_option_id');
+            $select->group('employee.partner_id');
+            $select->order('location.province_id');
+            $select->order('employee_role_option.role_phrase');
+            $select->order('partner.partner');
+
+            $xyz = $select->__toString();
+            $rows = $db->fetchAll($select);
+
+            $data = $this->organizeEmployeeResults($rows, 'role_phrase', true);
+
+            $abc = 123;
         }
 
         $choose = array("0" => '--' . t("choose") . '--');
-        $transition_types = $choose + array("1" => t("Intended Transition"), "2" => t("Actual Transition"));
+        $transition_types = $choose + array("1" => t("Actual Transition"), "2" => t("Intended Transition"));
 
         if (!$this->hasACL('training_organizer_option_all')) {
             // limit data to user's access to mechanisms only available to partners and
@@ -9958,7 +10295,8 @@ die (__LINE__ . " - " . $sql);
             $mechanismFilter->order('mechanism_phrase ASC');
 
             $mechanisms = $choose + $db->fetchPairs($mechanismFilter);
-        } else {
+        }
+        else {
             $mechanisms = $choose + $db->fetchPairs($db->select()
                     ->from('mechanism_option', array('id', 'mechanism_phrase'))
                     ->order('mechanism_phrase ASC')

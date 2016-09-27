@@ -623,42 +623,66 @@ class ReportFilterHelpers extends ITechController
             $select->columns('employee_role_option.role_phrase');
         }
         if (isset($criteria['primary_role']) && $criteria['primary_role']) {
+            if (!array_key_exists('employee_role_option', $joined)) {
+                $select->join('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
+                $joined['employee_role_option'] = 1;
+            }
             $select->where('employee_role_option.id = ?', $criteria['primary_role']);
+        }
+
+        // transition (used with transition_type)
+        if (isset($criteria['transition']) && $criteria['transition']) {
+
+            if (isset($criteria['transition_type']) && $criteria['transition_type']) {
+                if ($criteria['transition_type'] == '1') {
+                    // Actual Transition
+                    $select->where('employee.employee_transition_complete_option_id = ?', $criteria['transition']);
+                }
+                elseif ($criteria['transition_type'] == '2') {
+                    // Intended Transition
+                    $select->where('employee.employee_transition_option_id = ?', $criteria['transition']);
+                }
+            }
+            else {
+                $select->where('employee.employee_transition_option_id = ? OR employee.employ_transition_complete_option_id = ?',
+                    $criteria['transition'], $criteria['transition']);
+
+            }
         }
 
         // intended transition
         if (isset($criteria['show_intended_transition']) && $criteria['show_intended_transition']) {
-            if (!array_key_exists('employee_transition_option', $joined)) {
-                $select->join('employee_transition_option', 'employee_transition_option.id = employee.employee_transition_option_id', array());
-                $joined['employee_transition_option'] = 1;
+            if (!array_key_exists('intended_employee_transition_option', $joined)) {
+                $select->join(array('intended_employee_transition_option' => 'employee_transition_option'), 'intended_employee_transition_option.id = employee.employee_transition_option_id', array());
+                $joined['intended_employee_transition_option'] = 1;
             }
-            $select->columns('employee_transition_option.transition_phrase AS intended_transition');
+            $select->columns('intended_employee_transition_option.transition_phrase AS intended_transition');
         }
         if (isset($criteria['intended_transition']) && $criteria['intended_transition']) {
-            if (!array_key_exists('employee_transition_option', $joined)) {
-                $select->join('employee_transition_option', 'employee_transition_option.id = employee.employee_transition_option_id', array());
-                $joined['employee_transition_option'] = 1;
+            if (!array_key_exists('intended_employee_transition_option', $joined)) {
+                $select->join(array('intended_employee_transition_option' => 'employee_transition_option'), 'intended_employee_transition_option.id = employee.employee_transition_option_id', array());
+                $joined['intended_employee_transition_option'] = 1;
             }
-            $select->where('employee_transition_option.id = ?', $criteria['intended_transition']);
+            $select->where('intended_employee_transition_option.id = ?', $criteria['intended_transition']);
         }
 
         // transition outcome
         if (isset($criteria['show_actual_transition']) && $criteria['show_actual_transition']) {
-            if (!array_key_exists('employee_transition_option2', $joined)) {
-                $select->join(array('employee_transition_option2' => 'employee_transition_option'),
-                    'employee_transition_option2.id = employee.employee_transition_complete_option_id', array());
-                $joined['employee_transition_option2'] = 1;
+            if (!array_key_exists('actual_employee_transition_option', $joined)) {
+                $select->join(array('actual_employee_transition_option' => 'actual_employee_transition_option'),
+                    'actual_employee_transition_option.id = employee.employee_transition_complete_option_id', array());
+                $joined['actual_employee_transition_option'] = 1;
             }
-            $select->columns('employee_transition_option2.transition_phrase AS actual_transition');
+            $select->columns('actual_employee_transition_option.transition_phrase AS actual_transition');
 
         }
         if (isset($criteria['actual_transition']) && $criteria['actual_transition']) {
-            if (!array_key_exists('employee_transition_option2', $joined)) {
-                $select->join(array('employee_transition_option2' => 'employee_transition_option'),
-                    'employee_transition_option2.id = employee.employee_transition_complete_option_id', array());
-                $joined['employee_transition_option2'] = 1;
+            if (!array_key_exists('actual_employee_transition_option', $joined)) {
+                $select->join(array('actual_employee_transition_option' => 'employee_transition_option'),
+                    'actual_employee_transition_option.id = employee.employee_transition_complete_option_id', array());
+                $joined['actual_employee_transition_option'] = 1;
             }
-            $select->where('employee_transition_option2.id = ?', $criteria['actual_transition']);
+            $select->where('actual_employee_transition_option.id = ?', $criteria['actual_transition']);
 
         }
 
