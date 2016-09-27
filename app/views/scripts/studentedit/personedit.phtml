@@ -10,6 +10,9 @@
 	print ScriptContainer::$instance->renderJSHead();	?>
 
 		<script type="text/javascript" charset="utf-8">
+
+		var cohort_ids = [];
+		
 			$(document).ready(function() {
 				/* Funding - set checkbox if not empty*/
 				$("input[name^=fundingamount]").keyup(function (e) {
@@ -130,15 +133,34 @@
 				return aReturn;
 			}
 
-			function checkcohort(){
+			function checkcohort(){//TA:#217
 				if ($("#cohortid").val() == 0){
 					$("#studentid").attr('disabled','disabled');
 					$("#studentid").val('');
 					$("#studenttype").attr('disabled','disabled');
 					$("#studenttype").val(0);
 				} else {
+
+					//check if student was associated with selected cohort before
+					for(i=0;i<cohort_ids.length; i++){
+						if(cohort_ids[i] == $("#cohortid").val()){
+							alert("This student cannot be associated with selected cohort.");
+							$("#cohortid").val(cohort_ids[0]);
+							return;
+						}
+					}
+					
+					
 					$("#studentid").removeAttr('disabled');
 					$("#studenttype").removeAttr('disabled');
+					//TA:#217
+					$("#enrollmentdate").val('');
+					$("#enrollmentreason").val(0);
+					$("#separationdate").val('');
+					$("#separationreason").val(0);
+					$("#cadre").val(0);
+					$("#yearofstudy").val('');
+					
 				}
 			}
 
@@ -332,7 +354,8 @@
 
 							<label><?php echo t('Cohort') ?></label>
 							<input type="hidden" name="cohortid" value="<?php echo $this->cohortid; ?>" />
-							<select name="cohortid" id="cohortid" onchange="checkcohort()" <?php if (!empty($this->cohortid)) echo 'disabled' ?>>
+							<!-- TA:#217 if separation date is not empty then allow assign student to the new cohort -->
+							<select name="cohortid" id="cohortid" onchange="checkcohort()" <?php if (!empty($this->cohortid) && ($this->separationdate == "" || $this->separationdate == "0000-00-00")) echo 'disabled' ?>>
 								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
 	foreach ($this->getcohorts as $cohort){
@@ -540,7 +563,7 @@
 							<!-- TA: added 07/22/2014 END -->
 
 							<label><?php echo t('Date of Enrollment'); ?></label>
-							<input type="text" name="enrollmentdate" readonly value="<?php echo $this->escape($this->enrollmentdate);?>"<?php echo !$this->hascohort ? " disabled" : "";?>>
+							<input type="text" name="enrollmentdate" id="enrollmentdate" readonly value="<?php echo $this->escape($this->enrollmentdate);?>"<?php echo !$this->hascohort ? " disabled" : "";?>>
 
 							<label><?php echo t('Reason for Enrollment'); ?></label>
 <!--							<input type="text" name="enrollmentreason" value="<?php echo $this->escape($this->enrollmentreason);?>"> -->
@@ -589,7 +612,7 @@
 							</select>
 
 							<label><?php echo t('Years of Study'); ?></label>
-							<input type="text" name="yearofstudy" value="<?php echo $this->escape($this->yearofstudy);?>"<?php echo !$this->hascohort ? " disabled" : "";?> readonly>
+							<input type="text" name="yearofstudy" id="yearofstudy" value="<?php echo $this->escape($this->yearofstudy);?>"<?php echo !$this->hascohort ? " disabled" : "";?> readonly>
 
 							<div class="pad20 clear"></div>
 							<p style="float:left;font-size:14px;"><?php echo t('Funding'); ?></p>
@@ -794,7 +817,7 @@
 
 					<div class="clear"></div>
 					<div style="width :100%;">
-						<p style="font-weight:bold;"><?php echo t('Class History'); ?></p>
+						<p style="margin:15px 0 15px 0;font-weight:bold;"><?php echo t('Class History'); ?></p>
 						<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 							<thead>
 								<tr>
@@ -915,17 +938,167 @@
 <?php
 	}
 ?>
+
 							</tbody>
 						</table>
+											
 						<div style="text-align : right;">
-							<br>
+							
 							<input type="submit" name="licensepopupbutton" id="licensepopupbutton" value="<?php echo t('Update exams'); ?>" class="tsbutton green large">
 						</div>
 					</div>
+					<?php
+//TA:#247 Display student's cohort history
+require_once ('models/table/Helper.php');
+$helper = new Helper();
+echo "<script type='text/javascript'>cohort_ids.push(" . $this->cohortid . ");</script>";
+if(count($this->cohort_history) > 0){
+    echo "<div id='contentheader'><h2>Student cohort history</h2><br><br></div><div class='clear pad20'></div>";
+    for($i=0; $i<count($this->cohort_history); $i++){
+        echo "<script type='text/javascript'>cohort_ids.push(" . $this->cohort_history[$i]['id_cohort'] . ");</script>";
+        echo "Cohort: <b>" . $this->cohort_history[$i]['cohortname'] . 
+        "</b><br>" . t('Date of Enrollment') . ": " . $this->cohort_history[$i]['joindate'] . "<br>" . t('Date of Separation') . ": " . $this->cohort_history[$i]['dropdate'] . "<br>";
+        $classes = $helper->listcurrentclasses($this->cohort_history[$i]['id_cohort'], $this->sid);
+        ?>
+        
+        <div class="clear"></div>
+        <div style="width :100%;">
+        						<p style="margin:15px 0 15px 0;font-weight:bold;"><?php echo t('Class History'); ?></p>
+        						<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+        							<thead>
+        								<tr>
+        									<th><?php echo t('Class Name'); ?></th>
+        									<th><?php echo t('Topic'); ?></th>
+        									<th><?php echo t('Start date'); ?></th>
+        									<th><?php echo t('End date'); ?></th>
+        									<th><?php echo t('Instructor'); ?></th>
+        									<th><?php echo t('Course type'); ?></th>
+        									<?php if($this->setting['ps_display_ca_mark']) : ?>
+        										<th><?php echo t($this->translation['ps ca mark']); ?></th>
+         									<?php endif; ?>
+         									<?php if($this->setting['ps_display_exam_mark']) : ?>
+        										<th><?php echo t($this->translation['ps exam mark']); ?></th>
+        									<?php endif; ?>
+        									<th><?php echo t('Grade'); ?></th>
+        									<?php if($this->setting['ps_display_credits']) : ?>
+        									<th class=""><?php echo t($this->translation['ps credits']); ?></th>
+        									<?php endif; ?>
+        								</tr>
+        							</thead>
+        							<tbody>
+        <?php
+        	foreach ($classes as $row){
+        ?>
+        								<tr class="GradeA" style="">
+        									<td class="" style="width : 250px;"><?php echo $row['classname']; ?></td>
+        									<td class="" style=""><?php echo $row['coursetopic']; ?></td>
+        									<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($row['startdate'])); ?></td>
+        									<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($row['enddate'])); ?></td>
+        									<td class="" style="width : 120px;"><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
+        									<td class="" style="width : 120px;"><?php echo $row['coursetype']; ?></td>
+        									<?php if($this->setting['ps_display_ca_mark']) : ?>
+        										<td class="" style="width : 120px;"><?php echo $row['camark']; ?></td>
+        									<?php endif; ?>
+        									
+        									<?php if($this->setting['ps_display_exam_mark']) : ?>
+        										<td class="" style="width : 120px;"><?php echo $row['exammark']; ?></td>
+        									<?php endif; ?>
+        									
+        									<td class="" style="width : 120px;"><?php echo $row['grade']; ?></td>
+        									
+        									<?php if($this->setting['ps_display_credits']) : ?>
+        										<td class="" style="width : 120px;"><?php echo $row['credits']; ?></td>
+        									<?php endif; ?>
+        								</tr>
+        <?php
+        	}
+        ?>
+        							</tbody>
+        						</table>
+        						<div style="text-align : right;">
+        							<br>
+        							 <?php if ( $this->hasACL( 'acl_delete_ps_grades' )){?> 
+        							<input type="submit" name="classpopupbutton" id="classpopupbutton" value="<?php echo t('Update classes') ?>" class="tsbutton green large">
+        							<?php }?>
+        						</div>
+        					</div>
+         <?php
+         $practicum = $helper->ListCurrentPracticum($this->cohort_history[$i]['id_cohort'], $this->sid);
+         ?>
+         
+         	<div style="width :100%; ">
+						<p style="margin:15px 0 15px 0;font-weight:bold;"><?php echo  $this->translation['ps clinical allocation'] ?></p>
+						<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+							<thead>
+								<tr>
+									<th class=""><?php echo t('Practicum name'); ?></th>
+									<th class=""><?php echo t('Date'); ?></th>
+									<th class=""><?php echo t('Facility'); ?></th>
+									<th class=""><?php echo t('Advisor'); ?></th>
+									<th class=""><?php echo t('Hours required'); ?></th>
+									<th class=""><?php echo t('Hours completed'); ?></th>
+									<th class=""><?php echo t('Grade'); ?></th>
+								</tr>
+							</thead>
+							<tbody>
+<?php
+	foreach ($practicums as $row){
+?>
+								<tr class="GradeA" style="">
+									<td class="" style=""><?php echo $row['practicumname']; ?></td>
+									<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($row['practicumdate'])); ?></td>
+									<td class="" style="width : 200px;"><?php echo $row['facility_name']; ?></td>
+									<td class="" style="width : 200px;"><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
+									<td class="" style="width : 120px;"><?php echo $row['hoursrequired']; ?></td>
+									<td class="" style="width : 150px;"><?php echo $row['hourscompleted']; ?></td>
+									<td class="" style="width : 120px;"><?php echo $row['grade']; ?></td>
+								</tr>
+<?php
+	}
+?>
+							</tbody>
+						</table>
+					</div>
+         
+         <?php
+        $licenses = $helper->ListCurrentLicenses($this->cohort_history[$i]['id_cohort'], $this->sid);
+        ?>
+        <div style="width :100%; ">
+						<p style="margin:15px 0 15px 0;font-weight:bold;"><?php echo t("Exams") . "(" . t($this->translation['ps license and registration']) . ")"; ?></p>
+						<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+							<thead>
+								<tr>
+									<th class=""><?php echo t('License name'); ?></th>
+									<th class=""><?php echo t('Date'); ?></th>
+									<th class=""><?php echo t('Grade'); ?></th>
+								</tr>
+							</thead>
+							<tbody>
+<?php
+	foreach ($licenses as $row){
+?>
+								<tr class="GradeA" style="">
+									<td class="" style=""><?php echo $row['licensename']; ?></td>
+									<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($row['licensedate'])); ?></td>
+									<td class="" style="width : 120px;"><?php echo $row['grade']; ?></td>
+								</tr>
+<?php
+	}
+?>
+
+							</tbody>
+						</table>
+											
+					</div>
+        <?php
+    } 
+}
+?>
 					<div class="clear" style=""></div>
 				</div>
 				<div class="clear" style=""></div>
 			</div>
+			
 			<div class="clear" style="height : 100px;"></div>
 			<div class="clear" style=""></div>
 

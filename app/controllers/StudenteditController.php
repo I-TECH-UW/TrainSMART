@@ -672,7 +672,7 @@ class StudenteditController extends ITechController
 			$dropdate = $details['link_cohort'][0]['dropdate'] == "0000-00-00" ? "" : date("m/d/Y", strtotime($details['link_cohort'][0]['dropdate']));
 			$joinreason = $details['link_cohort'][0]['joinreason'];
 			$dropreason = $details['link_cohort'][0]['dropreason'];
-		}
+		} 
 		$this->view->assign('enrollmentdate', $joindate);
 		$this->view->assign('enrollmentreason', $joinreason);
 		$this->view->assign('separationdate', $dropdate);
@@ -806,6 +806,12 @@ class StudenteditController extends ITechController
 
 		$this->view->assign('lookupfunding', $helper->getFunding());
 		$this->view->assign('studentfunding', $studentedit->getStudentFunding($details['student'][0]['id']));
+		
+		//TA:#217 remove top  cohort from the history beacuse it will displyed in student form
+		if(count($details['link_cohort']) > 1){
+		    array_shift($details['link_cohort']);
+		    $this->view->assign('cohort_history', $details['link_cohort']);//use this to display cohort history
+		}
 
 	}
 

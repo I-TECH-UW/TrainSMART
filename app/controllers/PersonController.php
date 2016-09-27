@@ -1662,6 +1662,13 @@ class PersonController extends ReportFilterHelpers
             $personObj = new Person ();
             $errs = array();
             while ($row = $this->_csv_get_row($filename)) {
+                //TA:#213
+			    //INFORCE user to create files only in UTF-8 encoded:
+			    //Option 1: Excel:Save as Unicode Text -> Notepad: replace tabs with commas, save as csv UTF-8
+			    //Option 2: OpenOffice
+			    //It is not required for english, but absolutelly required for special characteristics.
+			    //If files saved in UTF-8 encoded, so we do not need this line
+			    // $row = array_map("utf8_encode", $row); 
                 $values = array();
                 if (!is_array($row))
                     continue;           // sanity?
@@ -1684,6 +1691,7 @@ class PersonController extends ReportFilterHelpers
                             $values[$cols[$i]] = $this->sanitize($v);
                     }
                 }
+        
                 // done now all fields are named and in $values[my_field]
                 if ($countValidFields) {
                     //validate

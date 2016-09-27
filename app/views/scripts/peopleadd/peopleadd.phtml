@@ -245,6 +245,7 @@
             <div class="mainformholder" style="">
             <!-- TA:92 add validation to select Type -->
                 <!-- add to 'form' onsubmit="if($('#type_id option:selected').val() == ''){alert('Please select Type');return false;}">-->
+                
                 <form action="<?php echo $this->escape($this->action); ?>" method="post" name="second" id="second">
                     <label><?php echo t('Title'); ?></label>
                     <select name="title">
@@ -270,9 +271,9 @@
 
                     <label><?php echo t('Gender'); ?></label>
                     <select name="gender" id="gender">
+                        <option value="unknown"><?php echo t('Unknown'); ?></option>
                         <option value="male"><?php echo t('Male'); ?></option>
                         <option value="female"><?php echo t('Female'); ?></option>
-                        <option value="unknown"><?php echo t('Unknown'); ?></option>
                     </select>
 
                     <label><?php echo t('Date of birth'); ?></label>

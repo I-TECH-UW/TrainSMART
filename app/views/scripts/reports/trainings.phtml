@@ -431,7 +431,9 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 																	echo ((array_key_exists('cnt', $row) !== false )? ','.$row['id']: $row['id']);
 																	if ( isset($row['id']) && $this->setting['display_training_start_date']) //TA:17: 09/09/2014
 																	echo ',"'.@$row['training_start_date'].'"';
-																	if ( $this->criteria['showEndDate'] )
+																	//TA:110 show end date as well with start date
+																	//if ( $this->criteria['showEndDate'] )
+																	if ( $this->criteria['showEndDate'] || (isset($row['id']) && $this->setting['display_training_start_date']))
 																	echo ',"'.$row['training_end_date'].'"';
 																	if ( $this->criteria['showProvince'] )
 																	echo ',"'.$row['province_name'].'"';
@@ -527,7 +529,8 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 																	,{key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true}
 																	<?php }?>
 																<?php } ?>
-																<?php if ( $this->criteria['showEndDate'] ) { ?>
+																<?php //TA:110 show end date with start date
+																if ( $this->criteria['showEndDate'] || (isset($row['id']) && $this->setting['display_training_start_date'])) { ?>
 																	,{key:"training_end_date", label: "<?php tp('End Date');?>", sortable:true, resizeable:true}
 																<?php } ?>
 																<?php if ( $this->criteria['showProvince'] ) { ?>

@@ -129,7 +129,7 @@ class EditTableHelper {
 			//      $rowRay[$key] .= '"]';
 		}
 
-		$labelSafe = strtolower(str_replace(' ','', $label)); // remove spaces
+		$labelSafe = strtolower(str_replace(' ','', $label)); // remove space
 
 		// links to add to fields
 		if($linkInfo) {
