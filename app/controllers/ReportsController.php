@@ -9969,7 +9969,7 @@ die (__LINE__ . " - " . $sql);
                 }
                 $p = &$byProvince[$province];
                 $p['rows'][] = &$r;
-                $p = &$p['totals'];
+
                 $p['fulltimecount'] += $r['fulltimecount'];
                 $p['parttimecount'] += $r['parttimecount'];
                 $p['cost'] += $r['cost'];
@@ -10001,14 +10001,15 @@ die (__LINE__ . " - " . $sql);
                 $p = &$byProvince[$province][$column];
                 if (!array_key_exists($key, $p)) {
                     $p[$key] = array(
-                        'totals' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0),
+                        'fulltimecount' => 0,
+                        'parttimecount' => 0,
+                        'cost' => 0,
                         'rows' => array()
                     );
                 }
                 $p = &$p[$key];
 
                 $p['rows'][] = $r;
-                $p = &$p['totals'];
                 $p['fulltimecount'] += $r['fulltimecount'];
                 $p['parttimecount'] += $r['parttimecount'];
                 $p['cost'] += $r['cost'];
@@ -10399,11 +10400,19 @@ die (__LINE__ . " - " . $sql);
             $select->group('partner.id');
             $select->order('mechanism_option.mechanism_phrase');
 
-            $xyz = $select->__toString();
-            $rows = $db->fetchAll($select);
+            $headers = array(t('Mechanism'));
+            $data = $this->organizeEmployeeResults($rows = $db->fetchAll($select), 'mechanism_phrase');
+            $output = $this->formatEmployeeResultsForTable($data, 'mechanism_phrase', array_keys($data['mechanism_phrase']), array_keys($data['byPartner']), false);
 
-            $data = $this->organizeEmployeeResults($rows, 'mechanism_phrase');
-            $abc = 123;
+            foreach (array_keys($data['byPartner']) as $partner) {
+                array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
+                    $partner . ' - ' . t('Annual Cost'));
+            }
+            array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
+                t('Total') . ' ' . t('Annual Cost'));
+
+            $this->view->assign('headers', $headers);
+            $this->view->assign('output', $output);
         }
 
         $choose = array("0" => '--' . t("choose") . '--');
@@ -10489,12 +10498,23 @@ die (__LINE__ . " - " . $sql);
             $select->order('employee_role_option.role_phrase');
             $select->order('partner.partner');
 
-            $xyz = $select->__toString();
-            $rows = $db->fetchAll($select);
+            // the rows and columns are not static and dependent on the contents of the data, so we need to manage a
+            // data structure for the table.
+            $data = $this->organizeEmployeeResults($db->fetchAll($select), 'role_phrase', true);
 
-            $data = $this->organizeEmployeeResults($rows, 'role_phrase', true);
+            $headers = array(t('Province & Primary Role'));
 
-            $abc = 123;
+            $output = $this->formatEmployeeResultsForTable($data, 'role_phrase', array_keys($data['role_phrase']), array_keys($data['byPartner']), true);
+
+            foreach (array_keys($data['byPartner']) as $partner) {
+                array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
+                    $partner . ' - ' . t('Annual Cost'));
+            }
+            array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
+                t('Total') . ' ' . t('Annual Cost'));
+
+            $this->view->assign('headers', $headers);
+            $this->view->assign('output', $output);
         }
 
         $choose = array("0" => '--' . t("choose") . '--');
