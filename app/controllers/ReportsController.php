@@ -39,6 +39,9 @@ class ReportsController extends ReportFilterHelpers {
 		$contextSwitch->addActionContext('ps-students-trained', 'csv');
 		$contextSwitch->addActionContext('employee-report-occupational-category', 'csv');
         $contextSwitch->addActionContext('employees', 'csv');
+        $contextSwitch->addActionContext('employee-report-mechanism-transition-description', 'csv');
+        $contextSwitch->addActionContext('employee-report-mechanism-transition', 'csv');
+        $contextSwitch->addActionContext('employee-report-primary-role', 'csv');
 
 		$contextSwitch->addContext('chwreport', array('suffix' => 'chwreport'));
 		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'chwreport');
@@ -9956,7 +9959,9 @@ die (__LINE__ . " - " . $sql);
                 // by Province
                 if (!array_key_exists($province, $byProvince)) {
                     $byProvince[$province] = array(
-                        'totals' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0),
+                        'fulltimecount' => 0,
+                        'parttimecount' => 0,
+                        'cost' => 0,
                         'rows' => array(),
                         'byPartner' => array(),
                         $column => array(),
@@ -9973,7 +9978,9 @@ die (__LINE__ . " - " . $sql);
                 $p = &$byProvince[$province]['byPartner'];
                 if (!array_key_exists($partner, $p)) {
                     $p[$partner] = array(
-                        'totals' => array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0),
+                        'fulltimecount' => 0,
+                        'parttimecount' => 0,
+                        'cost' => 0,
                         $column => array(),
                         'rows' => array()
                     );
@@ -9981,7 +9988,6 @@ die (__LINE__ . " - " . $sql);
                 $p = &$p[$partner];
                 $p['rows'][] = $r;
 
-                $p = &$p['totals'];
                 $p['fulltimecount'] += $r['fulltimecount'];
                 $p['parttimecount'] += $r['parttimecount'];
                 $p['cost'] += $r['cost'];
@@ -10083,9 +10089,6 @@ die (__LINE__ . " - " . $sql);
 
                 $lastRow = count($outputRows) - 1;
                 $outputRows[$lastRow][0] = $province . ' ' . t('Total');
-                array_push($outputRows[$lastRow], number_format($provinceData['totals']['fulltimecount']),
-                    number_format($provinceData['totals']['parttimecount']),
-                    number_format($provinceData['totals']['cost']));
             }
             $grandTotals = array(t('Grand Total'));
             foreach ($data['byPartner'] as $partner => $partnerValues) {
@@ -10114,10 +10117,21 @@ die (__LINE__ . " - " . $sql);
                         array_push($outputRows[$columnIndexes[$v]], 0, 0, 0);
                     }
                 }
-                array_push($outputRows[$lastRow], number_format($data['byPartner'][$partner]['totals']['fulltimecount']),
-                    number_format($data['byPartner'][$partner]['totals']['parttimecount']),
-                    number_format($data['byPartner'][$partner]['totals']['cost']));
+
+                if (array_key_exists($partner, $data['byPartner'])) {
+                    array_push($outputRows[$lastRow], number_format($data['byPartner'][$partner]['fulltimecount']),
+                        number_format($data['byPartner'][$partner]['parttimecount']),
+                        number_format($data['byPartner'][$partner]['cost']));
+                }
+                else {
+                    array_push($outputRows[$lastRow], 0, 0, 0);
+                }
+
             }
+
+            array_push($outputRows[$lastRow],  number_format($data['fulltimecount']),
+                number_format($data['parttimecount']),
+                number_format($data['cost']));
 
             // category totals
             foreach ($columnValues as $v) {
@@ -10280,21 +10294,16 @@ die (__LINE__ . " - " . $sql);
             $rows = $db->fetchAll($select);
             $descriptions = array_keys($db->fetchAssoc($db->select()->from('employee_transition_option', array('transition_phrase'))->order('transition_phrase')));
             $data = $this->organizeEmployeeResults($rows, 'transition_phrase');
-            $output = $this->formatEmployeeResultsForTable($data, 'transition_phrase', $descriptions);
+            $output = $this->formatEmployeeResultsForTable($data, 'transition_phrase', $descriptions, array_keys($data['byPartner']));
             $headers = array(t('Transition Description'));
-            $grandTotals = array(t('Grand Total'));
+
             foreach(array_keys($data['byPartner']) as $partner) {
                 array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
                     $partner . ' - ' . t('Annual Cost'));
-                array_push($grandTotals, number_format($data['byPartner'][$partner]['fulltimecount']),
-                    number_format($data['byPartner'][$partner]['parttimecount']), number_format($data['byPartner'][$partner]['cost']));
             }
             array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
                 t('Total') . ' ' . t('Annual Cost'));
-            array_push($grandTotals, number_format($data['fulltimecount']), number_format($data['parttimecount']),
-                number_format($data['cost']));
 
-            $output[] = $grandTotals;
             $this->view->assign('headers', $headers);
             $this->view->assign('output', $output);
         }
