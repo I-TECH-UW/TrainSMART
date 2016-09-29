@@ -6859,6 +6859,56 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			$this->view->assign('criteria', $criteria);
 		}
 	}
+	
+	//TA:#217 add repeated student report
+	public function psRepeatedStudentsAction() {
+	    $this->viewAssignEscaped ('locations', Location::getAll());
+	
+	    $helper = new Helper();
+	    $this->view->assign('mode', 'id');
+	    $this->view->assign('institutions', $helper->getInstitutions());
+	    $this->view->assign('cadres', $helper->getCadres());
+	    $this->view->assign('institutiontypes', $helper->AdminInstitutionTypes());
+	    $this->view->assign('cohorts', $helper->getCohorts());
+	    $this->view->assign('nationalities', $helper->getNationalities());
+	    $this->view->assign('funding', $helper->getFunding());
+	    $this->view->assign('tutors', $helper->getTutors());
+	    $this->view->assign('facilities', $helper->getFacilities());
+	    $this->view->assign('coursetypes', $helper->AdminCourseTypes());
+	    $this->view->assign('degrees', $helper->getDegrees());
+	    $this->view->assign('site_style', $this->setting('site_style'));
+	
+	    if ($this->getSanParam('process')) {
+	        $criteria = $this->getAllParams();
+	         
+	        if (isset($criteria['cohort']) && $criteria['cohort'] ||
+	            isset($criteria['showcohort']) && $criteria['showcohort']) {
+	
+	                //TA:#217 add to $criteria addition param 'show_current_cohort'
+	                $criteria['show_current_cohort'] = '1';
+	                list($query1, $headers) = $this->psStudentReportsBuildQuery($criteria);
+	                 
+	                //TA:#217 add to $criteria addition param 'show_old_cohorts'
+	                $criteria['show_current_cohort'] = '0';
+	                $criteria['show_old_cohorts'] = '1';
+	                list($query2, $headers) = $this->psStudentReportsBuildQuery($criteria);
+	                $headers[] = "Old Cohorts";
+	                 
+	                //TA:#217 create query
+	                $query = "select t1.*, t2.old_cohortname from (" . $query1 . ") as t1 ".
+	                    "left join (" . $query2 . ") as t2 on t1.id=t2.id ";
+	            }else{
+	                list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
+	            }
+	
+	            $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+	            $rowArray = $db->fetchAll($query);
+	            $this->viewAssignEscaped("headers", $headers);
+	            $this->viewAssignEscaped("output", $rowArray);
+	
+	            $this->view->assign('criteria', $criteria);
+	    }
+	}
 
 
 	public function psStudentsByNameAction() {
