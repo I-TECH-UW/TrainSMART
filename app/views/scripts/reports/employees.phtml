@@ -32,6 +32,7 @@
 <div id="pageHolder">
     <div id="header"><?php require_once('views/scripts/header.phtml'); ?></div>
     <div id="content">
+        <?php require_once 'views/scripts/status.phtml' ?>
         <div id="subcontent">
             <?php
             echo $this->partial('reports/employee-reports-report-types-partial.phtml', array('site_style' => $this->site_style, 'base_url' => $this->base_url));

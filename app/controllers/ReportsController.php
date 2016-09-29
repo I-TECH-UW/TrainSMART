@@ -9838,91 +9838,97 @@ die (__LINE__ . " - " . $sql);
 
         if (isset($criteria['go']) && $criteria['go']) {
             $select = self::employeeFilterQuery($criteria);
-            $select->distinct();
+            if (!is_a($select, "Zend_Db_Select", false)) {
+                $status = ValidationContainer::instance();
+                $status->setStatusMessage($select);
+            } else {
 
-            $c = array_map(
-                function($item) {
-                    $header_names = array(
-                        'partner' => t('Partner'),
-                        'province_name' => t('Region A (Province)'),
-                        'district_name' => t('Region B (Health District)'),
-                        'region_c_name' => t('Region C (Local Region)'),
-                        'base_phrase' => t('Employee Based at'),
-                        'facility_name' => t('Facility') . ' ' . t('Name'),
-                        'facility_type_phrase' => t('Facility Type'),
-                        'qualification_phrase' => t('Staff Cadre'),
-                        'funded_hours_per_week' => t('Funded hours per week'),
-                        'annual_cost' => t('Annual Cost'),
-                        'role_phrase' => t('Primary Role'),
-                        'intended_transition' => t('Intended Transition'),
-                        'actual_transition' => t('Actual Transition'),
-                        'transition_complete_date' => t('Actual Transition Date'),
-                        'salary' => t('Salary'),
-                        'benefits' => t('Benefits'),
-                        'additional_expenses' => t('Additional Expenses'),
-                        'stipend' => t('Stipend'),
-                    );
-                    if ($item[2] !== null) {
-                        return $header_names[$item[2]];
-                    }
-                    return $header_names[$item[1]];
-                },
-                $select->getPart(Zend_Db_Select::COLUMNS)
-            );
+                $select->distinct();
 
-            if (count($c)) {
-                $this->view->assign('headers', $c);
-                $f = $db->fetchAll($select);
-                $this->view->assign('output', $f);
+                $c = array_map(
+                    function ($item) {
+                        $header_names = array(
+                            'partner' => t('Partner'),
+                            'province_name' => t('Region A (Province)'),
+                            'district_name' => t('Region B (Health District)'),
+                            'region_c_name' => t('Region C (Local Region)'),
+                            'base_phrase' => t('Employee Based at'),
+                            'facility_name' => t('Facility') . ' ' . t('Name'),
+                            'facility_type_phrase' => t('Facility Type'),
+                            'qualification_phrase' => t('Staff Cadre'),
+                            'funded_hours_per_week' => t('Funded hours per week'),
+                            'annual_cost' => t('Annual Cost'),
+                            'role_phrase' => t('Primary Role'),
+                            'intended_transition' => t('Intended Transition'),
+                            'actual_transition' => t('Actual Transition'),
+                            'transition_complete_date' => t('Actual Transition Date'),
+                            'salary' => t('Salary'),
+                            'benefits' => t('Benefits'),
+                            'additional_expenses' => t('Additional Expenses'),
+                            'stipend' => t('Stipend'),
+                        );
+                        if ($item[2] !== null) {
+                            return $header_names[$item[2]];
+                        }
+                        return $header_names[$item[1]];
+                    },
+                    $select->getPart(Zend_Db_Select::COLUMNS)
+                );
+
+                if (count($c)) {
+                    $this->view->assign('headers', $c);
+                    $f = $db->fetchAll($select);
+                    $this->view->assign('output', $f);
+                }
             }
+
+            $choose = array("0" => '--' . t("choose") . '--');
+
+            $partners = $choose + $db->fetchPairs($db->select()
+                    ->from('partner', array('id', 'partner'))
+                    ->order('partner ASC')
+                );
+
+            $facilities = $choose + $db->fetchPairs($db->select()
+                    ->from('facility', array('id', 'facility_name'))
+                    ->order('facility_name ASC')
+                );
+
+            $facilityTypes = $choose + $db->fetchPairs($db->select()
+                    ->from('facility_type_option', array('id', 'facility_type_phrase'))
+                    ->order('facility_type_phrase ASC')
+                );
+
+            $classifications = $choose + $db->fetchPairs($db->select()
+                    ->from('employee_qualification_option', array('id', 'qualification_phrase'))
+                    ->order('qualification_phrase ASC')
+                );
+
+            $roles = $choose + $db->fetchPairs($db->select()
+                    ->from('employee_role_option', array('id', 'role_phrase'))
+                    ->order('role_phrase ASC')
+                );
+
+            $transitions = $choose + $db->fetchPairs($db->select()
+                    ->from('employee_transition_option', array('id', 'transition_phrase'))
+                    ->order('transition_phrase ASC')
+                );
+
+            $bases = $choose + $db->fetchPairs($db->select()
+                    ->from('employee_base_option', array('id', 'base_phrase'))
+                    ->order('base_phrase ASC')
+                );
+
+            $this->view->assign('partners', $partners);
+            $this->view->assign('facilities', $facilities);
+            $this->view->assign('facilityTypes', $facilityTypes);
+            $this->view->assign('classifications', $classifications);
+            $this->view->assign('roles', $roles);
+            $this->view->assign('transitions', $transitions);
+            $this->view->assign('locations', $locations);
+            $this->view->assign('bases', $bases);
+            $this->view->assign('criteria', $criteria);
         }
-
-        $choose = array("0" => '--' . t("choose") . '--');
-
-        $partners = $choose + $db->fetchPairs($db->select()
-                ->from('partner', array('id', 'partner'))
-                ->order('partner ASC')
-            );
-
-        $facilities = $choose + $db->fetchPairs($db->select()
-                ->from('facility', array('id', 'facility_name'))
-                ->order('facility_name ASC')
-            );
-
-        $facilityTypes = $choose + $db->fetchPairs($db->select()
-                ->from('facility_type_option', array('id', 'facility_type_phrase'))
-                ->order('facility_type_phrase ASC')
-            );
-
-        $classifications = $choose + $db->fetchPairs($db->select()
-                ->from('employee_qualification_option', array('id', 'qualification_phrase'))
-                ->order('qualification_phrase ASC')
-            );
-
-        $roles = $choose + $db->fetchPairs($db->select()
-                ->from('employee_role_option', array('id', 'role_phrase'))
-                ->order('role_phrase ASC')
-            );
-
-        $transitions = $choose + $db->fetchPairs($db->select()
-                ->from('employee_transition_option', array('id', 'transition_phrase'))
-                ->order('transition_phrase ASC')
-            );
-
-        $bases = $choose + $db->fetchPairs($db->select()
-                ->from('employee_base_option', array('id', 'base_phrase'))
-                ->order('base_phrase ASC')
-            );
-
-        $this->view->assign('partners', $partners);
-        $this->view->assign('facilities', $facilities);
-        $this->view->assign('facilityTypes', $facilityTypes);
-        $this->view->assign('classifications', $classifications);
-        $this->view->assign('roles', $roles);
-        $this->view->assign('transitions', $transitions);
-        $this->view->assign('locations', $locations);
-        $this->view->assign('bases', $bases);
-        $this->view->assign('criteria', $criteria);
     }
 
     /**
@@ -10158,53 +10164,58 @@ die (__LINE__ . " - " . $sql);
 		if ($criteria['go']) {
 
             $select = self::employeeFilterQuery($criteria);
+            if (!is_a($select, "Zend_Db_Select", false)) {
+                $status = ValidationContainer::instance();
+                $status->setStatusMessage($select);
+            } else {
 
-            $parts = $select->getPart(Zend_Db_Select::FROM);
-            if (!array_key_exists('link_mechanism_employee', $parts)) {
-                $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id', array());
+                $parts = $select->getPart(Zend_Db_Select::FROM);
+                if (!array_key_exists('link_mechanism_employee', $parts)) {
+                    $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id', array());
+                }
+                if (!array_key_exists('partner', $parts)) {
+                    $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+                }
+                if (!array_key_exists('location', $parts)) {
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
+                }
+                if (!array_key_exists('employee_qualification_option', $parts)) {
+                    $select->join('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
+                }
+                $select->columns(
+                    array(
+                        'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
+                        'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
+                        'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
+                        'partner.partner', 'employee_qualification_option.qualification_phrase', 'location.province_name'
+                    )
+                );
+
+                $select->group('province_id');
+                $select->group('employee_qualification_option_id');
+                $select->group('employee.partner_id');
+                $select->order('province_id');
+                $select->order('employee_qualification_option.qualification_phrase');
+                $select->order('partner.partner ASC');
+
+                // the rows and columns are not static and dependent on the contents of the data, so we need to manage a
+                // data structure for the table.
+                $data = $this->organizeEmployeeResults($db->fetchAll($select), 'qualification_phrase', true);
+
+                $headers = array(t('Province & Occupational Category'));
+
+                $output = $this->formatEmployeeResultsForTable($data, 'qualification_phrase', array_keys($data['qualification_phrase']), array_keys($data['byPartner']), true);
+
+                foreach (array_keys($data['byPartner']) as $partner) {
+                    array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
+                        $partner . ' - ' . t('Annual Cost'));
+                }
+                array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
+                    t('Total') . ' ' . t('Annual Cost'));
+
+                $this->view->assign('headers', $headers);
+                $this->view->assign('output', $output);
             }
-            if (!array_key_exists('partner', $parts)) {
-                $select->join(array('partner'), 'partner.id = employee.partner_id', array());
-            }
-            if (!array_key_exists('location', $parts)) {
-                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
-            }
-            if (!array_key_exists('employee_qualification_option', $parts)) {
-                $select->join('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
-            }
-            $select->columns(
-                array(
-                    'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
-                    'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
-                    'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
-                    'partner.partner', 'employee_qualification_option.qualification_phrase', 'location.province_name'
-                )
-            );
-
-            $select->group('province_id');
-            $select->group('employee_qualification_option_id');
-            $select->group('employee.partner_id');
-            $select->order('province_id');
-            $select->order('employee_qualification_option.qualification_phrase');
-            $select->order('partner.partner ASC');
-
-			// the rows and columns are not static and dependent on the contents of the data, so we need to manage a
-            // data structure for the table.
-            $data = $this->organizeEmployeeResults($db->fetchAll($select), 'qualification_phrase', true);
-
-            $headers = array(t('Province & Occupational Category'));
-
-            $output = $this->formatEmployeeResultsForTable($data, 'qualification_phrase', array_keys($data['qualification_phrase']), array_keys($data['byPartner']), true);
-
-			foreach (array_keys($data['byPartner']) as $partner) {
-				array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
-					$partner . ' - ' . t('Annual Cost'));
-			}
-			array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
-				t('Total') . ' ' . t('Annual Cost'));
-
-			$this->view->assign('headers', $headers);
-			$this->view->assign('output', $output);
 		}
 
 		$choose = array("0" => '--' . t("choose") . '--');
@@ -10265,48 +10276,53 @@ die (__LINE__ . " - " . $sql);
 
         if ($criteria['go']) {
             $select = self::employeeFilterQuery($criteria);
+            if (!is_a($select, "Zend_Db_Select", false)) {
+                $status = ValidationContainer::instance();
+                $status->setStatusMessage($select);
+            } else {
 
-            $parts = $select->getPart(Zend_Db_Select::FROM);
-            if (!array_key_exists('link_mechanism_employee', $parts)) {
-                $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id',
-                    array());
+                $parts = $select->getPart(Zend_Db_Select::FROM);
+                if (!array_key_exists('link_mechanism_employee', $parts)) {
+                    $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id',
+                        array());
+                }
+                if (!array_key_exists('employee_transition_option', $parts)) {
+                    $select->join(array('employee_transition_option'),
+                        'employee.employee_transition_option_id = employee_transition_option.id', array());
+                }
+                if (!array_key_exists('partner', $parts)) {
+                    $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+                }
+
+                $select->columns(
+                    array(
+                        'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
+                        'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
+                        'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
+                        'partner.partner', 'employee_transition_option.transition_phrase'
+                    )
+                );
+
+                $select->group('employee_transition_option.id');
+                $select->group('partner.id');
+                $select->order('employee_transition_option.transition_phrase');
+
+                $rows = $db->fetchAll($select);
+                $descriptions = array_keys($db->fetchAssoc($db->select()->from('employee_transition_option', array('transition_phrase'))->order('transition_phrase')));
+                $data = $this->organizeEmployeeResults($rows, 'transition_phrase');
+                $output = $this->formatEmployeeResultsForTable($data, 'transition_phrase', $descriptions, array_keys($data['byPartner']));
+                $headers = array(t('Transition Description'));
+
+                foreach (array_keys($data['byPartner']) as $partner) {
+                    array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
+                        $partner . ' - ' . t('Annual Cost'));
+                }
+                array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
+                    t('Total') . ' ' . t('Annual Cost'));
+
+                $this->view->assign('headers', $headers);
+                $this->view->assign('output', $output);
             }
-            if (!array_key_exists('employee_transition_option', $parts)) {
-                $select->join(array('employee_transition_option'),
-                    'employee.employee_transition_option_id = employee_transition_option.id', array());
-            }
-            if (!array_key_exists('partner', $parts)) {
-                $select->join(array('partner'), 'partner.id = employee.partner_id', array());
-            }
-
-            $select->columns(
-                array(
-                    'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
-                    'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
-                    'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
-                    'partner.partner', 'employee_transition_option.transition_phrase'
-                )
-            );
-
-            $select->group('employee_transition_option.id');
-            $select->group('partner.id');
-            $select->order('employee_transition_option.transition_phrase');
-
-            $rows = $db->fetchAll($select);
-            $descriptions = array_keys($db->fetchAssoc($db->select()->from('employee_transition_option', array('transition_phrase'))->order('transition_phrase')));
-            $data = $this->organizeEmployeeResults($rows, 'transition_phrase');
-            $output = $this->formatEmployeeResultsForTable($data, 'transition_phrase', $descriptions, array_keys($data['byPartner']));
-            $headers = array(t('Transition Description'));
-
-            foreach(array_keys($data['byPartner']) as $partner) {
-                array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
-                    $partner . ' - ' . t('Annual Cost'));
-            }
-            array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
-                t('Total') . ' ' . t('Annual Cost'));
-
-            $this->view->assign('headers', $headers);
-            $this->view->assign('output', $output);
         }
 
         $choose = array("0" => '--' . t("choose") . '--');
@@ -10372,47 +10388,52 @@ die (__LINE__ . " - " . $sql);
 
         if ($criteria['go']) {
             $select = self::employeeFilterQuery($criteria);
+            if (!is_a($select, "Zend_Db_Select", false)) {
+                $status = ValidationContainer::instance();
+                $status->setStatusMessage($select);
+            } else {
 
-            $parts = $select->getPart(Zend_Db_Select::FROM);
-            if (!array_key_exists('link_mechanism_employee', $parts)) {
-                $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id',
-                    array());
+                $parts = $select->getPart(Zend_Db_Select::FROM);
+                if (!array_key_exists('link_mechanism_employee', $parts)) {
+                    $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id',
+                        array());
+                }
+                if (!array_key_exists('mechanism_option', $parts)) {
+                    $select->join(array('mechanism_option'),
+                        'mechanism_option.id = link_mechanism_employee.mechanism_option_id',
+                        array());
+                }
+                if (!array_key_exists('partner', $parts)) {
+                    $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+                }
+
+                $select->columns(
+                    array(
+                        'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
+                        'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
+                        'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
+                        'partner.partner',
+                        'mechanism_option.mechanism_phrase',
+                    )
+                );
+                $select->group('mechanism_option.id');
+                $select->group('partner.id');
+                $select->order('mechanism_option.mechanism_phrase');
+
+                $headers = array(t('Mechanism'));
+                $data = $this->organizeEmployeeResults($rows = $db->fetchAll($select), 'mechanism_phrase');
+                $output = $this->formatEmployeeResultsForTable($data, 'mechanism_phrase', array_keys($data['mechanism_phrase']), array_keys($data['byPartner']), false);
+
+                foreach (array_keys($data['byPartner']) as $partner) {
+                    array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
+                        $partner . ' - ' . t('Annual Cost'));
+                }
+                array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
+                    t('Total') . ' ' . t('Annual Cost'));
+
+                $this->view->assign('headers', $headers);
+                $this->view->assign('output', $output);
             }
-            if (!array_key_exists('mechanism_option', $parts)) {
-                $select->join(array('mechanism_option'),
-                    'mechanism_option.id = link_mechanism_employee.mechanism_option_id',
-                    array());
-            }
-            if (!array_key_exists('partner', $parts)) {
-                $select->join(array('partner'), 'partner.id = employee.partner_id', array());
-            }
-
-            $select->columns(
-                array(
-                    'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
-                    'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
-                    'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
-                    'partner.partner',
-                    'mechanism_option.mechanism_phrase',
-                )
-            );
-            $select->group('mechanism_option.id');
-            $select->group('partner.id');
-            $select->order('mechanism_option.mechanism_phrase');
-
-            $headers = array(t('Mechanism'));
-            $data = $this->organizeEmployeeResults($rows = $db->fetchAll($select), 'mechanism_phrase');
-            $output = $this->formatEmployeeResultsForTable($data, 'mechanism_phrase', array_keys($data['mechanism_phrase']), array_keys($data['byPartner']), false);
-
-            foreach (array_keys($data['byPartner']) as $partner) {
-                array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
-                    $partner . ' - ' . t('Annual Cost'));
-            }
-            array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
-                t('Total') . ' ' . t('Annual Cost'));
-
-            $this->view->assign('headers', $headers);
-            $this->view->assign('output', $output);
         }
 
         $choose = array("0" => '--' . t("choose") . '--');
@@ -10468,53 +10489,58 @@ die (__LINE__ . " - " . $sql);
         if ($criteria['go']) {
 
             $select = self::employeeFilterQuery($criteria);
+            if (!is_a($select, "Zend_Db_Select", false)) {
+                $status = ValidationContainer::instance();
+                $status->setStatusMessage($select);
+            } else {
 
-            $parts = $select->getPart(Zend_Db_Select::FROM);
-            if (!array_key_exists('link_mechanism_employee', $parts)) {
-                $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id', array());
+                $parts = $select->getPart(Zend_Db_Select::FROM);
+                if (!array_key_exists('link_mechanism_employee', $parts)) {
+                    $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id', array());
+                }
+                if (!array_key_exists('partner', $parts)) {
+                    $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+                }
+                if (!array_key_exists('location', $parts)) {
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
+                }
+                if (!array_key_exists('employee_role_option', $parts)) {
+                    $select->join('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
+                }
+                $select->columns(
+                    array(
+                        'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
+                        'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
+                        'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
+                        'partner.partner', 'employee_role_option.role_phrase', 'location.province_name'
+                    )
+                );
+
+                $select->group('location.province_id');
+                $select->group('employee.employee_role_option_id');
+                $select->group('employee.partner_id');
+                $select->order('location.province_id');
+                $select->order('employee_role_option.role_phrase');
+                $select->order('partner.partner');
+
+                // the rows and columns are not static and dependent on the contents of the data, so we need to manage a
+                // data structure for the table.
+                $data = $this->organizeEmployeeResults($db->fetchAll($select), 'role_phrase', true);
+
+                $headers = array(t('Province & Primary Role'));
+
+                $output = $this->formatEmployeeResultsForTable($data, 'role_phrase', array_keys($data['role_phrase']), array_keys($data['byPartner']), true);
+
+                foreach (array_keys($data['byPartner']) as $partner) {
+                    array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
+                        $partner . ' - ' . t('Annual Cost'));
+                }
+                array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
+                    t('Total') . ' ' . t('Annual Cost'));
+
+                $this->view->assign('headers', $headers);
+                $this->view->assign('output', $output);
             }
-            if (!array_key_exists('partner', $parts)) {
-                $select->join(array('partner'), 'partner.id = employee.partner_id', array());
-            }
-            if (!array_key_exists('location', $parts)) {
-                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
-            }
-            if (!array_key_exists('employee_role_option', $parts)) {
-                $select->join('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
-            }
-            $select->columns(
-                array(
-                    'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
-                    'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
-                    'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
-                    'partner.partner', 'employee_role_option.role_phrase', 'location.province_name'
-                )
-            );
-
-            $select->group('location.province_id');
-            $select->group('employee.employee_role_option_id');
-            $select->group('employee.partner_id');
-            $select->order('location.province_id');
-            $select->order('employee_role_option.role_phrase');
-            $select->order('partner.partner');
-
-            // the rows and columns are not static and dependent on the contents of the data, so we need to manage a
-            // data structure for the table.
-            $data = $this->organizeEmployeeResults($db->fetchAll($select), 'role_phrase', true);
-
-            $headers = array(t('Province & Primary Role'));
-
-            $output = $this->formatEmployeeResultsForTable($data, 'role_phrase', array_keys($data['role_phrase']), array_keys($data['byPartner']), true);
-
-            foreach (array_keys($data['byPartner']) as $partner) {
-                array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
-                    $partner . ' - ' . t('Annual Cost'));
-            }
-            array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
-                t('Total') . ' ' . t('Annual Cost'));
-
-            $this->view->assign('headers', $headers);
-            $this->view->assign('output', $output);
         }
 
         $choose = array("0" => '--' . t("choose") . '--');

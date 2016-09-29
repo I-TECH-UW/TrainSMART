@@ -423,15 +423,109 @@ class ReportFilterHelpers extends ITechController
     }
 
 
+    protected function employeeValidateCriteria($criteria) {
+
+        if (isset($criteria['hours_min'])) {
+            if (intval($criteria['hours_min']) < 0) {
+                return (t("Minimum") . ' ' . t("Hours Worked per Week") . ' ' . t("must be greater than or equal to 0."));
+            }
+            if (isset($criteria['hours_max']) && $criteria['hours_max']) {
+                if (intval($criteria['hours_max']) < intval($criteria['hours_min'])) {
+                    return (t("Maximum") . ' ' . t("Hours Worked per Week") . ' ' . t("must be greater than Minimum."));
+                }
+                if (intval($criteria['hours_max']) < 0) {
+                    return (t("Maximum") . ' ' . t("Hours Worked per Week") . ' ' . t("must be greater than or equal to 0."));
+                }
+            }
+        }
+
+        if (isset($criteria['cost_min'])) {
+            if (intval($criteria['cost_min']) < 0) {
+                return (t("Minimum") . ' ' . t("Annual Cost") . ' ' . t("must be greater than or equal to 0."));
+            }
+            if (isset($criteria['cost_max']) && $criteria['cost_max']) {
+                if (intval($criteria['cost_max']) < intval($criteria['cost_min'])) {
+                    return (t("Maximum") . ' ' . t("Annual Cost") . ' ' . t("must be greater than Minimum."));
+                }
+                if (intval($criteria['cost_max']) < 0) {
+                    return (t("Maximum") . ' ' . t("Annual Cost") . ' ' . t("must be greater than or equal to 0."));
+                }
+            }
+        }
+        
+        if (isset($criteria['salary_min'])) {
+            if (intval($criteria['salary_min']) < 0) {
+                return (t("Minimum") . ' ' . t("Annual Salary") . ' ' . t("must be greater than or equal to 0."));
+            }
+            if (isset($criteria['salary_max']) && $criteria['salary_max']) {
+                if (intval($criteria['salary_max']) < intval($criteria['salary_min'])) {
+                    return (t("Maximum") . ' ' . t("Annual Salary") . ' ' . t("must be greater than Minimum."));
+                }
+                if (intval($criteria['salary_max']) < 0) {
+                    return (t("Maximum") . ' ' . t("Annual Salary") . ' ' . t("must be greater than or equal to 0."));
+                }
+            }
+        }
+
+        if (isset($criteria['benefits_min'])) {
+            if (intval($criteria['benefits_min']) < 0) {
+                return (t("Minimum") . ' ' . t("Annual Benefits") . ' ' . t("must be greater than or equal to 0."));
+            }
+            if (isset($criteria['benefits_max']) && $criteria['benefits_max']) {
+                if (intval($criteria['benefits_max']) < intval($criteria['benefits_min'])) {
+                    return (t("Maximum") . ' ' . t("Annual Benefits") . ' ' . t("must be greater than Minimum."));
+                }
+                if (intval($criteria['benefits_max']) < 0) {
+                    return (t("Maximum") . ' ' . t("Annual Benefits") . ' ' . t("must be greater than or equal to 0."));
+                }
+            }
+        }
+
+        if (isset($criteria['expenses_min'])) {
+            if (intval($criteria['expenses_min']) < 0) {
+                return (t("Minimum") . ' ' . t("Additional Expenses") . ' ' . t("must be greater than or equal to 0."));
+            }
+            if (isset($criteria['expenses_max']) && $criteria['expenses_max']) {
+                if (intval($criteria['expenses_max']) < intval($criteria['expenses_min'])) {
+                    return (t("Maximum") . ' ' . t("Additional Expenses") . ' ' . t("must be greater than Minimum."));
+                }
+                if (intval($criteria['expenses_max']) < 0) {
+                    return (t("Maximum") . ' ' . t("Additional Expenses") . ' ' . t("must be greater than or equal to 0."));
+                }
+            }
+        }
+
+        if (isset($criteria['stipend_min'])) {
+            if (intval($criteria['stipend_min']) < 0) {
+                return (t("Minimum") . ' ' . t("Annual Stipend") . ' ' . t("must be greater than or equal to 0."));
+            }
+            if (isset($criteria['stipend_max']) && $criteria['stipend_max']) {
+                if (intval($criteria['stipend_max']) < intval($criteria['stipend_min'])) {
+                    return (t("Maximum") . ' ' . t("Annual Stipend") . ' ' . t("must be greater than Minimum."));
+                }
+                if (intval($criteria['stipend_max']) < 0) {
+                    return (t("Maximum") . ' ' . t("Annual Stipend") . ' ' . t("must be greater than or equal to 0."));
+                }
+            }
+        }
+
+        return 1;
+    }
+
     /**
      * creates a Zend_Db_Select object for querying employee module data and applies filters specified in form data
      *
      * @param $criteria - form input filter criteria
-     * @return Zend_Db_Select - the query object with form filters to use/customize for reporting
+     * @return string|Zend_Db_Select
      */
     protected function employeeFilterQuery($criteria)
     {
         $joined = array();
+
+        $isValid = $this->employeeValidateCriteria($criteria);
+        if ($isValid !== 1) {
+            return ($isValid);
+        }
 
         $db = $this->dbfunc();
 
@@ -463,7 +557,11 @@ class ReportFilterHelpers extends ITechController
             $select->columns('location.province_name');
         }
 
-        if (isset($criteria['province_id']) && count($criteria['province_id'])) {
+        // TODO: find a better way to filter finer-resolution locations? We shouldn't get all of the results in
+        // TODO: province A if province A, district B and region c are selected, just what's in region c, but n-tier
+        if (isset($criteria['province_id']) && count($criteria['province_id']) &&
+            !((isset($criteria['district_id']) && count($criteria['district_id']))  ||
+                (isset($criteria['region_c_id']) && count($criteria['region_c_id'])))) {
             $ids = $criteria['province_id'];
             if (!array_key_exists('location', $joined)) {
                 $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
@@ -484,12 +582,18 @@ class ReportFilterHelpers extends ITechController
             $select->columns('location.district_name');
         }
 
-        if (isset($criteria['district_id']) && count($criteria['district_id'])) {
+        if (isset($criteria['district_id']) && count($criteria['district_id']) &&
+            !((isset($criteria['region_c_id']) && count($criteria['region_c_id'])))) {
             // This incoming data processing needs to happen because we're using renderFilter()
-            $ids = array_map(function ($item) {
-                $item = end(explode('_', $item));
-                return $item;
-            }, $criteria['district_id']);
+            if (is_array($criteria['district_id'])) {
+                $ids = array_map(function ($item) {
+                    $item = end(explode('_', $item));
+                    return $item;
+                }, $criteria['district_id']);
+            }
+            else {
+                $ids = end(explode('_', $criteria['district_id']));
+            }
 
             if (!array_key_exists('location', $joined)) {
                 $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
@@ -513,10 +617,16 @@ class ReportFilterHelpers extends ITechController
 
         if (isset($criteria['region_c_id']) && count($criteria['region_c_id'])) {
             // This incoming data processing needs to happen because we're using renderFilter()
-            $ids = array_map(function ($item) {
-                $item = end(explode('_', $item));
-                return $item;
-            }, $criteria['region_c_id']);
+
+            if (is_array($criteria['region_c_id'])) {
+                $ids = array_map(function ($item) {
+                    $item = end(explode('_', $item));
+                    return $item;
+                }, $criteria['region_c_id']);
+            }
+            else {
+                $ids = end(explode('_', $criteria['region_c_id']));
+            }
             if (!array_key_exists('location', $joined)) {
                 $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
                 $joined['location'] = 1;
@@ -646,7 +756,6 @@ class ReportFilterHelpers extends ITechController
             else {
                 $select->where('employee.employee_transition_option_id = ? OR employee.employ_transition_complete_option_id = ?',
                     $criteria['transition'], $criteria['transition']);
-
             }
         }
 
@@ -856,6 +965,8 @@ class ReportFilterHelpers extends ITechController
 
             $select->where('user_to_organizer_access.user_id = ?', $uid);
         }
+
+        $s = $select->__toString();
 
         return $select;
     }
