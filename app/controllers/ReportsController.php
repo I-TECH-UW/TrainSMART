@@ -6622,11 +6622,10 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
  		    if (!empty($user_institutions)) {
  			   $s->where("c.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
  		    }
-		}else{
+		}
+		else{
 		    //TA:#217 show students with only current cohort (avoid duplications students names in report)
-		    if ($cohortJoined) {
-		      $s->where('lsc.dropdate = ?', '0000-00-00');
-		    }
+		    $s->distinct(true);
 		}
 
 		if (isset($params['cadre']) && $params['cadre'] ||
