@@ -6478,6 +6478,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	protected function psStudentReportsBuildQuery(&$params) {
 
 		$headers = array();
+		$headers[] = "ID";//TA:#217
 		$headers[] = "First Name";
 		$headers[] = "Last Name";
 		$cohortJoined = false;
@@ -6487,7 +6488,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$helper = new Helper();
 
 		$s = $db->select()
-			->from(array('p' => 'person'), array('p.first_name', 'p.last_name'))
+			->from(array('p' => 'person'), array('p.id', 'p.first_name', 'p.last_name')) //TA:#217
 			->joinInner(array('s' => 'student'), 's.personid = p.id', array())
 			->where('p.is_deleted = 0');
 
@@ -6592,8 +6593,25 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			 $cohortJoined = true;
 			}
 			if (isset($params['showcohort']) && $params['showcohort']) {
-				$headers[] = "Cohort";
-				$s->columns('c.cohortname');
+			//TA:#217
+			    if((isset($params['show_old_cohorts']))){
+			        $headers[] = "Current Cohorts";
+			        $s->columns('GROUP_CONCAT(c.cohortname) as old_cohortname');
+			        $s->group('p.id');
+			        if ($cohortJoined){
+			         $s->where('lsc.dropdate != ?','0000-00-00');
+			        }
+			    }else if((isset($params['show_current_cohort']))){
+			        $headers[] = "Current Cohorts";
+			        $s->columns('GROUP_CONCAT(c.cohortname) as current_cohortname');
+			        $s->group('p.id');
+			        if ($cohortJoined){
+			         $s->where('lsc.dropdate = ?','0000-00-00');
+			        }
+			    }else{
+				    $headers[] = "Cohort";
+				    $s->columns('c.cohortname');
+			    }
 			}
 			if (isset($params['cohort']) && $params['cohort']) {
 				$s->where('c.id = ?', $params['cohort']);
@@ -6604,6 +6622,11 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
  		    if (!empty($user_institutions)) {
  			   $s->where("c.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
  		    }
+		}else{
+		    //TA:#217 show students with only current cohort (avoid duplications students names in report)
+		    if ($cohortJoined) {
+		      $s->where('lsc.dropdate = ?', '0000-00-00');
+		    }
 		}
 
 		if (isset($params['cadre']) && $params['cadre'] ||
