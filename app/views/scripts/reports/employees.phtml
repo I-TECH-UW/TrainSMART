@@ -61,51 +61,58 @@
 
 
                         echo labelAndField($this, t('Partner'),
-                            $this->formSelect('partner', $this->criteria['partner'], array(), $this->partners), 'partner');
+                            $this->formSelect('partner', isset($this->criteria['partner']) ? $this->criteria['partner'] : null, array(), $this->partners), 'partner');
 
                         echo region_filters_dropdown($this, $this->locations, $this->criteria, false, true);
 
                         echo labelAndField($this, t('Based at'),
-                            $this->formSelect('based_at', $this->criteria['based_at'], array(), $this->bases), 'based_at');
+                            $this->formSelect('based_at', isset($this->criteria['based_at']) ? $this->criteria['based_at'] : null, array(), $this->bases), 'based_at');
 
                         echo labelAndField($this, t('Site') . space . t('Name'),
-                            $this->formSelect('site', $this->criteria['site'], array(), $this->facilities), 'site');
+                            $this->formSelect('site', isset($this->criteria['site']) ? $this->criteria['site'] : null, array(), $this->facilities), 'site');
 
                         echo labelAndField($this, t('Facility Type'),
-                            $this->formSelect('facility_type', $this->criteria['facility_type'], array(), $this->facilityTypes), 'facility_type');
+                            $this->formSelect('facility_type', isset($this->criteria['facility_type']) ? $this->criteria['facility_type'] : null, array(), $this->facilityTypes), 'facility_type');
 
                         echo labelAndField($this, t('Staff Cadre'),
-                            $this->formSelect('classification', $this->criteria['classification'], array(), $this->classifications), 'classification');
+                            $this->formSelect('classification', isset($this->criteria['classification']) ? $this->criteria['classification'] : null, array(), $this->classifications), 'classification');
 
                         echo labelTwoFields($this, t('Funded hours per week'), t('to'), 'hours_min', 'hours_max',
-                            $this->criteria['hours_min'], $this->criteria['hours_max']);
+                            isset($this->criteria['hours_min']) ? $this->criteria['hours_min'] : '',
+                            isset($this->criteria['hours_max']) ? $this->criteria['hours_max'] : '');
 
                         echo labelTwoFields($this, t('Annual Cost'), t('to'), 'cost_min', 'cost_max',
-                            $this->criteria['cost_min'], $this->criteria['cost_max']);
+                            isset($this->criteria['cost_min']) ? $this->criteria['cost_min'] : '',
+                            isset($this->criteria['cost_max']) ? $this->criteria['cost_max'] : '');
 
                         echo labelAndField($this, t('Primary Role'),
-                            $this->formSelect('primary_role', $this->criteria['primary_role'], array(), $this->roles), 'primary_role');
+                            $this->formSelect('primary_role', isset($this->criteria['primary_role']) ? $this->criteria['primary_role'] : null, array(), $this->roles), 'primary_role');
 
                         echo labelAndField($this, t('Intended Transition'),
-                            $this->formSelect('intended_transition', $this->criteria['intended_transition'], array(), $this->transitions), 'intended_transition');
+                            $this->formSelect('intended_transition', isset($this->criteria['intended_transition']) ? $this->criteria['intended_transition'] : null, array(), $this->transitions), 'intended_transition');
 
                         echo labelAndField($this, t('Actual Transition Outcome'),
-                            $this->formSelect('actual_transition', $this->criteria['actual_transition'], array(), $this->transitions), 'actual_transition');
+                            $this->formSelect('actual_transition', isset($this->criteria['actual_transition']) ? $this->criteria['actual_transition'] : null, array(), $this->transitions), 'actual_transition');
 
                         echo labelTwoFields($this, t('Actual Transition Date'), t('to'), 'transition_start_date', 'transition_end_date',
-                            $this->criteria['transition_start_date'], $this->criteria['transition_end_date']);
+                            isset($this->criteria['transition_start_date']) ? $this->criteria['transition_start_date'] : '',
+                            isset($this->criteria['transition_end_date']) ? $this->criteria['transition_end_date'] : '');
 
                         echo labelTwoFields($this, t('Salary'), t('to'), 'salary_min', 'salary_max',
-                            $this->criteria['salary_min'], $this->criteria['salary_max']);
+                            isset($this->criteria['salary_min']) ? $this->criteria['salary_min'] : '',
+                            isset($this->criteria['salary_max']) ? $this->criteria['salary_max'] : '');
 
                         echo labelTwoFields($this, t('Benefits'), t('to'), 'benefits_min', 'benefits_max',
-                            $this->criteria['benefits_min'], $this->criteria['benefits_max']);
+                            isset($this->criteria['benefits_min']) ? $this->criteria['benefits_min'] : '',
+                            isset($this->criteria['benefits_max']) ? $this->criteria['benefits_max'] : '');
 
                         echo labelTwoFields($this, t('Additional Expenses'), t('to'), 'expenses_min', 'expenses_max',
-                            $this->criteria['expenses_min'], $this->criteria['expenses_max']);
+                            isset($this->criteria['expenses_min']) ? $this->criteria['expenses_min'] : '',
+                            isset($this->criteria['expenses_max']) ? $this->criteria['expenses_max'] : '');
 
                         echo labelTwoFields($this, t('Stipend'), t('to'), 'stipend_min', 'stipend_max',
-                            $this->criteria['stipend_min'], $this->criteria['stipend_max']);
+                            isset($this->criteria['stipend_min']) ? $this->criteria['stipend_min'] : '',
+                            isset($this->criteria['stipend_max']) ? $this->criteria['stipend_max'] : '');
 
                         echo $this->partial('reports/ps-search-preview-button-partial.phtml', array());
                         ?>
