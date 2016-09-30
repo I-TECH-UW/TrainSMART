@@ -218,7 +218,8 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
 	foreach ($this->lookuptutortypes as $tutortype){
 ?>
 							<div style="height : 20px; overflow : hidden;">
-								<input type="checkbox" style="margin : 3px;" name="tutortype[]" id="tutortype[]" value="<?php echo $tutortype['id']; ?>"<?php echo (in_array($tutortype['id'],$this->tutortypes) ? " checked" : "") ?>> <?php echo $tutortype['typename']; ?><br>
+								<input type="checkbox" style="margin : 3px;" name="tutortype[]" id="tutortype[]" value="<?php echo $tutortype['id']; ?>"<?php echo (in_array($tutortype['id'],$this->tutortypes) ? " checked" : "") ?>> 
+								<?php echo $tutortype['typename']; ?><br>
 							</div>
 <?php
 	}
@@ -235,7 +236,11 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
 }
 ?>
 							</select>
-
+							
+							<!-- TA:#254 
+							<label><?php echo t('Not active'); ?></label>
+							<input type="checkbox" style="margin : 8px 5px 12px 25px;" name="tutor_not_active" id="tutor_not_active" value="<?php echo $this->tutor_not_active;?>"/>
+-->
 							<label><?php echo t('Degree Institution'); ?></label>
 							<input type="text" name="degreeinst" value="<?php echo $this->escape($this->degreeinst);?>">
 
