@@ -45,7 +45,7 @@ function labelAndField($view, $label, $content, $id = '', $val = '')
 	$cal1 = (array_search($id, $view->calendar_fields) === false) ? '' : $cal;
 	if ($view->autoheight_labels)
 		$class .= ' autoHeight ';
-	$reportcheck = $view->is_report ? '<div class="leftBorderPad"><input type="checkbox" name="show_'.$id.'"'. (($view->criteria['show_'.$id]) ? 'CHECKED' : '').'/></div></div><div class="leftBorder">' : '';
+	$reportcheck = $view->is_report ? '<div class="leftBorderPad"><input type="checkbox" name="show_'.$id.'"'. ((isset($view->criteria['show_'.$id]) && $view->criteria['show_'.$id]) ? 'CHECKED' : '').'/></div></div><div class="leftBorder">' : '';
 
 	if ($content == 'text')
 		$content = '<input type="text" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/>';
@@ -123,7 +123,7 @@ function labelTwoFields($view, $label1, $label2, $id1, $id2, $val1 = '', $val2 =
 	$class2 = ($cal2 ? ' class="datepicker"':'');
 	if ($view->autoheight_labels)
 		$class .= ' autoHeight ';
-	$reportcheck = $view->is_report ? '<div class="leftBorderPad"><input type="checkbox" name="show_'.$id1.'"'. (($view->criteria['show_'.$id1]) ? 'CHECKED' : '').'/></div></div><div class="leftBorder">' : '';
+	$reportcheck = $view->is_report ? '<div class="leftBorderPad"><input type="checkbox" name="show_'.$id1.'"'. ((isset($view->criteria['show_'.$id1]) && $view->criteria['show_'.$id1]) ? 'CHECKED' : '').'/></div></div><div class="leftBorder">' : '';
 
 	$o = <<< EOF
 	<div class="$class $id1">$required$label1</div>
