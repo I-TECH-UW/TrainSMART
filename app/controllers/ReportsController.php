@@ -9902,7 +9902,8 @@ die (__LINE__ . " - " . $sql);
 		$this->viewAssignEscaped ( 'f',  $f);
 	}
 
-	public function employeesAction() {
+    public function employeesAction()
+    {
         $locations = Location::getAll();
         $criteria = $this->getAllParams();
 
@@ -9953,55 +9954,56 @@ die (__LINE__ . " - " . $sql);
                     $this->view->assign('output', $f);
                 }
             }
-
-            $choose = array("0" => '--' . t("choose") . '--');
-
-            $partners = $choose + $db->fetchPairs($db->select()
-                    ->from('partner', array('id', 'partner'))
-                    ->order('partner ASC')
-                );
-
-            $facilities = $choose + $db->fetchPairs($db->select()
-                    ->from('facility', array('id', 'facility_name'))
-                    ->order('facility_name ASC')
-                );
-
-            $facilityTypes = $choose + $db->fetchPairs($db->select()
-                    ->from('facility_type_option', array('id', 'facility_type_phrase'))
-                    ->order('facility_type_phrase ASC')
-                );
-
-            $classifications = $choose + $db->fetchPairs($db->select()
-                    ->from('employee_qualification_option', array('id', 'qualification_phrase'))
-                    ->order('qualification_phrase ASC')
-                );
-
-            $roles = $choose + $db->fetchPairs($db->select()
-                    ->from('employee_role_option', array('id', 'role_phrase'))
-                    ->order('role_phrase ASC')
-                );
-
-            $transitions = $choose + $db->fetchPairs($db->select()
-                    ->from('employee_transition_option', array('id', 'transition_phrase'))
-                    ->order('transition_phrase ASC')
-                );
-
-            $bases = $choose + $db->fetchPairs($db->select()
-                    ->from('employee_base_option', array('id', 'base_phrase'))
-                    ->order('base_phrase ASC')
-                );
-
-            $this->view->assign('partners', $partners);
-            $this->view->assign('facilities', $facilities);
-            $this->view->assign('facilityTypes', $facilityTypes);
-            $this->view->assign('classifications', $classifications);
-            $this->view->assign('roles', $roles);
-            $this->view->assign('transitions', $transitions);
-            $this->view->assign('locations', $locations);
-            $this->view->assign('bases', $bases);
-            $this->view->assign('criteria', $criteria);
         }
+
+        $choose = array("0" => '--' . t("choose") . '--');
+
+        $partners = $choose + $db->fetchPairs($db->select()
+                ->from('partner', array('id', 'partner'))
+                ->order('partner ASC')
+            );
+
+        $facilities = $choose + $db->fetchPairs($db->select()
+                ->from('facility', array('id', 'facility_name'))
+                ->order('facility_name ASC')
+            );
+
+        $facilityTypes = $choose + $db->fetchPairs($db->select()
+                ->from('facility_type_option', array('id', 'facility_type_phrase'))
+                ->order('facility_type_phrase ASC')
+            );
+
+        $classifications = $choose + $db->fetchPairs($db->select()
+                ->from('employee_qualification_option', array('id', 'qualification_phrase'))
+                ->order('qualification_phrase ASC')
+            );
+
+        $roles = $choose + $db->fetchPairs($db->select()
+                ->from('employee_role_option', array('id', 'role_phrase'))
+                ->order('role_phrase ASC')
+            );
+
+        $transitions = $choose + $db->fetchPairs($db->select()
+                ->from('employee_transition_option', array('id', 'transition_phrase'))
+                ->order('transition_phrase ASC')
+            );
+
+        $bases = $choose + $db->fetchPairs($db->select()
+                ->from('employee_base_option', array('id', 'base_phrase'))
+                ->order('base_phrase ASC')
+            );
+
+        $this->view->assign('partners', $partners);
+        $this->view->assign('facilities', $facilities);
+        $this->view->assign('facilityTypes', $facilityTypes);
+        $this->view->assign('classifications', $classifications);
+        $this->view->assign('roles', $roles);
+        $this->view->assign('transitions', $transitions);
+        $this->view->assign('locations', $locations);
+        $this->view->assign('bases', $bases);
+        $this->view->assign('criteria', $criteria);
     }
+
 
     /**
      * @param $rows - reference to database roles returned by filtered query

@@ -425,6 +425,64 @@ class ReportFilterHelpers extends ITechController
 
     protected function employeeValidateCriteria($criteria) {
 
+
+        if (isset($criteria['transition_start_date']) && $criteria['transition_start_date']) {
+            $errorMessage = null;
+            try {
+                $date = DateTime::createFromFormat('d/m/Y', $criteria['transition_start_date']);
+            }
+            catch (Exception $e) {
+                $errorMessage = t('Invalid start value for') . ' ' . t('Actual Transition Date');
+            }
+            // But wait, there's more! DateTime can interpret the date into a different day without
+            // throwing an exception.
+            if (!$errorMessage) {
+                $errors = DateTime::getLastErrors();
+                if (count($errors) && ((isset($errors['warning_count']) && $errors['warning_count'] > 0) ||
+                        (isset($errors['error_count']) && $errors['error_count']) > 0)) {
+                    $errorMessage = t('Invalid start value for') . ' ' . t('Actual Transition Date');
+                }
+            }
+            if ($errorMessage) {
+                return $errorMessage;
+            }
+        }
+
+        if (isset($criteria['transition_end_date']) && $criteria['transition_end_date']) {
+            $errorMessage = null;
+            try {
+                $date = DateTime::createFromFormat('d/m/Y', $criteria['transition_end_date']);
+            }
+            catch (Exception $e) {
+                $errorMessage = t('Invalid end value for') . ' ' . t('Actual Transition Date');
+            }
+
+            // But wait, there's more! DateTime can interpret the date into a different day without
+            // throwing an exception.
+            if (!$errorMessage) {
+                $errors = DateTime::getLastErrors();
+                if (count($errors) && ((isset($errors['warning_count']) && $errors['warning_count'] > 0) ||
+                        (isset($errors['error_count']) && $errors['error_count']) > 0)) {
+                    $errorMessage = t('Invalid end value for') . ' ' . t('Actual Transition Date');
+                }
+            }
+            if (!$errorMessage) {
+                // ensure that end date is after start date, if a start date is given
+                if (isset($criteria['transition_start_date']) && $criteria['transition_start_date']) {
+                    // assume start date is valid if we've reached here because it was validated before this
+                    $startdate = DateTime::createFromFormat('d/m/Y', $criteria['transition_start_date']);
+                    if ($date <= $startdate) {
+                        $errorMessage = t('Actual Transition Date') . ' ' . t('end date must be after start date.');
+                    }
+                }
+            }
+
+            if ($errorMessage) {
+                return $errorMessage;
+            }
+        }
+
+
         if (isset($criteria['hours_min'])) {
             if (intval($criteria['hours_min']) < 0) {
                 return (t("Minimum") . ' ' . t("Hours Worked per Week") . ' ' . t("must be greater than or equal to 0."));
