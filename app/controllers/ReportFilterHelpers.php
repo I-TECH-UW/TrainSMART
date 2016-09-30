@@ -800,11 +800,13 @@ class ReportFilterHelpers extends ITechController
         if (isset($criteria['show_transition_start_date']) && $criteria['show_transition_start_date']) {
             $select->columns('transition_complete_date');
         }
-        if (isset($criteria['transition_start_date_range']) && $criteria['transition_start_date_range']) {
-            $select->where('transition_complete_date >= ?', $criteria['transition_start_date_range']);
+        if (isset($criteria['transition_start_date']) && $criteria['transition_start_date']) {
+            $d = DateTime::createFromFormat('d/m/Y', $criteria['transition_start_date']);
+            $select->where('transition_complete_date >= ?', $d->format('Y-m-d'));
         }
-        if (isset($criteria['transition_end_date_range']) && $criteria['transition_end_date_range']) {
-            $select->where('transition_complete_date <= ?', $criteria['transition_end_date_range']);
+        if (isset($criteria['transition_end_date']) && $criteria['transition_end_date']) {
+            $d = DateTime::createFromFormat('d/m/Y', $criteria['transition_end_date']);
+            $select->where('transition_complete_date <= ?', $d->format('Y-m-d'));
         }
 
         // salary
