@@ -198,6 +198,15 @@ class Tutoredit extends ITechTable
 		);
 
 		$db->update('tutor',$tutor,"personid = '".$param['id']."'");
+		
+		//TA:#254
+		require_once('Person.php');
+		$person = new Person();
+		if($param['tutor_not_active']){
+		  $person->update(array ('active'=>'inactive'),'id='.$param['id']);
+		}else{
+		  $person->update(array ('active'=>'active'),'id='.$param['id']);
+		}
 
 		$select = $this->dbfunc()->select()
 			->from("tutor")
