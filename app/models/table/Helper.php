@@ -303,7 +303,7 @@ class Helper extends ITechTable
 	    ->join(array("p" => "person"),
 	        "p.id = t.personid",
 	        array())
-	    ->where('p.active="active" and id_institution = ?',$iid);
+	    ->where('p.active="active" and p.is_deleted=0 and id_institution = ?',$iid);
 	    $result = $this->dbfunc()->fetchAll($select);
 	    return count($result);
 	}
