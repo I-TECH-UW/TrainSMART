@@ -292,12 +292,20 @@ class Helper extends ITechTable
 		return $result;
 	}
 
+	
+	//TA:#254 count only active tutors
 	public function getInstitutionTutorCount($iid) {
-		$select = $this->dbfunc()->select()
-			->from("link_tutor_institution")
-			->where('id_institution = ?',$iid);
-		$result = $this->dbfunc()->fetchAll($select);
-		return count($result);
+	    $select = $this->dbfunc()->select()
+	    ->from("link_tutor_institution")
+	    ->join(array("t" => "tutor"),
+	        "link_tutor_institution.id_tutor = t.id",
+	        array())
+	    ->join(array("p" => "person"),
+	        "p.id = t.personid",
+	        array())
+	    ->where('p.active="active" and id_institution = ?',$iid);
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return count($result);
 	}
 
 	######################################
