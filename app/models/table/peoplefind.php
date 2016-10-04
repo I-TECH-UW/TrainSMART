@@ -216,7 +216,8 @@ select personid from student where id not in
     }
     if($param['inst']){
     	if($param['type'] == 'tutor'){
-    	 $where[] = " AND tutor_inst_id =" . $param['inst'];
+    	    //TA:#254 show only active tutors for selected institution
+    	 $where[] = " AND p.active='active' AND tutor_inst_id =" . $param['inst'];
     	}else if($param['type'] == 'student'){
     		$where[] = " AND student_inst_id =" . $param['inst'];
     	}
