@@ -505,6 +505,7 @@ class FacilityController extends ReportFilterHelpers {
 		// facilities list
 		$criteria = array ();
 		list ( $criteria, $location_tier, $location_id ) = $this->getLocationCriteriaValues ( $criteria );
+		$params = $this->getAllParams();//TA:115 by some reason params is not taken by above function, then take it again
         $criteria ['facility_name'] = $this->getSanParam ( 'facility_name' );
 		$criteria ['type_id'] = $this->getSanParam ( 'type_id' );
 		$criteria ['sponsor_id'] = $this->getSanParam ( 'sponsor_id' );
@@ -572,6 +573,11 @@ class FacilityController extends ReportFilterHelpers {
 			if ($criteria ['facility_name']) {
 				//$where [] = " facility_name = '" . mysql_escape_string ( $criteria ['facility_name'] ) . "'";//TA:17:14:
 				$where[] = " facility_name like '%{$criteria['facility_name']}%'"; //TA:17:14:
+			}
+			
+			//TA:115 this another way to take parameters
+			if ($params ['facility_name_text']) {
+			    $where[] = " facility_name like '%{$params['facility_name_text']}%'"; 
 			}
 
 			if ($where)
