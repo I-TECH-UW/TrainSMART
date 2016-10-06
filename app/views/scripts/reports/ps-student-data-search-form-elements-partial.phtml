@@ -38,9 +38,15 @@
         ?>
     </select></div>
 <div class="clear pad20">&nbsp;</div>
-
+           
 <div class="fieldquestion"><?php echo t('Start date between'); ?></div>
-<div class="fieldshow">&nbsp;</div>
+
+<!-- TA:#251 -->
+<div class="fieldshow">
+    <input type="checkbox" name="showstartdate" id="showstartdate"
+           value="1"<?php if (isset($this->criteria['showstartdate']) && $this->criteria['showstartdate']) { echo " checked"; } ?>>
+</div>
+
 <div class="fieldselect">
     <input type="text" name="startday" id="startday" value="" placeholder="<?php tp('Day') ?>"
            style="width : 30px; margin-right : 10px; margin-left : 0px;">

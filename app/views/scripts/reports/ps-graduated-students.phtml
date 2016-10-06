@@ -176,11 +176,6 @@
 							<input type="text" name="agemax" id="agemax" value="" style="width : 50px;" placeholder="<?php tp('Max')?>"></div>
 							<div class="clear pad20">&nbsp;</div>
 	
-							<div class="fieldquestion"><?php echo t('Graduation date'); ?></div>
-							<div class="fieldshow"><input type="checkbox" name="showgraduation" id="showgraduation" value="1"<?php echo $_GET['showgraduation'] ? " checked" : "" ?>></div>
-							<div class="fieldselect"></div>
-							<div class="clear pad20">&nbsp;</div>
-	
 							<div class="fieldquestion"><?php echo t('Facility @ graduation'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="showfacility" id="showfacility" value="1"<?php echo $_GET['showfacility'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="facility" id="facility" style="" size="10">
@@ -202,16 +197,22 @@
 	?>
 							</select></div>
 							<div class="clear pad20">&nbsp;</div>
+							
+							<!-- TA:#251 -->
+							<div class="fieldquestion"><?php echo t('Start date'); ?></div>
+							<div class="fieldshow"><input type="checkbox" name="showstartdate" id="showstartdate" value="1"<?php echo $_GET['showstartdate'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
 	
 							<div class="fieldquestion"><?php echo t('Graduation date between'); ?></div>
-							<div class="fieldshow">&nbsp;</div>
-							<div class="fieldselect"><input type="text" name="startday" id="startday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;">
-							<input type="text" name="startmonth" id="startmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
-							<input type="text" name="startyear" id="startyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;"><br>
+							<div class="fieldshow"><input type="checkbox" name="showgraduation" id="showgraduation" value="1"<?php echo $_GET['showgraduation'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"><input type="text" name="gradstartday" id="gradstartday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;">
+							<input type="text" name="gradstartmonth" id="gradstartmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
+							<input type="text" name="gradstartyear" id="gradstartyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;"><br>
 							<br><?php tp('and')?><br><br>
-							<input type="text" name="endday" id="endday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
-							<input type="text" name="endmonth" id="endmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
-							<input type="text" name="endyear" id="endyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;"></div>
+							<input type="text" name="gradendday" id="gradendday" value="" placeholder="<?php tp('Day')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
+							<input type="text" name="gradendmonth" id="gradendmonth" value="" placeholder="<?php tp('Month')?>" style="width : 30px; margin-right : 10px; margin-left : 0px;"> 
+							<input type="text" name="gradendyear" id="gradendyear" value="" placeholder="<?php tp('Year')?>" style="width : 50px; margin-right : 10px; margin-left : 0px;"></div>
 							<div class="clear pad20">&nbsp;</div>
 						</div>
 						<div class="pad20 clear"></div>

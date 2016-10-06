@@ -6824,7 +6824,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		}
 
 		$start_date = '';
-		if ((isset($params['startday']) && $params['startday']) &&
+		if((isset($params['startday']) && $params['startday']) &&
 			(isset($params['startmonth']) && $params['startmonth']) &&
 			(isset($params['startyear']) && $params['startyear'])) {
 			if (!$cohortJoined) {
@@ -6847,7 +6847,8 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			$end_date = $params['endyear'].'-'.$params['endmonth'].'-'.$params['endday'];
 		}
 
-		if (($start_date !== '') || ($end_date !== '')) {
+		//TA:#251 show start date as well
+		if ((isset($params['showstartdate']) && $params['showstartdate']) || ($start_date !== '') || ($end_date !== '')) {
 			$s->columns('c.startdate');
 			$headers[] = "Start Date";
 			if ($start_date !== '') {
@@ -6857,7 +6858,42 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				$s->where('c.startdate <= ?', $end_date);
 			}
 		}
-		print $s; //TA:100000
+		
+		//TA:#251 show grad date as well
+		$grad_start_date = '';
+		if((isset($params['gradstartday']) && $params['gradstartday']) &&
+		    (isset($params['gradstartmonth']) && $params['gradstartmonth']) &&
+		    (isset($params['gradstartyear']) && $params['gradstartyear'])) {
+		        if (!$cohortJoined) {
+		            $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		            $cohortJoined = true;
+		        }
+		        $grad_start_date = $params['gradstartyear'].'-'.$params['gradstartmonth'].'-'.$params['gradstartday'];
+		    }
+		
+		    $grad_end_date = '';
+		    if ((isset($params['gradendday']) && $params['gradendday']) &&
+		        (isset($params['gradendmonth']) && $params['gradendmonth']) &&
+		        (isset($params['gradendyear']) && $params['gradendyear'])) {
+		            if (!$cohortJoined) {
+		                $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		                $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		                $cohortJoined = true;
+		            }
+		            $grad_end_date = $params['gradendyear'].'-'.$params['gradendmonth'].'-'.$params['gradendday'];
+		        }
+		if ((isset($params['showgraduation']) && $params['showgraduation']) || ($grad_start_date !== '') || ($grad_end_date !== '')) {
+		    $s->columns('c.graddate');
+		    $headers[] = "Graduation Date";
+		    if ($grad_start_date !== '') {
+		        $s->where('c.graddate >= ?', $grad_start_date);
+		    }
+		    if ($grad_end_date !== '') {
+		        $s->where('c.graddate <= ?', $grad_end_date);
+		    }
+		}
+		//print $s;
 		return(array($s, $headers));
 	}
 

@@ -92,6 +92,12 @@
 							<?php echo $this->partial('reports/ps-student-data-search-form-elements-partial.phtml',
 								array('tutors' => $this->tutors, 'criteria' => $this->criteria));
 							?>
+							
+							<!-- TA:#251 -->
+                            <div class="fieldquestion"><?php echo t('Graduation date'); ?></div>
+                            <div class="fieldshow"><input type="checkbox" name="showgraduation" id="showgraduation" value="1"<?php echo $_GET['showgraduation'] ? " checked" : "" ?>></div>
+                            <div class="fieldselect"></div>
+                            <div class="clear pad20">&nbsp;</div>
 
 							<div class="fieldquestion"><?php echo t('Course Name And Exam Scores To Date'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="shownamedate" id="shownamedate" value="1"<?php echo $this->criteria['shownamedate'] ? " checked" : "" ?>></div>
