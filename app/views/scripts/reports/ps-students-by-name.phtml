@@ -69,6 +69,13 @@
 							<?php echo $this->partial('reports/ps-nationality-search-form-elements.phtml',
 								array('nationalities' => $this->nationalities, 'criteria' => $this->criteria));
 							?>
+							
+							<!-- TA:#251 -->
+							<div class="fieldquestion"><?php tp("Date of Birth"); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="showdob" id="showdob" value="1"<?php echo $this->criteria['showdob'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
 
 							<div class="fieldquestion"><?php echo t('Age'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="showage" id="showage" value="1"<?php echo $this->criteria['showage'] ? " checked" : "" ?>></div>

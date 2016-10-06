@@ -62,6 +62,13 @@
 							<div class="fieldshow"><input type="checkbox" name="shownationality" id="shownationality" value="1"<?php echo $this->criteria['shownationality'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"></div>
 							<div class="clear pad20">&nbsp;</div>
+							
+							<!-- TA:#251 -->
+							<div class="fieldquestion"><?php tp("Date of Birth"); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="showdob" id="showdob" value="1"<?php echo $this->criteria['showdob'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
 	
 							<?php
 							echo $this->partial('reports/age-range-form-elements-partial.phtml', array('criteria', $this->criteria));

@@ -6688,6 +6688,12 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				$s->where('ln.id = ?', $params['nationality']);
 			}
 		}
+		
+		//TA:#251
+		if ((isset($params['showdob'])) && $params['showdob']) {
+		    $headers[] = t("Date of Birth");
+		    $s->columns('p.birthdate');
+		}
 
 		if ((isset($params['showage']) && $params['showage']) ||
 			(isset($params['agemin']) && $params['agemin']) ||
@@ -6845,6 +6851,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				$s->where('c.startdate <= ?', $end_date);
 			}
 		}
+		print $s; //TA:100000
 		return(array($s, $headers));
 	}
 
