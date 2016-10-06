@@ -6782,7 +6782,8 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			$s->joinLeft(array('lf' => 'lookup_fundingsources'), 'lf.id = lsf.fundingsource', array());
 			//$s->columns('lf.fundingname');
 			//TA:103 to display multiple sources for one person in one row
-			$s->columns('GROUP_CONCAT(lf.fundingname)');
+			//TA:#251 to display amount of funding also
+			$s->columns("GROUP_CONCAT( ' ' , lf.fundingname, ': ',lsf.fundingamount)");
 			$s->group('p.id');
 			
 			$headers[] = "Funding";

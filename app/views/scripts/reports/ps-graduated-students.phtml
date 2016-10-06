@@ -185,6 +185,14 @@
 		}
 	?>
 							</select></div>
+							
+							<div class="fieldquestion"><?php echo t('Funding source'); ?></div>
+<div class="fieldshow">
+    <input type="checkbox" name="showfunding" id="showfunding"
+           value="1"<?php if (isset($this->criteria['showfunding']) && $this->criteria['showfunding']) { echo " checked"; } ?>></div>
+<div class="fieldselect"></div>
+
+
 							<div class="clear pad20">&nbsp;</div>
 	
 							<div class="fieldquestion"><?php echo t('Tutor advisor'); ?></div>
