@@ -65,6 +65,13 @@
 									?>
 								</select></div>
 							<div class="clear pad20">&nbsp;</div>
+							
+							<!-- TA:#251 -->
+							<div class="fieldquestion"><?php echo t('Marital Status'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_marital_status" id="show_marital_status" value="1"<?php echo $this->criteria['show_marital_status'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
 
 							<?php echo $this->partial('reports/ps-nationality-search-form-elements.phtml',
 								array('nationalities' => $this->nationalities, 'criteria' => $this->criteria));

@@ -6675,6 +6675,12 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				$s->where('p.gender = ?', $gender_arr[$gender_id]);
 			}
 		}
+		
+		//TA:#251
+		if ((isset($params['show_marital_status'])) && $params['show_marital_status']) {
+		    $headers[] = t("Marital Status");
+		    $s->columns('p.marital_status');
+		}
 
 		if ((isset($params['shownationality'])) && $params['shownationality'] ||
 			(isset($params['nationality']) && $params['nationality'])) {

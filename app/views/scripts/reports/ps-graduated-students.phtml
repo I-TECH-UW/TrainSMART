@@ -150,6 +150,13 @@
 	?>
 							</select></div>
 							<div class="clear pad20">&nbsp;</div>
+							
+							<!-- TA:#251 -->
+							<div class="fieldquestion"><?php echo t('Marital Status'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_marital_status" id="show_marital_status" value="1"<?php echo $this->criteria['show_marital_status'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
 	
 							<div class="fieldquestion"><?php echo t('Nationality'); ?></div>
 							<div class="fieldshow"><input type="checkbox" name="shownationality" id="shownationality" value="1"<?php echo $_GET['shownationality'] ? " checked" : "" ?>></div>
