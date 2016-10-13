@@ -1975,7 +1975,7 @@ class Helper extends ITechTable
 				WHERE lcc.cohortid = " . $cid . "
 				ORDER BY c.classname, p.first_name, p.last_name";		
 		}
-		$select = $db->query($query);
+		$select = $db->query($query); 
 		$result = $select->fetchAll();
 		return $result;		
 	}
@@ -2086,9 +2086,22 @@ class Helper extends ITechTable
 
 	function updateStudentClass($sid,$param){
 		$db = $this->dbfunc();
-
+        //TA:#270 this way does not work to merge 4 arrays keys, each array must be defined before merging
+		//$allclasses = array_unique(array_merge($allclasses, array_keys($param['camark']), array_keys($param['exammark']), array_keys($param['grade']), array_keys($param['credits'])));
 		$allclasses = array();
-		$allclasses = array_unique(array_merge($allclasses, array_keys($param['camark']), array_keys($param['exammark']), array_keys($param['grade']), array_keys($param['credits'])));
+		if($param['camark']){
+		   $allclasses = array_unique(array_merge($allclasses, array_keys($param['camark'])));
+		}
+		if($param['exammark']){
+		  $allclasses = array_unique(array_merge($allclasses, array_keys($param['exammark'])));
+		}
+ 		if($param['grade']){
+ 		 $allclasses = array_unique(array_merge($allclasses, array_keys($param['grade'])));
+ 		}
+ 		if($param['credits']){
+ 		 $allclasses = array_unique(array_merge($allclasses, array_keys($param['credits'])));
+ 		}
+ 		
 		foreach ($allclasses as $cid) {
 			$query = "SELECT * FROM link_student_classes WHERE
 				studentid = " . $sid . " AND
