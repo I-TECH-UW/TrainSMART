@@ -196,7 +196,8 @@
                 <option value="0"><?php echo t('Select...'); ?></option>
                 <?php
                   foreach ($this->institutions as $institution){
-                    echo "<option value=\"" . $institution['id'] . "\"" . ($this->institutionid == $institution['id'] ? " selected" : "") . ">" . $institution['institutionname'] . "</option>\n";
+                      //TA:#254 select institution only if tutor is active
+                    echo "<option value=\"" . $institution['id'] . "\"" . (($this->institutionid == $institution['id'] && $this->tutor_not_active == 'active') ? " selected" : "") . ">" . $institution['institutionname'] . "</option>\n";
                   }
                 ?>
               </select>
