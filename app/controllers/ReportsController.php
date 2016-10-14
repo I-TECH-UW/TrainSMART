@@ -8331,7 +8331,8 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			);
 
 			$where = array();
-			$where[] = "p.is_deleted = 0";
+			//TA:#254 only active tutors
+			$where[] = "p.is_deleted = 0 and p.active = 'active' " ;
 			$sort = array();
 			$locations = Location::getAll ();
 			$translation = Translation::getAll ();
@@ -8704,10 +8705,12 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					$query .= strtoupper($j['type']) . " JOIN " . $j['table'] . " " . $j['abbreviation'] . " ON " . $j['compare'] . "\n";
 				}
 			}
+			
 			if (count ($where) > 0){
 				$query .= "WHERE " . implode(" AND ", $where) . "\n";
 			}
 
+		
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 			$rowArray = $db->fetchAll ($query);
 			$this->viewAssignEscaped("headers", $headers);
