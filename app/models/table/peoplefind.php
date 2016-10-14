@@ -95,10 +95,18 @@ select personid from student where id not in
         break;
       case "key":
       case "tutor":
-        $sql = 'SELECT p.id, first_name, last_name, gender,
+//         $sql = 'SELECT p.id, first_name, last_name, gender,
+//           tutor_type AS type,
+//           tutor_link AS link,
+//           tutor_institutionname AS institutionname,
+//         		tutor_inst_id,
+//         		facility_id,
+//           \'N/A\' AS cohort ';
+          //TA:#254 if tutor is not active then institution is blank
+          $sql = 'SELECT p.id, first_name, last_name, gender,
           tutor_type AS type,
           tutor_link AS link,
-          tutor_institutionname AS institutionname,
+          CASE WHEN p.active=\'active\' THEN tutor_institutionname ELSE \'\' END AS institutionname,
         		tutor_inst_id,
         		facility_id,
           \'N/A\' AS cohort ';

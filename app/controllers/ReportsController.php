@@ -3316,7 +3316,7 @@ echo $sql . "<br>";
 				}
 			}
 			
-
+    //print $sql;
 			$rowArray = $db->fetchAll ( $sql);
 			
 
