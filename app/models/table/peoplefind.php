@@ -106,7 +106,7 @@ select personid from student where id not in
           $sql = 'SELECT p.id, first_name, last_name, gender,
           tutor_type AS type,
           tutor_link AS link,
-          CASE WHEN p.active=\'active\' THEN tutor_institutionname ELSE \'\' END AS institutionname,
+          CASE WHEN p.active=\'active\' THEN tutor_institutionname ELSE \'N/A\' END AS institutionname,
         		tutor_inst_id,
         		facility_id,
           \'N/A\' AS cohort ';
