@@ -945,7 +945,7 @@ class ReportFilterHelpers extends ITechController
         // transition date
         // labelTwoFields uses the name of the first field for the 'show' checkbox
         if (isset($criteria['show_transition_start_date']) && $criteria['show_transition_start_date']) {
-            $select->columns('transition_complete_date');
+            $select->columns(array('transition_complete_date' => new Zend_Db_Expr("DATE_FORMAT(transition_complete_date, '%d/%m/%Y')")));
         }
         if (isset($criteria['transition_start_date']) && $criteria['transition_start_date']) {
             $d = DateTime::createFromFormat('d/m/Y', $criteria['transition_start_date']);
@@ -1082,7 +1082,9 @@ class ReportFilterHelpers extends ITechController
 
         // labelTwoFields uses the name of the first field for the 'show' checkbox
         if (isset($criteria['show_contractstartdate']) && $criteria['show_contractstartdate']) {
-            $select->columns('employee.agreement_end_date');
+//            $select->columns('employee.agreement_end_date');
+            $select->columns(array('employee.agreement_end_date' => new Zend_Db_Expr("DATE_FORMAT(employee.agreement_end_date, '%d/%m/%Y')")));
+
         }
         if (isset($criteria['contractstartdate']) && $criteria['contractstartdate'] >= 0) {
             $d = DateTime::createFromFormat('d/m/Y', $criteria['contractstartdate']);
