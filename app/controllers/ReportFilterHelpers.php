@@ -925,7 +925,7 @@ class ReportFilterHelpers extends ITechController
         // transition outcome
         if (isset($criteria['show_actual_transition']) && $criteria['show_actual_transition']) {
             if (!array_key_exists('actual_employee_transition_option', $joined)) {
-                $select->join(array('actual_employee_transition_option' => 'actual_employee_transition_option'),
+                $select->join(array('actual_employee_transition_option' => 'employee_transition_option'),
                     'actual_employee_transition_option.id = employee.employee_transition_complete_option_id', array());
                 $joined['actual_employee_transition_option'] = 1;
             }
