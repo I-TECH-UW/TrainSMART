@@ -2143,15 +2143,21 @@ class TrainingController extends ReportFilterHelpers {
 		$editTable = new EditTableController ($this->getRequest(), $this->getResponse());
 		$editTable->setParentController($this);
 		$editTable->table = 'score';
-		$editTable->fields = array ('score_label' => t ( 'Label' ), 'score_value' => t ( 'Score' ) ); // TODO: Label translations
+		if ($this->setting('display_training_pt_pass') === '0') {
+		    $editTable->fields = array ('score_label' => t ( 'Label' ), 'score_value' => t ( 'Score' )); // TODO: Label translations
+		    $editTable->customColDef = array('score_value' => 'formatter:fickle');/*Todo rename this*/
+		}else{
+		  //TA:#271 add pass/fail options
+		  $editTable->fields = array ('score_label' => t ( 'Label' ), 'score_value' => t ( 'Score' ), 'pass_fail'=>t('Pass/Fail')); // TODO: Label translations
+		  $elements = array(array('text' => ' ', 'value' => ' '), array('text' => 'pass', 'value' => 'pass'), array('text' => 'fail', 'value' => 'fail'));
+		  $elements = json_encode($elements);
+		  $editTable->customColDef = array('score_value' => 'formatter:fickle', 'pass_fail' => "editor:'dropdown', editorOptions: {dropdownOptions: $elements }");/*Todo rename this*/
+		}
 		$editTable->label = t('Score'); //TA:66
 		$editTable->where = "person_to_training_id = {$personTrainingRow->id}";
 		$editTable->insertExtra = array ('person_to_training_id' => $personTrainingRow->id );
 		//$editTable->customColDef = array('training_date' => 'formatter:YAHOO.widget.DataTable.formatDate, editor:"date"');
 		//$editTable->customColDef = array('training_date' => 'width:120');
-		$editTable->customColDef = array('score_value' => 'formatter:fickle');/*Todo rename this*/
-
-
 		$editTable->execute ($this->getRequest());
 	}
 
