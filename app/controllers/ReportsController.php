@@ -9971,6 +9971,25 @@ die (__LINE__ . " - " . $sql);
 
                 $select->distinct();
 
+                $tables = $select->getPart(Zend_Db_Select::FROM);
+                $cols = $select->getPart(Zend_Db_Select::COLUMNS);
+                if (!array_key_exists('link_mechanism_employee', $tables)) {
+                    $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                }
+                if (!array_key_exists('mechanism_option', $tables)) {
+                    $select->join('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                }
+
+                if (!array_key_exists('mechanism_option.mechanism_phrase', $cols)) {
+                    $select->columns('mechanism_option.mechanism_phrase');
+                }
+                if (!array_key_exists('mechanism_option.end_date', $cols)) {
+                    $select->columns(array('mechanism_end_date' => 'mechanism_option.end_date'));
+                }
+                if (!array_key_exists('employee.id', $cols)) {
+                    $select->columns(array('employee_code' => 'employee.id'));
+                }
+
                 $c = array_map(
                     function ($item) {
                         $header_names = array(
@@ -9992,6 +10011,9 @@ die (__LINE__ . " - " . $sql);
                             'benefits' => t('Benefits'),
                             'additional_expenses' => t('Additional Expenses'),
                             'stipend' => t('Stipend'),
+                            'employee_code' => t('Employee Code'),
+                            'mechanism_phrase' => t('Mechanism'),
+                            'mechanism_end_date' => t('Mechanism') . ' ' . t('End Date'),
                         );
                         if ($item[2] !== null) {
                             return $header_names[$item[2]];
