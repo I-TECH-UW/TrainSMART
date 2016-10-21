@@ -584,6 +584,9 @@ foreach($this->results as $row) {
     }
     echo ',"'.$row['score_pre'].'"';
     echo ',"'.$row['score_post'].'"';
+     if($this->setting['display_training_pt_pass']){//TA:#271
+         echo ',"'.$row['pass_fail'].'"'; 
+    }
     echo ',"'.$row['score_percent_change'].'"';
     echo ',"'.$row['labels'].'"';
     echo ',"'.$row['scores'].'"';
@@ -757,6 +760,9 @@ var trainingColumnDefs = [
   <?php if ( $this->isScoreReport) { ?>
   ,{key:"score_pre", label: "<?php echo tp('Pre-Test'); ?>", sortable:true, sortOptions: { sortFunction: myScorePreSortFunction }, resizeable:true}
   ,{key:"score_post", label: "<?php echo tp('Post-Test'); ?>", sortable:true, sortOptions: { sortFunction: myScorePostSortFunction }, resizeable:true}
+  <?php if($this->setting['display_training_pt_pass']){ //TA:#271 ?> 
+  ,{key:"pass_fail", label: "<?php echo tp('Pass/Fail'); ?>", sortable:true, resizeable:true} 
+  <?php }?>
   ,{key:"score_percent_change", label: "<?php echo tp('% Change'); ?>", sortable:true, sortOptions: { sortFunction: myScorePercentSortFunction }, resizeable:true}
   ,{key:"labels", label: "<?php echo tp('Other Scores'); ?>", sortable:true, resizeable:true}
   ,{key:"scores", label: "<?php echo tp('Other Scores'); ?>", sortable:true, resizeable:true}

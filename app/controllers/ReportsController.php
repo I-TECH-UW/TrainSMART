@@ -2966,6 +2966,9 @@ echo $sql . "<br>";
 			if ($this->view->isScoreReport) {
 				$sql .= ', spre.score_value AS score_pre, spost.score_value AS score_post, ' . 'ROUND((spost.score_value - spre.score_value) / spre.score_value * 100) AS score_percent_change';
 				$sql .= ', scoreother.labels, scoreother.scores ';
+				if($this->setting('display_training_pt_pass') !== '0'){
+				 $sql .= ',spost.pass_fail as pass_fail ';//TA:#271
+				}
 			}
 
 			$num_locs = $this->setting('num_location_tiers');
