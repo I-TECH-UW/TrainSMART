@@ -31,7 +31,9 @@ class PersonToTraining extends ITechTable
    //     ->joinLeft(array('sr' => 'person_responsibility_option'), "p.secondary_responsibility_option_id = sr.id",array('secondary_responsibility'=>'responsibility_phrase'))
    //     ->joinLeft(array('l' => 'location'), "f.location_id = l.id",array('location_id'))
         ->joinLeft(array('spre' => 'score'), "spre.person_to_training_id = ptt.id AND spre.score_label = 'Pre-Test'", array('score_pre' => 'score_value'))
-        ->joinLeft(array('spost' => 'score'), "spost.person_to_training_id = ptt.id AND spost.score_label = 'Post-Test'", array('score_post' => 'score_value'))
+        //TA:#271 get pass_fail also
+//         ->joinLeft(array('spost' => 'score'), "spost.person_to_training_id = ptt.id AND spost.score_label = 'Post-Test'", array('score_post' => 'score_value'))
+    ->joinLeft(array('spost' => 'score'), "spost.person_to_training_id = ptt.id AND spost.score_label = 'Post-Test'", array('score_post' => 'score_value', 'pass_fail'=>'pass_fail'))
         ->joinLeft(array('scoreother' => 'score'), "scoreother.person_to_training_id = ptt.id AND scoreother.score_label != 'Post-Test' AND scoreother.score_label != 'Pre-Test'", array('score_other_k' => 'GROUP_CONCAT(scoreother.score_label)', 'score_other_v' => 'GROUP_CONCAT(scoreother.score_value)'))
         ->joinLeft(array('award'   => 'person_to_training_award_option'),        "award.id   = award_id"                  ,  array('award_phrase' => 'award_phrase'))
         ->joinLeft(array('budget'  => 'person_to_training_budget_option'),       "budget.id  = budget_code_option_id"     ,  array('budget_code_phrase' => 'budget_code_phrase'))
