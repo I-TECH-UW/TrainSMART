@@ -143,28 +143,32 @@ class PartnerController extends ReportFilterHelpers {
 
                 require_once 'views/helpers/EditTableHelper.php';
 
-                $sql = "SELECT mechanism_option.id, mechanism_option.mechanism_phrase, mechanism_option.end_date, partner_funder_option.funder_phrase
-                        FROM mechanism_option
-                        INNER JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id
-                        WHERE mechanism_option.owner_id = $id";
-                $primeMechanisms = $db->fetchAll($sql);
+                $select = $db->select()
+                    ->from('mechanism_option', array('id', 'mechanism_phrase', 'end_date'))
+                    ->joinInner('partner_funder_option', 'mechanism_option.funder_id = partner_funder_option.id', array('partner_funder_option.funder_phrase'))
+                    ->where('mechanism_option.owner_id = ?', $id);
+
+                $primeMechanisms = $db->fetchAll($select);
 
                 foreach($primeMechanisms as &$mech) {
-                    $sql = "SELECT partner.partner FROM partner INNER JOIN link_mechanism_partner on link_mechanism_partner.partner_id = partner.id
-                            WHERE link_mechanism_partner.mechanism_option_id = {$mech['id']} AND link_mechanism_partner.partner_id != $id";
+                    $select = $db->select()
+                        ->from('partner', array('partner.partner'))
+                        ->joinInner('link_mechanism_partner', 'link_mechanism_partner.partner_id = partner.id', array())
+                        ->where('link_mechanism_partner.mechanism_option_id = ?', $mech['id'])
+                        ->where('link_mechanism_partner.partner_id != ?', $id);
 
-                    $mech['subpartners'] = $db->fetchCol($sql);
+                    $mech['subpartners'] = $db->fetchCol($select);
                 }
                 $this->view->assign('primeMechanisms', $primeMechanisms);
 
-                $sql = "SELECT link_mechanism_partner.id, mechanism_option.mechanism_phrase, link_mechanism_partner.end_date, partner.partner
-						FROM
-						link_mechanism_partner
-						INNER JOIN mechanism_option ON link_mechanism_partner.mechanism_option_id = mechanism_option.id
-						LEFT JOIN partner ON mechanism_option.owner_id = partner.id
-                        WHERE owner_id != $id AND partner_id = $id";
+                $select = $db->select()
+                    ->from('link_mechanism_partner', array('link_mechanism_partner.end_date'))
+                    ->joinInner('mechanism_option', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array('mechanism_phrase'))
+                    ->joinInner('partner', 'mechanism_option.owner_id = partner.id', array('partner.partner'))
+                    ->where('owner_id != ?', $id)
+                    ->where('partner_id = ?', $id);
 
-                $secondaryMechanisms = $db->fetchAll($sql);
+                $secondaryMechanisms = $db->fetchAll($select);
                 $this->view->assign('secondaryMechanisms', $secondaryMechanisms);
 			}
 		}
