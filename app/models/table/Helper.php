@@ -2102,8 +2102,11 @@ class Helper extends ITechTable
  		 $allclasses = array_unique(array_merge($allclasses, array_keys($param['credits'])));
  		}
  		//TA:#270 remove all classes that student do not have grades
- 		$db->delete("link_student_classes", " studentid=" . $sid . " and  cohortid=" . $param['cohortid'] . " and classid not in (" . implode(",", $allclasses) . ")");
- 
+ 		if(count($allclasses) === 0){
+ 		 $db->delete("link_student_classes", " studentid=" . $sid . " and  cohortid=" . $param['cohortid']);
+ 		}else{
+ 		    $db->delete("link_student_classes", " studentid=" . $sid . " and  cohortid=" . $param['cohortid'] . " and classid not in (" . implode(",", $allclasses) . ")");
+ 		}
 		foreach ($allclasses as $cid) {
 			$query = "SELECT * FROM link_student_classes WHERE
 				studentid = " . $sid . " AND
