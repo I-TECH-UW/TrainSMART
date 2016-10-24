@@ -1142,6 +1142,18 @@ if ($this->setting ['display_region_c']) {
         </div>
 
     <?php endif; ?>
+    
+    <!-- TA:#271 -->
+    <?php if ($this->setting['display_training_pt_pass']) : ?>
+        <!-- test scores pass/fail -->
+        <div class="clear"></div>
+        <div class="hrGrey"></div>
+        <div class="clear"></div>
+        <div class="fieldIndentNoMargin"><?php tp('Post-Test Pass'); ?></div>
+        <div class="fieldIndent2">
+           <?php echo $this->pass;?>
+        </div>
+    <?php endif; ?>
 
     <?php endif; //$this->has_known_participants  ?>
     <?php if (!$this->row['has_known_participants']) : ?>

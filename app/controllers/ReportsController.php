@@ -2966,6 +2966,9 @@ echo $sql . "<br>";
 			if ($this->view->isScoreReport) {
 				$sql .= ', spre.score_value AS score_pre, spost.score_value AS score_post, ' . 'ROUND((spost.score_value - spre.score_value) / spre.score_value * 100) AS score_percent_change';
 				$sql .= ', scoreother.labels, scoreother.scores ';
+				if($this->setting('display_training_pt_pass') !== '0'){
+				 $sql .= ',spost.pass_fail as pass_fail ';//TA:#271
+				}
 			}
 
 			$num_locs = $this->setting('num_location_tiers');
@@ -6966,11 +6969,13 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	                list($query2, $headers) = $this->psStudentReportsBuildQuery($criteria);
 	                $headers[] = "Old Cohorts";
 	                 
-	                //TA:#217 create query
+	                //TA:#217 create query, take only repeated students (who dropped one cohort and joined to another)
 	                $query = "select t1.*, t2.old_cohortname from (" . $query1 . ") as t1 ".
-	                    "left join (" . $query2 . ") as t2 on t1.id=t2.id ";
+	                    "left join (" . $query2 . ") as t2 on t1.id=t2.id where t2.old_cohortname is not null";
 	            }else{
 	                list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
+	                //take only repeated students (who dropped one cohort and joined to another)
+	                $query = $query . " and s.id in (select id_student from link_student_cohort where dropdate != '0000-00-00' and id_student in (SELECT id_student FROM link_student_cohort group by id_student having count(*) > 1))";
 	            }
 	
 	            $db = Zend_Db_Table_Abstract::getDefaultAdapter();

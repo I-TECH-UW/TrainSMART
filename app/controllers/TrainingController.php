@@ -858,11 +858,17 @@ class TrainingController extends ReportFilterHelpers {
 
 		$locations = Location::getAll ();
 		$customColDefs = array();
+		//TA:#271
+		$pass = 0;
 
 		if ($training_id) {
 			$persons = PersonToTraining::getParticipants ( $training_id )->toArray ();
 
 			foreach ( $persons as $pid => $p ) {
+			    //TA:#271
+			    if($persons [$pid] ['pass_fail'] === 'pass'){
+			        $pass++;
+			    }
 				$region_ids = Location::getCityInfo ( $p ['location_id'], $this->setting ( 'num_location_tiers' ) ); // todo expensive call, getcityinfo loads all locations each time??
 				$persons [$pid] ['province_name'] = ($region_ids[1] ? $locations [$region_ids['1']] ['name'] : 'unknown');
 				if ($region_ids[2])
@@ -1108,7 +1114,11 @@ class TrainingController extends ReportFilterHelpers {
 
 		// row values
 		$this->view->assign ( 'row', $rowRay );
-
+		
+		//TA:#271  calcualte pass/fail
+		if($this->setting('display_training_pt_pass')){
+		  $this->view->assign ( 'pass', ($pass/count($persons))*100 . "%" );
+		}
 	}
 
 	/**
