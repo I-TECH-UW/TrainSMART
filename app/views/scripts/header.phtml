@@ -80,7 +80,9 @@ if ( $this->isLoggedIn() ) {
 			}
 
 			$navMain['reports']['training-by-participants']            = t('Training Reports');
-			$navMain['reports']['participants-by-category/cat/pepfar'] = t('Participant Reports');
+			//TA:#253
+// 			$navMain['reports']['participants-by-category/cat/pepfar'] = t('Participant Reports');
+			$navMain['reports']['participants-by-training'] = t('Participant Reports');
 			if ($this->setting['display_budget_code']) {
 				$navMain['reports']['budget-code']                    = t('Budget Code Reports');
 			}
