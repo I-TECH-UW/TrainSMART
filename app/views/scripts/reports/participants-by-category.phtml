@@ -10,10 +10,11 @@ print ScriptContainer::$instance->renderJSHead();
 $message = '';
 $multiple = TRUE; // multi-select for regions
 switch ( $this->criteria['cat'] ) {
-	case 'pepfar':
-		$catagoryLabel = t('PEPFAR');
-		$message = t('Unique by').': \''.(@$this->translation['PEPFAR Category']).'\' '.t('and').' \''.(@$this->translation['Training Organizer']).'\'. '.t('Not unique overall.');
-		break;
+    //TA:#253 remove those comments
+// 	case 'pepfar':
+// 		$catagoryLabel = t('PEPFAR');
+// 		$message = t('Unique by').': \''.(@$this->translation['PEPFAR Category']).'\' '.t('and').' \''.(@$this->translation['Training Organizer']).'\'. '.t('Not unique overall.');
+// 		break;
 	case 'level':
 		$catagoryLabel = (@$this->translation['Training Level']);
 		$message = t('Unique by').': \''.(@$this->translation['Training Level']).'\' '.t('and').' \''.(@$this->translation['Training Organizer']).'\'. '.t('Not unique overall.');
