@@ -1,200 +1,219 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title><?php echo $this->translation['Application Name'] . " | " . $this->pageTitle; ?></title>
-	<?php
-	require_once('views/helpers/Location.php');
-	require_once('views/helpers/ScriptContainer.php');
-	require_once('views/helpers/TrainingViewHelper.php');
-	print ScriptContainer::$instance->renderCSSHead();
-	print ScriptContainer::$instance->renderJSHead();
-	?>
-<style>
-    .subpartnerDivider {
-        height: 1px;
-    }
-    .centertitle {
-        text-align: center;
-        font-weight: bold;
-    }
-    .mechList {
-        display: none;
-        font-size: smaller;
-    }
-    .expando {
-        background: #6cb647;
-        color: #FFFFFF;
-        font-weight: bold;
-        font-size: 11px;
-        height: 17px;
-        width: 17px;
-        border: 0px none;
-    }
-    li {
-        margin-left: 20px;
-        list-style-type: square;
-    }
-    table.display td {
-        border:1px solid #D3D3D3;
-    }
-    table.dataTable tr.odd {
-        background-color: #CFFFCF;
-    }
-    table.dataTable tr.odd td.sorting_1 {
-        background-color: #ACCCAC;
-    }
-    h2 {
-        font-size: 14px;
-        color: #51965B;
-        margin-bottom: 0.5em;
-    }
-</style>
+    <title><?php echo $this->translation['Application Name'] . " | " . $this->pageTitle; ?></title>
+    <?php
+    require_once('views/helpers/Location.php');
+    require_once('views/helpers/ScriptContainer.php');
+    require_once('views/helpers/TrainingViewHelper.php');
+    print ScriptContainer::$instance->renderCSSHead();
+    print ScriptContainer::$instance->renderJSHead();
+    ?>
+    <style>
+        .fieldInput {
+            float: left;
+        }
+        .subpartnerDivider {
+            height: 1px;
+        }
+
+        .centertitle {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .mechList {
+            display: none;
+            font-size: smaller;
+        }
+
+        .expando {
+            background: #6cb647;
+            color: #FFFFFF;
+            font-weight: bold;
+            font-size: 11px;
+            height: 17px;
+            width: 17px;
+            border: 0px none;
+        }
+
+        li {
+            margin-left: 20px;
+            list-style-type: square;
+        }
+
+        table.display td {
+            border: 1px solid #D3D3D3;
+        }
+
+        table.dataTable tr.odd {
+            background-color: #CFFFCF;
+        }
+
+        table.dataTable tr.odd td.sorting_1 {
+            background-color: #ACCCAC;
+        }
+
+        h2 {
+            font-size: 14px;
+            color: #51965B;
+            margin-bottom: 0.5em;
+            clear: left;
+        }
+    </style>
 </head>
 <body class="yui-skin-sam">
 
-	<div id="pageHolder">
+<div id="pageHolder">
 
-		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
-		<div id="content">
+    <div id="header"><?php require_once('views/scripts/header.phtml'); ?></div>
+    <div id="content">
 
-			<?php require_once 'views/scripts/status.phtml' ?>
+        <?php require_once 'views/scripts/status.phtml' ?>
 
-			<h1><?php $this->mode == 'add' ? tp('Add Partner') : tp('Edit Partner'); ?></h1>
-			<form action="" method="post" id="employeePartnerEdit" class="form_employee">
-				<?php if (($this->partner['id']) && ($this->hasACL("edit_partners")) && ($this->hasACL("delete_partners"))): ?>
-				<div class="historyDiv">
-					<a href="<?php echo $this->base_url; ?>/partner/delete/id/<?php echo $this->partner['id']; ?>"><?php echo t('Delete this').space.t('Partner'); ?></a>
-				</div>
-				<?php
-					endif; // fi historyDiv
-
-					require_once ('views/helpers/DropDown.php');
-					$this->required_fields = array('partner', 'address1', 'city', 'province_id', 'hr_contact_name','hr_contact_phone','hr_contact_email');
-
-					if ($this->mode != 'add') {
-					  echo labelAndField($this, t('Partner').space.t('ID'),  'text', 'id',      $this->partner['id']);
-					}
-					echo labelAndField($this, t('Partner').space.t('Name'),'text', 'partner', $this->partner['partner']);
-
-                    $organizers = $this->organizers;
-				    $organizers .= hasACLEdit('acl_editor_training_organizer', 'admin/training-organizer', $this); // give them an insert and edit link if they have rights to this stuff
-				    $organizers .= $this->hasACL('acl_editor_training_organizer') ? "<a href=\"#\" onclick=\"addToSelect('" . str_replace ( "'", "\\" . "'", t ( 'Please enter your new' ) ) . " " . strtolower ( t('Organizer') ) . ":', 'select_training_organizer_option', '" . Settings::$COUNTRY_BASE_URL . "/training/insert-table/table/training_organizer_option/column/training_organizer_phrase/outputType/json'); return false;\">" . t ( 'Insert new' ) . "</a>" : ""; // copied from training edit form
-					echo labelAndField($this, t('Organizer'), $organizers,   'organizer');
-
-					echo labelAndField($this, t('Address 1'), 'text', 'address1',  $this->partner['address1']);
-					echo labelAndField($this, t('Address 2'), 'text', 'address2',  $this->partner['address2']);
-					echo labelAndField($this, t('City'),      'text', 'city',      $this->partner['city']);
-					echo region_filters_dropdown( $this, $this->locations, $this->partner, false, false, '', true);
-					echo labelAndField($this, t('HR Contact Person Name'), 'text', 'hr_contact_name',  $this->partner['hr_contact_name']);
-					echo labelAndField($this, t('HR Contact Office Phone'),             'text', 'hr_contact_phone', $this->partner['hr_contact_phone']);
-					echo labelAndField($this, t('HR Contact Office Fax'),               'text', 'hr_contact_fax',   $this->partner['hr_contact_fax']);
-					echo labelAndField($this, t('HR Contact Email'),                    'text', 'hr_contact_email', $this->partner['hr_contact_email']);
-
-				?>
-
-				<script type="text/javascript">
-
-					$(document).ready(function () {
-
-						itech_save_confirm_on_leave();
-						<?php if ($this->setting['display_employee_funder']) { ?>
-
-						/* Init the table */
-						oTable = $('.tablegrid').dataTable({
-							"bJQueryUI": true,
-							"bPaginate": false,
-							"bSort": true,
-							"bInfo": false,
-							"bFilter": false,
-                            "bAutoWidth": false
-						});
-
-						<?php } ?>
-
-					});
-                    function toggleSubpartners(btn) {
-                        var $butt = $(btn);
-
-                        var $div = $butt.siblings('div');
-
-                        var btnText = $div.is(":visible") ? '+' : '-';
-                        $butt.val(btnText);
-                        $div.slideToggle(500);
-                    }
-				</script>
-                <br/>
-
+        <h1><?php $this->mode == 'add' ? tp('Add Partner') : tp('Edit Partner'); ?></h1>
+        <form action="" method="post" id="employeePartnerEdit" class="form_employee">
+            <?php if (($this->partner['id']) && ($this->hasACL("edit_partners")) && ($this->hasACL("delete_partners"))): ?>
+                <div class="historyDiv">
+                    <a href="<?php echo $this->base_url; ?>/partner/delete/id/<?php echo $this->partner['id']; ?>"><?php echo t('Delete this') . space . t('Partner'); ?></a>
+                </div>
                 <?php
-                if ($this->setting['display_employee_funder']) {
-					if (count($this->primeMechanisms)) { ?>
-						<h2>Prime <?php tp('Mechanisms'); ?>:</h2>
-						<div style="width:100%;">
+            endif; // fi historyDiv
 
-							<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id=""
-								   style="width:100%">
-								<thead>
-								<tr>
-									<th><?php tp('Mechanism'); ?></th>
-									<th><?php tp('Funder'); ?></th>
-									<th><?php tp('Funding End Date'); ?></th>
-								</tr>
-								</thead>
-								<tbody>
-								<?php foreach ($this->primeMechanisms as $mech) { ?>
-									<tr>
-										<td>
-                                            <input type="button" onclick="toggleSubpartners(this);return true;" class="expando" value="+"/> <?php echo $mech['mechanism_phrase']; ?>
-                                            <div class="mechList">
-                                                <hr class="subpartnerDivider"/>
-                                                <div class="centertitle">Sub-Partners:</div>
-                                                <ul>
-                                                    <?php foreach($mech['subpartners'] as $subp) {
-                                                        echo "<li>$subp</li>";
-                                                    }?>
-                                                </ul>
-                                            </div>
-                                        </td>
-										<td><?php echo $mech['funder_phrase']; ?></td>
-										<td><?php echo $mech['end_date']; ?></td>
-									</tr>
-								<?php } ?>
-								</tbody>
-							</table>
-						</div>
-						<br/>
-					<?php }
-					if (count($this->secondaryMechanisms)) {	?>
-						<h2>Sub-Partner on <?php tp('Mechanisms'); ?>:</h2>
-						<div style="width:100%;">
+            require_once('views/helpers/DropDown.php');
+            $this->required_fields = array('partner', 'address1', 'city', 'province_id', 'hr_contact_name', 'hr_contact_phone', 'hr_contact_email');
 
-							<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id=""
-								   style="width:100%">
-								<thead>
-								<tr>
-									<th><?php tp('Mechanism'); ?></th>
-									<th><?php tp('Prime Partner'); ?></th>
-									<th><?php tp('Funding End Date'); ?></th>
-								</tr>
-								</thead>
-								<tbody>
-								<?php foreach ($this->secondaryMechanisms as $mech) { ?>
-									<tr>
-										<td><?php echo $mech['mechanism_phrase']; ?></td>
-										<td><?php echo $mech['partner']; ?></td>
-										<td><?php echo $mech['end_date']; ?></td>
-									</tr>
-								<?php } ?>
-								</tbody>
-							</table>
-						</div>
-					<?php }
-				} ?>
+            if ($this->mode != 'add') {
+                echo labelAndField($this, t('Partner') . space . t('ID'), 'text', 'id', $this->partner['id']);
+            }
+            echo labelAndField($this, t('Partner') . space . t('Name'), 'text', 'partner', $this->partner['partner']);
 
-				<div class="clear"></div>
-				<input type="hidden" name="limit" id="limit" value="1" />
-				<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Save');?>" />
-			</form>
-			<div class="clear"></div>
-		</div>
-	</body>
+            $organizers = $this->organizers;
+            $organizers .= hasACLEdit('acl_editor_training_organizer', 'admin/training-organizer', $this); // give them an insert and edit link if they have rights to this stuff
+            $organizers .= $this->hasACL('acl_editor_training_organizer') ? "<a href=\"#\" onclick=\"addToSelect('" . str_replace("'", "\\" . "'", t('Please enter your new')) . " " . strtolower(t('Organizer')) . ":', 'select_training_organizer_option', '" . Settings::$COUNTRY_BASE_URL . "/training/insert-table/table/training_organizer_option/column/training_organizer_phrase/outputType/json'); return false;\">" . t('Insert new') . "</a>" : ""; // copied from training edit form
+            echo labelAndField($this, t('Organizer'), $organizers, 'organizer');
+
+            echo region_filters_dropdown($this, $this->locations, $this->partner, false, false, '', true);
+            echo labelAndField($this, t('Address 1'), 'text', 'address1', $this->partner['address1']);
+            echo labelAndField($this, t('Address 2'), 'text', 'address2', $this->partner['address2']);
+            echo labelAndField($this, t('City'), 'text', 'city', $this->partner['city']);
+            echo labelAndField($this, t('HR Contact Person Name'), 'text', 'hr_contact_name', $this->partner['hr_contact_name']);
+            echo labelAndField($this, t('HR Contact Office Phone'), 'text', 'hr_contact_phone', $this->partner['hr_contact_phone']);
+            echo labelAndField($this, t('HR Contact Office Fax'), 'text', 'hr_contact_fax', $this->partner['hr_contact_fax']);
+            echo labelAndField($this, t('HR Contact Email'), 'text', 'hr_contact_email', $this->partner['hr_contact_email']);
+
+
+            //echo labelAndField($this, t('Completed Data Capture'), $this->formCheckbox())
+            ?>
+
+            <div class="fieldLabel"><?php tp('Completed Data Capture'); ?></div>
+            <?php echo $this->formCheckbox('capture_complete', $this->capture_complete, array('class' => 'fieldInput')); ?>
+
+        <script type="text/javascript">
+
+                $(document).ready(function () {
+
+                    itech_save_confirm_on_leave();
+                    <?php if ($this->setting['display_employee_funder']) { ?>
+
+                    /* Init the table */
+                    oTable = $('.tablegrid').dataTable({
+                        "bJQueryUI": true,
+                        "bPaginate": false,
+                        "bSort": true,
+                        "bInfo": false,
+                        "bFilter": false,
+                        "bAutoWidth": false
+                    });
+
+                    <?php } ?>
+
+                });
+                function toggleSubpartners(btn) {
+                    var $butt = $(btn);
+
+                    var $div = $butt.siblings('div');
+
+                    var btnText = $div.is(":visible") ? '+' : '-';
+                    $butt.val(btnText);
+                    $div.slideToggle(500);
+                }
+            </script>
+            <br/>
+
+            <?php
+            if ($this->setting['display_employee_funder']) {
+                if (count($this->primeMechanisms)) { ?>
+                    <h2>Prime <?php tp('Mechanisms'); ?>:</h2>
+                    <div style="width:100%;">
+
+                        <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id=""
+                               style="width:100%">
+                            <thead>
+                            <tr>
+                                <th><?php tp('Mechanism'); ?></th>
+                                <th><?php tp('Funder'); ?></th>
+                                <th><?php tp('Funding End Date'); ?></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($this->primeMechanisms as $mech) { ?>
+                                <tr>
+                                    <td>
+                                        <input type="button" onclick="toggleSubpartners(this);return true;"
+                                               class="expando" value="+"/> <?php echo $mech['mechanism_phrase']; ?>
+                                        <div class="mechList">
+                                            <hr class="subpartnerDivider"/>
+                                            <div class="centertitle">Sub-Partners:</div>
+                                            <ul>
+                                                <?php foreach ($mech['subpartners'] as $subp) {
+                                                    echo "<li>$subp</li>";
+                                                } ?>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td><?php echo $mech['funder_phrase']; ?></td>
+                                    <td><?php echo $mech['end_date']; ?></td>
+                                </tr>
+                            <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                <?php }
+                if (count($this->secondaryMechanisms)) { ?>
+                    <h2>Sub-Partner on <?php tp('Mechanisms'); ?>:</h2>
+                    <div style="width:100%;">
+
+                        <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id=""
+                               style="width:100%">
+                            <thead>
+                            <tr>
+                                <th><?php tp('Mechanism'); ?></th>
+                                <th><?php tp('Prime Partner'); ?></th>
+                                <th><?php tp('Funding End Date'); ?></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($this->secondaryMechanisms as $mech) { ?>
+                                <tr>
+                                    <td><?php echo $mech['mechanism_phrase']; ?></td>
+                                    <td><?php echo $mech['partner']; ?></td>
+                                    <td><?php echo $mech['end_date']; ?></td>
+                                </tr>
+                            <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php }
+            } ?>
+
+            <div class="clear"></div>
+            <input type="hidden" name="limit" id="limit" value="1"/>
+            <input type="submit" class="submitNoArrow" name="go" value="<?php tp('Save'); ?>"/>
+        </form>
+        <div class="clear"></div>
+    </div>
+</body>
 </html>

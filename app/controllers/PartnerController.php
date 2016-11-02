@@ -62,26 +62,27 @@ class PartnerController extends ReportFilterHelpers {
 	}
 
 	public function editAction() {
-		if (! $this->hasACL ( 'employees_module' )) {
-			$this->doNoAccessError ();
+		if (!$this->hasACL('employees_module')) {
+			$this->doNoAccessError();
 		}
 
-		$db     = $this->dbfunc();
-		$status = ValidationContainer::instance ();
-		$params = $this->getAllParams();
-		$id     = $params['id'];
+        $db = $this->dbfunc();
+        $uid = $this->isLoggedIn();
+        $params = $this->getAllParams();
+        $id = $params['id'];
+        $status = ValidationContainer::instance();
 
-		// restricted access?? only show partners by organizers that we have the ACL to view // - removed 5/1/13, they dont want this, its used by site-rollup (datashare), and user-restrict by org.
-		$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'
-		$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
-		$siteOrgsClause = $site_orgs ? " AND partner.organizer_option_id IN ($site_orgs)" : "";
-		if ($org_allowed_ids && $this->view->mode != 'add') {
-			$validID = $db->fetchCol("SELECT partner.id FROM partner WHERE partner.id = $id AND partner.organizer_option_id in ($org_allowed_ids) $siteOrgsClause");
-			if(empty($validID))
-				$this->doNoAccessError ();
-		}
+        if (!$uid) {
+            $this->doNoAccessError();
+        }
 
-		if ( $this->getRequest()->isPost() )
+        $p = $this->getAvailablePartnersAssoc();
+
+        if (!array_key_exists($id, $p)) {
+            $this->doNoAccessError();
+        }
+
+		if ($this->getRequest()->isPost())
 		{
 		    if (!$this->hasACL("edit_partners"))
 		    {
@@ -97,11 +98,11 @@ class PartnerController extends ReportFilterHelpers {
                 $status->checkRequired($this, 'hr_contact_phone', t('HR Contact Office Phone'));
                 $status->checkRequired($this, 'hr_contact_email', t('HR Contact Email'));
 
-
-    			//location save stuff
-    			$params['location_id'] = regionFiltersGetLastID(null, $params); // formprefix, criteria
-    			if ( $params['city'] ) {
-    				$params['location_id'] = Location::insertIfNotFound ( $params['city'], $params['location_id'], $this->setting ( 'num_location_tiers' ) );
+    			// location save stuff
+    			$params['location_id'] = regionFiltersGetLastID(null, $params);
+    			if ($params['city']) {
+    				$params['location_id'] = Location::insertIfNotFound($params['city'], $params['location_id'],
+                        $this->setting('num_location_tiers'));
     			}
     
     			if (! $status->hasError() ) {
@@ -118,22 +119,13 @@ class PartnerController extends ReportFilterHelpers {
 		    }
 		}
 		
-		if ($id && ! $status->hasError()) { // read data from db
+		if ($id && !$status->hasError()) { // read data from db
 
-			// restricted access?? only show partners by organizers that we have the ACL to view
-			$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'
-			$orgWhere = ($org_allowed_ids) ? " AND partner.organizer_option_id in ($org_allowed_ids) " : "";
-			// restricted access?? only show organizers that belong to this site if its a multi org site
-			$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
-			$allowedWhereClause = $site_orgs ? " AND partner.organizer_option_id in ($site_orgs) " : "";
-
-			// continue reading data
-			$sql = 'SELECT * FROM partner WHERE id = '.$id.space.$orgWhere;
-			$row = $db->fetchRow( $sql );
-			if (! $row)
-				$status->setStatusMessage ( t('Error finding that record in the database.') );
-			else
-			{
+            $row = $db->fetchRow($db->select()->from('partner')->where('id = ?', $id));
+			if (! $row) {
+                $status->setStatusMessage(t('Error finding that record in the database.'));
+            }
+			else {
 				$params = $row; // reassign form data
 
 				$region_ids = Location::getCityInfo($params['location_id'], $this->setting('num_location_tiers'));
@@ -141,24 +133,28 @@ class PartnerController extends ReportFilterHelpers {
 				$region_ids = Location::regionsToHash($region_ids);
 				$params = array_merge($params, $region_ids);
 
-                require_once 'views/helpers/EditTableHelper.php';
-
+                $joinClause = $db->quoteInto('link_mechanism_partner.partner_id = subpartner.id AND link_mechanism_partner.partner_id != ?', $id);
                 $select = $db->select()
                     ->from('mechanism_option', array('id', 'mechanism_phrase', 'end_date'))
                     ->joinInner('partner_funder_option', 'mechanism_option.funder_id = partner_funder_option.id', array('partner_funder_option.funder_phrase'))
+                    ->joinInner('link_mechanism_partner', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array())
+                    ->joinLeft(array('subpartner' => 'partner'), $joinClause, array('subpartner' => 'subpartner.partner'))
+                    ->joinInner('partner', 'mechanism_option.owner_id = partner.id', array('partner'))
                     ->where('mechanism_option.owner_id = ?', $id);
 
-                $primeMechanisms = $db->fetchAll($select);
+                $rows = $db->fetchAll($select);
 
-                foreach($primeMechanisms as &$mech) {
-                    $select = $db->select()
-                        ->from('partner', array('partner.partner'))
-                        ->joinInner('link_mechanism_partner', 'link_mechanism_partner.partner_id = partner.id', array())
-                        ->where('link_mechanism_partner.mechanism_option_id = ?', $mech['id'])
-                        ->where('link_mechanism_partner.partner_id != ?', $id);
-
-                    $mech['subpartners'] = $db->fetchCol($select);
+                $primeMechanisms = array();
+                foreach ($rows as $r) {
+                    if (!array_key_exists($r['id'], $primeMechanisms)) {
+                        $primeMechanisms[$r['id']] = $r;
+                        $primeMechanisms[$r['id']]['subpartners'] = array();
+                    }
+                    if ($r['subpartner']) {
+                        $primeMechanisms[$r['id']]['subpartners'][] = $r['subpartner'];
+                    }
                 }
+
                 $this->view->assign('primeMechanisms', $primeMechanisms);
 
                 $select = $db->select()
@@ -178,20 +174,20 @@ class PartnerController extends ReportFilterHelpers {
             $this->view->viewonly = true;
         }
 		// assign form drop downs
-		$this->view->assign( 'status', $status );
-		$this->view->assign ( 'pageTitle', $this->view->mode == 'add' ? t ( 'Add Partner' ) : t( 'View Partner' ) );
-		$this->viewAssignEscaped ( 'partner', $params );
-		$this->viewAssignEscaped ( 'locations', Location::getAll () );
-		$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $params['partner_type_option_id'], false, $this->view->viewonly, false ) ); //table, col, selected_value
-		$this->view->assign ( 'subpartners', DropDown::generateHtml ( 'partner', 'partner', 0, false, $this->view->viewonly, false, true, array('name' => 'subpartner_id[]'), true ) );
-		$this->view->assign ( 'types',       DropDown::generateHtml ( 'partner_type_option', 'type_phrase', $params['partner_type_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'importance',  DropDown::generateHtml ( 'partner_importance_option', 'importance_phrase', $params['partner_importance_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'transitions', DropDown::generateHtml ( 'employee_transition_option', 'transition_phrase', $params['employee_transition_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'incomingPartners', DropDown::generateHtml ( 'partner', 'partner', $params['incoming_partner'], false, $this->view->viewonly, false, true, array('name' => 'incoming_partner'), true ) );
-		$this->view->assign ( 'organizers',  DropDown::generateHtml ( 'training_organizer_option', 'training_organizer_phrase', $params['organizer_option_id'], false, $this->view->viewonly, false, true, array('name' => 'organizer_option_id'), true ) );
-		$helper = new Helper();
-		$this->viewAssignEscaped ( 'facilities', $helper->getFacilities() );
-	}
+        $this->view->assign('status', $status);
+        $this->view->assign('pageTitle', $this->view->mode == 'add' ? t('Add Partner') : t('View Partner'));
+        $this->viewAssignEscaped('partner', $params);
+        $this->viewAssignEscaped('locations', Location::getAll());
+        $this->view->assign('partners', DropDown::generateHtml('partner', 'partner', $params['partner_type_option_id'], false, $this->view->viewonly, false)); //table, col, selected_value
+        $this->view->assign('subpartners', DropDown::generateHtml('partner', 'partner', 0, false, $this->view->viewonly, false, true, array('name' => 'subpartner_id[]'), true));
+        $this->view->assign('types', DropDown::generateHtml('partner_type_option', 'type_phrase', $params['partner_type_option_id'], false, $this->view->viewonly, false));
+        $this->view->assign('importance', DropDown::generateHtml('partner_importance_option', 'importance_phrase', $params['partner_importance_option_id'], false, $this->view->viewonly, false));
+        $this->view->assign('transitions', DropDown::generateHtml('employee_transition_option', 'transition_phrase', $params['employee_transition_option_id'], false, $this->view->viewonly, false));
+        $this->view->assign('incomingPartners', DropDown::generateHtml('partner', 'partner', $params['incoming_partner'], false, $this->view->viewonly, false, true, array('name' => 'incoming_partner'), true));
+        $this->view->assign('organizers', DropDown::generateHtml('training_organizer_option', 'training_organizer_phrase', $params['organizer_option_id'], false, $this->view->viewonly, false, true, array('name' => 'organizer_option_id'), true));
+        $helper = new Helper();
+        $this->viewAssignEscaped('facilities', $helper->getFacilities());
+    }
 
 	public function searchAction()
 	{

@@ -89,6 +89,28 @@ class ReportFilterHelpers extends ITechController
     }
 
     /**
+     * gets an associative array of partners by id - filtered by user access
+     * @return array
+     */
+    public function getAvailablePartnersAssoc()
+    {
+        $db = $this->dbfunc();
+        $uid = $this->isLoggedIn();
+        if ($this->hasACL('training_organizer_option_all')) {
+            $select = $db->select()->from('partner', array('id', 'partner'));
+        }
+        else {
+            $select = $db->select()
+                ->from('partner', array('id', 'partner'))
+                ->joinInner('user_to_organizer_access',
+                    'partner.organizer_option_id = user_to_organizer_access.training_organizer_option_id', array())
+                ->where('user_to_organizer_access.user_id = ?', $uid);
+        }
+        $partners = $db->fetchAssoc($select);
+        return $partners;
+
+    }
+    /**
      * @param $params - query criteria
      * @return array containing a Zend_Db_Select object and the column headers for output
      */
