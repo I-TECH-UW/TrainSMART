@@ -267,6 +267,8 @@ class Cohortedit extends ITechTable
 			
 		}
 		
+		$select->where('p.is_deleted=0');//TA:#277
+		
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}

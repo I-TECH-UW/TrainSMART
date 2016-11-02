@@ -51,7 +51,7 @@ class Dashview extends ITechTable
 			);
 			$cohorts = $this->fetchCohorts($row['id']);
 			foreach ($cohorts as $cohort){
-			    if($cohort['active_student'] <=0){//TA:show only cohorts with active students
+			    if($cohort['active_student'] <=0){//TA:show only cohorts with active students //TA:#275 by rule we have to show only cohorts with active students, should we cancel this rule?
 			        continue;
 			    }
 				$output[] = array(
