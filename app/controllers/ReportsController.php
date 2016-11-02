@@ -9991,8 +9991,8 @@ die (__LINE__ . " - " . $sql);
                 if (!array_key_exists('mechanism_option.end_date', $cols)) {
                     $select->columns(array('mechanism_end_date' => 'mechanism_option.end_date'));
                 }
-                if (!array_key_exists('employee.id', $cols)) {
-                    $select->columns(array('employee_code' => 'employee.id'));
+                if (!array_key_exists('employee.employee_code', $cols)) {
+                    $select->columns('employee.employee_code');
                 }
 
                 $c = array_map(

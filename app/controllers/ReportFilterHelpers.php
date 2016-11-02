@@ -1104,7 +1104,6 @@ class ReportFilterHelpers extends ITechController
 
         // labelTwoFields uses the name of the first field for the 'show' checkbox
         if (isset($criteria['show_contractstartdate']) && $criteria['show_contractstartdate']) {
-//            $select->columns('employee.agreement_end_date');
             $select->columns(array('employee.agreement_end_date' => new Zend_Db_Expr("DATE_FORMAT(employee.agreement_end_date, '%d/%m/%Y')")));
 
         }
