@@ -98,6 +98,14 @@ class PartnerController extends ReportFilterHelpers {
                 $status->checkRequired($this, 'hr_contact_phone', t('HR Contact Office Phone'));
                 $status->checkRequired($this, 'hr_contact_email', t('HR Contact Email'));
 
+                if (isset($params['capture_complete']) && $params['capture_complete']) {
+                    $isValid = $status->isValidDateDDMMYYYY('capture_complete_date', t('Data Capture Completion Date'), $params['capture_complete_date']);
+                    if ($isValid) {
+                        $d = DateTime::createFromFormat('d/m/Y', $params['capture_complete_date']);
+                        $params['capture_complete_date'] = $d->format('Y-m-d');
+                    }
+                }
+
     			// location save stuff
     			$params['location_id'] = regionFiltersGetLastID(null, $params);
     			if ($params['city']) {
@@ -105,7 +113,7 @@ class PartnerController extends ReportFilterHelpers {
                         $this->setting('num_location_tiers'));
     			}
     
-    			if (! $status->hasError() ) {
+    			if (!$status->hasError()) {
     				$id = $this->_findOrCreateSaveGeneric('partner', $params);
     
     				if(!$id) {
@@ -119,7 +127,7 @@ class PartnerController extends ReportFilterHelpers {
 		    }
 		}
 		
-		if ($id && !$status->hasError()) { // read data from db
+		if ($id) { // read data from db
 
             $row = $db->fetchRow($db->select()->from('partner')->where('id = ?', $id));
 			if (! $row) {
@@ -127,6 +135,13 @@ class PartnerController extends ReportFilterHelpers {
             }
 			else {
 				$params = $row; // reassign form data
+
+                $params['capture_complete'] = false;
+                if (isset($params['capture_complete_date']) && $params['capture_complete_date']) {
+                    $d = DateTime::createFromFormat('Y-m-d', $params['capture_complete_date']);
+                    $params['capture_complete_date'] = $d->format('d/m/Y');
+                    $params['capture_complete'] = true;
+                }
 
 				$region_ids = Location::getCityInfo($params['location_id'], $this->setting('num_location_tiers'));
 				$params['city'] = $region_ids[0];
@@ -189,19 +204,12 @@ class PartnerController extends ReportFilterHelpers {
             $this->view->viewonly = true;
         }
 		// assign form drop downs
+        $this->view->assign('required_fields', array('partner', 'address1', 'city', 'province_id', 'hr_contact_name', 'hr_contact_phone', 'hr_contact_email', 'capture_complete_date'));
         $this->view->assign('status', $status);
         $this->view->assign('pageTitle', $this->view->mode == 'add' ? t('Add Partner') : t('View Partner'));
         $this->viewAssignEscaped('partner', $params);
         $this->viewAssignEscaped('locations', Location::getAll());
-        $this->view->assign('partners', DropDown::generateHtml('partner', 'partner', $params['partner_type_option_id'], false, $this->view->viewonly, false)); //table, col, selected_value
-        $this->view->assign('subpartners', DropDown::generateHtml('partner', 'partner', 0, false, $this->view->viewonly, false, true, array('name' => 'subpartner_id[]'), true));
-        $this->view->assign('types', DropDown::generateHtml('partner_type_option', 'type_phrase', $params['partner_type_option_id'], false, $this->view->viewonly, false));
-        $this->view->assign('importance', DropDown::generateHtml('partner_importance_option', 'importance_phrase', $params['partner_importance_option_id'], false, $this->view->viewonly, false));
-        $this->view->assign('transitions', DropDown::generateHtml('employee_transition_option', 'transition_phrase', $params['employee_transition_option_id'], false, $this->view->viewonly, false));
-        $this->view->assign('incomingPartners', DropDown::generateHtml('partner', 'partner', $params['incoming_partner'], false, $this->view->viewonly, false, true, array('name' => 'incoming_partner'), true));
         $this->view->assign('organizers', DropDown::generateHtml('training_organizer_option', 'training_organizer_phrase', $params['organizer_option_id'], false, $this->view->viewonly, false, true, array('name' => 'organizer_option_id'), true));
-        $helper = new Helper();
-        $this->viewAssignEscaped('facilities', $helper->getFacilities());
     }
 
 	public function searchAction()

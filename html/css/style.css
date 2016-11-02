@@ -1356,8 +1356,7 @@ table {
 	max-width:250px;
 }
 
-.form_employee input[type="text"],
-.datepicker {
+.form_employee input[type="text"] .datepicker {
 	max-width: 100px;
 	min-width: 100px;
 	width:100px;

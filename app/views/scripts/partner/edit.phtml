@@ -62,6 +62,35 @@
             clear: left;
         }
     </style>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            itech_save_confirm_on_leave();
+            $('.datepicker').datepicker({dateFormat: "dd/mm/yy"});
+            $('.calendarbtn').click(openNearestDatePicker);
+            /* Init the table */
+            var oTable = $('.tablegrid').dataTable({
+                "bJQueryUI": true,
+                "bPaginate": false,
+                "bSort": true,
+                "bInfo": false,
+                "bFilter": false,
+                "bAutoWidth": false
+            });
+            toggleRequired(document.getElementById("capture_complete"));
+        });
+        function toggleSubpartners(btn) {
+            var $button = $(btn);
+
+            var $div = $button.siblings('div');
+
+            var btnText = $div.is(":visible") ? '+' : '-';
+            $button.val(btnText);
+            $div.slideToggle(500);
+        }
+        function toggleRequired(item) {
+            $(item).next(".fieldLabel").children().first().toggle(item.checked);
+        }
+    </script>
 </head>
 <body class="yui-skin-sam">
 
@@ -82,7 +111,7 @@
             endif; // fi historyDiv
 
             require_once('views/helpers/DropDown.php');
-            $this->required_fields = array('partner', 'address1', 'city', 'province_id', 'hr_contact_name', 'hr_contact_phone', 'hr_contact_email');
+
 
             if ($this->mode != 'add') {
                 echo labelAndField($this, t('Partner') . space . t('ID'), 'text', 'id', $this->partner['id']);
@@ -104,42 +133,12 @@
             echo labelAndField($this, t('HR Contact Email'), 'text', 'hr_contact_email', $this->partner['hr_contact_email']);
 
 
-            //echo labelAndField($this, t('Completed Data Capture'), $this->formCheckbox())
             ?>
 
             <div class="fieldLabel"><?php tp('Completed Data Capture'); ?></div>
-            <?php echo $this->formCheckbox('capture_complete', $this->capture_complete, array('class' => 'fieldInput')); ?>
-
-        <script type="text/javascript">
-
-                $(document).ready(function () {
-
-                    itech_save_confirm_on_leave();
-                    <?php if ($this->setting['display_employee_funder']) { ?>
-
-                    /* Init the table */
-                    oTable = $('.tablegrid').dataTable({
-                        "bJQueryUI": true,
-                        "bPaginate": false,
-                        "bSort": true,
-                        "bInfo": false,
-                        "bFilter": false,
-                        "bAutoWidth": false
-                    });
-
-                    <?php } ?>
-
-                });
-                function toggleSubpartners(btn) {
-                    var $butt = $(btn);
-
-                    var $div = $butt.siblings('div');
-
-                    var btnText = $div.is(":visible") ? '+' : '-';
-                    $butt.val(btnText);
-                    $div.slideToggle(500);
-                }
-            </script>
+            <?php echo $this->formCheckbox('capture_complete', $this->partner['capture_complete'],
+                array('class' => 'fieldInput', 'onclick' => 'toggleRequired(this)', 'checked' => $this->partner['capture_complete'] ? true : false)); ?>
+            <?php echo labelAndField($this, t('Data Capture Completion Date'), 'date', 'capture_complete_date', $this->partner['capture_complete_date']); ?>
             <br/>
 
             <?php

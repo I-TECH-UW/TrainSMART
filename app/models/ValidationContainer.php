@@ -80,6 +80,32 @@ class ValidationContainer {
 		return $rtn;
 	}
 
+	public function isValidDateDDMMYYYY($fieldName, $textName, $dateString) {
+        $errorMessage = null;
+        try {
+            $date = DateTime::createFromFormat('d/m/Y', $dateString);
+        }
+        catch (Exception $e) {
+            $errorMessage = $textName . ' ' . t('is not a valid date');
+        }
+
+        // But wait, there's more! DateTime can interpret the date into a different day without
+        // throwing an exception.
+        if (!$errorMessage) {
+            $errors = DateTime::getLastErrors();
+            if (count($errors) && ((isset($errors['warning_count']) && $errors['warning_count'] > 0) ||
+                    (isset($errors['error_count']) && $errors['error_count']) > 0)) {
+                $errorMessage = $textName . ' ' . t('is not a valid date');
+            }
+        }
+
+        if ($errorMessage) {
+            $this->addError($fieldName, $errorMessage);
+            return false;
+        }
+        return true;
+    }
+
 	public function hasError() {
 		return count($this->messages);
 	}
