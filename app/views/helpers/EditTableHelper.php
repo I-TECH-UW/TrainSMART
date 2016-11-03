@@ -107,9 +107,17 @@ class EditTableHelper {
                 $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) .
                 '", width:15, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
                 
-            }else{
+            }else if($key == 'training_start_date'){//TA:#278 => The best way to add column width
+                $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) .
+                '", width:50, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+                
+            }else if($key == 'creator' || $key == 'creator_name' || $key == 'first_name' || $key == 'last_name'){//TA:#278 => The best way to add column width
+                $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) .
+                '", width:100, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+                
+            }else{//TA if width is not working then use above way (//TA:#278) how to set up column width
 			 $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) . 
-			 '", width:'.($key == 'first_name'?80:$key == 'last_name'?80:$key == 'facility_name'?80:$key == 'training_title'?120:(strlen($lbl)*6)).', resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+			 '", width:'.($key == 'facility_name'?80:$key == 'training_title'?120:(strlen($lbl)*6)).', resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
             }
 		}
 
