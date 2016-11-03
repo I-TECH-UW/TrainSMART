@@ -3235,32 +3235,38 @@ class AdminController extends UserController
 		if($this->getRequest()->isPost()) { // Update db
 			$updateData = array();
 
+            $params = $this->getAllParams();
 			// update translation labels
-			$tranTable = new Translation();
-			foreach($labelNames as $input_key => $db_key) {
+            if (isset($params['reset_capture_dates']) && $params['reset_capture_dates']) {
+                $db = $this->dbfunc();
+                $db->update('partner', array('capture_complete_date' => null));
+            }
+            else {
+                $tranTable = new Translation();
+                foreach ($labelNames as $input_key => $db_key) {
 
-				if ( $this->getParam($input_key) ) {
-					try {
-						$tranTable->update(
-							array('phrase' => $this->getParam($input_key)),
-							"key_phrase = '$db_key'"
-						);
-						$this->viewAssignEscaped($input_key, $this->getParam($input_key));
-					} catch(Zend_Exception $e) {
-						error_log($e);
-					}
-				}
-			}
-			// update _system (checkboxes)
-			foreach($checkboxFields as $input_key => $db_field) {
-				$value = ($this->getParam($input_key) == NULL) ? 0 : 1;
-				$updateData[$db_field] = $value;
-				$this->view->assign($input_key, $value);
-			}
-			$updateData['employee_header'] = $this->getParam('employee_header');
-			$this->view->assign('employee_header', $this->getParam('employee_header') ? $this->getParam('employee_header') : '');
-			$sysTable->update($updateData, '');
-
+                    if (isset($params[$input_key]) && $params[$input_key]) {
+                        try {
+                            $tranTable->update(
+                                array('phrase' => $params[$input_key]),
+                                "key_phrase = '$db_key'"
+                            );
+                            $this->viewAssignEscaped($input_key, $params[$input_key]);
+                        } catch (Zend_Exception $e) {
+                            error_log($e);
+                        }
+                    }
+                }
+                // update _system (checkboxes)
+                foreach ($checkboxFields as $input_key => $db_field) {
+                    $value = ($params[$input_key] == NULL) ? 0 : 1;
+                    $updateData[$db_field] = $value;
+                    $this->view->assign($input_key, $value);
+                }
+                $updateData['employee_header'] = $params['employee_header'];
+                $this->view->assign('employee_header', $params['employee_header'] ? $params['employee_header'] : '');
+                $sysTable->update($updateData, '');
+            }
 		} else { // view
 			// checkboxes
 			$sysRows = $sysTable->fetchRow($sysTable->select()->limit(1));

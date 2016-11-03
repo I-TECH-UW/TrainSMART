@@ -24,18 +24,33 @@ ob_end_clean();
 	print ScriptContainer::$instance->renderCSSHead();
 	print ScriptContainer::$instance->renderJSHead();
 	?>
+	<script type="text/javascript" charset="utf-8">
+		function confirmDateDeletion() {
+			if (confirm('Do you want to reset all partner completion dates?')) {
+				document.forms[0].submit();
+				return true;
+			}
+			return false;
+		}
+	</script>
 </head>
 <body  class="yui-skin-sam">
 	<div id="pageHolder">
 		<div id="header"><?php echo $header; ?></div>
 		<div id="content" class="adminDiv">
 
-			<form method="post" name="adminForm">
 
 			<div id="navAdmin"><?php echo $nav;?></div>
 
 			<div id="contentAdmin">
 				<h1><?php echo t($this->pageTitle); ?></h1>
+
+				<form method="post" name="clearDates">
+					<input type="submit" class="button" onclick="return confirmDateDeletion();" name="reset_capture_dates" value="Reset Partner Data Capture Completion Date">
+				</form>
+				<br/>
+
+				<form method="post" name="adminForm">
 
 			<table class="settings">
 				<thead>
@@ -63,6 +78,7 @@ ob_end_clean();
 					<td></td></tr>
 
 
+					<tr><td class="fieldTitle">Currency</td>
 					<td></td>
 					<td><input type="text" name="label_currency" value="<?php echo $this->label_currency; ?>"></td>
 					<td></td></tr>
