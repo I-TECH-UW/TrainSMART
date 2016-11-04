@@ -98,12 +98,10 @@ class PartnerController extends ReportFilterHelpers {
                 $status->checkRequired($this, 'hr_contact_phone', t('HR Contact Office Phone'));
                 $status->checkRequired($this, 'hr_contact_email', t('HR Contact Email'));
 
-                if (isset($params['capture_complete']) && $params['capture_complete']) {
-                    $isValid = $status->isValidDateDDMMYYYY('capture_complete_date', t('Data Capture Completion Date'), $params['capture_complete_date']);
-                    if ($isValid) {
-                        $d = DateTime::createFromFormat('d/m/Y', $params['capture_complete_date']);
-                        $params['capture_complete_date'] = $d->format('Y-m-d');
-                    }
+                $isValid = $status->isValidDateDDMMYYYY('capture_complete_date', t('Data Capture Completion Date'), $params['capture_complete_date']);
+                if ($isValid) {
+                    $d = DateTime::createFromFormat('d/m/Y', $params['capture_complete_date']);
+                    $params['capture_complete_date'] = $d->format('Y-m-d');
                 }
 
     			// location save stuff
@@ -127,7 +125,7 @@ class PartnerController extends ReportFilterHelpers {
 		    }
 		}
 		
-		if ($id) { // read data from db
+		else if ($id) { // read data from db
 
             $row = $db->fetchRow($db->select()->from('partner')->where('id = ?', $id));
 			if (! $row) {
@@ -136,11 +134,11 @@ class PartnerController extends ReportFilterHelpers {
 			else {
 				$params = $row; // reassign form data
 
-                $params['capture_complete'] = false;
+                $params['capture_complete'] = 0;
                 if (isset($params['capture_complete_date']) && $params['capture_complete_date']) {
                     $d = DateTime::createFromFormat('Y-m-d', $params['capture_complete_date']);
                     $params['capture_complete_date'] = $d->format('d/m/Y');
-                    $params['capture_complete'] = true;
+                    $params['capture_complete'] = 1;
                 }
 
 				$region_ids = Location::getCityInfo($params['location_id'], $this->setting('num_location_tiers'));

@@ -89,6 +89,7 @@
         }
         function toggleRequired(item) {
             $(item).next(".fieldLabel").children().first().toggle(item.checked);
+            return true;
         }
     </script>
 </head>
@@ -137,7 +138,7 @@
 
             <div class="fieldLabel"><?php tp('Completed Data Capture'); ?></div>
             <?php echo $this->formCheckbox('capture_complete', $this->partner['capture_complete'],
-                array('class' => 'fieldInput', 'onclick' => 'toggleRequired(this)', 'checked' => $this->partner['capture_complete'] ? true : false)); ?>
+                array('class' => 'fieldInput', 'onclick' => 'toggleRequired(this);', 'checked' => $this->partner['capture_complete'] ? "1" : "0", 'disableHidden' => true)); ?>
             <?php echo labelAndField($this, t('Data Capture Completion Date'), 'date', 'capture_complete_date', $this->partner['capture_complete_date']); ?>
             <br/>
 
