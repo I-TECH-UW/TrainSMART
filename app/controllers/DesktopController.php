@@ -212,7 +212,7 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 		require_once('models/table/Helper.php');
 		$helper = new Helper();
 		
-		$litedb->update('_app', array('user_id' => $helper->myid()), 'id = 0');
+		$litedb->update('_app', array('user_id' => $helper->myid(), 'init_timestamp' => date("Y-m-d")), 'id = 0');
 		
 		//$liteSysTable = new System(array( Zend_Db_Table_Abstract::ADAPTER => $litedb));
 		//$liteSysTable->select('*');

@@ -95,9 +95,12 @@ class DataController extends ITechController {
    ->from('person', array('count(*) as count')) //TA:#245 NEW code, if we need just participants count for each training
   // ->from('person', array('id', 'first_name', 'middle_name', 'last_name')) 
    ->setIntegrityCheck(false)
-   ->join(array('pt'=>'person_to_training'), "pt.person_id = person.id", array('training_id'))
-   ->where("training_id in (" . $this->getSanParam('ids') . ")")//new, it makes sence to leave it to take just trainings from the list not all of them
-   ->group("training_id");//new
+   ->join(array('pt'=>'person_to_training'), "pt.person_id = person.id", array('training_id'));
+   //TA:#287
+   if($this->getSanParam('ids')){
+        $select->where("training_id in (" . $this->getSanParam('ids') . ")");//new, it makes sence to leave it to take just trainings from the list not all of them
+   }
+   $select->group("training_id");//new
    
    $rows = $table->fetchAll($select);
    
@@ -142,9 +145,12 @@ foreach($rows as $row) {
    ->from('training_to_trainer', array('training_id'))
    ->setIntegrityCheck(false)
    //->join(array('p'=>'person'), "training_to_trainer.trainer_id = p.id", array('id', 'first_name', 'middle_name', 'last_name'))
-   ->join(array('p'=>'person'), "training_to_trainer.trainer_id = p.id", array('count(*) as count')) //TA:#245
-   ->where("training_id in (" . $this->getSanParam('ids') . ")")//TA:#245 it makes sence to leave it to take just trainings from the list not all of them
-   ->group("training_id");//TA:#245 remove it if they want to show persons names;
+   ->join(array('p'=>'person'), "training_to_trainer.trainer_id = p.id", array('count(*) as count')); //TA:#245
+   //TA:#287
+   if($this->getSanParam('ids')){
+        $select->where("training_id in (" . $this->getSanParam('ids') . ")");//TA:#245 it makes sence to leave it to take just trainings from the list not all of them
+   }
+   $select->group("training_id");//TA:#245 remove it if they want to show persons names;
    $rows = $table->fetchAll($select);
    
 //    foreach($rows as $row) {
