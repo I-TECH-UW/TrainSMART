@@ -179,6 +179,7 @@ id in (select personid from tutor where institutionid=" . $inst_id . ")) " ;
 		    $where .= " AND birthdate = '". @$ld->birthdate . "' ";
 		if(@$ld->facility_id)
 	           $where .= " AND facility_id = ". @$ld->facility_id;
+		$where .= " AND is_deleted = 0"; //TA:1000
  		$rows = $this->getRightTable()->fetchAll($where);
         if($rows->toArray()) {
             if(count($rows->toArray()) > 1){
