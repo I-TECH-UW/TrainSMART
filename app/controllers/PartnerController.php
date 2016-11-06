@@ -98,11 +98,18 @@ class PartnerController extends ReportFilterHelpers {
                 $status->checkRequired($this, 'hr_contact_phone', t('HR Contact Office Phone'));
                 $status->checkRequired($this, 'hr_contact_email', t('HR Contact Email'));
 
-                $isValid = $status->isValidDateDDMMYYYY('capture_complete_date', t('Data Capture Completion Date'), $params['capture_complete_date']);
-                if ($isValid) {
-                    $d = DateTime::createFromFormat('d/m/Y', $params['capture_complete_date']);
-                    $params['capture_complete_date'] = $d->format('Y-m-d');
+                $status->isAcceptableSAPhoneNumber('hr_contact_phone', t('HR Contact Office Phone'), $params['hr_contact_phone']);
+
+                if (isset($params['hr_contact_fax']) && $params['hr_contact_fax']) {
+                    $status->isAcceptableSAPhoneNumber('hr_contact_fax', t('HR Contact Office Fax'), $params['hr_contact_fax']);
                 }
+
+                if (isset($params['hr_contact_email']) && $params['hr_contact_email'] &&
+                    !(strstr($params['hr_contact_email'], '@'))) {
+                    $status->addError('hr_contact_email', t('HR Contact Email') . ' ' . t('invalid email address format.'));
+                }
+
+                $isValidDate = $status->isValidDateDDMMYYYY('capture_complete_date', t('Data Capture Completion Date'), $params['capture_complete_date']);
 
     			// location save stuff
     			$params['location_id'] = regionFiltersGetLastID(null, $params);
@@ -112,6 +119,10 @@ class PartnerController extends ReportFilterHelpers {
     			}
     
     			if (!$status->hasError()) {
+                    if ($isValidDate) {
+                        $d = DateTime::createFromFormat('d/m/Y', $params['capture_complete_date']);
+                        $params['capture_complete_date'] = $d->format('Y-m-d');
+                    }
     				$id = $this->_findOrCreateSaveGeneric('partner', $params);
     
     				if(!$id) {

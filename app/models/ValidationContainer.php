@@ -51,6 +51,18 @@ class ValidationContainer {
 		return true;
 	}
 
+	public function isAcceptableSAPhoneNumber($fieldName, $textName, $value) {
+
+        $phNumber = str_replace(' ', '', $value);
+        if ((strlen($phNumber) == 10) && ctype_digit($phNumber)) {
+            return true;
+        }
+        else {
+            $this->addError($fieldName, $textName . ' ' . t('is not an accepted phone number format.'));
+            return false;
+        }
+    }
+
 	public function isValidDate($controller, $fieldname, $textName, $dateString) {
 		require_once('Zend/Date.php');
 
