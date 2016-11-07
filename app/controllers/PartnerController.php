@@ -109,7 +109,9 @@ class PartnerController extends ReportFilterHelpers {
                     $status->addError('hr_contact_email', t('HR Contact Email') . ' ' . t('invalid email address format.'));
                 }
 
-                $isValidDate = $status->isValidDateDDMMYYYY('capture_complete_date', t('Data Capture Completion Date'), $params['capture_complete_date']);
+                if (isset($params['capture_complete']) && $params['capture_complete']) {
+                    $isValidDate = $status->isValidDateDDMMYYYY('capture_complete_date', t('Data Capture Completion Date'), $params['capture_complete_date']);
+                }
 
     			// location save stuff
     			$params['location_id'] = regionFiltersGetLastID(null, $params);
