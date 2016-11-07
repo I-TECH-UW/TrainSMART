@@ -113,43 +113,43 @@ or
 id in (select personid from tutor where institutionid=" . $inst_id . ")) " ;
 	    
 	    if($inst_id){
-	        $where = $fn . " and " . $ln . " and " . $inst;
+	        $where = $fn . " and " . $ln . " and " . $inst . " and is_deleted=0";
 	        $row = $this->getRightTable()->fetchRow($where);
 	        if(!$row) {
-	            $where = $fn . " and " . $mn . " and " . $inst;
+	            $where = $fn . " and " . $mn . " and " . $inst . " and is_deleted=0";
 	            $row = $this->getRightTable()->fetchRow($where);
 	        }
 	        if(!$row) {
-	            $where = $ln . " and " . $mn . " and " . $inst;
+	            $where = $ln . " and " . $mn . " and " . $inst . " and is_deleted=0";
 	            $row = $this->getRightTable()->fetchRow($where);
 	        }
 	        if(!$row) {
-	            $where = $fn . " and " . $dob . " and " . $inst;
+	            $where = $fn . " and " . $dob . " and " . $inst . " and is_deleted=0";
 	            $row = $this->getRightTable()->fetchRow($where);
 	        }
 	        if(!$row) {
-	            $where = $ln . " and " . $dob . " and " . $inst;
+	            $where = $ln . " and " . $dob . " and " . $inst . " and is_deleted=0";
 	            $row = $this->getRightTable()->fetchRow($where);
 	        }
 	        if(!$row) {
-	            $where = $mn . " and " . $dob . " and " . $inst;
+	            $where = $mn . " and " . $dob . " and " . $inst . " and is_deleted=0";
 	            $row = $this->getRightTable()->fetchRow($where);
 	        }
 	    }else{
 	        if(!$row) {
-	           $where = $fn . " and " . $ln . " and " . $mn;
+	           $where = $fn . " and " . $ln . " and " . $mn . " and is_deleted=0";
 	           $row = $this->getRightTable()->fetchRow($where);
 	        }
 	        if(!$row) {
-	            $where = $fn . " and " . $ln . " and " . $dob;
+	            $where = $fn . " and " . $ln . " and " . $dob . " and is_deleted=0";
 	            $row = $this->getRightTable()->fetchRow($where);
 	        }
 	        if(!$row) {
-	            $where = $fn . " and " . $mn . " and " . $dob;
+	            $where = $fn . " and " . $mn . " and " . $dob . " and is_deleted=0";
 	            $row = $this->getRightTable()->fetchRow($where);
 	        }
 	        if(!$row) {
-	            $where = $ln . " and " . $mn . " and " . $dob;
+	            $where = $ln . " and " . $mn . " and " . $dob . " and is_deleted=0";
 	            $row = $this->getRightTable()->fetchRow($where);
 	        }
 	    }
@@ -179,6 +179,8 @@ id in (select personid from tutor where institutionid=" . $inst_id . ")) " ;
 		    $where .= " AND birthdate = '". @$ld->birthdate . "' ";
 		if(@$ld->facility_id)
 	           $where .= " AND facility_id = ". @$ld->facility_id;
+		if(@$ld->gender)//TA:1000
+		    $where .= " AND gender = '". @$ld->gender. "' ";
 		$where .= " AND is_deleted = 0"; //TA:1000
  		$rows = $this->getRightTable()->fetchAll($where);
         if($rows->toArray()) {
@@ -187,6 +189,7 @@ id in (select personid from tutor where institutionid=" . $inst_id . ")) " ;
                 ", middle_name=" . @$ld->middle_name .
                 ", last_name=" . @$ld->last_name .
                 ", birthdate=" . @$ld->birthdate .
+                ", gender=" . @$ld->gender .
                 ", facility_id=" . @$ld->facility_id;
                 $this->log = $this->log . "CONFLICT: " . $message . "\n";
                 return $message;
