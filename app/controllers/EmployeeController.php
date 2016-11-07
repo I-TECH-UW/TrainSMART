@@ -334,14 +334,10 @@ class EmployeeController extends ReportFilterHelpers {
     			$params['option_nationality_id']    = $params['lookup_nationalities_id'];
     			$params['facility_type_option_id']  = $params['employee_site_type_option_id'];
     			$params['race_option_id']           = $params['person_race_option_id'];
-    
-    			// $status->checkRequired ( $this, 'first_name', t ( 'Frist Name' ) );
-    			// $status->checkRequired ( $this, 'last_name',  t ( 'Last Name' ) );
-    			
+
     			$status->checkRequired ( $this, 'employee_code', t('Employee Code'));
     			
-    			//$status->checkRequired ( $this, 'dob', t ( 'Date of Birth' ) );//TA:18: 08/28/2014 (DOB field is not required)
-    			
+    			$status->checkRequired($this, 'facilityInput', t('Site') . ' ' . t('Name'));
     			if($this->setting('display_employee_nationality'))
     				$status->checkRequired ( $this, 'lookup_nationalities_id', t('Employee Nationality'));
     			
@@ -493,7 +489,7 @@ class EmployeeController extends ReportFilterHelpers {
 		$titlesArray = OptionList::suggestionList ( 'person_title_option', 'title_phrase', false, 9999);
 		$this->view->assign ( 'titles',      DropDown::render('title_option_id', $this->translation['Title'], $titlesArray, 'title_phrase', 'id', $params['title_option_id'] ) );
 		
-		$this->view->assign ( 'partners',    DropDown::generateHtml   ( 'partner', 'partner', $params['partner_id'], false, !$this->hasACL("edit_employee"), $this->getAvailablePartners(), false, array("onchange" => "availableMechanisms();") ) );
+		$this->view->assign ( 'partners',    DropDown::generateHtml   ( 'partner', 'partner', $params['partner_id'], false, !$this->hasACL("edit_employee"), array_keys($this->getAvailablePartnersAssoc()), false, array("onchange" => "availableMechanisms();") ) );
 		
 		$this->view->assign ( 'bases',       DropDown::generateHtml   ( 'employee_base_option', 'base_phrase', $params['employee_base_option_id'], false, !$this->hasACL("edit_employee")) );
 		$this->view->assign ( 'site_types',  DropDown::generateHtml   ( 'employee_site_type_option', 'site_type_phrase', $params['facility_type_option_id'], false, !$this->hasACL("edit_employee")) );
@@ -518,31 +514,31 @@ class EmployeeController extends ReportFilterHelpers {
 		$this->view->assign('employeeMechanisms', $employeeMechanisms);
 	}
 
-	public function searchAction()
-	{
-		$this->view->assign('pageTitle', 'Search Employees');
-		if (! $this->hasACL ( 'employees_module' )) {
-			$this->doNoAccessError ();
-		}
+    public function searchAction()
+    {
+        $this->view->assign('pageTitle', 'Search Employees');
+        if (!$this->hasACL('employees_module')) {
+            $this->doNoAccessError();
+        }
 
-		$criteria = $this->getAllParams();
+        $criteria = $this->getAllParams();
 
-		if ($criteria['go'])
-		{
-			// process search
-			$where = array();
+        $locations = Location::getAll();
+        if ($criteria['go']) {
+            // process search
+            $where = array();
 
-			list($a, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
-			list($locationFlds, $locationsubquery) = Location::subquery($this->setting('num_location_tiers'), $location_tier, $location_id, true);
+            list($a, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
+            list($locationFlds, $locationsubquery) = Location::subquery($this->setting('num_location_tiers'), $location_tier, $location_id, true);
 
-			$sql = "SELECT DISTINCT
+            $sql = "SELECT DISTINCT
     employee.id,
     employee.employee_code,
     employee.gender,
     employee.national_id,
     employee.other_id,
     employee.location_id,
-    ".implode(',',$locationFlds).",
+    " . implode(',', $locationFlds) . ",
     CONCAT(supervisor.first_name,
     CONCAT(' ', supervisor.last_name)) as supervisor,
     qual.qualification_phrase as staff_cadre,
@@ -565,63 +561,60 @@ LEFT JOIN 	partner_funder_option on mechanism_option.funder_id = partner_funder_
 LEFT JOIN   link_mechanism_partner on link_mechanism_partner.mechanism_option_id = mechanism_option.id
 LEFT JOIN   partner subpartner on subpartner.id = link_mechanism_partner.partner_id
 ";
-			#if ($criteria['partner_id']) $sql    .= ' INNER JOIN partner_to_subpartner subp ON partner.id = ' . $criteria['partner_id'];
+            #if ($criteria['partner_id']) $sql    .= ' INNER JOIN partner_to_subpartner subp ON partner.id = ' . $criteria['partner_id'];
 
-			// restricted access?? only show partners by organizers that we have the ACL to view
-			$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'
-			if($org_allowed_ids)
-				$where[] = " partner.organizer_option_id in ($org_allowed_ids) ";
+            // restricted access?? only show partners by organizers that we have the ACL to view
+            $org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'
+            if ($org_allowed_ids)
+                $where[] = " partner.organizer_option_id in ($org_allowed_ids) ";
 
-			if ($locationWhere = $this->getLocationCriteriaWhereClause($criteria, '', '')) {
-				$where[] = $locationWhere;
-			}
+            if ($locationWhere = $this->getLocationCriteriaWhereClause($criteria, '', '')) {
+                $where[] = $locationWhere;
+            }
 
-			// if ($criteria['first_name'])                        $where[] = "employee.first_name   = '{$criteria['first_name']}'";
-			// if ($criteria['last_name'])                         $where[] = "employee.last_name    = '{$criteria['last_name']}'";
-			if ($criteria['employee_code'])                        $where[] = "employee.employee_code    like '%{$criteria['employee_code']}%'";
-			
-			if ($criteria['partner_id'])                        $where[] = 'employee.partner_id   = '.$criteria['partner_id']; //todo
-			
-			if ($criteria['facilityInput'])                     $where[] = 'employee.site_id      = '.$criteria['facilityInput'];
-			if ($criteria['employee_qualification_option_id'])  $where[] = 'employee.employee_qualification_option_id    = '.$criteria['employee_qualification_option_id'];
-			if ($criteria['category_option_id'])                $where[] = 'employee.staff_category_id = '.$criteria['category_option_id'];
+            // if ($criteria['first_name'])                        $where[] = "employee.first_name   = '{$criteria['first_name']}'";
+            // if ($criteria['last_name'])                         $where[] = "employee.last_name    = '{$criteria['last_name']}'";
+            if ($criteria['employee_code']) $where[] = "employee.employee_code    like '%{$criteria['employee_code']}%'";
 
-			if ( count ($where) )
-				$sql .= ' WHERE ' . implode(' AND ', $where);
-			
-			$sql .= ' GROUP BY employee.id ';
-			
-			$db = $this->dbfunc();
-			$rows = $db->fetchAll( $sql );
+            if ($criteria['partner_id']) $where[] = 'employee.partner_id   = ' . $criteria['partner_id']; //todo
 
-			$locations = Location::getAll();
-			// hack #TODO - seems Region A -> ASDF, Region B-> *Multiple Province*, Region C->null Will not produce valid locations with Location::subquery
-			// the proper solution is to add "Default" districts under these subdistricts, not sure if i can at this point the table is 12000 rows, todo later
-			foreach ($rows as $i => $row) {
-				if ($row['province_id'] == "" && $row['location_id']){ // empty province
-					$updatedRegions = Location::getCityandParentNames($row['location_id'], $locations, $this->setting('num_location_tiers'));
-					$rows[$i] = array_merge($row, $updatedRegions);
-				}
-			}
+            if ($criteria['facilityInput']) $where[] = 'employee.site_id      = ' . $criteria['facilityInput'];
+            if ($criteria['employee_qualification_option_id']) $where[] = 'employee.employee_qualification_option_id    = ' . $criteria['employee_qualification_option_id'];
+            if ($criteria['category_option_id']) $where[] = 'employee.staff_category_id = ' . $criteria['category_option_id'];
 
-			$this->viewAssignEscaped('results', $rows);
-			$this->viewAssignEscaped('count', count($rows));
+            if (count($where))
+                $sql .= ' WHERE ' . implode(' AND ', $where);
 
-			if ($criteria ['outputType'] && $rows) {
-				$this->sendData ( $this->reportHeaders ( false, $rows ) );
-			}
-		}
-		// assign form drop downs
-		$helper = new Helper();
+            $sql .= ' GROUP BY employee.id ';
 
-		$this->viewAssignEscaped ( 'criteria', $criteria );
-		$this->viewAssignEscaped ( 'locations', $locations );
-		$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, array_keys($this->getAvailablePartnersAssoc())));
-		
-		$this->view->assign ( 'cadres',      DropDown::generateHtml ( 'employee_qualification_option', 'qualification_phrase', $criteria['employee_qualification_option_id'], false, $this->view->viewonly, false ) );
-		$this->viewAssignEscaped ( 'sites', $helper->getFacilities() );
-		$this->view->assign ( 'categories',  DropDown::generateHtml ( 'employee_category_option', 'category_phrase', $criteria['employee_category_option_id'], false, $this->view->viewonly, false ) );
-	}
+            $db = $this->dbfunc();
+            $rows = $db->fetchAll($sql);
+
+            // hack #TODO - seems Region A -> ASDF, Region B-> *Multiple Province*, Region C->null Will not produce valid locations with Location::subquery
+            // the proper solution is to add "Default" districts under these subdistricts, not sure if i can at this point the table is 12000 rows, todo later
+            foreach ($rows as $i => $row) {
+                if ($row['province_id'] == "" && $row['location_id']) { // empty province
+                    $updatedRegions = Location::getCityandParentNames($row['location_id'], $locations, $this->setting('num_location_tiers'));
+                    $rows[$i] = array_merge($row, $updatedRegions);
+                }
+            }
+
+            $this->viewAssignEscaped('results', $rows);
+            $this->viewAssignEscaped('count', count($rows));
+
+            if ($criteria ['outputType'] && $rows) {
+                $this->sendData($this->reportHeaders(false, $rows));
+            }
+        }
+        // assign form drop downs
+        $helper = new Helper();
+
+        $this->viewAssignEscaped('criteria', $criteria);
+        $this->viewAssignEscaped('locations', $locations);
+        $this->view->assign('partners', DropDown::generateHtml('partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, array_keys($this->getAvailablePartnersAssoc())));
+
+        $this->view->assign('cadres', DropDown::generateHtml('employee_qualification_option', 'qualification_phrase', $criteria['employee_qualification_option_id'], false, $this->view->viewonly, false));
+        $this->viewAssignEscaped('sites', $helper->getFacilities());
+        $this->view->assign('categories', DropDown::generateHtml('employee_category_option', 'category_phrase', $criteria['employee_category_option_id'], false, $this->view->viewonly, false));
+    }
 }
-
-?>

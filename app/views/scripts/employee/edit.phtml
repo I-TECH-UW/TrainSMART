@@ -56,7 +56,7 @@
 						endif; // fi historyDiv
 
 
-						$this->required_fields = array('employee_code', 'partner_id', 'based_at', 'select_employee_qualification_option','salary','benefits','additional_expenses','stipend','employee_transition_option_id', 'select_employee_role_option', 'disability_option_id', 'disability_comments', 'funded_hours_per_week', 'agreement_end_date');
+						$this->required_fields = array('employee_code', 'partner_id', 'based_at', 'select_employee_qualification_option','salary','benefits','additional_expenses','stipend','employee_transition_option_id', 'select_employee_role_option', 'disability_option_id', 'disability_comments', 'funded_hours_per_week', 'agreement_end_date', 'facilityInput');
 
 						if (! $this->hasACL('edit_employee'))
 						{
@@ -98,14 +98,12 @@
 						if($this->setting['display_employee_base'])
 						echo labelAndField($this, t('Employee Based at'), $this->bases, 'based_at');
 						region_filters_dropdown( $this, $this->locations, $this->employee, false, false, '', true );
-						if($this->setting['display_employee_site_name']) {
-							$facDropDown = renderFacilityDropDown($this->facilities, $this->employee['site_id'], $this->viewonly);
-							if ($this->hasACL ( 'edit_facility' )) {
-								$facDropDown .= '<a href="'.$this->base_url.'/site/add">'.t('Insert a New').space.t('Site').'</a> ';
-								$facDropDown .= '<a href="'.$this->base_url.'/site/search">'.t('View/Edit').space.t('Site').'</a>'; // need to put the links inside of the div so they dont wrap to the next line
-							}
-							echo labelAndField($this, t('Site').space.t('Name'), $facDropDown, 'site');
+						$facDropDown = renderFacilityDropDown($this->facilities, $this->employee['site_id'], $this->viewonly);
+						if ($this->hasACL ( 'edit_facility' )) {
+							$facDropDown .= '<a href="'.$this->base_url.'/site/add">'.t('Insert a New').space.t('Site').'</a> ';
+							$facDropDown .= '<a href="'.$this->base_url.'/site/search">'.t('View/Edit').space.t('Site').'</a>'; // need to put the links inside of the div so they dont wrap to the next line
 						}
+						echo labelAndField($this, t('Site').space.t('Name'), $facDropDown, 'facilityInput');
 						if($this->setting['display_employee_site_type'])
 						echo labelAndField($this,t('Site').space.t('Type'),   $this->site_types);
 						if($this->setting['display_employee_staff_category'])
