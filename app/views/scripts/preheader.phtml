@@ -139,11 +139,11 @@ if ( $this->isLoggedIn() ) {
  	//if ( $this->setting['display_use_offline_app'] && ($this->hasACL('edit_country_options') || $this->hasACL('use_offline_app'))) {
     //TA:95 remove offline access from in-service, show only for pre-service 
 	if ( $this->setting['display_use_offline_app'] && $this->hasACL('use_offline_app') && $this->hasACL('pre_service')) {
-		$navMain['user'][''] = '---------------';
+		//TA:1000 $navMain['user'][''] = '---------------';
 		//$navMain['user']['../desktop/create'] = no_soft_space_str( t('Create App Now') );
-		$navMain['user']['../desktop/download'] = no_soft_space_str( t('Download PS Application') );
+		//TA:1000 $navMain['user']['../desktop/download'] = no_soft_space_str( t('Download PS Application') );
 		//$navMain['user']['../desktop/download-dotnet'] = no_soft_space_str( t('Get Required .NET') );
-		$navMain['user']['../sync/upload'] = t('Upload PS Application');
+		//TA:1000 $navMain['user']['../sync/upload'] = t('Upload PS Application');
 	}
 } else {
 	$navMain = array( // directory => array of nav items

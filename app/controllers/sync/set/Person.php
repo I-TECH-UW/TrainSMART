@@ -101,6 +101,12 @@ class SyncSetPerson extends SyncSetSimple
 	 */
 	public function fetchFieldMatch($ld, $inst_id){
 	    
+// 	    TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// 	    ne pravil'no match. Nel'zya delat' match po:
+// 	        birthdate, fisrt_name and inst_id, inache budet overwrite last_name
+// 	        ili
+// 	        birthdate, last_name and inst_id, inache budet overwrite first_name
+	    
 	    $row = null;
 	    
 	    $fn = " (trim(lcase(CONCAT(IFNULL(first_name,'')))))='".trim(strtolower((str_replace("'", "\'",@$ld->first_name)))) . "' ";
