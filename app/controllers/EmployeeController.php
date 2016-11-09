@@ -186,53 +186,46 @@ class EmployeeController extends ReportFilterHelpers {
      */
     public function getAvailableMechanisms() {
         $db = $this->dbfunc();
+        $user_id = $this->isLoggedIn();
 
-        $sql = 'SELECT mechanism_option.id, mechanism_option.mechanism_phrase, mechanism_option.owner_id
-                FROM mechanism_option
-                LEFT JOIN link_mechanism_partner ON mechanism_option.id = link_mechanism_partner.mechanism_option_id
-                WHERE is_deleted = 0';
-
-        if (!$this->hasACL('training_organizer_option_all')) {
-            $partners = $this->getAvailablePartners();
-            if (count($partners)) {
-                $plist = implode(',', $partners);
-                $sql .= " AND (link_mechanism_partner.partner_id in ($plist) OR
-                mechanism_option.owner_id in ($plist))";
+        // only get mechanisms that are not expired or that expired this quarter
+        $now = new DateTime();
+        $thisYear = $now->format('Y');
+        $quarterStarts = array(DateTime::createFromFormat('Y-m-d', $thisYear . '-01-01'),
+            DateTime::createFromFormat('Y-m-d', $thisYear . '-04-01'),
+            DateTime::createFromFormat('Y-m-d', $thisYear . '-07-01'),
+            DateTime::createFromFormat('Y-m-d', $thisYear . '-10-01'),
+        );
+        $currentQuarterStartDate = $quarterStarts[0];
+        $size = count($quarterStarts);
+        for ($i = 0; $i < $size; $i++) {
+            if (($i + 1) >= $size) {
+                $currentQuarterStartDate = $quarterStarts[$i];
+                break;
+            }
+            if ($quarterStarts[$i] < $now && $quarterStarts[$i + 1] > $now) {
+                $currentQuarterStartDate = $quarterStarts[$i];
+                break;
             }
         }
 
-        $sql .= ' GROUP BY mechanism_option.id ORDER BY owner_id ASC, mechanism_phrase ASC';
+        $select = $db->select()
+            ->from('mechanism_option', array('id', 'mechanism_phrase', 'owner_id'))
+            ->where('is_deleted = 0')
+            ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
 
-        $partnerMechanisms = $db->fetchAll($sql);
-
-        foreach ($partnerMechanisms as &$mech) {
-            $sql = "SELECT partner_id from link_mechanism_partner where mechanism_option_id = {$mech['id']}";
-            $mech['partners'] = $db->fetchCol($sql);
+        if (!$this->hasACL('training_organizer_option_all')) {
+            $select->joinLeft('partner', 'link_mechanism_partner.partner_id = partner.id and link_mechanism_partner.mechanism_option_id = mechanism_option.id', array())
+                ->joinLeft('user_to_organizer_access',
+                    'user_to_organizer_access.training_organizer_option_id = partner.organizer_option_id', array())
+                ->where('user_to_organizer_access.user_id = ?', $user_id);
         }
 
-        return $partnerMechanisms;
-    }
+        $s = $select->__toString();
+        $select->order('mechanism_phrase ASC');
+        $pm = $db->fetchAll($select);
 
-    /**
-     * gets mechanisms associated with employee
-     * @param int|string      - $employee_id
-     * @return array
-     */
-    public function getEmployeeMechanisms($employee_id) {
-        if (!$employee_id) {
-            return array();
-        }
-        $db = $this->dbfunc();
-        $sql = "SELECT link_mechanism_employee.id, link_mechanism_employee.percentage,
-                link_mechanism_employee.mechanism_option_id, mechanism_option.mechanism_phrase
-                FROM link_mechanism_employee INNER JOIN mechanism_option ON link_mechanism_employee.mechanism_option_id = mechanism_option.id
-                WHERE employee_id = $employee_id ORDER BY link_mechanism_employee.percentage DESC";
-        $employeeMechanisms = $db->fetchAll($sql);
-        foreach ($employeeMechanisms as &$mech) {
-            $sql = "SELECT partner_id from link_mechanism_partner where mechanism_option_id = {$mech['id']}";
-            $mech['partners'] = $db->fetchCol($sql);
-        }
-        return $employeeMechanisms;
+        return $pm;
     }
 
     /**
@@ -258,7 +251,7 @@ class EmployeeController extends ReportFilterHelpers {
 
                 $foundPartner = false;
                 foreach ($employeeMechanisms as $mech) {
-                    if (array_search($partner_id, $mech["partners"]) !== false) {
+                    if ($mech['partner_id'] == $partner_id) {
                         $foundPartner = true;
                         break;
                     }
@@ -299,6 +292,17 @@ class EmployeeController extends ReportFilterHelpers {
         $status = ValidationContainer::instance();
         $db = $this->dbfunc();
 
+        // get employee mechanisms
+        $select = $db->select()
+            ->from('link_mechanism_employee', array('id', 'percentage', 'mechanism_option_id'))
+            ->joinInner('mechanism_option', 'link_mechanism_employee.mechanism_option_id = mechanism_option.id',
+                array('mechanism_phrase'))
+            ->joinInner('link_mechanism_partner', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array('partner_id'))
+            ->where('employee_id = ?', $id)
+            ->order('percentage DESC');
+        $s = $select->__toString();
+        $employeeMechanisms = $db->fetchAll($select);
+
         // ignore when $params['edittabledelete'] is true so that edit table deletions can be done as a batch via
         // form post when save button is pressed, rather than AJAX
 		if ( $this->getRequest()->isPost() && !$params['edittabledelete'] )
@@ -319,7 +323,7 @@ class EmployeeController extends ReportFilterHelpers {
                     foreach ($newMechData as $newData) {
                         array_push($newMechanismIDs, $newData['id']);
                     }
-                    if (!$this->userHasAccess($params['partner_id'], $this->getEmployeeMechanisms($id), $newMechanismIDs)) {
+                    if (!$this->userHasAccess($params['partner_id'], $employeeMechanisms, $newMechanismIDs)) {
                         $this->doNoAccessError();
                     }
                 }
@@ -435,8 +439,7 @@ class EmployeeController extends ReportFilterHelpers {
         }
 
         // this data is used both for populating mechanisms and checking for subpartner permissions to edit employees
-        $employeeMechanisms = $this->getEmployeeMechanisms($id);
-        $mechanisms = $this->getAvailableMechanisms($id);
+        $mechanisms = $this->getAvailableMechanisms();
         $mechanismData = array('available' => $mechanisms);
         $mechanismData['employee_mechanism_ids'] = array();
         $mechanismData['employee_association_ids'] = array();

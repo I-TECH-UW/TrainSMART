@@ -143,7 +143,6 @@
             <br/>
 
             <?php
-            if ($this->setting['display_employee_funder']) {
                 if (count($this->primeMechanisms)) { ?>
                     <h2>Prime <?php tp('Mechanisms'); ?>:</h2>
                     <div style="width:100%;">
@@ -206,8 +205,8 @@
                             </tbody>
                         </table>
                     </div>
-                <?php }
-            } ?>
+                <?php } ?>
+
 
             <div class="clear"></div>
             <input type="hidden" name="limit" id="limit" value="1"/>

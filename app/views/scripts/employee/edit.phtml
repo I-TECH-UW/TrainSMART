@@ -355,8 +355,12 @@
                         <tr>
                             <td class="mechanismTableFooter"><?php tp('Mechanism'); ?> Totals:</td>
                             <td class="mechanismTableFooter" id="mechanismTableFooterPercent">0</td>
+							<?php if ($this->setting['display_hours_per_mechanism']){ ?>
+	                            <td class="mechanismTableFooter">0</td>
+							<?php }
+							if ($this->setting['display_annual_cost_to_mechanism'])	{ ?>
                             <td class="mechanismTableFooter">0</td>
-                            <td class="mechanismTableFooter">0</td>
+							<?php } ?>
                             <td class="mechanismTableFooter"></td>
                         </tr>
                         </tfoot>

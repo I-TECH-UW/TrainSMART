@@ -109,6 +109,7 @@ class PartnerController extends ReportFilterHelpers {
                     $status->addError('hr_contact_email', t('HR Contact Email') . ' ' . t('invalid email address format.'));
                 }
 
+                $isValidDate = false;
                 if (isset($params['capture_complete']) && $params['capture_complete']) {
                     $isValidDate = $status->isValidDateDDMMYYYY('capture_complete_date', t('Data Capture Completion Date'), $params['capture_complete_date']);
                 }
@@ -159,6 +160,26 @@ class PartnerController extends ReportFilterHelpers {
 				$region_ids = Location::regionsToHash($region_ids);
 				$params = array_merge($params, $region_ids);
 
+                $now = new DateTime();
+                $thisYear = $now->format('Y');
+                $quarterStarts = array(DateTime::createFromFormat('Y-m-d', $thisYear . '-01-01'),
+                    DateTime::createFromFormat('Y-m-d', $thisYear . '-04-01'),
+                    DateTime::createFromFormat('Y-m-d', $thisYear . '-07-01'),
+                    DateTime::createFromFormat('Y-m-d', $thisYear . '-10-01'),
+                );
+                $currentQuarterStartDate = $quarterStarts[0];
+                $size = count($quarterStarts);
+                for ($i = 0; $i < $size; $i++) {
+                    if (($i + 1) >= $size) {
+                        $currentQuarterStartDate = $quarterStarts[$i];
+                        break;
+                    }
+                    if ($quarterStarts[$i] < $now && $quarterStarts[$i + 1] > $now) {
+                        $currentQuarterStartDate = $quarterStarts[$i];
+                        break;
+                    }
+                }
+
                 $joinClause = $db->quoteInto('link_mechanism_partner.partner_id = subpartner.id AND link_mechanism_partner.partner_id != ?', $id);
                 $select = $db->select()
                     ->from('mechanism_option', array('id', 'mechanism_phrase', 'end_date'))
@@ -166,7 +187,8 @@ class PartnerController extends ReportFilterHelpers {
                     ->joinInner('link_mechanism_partner', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array())
                     ->joinLeft(array('subpartner' => 'partner'), $joinClause, array('subpartner' => 'subpartner.partner'))
                     ->joinInner('partner', 'mechanism_option.owner_id = partner.id', array('partner'))
-                    ->where('mechanism_option.owner_id = ?', $id);
+                    ->where('mechanism_option.owner_id = ?', $id)
+                    ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
 
                 if (!$this->hasACL('training_organizer_option_all')) {
                     $select->joinInner('user_to_organizer_access',
@@ -197,7 +219,8 @@ class PartnerController extends ReportFilterHelpers {
                     ->joinInner('mechanism_option', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array('mechanism_phrase'))
                     ->joinInner('partner', 'mechanism_option.owner_id = partner.id', array('partner.partner'))
                     ->where('owner_id != ?', $id)
-                    ->where('partner_id = ?', $id);
+                    ->where('partner_id = ?', $id)
+                    ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
 
                 if (!$this->hasACL('training_organizer_option_all')) {
                     $select->joinInner('user_to_organizer_access',
