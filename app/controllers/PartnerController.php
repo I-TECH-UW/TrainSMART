@@ -78,7 +78,7 @@ class PartnerController extends ReportFilterHelpers {
 
         $p = $this->getAvailablePartnersAssoc();
 
-        if (!array_key_exists($id, $p)) {
+        if (!array_key_exists($id, $p) && !($this->view->mode == 'add')) {
             $this->doNoAccessError();
         }
 
