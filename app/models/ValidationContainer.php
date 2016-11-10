@@ -58,7 +58,7 @@ class ValidationContainer {
             return true;
         }
         else {
-            $this->addError($fieldName, $textName . ' ' . t('is not an accepted phone number format.'));
+            $this->addError($fieldName, t('Please enter a 10-digit') . ' '. $textName);
             return false;
         }
     }
