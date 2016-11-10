@@ -221,7 +221,6 @@ class EmployeeController extends ReportFilterHelpers {
                 ->where('user_to_organizer_access.user_id = ?', $user_id);
         }
 
-        $s = $select->__toString();
         $select->order('mechanism_phrase ASC');
         $pm = $db->fetchAll($select);
 
@@ -356,14 +355,25 @@ class EmployeeController extends ReportFilterHelpers {
     				if ($params['disability_option_id'] == 1)
     					$status->checkRequired ( $this, 'disability_comments', t('Nature of Disability') );
     			}
-    			if($this->setting('display_employee_salary'))
-    				$status->checkRequired ( $this, 'salary', t('Salary') );
-    			if($this->setting('display_employee_benefits'))
-    				$status->checkRequired ( $this, 'benefits', t('Benefits') );
-    			if($this->setting('display_employee_additional_expenses'))
-    				$status->checkRequired ( $this, 'additional_expenses', t('Additional Expenses') );
-    			if($this->setting('display_employee_stipend'))
-    				$status->checkRequired ( $this, 'stipend', t('Stipend') );
+    			$costaccum = 0;
+    			if($this->setting('display_employee_salary')) {
+                    $status->checkRequired($this, 'salary', t('Salary'));
+                    $costaccum += $params['salary'];
+    			}
+    			if($this->setting('display_employee_benefits')) {
+                    $status->checkRequired($this, 'benefits', t('Benefits'));
+                    $costaccum += $params['benefits'];
+                }
+    			if($this->setting('display_employee_additional_expenses')) {
+                    $status->checkRequired($this, 'additional_expenses', t('Additional Expenses'));
+                    $costaccum += $params['additional_expenses'];
+                }
+    			if($this->setting('display_employee_stipend')) {
+                    $status->checkRequired($this, 'stipend', t('Stipend'));
+                    $costaccum += $params['stipend'];
+                }
+                $status->addError('annual_cost', t('Total') . ' ' . t('Annual Cost') . ' ' . t("can not be more than 2,000,000."));
+
     			if ( $this->setting('display_employee_partner') )
     				$status->checkRequired ( $this, 'partner_id', t ( 'Partner' ) );
     			//if($this->setting('display_employee_sub_partner'))

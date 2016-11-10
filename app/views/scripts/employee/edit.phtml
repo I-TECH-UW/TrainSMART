@@ -147,7 +147,7 @@
 							|| $this->setting['display_employee_benefits']
 							|| $this->setting['display_employee_additional_expenses']
 							|| $this->setting['display_employee_stipend']) {
-							echo '<h2>' . t('Annual Cost to Company  (CTC) funded by PEPFAR only Amount') . '</h2>';
+							echo '<h2>' . t('Annual Cost to Company (CTC) funded by PEPFAR only Amount') . '</h2>';
 							
 							if ($this->translation['Employee Local Currency'] && $this->translation['Employee Local Currency'] != 'Employee Local Currency')
 								echo "<br>".t('Currency:').space.$this->translation['Employee Local Currency'].'<br clear="all"/>'; #TODO rework
@@ -281,7 +281,13 @@
 								if ( isNaN (total) )
 									total = '?';
 
-								$(this).val(total);
+								if (total > 2000000) {
+									alert('<?php echo t('Annual Cost'); ?>' + ' - total cannot be greater than 2,000,000');
+									$(this).val(null);
+								}
+								else {
+									$(this).val(total);
+								}
 								return this;
 
 						};})( jQuery );
