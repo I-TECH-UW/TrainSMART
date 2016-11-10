@@ -284,23 +284,25 @@ class EmployeeController extends ReportFilterHelpers {
         $params = $this->getAllParams();
         $id = $params['id'];
 
-        if ($id == '' && $this->view->mode != 'add') {
+        $db = $this->dbfunc();
+        $employeeMechanisms = array();
+        if (!$id && $this->view->mode != 'add') {
             $this->doNoAccessError ();
+        }
+        else if ($this->view->mode !== 'add') {
+            // get current employee mechanisms
+            $select = $db->select()
+                ->from('link_mechanism_employee', array('id', 'percentage', 'mechanism_option_id'))
+                ->joinInner('mechanism_option', 'link_mechanism_employee.mechanism_option_id = mechanism_option.id',
+                    array('mechanism_phrase'))
+                ->joinInner('link_mechanism_partner', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array('partner_id'))
+                ->where('employee_id = ?', $id)
+                ->order('percentage DESC');
+            $s = $select->__toString();
+            $employeeMechanisms = $db->fetchAll($select);
         }
 
         $status = ValidationContainer::instance();
-        $db = $this->dbfunc();
-
-        // get employee mechanisms
-        $select = $db->select()
-            ->from('link_mechanism_employee', array('id', 'percentage', 'mechanism_option_id'))
-            ->joinInner('mechanism_option', 'link_mechanism_employee.mechanism_option_id = mechanism_option.id',
-                array('mechanism_phrase'))
-            ->joinInner('link_mechanism_partner', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array('partner_id'))
-            ->where('employee_id = ?', $id)
-            ->order('percentage DESC');
-        $s = $select->__toString();
-        $employeeMechanisms = $db->fetchAll($select);
 
         // ignore when $params['edittabledelete'] is true so that edit table deletions can be done as a batch via
         // form post when save button is pressed, rather than AJAX
@@ -336,20 +338,15 @@ class EmployeeController extends ReportFilterHelpers {
     			$params['site_id']                  = $params['facilityInput'];
     			$params['option_nationality_id']    = $params['lookup_nationalities_id'];
     			$params['facility_type_option_id']  = $params['employee_site_type_option_id'];
-    			$params['race_option_id']           = $params['person_race_option_id'];
 
     			$status->checkRequired ( $this, 'employee_code', t('Employee Code'));
     			
     			$status->checkRequired($this, 'facilityInput', t('Site') . ' ' . t('Name'));
-    			if($this->setting('display_employee_nationality'))
-    				$status->checkRequired ( $this, 'lookup_nationalities_id', t('Employee Nationality'));
-    			
+
     			$status->checkRequired ( $this, 'employee_qualification_option_id', t ( 'Staff Cadre' ) );
     			
     			if($this->setting('display_gender'))
     				$status->checkRequired ( $this, 'gender', t('Gender') );
-    			if($this->setting('display_employee_race'))
-    				$status->checkRequired ( $this, 'person_race_option_id', t('Race') );
     			if($this->setting('display_employee_disability')) {
     				$status->checkRequired ( $this, 'disability_option_id', t('Disability') );
     				if ($params['disability_option_id'] == 1)
@@ -372,12 +369,11 @@ class EmployeeController extends ReportFilterHelpers {
                     $status->checkRequired($this, 'stipend', t('Stipend'));
                     $costaccum += $params['stipend'];
                 }
-                $status->addError('annual_cost', t('Total') . ' ' . t('Annual Cost') . ' ' . t("can not be more than 2,000,000."));
-
+                if ($costaccum > 2000000) {
+                    $status->addError('annual_cost', t('Total') . ' ' . t('Annual Cost') . ' ' . t("can not be more than 2,000,000."));
+                }
     			if ( $this->setting('display_employee_partner') )
     				$status->checkRequired ( $this, 'partner_id', t ( 'Partner' ) );
-    			//if($this->setting('display_employee_sub_partner'))
-    				//$status->checkRequired ( $this, 'subpartner_id', t ( 'Sub Partner' ) );
     			if($this->setting('display_employee_intended_transition'))
     				$status->checkRequired ( $this, 'employee_transition_option_id', t ( 'Intended Transition' ) );
     			if(($this->setting('display_employee_base') && !$params['employee_base_option_id']) || !$this->setting('display_employee_base')) // either one is OK, javascript disables regions if base is on & has a value choice

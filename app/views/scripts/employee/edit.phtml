@@ -30,6 +30,20 @@
         .totalMechanismPercentageYes {background-color:#749a02;}
         .totalMechanismPercentageNo {background-color:#ff0202;}
     </style>
+    <script type="application/javascript">
+        $(document).ready(function() {
+            window.ITECH.mechData = JSON.parse($("#mechanismData").html());
+            window.ITECH.totalPercent = 0;
+            $('#select_partner').on('change', availableMechanisms);
+            availableMechanisms();
+            calculateMechanismTable();
+            $("#disassociateMechanisms").data("ids", []);
+            $("#associateMechanisms").data("ids", []);
+            $("#mechanismPercentages").data("percents", []);
+
+        });
+    </script>
+
 </head>
 <body class="yui-skin-sam"  >
 <script id="mechanismData" type="application/json">
@@ -73,10 +87,10 @@
 						    $this->viewonly = false;
 						}
 						echo labelAndField($this, t('Employee Code'), 'text', 'employee_code', $this->employee['employee_code'] );
-						
+
 						if($this->setting['display_employee_dob'])
 						echo labelAndField($this, t('Employee Date of Birth').space.('(dd/mm/yyyy)'),'date', 'dob', $this->employee['dob'] );
-						
+
 						if($this->setting['display_employee_disability'])
 						{
     						$this->viewonly = true;
@@ -91,8 +105,8 @@
 
 						if ($this->mode != 'add' && $this->employee['partner_employee_number'])
 						echo labelAndField($this, t('Employee').space.t('Number'),       'text', 'partner_employee_number', $this->employee['partner_employee_number']);
-						
-						if($this->setting['display_employee_partner'])	
+
+						if($this->setting['display_employee_partner'])
 						echo labelAndField($this, t('Employer'),     $this->partners, 'partner_id');
 
 						if($this->setting['display_employee_base'])
@@ -110,7 +124,7 @@
 						echo labelAndField($this, t('Staff Category'), $this->categories);
 						if($this->setting['display_employee_registration_number'])
 						echo labelAndField($this, t('Registration Number'),    'text', 'registration_number',    $this->employee['registration_number']);
-						
+
 						if($this->setting['display_employee_contract_end_date'])
 						    echo labelAndField($this, t('Contract End Date'),      'date', 'agreement_end_date', $this->employee['agreement_end_date']);
 						if($this->setting['display_employee_intended_transition'])
@@ -122,11 +136,11 @@
 						if($this->setting['display_employee_complete_transition'])
 						    echo labelAndField($this, t('Actual Transition Outcome'), $this->transitions_complete, 'employee_transition_complete_option_id');
 						echo labelAndField($this, t('Other Transition'), 'text', 'transition_complete_other', $this->employee['transition_complete_other']); // hidden field
-						
+
 						if($this->setting['display_employee_actual_transition_date'])
 						    echo labelAndField($this, t('Actual Transition Date'), 'date','transition_complete_date', $this->employee['transition_complete_date']);
-						
-						
+
+
 						// fields for only community health workers and community based workers
 						echo '<div class="clear"></div><br /><br />';
 
@@ -148,14 +162,14 @@
 							|| $this->setting['display_employee_additional_expenses']
 							|| $this->setting['display_employee_stipend']) {
 							echo '<h2>' . t('Annual Cost to Company (CTC) funded by PEPFAR only Amount') . '</h2>';
-							
+
 							if ($this->translation['Employee Local Currency'] && $this->translation['Employee Local Currency'] != 'Employee Local Currency')
 								echo "<br>".t('Currency:').space.$this->translation['Employee Local Currency'].'<br clear="all"/>'; #TODO rework
 						}
 						if($this->setting['display_employee_full_time'])
 						    echo labelAndField($this, t('Full Time'),      $this->fulltime);
 						echo labelAndField($this, t('Funded hours per week'),  'text', 'funded_hours_per_week',  $this->employee['funded_hours_per_week']);
-						
+
 						if($this->setting['display_employee_salary'])
 						echo labelAndField($this, t('Salary'),   'text', 'salary',   $this->employee['salary']);
 						if($this->setting['display_employee_benefits'])
@@ -585,19 +599,6 @@
 
             </form>
 			<div class="clear"></div>
-            <script type="application/javascript">
-                $(document).ready(function() {
-                    window.ITECH.mechData = JSON.parse($("#mechanismData").html());
-					window.ITECH.totalPercent = 0;
-                    $('#select_partner').on('change', availableMechanisms);
-                    availableMechanisms();
-                    calculateMechanismTable();
-                    $("#disassociateMechanisms").data("ids", []);
-                    $("#associateMechanisms").data("ids", []);
-                    $("#mechanismPercentages").data("percents", []);
-
-                });
-            </script>
 
             <script type="application/javascript">
                 var availableMechanisms = function() {
