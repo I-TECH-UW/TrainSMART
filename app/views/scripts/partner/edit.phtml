@@ -14,6 +14,7 @@
         .fieldInput {
             float: left;
         }
+
         .subpartnerDivider {
             height: 1px;
         }
@@ -143,69 +144,69 @@
             <br/>
 
             <?php
-                if (count($this->primeMechanisms)) { ?>
-                    <h2>Prime <?php tp('Mechanisms'); ?>:</h2>
-                    <div style="width:100%;">
+            if (count($this->primeMechanisms)) { ?>
+                <h2>Prime <?php tp('Mechanisms'); ?>:</h2>
+                <div style="width:100%;">
 
-                        <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id=""
-                               style="width:100%">
-                            <thead>
+                    <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id=""
+                           style="width:100%">
+                        <thead>
+                        <tr>
+                            <th><?php tp('Mechanism'); ?></th>
+                            <th><?php tp('Funder'); ?></th>
+                            <th><?php tp('Funding End Date'); ?></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($this->primeMechanisms as $mech) { ?>
                             <tr>
-                                <th><?php tp('Mechanism'); ?></th>
-                                <th><?php tp('Funder'); ?></th>
-                                <th><?php tp('Funding End Date'); ?></th>
+                                <td>
+                                    <input type="button" onclick="toggleSubpartners(this);return true;"
+                                           class="expando" value="+"/> <?php echo $mech['mechanism_phrase']; ?>
+                                    <div class="mechList">
+                                        <hr class="subpartnerDivider"/>
+                                        <div class="centertitle">Sub-Partners:</div>
+                                        <ul>
+                                            <?php foreach ($mech['subpartners'] as $subp) {
+                                                echo "<li>$subp</li>";
+                                            } ?>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td><?php echo $mech['funder_phrase']; ?></td>
+                                <td><?php echo $mech['end_date']; ?></td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            <?php foreach ($this->primeMechanisms as $mech) { ?>
-                                <tr>
-                                    <td>
-                                        <input type="button" onclick="toggleSubpartners(this);return true;"
-                                               class="expando" value="+"/> <?php echo $mech['mechanism_phrase']; ?>
-                                        <div class="mechList">
-                                            <hr class="subpartnerDivider"/>
-                                            <div class="centertitle">Sub-Partners:</div>
-                                            <ul>
-                                                <?php foreach ($mech['subpartners'] as $subp) {
-                                                    echo "<li>$subp</li>";
-                                                } ?>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                    <td><?php echo $mech['funder_phrase']; ?></td>
-                                    <td><?php echo $mech['end_date']; ?></td>
-                                </tr>
-                            <?php } ?>
-                            </tbody>
-                        </table>
-                    </div>
-                    <br/>
-                <?php }
-                if (count($this->secondaryMechanisms)) { ?>
-                    <h2>Sub-Partner on <?php tp('Mechanisms'); ?>:</h2>
-                    <div style="width:100%;">
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+                <br/>
+            <?php }
+            if (count($this->secondaryMechanisms)) { ?>
+                <h2>Sub-Partner on <?php tp('Mechanisms'); ?>:</h2>
+                <div style="width:100%;">
 
-                        <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id=""
-                               style="width:100%">
-                            <thead>
+                    <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id=""
+                           style="width:100%">
+                        <thead>
+                        <tr>
+                            <th><?php tp('Mechanism'); ?></th>
+                            <th><?php tp('Prime Partner'); ?></th>
+                            <th><?php tp('Funding End Date'); ?></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($this->secondaryMechanisms as $mech) { ?>
                             <tr>
-                                <th><?php tp('Mechanism'); ?></th>
-                                <th><?php tp('Prime Partner'); ?></th>
-                                <th><?php tp('Funding End Date'); ?></th>
+                                <td><?php echo $mech['mechanism_phrase']; ?></td>
+                                <td><?php echo $mech['partner']; ?></td>
+                                <td><?php echo $mech['end_date']; ?></td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            <?php foreach ($this->secondaryMechanisms as $mech) { ?>
-                                <tr>
-                                    <td><?php echo $mech['mechanism_phrase']; ?></td>
-                                    <td><?php echo $mech['partner']; ?></td>
-                                    <td><?php echo $mech['end_date']; ?></td>
-                                </tr>
-                            <?php } ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php } ?>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php } ?>
 
 
             <div class="clear"></div>
