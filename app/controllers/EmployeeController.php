@@ -222,8 +222,9 @@ class EmployeeController extends ReportFilterHelpers
             ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
 
         if (!$this->hasACL('training_organizer_option_all')) {
-            $select->joinLeft('partner', 'link_mechanism_partner.partner_id = partner.id and link_mechanism_partner.mechanism_option_id = mechanism_option.id', array())
-                ->joinLeft('user_to_organizer_access',
+            $select->joinInner('link_mechanism_partner', 'mechanism_option.id = link_mechanism_partner.mechanism_option_id', array())
+                ->joinInner('partner', 'link_mechanism_partner.partner_id = partner.id', array())
+                ->joinInner('user_to_organizer_access',
                     'user_to_organizer_access.training_organizer_option_id = partner.organizer_option_id', array())
                 ->where('user_to_organizer_access.user_id = ?', $user_id);
         }
@@ -305,8 +306,7 @@ class EmployeeController extends ReportFilterHelpers
                 ->joinInner('link_mechanism_partner', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array('partner_id'))
                 ->where('employee_id = ?', $id)
                 ->order('percentage DESC');
-            $s = $select->__toString();
-            $employeeMechanisms = $db->fetchAll($select);
+           $employeeMechanisms = $db->fetchAll($select);
         }
 
         $status = ValidationContainer::instance();
