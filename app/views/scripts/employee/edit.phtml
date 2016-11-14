@@ -450,7 +450,8 @@
             if ($this->hasACL('edit_employee')) {
                 $this->viewonly = false;
             }
-            echo labelAndField($this, t('Employee Code'), 'text', 'employee_code', $this->employee['employee_code']);
+            $f = $this->formText('employee_code', $this->employee['employee_code'], array('maxlength' => '15'));
+            echo labelAndField($this, t('Employee Code'), $f);
 
             if ($this->setting['display_employee_dob'])
                 echo labelAndField($this, t('Employee Date of Birth') . space . ('(dd/mm/yyyy)'), 'date', 'dob', $this->employee['dob']);
