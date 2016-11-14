@@ -303,10 +303,10 @@ class EmployeeController extends ReportFilterHelpers
                 ->from('link_mechanism_employee', array('id', 'percentage', 'mechanism_option_id'))
                 ->joinInner('mechanism_option', 'link_mechanism_employee.mechanism_option_id = mechanism_option.id',
                     array('mechanism_phrase'))
-                ->joinInner('link_mechanism_partner', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array('partner_id'))
                 ->where('employee_id = ?', $id)
                 ->order('percentage DESC');
-           $employeeMechanisms = $db->fetchAll($select);
+
+            $employeeMechanisms = $db->fetchAll($select);
         }
 
         $status = ValidationContainer::instance();
