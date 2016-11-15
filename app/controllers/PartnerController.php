@@ -194,11 +194,9 @@ class PartnerController extends ReportFilterHelpers
 
                 if (!$this->hasACL('training_organizer_option_all')) {
                     $select->joinInner('user_to_organizer_access',
-                        'partner.organizer_option_id = user_to_organizer_access.training_organizer_option_id', array())
+                        'partner.organizer_option_id = user_to_organizer_access.training_organizer_option_id OR ' .
+                        'subpartner.organizer_option_id = user_to_organizer_access.training_organizer_option_id', array())
                         ->where('user_to_organizer_access.user_id = ?', $uid);
-                    $select->joinInner(array('user_to_organizer_access2' => 'user_to_organizer_access'),
-                        'subpartner.organizer_option_id = user_to_organizer_access2.training_organizer_option_id', array())
-                        ->where('user_to_organizer_access2.user_id = ?', $uid);
                 }
 
                 $rows = $db->fetchAll($select);
