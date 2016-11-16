@@ -26,10 +26,15 @@
     if (property_exists($this, 'showvalue') && $this->showvalue) {
         echo $this->formCheckbox($prefix . 'showdate');
     }
+
+    $cal = ' <a class="calendarbtn" href="#"><img src="' . $this->base_url . '/js/yui/assets/calbtn.gif"></a>';
+
     echo $this->formText($startname, $startval, array('id' => $startname, 'class' => 'datepicker'));
-    echo " " . t('to') . " ";
+    echo $cal;
+    echo ' ' . $this->formLabel("", t('to'), array('class' => 'label')) . ' ';
     echo $this->formText($endname, $endval, array('id' => $endname, 'class' => 'datepicker'));
-    echo "</span>";
+    echo $cal;
+    echo '</span>';
     ?>
 
-    <div class="clear pad20">&nbsp;</div>
+    <div class="clear pad20"></div>

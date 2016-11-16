@@ -252,6 +252,7 @@ class PartnerController extends ReportFilterHelpers
         }
 
         $criteria = $this->getAllParams();
+        $status = ValidationContainer::instance();
 
         if ($criteria['go']) {
             // process search
@@ -288,8 +289,25 @@ class PartnerController extends ReportFilterHelpers
 
             if ($criteria['subpartner_id']) $where[] = 'subpartners.subpartner_id = ' . $criteria['subpartner_id'];
             if ($criteria['partner_id']) $where[] = 'partner.id = ' . $criteria['partner_id'];
-            if ($criteria['start_date']) $where[] = 'mo.end_date >= \'' . $this->_euro_date_to_sql($criteria['start_date']) . ' 00:00:00\'';
-            if ($criteria['end_date']) $where[] = 'mo.end_date <= \'' . $this->_euro_date_to_sql($criteria['end_date']) . ' 23:59:59\'';
+            if (isset($criteria['funding_startdate']) &&
+                $status->isValidDateDDMMYYYY('funding_startdate', t('Data Capture Completion Date'), $criteria['funding_startdate'])) {
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_startdate']);
+                $where[] = 'mo.end_date >= ' . $d->format('Y-m-d');
+            }
+            if (isset($criteria['funding_enddate']) &&
+                $status->isValidDateDDMMYYYY('funding_startdate', t('Data Capture Completion Date'), $criteria['funding_startdate'])) {
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_startdate']);
+                $where[] = 'mo.end_date <= ' . $d->format('Y-m-d');
+            }
+            if (isset($criteria['capture_complete_startdate']) && $status->isValidDateDDMMYYYY('capture_complete_startdate', t('Data Capture Completion Date'), $criteria['capture_complete_startdate'])) {
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_startdate']);
+                $where[] = 'partner.capture_complete_date >= ' . $d->format('Y-m-d');
+            }
+            if (isset($criteria['capture_complete_enddate']) && $status->isValidDateDDMMYYYY('capture_complete_enddate', t('Data Capture Completion Date'), $criteria['capture_complete_enddate'])) {
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_enddate']);
+                $where[] = 'partner.capture_complete_date <= ' . $d->format('Y-m-d');
+            }
+
             if (count($where)) {
                 $sql .= ' WHERE ' . implode(' AND ', $where);
             }
