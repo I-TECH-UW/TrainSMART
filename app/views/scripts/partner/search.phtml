@@ -29,20 +29,20 @@
 						}
 						echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, false );
 						$cal = '<a class="calendarbtn" href="#"><img src="'.$this->base_url.'/js/yui/assets/calbtn.gif"></a>';
-						if($this->setting['display_employee_funder']) {
+						if ($this->setting['display_employee_funder']) {
 							echo $this->partial('/reports/date-range-partial.phtml',
 								array('label' => t('Funding End Date Between'),
 									'prefix' => 'funding_',
-									'startval' => $this->criteria['funding_start_date'],
-									'endval' => $this->criteria['funding_end_date'],
+									'start_date' => $this->criteria['funding_start_date'],
+									'end_date' => $this->criteria['funding_end_date'],
 									'showvalue' => false)
 							);
 						}
 						echo $this->partial('/reports/date-range-partial.phtml',
 							array('label' => t('Data Capture Completion Date'),
 								'prefix' => 'capture_complete_',
-								'startval' => $this->criteria['capture_complete_start_date'],
-								'endval' => $this->criteria['capture_complete_end_date'],
+								'start_date' => $this->criteria['capture_complete_start_date'],
+								'end_date' => $this->criteria['capture_complete_end_date'],
 								'showvalue' => false)
 						);
 					?>

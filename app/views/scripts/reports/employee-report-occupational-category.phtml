@@ -38,8 +38,8 @@ echo $this->partial('reports/employee-reports-common-javascript-header-partial.p
 //                    echo $this->partial('reports/employee-reports-contract-end-date-partial.phtml');
                     echo $this->partial('/reports/date-range-partial.phtml',
                         array('label' => t('Contract end date'), 'prefix' => 'contract_',
-                            'startval' => $this->criteria['contract_startdate'],
-                            'endval' => $this->criteria['contract_enddate'], 'showvalue' => false)
+                            'start_date' => $this->criteria['contract_start_date'],
+                            'end_date' => $this->criteria['contract_end_date'], 'showvalue' => false)
                     );
                     echo $this->partial('reports/ps-search-preview-button-partial.phtml', array());
                 ?>
