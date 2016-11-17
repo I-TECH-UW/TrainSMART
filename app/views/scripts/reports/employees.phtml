@@ -12,21 +12,8 @@
 
     print ScriptContainer::$instance->renderCSSHead();
     print ScriptContainer::$instance->renderJSHead();
+    echo $this->partial('reports/employee-reports-common-javascript-header-partial.phtml');
     ?>
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('.datepicker').datepicker({dateFormat: "dd/mm/yy"});
-            $('.calendarbtn').click(openNearestDatePicker);
-        });
-        $(document).ready(function () {
-            /* Init the table */
-            var oTable = $('.tablegrid').dataTable({
-                "bJQueryUI": true,
-                "bSort": true,
-                "sPaginationType": "full_numbers"
-            });
-        });
-    </script>
 
 </head>
 <body class="yui-skin-sam">

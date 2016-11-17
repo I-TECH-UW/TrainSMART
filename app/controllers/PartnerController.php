@@ -289,6 +289,8 @@ class PartnerController extends ReportFilterHelpers
 
             if ($criteria['subpartner_id']) $where[] = 'subpartners.subpartner_id = ' . $criteria['subpartner_id'];
             if ($criteria['partner_id']) $where[] = 'partner.id = ' . $criteria['partner_id'];
+
+            // TODO: fix startdate/enddate field name
             if (isset($criteria['funding_startdate']) &&
                 $status->isValidDateDDMMYYYY('funding_startdate', t('Data Capture Completion Date'), $criteria['funding_startdate'])) {
                 $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_startdate']);

@@ -6,20 +6,8 @@
 require_once('views/helpers/ScriptContainer.php');
 print ScriptContainer::$instance->renderCSSHead();
 print ScriptContainer::$instance->renderJSHead();
+echo $this->partial('reports/employee-reports-common-javascript-header-partial.phtml');
 ?>
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('.datepicker').datepicker( {dateFormat: "dd/mm/yy"} );
-        });
-        $(document).ready(function() {
-            /* Init the table */
-            var oTable = $('.tablegrid').dataTable({
-                "bJQueryUI": true,
-                "bSort": false,
-                "sPaginationType": "full_numbers"
-            });
-        } );
-    </script>
 
 </head>
 <body class="yui-skin-sam">
@@ -47,7 +35,12 @@ print ScriptContainer::$instance->renderJSHead();
                     echo $this->partial('reports/employee-reports-common-partial.phtml',
                         array('mechanisms' => $this->mechanisms, 'funders' => $this->funders,
                             'transitions' => $this->transitions, 'transition_types' => $this->transition_types));
-                    echo $this->partial('reports/employee-reports-contract-end-date-partial.phtml');
+//                    echo $this->partial('reports/employee-reports-contract-end-date-partial.phtml');
+                    echo $this->partial('/reports/date-range-partial.phtml',
+                        array('label' => t('Contract end date'), 'prefix' => 'contract_',
+                            'startval' => $this->criteria['contract_startdate'],
+                            'endval' => $this->criteria['contract_enddate'], 'showvalue' => false)
+                    );
                     echo $this->partial('reports/ps-search-preview-button-partial.phtml', array());
                 ?>
 

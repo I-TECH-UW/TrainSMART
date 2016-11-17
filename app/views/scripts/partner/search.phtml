@@ -7,6 +7,7 @@
 	require_once('views/helpers/ScriptContainer.php');
 	print ScriptContainer::$instance->renderCSSHead();
 	print ScriptContainer::$instance->renderJSHead();
+	echo $this->partial('reports/employee-reports-common-javascript-header-partial.phtml');
 	?>
 
 </head>

@@ -503,10 +503,10 @@ class ReportFilterHelpers extends ITechController
             }
         }
 
-        if (isset($criteria['contractstartdate']) && $criteria['contractstartdate']) {
+        if (isset($criteria['contract_startdate']) && $criteria['contract_startdate']) {
             $errorMessage = null;
             try {
-                $date = DateTime::createFromFormat('d/m/Y', $criteria['contractstartdate']);
+                $date = DateTime::createFromFormat('d/m/Y', $criteria['contract_startdate']);
             }
             catch (Exception $e) {
                 $errorMessage = t('Invalid value for') . ' ' . t('Contract Date');
@@ -525,10 +525,10 @@ class ReportFilterHelpers extends ITechController
             }
         }
 
-        if (isset($criteria['contractenddate']) && $criteria['contractenddate']) {
+        if (isset($criteria['contract_enddate']) && $criteria['contract_enddate']) {
             $errorMessage = null;
             try {
-                $date = DateTime::createFromFormat('d/m/Y', $criteria['contractenddate']);
+                $date = DateTime::createFromFormat('d/m/Y', $criteria['contract_enddate']);
             }
             catch (Exception $e) {
                 $errorMessage = t('Invalid value for') . ' ' . t('Contract End Date');
@@ -1103,17 +1103,17 @@ class ReportFilterHelpers extends ITechController
         }
 
         // labelTwoFields uses the name of the first field for the 'show' checkbox
-        if (isset($criteria['show_contractstartdate']) && $criteria['show_contractstartdate']) {
+        if (isset($criteria['show_contract_startdate']) && $criteria['show_contract_startdate']) {
             $select->columns(array('employee.agreement_end_date' => new Zend_Db_Expr("DATE_FORMAT(employee.agreement_end_date, '%d/%m/%Y')")));
 
         }
-        if (isset($criteria['contractstartdate']) && $criteria['contractstartdate'] >= 0) {
-            $d = DateTime::createFromFormat('d/m/Y', $criteria['contractstartdate']);
+        if (isset($criteria['contract_startdate']) && $criteria['contract_startdate'] >= 0) {
+            $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_startdate']);
             $select->where('employee.agreement_end_date >= ?', $d->format('Y-m-d'));
         }
 
-        if (isset($criteria['contractenddate']) && $criteria['contractenddate']) {
-            $d = DateTime::createFromFormat('d/m/Y', $criteria['contractenddate']);
+        if (isset($criteria['contract_enddate']) && $criteria['contract_enddate']) {
+            $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_enddate']);
             $select->where('employee.agreement_end_date <= ?', $d->format('Y-m-d'));
         }
 
