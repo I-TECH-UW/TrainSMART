@@ -33,22 +33,16 @@
 							echo $this->partial('/reports/date-range-partial.phtml',
 								array('label' => t('Funding End Date Between'),
 									'prefix' => 'funding_',
-									'startval' => $this->criteria['funding_startdate'],
-									'endval' => $this->criteria['funding_enddate'],
+									'startval' => $this->criteria['funding_start_date'],
+									'endval' => $this->criteria['funding_end_date'],
 									'showvalue' => false)
 							);
-/*							echo '<div class="fieldLabel">' . t('Funding End Date Between') . '</div>	<div class="fieldInput">'
-								. '<input type="text" id="start_date" class="datepicker" name="start_date" value="' . $this->criteria['start_date'] . '" /> ' . $cal
-								. ' <label class="label">' . t('to') . ' </label>'
-								. '<span><input type="text" id="end_date" class="datepicker" name="end_date" value="' . $this->criteria['end_date'] . '" /> ' . $cal . '</span>'
-								. '</div>';
-*/
 						}
 						echo $this->partial('/reports/date-range-partial.phtml',
 							array('label' => t('Data Capture Completion Date'),
 								'prefix' => 'capture_complete_',
-								'startval' => $this->criteria['capture_complete_startdate'],
-								'endval' => $this->criteria['capture_complete_enddate'],
+								'startval' => $this->criteria['capture_complete_start_date'],
+								'endval' => $this->criteria['capture_complete_end_date'],
 								'showvalue' => false)
 						);
 					?>

@@ -5,17 +5,17 @@
         $prefix = $this->prefix;
     }
 
-    $startname = $prefix . 'startdate';
-    $endname = $prefix . 'enddate';
+    $startname = $prefix . 'start_date';
+    $endname = $prefix . 'end_date';
 
     $startval = "";
     $endval = "";
 
-    if (property_exists($this, 'startdate')) {
-        $startval = $this->startdate;
+    if (property_exists($this, 'start_date')) {
+        $startval = $this->start_date;
     }
-    if (property_exists($this, 'enddate')) {
-        $endval = $this->enddate;
+    if (property_exists($this, 'end_date')) {
+        $endval = $this->end_date;
     }
 
     echo '<span>';

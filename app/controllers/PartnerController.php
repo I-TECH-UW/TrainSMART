@@ -290,23 +290,22 @@ class PartnerController extends ReportFilterHelpers
             if ($criteria['subpartner_id']) $where[] = 'subpartners.subpartner_id = ' . $criteria['subpartner_id'];
             if ($criteria['partner_id']) $where[] = 'partner.id = ' . $criteria['partner_id'];
 
-            // TODO: fix startdate/enddate field name
-            if (isset($criteria['funding_startdate']) &&
-                $status->isValidDateDDMMYYYY('funding_startdate', t('Data Capture Completion Date'), $criteria['funding_startdate'])) {
-                $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_startdate']);
+            if (isset($criteria['funding_start_date']) &&
+                $status->isValidDateDDMMYYYY('funding_start_date', t('Data Capture Completion Date'), $criteria['funding_start_date'])) {
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_start_date']);
                 $where[] = 'mo.end_date >= ' . $d->format('Y-m-d');
             }
-            if (isset($criteria['funding_enddate']) &&
-                $status->isValidDateDDMMYYYY('funding_startdate', t('Data Capture Completion Date'), $criteria['funding_startdate'])) {
-                $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_startdate']);
+            if (isset($criteria['funding_end_date']) &&
+                $status->isValidDateDDMMYYYY('funding_end_date', t('Data Capture Completion Date'), $criteria['funding_end_date'])) {
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_end_date']);
                 $where[] = 'mo.end_date <= ' . $d->format('Y-m-d');
             }
-            if (isset($criteria['capture_complete_startdate']) && $status->isValidDateDDMMYYYY('capture_complete_startdate', t('Data Capture Completion Date'), $criteria['capture_complete_startdate'])) {
-                $d = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_startdate']);
+            if (isset($criteria['capture_complete_start_date']) && $status->isValidDateDDMMYYYY('capture_complete_start_date', t('Data Capture Completion Date'), $criteria['capture_complete_start_date'])) {
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_start_date']);
                 $where[] = 'partner.capture_complete_date >= ' . $d->format('Y-m-d');
             }
-            if (isset($criteria['capture_complete_enddate']) && $status->isValidDateDDMMYYYY('capture_complete_enddate', t('Data Capture Completion Date'), $criteria['capture_complete_enddate'])) {
-                $d = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_enddate']);
+            if (isset($criteria['capture_complete_end_date']) && $status->isValidDateDDMMYYYY('capture_complete_end_date', t('Data Capture Completion Date'), $criteria['capture_complete_end_date'])) {
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_end_date']);
                 $where[] = 'partner.capture_complete_date <= ' . $d->format('Y-m-d');
             }
 
