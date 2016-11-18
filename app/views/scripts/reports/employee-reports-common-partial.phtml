@@ -2,7 +2,8 @@
 <?php
 // Period (Date Range)
 echo $this->partial('/reports/date-range-partial.phtml',
-    array('label' => t('Period'), 'prefix' => 'period_', 'start_date' => '', 'end_date' => '', 'showvalue' => false));
+    array('label' => t('Period'), 'prefix' => 'period_', 'start_date' => $this->criteria['period_start_date'],
+        'end_date' => $this->criteria['period_end_date'], 'show_value' => false));
 ?>
 
 <span>

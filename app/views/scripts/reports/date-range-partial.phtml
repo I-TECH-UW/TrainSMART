@@ -23,8 +23,8 @@
         echo $this->formLabel("", $this->label, array('class' => 'fieldLabel'));
     }
 
-    if (property_exists($this, 'showvalue') && $this->showvalue) {
-        echo $this->formCheckbox($prefix . 'showdate');
+    if (property_exists($this, 'show_value') && $this->show_value) {
+        echo $this->formCheckbox($prefix . 'show_date');
     }
 
     $cal = ' <a class="calendarbtn" href="#"><img src="' . $this->base_url . '/js/yui/assets/calbtn.gif"></a>';

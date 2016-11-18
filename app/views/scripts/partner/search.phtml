@@ -35,7 +35,7 @@
 									'prefix' => 'funding_',
 									'start_date' => $this->criteria['funding_start_date'],
 									'end_date' => $this->criteria['funding_end_date'],
-									'showvalue' => false)
+									'show_value' => false)
 							);
 						}
 						echo $this->partial('/reports/date-range-partial.phtml',
@@ -43,7 +43,7 @@
 								'prefix' => 'capture_complete_',
 								'start_date' => $this->criteria['capture_complete_start_date'],
 								'end_date' => $this->criteria['capture_complete_end_date'],
-								'showvalue' => false)
+								'show_value' => false)
 						);
 					?>
 					<div class="clear"></div>
@@ -51,19 +51,6 @@
 					<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
 				</fieldset>
 			</form>
-
-
-			<script type="text/javascript">
-				$(function () {
-					$('.datepicker').datepicker({
-						changeMonth: true,
-						changeYear: true,
-						dateFormat: "dd/mm/yy"
-					});
-					$('.calendarbtn').click(openNearestDatePicker);
-				});
-			</script>
-
 
 			<?php if ( $this->criteria['go'] ) { ?>
 			<div class="hrGrey"></div>
