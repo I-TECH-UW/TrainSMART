@@ -10081,6 +10081,12 @@ die (__LINE__ . " - " . $sql);
         $this->view->assign('transitions', $transitions);
         $this->view->assign('locations', $locations);
         $this->view->assign('bases', $bases);
+        
+        //TA:#293 set location multiple selection
+         require_once ('views/helpers/Location.php');
+         $criteria['district_id'] = regionFiltersGetDistrictIDMultiple($criteria);
+         $criteria['region_c_id'] = regionFiltersGetLastIDMultiple('', $criteria);
+        
         $this->view->assign('criteria', $criteria);
     }
 
@@ -10331,7 +10337,10 @@ die (__LINE__ . " - " . $sql);
                     $select->join(array('partner'), 'partner.id = employee.partner_id', array());
                 }
                 if (!array_key_exists('location', $parts)) {
-                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
+                    //TA:#293 take multiple locations
+                   // $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
+                    $select->join('link_employee_location', 'link_employee_location.id_employee = employee.id', array());
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = link_employee_location.id', array());
                 }
                 if (!array_key_exists('employee_qualification_option', $parts)) {
                     $select->join('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
@@ -10417,6 +10426,12 @@ die (__LINE__ . " - " . $sql);
 		$this->view->assign('classifications', $classifications);
 		$this->view->assign('transitions', $transitions);
         $this->view->assign('transition_types', $transition_types);
+        
+        //TA:#293 set location multiple selection
+        require_once ('views/helpers/Location.php');
+        $criteria['district_id'] = regionFiltersGetDistrictIDMultiple($criteria);
+        $criteria['region_c_id'] = regionFiltersGetLastIDMultiple('', $criteria);
+        
 		$this->view->assign('criteria', $criteria);
 		$this->view->assign('funders', $funders);
 		$this->view->assign('mechanisms', $mechanisms);
@@ -10530,6 +10545,12 @@ die (__LINE__ . " - " . $sql);
         $this->view->assign('classifications', $classifications);
         $this->view->assign('transitions', $transitions);
         $this->view->assign('transition_types', $transition_types);
+        
+        //TA:#293 set location multiple selection
+        require_once ('views/helpers/Location.php');
+        $criteria['district_id'] = regionFiltersGetDistrictIDMultiple($criteria);
+        $criteria['region_c_id'] = regionFiltersGetLastIDMultiple('', $criteria);
+        
         $this->view->assign('criteria', $criteria);
         $this->view->assign('funders', $funders);
         $this->view->assign('mechanisms', $mechanisms);
@@ -10656,7 +10677,10 @@ die (__LINE__ . " - " . $sql);
                     $select->join(array('partner'), 'partner.id = employee.partner_id', array());
                 }
                 if (!array_key_exists('location', $parts)) {
-                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
+                    //TA:#293 take multiple locations 
+                   // $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
+                    $select->join('link_employee_location', 'link_employee_location.id_employee = employee.id', array());
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = link_employee_location.id', array());
                 }
                 if (!array_key_exists('employee_role_option', $parts)) {
                     $select->join('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
@@ -10749,6 +10773,12 @@ die (__LINE__ . " - " . $sql);
         $this->view->assign('classifications', $classifications);
         $this->view->assign('transitions', $transitions);
         $this->view->assign('transition_types', $transition_types);
+        
+        //TA:#293 set location multiple selection
+        require_once ('views/helpers/Location.php');
+        $criteria['district_id'] = regionFiltersGetDistrictIDMultiple($criteria);
+        $criteria['region_c_id'] = regionFiltersGetLastIDMultiple('', $criteria);
+        
         $this->view->assign('criteria', $criteria);
         $this->view->assign('funders', $funders);
         $this->view->assign('mechanisms', $mechanisms);

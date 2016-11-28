@@ -474,7 +474,13 @@
 
             if ($this->setting['display_employee_base'])
                 echo labelAndField($this, t('Employee Based at'), $this->bases, 'based_at');
-            region_filters_dropdown($this, $this->locations, $this->employee, false, false, '', true);
+            
+             //TA:#293 show multiple locations 
+           //region_filters_dropdown($this, $this->locations, $this->employee, false, false, '', true);
+            echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
+            array('translation' => $this->translation, 'locations' => $this->locations,
+                    'criteria' => $this->criteria, 'setting' => $this->setting));
+            
             $facDropDown = renderFacilityDropDown($this->facilities, $this->employee['site_id'], $this->viewonly);
             if ($this->hasACL('edit_facility')) {
                 $facDropDown .= '<a href="' . $this->base_url . '/site/add">' . t('Insert a New') . space . t('Site') . '</a> ';

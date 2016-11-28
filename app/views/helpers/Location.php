@@ -399,6 +399,53 @@ function renderFacilityDropDown($facilities, $selected_index, $readonly)
 
 }
 
+/** TA:#293 take district id multiple  */
+function regionFiltersGetDistrictIDMultiple($criteria){
+     $arr = array();
+        foreach($criteria['district_id'] as $val) {
+            $o = explode('_', $val);
+            if(count($o) > 1){
+                array_push($arr,$o[1]);
+            }
+        }
+       return $arr;
+}
+
+/** TA:#293 take multiple locations
+ * get the last drop down chosen by region filters
+ *
+ * @param string $prefix - prefix for html element names
+ * @param $criteria - html form parameters
+ * @return mixed|null
+ */
+function regionFiltersGetLastIDMultiple($prefix, $criteria)
+{
+    $arr= array();
+    if ($prefix)
+        $prefix .= '_';
+    $selectedID = null;
+
+    if($criteria[$prefix.'province_id']) $selectedID = $criteria[$prefix.'province_id'];
+    if($criteria[$prefix.'district_id']) $selectedID = $criteria[$prefix.'district_id'];
+    if($criteria[$prefix.'region_c_id']) $selectedID = $criteria[$prefix.'region_c_id'];
+    if($criteria[$prefix.'region_d_id']) $selectedID = $criteria[$prefix.'region_d_id'];
+    if($criteria[$prefix.'region_e_id']) $selectedID = $criteria[$prefix.'region_e_id'];
+    if($criteria[$prefix.'region_f_id']) $selectedID = $criteria[$prefix.'region_f_id'];
+    if($criteria[$prefix.'region_g_id']) $selectedID = $criteria[$prefix.'region_g_id'];
+    if($criteria[$prefix.'region_h_id']) $selectedID = $criteria[$prefix.'region_h_id'];
+    if($criteria[$prefix.'region_i_id']) $selectedID = $criteria[$prefix.'region_i_id'];
+
+    if (! $selectedID)
+        return null;
+
+    foreach($selectedID as $val) {
+        $o = explode('_', $val);
+        array_push($arr,array_pop($o));
+    }
+
+    return $arr;
+}
+
 
 /**
  * get the last drop down chosen by region filters

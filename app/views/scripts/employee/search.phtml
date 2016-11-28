@@ -27,7 +27,11 @@
 
 						echo labelAndField($this, t('Employee').space.t('Code'), 'text', 'employee_code', $this->criteria['employee_code']);
 						
-						echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, false );
+						//TA:#293 multiple location selection
+						//echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, false );
+						echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
+						    array('translation' => $this->translation, 'locations' => $this->locations,
+						        'criteria' => $this->criteria, 'setting' => $this->setting));
 						
 						if ( $this->setting['display_employee_partner'] ) {
   						  echo labelAndField($this, t('Partner'), $this->partners);
