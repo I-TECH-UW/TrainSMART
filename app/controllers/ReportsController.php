@@ -10086,6 +10086,10 @@ die (__LINE__ . " - " . $sql);
          require_once ('views/helpers/Location.php');
          $criteria['district_id'] = regionFiltersGetDistrictIDMultiple($criteria);
          $criteria['region_c_id'] = regionFiltersGetLastIDMultiple('', $criteria);
+         
+         //TA:#293.1
+         $helper = new Helper();
+         $this->viewAssignEscaped('sites', $helper->getFacilities());
         
         $this->view->assign('criteria', $criteria);
     }

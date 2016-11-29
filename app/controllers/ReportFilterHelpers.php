@@ -857,6 +857,12 @@ class ReportFilterHelpers extends ITechController
                 $joined['facility'] = 1;
             }
             $select->where('facility.id = ?', $criteria['site']);
+        }else if (isset($criteria['facilityInput']) && $criteria['facilityInput']) {//TA:#293.1
+            if (!array_key_exists('facility', $joined)) {
+                $select->joinInner('facility', 'facility.id = employee.site_id', array());
+                $joined['facility'] = 1;
+            }
+            $select->where('facility.id = ?', $criteria['facilityInput']);
         }
 
         // facility type
@@ -1159,7 +1165,7 @@ class ReportFilterHelpers extends ITechController
         }
 
         $s = $select->__toString();
-
+        
         return $select;
     }
 }
