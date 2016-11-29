@@ -347,7 +347,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
                 }
               },
             failure: function() {
-                alert('Could not delete this record, sorry!'); //TA:19:TODO throws this alert
+                alert('Could not delete this record, sorry!'); //TA:19:TODO throws this alert //TA:#301 ???? why fail ?????
             },
             scope: this
           };

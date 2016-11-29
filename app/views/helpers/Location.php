@@ -363,34 +363,87 @@ function renderFacilityDropDown($facilities, $selected_index, $readonly)
 
   // selects have a value attribute "region1_region2_region3", ie: 555_423_1
   // lets filter facility list by the last value when the user chooses something
+  //TA:#293.1 make it working for multiple selection as well
+//   $js = '
+//       $(function () {
+//         regionSelectElements = $("#province_id,#district_id,#region_c_id,#region_d_id,#region_e_id,#region_f_id,#region_g_id,#region_h_id,#region_i_id")
+//         .change(function () {
+//             var compare_id = "";
+//             if ($(this).val() != ""){
+//               compare_id = $(this).val().split("_").pop();
+//             } else {
+//               for (i = regionSelectElements.length - 1 ; i >= 0; i--) {
+//                 compare_id = $(regionSelectElements[i]).val().split("_").pop();
+//                 if (compare_id != "")
+//                   break;
+//               }
+//             }
+//             allFacilities = $("#facilityInputHidden").children();
+//             cnt = allFacilities.length;
+//             facilityInput = $("#facilityInput");
+//             facilityInput.empty();
+//             for(i = 0; i < cnt; i++){
+//               row = $(allFacilities[i]);
+//               if(compare_id == "" || row.hasClass(compare_id) || row.hasClass("defaultval")){
+//                 facilityInput.append(row.clone());
+//               }
+//             }
+//           });
+//       });
+//   ';
   $js = '
       $(function () {
         regionSelectElements = $("#province_id,#district_id,#region_c_id,#region_d_id,#region_e_id,#region_f_id,#region_g_id,#region_h_id,#region_i_id")
         .change(function () {
-            var compare_id = "";
+        
+        if(Array.isArray($(this).val())){
+            var compare_id = [];
             if ($(this).val() != ""){
-              compare_id = $(this).val().split("_").pop();
+              for (i = 0; i < $(this).val().length; i++) {
+                    compare_id.push(($(this).val())[i].split("_").pop());
+              }
             } else {
               for (i = regionSelectElements.length - 1 ; i >= 0; i--) {
-                compare_id = $(regionSelectElements[i]).val().split("_").pop();
-                if (compare_id != "")
+                compare_id.push($(regionSelectElements[i]).val().split("_").pop());
+                if ($(regionSelectElements[i]).val().split("_").pop() != "")
                   break;
               }
             }
-
             allFacilities = $("#facilityInputHidden").children();
             cnt = allFacilities.length;
             facilityInput = $("#facilityInput");
             facilityInput.empty();
-
             for(i = 0; i < cnt; i++){
               row = $(allFacilities[i]);
-
-              if(compare_id == "" || row.hasClass(compare_id) || row.hasClass("defaultval")){
+                for(j = 0; j < compare_id.length; j++){
+              if(compare_id[j] == "" || row.hasClass(compare_id[j]) || row.hasClass("defaultval")){
                 facilityInput.append(row.clone());
               }
-
+                    }
             }
+     }else{
+             var compare_id = "";
+             if ($(this).val() != ""){
+               compare_id = $(this).val().split("_").pop();
+             } else {
+               for (i = regionSelectElements.length - 1 ; i >= 0; i--) {
+                 compare_id = $(regionSelectElements[i]).val().split("_").pop();
+                 if (compare_id != "")
+                   break;
+               }
+             }
+             allFacilities = $("#facilityInputHidden").children();
+             cnt = allFacilities.length;
+             facilityInput = $("#facilityInput");
+             facilityInput.empty();
+             for(i = 0; i < cnt; i++){
+               row = $(allFacilities[i]);
+               if(compare_id == "" || row.hasClass(compare_id) || row.hasClass("defaultval")){
+                 facilityInput.append(row.clone());
+               }
+             }
+     }
+     
           });
       });
   ';

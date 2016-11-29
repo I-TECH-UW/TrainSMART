@@ -477,9 +477,11 @@
             
              //TA:#293 show multiple locations 
            //region_filters_dropdown($this, $this->locations, $this->employee, false, false, '', true);
-            echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
-            array('translation' => $this->translation, 'locations' => $this->locations,
-                    'criteria' => $this->criteria, 'setting' => $this->setting));
+//             echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
+//             array('translation' => $this->translation, 'locations' => $this->locations,
+//                     'criteria' => $this->criteria, 'setting' => $this->setting));
+                                    //&$view, &$locations, &$criteria, $is_multiple = false, $middleColumn = false, $prefix = '', $required = false
+            region_filters_dropdown($this, $this->locations, $this->employee, true, false, '', true);
             
             $facDropDown = renderFacilityDropDown($this->facilities, $this->employee['site_id'], $this->viewonly);
             if ($this->hasACL('edit_facility')) {

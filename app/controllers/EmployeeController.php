@@ -347,6 +347,8 @@ class EmployeeController extends ReportFilterHelpers
                 $params['facility_type_option_id'] = $params['employee_site_type_option_id'];
 
                 $status->checkRequired($this, 'employee_code', t('Employee Code'));
+                
+                $status->checkRequired($this, 'location_id', t('All Location Fields'));//TA:#293.1
 
                 $status->checkRequired($this, 'facilityInput', t('Site') . ' ' . t('Name'));
 
