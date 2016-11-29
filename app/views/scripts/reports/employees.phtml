@@ -62,7 +62,7 @@
                         //TA:#293.1
 //                         echo labelAndField($this, t('Site') . space . t('Name'),
 //                             $this->formSelect('site', isset($this->criteria['site']) ? $this->criteria['site'] : null, array(), $this->facilities), 'site');   
-                        echo labelAndField($this, t('Site Name'), renderFacilityDropDown($this->sites, $this->criteria['site'], $this->viewonly), 'facilityInput');
+                        echo labelAndField($this, t('Site Name'), renderFacilityDropDown($this->sites, $this->criteria['facilityInput'], $this->viewonly), 'facilityInput');
 
                         echo labelAndField($this, t('Facility Type'),
                             $this->formSelect('facility_type', isset($this->criteria['facility_type']) ? $this->criteria['facility_type'] : null, array(), $this->facilityTypes), 'facility_type');

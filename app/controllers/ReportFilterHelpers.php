@@ -850,7 +850,14 @@ class ReportFilterHelpers extends ITechController
                 $joined['facility'] = 1;
             }
             $select->columns('facility.facility_name');
+        }else if (isset($criteria['show_facilityInput']) && $criteria['show_facilityInput']) {//TA:#293.1
+            if (!array_key_exists('facility', $joined)) {
+                $select->joinInner('facility', 'facility.id = employee.site_id', array());
+                $joined['facility'] = 1;
+            }
+            $select->columns('facility.facility_name');
         }
+      
         if (isset($criteria['site']) && $criteria['site']) {
             if (!array_key_exists('facility', $joined)) {
                 $select->joinInner('facility', 'facility.id = employee.site_id', array());
@@ -1165,7 +1172,7 @@ class ReportFilterHelpers extends ITechController
         }
 
         $s = $select->__toString();
-        
+        //print $select;
         return $select;
     }
 }
