@@ -29,9 +29,10 @@
 						
 						//TA:#293 multiple location selection
 						//echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, false );
-						echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
-						    array('translation' => $this->translation, 'locations' => $this->locations,
-						        'criteria' => $this->criteria, 'setting' => $this->setting));
+// 						echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
+// 						    array('translation' => $this->translation, 'locations' => $this->locations,
+// 						        'criteria' => $this->criteria, 'setting' => $this->setting));
+						region_filters_dropdown( $this, $this->locations, $this->criteria, true, false );
 						
 						if ( $this->setting['display_employee_partner'] ) {
   						  echo labelAndField($this, t('Partner'), $this->partners);
