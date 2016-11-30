@@ -223,7 +223,7 @@ class EmployeeController extends ReportFilterHelpers
 
         if (!$this->hasACL('training_organizer_option_all')) {
             $select->joinInner('link_mechanism_partner', 'mechanism_option.id = link_mechanism_partner.mechanism_option_id', array())
-                ->joinInner('partner', 'link_mechanism_partner.partner_id = partner.id', array())
+                ->joinInner('partner', 'link_mechanism_partner.partner_id = partner.id', array('partner_id' => 'partner.id'))
                 ->joinInner('user_to_organizer_access',
                     'user_to_organizer_access.training_organizer_option_id = partner.organizer_option_id', array())
                 ->where('user_to_organizer_access.user_id = ?', $user_id);
@@ -231,6 +231,14 @@ class EmployeeController extends ReportFilterHelpers
 
         $select->order('mechanism_phrase ASC');
         $pm = $db->fetchAll($select);
+
+        $numRows = count($pm);
+        for ($i = 0; $i < $numRows; $i++) {
+            $select = $db->select()
+                ->from('link_mechanism_partner', array('partner_id'))
+                ->where('mechanism_option_id = ?', $pm[$i]['id']);
+            $pm[$i]['partners'] = $db->fetchCol($select);
+        }
 
         return $pm;
     }
