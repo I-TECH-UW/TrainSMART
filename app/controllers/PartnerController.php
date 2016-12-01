@@ -222,12 +222,6 @@ class PartnerController extends ReportFilterHelpers
                     ->where('partner_id = ?', $id)
                     ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
 
-                if (!$this->hasACL('training_organizer_option_all')) {
-                    $select->joinInner('user_to_organizer_access',
-                        'partner.organizer_option_id = user_to_organizer_access.training_organizer_option_id', array())
-                        ->where('user_to_organizer_access.user_id = ?', $uid);
-                }
-
                 $secondaryMechanisms = $db->fetchAll($select);
                 $this->view->assign('secondaryMechanisms', $secondaryMechanisms);
             }
