@@ -10038,10 +10038,18 @@ die (__LINE__ . " - " . $sql);
 
         $choose = array("0" => '--' . t("choose") . '--');
 
-        $partners = $choose + $db->fetchPairs($db->select()
-                ->from('partner', array('id', 'partner'))
-                ->order('partner ASC')
-            );
+        $select = $db->select()
+            ->from('partner', array('id', 'partner'))
+            ->order('partner ASC');
+
+        if (!$this->hasACL('training_organizer_option_all')) {
+            $uid = $this->isLoggedIn();
+            $select->join(array('user_to_organizer_access'),
+                'user_to_organizer_access.training_organizer_option_id = partner.organizer_option_id', array())
+                ->where('user_to_organizer_access.user_id = ?', $uid);
+        }
+
+        $partners = $choose + $db->fetchPairs($select);
 
         $facilities = $choose + $db->fetchPairs($db->select()
                 ->from('facility', array('id', 'facility_name'))
@@ -10083,13 +10091,13 @@ die (__LINE__ . " - " . $sql);
         $this->view->assign('bases', $bases);
         
         //TA:#293 set location multiple selection
-         require_once ('views/helpers/Location.php');
-         $criteria['district_id'] = regionFiltersGetDistrictIDMultiple($criteria);
-         $criteria['region_c_id'] = regionFiltersGetLastIDMultiple('', $criteria);
+        require_once ('views/helpers/Location.php');
+        $criteria['district_id'] = regionFiltersGetDistrictIDMultiple($criteria);
+        $criteria['region_c_id'] = regionFiltersGetLastIDMultiple('', $criteria);
          
-         //TA:#293.1
-         $helper = new Helper();
-         $this->viewAssignEscaped('sites', $helper->getFacilities());
+        //TA:#293.1
+        $helper = new Helper();
+        $this->viewAssignEscaped('sites', $helper->getFacilities());
         
         $this->view->assign('criteria', $criteria);
     }

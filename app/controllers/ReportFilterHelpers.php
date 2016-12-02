@@ -694,7 +694,7 @@ class ReportFilterHelpers extends ITechController
         $db = $this->dbfunc();
 
         $select = $db->select()
-            ->from(array('employee'), array());
+            ->from('employee', array());
 
         if (isset($criteria['show_partner']) && $criteria['show_partner']) {
             if (!array_key_exists('partner', $joined)) {
