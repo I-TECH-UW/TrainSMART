@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# CentOS x86_64 6.7 PHP 5.6.xx with Zend Debugger
+# CentOS x86_64 6.8 PHP 5.6.xx with Zend Debugger
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
@@ -11,7 +11,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "box-cutter/centos67"
+  config.vm.box = "box-cutter/centos68"
   config.vm.hostname = "centos6-php56-zend"
   
   # forward http
@@ -39,9 +39,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "file", source: "vagrant/bootstrap/zend-debugger.ini", destination: "/home/vagrant/php-debugger.ini"
   config.vm.provision "file", source: "vagrant/bootstrap/ZendDebugger-php5.6.so", destination: "/home/vagrant/ZendDebugger.so"
   config.vm.provision "file", source: "vagrant/bootstrap/php-5.6-debugging-settings.ini", destination: "/home/vagrant/php.ini"
-#  config.vm.provision "file", source: "vagrant/bootstrap/rc.local.append", destination: "/home/vagrant/rc.local.append"
-#  config.vm.provision "file", source: "vagrant/bootstrap/mysqld.init.d", destination: "/home/vagrant/mysqld.init"
-  
+
   config.vm.provider "virtualbox" do |v|
 	v.memory = 1024
 	v.cpus = 2
