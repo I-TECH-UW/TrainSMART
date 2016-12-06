@@ -1250,7 +1250,10 @@ class TrainingController extends ReportFilterHelpers {
 
 			}
 
-		} else if ($do == 'persons') { // update person table
+		} else if($do == 'file'){ //TA:#301
+		    require_once 'views/helpers/FileUpload.php';
+		    FileUpload::deleteFile ( $this);
+		}else if ($do == 'persons') { // update person table
 			require_once ('models/table/PersonToTraining.php');
 			$tableObj = new PersonToTraining ( );
 
