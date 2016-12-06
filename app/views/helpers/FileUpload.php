@@ -93,6 +93,21 @@ class FileUpload
 
         return $html;
     }
+    
+    //TA:#301
+    public static function deleteFile(&$controller){
+        $request = $controller->getRequest();
+        $response = $controller->getResponse();
+        $id = $controller->getSanParam('id');
+        if ($request->isPost() && $id) {
+            require_once('controllers/EditTableController.php');
+            $editTable = new EditTableController($request, $response);
+            $editTable->setParentController($controller);
+            $editTable->table = 'file';
+            $editTable->execute($request);
+        }
+    }
+    
 
 
 }

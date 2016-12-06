@@ -347,7 +347,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
                 }
               },
             failure: function() {
-                alert('Could not delete this record, sorry!'); //TA:19:TODO throws this alert //TA:#301 ???? why fail ?????
+                alert('Could not delete this record, sorry!'); 
             },
             scope: this
           };
@@ -356,9 +356,9 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
           oEditCell = this.getTdEl({record:oRecord, column:this.getColumn("edit")});
           oEditCell.innerHTML = this.config.deletingText;
 
-          queryString = "id=" + oRecord.getData("id") + "&delete=1&edittabledelete=1";
+          //TA:#301
+          queryString = "id=" + oRecord.getData("id") + "&delete=1&edittable=file&edittabledelete=1";
           cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/outputType/json", ajaxDelCallback, queryString);
-          //TA:19:TODO https://pepfarskillsmart.trainingdata.org/employee/outputType/json, ajaxDelCallback, id=27&delete=1&edittabledelete=1 
         }
 
         //
