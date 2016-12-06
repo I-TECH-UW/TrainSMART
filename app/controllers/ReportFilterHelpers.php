@@ -706,7 +706,7 @@ class ReportFilterHelpers extends ITechController
 
         if (isset($criteria['partner']) && $criteria['partner']) {
             if (!array_key_exists('partner', $joined)) {
-                $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+                $select->joinLeft(array('partner'), 'partner.id = employee.partner_id', array());
                 $joined['partner'] = 1;
             }
             $select->where('partner.id = ?', $criteria['partner']);
@@ -829,7 +829,7 @@ class ReportFilterHelpers extends ITechController
         // based at
         if (isset($criteria['show_based_at']) && $criteria['show_based_at']) {
             if (!array_key_exists('employee_base_option', $joined)) {
-                $select->joinInner('employee_base_option', 'employee_base_option.id = employee.employee_base_option_id', array());
+                $select->joinLeft('employee_base_option', 'employee_base_option.id = employee.employee_base_option_id', array());
                 $joined['employee_base_option'] = 1;
             }
             $select->columns('employee_base_option.base_phrase');
@@ -837,7 +837,7 @@ class ReportFilterHelpers extends ITechController
 
         if (isset($criteria['based_at']) && $criteria['based_at']) {
             if (!array_key_exists('employee_base_option', $joined)) {
-                $select->joinInner('employee_base_option', 'employee_base_option.id = employee.employee_base_option_id', array());
+                $select->joinLeft('employee_base_option', 'employee_base_option.id = employee.employee_base_option_id', array());
                 $joined['employee_base_option'] = 1;
             }
             $select->where('employee_base_option.id = ?', $criteria['based_at']);
@@ -846,13 +846,13 @@ class ReportFilterHelpers extends ITechController
         // site
         if (isset($criteria['show_site']) && $criteria['show_site']) {
             if (!array_key_exists('facility', $joined)) {
-                $select->joinInner('facility', 'facility.id = employee.site_id', array());
+                $select->joinLeft('facility', 'facility.id = employee.site_id', array());
                 $joined['facility'] = 1;
             }
             $select->columns('facility.facility_name');
         }else if (isset($criteria['show_facilityInput']) && $criteria['show_facilityInput']) {//TA:#293.1
             if (!array_key_exists('facility', $joined)) {
-                $select->joinInner('facility', 'facility.id = employee.site_id', array());
+                $select->joinLeft('facility', 'facility.id = employee.site_id', array());
                 $joined['facility'] = 1;
             }
             $select->columns('facility.facility_name');
@@ -860,13 +860,13 @@ class ReportFilterHelpers extends ITechController
       
         if (isset($criteria['site']) && $criteria['site']) {
             if (!array_key_exists('facility', $joined)) {
-                $select->joinInner('facility', 'facility.id = employee.site_id', array());
+                $select->joinLeft('facility', 'facility.id = employee.site_id', array());
                 $joined['facility'] = 1;
             }
             $select->where('facility.id = ?', $criteria['site']);
         }else if (isset($criteria['facilityInput']) && $criteria['facilityInput']) {//TA:#293.1
             if (!array_key_exists('facility', $joined)) {
-                $select->joinInner('facility', 'facility.id = employee.site_id', array());
+                $select->joinLeft('facility', 'facility.id = employee.site_id', array());
                 $joined['facility'] = 1;
             }
             $select->where('facility.id = ?', $criteria['facilityInput']);
@@ -927,14 +927,14 @@ class ReportFilterHelpers extends ITechController
         // role
         if (isset($criteria['show_primary_role']) && $criteria['show_primary_role']) {
             if (!array_key_exists('employee_role_option', $joined)) {
-                $select->join('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
+                $select->joinLeft('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
                 $joined['employee_role_option'] = 1;
             }
             $select->columns('employee_role_option.role_phrase');
         }
         if (isset($criteria['primary_role']) && $criteria['primary_role']) {
             if (!array_key_exists('employee_role_option', $joined)) {
-                $select->join('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
+                $select->joinLeft('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
                 $joined['employee_role_option'] = 1;
             }
             $select->where('employee_role_option.id = ?', $criteria['primary_role']);
@@ -962,14 +962,14 @@ class ReportFilterHelpers extends ITechController
         // intended transition
         if (isset($criteria['show_intended_transition']) && $criteria['show_intended_transition']) {
             if (!array_key_exists('intended_employee_transition_option', $joined)) {
-                $select->join(array('intended_employee_transition_option' => 'employee_transition_option'), 'intended_employee_transition_option.id = employee.employee_transition_option_id', array());
+                $select->joinLeft(array('intended_employee_transition_option' => 'employee_transition_option'), 'intended_employee_transition_option.id = employee.employee_transition_option_id', array());
                 $joined['intended_employee_transition_option'] = 1;
             }
             $select->columns('intended_employee_transition_option.transition_phrase AS intended_transition');
         }
         if (isset($criteria['intended_transition']) && $criteria['intended_transition']) {
             if (!array_key_exists('intended_employee_transition_option', $joined)) {
-                $select->join(array('intended_employee_transition_option' => 'employee_transition_option'), 'intended_employee_transition_option.id = employee.employee_transition_option_id', array());
+                $select->joinLeft(array('intended_employee_transition_option' => 'employee_transition_option'), 'intended_employee_transition_option.id = employee.employee_transition_option_id', array());
                 $joined['intended_employee_transition_option'] = 1;
             }
             $select->where('intended_employee_transition_option.id = ?', $criteria['intended_transition']);
@@ -978,7 +978,7 @@ class ReportFilterHelpers extends ITechController
         // transition outcome
         if (isset($criteria['show_actual_transition']) && $criteria['show_actual_transition']) {
             if (!array_key_exists('actual_employee_transition_option', $joined)) {
-                $select->join(array('actual_employee_transition_option' => 'employee_transition_option'),
+                $select->joinLeft(array('actual_employee_transition_option' => 'employee_transition_option'),
                     'actual_employee_transition_option.id = employee.employee_transition_complete_option_id', array());
                 $joined['actual_employee_transition_option'] = 1;
             }
@@ -987,7 +987,7 @@ class ReportFilterHelpers extends ITechController
         }
         if (isset($criteria['actual_transition']) && $criteria['actual_transition']) {
             if (!array_key_exists('actual_employee_transition_option', $joined)) {
-                $select->join(array('actual_employee_transition_option' => 'employee_transition_option'),
+                $select->joinLeft(array('actual_employee_transition_option' => 'employee_transition_option'),
                     'actual_employee_transition_option.id = employee.employee_transition_complete_option_id', array());
                 $joined['actual_employee_transition_option'] = 1;
             }
@@ -1070,11 +1070,11 @@ class ReportFilterHelpers extends ITechController
 
         if (isset($criteria['show_mechanism']) && $criteria['show_mechanism']) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
-                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                 $joined['link_mechanism_employee'] = 1;
             }
             if (!array_key_exists('mechanism_option', $joined)) {
-                $select->join('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
                 $joined['mechanism_option'] = 1;
             }
             $select->columns('mechanism_phrase');
@@ -1082,11 +1082,11 @@ class ReportFilterHelpers extends ITechController
         }
         if (isset($criteria['mechanism']) && $criteria['mechanism']) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
-                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                 $joined['link_mechanism_employee'] = 1;
             }
             if (!array_key_exists('mechanism_option', $joined)) {
-                $select->join('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
                 $joined['mechanism_option'] = 1;
             }
             if (count($criteria['mechanism']) > 1) {
@@ -1098,15 +1098,15 @@ class ReportFilterHelpers extends ITechController
 
         if (isset($criteria['show_funder']) && $criteria['show_funder']) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
-                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                 $joined['link_mechanism_employee'] = 1;
             }
             if (!array_key_exists('mechanism_option', $joined)) {
-                $select->join('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
                 $joined['mechanism_option'] = 1;
             }
             if (!array_key_exists('partner_funder_option', $joined)) {
-                $select->join('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array());
+                $select->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array());
                 $joined['partner_funder_option'] = 1;
             }
 
@@ -1114,15 +1114,15 @@ class ReportFilterHelpers extends ITechController
         }
         if (isset($criteria['funder']) && ($criteria['funder'])) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
-                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                 $joined['link_mechanism_employee'] = 1;
             }
             if (!array_key_exists('mechanism_option', $joined)) {
-                $select->join('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
                 $joined['mechanism_option'] = 1;
             }
             if (!array_key_exists('partner_funder_option', $joined)) {
-                $select->join('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array());
+                $select->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array());
                 $joined['partner_funder_option'] = 1;
             }
 
@@ -1153,17 +1153,17 @@ class ReportFilterHelpers extends ITechController
             $uid = $this->isLoggedIn();
 
             if (!array_key_exists('partner', $joined)) {
-                $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+                $select->joinLeft(array('partner'), 'partner.id = employee.partner_id', array());
                 $joined['partner'] = 1;
             }
 
             if (!array_key_exists('link_mechanism_partner', $joined)) {
-                $select->join(array('link_mechanism_partner'), 'partner.id = link_mechanism_partner.partner_id', array());
+                $select->joinLeft(array('link_mechanism_partner'), 'partner.id = link_mechanism_partner.partner_id', array());
                 $joined['link_mechanism_partner'] = 1;
             }
 
             if (!array_key_exists('user_to_organizer_access', $joined)) {
-                $select->join(array('user_to_organizer_access'),
+                $select->joinLeft(array('user_to_organizer_access'),
                     'user_to_organizer_access.training_organizer_option_id = partner.organizer_option_id', array());
                 $joined['user_to_organizer_access'] = 1;
             }
