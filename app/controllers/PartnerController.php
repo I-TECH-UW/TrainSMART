@@ -185,10 +185,10 @@ class PartnerController extends ReportFilterHelpers
                 $joinClause = $db->quoteInto('link_mechanism_partner.partner_id = subpartner.id AND link_mechanism_partner.partner_id != ?', $id);
                 $select = $db->select()
                     ->from('mechanism_option', array('id', 'mechanism_phrase', 'end_date'))
-                    ->joinInner('partner_funder_option', 'mechanism_option.funder_id = partner_funder_option.id', array('partner_funder_option.funder_phrase'))
-                    ->joinInner('link_mechanism_partner', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array())
+                    ->joinLeft('partner_funder_option', 'mechanism_option.funder_id = partner_funder_option.id', array('partner_funder_option.funder_phrase'))
+                    ->joinLeft('link_mechanism_partner', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array())
                     ->joinLeft(array('subpartner' => 'partner'), $joinClause, array('subpartner' => 'subpartner.partner'))
-                    ->joinInner('partner', 'mechanism_option.owner_id = partner.id', array('partner'))
+                    ->joinLeft('partner', 'mechanism_option.owner_id = partner.id', array('partner'))
                     ->where('mechanism_option.owner_id = ?', $id)
                     ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
 
@@ -216,8 +216,8 @@ class PartnerController extends ReportFilterHelpers
 
                 $select = $db->select()
                     ->from('link_mechanism_partner', array('link_mechanism_partner.end_date'))
-                    ->joinInner('mechanism_option', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array('mechanism_phrase'))
-                    ->joinInner('partner', 'mechanism_option.owner_id = partner.id', array('partner.partner'))
+                    ->joinLeft('mechanism_option', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array('mechanism_phrase'))
+                    ->joinLeft('partner', 'mechanism_option.owner_id = partner.id', array('partner.partner'))
                     ->where('owner_id != ?', $id)
                     ->where('partner_id = ?', $id)
                     ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
