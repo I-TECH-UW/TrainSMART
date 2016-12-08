@@ -2780,6 +2780,8 @@ echo $sql . "<br>";
 		$criteria ['showSuffix']        = ($this->getSanParam ( 'showSuffix' ));
 		$criteria ['showEmail']         = ($this->getSanParam ( 'showEmail' ));
 		$criteria ['showPhone']         = ($this->getSanParam ( 'showPhone' ));
+		$criteria ['show_score_increase']         = ($this->getSanParam ( 'show_score_increase' ));//TA:#313
+		$criteria ['show_other_scores']         = ($this->getSanParam ( 'show_other_scores' ));//TA:#313
 		$criteria ['showTot']           = ($this->getSanParam ( 'showTot' ) or ($criteria ['doCount'] and $criteria ['is_tot'] !== '' or $criteria ['is_tot'] === '0'));
 		$criteria ['showOrganizer']     = ($this->getSanParam ( 'showOrganizer' ) or ($criteria ['doCount'] and ($criteria ['training_organizer_option_id'])));
 		$criteria ['showFunding']       = ($this->getSanParam ( 'showFunding' ) or ($criteria ['doCount'] and $criteria ['funding_id'] or $criteria ['funding_id'] === '0'));
@@ -2962,10 +2964,15 @@ echo $sql . "<br>";
 			if ( $criteria['showViewingLoc']) {
 				$sql .= ', person_to_training_viewing_loc_option.location_phrase '; // wont work on is_trainers report
 			}
-
+			
 			if ($this->view->isScoreReport) {
-				$sql .= ', spre.score_value AS score_pre, spost.score_value AS score_post, ' . 'ROUND((spost.score_value - spre.score_value) / spre.score_value * 100) AS score_percent_change';
-				$sql .= ', scoreother.labels, scoreother.scores ';
+				$sql .= ', spre.score_value AS score_pre, spost.score_value AS score_post';
+				if ($criteria ['show_score_increase']) { //TA:#313
+				    $sql .= ', ROUND((spost.score_value - spre.score_value) / spre.score_value * 100) AS score_percent_change';
+				}
+				if ($criteria ['show_other_scores']) {//TA:#313
+				    $sql .= ', scoreother.labels, scoreother.scores ';
+				}
 				if($this->setting('display_training_pt_pass') !== '0'){
 				 $sql .= ',spost.pass_fail as pass_fail ';//TA:#271
 				}
@@ -3219,7 +3226,8 @@ echo $sql . "<br>";
 			if ($where)
 			$sql .= ' WHERE ' . implode ( ' AND ', $where );
 
-			if ($this->view->isScoreReport && $criteria ['score_percent_min']) {
+			//TA:#313
+			if ($this->view->isScoreReport && $criteria ['score_percent_min'] && $criteria ['show_score_increase']) {
 				$sql .= ' HAVING score_percent_change > ' . $criteria ['score_percent_min'];
 			}
 

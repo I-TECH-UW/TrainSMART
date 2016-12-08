@@ -171,11 +171,11 @@ class SyncController extends ReportFilterHelpers
 		}
 		// status dump for async 
 		if($this->getSanParam('statuscheck')) {
-		    //TA:1000 uncomment // comment for debuging otherwise local MySQL is crushed
-			$syncLog = new SyncLog($fid);
-			$remaining = count(SyncCompare::$compareTypes) - $syncLog->getDiffStatus();
-			$this->sendData ( array($remaining) );
-//		    $this->sendData ( array(count(SyncCompare::$compareTypes)) ); //TA:10000 use for debiging
+		    //TA:#303 uncomment // comment for debuging otherwise local MySQL is crushed
+//			$syncLog = new SyncLog($fid);
+//			$remaining = count(SyncCompare::$compareTypes) - $syncLog->getDiffStatus();
+//			$this->sendData ( array($remaining) );
+		    $this->sendData ( array(count(SyncCompare::$compareTypes)) ); //TA:#303 use for debiging
 			return;
 		} else if($this->getSanParam('startjob')) {// thread start for async 
 			try {

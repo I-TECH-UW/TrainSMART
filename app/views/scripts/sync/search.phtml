@@ -17,8 +17,8 @@ print ScriptContainer::$instance->renderJSHead();
 	  <div id="content">
 			<h1>Search for Differences</h1>
 			<p>Please do not close your browser window.
-			We are now searching for desktop data diffrences.<br>
-			When the process is complete, you'll have a chance to review and/or commit these changes.<br>
+			We are now searching for desktop data differences.<br>
+			When the process is complete, you'll have a chance to review and commit these changes.<br>
 			The search operation can take five minutes or more depending on uploading total data volume.
 			</p>
 			<p>&nbsp;</p>
@@ -30,7 +30,7 @@ print ScriptContainer::$instance->renderJSHead();
 			
 			<br/><br/><br/>
 			
-			<iframe width="90%" height="600px" src="<?php echo $this->base_url;?>/sync/search/fid/<?php echo $this->fid;?>/startjob/1/outputType/text';?>"></iframe>
+			<iframe width="90%" height="400px" src="<?php echo $this->base_url;?>/sync/search/fid/<?php echo $this->fid;?>/startjob/1/outputType/text';?>"></iframe>
 	  </div>
 	  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
 	</div>

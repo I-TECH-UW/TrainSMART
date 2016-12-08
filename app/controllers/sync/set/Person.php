@@ -99,7 +99,7 @@ class SyncSetPerson extends SyncSetSimple
 	/*
 	 * Match by five fields first_name, last_name, middle_name, datebirth, institutionid. If any of three are the same then return.
 	 */
-	public function fetchFieldMatch($ld, $inst_id){
+	public function fetchFieldMatchOld2($ld, $inst_id){
 	    
 // 	    TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // 	    ne pravil'no match. Nel'zya delat' match po:
@@ -167,7 +167,35 @@ id in (select personid from tutor where institutionid=" . $inst_id . ")) " ;
 	    return null;
 	}
 	
-	public function isDirty($ld,$rd) {
+	/*
+	 * TA:#303 Match by four fields first_name, last_name, middle_name, institutionid. 
+	 */
+	public function fetchFieldMatch($ld, $inst_id){
+	     
+	    $row = null;
+	     
+	    $fn = " (trim(lcase(CONCAT(IFNULL(first_name,'')))))='".trim(strtolower((str_replace("'", "\'",@$ld->first_name)))) . "' ";
+	    $ln = " (trim(lcase(CONCAT(IFNULL(last_name,'')))))='".trim(strtolower((str_replace("'", "\'", @$ld->last_name)))) . "' ";
+	    $mn = " (trim(lcase(CONCAT(IFNULL(middle_name,'')))))='".trim(strtolower((str_replace("'", "\'", @$ld->middle_name)))) . "' ";
+	    $inst = "";
+	    if($inst_id){
+	    $inst = " and (
+            id in (select personid from student where institutionid=" . $inst_id . ")
+            or
+            id in (select personid from tutor where institutionid=" . $inst_id . ")) " ;
+	    }
+	     
+	    $where = $fn . " and " . $ln . " and " . $mn . $inst . " and is_deleted=0";
+	    $row = $this->getRightTable()->fetchRow($where);
+	     
+	    if($row) {
+	        return $row;
+	    }
+	
+	    return null;
+	}
+	
+	public function isDirtyOld($ld,$rd) {
 	    foreach($this->getColumns() as $col) {
 	        if ( $ld[$col] != $rd[$col]){
 	           // print " Dirty id:" . $ld['id'] . "=" . $rd['id'] . "=>" . $col . ":". $ld[$col] . "=" . $rd[$col] . "; ";
@@ -176,6 +204,22 @@ id in (select personid from tutor where institutionid=" . $inst_id . ")) " ;
 	    }
 	    return false;
 	}
+	
+	//TA:#303
+	public function isDirty($ld,$rd) {
+	    foreach($this->getColumns() as $col) {
+	        if(($col !== 'first_name' && $col !== 'last_name' && $col !== 'middle_name')
+	            &&!(
+	            ($rd[$col] === null && trim($ld[$col]) === '') ||
+	            ($rd[$col] === null && trim($ld[$col]) === '0') ||
+	            ($rd[$col] === 'na' && trim($ld[$col]) === '')
+	        )
+	            && trim($rd[$col]) !== trim($ld[$col])){
+	            return true;
+	        }   
+	        }
+	        return false;
+	    }
 	
 	
 	public function isConflict($ld, $rd){
@@ -218,11 +262,18 @@ id in (select personid from tutor where institutionid=" . $inst_id . ")) " ;
 	            list($fk, $type) = $col;
 	            $rItem->$fk = $this->_map_fk($lItem, $fk, $type);
 	        } else {
-	            //update value
-	            if($rItem->$col !== $lItem->$col){
-	                $this->log = $this->log . $col . ":" . $rItem->$col . "=>" . $lItem->$col . ", ";
+	            //update value except for first_name, last_name, middle_name
+                //TA:#303 do not update if empty and null, empty and 0, null and 0
+	            if(($col !== 'first_name' && $col !== 'last_name' && $col !== 'middle_name')
+	                && !( 
+	                ($rItem->$col === null && trim($lItem->$col) === '') ||
+	                ($rItem->$col === null && trim($lItem->$col) === '0') ||
+	                ($rItem->$col === 'na' && trim($lItem->$col) === '')
+	                ) 
+	                && trim($rItem->$col) !== trim($lItem->$col)){
+	                   $this->log = $this->log . $col . ":" . $rItem->$col . "=>" . $lItem->$col . ", ";
 	            }
-	            $rItem->$col = $lItem->$col;
+	            $rItem->$col = trim($lItem->$col);
 	        }
 	    }
 	    $this->log = $this->log . "\n";

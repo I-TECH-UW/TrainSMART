@@ -179,6 +179,14 @@ class TrainingController extends ReportFilterHelpers {
 					$status->addError ( 'post', $this->view->translation ['Post Test Score'] . ' ' . t ( 'must be between 1-100.' ) );
 				}
 			}
+			//TA:#313
+			if ($final_mark = trim ( $this->getSanParam ( 'final_mark' ) )) {
+			    if (! is_numeric ( $final_mark )) {
+			        $status->addError ( 'final_mark', 'Final Course Mark must be numeric.'  );
+			    } elseif ($final_mark < 0 || $final_mark > 100) {
+			        $status->addError ( 'final_mark', 'Final Course Mark must be between 1-100.'  );
+			    }
+			}
 
 			//TA:17: 9/2/2014 Start date is not required
 			//if ( $this->getSanParam('start-year') == ""  || $this->getSanParam('start-month') == "" || $this->getSanParam('start-day') == "" )
