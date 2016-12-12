@@ -101,7 +101,8 @@ public function isConflict($ld, $rd){
         if($rows->toArray()) {
             if(count($rows->toArray()) > 1){
                 $message = count($rows->toArray()) . " records are found for cohortname=" . @$ld->cohortname;
-                $this->log = $this->log . "CONFLICT: " . $message . "\n";
+                //$this->log = $this->log . "CONFLICT: " . $message . "\n";
+                $this->error = $this->error . "CONFLICT: " . $message . "\n";
                 return $message;
             }
         }

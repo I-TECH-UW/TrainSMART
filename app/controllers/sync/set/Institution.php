@@ -73,7 +73,8 @@ class SyncSetInstitution extends SyncSetSimple
         if ($rows->toArray()) {
             if (count($rows->toArray()) > 1) {
                 $message = count($rows->toArray()) . " records are found for institutionname=" . @$ld->institutionname;
-                $this->log = $this->log . "CONFLICT: " . $message . "\n";
+                //$this->log = $this->log . "CONFLICT: " . $message . "\n"; //TA:#315
+                $this->error = $this->error . "CONFLICT: " . $message . "\n";
                 return $message;
             }
         }

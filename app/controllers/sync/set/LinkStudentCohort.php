@@ -35,13 +35,20 @@ class SyncSetLinkStudentCohort extends SyncSetSimple
         );
     }
     
-    public function isDirty($ld,$rd) {
-        foreach($this->getColumns() as $col) {
-            if ( $ld[$col] != $rd[$col])
-                return true;
-        }
-        return false;
-    }
+    //TA:#303, TA:#315,  $rd = DB, $ld = sqlite
+	public function isDirty($ld,$rd) {
+	    foreach($this->getColumns() as $col) {
+	        if ( trim($ld[$col]) != trim($rd[$col])){
+	            if(
+	                ($col === 'dropdate' && !($rd[$col] === '0000-00-00' && trim($ld[$col]) === ''))
+	                
+	             ){
+	             return true;
+	           }
+	       }
+	    }
+	    return false;
+	}
     
     public function isConflict($ld, $rd){
 //         if($ld['id'] === $rd['id'] && !($ld['id_cohort'] === $rd['id_cohort'] && $ld['id_student'] === $rd['id_student'])){

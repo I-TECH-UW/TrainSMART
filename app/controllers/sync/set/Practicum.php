@@ -54,7 +54,8 @@ class SyncSetPracticum extends SyncSetSimple
                 ", practicumname=" . @$ld->practicumname .
                 ", facilityid=" . @$ld->facilityid .
                 ", practicumdate=" . @$ld->practicumdate;
-                $this->log = $this->log . "CONFLICT: " . $message . "\n";
+                //$this->log = $this->log . "CONFLICT: " . $message . "\n";
+                $this->error = $this->error . "CONFLICT: " . $message . "\n"; //TA:#315
                 return $message;
             }
         }

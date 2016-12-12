@@ -205,7 +205,7 @@ id in (select personid from tutor where institutionid=" . $inst_id . ")) " ;
 	    return false;
 	}
 	
-	//TA:#303
+	//TA:#303 $rd = DB, $ld = sqlite
 	public function isDirty($ld,$rd) {
 	    foreach($this->getColumns() as $col) {
 	        if(($col !== 'first_name' && $col !== 'last_name' && $col !== 'middle_name')
@@ -220,18 +220,46 @@ id in (select personid from tutor where institutionid=" . $inst_id . ")) " ;
 	        }
 	        return false;
 	    }
+	    
+	    public function isConflictOld($ld, $rd){
+	        $s = trim(strtolower((@$ld->first_name).(@$ld->middle_name).(@$ld->last_name)));
+	        $where = "(trim(lcase(CONCAT(IFNULL(first_name,''), IFNULL(middle_name,''), IFNULL(last_name,''))))=".$this->quote($s).")";
+	        if(@$ld->birthdate)
+	            $where .= " AND birthdate = '". @$ld->birthdate . "' ";
+	        if(@$ld->facility_id)
+	            $where .= " AND facility_id = ". @$ld->facility_id;
+	        if(@$ld->gender)//TA:1000
+	            $where .= " AND gender = '". @$ld->gender. "' ";
+	        $where .= " AND is_deleted = 0"; //TA:1000
+	        $rows = $this->getRightTable()->fetchAll($where);
+	        if($rows->toArray()) {
+	            if(count($rows->toArray()) > 1){
+	                $message = count($rows->toArray()) . " records are found for first_name=" . @$ld->first_name .
+	                ", middle_name=" . @$ld->middle_name .
+	                ", last_name=" . @$ld->last_name .
+	                ", birthdate=" . @$ld->birthdate .
+	                ", gender=" . @$ld->gender .
+	                ", facility_id=" . @$ld->facility_id;
+	                $this->log = $this->log . "CONFLICT: " . $message . "\n";
+	                return $message;
+	            }
+	        }
+	        return null;
+	    }
 	
-	
-	public function isConflict($ld, $rd){
+	//TA:#303, TA:#315,  $rd = DB, $ld = sqlite, forse conflict do not allow to overwrite data
+	public function isConflict($ld, $rd, $inst_id){
         $s = trim(strtolower((@$ld->first_name).(@$ld->middle_name).(@$ld->last_name)));
 		$where = "(trim(lcase(CONCAT(IFNULL(first_name,''), IFNULL(middle_name,''), IFNULL(last_name,''))))=".$this->quote($s).")";
-		if(@$ld->birthdate)
+		if(@$ld->birthdate && trim(@$ld->birthdate) != '')
 		    $where .= " AND birthdate = '". @$ld->birthdate . "' ";
-		if(@$ld->facility_id)
-	           $where .= " AND facility_id = ". @$ld->facility_id;
-		if(@$ld->gender)//TA:1000
-		    $where .= " AND gender = '". @$ld->gender. "' ";
+// 		if(@$ld->facility_id && trim(@$ld->facility_id) !=='0')
+// 	           $where .= " AND facility_id = ". @$ld->facility_id;
+// 		if(@$ld->gender)//TA:1000
+// 		    $where .= " AND gender = '". @$ld->gender. "' ";
 		$where .= " AND is_deleted = 0"; //TA:1000
+		$where .= " AND (person.id in (select personid from student where institutionid=$inst_id) or
+person.id in (select personid from tutor where institutionid=$inst_id))";
  		$rows = $this->getRightTable()->fetchAll($where);
         if($rows->toArray()) {
             if(count($rows->toArray()) > 1){
@@ -239,9 +267,11 @@ id in (select personid from tutor where institutionid=" . $inst_id . ")) " ;
                 ", middle_name=" . @$ld->middle_name .
                 ", last_name=" . @$ld->last_name .
                 ", birthdate=" . @$ld->birthdate .
-                ", gender=" . @$ld->gender .
-                ", facility_id=" . @$ld->facility_id;
-                $this->log = $this->log . "CONFLICT: " . $message . "\n";
+               // ", gender=" . @$ld->gender .
+               // ", facility_id=" . @$ld->facility_id;
+                ", institution_id=" . $inst_id;
+                //$this->log = $this->log . "CONFLICT: " . $message . "\n";
+                $this->error = $this->error . "CONFLICT: " . $message . "\n";
                 return $message;
             }
         }

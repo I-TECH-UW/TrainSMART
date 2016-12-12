@@ -314,6 +314,7 @@ class SyncCompare
         
         $errors = array();
         $log_text = "";
+        $error_text = ""; //TA:#315
         //TA:#303 $this->syncLog->truncate(); // delete unfinished items for db file
         
         //TA:99 to match person we have to take insitutionid from 'student' or 'tutor' table
@@ -346,7 +347,12 @@ class SyncCompare
                         $rItem = $set->fetchFieldMatch($ld, $inst_id);
                         if ($rItem) {
                             if ($set->isDirty($ld, $rItem)) {
-                                $isConflict = $set->isConflict($ld, $rItem);
+                                //TA:#303, TA:#315
+                                if($tableType === 'person'){
+                                    $isConflict = $set->isConflict($ld, $rItem, $inst_id);
+                                }else{
+                                    $isConflict = $set->isConflict($ld, $rItem);
+                                }
                                 if ($isConflict) {
                                     // write message and skip action
                                     //if(!$commit){
@@ -418,6 +424,7 @@ class SyncCompare
                 }
     
                 $log_text = $log_text . $set->getLog();
+                $error_text = $error_text . $set->getError();
             }
             // do not remove this line (to show that process is done)
             //TA:#303 $this->syncLog->addTableCompleteMessage($tableType);
@@ -427,8 +434,14 @@ class SyncCompare
             // TA:50
             $log_text = $log_text . "];\n";
         }
-        if(!$commit) 
-            print $log_text;
+        if(!$commit){
+            //TA:#315
+            if($error_text !== ""){
+                $error_text = "The following conflicts are found in data:\n" . $error_text . "\n\nWe recommend to fix conflicts before continue with the next step and rerun sync process again. 
+\nOr you can continue with the next step, but please note, conflict data will not be committed to database.\n";
+            }
+            print $error_text . "\n\nUploading process is completed with folowing database tables:\n\n" . $log_text;
+        }
         
         //clean up synclog table after commit
         if($commit){

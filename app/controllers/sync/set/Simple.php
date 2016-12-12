@@ -18,6 +18,7 @@ class SyncSetSimple
 	public $syncfile_id = null;
 	
 	public $log = ""; //TA:50
+	public $error = ""; //TA:#313
 	public $last_id = null;
 	
 	//public static $used_ids = array();//TA:50
@@ -538,6 +539,11 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 	//TA:50
 	public function getLog() {
 	    return $this->log;
+	}
+	
+	//TA:#315
+	public function getError() {
+	    return $this->error;
 	}
 	
 }
