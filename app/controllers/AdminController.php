@@ -381,6 +381,7 @@ class AdminController extends UserController
 			'check_course_objectives' => 'display_course_objectives',
 			'check_training_pre'      => 'display_training_pre_test',
 			'check_training_post'     => 'display_training_post_test',
+		    'check_training_final_mark'     => 'display_training_final_mark',//TA:#313
 			'check_training_custom1'  => 'display_training_custom1',
 			'check_training_custom2'  => 'display_training_custom2',
 			'check_training_custom3'     => 'display_training_custom3',

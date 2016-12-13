@@ -1119,7 +1119,7 @@ if ($this->setting ['display_region_c']) {
                 href="<?php echo $this->base_url; ?>/training/scores-import/training/<?php echo $this->row['id']; ?>"><?php tp('Import Scores'); ?></a>
         </div>
     <?php } ?>
-    <?php if ($this->setting['display_training_pre_test'] || $this->setting['display_training_post_test']) : ?>
+    <?php if ($this->setting['display_training_pre_test'] || $this->setting['display_training_post_test'] || $this->setting['display_training_final_mark']) : ?>
         <!-- test scores -->
         <div class="clear"></div>
         <div class="hrGrey"></div>
@@ -1137,6 +1137,12 @@ if ($this->setting ['display_region_c']) {
                 <?php echo $this->translation['Post Test Score']; ?>
                 <input type="text" size="8" name="post"
                        value="<?php echo $this->row['post']; ?>" <?php echo $this->viewonly; ?>>
+            <?php endif; ?>
+            <!-- TA:#313 -->
+            <?php if ($this->setting['display_training_final_mark']) : ?>
+                &nbsp;Final Course Mark
+                <input type="text" size="8" name="final_mark"
+                       value="<?php echo $this->row['final_mark']; ?>" <?php echo $this->viewonly; ?>>
             <?php endif; ?>
 
         </div>

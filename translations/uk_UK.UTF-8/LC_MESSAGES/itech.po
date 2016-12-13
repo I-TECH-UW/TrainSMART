@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Trainsmart\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-09-24 16:51-0800\n"
-"PO-Revision-Date: 2016-02-23 11:14-0800\n"
+"PO-Revision-Date: 2016-12-09 08:59-0800\n"
 "Last-Translator: DB\n"
 "Language-Team: Fuse IQ <todd@fuseiq.com>\n"
 "Language: uk_UA\n"
@@ -2014,10 +2014,7 @@ msgstr "Будь ласка, виберіть зі списку або дода�
 msgid "Please enter the number of days for this trainer."
 msgstr "Будь ласка, введіть кількість днів для даного інструктора."
 
-msgid ""
-"You must edit this person's trainer profile before adding them to this session.\\n"
-"\\n"
-"Would you like to do this now?"
+msgid "You must edit this person's trainer profile before adding them to this session.\\n\\nWould you like to do this now?"
 msgstr "Ви повинні відредагувати інформацію про даного інструктора перед тим як додати його до цієї сессіі.Ви хочете зробити це зараз?"
 
 msgid "Participant Information"
@@ -4150,6 +4147,5 @@ msgstr "Заклади, що чекають затвердження"
 msgid "Upload"
 msgstr "Завантажити"
 
-msgid "Trainer type"
+msgid "Trainer Category"
 msgstr "Категорія інструктора"
-

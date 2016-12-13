@@ -171,11 +171,11 @@ class SyncController extends ReportFilterHelpers
 		}
 		// status dump for async 
 		if($this->getSanParam('statuscheck')) {
-		    //TA:1000 uncomment // comment for debuging otherwise local MySQL is crushed
-			$syncLog = new SyncLog($fid);
-			$remaining = count(SyncCompare::$compareTypes) - $syncLog->getDiffStatus();
-			$this->sendData ( array($remaining) );
-//		    $this->sendData ( array(count(SyncCompare::$compareTypes)) ); //TA:10000 use for debiging
+		    //TA:#303 uncomment // comment for debuging otherwise local MySQL is crushed
+// 			$syncLog = new SyncLog($fid);
+// 			$remaining = count(SyncCompare::$compareTypes) - $syncLog->getDiffStatus();
+// 			$this->sendData ( array($remaining) );
+		    $this->sendData ( array("0") ); //TA:#303 use for debiging
 			return;
 		} else if($this->getSanParam('startjob')) {// thread start for async 
 			try {
@@ -194,7 +194,9 @@ class SyncController extends ReportFilterHelpers
 				$this->sendData ( array("Uploading process is completed with errors \n".print_r($has_errors,true)) );
 				
 			} else {
-				$this->sendData ( array('Uploading process is completed with folowing database tables:') );
+			    //TA:#315
+				//$this->sendData ( array('Uploading process is completed with folowing database tables:') );
+				$this->sendData (array(' ') );
 			}
 			return;
 		}

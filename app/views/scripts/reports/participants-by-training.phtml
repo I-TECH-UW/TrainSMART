@@ -411,12 +411,18 @@ if ( $this->setting['display_viewing_location'] && $this->mode != 'search' && ! 
   </div></div>
 
 	<div class="fieldLabel" id="is_tot_lbl"><?php tp('Show score increase above') ?></div>
-	<div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" style="visibility:hidden;"></div>
-
+	<div class="fieldInput"><div  class="leftBorderPad">
+	<!-- TA:#313 -->
+	<input type="checkbox" name="show_score_increase" <?php  if ($this->criteria['show_score_increase']) echo 'CHECKED';?> /></div>
 	<div  class="leftBorder">
   <input type="text" name="score_percent_min" value="<?php echo @$this->criteria['score_percent_min']; ?>" size="5" />%
   </div></div>
-
+  
+  <!-- TA:#313 -->
+  <div class="fieldLabel" id="is_tot_lbl">Other Scores</div>
+   <div class="fieldInput"><div  class="leftBorderPad">
+   <input type="checkbox" name="show_other_scores" <?php  if ($this->criteria['show_other_scores']) echo 'CHECKED';?> /></div><label for="showTot" ></label></div>
+	
 
 <?php } ?>
 
@@ -762,10 +768,12 @@ var trainingColumnDefs = [
   ,{key:"score_post", label: "<?php echo tp('Post-Test'); ?>", sortable:true, sortOptions: { sortFunction: myScorePostSortFunction }, resizeable:true}
   <?php if($this->setting['display_training_pt_pass']){ //TA:#271 ?> 
   ,{key:"pass_fail", label: "<?php echo tp('Pass/Fail'); ?>", sortable:true, resizeable:true} 
-  <?php }?>
+  <?php }if ($this->criteria ['show_score_increase']) { //TA:#313?>
   ,{key:"score_percent_change", label: "<?php echo tp('% Change'); ?>", sortable:true, sortOptions: { sortFunction: myScorePercentSortFunction }, resizeable:true}
+  <?php } if ($this->criteria ['show_other_scores']) {//TA:#313?>
   ,{key:"labels", label: "<?php echo tp('Other Scores'); ?>", sortable:true, resizeable:true}
-  ,{key:"scores", label: "<?php echo tp('Other Scores'); ?>", sortable:true, resizeable:true}
+  ,{key:"scores", label: "<?php echo tp('Other Scores'); ?>", sortable:true, resizeable:true}  
+  <?php } ?>   
   <?php } ?>
 
 

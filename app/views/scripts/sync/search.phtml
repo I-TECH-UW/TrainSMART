@@ -16,21 +16,27 @@ print ScriptContainer::$instance->renderJSHead();
 	  <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
 	  <div id="content">
 			<h1>Search for Differences</h1>
+			<div id="message">
 			<p>Please do not close your browser window.
-			We are now searching for desktop data diffrences.<br>
-			When the process is complete, you'll have a chance to review and/or commit these changes.<br>
+			We are now searching for desktop data differences.<br>
+			When the process is complete, you'll have a chance to review and commit these changes.<br>
 			The search operation can take five minutes or more depending on uploading total data volume.
 			</p>
+			</div>
 			<p>&nbsp;</p>
 			<p class="status" id="status-box">&nbsp;</p>
 			
-			 <form style="display:none; width:50%;" id="continue" action="<?php echo $this->base_url;?>/sync/review/fid/<?php echo $this->fid;?>" method="get">
-				  <input type="submit" class="submitArrow" name="go" value="<?php tp('Continue')?>" />
-			</form>
-			
 			<br/><br/><br/>
 			
-			<iframe width="90%" height="600px" src="<?php echo $this->base_url;?>/sync/search/fid/<?php echo $this->fid;?>/startjob/1/outputType/text';?>"></iframe>
+			<iframe width="90%" height="400px" src="<?php echo $this->base_url;?>/sync/search/fid/<?php echo $this->fid;?>/startjob/1/outputType/text';?>"></iframe>
+	  
+	  <!-- TA:#315 -->
+	  <form style="display:none; width:50%;" id="continue" action="<?php echo $this->base_url;?>/sync/review/fid/<?php echo $this->fid;?>" method="get">
+				 <div align="center"> <br><br><input type="submit" class="submitArrow" name="go" value="<?php tp('Continue')?>" /><br><br></div>
+			</form>
+			
+			
+			
 	  </div>
 	  <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
 	</div>
@@ -64,11 +70,17 @@ print ScriptContainer::$instance->renderJSHead();
 			var m = o.responseText;
 			if ( m == 0) {
 			    var formObj = YAHOO.util.Dom.get('continue');
-			    formObj.style.display = 'block';				
+			    //TA:#315
+			    //formObj.style.display = 'block';	
+			    formObj.style.display = 'inline	';		
 			}
-			
-			o.argument.messageContainer.innerHTML = m + ' tables remaining<br />';
-		},
+
+			//TA:#315
+			//o.argument.messageContainer.innerHTML = m + ' tables remaining<br />';
+			var mesObj = YAHOO.util.Dom.get('message');
+			mesObj.style.display = 'none';
+			o.argument.messageContainer.innerHTML = "Searching for desktop data differences is completed. <br><font color='red'><b>Please read carefully the entire output before continue with the next step.</font></b>";
+			},
 		startRequest: function(callback) {
 			YAHOO.util.Connect.asyncRequest('GET', callback.argument.getUrl, callback);
 		}	 

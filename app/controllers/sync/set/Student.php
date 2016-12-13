@@ -55,10 +55,19 @@ class SyncSetStudent extends SyncSetSimple
 		return null;
 	}
 	
+	//TA:#303, TA:#315,  $rd = DB, $ld = sqlite
 	public function isDirty($ld,$rd) {
 	    foreach($this->getColumns() as $col) {
-	        if ( $ld[$col] != $rd[$col])
-	            return true;
+	        if ( trim($ld[$col]) != trim($rd[$col])){
+	            if(($col === 'postfacilityname' && !($rd[$col] === '0' && trim($ld[$col]) === ''))
+	                &&
+	                ($col === 'hscomldate' && !($rd[$col] === '0000-00-00' && trim($ld[$col]) === ''))
+	                &&
+	                ($col === 'schoolstartdate' && !($rd[$col] === '0000-00-00' && trim($ld[$col]) === ''))
+	             ){
+	             return true;
+	           }
+	       }
 	    }
 	    return false;
 	}
@@ -68,7 +77,8 @@ class SyncSetStudent extends SyncSetSimple
         if($rows->toArray()) {
             if(count($rows->toArray()) > 1){
                 $message =  count($rows->toArray()) . " records are found for personid=" . @$ld->personid;
-                $this->log = $this->log . "CONFLICT: " . $message . "\n";
+                //$this->log = $this->log . "CONFLICT: " . $message . "\n";
+                $this->error = $this->error . "CONFLICT: " . $message . "\n"; //TA:#315
                 return $message;
             }
         }
