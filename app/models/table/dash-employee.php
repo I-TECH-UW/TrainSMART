@@ -36,7 +36,8 @@ class DashviewEmployee extends Dashview
     {
         $db = $this->dbfunc();
 
-        $sql_string = 'SELECT DISTINCT `employee`.`partner_id`, count(id) AS `cnt` FROM `employee` GROUP BY `partner_id`';
+        //TA:#309 show only active employees
+        $sql_string = 'SELECT DISTINCT `employee`.`partner_id`, count(id) AS `cnt` FROM `employee` where employee.is_active=1 GROUP BY `partner_id`';
 
         $result = $db->fetchAll($sql_string);
         $ret = array();
