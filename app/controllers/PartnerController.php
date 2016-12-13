@@ -28,6 +28,29 @@ class PartnerController extends ReportFilterHelpers
             $this->_redirect('select/select');
     }
 
+    protected function calculateCurrentQuarter() {
+        $now = new DateTime();
+        $thisYear = $now->format('Y');
+        $quarterStarts = array(DateTime::createFromFormat('Y-m-d', $thisYear . '-01-01'),
+            DateTime::createFromFormat('Y-m-d', $thisYear . '-04-01'),
+            DateTime::createFromFormat('Y-m-d', $thisYear . '-07-01'),
+            DateTime::createFromFormat('Y-m-d', $thisYear . '-10-01'),
+        );
+        $currentQuarterStartDate = $quarterStarts[0];
+        $size = count($quarterStarts);
+        for ($i = 0; $i < $size; $i++) {
+            if (($i + 1) >= $size) {
+                $currentQuarterStartDate = $quarterStarts[$i];
+                break;
+            }
+            if ($quarterStarts[$i] < $now && $quarterStarts[$i + 1] > $now) {
+                $currentQuarterStartDate = $quarterStarts[$i];
+                break;
+            }
+        }
+        return $currentQuarterStartDate;
+    }
+
     public function indexAction()
     {
         $this->_redirect('partner/search');
@@ -162,25 +185,7 @@ class PartnerController extends ReportFilterHelpers
                 $region_ids = Location::regionsToHash($region_ids);
                 $params = array_merge($params, $region_ids);
 
-                $now = new DateTime();
-                $thisYear = $now->format('Y');
-                $quarterStarts = array(DateTime::createFromFormat('Y-m-d', $thisYear . '-01-01'),
-                    DateTime::createFromFormat('Y-m-d', $thisYear . '-04-01'),
-                    DateTime::createFromFormat('Y-m-d', $thisYear . '-07-01'),
-                    DateTime::createFromFormat('Y-m-d', $thisYear . '-10-01'),
-                );
-                $currentQuarterStartDate = $quarterStarts[0];
-                $size = count($quarterStarts);
-                for ($i = 0; $i < $size; $i++) {
-                    if (($i + 1) >= $size) {
-                        $currentQuarterStartDate = $quarterStarts[$i];
-                        break;
-                    }
-                    if ($quarterStarts[$i] < $now && $quarterStarts[$i + 1] > $now) {
-                        $currentQuarterStartDate = $quarterStarts[$i];
-                        break;
-                    }
-                }
+                $currentQuarterStartDate = $this->calculateCurrentQuarter();
 
                 $joinClause = $db->quoteInto('link_mechanism_partner.partner_id = subpartner.id AND link_mechanism_partner.partner_id != ?', $id);
                 $select = $db->select()
@@ -247,6 +252,8 @@ class PartnerController extends ReportFilterHelpers
 
         $criteria = $this->getAllParams();
         $status = ValidationContainer::instance();
+        $locations = Location::getAll(); // used in view also
+        $db = $this->dbfunc();
 
         if ($criteria['go']) {
             // process search
@@ -267,40 +274,60 @@ class PartnerController extends ReportFilterHelpers
 					LEFT JOIN partner sub                       ON sub.id = link_mechanism_partner.partner_id
 					LEFT JOIN location parent_loc               ON parent_loc.id = partner.location_id";
 
-            // restricted access?? only show partners by organizers that we have the ACL to view
-            $org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'
-            if ($org_allowed_ids) {
-                $where[] = " partner.organizer_option_id in ($org_allowed_ids) ";
+            $currentQuarterStartDate = $this->calculateCurrentQuarter();
+
+            $select = $db->select()
+                ->from('partner', array('id', 'partner'))
+                ->joinLeft('mechanism_option', 'partner.id = mechanism_option.owner_id and mechanism_option.end_date >= ' . $currentQuarterStartDate->format('Y-m-d'),
+                    array(
+                        'mechanisms' => "GROUP_CONCAT(mechanism_phrase ORDER BY mechanism_phrase ASC SEPARATOR ', ')",
+                        'end_dates' => "GROUP_CONCAT(mechanism_option.end_date ORDER BY mechanism_phrase ASC SEPARATOR ', ')"
+                    )
+                )
+                ->joinLeft('link_mechanism_partner', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array())
+                ->joinLeft(array('subpartner' => 'partner'), 'link_mechanism_partner.partner_id = subpartner.id AND link_mechanism_partner.partner_id <> mechanism_option.owner_id',
+                    array('subpartners' => "GROUP_CONCAT(DISTINCT subpartner.partner ORDER BY subpartner.partner ASC SEPARATOR ', ')"))
+                ->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id',
+                    array('funders' => "GROUP_CONCAT(DISTINCT funder_phrase ORDER BY subpartner.partner ASC SEPARATOR ', ')"))
+                ->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = partner.location_id', array('province_name', 'district_name', 'region_c_name'))
+                ->group('partner.id');
+
+            if (!$this->hasACL('training_organizer_option_all')) {
+                $uid = $this->isLoggedIn();
+                $select->joinInner('user_to_organizer_access',
+                    'partner.organizer_option_id = user_to_organizer_access.training_organizer_option_id OR ' .
+                    'subpartner.organizer_option_id = user_to_organizer_access.training_organizer_option_id', array())
+                    ->where('user_to_organizer_access.user_id = ?', $uid);
             }
-            // restricted access?? only show organizers that belong to this site if its a multi org site
-            $site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
-            if ($site_orgs) {
-                $where[] = " partner.organizer_option_id in ($site_orgs) ";
-            }
+
             if ($locationWhere = $this->getLocationCriteriaWhereClause($criteria, '', '')) {
                 $where[] = "($locationWhere OR parent_loc.parent_id = $location_id)"; #todo the subquery and parent_id is not working
             }
 
-            if ($criteria['subpartner_id']) $where[] = 'subpartners.subpartner_id = ' . $criteria['subpartner_id'];
-            if ($criteria['partner_id']) $where[] = 'partner.id = ' . $criteria['partner_id'];
+            if (isset($criteria['partner_id']) && $criteria['partner_id']) {
+                $select->where('partner.id = ?', $criteria['partner_id']);
+            }
 
+            if (!isset($criteria['show_complete_captures']) || !$criteria['show_complete_captures']) {
+
+            }
             if (isset($criteria['funding_start_date']) &&
                 $status->isValidDateDDMMYYYY('funding_start_date', t('Data Capture Completion Date'), $criteria['funding_start_date'])) {
                 $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_start_date']);
-                $where[] = 'mo.end_date >= ' . $d->format('Y-m-d');
+                $select->where('mechanism_option.end_date >= ?', $d->format('Y-m-d'));
             }
             if (isset($criteria['funding_end_date']) &&
                 $status->isValidDateDDMMYYYY('funding_end_date', t('Data Capture Completion Date'), $criteria['funding_end_date'])) {
                 $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_end_date']);
-                $where[] = 'mo.end_date <= ' . $d->format('Y-m-d');
+                $select->where('mechanism_option.end_date <= ?', $d->format('Y-m-d'));
             }
             if (isset($criteria['capture_complete_start_date']) && $status->isValidDateDDMMYYYY('capture_complete_start_date', t('Data Capture Completion Date'), $criteria['capture_complete_start_date'])) {
                 $d = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_start_date']);
-                $where[] = 'partner.capture_complete_date >= ' . $d->format('Y-m-d');
+                $select->where('partner.capture_complete_date >= ?', $d->format('Y-m-d'));
             }
             if (isset($criteria['capture_complete_end_date']) && $status->isValidDateDDMMYYYY('capture_complete_end_date', t('Data Capture Completion Date'), $criteria['capture_complete_end_date'])) {
                 $d = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_end_date']);
-                $where[] = 'partner.capture_complete_date <= ' . $d->format('Y-m-d');
+                $select->where('partner.capture_complete_date <= ?', $d->format('Y-m-d'));
             }
 
             if (count($where)) {
@@ -312,7 +339,6 @@ class PartnerController extends ReportFilterHelpers
             $db = $this->dbfunc();
             $rows = $db->fetchAll($sql);
 
-            $locations = Location::getAll(); // used in view also
             // hack #TODO - seems Region A -> ASDF, Region B-> *Multiple Province*, Region C->null Will not produce valid locations with Location::subquery
             foreach ($rows as $i => $row) {
                 if ($row['province_id'] == "") { // empty province
@@ -347,3 +373,4 @@ class PartnerController extends ReportFilterHelpers
         $this->view->assign('partners', DropDown::generateHtml('partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, $this->getAvailablePartners()));
     }
 }
+

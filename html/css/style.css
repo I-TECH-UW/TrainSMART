@@ -84,6 +84,9 @@ input[type='checkbox'] { margin-right: .5em;}
 
 .fieldLabel,.fieldLabelThin { float:left; width:240px; text-align:right; margin-right:1em; margin-bottom:1em; font-size:11px; font-weight:bold; padding-top:0.3em; color:#696969; clear:left; }
 
+.fieldLabelNoFloat { width:240px; text-align:right; margin-right:1em; margin-bottom:1em; font-size:11px; font-weight:bold; padding-top:0.3em; color:#696969; }
+.fieldLabelFont { font-size:11px; font-weight:bold; color:#696969; }
+
 .fieldInput { margin-bottom:1em;}
 
 .fieldLabelThin { width: 150px;}

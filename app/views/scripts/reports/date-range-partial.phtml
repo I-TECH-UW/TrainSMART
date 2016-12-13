@@ -18,11 +18,18 @@
         $endval = $this->end_date;
     }
 
-    echo '<span>';
-    if (property_exists($this, 'label')) {
-        echo $this->formLabel("", $this->label, array('class' => 'fieldLabel'));
+    echo '<div class="fieldLabel">';
+    if (property_exists($this, 'required')) {
+        $requiredID = $prefix . 'required';
+        echo "<span class='required' id='$requiredID'>*</span>";
     }
 
+    if (property_exists($this, 'label')) {
+        echo $this->formLabel("", $this->label);
+    }
+    echo '</div>';
+
+    echo '<div class="fieldInput">';
     if (property_exists($this, 'show_value') && $this->show_value) {
         echo $this->formCheckbox($prefix . 'show_date');
     }
@@ -31,10 +38,12 @@
 
     echo $this->formText($startname, $startval, array('id' => $startname, 'class' => 'datepicker'));
     echo $cal;
-    echo ' ' . $this->formLabel("", t('to'), array('class' => 'label')) . ' ';
+    echo ' ' . $this->formLabel("", t('to'), array('class' => 'fieldLabelFont')) . ' ';
     echo $this->formText($endname, $endval, array('id' => $endname, 'class' => 'datepicker'));
     echo $cal;
     echo '</span>';
+    echo '</div>';
+
     ?>
 
     <div class="clear pad20"></div>

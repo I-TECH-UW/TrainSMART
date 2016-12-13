@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
 	<title><?php echo $this->translation['Application Name'] . " | " . $this->pageTitle; ?></title>
 	<?php
@@ -10,6 +10,14 @@
 	echo $this->partial('reports/employee-reports-common-javascript-header-partial.phtml');
 	?>
 
+    <script type="text/javascript">
+        function toggle_date_requirement() {
+            $('#capture_complete_required').toggle($('#show_complete_captures').val());
+            return true;
+        }
+        $(document).ready(function () { toggle_date_requirement(); });
+
+    </script>
 </head>
 <body class="yui-skin-sam">
 
@@ -38,19 +46,39 @@
 									'show_value' => false)
 							);
 						}
+
+                        echo '<div class="fieldLabel">';
+                        echo $this->formLabel("", t('Show Only Complete Data Captures'));
+                        echo '</div>';
+                        echo '<div class="fieldInput">';
+                        echo $this->formCheckbox("show_complete_captures", $this->criteria['show_complete_captures'],
+                            array('onClick' => 'toggle_date_requirement();', 'style' => 'margin-top: .25em;'));
+                        echo '</div><div class="clear"></div>';
+
 						echo $this->partial('/reports/date-range-partial.phtml',
 							array('label' => t('Data Capture Completion Date'),
 								'prefix' => 'capture_complete_',
 								'start_date' => $this->criteria['capture_complete_start_date'],
 								'end_date' => $this->criteria['capture_complete_end_date'],
+                                'required' => $this->criteria['show_complete_captures'],
 								'show_value' => false)
 						);
 					?>
 					<div class="clear"></div>
 					<input type="hidden" name="limit" id="limit" value="1" />
-					<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+                    <?php
+                    echo $this->partial('reports/ps-search-preview-button-partial.phtml', array());
+                    ?>
+
 				</fieldset>
 			</form>
+            <?php if (isset($this->output)) {
+                echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
+                    array('output' => $this->output, 'headers' => $this->headers));
+                ?>
+                <input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large"
+                       onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=csv"?>')">
+            <?php } ?>
 
 			<?php if ( $this->criteria['go'] ) { ?>
 			<div class="hrGrey"></div>
