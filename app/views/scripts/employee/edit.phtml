@@ -440,7 +440,14 @@
 
             if (!$this->hasACL('edit_employee')) {
                 $this->viewonly = true;
-            }
+            } 
+            ?>
+            
+            <!-- TA:#309 -->
+            <div class="fieldLabel"><label><?php echo t('Active'); ?> HRH</label></div>
+            <input type="checkbox" name="employee_active" id="employee_active" style="margin : 4px 5px 12px 0px;" <?php echo ($this->employee_active === 'inactive'?'checked="checked"':'');?>">
+           
+           <?php
             echo labelAndField($this, t('Staff Cadre'), $this->cadres, 'select_employee_qualification_option');
             if ($this->setting['display_employee_primary_role'])
                 echo labelAndField($this, t('Primary Role'), $this->roles, 'select_employee_role_option');
