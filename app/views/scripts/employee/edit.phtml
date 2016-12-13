@@ -540,18 +540,19 @@
             }
             if ($this->setting['display_employee_full_time'])
                 echo labelAndField($this, t('Full Time'), $this->fulltime);
-            echo labelAndField($this, t('Funded hours per week'), 'text', 'funded_hours_per_week', $this->employee['funded_hours_per_week']);
-
+            
+            //TA:#282 use currentcy format for the next fleds
+            echo labelAndField($this, t('Funded hours per week'), 'currency', 'funded_hours_per_week', $this->employee['funded_hours_per_week']);
             if ($this->setting['display_employee_salary'])
-                echo labelAndField($this, t('Salary'), 'text', 'salary', $this->employee['salary']);
+                echo labelAndField($this, t('Salary'), 'currency', 'salary', $this->employee['salary']);
             if ($this->setting['display_employee_benefits'])
-                echo labelAndField($this, t('Benefits'), 'text', 'benefits', $this->employee['benefits']);
+                echo labelAndField($this, t('Benefits'), 'currency', 'benefits', $this->employee['benefits']);
             if ($this->setting['display_employee_additional_expenses'])
-                echo labelAndField($this, t('Additional Expenses'), 'text', 'additional_expenses', $this->employee['additional_expenses']);
+                echo labelAndField($this, t('Additional Expenses'), 'currency', 'additional_expenses', $this->employee['additional_expenses']);
             if ($this->setting['display_employee_stipend'])
-                echo labelAndField($this, t('Stipend'), 'text', 'stipend', $this->employee['stipend']);
+                echo labelAndField($this, t('Stipend'), 'currency', 'stipend', $this->employee['stipend']);
             if ($this->setting['display_employee_annual_cost'])
-                echo labelAndField($this, t('Annual Cost'), 'text', 'annual_cost', $this->employee['annual_cost']);
+                echo labelAndField($this, t('Annual Cost'), 'currency', 'annual_cost', $this->employee['annual_cost']);
 
             echo '<div class="clear"></div><br /><br />';
 
