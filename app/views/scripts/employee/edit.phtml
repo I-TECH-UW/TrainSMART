@@ -445,7 +445,7 @@
             
             <!-- TA:#309 -->
             <div class="fieldLabel"><label><?php echo t('Active'); ?> HRH</label></div>
-            <input type="checkbox" name="employee_active" id="employee_active" style="margin : 4px 5px 12px 0px;" <?php echo ($this->employee_active === 'inactive'?'checked="checked"':'');?>">
+            <input type="checkbox" name="is_active" id="is_active" style="margin : 4px 5px 12px 0px;" <?php echo ($this->employee['is_active'] === '1'?'checked="checked"':'');?>"/>
            
            <?php
             echo labelAndField($this, t('Staff Cadre'), $this->cadres, 'select_employee_qualification_option');
