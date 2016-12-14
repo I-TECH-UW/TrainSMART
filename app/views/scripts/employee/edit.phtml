@@ -156,15 +156,15 @@
                 var total = 0;
                 $('.dec_warning').remove();
                 flds.each(function (i, val) {
-                    var new_val = $(this).val().match(/^\D*([\d\.,]+)\s*$/); //optionally $, then 1234 w/ optional decimal, optional space then end
-                    new_val = (new_val && new_val[1]) ? parseInt(new_val[1]) : 0;
-                    total += new_val;
-
-                    var using_punc_val = $(this).val().match(/[.,]/);
-                    if (using_punc_val && using_punc_val[0]) { // display warning if using puncuation (!! is force compare bool)
-                        $('.dec_warning').remove();
-                        $(errField).after('<span class="errorText dec_warning"> <br> <?php tp('Please do not use decimal places or change, please round the amount up to the next dollar'); ?></span>')
-                    }
+                	//TA:#282 except decimal values
+//                     var new_val = $(this).val().match(/^\D*([\d\.,]+)\s*$/); //optionally $, then 1234 w/ optional decimal, optional space then end
+//                     new_val = (new_val && new_val[1]) ? parseFloat(new_val[1]) : 0;
+//                     var using_punc_val = $(this).val().match(/[.,]/);
+//                     if (using_punc_val && using_punc_val[0]) { // display warning if using puncuation (!! is force compare bool)
+//                         $('.dec_warning').remove();
+//                        $(errField).after('<span class="errorText dec_warning"> <br> <?php tp('Please do not use decimal places or change, please round the amount up to the next dollar'); ?></span>')
+//                     }
+               	 total += parseFloat($(this).val());
                 });
 
                 if (isNaN(total))
@@ -548,8 +548,9 @@
             if ($this->setting['display_employee_full_time'])
                 echo labelAndField($this, t('Full Time'), $this->fulltime);
             
+            echo labelAndField($this, t('Funded hours per week'), 'text', 'funded_hours_per_week', $this->employee['funded_hours_per_week']);
+            
             //TA:#282 use currentcy format for the next fleds
-            echo labelAndField($this, t('Funded hours per week'), 'currency', 'funded_hours_per_week', $this->employee['funded_hours_per_week']);
             if ($this->setting['display_employee_salary'])
                 echo labelAndField($this, t('Salary'), 'currency', 'salary', $this->employee['salary']);
             if ($this->setting['display_employee_benefits'])
