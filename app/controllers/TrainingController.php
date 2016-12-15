@@ -2434,7 +2434,7 @@ class TrainingController extends ReportFilterHelpers {
 		
 		//TA:#317
 		$personsFields = array_merge($personsFields, array ( 'phone_home' => t ( 'Phone' ) )); 
-		$personsFields = array_merge($personsFields, array ( 'empty_column' => t ( '               ' ) ));
+		$personsFields = array_merge($personsFields, array ( 'empty_column' => t ( 'Signature' ) ));
 
 		$colStatic = array_keys ( $personsFields ); // all
 		$editLinkInfo = array ('disabled' => 1 ); // no edit/remove links
