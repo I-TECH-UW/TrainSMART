@@ -153,7 +153,9 @@ class CohortController extends ITechController {
 		$this->view->assign('studentsseparated',count($helper->getCohortStudents($cohortid,"dropped")));
 		$this->view->assign('studentsgraduating',count($helper->getCohortStudents($cohortid,"graduating")));
 
-		$this->view->assign('allStudents',$cohort->getAllStudents($cohortid, true));
+		//TA:#304 Let's take all students from this institution only
+		//$this->view->assign('allStudents',$cohort->getAllStudents($cohortid, true));
+		$this->view->assign('allStudents',$cohort->getAllStudents($cohortid, true, $details['institutionid']));
 		$this->view->assign('cohortStudents',$cohort->getAllStudents($cohortid));
 		$this->view->assign('licenses',$cohort->getLicenses($cohortid));
 		
