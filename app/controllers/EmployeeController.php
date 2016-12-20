@@ -433,7 +433,11 @@ class EmployeeController extends ReportFilterHelpers
                     $id = $this->_findOrCreateSaveGeneric('employee', $params);
 
                     if (!$id) {
-                        $status->setStatusMessage(t('That person could not be saved. Employee code for this partner exists.'));
+                        //TA:#171 add more details to error message and redirect to employee edit page for edit or stay on the same page
+                        $status->setStatusMessage(t('That position could not be saved. Employee code for this partner exists.'));
+                        if($params['id']){
+                            $this->_redirect("employee/edit/id/".$params['id']);
+                        }
                     } else {
                         if ($params['disassociateMechanisms']) {
                             if (!Employee::disassociateMechanismsFromEmployee($id, $params['disassociateMechanisms'])) {
@@ -466,7 +470,7 @@ class EmployeeController extends ReportFilterHelpers
                             }
                         }
                         
-                        $status->setStatusMessage(t('The person was saved.'));
+                        $status->setStatusMessage(t('The position was saved.'));
                         $this->_redirect("employee/edit/id/$id");
                     }
                 }
