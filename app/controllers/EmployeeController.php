@@ -426,7 +426,8 @@ class EmployeeController extends ReportFilterHelpers
                     $max = $db->fetchOne("SELECT MAX(partner_employee_number) FROM employee WHERE partner_id = ?", $params['partner_id']);
                     $params['partner_employee_number'] = $max ? $max + 1 : 1; // max+1 or default to 1
                 }
-
+                
+            
                 // save
                 if (!$status->hasError()) {
                     require_once('models/table/Employee.php');
