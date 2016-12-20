@@ -433,7 +433,7 @@ class EmployeeController extends ReportFilterHelpers
                     $id = $this->_findOrCreateSaveGeneric('employee', $params);
 
                     if (!$id) {
-                        $status->setStatusMessage(t('That person could not be saved.'));
+                        $status->setStatusMessage(t('That person could not be saved. Employee code for this partner exists.'));
                     } else {
                         if ($params['disassociateMechanisms']) {
                             if (!Employee::disassociateMechanismsFromEmployee($id, $params['disassociateMechanisms'])) {
