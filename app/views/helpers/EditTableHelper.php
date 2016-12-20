@@ -115,10 +115,14 @@ class EditTableHelper {
                 $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) .
                 '", width:100, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
                 
-            }else{//TA if width is not working then use above way (//TA:#278) how to set up column width
-			 $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) . 
-			 '", width:'.($key == 'facility_name'?80:$key == 'training_title'?120:(strlen($lbl)*6)).', resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+            }else if($key == 'facility_name' || $key == 'location_name'){//TA:#317 wrap text
+                            $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) . 
+ 			 '", style:"overflow:auto;", resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
             }
+            else{//TA if width is not working then use above way (//TA:#278) how to set up column width
+                $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) . 
+  			 '", width:'.($key == 'training_title'?120:(strlen($lbl)*6)).', resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+                      			 }
 		}
 
 		// Format data

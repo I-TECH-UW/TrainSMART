@@ -1,4 +1,4 @@
-msgid ""
+﻿msgid ""
 msgstr ""
 "Project-Id-Version: Trainsmart\n"
 "Report-Msgid-Bugs-To: \n"
@@ -4149,3 +4149,6 @@ msgstr "Завантажити"
 
 msgid "Trainer Category"
 msgstr "Категорія тренера"
+
+msgid "Signature"
+msgstr "Підпис"
