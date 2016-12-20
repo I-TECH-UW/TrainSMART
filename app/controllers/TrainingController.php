@@ -2441,7 +2441,7 @@ class TrainingController extends ReportFilterHelpers {
 		$personsFields = array_merge($personsFields, array ( 'empty_column' => t ( 'Signature' ) . '     ' ));
 
 		$colStatic = array_keys ( $personsFields ); // all
-		$editLinkInfo = array ('disabled' => 1 ); // no edit/remove links
+		$editLinkInfo = array ('disabled' => 1 ); // no edit/remove link
 		$html = EditTableHelper::generateHtmlTraining ( 'Persons', $persons, $personsFields, $colStatic, array (), $editLinkInfo );
 		$this->view->assign ( 'tablePersons', $html );
 

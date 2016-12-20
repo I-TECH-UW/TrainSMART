@@ -22,7 +22,7 @@ class PersonToTraining extends ITechTable
     $select = $tableObj->select()
         ->from(array('ptt' => $tableObj->_name), array('id', 'person_id', 'duration_days', 'award_id', 'score_percent_change' => new Zend_Db_Expr('ROUND((spost.score_value - spre.score_value) / spre.score_value * 100)')))
         ->setIntegrityCheck(false)
-        ->join(array('p' => 'person'), "p.id = ptt.person_id",array('first_name','middle_name', 'last_name','birthdate', 'phone_home')) //TA:#317
+        ->join(array('p' => 'person'), "p.id = ptt.person_id",array('p.first_name','p.middle_name', 'p.last_name','p.birthdate', 'p.phone_home')) //TA:#317
         //->join(array('f' => 'facility'), "p.facility_id = f.id",array('facility_name', 'location_id')) //TA:17: 10/15/2014 - commented: display only persons with known facility id
         ->joinLeft(array('f' => 'facility'), "p.facility_id = f.id",array('facility_name', 'location_id')) //TA:17: 10/15/2014 
         ->joinLeft(array('pq' => 'person_qualification_option'), "p.primary_qualification_option_id = pq.id",array('qualification' => 'qualification_phrase'))
