@@ -2391,7 +2391,11 @@ class TrainingController extends ReportFilterHelpers {
 		$this->view->assign ( 'tableTrainers', $html );
 
 		/* Participants */
+		$persons = PersonToTraining::getParticipants ( $training_id );
+		print_r($persons); print "<br><br>";
+		
 		$persons = PersonToTraining::getParticipants ( $training_id )->toArray ();
+		print_r($persons); print "<br><br>";
 		//TA:#317
 		$personsFields = array ('first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'last_name' => t ( 'Last name' ));
 		
