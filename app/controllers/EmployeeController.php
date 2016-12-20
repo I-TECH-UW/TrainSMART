@@ -566,6 +566,20 @@ class EmployeeController extends ReportFilterHelpers
 
         $this->view->assign('mechanismData', $mechanismData);
         $this->view->assign('employeeMechanisms', $employeeMechanisms);
+       
+        //TA:#256
+        $dc = strtotime($params['timestamp_created']);
+        $dateCreated = $dc != '' && $dc > 0 ? date("d-m-Y",$dc) : t("N/A");
+        $this->view->assign('dateCreated', $dateCreated);
+        $dm = strtotime($params['timestamp_updated']);
+        $dateModified = $dm != '' && $dm >0 ? date("d-m-Y",$dm): t("N/A");
+        $this->view->assign('dateModified', $dateModified);
+        require_once('models/table/User.php');
+        $userObj = new User ();
+        $created_by = $params['created_by'] ? $userObj->getUserFullName($params['created_by']) : t("N/A");
+        $this->viewAssignEscaped('creator', $created_by);
+        $update_by = $params['modified_by'] ? $userObj->getUserFullName($params['modified_by']) : t("N/A");
+        $this->viewAssignEscaped('updater', $update_by);
     }
 
     public function searchAction()
