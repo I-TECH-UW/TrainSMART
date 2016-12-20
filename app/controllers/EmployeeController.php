@@ -569,10 +569,10 @@ class EmployeeController extends ReportFilterHelpers
        
         //TA:#256
         $dc = strtotime($params['timestamp_created']);
-        $dateCreated = $dc != '' && $dc > 0 ? date("d-m-Y",$dc) : t("N/A");
+        $dateCreated = $dc != '' && $dc > 0 ? date("d-m-Y H:i:s",$dc) : t("N/A");
         $this->view->assign('dateCreated', $dateCreated);
         $dm = strtotime($params['timestamp_updated']);
-        $dateModified = $dm != '' && $dm >0 ? date("d-m-Y",$dm): t("N/A");
+        $dateModified = $dm != '' && $dm >0 ? date("d-m-Y H:i:s",$dm): t("N/A");
         $this->view->assign('dateModified', $dateModified);
         require_once('models/table/User.php');
         $userObj = new User ();
