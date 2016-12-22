@@ -127,6 +127,10 @@ class PartnerController extends ReportFilterHelpers
                 $status->checkRequired($this, 'hr_contact_name', t('HR Contact Person Name'));
                 $status->checkRequired($this, 'hr_contact_phone', t('HR Contact Office Phone'));
                 $status->checkRequired($this, 'hr_contact_email', t('HR Contact Email'));
+                //TA:#279
+                if($params['capture_complete']){
+                    $status->checkRequired($this, 'capture_complete_date', t('Data Capture Completion Date'));
+                }
 
                 $status->isAcceptableSAPhoneNumber('hr_contact_phone', t('HR Contact Office Phone'), $params['hr_contact_phone']);
 
@@ -143,6 +147,8 @@ class PartnerController extends ReportFilterHelpers
                 $isValidDate = false;
                 if (isset($params['capture_complete']) && $params['capture_complete']) {
                     $isValidDate = $status->isValidDateDDMMYYYY('capture_complete_date', t('Data Capture Completion Date'), $params['capture_complete_date']);
+                }else{//TA:#279 write date as null
+                    $params['capture_complete_date'] = null;
                 }
 
                 // location save stuff
