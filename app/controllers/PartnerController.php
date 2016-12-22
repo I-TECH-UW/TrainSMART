@@ -404,23 +404,27 @@ class PartnerController extends ReportFilterHelpers
             $rows = $db->fetchAll($sql);
 
             $s = $select->__toString();
-            $headers = array(t('ID'), t('Partner') . ' ' . t('Name'), t('Region A (Province)'),
-                t('Region B (Health District)'), t('Region C (Local Region)'), t('Sub Partner'),
-                t('Funder'), t('Mechanism'), t('Funder End Date'));
-            $output = $db->fetchAll($select);
-            foreach ($output as &$r) {
-                $mechanism_info = explode(', ', $r['mechanism_info']);
-                $numitems = count($mechanism_info);
-                unset($r['mechanism_info']);
-                for ($i = 0; $i < $numitems; $i += 3) {
-                    $r['funder_phrase'] .= $mechanism_info[$i + 1] . ', ';
-                    $r['mechanisms'] .= $mechanism_info[$i] . ', ';
-                    $r['end_date'] .= $mechanism_info[$i + 2] . ', ';
-                }
-                $r['funder_phrase'] = trim($r['funder_phrase'], ', ');
-                $r['mechanisms'] = trim($r['mechanisms'], ', ');
-                $r['end_date'] = trim($r['end_date'], ', ');
+            if (!$status->hasError()) {
+                $headers = array(t('ID'), t('Partner') . ' ' . t('Name'), t('Region A (Province)'),
+                    t('Region B (Health District)'), t('Region C (Local Region)'), t('Sub Partner'),
+                    t('Funder'), t('Mechanism'), t('Funder End Date'));
+                $output = $db->fetchAll($select);
+                foreach ($output as &$r) {
+                    $mechanism_info = explode(', ', $r['mechanism_info']);
+                    $numitems = count($mechanism_info);
+                    unset($r['mechanism_info']);
+                    for ($i = 0; $i < $numitems; $i += 3) {
+                        $r['funder_phrase'] .= $mechanism_info[$i + 1] . ', ';
+                        $r['mechanisms'] .= $mechanism_info[$i] . ', ';
+                        $r['end_date'] .= $mechanism_info[$i + 2] . ', ';
+                    }
+                    $r['funder_phrase'] = trim($r['funder_phrase'], ', ');
+                    $r['mechanisms'] = trim($r['mechanisms'], ', ');
+                    $r['end_date'] = trim($r['end_date'], ', ');
 
+                }
+                $this->viewAssignEscaped('output', $output);
+                $this->viewAssignEscaped('headers', $headers);
             }
 //            $output = $db->fetchAll($select);
 
@@ -453,8 +457,6 @@ class PartnerController extends ReportFilterHelpers
             }
         }
         // assign form drop downs
-        $this->viewAssignEscaped('output', $output);
-        $this->viewAssignEscaped('headers', $headers);
         $this->viewAssignEscaped('criteria', $criteria);
         $this->viewAssignEscaped('locations', $locations);
         $this->view->assign('partners', DropDown::generateHtml('partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, $this->getAvailablePartners()));

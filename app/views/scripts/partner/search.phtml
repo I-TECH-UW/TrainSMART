@@ -12,7 +12,8 @@
 
     <script type="text/javascript">
         function toggle_date_requirement() {
-            $('#capture_complete_required').toggle($('#show_complete_captures').val());
+            var foo = $('#show_complete_captures').val();
+            $('#capture_complete_required').toggle($('#show_complete_captures').val() === '1');
             return true;
         }
         $(document).ready(function () { toggle_date_requirement(); });
@@ -25,6 +26,7 @@
 
 		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
 		<div id="content">
+            <?php require_once 'views/scripts/status.phtml' ?>
 
 			<h1><?php tp('Search Partners');?></h1>
 			<form action="" method="get" class="form_employee">
@@ -52,7 +54,7 @@
                         echo '</div>';
                         echo '<div class="fieldInput">';
                         echo $this->formCheckbox("show_complete_captures", $this->criteria['show_complete_captures'],
-                            array('onClick' => 'toggle_date_requirement();', 'style' => 'margin-top: .25em;'));
+                            array('onClick' => 'toggle_date_requirement();', 'style' => 'margin-top: .25em;', 'checked' => $this->criteria['show_complete_captures']));
                         echo '</div><div class="clear"></div>';
 
 						echo $this->partial('/reports/date-range-partial.phtml',
