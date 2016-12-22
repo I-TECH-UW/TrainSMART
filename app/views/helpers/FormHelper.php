@@ -49,6 +49,10 @@ function labelAndField($view, $label, $content, $id = '', $val = '')
 
 	if ($content == 'text')
 		$content = '<input type="text" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/>';
+	else if ($content == 'phone_10') //TA:#279
+		$content = '<input type="text" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.' onkeypress="return isNumber(event)" maxlength="10"/>';
+	else if ($content == 'email') //TA:#279
+	    $content = '<input type="email" style="border:1px solid #7f9db9; padding:1px 2px; font-family:verdana;" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/>';
 	else if ($content == 'date')
 		$content = '<input type="text" class="datepicker" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/> '.$cal;
 	else if ($content == 'textarea')

@@ -2384,7 +2384,7 @@ class TrainingController extends ReportFilterHelpers {
 		/* Trainers */
 		$trainers = TrainingToTrainer::getTrainers ( $training_id )->toArray ();
 
-		$trainerFields = array ('last_name' => $this->tr ( 'Last Name' ), 'first_name' => $this->tr ( 'First Name' ), 'duration_days' => t ( 'Days' ) );
+		$trainerFields = array ('last_name' => t ( 'Last name' ), 'first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'duration_days' => t ( 'Days' ) );
 		$colStatic = array_keys ( $trainerFields ); // all
 		$editLinkInfo = array ('disabled' => 1 ); // no edit/remove links
 		$html = EditTableHelper::generateHtmlTraining ( 'Trainer', $trainers, $trainerFields, $colStatic, array (), $editLinkInfo );
@@ -2392,7 +2392,11 @@ class TrainingController extends ReportFilterHelpers {
 
 		/* Participants */
 		$persons = PersonToTraining::getParticipants ( $training_id )->toArray ();
-		$personsFields = array ('last_name' => $this->tr ( 'Last Name' ), 'first_name' => $this->tr ( 'First Name' ));
+		//TA:#317
+		$personsFields = array ('first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'last_name' => t ( 'Last name' ));
+		
+		//TA:#317
+		$personsFields = array_merge($personsFields, array ( 'facility_name' => t ( 'Facility' ) )); 
 
 		if ( $this->setting('module_attendance_enabled') ) {
 			if( strtotime( $rowRay ['training_start_date'] ) < time() ) {
@@ -2401,18 +2405,18 @@ class TrainingController extends ReportFilterHelpers {
 			}
 			$personsFields['award_phrase']  = $this->tr ( 'Complete' );
 		}
-		$personsFields = array_merge($personsFields, array ('birthdate' => t ( 'Date of Birth' ), 'facility_name' => t ( 'Facility' )));
+		//TA:#317 $personsFields = array_merge($personsFields, array ('birthdate' => t ( 'Date of Birth' ), 'facility_name' => t ( 'Facility' )));
 
 		if ( $this->setting('display_viewing_location') ) {
 			$personsFields['location_phrase'] = $this->tr ( 'Viewing Location' );
 		}
 		if ( $this->setting('display_budget_code') ) {
-			$personsFields['budget_code_phrase'] = $this->tr ( 'Budget Code' );
+			//TA:#317 $personsFields['budget_code_phrase'] = $this->tr ( 'Budget Code' );
 		}
 
 
 		//if ($this->setting ( 'display_region_b' ))
-		$personsFields ['location_name'] = t ( 'Location' );
+		$personsFields ['location_name'] = t ( 'Region' );
 		//add location
 		$locations = Location::getAll ();
 		foreach ( $persons as $pid => $person ) {
@@ -2425,11 +2429,19 @@ class TrainingController extends ReportFilterHelpers {
 				else
 					break;
 			}
-			$persons [$pid] ['location_name'] = implode ( ', ', $ordered_l );
+			//$persons [$pid] ['facility_name'] = substr_replace($persons[$pid]['facility_name'], " ", "<br>");
+			//$persons [$pid] ['facility_name'] =implode ( '<br>', explode(" " , $persons [$pid] ['facility_name']));
+			//TA:#317 add <br> to wrap text
+			 $persons [$pid] ['location_name'] = str_replace(",", "<br>", trim(implode ( ',', $ordered_l ), ","));
+			
 		}
+		
+		//TA:#317
+		$personsFields = array_merge($personsFields, array ( 'phone_home' => t ( 'Phone' ) )); 
+		$personsFields = array_merge($personsFields, array ( 'empty_column' => t ( 'Signature' ) . '     ' ));
 
 		$colStatic = array_keys ( $personsFields ); // all
-		$editLinkInfo = array ('disabled' => 1 ); // no edit/remove links
+		$editLinkInfo = array ('disabled' => 1 ); // no edit/remove link
 		$html = EditTableHelper::generateHtmlTraining ( 'Persons', $persons, $personsFields, $colStatic, array (), $editLinkInfo );
 		$this->view->assign ( 'tablePersons', $html );
 

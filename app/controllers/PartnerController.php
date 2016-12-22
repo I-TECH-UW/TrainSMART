@@ -131,9 +131,12 @@ class PartnerController extends ReportFilterHelpers
             } else {
                 //validate then save
                 $status->checkRequired($this, 'partner', t('Partner'));
+                $status->checkRequired($this, 'organizer_option_id', t('Organizer'));//TA:#279
                 $status->checkRequired($this, 'address1', t('Address 1'));
                 $status->checkRequired($this, 'city', t('City'));
                 $status->checkRequired($this, 'province_id', t('Region A (Province)'));
+                $status->checkRequired($this, 'district_id', t('District'));//TA:#279
+                $status->checkRequired($this, 'region_c_id', t('Sub-District'));//TA:#279
                 $status->checkRequired($this, 'hr_contact_name', t('HR Contact Person Name'));
                 $status->checkRequired($this, 'hr_contact_phone', t('HR Contact Office Phone'));
                 $status->checkRequired($this, 'hr_contact_email', t('HR Contact Email'));

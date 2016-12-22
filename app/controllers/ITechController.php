@@ -825,12 +825,17 @@ protected function sendData($data) {
 			$row = $tableCustom->createRow();
 		}
 
+		//TA:#171 catch error
+		try {
 		$this->fillFromArray($row, $valueArray);                                               // fill data from array
 		if(isset($row->is_default) && !isset($valueArray['is_default']))                       // breaks otherwise
 			$row->is_default = 0;
 
 		$id = $row->save();
 		return $id;
+		} catch (Exception $e) {
+		    return false;
+		}
 	}
 }
 ?>

@@ -426,14 +426,19 @@ class EmployeeController extends ReportFilterHelpers
                     $max = $db->fetchOne("SELECT MAX(partner_employee_number) FROM employee WHERE partner_id = ?", $params['partner_id']);
                     $params['partner_employee_number'] = $max ? $max + 1 : 1; // max+1 or default to 1
                 }
-
+                
+            
                 // save
                 if (!$status->hasError()) {
                     require_once('models/table/Employee.php');
                     $id = $this->_findOrCreateSaveGeneric('employee', $params);
 
                     if (!$id) {
-                        $status->setStatusMessage(t('That person could not be saved.'));
+                        //TA:#171 add more details to error message and redirect to employee edit page for edit or stay on the same page
+                        $status->setStatusMessage(t('That position could not be saved. Employee code for this partner exists.'));
+                        if($params['id']){
+                            $this->_redirect("employee/edit/id/".$params['id']);
+                        }
                     } else {
                         if ($params['disassociateMechanisms']) {
                             if (!Employee::disassociateMechanismsFromEmployee($id, $params['disassociateMechanisms'])) {
@@ -466,7 +471,7 @@ class EmployeeController extends ReportFilterHelpers
                             }
                         }
                         
-                        $status->setStatusMessage(t('The person was saved.'));
+                        $status->setStatusMessage(t('The position was saved.'));
                         $this->_redirect("employee/edit/id/$id");
                     }
                 }
@@ -561,6 +566,20 @@ class EmployeeController extends ReportFilterHelpers
 
         $this->view->assign('mechanismData', $mechanismData);
         $this->view->assign('employeeMechanisms', $employeeMechanisms);
+       
+        //TA:#256
+        $dc = strtotime($params['timestamp_created']);
+        $dateCreated = $dc != '' && $dc > 0 ? date("d-m-Y H:i:s",$dc) : t("N/A");
+        $this->view->assign('dateCreated', $dateCreated);
+        $dm = strtotime($params['timestamp_updated']);
+        $dateModified = $dm != '' && $dm >0 ? date("d-m-Y H:i:s",$dm): t("N/A");
+        $this->view->assign('dateModified', $dateModified);
+        require_once('models/table/User.php');
+        $userObj = new User ();
+        $created_by = $params['created_by'] ? $userObj->getUserFullName($params['created_by']) : t("N/A");
+        $this->viewAssignEscaped('creator', $created_by);
+        $update_by = $params['modified_by'] ? $userObj->getUserFullName($params['modified_by']) : t("N/A");
+        $this->viewAssignEscaped('updater', $update_by);
     }
 
     public function searchAction()

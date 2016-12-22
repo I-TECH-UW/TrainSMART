@@ -445,6 +445,10 @@
             } 
             ?>
             
+            <!-- TA:#256 -->
+            <table style="width:100%">
+            <tr><td>
+            
             <!-- TA:#309 -->
             <div class="fieldLabel"><label><?php echo t('Active'); ?> HRH</label></div>
             <input type="checkbox" name="is_active" id="is_active" style="margin : 4px 5px 12px 0px;" <?php echo (($this->employee['is_active'] === '1' || !$this->employee['is_active'])?'checked="checked"':'');?>"/>
@@ -569,6 +573,20 @@
 
             /////////////////////////// data table - course history - and UI javascript ///////////////////////////
             ?>
+            
+            <!-- TA:#256 -->
+            </td>
+				<td style="width:20%" valign='top' align='left'>
+						<div class="historyDiv">
+						<b><?php echo t("Date created");?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>						
+						<b><?php echo t("Created by");?></b>&nbsp;<?php echo $this->creator; ?><br>
+						<b><?php echo t("Date updated");?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
+						<b><?php echo t("Updated by");?></b>&nbsp;<?php echo $this->updater; ?><br>
+						</div>
+						</td>
+				</tr>
+				</table>
+				
             <div class="clear"></div>
             <br/><br/>
 
