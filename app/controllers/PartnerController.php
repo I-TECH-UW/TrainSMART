@@ -234,7 +234,7 @@ class PartnerController extends ReportFilterHelpers
                     ->joinLeft('partner', 'mechanism_option.owner_id = partner.id', array('partner.partner'))
                     ->where('owner_id != ?', $id)
                     ->where('partner_id = ?', $id)
-                    ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
+                    ->where('mechanism_option.end_date <= ?', $currentQuarterStartDate->format('Y-m-d'));//TA:#279 use <=, by some reason >= works opposite way ???
 
                 $secondaryMechanisms = $db->fetchAll($select);
                 $this->view->assign('secondaryMechanisms', $secondaryMechanisms);
