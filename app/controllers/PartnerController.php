@@ -15,6 +15,19 @@ class PartnerController extends ReportFilterHelpers
 {
     public function init()
     {
+        $contextSwitch = $this->_helper->getHelper('contextSwitch');
+
+        $contextSwitch->addContext('csv', array(
+                'headers' => array('Content-Type' => 'text/csv'),
+                'callbacks' => array(
+                    'post' => array($this, 'postCsvCallback'),
+                    'init' => array($this, 'preCsvCallback')
+                )
+            )
+        );
+        $contextSwitch->addActionContext('search', 'csv');
+        $contextSwitch->initContext();
+
     }
 
     public function preDispatch()
@@ -258,7 +271,29 @@ class PartnerController extends ReportFilterHelpers
         if ($criteria['go']) {
             // process search
             $where = array();
+
+            // this should probably be a helper function
+
+            $tier_id = null;
+            $location_id = null;
+            if (isset($criteria['region_c_id']) && $criteria['region_c_id']) {
+                $tmp = explode('_', $criteria['region_c_id']);
+                $location_id = array_pop($tmp);
+                $tier_id = 'region_c_id';
+            }
+            else if (isset($criteria['district_id']) && $criteria['district_id']) {
+                $tmp = explode('_', $criteria['district_id']);
+                $location_id = array_pop($tmp);
+                $tier_id = 'district_id';
+
+            }
+            else if (isset($criteria['province_id']) && $criteria['province_id']) {
+                $location_id = $criteria['province_id'];
+                $tier_id = 'province_id';
+            }
+
             list($a, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
+            $tierName = Location::getRegionByTier($location_tier);
             list($locationFlds, $locationsubquery) = Location::subquery($this->setting('num_location_tiers'), $location_tier, $location_id, true);
             $sql = "SELECT DISTINCT
 					partner.id, partner.partner, partner.location_id, " . implode(',', $locationFlds) . "
@@ -278,18 +313,12 @@ class PartnerController extends ReportFilterHelpers
 
             $select = $db->select()
                 ->from('partner', array('id', 'partner'))
-                ->joinLeft('mechanism_option', 'partner.id = mechanism_option.owner_id and mechanism_option.end_date >= ' . $currentQuarterStartDate->format('Y-m-d'),
-                    array(
-                        'mechanisms' => "GROUP_CONCAT(mechanism_phrase ORDER BY mechanism_phrase ASC SEPARATOR ', ')",
-                        'end_dates' => "GROUP_CONCAT(mechanism_option.end_date ORDER BY mechanism_phrase ASC SEPARATOR ', ')"
-                    )
-                )
+                ->joinLeft('mechanism_option', 'partner.id = mechanism_option.owner_id and mechanism_option.end_date >= ' . $currentQuarterStartDate->format('Y-m-d'), array())
                 ->joinLeft('link_mechanism_partner', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array())
                 ->joinLeft(array('subpartner' => 'partner'), 'link_mechanism_partner.partner_id = subpartner.id AND link_mechanism_partner.partner_id <> mechanism_option.owner_id',
-                    array('subpartners' => "GROUP_CONCAT(DISTINCT subpartner.partner ORDER BY subpartner.partner ASC SEPARATOR ', ')"))
-                ->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id',
-                    array('funders' => "GROUP_CONCAT(DISTINCT funder_phrase ORDER BY subpartner.partner ASC SEPARATOR ', ')"))
-                ->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = partner.location_id', array('province_name', 'district_name', 'region_c_name'))
+                    array())
+                ->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array())
+                ->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = partner.location_id', array())
                 ->group('partner.id');
 
             if (!$this->hasACL('training_organizer_option_all')) {
@@ -300,7 +329,15 @@ class PartnerController extends ReportFilterHelpers
                     ->where('user_to_organizer_access.user_id = ?', $uid);
             }
 
-            if ($locationWhere = $this->getLocationCriteriaWhereClause($criteria, '', '')) {
+            $select->columns(array('location.province_name', 'location.district_name', 'location.region_c_name'));
+            $select->columns(array('subpartners' => "GROUP_CONCAT(DISTINCT subpartner.partner ORDER BY subpartner.partner ASC SEPARATOR ', ')"));
+            $select->columns(array('mechanism_info' => "GROUP_CONCAT(DISTINCT mechanism_phrase, ', ', funder_phrase, ', ', mechanism_option.end_date ORDER BY mechanism_phrase ASC SEPARATOR ', ')"));
+
+            if ($location_id) {
+                $select->where($tierName . ' = ?', $location_id);
+            }
+
+            if ($locationWhere = $this->getLocationCriteriaWhereClause($criteria)) {
                 $where[] = "($locationWhere OR parent_loc.parent_id = $location_id)"; #todo the subquery and parent_id is not working
             }
 
@@ -308,9 +345,6 @@ class PartnerController extends ReportFilterHelpers
                 $select->where('partner.id = ?', $criteria['partner_id']);
             }
 
-            if (!isset($criteria['show_complete_captures']) || !$criteria['show_complete_captures']) {
-
-            }
             if (isset($criteria['funding_start_date']) &&
                 $status->isValidDateDDMMYYYY('funding_start_date', t('Data Capture Completion Date'), $criteria['funding_start_date'])) {
                 $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_start_date']);
@@ -321,13 +355,41 @@ class PartnerController extends ReportFilterHelpers
                 $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_end_date']);
                 $select->where('mechanism_option.end_date <= ?', $d->format('Y-m-d'));
             }
+            $complete_start = null;
             if (isset($criteria['capture_complete_start_date']) && $status->isValidDateDDMMYYYY('capture_complete_start_date', t('Data Capture Completion Date'), $criteria['capture_complete_start_date'])) {
-                $d = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_start_date']);
-                $select->where('partner.capture_complete_date >= ?', $d->format('Y-m-d'));
+                $complete_start = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_start_date']);
             }
+            $complete_end = null;
             if (isset($criteria['capture_complete_end_date']) && $status->isValidDateDDMMYYYY('capture_complete_end_date', t('Data Capture Completion Date'), $criteria['capture_complete_end_date'])) {
-                $d = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_end_date']);
-                $select->where('partner.capture_complete_date <= ?', $d->format('Y-m-d'));
+                $complete_end = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_end_date']);
+            }
+
+            if (isset($criteria['show_complete_captures']) && $criteria['show_complete_captures']) {
+                if (!$complete_start && !$complete_end) {
+                    $status->addError('capture_complete_start_date', t('Data Capture Completion Date') . ' ' . t('is required.'));
+                }
+                if ($complete_start) {
+                    $select->where('partner.capture_complete_date >= ?', $complete_start->format('Y-m-d'));
+                }
+                if ($complete_end) {
+                    $select->where('partner.capture_complete_date <= ?', $complete_end->format('Y-m-d'));
+                }
+            }
+            else {
+                $completeclause = null;
+                if ($complete_start && $complete_end) {
+                    $completeclause = $db->quoteInto('((partner.capture_complete_date >= ? AND ', $complete_start->format('Y-m-d'));
+                    $completeclause .= $db->quoteInto('partner.capture_complete_date <= ?) OR partner.capture_complete_date IS NULL)', $complete_end->format('Y-m-d'));
+                }
+                else if ($complete_start) {
+                    $completeclause = $db->quoteInto('((partner.capture_complete_date >= ?) OR partner.capture_complete_date IS NULL)', $complete_start->format('Y-m-d'));
+                }
+                else if ($complete_end) {
+                    $completeclause = $db->quoteInto('((partner.capture_complete_date <= ?) OR partner.capture_comlplete_date IS NULL)', $complete_end->format('Y-m-d'));
+                }
+                if ($completeclause !== null) {
+                    $select->where($completeclause);
+                }
             }
 
             if (count($where)) {
@@ -336,8 +398,28 @@ class PartnerController extends ReportFilterHelpers
 
             $sql .= ' GROUP BY partner.id ';
 
-            $db = $this->dbfunc();
             $rows = $db->fetchAll($sql);
+
+            $s = $select->__toString();
+            $headers = array(t('ID'), t('Partner') . ' ' . t('Name'), t('Region A (Province)'),
+                t('Region B (Health District)'), t('Region C (Local Region)'), t('Sub Partner'),
+                t('Funder'), t('Mechanism'), t('Funder End Date'));
+            $output = $db->fetchAll($select);
+            foreach ($output as &$r) {
+                $mechanism_info = explode(', ', $r['mechanism_info']);
+                $numitems = count($mechanism_info);
+                unset($r['mechanism_info']);
+                for ($i = 0; $i < $numitems; $i += 3) {
+                    $r['funder_phrase'] .= $mechanism_info[$i + 1] . ', ';
+                    $r['mechanisms'] .= $mechanism_info[$i] . ', ';
+                    $r['end_date'] .= $mechanism_info[$i + 2] . ', ';
+                }
+                $r['funder_phrase'] = trim($r['funder_phrase'], ', ');
+                $r['mechanisms'] = trim($r['mechanisms'], ', ');
+                $r['end_date'] = trim($r['end_date'], ', ');
+
+            }
+//            $output = $db->fetchAll($select);
 
             // hack #TODO - seems Region A -> ASDF, Region B-> *Multiple Province*, Region C->null Will not produce valid locations with Location::subquery
             foreach ($rows as $i => $row) {
@@ -368,6 +450,8 @@ class PartnerController extends ReportFilterHelpers
             }
         }
         // assign form drop downs
+        $this->viewAssignEscaped('output', $output);
+        $this->viewAssignEscaped('headers', $headers);
         $this->viewAssignEscaped('criteria', $criteria);
         $this->viewAssignEscaped('locations', $locations);
         $this->view->assign('partners', DropDown::generateHtml('partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, $this->getAvailablePartners()));

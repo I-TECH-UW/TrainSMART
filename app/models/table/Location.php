@@ -32,6 +32,18 @@ class Location extends ITechTable
         'region_i' => 'Region I'
     );
 
+    public static function getRegionByTier($tier) {
+        return (array_keys(self::$region_names)[$tier - 1]);
+    }
+
+    /**
+     * gets an array of region names and text strings
+     * @return array
+     */
+    public static function getRegionNames() {
+        return self::$region_names;
+    }
+
     /**
      * gets all non-deleted locations from database, flags locations that do not have a valid parent in 'is_good' field
      *
