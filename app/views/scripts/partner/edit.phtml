@@ -89,6 +89,13 @@
             $div.slideToggle(500);
         }
         function toggleRequired(item) {
+            //TA:#279
+            if(document.getElementById("capture_complete").checked){
+          	  document.getElementById("add_date").style.display = "block";
+          	 }else{
+            	document.getElementById("add_date").style.display = "none";
+            }
+            
             $(item).next(".fieldLabel").children().first().toggle(item.checked);
             return true;
         }
@@ -114,9 +121,14 @@
 
             require_once('views/helpers/DropDown.php');
 
+            //TA:#279
+            $this->required_fields = array('partner', 'organizer','address1','city', 'hr_contact_name','hr_contact_phone','hr_contact_email', 'capture_complete_date');
 
             if ($this->mode != 'add') {
-                echo labelAndField($this, t('Partner') . space . t('ID'), 'text', 'id', $this->partner['id']);
+                //TA:279 non editable
+                //echo labelAndField($this, t('Partner') . space . t('ID'), 'text', 'id', $this->partner['id']);
+                echo '<div class="fieldLabel id">' . t('Partner') . space . t('ID') . ' </div>
+                <div class="fieldInput"><input type="text" id="id" name="id" value="' . $this->partner['id'] . '" readonly/></div>';
             }
             echo labelAndField($this, t('Partner') . space . t('Name'), 'text', 'partner', $this->partner['partner']);
 
@@ -130,18 +142,19 @@
             echo labelAndField($this, t('Address 2'), 'text', 'address2', $this->partner['address2']);
             echo labelAndField($this, t('City'), 'text', 'city', $this->partner['city']);
             echo labelAndField($this, t('HR Contact Person Name'), 'text', 'hr_contact_name', $this->partner['hr_contact_name']);
-            echo labelAndField($this, t('HR Contact Office Phone'), 'text', 'hr_contact_phone', $this->partner['hr_contact_phone']);
-            echo labelAndField($this, t('HR Contact Office Fax'), 'text', 'hr_contact_fax', $this->partner['hr_contact_fax']);
-            echo labelAndField($this, t('HR Contact Email'), 'text', 'hr_contact_email', $this->partner['hr_contact_email']);
+            echo labelAndField($this, t('HR Contact Office Phone'), 'phone_10', 'hr_contact_phone', $this->partner['hr_contact_phone']);//TA:#279
+            echo labelAndField($this, t('HR Contact Office Fax'), 'phone_10', 'hr_contact_fax', $this->partner['hr_contact_fax']);//TA:#279
+            echo labelAndField($this, t('HR Contact Email'), 'email', 'hr_contact_email', $this->partner['hr_contact_email']);//TA:#279
 
 
             ?>
-
+            
             <div class="fieldLabel"><?php tp('Completed Data Capture'); ?></div>
             <?php echo $this->formCheckbox('capture_complete', $this->partner['capture_complete'],
                 array('class' => 'fieldInput', 'onclick' => 'toggleRequired(this);', 'checked' => $this->partner['capture_complete'] ? "1" : "0", 'disableHidden' => true)); ?>
+            <div id="add_date" style = "display:none">
             <?php echo labelAndField($this, t('Data Capture Completion Date'), 'date', 'capture_complete_date', $this->partner['capture_complete_date']); ?>
-            <br/>
+            </div><br/>
 
             <?php
             if (count($this->primeMechanisms)) { ?>
