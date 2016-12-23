@@ -92,8 +92,11 @@
             //TA:#279
             if(document.getElementById("capture_complete").checked){
           	  document.getElementById("add_date").style.display = "block";
+              document.getElementById("capture_complete").value=1;
           	 }else{
             	document.getElementById("add_date").style.display = "none";
+            	document.getElementById("capture_complete").value=0;
+            	document.getElementById("capture_complete_date").value="";
             }
             
             $(item).next(".fieldLabel").children().first().toggle(item.checked);

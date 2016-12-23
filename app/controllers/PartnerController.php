@@ -140,6 +140,10 @@ class PartnerController extends ReportFilterHelpers
                 $status->checkRequired($this, 'hr_contact_name', t('HR Contact Person Name'));
                 $status->checkRequired($this, 'hr_contact_phone', t('HR Contact Office Phone'));
                 $status->checkRequired($this, 'hr_contact_email', t('HR Contact Email'));
+                //TA:#279
+                if($params['capture_complete']){
+                    $status->checkRequired($this, 'capture_complete_date', t('Data Capture Completion Date'));
+                }
 
                 $status->isAcceptableSAPhoneNumber('hr_contact_phone', t('HR Contact Office Phone'), $params['hr_contact_phone']);
 
@@ -156,6 +160,8 @@ class PartnerController extends ReportFilterHelpers
                 $isValidDate = false;
                 if (isset($params['capture_complete']) && $params['capture_complete']) {
                     $isValidDate = $status->isValidDateDDMMYYYY('capture_complete_date', t('Data Capture Completion Date'), $params['capture_complete_date']);
+                }else{//TA:#279 write date as null
+                    $params['capture_complete_date'] = null;
                 }
 
                 // location save stuff
@@ -241,7 +247,7 @@ class PartnerController extends ReportFilterHelpers
                     ->joinLeft('partner', 'mechanism_option.owner_id = partner.id', array('partner.partner'))
                     ->where('owner_id != ?', $id)
                     ->where('partner_id = ?', $id)
-                    ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
+                    ->where('mechanism_option.end_date <= ?', $currentQuarterStartDate->format('Y-m-d'));//TA:#279 use <=, by some reason >= works opposite way ???
 
                 $secondaryMechanisms = $db->fetchAll($select);
                 $this->view->assign('secondaryMechanisms', $secondaryMechanisms);
