@@ -12,7 +12,7 @@
 
     <script type="text/javascript">
         function toggle_date_requirement() {
-            $('#capture_complete_required').toggle($('#show_complete_captures').val() === '1');
+            $('#capture_complete_required').toggle($('#show_complete_captures').checked);
             return true;
         }
         $(document).ready(function () { toggle_date_requirement(); });
@@ -53,7 +53,8 @@
                         echo '</div>';
                         echo '<div class="fieldInput">';
                         echo $this->formCheckbox("show_complete_captures", $this->criteria['show_complete_captures'],
-                            array('onClick' => 'toggle_date_requirement();', 'style' => 'margin-top: .25em;', 'checked' => $this->criteria['show_complete_captures']));
+                            array('onClick' => 'toggle_date_requirement();', 'style' => 'margin-top: .25em;',
+                                'checked' => $this->criteria['show_complete_captures'] === "1"));
                         echo '</div><div class="clear"></div>';
 
 						echo $this->partial('/reports/date-range-partial.phtml',
@@ -75,7 +76,9 @@
 			</form>
             <?php if (isset($this->output)) {
                 echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
-                    array('output' => $this->output, 'headers' => $this->headers));
+                    array('output' => $this->output, 'headers' => $this->headers, 'row_click_key' => 'id',
+                        'row_click_prefix' => "location='$this->base_url/partner/edit/id/",
+                        'row_click_suffix' => "';"));
                 ?>
                 <input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large"
                        onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=csv"?>')">

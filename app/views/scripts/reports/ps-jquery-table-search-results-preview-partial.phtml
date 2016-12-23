@@ -23,7 +23,22 @@
     <tbody>
     <?php
         foreach ($this->output as $row) {
-            echo '<tr style="cursor : pointer;" class="GradeA">';
+            $rowstring = '<tr style="cursor : pointer;" class="GradeA"';
+            if (isset($this->row_click_prefix) && $this->row_click_prefix) {
+                $suffix = '';
+                if (isset($this->row_click_suffix) && $this->row_click_suffix) {
+                    $suffix = $this->row_click_suffix;
+                }
+                if (isset($this->row_click_key) && $this->row_click_key) {
+                    $rowstring .= ' onclick="' . $this->row_click_prefix . $row[$this->row_click_key] . $suffix . '"';
+                }
+                else {
+                    $rowstring .= ' onclick="' . $this->row_click_prefix . $suffix . '"';
+                }
+
+            }
+            $rowstring .= '>';
+            echo $rowstring;
             foreach ($row as $key => $value) {
                 echo '<td>' . $value . '</td>';
             }
