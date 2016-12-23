@@ -272,11 +272,8 @@ class PartnerController extends ReportFilterHelpers
         $db = $this->dbfunc();
 
         if ($criteria['go']) {
-            // process search
-            $where = array();
 
-            // this should probably be a helper function
-
+            // a less hacky version of this should probably be a helper function
             $tier_id = null;
             $location_id = null;
             if (isset($criteria['region_c_id']) && $criteria['region_c_id']) {
@@ -294,23 +291,6 @@ class PartnerController extends ReportFilterHelpers
                 $location_id = $criteria['province_id'];
                 $tier_id = 'province_id';
             }
-
-            list($a, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
-            $tierName = Location::getRegionByTier($location_tier);
-            list($locationFlds, $locationsubquery) = Location::subquery($this->setting('num_location_tiers'), $location_tier, $location_id, true);
-            $sql = "SELECT DISTINCT
-					partner.id, partner.partner, partner.location_id, " . implode(',', $locationFlds) . "
-					,GROUP_CONCAT(sub.partner) as subPartner
-					,GROUP_CONCAT(pfo.funder_phrase) as partnerFunder
-					,GROUP_CONCAT(mo.mechanism_phrase) as mechanism
-					,GROUP_CONCAT(mo.end_date) as funding_end_date
-					FROM partner 
-					LEFT JOIN ($locationsubquery) as l  ON l.id = partner.location_id
-					LEFT JOIN link_mechanism_partner    ON partner.id = link_mechanism_partner.partner_id
-					LEFT JOIN mechanism_option mo        		ON link_mechanism_partner.mechanism_option_id = mo.id
-					LEFT JOIN partner_funder_option pfo         ON mo.funder_id = pfo.id
-					LEFT JOIN partner sub                       ON sub.id = link_mechanism_partner.partner_id
-					LEFT JOIN location parent_loc               ON parent_loc.id = partner.location_id";
 
             $currentQuarterStartDate = $this->calculateCurrentQuarter();
 
@@ -334,14 +314,12 @@ class PartnerController extends ReportFilterHelpers
 
             $select->columns(array('location.province_name', 'location.district_name', 'location.region_c_name'));
             $select->columns(array('subpartners' => "GROUP_CONCAT(DISTINCT subpartner.partner ORDER BY subpartner.partner ASC SEPARATOR ', ')"));
-            $select->columns(array('mechanism_info' => "GROUP_CONCAT(DISTINCT mechanism_phrase, ', ', funder_phrase, ', ', mechanism_option.end_date ORDER BY mechanism_phrase ASC SEPARATOR ', ')"));
+
+            // selecting the funder phrase and end date with the mechanism so the output matches in each column
+            $select->columns(array('mechanism_info' => "GROUP_CONCAT(DISTINCT mechanism_phrase, ',,,', funder_phrase, ',,,', mechanism_option.end_date ORDER BY mechanism_phrase ASC SEPARATOR ',,,')"));
 
             if ($location_id) {
-                $select->where($tierName . ' = ?', $location_id);
-            }
-
-            if ($locationWhere = $this->getLocationCriteriaWhereClause($criteria)) {
-                $where[] = "($locationWhere OR parent_loc.parent_id = $location_id)"; #todo the subquery and parent_id is not working
+                $select->where($tier_id . ' = ?', $location_id);
             }
 
             if (isset($criteria['partner_id']) && $criteria['partner_id']) {
@@ -358,6 +336,7 @@ class PartnerController extends ReportFilterHelpers
                 $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_end_date']);
                 $select->where('mechanism_option.end_date <= ?', $d->format('Y-m-d'));
             }
+
             $complete_start = null;
             if (isset($criteria['capture_complete_start_date']) && $status->isValidDateDDMMYYYY('capture_complete_start_date', t('Data Capture Completion Date'), $criteria['capture_complete_start_date'])) {
                 $complete_start = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_start_date']);
@@ -395,22 +374,15 @@ class PartnerController extends ReportFilterHelpers
                 }
             }
 
-            if (count($where)) {
-                $sql .= ' WHERE ' . implode(' AND ', $where);
-            }
-
-            $sql .= ' GROUP BY partner.id ';
-
-            $rows = $db->fetchAll($sql);
-
-            $s = $select->__toString();
             if (!$status->hasError()) {
                 $headers = array(t('ID'), t('Partner') . ' ' . t('Name'), t('Region A (Province)'),
                     t('Region B (Health District)'), t('Region C (Local Region)'), t('Sub Partner'),
                     t('Funder'), t('Mechanism'), t('Funder End Date'));
                 $output = $db->fetchAll($select);
+
+                // post-process the mechanism_info column into 3 columns
                 foreach ($output as &$r) {
-                    $mechanism_info = explode(', ', $r['mechanism_info']);
+                    $mechanism_info = explode(',,,', $r['mechanism_info']);
                     $numitems = count($mechanism_info);
                     unset($r['mechanism_info']);
                     for ($i = 0; $i < $numitems; $i += 3) {
@@ -426,37 +398,8 @@ class PartnerController extends ReportFilterHelpers
                 $this->viewAssignEscaped('output', $output);
                 $this->viewAssignEscaped('headers', $headers);
             }
-//            $output = $db->fetchAll($select);
-
-            // hack #TODO - seems Region A -> ASDF, Region B-> *Multiple Province*, Region C->null Will not produce valid locations with Location::subquery
-            foreach ($rows as $i => $row) {
-                if ($row['province_id'] == "") { // empty province
-                    $updatedRegions = Location::getCityandParentNames($row['location_id'], $locations, $this->setting('num_location_tiers'));
-                    $rows[$i] = array_merge($row, $updatedRegions);
-                }
-            }
-
-            $this->viewAssignEscaped('results', $rows);
-            $this->view->assign('count', count($rows));
-
-            if ($criteria ['outputType']) {
-                foreach ($rows as $i => $row) {
-                    unset($rows[$i]['city_id']);
-                    unset($rows[$i]['location_id']);
-                    unset($rows[$i]['province_id']);
-                    unset($rows[$i]['district_id']);
-                    unset($rows[$i]['region_c_id']);
-                    unset($rows[$i]['region_d_id']);
-                    unset($rows[$i]['region_e_id']);
-                    unset($rows[$i]['region_f_id']);
-                    unset($rows[$i]['region_g_id']);
-                    unset($rows[$i]['region_h_id']);
-                    unset($rows[$i]['region_i_id']);
-                }
-                $this->sendData($this->reportHeaders(false, $rows));
-            }
         }
-        // assign form drop downs
+
         $this->viewAssignEscaped('criteria', $criteria);
         $this->viewAssignEscaped('locations', $locations);
         $this->view->assign('partners', DropDown::generateHtml('partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, $this->getAvailablePartners()));
