@@ -3511,116 +3511,81 @@ class AdminController extends UserController
         if ($this->getRequest()->isPost()) {
             $params = $this->getAllParams();
 
-            if ($params['outputType'] == 'json') {
-                $id = $this->getSanParam('id');
-
-                $ret = array();
-                if (!$id)
-                {
-                    $ret['error'] = "No record id %s found.";
+            if (isset($params['operation']) && $params['mechanism_operation']) {
+                if ($params['mechanism_operation'] === 'new') {
+                    $db->insert('mechanism_option',
+                        array('mechanism_phrase' => $params['mechanism_phrase'],
+                            'owner_id' => $params['partner_id'],
+                            'funder_id' => $params['funder_id'],
+                            'external_id' => $params['external_id'],
+                            'end_date' => $params['mechanism_end_date']
+                        ));
+                    $id = $db->lastInsertId();
+                    $db->insert('link_mechanism_partner', array('partner_id' => $params['partner_id'],
+                        'mechanism_option_id' => $id));
                 }
-                elseif ($id == 'undefined') {
+                elseif ($params['mechanism_operation'] === 'update') {
 
-                    // This is a create - mechanism add
-                    $data = array('mechanism_phrase' => $this->getSanParam('mechanism_phrase'));
-                    if ($data['mechanism_phrase']) {
-                        $rv = $db->insert("mechanism_option", $data);
-                        if (!$rv) {
-                            $ret['error'] = "Could not insert %s";
-                        } else {
-                            $ret['insert'] = $db->lastInsertId();
+                    if (isset($params['owner_id']) && $params['owner_id']) {
+                        $id = $db->fetchOne($db->select()->from('mechanism_option', array('owner_id'))->where('mechanism_option.id = ?', $params['mechanism_id']));
+
+                        if ($id != $params['owner_id']) {
+                            $db->update('link_mechanism_partner', array('partner_id' => $params['owner_id']),
+                                "link_mechanism_option.mechanism_option_id = {$params['mechanism_id']}");
                         }
-                    } else {
-                        $ret['error'] = "Could not create %s";
+                        $db->update('link_mechanism_partner',
+                            array('mechanism_phrase' => $params['mechanism_phrase'],
+                                'owner_id' => $params['partner_id'],
+                                'funder_id' => $params['funder_id'],
+                                'external_id' => $params['external_id'],
+                                'end_date' => $params['mechanism_end_date']
+                            ),
+                            "link_mechanism_option.mechanism_option_id = {$params['mechanism_id']}"
+                        );
                     }
                 }
-                elseif ($this->getSanParam('delete') == 1) {
-
-                    // delete
-                    $rv = $db->delete('mechanism_option', "id = $id");
-                    if (!$rv) {
-                        $ret['error'] = "Could not delete %s";
-                    } else {
-                        $ret['msg'] = 'ok';
-                    }
+                elseif ($params['mechanism_operation'] === 'delete') {
+                    $db->update('mechanism_option', array('is_deleted' => 1), 'where mechanism_option.id = ?', $params['mechanism_id']);
+                    $db->delete('link_mechanism_partner', "where link_mechanism_partner.partner_id = {$params['partner_id']}");
                 }
-                else {
-
-                    // update
-                    $update_data = array();
-
-                    // this is a graceless and plodding approach
-                    if (isset($params['funder_phrase'])) {
-                        $update_data['funder_id'] = $this->getSanParam('funder_phrase');
-                    } elseif (isset($params['mechanism_phrase'])) {
-                        $update_data['mechanism_phrase'] = $this->getSanParam('mechanism_phrase');
-                    } elseif (isset($params['partner'])) {
-                        $update_data['owner_id'] = $this->getSanParam('partner');
-                    } elseif (isset($params['external_id'])) {
-                        $update_data['external_id'] = $this->getSanParam('external_id');
-                    } elseif (isset($params['end_date'])) {
-                        $update_data['end_date'] = $this->getSanParam('end_date');
-                    }
-
-                    if (count($update_data) > 0) {
-                        $rv = $db->update('mechanism_option', $update_data, "id = $id");
-                        if ($rv == 1) {
-                            $ret['msg'] = 'ok';
-                        } elseif ($rv < 1) {
-                            $ret['error'] = "Could not update %s";
-                        }
-                        else {
-                            $ret['error'] = "Multiple records updated with %s";
-                        }
-                    } else {
-                        $ret['error'] = "Could not update %s";
-                    }
-                }
-                $this->sendData($ret);
             }
         }
 
-        // and read
-        $sql = 'SELECT partner as text, id as value from partner ORDER BY partner ASC';
-        $partners = json_encode($db->fetchAll($sql));
+        $choose = array("0" => '--' . t("choose") . '--');
 
-        $sql = 'SELECT funder_phrase as text, id as value from partner_funder_option';
-        $funders = json_encode($db->fetchAll($sql));
+        $partners = $choose + $db->fetchPairs($db->select()
+                ->from('partner', array('id', 'partner'))
+                ->order('partner ASC')
+            );
 
-        // fill in null values in the partner column so the edittable visibly updates when a user selects a
-        // value for a field that came in null - probably a YUI DataTable beta quirk
-        $sql = 'SELECT
-            partner_funder_option.funder_phrase,
-            mechanism_option.mechanism_phrase,
-            mechanism_option.owner_id,
-            mechanism_option.funder_id,
-            mechanism_option.id,
-            mechanism_option.external_id,
-            mechanism_option.end_date,
-            IFNULL(partner.partner, "0") as partner
-            FROM
-            mechanism_option
-            LEFT JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id
-            LEFT JOIN partner ON mechanism_option.owner_id = partner.id
-            ORDER BY mechanism_phrase ASC
-            ';
-        $tableRows = $db->fetchAll($sql);
+        $funders = $choose + $db->fetchPairs($db->select()
+                ->from('partner_funder_option', array('id', 'funder_phrase'))
+                ->order('funder_phrase ASC')
+            );
 
-        require_once 'views/helpers/EditTableHelper.php';
 
-        $customColDefs = array(
-            'mechanism_phrase' => "sortable:true",
-            'partner'          => "sortable:true, editor:'dropdown', editorOptions: {dropdownOptions:$partners}",
-            'funder_phrase'    => "sortable:true, editor:'dropdown', editorOptions: {dropdownOptions:$funders}",
-            'external_id'      => "sortable:true",
-            // formatDate is defined in the view file
-            'end_date'         => "sortable:true, formatter:formatDate, editor:'date'"
-        );
+        $select = $db->select()
+            ->from('mechanism_option', array())
+            ->joinLeft('partner', 'mechanism_option.owner_id = partner.id', array())
+            ->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array())
+            ->order('mechanism_phrase ASC');
+        $select->columns(array('mechanism_option.id', 'mechanism_phrase', 'partner.partner', 'partner_funder_option.funder_phrase', 'external_id', 'mechanism_option.end_date'));
+
+        $s = $select->__toString();
+
+        $headers = array(t('ID'), t('Mechanism'), t('Prime') . ' ' . t('Partner'), t('Funder'), t('Mechanism') . ' ' . t('ID'), t('Funding End Date'));
+        $output = $db->fetchAll($select);
+
+        $select->columns(array('mechanism_option.funder_id', 'mechanism_option.owner_id'));
+        $mechanisms = $db->fetchAssoc($select);
+
+        $this->view->assign('headers', $headers);
+        $this->view->assign('output', $output);
+        $this->view->assign('mechanisms', $mechanisms);
+        $this->view->assign('partners', $partners);
+        $this->view->assign('funders', $funders);
 
         $this->view->assign('pageTitle', t('Mechanism'));
-        $columnNames = array('mechanism_phrase' => t('Mechanism'), 'partner' => t('Prime').space.t('Partner'),
-            'funder_phrase' => t('Funder'), 'external_id' => t('Mechanism')." ID", 'end_date' => t('Funding End Date'));
-        $this->view->assign('editTable', EditTableHelper::generateHtml('mechanism', $tableRows, $columnNames, $customColDefs, array()));
 
 	}
 

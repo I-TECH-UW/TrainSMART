@@ -16,22 +16,139 @@ $nav = ob_get_contents();
 ob_end_clean(); 
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
   <title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
 <?php
 require_once('views/helpers/ScriptContainer.php');
 print ScriptContainer::$instance->renderCSSHead();
 print ScriptContainer::$instance->renderJSHead();
+echo $this->partial('reports/employee-reports-common-javascript-header-partial.phtml');
 ?>
 
-	<script type='text/javascript'>
-		function submitAdminForm () { return true;} // Added because was missing. Referenced by lots of onlick properties.
-	</script>
+    <script type="text/javascript">
 
+        var mechanisms = <?php echo json_encode($this->mechanisms); ?>;
+        $(document).ready(function () {
+
+            $("#dialog-form-mechanism").dialog({
+                autoOpen: false,
+                height: 460,
+                width: 750,
+                modal: true
+            });
+
+        });
+
+        function updateMechanism(id) {
+
+            var $dialog = $("#dialog-form-mechanism");
+
+            if (id == "0") {
+                // new mechanism
+                $dialog.dialog({
+                    "buttons": [
+                        {
+                            text: "<?php echo t('Save'); ?>",
+                            click: function () {
+                                document.getElementById('mechanism_operation').value = "new";
+                                document.getElementById('mechanism_dialog').submit();
+                            }
+                        },
+                        {
+                            text: "<?php echo t('Cancel'); ?>",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    ]
+                });
+            }
+            else {
+                $dialog.dialog({
+                    "buttons": [
+                        {
+                            text: "<?php echo t('Delete'); ?>",
+                            click: function () {
+                                if (confirm("Are you sure you want to delete this <?php echo t('Mechanism'); ?>?"))
+                                {
+                                    document.getElementById('mechanism_id').value = id;
+                                    document.getElementById('mechanism_operation').value = "delete";
+                                    document.getElementById('mechanism_dialog').submit();
+                                }
+                            }
+                        },
+                        {
+                            text: "<?php echo t('Save'); ?>",
+                            click: function () {
+                                document.getElementById('mechanism_id').value = id;
+                                document.getElementById('mechanism_operation').value = "update";
+                                document.getElementById('mechanism_dialog').submit();
+                            }
+                        },
+                        {
+                            text: "<?php echo t('Cancel'); ?>",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    ]
+                });
+                document.getElementById('mechanism_phrase').value = mechanisms[id]['mechanism_phrase'];
+                document.getElementById('partner_id').value = mechanisms[id]['owner_id'];
+                document.getElementById('funder_id').value = mechanisms[id]['funder_id'];
+                document.getElementById('external_id').value = mechanisms[id]['external_id'];
+                document.getElementById('mechanism_end_date').value = mechanisms[id]['end_date'];
+            }
+
+            $("#dialog-form-mechanism").dialog("open");
+        }
+    </script>
+
+    <style>
+        td {
+            text-align: left;
+            padding: 2px;
+        }
+        #mechanism_phrase {
+            width: 600px;
+        }
+    </style>
 </head>
 <body  class="yui-skin-sam">
+
+<div id="dialog-form-mechanism">
+    <form method="post" name="mechanism_dialog" id="mechanism_dialog">
+        <input type="hidden" name="mechanism_operation" id="mechanism_operation">
+        <input type="hidden" name="mechanism_id" id="mechanism_id">
+        <table id="mechanism_form_table">
+            <tr>
+                <td><label for="mechanism_phrase" class="fieldLabelFont"><?php echo t('Mechanism'); ?></label></td>
+                <td><input type="text" name="mechanism_phrase" id="mechanism_phrase"></td>
+            </tr>
+
+            <?php
+            echo "<tr><td><label for='partner_id' class='fieldLabelFont'>" . t('Partner'). '</label></td><td>';
+
+            echo $this->formSelect('partner_id', '', array(), $this->partners);
+            echo "</td></tr><tr><td>";
+            echo "<label for='funder_id' class='fieldLabelFont'>" . t('Funder'). '</label></td><td>';
+
+            echo $this->formSelect('funder_id', '', array(), $this->funders);
+            ?>
+        </td></tr>
+
+        <tr><td><label for="external_id" class="fieldLabelFont"><?php echo t('Mechanism') . ' ' . t('ID'); ?></label></td>
+            <td><input type="text" name="external_id" id="external_id"></td></tr>
+
+        <tr><td><label for="mechanism_end_date" class="fieldLabelFont"><?php echo t('Funding End Date'); ?></label></td>
+            <td><input type="text" name="mechanism_end_date" id="mechanism_end_date" class="datepicker">
+                <a class="calendarbtn" href="#"><img src="/js/yui/assets/calbtn.gif"></a></td></tr>
+        </table>
+    </form>
+</div>
+
 <div id="pageHolder">
     <div id="header"><?php echo $header; ?></div>
     <div id="content" class="adminDiv">
@@ -44,18 +161,18 @@ print ScriptContainer::$instance->renderJSHead();
                 <h1><?php echo $this->pageTitle; ?></h1>
                 <div style="font-style:italic;">Add/edit <?php echo $this->pageTitle;?> <?php if(substr($pageTitle,-1) != 's') echo 'options'; ?></div>
                 <br/>
-      <script type="text/javascript">
-
-          var formatDate = function(elCell, oRecord, oColumn, sData) {
-              // TODO: this yields european dates only, needs localization support
-              var end = oRecord.getData("end_date");
-              if (!end) {
-                  end = "0000-00-00";
-              }
-              var end_date = end.split("-");
-              elCell.innerHTML = end_date[2] + "/" + end_date[1] + "/" + end_date[0];
-          };
-      </script>
+                <input type="button" name="new_mechanism_top" id="new_mechanism_top" onclick="updateMechanism(0);" value="<?php echo t('Add') . ' ' . t('Mechanism'); ?>" class="tsbutton green large">
+                <br/>
+                <?php if (isset($this->output)) {
+                    echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
+                        array('output' => $this->output, 'headers' => $this->headers, 'row_click_key' => 'id',
+                            'row_click_prefix' => "updateMechanism(",
+                            'row_click_suffix' => ");"));
+                    ?>
+                <?php } ?>
+                <br/>
+                <input type="button" name="new_mechanism_bottom" id="new_mechanism_bottom" onclick="updateMechanism(0);" value="<?php echo t('Add') . ' ' . t('Mechanism'); ?>" class="tsbutton green large">
+                <br/>
 
       <?php echo $this->editTable; ?>
                 <div class="clear"></div>
