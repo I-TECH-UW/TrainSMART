@@ -354,6 +354,7 @@ class EmployeeController extends ReportFilterHelpers
                 $params['option_nationality_id'] = $params['lookup_nationalities_id'];
                 $params['facility_type_option_id'] = $params['employee_site_type_option_id'];
                 $params['is_active'] = $params['is_active']?'1':'0';//TA:#309
+                $params['employee_transition_complete_option_id'] = $params['employee_transition_complete_option_id']?$params['employee_transition_complete_option_id']:'0';
 
                 $status->checkRequired($this, 'employee_code', t('Employee Code'));
                 $status->checkRequired($this, 'facilityInput', t('Site') . ' ' . t('Name'));
