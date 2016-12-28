@@ -3507,46 +3507,61 @@ class AdminController extends UserController
 	public function employeeMechanismAction()
 	{
         $db = $this->dbfunc();
+        $status = ValidationContainer::instance();
 
         if ($this->getRequest()->isPost()) {
             $params = $this->getAllParams();
 
-            if (isset($params['operation']) && $params['mechanism_operation']) {
+            if (isset($params['mechanism_operation']) && $params['mechanism_operation']) {
                 if ($params['mechanism_operation'] === 'new') {
-                    $db->insert('mechanism_option',
-                        array('mechanism_phrase' => $params['mechanism_phrase'],
-                            'owner_id' => $params['partner_id'],
-                            'funder_id' => $params['funder_id'],
-                            'external_id' => $params['external_id'],
-                            'end_date' => $params['mechanism_end_date']
-                        ));
-                    $id = $db->lastInsertId();
-                    $db->insert('link_mechanism_partner', array('partner_id' => $params['partner_id'],
-                        'mechanism_option_id' => $id));
+
+                    if ($status->isValidDateDDMMYYYY('mechanism_end_date', t('Funding End Date'), $params['mechanism_end_date'])) {
+                        $d = DateTime::createFromFormat('d/m/Y', $params['mechanism_end_date']);
+                        $params['mechanism_end_date'] = $d->format('Y-m-d');
+
+                        $db->insert('mechanism_option',
+                            array('mechanism_phrase' => $params['mechanism_phrase'],
+                                'owner_id' => $params['partner_id'],
+                                'funder_id' => $params['funder_id'],
+                                'external_id' => $params['external_id'],
+                                'end_date' => $params['mechanism_end_date']
+                            ));
+                        $id = $db->lastInsertId();
+                        $db->insert('link_mechanism_partner', array('partner_id' => $params['partner_id'],
+                            'mechanism_option_id' => $id));
+                    }
                 }
                 elseif ($params['mechanism_operation'] === 'update') {
+                    $status = ValidationContainer::instance();
+                    if ($status->isValidDateDDMMYYYY('mechanism_end_date', t('Funding End Date'), $params['mechanism_end_date'])) {
 
-                    if (isset($params['owner_id']) && $params['owner_id']) {
-                        $id = $db->fetchOne($db->select()->from('mechanism_option', array('owner_id'))->where('mechanism_option.id = ?', $params['mechanism_id']));
+                        if (isset($params['partner_id']) && $params['partner_id']) {
+                            $id = $db->fetchOne($db->select()->from('mechanism_option', array('owner_id'))->where('mechanism_option.id = ?', $params['mechanism_id']));
 
-                        if ($id != $params['owner_id']) {
-                            $db->update('link_mechanism_partner', array('partner_id' => $params['owner_id']),
-                                "link_mechanism_option.mechanism_option_id = {$params['mechanism_id']}");
+                            if ($id != $params['partner_id']) {
+                                $db->update('link_mechanism_partner', array('partner_id' => $params['partner_id']),
+                                    "link_mechanism_partner.mechanism_option_id = {$params['mechanism_id']}");
+                            }
                         }
-                        $db->update('link_mechanism_partner',
+
+                        $d = DateTime::createFromFormat('d/m/Y', $params['mechanism_end_date']);
+                        $params['mechanism_end_date'] = $d->format('Y-m-d');
+
+                        $db->update('mechanism_option',
                             array('mechanism_phrase' => $params['mechanism_phrase'],
                                 'owner_id' => $params['partner_id'],
                                 'funder_id' => $params['funder_id'],
                                 'external_id' => $params['external_id'],
                                 'end_date' => $params['mechanism_end_date']
                             ),
-                            "link_mechanism_option.mechanism_option_id = {$params['mechanism_id']}"
+                            "mechanism_option.id = {$params['mechanism_id']}"
                         );
                     }
                 }
                 elseif ($params['mechanism_operation'] === 'delete') {
-                    $db->update('mechanism_option', array('is_deleted' => 1), 'where mechanism_option.id = ?', $params['mechanism_id']);
-                    $db->delete('link_mechanism_partner', "where link_mechanism_partner.partner_id = {$params['partner_id']}");
+                    $db->delete('mechanism_option', "mechanism_option.id = {$params['mechanism_id']}");
+                    $db->delete('link_mechanism_partner', "link_mechanism_partner.mechanism_option_id = {$params['mechanism_id']}");
+                    $status->setStatusMessage(t('Mechanism') . ' ' . t('Deleted') . ': ' . $params['mechanism_phrase']);
                 }
             }
         }
@@ -3569,7 +3584,9 @@ class AdminController extends UserController
             ->joinLeft('partner', 'mechanism_option.owner_id = partner.id', array())
             ->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array())
             ->order('mechanism_phrase ASC');
-        $select->columns(array('mechanism_option.id', 'mechanism_phrase', 'partner.partner', 'partner_funder_option.funder_phrase', 'external_id', 'mechanism_option.end_date'));
+
+        $select->columns(array('mechanism_option.id', 'mechanism_phrase', 'partner.partner',
+            'partner_funder_option.funder_phrase', 'external_id', 'end_date' => new Zend_Db_Expr("DATE_FORMAT(mechanism_option.end_date, '%d/%m/%Y')")));
 
         $s = $select->__toString();
 
@@ -3584,7 +3601,7 @@ class AdminController extends UserController
         $this->view->assign('mechanisms', $mechanisms);
         $this->view->assign('partners', $partners);
         $this->view->assign('funders', $funders);
-
+        $this->view->assign('status', $status);
         $this->view->assign('pageTitle', t('Mechanism'));
 
 	}
