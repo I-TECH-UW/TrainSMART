@@ -62,21 +62,6 @@ function labelAndField($view, $label, $content, $id = '', $val = '')
 	else if ($content == 'currency') //TA:#282
  	    $content = '<input placeholder="0.00" type="number" min="0.00" step="0.01" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.' onkeypress="return isNumber(event)" onchange="validateFloatKeyPress(this);"/>';
 	    $o = <<< EOF
-	<script type="text/javascript">
-	function isNumber(evt) {
-    evt = (evt) ? evt : window.event;
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46) {
-        return false;
-    }
-    return true;
-}
-function validateFloatKeyPress(el) {
-    var v = parseFloat(el.value);
-    el.value = (isNaN(v)) ? '' : v.toFixed(2);
-}
-
-	</script>
 	<div class="$class $id">$required$label</div>
 	<div class="fieldInput">$reportcheck$content$cal1</div>
 EOF;
