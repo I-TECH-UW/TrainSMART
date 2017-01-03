@@ -237,7 +237,8 @@
          * @returns {boolean}
          */
         var calculateMechanismTable = function () {
-            var hours = parseInt($('#funded_hours_per_week').val());
+            //TA:327 #var hours = parseInt($('#funded_hours_per_week').val());
+            var hours = parseFloat($('#funded_hours_per_week').val());
             //TA:#282 var cost = parseInt($('#annual_cost').val());
             var cost = parseFloat($('#annual_cost').val());
 
@@ -252,9 +253,11 @@
             var len = $rows.length;
             var percentAccumulate = 0;
             for (var i = 0; i < len; i++) {
-                var pcent = parseInt($($rows[i]).children().first().next().text());
+                //TA:#327 var pcent = parseInt($($rows[i]).children().first().next().text());
+            	var pcent = parseFloat($($rows[i]).children().first().next().text());
                 var $node = $($rows[i]).children().first().next();
-                var pcent = parseInt($node.text());
+                //TA:#327 var pcent = parseInt($node.text());
+                var pcent = parseFloat($node.text());
                 if (!isNaN(pcent) && (!$node.hasClass('toDeleteMechanism'))) {
                     percentAccumulate += pcent;
                     $node = $node.next();
@@ -342,7 +345,9 @@
         function addMechanism() {
             $(".dataTables_empty").remove();
             var $percentBox = $("#percentage");
-            var percent = parseInt($percentBox.val());
+            //TA:#327
+            //var percent = parseInt($percentBox.val());
+            var percent = parseFloat($percentBox.val());
 
             if (isNaN(percent) || (percent < 1)) {
                 alert("Invalid value for percentage");
@@ -360,8 +365,12 @@
             var $selectedMechanism = $("#new_mechanism option:selected");
             var mechID = $selectedMechanism.val();
 
-            var hours = parseInt($('#funded_hours_per_week').val());
-            var cost = parseInt($('#annual_cost').val());
+            //TA:#327
+            //var hours = parseInt($('#funded_hours_per_week').val());
+            var hours = parseFloat($('#funded_hours_per_week').val());
+            //TA:#327
+           // var cost = parseInt($('#annual_cost').val());
+            var cost = parseFloat($('#annual_cost').val());
 
             if (isNaN(hours) || isNaN(cost)) {
                 return false;
@@ -411,6 +420,17 @@
                 }
             }
             $('#new_mechanism').html(optList);
+        }
+
+        //TA:#224.2
+        function addSite(){
+           
+        	$('#sites').html($('#sites').html() + '<?php 
+        	$facDropDown = renderFacilityDropDown($this->facilities, $this->employee['site_id'], $this->viewonly);
+        	//echo labelAndField($this, t('Site') . space . t('Name'), $facDropDown, 'facilityInput');
+        	echo "AAAA";
+        	?>
+        	');
         }
 
     </script>
@@ -500,8 +520,14 @@
             if ($this->hasACL('edit_facility')) {
                 $facDropDown .= '<a href="' . $this->base_url . '/site/add">' . t('Insert a New') . space . t('Site') . '</a> ';
                 $facDropDown .= '<a href="' . $this->base_url . '/site/search">' . t('View/Edit') . space . t('Site') . '</a>'; // need to put the links inside of the div so they dont wrap to the next line
+                //TA:#224.2
+                $facDropDown .= '<a href="" onClick="addSite(); return false;">' . t('Add another site'). '</a>'; 
             }
             echo labelAndField($this, t('Site') . space . t('Name'), $facDropDown, 'facilityInput');
+            
+            //TA:#224.2
+            echo "<div id='sites'></div>";
+            
             if ($this->setting['display_employee_site_type'])
                 echo labelAndField($this, t('Site') . space . t('Type'), $this->site_types);
             if ($this->setting['display_employee_staff_category'])
