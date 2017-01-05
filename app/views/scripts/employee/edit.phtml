@@ -422,17 +422,6 @@
             $('#new_mechanism').html(optList);
         }
 
-        //TA:#224.2
-        function addSite(){
-           
-        	$('#sites').html($('#sites').html() + '<?php 
-        	$facDropDown = renderFacilityDropDown($this->facilities, $this->employee['site_id'], $this->viewonly);
-        	//echo labelAndField($this, t('Site') . space . t('Name'), $facDropDown, 'facilityInput');
-        	echo "AAAA";
-        	?>
-        	');
-        }
-
     </script>
 
 </head>
@@ -520,13 +509,8 @@
             if ($this->hasACL('edit_facility')) {
                 $facDropDown .= '<a href="' . $this->base_url . '/site/add">' . t('Insert a New') . space . t('Site') . '</a> ';
                 $facDropDown .= '<a href="' . $this->base_url . '/site/search">' . t('View/Edit') . space . t('Site') . '</a>'; // need to put the links inside of the div so they dont wrap to the next line
-                //TA:#224.2
-                $facDropDown .= '<a href="" onClick="addSite(); return false;">' . t('Add another site'). '</a>'; 
             }
             echo labelAndField($this, t('Site') . space . t('Name'), $facDropDown, 'facilityInput');
-            
-            //TA:#224.2
-            echo "<div id='sites'></div>";
             
             if ($this->setting['display_employee_site_type'])
                 echo labelAndField($this, t('Site') . space . t('Type'), $this->site_types);
