@@ -304,6 +304,13 @@ class EmployeeController extends ReportFilterHelpers
         $id = $params['id'];
 
         $db = $this->dbfunc();
+        $choose = array("0" => '--' . t("choose") . '--');
+        $bases = $choose + $db->fetchPairs(
+            $db->select()
+                ->from(('employee_base_option'), array('id', 'base_phrase'))
+                ->order('base_phrase ASC')
+        );
+
         $employeeMechanisms = array();
         if (!$id && $this->view->mode != 'add') {
             $this->doNoAccessError();
@@ -395,10 +402,18 @@ class EmployeeController extends ReportFilterHelpers
                     $status->checkRequired($this, 'partner_id', t('Partner'));
                 if ($this->setting('display_employee_intended_transition'))
                     $status->checkRequired($this, 'employee_transition_option_id', t('Intended Transition'));
-                if (($this->setting('display_employee_base') && !$params['employee_base_option_id']) || !$this->setting('display_employee_base')) // either one is OK, javascript disables regions if base is on & has a value choice
-                    $status->checkRequired($this, 'province_id', t('Region A (Province)') . space . t('or') . space . t('Employee Based at'));
-                if ($this->setting('display_employee_base') && !$params['province_id'])
-                    $status->checkRequired($this, 'employee_base_option_id', t('Employee Based at') . space . t('or') . space . t('Region A (Province)'));
+
+                if ($this->setting('display_employee_base')) {
+                    $status->checkRequired($this, 'employee_base_option_id', t('Employee Based at'));
+
+                    // this functionality relies on an entry in the employee_base_option table to have the 'base_phrase' the same as the translated version of the string 'Other' in the translation table
+                    $b = array_flip($bases);
+                    $other_id = $b[t('Other')];
+                    if ($other_id && $params['employee_base_option_id'] == $other_id) {
+                        $status->checkRequired($this, 'based_at_other', t('Employee Based at') . ' ' . t('Other, Specify'));
+                    }
+                }
+
                 if ($this->setting('display_employee_primary_role'))
                     $status->checkRequired($this, 'employee_role_option_id', t('Primary Role'));
 
@@ -522,6 +537,102 @@ class EmployeeController extends ReportFilterHelpers
             }
         }
 
+
+        // TODO: XXX
+        $titles = $choose + $db->fetchPairs(
+                $db->select()
+                    ->from(('person_title_option'), array('id', 'title_phrase'))
+                    ->order('title_phrase ASC')
+            );
+
+        $select = $db->select()
+            ->from('partner', array('id', 'partner'))
+            ->order('partner ASC');
+
+        if (!$this->hasACL('training_organizer_option_all')) {
+            $uid = $this->isLoggedIn();
+            $select->join(array('user_to_organizer_access'),
+                'user_to_organizer_access.training_organizer_option_id = partner.organizer_option_id', array())
+                ->where('user_to_organizer_access.user_id = ?', $uid);
+        }
+
+        $partners = $choose + $db->fetchPairs($select);
+
+
+        $site_types = $choose + $db->fetchPairs(
+                $db->select()
+                    ->from(('employee_site_type_option'), array('id', 'site_type_phrase'))
+                    ->order('site_type_phrase ASC')
+            );
+
+        $cadres = $choose + $db->fetchPairs(
+                $db->select()
+                    ->from(('employee_qualification_option'), array('id', 'qualification_phrase'))
+                    ->order('qualification_phrase ASC')
+            );
+
+        $categories = $choose + $db->fetchPairs(
+                $db->select()
+                    ->from(('employee_category_option'), array('id', 'category_phrase'))
+                    ->order('category_phrase ASC')
+            );
+
+        $fulltime = $choose + $db->fetchPairs(
+                $db->select()
+                    ->from(('employee_fulltime_option'), array('id', 'fulltime_phrase'))
+                    ->order('fulltime_phrase ASC')
+            );
+        $roles = $choose + $db->fetchPairs(
+                $db->select()
+                    ->from(('employee_role_option'), array('id', 'role_phrase'))
+                    ->order('role_phrase ASC')
+            );
+        $transitions = $choose + $db->fetchPairs(
+                $db->select()
+                    ->from(('employee_transition_option'), array('id', 'transition_phrase'))
+                    ->order('transition_phrase ASC')
+            );
+        $relationships = $choose + $db->fetchPairs(
+                $db->select()
+                    ->from(('employee_relationship_option'), array('id', 'relationship_phrase'))
+                    ->order('relationship_phrase ASC')
+            );
+        $referrals = $choose + $db->fetchPairs(
+                $db->select()
+                    ->from(('employee_referral_option'), array('id', 'referral_phrase'))
+                    ->order('referral_phrase ASC')
+            );
+        $provided = $choose + $db->fetchPairs(
+                $db->select()
+                    ->from(('employee_training_provided_option'), array('id', 'training_provided_phrase'))
+                    ->order('training_provided_phrase ASC')
+            );
+
+        // TODO: XXX
+        $supervisors = $choose + $db->fetchPairs(
+                $db->select()
+                    ->from(('employee_relationship_option'), array('id', 'relationship_phrase'))
+                    ->order('relationship_phrase ASC')
+            );
+
+        $nationality = $choose + $db->fetchPairs(
+                $db->select()
+                    ->from(('lookup_nationalities'), array('id', 'nationality'))
+                    ->order('nationality ASC')
+            );
+        $race = $choose + $db->fetchPairs(
+                $db->select()
+                    ->from(('person_race_option'), array('id', 'race_phrase'))
+                    ->order('race_phrase ASC')
+            );
+
+        $this->viewAssignEscaped('race2', $choose +
+            $db->fetchPairs($db->select()
+                ->from(('person_race_option'), array('id', 'race_phrase'))
+                ->order('race_phrase ASC')
+            )
+        );
+
         // assign form drop downs
         $params['dob'] = formhelperdate($params['dob']);
         $params['agreement_end_date'] = formhelperdate($params['agreement_end_date']);
@@ -546,7 +657,7 @@ class EmployeeController extends ReportFilterHelpers
 
         $this->view->assign('partners', DropDown::generateHtml('partner', 'partner', $params['partner_id'], false, !$this->hasACL("edit_employee"), array_keys($this->getAvailablePartnersAssoc()), false, array("onchange" => "availableMechanisms();")));
 
-        $this->view->assign('bases', DropDown::generateHtml('employee_base_option', 'base_phrase', $params['employee_base_option_id'], false, !$this->hasACL("edit_employee")));
+        $this->view->assign('bases', $bases);
         $this->view->assign('site_types', DropDown::generateHtml('employee_site_type_option', 'site_type_phrase', $params['facility_type_option_id'], false, !$this->hasACL("edit_employee")));
         $this->view->assign('cadres', DropDown::generateHtml('employee_qualification_option', 'qualification_phrase', $params['employee_qualification_option_id'], false, !$this->hasACL("edit_employee")));
         $this->view->assign('categories', DropDown::generateHtml('employee_category_option', 'category_phrase', $params['employee_category_option_id'], false, !$this->hasACL("edit_employee"), false));
