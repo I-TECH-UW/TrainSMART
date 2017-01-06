@@ -46,11 +46,12 @@ class Employee extends ITechTable {
      */
 	public static function saveMechanismAssociations ( $employee_id, $mechanism_ids, $mechanism_percentages)
 	{
-	    if ((!$mechanism_ids) || (!$employee_id) ||
-            (!preg_match('/^\d+[,\d+]*$/', $mechanism_ids)) ||
-            (!preg_match('/^\d+[,\d+]*$/', $mechanism_percentages))) {
-            return false;
-        }
+	    //TA:#327 it checked on database side,  Percentage can be decimal
+// 	    if ((!$mechanism_ids) || (!$employee_id) ||
+//             (!preg_match('/^\d+[,\d+]*$/', $mechanism_ids)) ||
+//             (!preg_match('/^\d+[,\d+]*$/', $mechanism_percentages))) {
+//             return false;
+//         }
 
         $ids = explode(',', $mechanism_ids);
         $percentages = explode(',', $mechanism_percentages);
