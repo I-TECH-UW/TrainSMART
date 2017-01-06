@@ -307,7 +307,7 @@ class EmployeeController extends ReportFilterHelpers
         $choose = array("0" => '--' . t("choose") . '--');
         $bases = $choose + $db->fetchPairs(
             $db->select()
-                ->from(('employee_base_option'), array('id', 'base_phrase'))
+                ->from('employee_base_option', array('id', 'base_phrase'))
                 ->order('base_phrase ASC')
         );
 
@@ -422,11 +422,6 @@ class EmployeeController extends ReportFilterHelpers
                 $status->checkRequired($this, 'funded_hours_per_week', t('Funded hours per week'));
                 if ($this->setting['display_employee_contract_end_date'])
                     $status->checkRequired($this, 'agreement_end_date', t('Contract End Date'));
-
-                // TODO: used?
-                $params['subPartner'] = $this->_array_me($params['subPartner']);
-                $params['partnerFunder'] = $this->_array_me($params['partnerFunder']);
-                $params['mechanism'] = $this->_array_me($params['mechanism']);
 
                 $total_percent = 0;
                 foreach ($params['percentage'] as $i => $val) {

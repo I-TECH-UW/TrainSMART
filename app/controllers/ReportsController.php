@@ -9879,7 +9879,7 @@ die (__LINE__ . " - " . $sql);
             $select = self::employeeFilterQuery($criteria);
             if (!is_a($select, "Zend_Db_Select", false)) {
                 $status = ValidationContainer::instance();
-                $status->setStatusMessage($select);
+                $status->setStatusMessage(t('Error'));
             } else {
 
                 $select->distinct();
@@ -9911,6 +9911,7 @@ die (__LINE__ . " - " . $sql);
                             'district_name' => t('Region B (Health District)'),
                             'region_c_name' => t('Region C (Local Region)'),
                             'base_phrase' => t('Employee Based at'),
+                            'based_at_other' => t('Other, Specify'),
                             'facility_name' => t('Facility') . ' ' . t('Name'),
                             'facility_type_phrase' => t('Facility Type'),
                             'qualification_phrase' => t('Staff Cadre'),

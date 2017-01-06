@@ -934,6 +934,14 @@ class ReportFilterHelpers extends ITechController
                 $joined['employee_base_option'] = 1;
             }
             $select->columns('employee_base_option.base_phrase');
+
+            if (isset($criteria['based_at']) && $criteria['based_at']) {
+                // this functionality relies on the translation for the string 'Other' to be one of the entries in the employee_base_option table in the base_phrase column
+                $basedAtOtherId = $db->fetchOne($db->select()->from('employee_base_option', array('id'))->where('base_phrase = "' . t('Other') . '"'));
+                if ($basedAtOtherId == $criteria['based_at']) {
+                    $select->columns('employee.based_at_other');
+                }
+            }
         }
 
         if (isset($criteria['based_at']) && $criteria['based_at']) {
