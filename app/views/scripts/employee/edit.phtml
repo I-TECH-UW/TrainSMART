@@ -509,7 +509,7 @@
                 echo '<div id="based_at_other_container">';
                 echo '<div class="fieldLabel"><span class="required">*</span>' . t('Other, Specify') . '</div>';
                 echo '<div class="fieldInput">';
-                echo $this->formText('based_at_other', $this->criteria['based_at_other'], array());
+                echo $this->formText('based_at_other', $this->criteria['based_at_other'], array("maxlength" => "50"));
                 echo '</div></div>';
 
             }

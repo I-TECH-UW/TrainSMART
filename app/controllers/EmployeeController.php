@@ -412,6 +412,9 @@ class EmployeeController extends ReportFilterHelpers
                         $other_id = $b[t('Other')];
                         if ($other_id && $params['employee_base_option_id'] == $other_id) {
                             $status->checkRequired($this, 'based_at_other', t('Employee Based at') . ' ' . t('Other, Specify'));
+                            if (strlen($params['based_at_other'] > 50)) {
+                                $status->addError('based_at_other', t('Based at Other, Specify must be 50 characters or fewer'));
+                            }
                         }
                     }
                 }
