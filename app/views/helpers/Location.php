@@ -604,6 +604,28 @@ function region_filters_dropdown(&$view, &$locations, &$criteria, $is_multiple =
 
 }
 
+//TA:#224.2
+function region_filters_dropdown_inline(&$view, &$locations, &$criteria, $prefix = '') {
+    if ( $prefix )
+        $prefix .= '_';
+
+    $label = "<span style='font-size:11px; font-weight:bold; color:#696969;'>";
+     
+    echo  $label . t('Region A (Province)') . "</span>";
+    renderFilter($locations, 1, $prefix.'province_id', @$criteria[$prefix.'province_id'], ($view->setting['display_region_b']?$prefix.'district_id':false), false, $view->viewonly);
+
+    if ( $view->setting['display_region_b'] ) {
+        echo $label . t('Region B (Health District)') . "</span>";
+        renderFilter($locations, 2, $prefix.'district_id', @$criteria[$prefix.'district_id'], ($view->setting['display_region_c']?$prefix.'region_c_id':false), false, $view->viewonly);
+    }
+
+    if ( $view->setting['display_region_c'] ) {
+        echo $label . t('Region C (Local Region)') . "</span>";
+        renderFilter($locations, 3, $prefix.'region_c_id', @$criteria[$prefix.'region_c_id'], ($view->setting['display_region_d']?$prefix.'region_d_id':false), false, $view->viewonly);
+    }
+
+}
+
 /**
  * region filters (Dropdown style)
  *

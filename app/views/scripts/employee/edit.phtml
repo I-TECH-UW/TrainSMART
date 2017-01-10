@@ -520,17 +520,36 @@
 //             array('translation' => $this->translation, 'locations' => $this->locations,
 //                     'criteria' => $this->criteria, 'setting' => $this->setting));
                                     //&$view, &$locations, &$criteria, $is_multiple = false, $middleColumn = false, $prefix = '', $required = false
-            region_filters_dropdown($this, $this->locations, $this->employee, true, false, '', true);
+            //TA:#224.2
+//             region_filters_dropdown($this, $this->locations, $this->employee, true, false, '', true);           
+//             $facDropDown = renderFacilityDropDown($this->facilities, $this->employee['site_id'], $this->viewonly);
+//             if ($this->hasACL('edit_facility')) {
+//                 $facDropDown .= '<a href="' . $this->base_url . '/site/add">' . t('Insert a New') . space . t('Site') . '</a> ';
+//                 $facDropDown .= '<a href="' . $this->base_url . '/site/search">' . t('View/Edit') . space . t('Site') . '</a>'; // need to put the links inside of the div so they dont wrap to the next line
+//             }
+//             echo labelAndField($this, t('Site') . space . t('Name'), $facDropDown, 'facilityInput');
+//             if ($this->setting['display_employee_site_type'])
+//                 echo labelAndField($this, t('Site') . space . t('Type'), $this->site_types);
+                $links = '<a href="' . $this->base_url . '/site/add">' . t('Insert a New') . space . t('Site') . '</a>';
+                $links .= '<a href="' . $this->base_url . '/site/search">' . t('View/Edit') . space . t('Site') . '</a>';
+                $links .= '<a href="" onClick="addFacilityRow(); return false;">' . t('Add Another Site') . '</a>';
+                echo labelAndField($this, '' , $links, '');
+                for($i=0;$i<=3; $i++){
+                    $display = 'none';
+                    if($i == 0){
+                        $display = 'inline';
+                    }
+                    echo "<div id='facility_box_$i' style='display:$display;'>";
+                    region_filters_dropdown_inline($this, $this->locations, $this->employee, $i);
+                    $label = "<span style='font-size:11px; font-weight:bold; padding-top:0.3em; color:#696969;'>";
+                    echo "&nbsp;" . $label . t('Site Name') . "</span>&nbsp;" . renderFacilityDropDownSingle($this->facilities, $this->employee['site_id'], $this->viewonly, $i);
+                    echo "&nbsp;" . $label . t('FTE') . "</span>&nbsp;<input type='text' id='fte' name='fte' value='' style='width:50px;'/>";
+                    if($i != 0){
+                        echo '&nbsp;<a style="display:none;" id="facility_remove" href="" onClick="$(this).parent().remove(); return false;">' . t('Remove'). '</a>';
+                    }
+                    echo "<br><br></div>";
+                }
             
-            $facDropDown = renderFacilityDropDown($this->facilities, $this->employee['site_id'], $this->viewonly);
-            if ($this->hasACL('edit_facility')) {
-                $facDropDown .= '<a href="' . $this->base_url . '/site/add">' . t('Insert a New') . space . t('Site') . '</a> ';
-                $facDropDown .= '<a href="' . $this->base_url . '/site/search">' . t('View/Edit') . space . t('Site') . '</a>'; // need to put the links inside of the div so they dont wrap to the next line
-            }
-            echo labelAndField($this, t('Site') . space . t('Name'), $facDropDown, 'facilityInput');
-            
-            if ($this->setting['display_employee_site_type'])
-                echo labelAndField($this, t('Site') . space . t('Type'), $this->site_types);
             if ($this->setting['display_employee_staff_category'])
                 echo labelAndField($this, t('Staff Category'), $this->categories);
             if ($this->setting['display_employee_registration_number'])
