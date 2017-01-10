@@ -9897,7 +9897,7 @@ die (__LINE__ . " - " . $sql);
                     $select->columns('mechanism_option.mechanism_phrase');
                 }
                 if (!array_key_exists('mechanism_option.end_date', $cols)) {
-                    $select->columns(array('mechanism_end_date' => 'mechanism_option.end_date'));
+                    $select->columns(array('mechanism_end_date' => new Zend_Db_Expr("DATE_FORMAT(mechanism_option.end_date, '%d/%m/%Y')")));
                 }
                 if (!array_key_exists('employee.employee_code', $cols)) {
                     $select->columns('employee.employee_code');
