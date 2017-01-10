@@ -1022,7 +1022,7 @@ class DashboardController extends ReportFilterHelpers {
 				if ($params['partner_id'] != $oldPartnerId || $params['partner_id'] == "")
 					$params['partner_employee_number'] = null;
 			}
-			if ($params['partner_id'] && $params['partner_employee_number'] == "") { // generate a new id
+			if ($params['partner_id'] && (!isset($params['partner_employee_number']) || $params['partner_employee_number'] == "")) { // generate a new id
 				$max = $db->fetchOne("SELECT MAX(partner_employee_number) FROM employee WHERE partner_id = ?", $params['partner_id']);
 				$params['partner_employee_number'] = $max ? $max + 1 : 1; // max+1 or default to 1
 			}

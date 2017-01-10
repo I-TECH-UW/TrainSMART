@@ -112,7 +112,6 @@
             }).change(); // fire once
 
             $('#id').attr({readonly: 'readonly'});
-            $('#partner_employee_number').attr({readonly: 'readonly'});
             $('#annual_cost').attr({readonly: 'readonly'});
 
             $('.datepicker').datepicker({
@@ -491,9 +490,6 @@
                 }
             }
 
-            if ($this->mode != 'add' && $this->employee['partner_employee_number'])
-                echo labelAndField($this, t('Employee') . space . t('Number'), 'text', 'partner_employee_number', $this->employee['partner_employee_number']);
-
             if ($this->setting['display_employee_partner'])
                 echo labelAndField($this, t('Employer'), $this->partners, 'partner_id');
 
@@ -515,11 +511,6 @@
             }
 
              //TA:#293 show multiple locations 
-           //region_filters_dropdown($this, $this->locations, $this->employee, false, false, '', true);
-//             echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
-//             array('translation' => $this->translation, 'locations' => $this->locations,
-//                     'criteria' => $this->criteria, 'setting' => $this->setting));
-                                    //&$view, &$locations, &$criteria, $is_multiple = false, $middleColumn = false, $prefix = '', $required = false
             region_filters_dropdown($this, $this->locations, $this->employee, true, false, '', true);
             
             $facDropDown = renderFacilityDropDown($this->facilities, $this->employee['site_id'], $this->viewonly);
