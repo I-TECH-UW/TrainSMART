@@ -615,37 +615,6 @@ class EmployeeController extends ReportFilterHelpers
             list($a, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
             list($locationFlds, $locationsubquery) = Location::subquery($this->setting('num_location_tiers'), $location_tier, $location_id, true);
 
-            //TA:#293 take multiple locations
-//             $sql = "SELECT DISTINCT
-//     employee.id,
-//     employee.employee_code,
-//     employee.gender,
-//     employee.national_id,
-//     employee.other_id,
-//     employee.location_id,
-//     " . implode(',', $locationFlds) . ",
-//     CONCAT(supervisor.first_name,
-//     CONCAT(' ', supervisor.last_name)) as supervisor,
-//     qual.qualification_phrase as staff_cadre,
-//     site.facility_name,
-//     category.category_phrase as staff_category,
-// GROUP_CONCAT(subpartner.partner) as subPartner,
-// GROUP_CONCAT( partner_funder_option.funder_phrase) as partnerFunder,
-// GROUP_CONCAT(mechanism_option.mechanism_phrase) as mechanism,
-// GROUP_CONCAT(link_mechanism_employee.percentage) as percentage
-// FROM    employee
-// LEFT JOIN    ($locationsubquery) as l ON l.id = employee.location_id
-// LEFT JOIN   employee supervisor ON supervisor.id = employee.supervisor_id
-// LEFT JOIN   facility site ON site.id = employee.site_id
-// LEFT JOIN   employee_qualification_option qual ON qual.id = employee.employee_qualification_option_id
-// LEFT JOIN   employee_category_option category ON category.id = employee.employee_category_option_id
-// LEFT JOIN   partner ON partner.id = employee.partner_id
-// LEFT JOIN   link_mechanism_employee on link_mechanism_employee.employee_id = employee.id
-// LEFT JOIN   mechanism_option on mechanism_option.id = link_mechanism_employee.mechanism_option_id
-// LEFT JOIN 	partner_funder_option on mechanism_option.funder_id = partner_funder_option.id
-// LEFT JOIN   link_mechanism_partner on link_mechanism_partner.mechanism_option_id = mechanism_option.id
-// LEFT JOIN   partner subpartner on subpartner.id = link_mechanism_partner.partner_id
-// ";
             $sql = "SELECT DISTINCT
             employee.id,
             employee.employee_code,
@@ -681,7 +650,6 @@ class EmployeeController extends ReportFilterHelpers
             LEFT JOIN   link_mechanism_partner on link_mechanism_partner.mechanism_option_id = mechanism_option.id
             LEFT JOIN   partner subpartner on subpartner.id = link_mechanism_partner.partner_id
             ";
-            #if ($criteria['partner_id']) $sql    .= ' INNER JOIN partner_to_subpartner subp ON partner.id = ' . $criteria['partner_id'];
 
             // restricted access?? only show partners by organizers that we have the ACL to view
             $org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'
@@ -692,8 +660,6 @@ class EmployeeController extends ReportFilterHelpers
                 $where[] = $locationWhere;
             }
 
-            // if ($criteria['first_name'])                        $where[] = "employee.first_name   = '{$criteria['first_name']}'";
-            // if ($criteria['last_name'])                         $where[] = "employee.last_name    = '{$criteria['last_name']}'";
             if ($criteria['employee_code']) $where[] = "employee.employee_code    like '%{$criteria['employee_code']}%'";
 
             if ($criteria['partner_id']) $where[] = 'employee.partner_id   = ' . $criteria['partner_id']; //todo
