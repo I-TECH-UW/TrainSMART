@@ -3234,15 +3234,14 @@ class AdminController extends UserController
 		);
 
 		if($this->getRequest()->isPost()) { // Update db
-			$updateData = array();
+            $updateData = array();
 
             $params = $this->getAllParams();
-			// update translation labels
+            // update translation labels
             if (isset($params['reset_capture_dates']) && $params['reset_capture_dates']) {
                 $db = $this->dbfunc();
                 $db->update('partner', array('capture_complete_date' => null));
-            }
-            else {
+            } else {
                 $tranTable = new Translation();
                 foreach ($labelNames as $input_key => $db_key) {
 
@@ -3268,21 +3267,7 @@ class AdminController extends UserController
                 $this->view->assign('employee_header', $params['employee_header'] ? $params['employee_header'] : '');
                 $sysTable->update($updateData, '');
             }
-		} else { // view
-			// checkboxes
-			$sysRows = $sysTable->fetchRow($sysTable->select()->limit(1));
-			$this->view->assign('employee_header', isset($sysRows->employee_header) ? $sysRows->employee_header : '');
-			foreach($checkboxFields as $input_key => $field_key) {
-				if ( isset($sysRows->$field_key) )
-					$this->view->assign($input_key, $sysRows->$field_key);
-			}
-			// labels
-			$t = Translation::getAll();
-			foreach($labelNames as $input_key => $db_key) {
-				$this->viewAssignEscaped($input_key, $t[$db_key]);
-			}
-
-		}
+        }
 
 		// redirect to next page
 		if($this->getParam('redirect')) {
@@ -3291,7 +3276,21 @@ class AdminController extends UserController
 		} else if($this->getParam('saveonly')) {
 			$status = ValidationContainer::instance();
 			$status->setStatusMessage(t('Your settings have been updated.'));
+		    $this->view->assign('status', $status);
 		}
+
+        // checkboxes
+        $sysRows = $sysTable->fetchRow($sysTable->select()->limit(1));
+        $this->view->assign('employee_header', isset($sysRows->employee_header) ? $sysRows->employee_header : '');
+        foreach($checkboxFields as $input_key => $field_key) {
+            if ( isset($sysRows->$field_key) )
+                $this->view->assign($input_key, $sysRows->$field_key);
+        }
+        // labels
+        $t = Translation::getAll();
+        foreach($labelNames as $input_key => $db_key) {
+            $this->viewAssignEscaped($input_key, $t[$db_key]);
+        }
 	}
 
 	public function employeePartnerTypeAction()
