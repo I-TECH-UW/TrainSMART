@@ -218,8 +218,12 @@ class EmployeeController extends ReportFilterHelpers
 
         $select = $db->select()
             ->from('mechanism_option', array('id', 'mechanism_phrase', 'owner_id'))
+            ->joinLeft(array('mechanism_partners' => 'link_mechanism_partner'), 'mechanism_partners.mechanism_option_id = mechanism_option.id',
+                array('partners' => "GROUP_CONCAT(DISTINCT mechanism_partners.partner_id SEPARATOR ',')"))
             ->where('is_deleted = 0')
-            ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
+            ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'))
+            ->group('mechanism_option.id')
+            ->order('mechanism_phrase ASC');
 
         if (!$this->hasACL('training_organizer_option_all')) {
             $select->joinInner('link_mechanism_partner', 'mechanism_option.id = link_mechanism_partner.mechanism_option_id', array())
@@ -229,18 +233,13 @@ class EmployeeController extends ReportFilterHelpers
                 ->where('user_to_organizer_access.user_id = ?', $user_id);
         }
 
-        $select->order('mechanism_phrase ASC');
-        $pm = $db->fetchAll($select);
+        $res = $db->fetchAll($select);
 
-        $numRows = count($pm);
-        for ($i = 0; $i < $numRows; $i++) {
-            $select = $db->select()
-                ->from('link_mechanism_partner', array('partner_id'))
-                ->where('mechanism_option_id = ?', $pm[$i]['id']);
-            $pm[$i]['partners'] = $db->fetchCol($select);
+        foreach ($res as &$r) {
+            $r['partners'] = explode(',', $r['partners']);
         }
 
-        return $pm;
+        return $res;
     }
 
     /**
