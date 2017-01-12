@@ -427,6 +427,20 @@
             $('#new_mechanism').html(optList);
         }
 
+        //TA:#224.2
+     function addFacilityRow(){
+     	var all_elem = $('[id^="facility_box_"]');
+     	for($k=1;$k<=all_elem.length; $k++){
+         	if($(all_elem[$k]).css('display') == 'none'){
+         		$(all_elem[$k]).css('display','inline');
+       		    break;
+         	}
+     	}
+     	
+
+     	return false;
+     }
+
     </script>
 
 </head>
@@ -512,8 +526,22 @@
                 echo $this->formText('based_at_other', $this->criteria['based_at_other'], array("maxlength" => "50"));
                 echo '</div></div>';
 
-            }
-
+            }?>
+            
+            <!-- TA:#256, TA:#224.2 move to this location-->
+            </td>
+            <td style="width:20%" valign='top' align='left'>
+            <div class="historyDiv">
+            <b><?php echo t("Date created");?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>
+            						<b><?php echo t("Created by");?></b>&nbsp;<?php echo $this->creator; ?><br>
+            						<b><?php echo t("Date updated");?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
+            						<b><?php echo t("Updated by");?></b>&nbsp;<?php echo $this->updater; ?><br>
+            						</div>
+            						</td>
+            				</tr>
+            				</table>
+            				           				
+             <?php 
              //TA:#293 show multiple locations 
            //region_filters_dropdown($this, $this->locations, $this->employee, false, false, '', true);
 //             echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
@@ -527,28 +555,52 @@
 //                 $facDropDown .= '<a href="' . $this->base_url . '/site/add">' . t('Insert a New') . space . t('Site') . '</a> ';
 //                 $facDropDown .= '<a href="' . $this->base_url . '/site/search">' . t('View/Edit') . space . t('Site') . '</a>'; // need to put the links inside of the div so they dont wrap to the next line
 //             }
-//             echo labelAndField($this, t('Site') . space . t('Name'), $facDropDown, 'facilityInput');
+//            echo labelAndField($this, t('Site') . space . t('Name'), $facDropDown, 'facilityInput');
 //             if ($this->setting['display_employee_site_type'])
 //                 echo labelAndField($this, t('Site') . space . t('Type'), $this->site_types);
+                $helper = new Helper();
+                $db_locations_arr = $helper->get3TiersLocationsParentIds();
                 $links = '<a href="' . $this->base_url . '/site/add">' . t('Insert a New') . space . t('Site') . '</a>';
                 $links .= '<a href="' . $this->base_url . '/site/search">' . t('View/Edit') . space . t('Site') . '</a>';
                 $links .= '<a href="" onClick="addFacilityRow(); return false;">' . t('Add Another Site') . '</a>';
                 echo labelAndField($this, '' , $links, '');
-                for($i=0;$i<=3; $i++){
-                    $display = 'none';
-                    if($i == 0){
-                        $display = 'inline';
+                echo "<div id='sites_box'></div>";
+                $label = "<span style='font-size:11px; font-weight:bold; color:#696969;'>";
+                echo "<table border=0><tbody>";
+                for($i=1;$i<=5; $i++){
+                    $display = ($i == 1)?'inline':'none';
+                    echo "<tr id='facility_box_$i' style='display:$display;'>";
+                    echo "<td>";
+                    echo  $label . t('Region A (Province)') . "</span><br>";
+                    renderFilter($this->locations, 1, $i.'_province_id', '', ($this->setting['display_region_b']?$i.'_district_id':false), false, $this->viewonly);
+                    echo "</td>";
+                    echo "<td style='padding: 5px;'>";
+                    echo $label . t('Region B (Health District)') . "</span><br>";
+                    renderFilter($this->locations, 2, $i.'_district_id', '', ($this->setting['display_region_c']?$i.'_region_c_id':false), false, $this->viewonly);
+                    echo "</td>";
+                    echo "<td>";
+                    echo $label . t('Region C (Local Region)') . "</span><br>";
+                    renderFilter($this->locations, 3, $i.'_region_c_id', '', ($this->setting['display_region_d']?$i.'_region_d_id':false), false, $this->viewonly);
+                    echo "</td>";  
+                    echo "<td style='padding: 5px;'>";
+                    echo $label . t('Site Type') . "</span><br>" . renderFacilityTypesDropDown($this->site_types, '', $this->viewonly, $i);
+                    echo "</td>";
+                    echo "<td>";
+                    echo $label . "<span class='required'>*</span>" . t('Site Name') . "</span><br>" . renderFacilityDropDownWithType($db_locations_arr, $this->facilities, '', $this->viewonly, $i, ($i == 1)?true:false);
+                    echo "</td>";
+                    echo "<td style='padding: 5px;'>";
+                    echo $label . t('HIV Related FTE') . "</span><br><input type='text' id='fte' name='fte' value='' style='width:100px;'/>";
+                    echo "</td>";
+                    echo "<td valign='center'>";
+                    if($i != 1){
+                        echo '&nbsp;<br><a id="facility_remove" href="" onClick="$(this).parent().parent().remove(); return false;">' . t('Remove'). '</a>';
                     }
-                    echo "<div id='facility_box_$i' style='display:$display;'>";
-                    region_filters_dropdown_inline($this, $this->locations, $this->employee, $i);
-                    $label = "<span style='font-size:11px; font-weight:bold; padding-top:0.3em; color:#696969;'>";
-                    echo "&nbsp;" . $label . t('Site Name') . "</span>&nbsp;" . renderFacilityDropDownSingle($this->facilities, $this->employee['site_id'], $this->viewonly, $i);
-                    echo "&nbsp;" . $label . t('FTE') . "</span>&nbsp;<input type='text' id='fte' name='fte' value='' style='width:50px;'/>";
-                    if($i != 0){
-                        echo '&nbsp;<a style="display:none;" id="facility_remove" href="" onClick="$(this).parent().remove(); return false;">' . t('Remove'). '</a>';
-                    }
-                    echo "<br><br></div>";
+                    echo "</td>";
+                    echo "</div>";
+                    echo "</tr>";
                 }
+                echo "</tbody></table><br>";
+                ////////////// end #224.2
             
             if ($this->setting['display_employee_staff_category'])
                 echo labelAndField($this, t('Staff Category'), $this->categories);
@@ -620,18 +672,7 @@
             /////////////////////////// data table - course history - and UI javascript ///////////////////////////
             ?>
             
-            <!-- TA:#256 -->
-            </td>
-				<td style="width:20%" valign='top' align='left'>
-						<div class="historyDiv">
-						<b><?php echo t("Date created");?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>						
-						<b><?php echo t("Created by");?></b>&nbsp;<?php echo $this->creator; ?><br>
-						<b><?php echo t("Date updated");?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
-						<b><?php echo t("Updated by");?></b>&nbsp;<?php echo $this->updater; ?><br>
-						</div>
-						</td>
-				</tr>
-				</table>
+            
 				
             <div class="clear"></div>
             <br/><br/>

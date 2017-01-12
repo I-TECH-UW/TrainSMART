@@ -3012,6 +3012,22 @@ class Helper extends ITechTable
             $db->query($query);
         }
     }
+
+    //TA:#224.2
+    public function get3TiersLocationsParentIds(){
+        $db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+        $sql = 'SELECT DISTINCT
+       f.id as id,
+       f.location_id AS "zone1",
+       l2.id as "zone2",
+       l2.parent_id AS "zone3"
+      FROM facility f
+      LEFT JOIN location l1 ON f.location_id = l1.id
+      LEFT JOIN location l2 ON l1.parent_id = l2.id
+      ';
+        return $db->fetchAll($sql);
+    }
+    
 }
 
 
