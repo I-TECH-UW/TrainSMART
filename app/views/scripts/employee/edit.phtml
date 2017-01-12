@@ -112,6 +112,7 @@
             }).change(); // fire once
 
             $('#id').attr({readonly: 'readonly'});
+            $('#partner_employee_number').attr({readonly: 'readonly'});
             $('#annual_cost').attr({readonly: 'readonly'});
 
             $('.datepicker').datepicker({
@@ -161,13 +162,6 @@
                 $('.dec_warning').remove();
                 flds.each(function (i, val) {
                 	//TA:#282 accept decimal values
-//                     var new_val = $(this).val().match(/^\D*([\d\.,]+)\s*$/); //optionally $, then 1234 w/ optional decimal, optional space then end
-//                     new_val = (new_val && new_val[1]) ? parseInt(new_val[1]) : 0;
-//                     var using_punc_val = $(this).val().match(/[.,]/);
-//                     if (using_punc_val && using_punc_val[0]) { // display warning if using puncuation (!! is force compare bool)
-//                         $('.dec_warning').remove();
-//                        $(errField).after('<span class="errorText dec_warning"> <br> <?php tp('Please do not use decimal places or change, please round the amount up to the next dollar'); ?></span>')
-//                     }
                 var new_val = ($(this).val()) ? parseFloat($(this).val()) : 0;
                	 total += new_val;
                 });
@@ -257,10 +251,10 @@
             var len = $rows.length;
             var percentAccumulate = 0;
             for (var i = 0; i < len; i++) {
-                //TA:#327 var pcent = parseInt($($rows[i]).children().first().next().text());
+                //TA:#327
             	var pcent = parseFloat($($rows[i]).children().first().next().text());
                 var $node = $($rows[i]).children().first().next();
-                //TA:#327 var pcent = parseInt($node.text());
+
                 var pcent = parseFloat($node.text());
                 if (!isNaN(pcent) && (!$node.hasClass('toDeleteMechanism'))) {
                     percentAccumulate += pcent;
@@ -328,7 +322,6 @@
             }
             else {
                 if (typeof id != 'undefined') {
-                    //siblings.css({"text-decoration" : "", "color" : "", "font-style" : ""});
                     $siblings.removeClass('toDeleteMechanism');
                     // use jQuery's inArray because IE <9 doesn't support indexOf in arrays
                     idList.splice($.inArray(id, idList), 1);
@@ -350,7 +343,6 @@
             $(".dataTables_empty").remove();
             var $percentBox = $("#percentage");
             //TA:#327
-            //var percent = parseInt($percentBox.val());
             var percent = parseFloat($percentBox.val());
 
             if (isNaN(percent) || (percent < 1)) {
@@ -370,10 +362,8 @@
             var mechID = $selectedMechanism.val();
 
             //TA:#327
-            //var hours = parseInt($('#funded_hours_per_week').val());
             var hours = parseFloat($('#funded_hours_per_week').val());
             //TA:#327
-           // var cost = parseInt($('#annual_cost').val());
             var cost = parseFloat($('#annual_cost').val());
 
             if (isNaN(hours) || isNaN(cost)) {
@@ -469,11 +459,6 @@
             if ($this->setting['display_employee_primary_role'])
                 echo labelAndField($this, t('Primary Role'), $this->roles, 'select_employee_role_option');
 
-            $this->viewonly = true;
-            echo labelAndField($this, t('Employee') . space . t('ID'), 'text', 'employee_id', $this->employee['id']);
-            if ($this->hasACL('edit_employee')) {
-                $this->viewonly = false;
-            }
             $f = $this->formText('employee_code', $this->employee['employee_code'], array('maxlength' => '15'));
             echo labelAndField($this, t('Employee Code'), $f);
 
@@ -489,6 +474,9 @@
                     $this->viewonly = false;
                 }
             }
+
+           if ($this->mode != 'add' && $this->employee['partner_employee_number'])
+               echo labelAndField($this, t('Employee') . space . t('Number'), 'text', 'partner_employee_number', $this->employee['partner_employee_number']);
 
             if ($this->setting['display_employee_partner'])
                 echo labelAndField($this, t('Employer'), $this->partners, 'partner_id');
