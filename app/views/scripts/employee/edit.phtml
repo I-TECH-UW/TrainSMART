@@ -566,30 +566,32 @@
                 echo labelAndField($this, '' , $links, '');
                 echo "<div id='sites_box'></div>";
                 $label = "<span style='font-size:11px; font-weight:bold; color:#696969;'>";
+                $SITES_CNT = 5;
+                echo "<input type='hidden' id='sites_cnt' name='sites_cnt' value='$SITES_CNT'/>";
                 echo "<table border=0><tbody>";
-                for($i=1;$i<=5; $i++){
-                    $display = ($i == 1)?'inline':'none';
+                for($i=1;$i<=$SITES_CNT; $i++){
+                    $display = (($i == 1) || ($this->employee[$i.'_facilityInput']))?'inline':'none';
                     echo "<tr id='facility_box_$i' style='display:$display;'>";
                     echo "<td>";
                     echo  $label . t('Region A (Province)') . "</span><br>";
-                    renderFilter($this->locations, 1, $i.'_province_id', '', ($this->setting['display_region_b']?$i.'_district_id':false), false, $this->viewonly);
+                    renderFilter($this->locations, 1, $i.'_province_id', $this->employee[$i.'_province_id'], ($this->setting['display_region_b']?$i.'_district_id':false), false, $this->viewonly);
                     echo "</td>";
                     echo "<td style='padding: 5px;'>";
                     echo $label . t('Region B (Health District)') . "</span><br>";
-                    renderFilter($this->locations, 2, $i.'_district_id', '', ($this->setting['display_region_c']?$i.'_region_c_id':false), false, $this->viewonly);
+                    renderFilter($this->locations, 2, $i.'_district_id', $this->employee[$i.'_district_id'], ($this->setting['display_region_c']?$i.'_region_c_id':false), false, $this->viewonly);
                     echo "</td>";
                     echo "<td>";
                     echo $label . t('Region C (Local Region)') . "</span><br>";
-                    renderFilter($this->locations, 3, $i.'_region_c_id', '', ($this->setting['display_region_d']?$i.'_region_d_id':false), false, $this->viewonly);
+                    renderFilter($this->locations, 3, $i.'_region_c_id', $this->employee[$i.'_region_c_id'], ($this->setting['display_region_d']?$i.'_region_d_id':false), false, $this->viewonly);
                     echo "</td>";  
                     echo "<td style='padding: 5px;'>";
-                    echo $label . t('Site Type') . "</span><br>" . renderFacilityTypesDropDown($this->site_types, '', $this->viewonly, $i);
+                    echo $label . t('Site Type') . "</span><br>" . renderFacilityTypesDropDown($this->site_types, $this->employee[$i.'_facilityType'], $this->viewonly, $i);
                     echo "</td>";
                     echo "<td>";
-                    echo $label . "<span class='required'>*</span>" . t('Site Name') . "</span><br>" . renderFacilityDropDownWithType($db_locations_arr, $this->facilities, '', $this->viewonly, $i, ($i == 1)?true:false);
+                    echo $label . "<span class='required'>*</span>" . t('Site Name') . "</span><br>" . renderFacilityDropDownWithType($db_locations_arr, $this->facilities, $this->employee[$i.'_facilityInput'], $this->viewonly, $i, ($i == 1)?true:false);
                     echo "</td>";
                     echo "<td style='padding: 5px;'>";
-                    echo $label . t('HIV Related FTE') . "</span><br><input type='text' id='fte' name='fte' value='' style='width:100px;'/>";
+                    echo $label . t('HIV Related FTE') . "</span><br><input type='text' id='" . $i . "_fte_related' name='" . $i . "_fte_related' value='" . $this->employee[$i.'_fte_related'] ."' style='width:100px;'/>";
                     echo "</td>";
                     echo "<td valign='center'>";
                     if($i != 1){

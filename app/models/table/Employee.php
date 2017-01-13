@@ -74,7 +74,8 @@ class Employee extends ITechTable {
 	    return true;
 	}
 	
-	//TA:#293
+	//TA:#293 
+	//TA:#224.2 'employee multi locations' should be depricated and replaced by 'employee multi sites' where each site(facility) has own locations (see code below)
 	public static function getEmployeeLocations($employee_id){
 	    $res = array();
 	    $linkTable = new ITechTable ( array ('name' => 'link_employee_location' ));
@@ -87,6 +88,7 @@ class Employee extends ITechTable {
 	}
 	
 	//TA:#293 multiple locations
+	//TA:#224.2 'employee multi locations' should be depricated and replaced by 'employee multi sites' where each site(facility) has own locations (see code below)
 	public static function removeLocations($employee_id)
 	{
 	
@@ -102,6 +104,7 @@ class Employee extends ITechTable {
 	}
 	
 	//TA:#293 multiple locations
+	//TA:#224.2 'employee multi locations' should be depricated and replaced by 'employee multi sites' where each site(facility) has own locations (see code below)
 	public static function saveLocations ( $employee_id, $location_ids)
 	{
 	    Employee::removeLocations($employee_id);
@@ -109,6 +112,45 @@ class Employee extends ITechTable {
 	    foreach($location_ids as $i => $loc) {
 	        try {
 	            $row = $linkTable->createRow(array('id_employee' => $employee_id, 'id_location' => $location_ids[$i]));
+	            $row->save();
+	        } catch(Exception $e) {
+	            error_log($e);
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+	
+	//TA:#224.2 
+	public static function getEmployeeSites($employee_id){
+	    $tableObj = new Employee();
+	    $db = $tableObj->dbfunc();
+	    $query = "SELECT link_employee_facility.facility_id, link_employee_facility.fte_related, facility.type_option_id, facility.location_id FROM link_employee_facility 
+	    LEFT JOIN facility ON link_employee_facility.facility_id = facility.id WHERE (employee_id = $employee_id)";
+	    $select = $db->query($query);
+	    return $select->fetchAll();
+	}
+	
+	//TA:#224.2 
+	public static function removeSites($employee_id){
+	    $table = new ITechTable ( array ('name' => 'link_employee_facility' ) );
+	    try {
+	        $table->delete("employee_id = $employee_id");
+	    } catch(Exception $e) {
+	        error_log($e);
+	        return false;
+	    }
+	    return true;
+	
+	}
+	
+	//TA:#224.2 
+	public static function saveSites ( $employee_id, $facilities_fte){
+	    Employee::removeSites($employee_id);
+	    $linkTable = new ITechTable ( array ('name' => 'link_employee_facility' ) );
+	    foreach($facilities_fte as $i => $loc) {
+	        try {
+	            $row = $linkTable->createRow(array('employee_id' => $employee_id, 'facility_id' => $i, 'fte_related' => $loc));
 	            $row->save();
 	        } catch(Exception $e) {
 	            error_log($e);

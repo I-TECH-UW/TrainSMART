@@ -341,28 +341,9 @@ function renderFacilityTypesDropDown($facilities_types, $selected_index, $readon
 
     $js = '
           $(function () {
-            regionSelectElements = $("#' . $prefix .'province_id,#' . $prefix .'district_id,#' . $prefix .'region_c_id")
+            regionSelectElements = $("#' . $prefix .'facilityInput")
             .change(function () {
-                var compare_id = "";
-                if ($(this).val() != ""){
-                  compare_id = $(this).val().split("_").pop();
-                } else {
-                  for (i = regionSelectElements.length - 1 ; i >= 0; i--) {
-                    compare_id = $(regionSelectElements[i]).val().split("_").pop();
-                    if (compare_id != "")
-                          break;
-                      }
-                    }
-                    allFacilities = $("#' . $prefix .'facilityInputHidden").children();
-                    cnt = allFacilities.length;
-                    var facilityInput = $("#' . $prefix .'facilityInput");
-                    facilityInput.empty();
-                    for(i = 0; i < cnt; i++){
-                      row = $(allFacilities[i]);
-                      if(compare_id == "" || row.hasClass(compare_id) || row.hasClass("defaultval")){
-                        facilityInput.append(row.clone());
-                      }
-                    }
+            $("#' . $prefix .'facilityType").val($("option:selected", this).attr("type_id"));
               });
           });
       ';

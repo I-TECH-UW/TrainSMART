@@ -364,10 +364,12 @@ class EmployeeController extends ReportFilterHelpers
                 $params['employee_transition_complete_option_id'] = $params['employee_transition_complete_option_id']?$params['employee_transition_complete_option_id']:'0';
 
                 $status->checkRequired($this, 'employee_code', t('Employee Code'));
-                $status->checkRequired($this, 'facilityInput', t('Site') . ' ' . t('Name'));
+                //TA:#224.2 'employee multi locations' should be depricated and replaced by 'employee multi sites' where each site(facility) has own locations (see code below)
+//                 $status->checkRequired($this, 'facilityInput', t('Site') . ' ' . t('Name'));
+                $status->checkRequired($this, '1_facilityInput', t('Site') . ' ' . t('Name'));
                 
-                //print_r($params);//TA:#293.2
-                $status->checkRequired($this, 'region_c_id', t('All Location Fields'));//TA:#293.1
+               //TA:#224.2 'employee multi locations' should be depricated and replaced by 'employee multi sites' where each site(facility) has own locations (see code below) 
+                //$status->checkRequired($this, 'region_c_id', t('All Location Fields'));//TA:#293.1
 
                 $status->checkRequired($this, 'employee_qualification_option_id', t('Staff Cadre'));
 
@@ -469,6 +471,8 @@ class EmployeeController extends ReportFilterHelpers
                         }
                         
                         //TA:#293 multiple location
+                        //TA:#224.2 'employee multi locations' should be depricated and replaced by 'employee multi sites' where each site(facility) has own locations (see code below)
+                        //TA:#224.2 deprectaed code
                         if ($params['location_id']) {
                             $param_loc = $params['location_id'];
                             sort($param_loc);
@@ -486,7 +490,15 @@ class EmployeeController extends ReportFilterHelpers
                                 $status->setStatusMessage(t('Error removing locations.'));
                             }
                         }
-                        
+                        /////////
+                        //TA:#224.2 new code
+                        $facilities_fte = array();
+                        for($i=1;$i<=$params['sites_cnt']; $i++){ 
+                            if($params[$i.'_facilityInput']){
+                                $facilities_fte[$params[$i.'_facilityInput']] = $params[$i.'_fte_related'];
+                            }
+                        }
+                        Employee::saveSites($id, $facilities_fte); 
                         $status->setStatusMessage(t('The position was saved.'));
                         $this->_redirect("employee/edit/id/$id");
                     }
@@ -519,15 +531,28 @@ class EmployeeController extends ReportFilterHelpers
             } else {
                 $params = $row; // reassign form data
 
-               //TA:#293 get multiple employee locations
-                $location_ids = Employee::getEmployeeLocations($id);
-                $result = array();
-                foreach($location_ids as $i => $loc) {
-                    $region_ids = Location::getCityInfo($location_ids[$i], $this->setting('num_location_tiers'));
-                    $region_ids = Location::regionsToHash($region_ids);
-                    $result = array_merge_recursive($result, $region_ids);
+               //TA:#293 get multiple employee locations 
+               //TA:#224.2 'employee multi locations' should be depricated and replaced by 'employee multi sites' where each site(facility) has own locations (see code below)
+//                 $location_ids = Employee::getEmployeeLocations($id);
+//                 $result = array();
+//                 foreach($location_ids as $i => $loc) {
+//                     $region_ids = Location::getCityInfo($location_ids[$i], $this->setting('num_location_tiers'));
+//                     $region_ids = Location::regionsToHash($region_ids);
+//                     $result = array_merge_recursive($result, $region_ids);
+//                 }
+//                 $params = array_merge($params, $result);
+                $sites_info = Employee::getEmployeeSites($id);
+                $result_sites = array();
+                foreach($sites_info as $i => $loc) {
+                    $region_ids = Location::getCityInfo($sites_info[$i]['location_id'], $this->setting('num_location_tiers'));
+                    $region_ids = Location::regionsToHash($region_ids, ($i+1));
+                    $result_sites = array_merge_recursive($result_sites, $region_ids);
+                    $result_sites[($i+1).'_fte_related'] = $sites_info[$i]['fte_related'];
+                    $result_sites[($i+1).'_facilityType'] = $sites_info[$i]['type_option_id'];
+                    $result_sites[($i+1).'_facilityInput'] = $sites_info[$i]['facility_id'];
                 }
-                $params = array_merge($params, $result);
+                $params = array_merge($params, $result_sites);
+                ///////////////////////
             }
 
             if ((!$this->hasACL('training_organizer_option_all')) &&
