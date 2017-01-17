@@ -125,7 +125,7 @@ class Employee extends ITechTable {
 	public static function getEmployeeSites($employee_id){
 	    $tableObj = new Employee();
 	    $db = $tableObj->dbfunc();
-	    $query = "SELECT link_employee_facility.facility_id, link_employee_facility.fte_related, facility.type_option_id, facility.location_id FROM link_employee_facility 
+	    $query = "SELECT link_employee_facility.facility_id, link_employee_facility.fte_related, link_employee_facility.non_hiv, facility.type_option_id, facility.location_id FROM link_employee_facility 
 	    LEFT JOIN facility ON link_employee_facility.facility_id = facility.id WHERE (employee_id = $employee_id)";
 	    $select = $db->query($query);
 	    return $select->fetchAll();
@@ -150,7 +150,7 @@ class Employee extends ITechTable {
 	    $linkTable = new ITechTable ( array ('name' => 'link_employee_facility' ) );
 	    foreach($facilities_fte as $i => $loc) {
 	        try {
-	            $row = $linkTable->createRow(array('employee_id' => $employee_id, 'facility_id' => $i, 'fte_related' => $loc));
+	            $row = $linkTable->createRow(array('employee_id' => $employee_id, 'facility_id' => $i, 'fte_related' => $loc['fte_related'], 'non_hiv' => $loc['non_hiv']));
 	            $row->save();
 	        } catch(Exception $e) {
 	            error_log($e);

@@ -453,7 +453,7 @@ class EmployeeController extends ReportFilterHelpers
 
                     if (!$id) {
                         //TA:#171 add more details to error message and redirect to employee edit page for edit or stay on the same page
-                        $status->setStatusMessage(t('That position could not be saved. Employee code for this partner exists.'));
+                        $status->setStatusMessage(t('That position could not be saved.'));
                         if($params['id']){
                             $this->_redirect("employee/edit/id/".$params['id']);
                         }
@@ -473,33 +473,36 @@ class EmployeeController extends ReportFilterHelpers
                         //TA:#293 multiple location
                         //TA:#224.2 'employee multi locations' should be depricated and replaced by 'employee multi sites' where each site(facility) has own locations (see code below)
                         //TA:#224.2 deprectaed code
-                        if ($params['location_id']) {
-                            $param_loc = $params['location_id'];
-                            sort($param_loc);
-                            $db_emp_loc = Employee::getEmployeeLocations($id);
-                            if(!empty($db_emp_loc)){
-                                sort($db_emp_loc);
-                            }
-                            if(!(empty(array_diff($param_loc, $db_emp_loc)) && empty(array_diff($db_emp_loc, $param_loc)))){
-                                if (!Employee::saveLocations($id, $param_loc)) {
-                                    $status->setStatusMessage(t('Error saving locations.'));
-                                }
-                            }
-                        }else{//remove all employee locations
-                            if (!Employee::removeLocations($id)) {
-                                $status->setStatusMessage(t('Error removing locations.'));
-                            }
-                        }
+//                         if ($params['location_id']) {
+//                             $param_loc = $params['location_id'];
+//                             sort($param_loc);
+//                             $db_emp_loc = Employee::getEmployeeLocations($id);
+//                             if(!empty($db_emp_loc)){
+//                                 sort($db_emp_loc);
+//                             }
+//                             if(!(empty(array_diff($param_loc, $db_emp_loc)) && empty(array_diff($db_emp_loc, $param_loc)))){
+//                                 if (!Employee::saveLocations($id, $param_loc)) {
+//                                     $status->setStatusMessage(t('Error saving locations.'));
+//                                 }
+//                             }
+//                         }else{//remove all employee locations
+//                             if (!Employee::removeLocations($id)) {
+//                                 $status->setStatusMessage(t('Error removing locations.'));
+//                             }
+//                         }
                         /////////
                         //TA:#224.2 new code
                         $facilities_fte = array();
                         for($i=1;$i<=$params['sites_cnt']; $i++){ 
                             if($params[$i.'_facilityInput']){
-                                $facilities_fte[$params[$i.'_facilityInput']] = $params[$i.'_fte_related'];
+                                $facilities_fte[$params[$i.'_facilityInput']] = array("fte_related"=>$params[$i.'_fte_related'], "non_hiv"=>$params[$i.'_non_hiv']?"1":"0");
                             }
                         }
+//                         print_r($params);print "<br><br>";
+//                         print_r($facilities_fte);
                         Employee::saveSites($id, $facilities_fte); 
                         $status->setStatusMessage(t('The position was saved.'));
+                        ////TA:#224.2 uncomment 
                         $this->_redirect("employee/edit/id/$id");
                     }
                 }
@@ -543,18 +546,20 @@ class EmployeeController extends ReportFilterHelpers
 //                 $params = array_merge($params, $result);
                 $sites_info = Employee::getEmployeeSites($id);
                 $result_sites = array();
+                $helper = new Helper();
                 foreach($sites_info as $i => $loc) {
-                    $region_ids = Location::getCityInfo($sites_info[$i]['location_id'], $this->setting('num_location_tiers'));
+                    $region_ids = $helper->getFacility3TiersLocationsParentIds($sites_info[$i]['facility_id'], $sites_info[$i]['location_id']);
                     $region_ids = Location::regionsToHash($region_ids, ($i+1));
                     $result_sites = array_merge_recursive($result_sites, $region_ids);
                     $result_sites[($i+1).'_fte_related'] = $sites_info[$i]['fte_related'];
                     $result_sites[($i+1).'_facilityType'] = $sites_info[$i]['type_option_id'];
                     $result_sites[($i+1).'_facilityInput'] = $sites_info[$i]['facility_id'];
+                    $result_sites[($i+1).'_non_hiv'] = $sites_info[$i]['non_hiv'];
                 }
                 $params = array_merge($params, $result_sites);
                 ///////////////////////
             }
-
+            
             if ((!$this->hasACL('training_organizer_option_all')) &&
                 (!$params['partner_id'] || !$this->userHasAccess($params['partner_id'], $employeeMechanisms))
             ) {
@@ -674,13 +679,49 @@ class EmployeeController extends ReportFilterHelpers
 // LEFT JOIN   link_mechanism_partner on link_mechanism_partner.mechanism_option_id = mechanism_option.id
 // LEFT JOIN   partner subpartner on subpartner.id = link_mechanism_partner.partner_id
 // ";
+//TA:#224.3
+//             $sql = "SELECT DISTINCT
+//             employee.id,
+//             employee.employee_code,
+//             employee.gender,
+//             employee.national_id,
+//             employee.other_id,
+//             link_employee_location.id_location as location_id,
+//             /* TA:#293 display locations names comma separated*/
+//             GROUP_CONCAT(DISTINCT province_name) as province_name, province_id,
+//             GROUP_CONCAT(DISTINCT district_name) as district_name, district_id,
+//             GROUP_CONCAT(DISTINCT region_c_name) as region_c_name, region_c_id,
+//             GROUP_CONCAT(DISTINCT city_name) as city_name, city_id,
+//             CONCAT(supervisor.first_name,
+//             CONCAT(' ', supervisor.last_name)) as supervisor,
+//             qual.qualification_phrase as staff_cadre,
+//             site.facility_name,
+//             category.category_phrase as staff_category,
+//             GROUP_CONCAT(subpartner.partner) as subPartner,
+//             GROUP_CONCAT( partner_funder_option.funder_phrase) as partnerFunder,
+//             GROUP_CONCAT(mechanism_option.mechanism_phrase) as mechanism,
+//             GROUP_CONCAT(link_mechanism_employee.percentage) as percentage
+//             FROM    employee
+//             left join link_employee_location on link_employee_location.id_employee=employee.id
+//             LEFT JOIN    ($locationsubquery) as l ON l.id = link_employee_location.id_location
+//             LEFT JOIN   employee supervisor ON supervisor.id = employee.supervisor_id
+//             LEFT JOIN   facility site ON site.id = employee.site_id
+//             LEFT JOIN   employee_qualification_option qual ON qual.id = employee.employee_qualification_option_id
+//             LEFT JOIN   employee_category_option category ON category.id = employee.employee_category_option_id
+//             LEFT JOIN   partner ON partner.id = employee.partner_id
+//             LEFT JOIN   link_mechanism_employee on link_mechanism_employee.employee_id = employee.id
+//             LEFT JOIN   mechanism_option on mechanism_option.id = link_mechanism_employee.mechanism_option_id
+//             LEFT JOIN 	partner_funder_option on mechanism_option.funder_id = partner_funder_option.id
+//             LEFT JOIN   link_mechanism_partner on link_mechanism_partner.mechanism_option_id = mechanism_option.id
+//             LEFT JOIN   partner subpartner on subpartner.id = link_mechanism_partner.partner_id
+//             ";
             $sql = "SELECT DISTINCT
             employee.id,
             employee.employee_code,
             employee.gender,
             employee.national_id,
             employee.other_id,
-            link_employee_location.id_location as location_id,
+            facility.id_location as location_id,
             /* TA:#293 display locations names comma separated*/
             GROUP_CONCAT(DISTINCT province_name) as province_name, province_id,
             GROUP_CONCAT(DISTINCT district_name) as district_name, district_id,
@@ -696,8 +737,9 @@ class EmployeeController extends ReportFilterHelpers
             GROUP_CONCAT(mechanism_option.mechanism_phrase) as mechanism,
             GROUP_CONCAT(link_mechanism_employee.percentage) as percentage
             FROM    employee
-            left join link_employee_location on link_employee_location.id_employee=employee.id
-            LEFT JOIN    ($locationsubquery) as l ON l.id = link_employee_location.id_location
+            left join link_employee_facility on link_employee_facility.employee_id=employee.id
+            left join facility on link_employee_facility.facility_id=facility.id
+            LEFT JOIN    ($locationsubquery) as l ON l.id = facility.location_id
             LEFT JOIN   employee supervisor ON supervisor.id = employee.supervisor_id
             LEFT JOIN   facility site ON site.id = employee.site_id
             LEFT JOIN   employee_qualification_option qual ON qual.id = employee.employee_qualification_option_id

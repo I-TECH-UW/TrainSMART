@@ -567,8 +567,9 @@
                 echo "<div id='sites_box'></div>";
                 $label = "<span style='font-size:11px; font-weight:bold; color:#696969;'>";
                 $SITES_CNT = 5;
+                //print_r($this->locations);
                 echo "<input type='hidden' id='sites_cnt' name='sites_cnt' value='$SITES_CNT'/>";
-                echo "<table border=0><tbody>";
+                echo "<table border=0 width=100%><tbody>";
                 for($i=1;$i<=$SITES_CNT; $i++){
                     $display = (($i == 1) || ($this->employee[$i.'_facilityInput']))?'inline':'none';
                     echo "<tr id='facility_box_$i' style='display:$display;'>";
@@ -592,6 +593,10 @@
                     echo "</td>";
                     echo "<td style='padding: 5px;'>";
                     echo $label . t('HIV Related FTE') . "</span><br><input type='text' id='" . $i . "_fte_related' name='" . $i . "_fte_related' value='" . $this->employee[$i.'_fte_related'] ."' style='width:100px;'/>";
+                    echo "</td>";
+                    echo "<td style='padding: 5px;'>";
+                    $checked = ($this->employee[$i .'_non_hiv'] === '1')?" checked='checked'":"";
+                    echo $label . t('NON HIV') . "</span><br><input type='checkbox' id='" . $i . "_non_hiv' name='" . $i . "_non_hiv' style='width:50px; margin : 4px 5px 5px 0px;' $checked />";
                     echo "</td>";
                     echo "<td valign='center'>";
                     if($i != 1){
