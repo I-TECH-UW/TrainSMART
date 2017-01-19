@@ -151,14 +151,19 @@ if ($this->setting['display_mod_skillsmart']) {
 
 <!-- TA:#331 -->
 <?php if ( $this->setting['module_people_education']  ) { ?>
-<?php echo DropDown::render('people_education_type_option_id', t('Type of Education'), $this->people_education_type, 'education_type_phrase', 'id', $this->person['people_education_type_option_id'] ); ?><br/>
-<?php echo DropDown::render('people_education_school_name_option_id', t('Official School Name'), $this->people_education_school_name, 'school_name_phrase', 'id', $this->person['people_education_school_name_option_id'] ); ?><br/>
-<?php echo DropDown::render('people_education_country_option_id', t('Country'), $this->people_education_country, 'education_country_phrase', 'id', $this->person['people_education_country_option_id'] ); ?><br/>
-<div class="fieldLabel"  id="people_education_date"><?php echo t('Year of Graduation/Completion');?></div><div class="fieldInput"><select id="people_education_date_option" name="people_education_date_option" >
+<?php echo DropDown::render('education_type_option_id', t('Type of Education'), $this->people_education_type, 'education_type_phrase', 'id', $this->person['education_type_option_id'] ); ?><br/>
+<?php echo DropDown::render('education_school_name_option_id', t('Official School Name'), $this->people_education_school_name, 'school_name_phrase', 'id', $this->person['education_school_name_option_id'] ); ?><br/>
+<?php echo DropDown::render('education_country_option_id', t('Country'), $this->people_education_country, 'education_country_phrase', 'id', $this->person['education_country_option_id'] ); ?><br/>
+<div class="fieldLabel"  id="people_education_date"><?php echo t('Year of Graduation/Completion');?></div>
+<div class="fieldInput"><select id="education_date_graduation" name="education_date_graduation" >
 <?php 
   echo "<option value=0>--" . t('choose') . "--</option>";
    for($i = date('Y') ; $i > '1920'; $i--){
-      echo "<option value=$i>$i</option>";
+       $selected = "";
+       if($this->person['education_date_graduation'] == $i){
+           $selected = "selected='selected'";
+       }
+      echo "<option value=$i $selected>$i</option>";
    }
 ?>
 </select></div><br/>

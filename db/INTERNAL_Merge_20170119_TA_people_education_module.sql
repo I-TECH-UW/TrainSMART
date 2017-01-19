@@ -52,3 +52,8 @@ CREATE TABLE `education_country_option` (
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+ALTER TABLE `person` ADD COLUMN `education_type_option_id` int(11) DEFAULT NULL;
+ALTER TABLE `person` ADD COLUMN `education_school_name_option_id` int(11) DEFAULT NULL;
+ALTER TABLE `person` ADD COLUMN `education_country_option_id` int(11) DEFAULT NULL;
+ALTER TABLE `person` ADD COLUMN `education_date_graduation` int(11) DEFAULT NULL;
+
