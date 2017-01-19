@@ -724,6 +724,7 @@ class AdminController extends UserController
 		);
 		$checkboxFields = array(
 			'check_approval_mod'     => 'module_facility_approval',
+		    'check_education_mod'     => 'module_people_education',//TA:#331
 			'check_multi_sponsors'   => 'allow_multi_sponsors',
 			'check_display_dates'    => 'display_sponsor_dates',
 			'check_require_dates'    => 'require_sponsor_dates',
@@ -857,6 +858,7 @@ class AdminController extends UserController
 			'check_primary_responsibility'  => 'display_primary_responsibility',
 			'check_secondary_responsibility'  => 'display_secondary_responsibility',
 			'check_approval_mod'              => 'module_person_approval',
+		    'check_education_mod'              => 'module_people_education',//TA:#331
 			'check_people_comments'	=> 'display_people_comments', //TA:17: 09/09/2014
 			'check_people_facilitator' => 'display_people_facilitator', //TA:17: 09/09/2014
 			'check_people_birthdate' => 'display_people_birthdate', //TA:17: 09/10/2014
