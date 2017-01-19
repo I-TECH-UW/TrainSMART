@@ -721,7 +721,7 @@ class EmployeeController extends ReportFilterHelpers
             employee.gender,
             employee.national_id,
             employee.other_id,
-            facility.id_location as location_id,
+            facility.location_id as location_id,
             /* TA:#293 display locations names comma separated*/
             GROUP_CONCAT(DISTINCT province_name) as province_name, province_id,
             GROUP_CONCAT(DISTINCT district_name) as district_name, district_id,

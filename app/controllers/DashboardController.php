@@ -1258,7 +1258,7 @@ class DashboardController extends ReportFilterHelpers {
     employee.gender,
     employee.national_id,
     employee.other_id,
-    facility.id_location as location_id,
+    facility.location_id as location_id,
     ".implode(',',$locationFlds).",
 			    CONCAT(supervisor.first_name,
 			    CONCAT(' ', supervisor.last_name)) as supervisor,
