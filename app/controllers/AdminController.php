@@ -4113,7 +4113,7 @@ class AdminController extends UserController
 		$editTable->setParentController($controller);
 		$editTable->table   = 'education_type_option';
 		$editTable->fields  = array('education_type_phrase' => t('Type Of Education'));
-		$editTable->label   = t('Type Oschool1f Education');
+		$editTable->label   = t('Type Of Education');
 		$editTable->execute($controller->getRequest());
 	
 	}
