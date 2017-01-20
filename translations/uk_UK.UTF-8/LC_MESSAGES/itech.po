@@ -1,9 +1,9 @@
-﻿msgid ""
+msgid ""
 msgstr ""
 "Project-Id-Version: Trainsmart\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-09-24 16:51-0800\n"
-"PO-Revision-Date: 2016-12-19 13:53-0800\n"
+"PO-Revision-Date: 2017-01-20 13:37-0800\n"
 "Last-Translator: DB\n"
 "Language-Team: Fuse IQ <todd@fuseiq.com>\n"
 "Language: uk_UA\n"
@@ -380,7 +380,7 @@ msgid "day"
 msgstr "день"
 
 msgid "days"
-msgstr "дні"
+msgstr "днів"
 
 msgid "This training session could not be deleted. Some participants or trainers may still be attached."
 msgstr "Даний тренінг видалити не вдалося. Деякі учасники або тренери можуть досі бути учасниками тренінгу."
@@ -593,7 +593,7 @@ msgid "Is Active"
 msgstr "Діючий"
 
 msgid "English"
-msgstr "Англійський"
+msgstr "English"
 
 msgid "French"
 msgstr "Французький"
@@ -689,7 +689,7 @@ msgid "Pre-service"
 msgstr "Система попереднього навчання"
 
 msgid "My Account"
-msgstr "Мій обликовий запис"
+msgstr "Мій облiковий запис"
 
 msgid "Country Setup"
 msgstr "Налаштування країни"
@@ -1283,7 +1283,7 @@ msgid "Qualification Comments"
 msgstr "Коментарі до кваліфікації"
 
 msgid "Trainer Information"
-msgstr "Інформація про інструктора"
+msgstr "Інформація про тренера"
 
 msgid "Show/Hide"
 msgstr "Показати/Сховати"
@@ -1769,7 +1769,7 @@ msgid "Students By Name Report"
 msgstr "Звіт студентів за ім'ям"
 
 msgid "training location"
-msgstr "місцезнаходження тренінгу"
+msgstr "Місце проведення тренінгу"
 
 msgid "Students Trained Report"
 msgstr "Звіт студентів, які пройшли навчання"

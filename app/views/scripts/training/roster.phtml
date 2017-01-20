@@ -26,17 +26,17 @@ print ScriptContainer::$instance->renderJSHead();
     </div>
 
 
-    <div class="simpleLabel longerWidth"><?php tp('Course Name');?></div>
+    <!--  <div class="simpleLabel longerWidth"><?php tp('Course Name');?></div>
     <div class="simpleValueNoMargin">
       <a href="<?php echo $this->base_url . '/training/view/id/' . $this->row['id']; ?>"><?php echo $this->row['training_title']; ?></a>
-    </div>
+    </div>-->
 
     <div class="simpleLabel longerWidth"><?php echo t('Training').' '.t('Location');?></div>
     <div class="simpleValueNoMargin">
       <?php echo $this->row['training_location_name']; ?>
     </div>
     <div class="simpleLabel longerWidth"><?php tp('Course Length');?></div>
-    <div class="simpleValueNoMargin"> <?php echo $this->row['duration']; ?> </div>
+    <div class="simpleValueNoMargin"> <?php echo str_replace("days", "", $this->row['duration']); tp('days'); ?> </div>
 
     <div class="simpleLabel longerWidth"><?php tp('Training topic');?></div>
     <div class="simpleValueNoMargin">
@@ -48,10 +48,10 @@ print ScriptContainer::$instance->renderJSHead();
       <?php echo $this->row['training_level_phrase']; ?>
     </div>
 
-    <div class="simpleLabel longerWidth"><?php echo $this->translation['PEPFAR Category']; ?></div>
+    <!--  <div class="simpleLabel longerWidth"><?php echo $this->translation['PEPFAR Category']; ?></div>
     <div class="simpleValueNoMargin">
       <?php echo $this->row['pepfar']; ?>
-    </div>
+    </div>-->
 
     <?php if($this->row['objectives']) : ?>
       <div class="simpleLabel longerWidth"><?php echo $this->translation['Course Objectives']; ?></div>
