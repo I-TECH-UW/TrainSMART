@@ -80,7 +80,7 @@ class Training extends ITechTable
 		->joinLeft(array('torg' => 'training_organizer_option'),    "$this->_name.training_organizer_option_id = torg.id",    array('training_organizer' => 'training_organizer_phrase'))
 		//->joinLeft(array('tt' => 'training_topic_option'), "$this->_name.training_topic_option_id = tt.id",'training_topic_phrase')
 		->joinLeft(array('ttfo' => 'training_to_training_funding_option'),    "training.id = ttfo.training_id",    array())
-		->joinLeft(array('tfo' => 'training_funding_option'),    "tfo.id = ttfo.training_funding_option_id",    array('GROUP_CONCAT(tfo.funding_phrase) as funding'))
+		->joinLeft(array('tfo' => 'training_funding_option'),    "tfo.id = ttfo.training_funding_option_id",    array('GROUP_CONCAT(DISTINCT tfo.funding_phrase) as funding'))
 		->where("$this->_name.id = $training_id");
 		$rowRay = $this->fetchRow($select);
 		if ($rowRay)
@@ -147,6 +147,8 @@ class Training extends ITechTable
 			->joinLeft(array('tt' => 'training_to_trainer'), "$this->_name.id = tt.training_id", array('countTrainer' => 'COUNT(tt.trainer_id)'))
 			->joinLeft(array('pt' => 'person_to_training'), "$this->_name.id = pt.training_id", array('countPerson' => 'COUNT(pt.person_id)'))
 			->joinLeft(array('uc' => 'user'), "$this->_name.created_by = uc.id", array('creator' =>"COALESCE(CONCAT(uc.first_name, ' ', uc.last_name), 'system')"))
+			->joinLeft(array('ttfo' => 'training_to_training_funding_option'),    "training.id = ttfo.training_id",    array())
+			->joinLeft(array('tfo' => 'training_funding_option'),    "tfo.id = ttfo.training_funding_option_id",    array('GROUP_CONCAT(DISTINCT tfo.funding_phrase) as funding'))
 			->group("$this->_name.id")
 			->where("$this->_name.is_deleted = 0 AND has_known_participants = 1 " . (($where) ? " AND $where" : ''))
 			->order("$this->_name.training_start_date DESC");
@@ -174,13 +176,21 @@ class Training extends ITechTable
 		`t`.`training_title_phrase` AS `training_title`,
 		`tl`.`training_location_name`,
 		`ta`.`message`,
-		CASE WHEN uc.id IS NULL THEN 'system' ELSE CONCAT(uc.first_name, ' ', uc.last_name) END  AS `creator`
+		CASE WHEN uc.id IS NULL THEN 'system' ELSE CONCAT(uc.first_name, ' ', uc.last_name) END  AS `creator`,
+		GROUP_CONCAT(tfo.funding_phrase) as funding,
+		`torg`.`training_organizer_phrase`
 		FROM `training`
 		INNER JOIN `training_title_option` AS `t` ON training_title_option_id = t.id
 		LEFT JOIN `training_location` AS `tl` ON training.training_location_id = tl.id
 		INNER JOIN (SELECT MAX(id) as \"id\", training_id FROM `training_approval_history` GROUP BY training_id) AS `tamax` ON training.id = tamax.training_id
 		INNER JOIN `training_approval_history` AS `ta` ON ta.id = tamax.id
 		LEFT JOIN `user` AS `uc` ON training.created_by = uc.id
+		LEFT JOIN
+    `training_to_training_funding_option` AS `ttfo` ON training.id = ttfo.training_id
+	LEFT JOIN
+    `training_funding_option` AS `tfo` ON tfo.id = ttfo.training_funding_option_id
+        LEFT JOIN
+    `training_organizer_option` AS `torg` ON training.training_organizer_option_id = torg.id
 		WHERE
 		(training.is_deleted = 0 AND is_approved = 0 ) $where
 		GROUP BY
