@@ -42,6 +42,16 @@ print ScriptContainer::$instance->renderJSHead();
     <div class="simpleValueNoMargin">
       <?php echo $this->row['training_topic_phrase']; ?>
     </div>
+    
+    <div class="simpleLabel longerWidth"><?php tp('Funding');?></div>
+    <div class="simpleValueNoMargin">
+      <?php echo $this->row['funding']; ?>
+    </div>
+    
+    <div class="simpleLabel longerWidth"><?php tp('Performer of Training');?></div>
+    <div class="simpleValueNoMargin">
+      <?php echo $this->row['training_organizer']; ?>
+    </div>
 
     <div class="simpleLabel longerWidth"><?php tp('Training Level');?></div>
     <div class="simpleValueNoMargin">
