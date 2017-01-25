@@ -67,7 +67,7 @@ class IndexController extends ITechController {
 			$uid = Session::getCurrentUserId ();
 
 			// Find incomplete training and future trainings
-			$trainingFields = array ('id' => t('ID'),'training_title' => t ( 'Course Name' ), 'training_start_date' => t ( 'Start Date' ), 'training_organizer_phrase'  => t('Training Organizer'), 'training_location_name' => t ( 'Training Center' ), 
+			$trainingFields = array ('id' => t('ID'),'training_title' => t ( 'Course Name' ), 'training_start_date' => t ( 'Start Date' ), 'training_organizer_phrase'  => t('Training Organizer'), 'training_location_name' => t ( 'Training Location' ), 
 			    'budget_code' => t('Budget Code'),'funding'  => t('Funding'), 'creator' => t ( 'Created By' ));
 			if(!$this->setting('display_budget_code')) {
 				unset($trainingFields['budget_code']);
