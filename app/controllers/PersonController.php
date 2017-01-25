@@ -884,6 +884,15 @@ class PersonController extends ReportFilterHelpers
             $this->viewAssignEscaped('primaryResponsibilities', $primaryResponsibilitiesArray);
             $secondaryResponsibilitiesArray = OptionList::suggestionList('person_secondary_responsibility_option', 'responsibility_phrase', false, false);
             $this->viewAssignEscaped('secondaryResponsibilities', $secondaryResponsibilitiesArray);
+            
+            //TA:#331
+            $educationTypeArray = OptionList::suggestionList('education_type_option', 'education_type_phrase', false, false);
+            $this->viewAssignEscaped('people_education_type', $educationTypeArray);
+            $educationSchoolNameArray = OptionList::suggestionList('education_school_name_option', 'school_name_phrase', false, false);
+            $this->viewAssignEscaped('people_education_school_name', $educationSchoolNameArray);
+            $educationSchoolNameArray = OptionList::suggestionList('education_country_option', 'education_country_phrase', false, false);
+            $this->viewAssignEscaped('people_education_country', $educationSchoolNameArray);
+            ////
 
 
             $educationlevelsArray = OptionList::suggestionList('person_education_level_option', 'education_level_phrase', false, false);

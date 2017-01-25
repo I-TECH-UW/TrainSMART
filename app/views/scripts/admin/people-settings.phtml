@@ -262,6 +262,13 @@ print ScriptContainer::$instance->renderJSHead();
    	<td></td>
     <td></td>
   </tr>
+  
+  <!-- TA:#331 -->
+  <tr><td class="fieldTitle"><?php echo t('People Education'); ?></td>
+    <td></td>
+    <td></td>
+    <td><input type="checkbox" name="check_education_mod" <?php if($this->check_education_mod) echo 'checked'; ?> id="check_education_mod"><label for="check_education_mod"><?php echo t('Enabled'); ?></label></td>
+  </tr>
 
 </table>
 
