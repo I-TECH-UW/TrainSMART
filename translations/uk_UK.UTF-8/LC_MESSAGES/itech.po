@@ -1,9 +1,9 @@
-﻿msgid ""
+msgid ""
 msgstr ""
 "Project-Id-Version: Trainsmart\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-09-24 16:51-0800\n"
-"PO-Revision-Date: 2016-12-19 13:53-0800\n"
+"PO-Revision-Date: 2017-01-25 16:10-0800\n"
 "Last-Translator: DB\n"
 "Language-Team: Fuse IQ <todd@fuseiq.com>\n"
 "Language: uk_UA\n"
@@ -88,7 +88,7 @@ msgid "The facility was saved."
 msgstr "Заклад було збережено."
 
 msgid "ERROR: The facility could not be saved."
-msgstr "ПОМИЛКА: Неможливо зберегти заклад."
+msgstr "ПОМИЛКА: Неможливо зберегти установу."
 
 msgid "That facility was deleted."
 msgstr "Заклад було видалено."
@@ -136,13 +136,13 @@ msgid "That person could not be found."
 msgstr "Не вдалося знайти цю особу. "
 
 msgid "That person is an active participant or trainer and could not be deleted."
-msgstr "Ця особа є діючим учасником або тренером і не може бути видалена."
+msgstr "Ця особа є діючим учасником або інструктором і не може бути видалена."
 
 msgid "The person was saved. Refreshing history..."
 msgstr "Дана особа була збережена. Йде оновлення журналу ..."
 
 msgid "The person was saved."
-msgstr "Особа була збережена."
+msgstr "Дана особа була збережена."
 
 msgid "Gender"
 msgstr "Стать"
@@ -157,10 +157,10 @@ msgid "Birthdate"
 msgstr "Дата народження"
 
 msgid "Trainer type"
-msgstr "Тип тренера"
+msgstr "Тип інструктора"
 
 msgid "Trainer skill"
-msgstr "Навички тренера"
+msgstr "Навички інструктора"
 
 msgid "Enter a reason, or select a different reason above."
 msgstr "Вкажіть причину, або виберіть іншу причину вище."
@@ -172,13 +172,13 @@ msgid "Facility"
 msgstr "Заклад"
 
 msgid "That facility name could not be found."
-msgstr "Не вдалося знайти цю назву закладу."
+msgstr "Не вдалося знайти цю назву установи."
 
 msgid "The person was saved. Refreshing change history..."
 msgstr "Дана особа була збережена. Йде оновлення журналу змін ..."
 
 msgid "The trainer information could not be saved."
-msgstr "Не вдалося зберегти інформацію тренера."
+msgstr "Не вдалося зберегти інформацію інструктора."
 
 msgid "ERROR: The person could not be saved."
 msgstr "ПОМИЛКА: Неможливо зберегти особу."
@@ -202,7 +202,7 @@ msgid "Training Topic"
 msgstr "Тема тренінгу"
 
 msgid "Funding"
-msgstr "Джерело фінансування"
+msgstr "Фінансування"
 
 msgid "Facility Name"
 msgstr "Назва закладу"
@@ -286,7 +286,7 @@ msgid "Course Length"
 msgstr "Тривалість курсу"
 
 msgid "Course Trainers"
-msgstr "Тренери курсу"
+msgstr "Інструктори курсу"
 
 msgid "Days"
 msgstr "Дні"
@@ -380,10 +380,10 @@ msgid "day"
 msgstr "день"
 
 msgid "days"
-msgstr "дні"
+msgstr "днів"
 
 msgid "This training session could not be deleted. Some participants or trainers may still be attached."
-msgstr "Даний тренінг видалити не вдалося. Деякі учасники або тренери можуть досі бути учасниками тренінгу."
+msgstr "Даний тренінг видалити не вдалося. Деякі учасники або інструктори можуть досі бути учасниками тренінгу."
 
 msgid "This training session could not be saved."
 msgstr "Даний тренінг зберегти не вдалося."
@@ -407,7 +407,7 @@ msgid "already exists"
 msgstr "вже існує"
 
 msgid "This trainer is already in this training session."
-msgstr "Даний тренер вже знаходиться в цьому тренінгу."
+msgstr "Даний інструктор вже знаходиться в цьому тренінгу."
 
 msgid "Could not update this record."
 msgstr "Неможливо оновити цей запис."
@@ -467,7 +467,7 @@ msgid "That user account has been disabled."
 msgstr "Цей обліковий запис користувача було відключено."
 
 msgid "That username or password is invalid."
-msgstr "Це ім'я користувача або пароль недійсні."
+msgstr "Ім'я користувача або пароль недійсні."
 
 msgid "Sunday"
 msgstr "Неділя"
@@ -521,10 +521,10 @@ msgid "Middle Name"
 msgstr "По батькові"
 
 msgid "Last Name"
-msgstr "Прізвище"
+msgstr "Призвище"
 
 msgid "Surname"
-msgstr "Прізвище"
+msgstr "Призвище"
 
 msgid "National ID"
 msgstr "Державне посвідчення особи"
@@ -575,7 +575,7 @@ msgid "PEPFAR topic"
 msgstr "Тема ПЕПФАР"
 
 msgid "Training of Trainers"
-msgstr "Тренінг тренерів"
+msgstr "Трейнінг інструкторів"
 
 msgid "Course Objectives"
 msgstr "Цілі курсу"
@@ -593,7 +593,7 @@ msgid "Is Active"
 msgstr "Діючий"
 
 msgid "English"
-msgstr "Англійський"
+msgstr "English"
 
 msgid "French"
 msgstr "Французький"
@@ -608,7 +608,7 @@ msgid "Export"
 msgstr "Експортувати"
 
 msgid "Developed and funded by I-TECH. For questions or help,"
-msgstr "Розроблено та профінансовано I-TECH. Для питань або за допомогою ,"
+msgstr "Розроблено та профінансовано I-TECH. З питаннями або за допомогою звертайтеся,"
 
 msgid "click here"
 msgstr "натисніть тут"
@@ -665,7 +665,7 @@ msgid "Participant Reports"
 msgstr "Звіти по учасниках"
 
 msgid "Trainer Reports"
-msgstr "Звіти по тренерах"
+msgstr "Звіти по інструкторах"
 
 msgid "Facility Reports"
 msgstr "Звіти по закладах"
@@ -692,16 +692,16 @@ msgid "My Account"
 msgstr "Мій обликовий запис"
 
 msgid "Country Setup"
-msgstr "Налаштування країни"
+msgstr "Настройки країни"
 
 msgid "Training Settings"
-msgstr "Налаштування тренінгу"
+msgstr "Настройки тренінгу"
 
 msgid "People Settings"
-msgstr "Налаштування людей"
+msgstr "Настройки людей"
 
 msgid "Facility Settings"
-msgstr "Налаштування закладу"
+msgstr "Настройки закладу"
 
 msgid "Training Partners"
 msgstr "Партнери тренінгу"
@@ -734,7 +734,7 @@ msgid "Welcome"
 msgstr "Ласкаво просимо"
 
 msgid "Region Setup"
-msgstr "Регіональні налаштування"
+msgstr "Регіональні настройки"
 
 msgid "Move Regions"
 msgstr "Перемістити регіони"
@@ -770,13 +770,13 @@ msgid "Qualifications"
 msgstr "Категорії персоналу"
 
 msgid "Trainer Types"
-msgstr "Тип тренера"
+msgstr "Тип інструктора"
 
 msgid "Trainer Skills"
-msgstr "Навички тренера"
+msgstr "Навички інструктора"
 
 msgid "Trainer Skill"
-msgstr "Навик тренера"
+msgstr "Навичка інструктора"
 
 msgid "Languages"
 msgstr "Мови"
@@ -818,10 +818,10 @@ msgid "Degrees"
 msgstr "Ступені освіти"
 
 msgid "Add degree"
-msgstr "Додати ступінь освіти "
+msgstr "Додати ступень освіти "
 
 msgid "Update degree"
-msgstr "Оновити ступінь освіти"
+msgstr "Оновити ступень освіти"
 
 msgid "Degree"
 msgstr "Ступінь"
@@ -848,7 +848,7 @@ msgid "Sponsors"
 msgstr "Спонсори"
 
 msgid "Tutor types"
-msgstr "Типи тренерів"
+msgstr "Типи інструкторів"
 
 msgid "Course types"
 msgstr "Типи курсів"
@@ -1145,7 +1145,7 @@ msgid "Training Location Name"
 msgstr "Назва місцезнаходження тренінгу"
 
 msgid "Training locations"
-msgstr "Місце проведення тренінгу"
+msgstr "Місцезнаходження тренінгу"
 
 msgid "Results"
 msgstr "Результати "
@@ -1205,10 +1205,10 @@ msgid "unique"
 msgstr "унікальний"
 
 msgid "Trainers"
-msgstr "Тренери"
+msgstr "Інструктори"
 
 msgid "Trainer"
-msgstr "Тренер"
+msgstr "Інструктор"
 
 msgid "Total"
 msgstr "Всього"
@@ -1241,7 +1241,7 @@ msgid "Right-click and select \"Save Target As...\" to download."
 msgstr "Натисніть праву клавішу миші та виберіть  \"Зберегти як ... \" щоб завантажити."
 
 msgid "Document Upload"
-msgstr "Завантаження документу"
+msgstr "Загрузка документу"
 
 msgid "Please login below"
 msgstr "Будь ласка, увійдіть в систему нижче"
@@ -1289,13 +1289,13 @@ msgid "Show/Hide"
 msgstr "Показати/Сховати"
 
 msgid "Is person an active trainer?"
-msgstr "Ця особа є діючим тренером?"
+msgstr "Ця особа є діючим інструктором?"
 
 msgid "Trainer Affiliation"
-msgstr "Приналежність тренера"
+msgstr "Приналежність інструктора"
 
 msgid "Trainer skills"
-msgstr "Навички тренера"
+msgstr "Навички інструктора"
 
 msgid "check all that apply"
 msgstr "відмітити все, що підходить"
@@ -1358,7 +1358,7 @@ msgid "Secondary responsibility"
 msgstr "Додаткова відповідальність"
 
 msgid "Trainer languages"
-msgstr "Мови тренера"
+msgstr "Мови інструктора"
 
 msgid "Recommended Training Topics"
 msgstr "Рекомендовані теми тренінгу"
@@ -1382,7 +1382,7 @@ msgid "Topics"
 msgstr "Теми"
 
 msgid "Please add or verify the trainer information below."
-msgstr "Будь ласка, додайте або підтвердіть нижче інформацію про тренера."
+msgstr "Будь ласка, додайте або підтвердіть нижче інформацію про інструктора."
 
 msgid "Please enter facility information"
 msgstr "Будь ласка, введіть інформацію про заклад"
@@ -1418,7 +1418,7 @@ msgid "Person Search"
 msgstr "Пошук особи"
 
 msgid "Trainers only"
-msgstr "Лише тренери"
+msgstr "Лише інструктори"
 
 msgid "Participants only"
 msgstr "Лише учасники"
@@ -1439,10 +1439,10 @@ msgid "Middle name"
 msgstr "По батькові"
 
 msgid "Last name"
-msgstr "Прізвище"
+msgstr "Призвище"
 
 msgid "Trainer Type"
-msgstr "Тип тренера"
+msgstr "Тип інструктора"
 
 msgid "Training History"
 msgstr "Журнал тренінгу"
@@ -1529,16 +1529,16 @@ msgid "filter"
 msgstr "фільтр"
 
 msgid "Training location"
-msgstr "Місце проведення тренінгу"
+msgstr "Місцезнаходження тренінгу"
 
 msgid "Report"
 msgstr "Звіт"
 
 msgid "Select trainer report"
-msgstr "Вибрати звіт про тренера"
+msgstr "Вибрати звіт про інструктора"
 
 msgid "Trainers by Skill, Language, and PEPFAR"
-msgstr "Тренери за навичками, мовою та ПЕПФАР"
+msgstr "Інструктори за навичками, мовою та ПЕПФАР"
 
 msgid "Select training report"
 msgstr "Вибрати звіт про тренінг"
@@ -1565,7 +1565,7 @@ msgid "Institution Information"
 msgstr "Інформація про інститут"
 
 msgid "Tutor By Name"
-msgstr "Тренер за ім`ям"
+msgstr "Інструктор за ім`ям"
 
 msgid "Facility Report"
 msgstr "Звіт закладу"
@@ -1655,7 +1655,7 @@ msgid "Participant Count"
 msgstr "Кількість учасників"
 
 msgid "Trainers by Name"
-msgstr "Тренери за ім`ям"
+msgstr "Інструктори за ім`ям"
 
 msgid "Show post-test scores above"
 msgstr "Показати вище результати після тесту"
@@ -1760,10 +1760,10 @@ msgid "Missing Students Trained"
 msgstr "Відсутні студенти, які пройшли навчання"
 
 msgid "Missing Tutor By Name Report"
-msgstr "Звіт відсутніх тренерів зв ім'ям"
+msgstr "Звіт відсутніх інструкторів зв ім'ям"
 
 msgid "Missing Tutor By Name"
-msgstr "Відсутні тренери за ім`ям"
+msgstr "Відсутні інструктора за ім`ям"
 
 msgid "Students By Name Report"
 msgstr "Звіт студентів за ім'ям"
@@ -1793,13 +1793,13 @@ msgid "Extended Report with Regions and Qualification"
 msgstr "Розширений звіт із регіонами і кваліфікацією"
 
 msgid "Trainer Report"
-msgstr "Звіт по тренерах"
+msgstr "Звіт по інструкторах"
 
 msgid "trainer report"
-msgstr "звіт по тренерах"
+msgstr "звіт по інструкторах"
 
 msgid "Trainer language"
-msgstr "Мова тренера"
+msgstr "Мова інструктора"
 
 msgid "Select topic taught"
 msgstr "Вибрати прочитану тему"
@@ -1883,13 +1883,13 @@ msgid "Training Session Deleted"
 msgstr "Даний тренінг був видалений"
 
 msgid "This training session has been deleted."
-msgstr "Даний тренінг був видалений."
+msgstr "Данный тренинг был удалён."
 
 msgid "Edit Topics"
 msgstr "Редагувати теми"
 
 msgid "Edit Trainer Topic"
-msgstr "Редагувати тему тренера"
+msgstr "Редагувати тему інструктора"
 
 msgid "Training Roster"
 msgstr "Реєстр тренінгу"
@@ -1904,10 +1904,10 @@ msgid "End Date:"
 msgstr "Дата закінчення:"
 
 msgid "Total Trainers:"
-msgstr "Всього тренерів:"
+msgstr "Всього інструкторів:"
 
 msgid "Total Trainers"
-msgstr "Всього тренерів"
+msgstr "Всього інструкторів"
 
 msgid "Total Participants:"
 msgstr "Всього учасників:"
@@ -2000,22 +2000,22 @@ msgid "Insert"
 msgstr "Вставити"
 
 msgid "New Person Form"
-msgstr "Форма нової особи"
+msgstr "Форма нової особистості"
 
 msgid "The entered trainer name could not be found."
-msgstr "Введене ім'я тренера не знайдено."
+msgstr "Введене ім'я інструктора не знайдено."
 
 msgid "The entered person could not be found."
-msgstr "Введене ім'я особи не знайдено."
+msgstr "Введене ім'я людини не знайдено."
 
 msgid "Please select one from the list or add a new person."
-msgstr "Будь ласка, виберіть зі списку або додайте нову особу. "
+msgstr "Будь ласка, виберіть зі списку або додайте нову людину. "
 
 msgid "Please enter the number of days for this trainer."
-msgstr "Будь ласка, введіть кількість днів для даного тренера."
+msgstr "Будь ласка, введіть кількість днів для даного інструктора."
 
 msgid "You must edit this person's trainer profile before adding them to this session.\\n\\nWould you like to do this now?"
-msgstr "Ви повинні відредагувати інформацію про даного тренера перед тим як додати його до цього тренінгу.Ви хочете зробити це зараз?"
+msgstr "Ви повинні відредагувати інформацію про даного інструктора перед тим як додати його до цієї сессіі.Ви хочете зробити це зараз?"
 
 msgid "Participant Information"
 msgstr "Інформація про учасника"
@@ -2138,16 +2138,16 @@ msgid "All Training Organizers"
 msgstr "Всі організатори навчання"
 
 msgid "Block this User"
-msgstr "Блокувати цього користувача"
+msgstr "Блокувати користувача"
 
 msgid "Are you sure you wish to block this user?"
 msgstr "Ви впевнені, що хочете блокувати цього користувача?"
 
 msgid "Activate this User"
-msgstr "Активувати цього користувача"
+msgstr "Активувати користувача"
 
 msgid "Are you sure you wish to activate this user?"
-msgstr "Ви впевнені, що хочете активувати цього користувача?"
+msgstr "Ви впевекеы, що хочете активувати цього користувача?"
 
 msgid "Forgot Password"
 msgstr "Забули пароль"
@@ -2213,7 +2213,7 @@ msgid "City is required."
 msgstr "Поле місто обов'язково"
 
 msgid "Trainer affiliation"
-msgstr "Приналежність тренера"
+msgstr "Приналежність інструктора"
 
 msgid "Your new password has been sent. Please check your email for further instructions."
 msgstr "Ваш новий пароль було надіслано. Будь ласка, перевірте свою електронну пошту для отримання подальших інструкцій."
@@ -2249,7 +2249,7 @@ msgid "Refresh this page, or go to the home page to see changes applied."
 msgstr "Оновити цю сторінку, або перейдіть на головну сторінку щоб побачити зміни."
 
 msgid "Settings"
-msgstr "Налаштування"
+msgstr "Настройки"
 
 msgid "Field"
 msgstr "Поле "
@@ -2294,7 +2294,7 @@ msgid "since"
 msgstr "з"
 
 msgid "Incomplete trainings that already occurred"
-msgstr "Незаповнені тренінги, які вже відбулися"
+msgstr "Незавершені тренінги, які вже відбулися"
 
 msgid "City/Town"
 msgstr "Місто"
@@ -2402,7 +2402,7 @@ msgid "Budget Code Reports"
 msgstr "Звіти по бюджетах"
 
 msgid "Budget Code Report"
-msgstr "Звіт по бюджетах"
+msgstr "Звіт бюджету"
 
 msgid "Student Reports"
 msgstr "Звіти про учнів"
@@ -2420,7 +2420,7 @@ msgid "Institution Reports"
 msgstr "Звіти по інститутах"
 
 msgid "Tutor Reports"
-msgstr "Звіти по тренерах"
+msgstr "Звіти по інструкторах"
 
 msgid "Partners"
 msgstr "Партнери"
@@ -2501,7 +2501,7 @@ msgid "Evaluations Reports"
 msgstr "Звіти по процесах визначення якості"
 
 msgid "Select the region level you want to move"
-msgstr "Оберіть рівень регіону, який ви хочете перемістити"
+msgstr "Select the region level you want to move"
 
 msgid "Select the region to move to"
 msgstr "Оберіть регіон, щоб перемістити в"
@@ -2621,10 +2621,10 @@ msgid "Number of beds (students)"
 msgstr "Кількість спальних місць (студентів)"
 
 msgid "Tutor housing"
-msgstr "Житло для тренерів"
+msgstr "Житло для інструкторів"
 
 msgid "Number of Tutor houses"
-msgstr "Кількість житла для тренерів"
+msgstr "Кількість житла для інструкторів"
 
 msgid "Year Founded"
 msgstr "Фінансовий рік"
@@ -2651,10 +2651,10 @@ msgid "Add/Edit Staff Members"
 msgstr "Додати/редагувати співробітників"
 
 msgid "Tutor to Student Ratio"
-msgstr "Відношення кількості тренерів до кількості студентів"
+msgstr "Відношення кількості інструкторів до кількості студентів"
 
 msgid "Number of Tutors"
-msgstr "Кількість тренерів"
+msgstr "Кількість інструкторів"
 
 msgid "Number of Students"
 msgstr "Кількість студентів"
@@ -2804,7 +2804,7 @@ msgid "Add person"
 msgstr "Додати особу"
 
 msgid "Add a New Student or Tutor Record"
-msgstr "Додати запис нового студента або тренера"
+msgstr "Додати запис нового студента або інструктора"
 
 msgid "Local address"
 msgstr "Місцева адреса"
@@ -3038,7 +3038,7 @@ msgid "Order"
 msgstr "Порядок"
 
 msgid "Parent"
-msgstr "Джерело"
+msgstr "Ісходник"
 
 msgid "Favorite color"
 msgstr "Улюблений колір"
@@ -3047,7 +3047,7 @@ msgid "Display"
 msgstr "Показати"
 
 msgid "TOT"
-msgstr "Навчання тренерів"
+msgstr "Навчання інструкторів"
 
 msgid "Mutiple checkbox field"
 msgstr "Поле для декількох відміток"
@@ -3182,7 +3182,7 @@ msgid "Display recommended trainings per individual"
 msgstr "Показати рекомендовані тренінги для людини"
 
 msgid "Require at least one trainer skill per trainer"
-msgstr "Потрібно щонайменше один навик для тренера"
+msgstr "Потрібно щонайменше один навик для інструктора"
 
 msgid "Assign Training Titles to Categories"
 msgstr "Присвоїти назви тренінгу до категорій"
@@ -3233,10 +3233,10 @@ msgid "M&E Responsibility"
 msgstr "Відповідальність за моніторинг і процес визначення якості"
 
 msgid "Active trainer"
-msgstr "Діючий тренер"
+msgstr "Діючий інструктор"
 
 msgid "Active Trainer"
-msgstr "Діючий тренер"
+msgstr "Діючий інструктор"
 
 msgid "Facilitator Information"
 msgstr "Інформація про посередника"
@@ -3263,13 +3263,13 @@ msgid "approve"
 msgstr "затвердити"
 
 msgid "Both Names"
-msgstr "За ім`ям та прізвищем"
+msgstr "За ім`ям та призвищем"
 
 msgid "That person has been approved"
 msgstr "Ця особа була затверджена"
 
 msgid "Error approving person: That account could not be found."
-msgstr "Помилка затвердження особи: не вдалося знайти обліковий запис."
+msgstr "Помилка затвердження особистості: не вдалося знайти обліковий запис."
 
 msgid "Government employee"
 msgstr "Державний службовець"
@@ -3287,7 +3287,7 @@ msgid "Disability"
 msgstr "Інвалідність"
 
 msgid "Nurse Trainer Type"
-msgstr "Тип тренера"
+msgstr "Тип інструктора"
 
 msgid "Year you started providing care"
 msgstr "Рік, коли ви почали надавати допомогу"
@@ -3530,13 +3530,13 @@ msgid "Update sponsor"
 msgstr "Оновити спонсора"
 
 msgid "Add tutor type"
-msgstr "Додатти тип тренера"
+msgstr "Додатти тип інструктору"
 
 msgid "Update tutor type"
-msgstr "Оновити тип тренера"
+msgstr "Оновити тип інструктору"
 
 msgid "Tutor type"
-msgstr "Тип тренера"
+msgstr "Тип інструктора"
 
 msgid "Add course type"
 msgstr "Додати тип курсу"
@@ -3569,7 +3569,7 @@ msgid "Ability to duplicate Training"
 msgstr "Здатність дублювати тренінг"
 
 msgid "Approve people and facilities"
-msgstr "Затвердити людей та заклади"
+msgstr "Затвердити людей та установи"
 
 msgid "All Institutions"
 msgstr "Всі інститути"
@@ -3581,7 +3581,7 @@ msgid "Next User"
 msgstr "Наступний користувач"
 
 msgid "SkillSmart Main Settings"
-msgstr "Головні налаштування навичок"
+msgstr "Головні настройки навичок"
 
 msgid "Professional Bodies"
 msgstr "Професійні органи"
@@ -3641,7 +3641,7 @@ msgid "Update competency"
 msgstr "Оновити компетенцію"
 
 msgid "Nurse trainer type"
-msgstr "Тип тренера"
+msgstr "Тип інструктора"
 
 msgid "Occupational Categories"
 msgstr "Професійні категорії"
@@ -3881,10 +3881,10 @@ msgid "Add Criteria"
 msgstr "Додати критерій"
 
 msgid "Trainer by Name"
-msgstr "За ім`ям тренера"
+msgstr "За ім`ям інструктора"
 
 msgid "Partcipant or Trainer"
-msgstr "Учасник або Тренер"
+msgstr "Учасник або Інструктор"
 
 msgid "All People Data"
 msgstr "Дані за всіма людьми"
@@ -3977,16 +3977,16 @@ msgid "Computer Count"
 msgstr "Кількість комп`ютерів"
 
 msgid "# of Tutors"
-msgstr "# тренерів"
+msgstr "# інструкторів"
 
 msgid "Tutor Count"
-msgstr "Кількість тренерів"
+msgstr "Кількість інструкторів"
 
 msgid "# of Beds"
 msgstr "# спальних місць"
 
 msgid "Tutor Student Ratio"
-msgstr "Відношення кількості тренерів до кількості студентів"
+msgstr "Відношення кількості інструкторів до кількості студентів"
 
 msgid "Bed Count"
 msgstr "Кількість спальних місць"
@@ -4007,10 +4007,10 @@ msgid "Year of Graduates"
 msgstr "Рік випуску"
 
 msgid "Tutors By Name Report"
-msgstr "Звіт тренерів за іменами"
+msgstr "Звіт інструкторів за іменами"
 
 msgid "Tutors By Name"
-msgstr "Тренери за іменами"
+msgstr "Інструктори за іменами"
 
 msgid "Facility (work)"
 msgstr "Заклад (місце роботи)"
@@ -4085,10 +4085,10 @@ msgid "# of students"
 msgstr "# студентів"
 
 msgid "# of tutors"
-msgstr "# тренерів"
+msgstr "# інструкторів"
 
 msgid "Student/Tutor Ratio"
-msgstr "Відношення кількості тренерів до кількості студентів"
+msgstr "Відношення кількості інструкторів до кількості студентів"
 
 msgid "# of grads"
 msgstr "# випускників"
@@ -4097,7 +4097,7 @@ msgid "Early terminations"
 msgstr "Припинено дострокова"
 
 msgid "Инструктор Reports"
-msgstr "Звіти по тренерах"
+msgstr "Звіти по інструкторах"
 
 msgid "Download Complete Excel Data for these trainings"
 msgstr "Завантажити повні дані у форматі Excel для цих тренінгів"
@@ -4148,7 +4148,7 @@ msgid "Upload"
 msgstr "Завантажити"
 
 msgid "Trainer Category"
-msgstr "Категорія тренера"
+msgstr "Категорія інструктора"
 
-msgid "Signature"
-msgstr "Підпис"
+msgid "Performer of Training"
+msgstr "Виконавець  тренiнгу"

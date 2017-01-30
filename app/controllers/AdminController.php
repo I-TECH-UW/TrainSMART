@@ -724,6 +724,7 @@ class AdminController extends UserController
 		);
 		$checkboxFields = array(
 			'check_approval_mod'     => 'module_facility_approval',
+		    'check_education_mod'     => 'module_people_education',//TA:#331
 			'check_multi_sponsors'   => 'allow_multi_sponsors',
 			'check_display_dates'    => 'display_sponsor_dates',
 			'check_require_dates'    => 'require_sponsor_dates',
@@ -857,6 +858,7 @@ class AdminController extends UserController
 			'check_primary_responsibility'  => 'display_primary_responsibility',
 			'check_secondary_responsibility'  => 'display_secondary_responsibility',
 			'check_approval_mod'              => 'module_person_approval',
+		    'check_education_mod'              => 'module_people_education',//TA:#331
 			'check_people_comments'	=> 'display_people_comments', //TA:17: 09/09/2014
 			'check_people_facilitator' => 'display_people_facilitator', //TA:17: 09/09/2014
 			'check_people_birthdate' => 'display_people_birthdate', //TA:17: 09/10/2014
@@ -4094,6 +4096,66 @@ class AdminController extends UserController
 				$style_id, false
 			)
 		);
+	}
+	
+	//TA:#331
+	public function peopleEducationtypeAction(){
+	    if($this->getRequest()->isPost()) {
+			// form submit
+			$updateData = array();
+			$require_trainer_skill = $this->getParam('require_trainer_skill');
+			if (empty($require_trainer_skill)) { $require_trainer_skill = 0; }
+			$this->putSetting('require_trainer_skill', $require_trainer_skill);
+		}
+
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
+		$editTable->setParentController($controller);
+		$editTable->table   = 'education_type_option';
+		$editTable->fields  = array('education_type_phrase' => t('Type Of Education'));
+		$editTable->label   = t('Type Of Education');
+		$editTable->execute($controller->getRequest());
+	
+	}
+	
+	//TA:#331
+	public function peopleSchoolnameAction(){
+	    if($this->getRequest()->isPost()) {
+	        // form submit
+	        $updateData = array();
+	        $require_trainer_skill = $this->getParam('require_trainer_skill');
+	        if (empty($require_trainer_skill)) { $require_trainer_skill = 0; }
+	        $this->putSetting('require_trainer_skill', $require_trainer_skill);
+	    }
+	
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'education_school_name_option';
+	    $editTable->fields  = array('school_name_phrase' => t('Official School Name'));
+	    $editTable->label   = t('Official School Name');
+	    $editTable->execute($controller->getRequest());
+	
+	}
+	
+	//TA:#331
+	public function peopleEducationcountryAction(){
+	    if($this->getRequest()->isPost()) {
+	        // form submit
+	        $updateData = array();
+	        $require_trainer_skill = $this->getParam('require_trainer_skill');
+	        if (empty($require_trainer_skill)) { $require_trainer_skill = 0; }
+	        $this->putSetting('require_trainer_skill', $require_trainer_skill);
+	    }
+	
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'education_country_option';
+	    $editTable->fields  = array('education_country_phrase' => t('Country'));
+	    $editTable->label   = t('Country');
+	    $editTable->execute($controller->getRequest());
+	
 	}
 }
 
