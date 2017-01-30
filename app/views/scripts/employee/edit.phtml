@@ -57,28 +57,8 @@
     </style>
     <script type="application/javascript">
         $(document).ready(function () {
-            window.ITECH.mechData = <?php echo json_encode($this->mechanismData, JSON_HEX_APOS); ?>;
-            window.ITECH.totalPercent = 0;
             $('#select_partner').on('change', availableMechanisms);
-            availableMechanisms();
-            calculateMechanismTable();
-            $("#disassociateMechanisms").data("ids", []);
-            $("#associateMechanisms").data("ids", []);
-            $("#mechanismPercentages").data("percents", []);
-
-        });
-
-        function basedAtOther() {
-            $('#based_at_other_container').toggle($("#employee_base_option_id option:selected").text() === "<?php echo t('Other'); ?>");
-        }
-
-        $(document).ready(function () {  /* doc ready */
-
-            itech_save_confirm_on_leave();
-
-            basedAtOther();
-            validCHWids = <?php echo json_encode($this->validCHWids); ?>;
-            /* watch Cadre field and show/hide CHW divs on CHW fields */
+            window.ITECH.totalPercent = 0;
 
             /* Init the table */
             $('#employee_mechanism_table').dataTable({
@@ -90,7 +70,53 @@
                 "bAutoWidth": false
             });
 
+            window.ITECH.mechData = <?php echo json_encode($this->mechanismData, JSON_HEX_APOS); ?>;
+<?php
+                $disassociateIDs = isset($this->employee['disassociateMechanisms']) ? json_encode(explode(',', $this->employee['disassociateMechanisms']), JSON_HEX_APOS) : '[]';
+                $associateIDs = isset($this->employee['associateMechanisms']) ? json_encode(explode(',', $this->employee['associateMechanisms']), JSON_HEX_APOS) : '[]';
+                $mechanismPercentages = isset($this->employee['mechanismPercentages']) ? json_encode(explode(',', $this->employee['mechanismPercentages']), JSON_HEX_APOS) : '[]';
+                echo "            var disassociateIDs = $disassociateIDs;", PHP_EOL;
+                echo "            var associateMechanisms = $associateIDs;", PHP_EOL;
+                echo "            var mechanismPercentages = $mechanismPercentages;", PHP_EOL;
+?>
 
+            $("#disassociateMechanisms").data("ids", disassociateIDs);
+            $("#associateMechanisms").data("ids", associateMechanisms);
+            $("#mechanismPercentages").data("percents", mechanismPercentages);
+
+            if (disassociateIDs.length > 0) {
+                var selectorString = '';
+                for (var i in disassociateIDs) {
+                    selectorString = selectorString + '#table_mechanism_delete_toggle_' + disassociateIDs[i] + ',';
+                }
+
+                // jQuery ignores the trailing comma in the string, nice.
+                $(selectorString).each(function(i, element) {
+                    element.checked = true;
+                    deleteToggle(element);
+                });
+            }
+
+            if ((associateMechanisms.length > 0) && (associateMechanisms.length == mechanismPercentages.length)) {
+                for (var i in associateMechanisms) {
+                    addMechanismToTable(associateMechanisms[i], mechanismPercentages[i]);
+                }
+            }
+            availableMechanisms();
+            calculateMechanismTable();
+        });
+
+        function basedAtOther() {
+            $('#based_at_other_container').toggle($("#employee_base_option_id option:selected").text() === "<?php echo t('Other'); ?>");
+        }
+
+        $(document).ready(function () {  /* doc ready */
+
+            itech_save_confirm_on_leave();
+
+            basedAtOther();
+
+            var validCHWids = <?php echo json_encode($this->validCHWids); ?>;
             $('#select_employee_qualification_option').change(function () { /* watch Cadre field and show/hide CHW divs on CHW fields */
 
                 if (validCHWids.lastIndexOf(parseInt($(this).val())) != -1) { // found in the valid list
@@ -224,8 +250,6 @@
                 else
                     $('#facilityInput').removeAttr('disabled');
             });
-
-
         });
 
         /**
@@ -235,9 +259,9 @@
          * @returns {boolean}
          */
         var calculateMechanismTable = function () {
-            //TA:327 #var hours = parseInt($('#funded_hours_per_week').val());
+            //TA:327
             var hours = parseFloat($('#funded_hours_per_week').val());
-            //TA:#282 var cost = parseInt($('#annual_cost').val());
+            //TA:#282
             var cost = parseFloat($('#annual_cost').val());
 
             if (isNaN(hours) || isNaN(cost)) {
@@ -294,41 +318,37 @@
             var $element = $(element);
             var $siblings = $element.parent().siblings('td');
             var idList = $("#disassociateMechanisms").data("ids");
+            var mechData = window.ITECH.mechData;
+            var mechID = $element.parent().parent().attr("id").split('_').pop();
 
-            // get the mechanism association id in the tr element
-            var id = $element.parent().parent().attr("id");
 
-            var mechID = $element.parent().siblings().first().data('mechID');
-            if ((typeof mechID === 'undefined') && (typeof id != 'undefined')) {
-                mechID = window.ITECH.mechData['employee_association_ids'][id];
-            }
 
             if (element.checked) {
-                if (typeof id != 'undefined') {
-                    idList.push(id);
-                    $siblings.addClass('toDeleteMechanism');
-                }
-                else {
-                    // since there's no tr id,
-                    // this should be a new mechanism that's been deleted before it was saved
-
+                if ($element.parent().parent().hasClass('newMechanism')) {
                     var mechIndex = $.inArray(mechID, $("#associateMechanisms").data('ids'));
                     $("#associateMechanisms").data('ids').splice(mechIndex, 1);
                     $("#mechanismPercentages").data('percents').splice(mechIndex, 1);
                     $('#employee_mechanism_table').dataTable().fnDeleteRow($element.parent().parent()[0]);
                 }
-                window.ITECH.mechData['employee_mechanism_ids'].splice($.inArray(mechID, window.ITECH.mechData['employee_mechanism_ids']), 1);
+                else {
+                    idList.push(mechID);
+                    $siblings.addClass('toDeleteMechanism');
+                }
 
+                window.ITECH.mechData.assigned_mechanisms[mechID] = undefined;
             }
             else {
-                if (typeof id != 'undefined') {
+                if (typeof mechID != 'undefined') {
                     $siblings.removeClass('toDeleteMechanism');
                     // use jQuery's inArray because IE <9 doesn't support indexOf in arrays
-                    idList.splice($.inArray(id, idList), 1);
+                    idList.splice($.inArray(mechID, idList), 1);
                     $element.parent().parent().removeData('toDelete');
+                    window.ITECH.mechData.assigned_mechanisms[mechID] = {'mechanism_option_id' : mechID,
+                        'percentage' : $element.parent().siblings('td.percent').html(),
+                        'mechanism_phrase' : mechData['byMechanism'][mechID]['mechanism_phrase']};
                 }
-                window.ITECH.mechData['employee_mechanism_ids'].push(mechID);
             }
+
             calculateMechanismTable();
             availableMechanisms();
 
@@ -357,29 +377,14 @@
                 return false;
             }
 
-            var fpercent = percent / 100.0;
             var $selectedMechanism = $("#new_mechanism option:selected");
             var mechID = $selectedMechanism.val();
 
-            //TA:#327
-            var hours = parseFloat($('#funded_hours_per_week').val());
-            //TA:#327
-            var cost = parseFloat($('#annual_cost').val());
-
-            if (isNaN(hours) || isNaN(cost)) {
-                return false;
-            }
-
-            var $oTable = $('#employee_mechanism_table').dataTable();
-            var newRowIDs = $oTable.fnAddData([$selectedMechanism.text(), percent,
-                (fpercent * hours).toFixed(1), (fpercent * cost).toFixed(2), '<input type="checkbox" onclick="deleteToggle(this);"/>']);
-            var newRow = $($oTable.fnSettings().aoData[newRowIDs[0]].nTr);
-            newRow.addClass('newMechanism');
-            newRow.children().first().data("mechID", mechID);
+            addMechanismToTable(mechID, percent);
 
             $("#associateMechanisms").data("ids").push(mechID);
             $("#mechanismPercentages").data("percents").push(percent);
-            window.ITECH.mechData['employee_mechanism_ids'].push(mechID);
+            window.ITECH.mechData.assigned_mechanisms[mechID] = {'mechanism_option_id' : mechID, 'percentage' : percent, 'mechanism_phrase' : window.ITECH.mechData['byMechanism'][mechID]['mechanism_phrase']};
 
             $percentBox.val("");
             calculateMechanismTable();
@@ -388,31 +393,67 @@
             return true;
         }
 
+        function addMechanismToTable(mechID, percent) {
+            //TA:#327
+            var hours = parseFloat($('#funded_hours_per_week').val());
+            //TA:#327
+            var cost = parseFloat($('#annual_cost').val());
+            var fpercent = percent / 100.0;
+            if (isNaN(hours) || isNaN(cost)) {
+                return false;
+            }
+            var $oTable = $('#employee_mechanism_table').dataTable();
+            var newRowIDs = $oTable.fnAddData([window.ITECH.mechData['byMechanism'][mechID]['mechanism_phrase'], percent,
+                (fpercent * hours).toFixed(1), (fpercent * cost).toFixed(2), '<input type="checkbox" onclick="deleteToggle(this);"/>']);
+            var newRow = $($oTable.fnSettings().aoData[newRowIDs[0]].nTr);
+            newRow.addClass('newMechanism');
+            newRow.prop('id', 'table_mechanism_row_' + mechID);
+            newRow.children().last().children()[0].id = 'table_mechanism_delete_toggle_' + mechID;
+            newRow.children().first().data("mechID", mechID);
+        }
+
         /**
          * prepare stored data from mechanism table changes for submission to backend
          * @returns {boolean}
          */
         function processMechanismAssociations() {
-            $("#associateMechanisms").val($("#associateMechanisms").data("ids").join(','));
-            $("#mechanismPercentages").val($("#mechanismPercentages").data("percents").join(','));
-            $("#disassociateMechanisms").val($("#disassociateMechanisms").data("ids").join(','));
+            var $associate = $("#associateMechanisms");
+            var $percentages = $("#mechanismPercentages");
+            var $disassociate = $("#disassociateMechanisms");
+
+            if ($associate.data("ids").length && $percentages.data("percents").length) {
+                $associate.val($associate.data("ids").join(','));
+                $percentages.val($percentages.data("percents").join(','));
+            }
+            else {
+                $associate.val("");
+                $percentages.val("");
+            }
+            if ($disassociate.data("ids").length) {
+                $disassociate.val($disassociate.data("ids").join(','));
+            }
+            else {
+                $disassociate.val("");
+            }
             return true;
         }
         var availableMechanisms = function () {
             var optList = '<option value="">--choose--</option>';
             var partnerID = $('#select_partner').val();
             var mechData = window.ITECH.mechData;
-            var numMechs = mechData['available'].length;
             var mech;
-            for (var i = 0; i < numMechs; i++) {
-                mech = mechData['available'][i];
-                if ((partnerID === mech['owner_id'] ||
-                    ($.inArray(partnerID, mech['partners']) > -1)) &&
-                    ($.inArray(mech['id'], mechData['employee_mechanism_ids']) < 0)) {
 
-                    optList += '<option value="' + mech['id'] + '">' + mech['mechanism_phrase'] + '</option>';
+            if (mechData['byPartner'].hasOwnProperty(partnerID)) {
+                var partnerMechanisms = window.ITECH.mechData['byPartner'][partnerID];
+                var numMechs = partnerMechanisms.length;
+                for (var i = 0; i < numMechs; i++) {
+                    if (!mechData.assigned_mechanisms.hasOwnProperty(partnerMechanisms[i]) || mechData.assigned_mechanisms[partnerMechanisms[i]] === undefined) {
+                        mech = mechData['byMechanism'][partnerMechanisms[i]]['mechanism_phrase'];
+                        optList += '<option value="' + partnerMechanisms[i] + '">' + mechData['byMechanism'][partnerMechanisms[i]]['mechanism_phrase'] + '</option>';
+                    }
                 }
             }
+
             $('#new_mechanism').html(optList);
         }
 
@@ -491,7 +532,7 @@
                 echo '<div class="fieldLabel"><span class="required">*</span>' . t('Employee Based at') . '</div>';
                 echo '<div class="fieldInput">';
                 echo $this->formSelect('employee_base_option_id',
-                    isset($this->criteria['employee_base_option_id']) ? $this->criteria['employee_base_option_id'] : null,
+                    isset($this->employee['employee_base_option_id']) ? $this->employee['employee_base_option_id'] : null,
                     array('disable' => !$this->hasACL("edit_employee"), 'onclick' => 'basedAtOther();'),
                     $this->bases);
                 echo '</div>';
@@ -499,7 +540,7 @@
                 echo '<div id="based_at_other_container">';
                 echo '<div class="fieldLabel"><span class="required">*</span>' . t('Other, Specify') . '</div>';
                 echo '<div class="fieldInput">';
-                echo $this->formText('based_at_other', $this->criteria['based_at_other'], array("maxlength" => "50"));
+                echo $this->formText('based_at_other', $this->employee['based_at_other'], array("maxlength" => "50"));
                 echo '</div></div>';
 
             }
@@ -637,29 +678,40 @@
                 <tbody id="employee_mechanism_table_body">
                 <?php
                 $percent_total = 0;
-                foreach ($this->employeeMechanisms as $mech) {
+                foreach ($this->employeeMechanisms as $mechanismID => $mechData) {
                     $percent_total += $mech['percentage'];
                     ?>
-                    <tr id="<?php echo $mech['id']; ?>">
-                        <td><?php echo $mech['mechanism_phrase']; ?></td>
-                        <td><?php echo $mech['percentage']; ?></td>
+                    <tr id="table_mechanism_row_<?php echo $mechanismID; ?>">
+                        <td><?php echo $mechData['mechanism_phrase']; ?></td>
+                        <td class="percent"><?php echo $mechData['percentage']; ?></td>
                         <?php if ($this->setting['display_hours_per_mechanism']) { ?>
-                            <td><?php echo sprintf('%0.1f', $mech['percentage'] / 100.0 * $this->employee['funded_hours_per_week']); ?></td>
+                            <td><?php echo sprintf('%0.1f', $mechData['percentage'] / 100.0 * $this->employee['funded_hours_per_week']); ?></td>
                         <?php }
                         if ($this->setting['display_annual_cost_to_mechanism']) { ?>
-                            <td><?php echo sprintf('%0.2f', $mech['percentage'] / 100.0 * $this->employee['annual_cost']); ?></td>
+                            <td><?php echo sprintf('%0.2f', $mechData['percentage'] / 100.0 * $this->employee['annual_cost']); ?></td>
                         <?php } ?>
-                        <td><input type="checkbox" onclick="deleteToggle(this);"/></td>
+                        <td><input id="table_mechanism_delete_toggle_<?php echo $mechanismID;?>" type="checkbox" onclick="deleteToggle(this);"/></td>
                     </tr>
                 <?php } ?>
 
                 </tbody>
             </table>
             
-            <input type="hidden" id="disassociateMechanisms" name="disassociateMechanisms"/>
-            <input type="hidden" id="associateMechanisms" name="associateMechanisms"/>
-            <input type="hidden" id="mechanismPercentages" name="mechanismPercentages"/>
+            <input type="hidden" id="disassociateMechanisms" name="disassociateMechanisms" <?php
+            if (isset($this->employee['disassociateMechanisms'])) {
+                echo 'value="' . $this->employee['disassociateMechanisms'] . '"';
+            }
+            ?>/>
 
+            <?php if (isset($this->employee['associateMechanisms']) && isset($this->employee['mechanismPercentages'])) {
+                echo '<input type = "hidden" id = "associateMechanisms" name = "associateMechanisms" value="' . $this->employee['associateMechanisms'] . '" />';
+                echo '<input type = "hidden" id = "mechanismPercentages" name = "mechanismPercentages" value="' . $this->employee['mechanismPercentages'] . '" />';
+            }
+            else {
+                echo '<input type = "hidden" id = "associateMechanisms" name = "associateMechanisms" />';
+                echo '<input type = "hidden" id = "mechanismPercentages" name = "mechanismPercentages" />';
+            }
+            ?>
             <br/>
             <div class="clear"></div>
             <div>

@@ -464,7 +464,7 @@ class ReportFilterHelpers extends ITechController
         if (isset($params['showfunding']) && $params['showfunding']) {
             $s->joinLeft(array('lsf' => 'link_student_funding'), 'lsf.studentid = s.id', array());
             $s->joinLeft(array('lf' => 'lookup_fundingsources'), 'lf.id = lsf.fundingsource', array());
-            //$s->columns('lf.fundingname');
+
             //TA:103 to display multiple sources for one person in one row
             $s->columns('GROUP_CONCAT(lf.fundingname)');
             $s->group('p.id');
@@ -545,6 +545,28 @@ class ReportFilterHelpers extends ITechController
         return(array($s, $headers));
     }
 
+    protected function getCurrentQuarterStartDate() {
+        $now = new DateTime();
+        $thisYear = $now->format('Y');
+        $quarterStarts = array(DateTime::createFromFormat('Y-m-d', $thisYear . '-01-01'),
+            DateTime::createFromFormat('Y-m-d', $thisYear . '-04-01'),
+            DateTime::createFromFormat('Y-m-d', $thisYear . '-07-01'),
+            DateTime::createFromFormat('Y-m-d', $thisYear . '-10-01'),
+        );
+        $currentQuarterStartDate = $quarterStarts[0];
+        $size = count($quarterStarts);
+        for ($i = 0; $i < $size; $i++) {
+            if (($i + 1) >= $size) {
+                $currentQuarterStartDate = $quarterStarts[$i];
+                break;
+            }
+            if ($quarterStarts[$i] < $now && $quarterStarts[$i + 1] > $now) {
+                $currentQuarterStartDate = $quarterStarts[$i];
+                break;
+            }
+        }
+        return ($currentQuarterStartDate);
+    }
 
     protected function employeeValidateCriteria($criteria) {
 

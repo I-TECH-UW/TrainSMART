@@ -19,21 +19,22 @@ class Employee extends ITechTable {
      * @param $association_ids - the ids to remove
      * @return bool
      */
-    public static function disassociateMechanismsFromEmployee($employee_id, $association_ids)
+    public static function disassociateMechanismsFromEmployee($employee_id, $mechanism_ids)
 	{
-	    if ((!$association_ids) || (!$employee_id) ||
-            (!preg_match('/^\d+[,\d+]*$/', $association_ids))) {
+	    if ((!$mechanism_ids) || (!$employee_id) ||
+            (!preg_match('/^\d+[,\d+]*$/', $mechanism_ids))) {
             return false;
         }
 	    
 	    $table = new ITechTable ( array ('name' => 'link_mechanism_employee' ) );
+	    $rv = false;
 	    try {
-	        $table->delete("id IN ($association_ids) AND employee_id = $employee_id");
+	        $rv = $table->delete("mechanism_option_id IN ($mechanism_ids) AND employee_id = $employee_id");
 	    } catch(Exception $e) {
 	        error_log($e);
 	        return false;
 	    }
-	    return true;
+	    return $rv;
 	     
 	}
 
@@ -46,12 +47,6 @@ class Employee extends ITechTable {
      */
 	public static function saveMechanismAssociations ( $employee_id, $mechanism_ids, $mechanism_percentages)
 	{
-	    //TA:#327 it checked on database side,  Percentage can be decimal
-// 	    if ((!$mechanism_ids) || (!$employee_id) ||
-//             (!preg_match('/^\d+[,\d+]*$/', $mechanism_ids)) ||
-//             (!preg_match('/^\d+[,\d+]*$/', $mechanism_percentages))) {
-//             return false;
-//         }
 
         $ids = explode(',', $mechanism_ids);
         $percentages = explode(',', $mechanism_percentages);
