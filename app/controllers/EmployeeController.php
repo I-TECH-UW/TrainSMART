@@ -253,7 +253,7 @@ class EmployeeController extends ReportFilterHelpers
         $id = $params['id'];
 
         $db = $this->dbfunc();
-        $choose = array("0" => '--' . t("choose") . '--');
+        $choose = array("" => '--' . t("choose") . '--');
         $bases = $choose + $db->fetchPairs(
             $db->select()
                 ->from('employee_base_option', array('id', 'base_phrase'))

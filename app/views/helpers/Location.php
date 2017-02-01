@@ -147,9 +147,22 @@ function renderFilter(&$locations, $tier, $widget_id, $default_val_id = false, $
                 $default_val_id = $val['id'];
         }
     }
-    $also_match_id = false;
-    if ( !is_array($default_val_id) && strpos($default_val_id, '_')){ // bugfix - print_all_region_filters() might get actual option value="123_123" from some controllers (partnerController)
-        $also_match_id = array_pop(explode('_', $default_val_id));
+
+    // this underscore format representing the location hierarchy costs us a lot of time, performance, work, and adds a lot of confusion and errors
+    $locationIDs = array();
+    if (is_array($default_val_id)) {
+        foreach ($default_val_id as $id) {
+            if (strpos($id, '_')) {
+                $id = array_pop(explode('_', $id));
+            }
+            $locationIDs[$id] = true;
+        }
+    }
+    else if ($default_val_id && strpos($default_val_id, '_')) {
+        $locationIDs[array_pop(explode('_', $default_val_id))] = true;
+    }
+    else if ($default_val_id) {
+        $locationIDs[$default_val_id] = true;
     }
 
     ?>
@@ -157,14 +170,10 @@ function renderFilter(&$locations, $tier, $widget_id, $default_val_id = false, $
             <?php if ($child_widget_id ) { ?>onchange="setChildStatus_<?php echo str_replace('-', '_', $widget_id);?>();" <?php }?>>
         <option value="">--<?php tp('choose');?>--</option>
         <?php
-        foreach ( $locations as $val ) {
-            if ( $val['tier'] == $tier) {
+        foreach ($locations as $val) {
+            if ($val['tier'] == $tier) {
                 $selected = '';
-                if ( is_array($default_val_id) && (@in_array($val['id'], $default_val_id) ) ) {
-                    $selected = 'selected="selected"';
-                } else if ( !is_array($default_val_id) && $val['id'] === $default_val_id ) {
-                    $selected = 'selected="selected"';
-                } else if ($also_match_id === $val['id']) {
+                if (array_key_exists($val['id'], $locationIDs)) {
                     $selected = 'selected="selected"';
                 }
                 echo '<option value="'.buildId($tier, $locations, $val['id']).'" '.$selected.'>'.$val['name'].'</option>';
