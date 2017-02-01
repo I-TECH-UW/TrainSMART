@@ -207,51 +207,6 @@
             };
         })(jQuery);
 
-        $(function (e) { /* docready */
-            // we dont want to capture national id data if not southafrica, only their site.
-            var select = $('#select_lookup_nationalities');
-            var id_fld = $('#national_id');
-            var passport = $('#other_id');
-            if (!select.length)
-                return;
-            if (location.hostname.indexOf("pepfarskillsmart.trainingdata.org") !== -1) /*south africa*/
-                return;
-            select.change(function (e) {
-                if (id_fld.length) {
-                    if (select.val() != 1) /*south africa - these values are hardcoded. */
-                        id_fld.attr('disabled', 'disabled');
-                    else
-                        id_fld.attr('disabled', null);
-                }
-                if (passport.length) {
-                    if (select.val() == 2) /*foreign*/
-                        passport.attr('disabled', null);
-                    else
-                        passport.attr('disabled', 'disabled');
-                }
-            }).change();
-
-            $('#select_employee_base_option').change(function () { /* watch based at field */
-                var val = $(this).val();
-                var real_val = $(this).find('option:selected').text();
-                $('#facilityInput,#province_id,#district_id,#region_c_id,#region_d_id,#region_e_id,#region_f_id,#region_g_id,#region_h_id,#region_i_id').attr('disabled', ((real_val == "Non South African based office") ? 'disabled' : null)); // enable/disable site by value of base field
-            }).change(); // fire once
-
-            rgnsels = $('#province_id,#district_id,#region_c_id,#region_d_id,#region_e_id,#region_f_id,#region_g_id,#region_h_id,#region_i_id');
-            rgnsels.change(function (e) { /* southafrica, hardcoded, they dont want site_enabled if multiple regions selected */
-                var off = false;
-                rgnsels.each(function (i, val) {
-                    var chosen = $(this).find('option:selected').html();
-                    if (!off && (chosen.indexOf('*Multiple') != -1 || chosen.indexOf('*Not In') != -1))
-                        off = true;
-                });
-                if (off)
-                    $('#facilityInput').attr('disabled', 'disabled');
-                else
-                    $('#facilityInput').removeAttr('disabled');
-            });
-        });
-
         /**
          * calculate values for mechanism table hours and cost based on mechanism percentages
          * and employee funded hours and annual cost
@@ -320,8 +275,6 @@
             var idList = $("#disassociateMechanisms").data("ids");
             var mechData = window.ITECH.mechData;
             var mechID = $element.parent().parent().attr("id").split('_').pop();
-
-
 
             if (element.checked) {
                 if ($element.parent().parent().hasClass('newMechanism')) {
@@ -500,8 +453,8 @@
             if ($this->setting['display_employee_primary_role'])
                 echo labelAndField($this, t('Primary Role'), $this->roles, 'select_employee_role_option');
 
-            $f = $this->formText('employee_code', $this->employee['employee_code'], array('maxlength' => '15'));
-            echo labelAndField($this, t('Employee Code'), $f);
+            echo labelAndField($this, '<span class="required">*</span>' . t('Employee Code'),
+                $this->formText('employee_code', $this->employee['employee_code'], array('maxlength' => '15')));
 
             if ($this->setting['display_employee_dob'])
                 echo labelAndField($this, t('Employee Date of Birth') . space . ('(dd/mm/yyyy)'), 'date', 'dob', $this->employee['dob']);

@@ -222,7 +222,6 @@ class EmployeeController extends ReportFilterHelpers
                 ->where('user_to_organizer_access.user_id = ?', $user_id);
         }
 
-        $s = $select->__toString();
         $res['byMechanism'] = $db->fetchAssoc($select);
         $mechanisms = &$res['byMechanism'];
         $res['byPartner'] = array();
@@ -241,7 +240,7 @@ class EmployeeController extends ReportFilterHelpers
 
         return $res;
     }
-    
+
     public function editAction()
     {
         
@@ -285,16 +284,6 @@ class EmployeeController extends ReportFilterHelpers
             if (!$this->hasACL('edit_employee')) {
                 $this->doNoAccessError();
             } else {
-                if ($id && (!$this->hasACL('training_organizer_option_all'))) {
-
-                    // ensure that we have permissions to edit this employee via mechanism partners and subpartners,
-                    // including newly posted form data
-                    $newMechanismIDs = array();
-                    $newMechData = json_decode($params['employeeFunding_new_data'], true);
-                    foreach ($newMechData as $newData) {
-                        array_push($newMechanismIDs, $newData['id']);
-                    }
-                }
 
                 //validate then save
                 //TA:#293 take multiple locations
@@ -317,13 +306,15 @@ class EmployeeController extends ReportFilterHelpers
 
                 $status->checkRequired($this, 'employee_qualification_option_id', t('Staff Cadre'));
 
-                if ($this->setting('display_gender'))
+                if ($this->setting('display_gender')) {
                     $status->checkRequired($this, 'gender', t('Gender'));
+                }
                 if ($this->setting('display_employee_disability')) {
                     $status->checkRequired($this, 'disability_option_id', t('Disability'));
                     if ($params['disability_option_id'] == 1)
                         $status->checkRequired($this, 'disability_comments', t('Nature of Disability'));
                 }
+
                 $costaccum = 0;
                 if ($this->setting('display_employee_salary')) {
                     $status->checkRequired($this, 'salary', t('Salary'));

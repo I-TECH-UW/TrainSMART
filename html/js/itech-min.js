@@ -212,16 +212,7 @@ function filterSubTypeOptions(selectObjParentId, selectObjChildId) {
         curTypes.push(selectObjParent.options[j].value);
       }
     }
- 
-  //var curType = selectObjParent.options[selectObjParent.selectedIndex].value;
-  /*
-  var oldSubType = 0;
-  if(selectObj.selectedIndex != -1) {
-    oldSubType = selectObj.options[selectObj.selectedIndex].value ;
-    selectObj.selectedIndex = 0; 
-  }
-  */
-  
+
     var oldSubTypes = [ ];
     for(j = 0; j < selectObj.options.length; j++) {
       if(selectObj.options[j].selected) {
@@ -413,125 +404,6 @@ function itech_save_confirm_on_leave ()
 		$('select,input').change(function () { form_has_changes = true; });
 		$('form').submit(function () { form_has_submitted = true;	});
 	});
-}
-
-/* SAONLY - south africa only - disable all sub regions if val() = *Multiple Regions* */
-$(window).load(function (e) {
-  if ((location.hostname.indexOf("pepfarskillsmart.trainingdata.org") !== -1) && location.hostname != 'localhost') /*south africa*/
-    return;
-  rgnsels = $('#province_id,#district_id,#region_c_id,#region_d_id,#region_e_id,#region_f_id,#region_g_id,#region_h_id,#region_i_id');
-  rgnsels.change(function (e) { /* southafrica, hardcoded, they dont want site_enabled if multiple regions selected */
-    var off = false;
-    rgnsels.each(function (i, val) {
-      $(this).removeAttr('disabled')
-      var chosen = $(this).find('option:selected').html();
-      if (!off && (chosen.indexOf('*Multiple') != -1 || chosen.indexOf('*Not In') != -1)){
-        off = true;
-        return; //stop processing
-      }
-      if (off) // turn off next elems
-        $(this).attr('disabled', 'disabled');
-    });
-    if (off)
-      $('#facilityInput').attr('disabled', 'disabled');
-    else
-      $('#facilityInput').removeAttr('disabled');
-    
-  });
-})
-
-
-function filterFunderOptions(selectObjParentId, selectObjChildId) {
-  
-  var selectObj = document.getElementById(selectObjChildId);
-  if ( (selectObj == undefined) || (selectObj == null) ) return;
-  
-  if ( selectObj ) {
-	  
-    var selectObjParent = document.getElementById(selectObjParentId);
-    var index = selectObjParent.selectedIndex;
-    var selected_option_value = selectObjParent.options[index].value;
-    var selected_option_text = selectObjParent.options[index].text;
- 
-    if ( selectObj.originalOptions == undefined ) {
-      clone(selectObj);
-    }
-
-    // allow for multiple-select
-    var curTypes = [ ];
-    for(j = 0; j < selectObjParent.options.length; j++) {
-      if(selectObjParent.options[j].selected) {
-        curTypes.push(selectObjParent.options[j].value);
-      }
-    }
-  
-    var oldSubTypes = [ ];
-    for(j = 0; j < selectObj.options.length; j++) {
-      if(selectObj.options[j].selected) {
-        oldSubTypes.push(selectObj.options[j].value);
-      }
-    }   
-    	
-    var i = 0;
-    var tmpOpt = '';
- 	
-    ilength = selectObj.options.length;
-    for(i = 1; i < ilength; i++) {
-      selectObj.remove(1);
-    }
- 
-    var prefix = '';
-    var prefix2 = '';
-    var newi = 0;
-     
-    for (i in selectObj.originalOptions) { 
-      tmpOpt = selectObj.originalOptions[i];   
-      
-      for(j in curTypes){
-        curType=curTypes[j];
-        prefix=i.substring(0,curType.length+1); 	  
-        prefix2=(curType+'_');
-     	 
-   	    if ( prefix == prefix2 ) {
-          newi++;
-  	      appendOptionLast(selectObj, tmpOpt, i);
-  	      
-  	      for(k in oldSubTypes){
-  	      	if(i==oldSubTypes[k])
-              selectobj.options[newi].selected=true;
-            selectObj.disabled=false;
-  	        
-  	      }  
-   	    }
-      }
-    }
-  } // if (selectObj)  
-
- // disable if no options (other than --choose--)
-  if (newi < 1)
-    $(selectObj).attr('disabled', 'disabled');
-
-} // func
-
-function setFunderStatus(selectedIndex, childId, parentId)  {
-	var childObj = YAHOO.util.Dom.get(childId);
-	if ( childObj ) {
-		if ( selectedIndex ) {
-			childObj.disabled = false;
-			filterFunderOptions(parentId,childId);
-		} else {
-			childObj.selectedIndex = 0;
-			childObj.disabled = true;
-			
-		}
-		//also filter the child of the child
-		var childFunction = "setChildStatus_" + childId;
-		try {
-			eval(childFunction + "()");
-		} catch(err) {
-			
-		}
-	}
 }
 
 //TA:#282 TA:#279
