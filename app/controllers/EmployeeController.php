@@ -305,6 +305,7 @@ class EmployeeController extends ReportFilterHelpers
                 $status->checkRequired($this, 'region_c_id', t('All Location Fields'));//TA:#293.1
 
                 $status->checkRequired($this, 'employee_qualification_option_id', t('Staff Cadre'));
+                $status->checkRequired($this, 'employee_site_type_option_id', t('Site') . ' ' . t('Type'));
 
                 if ($this->setting('display_gender')) {
                     $status->checkRequired($this, 'gender', t('Gender'));
