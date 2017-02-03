@@ -439,7 +439,7 @@
                 <?php
             endif; // fi historyDiv
 
-            $this->required_fields = array('employee_code', 'partner_id', 'employee_base_option_id', 'select_employee_qualification_option', 'salary', 'benefits', 'additional_expenses', 'stipend', 'employee_transition_option_id', 'select_employee_role_option', 'disability_option_id', 'disability_comments', 'funded_hours_per_week', 'agreement_end_date', 'facilityInput');
+            $this->required_fields = array('employee_code', 'select_employee_site_type_option', 'partner_id', 'employee_base_option_id', 'select_employee_qualification_option', 'salary', 'benefits', 'additional_expenses', 'stipend', 'employee_transition_option_id', 'select_employee_role_option', 'disability_option_id', 'disability_comments', 'funded_hours_per_week', 'agreement_end_date', 'facilityInput');
 
             if (!$this->hasACL('edit_employee')) {
                 $this->viewonly = true;
@@ -514,8 +514,9 @@
             }
             echo labelAndField($this, t('Site') . space . t('Name'), $facDropDown, 'facilityInput');
             
-            if ($this->setting['display_employee_site_type'])
-                echo labelAndField($this, t('Site') . space . t('Type'), $this->site_types);
+            if ($this->setting['display_employee_site_type']) {
+                echo labelAndField($this, '<span class="required">*</span>' . t('Site') . space . t('Type'), $this->site_types);
+            }
             if ($this->setting['display_employee_staff_category'])
                 echo labelAndField($this, t('Staff Category'), $this->categories);
             if ($this->setting['display_employee_registration_number'])
