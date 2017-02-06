@@ -515,7 +515,10 @@
             echo labelAndField($this, t('Site') . space . t('Name'), $facDropDown, 'facilityInput');
             
             if ($this->setting['display_employee_site_type']) {
-                echo labelAndField($this, '<span class="required">*</span>' . t('Site') . space . t('Type'), $this->site_types);
+                // Disable data requirement until further notice, issue #339
+                // echo labelAndField($this, '<span class="required">*</span>' . t('Site') . space . t('Type'), $this->site_types);
+
+                echo labelAndField($this, t('Site') . space . t('Type'), $this->site_types);
             }
             if ($this->setting['display_employee_staff_category'])
                 echo labelAndField($this, t('Staff Category'), $this->categories);
