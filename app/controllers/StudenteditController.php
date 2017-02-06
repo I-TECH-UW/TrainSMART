@@ -641,14 +641,10 @@ class StudenteditController extends ITechController
 
 		    //TA:#270, TA:#319 in link_student_classes it seems that some records use person_id ($pupiladd) some student_id ($sid)
 		    //but it should use student_id
-		    //TA:#319 it working for studentedit/personedit/id/16791, but not working for studentedit/personedit/id/15170
+		    //TA:#319 use $sid not $details['person'][0]['id']
 			$this->view->assign('currentclasses', $helper->listcurrentclasses($details['link_cohort'][0]['id_cohort'], $sid));
 		    $this->view->assign('currentpracticum', $helper->ListCurrentPracticum($details['link_cohort'][0]['id_cohort'], $sid));
 		    $this->view->assign('currentlicenses', $helper->ListCurrentLicenses($details['link_cohort'][0]['id_cohort'], $sid));
-		    //TA:#319 it working for studentedit/personedit/id/15170, but not working for studentedit/personedit/id/1679
-// 		    $this->view->assign('currentclasses', $helper->listcurrentclasses($details['link_cohort'][0]['id_cohort'], $details['person'][0]['id']));
-// 		    $this->view->assign('currentpracticum', $helper->ListCurrentPracticum($details['link_cohort'][0]['id_cohort'], $details['person'][0]['id']));
-// 		    $this->view->assign('currentlicenses', $helper->ListCurrentLicenses($details['link_cohort'][0]['id_cohort'], $details['person'][0]['id']));
 		} else {
 			$this->view->assign('currentclasses', array());
 			$this->view->assign('currentpracticum', array());
@@ -866,6 +862,7 @@ class StudenteditController extends ITechController
 		$this->viewAssignEscaped('locations', Location::getAll());
 		$studentedit = new Studentedit();
 		$details = $studentedit->EditStudent($pupiladd);
+		$sid = $details['student'][0]['id']; //TA:#319
 
 		#print_r ($details);
 
@@ -902,10 +899,10 @@ class StudenteditController extends ITechController
 			$this->view->assign('allclasses', $helper->listcurrentclasses($details['link_cohort'][0]['id_cohort']));
 			$this->view->assign('allpracticum', $helper->ListCurrentPracticum($details['link_cohort'][0]['id_cohort']));
 			$this->view->assign('alllicenses', $helper->ListCurrentLicenses($details['link_cohort'][0]['id_cohort']));
-
-			$this->view->assign('currentclasses', $helper->listcurrentclasses($details['link_cohort'][0]['id_cohort'], $details['person'][0]['id']));
-			$this->view->assign('currentpracticum', $helper->ListCurrentPracticum($details['link_cohort'][0]['id_cohort'], $details['person'][0]['id']));
-			$this->view->assign('currentlicenses', $helper->ListCurrentLicenses($details['link_cohort'][0]['id_cohort'], $details['person'][0]['id']));
+			//TA:#319 use $sid not $details['person'][0]['id']
+			$this->view->assign('currentclasses', $helper->listcurrentclasses($details['link_cohort'][0]['id_cohort'], $sid));
+			$this->view->assign('currentpracticum', $helper->ListCurrentPracticum($details['link_cohort'][0]['id_cohort'], $sid));
+			$this->view->assign('currentlicenses', $helper->ListCurrentLicenses($details['link_cohort'][0]['id_cohort'], $sid));
 		} else {
 			$this->view->assign('currentclasses', array());
 			$this->view->assign('currentpracticum', array());
