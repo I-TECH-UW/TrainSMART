@@ -1042,7 +1042,6 @@ class TrainingController extends ReportFilterHelpers {
 
 
 		}
-
 		$html = EditTableHelper::generateHtmlTraining ( 'Persons', $persons, $personsFields, $colStatic, $linkInfo, $editLinkInfo, $customColDefs);
 		$this->view->assign ( 'tablePersons', $html );
 

@@ -2,7 +2,7 @@
 2017-01-19 
 Tamara Astakhova
 People education module
-#331
+#331.1
 **********************************************************************/
 
 ALTER TABLE _system ADD module_people_education tinyint(1) NOT NULL DEFAULT '0';
@@ -56,4 +56,23 @@ ALTER TABLE `person` ADD COLUMN `education_type_option_id` int(11) DEFAULT NULL;
 ALTER TABLE `person` ADD COLUMN `education_school_name_option_id` int(11) DEFAULT NULL;
 ALTER TABLE `person` ADD COLUMN `education_country_option_id` int(11) DEFAULT NULL;
 ALTER TABLE `person` ADD COLUMN `education_date_graduation` int(11) DEFAULT NULL;
+
+========================================================================================
+NEW RELEASE:
+========================================================================================
+
+ALTER TABLE person DROP COLUMN education_type_option_id;
+ALTER TABLE person DROP COLUMN education_school_name_option_id;
+ALTER TABLE person DROP COLUMN education_country_option_id;
+ALTER TABLE person DROP COLUMN education_date_graduation;
+
+CREATE TABLE `person_to_education` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `person_id` int(11) NOT NULL,
+  `education_type_option_id` int(11) NOT NULL,
+  `education_school_name_option_id` int(11) DEFAULT NULL,
+ `education_country_option_id` int(11) DEFAULT NULL,
+`education_date_graduation` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 

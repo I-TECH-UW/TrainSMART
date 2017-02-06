@@ -171,5 +171,16 @@ class Person extends ITechTable
 
 		return $rslt;
 	}
+	
+	//TA:#331.1
+	public function getPersonEducation($person_id) {
+	   $select = $this->dbfunc()->select()
+		->from('person_to_education')->where("person_id=$person_id")
+	   ->joinLeft('education_type_option', 'education_type_option_id=education_type_option.id')
+	   ->joinLeft('education_school_name_option', 'education_school_name_option_id=education_school_name_option.id')
+	   ->joinLeft('education_country_option', 'education_country_option_id=education_country_option.id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
 }
 
