@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Trainsmart\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-09-24 16:51-0800\n"
-"PO-Revision-Date: 2017-01-25 16:10-0800\n"
+"PO-Revision-Date: 2017-02-07 10:29-0800\n"
 "Last-Translator: DB\n"
 "Language-Team: Fuse IQ <todd@fuseiq.com>\n"
 "Language: uk_UA\n"
@@ -202,7 +202,7 @@ msgid "Training Topic"
 msgstr "Тема тренінгу"
 
 msgid "Funding"
-msgstr "Фінансування"
+msgstr "Джерелo фінансування"
 
 msgid "Facility Name"
 msgstr "Назва закладу"
@@ -521,7 +521,7 @@ msgid "Middle Name"
 msgstr "По батькові"
 
 msgid "Last Name"
-msgstr "Призвище"
+msgstr "Прiзвище"
 
 msgid "Surname"
 msgstr "Призвище"
@@ -689,19 +689,19 @@ msgid "Pre-service"
 msgstr "Система попереднього навчання"
 
 msgid "My Account"
-msgstr "Мій обликовий запис"
+msgstr "Мій облiковий запис"
 
 msgid "Country Setup"
-msgstr "Настройки країни"
+msgstr "Налаштування країни"
 
 msgid "Training Settings"
-msgstr "Настройки тренінгу"
+msgstr "Налаштування тренінгу"
 
 msgid "People Settings"
-msgstr "Настройки людей"
+msgstr "Налаштування людей"
 
 msgid "Facility Settings"
-msgstr "Настройки закладу"
+msgstr "Налаштування закладу"
 
 msgid "Training Partners"
 msgstr "Партнери тренінгу"
@@ -923,7 +923,7 @@ msgid "PS Degrees"
 msgstr "СПО ступені освіти"
 
 msgid "PS Funding"
-msgstr "СПО фінансування"
+msgstr "СПО Джерелo фінансування"
 
 msgid "PS Institution Types"
 msgstr "СПО типи інститутів"
@@ -1205,7 +1205,7 @@ msgid "unique"
 msgstr "унікальний"
 
 msgid "Trainers"
-msgstr "Інструктори"
+msgstr "Tренери"
 
 msgid "Trainer"
 msgstr "Інструктор"
@@ -1283,7 +1283,7 @@ msgid "Qualification Comments"
 msgstr "Коментарі до кваліфікації"
 
 msgid "Trainer Information"
-msgstr "Інформація про інструктора"
+msgstr "Інформація про тренера"
 
 msgid "Show/Hide"
 msgstr "Показати/Сховати"
@@ -1439,7 +1439,7 @@ msgid "Middle name"
 msgstr "По батькові"
 
 msgid "Last name"
-msgstr "Призвище"
+msgstr "Прiзвище"
 
 msgid "Trainer Type"
 msgstr "Тип інструктора"
@@ -1529,7 +1529,7 @@ msgid "filter"
 msgstr "фільтр"
 
 msgid "Training location"
-msgstr "Місцезнаходження тренінгу"
+msgstr "Місце проведення тренінгу"
 
 msgid "Report"
 msgstr "Звіт"
@@ -1769,7 +1769,7 @@ msgid "Students By Name Report"
 msgstr "Звіт студентів за ім'ям"
 
 msgid "training location"
-msgstr "місцезнаходження тренінгу"
+msgstr "Місце проведення тренінгу"
 
 msgid "Students Trained Report"
 msgstr "Звіт студентів, які пройшли навчання"
@@ -1904,10 +1904,10 @@ msgid "End Date:"
 msgstr "Дата закінчення:"
 
 msgid "Total Trainers:"
-msgstr "Всього інструкторів:"
+msgstr "Всього тренерiв:"
 
 msgid "Total Trainers"
-msgstr "Всього інструкторів"
+msgstr "Всього тренерiв"
 
 msgid "Total Participants:"
 msgstr "Всього учасників:"
@@ -2249,7 +2249,7 @@ msgid "Refresh this page, or go to the home page to see changes applied."
 msgstr "Оновити цю сторінку, або перейдіть на головну сторінку щоб побачити зміни."
 
 msgid "Settings"
-msgstr "Настройки"
+msgstr "Налаштування"
 
 msgid "Field"
 msgstr "Поле "
@@ -2294,7 +2294,7 @@ msgid "since"
 msgstr "з"
 
 msgid "Incomplete trainings that already occurred"
-msgstr "Незавершені тренінги, які вже відбулися"
+msgstr "Незаповнені тренінги, які вже відбулися"
 
 msgid "City/Town"
 msgstr "Місто"
@@ -3695,7 +3695,7 @@ msgid "Edit name"
 msgstr "Редагувати назву"
 
 msgid "Employee Settings"
-msgstr "Настройки співробітника"
+msgstr "Налаштування співробітника"
 
 msgid "Partner Importance"
 msgstr "Значення партнера"
@@ -4076,7 +4076,7 @@ msgid "Sponsor Dates"
 msgstr "Дати спонсорування"
 
 msgid "Employees Settings"
-msgstr "Настройки співробітників"
+msgstr "Налаштування співробітників"
 
 msgid "Training institution"
 msgstr "Інститут тренінгу"
@@ -4152,3 +4152,6 @@ msgstr "Категорія інструктора"
 
 msgid "Performer of Training"
 msgstr "Виконавець  тренiнгу"
+
+msgid "Signature"
+msgstr "Підпис"
