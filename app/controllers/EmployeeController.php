@@ -299,13 +299,13 @@ class EmployeeController extends ReportFilterHelpers
                 $params['employee_transition_complete_option_id'] = $params['employee_transition_complete_option_id']?$params['employee_transition_complete_option_id']:'0';
 
                 $status->checkRequired($this, 'employee_code', t('Employee Code'));
-                $status->checkRequired($this, 'facilityInput', t('Site') . ' ' . t('Name'));
+                // Disabled until further notice - issue #339
+                // $status->checkRequired($this, 'facilityInput', t('Site') . ' ' . t('Name'));
                 
                 //TA:#293.2
                 $status->checkRequired($this, 'region_c_id', t('All Location Fields'));//TA:#293.1
 
-                // Disabled until further notice - issue #339
-                // $status->checkRequired($this, 'employee_qualification_option_id', t('Staff Cadre'));
+                $status->checkRequired($this, 'employee_qualification_option_id', t('Staff Cadre'));
                 
                 $status->checkRequired($this, 'employee_site_type_option_id', t('Site') . ' ' . t('Type'));
 
