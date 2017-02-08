@@ -463,12 +463,6 @@ class EmployeeController extends ReportFilterHelpers
                 }
                 $params = array_merge($params, $result);
             }
-
-            if ((!$this->hasACL('training_organizer_option_all')) &&
-                (!$params['partner_id'] || !$this->userHasAccess($params['partner_id'], $employeeMechanisms))
-            ) {
-                $this->doNoAccessError();
-            }
         }
 
         // assign form drop downs
