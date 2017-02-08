@@ -211,13 +211,14 @@ class PartnerController extends ReportFilterHelpers
 
                 $joinClause = $db->quoteInto('link_mechanism_partner.partner_id = subpartner.id AND link_mechanism_partner.partner_id != ?', $id);
                 $select = $db->select()
-                    ->from('mechanism_option', array('id', 'mechanism_phrase', 'end_date'))
-                    ->joinLeft('partner_funder_option', 'mechanism_option.funder_id = partner_funder_option.id', array('partner_funder_option.funder_phrase'))
+                    ->from('mechanism_option', array())
+                    ->joinLeft('partner_funder_option', 'mechanism_option.funder_id = partner_funder_option.id', array())
                     ->joinLeft('link_mechanism_partner', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array())
-                    ->joinLeft(array('subpartner' => 'partner'), $joinClause, array('subpartner' => 'subpartner.partner'))
-                    ->joinLeft('partner', 'mechanism_option.owner_id = partner.id', array('partner'))
+                    ->joinLeft(array('subpartner' => 'partner'), $joinClause, array())
+                    ->joinLeft('partner', 'mechanism_option.owner_id = partner.id', array())
                     ->where('mechanism_option.owner_id = ?', $id)
-                    ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
+                    ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'))
+                    ->group('mechanism_option.id');
 
                 if (!$this->hasACL('training_organizer_option_all')) {
                     $select->joinInner('user_to_organizer_access',
@@ -226,28 +227,29 @@ class PartnerController extends ReportFilterHelpers
                         ->where('user_to_organizer_access.user_id = ?', $uid);
                 }
 
-                $rows = $db->fetchAll($select);
+                $select->columns(array('mechanism_option.id', 'mechanism_option.mechanism_phrase', 'mechanism_option.end_date',
+                    'partner_funder_option.funder_phrase', 'partner.partner'));
 
-                $primeMechanisms = array();
-                foreach ($rows as $r) {
-                    if (!array_key_exists($r['id'], $primeMechanisms)) {
-                        $primeMechanisms[$r['id']] = $r;
-                        $primeMechanisms[$r['id']]['subpartners'] = array();
-                    }
-                    if ($r['subpartner']) {
-                        $primeMechanisms[$r['id']]['subpartners'][] = $r['subpartner'];
+                $select->columns(array('subpartners' => "GROUP_CONCAT(DISTINCT subpartner.partner ORDER BY subpartner.partner ASC SEPARATOR ',,,')"));
+
+                $primeMechanisms = $db->fetchAssoc($select);
+                foreach ($primeMechanisms as $partner_id => &$row) {
+                    if (strlen($row['subpartners'])) {
+                        $row['subpartners'] = explode(',,,', $row['subpartners']);
                     }
                 }
 
                 $this->view->assign('primeMechanisms', $primeMechanisms);
 
                 $select = $db->select()
-                    ->from('link_mechanism_partner', array('link_mechanism_partner.end_date'))
-                    ->joinLeft('mechanism_option', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array('mechanism_phrase'))
-                    ->joinLeft('partner', 'mechanism_option.owner_id = partner.id', array('partner.partner'))
-                    ->where('owner_id != ?', $id)
-                    ->where('partner_id = ?', $id)
-                    ->where('mechanism_option.end_date <= ?', $currentQuarterStartDate->format('Y-m-d'));//TA:#279 use <=, by some reason >= works opposite way ???
+                    ->from('link_mechanism_partner', array())
+                    ->joinLeft('mechanism_option', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array())
+                    ->joinInner('partner', 'link_mechanism_partner.partner_id = partner.id', array())
+                    ->where('mechanism_option.owner_id != ?', $id)
+                    ->where('link_mechanism_partner.partner_id = ?', $id)
+                    ->where('link_mechanism_partner.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
+
+                $select->columns(array('mechanism_option.mechanism_phrase', 'partner.partner', 'link_mechanism_partner.end_date'));
 
                 $secondaryMechanisms = $db->fetchAll($select);
                 $this->view->assign('secondaryMechanisms', $secondaryMechanisms);
