@@ -894,38 +894,40 @@ class PersonController extends ReportFilterHelpers
                 $this->viewAssignEscaped('people_education_type', $educationTypeArray);
                 $educationSchoolNameArray = OptionList::suggestionList('education_school_name_option', 'school_name_phrase', false, false);
                 $this->viewAssignEscaped('people_education_school_name', $educationSchoolNameArray);
-                $educationSchoolNameArray = OptionList::suggestionList('education_country_option', 'education_country_phrase', false, false);
-                $this->viewAssignEscaped('people_education_country', $educationSchoolNameArray);
+                $educationCountryArray = OptionList::suggestionList('education_country_option', 'education_country_phrase', false, false);
+                $this->viewAssignEscaped('people_education_country', $educationCountryArray);
                 $person = new Person ();
                 $education = $person->getPersonEducation($person_id);
                 $tableFields = array ('education_type_phrase' => t( 'Type of Education' ), 'school_name_phrase' => t( 'Official School Name' ), 
                 'education_country_phrase' => t ( 'Country' ), 'education_date_graduation' => t ( 'Year of Graduation/Completion' ) );
                 $customColDefs = array();
-                $rowArray = OptionList::suggestionList('education_type_option', array('id', 'education_type_phrase'), false, 9999, false, false);
+               // $rowArray = OptionList::suggestionList('education_type_option', array('id', 'education_type_phrase'), false, 9999, false, false);
                 $elements = array(0 => array('text' => ' ', 'value' => 0));
-                foreach ($rowArray as $i => $tablerow) {
+               // foreach ($rowArray as $i => $tablerow) {
+                foreach ($educationTypeArray as $i => $tablerow) {
                     $elements[$i+1]['text']  = $tablerow['education_type_phrase'];
                     $elements[$i+1]['value'] = $tablerow['id'];
                 }
                 $elements = json_encode($elements); 
-                $customColDefs['education_type_phrase']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";
-                $rowArray = OptionList::suggestionList('education_school_name_option', array('id', 'school_name_phrase'), false, 9999, false, false);
+                //$customColDefs['education_type_phrase']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }"; //allow edit
+                //$rowArray = OptionList::suggestionList('education_school_name_option', array('id', 'school_name_phrase'), false, 9999, false, false);
                 $elements = array(0 => array('text' => ' ', 'value' => 0));
-                foreach ($rowArray as $i => $tablerow) {
+               // foreach ($rowArray as $i => $tablerow) {
+                foreach ($educationSchoolNameArray as $i => $tablerow) {
                     $elements[$i+1]['text']  = $tablerow['school_name_phrase'];
                     $elements[$i+1]['value'] = $tablerow['id'];
                 }
                 $elements = json_encode($elements);
-                $customColDefs['school_name_phrase']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";
-                $rowArray = OptionList::suggestionList('education_country_option', array('id', 'education_country_phrase'), false, 9999, false, false);
+               // $customColDefs['school_name_phrase']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";//allow edit
+                //$rowArray = OptionList::suggestionList('education_country_option', array('id', 'education_country_phrase'), false, 9999, false, false);
                 $elements = array(0 => array('text' => ' ', 'value' => 0));
-                foreach ($rowArray as $i => $tablerow) {
+              //  foreach ($rowArray as $i => $tablerow) {
+                foreach ($educationCountryArray as $i => $tablerow) {
                     $elements[$i+1]['text']  = $tablerow['education_country_phrase'];
                     $elements[$i+1]['value'] = $tablerow['id'];
                 }
                 $elements = json_encode($elements);
-                $customColDefs['education_country_phrase']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";
-                //$customColDefs['education_date_graduation'] = "editor:'textbox'";
+               // $customColDefs['education_country_phrase']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";//allow edit
                 $elements = array(0 => array('text' => ' ', 'value' => 0));
                 $k=0;
                 for($i = date('Y') ; $i > '1920'; $i--){
@@ -934,10 +936,10 @@ class PersonController extends ReportFilterHelpers
                     $k++;
                 }
                 $elements = json_encode($elements);
-                $customColDefs['education_date_graduation']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";
+               // $customColDefs['education_date_graduation']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";//allow edit
                 $this->view->assign ( 'education', $education );
                 require_once 'views/helpers/EditTableHelper.php';
-                 $html = EditTableHelper::generateHtml('education', $education, $tableFields, $customColDefs, array(), !$this->viewonly);//working editable cells
+                $html = EditTableHelper::generateHtml('education', $education, $tableFields, $customColDefs, array(), !$this->viewonly);//working editable cells
                 $this->view->assign ( 'tableEducation', $html );
                 //NEW CODE
 //                 require_once 'views/helpers/DropDown.php';
@@ -1972,11 +1974,13 @@ class PersonController extends ReportFilterHelpers
             return;
         }   
         if ($do == 'person_education') {//update person education table
+            $person = new Person ();
             if ($action == 'add') {
-                $param = array();
-                $person = new Person ();
                 $person->addPersonEducation($person_id, $this->getParam ( 'education_type_option_id' ),
                     $this->getParam ( 'education_school_name_option_id' ), $this->getParam ( 'education_country_option_id' ), $this->getParam ( 'education_date_graduation' ));
+            }else if ($action == 'delete') {
+//                 $person->addPersonEducation($person_id, $this->getParam ( 'education_type_option_id' ),
+//                     $this->getParam ( 'education_school_name_option_id' ), $this->getParam ( 'education_country_option_id' ), $this->getParam ( 'education_date_graduation' ));
             }
         }
     }
