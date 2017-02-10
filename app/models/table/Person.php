@@ -184,9 +184,16 @@ class Person extends ITechTable
 	}
 	
 	//TA:#331.1
-		public function deletePersonEducation($person_id) {
+		public function deletePersonEducation($person_id, $education_type_option, $education_school_name_option, $education_country_option, $education_date_graduation) {
 		    $db = $this->dbfunc();
-		    $db->query("DELETE FROM person_to_education WHERE person_id = " . $person_id);
+		    //delete by ids
+// 		    $db->query("DELETE FROM person_to_education WHERE person_id=" . $person_id . " AND education_type_option_id=" . $education_type_option . " AND  education_school_name_option_id=" .  
+// 		        $education_school_name_option . " AND education_country_option_id=" .  $education_country_option . " AND  education_date_graduation=" .  $education_date_graduation);
+          //delete by names
+		    $db->query("DELETE FROM person_to_education WHERE person_id=" . $person_id . 
+		        " AND education_type_option_id=(SELECT ID FROM education_type_option where education_type_phrase='" . $education_type_option . "') " . 
+		        " AND  education_school_name_option_id=(SELECT ID FROM education_school_name_option where school_name_phrase='" . $education_school_name_option . "') " .  
+		        " AND education_country_option_id=(SELECT ID FROM education_country_option where education_country_phrase='" .  $education_country_option . "') AND  education_date_graduation=" .  $education_date_graduation);
 		}
 	
 	//TA:#331.1

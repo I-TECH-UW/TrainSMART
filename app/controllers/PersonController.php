@@ -1978,9 +1978,9 @@ class PersonController extends ReportFilterHelpers
             if ($action == 'add') {
                 $person->addPersonEducation($person_id, $this->getParam ( 'education_type_option_id' ),
                     $this->getParam ( 'education_school_name_option_id' ), $this->getParam ( 'education_country_option_id' ), $this->getParam ( 'education_date_graduation' ));
-            }else if ($action == 'delete') {
-//                 $person->addPersonEducation($person_id, $this->getParam ( 'education_type_option_id' ),
-//                     $this->getParam ( 'education_school_name_option_id' ), $this->getParam ( 'education_country_option_id' ), $this->getParam ( 'education_date_graduation' ));
+            }else if ($action == 'del') {
+                $person->deletePersonEducation($person_id, $this->getParam ( 'education_type_option_id' ),
+                    $this->getParam ( 'education_school_name_option_id' ), $this->getParam ( 'education_country_option_id' ), $this->getParam ( 'education_date_graduation' ));
             }
         }
     }

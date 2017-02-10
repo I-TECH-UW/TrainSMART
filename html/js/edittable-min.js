@@ -228,7 +228,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
 
         // Perform AJAX saving here (we are overriding YUI's DataTable method)
         this.myDataTable.onEventSaveCellEditor = function(oArgs) {
-            var oCellEditor = this.getCellEditor();
+            var oCellEditor = this.getCellEditor();   
 
             // override date behavior so we don't output default javascript date format
             if (oCellEditor.column.editor === "date") {
@@ -374,9 +374,20 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
           oEditCell = this.getTdEl({record:oRecord, column:this.getColumn("edit")});
           oEditCell.innerHTML = this.config.deletingText;
 
-          //TA:#301
-          queryString = "id=" + oRecord.getData("id") + "&delete=1&edittable=file&edittabledelete=1";
-          cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/outputType/json", ajaxDelCallback, queryString);
+          
+          if(labelSafe == 'education'){//TA:#331.1
+        	  //var td = this.getTdEl({record:oRecord, column:this.getColumn(0)});	  
+        	  var queryString = "a=del&education_type_option_id=" + oRecord.getData("education_type_phrase") + 
+              "&education_school_name_option_id=" + oRecord.getData("school_name_phrase") + 
+              "&education_country_option_id=" + oRecord.getData("education_country_phrase") +
+              "&education_date_graduation=" + oRecord.getData("education_date_graduation");
+        	  alert(document.location + "/edittable/person_education/outputType/json" + "----" + queryString);
+    		  cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/edittable/person_education/outputType/json", ajaxDelCallback, queryString);  
+          }else{//default
+          	//TA:#301
+          	queryString = "id=" + oRecord.getData("id") + "&delete=1&edittable=file&edittabledelete=1";
+          	cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/outputType/json", ajaxDelCallback, queryString);
+          }
         }
 
         //
