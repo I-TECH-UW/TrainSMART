@@ -129,13 +129,30 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
           		arr.push(data['_oData']);
           	}
          }
-          $('#' + labelSafe + '_new_data').val('{"data":' +  JSON.stringify(arr) + '}');
-        
-          
+          $('#' + labelSafe + '_new_data').val('{"data":' +  JSON.stringify(arr) + '}'); 
         }
         
-    
-        
+        //TA:#331.1   Add row w/data
+        this.addDataRowPersonEducation = function(jsonData, row_name, jsonUrl) {
+          jsonData.edit = (noEdit) ? this.config.deleteOnly : this.config.editLinks;
+          jsonData.row_name = row_name; // Name to display when "delete" is clicked
+          this.myDataTable.addRow(jsonData);
+          var arr = new Array();
+          for(var i=0; i<this.myDataTable.getRecordSet().getLength(); i++){
+          	var row = this.myDataTable.getRecord(i);
+          	if(row.getData('row_name')){
+          		var data = JSON.parse(JSON.stringify(row));
+          		arr.push(data['_oData']);
+          	}
+         }  
+          var queryString = "a=add&education_type_option_id=" + jsonData.education_type_option_id + 
+          "&education_school_name_option_id=" + jsonData.education_school_name_option_id + 
+          "&education_country_option_id=" + jsonData.education_country_option_id +
+          "&education_date_graduation=" + jsonData.education_date_graduation;
+			//cObj = YAHOO.util.Connect.asyncRequest('POST', jsonUrl, ajaxCallback, queryString); the best way to add ajaxCallback in case of error message
+			cObj = YAHOO.util.Connect.asyncRequest('POST', jsonUrl, "", queryString); //working
+        }
+           
         //
         // Setup our new DataTable object
         //
@@ -339,12 +356,13 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
         this.myDataTable.deleteAjax = function(oRecord) {
           var ajaxDelCallback = {
             success: function(o) {
-                var status = YAHOO.lang.JSON.parse(o.responseText);
-                if(status.error != null) {
-                  alert(tr("Could not delete, sorry.  The server said:") + "\n\n" + status.error);
-                } else {
+            	//TA:#331.1 by some reason parse does not work
+//                var status = YAHOO.lang.JSON.parse(o.responseText);
+//                if(status.error != null) {
+//                  alert(tr("Could not delete, sorry.  The server said:") + "\n\n" + status.error);
+//                } else {
                   this.deleteRow(oRecord);
-                }
+ //               }
               },
             failure: function() {
                 alert('Could not delete this record, sorry!'); 

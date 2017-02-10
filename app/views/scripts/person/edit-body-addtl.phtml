@@ -21,7 +21,7 @@ if ( $this->setting['num_location_tiers'] > 2 ) {
 ?>
 
 $('#facilityInput').<?php echo $selectFunction; ?>(sels, true);
-	});
+
 </script>
 
 
@@ -151,8 +151,8 @@ if ($this->setting['display_mod_skillsmart']) {
 
 <!-- TA:#331.1 -->
 <?php if ( $this->setting['module_people_education']  ) { ?>
-<div id="EducationTable"></div>
-    <?php echo $this->tablePersonEducation; ?>
+<div class="fieldIndentNoMargin"><?php tp('Education History');?></div>
+    <?php echo $this->tableEducation; ?>
     <br/>
   <?php if(!$this->viewonly){?>
   <span style="font-size:11px; font-weight:bold; color:#696969;"><?php echo t('Type of Education'); ?></span>
@@ -190,36 +190,39 @@ if ($this->setting['display_mod_skillsmart']) {
 ?>
 </select>
 &nbsp;&nbsp;<input type="button" name="Insert" value="<?php tp("Insert"); ?>" class="insert" id="personEducationInsertButton" onclick="addPersonEducation(this);return false;">
-<br><br>
+<br><br><br>
+
 <script type="text/javascript">
 //TA:#331.1
 function addPersonEducation(oButton) {
-    var oPType = YAHOO.util.Dom.get('education_type_option_id');
-    var oPName = YAHOO.util.Dom.get('education_school_name_option_id');
-    var oPCountry = YAHOO.util.Dom.get('education_country_option_id');
-    var oPBYear = YAHOO.util.Dom.get('education_date_graduation');
-
-    var jsonAdd = {}
-   // jsonAdd.id = oPId.value;
-   // jsonAdd.person_id = oPId.value;
-    jsonAdd.education_type_option_id = oPType.value;
-    jsonAdd.education_school_name_option_id = oPName.value;
-    jsonAdd.education_country_option_id = oPCountry.value;
-    jsonAdd.education_date_graduation = oPBYear.value;
-    alert(jsonAdd);
-
-    var successCallback = function () {
-       // oPId.value = "0";
-        oPType.value = "0";
-        oPName.value = "0";
-        oPCountry.value = "0";
-        oPBYear.value = "0";
+    var jsonAdd = {};
+    jsonAdd.education_type_phrase = "";
+    if($("#education_type_option_id option:selected").val() != 0){
+     jsonAdd.education_type_phrase = $("#education_type_option_id option:selected").text();
+     jsonAdd.education_type_option_id = $("#education_type_option_id option:selected").val();
+    }else{
+        alert("Please select 'Type of Education'.");
+        return;
     }
-
-    alert(ITECH.EducationTable);
-   // ITECH.EducationTable.addRow(jsonAdd, successCallback);
-    ITECH.EducationTable.addRow(jsonAdd);
-
+    jsonAdd.school_name_phrase = "";
+    if($("#education_school_name_option_id option:selected").val() != 0){
+    	jsonAdd.school_name_phrase = $("#education_school_name_option_id option:selected").text();
+        jsonAdd.education_school_name_option_id = $("#education_school_name_option_id option:selected").val();
+    }
+    jsonAdd.education_country_phrase = "";
+    if($("#education_country_option_id option:selected").val() != 0){
+    	jsonAdd.education_country_phrase = $("#education_country_option_id option:selected").text();
+        jsonAdd.education_country_option_id = $("#education_country_option_id option:selected").val();
+    }
+    jsonAdd.education_date_graduation = "";
+    if($("#education_date_graduation option:selected").val() != 0){
+        jsonAdd.education_date_graduation = $("#education_date_graduation option:selected").val();
+    }
+    ITECH.educationTable.addDataRowPersonEducation(jsonAdd, jsonAdd.education_type_phrase, '<?php echo $_SERVER['REQUEST_URI'] . "/edittable/person_education/outputType/json"; ?>');
+    $("#education_type_option_id").val("0");
+    $("#education_school_name_option_id").val("0");
+    $("#education_country_option_id").val("0");
+    $("#education_date_graduation").val("0");
 }
 </script> 
 <?php }?>
@@ -236,8 +239,6 @@ function addPersonEducation(oButton) {
 <?php if ( $this->setting['display_secondary_responsibility']  ) { ?>
 <?php echo DropDown::render('secondary_responsibility_option_id', $this->translation['Secondary Responsibility'], $this->secondaryResponsibilities, 'responsibility_phrase', 'id', $this->person['secondary_responsibility_option_id'], $onchange = 'makeUniqueOptions("secondary_responsibility_option_id","primary_responsibility_option_id");' ); ?><br/>
 <?php }?>
-
-
 <script type="text/javascript">
   function makeUniqueOptions(updatedSelect,alternateSelect) {
     var updatedObj = YAHOO.util.Dom.get(updatedSelect);

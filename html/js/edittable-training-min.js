@@ -85,7 +85,7 @@ function makeEditTableTraining(labelAdd, tableData, columnDefs, jsonUrl, linkInf
 				success : function(o) {
 					var status = YAHOO.lang.JSON.parse(o.responseText); // ,
 																		// true);
-
+					
 				if (status.error != null) {
 					alert(status.error);
 					return false;

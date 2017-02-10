@@ -182,5 +182,17 @@ class Person extends ITechTable
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
+	
+	//TA:#331.1
+		public function deletePersonEducation($person_id) {
+		    $db = $this->dbfunc();
+		    $db->query("DELETE FROM person_to_education WHERE person_id = " . $person_id);
+		}
+	
+	//TA:#331.1
+	public function addPersonEducation($person_id, $education_type_option_id, $education_school_name_option_id, $education_country_option_id, $education_date_graduation) {
+	    $db = $this->dbfunc()->query("INSERT INTO person_to_education (person_id, education_type_option_id, education_school_name_option_id, education_country_option_id, education_date_graduation)
+values ($person_id, $education_type_option_id, $education_school_name_option_id, $education_country_option_id, $education_date_graduation)");
+	}
 }
 

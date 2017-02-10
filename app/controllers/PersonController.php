@@ -357,6 +357,12 @@ class PersonController extends ReportFilterHelpers
 
     public function doAddEditView()
     {
+        
+        // TA:#331.1 edittable ajax 
+        if ($this->getParam ( 'edittable' )) {
+            $this->ajaxEditTable ();
+            return;
+        }
 
         try {
 
@@ -404,7 +410,6 @@ class PersonController extends ReportFilterHelpers
             $this->viewAssignEscaped('other_reason_option_id', $other_reason_option_id);
 
             if ($request->isPost()) {
-
                 $errortext = "";
                 if ($dupe_id = $this->getSanParam('dupe_id')) {
                     if ($this->getSanParam('maketrainer')) {
@@ -620,8 +625,7 @@ class PersonController extends ReportFilterHelpers
                             $training_recieved_data = json_encode($training_recieved_results);
                         }
                         $personrow->training_recieved_data = $training_recieved_data;
-
-
+                        
                         if ($person_id) {
                             $trainsaved = array();
                             $train = $this->getSanParam('train');
@@ -756,7 +760,6 @@ class PersonController extends ReportFilterHelpers
 
                                 $comps = $helper->getPersonCompetenciesDetailed($person_id);
                                 $status->setRedirect('/person/edit/id/' . $person_id);
-
                             } else {
                                 $status->setRedirect('/person/edit/id/' . $person_id);
                             }
@@ -886,7 +889,7 @@ class PersonController extends ReportFilterHelpers
             $this->viewAssignEscaped('secondaryResponsibilities', $secondaryResponsibilitiesArray);
             
             //TA:#331.1
-            if ( $this->setting['module_people_education']  && $person_id){
+            if ( $this->setting('module_people_education')  && $person_id){
                 $educationTypeArray = OptionList::suggestionList('education_type_option', 'education_type_phrase', false, false);
                 $this->viewAssignEscaped('people_education_type', $educationTypeArray);
                 $educationSchoolNameArray = OptionList::suggestionList('education_school_name_option', 'school_name_phrase', false, false);
@@ -932,9 +935,16 @@ class PersonController extends ReportFilterHelpers
                 }
                 $elements = json_encode($elements);
                 $customColDefs['education_date_graduation']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";
+                $this->view->assign ( 'education', $education );
                 require_once 'views/helpers/EditTableHelper.php';
-                $html = EditTableHelper::generateHtml('Education', $education, $tableFields, $customColDefs, array(), !$this->viewonly);
-                $this->view->assign ( 'tablePersonEducation', $html );
+                 $html = EditTableHelper::generateHtml('education', $education, $tableFields, $customColDefs, array(), !$this->viewonly);//working editable cells
+                $this->view->assign ( 'tableEducation', $html );
+                //NEW CODE
+//                 require_once 'views/helpers/DropDown.php';
+//                 $this->view->assign ( 'people_education_type_list', DropDown::generateHtml ( 'education_type_option', 'education_type_phrase',false, false, $this->viewonly)); 
+//                 $this->view->assign ( 'people_education_school_name_list', DropDown::generateHtml ( 'education_school_name_option', 'school_name_phrase',false, false, $this->viewonly));
+//                 $this->view->assign ( 'people_education_country_list', DropDown::generateHtml ( 'education_country_option', 'education_country_phrase',false, false, $this->viewonly));
+                
             }
             //////////////////////////////////////////////////////////////////////
 
@@ -1948,5 +1958,26 @@ class PersonController extends ReportFilterHelpers
         //done, output a csv
         if ($this->getSanParam('outputType') == 'csv')
             $this->sendData($this->reportHeaders(false, $sorted));
+    }
+    
+    /**
+     * editTable ajax TA:#331.1
+     */
+    private function ajaxEditTable() {
+        $person_id = $this->getParam ( 'id' );
+        $do = $this->getParam ( 'edittable' );
+        $action = $this->getParam ( 'a' );
+        if (! $person_id) { // user is adding a new session (which does not have an id yet)
+            $this->sendData ( array ('0' => 0 ) );
+            return;
+        }   
+        if ($do == 'person_education') {//update person education table
+            if ($action == 'add') {
+                $param = array();
+                $person = new Person ();
+                $person->addPersonEducation($person_id, $this->getParam ( 'education_type_option_id' ),
+                    $this->getParam ( 'education_school_name_option_id' ), $this->getParam ( 'education_country_option_id' ), $this->getParam ( 'education_date_graduation' ));
+            }
+        }
     }
 }
