@@ -58,7 +58,7 @@ ALTER TABLE `person` ADD COLUMN `education_country_option_id` int(11) DEFAULT NU
 ALTER TABLE `person` ADD COLUMN `education_date_graduation` int(11) DEFAULT NULL;
 
 ========================================================================================
-NEW RELEASE:
+LAST RELEASE:
 ========================================================================================
 
 ALTER TABLE person DROP COLUMN education_type_option_id;
@@ -75,4 +75,14 @@ CREATE TABLE `person_to_education` (
 `education_date_graduation` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+========================================================================================
+NEW RELEASE:
+========================================================================================
+
+INSERT INTO translation (key_phrase, phrase) values ('Education History', 'Education History');
+INSERT INTO translation (key_phrase, phrase) values ('Type of Education', 'Type of Education');
+INSERT INTO translation (key_phrase, phrase) values ('Official School Name', 'Official School Name');
+INSERT INTO translation (key_phrase, phrase) values ('Education Country', 'Education Country');
+INSERT INTO translation (key_phrase, phrase) values ('Year of Graduation/Completion', 'Year of Graduation/Completion');
 

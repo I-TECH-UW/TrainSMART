@@ -826,7 +826,12 @@ class AdminController extends UserController
 			'label_comments'    => 'Qualification Comments',
 			'label_address1'		=> 'Address 1',
 			'label_address2'		=> 'Address 2',
-			'label_home_phone'  => 'Home phone'
+			'label_home_phone'  => 'Home phone',
+		    'label_education_history'  => 'Education History',//TA:#331.1
+		    'label_type_of_education'  => 'Type of Education',//TA:#331.1
+		    'label_official_school_name'  => 'Official School Name',//TA:#331.1
+		    'label_education_country'  => 'Education Country',//TA:#331.1
+		    'label_year_graduation'  => 'Year of Graduation/Completion',//TA:#331.1
 		);
 
 		// _system settings
@@ -870,8 +875,7 @@ class AdminController extends UserController
 			// update translation labels
 			$tranTable = new Translation();
 			foreach($labelNames as $input_key => $db_key) {
-
-				if ( $this->getParam($input_key) ) {
+			    if ( $this->getParam($input_key) ) {
 					try {
 						$tranTable->update(
 							array('phrase' => $this->getParam($input_key)),

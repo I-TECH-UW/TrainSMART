@@ -899,7 +899,7 @@ class PersonController extends ReportFilterHelpers
                 $person = new Person ();
                 $education = $person->getPersonEducation($person_id);
                 $tableFields = array ('education_type_phrase' => t( 'Type of Education' ), 'school_name_phrase' => t( 'Official School Name' ), 
-                'education_country_phrase' => t ( 'Country' ), 'education_date_graduation' => t ( 'Year of Graduation/Completion' ) );
+                'education_country_phrase' => t ( 'Education Country' ), 'education_date_graduation' => t ( 'Year of Graduation/Completion' ) );
                 $customColDefs = array();
                // $rowArray = OptionList::suggestionList('education_type_option', array('id', 'education_type_phrase'), false, 9999, false, false);
                 $elements = array(0 => array('text' => ' ', 'value' => 0));

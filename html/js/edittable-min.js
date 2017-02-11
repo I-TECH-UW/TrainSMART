@@ -381,7 +381,6 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
               "&education_school_name_option_id=" + oRecord.getData("school_name_phrase") + 
               "&education_country_option_id=" + oRecord.getData("education_country_phrase") +
               "&education_date_graduation=" + oRecord.getData("education_date_graduation");
-        	  alert(document.location + "/edittable/person_education/outputType/json" + "----" + queryString);
     		  cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/edittable/person_education/outputType/json", ajaxDelCallback, queryString);  
           }else{//default
           	//TA:#301

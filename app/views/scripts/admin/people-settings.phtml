@@ -269,6 +269,41 @@ print ScriptContainer::$instance->renderJSHead();
     <td></td>
     <td><input type="checkbox" name="check_education_mod" <?php if($this->check_education_mod) echo 'checked'; ?> id="check_education_mod"><label for="check_education_mod"><?php echo t('Enabled'); ?></label></td>
   </tr>
+  
+  <!-- TA:#331.1 -->
+  <tr><td class="fieldTitle"><?php echo t('Education History'); ?></td>
+   	<td></td>
+   	<td><input type="text" name="label_education_history" value="<?php echo $this->label_education_history; ?>"></td>
+   	<td></td>
+ </tr>
+ 
+  <!-- TA:#331.1 -->
+  <tr><td class="fieldTitle"><?php echo t('Type of Education'); ?></td>
+   	<td></td>
+   	<td><input type="text" name="label_type_of_education" value="<?php echo $this->label_type_of_education; ?>"></td>
+   	<td><a href="<?php echo $this->base_url;?>/admin/people-educationtype" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
+ </tr>
+ 
+ <!-- TA:#331.1 -->
+  <tr><td class="fieldTitle"><?php echo t('Official School Name'); ?></td>
+   	<td></td>
+   	<td><input type="text" name="label_official_school_name" value="<?php echo $this->label_official_school_name; ?>"></td>
+   	<td><a href="<?php echo $this->base_url;?>/admin/people-schoolname" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
+ </tr>
+ 
+ <!-- TA:#331.1 -->
+  <tr><td class="fieldTitle"><?php echo t('Education Country'); ?></td>
+   	<td></td>
+   	<td><input type="text" name="label_education_country" value="<?php echo $this->label_education_country; ?>"></td>
+   	<td><a href="<?php echo $this->base_url;?>/admin/people-educationcountry" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
+ </tr>
+ 
+ <!-- TA:#331.1 -->
+  <tr><td class="fieldTitle"><?php echo t('Year of Graduation/Completion'); ?></td>
+   	<td></td>
+   	<td><input type="text" name="label_year_graduation" value="<?php echo $this->label_year_graduation; ?>"></td>
+   	<td></td>
+ </tr>
 
 </table>
 
