@@ -244,7 +244,7 @@ class PartnerController extends ReportFilterHelpers
                 $select = $db->select()
                     ->from('link_mechanism_partner', array())
                     ->joinLeft('mechanism_option', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array())
-                    ->joinInner('partner', 'link_mechanism_partner.partner_id = partner.id', array())
+                    ->joinLeft('partner', 'partner.id = mechanism_option.owner_id')
                     ->where('mechanism_option.owner_id != ?', $id)
                     ->where('link_mechanism_partner.partner_id = ?', $id)
                     ->where('link_mechanism_partner.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
