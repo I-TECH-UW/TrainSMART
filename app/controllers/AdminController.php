@@ -4161,6 +4161,38 @@ class AdminController extends UserController
 	    $editTable->execute($controller->getRequest());
 	
 	}
+	
+	//TA:#331.1
+public function peopleSchoolmergeAction(){
+    $status = ValidationContainer::instance();
+		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+		$this->view->assign('showMerge', true);
+		$status = ValidationContainer::instance();
+
+		if($this->getSanParam('submitted') ){
+			$fromID = $this->getSanParam('school_from_id');
+			$toID = $this->getSanParam('school_to_id');
+			if (!$fromID or !$toID or $fromID == $toID){
+				$status->addError( null, t('You must select a valid school to merge') );
+			} else {
+			    try {
+			     $db2 = $this->dbfunc();
+			     $db2->query("UPDATE person_to_education set education_school_name_option_id=$toID WHERE education_school_name_option_id=$fromID");
+			     $db2->delete('education_school_name_option', "id=$fromID");
+			    }catch (Exception $e) {
+			         $status->addError( null, t('Error merge.') );
+			         return;
+		          }
+
+		          $_SESSION['status'] = t( 'Merge was saved.' );
+		          $status->setStatusMessage( t( 'Merge was saved.' ) );
+			}
+		}
+		
+		$rowArray = $db->fetchAll ( "select * from education_school_name_option");
+		$this->viewAssignEscaped ( 'results', $rowArray );
+
+	}
 }
 
 
