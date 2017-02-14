@@ -71,14 +71,14 @@
             });
 
             window.ITECH.mechData = <?php echo json_encode($this->mechanismData, JSON_HEX_APOS); ?>;
-<?php
-                $disassociateIDs = isset($this->employee['disassociateMechanisms']) ? json_encode(explode(',', $this->employee['disassociateMechanisms']), JSON_HEX_APOS) : '[]';
-                $associateIDs = isset($this->employee['associateMechanisms']) ? json_encode(explode(',', $this->employee['associateMechanisms']), JSON_HEX_APOS) : '[]';
-                $mechanismPercentages = isset($this->employee['mechanismPercentages']) ? json_encode(explode(',', $this->employee['mechanismPercentages']), JSON_HEX_APOS) : '[]';
-                echo "            var disassociateIDs = $disassociateIDs;", PHP_EOL;
-                echo "            var associateMechanisms = $associateIDs;", PHP_EOL;
-                echo "            var mechanismPercentages = $mechanismPercentages;", PHP_EOL;
-?>
+            <?php
+            $disassociateIDs = isset($this->employee['disassociateMechanisms']) ? json_encode(explode(',', $this->employee['disassociateMechanisms']), JSON_HEX_APOS) : '[]';
+            $associateIDs = isset($this->employee['associateMechanisms']) ? json_encode(explode(',', $this->employee['associateMechanisms']), JSON_HEX_APOS) : '[]';
+            $mechanismPercentages = isset($this->employee['mechanismPercentages']) ? json_encode(explode(',', $this->employee['mechanismPercentages']), JSON_HEX_APOS) : '[]';
+            echo "            var disassociateIDs = $disassociateIDs;", PHP_EOL;
+            echo "            var associateMechanisms = $associateIDs;", PHP_EOL;
+            echo "            var mechanismPercentages = $mechanismPercentages;", PHP_EOL;
+            ?>
 
             $("#disassociateMechanisms").data("ids", disassociateIDs);
             $("#associateMechanisms").data("ids", associateMechanisms);
@@ -86,7 +86,8 @@
 
             if (disassociateIDs.length > 0) {
                 var selectorString = '';
-                for (var i in disassociateIDs) {
+                var i;
+                for (i in disassociateIDs) {
                     selectorString = selectorString + '#table_mechanism_delete_toggle_' + disassociateIDs[i] + ',';
                 }
 
@@ -98,7 +99,7 @@
             }
 
             if ((associateMechanisms.length > 0) && (associateMechanisms.length == mechanismPercentages.length)) {
-                for (var i in associateMechanisms) {
+                for (i in associateMechanisms) {
                     addMechanismToTable(associateMechanisms[i], mechanismPercentages[i]);
                 }
             }
@@ -187,9 +188,9 @@
                 var total = 0;
                 $('.dec_warning').remove();
                 flds.each(function (i, val) {
-                	//TA:#282 accept decimal values
-                var new_val = ($(this).val()) ? parseFloat($(this).val()) : 0;
-               	 total += new_val;
+                    //TA:#282 accept decimal values
+                    var new_val = ($(this).val()) ? parseFloat($(this).val()) : 0;
+                    total += new_val;
                 });
 
                 if (isNaN(total))
@@ -231,7 +232,7 @@
             var percentAccumulate = 0;
             for (var i = 0; i < len; i++) {
                 //TA:#327
-            	var pcent = parseFloat($($rows[i]).children().first().next().text());
+                var pcent = parseFloat($($rows[i]).children().first().next().text());
                 var $node = $($rows[i]).children().first().next();
 
                 var pcent = parseFloat($node.text());
@@ -437,166 +438,185 @@
 
             if (!$this->hasACL('edit_employee')) {
                 $this->viewonly = true;
-            } 
+            }
             ?>
-            
+
             <!-- TA:#256 -->
             <table style="width:100%">
-            <tr><td>
-            
-            <!-- TA:#309 -->
-            <div class="fieldLabel"><label><?php echo t('Active'); ?> HRH</label></div>
-            <input type="checkbox" name="is_active" id="is_active" style="margin : 4px 5px 12px 0px;" <?php echo (($this->employee['is_active'] === '1' || !$this->employee['is_active'])?'checked="checked"':'');?>"/>
-           
-           <?php
-            echo labelAndField($this, t('Staff Cadre'), $this->cadres, 'select_employee_qualification_option');
-            if ($this->setting['display_employee_primary_role'])
-                echo labelAndField($this, t('Primary Role'), $this->roles, 'select_employee_role_option');
+                <tr><td>
 
-            echo labelAndField($this, '<span class="required">*</span>' . t('Employee Code'),
-                $this->formText('employee_code', $this->employee['employee_code'], array('maxlength' => '15')));
+                        <!-- TA:#309 -->
+                        <div class="fieldLabel"><label><?php echo t('Active'); ?> HRH</label></div>
+                        <input type="checkbox" name="is_active" id="is_active" style="margin : 4px 5px 12px 0px;" <?php echo (($this->employee['is_active'] === '1' || !$this->employee['is_active'])?'checked="checked"':'');?>>
 
-            if ($this->setting['display_employee_dob'])
-                echo labelAndField($this, t('Employee Date of Birth') . space . ('(dd/mm/yyyy)'), 'date', 'dob', $this->employee['dob']);
+                        <?php
+                        echo labelAndField($this, t('Staff Cadre'), $this->cadres, 'select_employee_qualification_option');
+                        if ($this->setting['display_employee_primary_role']) {
+                            echo labelAndField($this, t('Primary Role'), $this->roles, 'select_employee_role_option');
+                        }
 
-            if ($this->setting['display_employee_disability']) {
-                $store = $this->viewonly;
-                $this->viewonly = true;
-                echo confirmDropdown($this, t('Disability'), 'disability_option_id', $this->employee['disability_option_id']);
-                echo labelAndField($this, t('Nature of Disability'), 'text', 'disability_comments', $this->employee['disability_comments']);
-                echo '<div class="clear"></div><br /><br />' . PHP_EOL;
-                if ($this->hasACL('edit_employee')) {
-                    $this->viewonly = $store;
-                }
-            }
+                        echo labelAndField($this, '<span class="required">*</span>' . t('Employee Code'),
+                            $this->formText('employee_code', $this->employee['employee_code'], array('maxlength' => '15')));
 
-            if ($this->setting['display_partner_employee_number']) {
-                if ($this->mode != 'add' && $this->employee['partner_employee_number'])
-                    $store = $this->viewonly;
-                    $this->viewonly = true;
-                    echo labelAndField($this, t('Employee') . space . t('Number'), 'text', 'partner_employee_number', $this->employee['partner_employee_number']);
-                    $this->viewonly = $store;
-            }
+                        if ($this->setting['display_employee_dob']) {
+                            echo labelAndField($this, t('Employee Date of Birth') . space . ('(dd/mm/yyyy)'), 'date', 'dob', $this->employee['dob']);
+                        }
+                        if ($this->setting['display_employee_disability']) {
+                            $store = $this->viewonly;
+                            $this->viewonly = true;
+                            echo confirmDropdown($this, t('Disability'), 'disability_option_id', $this->employee['disability_option_id']);
+                            echo labelAndField($this, t('Nature of Disability'), 'text', 'disability_comments', $this->employee['disability_comments']);
+                            echo '<div class="clear"></div><br /><br />' . PHP_EOL;
+                            if ($this->hasACL('edit_employee')) {
+                                $this->viewonly = $store;
+                            }
+                        }
 
-            if ($this->setting['display_employee_partner'])
-                echo labelAndField($this, t('Employer'), $this->partners, 'partner_id');
+                        if ($this->setting['display_partner_employee_number']) {
+                            if ($this->mode != 'add' && $this->employee['partner_employee_number'])
+                                $store = $this->viewonly;
+                            $this->viewonly = true;
+                            echo labelAndField($this, t('Employee') . space . t('Number'), 'text', 'partner_employee_number', $this->employee['partner_employee_number']);
+                            $this->viewonly = $store;
+                        }
 
-            if ($this->setting['display_employee_base']) {
-                echo '<div class="fieldLabel"><span class="required">*</span>' . t('Employee Based at') . '</div>';
-                echo '<div class="fieldInput">';
-                echo $this->formSelect('employee_base_option_id',
-                    isset($this->employee['employee_base_option_id']) ? $this->employee['employee_base_option_id'] : null,
-                    array('disable' => !$this->hasACL("edit_employee"), 'onclick' => 'basedAtOther();'),
-                    $this->bases);
-                echo '</div>';
+                        if ($this->setting['display_employee_partner']) {
+                            echo labelAndField($this, t('Employer'), $this->partners, 'partner_id');
+                        }
 
-                echo '<div id="based_at_other_container">';
-                echo '<div class="fieldLabel"><span class="required">*</span>' . t('Other, Specify') . '</div>';
-                echo '<div class="fieldInput">';
-                echo $this->formText('based_at_other', $this->employee['based_at_other'], array("maxlength" => "50"));
-                echo '</div></div>';
+                        if ($this->setting['display_employee_base']) {
+                            echo '<div class="fieldLabel"><span class="required">*</span>' . t('Employee Based at') . '</div>';
+                            echo '<div class="fieldInput">';
+                            echo $this->formSelect('employee_base_option_id',
+                                isset($this->employee['employee_base_option_id']) ? $this->employee['employee_base_option_id'] : null,
+                                array('disable' => !$this->hasACL("edit_employee"), 'onclick' => 'basedAtOther();'),
+                                $this->bases);
+                            echo '</div>';
 
-            }
+                            echo '<div id="based_at_other_container">';
+                            echo '<div class="fieldLabel"><span class="required">*</span>' . t('Other, Specify') . '</div>';
+                            echo '<div class="fieldInput">';
+                            echo $this->formText('based_at_other', $this->employee['based_at_other'], array("maxlength" => "50"));
+                            echo '</div></div>';
 
-             //TA:#293 show multiple locations 
-            region_filters_dropdown($this, $this->locations, $this->employee, true, false, '', true);
-            
-            $facDropDown = renderFacilityDropDown($this->facilities, $this->employee['site_id'], $this->viewonly);
-            if ($this->hasACL('edit_facility')) {
-                $facDropDown .= '<a href="' . $this->base_url . '/site/add">' . t('Insert a New') . space . t('Site') . '</a> ';
-                $facDropDown .= '<a href="' . $this->base_url . '/site/search">' . t('View/Edit') . space . t('Site') . '</a>'; // need to put the links inside of the div so they dont wrap to the next line
-            }
-            echo labelAndField($this, t('Site') . space . t('Name'), $facDropDown, 'facilityInput');
-            
-            if ($this->setting['display_employee_site_type']) {
-                // Disable data requirement until further notice, issue #339
-                // echo labelAndField($this, '<span class="required">*</span>' . t('Site') . space . t('Type'), $this->site_types);
+                        }
 
-                echo labelAndField($this, t('Site') . space . t('Type'), $this->site_types);
-            }
-            if ($this->setting['display_employee_staff_category'])
-                echo labelAndField($this, t('Staff Category'), $this->categories);
-            if ($this->setting['display_employee_registration_number'])
-                echo labelAndField($this, t('Registration Number'), 'text', 'registration_number', $this->employee['registration_number']);
+                        //TA:#293 show multiple locations
+                        region_filters_dropdown($this, $this->locations, $this->employee, true, false, '', true);
 
-            if ($this->setting['display_employee_contract_end_date'])
-                echo labelAndField($this, t('Contract End Date'), 'date', 'agreement_end_date', $this->employee['agreement_end_date']);
-            if ($this->setting['display_employee_intended_transition'])
-                echo labelAndField($this, t('Intended Transition'), $this->transitions, 'employee_transition_option_id');
-            echo labelAndField($this, t('Other Transition'), 'text', 'transition_other', $this->employee['transition_other']); // hidden field
-            if ($this->setting['display_employee_transition_confirmed'])
-                echo confirmDropdown($this, t('Transition Confirmed'), 'transition_confirmed', $this->employee['transition_confirmed']);
-            echo labelAndField($this, t('Intended Transition Date'), 'date', 'transition_date', $this->employee['transition_date']);
-            if ($this->setting['display_employee_complete_transition'])
-                echo labelAndField($this, t('Actual Transition Outcome'), $this->transitions_complete, 'employee_transition_complete_option_id');
-            echo labelAndField($this, t('Other Transition'), 'text', 'transition_complete_other', $this->employee['transition_complete_other']); // hidden field
+                        $facDropDown = renderFacilityDropDown($this->facilities, $this->employee['site_id'], $this->viewonly);
+                        if ($this->hasACL('edit_facility')) {
+                            $facDropDown .= '<a href="' . $this->base_url . '/site/add">' . t('Insert a New') . space . t('Site') . '</a> ';
+                            $facDropDown .= '<a href="' . $this->base_url . '/site/search">' . t('View/Edit') . space . t('Site') . '</a>'; // need to put the links inside of the div so they dont wrap to the next line
+                        }
+                        echo labelAndField($this, t('Site') . space . t('Name'), $facDropDown, 'facilityInput');
 
-            if ($this->setting['display_employee_actual_transition_date'])
-                echo labelAndField($this, t('Actual Transition Date'), 'date', 'transition_complete_date', $this->employee['transition_complete_date']);
+                        if ($this->setting['display_employee_site_type']) {
+                            // Disable data requirement until further notice, issue #339
+                            // echo labelAndField($this, '<span class="required">*</span>' . t('Site') . space . t('Type'), $this->site_types);
 
+                            echo labelAndField($this, t('Site') . space . t('Type'), $this->site_types);
+                        }
 
-            // fields for only community health workers and community based workers
-            echo '<div class="clear"></div><br /><br />';
+                        if ($this->setting['display_employee_staff_category']) {
+                            echo labelAndField($this, t('Staff Category'), $this->categories);
+                        }
+                        if ($this->setting['display_employee_registration_number']) {
+                            echo labelAndField($this, t('Registration Number'), 'text', 'registration_number', $this->employee['registration_number']);
+                        }
+                        if ($this->setting['display_employee_contract_end_date']) {
+                            echo labelAndField($this, t('Contract End Date'), 'date', 'agreement_end_date', $this->employee['agreement_end_date']);
+                        }
+                        if ($this->setting['display_employee_intended_transition']) {
+                            echo labelAndField($this, t('Intended Transition'), $this->transitions, 'employee_transition_option_id');
+                        }
+                        echo labelAndField($this, t('Other Transition'), 'text', 'transition_other', $this->employee['transition_other']); // hidden field
+                        if ($this->setting['display_employee_transition_confirmed']) {
+                            echo confirmDropdown($this, t('Transition Confirmed'), 'transition_confirmed', $this->employee['transition_confirmed']);
+                        }
+                        echo labelAndField($this, t('Intended Transition Date'), 'date', 'transition_date', $this->employee['transition_date']);
+                        if ($this->setting['display_employee_complete_transition']) {
+                            echo labelAndField($this, t('Actual Transition Outcome'), $this->transitions_complete, 'employee_transition_complete_option_id');
+                        }
+                        echo labelAndField($this, t('Other Transition'), 'text', 'transition_complete_other', $this->employee['transition_complete_other']); // hidden field
 
-            echo '<div id="chw"' . ($this->expandCHWFields ? '' : ' style="display:none;"') . '>';
-            if ($this->setting['display_employee_relationship'])
-                echo labelAndField($this, t('Relationship between CHW and formal health services'), $this->relationships);
-            if ($this->setting['display_employee_referral_mechanism'])
-                echo labelAndField($this, t('Referral Mechanism'), $this->referrals);
-            if ($this->setting['display_employee_chw_supervisor'])
-                echo labelAndField($this, t('CHW Supervisor'), $this->supervisors);
-            if ($this->setting['display_employee_trainings_provided'])
-                echo labelAndField($this, t('Trainings provided'), $this->provided);
-            echo '</div>';
-
-            // yearly costs of employee
-            echo '<div class="clear"></div><br /><br />';
-            if ($this->setting['display_employee_salary']
-                || $this->setting['display_employee_benefits']
-                || $this->setting['display_employee_additional_expenses']
-                || $this->setting['display_employee_stipend']
-            ) {
-                echo '<h2>' . t('Annual Cost to Company (CTC) funded by PEPFAR only Amount') . '</h2>';
-
-                if ($this->translation['Employee Local Currency'] && $this->translation['Employee Local Currency'] != 'Employee Local Currency')
-                    echo "<br>" . t('Currency:') . space . $this->translation['Employee Local Currency'] . '<br clear="all"/>'; #TODO rework
-            }
-            if ($this->setting['display_employee_full_time'])
-                echo labelAndField($this, t('Full Time'), $this->fulltime);
-            
-            echo labelAndField($this, t('Funded hours per week'), 'text', 'funded_hours_per_week', $this->employee['funded_hours_per_week']);
-            
-            //TA:#282 use currentcy format for the next fleds
-            if ($this->setting['display_employee_salary'])
-                echo labelAndField($this, t('Salary'), 'currency', 'salary', $this->employee['salary']);
-            if ($this->setting['display_employee_benefits'])
-                echo labelAndField($this, t('Benefits'), 'currency', 'benefits', $this->employee['benefits']);
-            if ($this->setting['display_employee_additional_expenses'])
-                echo labelAndField($this, t('Additional Expenses'), 'currency', 'additional_expenses', $this->employee['additional_expenses']);
-            if ($this->setting['display_employee_stipend'])
-                echo labelAndField($this, t('Stipend'), 'currency', 'stipend', $this->employee['stipend']);
-            if ($this->setting['display_employee_annual_cost'])
-                echo labelAndField($this, t('Annual Cost'), 'currency', 'annual_cost', $this->employee['annual_cost']);
-
-            echo '<div class="clear"></div><br /><br />';
+                        if ($this->setting['display_employee_actual_transition_date']) {
+                            echo labelAndField($this, t('Actual Transition Date'), 'date', 'transition_complete_date', $this->employee['transition_complete_date']);
+                        }
 
 
-            /////////////////////////// data table - course history - and UI javascript ///////////////////////////
-            ?>
-            
-            <!-- TA:#256 -->
-            </td>
-				<td style="width:20%" valign='top' align='left'>
-						<div class="historyDiv">
-						<b><?php echo t("Date created");?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>						
-						<b><?php echo t("Created by");?></b>&nbsp;<?php echo $this->creator; ?><br>
-						<b><?php echo t("Date updated");?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
-						<b><?php echo t("Updated by");?></b>&nbsp;<?php echo $this->updater; ?><br>
-						</div>
-						</td>
-				</tr>
-				</table>
-				
+                        // fields for only community health workers and community based workers
+                        echo '<div class="clear"></div><br /><br />';
+
+                        echo '<div id="chw"' . ($this->expandCHWFields ? '' : ' style="display:none;"') . '>';
+                        if ($this->setting['display_employee_relationship']) {
+                            echo labelAndField($this, t('Relationship between CHW and formal health services'), $this->relationships);
+                        }
+                        if ($this->setting['display_employee_referral_mechanism']) {
+                            echo labelAndField($this, t('Referral Mechanism'), $this->referrals);
+                        }
+                        if ($this->setting['display_employee_chw_supervisor']) {
+                            echo labelAndField($this, t('CHW Supervisor'), $this->supervisors);
+                        }
+                        if ($this->setting['display_employee_trainings_provided']) {
+                            echo labelAndField($this, t('Trainings provided'), $this->provided);
+                        }
+                        echo '</div>';
+
+                        // yearly costs of employee
+                        echo '<div class="clear"></div><br /><br />';
+                        if ($this->setting['display_employee_salary']
+                            || $this->setting['display_employee_benefits']
+                            || $this->setting['display_employee_additional_expenses']
+                            || $this->setting['display_employee_stipend']
+                        ) {
+                            echo '<h2>' . t('Annual Cost to Company (CTC) funded by PEPFAR only Amount') . '</h2>';
+
+                            if ($this->translation['Employee Local Currency'] && $this->translation['Employee Local Currency'] != 'Employee Local Currency') {
+                                echo "<br>" . t('Currency:') . space . $this->translation['Employee Local Currency'] . '<br clear="all"/>'; #TODO rework
+                            }
+                        }
+                        if ($this->setting['display_employee_full_time']) {
+                            echo labelAndField($this, t('Full Time'), $this->fulltime);
+                        }
+
+                        echo labelAndField($this, t('Funded hours per week'), 'text', 'funded_hours_per_week', $this->employee['funded_hours_per_week']);
+
+                        //TA:#282 use currency format for the next fields
+                        if ($this->setting['display_employee_salary']) {
+                            echo labelAndField($this, t('Salary'), 'currency', 'salary', $this->employee['salary']);
+                        }
+                        if ($this->setting['display_employee_benefits']) {
+                            echo labelAndField($this, t('Benefits'), 'currency', 'benefits', $this->employee['benefits']);
+                        }
+                        if ($this->setting['display_employee_additional_expenses']) {
+                            echo labelAndField($this, t('Additional Expenses'), 'currency', 'additional_expenses', $this->employee['additional_expenses']);
+                        }
+                        if ($this->setting['display_employee_stipend']) {
+                            echo labelAndField($this, t('Stipend'), 'currency', 'stipend', $this->employee['stipend']);
+                        }
+                        if ($this->setting['display_employee_annual_cost']) {
+                            echo labelAndField($this, t('Annual Cost'), 'currency', 'annual_cost', $this->employee['annual_cost']);
+                        }
+
+                        echo '<div class="clear"></div><br /><br />';
+
+                        /////////////////////////// data table - course history - and UI javascript ///////////////////////////
+                        ?>
+
+                        <!-- TA:#256 -->
+                    </td>
+                    <td style="width:20%" valign='top' align='left'>
+                        <div class="historyDiv">
+                            <b><?php echo t("Date created");?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>
+                            <b><?php echo t("Created by");?></b>&nbsp;<?php echo $this->creator; ?><br>
+                            <b><?php echo t("Date updated");?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
+                            <b><?php echo t("Updated by");?></b>&nbsp;<?php echo $this->updater; ?><br>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
             <div class="clear"></div>
             <br/><br/>
 
@@ -653,7 +673,7 @@
 
                 </tbody>
             </table>
-            
+
             <input type="hidden" id="disassociateMechanisms" name="disassociateMechanisms" <?php
             if (isset($this->employee['disassociateMechanisms'])) {
                 echo 'value="' . $this->employee['disassociateMechanisms'] . '"';

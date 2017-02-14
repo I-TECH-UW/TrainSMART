@@ -277,13 +277,12 @@ class EmployeeController extends ReportFilterHelpers
 
         $status = ValidationContainer::instance();
 
-        // ignore when $params['edittabledelete'] is true so that edit table deletions can be done as a batch via
-        // form post when save button is pressed, rather than AJAX
-        if ($this->getRequest()->isPost() && !$params['edittabledelete']) {
+        if ($this->getRequest()->isPost()) {
 
             if (!$this->hasACL('edit_employee')) {
                 $this->doNoAccessError();
-            } else {
+            }
+            else {
 
                 //validate then save
                 //TA:#293 take multiple locations
@@ -298,25 +297,69 @@ class EmployeeController extends ReportFilterHelpers
                 $params['is_active'] = $params['is_active']?'1':'0';//TA:#309
                 $params['employee_transition_complete_option_id'] = $params['employee_transition_complete_option_id']?$params['employee_transition_complete_option_id']:'0';
 
+                $status->checkRequired($this, 'employee_qualification_option_id', t('Staff Cadre'));
+
+                if ($this->setting('display_employee_primary_role')) {
+                    $status->checkRequired($this, 'employee_role_option_id', t('Primary Role'));
+                }
+
                 $status->checkRequired($this, 'employee_code', t('Employee Code'));
 
-                $status->checkRequired($this, 'facilityInput', t('Site') . ' ' . t('Name'));
-                
-                //TA:#293.2
-                $status->checkRequired($this, 'region_c_id', t('All Location Fields'));//TA:#293.1
-
-                $status->checkRequired($this, 'employee_qualification_option_id', t('Staff Cadre'));
-                // Disabled until further notice - issue #339
-                // $status->checkRequired($this, 'employee_site_type_option_id', t('Site') . ' ' . t('Type'));
-
-                if ($this->setting('display_gender')) {
-                    $status->checkRequired($this, 'gender', t('Gender'));
-                }
                 if ($this->setting('display_employee_disability')) {
                     $status->checkRequired($this, 'disability_option_id', t('Disability'));
                     if ($params['disability_option_id'] == 1)
                         $status->checkRequired($this, 'disability_comments', t('Nature of Disability'));
                 }
+
+                // set partner specific unique employee number. (auto-increment ID for each employee, starting at 1, per-partner)
+                if ($id) { // reset if change partner_id
+                    $oldPartnerId = $db->fetchOne("SELECT partner_id FROM employee WHERE id = ?", $id);
+                    if ($params['partner_id'] != $oldPartnerId || $params['partner_id'] == "")
+                        $params['partner_employee_number'] = null;
+                }
+                if ($params['partner_id'] && (!isset($params['partner_employee_number']) || $params['partner_employee_number'] == "")) { // generate a new id
+                    $max = $db->fetchOne("SELECT MAX(partner_employee_number) FROM employee WHERE partner_id = ?", $params['partner_id']);
+                    $params['partner_employee_number'] = $max ? $max + 1 : 1; // max+1 or default to 1
+                }
+
+                if ($this->setting('display_employee_partner')) {
+                    $status->checkRequired($this, 'partner_id', t('Partner'));
+                }
+
+                if ($this->setting('display_employee_base')) {
+                    $hasBase = $status->checkRequired($this, 'employee_base_option_id', t('Employee Based at'));
+
+                    if ($hasBase) {
+                        // this functionality relies on an entry in the employee_base_option table to have the 'base_phrase'
+                        // the same as the translated version of the string 'Other' in the translation table
+                        $b = array_flip($bases);
+                        $other_id = $b[t('Other')];
+                        if ($other_id && $params['employee_base_option_id'] == $other_id) {
+                            $status->checkRequired($this, 'based_at_other', t('Employee Based at') . ' ' . t('Other, Specify'));
+                            if (strlen($params['based_at_other'] > 50)) {
+                                $status->addError('based_at_other', t('Based at Other, Specify must be 50 characters or fewer'));
+                            }
+                        }
+                    }
+                }
+
+                //TA:#293.2
+                $status->checkRequired($this, 'region_c_id', t('All Location Fields'));//TA:#293.1
+
+                $status->checkRequired($this, 'facilityInput', t('Site') . ' ' . t('Name'));
+
+                // Disabled until further notice - issue #339
+                // $status->checkRequired($this, 'employee_site_type_option_id', t('Site') . ' ' . t('Type'));
+
+                if ($this->setting('display_employee_contract_end_date')) {
+                    $status->checkRequired($this, 'agreement_end_date', t('Contract End Date'));
+                }
+
+                if ($this->setting('display_employee_intended_transition')) {
+                    $status->checkRequired($this, 'employee_transition_option_id', t('Intended Transition'));
+                }
+
+                $status->checkRequired($this, 'funded_hours_per_week', t('Funded hours per week'));
 
                 $costaccum = 0;
                 if ($this->setting('display_employee_salary')) {
@@ -338,51 +381,16 @@ class EmployeeController extends ReportFilterHelpers
                 if ($costaccum > 2000000) {
                     $status->addError('annual_cost', t('Total') . ' ' . t('Annual Cost') . ' ' . t("can not be more than 2,000,000."));
                 }
-                if ($this->setting('display_employee_partner'))
-                    $status->checkRequired($this, 'partner_id', t('Partner'));
-                if ($this->setting('display_employee_intended_transition'))
-                    $status->checkRequired($this, 'employee_transition_option_id', t('Intended Transition'));
-
-                if ($this->setting('display_employee_base')) {
-                    $hasBase = $status->checkRequired($this, 'employee_base_option_id', t('Employee Based at'));
-
-                    if ($hasBase) {
-                        // this functionality relies on an entry in the employee_base_option table to have the 'base_phrase' the same as the translated version of the string 'Other' in the translation table
-                        $b = array_flip($bases);
-                        $other_id = $b[t('Other')];
-                        if ($other_id && $params['employee_base_option_id'] == $other_id) {
-                            $status->checkRequired($this, 'based_at_other', t('Employee Based at') . ' ' . t('Other, Specify'));
-                            if (strlen($params['based_at_other'] > 50)) {
-                                $status->addError('based_at_other', t('Based at Other, Specify must be 50 characters or fewer'));
-                            }
-                        }
-                    }
-                }
-
-                if ($this->setting('display_employee_primary_role'))
-                    $status->checkRequired($this, 'employee_role_option_id', t('Primary Role'));
-
-                $status->checkRequired($this, 'funded_hours_per_week', t('Funded hours per week'));
-                if ($this->setting('display_employee_contract_end_date'))
-                    $status->checkRequired($this, 'agreement_end_date', t('Contract End Date'));
 
                 $total_percent = 0;
                 foreach ($params['percentage'] as $i => $val) {
                     $total_percent = $total_percent + $params['percentage'][$i];
                 }
-                if ($total_percent > 100) $status->setStatusMessage(t(' Warn: Total Funded Percentage > 100 '));
 
-                // set partner specific unique employee number. (auto-increment ID for each employee, starting at 1, per-partner)
-                if ($id) { // reset if change partner_id
-                    $oldPartnerId = $db->fetchOne("SELECT partner_id FROM employee WHERE id = ?", $id);
-                    if ($params['partner_id'] != $oldPartnerId || $params['partner_id'] == "")
-                        $params['partner_employee_number'] = null;
+                if ($total_percent > 100) {
+                    $status->setStatusMessage(t(' Warn: Total Funded Percentage > 100 '));
                 }
-                if ($params['partner_id'] && (!isset($params['partner_employee_number']) || $params['partner_employee_number'] == "")) { // generate a new id
-                    $max = $db->fetchOne("SELECT MAX(partner_employee_number) FROM employee WHERE partner_id = ?", $params['partner_id']);
-                    $params['partner_employee_number'] = $max ? $max + 1 : 1; // max+1 or default to 1
-                }
-            
+
                 // save
                 if (!$status->hasError()) {
                     require_once('models/table/Employee.php');
@@ -391,9 +399,6 @@ class EmployeeController extends ReportFilterHelpers
                     if (!$id) {
                         //TA:#171 add more details to error message and redirect to employee edit page for edit or stay on the same page
                         $status->setStatusMessage(t('That position could not be saved. Employee code for this partner exists.'));
-                        if($params['id']){
-                            $this->_redirect("employee/edit/id/".$params['id']);
-                        }
                     } else {
                         if (isset($params['disassociateMechanisms']) && $params['disassociateMechanisms']) {
                             if (!Employee::disassociateMechanismsFromEmployee($id, $params['disassociateMechanisms'])) {
@@ -433,12 +438,6 @@ class EmployeeController extends ReportFilterHelpers
             } // else we have edit_employee acl
         } // if isPost()
 
-        if ($this->getRequest()->isPost() && $params['edittabledelete']) {
-            // tell edit table that the ajax request succeeded, we'll actually process it when the
-            // Save button is clicked
-            $this->sendData(array('msg' => 'ok'));
-        }
-
         // this data is used both for populating mechanisms and checking for subpartner permissions to edit employees
         $mechanismData = $this->getAvailableMechanisms();
         $mechanismData['assigned_mechanisms'] = $employeeMechanisms;
@@ -453,7 +452,7 @@ class EmployeeController extends ReportFilterHelpers
             } else {
                 $params = $row; // reassign form data
 
-               //TA:#293 get multiple employee locations
+                //TA:#293 get multiple employee locations
                 $location_ids = Employee::getEmployeeLocations($id);
                 $result = array();
                 foreach($location_ids as $i => $loc) {
