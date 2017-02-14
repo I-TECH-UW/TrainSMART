@@ -4129,23 +4129,16 @@ class AdminController extends UserController
 	}
 	
 	//TA:#331.1
-	public function peopleSchoolnameAction(){
-	    if($this->getRequest()->isPost()) {
-	        // form submit
-	        $updateData = array();
-	        $require_trainer_skill = $this->getParam('require_trainer_skill');
-	        if (empty($require_trainer_skill)) { $require_trainer_skill = 0; }
-	        $this->putSetting('require_trainer_skill', $require_trainer_skill);
-	    }
-	
+	public function peopleSchoolnameAction(){    
 	    $controller = &$this;
 	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
 	    $editTable->setParentController($controller);
 	    $editTable->table   = 'education_school_name_option';
 	    $editTable->fields  = array('school_name_phrase' => t('Official School Name'));
 	    $editTable->label   = t('Official School Name');
-	    $editTable->execute($controller->getRequest());
-	
+	    $editTable->dependencies = array('person_to_education');
+	    $editTable->allowMerge = true;
+	    $editTable->execute($controller->getRequest());	
 	}
 	
 	//TA:#331.1
