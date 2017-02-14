@@ -228,6 +228,72 @@ function addPersonEducation(oButton) {
 <?php }?>
 <?php }?>
 
+<!-- TA:#331.2 -->
+<?php if ( $this->setting['module_participants_attestation']  ) { ?>
+<div class="fieldIndentNoMargin"><?php tp('Attestation Progress');?></div>
+    <?php echo $this->tableAttestation; ?>
+    <br/>
+  <?php if(!$this->viewonly){?>
+  <span style="font-size:11px; font-weight:bold; color:#696969;"><?php echo t('Attestation Category'); ?></span>
+  <select id="attestation_category_option_id" name="attestation_category_option_id">
+  <option value="0">--<?php echo t('choose'); ?>--</option>
+  <?php  foreach ( $this->people_attestation_category as $val ) {
+	echo '<option value="' . $val ['id'] . '" >' . $val ['attestation_category_phrase'] . '</option>' . "\n";
+	} ?>
+  </select>
+  &nbsp;&nbsp;<span style="font-size:11px; font-weight:bold; color:#696969;"><?php echo t('Attestation Level'); ?></span>
+  <select id="attestation_level_option_id" name="attestation_level_option_id">
+  <option value="0">--<?php echo t('choose'); ?>--</option>
+  <?php  foreach ( $this->people_attestation_level as $val ) {
+	echo '<option value="' . $val ['id'] . '" >' . $val ['attestation_level_phrase'] . '</option>' . "\n";
+	} ?>
+  </select>
+  &nbsp;&nbsp;<span style="font-size:11px; font-weight:bold; color:#696969;"><?php echo t('Attestation Year'); ?></span>
+<select id="attestation_date" name="attestation_date" >
+<?php 
+  echo "<option value=0>--" . t('choose') . "--</option>";
+   for($i = date('Y') ; $i > '1920'; $i--){
+       $selected = "";
+       if($this->person['attestation_date'] == $i){
+           $selected = "selected='selected'";
+       }
+      echo "<option value=$i $selected>$i</option>";
+   }
+?>
+</select>
+&nbsp;&nbsp;<input type="button" name="Insert" value="<?php tp("Insert"); ?>" class="insert" id="personAttestationInsertButton" onclick="addPersonAttestation(this);return false;">
+<br><br><br>
+
+<script type="text/javascript">
+//TA:#331.2
+function addPersonAttestation(oButton) {
+    var jsonAdd = {};
+    jsonAdd.attestation_category_phrase = "";
+    if($("#attestation_category_option_id option:selected").val() != 0){
+     jsonAdd.attestation_category_phrase = $("#attestation_category_option_id option:selected").text();
+     jsonAdd.attestation_category_option_id = $("#attestation_category_option_id option:selected").val();
+    }else{
+        alert("Please select 'Attestation Category'.");
+        return;
+    }
+    jsonAdd.attestation_level_phrase = "";
+    if($("#attestation_level_option_id option:selected").val() != 0){
+    	jsonAdd.attestation_level_phrase = $("#attestation_level_option_id option:selected").text();
+        jsonAdd.attestation_level_option_id = $("#attestation_level_option_id option:selected").val();
+    }
+    jsonAdd.attestation_date = "";
+    if($("#attestation_date option:selected").val() != 0){
+        jsonAdd.attestation_date = $("#attestation_date option:selected").val();
+    }
+    ITECH.attestationTable.addDataRowPersonAttestation(jsonAdd, jsonAdd.attestation_category_phrase, '<?php echo $_SERVER['REQUEST_URI'] . "/edittable/person_attestation/outputType/json"; ?>');
+    $("#attestation_category_option_id").val("0");
+    $("#attestation_level_option_id").val("0");
+    $("#attestation_date").val("0");
+}
+</script> 
+<?php }?>
+<?php }?>
+
 <?php if ( $this->setting['display_responsibility_me']  ) { ?>
 <div class="fieldLabel" ><?php echo (@$this->translation['M&E Responsibility']); ?></div><div class="fieldInput"><textarea name="me_responsibility" rows="3" cols="100"><?php echo $this->person['me_responsibility'];?></textarea></div><br/>
 <?php }?>

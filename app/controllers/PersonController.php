@@ -358,7 +358,7 @@ class PersonController extends ReportFilterHelpers
     public function doAddEditView()
     {
         
-        // TA:#331.1 edittable ajax 
+        // TA:#331.1, TA:#331.2 edittable ajax 
         if ($this->getParam ( 'edittable' )) {
             $this->ajaxEditTable ();
             return;
@@ -901,28 +901,22 @@ class PersonController extends ReportFilterHelpers
                 $tableFields = array ('education_type_phrase' => t( 'Type of Education' ), 'school_name_phrase' => t( 'Official School Name' ), 
                 'education_country_phrase' => t ( 'Education Country' ), 'education_date_graduation' => t ( 'Year of Graduation/Completion' ) );
                 $customColDefs = array();
-               // $rowArray = OptionList::suggestionList('education_type_option', array('id', 'education_type_phrase'), false, 9999, false, false);
                 $elements = array(0 => array('text' => ' ', 'value' => 0));
-               // foreach ($rowArray as $i => $tablerow) {
-                foreach ($educationTypeArray as $i => $tablerow) {
+               foreach ($educationTypeArray as $i => $tablerow) {
                     $elements[$i+1]['text']  = $tablerow['education_type_phrase'];
                     $elements[$i+1]['value'] = $tablerow['id'];
                 }
                 $elements = json_encode($elements); 
                 //$customColDefs['education_type_phrase']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }"; //allow edit
-                //$rowArray = OptionList::suggestionList('education_school_name_option', array('id', 'school_name_phrase'), false, 9999, false, false);
                 $elements = array(0 => array('text' => ' ', 'value' => 0));
-               // foreach ($rowArray as $i => $tablerow) {
-                foreach ($educationSchoolNameArray as $i => $tablerow) {
+               foreach ($educationSchoolNameArray as $i => $tablerow) {
                     $elements[$i+1]['text']  = $tablerow['school_name_phrase'];
                     $elements[$i+1]['value'] = $tablerow['id'];
                 }
                 $elements = json_encode($elements);
                // $customColDefs['school_name_phrase']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";//allow edit
-                //$rowArray = OptionList::suggestionList('education_country_option', array('id', 'education_country_phrase'), false, 9999, false, false);
                 $elements = array(0 => array('text' => ' ', 'value' => 0));
-              //  foreach ($rowArray as $i => $tablerow) {
-                foreach ($educationCountryArray as $i => $tablerow) {
+              foreach ($educationCountryArray as $i => $tablerow) {
                     $elements[$i+1]['text']  = $tablerow['education_country_phrase'];
                     $elements[$i+1]['value'] = $tablerow['id'];
                 }
@@ -941,12 +935,47 @@ class PersonController extends ReportFilterHelpers
                 require_once 'views/helpers/EditTableHelper.php';
                 $html = EditTableHelper::generateHtml('education', $education, $tableFields, $customColDefs, array(), !$this->viewonly);//working editable cells
                 $this->view->assign ( 'tableEducation', $html );
-                //NEW CODE
-//                 require_once 'views/helpers/DropDown.php';
-//                 $this->view->assign ( 'people_education_type_list', DropDown::generateHtml ( 'education_type_option', 'education_type_phrase',false, false, $this->viewonly)); 
-//                 $this->view->assign ( 'people_education_school_name_list', DropDown::generateHtml ( 'education_school_name_option', 'school_name_phrase',false, false, $this->viewonly));
-//                 $this->view->assign ( 'people_education_country_list', DropDown::generateHtml ( 'education_country_option', 'education_country_phrase',false, false, $this->viewonly));
-                
+            }
+            //////////////////////////////////////////////////////////////////////
+            
+            //TA:#331.2
+            if ( $this->setting('module_participants_attestation')  && $person_id){
+                $attestationCategoryArray = OptionList::suggestionList('attestation_category_option', 'attestation_category_phrase', false, false);
+                $this->viewAssignEscaped('people_attestation_category', $attestationCategoryArray);
+                $attestationLevelArray = OptionList::suggestionList('attestation_level_option', 'attestation_level_phrase', false, false);
+                $this->viewAssignEscaped('people_attestation_level', $attestationLevelArray);
+                $person = new Person ();
+                $attestation = $person->getPersonAttestation($person_id);
+                $tableFields = array ('attestation_category_phrase' => t( 'Attestation Category' ), 'attestation_level_phrase' => t( 'Attestation Level' ),
+                   'attestation_date' => t ( 'Attestation Year' ) );
+                $customColDefs = array();
+                $elements = array(0 => array('text' => ' ', 'value' => 0));
+                foreach ($attestationCategoryArray as $i => $tablerow) {
+                    $elements[$i+1]['text']  = $tablerow['attestation_category_phrase'];
+                    $elements[$i+1]['value'] = $tablerow['id'];
+                }
+                $elements = json_encode($elements);
+                //$customColDefs['attestation_category_phrase']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }"; //allow edit
+                $elements = array(0 => array('text' => ' ', 'value' => 0));
+                foreach ($attestationLevelArray as $i => $tablerow) {
+                    $elements[$i+1]['text']  = $tablerow['attestation_level_phrase'];
+                    $elements[$i+1]['value'] = $tablerow['id'];
+                }
+                $elements = json_encode($elements);
+                // $customColDefs['attestation_level_phrase']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";//allow edit
+                $elements = array(0 => array('text' => ' ', 'value' => 0));
+                $k=0;
+                for($i = date('Y') ; $i > '1920'; $i--){
+                    $elements[$k]['text']  = $i;
+                    $elements[$k]['value'] = $i;
+                    $k++;
+                }
+                $elements = json_encode($elements);
+                // $customColDefs['attestation_date']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";//allow edit
+                $this->view->assign ( 'attestation', $attestation );
+                require_once 'views/helpers/EditTableHelper.php';
+                $html = EditTableHelper::generateHtml('attestation', $attestation, $tableFields, $customColDefs, array(), !$this->viewonly);//working editable cells
+                $this->view->assign ( 'tableAttestation', $html ); 
             }
             //////////////////////////////////////////////////////////////////////
 
@@ -1963,7 +1992,7 @@ class PersonController extends ReportFilterHelpers
     }
     
     /**
-     * editTable ajax TA:#331.1
+     * editTable ajax TA:#331.1, TA:#331.2
      */
     private function ajaxEditTable() {
         $person_id = $this->getParam ( 'id' );
@@ -1981,6 +2010,15 @@ class PersonController extends ReportFilterHelpers
             }else if ($action == 'del') {
                 $person->deletePersonEducation($person_id, $this->getParam ( 'education_type_option_id' ),
                     $this->getParam ( 'education_school_name_option_id' ), $this->getParam ( 'education_country_option_id' ), $this->getParam ( 'education_date_graduation' ));
+            }
+        }else if ($do == 'person_attestation') {//update person attestation table
+            $person = new Person ();
+            if ($action == 'add') {
+                $person->addPersonAttestation($person_id, $this->getParam ( 'attestation_category_option_id' ),
+                    $this->getParam ( 'attestation_level_option_id' ), $this->getParam ( 'attestation_date' ));
+            }else if ($action == 'del') {
+                $person->deletePersonAttestation($person_id, $this->getParam ( 'attestation_category_option_id' ),
+                    $this->getParam ( 'attestation_level_option_id' ), $this->getParam ( 'attestation_date' ));
             }
         }
     }

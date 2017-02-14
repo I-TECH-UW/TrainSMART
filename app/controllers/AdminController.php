@@ -725,6 +725,7 @@ class AdminController extends UserController
 		$checkboxFields = array(
 			'check_approval_mod'     => 'module_facility_approval',
 		    'check_education_mod'     => 'module_people_education',//TA:#331.1
+		    'check_participants_attestation'     => 'module_participants_attestation',//TA:#331.2
 			'check_multi_sponsors'   => 'allow_multi_sponsors',
 			'check_display_dates'    => 'display_sponsor_dates',
 			'check_require_dates'    => 'require_sponsor_dates',
@@ -832,6 +833,10 @@ class AdminController extends UserController
 		    'label_official_school_name'  => 'Official School Name',//TA:#331.1
 		    'label_education_country'  => 'Education Country',//TA:#331.1
 		    'label_year_graduation'  => 'Year of Graduation/Completion',//TA:#331.1
+		    'label_attestation_progress'  => 'Attestation Progress',//TA:#331.2
+		    'label_attestation_category'  => 'Attestation Category',//TA:#331.2
+		    'label_attestation_level'  => 'Attestation Level',//TA:#331.2
+		    'label_attestation_year'  => 'Attestation Year',//TA:#331.2
 		);
 
 		// _system settings
@@ -864,6 +869,7 @@ class AdminController extends UserController
 			'check_secondary_responsibility'  => 'display_secondary_responsibility',
 			'check_approval_mod'              => 'module_person_approval',
 		    'check_education_mod'              => 'module_people_education',//TA:#331.1
+		    'check_attestation_mod'              => 'module_participants_attestation',//TA:#331.2
 			'check_people_comments'	=> 'display_people_comments', //TA:17: 09/09/2014
 			'check_people_facilitator' => 'display_people_facilitator', //TA:17: 09/09/2014
 			'check_people_birthdate' => 'display_people_birthdate', //TA:17: 09/10/2014
@@ -4192,6 +4198,44 @@ public function peopleSchoolmergeAction(){
 		$rowArray = $db->fetchAll ( "select * from education_school_name_option");
 		$this->viewAssignEscaped ( 'results', $rowArray );
 
+	}
+	
+	//TA:#331.2
+	public function peopleAttestationcategoryAction(){
+	    if($this->getRequest()->isPost()) {
+	        // form submit
+	        $updateData = array();
+	        $require_trainer_skill = $this->getParam('require_trainer_skill');
+	        if (empty($require_trainer_skill)) { $require_trainer_skill = 0; }
+	        $this->putSetting('require_trainer_skill', $require_trainer_skill);
+	    }
+	
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'attestation_category_option';
+	    $editTable->fields  = array('attestation_category_phrase' => t('Attestation Category'));
+	    $editTable->label   = t('Attestation Category');
+	    $editTable->execute($controller->getRequest());
+	}
+	
+	//TA:#331.2
+	public function peopleAttestationlevelAction(){
+	    if($this->getRequest()->isPost()) {
+	        // form submit
+	        $updateData = array();
+	        $require_trainer_skill = $this->getParam('require_trainer_skill');
+	        if (empty($require_trainer_skill)) { $require_trainer_skill = 0; }
+	        $this->putSetting('require_trainer_skill', $require_trainer_skill);
+	    }
+	
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'attestation_level_option';
+	    $editTable->fields  = array('attestation_level_phrase' => t('Attestation Level'));
+	    $editTable->label   = t('Attestation Level');
+	    $editTable->execute($controller->getRequest());
 	}
 }
 

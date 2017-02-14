@@ -201,5 +201,31 @@ class Person extends ITechTable
 	    $db = $this->dbfunc()->query("INSERT INTO person_to_education (person_id, education_type_option_id, education_school_name_option_id, education_country_option_id, education_date_graduation)
 values ($person_id, $education_type_option_id, $education_school_name_option_id, $education_country_option_id, $education_date_graduation)");
 	}
+	
+	//TA:#331.2
+	public function getPersonAttestation($person_id) {
+	    $select = $this->dbfunc()->select()
+	    ->from('person_to_attestation')->where("person_id=$person_id")
+	    ->joinLeft('attestation_category_option', 'attestation_category_option_id=attestation_category_option.id')
+	    ->joinLeft('attestation_level_option', 'attestation_level_option_id=attestation_level_option.id');
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return $result;
+	}
+	
+	//TA:#331.2
+	public function deletePersonAttestation($person_id, $attestation_category_option, $attestation_level_option, $attestation_date) {
+	    $db = $this->dbfunc();
+	    //delete by names
+	    $db->query("DELETE FROM person_to_attestation WHERE person_id=" . $person_id .
+	        " AND attestation_category_option_id=(SELECT ID FROM attestation_category_option where attestation_category_phrase='" . $attestation_category_option . "') " .
+	        " AND  attestation_level_option_id=(SELECT ID FROM attestation_level_option where attestation_level_phrase='" . $attestation_level_option . "') " .
+	        " AND  attestation_date=" .  $attestation_date);
+	}
+	
+	//TA:#331.2
+	public function addPersonAttestation($person_id, $attestation_category_option, $attestation_level_option, $attestation_date) {
+	    $db = $this->dbfunc()->query("INSERT INTO person_to_attestation (person_id, attestation_category_option_id, attestation_level_option_id, attestation_date)
+	        values ($person_id, $attestation_category_option, $attestation_level_option, $attestation_date)");
+	}
 }
 

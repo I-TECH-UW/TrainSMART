@@ -152,6 +152,26 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
 			//cObj = YAHOO.util.Connect.asyncRequest('POST', jsonUrl, ajaxCallback, queryString); the best way to add ajaxCallback in case of error message
 			cObj = YAHOO.util.Connect.asyncRequest('POST', jsonUrl, "", queryString); //working
         }
+        
+      //TA:#331.2   Add row w/data
+        this.addDataRowPersonAttestation = function(jsonData, row_name, jsonUrl) {
+          jsonData.edit = (noEdit) ? this.config.deleteOnly : this.config.editLinks;
+          jsonData.row_name = row_name; // Name to display when "delete" is clicked
+          this.myDataTable.addRow(jsonData);
+          var arr = new Array();
+          for(var i=0; i<this.myDataTable.getRecordSet().getLength(); i++){
+          	var row = this.myDataTable.getRecord(i);
+          	if(row.getData('row_name')){
+          		var data = JSON.parse(JSON.stringify(row));
+          		arr.push(data['_oData']);
+          	}
+         }  
+          var queryString = "a=add&attestation_category_option_id=" + jsonData.attestation_category_option_id + 
+          "&attestation_level_option_id=" + jsonData.attestation_level_option_id + 
+          "&attestation_date=" + jsonData.attestation_date;
+			//cObj = YAHOO.util.Connect.asyncRequest('POST', jsonUrl, ajaxCallback, queryString); the best way to add ajaxCallback in case of error message
+			cObj = YAHOO.util.Connect.asyncRequest('POST', jsonUrl, "", queryString); //working
+        }
            
         //
         // Setup our new DataTable object
@@ -356,7 +376,7 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
         this.myDataTable.deleteAjax = function(oRecord) {
           var ajaxDelCallback = {
             success: function(o) {
-            	//TA:#331.1 by some reason parse does not work
+            	//TA:#331.1, TA:#331.2 by some reason parse does not work
 //                var status = YAHOO.lang.JSON.parse(o.responseText);
 //                if(status.error != null) {
 //                  alert(tr("Could not delete, sorry.  The server said:") + "\n\n" + status.error);
@@ -373,15 +393,20 @@ function makeEditTable(labelAdd, tableData, columnDefs, noDelete, noEdit) {
           // Inform user we are attempting to delete
           oEditCell = this.getTdEl({record:oRecord, column:this.getColumn("edit")});
           oEditCell.innerHTML = this.config.deletingText;
-
           
-          if(labelSafe == 'education'){//TA:#331.1
+         //TA:#331.1
+          if(oRecord.getData("education_type_phrase")){ // if(labelSafe == 'education'){ it does not work when two ITECH tables are added
         	  //var td = this.getTdEl({record:oRecord, column:this.getColumn(0)});	  
         	  var queryString = "a=del&education_type_option_id=" + oRecord.getData("education_type_phrase") + 
               "&education_school_name_option_id=" + oRecord.getData("school_name_phrase") + 
               "&education_country_option_id=" + oRecord.getData("education_country_phrase") +
               "&education_date_graduation=" + oRecord.getData("education_date_graduation");
     		  cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/edittable/person_education/outputType/json", ajaxDelCallback, queryString);  
+          }else if(oRecord.getData("attestation_category_phrase")){//TA:#331.2
+        	  var queryString = "a=del&attestation_category_option_id=" + oRecord.getData("attestation_category_phrase") + 
+              "&attestation_level_option_id=" + oRecord.getData("attestation_level_phrase") + 
+              "&attestation_date=" + oRecord.getData("attestation_date");
+    		  cObj = YAHOO.util.Connect.asyncRequest('POST', document.location + "/edittable/person_attestation/outputType/json", ajaxDelCallback, queryString);  
           }else{//default
           	//TA:#301
           	queryString = "id=" + oRecord.getData("id") + "&delete=1&edittable=file&edittabledelete=1";

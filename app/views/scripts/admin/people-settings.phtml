@@ -304,6 +304,41 @@ print ScriptContainer::$instance->renderJSHead();
    	<td><input type="text" name="label_year_graduation" value="<?php echo $this->label_year_graduation; ?>"></td>
    	<td></td>
  </tr>
+ 
+ <!-- TA:#331.2 -->
+  <tr><td class="fieldTitle"><?php echo t('Participants Attestation'); ?></td>
+    <td></td>
+    <td></td>
+    <td><input type="checkbox" name="check_attestation_mod" <?php if($this->check_attestation_mod) echo 'checked'; ?> id="check_attestation_mod"><label for="check_attestation_mod"><?php echo t('Enabled'); ?></label></td>
+  </tr>
+  
+  <!-- TA:#331.2 -->
+  <tr><td class="fieldTitle"><?php echo t('Attestation Progress'); ?></td>
+   	<td></td>
+   	<td><input type="text" name="label_attestation_progress" value="<?php echo $this->label_attestation_progress; ?>"></td>
+   	<td></td>
+ </tr>
+ 
+  <!-- TA:#331.2 -->
+  <tr><td class="fieldTitle"><?php echo t('Attestation Category'); ?></td>
+   	<td></td>
+   	<td><input type="text" name="label_attestation_category" value="<?php echo $this->label_attestation_category; ?>"></td>
+   	<td><a href="<?php echo $this->base_url;?>/admin/people-attestationcategory" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
+ </tr>
+ 
+ <!-- TA:#331.2 -->
+  <tr><td class="fieldTitle"><?php echo t('Attestation Level'); ?></td>
+   	<td></td>
+   	<td><input type="text" name="label_attestation_level" value="<?php echo $this->label_attestation_level; ?>"></td>
+   	<td><a href="<?php echo $this->base_url;?>/admin/people-attestationlevel" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
+ </tr>
+ 
+ <!-- TA:#331.2 -->
+  <tr><td class="fieldTitle"><?php echo t('Attestation Year'); ?></td>
+   	<td></td>
+   	<td><input type="text" name="label_attestation_year" value="<?php echo $this->label_attestation_year; ?>"></td>
+   	<td></td>
+ </tr>
 
 </table>
 
