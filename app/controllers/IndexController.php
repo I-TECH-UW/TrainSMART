@@ -235,33 +235,11 @@ class IndexController extends ITechController {
 	}
 
 	public function jsAggregateAction() {
-		#$headers = apache_request_headers ();
-
-		// Checking if the client is validating his cache and if it is current.
-		/*
-	    if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) > time() - 60*60*24)) {
-	        // Client's cache IS current, so we just respond '304 Not Modified'.
-	        header('Last-Modified: '.gmdate('D, d M Y H:i:s',  time()).' GMT', true, 304);
-			$this->setNoRenderer();
-	    }
-		#echo Globals::$BASE_PATH.Globals::$WEB_FOLDER.$file;
-		#exit;
-		*/
-
 		$response = $this->getResponse ();
 		$response->clearHeaders ();
 
-		//allow cache
-		#$response->setHeader ( 'Expires', gmdate ( 'D, d M Y H:i:s', time () + 60 * 60 * 30 ) . ' GMT', true );
-		#$response->setHeader ( 'Cache-Control', 'max-age=7200, public', true );
-		#$response->setHeader ( 'Last-Modified', '', true );
-		#$response->setHeader ( 'Cache-Control',  "public, must-revalidate, max-age=".(60*60*24*7), true ); // new ver TS new JS file
 		$response->setHeader ( 'Cache-Control',  "must-revalidate, max-age=".(60*60*24*7), true ); // new ver TS new JS file
-		#$response->setHeader ( 'Pragma', 'public', true );
 		$response->setHeader ( 'Last-Modified',''.date('D, d M Y H:i:s', strtotime('18 March 2013 19:20')).' GMT', true ); // todo update this when thers a new javascript file to force re dl
 		$response->setHeader ( 'Content-type', 'application/javascript' ); // should fix inspector warnings (was text/html)
-
 	}
-
 }
-?>
