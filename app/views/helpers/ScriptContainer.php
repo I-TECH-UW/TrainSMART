@@ -39,8 +39,7 @@ class ScriptContainer {
 			$this->addCSSLink('/css/media/demo_table_jui.css');
 			$this->addCSSLink('/css/media/jquery-ui-1.8.17.custom.css');
 			$this->addCSSLink('/css/jquery.tabledrag.css');
-			//	$this->addCSSLink('/css/trainsmart/ts.css');
-			//	$this->addCSSLink('/css/media/trainsmart.css');
+
 			require_once('models/Session.php');
 			if (Session::getSetting('site_style') === 'eventsmart') {
 				$this->addCSSLink('/css/style-engender.css');
@@ -93,7 +92,6 @@ class ScriptContainer {
 			$this->addJSLink('/js/itech.js');
 			$this->addJSLink('/js/dropdown.js');
 			$this->addJSLink('/js/jquery.tabledrag.js');
-			
 
 			$burl = Settings::$COUNTRY_BASE_URL;
 
@@ -108,27 +106,12 @@ class ScriptContainer {
 		$test = (strstr($filename, 'translation-') || strstr($filename, '/scripts/'));
 		if ($test===false)
 		{
-			//self::$jsfiles []= (self::$debug?str_replace('.js','-min.js',$filename):$filename); //.'?_yuiversion=2.5.0';
-#			echo "including " . str_replace('.js','-min.js',$filename) . "<br>";
 			self::$jsfiles []= str_replace('.js','-min.js',$filename);
 		}
 		else 
 		{
-#			echo "including " . $filename . "<br>";
 			self::$jsfiles []= $filename;
 		}
-		//if ( $test !== false )
-		//	self::$jsfiles []= $filename;
-		//else
-		//	self::$jsfiles []= (self::$debug?str_replace('.js','-min.js',$filename):$filename); //.'?_yuiversion=2.5.0';
-
-    /*
-    $localized = '<script type="text/javascript" src="'.(Settings::$COUNTRY_BASE_URL).(self::$debug?str_replace('.js','-min.js',$filename):$filename).'?_yuiversion=2.5.0"></script>';
-
-		if ( array_search($localized, self::$jsincludes) === false )
-			self::$jsincludes []= $localized;
-		//*/
-
 	}
 
 	public function addCSSLink($filename) {
