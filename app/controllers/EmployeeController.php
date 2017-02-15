@@ -357,7 +357,16 @@ class EmployeeController extends ReportFilterHelpers
 
                 if ($this->setting('display_employee_intended_transition')) {
                     $status->checkRequired($this, 'employee_transition_option_id', t('Intended Transition'));
+                    //TA:#279.2
+                    if($params['employee_transition_option_id'] == 8){
+                        $status->checkRequired($this, 'transition_other', t('Intended Transition Other'));
+                    }
                 }
+                
+                //TA:#279.2
+                if($params['employee_transition_complete_option_id'] == 8){
+                    $status->checkRequired($this, 'transition_complete_other', t('Actual Transition Outcome Other'));
+                }         
 
                 $status->checkRequired($this, 'funded_hours_per_week', t('Funded hours per week'));
 

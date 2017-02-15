@@ -434,7 +434,13 @@
                 <?php
             endif; // fi historyDiv
 
-            $this->required_fields = array('employee_code', 'select_employee_site_type_option', 'partner_id', 'employee_base_option_id', 'select_employee_qualification_option', 'salary', 'benefits', 'additional_expenses', 'stipend', 'employee_transition_option_id', 'select_employee_role_option', 'disability_option_id', 'disability_comments', 'funded_hours_per_week', 'agreement_end_date', 'facilityInput');
+            //TA:#279.2 add 'transition_other' and 'transition_complete_other' to required fields
+//             $this->required_fields = array('employee_code', 'select_employee_site_type_option', 'partner_id', 'employee_base_option_id', 'select_employee_qualification_option', 'salary',
+//                 'benefits', 'additional_expenses', 'stipend', 'employee_transition_option_id', 'select_employee_role_option', 'disability_option_id', 'disability_comments',
+//                 'funded_hours_per_week', 'agreement_end_date', 'facilityInput');
+            $this->required_fields = array('employee_code', 'select_employee_site_type_option', 'partner_id', 'employee_base_option_id', 'select_employee_qualification_option', 'salary', 
+                'benefits', 'additional_expenses', 'stipend', 'employee_transition_option_id', 'select_employee_role_option', 'disability_option_id', 'disability_comments', 
+                'funded_hours_per_week', 'agreement_end_date', 'facilityInput', 'transition_other', 'transition_complete_other');
 
             if (!$this->hasACL('edit_employee')) {
                 $this->viewonly = true;
@@ -530,7 +536,8 @@
                         if ($this->setting['display_employee_intended_transition']) {
                             echo labelAndField($this, t('Intended Transition'), $this->transitions, 'employee_transition_option_id');
                         }
-                        echo labelAndField($this, t('Other Transition'), 'text', 'transition_other', $this->employee['transition_other']); // hidden field
+                        //TA:#279.2 change label
+                        echo labelAndField($this, t('Intended Transition Other'), 'text', 'transition_other', $this->employee['transition_other']); // hidden field
                         if ($this->setting['display_employee_transition_confirmed']) {
                             echo confirmDropdown($this, t('Transition Confirmed'), 'transition_confirmed', $this->employee['transition_confirmed']);
                         }
@@ -538,7 +545,8 @@
                         if ($this->setting['display_employee_complete_transition']) {
                             echo labelAndField($this, t('Actual Transition Outcome'), $this->transitions_complete, 'employee_transition_complete_option_id');
                         }
-                        echo labelAndField($this, t('Other Transition'), 'text', 'transition_complete_other', $this->employee['transition_complete_other']); // hidden field
+                        //TA:#279.2 change label
+                        echo labelAndField($this, t('Actual Transition Outcome Other'), 'text', 'transition_complete_other', $this->employee['transition_complete_other']); // hidden field
 
                         if ($this->setting['display_employee_actual_transition_date']) {
                             echo labelAndField($this, t('Actual Transition Date'), 'date', 'transition_complete_date', $this->employee['transition_complete_date']);
