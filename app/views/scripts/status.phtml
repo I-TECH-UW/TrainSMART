@@ -4,14 +4,19 @@
 <div id="status"></div>
 <script type="text/javascript">
     <?php
-    if ( isset($this->status) ) {
-    if ( isset($this->status->status) and $this->status->status ) { ?>    displayStatus('<?php echo $this->status->status?>'); <?php } ?>
-    <?php foreach($this->status->messages as $field => $msg) { ?>
-    displayErrorMessage('<?php echo $field; ?>', '<?php echo $msg; ?>');
-    <?php } ?>
-    <?php if ( $this->status->redirect ) { ?>
-    window.location = '<?php echo $this->status->redirect?>';
-    <?php }
+    if (isset($this->status)) {
+        if ($this->status->redirect) {
+            echo "window.location = {$this->status->redirect};";
+        } else {
+            echo "$(document).ready(function () {\n";
+            if (isset($this->status->status) and $this->status->status) {
+                echo "displayStatus('{$this->status->status}');\n";
+            }
+            foreach ($this->status->messages as $field => $msg) {
+                echo "displayErrorMessage('$field', '$msg');\n";
+            }
+            echo "});\n";
+        }
     }
     ?>
 </script>

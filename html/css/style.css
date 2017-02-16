@@ -60,7 +60,7 @@ input[type='checkbox'] { margin-right: .5em;}
 
 .clear { clear:both; margin-top:0px;}
 
-.errorText, #statusBox.statusError, .required { color: #F22; }
+.errorText, #statusBox.statusError, .required { color: #F22 !important; }
 
 .hrGrey { background:url(../images/grad_grey.gif) center repeat-x; height:30px; margin-top:5px; }
 

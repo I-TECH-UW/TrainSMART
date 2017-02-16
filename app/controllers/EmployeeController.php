@@ -343,8 +343,14 @@ class EmployeeController extends ReportFilterHelpers
                     }
                 }
 
+                // It's safe to assume that if region_c_id is selected then province and district also are, but now we
+                // also need to trigger the error handling code that displays errors on the front-end
+
+                $status->checkRequired($this, 'province_id', t('Region A (Province)'));
+                $status->checkRequired($this, 'district_id', t('Region B (Health District)'));
+
                 //TA:#293.2
-                $status->checkRequired($this, 'region_c_id', t('All Location Fields'));//TA:#293.1
+                $status->checkRequired($this, 'region_c_id', t('Region C (Local Region)'));//TA:#293.1
 
                 $status->checkRequired($this, 'facilityInput', t('Site') . ' ' . t('Name'));
 

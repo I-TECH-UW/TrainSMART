@@ -35,8 +35,7 @@ class ValidationContainer {
 
 	public function checkRequired($controller, $name, $textName) {
 		$val = $controller->getRequest()->getParam($name);
-		if ( ($val === null) or ($val == '') ) {
-    			//$this->addError($name,' (required)');
+		if (($val === null) || ($val == '') || (is_array($val) && count($val) == 1 && ($val[0] === null || $val[0] == ''))) {
           		$this->addError($name, $textName.' ('.t('required').')');
 			return false;
 		}

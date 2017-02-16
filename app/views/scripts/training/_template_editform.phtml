@@ -1,6 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
     <title><?php echo t($this->translation['Application Name']); ?> | <?php echo t($this->pageTitle); ?></title>
     <?php
@@ -95,7 +94,7 @@
                 var day = 1000 * 60 * 60 * 24;
                 var duration = (endTime - startTime) / day;
                 if (YAHOO.util.Dom.get("training_length_value").value != (Math.round(duration) + 1))
-                    alert("<?php echo t('It looks like the').' '.t('training').' '.t('dates do not match the length. Please double check these fields.');?>");
+                    alert("<?php echo t('It looks like the') . ' ' . t('training') . ' ' . t('dates do not match the length. Please double check these fields.');?>");
 
             }
 
@@ -202,8 +201,8 @@
                             <?php if (@$this->evaluation_id) : ?><a
                                 href="javascript:submitThenRedirect('<?php echo $this->base_url; ?>/evaluation/data/id/<?php echo $this->evaluation_to_training_id; ?>');"
                                 onclick=""><?php tp('Enter Evaluation Data'); ?></a>&nbsp;&nbsp;&nbsp;<a
-                                    href="javascript:submitThenRedirect('<?php echo $this->base_url; ?>/reports/evaluations/training_id/<?php echo $this->row['id']; ?>');"
-                                    onclick=""><?php tp('View Data'); ?></a>&nbsp;&nbsp;&nbsp;<a
+                                        href="javascript:submitThenRedirect('<?php echo $this->base_url; ?>/reports/evaluations/training_id/<?php echo $this->row['id']; ?>');"
+                                        onclick=""><?php tp('View Data'); ?></a>&nbsp;&nbsp;&nbsp;<a
                                 href="javascript:submitThenRedirect('<?php echo $this->base_url; ?>/reports/evaluations/training_id/<?php echo $this->row['id']; ?>/outputType/csv');"
                                 onclick=""><?php tp('Export'); ?></a><?php else : ?><?php tp('unassigned') ?><?php endif; ?>
                             <br>
@@ -231,7 +230,7 @@
                 <!-- TA:17: 8/27/2014 END -->
 
                 <div class="fieldLabel" id="training_title_lbl"><span
-                        class="required">*</span><?php echo $this->translation['Training Name']; ?></div>
+                            class="required">*</span><?php echo $this->translation['Training Name']; ?></div>
                 <div class="fieldInput">
 
                     <select id="select_training_title_option" name="training_category_and_title_option_id">
@@ -272,7 +271,7 @@
                             }
                         }
                     }
-                    <?php if($this->viewonly) print 'elTitle.disabled = true'; ?>
+                    <?php if ($this->viewonly) print 'elTitle.disabled = true'; ?>
 
                     <?php if(!$this->row['id']) { ?>
                     elTitle.selectedIndex = 0; //  do not default to "unknown" title
@@ -363,8 +362,8 @@
                     <div class="fieldLabel"><?php echo t('Training location'); ?></div>
                     <div class="fieldInput">
                         <?php
-                        training_location_dropdown($this->tlocations, $this->row['training_location_id'], 'name="training_location_id" id="select_training_location" ' . $this->viewonly); 
-                        if ($this->hasACL ( 'edit_training_location' )){//TA:114
+                        training_location_dropdown($this->tlocations, $this->row['training_location_id'], 'name="training_location_id" id="select_training_location" ' . $this->viewonly);
+                        if ($this->hasACL('edit_training_location')) {//TA:114
                             echo $this->insertLocationLink;
                         }
                         ?>
@@ -460,38 +459,38 @@ endif; ?>
     <div class="fieldLabel"
          id="training_topic_option_id_lbl"><?php echo(@$this->translation['Training Topic']); ?></div>
     <div class="fieldInput" id="topicContainer">
-        <?php if(isset($this->dropDownTopic)) : ?>
-      <?php echo $this->dropDownTopic; ?>
-    <?php elseif($this->topicArray) : ?>
-      <div style="line-height:1.5em;margin-bottom:0.5em;">
-       <?php if(!$this->viewonly) : ?>
-          <?php tp('Check all that apply below');?>
-          <?php echo $this->insertTopicLink; ?>
-          <?php echo hasACLEdit('acl_editor_training_topic', 'admin/training-topic', $this); ?>
+        <?php if (isset($this->dropDownTopic)) : ?>
+            <?php echo $this->dropDownTopic; ?>
+        <?php elseif ($this->topicArray) : ?>
+            <div style="line-height:1.5em;margin-bottom:0.5em;">
+                <?php if (!$this->viewonly) : ?>
+                    <?php tp('Check all that apply below'); ?>
+                    <?php echo $this->insertTopicLink; ?>
+                    <?php echo hasACLEdit('acl_editor_training_topic', 'admin/training-topic', $this); ?>
+                <?php endif; ?>
+            </div>
+            <?php
+            // table used to align checkboxes w/labels
+            $topicChunked = array_chunk($this->topicArray, count($this->topicArray) / 2);
+
+            foreach ($topicChunked as $i => $topicRay) {
+                if ($i % 2 == 0) echo '<div class="fieldLabel" >&nbsp;</div>';
+                echo '<div class="float50" style="width: 33%;"><table width="100%" class="tableChoices">';
+                foreach ($topicRay as $item) {
+                    $isChecked = (isset($item['training_id']) && $item['training_id']) ? ' checked' : '';
+                    echo '<tr><td valign="top" width="30px;">';
+                    echo '<input type="checkbox" name="topic_id[]" value="' . $item['id'] . '" id="topic_id_' . $item['id'] . '"' . $isChecked . ' ' . $this->viewonly . '> ';
+                    echo '</td><td valign="top">';
+                    echo '<label for="topic_id_' . $item['id'] . '">' . $item['training_topic_phrase'] . '</label>';
+                    echo '</td></tr>';
+                }
+                echo '</table></div>';
+            }
+
+            ?>
+            </tr>
+            </table>
         <?php endif; ?>
-      </div>
-      <?php
-        // table used to align checkboxes w/labels
-        $topicChunked = array_chunk($this->topicArray, count($this->topicArray) / 2);
-
-        foreach($topicChunked as $i => $topicRay) {
-          if ( $i%2 == 0) echo '<div class="fieldLabel" >&nbsp;</div>';
-          echo '<div class="float50" style="width: 33%;"><table width="100%" class="tableChoices">';
-          foreach($topicRay as $item) {
-            $isChecked = (isset($item['training_id']) && $item['training_id']) ? ' checked' : '';
-            echo '<tr><td valign="top" width="30px;">';
-            echo '<input type="checkbox" name="topic_id[]" value="'.$item['id'].'" id="topic_id_'.$item['id'].'"'.$isChecked.' '.$this->viewonly.'> ';
-            echo '</td><td valign="top">';
-            echo '<label for="topic_id_'.$item['id'].'">'.$item['training_topic_phrase'].'</label>';
-            echo '</td></tr>';
-          }
-          echo '</table></div>';
-        }
-
-      ?>
-      </tr>
-      </table>
-    <?php endif; ?>
     </div><br/><br clear="all"/>
 <?php endif; ?>
 
@@ -499,7 +498,7 @@ endif; ?>
     <div class="fieldLabel"><?php echo $this->translation['Training of Trainers']; ?></div>
     <div class="fieldInput" id="totContainer">
         <input type="checkbox" name="is_tot" value="1" id="is_tot" <?php if ($this->row['is_tot']) print 'checked'; ?>/><label
-            for="is_tot"></label>
+                for="is_tot"></label>
     </div><br/>
 <?php endif; ?>
 
@@ -659,7 +658,7 @@ if ($this->row['has_known_participants']) :
 ?>
 
 
-    <!-- TA:17: 09/03/2014 -->
+<!-- TA:17: 09/03/2014 -->
 <?php if ($this->setting['display_facilitator_info']) { ?>
 
     <div class="clear"></div>
@@ -667,7 +666,7 @@ if ($this->row['has_known_participants']) :
     <div class="clear"></div>
 
     <div class="fieldIndentNoMargin"><span class="required">*</span><?php echo t('Trainer Information'); ?> <span
-            class="total"><?php echo t('Total Trainers') . ':'; ?> <span id="trainer_total">0</span></span></div>
+                class="total"><?php echo t('Total Trainers') . ':'; ?> <span id="trainer_total">0</span></span></div>
     <div class="fieldIndent2">
 
         <div id="trainerTable"></div>
@@ -719,21 +718,24 @@ if ($this->row['has_known_participants']) :
                            onblur="middleNameOnBlur(this)">
                 <?php } ?>
                 <!-- TA:113 add birthday, facility, distyrict fields as well -->
-                <input type="text" id="trainer_birthdate" size="9" disabled="true" value="<?php tp('Birthdate'); ?>" alt="Birthdate">
-<input type="text" id="trainer_facility" size="15" disabled="true" value="<?php tp('Facility'); ?>" alt="Facility">
-<?php
-if ($this->setting ['display_region_c']) {
-    $location_title = $this->translation['Region C (Local Region)'];
-    $location_idx = 10;
-} else if ($this->setting ['display_region_b']) {
-    $location_title = $this->translation['Region B (Health District)'];
-    $location_idx = 9;
-} else {
-    $location_title = $this->translation['Region A (Province)'];
-    $location_idx = 8;
-}
-?>
-<input type="text" id="trainer_health" size="15" disabled="true" value="<?php echo $location_title; ?>" alt="Location">
+                <input type="text" id="trainer_birthdate" size="9" disabled="true" value="<?php tp('Birthdate'); ?>"
+                       alt="Birthdate">
+                <input type="text" id="trainer_facility" size="15" disabled="true" value="<?php tp('Facility'); ?>"
+                       alt="Facility">
+                <?php
+                if ($this->setting ['display_region_c']) {
+                    $location_title = $this->translation['Region C (Local Region)'];
+                    $location_idx = 10;
+                } else if ($this->setting ['display_region_b']) {
+                    $location_title = $this->translation['Region B (Health District)'];
+                    $location_idx = 9;
+                } else {
+                    $location_title = $this->translation['Region A (Province)'];
+                    $location_idx = 8;
+                }
+                ?>
+                <input type="text" id="trainer_health" size="15" disabled="true" value="<?php echo $location_title; ?>"
+                       alt="Location">
                 <input type="hidden" id="trainer_days" value="0">
                 <!--<input type="text" id="trainer_days" size="3" value="" >&nbsp;<?php tp('days'); ?>-->
                 &nbsp;&nbsp;&nbsp;
@@ -789,13 +791,13 @@ if ($this->setting ['display_region_c']) {
 
                     // array can contain object references, element ids, or both
                     function suggestTrainerName(oSelf, elItem, oData) {
-             
+
                         //TA:113
                         oTrainerId.value = elItem[2][4];
                         oIsTrainer.value = elItem[2][8];
                         oTrainerBday.value = elItem[2][7];
-                         oTrainerFacility.value = elItem[2][5];
-                         OTrainerHealth.value = elItem[2][<?php echo $location_idx;?>];
+                        oTrainerFacility.value = elItem[2][5];
+                        OTrainerHealth.value = elItem[2][<?php echo $location_idx;?>];
 
                         //TA:113
 //                         var midNameIdx = 2;
@@ -803,8 +805,8 @@ if ($this->setting ['display_region_c']) {
                         var midNameIdx = 1;
                         var lastNameIdx = 2;
                         <?php if ( $this->setting['display_middle_name'] ) { ?>
-                        midNameIdx =    <?php echo ( $this->setting['display_middle_name_last'] ? 3:2);?>;
-                        lastNameIdx =    <?php echo ( $this->setting['display_middle_name_last'] ? 2:3);?>;
+                        midNameIdx =    <?php echo($this->setting['display_middle_name_last'] ? 3 : 2);?>;
+                        lastNameIdx =    <?php echo($this->setting['display_middle_name_last'] ? 2 : 3);?>;
                         <?php }?>
                         if (elItem[0]._elTextbox == oTrainerLast) {
                             oTrainerFirst.value = elItem[2][1];
@@ -854,12 +856,12 @@ if ($this->setting ['display_region_c']) {
                     }
 
                     //  if(oTrainerDays.value == "Days" || !oTrainerDays.value) {
-                    //      alert('<?php echo t('Please enter the number of days for this').' '.t('trainer').'.';?>');
+                    //      alert('<?php echo t('Please enter the number of days for this') . ' ' . t('trainer') . '.';?>');
                     //   return;
                     //    }
                     <?php if (@$this->setting['require_trainer_skill']) : ?>
                     if (oIsTrainer.value == 0) {
-                        if (confirm("<?php echo t('You must edit this person\'s').' '.t('trainer').' '.t('profile before adding them to this session.\n\nWould you like to do this now?');?>")) {
+                        if (confirm("<?php echo t('You must edit this person\'s') . ' ' . t('trainer') . ' ' . t('profile before adding them to this session.\n\nWould you like to do this now?');?>")) {
                             submitThenRedirect('<?php echo $this->base_url;?>/person/edit/id/' + oTrainerId.value + '/trainingredirect/<?php echo $this->row['id']; ?>/maketrainer/1/days/1' + '#training');
                         }
                         return;
@@ -904,7 +906,6 @@ if ($this->setting ['display_region_c']) {
                         oTrainerFacility.value = oTrainerFacility.alt;
                         OTrainerHealth.value = OTrainerHealth.alt;
 
-         
 
                     }
 
@@ -928,7 +929,7 @@ if ($this->setting ['display_region_c']) {
     <div class="hrGrey"></div>
     <div class="clear"></div>
     <div class="fieldIndentNoMargin"><span class="required">*</span><?php tp('Participant Information'); ?> <span
-            class="total"><?php tp('Total Participants:'); ?> <span id="persons_total">0</span></span></div>
+                class="total"><?php tp('Total Participants:'); ?> <span id="persons_total">0</span></span></div>
 <div class="fieldIndent2">
     <div id="personsTable"></div>
     <?php echo $this->tablePersons; ?>
@@ -1021,8 +1022,8 @@ if ($this->setting ['display_region_c']) {
                     OPHealth.value = elItem[2][<?php echo $location_idx;?>];
                     oPId.value = elItem[2][4];
 
-                    var midNameIdx =    <?php echo ( $this->setting['display_middle_name_last'] ? 3:2);?>;
-                    var lastNameIdx =    <?php echo ( $this->setting['display_middle_name_last'] ? 2:3);?>;
+                    var midNameIdx =    <?php echo($this->setting['display_middle_name_last'] ? 3 : 2);?>;
+                    var lastNameIdx =    <?php echo($this->setting['display_middle_name_last'] ? 2 : 3);?>;
 
                     if (elItem[0]._elTextbox == oPLast) {
                         oPFirst.value = elItem[2][1];
@@ -1067,7 +1068,7 @@ if ($this->setting ['display_region_c']) {
                 var oPId = YAHOO.util.Dom.get('person_id');
 
                 if (oPId.value == 0) {
-                    alert("<?php echo t('The entered person could not be found.') . '\n'. t('Please select one from the list or add a new person.'); ?>");
+                    alert("<?php echo t('The entered person could not be found.') . '\n' . t('Please select one from the list or add a new person.'); ?>");
                     return;
                 }
 
@@ -1116,7 +1117,7 @@ if ($this->setting ['display_region_c']) {
     <?php if (!$this->viewonly && $this->setting['display_training_score']) { ?>
         <div class="fieldLabel"><label><?php tp('Participant Test Scores'); ?></label></div>
         <div class="fieldInput"><a
-                href="<?php echo $this->base_url; ?>/training/scores-import/training/<?php echo $this->row['id']; ?>"><?php tp('Import Scores'); ?></a>
+                    href="<?php echo $this->base_url; ?>/training/scores-import/training/<?php echo $this->row['id']; ?>"><?php tp('Import Scores'); ?></a>
         </div>
     <?php } ?>
     <?php if ($this->setting['display_training_pre_test'] || $this->setting['display_training_post_test'] || $this->setting['display_training_final_mark']) : ?>
@@ -1148,7 +1149,7 @@ if ($this->setting ['display_region_c']) {
         </div>
 
     <?php endif; ?>
-    
+
     <!-- TA:#271 -->
     <?php if ($this->setting['display_training_pt_pass']) : ?>
         <!-- test scores pass/fail -->
@@ -1157,7 +1158,7 @@ if ($this->setting ['display_region_c']) {
         <div class="clear"></div>
         <div class="fieldIndentNoMargin"><?php tp('Post-Test Pass'); ?></div>
         <div class="fieldIndent2">
-           <?php echo $this->pass;?>
+            <?php echo $this->pass; ?>
         </div>
     <?php endif; ?>
 
@@ -1166,11 +1167,11 @@ if ($this->setting ['display_region_c']) {
         <script type="text/javascript">
 
             <?php $num_qual_quantities = 1;
-                foreach ($this->unknownQualDropDowns as $dd) {
-                    if ( $dd['quantity_na'] ) $num_qual_quantities++;
-             else if ( $dd['quantity_male'] ) $num_qual_quantities++;
-                 else if ( $dd['quantity_female'] ) $num_qual_quantities++;
-                }
+            foreach ($this->unknownQualDropDowns as $dd) {
+                if ($dd['quantity_na']) $num_qual_quantities++;
+                else if ($dd['quantity_male']) $num_qual_quantities++;
+                else if ($dd['quantity_female']) $num_qual_quantities++;
+            }
 
             ?>
             var qual_cnt = <?php print $num_qual_quantities;?>;
@@ -1209,7 +1210,7 @@ if ($this->setting ['display_region_c']) {
                     }
                 }
 
-               // var totalElement = YAHOO.util.Dom.get('total');
+                // var totalElement = YAHOO.util.Dom.get('total');
                 var totalElement = YAHOO.util.Dom.get('persons_total');
                 totalElement.innerHTML = num;
 
@@ -1363,13 +1364,13 @@ if ($this->setting ['display_region_c']) {
 <script type="text/javascript">
     <?php
     // onready - add ajax submit
-        if(!$this->viewonly) {
-            if ( $this->mode != 'add') {
-                echo "addAjaxSubmit('submitTraining','trainingForm','".$this->base_url."/training/edit/id/".$this->row['id'].">/outputType/json');".PHP_EOL;
-            } else {
-                echo "addAjaxSubmit('submitTraining','trainingForm','".$this->base_url."/training/add/outputType/json/');".PHP_EOL;
-            }
+    if (!$this->viewonly) {
+        if ($this->mode != 'add') {
+            echo "addAjaxSubmit('submitTraining','trainingForm','" . $this->base_url . "/training/edit/id/" . $this->row['id'] . ">/outputType/json');" . PHP_EOL;
+        } else {
+            echo "addAjaxSubmit('submitTraining','trainingForm','" . $this->base_url . "/training/add/outputType/json/');" . PHP_EOL;
         }
+    }
 
     ?>
 
@@ -1402,7 +1403,7 @@ if ($this->setting ['display_region_c']) {
         var personsTable = ITECH.personsTable;
         var trainerTable = ITECH.trainerTable;
 
-        if (<?php echo ($this->row['has_known_participants'] ? '(trainerTable != undefined &&  (trainerTable.myDataTable.getRecordSet().getLength() != 0)) || (personsTable != undefined && (personsTable.myDataTable.getRecordSet().getLength() != 0))': ' (YAHOO.util.Dom.get("qualification_quantity_na_0").value > 0) || (YAHOO.util.Dom.get("qualification_quantity_female_0").value > 0) || (YAHOO.util.Dom.get("qualification_quantity_male_0").value > 0) ');  ?>) {
+        if (<?php echo($this->row['has_known_participants'] ? '(trainerTable != undefined &&  (trainerTable.myDataTable.getRecordSet().getLength() != 0)) || (personsTable != undefined && (personsTable.myDataTable.getRecordSet().getLength() != 0))' : ' (YAHOO.util.Dom.get("qualification_quantity_na_0").value > 0) || (YAHOO.util.Dom.get("qualification_quantity_female_0").value > 0) || (YAHOO.util.Dom.get("qualification_quantity_male_0").value > 0) ');  ?>) {
             alert('<?php echo t('All trainers and participants must be removed before deleting a training session.'); ?>');
         } else if (confirm("<?php tp("Are you sure you wish to delete this training session?"); ?>")) {
             YAHOO.util.Dom.get('specialAction').value = "delete";
@@ -1413,7 +1414,7 @@ if ($this->setting ['display_region_c']) {
 
     // duplicate training confirm
     function duplicateTraining() {
-        if (confirm("<?php echo t('Duplicate this').' '.t('Training').'?'; ?>")) {
+        if (confirm("<?php echo t('Duplicate this') . ' ' . t('Training') . '?'; ?>")) {
             YAHOO.util.Dom.get('specialAction').value = "duplicate";
             submitForm();
         }
@@ -1421,11 +1422,11 @@ if ($this->setting ['display_region_c']) {
 
     // submit form via ajax
     function submitForm() {
-        <?php if ( $this->mode != 'add') {
-              echo 'var postUrl = "'. $this->base_url . '/training/edit/id/'.$this->row['id'].'/outputType/json"';
-        } else {
-              echo 'var postUrl = "' . $this->base_url . '/training/add/outputType/json"';
-        } ?>
+        <?php if ($this->mode != 'add') {
+        echo 'var postUrl = "' . $this->base_url . '/training/edit/id/' . $this->row['id'] . '/outputType/json"';
+    } else {
+        echo 'var postUrl = "' . $this->base_url . '/training/add/outputType/json"';
+    } ?>
 
         var buttonId = 'submitTraining';
         var formId = 'trainingForm';
@@ -1434,18 +1435,13 @@ if ($this->setting ['display_region_c']) {
             var handleSuccess = function (o) {
                 try {
                     var response = o.responseText;
-
+                    var key;
                     var responseObj = YAHOO.lang.JSON.parse(response);
                     displayStatus(responseObj.status);
-                    var allGood = true;
                     if (responseObj.messages) {
-                        for (var key in responseObj.messages) {
+                        for (key in responseObj.messages) {
                             displayErrorMessage(key, responseObj.messages[key]);
-                            allGood = false;
                         }
-                    }
-                    if (!allGood) {
-                        setStatusBoxError();
                     }
 
                     if (responseObj.obj_id) {
@@ -1456,7 +1452,7 @@ if ($this->setting ['display_region_c']) {
                     }
 
                     var redir = document.getElementById('redirectUrl');
-                    if (redir.value != '' && allGood) {
+                    if (redir.value != '') {
                         window.location = redir.value;
                     } else if (responseObj.redirect) {
                         window.location = responseObj.redirect;
@@ -1470,11 +1466,11 @@ if ($this->setting ['display_region_c']) {
 
                 document.body.style.cursor = "auto";
 
-            }
+            };
             var handleFailure = function (o) {
                 alert("Submission failed with code: " + o.status + ". The error text is: " + o.statusText);
                 document.body.style.cursor = "auto";
-            }
+            };
 
             var callback = {
                 success: handleSuccess,
