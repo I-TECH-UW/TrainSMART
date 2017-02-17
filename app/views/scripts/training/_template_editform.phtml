@@ -853,6 +853,13 @@ if ($this->setting ['display_region_c']) {
                         return;
                     }
 
+                    //TA:#345
+                    if (oIsTrainer.value == 0) {
+                        if(!confirm("<?php echo t('This person is not trainer.\n Would you like to make this person as a trainer before insert?');?>")){
+                            return;
+                        }
+                    }
+
                     //  if(oTrainerDays.value == "Days" || !oTrainerDays.value) {
                     //      alert('<?php echo t('Please enter the number of days for this').' '.t('trainer').'.';?>');
                     //   return;
@@ -864,7 +871,7 @@ if ($this->setting ['display_region_c']) {
                         }
                         return;
                     }
-                    <?php endif; ?>
+                    <?php  endif; ?>
 
                     //oButton.disabled = true;
 
