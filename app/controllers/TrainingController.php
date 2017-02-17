@@ -1226,20 +1226,6 @@ class TrainingController extends ReportFilterHelpers {
 			if ($action == 'add') {
 
 				$days = $this->getParam ( 'days' );
-				//TA:#345				
- 				require_once ('models/table/Trainer.php');
- 			    $trainerTable = new Trainer ();
-                 $trainerRow = $trainerTable->fetchRow('person_id = ' . $row_id);
-                 if (!$trainerRow) { 
-                     $trainerRow = $trainerTable->createRow();
-                     $trainerRow->person_id = $row_id;
-                     $trainerRow->is_active = 1;
-                     if (!$trainerRow->save()) {
-                         $sendRay ['error'] = t ( 'This person cannot be added to this training session.' );
-                     }
-                }       
-                /////////
-                
  				$result = TrainingToTrainer::addTrainerToTraining ( $row_id, $training_id, $days );
 				$sendRay ['insert'] = $result;
 				if ($result == - 1) {

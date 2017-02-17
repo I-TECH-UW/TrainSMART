@@ -853,25 +853,18 @@ if ($this->setting ['display_region_c']) {
                         return;
                     }
 
-                    //TA:#345
-                    if (oIsTrainer.value == 0) {
-                        if(!confirm("<?php echo t('This person is not trainer.\n Would you like to make this person as a trainer before insert?');?>")){
-                            return;
-                        }
-                    }
-
                     //  if(oTrainerDays.value == "Days" || !oTrainerDays.value) {
                     //      alert('<?php echo t('Please enter the number of days for this').' '.t('trainer').'.';?>');
                     //   return;
                     //    }
-                    <?php if (@$this->setting['require_trainer_skill']) : ?>
+                    <?php //TA:#345 if (@$this->setting['require_trainer_skill']) : ?>
                     if (oIsTrainer.value == 0) {
                         if (confirm("<?php echo t('You must edit this person\'s').' '.t('trainer').' '.t('profile before adding them to this session.\n\nWould you like to do this now?');?>")) {
                             submitThenRedirect('<?php echo $this->base_url;?>/person/edit/id/' + oTrainerId.value + '/trainingredirect/<?php echo $this->row['id']; ?>/maketrainer/1/days/1' + '#training');
                         }
                         return;
                     }
-                    <?php  endif; ?>
+                    <?php // endif; ?>
 
                     //oButton.disabled = true;
 
