@@ -645,22 +645,33 @@
 					<div class="blockleft">Facility Name</div>
 					<div class="blockright">
 <?php
+    $hasFacility = false;
 	foreach ($this->facilities as $facility){
 		if ($facility['id'] == $this->postfacilityname){
 			echo $facility['facility_name'];
+			$hasFacility = true;
 		}
 	}
+	if (!$hasFacility) {
+	    echo "N/A";
+    }
 ?>
 					</div>
 					<div class="clear pad50"></div>
 
-					<div class="blockleft">Comments</div>
-					<div class="blockright">
+
+					<div class="blockheader">Comments</div>
+                    <div class="blockleft" style="font-weight: normal">
 <?php
-	echo $this->escape($this->comments);
+    if (isset($this->comments) && $this->comments) {
+        echo $this->escape($this->comments);
+    }
+    else {
+        echo "N/A";
+    }
 ?>
 					</div>
-					<div class="clear"></div>
+					<div class="clear pad50"></div>
 
 					<div class="clear"></div>
 					<div style="width :100%;">

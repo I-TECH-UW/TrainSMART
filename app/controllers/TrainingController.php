@@ -1226,12 +1226,12 @@ class TrainingController extends ReportFilterHelpers {
 			if ($action == 'add') {
 
 				$days = $this->getParam ( 'days' );
-				$result = TrainingToTrainer::addTrainerToTraining ( $row_id, $training_id, $days );
+ 				$result = TrainingToTrainer::addTrainerToTraining ( $row_id, $training_id, $days );
 				$sendRay ['insert'] = $result;
 				if ($result == - 1) {
 					$sendRay ['error'] = t ( 'This' ).' '.t( 'trainer' ).' '.t( 'is already in this training session.' );
-				}else if($result == null){//TA:20170208
-				    $sendRay ['error'] = t ( 'This person cannot be added to this training session. Please check if this person is trainer.' );
+				}else if($result == null){//TA:#345
+				    $sendRay ['error'] = t ( 'This person cannot be added to this training session.' );
 				}
 				$this->sendData ( $sendRay );
 
