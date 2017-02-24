@@ -545,93 +545,78 @@ class EmployeeController extends ReportFilterHelpers
             $this->doNoAccessError();
         }
 
+        $db = $this->dbfunc();
+
         $criteria = $this->getAllParams();
 
         $locations = Location::getAll();
+
         if ($criteria['go']) {
-            // process search
-            $where = array();
 
-            list($a, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
-            list($locationFlds, $locationsubquery) = Location::subquery($this->setting('num_location_tiers'), $location_tier, $location_id, true);
+            $select = $db->select()
+                ->from('employee', array());
 
-            $sql = "SELECT DISTINCT
-            employee.id,
-            employee.employee_code,
-            employee.gender,
-            employee.national_id,
-            employee.other_id,
-            link_employee_location.id_location as location_id,
-            /* TA:#293 display locations names comma separated*/
-            GROUP_CONCAT(DISTINCT province_name) as province_name, province_id,
-            GROUP_CONCAT(DISTINCT district_name) as district_name, district_id,
-            GROUP_CONCAT(DISTINCT region_c_name) as region_c_name, region_c_id,
-            GROUP_CONCAT(DISTINCT city_name) as city_name, city_id,
-            CONCAT(supervisor.first_name,
-            CONCAT(' ', supervisor.last_name)) as supervisor,
-            qual.qualification_phrase as staff_cadre,
-            site.facility_name,
-            category.category_phrase as staff_category,
-            GROUP_CONCAT(subpartner.partner) as subPartner,
-            GROUP_CONCAT( partner_funder_option.funder_phrase) as partnerFunder,
-            GROUP_CONCAT(mechanism_option.mechanism_phrase) as mechanism,
-            GROUP_CONCAT(link_mechanism_employee.percentage) as percentage
-            FROM    employee
-            left join link_employee_location on link_employee_location.id_employee=employee.id
-            LEFT JOIN    ($locationsubquery) as l ON l.id = link_employee_location.id_location
-            LEFT JOIN   employee supervisor ON supervisor.id = employee.supervisor_id
-            LEFT JOIN   facility site ON site.id = employee.site_id
-            LEFT JOIN   employee_qualification_option qual ON qual.id = employee.employee_qualification_option_id
-            LEFT JOIN   employee_category_option category ON category.id = employee.employee_category_option_id
-            LEFT JOIN   partner ON partner.id = employee.partner_id
-            LEFT JOIN   link_mechanism_employee on link_mechanism_employee.employee_id = employee.id
-            LEFT JOIN   mechanism_option on mechanism_option.id = link_mechanism_employee.mechanism_option_id
-            LEFT JOIN 	partner_funder_option on mechanism_option.funder_id = partner_funder_option.id
-            LEFT JOIN   link_mechanism_partner on link_mechanism_partner.mechanism_option_id = mechanism_option.id
-            LEFT JOIN   partner subpartner on subpartner.id = link_mechanism_partner.partner_id
-            ";
+            $select->joinLeft('link_employee_location', 'employee.id = link_employee_location.id_employee', array());
+            $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')),
+                'location.id = link_employee_location.id_location', array());
+            $select->joinLeft('partner', 'partner.id = employee.partner_id', array());
+            $select->joinLeft('facility', 'facility.id = employee.site_id', array());
+            $select->joinLeft('employee_qualification_option',
+                'employee_qualification_option.id = employee.employee_qualification_option_id', array());
 
-            // restricted access?? only show partners by organizers that we have the ACL to view
-            $org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'
-            if ($org_allowed_ids)
-                $where[] = " partner.organizer_option_id in ($org_allowed_ids) ";
+            $select->columns(array('employee.id', 'employee.employee_code',
+                'province_name' => "GROUP_CONCAT(DISTINCT location.province_name ORDER BY location.province_name ASC SEPARATOR ', ')",
+                'district_name' => "GROUP_CONCAT(DISTINCT location.district_name ORDER BY location.district_name ASC SEPARATOR ', ')",
+                'region_c_name' => "GROUP_CONCAT(DISTINCT location.region_c_name ORDER BY location.region_c_name ASC SEPARATOR ', ')",
+                'partner.partner', 'facility.facility_name', 'employee_qualification_option.qualification_phrase'));
+
+            $select->group('employee.id');
+
+            if (!$this->hasACL('training_organizer_option_all')) {
+                $user_id = $this->isLoggedIn();
+
+                $select->joinInner('user_to_organizer_access',
+                        'user_to_organizer_access.training_organizer_option_id = partner.organizer_option_id', array())
+                    ->where('user_to_organizer_access.user_id = ?', $user_id);
+            }
+
+            if (isset($criteria['employee_code']) && $criteria['employee_code']) {
+                $select->where('employee.employee_code like %?%', $criteria['employee_code']);
+            }
+
+            if (isset($criteria['partner_id']) && $criteria['partner_id']) {
+                $select->where('employee.partner_id = ?', $criteria['partner_id']);
+            }
+
+            if (isset($criteria['facilityInput']) && $criteria['facilityInput']) {
+                $select->where('employee.site_id = ?', $criteria['facilityInput']);
+            }
+
+            if (isset($criteria['employee_qualification_option_id']) && $criteria['employee_qualification_option_id']) {
+                $select->where('employee.employee_qualification_option_id = ?', $criteria['employee_qualification_option_id']);
+            }
+
+            if (isset($criteria['category_option_id']) && $criteria['category_option_id']) {
+                $select->where('employee.staff_category_id = ?', $criteria['category_option_id']);
+            }
 
             if ($locationWhere = $this->getLocationCriteriaWhereClause($criteria, '', '')) {
-                $where[] = $locationWhere;
+                $select->where($locationWhere);
             }
 
-            if ($criteria['employee_code']) $where[] = "employee.employee_code    like '%{$criteria['employee_code']}%'";
+            $this->view->assign('headers', array(t('ID'), t('Employee Code'), t('Region A (Province)'),
+                t('Region B (Health District)'), t('Region C (Local Region)'), t('Partner'),
+                t('Facility'), t('Staff Cadre')));
 
-            if ($criteria['partner_id']) $where[] = 'employee.partner_id   = ' . $criteria['partner_id']; //todo
+            // don't get column names in this fetch so they don't have to be filtered out of json output in the view
+            $oldFetchMode = $db->getFetchMode();
+            $db->setFetchMode(Zend_Db::FETCH_NUM);
+            
+            $this->view->assign('output', $db->fetchAll($select));
 
-            if ($criteria['facilityInput']) $where[] = 'employee.site_id      = ' . $criteria['facilityInput'];
-            if ($criteria['employee_qualification_option_id']) $where[] = 'employee.employee_qualification_option_id    = ' . $criteria['employee_qualification_option_id'];
-            if ($criteria['category_option_id']) $where[] = 'employee.staff_category_id = ' . $criteria['category_option_id'];
-
-            if (count($where))
-                $sql .= ' WHERE ' . implode(' AND ', $where);
-
-            $sql .= ' GROUP BY employee.id ';
-
-            $db = $this->dbfunc();
-            $rows = $db->fetchAll($sql);
-
-            // hack #TODO - seems Region A -> ASDF, Region B-> *Multiple Province*, Region C->null Will not produce valid locations with Location::subquery
-            // the proper solution is to add "Default" districts under these subdistricts, not sure if i can at this point the table is 12000 rows, todo later
-            foreach ($rows as $i => $row) {
-                if ($row['province_id'] == "" && $row['location_id']) { // empty province
-                    $updatedRegions = Location::getCityandParentNames($row['location_id'], $locations, $this->setting('num_location_tiers'));
-                    $rows[$i] = array_merge($row, $updatedRegions);
-                }
-            }
-
-            $this->viewAssignEscaped('results', $rows);
-            $this->viewAssignEscaped('count', count($rows));
-
-            if ($criteria ['outputType'] && $rows) {
-                $this->sendData($this->reportHeaders(false, $rows));
-            }
+            $db->setFetchMode($oldFetchMode);
         }
+
         // assign form drop downs
         $helper = new Helper();
 
