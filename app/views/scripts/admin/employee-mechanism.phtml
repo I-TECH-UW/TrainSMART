@@ -169,8 +169,8 @@ echo $this->partial('reports/employee-reports-common-javascript-header-partial.p
                         array('output' => $this->output, 'headers' => $this->headers, 'row_click_key' => 'id',
                             'row_click_prefix' => "updateMechanism(",
                             'row_click_suffix' => ");"));
-                    ?>
-                <?php } ?>
+                }
+                ?>
                 <br/>
                 <input type="button" name="new_mechanism_bottom" id="new_mechanism_bottom" onclick="updateMechanism(0);" value="<?php echo t('Add') . ' ' . t('Mechanism'); ?>" class="tsbutton green large">
                 <br/>
