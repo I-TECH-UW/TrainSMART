@@ -456,10 +456,12 @@
                         <input type="checkbox" name="is_active" id="is_active" style="margin : 4px 5px 12px 0px;" <?php echo (($this->employee['is_active'] === '1' || !$this->employee['is_active'])?'checked="checked"':'');?>>
 
                         <?php
-                        echo labelAndField($this, t('Staff Cadre'), $this->cadres, 'select_employee_qualification_option');
+                        //TA:#329 change order those two fields
                         if ($this->setting['display_employee_primary_role']) {
                             echo labelAndField($this, t('Primary Role'), $this->roles, 'select_employee_role_option');
                         }
+                        echo labelAndField($this, t('Staff Cadre'), $this->cadres, 'select_employee_qualification_option');
+                        
 
                         echo labelAndField($this, '<span class="required">*</span>' . t('Employee Code'),
                             $this->formText('employee_code', $this->employee['employee_code'], array('maxlength' => '15')));
