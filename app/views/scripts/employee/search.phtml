@@ -14,6 +14,7 @@
                 "bJQueryUI": true,
                 "bSort": true,
                 "sPaginationType": "full_numbers",
+                "iDisplayLength": 100,
                 "aaData" : <?php echo json_encode($this->output, JSON_HEX_APOS|JSON_HEX_QUOT); ?>,
                 "aoColumns" : <?php echo json_encode(array_map(function ($header) { return array('sTitle' => $header); }, $this->headers), JSON_HEX_APOS|JSON_HEX_QUOT);?>
             });
@@ -23,21 +24,6 @@
             $('.tablegrid tbody').css('cursor', 'pointer');
         });
 
-        function fnGetSelected( oTableLocal ){
-            var aReturn = new Array();
-            var aTrs = oTableLocal.fnGetNodes();
-
-            for ( var i=0 ; i<aTrs.length ; i++ ){
-                if ( $(aTrs[i]).hasClass('row_selected') ){
-                    aReturn.push( aTrs[i] );
-                }
-            }
-            return aReturn;
-        }
-
-        function goToEmployee(id) {
-            window.location = '/employee/edit/id/' + id;
-        }
 
     </script>
 
