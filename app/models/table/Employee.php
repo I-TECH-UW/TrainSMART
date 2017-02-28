@@ -113,4 +113,10 @@ class Employee extends ITechTable {
 	    return true;
 	}
 	
+	//TA:#329
+	public static function getAllEmployeeQualifications(){
+	    $linkTable = new ITechTable ( array ('name' => 'employee_qualification_option' ));
+	    $select = $linkTable->select();
+	    return $linkTable->fetchAll($select)->toArray();
+	}
 }

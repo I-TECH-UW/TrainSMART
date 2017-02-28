@@ -297,7 +297,10 @@ class EmployeeController extends ReportFilterHelpers
                 $params['is_active'] = $params['is_active']?'1':'0';//TA:#309
                 $params['employee_transition_complete_option_id'] = $params['employee_transition_complete_option_id']?$params['employee_transition_complete_option_id']:'0';
 
-                $status->checkRequired($this, 'employee_qualification_option_id', t('Staff Cadre'));
+                //TA:#329
+                $status->checkRequired($this, 'select_employee_qualification_option', t('Staff Cadre'));
+                $params['employee_qualification_option_id'] = explode("_", $params['select_employee_qualification_option'])[1];
+//                 $status->checkRequired($this, 'employee_qualification_option_id', t('Staff Cadre')); 
 
                 if ($this->setting('display_employee_primary_role')) {
                     $status->checkRequired($this, 'employee_role_option_id', t('Primary Role'));
@@ -502,6 +505,7 @@ class EmployeeController extends ReportFilterHelpers
         $this->view->assign('categories', DropDown::generateHtml('employee_category_option', 'category_phrase', $params['employee_category_option_id'], false, !$this->hasACL("edit_employee"), false));
         $this->view->assign('fulltime', DropDown::generateHtml('employee_fulltime_option', 'fulltime_phrase', $params['employee_fulltime_option_id'], false, !$this->hasACL("edit_employee"), false));
         $this->view->assign('roles', DropDown::generateHtml('employee_role_option', 'role_phrase', $params['employee_role_option_id'], false, !$this->hasACL("edit_employee"), false));
+        $this->view->assign('cadres_data',Employee::getAllEmployeeQualifications()); //TA:#329
         $this->view->assign('transitions', DropDown::generateHtml('employee_transition_option', 'transition_phrase', $params['employee_transition_option_id'], false, !$this->hasACL("edit_employee"), false));
         $this->view->assign('transitions_complete', DropDown::generateHtml('employee_transition_option', 'transition_phrase', $params['employee_transition_complete_option_id'], false, !$this->hasACL("edit_employee"), false, false, array('name' => 'employee_transition_complete_option_id'), true));
         $helper = new Helper();
