@@ -126,7 +126,7 @@ class Employee extends ITechTable {
 	    $tableObj = new Employee();
 	    $db = $tableObj->dbfunc();
 	    $query = "SELECT link_employee_facility.facility_id, link_employee_facility.fte_related, link_employee_facility.non_hiv, facility.type_option_id, facility.location_id FROM link_employee_facility 
-	    LEFT JOIN facility ON link_employee_facility.facility_id = facility.id WHERE (employee_id = $employee_id)";
+	    LEFT JOIN facility ON link_employee_facility.facility_id = facility.id WHERE (employee_id = $employee_id) order by link_employee_facility.id";
 	    $select = $db->query($query);
 	    return $select->fetchAll();
 	}
