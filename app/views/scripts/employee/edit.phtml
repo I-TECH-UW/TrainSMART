@@ -560,39 +560,40 @@
 //                 echo labelAndField($this, t('Site') . space . t('Type'), $this->site_types);
                 $helper = new Helper();
                 $db_locations_arr = $helper->get3TiersLocationsParentIds();
-                $links = '<a href="' . $this->base_url . '/site/add">' . t('Insert a New') . space . t('Site') . '</a>';
-                $links .= '<a href="' . $this->base_url . '/site/search">' . t('View/Edit') . space . t('Site') . '</a>';
+                $links = '<a href="' . $this->base_url . '/site/add">' . t('Insert a New') . space . t('Site') . '</a>&nbsp;&nbsp;';
+                $links .= '<a href="' . $this->base_url . '/site/search">' . t('View/Edit') . space . t('Site') . '</a>&nbsp;&nbsp;';
                 $links .= '<a href="" onClick="addFacilityRow(); return false;">' . t('Add Another Site') . '</a>';
-                echo labelAndField($this, '' , $links, '');
+                //echo labelAndField($this, '' , $links, '');
                 echo "<div id='sites_box'></div>";
                 $label = "<span style='font-size:11px; font-weight:bold; color:#696969;'>";
                 $SITES_CNT = 5;
-                //print_r($this->locations);
                 echo "<input type='hidden' id='sites_cnt' name='sites_cnt' value='$SITES_CNT'/>";
                 echo "<table border=0 width=100%><tbody>";
+                echo "<tr><td><table border=0 width=100%><tr><td width='765px'>&nbsp;</td><td>" . $links . "</td></tr></table></td></tr>";
                 for($i=1;$i<=$SITES_CNT; $i++){
                     $display = (($i == 1) || ($this->employee[$i.'_facilityInput']))?'inline':'none';
+                    $req = ($i == 1)?"<span class='required'>*</span>":"";
                     echo "<tr id='facility_box_$i' style='display:$display;'>";
                     echo "<td>";
-                    echo  $label . t('Region A (Province)') . "</span><br>";
+                    echo  $label . $req . t('Region A (Province)') . "</span><br>";
                     renderFilter($this->locations, 1, $i.'_province_id', $this->employee[$i.'_province_id'], ($this->setting['display_region_b']?$i.'_district_id':false), false, $this->viewonly);
                     echo "</td>";
                     echo "<td style='padding: 5px;'>";
-                    echo $label . t('Region B (Health District)') . "</span><br>";
+                    echo $label . $req . t('Region B (Health District)') . "</span><br>";
                     renderFilter($this->locations, 2, $i.'_district_id', $this->employee[$i.'_district_id'], ($this->setting['display_region_c']?$i.'_region_c_id':false), false, $this->viewonly);
                     echo "</td>";
                     echo "<td>";
-                    echo $label . t('Region C (Local Region)') . "</span><br>";
+                    echo $label . $req . t('Region C (Local Region)') . "</span><br>";
                     renderFilter($this->locations, 3, $i.'_region_c_id', $this->employee[$i.'_region_c_id'], ($this->setting['display_region_d']?$i.'_region_d_id':false), false, $this->viewonly);
                     echo "</td>";  
                     echo "<td style='padding: 5px;'>";
                     echo $label . t('Site Type') . "</span><br>" . renderFacilityTypesDropDown($this->site_types, $this->employee[$i.'_facilityType'], $this->viewonly, $i);
                     echo "</td>";
                     echo "<td>";
-                    echo $label . "<span class='required'>*</span>" . t('Site Name') . "</span><br>" . renderFacilityDropDownWithType($db_locations_arr, $this->facilities, $this->employee[$i.'_facilityInput'], $this->viewonly, $i, ($i == 1)?true:false);
+                    echo $label . $req . t('Site Name') . "</span><br>" . renderFacilityDropDownWithType($db_locations_arr, $this->facilities, $this->employee[$i.'_facilityInput'], $this->viewonly, $i, ($i == 1)?true:false);
                     echo "</td>";
                     echo "<td style='padding: 5px;'>";
-                    echo $label . t('HIV Related FTE') . "</span><br><input type='text' id='" . $i . "_fte_related' name='" . $i . "_fte_related' value='" . $this->employee[$i.'_fte_related'] ."' style='width:100px;'/>";
+                    echo $label . $req . t('HIV Related FTE') . "</span><br><input type='text' id='" . $i . "_fte_related' name='" . $i . "_fte_related' value='" . $this->employee[$i.'_fte_related'] ."' style='width:110px;'/>";
                     echo "</td>";
                     echo "<td style='padding: 5px;'>";
                     $checked = ($this->employee[$i .'_non_hiv'] === '1')?" checked='checked'":"";
@@ -605,6 +606,39 @@
                     echo "</td>";
                     echo "</div>";
                     echo "</tr>";
+                    echo "<script>
+                    elSubDistrict" . $i. " = YAHOO.util.Dom.get('" . $i. "_region_c_id');
+                    elFacilityType" . $i. " = YAHOO.util.Dom.get('" .$i."_facilityType');
+                    elFacilityName" . $i. " = YAHOO.util.Dom.get('" .$i."_facilityInput');
+                    elFTE_field" . $i. " = YAHOO.util.Dom.get('" .$i."_fte_related');
+                    elFTE_cb" . $i. " = YAHOO.util.Dom.get('" .$i."_non_hiv');
+                    YAHOO.util.Event.onDOMReady(function () {
+                            elSubDistrict" . $i. ".onchange();
+                    });
+                    elSubDistrict" . $i. ".onchange = function () {
+                        if(this.selectedIndex == 0){
+                            elFacilityType" . $i. ".disabled = true;
+                            elFacilityName" . $i. ".disabled = true;
+                            elFacilityType" . $i. ".selectedIndex = 0;
+                            elFacilityName" . $i. ".selectedIndex = 0;
+                        }else{
+                            elFacilityType" . $i. ".disabled = false;
+                            elFacilityName" . $i. ".disabled = false;
+                        }
+                         elFacilityName" . $i. ".onchange();
+                    }
+                    elFacilityName" . $i. ".onchange = function () {
+                        if(this.selectedIndex == 0){
+                            elFTE_field" . $i. ".disabled = true;
+                            elFTE_cb" . $i. ".disabled = true;
+                            elFTE_field" . $i. ".value = '';
+                            elFTE_cb" . $i. ".checked  = false;
+                        }else{
+                            elFTE_field" . $i. ".disabled = false;
+                            elFTE_cb" . $i. ".disabled = false;
+                        }
+                    }
+                    </script>";
                 }
                 echo "</tbody></table><br>";
                 ////////////// end #224.2
