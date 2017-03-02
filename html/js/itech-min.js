@@ -353,6 +353,19 @@ function setTrainingTitle(selectedIndex, categoryId, titleId)  {
   }
 }
 
+//TA:#329
+function setFilteredOption(selectedIndex, categoryId, titleId)  {
+	var catObj = YAHOO.util.Dom.get(categoryId), titleObj = YAHOO.util.Dom.get(titleId);
+  var selectedItem = titleObj.value;
+	if ( catObj ) {
+    filterSubTypeOptions(categoryId, titleId);
+	}
+
+  if ( selectedItem ) { //restore last choice (bugfix)
+    $('#'+titleId).val(selectedItem);
+  }
+}
+
 
 function openNearestDatePicker() {
 	$(this).siblings('input.datepicker').first().datepicker("show");

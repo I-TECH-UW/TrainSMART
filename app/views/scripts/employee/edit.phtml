@@ -455,11 +455,41 @@
                         <input type="checkbox" name="is_active" id="is_active" style="margin : 4px 5px 12px 0px;" <?php echo (($this->employee['is_active'] === '1' || !$this->employee['is_active'])?'checked="checked"':'');?>>
 
                         <?php
-                        echo labelAndField($this, t('Staff Cadre'), $this->cadres, 'employee_qualification_option_id');
+                        //TA:#329 change order those two fields and add filter
                         if ($this->setting['display_employee_primary_role']) {
                             echo labelAndField($this, t('Primary Role'), $this->roles, 'employee_role_option_id');
                         }
-
+                        ?>
+                        <div class="fieldLabel employee_qualification_option_id"><span class="required">*</span>Occupational Classification</div>
+	                    <div class="fieldInput">
+	                    <select id="employee_qualification_option_id" name="employee_qualification_option_id">
+                        <option value="">&mdash; <?php tp('select'); ?> &mdash;</option>
+                        <?php
+                        foreach ($this->cadres_data as $vals) { 
+                            $isSelected = ($vals['id'] && $vals['id'] === $this->employee['employee_qualification_option_id']) ? ' selected="selected"' : '';
+                            echo '<option value="' . $vals['role_option_id'] . '_' . $vals['id'] . '"' . $isSelected . '>' . $vals['qualification_phrase'] . '</option>';
+                        }
+                        ?>
+                    </select></div>
+                         <script>
+                         //TA:#329
+                    elCategory = YAHOO.util.Dom.get("select_employee_role_option");
+                    elTitle = YAHOO.util.Dom.get("employee_qualification_option_id");
+                    elCategory.onchange = function () {
+                    	setFilteredOption(this.selectedIndex, 'select_employee_role_option', 'employee_qualification_option_id');
+                    }
+                    setFilteredOption(elCategory.selectedIndex, 'select_employee_role_option', 'employee_qualification_option_id');
+                    training_title_id = "<?php print $this->cadres_data['employee_role_id'];?>";
+                    if (training_title_id) {
+                        for (var i = 0; i < elTitle.options.length; i++) {
+                            if (elTitle.options[i].value == elCategory.options[elCategory.selectedIndex].value + "_" + training_title_id) {
+                                elTitle.options[i].selected = true;
+                            }
+                        }
+                    }
+                </script>
+                        <?php
+                         
                         echo labelAndField($this, '<span class="required">*</span>' . t('Employee Code'),
                             $this->formText('employee_code', $this->employee['employee_code'], array('maxlength' => '15')));
 
