@@ -244,11 +244,19 @@
 					$(event.target.parentNode).addClass('row_selected');
 				});
 
-				/* Init the table */
+				/* Init the tables */
 				oTable = $('.tablegrid').dataTable({
 					"bJQueryUI": true,
 					"sPaginationType": "full_numbers"
 				});
+
+				/* init non-paging tables */
+                var fullTable = $('.tablegrid_show_all').dataTable({
+                    "bJQueryUI": true,
+                    "iDisplayLength": -1,
+                    "bLengthChange": false
+                });
+
 			} );
 
 			/* Get the rows which are currently selected */
@@ -271,7 +279,7 @@
 	<form method="post" name="studentform" id="studentform">
 		<input type="hidden" name="formaction" value="students">
 		<input type="hidden" name="id" id="id" value="<?php echo $this->id; ?>">
-		<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+		<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid_show_all" id="" style="width:100%">
 			<thead>
 				<tr>
 					<th><?php echo t('Student Id'); ?></th>
@@ -376,7 +384,7 @@
 	<form method="post" name="classform" id="classform">
 		<input type="hidden" name="classaction" id="classaction" value="classaction">
 		<input type="hidden" name="classid" id="classid" value="<?php echo $this->id; ?>">
-		<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+		<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid_show_all" id="" style="width:100%">
 			<thead>
 				<tr>
 					<th><?php echo t('Class Name'); ?></th>
