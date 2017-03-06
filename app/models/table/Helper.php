@@ -1589,7 +1589,7 @@ class Helper extends ITechTable
             $params['enddate'] = date("Y-m-d", strtotime($params['enddate']));
         }
         $this->dbfunc()->insert($linktable, $params);
-
+		return ($this->dbfunc()->lastInsertId($linktable));
 	}
 
 	public function addCadres($params){
@@ -1881,7 +1881,7 @@ class Helper extends ITechTable
 		}
 	}
 
-	public function updateCohortClasses($cid,$param){
+	public function updateCohortClasses($cid,$param, $delete = true){
 		$db = $this->dbfunc();
 		$ids = array();
 		foreach ($param['class'] as $class){
@@ -1900,15 +1900,17 @@ class Helper extends ITechTable
 				$this->dbfunc()->insert("link_cohorts_classes", $insert);
 			}
 		}
-		if (count ($ids) == 0){
-			# DELETED ALL LINKS
-			$query = "DELETE FROM link_cohorts_classes WHERE cohortid = '" . $cid . "'";
-			$db->query($query);
-		} else {
-			# REMOVE ANYTHING THAT'S NOT SELECTED
-			$query = "DELETE FROM link_cohorts_classes WHERE cohortid = " . $cid . " AND classid NOT IN (" . implode(",", $ids) . ")";
-			$select = $db->query($query);
-		}
+		if ($delete) {
+            if (count($ids) == 0) {
+                # DELETED ALL LINKS
+                $query = "DELETE FROM link_cohorts_classes WHERE cohortid = '" . $cid . "'";
+                $db->query($query);
+            } else {
+                # REMOVE ANYTHING THAT'S NOT SELECTED
+                $query = "DELETE FROM link_cohorts_classes WHERE cohortid = " . $cid . " AND classid NOT IN (" . implode(",", $ids) . ")";
+                $select = $db->query($query);
+            }
+        }
 	}
 
 	public function updateCohortPracticums($cid,$param){
@@ -2979,6 +2981,11 @@ class Helper extends ITechTable
 		return $ret;
 	}
 
+	public function getCourseTypes() {
+		$db = $this->dbfunc();
+        $s = $db->select()->from('lookup_coursetype', array('id', 'coursetype'))->order('coursetype ASC');
+        return ($db->fetchPairs($s));
+	}
 
     public function saveUserPrograms($uid, $ins)
     {
