@@ -15,8 +15,8 @@ $nav = ob_get_contents();
 ob_end_clean();
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
 	<title><?php echo $this->translation['Application Name'];?> | <?php echo t($this->pageTitle); ?></title>
 	<?php
@@ -59,30 +59,26 @@ ob_end_clean();
 							$("#_action").val("update");
 						}
 
-						// TODO: Enforce data validation on new fields when fields stop changing
-// 						if ($("#startdate").val() == ""){
-// 							alert ('Please enter a start date');
-// 							$("#startdate").focus();
-// 						} else if ($("#enddate").val() == ""){
-// 							alert ('Please enter an end date');
-// 							$("#enddate").focus();
-// 						} else if (Date.parse($("#enddate").val()) <= Date.parse($("#startdate").val())){
-//							alert ('<?php //echo t('The end date cannot be before the start date')?>');
-// 							$("#enddate").focus();
-// 						} else {
-// 							$( this ).dialog( "close" );
-// 							document.getElementById("adminform").submit();
-// 						}
-						
-						   $( this ).dialog( "close" );
-						document.getElementById("adminform").submit();
+ 						if ($("#startdate").val() == ""){
+ 							alert ('Please enter a start date');
+ 							$("#startdate").focus();
+ 						} else if ($("#enddate").val() == ""){
+ 							alert ('Please enter an end date');
+ 							$("#enddate").focus();
+ 						} else if (Date.parse($("#enddate").val()) <= Date.parse($("#startdate").val())){
+							alert ('<?php //echo t('The end date cannot be before the start date')?>');
+ 							$("#enddate").focus();
+ 						} else {
+ 							$( this ).dialog( "close" );
+ 							document.getElementById("adminform").submit();
+ 						}
 					},
 					"<?php echo t('Cancel') ?>": function() {
 						$( this ).dialog( "close" );
 					}
 				},
 				close: function() {
-					//allFields.val( "" ).removeClass( "ui-state-error" );
+
 				}
 			});
 
@@ -168,8 +164,6 @@ ob_end_clean();
 </head>
 <body  class="yui-skin-sam">
 <div id="dialog-form" title="Update class">
-	<p class="validateTips"><?php echo t('All form fields are required.')?></p>
-
 	<form method="post">
 		<fieldset>
 			<label for="classname"><?php echo t('Class name');?></label>
@@ -217,6 +211,7 @@ ob_end_clean();
 		<input type="hidden" name="currentid" id="currentid" class="text ui-widget-content ui-corner-all" />
 	</form>
 </div>
+
 <div id="pageHolder">
 	<div id="header"><?php echo $header; ?></div>
 	<div id="content" class="adminDiv">
@@ -251,7 +246,7 @@ ob_end_clean();
 					<?php
 					foreach ($this->lookup as $lookup){
 						?>
-						<tr class="GradeA" style="cursor : pointer;" onclick='edititem(<?php echo json_encode($lookup); ?>);'>
+						<tr class="GradeA" style="cursor : pointer;" onclick='edititem(<?php echo json_encode($lookup, JSON_HEX_QUOT|JSON_HEX_APOS); ?>);'>
 
 							<td><?php echo $lookup['id']; ?></td>
 							<td><?php echo $lookup['classname']; ?></td>

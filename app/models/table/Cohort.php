@@ -42,7 +42,7 @@ class Cohortedit extends ITechTable
 		return $row;	
 	}
 	
-	public function Listcohort($fetchlist) {
+	public function Listcohort() {
 		$db = $this->dbfunc();
 		$select = $db->query("select * from cohort ");
 		$row = $select->fetchAll();
@@ -434,7 +434,7 @@ class Cohortedit extends ITechTable
 		$rowArray = $this->dbfunc()->insert($this->_exams,$insert);
 	}
 	 
-	public function ListExams($fetchexams) {
+	public function ListExams() {
 		$db = $this->dbfunc();
 		$select = $db->query("select * from exams");
 		$row = $select->fetchAll();

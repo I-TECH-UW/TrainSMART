@@ -67,61 +67,93 @@ class CohortController extends ITechController {
 		$request = $this->getRequest();
 		
 		$helper = new Helper();
-		
-		if ((isset ($_POST['action'])) && ($_POST['action'] == "students")){
-			$helper->updateCohortStudents($request->getparam('id'), $_POST);
-			$this->_redirect ('cohort/cohortedit/id/' . $request->getparam('id'));
-		}
 
-		if (isset ($_POST['licenseaction'])){
-			$helper->updateCohortLicense($request->getparam('id'), $_POST);
-			$this->_redirect ('cohort/cohortedit/id/' . $request->getparam('id'));
-		}
+		if ($request->isPost()) {
 
-		if (isset ($_POST['classaction'])){
-			$helper->updateCohortClasses($request->getparam('id'), $_POST);
-			$this->_redirect ('cohort/cohortedit/id/' . $request->getparam('id'));
-		}
+            $params = $this->getAllParams();
 
-		if (isset ($_POST['practicumaction'])){
-			$helper->updateCohortPracticums($request->getparam('id'), $_POST);
-			$this->_redirect ('cohort/cohortedit/id/' . $request->getparam('id'));
-		}
-		
-		if (isset ($_POST['delpracticum'])){
-			$helper->deleteCohortPracticum($request->getparam('id'), $_POST);
-			$this->_redirect ('cohort/cohortedit/id/' . $request->getparam('id'));
-		}
+            // filter out keys from the frontend that aren't in the database
+            $frontend_keys = array('action', 'controller', 'formaction', 'module');
+            if (isset($params['formaction'])) {
 
-		if (isset ($_POST['dellicense'])){
-			$helper->deleteCohortLicense($request->getparam('id'), $_POST);
-			$this->_redirect ('cohort/cohortedit/id/' . $request->getparam('id'));
-		}
+                switch ($params['formaction']) {
+                    case 'addclass': {
+                        $cohort_id = $params['id'];
+                        array_push($frontend_keys, 'currentid', 'id');
+                        $columns = array_diff_key($params, array_flip($frontend_keys));
 
-		if(isset($_POST['update'])){
-			# UPDATING COHORT
-			$cohort = new Cohortedit();
-			$cohortid = $cohort->updateCohort($_POST);	
-		}
-		
-		// Cohort Update Query
-	    if(isset($_POST['updatecohort'])){
-			$cohortupdate = new Cohortedit();
-			$update = $cohortupdate->UpdateCohort($_POST);	
-		}
-		
-		// delete cohort ?
-		if(isset($_POST['deletecohort'])){
-			$cohortupdate = new Cohortedit();
-			
-	    	if( $cohortupdate->DeleteCohort($_POST) ){
-	    		header("Location:/cohort/");
-	    		exit;
-	    	}
-		}
-		
+                        $class_id = $helper->addClasses($columns);
+                        $helper->updateCohortClasses($cohort_id, array('class' => array($class_id => array('id' => $class_id))), false);
+                        break;
+                    }
+                    case 'editclass': {
+                        $params['id'] = $params['currentid'];
+                        array_push($frontend_keys, 'currentid');
+                        $columns = array_diff_key($params, array_flip($frontend_keys));
+                        $helper->updateClasses($columns);
+                        break;
+                    }
+                    case 'students': {
+                        $helper->updateCohortStudents($params['id'], $params);
+                        $this->_redirect('cohort/cohortedit/id/' . $params['id']);
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                }
+            }
+
+            if (isset ($_POST['licenseaction'])) {
+                $helper->updateCohortLicense($request->getparam('id'), $_POST);
+                $this->_redirect('cohort/cohortedit/id/' . $request->getparam('id'));
+            }
+
+            if (isset ($_POST['classaction'])) {
+                $helper->updateCohortClasses($request->getparam('id'), $_POST);
+                $this->_redirect('cohort/cohortedit/id/' . $request->getparam('id'));
+            }
+
+            if (isset ($_POST['practicumaction'])) {
+                $helper->updateCohortPracticums($request->getparam('id'), $_POST);
+                $this->_redirect('cohort/cohortedit/id/' . $request->getparam('id'));
+            }
+
+            if (isset ($_POST['delpracticum'])) {
+                $helper->deleteCohortPracticum($request->getparam('id'), $_POST);
+                $this->_redirect('cohort/cohortedit/id/' . $request->getparam('id'));
+            }
+
+            if (isset ($_POST['dellicense'])) {
+                $helper->deleteCohortLicense($request->getparam('id'), $_POST);
+                $this->_redirect('cohort/cohortedit/id/' . $request->getparam('id'));
+            }
+
+            if (isset($_POST['update'])) {
+                # UPDATING COHORT
+                $cohort = new Cohortedit();
+                $cohortid = $cohort->updateCohort($_POST);
+            }
+
+            // Cohort Update Query
+            if (isset($_POST['updatecohort'])) {
+                $cohortupdate = new Cohortedit();
+                $update = $cohortupdate->UpdateCohort($_POST);
+            }
+
+            // delete cohort ?
+            if (isset($_POST['deletecohort'])) {
+                $cohortupdate = new Cohortedit();
+
+                if ($cohortupdate->DeleteCohort($_POST)) {
+                    header("Location:/cohort/");
+                    exit;
+                }
+            }
+        }
+
 		$cohortlist = new Cohortedit();
-		$result = $cohortlist->Listcohort($fetchlist);	
+		$result = $cohortlist->Listcohort();
 		  
 		$this->view->assign('cohortfetch',$result);
 		  
@@ -154,43 +186,30 @@ class CohortController extends ITechController {
 		$this->view->assign('studentsgraduating',count($helper->getCohortStudents($cohortid,"graduating")));
 
 		//TA:#304 Let's take all students from this institution only
-		//$this->view->assign('allStudents',$cohort->getAllStudents($cohortid, true));
 		$this->view->assign('allStudents',$cohort->getAllStudents($cohortid, true, $details['institutionid']));
 		$this->view->assign('cohortStudents',$cohort->getAllStudents($cohortid));
 		$this->view->assign('licenses',$cohort->getLicenses($cohortid));
 		
 		$this->view->assign('facilities',$helper->getFacilities());
 		$this->view->assign('advisors',$helper->getAllTutors());
-		
 
-		  // For Graduation Requirements
-		  
-#		$requirementlist = new Cohortedit();
-#		$result = $requirementlist->ListRequirement($fetchrequire);	
-#		$this->view->assign('graduationfetch',$result);
-#		//$this->view->assign('action','../cohort/cohortgraduationedit');
-		
-		
 		$result = $helper->ListCurrentPracticum($cohortid);	
 		$this->view->assign('practicumfetch',$result);
-		//$this->view->assign('action','../cohort/cohortpracticumedit');
-		
+
 				
-		$result = $cohort->ListExams($fetchexams);	
+		$result = $cohort->ListExams();
 		$this->view->assign('fetchexams',$result);
-		//$this->view->assign('action','../cohort/cohortexamedit');
-		
+
 		$result = $cohort->ListClasses($this->setting('site_style'));
 		$this->view->assign('fetchclasses',$result);
 
 		$result = $helper->ListCurrentClasses($cohortid);	
 		$this->view->assign('fetchcurrentclasses',$result);
-		//$this->view->assign('action','../cohort/cohortclassedit');
-
 
 		$this->view->assign('lookupdegrees',$helper->getDegrees());
-		
-		//TA:97
+		$this->view->assign('coursetypes', $helper->getCourseTypes());
+
+        //TA:97
  		$dc = strtotime($details['timestamp_created']);
  		$dateCreated = $dc != '' && $dc > 0 ? date("d-m-Y",$dc) : t("N/A");
  		$this->view->assign('dateCreated', $dateCreated);
@@ -222,7 +241,6 @@ class CohortController extends ITechController {
 			$cohort = new Cohortedit();
 			$cohortid = $cohort->AddRequirement($cohortid,$_POST);	
 		}
-	
 	}
 	
 	public function cohortgraduationeditAction(){

@@ -1,3 +1,4 @@
+
 <html>
 	<head>
 		<title><?php echo $this->escape($this->title);?></title>
@@ -15,6 +16,7 @@
 			h1 { font-size: 1.2em; margin: .6em 0; }
 			.ui-dialog .ui-state-error { padding: .3em; }
 			.validateTips { border: 1px solid transparent; padding: 0.3em; }
+            .dataTables_wrapper { min-height: 0; }
 		</style>
 		<script>
 			$(function() {
@@ -34,9 +36,6 @@
 						<?php echo t('Cancel')?>: function() {
 							$( this ).dialog( "close" );
 						}
-					},
-					close: function() {
-						//allFields.val( "" ).removeClass( "ui-state-error" );
 					}
 				});
 
@@ -59,9 +58,6 @@
 						<?php echo t('Cancel')?>: function() {
 							$( this ).dialog( "close" );
 						}
-					},
-					close: function() {
-						//allFields.val( "" ).removeClass( "ui-state-error" );
 					}
 				});
 
@@ -77,7 +73,61 @@
 						$( "#dialog-form-license" ).dialog( "open" );
 				});
 
-				$( "#dialog-form-class" ).dialog({
+                $( "#dialog-form-edit-class" ).dialog({
+                    autoOpen: false,
+                    width: 550,
+                    modal: true,
+                    buttons: {
+                        "<?php echo t('Save') ?>": function() {
+
+                            if ($("#currentid").val() == 0){
+                                $("#_action").val("addnew");
+                            } else {
+                                $("#_action").val("update");
+                            }
+
+                            if ($("#classname").val() == "") {
+                                alert('Class Name is required');
+                                $("#classname").focus();
+                            }
+                            else if ($("#startdate").val() == ""){
+                                alert ('Please enter a start date');
+                                $("#startdate").focus();
+                            } else if ($("#enddate").val() == ""){
+                                alert ('Please enter an end date');
+                                $("#enddate").focus();
+                            } else if (Date.parse($("#enddate").val()) <= Date.parse($("#startdate").val())){
+                                alert ('<?php //echo t('The end date cannot be before the start date')?>');
+                                $("#enddate").focus();
+                            } else {
+                                $( this ).dialog( "close" );
+                                document.getElementById("editclass").submit();
+                            }
+                        },
+                        "<?php echo t('Cancel') ?>": function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+
+                $( "#addclassbutton" )
+                    .button()
+                    .click(function() {
+                        $('#dialog-form-edit-class').dialog('option', 'title', '<?php echo t('Add class')?>');
+                        $("#currentid").val("0");
+
+                        <?php // Note: the form action is being changed here by JavaScript ?>
+                        $("#editclassaction").val('addclass');
+
+                        $("#classname").val("");
+                        $("#startdate").val("");
+                        $("#enddate").val("");
+                        $("#coursetopic").val("");
+
+                        $("#dialog-form-edit-class" ).dialog("open");
+                    });
+
+            $( "#dialog-form-class" ).dialog({
 					autoOpen: false,
 					height: 460,
 					width: 750,
@@ -89,9 +139,6 @@
 						<?php echo t('Cancel')?>: function() {
 							$( this ).dialog( "close" );
 						}
-					},
-					close: function() {
-						//allFields.val( "" ).removeClass( "ui-state-error" );
 					}
 				});
 
@@ -114,9 +161,6 @@
 						<?php echo t('Cancel')?>: function() {
 							$( this ).dialog( "close" );
 						}
-					},
-					close: function() {
-						//allFields.val( "" ).removeClass( "ui-state-error" );
 					}
 				});
 
@@ -134,10 +178,32 @@
 
 						$( "#dialog-form-practicum" ).dialog( "open" );
 				});
-
-
 			});
-			function licenseedititem(iid,nm,dt){
+
+            function classedititem(d){
+
+                $('#dialog-form-edit-class').dialog('option', 'title', '<?php echo t('Update class')?>');
+                $("#currentid").val(d['id']);
+
+                <?php // Note: the form action is being changed here by JavaScript ?>
+                $("#editclassaction").val('editclass');
+
+                $("#classname").val(d['classname']);
+                $("#startdate").val(d['startdate']);
+                $("#enddate").val(d['enddate']);
+                $("#instructorid").val(d['instructorid']);
+                $("#coursetypeid").val(d['coursetypeid']);
+                $("#coursetopic").val(d['coursetopic']);
+
+                $("#class_modules_id").val(d['class_modules_id']);
+                $("#custom_1").val(d['custom_1']);
+                $("#credits").val(d['maxcredits']);
+                $("#custom_2").val(d['custom_2']);
+
+                $( "#dialog-form-edit-class" ).dialog( "open" );
+            }
+
+            function licenseedititem(iid,nm,dt){
 				$('#dialog-form-license').dialog('option', 'title', '<?php echo t('Update a license'); ?>');
 				$("#licenseid").val(iid);
 
@@ -178,13 +244,6 @@
 					$(event.target.parentNode).addClass('row_selected');
 				});
 
-				/* Add a click handler for the delete row */
-/*
-				$('#delete').click( function() {
-					var anSelected = fnGetSelected( oTable );
-					oTable.fnDeleteRow( anSelected[0] );
-				} );
-*/
 				/* Init the table */
 				oTable = $('.tablegrid').dataTable({
 					"bJQueryUI": true,
@@ -210,7 +269,7 @@
 
 <div id="dialog-form-student" title="<?php echo t("Update students")?>">
 	<form method="post" name="studentform" id="studentform">
-		<input type="hidden" name="action" id="action" value="students">
+		<input type="hidden" name="formaction" value="students">
 		<input type="hidden" name="id" id="id" value="<?php echo $this->id; ?>">
 		<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 			<thead>
@@ -264,6 +323,55 @@
 	</form>
 </div>
 
+<div id="dialog-form-edit-class" title="Update class">
+    <form method="post" name="editclass" id="editclass">
+        <input type="hidden" name="formaction" id="editclassaction">
+
+        <fieldset>
+            <label for="classname"><?php echo t('Class name');?></label>
+            <input type="text" name="classname" id="classname" class="text ui-widget-content ui-corner-all" />
+            <label for="coursetypeid"><?php echo t('Course Type');?></label>
+            <?php echo $this->formSelect('coursetypeid', '',
+                array('id' => 'coursetypeid', 'class' => 'text ui-widget-content ui-corner-all'),
+                $this->coursetypes); ?>
+            <label for="coursetopic"><?php echo t('Topic');?></label>
+            <input type="text" name="coursetopic" id="coursetopic" class="text ui-widget-content ui-corner-all" />
+            <label for="startdate"><?php echo t('Start date');?></label>
+            <input type="text" name="startdate" id="startdate" class="calendarbox text ui-widget-content ui-corner-all" />
+            <label for="enddate"><?php echo t('End date');?></label>
+            <input type="text" name="enddate" id="enddate" class="calendarbox text ui-widget-content ui-corner-all" />
+            <label for="instructorid"><?php echo t('Instructor');?></label>
+
+            <select name="instructorid" id="instructorid" class="text ui-widget-content ui-corner-all">
+                <?php
+                foreach ($this->advisors as $advisor) {
+                    echo "<option value='{$advisor['id']}'>{$advisor['first_name']} {$advisor['last_name']}</option>\n";
+                }
+                ?>
+            </select>
+            <?php if ($this->setting['site_style'] == 'skillsmart') { ?>
+                <label for="class_modules_id">Module</label>
+                <select name="class_modules_id" id="class_modules_id" class="text ui-widget-content ui-corner-all">
+                    <?php
+                    foreach ($this->modules as $module){
+                        echo "<option value=\"" . $module['id'] . "\">" . $module['external_id'] . " - " . $module['title'] . "</option>\n";
+                    }
+                    ?>
+                </select>
+                <label for="custom_1">Short Name</label>
+                <input type="text" name="custom_1" id="custom_1" class="text ui-widget-content ui-corner_all" />
+                <label for="credits">Credits</label>
+                <input type="text" name="credits" id="credits" class="text ui-widget-content ui-corner_all" />
+                <label for="custom_2">Weight</label>
+                <input type="text" name="custom_2" id="custom_2" class="text ui-widget-content ui-corner_all" />
+            <?php } ?>
+
+        </fieldset>
+        <input type="hidden" name="currentid" id="currentid" class="text ui-widget-content ui-corner-all" />
+    </form>
+</div>
+
+
 <div id="dialog-form-class" title="<?php echo t('Update classes')?>">
 	<form method="post" name="classform" id="classform">
 		<input type="hidden" name="classaction" id="classaction" value="classaction">
@@ -293,9 +401,9 @@
 							<?php } else { ?>
 								<td><input type="checkbox" name="class[<?php echo $classes['id']; ?>][id]" id="class[<?php echo $classes['id']; ?>][id]" value="<?php echo $classes['id']; ?>"<?php echo ($found ? " checked" : "") ?>> <?php echo $classes['classname']; ?></td>
 							<?php } ?>
-							<td class=""><?php echo $classes['first_name'] . " " . $classes['last_name']; ?></td>
-							<td class=""><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); } ?></td>
-							<td class=""><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); } ?></td>
+							<td><?php echo $classes['first_name'] . " " . $classes['last_name']; ?></td>
+							<td><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); } ?></td>
+							<td><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); } ?></td>
 						</tr>
 						<?php
 					}
@@ -520,6 +628,7 @@
 							</tbody>
 						</table>
 						<div style="text-align : right;">
+                            <br>
 							<input type="submit" name="licensepopupbutton" id="licensepopupbutton" value="<?php echo t('Add a license'); ?>" class="tsbutton green large">
 						</div>
 					</div>
@@ -545,16 +654,16 @@
 							<?php
 								foreach ($this->fetchcurrentclasses as $classes){
 									?>
-									<tr class="GradeA">
+									<tr class="GradeA" style="cursor : pointer;" onclick='classedititem(<?php echo json_encode($classes, JSON_HEX_QUOT|JSON_HEX_APOS); ?>);'>
 										<td class="">
 											<?php if ($this->setting['site_style'] == 'skillsmart') {
 												echo $classes['custom_1'];
 											} else {
 												echo $classes['classname'];
 											}?></td>
-										<td class="" style=" width : 160px;"><?php echo $classes['first_name'] . " " . $classes['last_name'];?></td>
-										<td class="" style=" width : 120px;"><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); }?></td>
-										<td class="" style=" width : 120px;"><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); }?></td>
+										<td style="width : 160px;"><?php echo $classes['first_name'] . " " . $classes['last_name'];?></td>
+										<td style="width : 120px;"><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); }?></td>
+										<td style="width : 120px;"><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); }?></td>
 									</tr>
 									<?php
 								}
@@ -562,6 +671,8 @@
 							</tbody>
 						</table>
 						<div style="text-align : right;">
+                            <br>
+                            <input type="button" name="addclassbutton" id="addclassbutton" value="<?php echo t('Add Class'); ?>" class="tsbutton green large">
 							<input type="submit" name="classpopupbutton" id="classpopupbutton" value="<?php echo t('Update associated classes'); ?>" class="tsbutton green large">
 						</div>
 					</div>
@@ -603,6 +714,7 @@
 							</tbody>
 						</table>
 						<div style="text-align : right;">
+                            <br>
 							<input type="submit" name="practicumpopupbutton" id="practicumpopupbutton" value="<?php echo t('Add a practicum'); ?>" class="tsbutton green large">
 						</div>
 					</div>
