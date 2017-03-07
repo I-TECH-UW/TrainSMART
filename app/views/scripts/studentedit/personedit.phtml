@@ -68,9 +68,6 @@
 						<?php echo t('Cancel')?>: function() {
 							$( this ).dialog( "close" );
 						}
-					},
-					close: function() {
-						//allFields.val( "" ).removeClass( "ui-state-error" );
 					}
 				});
 
@@ -86,15 +83,12 @@
 					width: 750,
 					modal: true,
 					buttons: {
-						<?php echo t('Update')?>: function() {
+						"<?php echo t('Update')?>": function() {
 							document.getElementById('classform').submit();
 						},
-						<?php echo t('Cancel')?>: function() {
+						"<?php echo t('Cancel')?>": function() {
 							$( this ).dialog( "close" );
 						}
-					},
-					close: function() {
-						//allFields.val( "" ).removeClass( "ui-state-error" );
 					}
 				});
 
@@ -110,15 +104,12 @@
 					width: 750,
 					modal: true,
 					buttons: {
-						<?php echo t('Update')?>: function() {
+						"<?php echo t('Update')?>": function() {
 							document.getElementById('practicumform').submit();
 						},
-						<?php echo t('Cancel')?>: function() {
+						"<?php echo t('Cancel')?>": function() {
 							$( this ).dialog( "close" );
 						}
-					},
-					close: function() {
-						//allFields.val( "" ).removeClass( "ui-state-error" );
 					}
 				});
 
@@ -153,7 +144,7 @@
 					$("#studenttype").val(0);
 				} else {
 
-					//check if student was associated with selected cohort before
+					// check if student was associated with selected cohort before
 					for(i=0;i<cohort_ids.length; i++){
 						if(cohort_ids[i] == $("#cohortid").val()){
 							alert("This student cannot be associated with selected cohort.");
@@ -371,9 +362,9 @@
 								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
 	foreach ($this->getcohorts as $cohort){
-		if (trim($cohort[cohortname]) != ""){
+		if (trim($cohort['cohortname']) != ""){
 ?>
-								<option value="<?php echo $cohort[id]; ?>"<?php echo ($this->escape($this->cohortid) == $cohort[id] ? " selected" : "") ?>><?php echo $cohort[cohortname] . (trim($cohort[cohortid]) != "" ? " [" . trim($cohort[cohortid]) . "]" : ""); ?></option>
+								<option value="<?php echo $cohort['id']; ?>"<?php echo ($this->escape($this->cohortid) == $cohort['id'] ? " selected" : "") ?>><?php echo $cohort['cohortname'] . (trim($cohort['cohortid']) != "" ? " [" . trim($cohort['cohortid']) . "]" : ""); ?></option>
 <?php
 		}
 	}
@@ -555,10 +546,6 @@
 							<p style="float:left;font-size:14px;"><?php echo t('Student Information'); ?></p>
 							<div class="pad20 clear"></div><br>
 
-							<!-- TA:83 <label><?php //echo t('Student ID'); ?></label>
-							<input type="text" name="studentid" id="studentid" value="<?php //echo $this->escape($this->studentid);?>">
-                            -->
-                            
 							<!-- TA: added 07/22/2014 START -->
 							<?php
 								if($this->escape($this->label_ps_religious_denomin)){
@@ -596,8 +583,6 @@
 							<input type="button" value="<?php echo t('Remove separation date'); ?>" style="padding : 2px; position : relative; left : 24px; margin-bottom : 10px;" onclick="document.getElementById('separationdate').value = '';document.getElementById('separationreason').selectedIndex = 0;">
 
 							<label><?php echo t('Reason for Separation'); ?></label>
-<!--							<input type="text" name="separationreason"
-							value="<?php echo $this->escape($this->separationreason);?>"> -->
 							<select name="separationreason" id="separationreason" class="comboeditable"<?php echo !$this->hascohort ? " disabled" : "";?>>
 								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
@@ -614,9 +599,9 @@
 								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
 	foreach ($this->getcadres as $cadre){
-		if (trim($cadre[cadrename]) != ""){
+		if (trim($cadre['cadrename']) != ""){
 ?>
-								<option value="<?php echo $cohort[id]; ?>"<?php echo ($this->escape($this->cadre) == $cadre[id] ? " selected" : "") ?>><?php echo $cadre[cadrename]; ?></option>
+								<option value="<?php echo $cohort['id']; ?>"<?php echo ($this->escape($this->cadre) == $cadre[id] ? " selected" : "") ?>><?php echo $cadre['cadrename']; ?></option>
 <?php
 		}
 	}
@@ -722,9 +707,6 @@
 							<div class="clear pad20"></div>
 						 	<p style="float : left;"><?php echo t('Facility After Graduation'); ?></p>
 							<div class="clear pad20"></div>
-
-<!--TA: fixed bug: 08/04/2014: Provine and District are displayed twice  -->
-<?php //region_filters_dropdown_ps($this, 'post'); //TA: also this code not working to submit info into DB ?> 
 
 							  <label id="province_id_lbl"><?php echo (@$this->translation['Region A (Province)']); ?></label>
 <?php renderFilter($this->locations, 1, 'postgeo1', $this->postgeo1, 'postgeo2');?>
