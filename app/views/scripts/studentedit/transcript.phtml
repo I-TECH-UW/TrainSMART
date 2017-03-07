@@ -92,8 +92,8 @@
     <?php
     $shown = false;
     foreach ($this->gettitle as $fetchtitle) {
-        if ($this->escape($this->selid) == $fetchtitle[id]) {
-            echo $fetchtitle[title_phrase];
+        if ($this->escape($this->selid) == $fetchtitle['id']) {
+            echo $fetchtitle['title_phrase'];
             $shown = true;
         }
     }
@@ -112,7 +112,7 @@
 </div>
 <div class="clear"></div>
 
-<div class="blockleft">School ID</div>
+<div class="blockleft"><?php echo t('Student ID'); ?></div>
 <div class="blockright">
     <?php
     echo trim($this->escape($this->nationalid)) != "" ? $this->escape($this->nationalid) : "N/A";
@@ -386,7 +386,7 @@
 <div class="clear pad50"></div>
 
 <div class="blockheader">Student Information</div>
-<div class="blockleft">Student ID</div>
+<div class="blockleft">TrainSMART ID</div>
 <div class="blockright">
     <?php
     echo $this->escape($this->id);
