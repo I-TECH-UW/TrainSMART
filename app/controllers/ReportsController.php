@@ -8971,7 +8971,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					'i.fax',
 					'saqa_id' => 'p.custom_field2',
 					'nqf_max' => new Zend_Db_Expr($db->quote('3')),
-					's.id',
+					'student_id' => 's.id',
 				)
 			);
 
