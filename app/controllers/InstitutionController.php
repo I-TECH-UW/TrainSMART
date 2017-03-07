@@ -111,7 +111,7 @@ class InstitutionController extends ITechController
 		$institutedit = new Institution();
 		$details=$institutedit->Editinstitute($instituteid);
 
-		$this->view->assign('insid',$institudeid);
+		$this->view->assign('insid',$instituteid);
 
 
 		# PRESENTING MULTI-SELECT OPTIONS

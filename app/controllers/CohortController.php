@@ -451,210 +451,35 @@ class CohortController extends ITechController {
 	
 	//TA:#362
 	public function transcriptAction(){
-	    $output = '';
+	    $helper = new Helper();
 	    $request = $this->getRequest();
 	    $cohortid = $request->getparam('id');
 	    $cohortedit = new Cohortedit();
-		$details=$cohortedit->EditCohort($cohortid);
+		$cohort=$cohortedit->EditCohort($cohortid);
+		$this->view->assign('cohort', $cohort);
+		$this->view->assign('degree', $helper->getDegree($cohort['degree'])[0]['degree']);
+		$students_final = array();
+		$students = $cohortedit->getAllStudents($cohortid);
+		foreach ($students as $row) {
+		    $row['classes'] = $helper->listcurrentclasses($cohortid, $row['sid']);
+		    array_push($students_final,$row);
+		}
+		$this->view->assign('students', $students_final);
+		require_once ('models/table/Institution.php');
+		$institute = new Institution();
+		$institution=$institute->Editinstitute($cohort['institutionid']);
+		$this->view->assign('institution', $institution);
+	    require_once ('models/table/Location.php');
+		list($fields, $query)  = Location::subquery($this->setting('num_location_tiers'), false, $institution['geography3'], false);
+		$sql = "select * from (" . $query . ") as t where t.id=" . $institution['geography3'];
+		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+		$db = $this->dbfunc();
+		$signor = $db->fetchAll($sql);
+		$this->view->assign('location', $location[0]);
 		
-	    $output .= $cohortid;
-		
-		$this->view->assign('output', $output);
+		$signor = $institute->getStaffTranscriptSignor($cohort['institutionid']);
+		$this->view->assign('signor', $signor[0]);
 	    
-// 	    require_once('models/table/Studentedit.php');
-// 	    $request = $this->getRequest();
-// 	    $helper = new Helper();
-	
-// 	    $this->viewAssignEscaped('locations', Location::getAll());
-// 	    $params = $this->getAllParams();
-// 	    if (isset($params['licenseaction'])) {
-// 	        $helper->updateStudentLicense($request->getparam('id'), $params);
-// 	        $this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personview/id/' . $params['id']);
-// 	    }
-// 	    if (isset($params['classaction'])) {
-// 	        $helper->updateStudentClass($request->getparam('id'), $params);
-// 	        $this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personview/id/' . $params['id']);
-// 	    }
-// 	    if (isset($params['practicumaction'])) {
-// 	        $helper->updateStudentPracticum($request->getparam('id'), $params);
-// 	        $this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personview/id/' . $params['id']);
-// 	    }
-	
-	
-// 	    // UPDATING FIRST, SO WE WILL LATER RETRIEVE UPDATED VALUES
-// 	    if (isset($params['personupdate'])) {
-// 	        require_once('models/table/Studentedit.php');
-	
-// 	        $studentupdate = new Studentedit();
-// 	        $update = $studentupdate->UpdatePerson($params);                        # STORING PERSON RECORD
-// 	        $update = $studentupdate->UpdateStudent($params);                    # STORING STUDENT RECORD
-// 	        $update = $studentupdate->UpdateStudentCohort($params);                # STORING COHORT LINK
-// 	        $update = $studentupdate->UpdatePermanentAddress($params);            # STORING PERMANENT ADDRESS
-// 	        $update = $studentupdate->UpdateFunding($params);                    # STORING FUNDING
-// 	    }
-	
-	
-// 	    $pupiladd = $request->getParam('id');
-	
-// 	    $this->view->assign('id', $pupiladd);
-	
-// 	    $this->viewAssignEscaped('locations', Location::getAll());
-// 	    $studentedit = new Studentedit();
-// 	    $details = $studentedit->EditStudent($pupiladd);
-// 	    $sid = $details['student'][0]['id']; //TA:#319
-	
-// 	    #print_r ($details);
-	
-// 	    $date = $details['person'][0]['birthdate'];
-// 	    $dob = date("d-m-Y", strtotime($date));
-	
-// 	    $this->view->assign('id', $pupiladd);
-// 	    $this->view->assign('selid', $details['person'][0]['title_option_id']);
-// 	    $this->view->assign('firstname', $details['person'][0]['first_name']);
-// 	    $this->view->assign('middlename', $details['person'][0]['middle_name']);
-// 	    $this->view->assign('lastname', $details['person'][0]['last_name']);
-// 	    $this->view->assign('gender', $details['person'][0]['gender']);
-// 	    $this->view->assign('dob', $dob);
-// 	    $this->view->assign('localgeo1', $details['student'][0]['geog1']);
-// 	    $this->view->assign('localgeo2', $details['student'][0]['geog2']);
-// 	    $this->view->assign('localgeo3', $details['student'][0]['geog3']);
-// 	    $this->view->assign('address1', $details['person'][0]['home_address_1']);
-// 	    $this->view->assign('address2', $details['person'][0]['home_address_2']);
-// 	    $this->view->assign('city', $details['person'][0]['home_city']);
-// 	    $this->view->assign('zip', $details['person'][0]['home_postal_code']);
-// 	    $this->view->assign('enroll', $details['person'][0]['home_address_2']);
-// 	    $this->view->assign('email', $details['person'][0]['email']);
-// 	    $this->view->assign('email2', $details['person'][0]['email_secondary']);
-// 	    $this->view->assign('titid', $details['person'][0]['title_option_id']);
-// 	    $this->view->assign('phone', $details['person'][0]['phone_work']);
-// 	    $this->view->assign('cell', $details['person'][0]['phone_mobile']);
-// 	    $this->view->assign('nationalid', $details['person'][0]['national_id']);
-// 	    $this->view->assign('graduated', $details['student'][0]['isgraduated']);
-// 	    $this->view->assign('cohortid', $details['link_cohort'][0]['id_cohort']);
-	
-// 	    $this->view->assign('facilities', $helper->getFacilities());
-	
-// 	    if ($details['link_cohort'][0]['id_cohort'] != 0) {
-// 	        $this->view->assign('allclasses', $helper->listcurrentclasses($details['link_cohort'][0]['id_cohort']));
-// 	        $this->view->assign('allpracticum', $helper->ListCurrentPracticum($details['link_cohort'][0]['id_cohort']));
-// 	        $this->view->assign('alllicenses', $helper->ListCurrentLicenses($details['link_cohort'][0]['id_cohort']));
-// 	        //TA:#319 use $sid not $details['person'][0]['id']
-// 	        $this->view->assign('currentclasses', $helper->listcurrentclasses($details['link_cohort'][0]['id_cohort'], $sid));
-// 	        $this->view->assign('currentpracticum', $helper->ListCurrentPracticum($details['link_cohort'][0]['id_cohort'], $sid));
-// 	        $this->view->assign('currentlicenses', $helper->ListCurrentLicenses($details['link_cohort'][0]['id_cohort'], $sid));
-// 	    } else {
-// 	        $this->view->assign('currentclasses', array());
-// 	        $this->view->assign('currentpracticum', array());
-// 	        $this->view->assign('currentlicenses', array());
-// 	    }
-	
-	
-// 	    # PERMANENT ADDRESS
-// 	    $this->view->assign('permanentgeo1', $details['permanent_address'][0]['id_geog1']);
-// 	    $this->view->assign('permanentgeo2', $details['permanent_address'][0]['id_geog2']);
-// 	    $this->view->assign('permanentgeo3', $details['permanent_address'][0]['id_geog3']);
-// 	    $this->view->assign('permanentaddress1', $details['permanent_address'][0]['address1']);
-// 	    $this->view->assign('permanentaddress2', $details['permanent_address'][0]['address2']);
-// 	    $this->view->assign('permanentcity', $details['permanent_address'][0]['city']);
-// 	    $this->view->assign('permanentzip', $details['permanent_address'][0]['postalcode']);
-	
-// 	    # STUDENT VIEW
-// 	    $this->view->assign('studentid', $details['student'][0]['studentid']);
-// 	    $this->view->assign('studenttype', $details['student'][0]['studenttype']);
-// 	    $this->view->assign('comments', $details['student'][0]['comments']);
-	
-// 		if (count($details['link_cohort']) == 0) {
-// 	    $joindate = "";
-// 	    $dropdate = "";
-// 	    $joinreason = 0;
-// 	    $dropreason = 0;
-// 	    } else {
-// 			$joindate = $details['link_cohort'][0]['joindate'] == "0000-00-00" ? "" : date("m/d/Y", strtotime($details['link_cohort'][0]['joindate']));
-// 			$dropdate = $details['link_cohort'][0]['dropdate'] == "0000-00-00" ? "" : date("m/d/Y", strtotime($details['link_cohort'][0]['dropdate']));
-// 			$joinreason = $details['link_cohort'][0]['joinreason'];
-// 			$dropreason = $details['link_cohort'][0]['dropreason'];
-// 		}
-// 		$this->view->assign('enrollmentdate', $joindate);
-// 		$this->view->assign('enrollmentreason', $joinreason);
-// 		$this->view->assign('separationdate', $dropdate);
-// 		$this->view->assign('separationreason', $dropreason);
-	
-// 			    $this->view->assign('cadre', $details['student'][0]['cadre']);
-// 			        $this->view->assign('advisor', $details['student'][0]['advisorid']);
-	
-// 			            $this->view->assign('fundingsource', $details['funding'][0]['fundingsource']);
-// 			                $this->view->assign('fundingamount', $details['funding'][0]['fundingamount']);
-	
-// 			                // POST GRADUATION FIELDS
-// 			                $this->view->assign('postgeo1', $details['student'][0]['postgeo1']);
-// 			                $this->view->assign('postgeo2', $details['student'][0]['postgeo2']);
-// 			                $this->view->assign('postgeo3', $details['student'][0]['postgeo3']);
-// 		$this->view->assign('postaddress1', $details['student'][0]['postaddress1']);
-// 		$this->view->assign('postfacilityname', $details['student'][0]['postfacilityname']);
-	
-// 			$helper = new Helper();
-	
-// 			                $this->view->assign('joinreasons', $helper->getReasons('join'));
-// 			                $this->view->assign('dropreasons', $helper->getReasons('drop'));
-	
-	
-// 			                // For Title List
-// 			                $listtitle = $studentedit->ListTitle();
-// 			                $this->view->assign('gettitle', $listtitle);
-	
-// 			                # GETTING COHORTS
-// 			                $listcohort = $studentedit->ListCohort();
-// 			                $this->view->assign('getcohorts', $listcohort);
-	
-// 			                # GETTING CADRES
-// 			                $listcadre = $studentedit->listCadre();
-// 			                $this->view->assign('getcadres', $listcadre);
-	
-// 			                # GETTING TUTORS
-// 			                $listtutors = $studentedit->ListTutors();
-// 			                $this->view->assign('gettutors', $listtutors);
-	
-// 			                # NATIONALITY INFO
-// 			                $helper = new Helper();
-// 			                $this->view->assign('lookupnationalities', $helper->getNationalities());
-// 			                $this->view->assign('nationalityid', $details['student'][0]['nationalityid']);
-	
-// 		if (count($details['link_cohort']) > 0) {
-// 			$this->view->assign('hascohort', true);
-	
-// 			#$cstartdate = $details['cohort'][0]['startdate'];
-// 			$cstartdate = $joindate;
-// 			                #echo '<pre>';var_dump($details);die();
-// 			                if ($cstartdate) {
-// 			                $joindate = $details['link_cohort'][0]['joindate'] == "0000-00-00" ? "" : date("m/d/Y", strtotime($details['link_cohort'][0]['joindate']));
-// 			                $dropdate = $details['link_cohort'][0]['dropdate'] == "0000-00-00" ? "" : date("m/d/Y", strtotime($details['link_cohort'][0]['dropdate']));
-	
-// 			                $lastclass = $dropdate ? $dropdate : date("m/d/Y");  // seperate date or today
-// 				$yearofstudy = intval((strtotime($lastclass) - strtotime($cstartdate)) / 31536000 + 1); // time spent in class / seconds in a year + 1 year to show 1 year if 6mo of class or whatever
-// 	}
-	
-// 			                $this->view->assign('yearofstudy', $cstartdate ? $yearofstudy : "");
-	
-// 			                if (count($details['cadre']) > 0) {
-// 			                $cadre = $details['cadre'][0]['id'];
-// 				} else {
-// 					$cadre = 0;
-// 				}
-	
-	
-// 			} else {
-// 				$this->view->assign('hascohort', false);
-// 				$this->view->assign('yearofstudy', "");
-// 				$cadre = 0;
-// 			}
-	
-// 			$this->view->assign('lookupstudenttypes', $helper->getStudentTypes());
-// 			$this->view->assign('cadre', $cadre);
-	
-	
-// 			$this->view->assign('lookupfunding', $helper->getFunding());
-// 			$this->view->assign('studentfunding', $studentedit->getStudentFunding($details['student'][0]['id']));
-	
 		}
 
 }

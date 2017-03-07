@@ -822,6 +822,15 @@ class Helper extends ITechTable
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
+	
+	//TA:#362
+	public function getDegree($id) {
+	    $select = $this->dbfunc()->select()
+	    ->from("lookup_degrees")
+	    ->where("id = ?",$id);
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return $result;
+	}
 
 	public function getDegreeTypes() {
 		$select = $this->dbfunc()->select()
