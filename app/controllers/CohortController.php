@@ -478,6 +478,7 @@ class CohortController extends ITechController {
 		$this->view->assign('location', $location[0]);
 		
 		$signor = $institute->getStaffTranscriptSignor($cohort['institutionid']);
+		print_r($signor);
 		$this->view->assign('signor', $signor[0]);
 	    
 		}
