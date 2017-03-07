@@ -5,7 +5,6 @@
     <style>
         @page {
             size: auto;
-            /*margin: 32pt 32pt 32pt 32pt;*/
         }
 
         @media screen {
@@ -30,6 +29,10 @@
                 page-break-inside: avoid;
                 page-break-after: auto;
                 page-break-before: auto;
+            }
+            .resultsTable {
+                width: 100%;
+                page-break-after: always;
             }
         }
         .resultsTable {
