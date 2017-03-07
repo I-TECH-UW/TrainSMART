@@ -44,9 +44,14 @@
 					"sPaginationType": "full_numbers"
 				});
 
-                /* init non-paging tables */
+                <?php
+                /* init non-paging tables - workaround for the checkboxes that are not registering because they
+                    are not visible
+                */
+                ?>
                 var fullTable = $('.tablegrid_show_all').dataTable({
                     "bJQueryUI": true,
+                    "bFilter": false,
                     "iDisplayLength": -1,
                     "bLengthChange": false
                 });
