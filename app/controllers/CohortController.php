@@ -448,6 +448,40 @@ class CohortController extends ITechController {
 		$this->view->assign('lookup_cadres', $helper->getUserAllowedCadreNames($user_id));
 		
 	}
+	
+	//TA:#362
+	public function transcriptAction(){
+	    $helper = new Helper();
+	    $request = $this->getRequest();
+	    $cohortid = $request->getparam('id');
+	    $cohortedit = new Cohortedit();
+		$cohort=$cohortedit->EditCohort($cohortid);
+		$this->view->assign('cohort', $cohort);
+		$this->view->assign('degree', $helper->getDegree($cohort['degree'])[0]['degree']);
+		$students_final = array();
+		$students = $cohortedit->getAllStudents($cohortid);
+		foreach ($students as $row) {
+		    $row['classes'] = $helper->listcurrentclasses($cohortid, $row['sid']);
+		    array_push($students_final,$row);
+		}
+		$this->view->assign('students', $students_final);
+		require_once ('models/table/Institution.php');
+		$institute = new Institution();
+		$institution=$institute->Editinstitute($cohort['institutionid']);
+		$this->view->assign('institution', $institution);
+	    require_once ('models/table/Location.php');
+		list($fields, $query)  = Location::subquery($this->setting('num_location_tiers'), false, $institution['geography3'], false);
+		$sql = "select * from (" . $query . ") as t where t.id=" . $institution['geography3'];
+		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+		$db = $this->dbfunc();
+		$signor = $db->fetchAll($sql);
+		$this->view->assign('location', $location[0]);
+		
+		$signor = $institute->getStaffTranscriptSignor($cohort['institutionid']);
+		print_r($signor);
+		$this->view->assign('signor', $signor[0]);
+	    
+		}
 
 }
 ?>

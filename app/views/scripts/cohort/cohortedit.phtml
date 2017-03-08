@@ -471,7 +471,8 @@
 			<div id="content">
 				<div id="subcontent">
 					<div id="contentheader">
-						<h2><?php echo t('Edit/View Cohort Record'); ?></h2>
+						<h2><?php echo t('Edit/View Cohort Record'); ?>
+						</h2>
 					</div>
 					<div class="pad50 clear"></div>
 					<form  id="cohortedit" method="post" class="formvalidate">
@@ -553,7 +554,10 @@
 						<b><?php echo t('Created by'); ?></b>&nbsp;<?php echo $this->creator; ?><br>
 						<b><?php echo t('Date updated'); ?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
 						<b><?php echo t('Updated by'); ?></b>&nbsp;<?php echo $this->updater; ?><br>
-						
+						<!-- TA:#362 -->
+						<hr>
+						<a href="<?php echo Settings::$COUNTRY_BASE_URL; ?>/cohort/transcript/id/<?php echo $this->escape($this->id); ?>" target="_blank" ><?php echo t('Create a new Official Transcript')?></a> <br/>
+                          
 						</div>
 				</td>
 				</td></tr>
