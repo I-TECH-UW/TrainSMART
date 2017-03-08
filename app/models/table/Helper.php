@@ -1145,14 +1145,6 @@ class Helper extends ITechTable
 		return $result;
 	}
 
-	public function AdminClasses(){
-		$select = $this->dbfunc()->select()
-			->from("classes")
-			->order('classname');
-		$result = $this->dbfunc()->fetchAll($select);
-		return $result;
-	}
-
 	public function AdminCadres(){
 		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
 		$select = $this->dbfunc()->select()
@@ -2188,6 +2180,17 @@ class Helper extends ITechTable
 		$db = $this->dbfunc();
 		$query = "DELETE FROM licenses WHERE id = " . addslashes($param['dellicense']);
 		$db->query($query);
+	}
+
+	public function deleteClass($data) {
+		if (isset($data['id']) && $data['id']) {
+            $db = $this->dbfunc();
+            $where = $db->quoteInto('classid = ?', $data['id']);
+            $db->delete('link_cohorts_classes', $where);
+            $db->delete('link_student_classes', $where);
+            $where = $db->quoteInto('id = ?', $data['id']);
+            $db->delete('classes', $where);
+		}
 	}
 
 	public function saveLabels($param){

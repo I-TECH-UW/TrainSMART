@@ -2172,28 +2172,58 @@ class AdminController extends UserController
 			}
 
 			switch($params['_action']) {
-				case "addnew":
-					$helper->addClasses($data);
-					break;
-				case "update":
-					$helper->updateClasses($data);
-					break;
+				case "addnew": {
+                    $helper->addClasses($data);
+                    break;
+                }
+				case "update": {
+                    $helper->updateClasses($data);
+                    break;
+                }
+                case "delete": {
+                    $helper->deleteClass($data);
+                }
 			}
 			$this->_redirect ( 'admin/preservice-classes' );
 		}
 
 		$db = $this->dbfunc();
-		$q = "select id, external_id, title from class_modules ORDER BY title ASC";
-		// this view relies on the indexes of the resulting array from fetchAssoc to be the db ids
-		// which relies, in turn, on id being the first column selected
+		$q = $db->select()->from('class_modules', array('id', 'external_id', 'title'))->order('title ASC');
 		$modules = $db->fetchAssoc($q);
 
-		$list = $helper->AdminClasses();
+        $select = $db->select()
+            ->from('classes', array())
+            ->joinLeft('lookup_coursetype', 'classes.coursetypeid = lookup_coursetype.id', array())
+            ->joinLeft('tutor', 'classes.instructorid = tutor.id', array())
+            ->joinLeft('person',
+                'tutor.personid = person.id AND CHAR_LENGTH(person.first_name) > 0 AND CHAR_LENGTH(person.last_name) > 0',
+                array())
+            ->order('classname')
+            ->columns(array('classes.id', 'classname', 'coursetypeid' => 'lookup_coursetype.id',
+                'lookup_coursetype.coursetype', 'coursetopic',
+                'startdate' => new Zend_Db_Expr("DATE_FORMAT(classes.startdate, '%d/%m/%Y')"),
+                'enddate' => new Zend_Db_Expr("DATE_FORMAT(classes.enddate, '%d/%m/%Y')"),
+                'instructorid' => 'tutor.id', 'instructor' => 'CONCAT_WS(", ", person.last_name, person.first_name)',
+                'class_modules_id', 'custom_1', 'maxcredits', 'custom_2'
+            ));
 
-		$q = "select id, coursetype from lookup_coursetype ORDER BY coursetype ASC";
-		$coursetypes = $db->fetchAssoc($q);
+        $list = $this->dbfunc()->fetchAll($select);
 
-		$tutors = $helper->getAllTutors();
+		$q = $db->select()
+            ->from('lookup_coursetype', array('id', 'coursetype'))
+            ->order('coursetype ASC');
+
+		$coursetypes = $db->fetchPairs($q);
+
+		$q = $db->select()
+            ->from('tutor', array())
+            ->joinInner('person',
+                'tutor.personid = person.id AND CHAR_LENGTH(person.first_name) > 0 AND CHAR_LENGTH(person.last_name) > 0',
+                array())
+            ->columns(array('tutor.id', 'name' => 'CONCAT(person.last_name, ", ", person.first_name)'))
+            ->order('name');
+        $tutors = array('' => t('--choose--')) + $db->fetchPairs($q);
+
 		$this->view->assign("lookup", $list);
 		$this->view->assign("coursetypes", $coursetypes);
 		$this->view->assign("tutors", $tutors);

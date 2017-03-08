@@ -39,6 +39,14 @@ ob_end_clean();
 				width: 350,
 				modal: true,
 				buttons: {
+				    "<?php echo t('Delete'); ?>": function() {
+                        if (confirm("Are you sure you want to delete this class?\n\nThis will remove it from the cohort and delete associated student grades."))
+                        {
+                            $("#_id").val($("#currentid").val());
+                            $("#_action").val("delete");
+                            document.getElementById('adminform').submit();
+                        }
+                    },
 					"<?php echo t('Save') ?>": function() {
 						$("#_classname").val($("#classname").val());
 						$("#_startdate").val($("#startdate").val());
@@ -141,6 +149,7 @@ ob_end_clean();
 			/* Init the table */
 			oTable = $('.tablegrid').dataTable({
 				"bJQueryUI": true,
+                "iDisplayLength": 25,
 				"sPaginationType": "full_numbers"
 			});
 			$("#peopleadd").validate();
@@ -169,13 +178,10 @@ ob_end_clean();
 			<label for="classname"><?php echo t('Class name');?></label>
 			<input type="text" name="classname" id="classname" class="text ui-widget-content ui-corner-all" />
 			<label for="coursetypeid"><?php echo t('Course Name');?></label>
-			<select type="text" name="coursetypeid" id="coursetypeid" class="text ui-widget-content ui-corner-all">
-				<?php
-				foreach ($this->coursetypes as $ct){
-					echo "<option value=\"" . $ct['id'] . "\">" . $ct['coursetype'] . "</option>\n";
-				}
-				?>
-			</select>
+
+            <?php
+            echo $this->formSelect('coursetypeid', '', array('id' => 'coursetypeid', 'class' => "text ui-widget-content ui-corner-all"), $this->coursetypes);
+            ?>
 			<label for="coursetopic"><?php echo t('Topic');?></label>
 			<input type="text" name="coursetopic" id="coursetopic" class="text ui-widget-content ui-corner-all" />
 			<label for="startdate"><?php echo t('Start date');?></label>
@@ -183,13 +189,9 @@ ob_end_clean();
 			<label for="enddate"><?php echo t('End date');?></label>
 			<input type="text" name="enddate" id="enddate" class="calendarbox text ui-widget-content ui-corner-all" />
 			<label for="instructorid"><?php echo t('Instructor');?></label>
-			<select name="instructorid" id="instructorid" class="text ui-widget-content ui-corner-all">
-				<?php
-				foreach ($this->tutors as $tutor){
-					echo "<option value=\"" . $tutor['id'] . "\">" . $tutor['last_name'] . ", " . $tutor['first_name'] . "</option>\n";
-				}
-				?>
-			</select>
+            <?php
+            echo $this->formSelect('instructorid', '', array('id' => 'instructorid', 'class' => "text ui-widget-content ui-corner-all"), $this->tutors);
+            ?>
 			<?php if ($this->setting['site_style'] == 'skillsmart') { ?>
 				<label for="class_modules_id">Module</label>
 				<select name="class_modules_id" id="class_modules_id" class="text ui-widget-content ui-corner-all">
@@ -250,11 +252,11 @@ ob_end_clean();
 
 							<td><?php echo $lookup['id']; ?></td>
 							<td><?php echo $lookup['classname']; ?></td>
-							<td><?php echo $this->coursetypes[$lookup['coursetypeid']]['coursetype']; ?></td>
+							<td><?php echo $lookup['coursetype']; ?></td>
 							<td><?php echo addslashes($lookup['coursetopic']); ?></td>
-							<td><?php echo addslashes(date("m/d/Y", $lookup['startdate'])); ?></td>
-							<td><?php echo addslashes(date("m/d/Y", $lookup['enddate'])); ?></td>
-							<td><?php echo addslashes($lookup['instructorid']); ?></td>
+							<td><?php echo $lookup['startdate']; ?></td>
+                            <td><?php echo $lookup['enddate']; ?></td>
+							<td><?php echo trim($lookup['instructor']) != ',' ? $lookup['instructor'] : ''; ?></td>
 							<?php if ($this->setting['site_style'] == 'skillsmart') { ?>
 								<td><?php echo $this->modules[$lookup['class_modules_id']]['title'] ?></td>
 								<td><?php echo $lookup['custom_1'] ?></td>
