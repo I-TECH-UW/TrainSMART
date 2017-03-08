@@ -6,3 +6,4 @@ Add student transcript signor
 **********************************************************************/
 
 ALTER TABLE `link_tutor_institution` ADD COLUMN `transcript_signor` TINYINT NOT NULL DEFAULT '0';
+ALTER TABLE `link_tutor_institution` ADD COLUMN `tutor_title` VARCHAR(100) NULL DEFAULT '';
