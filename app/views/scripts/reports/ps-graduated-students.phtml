@@ -1,60 +1,5 @@
-<?php
-	if (isset ($_GET['csv'])){
-		$data = array();
-		
-		$_row = array();
-		foreach ($this->headers as $key=>$value){
-			$_row[] = $value;
-		}
-		$data[] = $_row;
-		
-		foreach ($this->output as $row){
-			$_row = array();
-			foreach ($row as $key=>$value){
-				$_row[] = $value;
-			}
-			$data[] = $_row;
-		}
-		
-
-		$delimiter = ',';
-		$enclosure = '"';
-		$encloseAll = false;
-		$nullToMysqlNull = false;
-	
-		$delimiter_esc = preg_quote($delimiter, '/');
-		$enclosure_esc = preg_quote($enclosure, '/');
-	
-		$output = array();
-		foreach ($data as $row){
-			$outputrow = array();
-			foreach ($row as $field){
-				if ($field === null && $nullToMysqlNull) {
-					$outputrow[] = 'NULL';
-					continue;
-				}
-		
-				// Enclose fields containing $delimiter, $enclosure or whitespace
-				if ( $encloseAll || preg_match( "/(?:${delimiter_esc}|${enclosure_esc}|\s)/", $field ) ) {
-					$outputrow[] = $enclosure . str_replace($enclosure, $enclosure . $enclosure, $field) . $enclosure;
-				}
-				else {
-					$outputrow[] = $field;
-				}
-			}
-			$output[] = implode($delimiter,$outputrow);
-		}
-		$output = implode("\n", $output);
-		header("Content-type: text/csv");
-		header("Content-Disposition: attachment; filename=graduated-students-" . date("d.m.Y.H.m.s") . ".csv");
-		header("Pragma: no-cache");
-		header("Expires: 0");
-		echo $output;
-		exit;
-	}
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 	<head>
 		<title><?php echo $this->translation['Application Name'];?> | <?php tp('Graduated Students Report');?></title>
 		<?php
@@ -232,57 +177,13 @@
 						</div>
 						<div class="clear pad20">&nbsp;</div>
 					</form>
-<?php
-if (isset($this->output)) {
-	if (count ($this->output) == 0){
-		echo "				<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"display tablegrid\" id=\"\" style=\"width:100%\">\n";
-		echo "					<thead>\n";
-		echo "						<tr>\n";
-		echo "							<th>".t('Output')."</th>\n";
-		echo "						</tr>\n";
-		echo "					</thead>\n";
-		echo "					<tbody>\n";
-		echo "						<tr>\n";
-		echo "							<td>>".t('Your search criteria returned no results')."</td>\n";
-		echo "						</tr>\n";
-		echo "					</tbody>\n";
-		echo "				</table>\n";
-	} else {
-?>
-				<br>
-				<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
-					<thead>
-						<tr>
-<?php
-		foreach ($this->headers as $key=>$value){
-			echo "							<th>" . t($value) . "</th>\n";
-		}
-?>
-						</tr>
-					</thead>
-					<tbody>
-<?php
-		foreach ($this->output as $row){
-			echo "						<tr style=\"cursor : pointer;\" class=\"GradeA\">\n";
-			foreach ($row as $key=>$value){
-				echo "				   			<td>" . $value . "</td>\n";
-			}
-			echo "						</tr>\n";
-		}
-?>
-					</tbody>
-				</table>
-				<input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large" onclick="window.open('<?php
-$_GET['csv'] = 1;
-$url = $_SERVER['REQUEST_URI'] . "&csv=1";
-#foreach ($_GET as $key=>$value){
-#	$url .= $key . "=" . $value . "&";
-#}
-echo $url;  ?>')">
-<?php
-	}
-}
-?>
+        <?php if (isset($this->output)) {
+            echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
+                array('output' => $this->output, 'headers' => $this->headers));
+            ?>
+            <input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large"
+                   onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=csv"?>')">
+        <?php } ?>
 					<div class="clear" style=""></div>
 				</div>
 				<div class="clear" style=""></div>

@@ -122,6 +122,11 @@ class ReportFilterHelpers extends ITechController
     public static function generateCSV($headers, $content) {
         $data = array();
 
+        if ($headers[0] === 'ID') {
+            // work around excel problem - https://support.microsoft.com/en-us/help/323626/-sylk-file-format-is-not-valid-error-message-when-you-open-file
+
+            $headers[0] = "id";
+        }
         $data[] = array_values($headers);
 
         foreach ($content as $row) {
