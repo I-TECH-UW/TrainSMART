@@ -457,7 +457,9 @@ class CohortController extends ITechController {
 	    $cohortedit = new Cohortedit();
 		$cohort=$cohortedit->EditCohort($cohortid);
 		$this->view->assign('cohort', $cohort);
-		$this->view->assign('degree', $helper->getDegree($cohort['degree'])[0]['degree']);
+		if($cohort['degree']){
+		  $this->view->assign('degree', $helper->getDegree($cohort['degree'])[0]['degree']);
+		}
 		$students_final = array();
 		$students = $cohortedit->getAllStudents($cohortid);
 		foreach ($students as $row) {
@@ -478,7 +480,6 @@ class CohortController extends ITechController {
 		$this->view->assign('location', $location[0]);
 		
 		$signor = $institute->getStaffTranscriptSignor($cohort['institutionid']);
-		print_r($signor);
 		$this->view->assign('signor', $signor[0]);
 	    
 		}

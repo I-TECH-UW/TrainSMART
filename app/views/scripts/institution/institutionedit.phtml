@@ -79,6 +79,29 @@
 					break;
 				}
 			}
+
+			//TA:#362
+			function setSignor(){
+			var val = $("#transcript_signor").val('');			
+			$("#staff_table > tbody > tr >td >#transcript_signor_ch").each(function(){
+				if(this.checked){
+					if($("#transcript_signor").val() != ''){
+						$("#transcript_signor").val($("#transcript_signor").val() + ",");
+					}
+					$("#transcript_signor").val($("#transcript_signor").val() + this.name);
+				}
+			});
+
+			var val = $("#tutor_title_info").val('');
+			$("#staff_table > tbody > tr >td >#tutor_title").each(function(){
+				if(this.value != ''){
+					if($("#tutor_title_info").val() != ''){
+						$("#tutor_title_info").val($("#tutor_title_info").val() + ";");
+					}
+					$("#tutor_title_info").val($("#tutor_title_info").val() + this.name + "=" + this.value);
+				}
+			});		
+	}
 		</script>
 	</head>
 	<body>
@@ -92,7 +115,7 @@
 	
 					<div class="pad50 clear"></div>
 
-					<form action="" id="peopleadd" method="post" name="inspost" class="formvalidate">
+					<form action="" id="peopleadd" method="post" name="inspost" class="formvalidate" onclick='return setSignor();'>
 					
 					<!-- TA:97 -->
 	<table style="width:100%">
@@ -262,6 +285,7 @@
 				</table>
 				
 				<input type='hidden' id='transcript_signor' name='transcript_signor'/><!-- TA:#362 -->
+				<input type='hidden' id='tutor_title_info' name='tutor_title_info'/><!-- TA:#362 -->
 				
 					</form>
 					<br><br>
@@ -274,6 +298,7 @@
 							<thead>
 								<tr>
 									<th><?php echo t('Name'); ?></th>
+									<th><?php echo t('Prefix'); ?></th>
 									<th><?php echo t('Title'); ?></th>
 									<th><?php echo t('Phone'); ?></th>
 									<th><?php echo t('Email'); ?></th>
@@ -286,36 +311,24 @@
 
 	foreach ($this->fetchins as $staff){
 ?>
-								<tr class="GradeA">
+								<tr class="GradeA" id='<?php echo $staff['tutorid']; ?>'>
 									<td onclick="location = '../../../tutoredit/tutoredit/id/<?php echo $staff['id']; ?>'"><?php echo $staff['first_name'] . " " . $staff['last_name']; ?></td>
 									<td class=""><?php echo $staff['title_phrase']; ?></td>
+									<!-- TA:#362  -->
+									<td class="" ><input type='text' id='tutor_title' name='<?php echo $staff['tutorid']; ?>' value='<?php echo $staff['tutor_title']; ?>'/></td>
 									<td class=""><?php echo $staff['phone_work']; ?></td>
 									<td class=""><?php echo $staff['email']; ?></td>
 									
-									<!-- TA:#362 start -->
+									<!-- TA:#362 -->
 									<?php $checked = ($staff['transcript_signor']==='1')? "checked":"";?>
-									<td class=""><input type='checkbox' id='transcript_signor_ch' name='<?php echo $staff['tutorid']; ?>' <?php echo $checked; ?> onchange='setSignor();'/></td>
+									<td class=""><input type='checkbox' id='transcript_signor_ch' name='<?php echo $staff['tutorid']; ?>' <?php echo $checked; ?>/></td>
 								</tr>
 <?php
 	}
 ?>
 							</tbody>
 						</table >
-						<script>
-						function setSignor(){
-							$("#transcript_signor").val('');
-							$("#staff_table > tbody > tr >td >#transcript_signor_ch").each(function(){
-								if(this.checked){
-									var val = $("#transcript_signor").val();
-									if($("#transcript_signor").val() != ''){
-										$("#transcript_signor").val($("#transcript_signor").val() + ",");
-									}
-									$("#transcript_signor").val($("#transcript_signor").val() + this.name);
-								}
-							});
-						}
-						</script>
-						<!-- TA:#362 end -->
+						
 					</div>
                     <br>
 					<div style="text-align : right;">
