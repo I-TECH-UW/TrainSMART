@@ -684,6 +684,117 @@
 </div>
 </div>
 <br>
+
+<!-- TA:#342 START -->
+<?php if($this->old_cohorts){?>
+<h3>Student cohort history</h3>
+<?php
+    foreach ($this->old_cohorts as $id=>$cohort) {
+        echo '<h4>Cohort: '. $cohort['cohortname'] . '<br>' .
+            'Date of Enrollment:' .  $cohort['joindate'] . '<br>' .
+            'Date of Separation:' .  $cohort['dropdate'] . '<br>' .
+        '</h4>';
+        ?>
+        <div class="blockheader">Class History</div>
+        <div style="width :100%;">
+        <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+        <thead>
+        <tr>
+        <th>Class Name</th>
+        <th>Topic</th>
+        <th>Start date</th>
+        <th>End date</th>
+        <th>Instructor</th>
+        <th>Course type</th>
+        <th>Grade</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        foreach ($cohort['classes'] as $row) {
+            ?>
+                    <tr class="GradeA" style="">
+                        <td style="width : 250px;"><?php echo $row['classname']; ?></td>
+                        <td style=""><?php echo $row['coursetopic']; ?></td>
+                        <td style="width : 120px;"><?php echo date("m/d/Y", strtotime($row['startdate'])); ?></td>
+                        <td style="width : 120px;"><?php echo date("m/d/Y", strtotime($row['enddate'])); ?></td>
+                        <td style="width : 120px;"><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
+                        <td style="width : 120px;"><?php echo $row['coursetype']; ?></td>
+                        <td style="width : 120px;"><?php echo $row['grade']; ?></td>
+                    </tr>
+                    <?php
+                }
+                ?>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="blockheader">Clinical Allocation</div>
+        
+        <div style="width :100%; ">
+            <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+                <thead>
+                <tr>
+                    <th>Practicum name</th>
+                    <th>Date</th>
+                    <th>Facility</th>
+                    <th>Advisor</th>
+                    <th>Hours required</th>
+                    <th>Hours completed</th>
+                    <th>Grade</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                foreach ($cohort['practicum'] as $row) {
+                    ?>
+                    <tr class="GradeA" style="">
+                        <td style=""><?php echo $row['practicumname']; ?></td>
+                        <td style="width : 120px;"><?php echo date("m/d/Y", strtotime($row['practicumdate'])); ?></td>
+                        <td style="width : 200px;"><?php echo $row['facility_name']; ?></td>
+                        <td style="width : 200px;"><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
+                        <td style="width : 120px;"><?php echo $row['hoursrequired']; ?></td>
+                        <td style="width : 150px;"><?php echo $row['hourscompleted']; ?></td>
+                        <td style="width : 120px;"><?php echo $row['grade']; ?></td>
+                    </tr>
+                    <?php
+                }
+                ?>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="blockheader">Exams (licensure/registration)</div>
+        
+        <div style="width :100%; ">
+            <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+                <thead>
+                <tr>
+                    <th>License name</th>
+                    <th>Date</th>
+                    <th>Grade</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                foreach ($cohort['licenses'] as $row) {
+                    ?>
+                    <tr class="GradeA" style="">
+                        <td style=""><?php echo $row['licensename']; ?></td>
+                        <td style="width : 120px;"><?php echo date("m/d/Y", strtotime($row['licensedate'])); ?></td>
+                        <td style="width : 120px;"><?php echo $row['grade']; ?></td>
+                    </tr>
+                    <?php
+                }
+                ?>
+                </tbody>
+            </table>
+        </div>
+   <?php } ?> 
+   <?php }?>   
+<!-- TA:#342 END -->   
+    
+<br>
 <input type="button" class='no-print tsbutton' onclick="window.print();" value="Print">
 </body>
 </html>
