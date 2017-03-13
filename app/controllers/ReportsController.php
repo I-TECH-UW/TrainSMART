@@ -6486,7 +6486,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			    $s->joinLeft(array('i' => 'institution'), 'i.id = c.institutionid', array());
 			    $institutionJoined = true;
 			}
-			
+
 			if (isset($params['showinstitution']) && $params['showinstitution']) {
 			    $headers[] = "Institution";
 			    $s->columns('i.institutionname');
@@ -6494,7 +6494,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			if (isset($params['institution']) && $params['institution']) {
 			    $s->where('i.id = ?', $params['institution']);
 			}
-			
+
 		}
 
 		if (isset($params['cohort']) && $params['cohort'] ||
@@ -6545,7 +6545,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			isset($params['showcadre']) && $params['showcadre']) {
 
 			//TA:#247 use link_student_cohort and cohort to get cadres
-			// do not use to get cadre by student table, beacuse when new student is added cadre is 0 by defualt 
+			// do not use to get cadre by student table, beacuse when new student is added cadre is 0 by defualt
 			//and when we assign student to cohort new record in added only to link_student_cohort table, but student.cadre value is not updated
 			//$s->joinLeft(array('ca' => 'cadres'), 'ca.id = s.cadre', array());
 			if (!$cohortJoined) {
@@ -6554,7 +6554,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			     $cohortJoined = true;
 			}
 			$s->joinLeft(array('ca' => 'cadres'), 'ca.id = c.cadreid', array());
-			
+
 			if (isset($params['showcadre']) && $params['showcadre']) {
 				$headers[] = "Cadre";
 				$s->columns('ca.cadrename');
@@ -6588,7 +6588,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				$s->where('p.gender = ?', $gender_arr[$gender_id]);
 			}
 		}
-		
+
 		//TA:#251
 		if ((isset($params['show_marital_status'])) && $params['show_marital_status']) {
 		    $headers[] = t("Marital Status");
@@ -6607,7 +6607,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				$s->where('ln.id = ?', $params['nationality']);
 			}
 		}
-		
+
 		//TA:#251
 		if ((isset($params['showdob'])) && $params['showdob']) {
 		    $headers[] = t("Date of Birth");
@@ -6617,11 +6617,11 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		if ((isset($params['showage']) && $params['showage']) ||
 			(isset($params['agemin']) && $params['agemin']) ||
 			(isset($params['agemax']) && $params['agemax'])) {
-			
+
 			if (isset($params['showage']) && $params['showage']) {
 				$headers[] = "Age";
 				$s->columns(new Zend_Db_Expr("DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(p.birthdate)), '%Y')+0 AS age"));
-	
+
 				if (isset($params['agemin']) && $params['agemin']) {
 					$s->having('age >= ?', $params['agemin']);
 				}
@@ -6654,10 +6654,19 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			}
 			$s->columns("IF(lsc.isgraduated = 0 AND lsc.dropdate != '0000-00-00', 'Terminated Early', '')");
 			$headers[] = "Terminated Early";
-
-			$s->where("lsc.isgraduated = 0");
-			$s->where("lsc.dropdate != '0000-00-00'");
 		}
+
+        if (isset($params['termination_status']) && $params['termination_status'] == 2) {
+            if (!$cohortJoined) {
+                $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+                $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+                $cohortJoined = true;
+            }
+            if ($params['termination_status'] == 2) {
+                $s->where("lsc.isgraduated = 0");
+                $s->where("lsc.dropdate != '0000-00-00'");
+            }
+        }
 
 		if ((isset($params['showdegrees'])) && $params['showdegrees'] ||
 			(isset($params['degrees']) && $params['degrees'])) {
@@ -6698,7 +6707,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			//TA:#251 to display amount of funding also
 			$s->columns("GROUP_CONCAT( ' ' , lf.fundingname, ': ',lsf.fundingamount)");
 			$s->group('p.id');
-			
+
 			$headers[] = "Funding";
 		}
 
@@ -6772,7 +6781,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				$s->where('c.startdate <= ?', $end_date);
 			}
 		}
-		
+
 		//TA:#251 show grad date as well
 		$grad_start_date = '';
 		if((isset($params['gradstartday']) && $params['gradstartday']) &&
@@ -6785,7 +6794,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		        }
 		        $grad_start_date = $params['gradstartyear'].'-'.$params['gradstartmonth'].'-'.$params['gradstartday'];
 		    }
-		
+
 		    $grad_end_date = '';
 		    if ((isset($params['gradendday']) && $params['gradendday']) &&
 		        (isset($params['gradendmonth']) && $params['gradendmonth']) &&
@@ -6828,6 +6837,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$this->view->assign('coursetypes', $helper->AdminCourseTypes());
 		$this->view->assign('degrees', $helper->getDegrees());
 		$this->view->assign('site_style', $this->setting('site_style'));
+        $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
 
 		if ($this->getSanParam('process')) {
 			$criteria = $this->getAllParams();
@@ -6862,10 +6872,15 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	    $this->view->assign('coursetypes', $helper->AdminCourseTypes());
 	    $this->view->assign('degrees', $helper->getDegrees());
 	    $this->view->assign('site_style', $this->setting('site_style'));
-	
+        $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
+
 	    if ($this->getSanParam('process')) {
 	        $criteria = $this->getAllParams();
-	         
+            // these two variables may be brought over from a different student report when the
+            // report is changed.
+            unset($criteria['showterminated']);
+            unset($criteria['termination_status']);
+
 	        if (isset($criteria['cohort']) && $criteria['cohort'] ||
 	            isset($criteria['showcohort']) && $criteria['showcohort']) {
 	
@@ -6887,7 +6902,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	                //take only repeated students (who dropped one cohort and joined to another)
 	                $query = $query . " and s.id in (select id_student from link_student_cohort where dropdate != '0000-00-00' and id_student in (SELECT id_student FROM link_student_cohort group by id_student having count(*) > 1))";
 	            }
-	
+
 	            $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 	            $rowArray = $db->fetchAll($query);
 	            $this->viewAssignEscaped("headers", $headers);
@@ -6914,6 +6929,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$this->view->assign('coursetypes', $helper->AdminCourseTypes());
 		$this->view->assign('degrees', $helper->getDegrees());
 		$this->view->assign('site_style', $this->setting('site_style'));
+        $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
 
 		if ($this->getSanParam('process')) {
 			$criteria = $this->getAllParams();
@@ -6948,9 +6964,16 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$this->view->assign ( 'coursetypes', $helper->AdminCourseTypes());
 		$this->view->assign ( 'degrees', $helper->getDegrees());
 		$this->view->assign('site_style', $this->setting('site_style'));
+        $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
 
 		if ($this->getSanParam ('process')) {
 			$criteria = $this->getAllParams();
+
+			// these two variables may be brought over from a different student report when the
+            // report is changed.
+			unset($criteria['showterminated']);
+			unset($criteria['termination_status']);
+
 			list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 			$rowArray = $db->fetchAll($query);
@@ -8932,6 +8955,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$this->view->assign('coursetypes', $helper->AdminCourseTypes());
 		$this->view->assign('degrees', $helper->getDegrees());
 		$this->view->assign('site_style', $this->setting('site_style'));
+        $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
 
         $criteria = array();
         $criteria['showinstitution'] = true;

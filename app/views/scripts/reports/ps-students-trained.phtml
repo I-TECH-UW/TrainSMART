@@ -81,7 +81,8 @@
 							echo $this->partial('reports/age-range-form-elements-partial.phtml', array('criteria', $this->criteria));
 
 							echo $this->partial('reports/ps-student-data-search-form-elements-partial.phtml',
-								array('tutors' => $this->tutors, 'criteria' => $this->criteria));
+								array('tutors' => $this->tutors, 'criteria' => $this->criteria,
+                                    'termination_statuses' => $this->termination_statuses));
 							?>
 							
 							<!-- TA:#251 -->

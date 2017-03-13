@@ -5,12 +5,20 @@
 <div class="fieldselect"></div>
 <div class="clear pad20">&nbsp;</div>
 
-<div class="fieldquestion"><?php echo t('Terminated early'); ?></div>
-<div class="fieldshow">
-    <input type="checkbox" name="showterminated" id="showterminated"
-           value="1"<?php if (isset($this->criteria['showterminated']) && $this->criteria['showterminated']) { echo " checked"; } ?>></div>
-<div class="fieldselect"></div>
-<div class="clear pad20">&nbsp;</div>
+<div class="fieldquestion termination"><?php echo t('Terminated early'); ?></div>
+<div class="fieldshow termination">
+    <?php
+        $checked = isset($this->criteria['showterminated']) ? '1' : '0';
+        echo $this->formCheckbox('showterminated', 1, array('id' => 'showterminated', 'checked' => $checked,
+            'disableHidden' => true));
+    ?>
+</div>
+<div class="fieldselect termination">
+    <?php echo $this->formSelect('termination_status', $this->criteria['termination_status'], array('style' => 'height: auto;'),
+            $this->termination_statuses); ?>
+</div>
+
+<div class="clear pad20 termination">&nbsp;</div>
 
 <div class="fieldquestion"><?php echo t('Graduated'); ?></div>
 <div class="fieldshow">

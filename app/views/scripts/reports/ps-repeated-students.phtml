@@ -24,7 +24,13 @@
 					window.location = '<?php echo $this->base_url;?>' + reportSelector[reportSelector.selectedIndex].value + '?<?php echo $_SERVER['QUERY_STRING'];?>';
 				}
 			}
+
 		</script>
+        <style>
+            .termination {
+                display: none;
+            }
+        </style>
 	</head>
 	<body class="yui-skin-sam" >
 		<div id="pageHolder">
@@ -90,7 +96,8 @@
 							<div class="clear pad20">&nbsp;</div>
 
 							<?php echo $this->partial('reports/ps-student-data-search-form-elements-partial.phtml',
-								array('tutors' => $this->tutors, 'criteria' => $this->criteria));
+                                array('tutors' => $this->tutors, 'criteria' => $this->criteria,
+                                    'termination_statuses' => $this->termination_statuses));
 							?>
 							
 							<!-- TA:#251 -->
