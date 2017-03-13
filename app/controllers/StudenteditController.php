@@ -908,8 +908,22 @@ class StudenteditController extends ITechController
 			$this->view->assign('currentpracticum', array());
 			$this->view->assign('currentlicenses', array());
 		}
-
-
+		
+		//TA:#342 take info about old cohorts
+		array_shift($details['link_cohort']);
+		$old_cohorts = array();
+		foreach ($details['link_cohort'] as $row=>$value) { 
+                $old_cohort['id_cohort'] = $value['id_cohort'];
+                $old_cohort['cohortname'] = $value['cohortname'];
+                $old_cohort['joindate'] = $value['joindate'];
+                $old_cohort['dropdate'] = $value['dropdate'];
+                $old_cohort['classes'] = $helper->listcurrentclasses($value['id_cohort'], $sid);
+                $old_cohort['practicum'] = $helper->ListCurrentPracticum($value['id_cohort'], $sid);
+                $old_cohort['licenses'] = $helper->ListCurrentLicenses($value['id_cohort'], $sid);
+                array_push($old_cohorts,$old_cohort);
+		}
+		$this->view->assign('old_cohorts', $old_cohorts);
+		
 		# PERMANENT ADDRESS
 		$this->view->assign('permanentgeo1', $details['permanent_address'][0]['id_geog1']);
 		$this->view->assign('permanentgeo2', $details['permanent_address'][0]['id_geog2']);
