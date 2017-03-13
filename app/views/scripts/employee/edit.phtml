@@ -70,6 +70,16 @@
                 "bAutoWidth": false
             });
 
+            /*TA:#224 Init the table */
+            $('#multi_sites_table').dataTable({
+                "bJQueryUI": true,
+                "bPaginate": false,
+                "bSort": true,
+                "bInfo": false,
+                "bFilter": false,
+                "bAutoWidth": false
+            });
+
             window.ITECH.mechData = <?php echo json_encode($this->mechanismData, JSON_HEX_APOS); ?>;
             <?php
             $disassociateIDs = isset($this->employee['disassociateMechanisms']) ? json_encode(explode(',', $this->employee['disassociateMechanisms']), JSON_HEX_APOS) : '[]';
@@ -105,6 +115,8 @@
             }
             availableMechanisms();
             calculateMechanismTable();
+
+            calculateSiteTable();//TA:#224
         });
 
         function basedAtOther() {
@@ -208,6 +220,8 @@
             };
         })(jQuery);
 
+        
+
         /**
          * calculate values for mechanism table hours and cost based on mechanism percentages
          * and employee funded hours and annual cost
@@ -308,6 +322,7 @@
 
             return true;
         }
+        
 
         /**
          * add new mechanism and percentage to mechanism table and store data for saving on form submission
@@ -411,6 +426,131 @@
             $('#new_mechanism').html(optList);
         }
 
+        //TA:#224
+        function addSite() {    
+            var $oTable = $('#multi_sites_table').dataTable();
+            var province = '';
+            var province_id = $('#province_id').val();
+            if(province_id){
+            	province = $('#province_id option:selected' ).text();
+            }else{
+            	alert("Specify value for '<?php tp('Region A (Province)');?>'.");
+                return false;
+            }    
+            var district = '';
+            var district_id = $('#district_id').val();
+            if(district_id){
+            	district = $('#district_id option:selected' ).text();
+            }else{
+            	alert("Specify value for '<?php tp('Region B (Health District)');?>'.");
+                return false;
+            } 
+            var region = '';
+            var region_id = $('#region_c_id').val();
+            if(region_id){
+            	region = $('#region_c_id option:selected' ).text();
+            }else{
+            	alert("Specify value for '<?php tp('Region C (Local Region)');?>'.");
+                return false;
+            } 
+            var site_type = '';
+            if($('#facilityType').val()){
+            	site_type = $('#facilityType option:selected' ).text();
+            }
+            var site_name = '';
+            var site_id = $('#facilityInput').val();
+            if(site_id){
+            	site_name = $('#facilityInput option:selected' ).text();
+            }else{
+            	alert("Specify value for '<?php tp('Site Name');?>'.");
+                return false;
+            } 
+             var hiv_fte_related = $('#hiv_fte_related' ).val();
+            if(hiv_fte_related === "" || isNaN(hiv_fte_related)){
+                alert("Specify integer value for '<?php tp('HIV Related FTE (Hrs)');?>'.");
+                $('#hiv_fte_related' ).val('');
+                return false;
+            }
+            hiv_fte_related = parseInt(hiv_fte_related);
+            var non_hiv_fte_related = $('#non_hiv_fte_related' ).val();
+            if(non_hiv_fte_related === "" || isNaN(non_hiv_fte_related)){
+                alert("Specify integer value for '<?php tp('Non-HIV Related FTE (Hrs)');?>'.");
+                $('#non_hiv_fte_related' ).val('');
+                return false;
+            }
+            non_hiv_fte_related = parseInt(non_hiv_fte_related);
+                var newRowIDs = $oTable.fnAddData([province, district, region, site_type, site_name, hiv_fte_related, 
+                                                   non_hiv_fte_related,
+                '<input type="checkbox" onclick="deleteToggleSite(this);"/>']);
+               var newRow = $($oTable.fnSettings().aoData[newRowIDs[0]].nTr);
+               
+               var data = site_id + "," + hiv_fte_related + "," + non_hiv_fte_related;
+               if($('#multi_sites_table_data_add').val() != ''){
+                  	$('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + ";");
+                  }
+                  $('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + data);
+               
+                 calculateSiteTable();
+                 $('#hiv_fte_related').val('');
+                 $('#non_hiv_fte_related').val('');
+                return true;   
+        }
+
+        //TA:#224
+        var calculateSiteTable = function () {
+            var sites_count = 0;
+        	var $rows = $("#multi_sites_table > tbody > tr");
+            var hiv_fte_Accumulate = 0;
+            var non_hiv_fte_Accumulate = 0;
+           for (var i = 0; i < $rows.length; i++) {
+           	var hiv_fte = parseInt($($rows[i]).children().first().next().next().next().next().next().text());
+           	var non_hiv_fte = parseInt($($rows[i]).children().first().next().next().next().next().next().next().text());
+           	hiv_fte_Accumulate = hiv_fte_Accumulate + hiv_fte;
+           	non_hiv_fte_Accumulate = non_hiv_fte_Accumulate + non_hiv_fte;
+           }
+           if (isNaN(hiv_fte_Accumulate)){
+        	   $('#hiv_related_fte_total').text("0");
+        	   sites_count = 0;
+           } else{            
+               $('#hiv_related_fte_total').text(hiv_fte_Accumulate);
+               sites_count = $rows.length;
+           }
+           if (isNaN(non_hiv_fte_Accumulate)){
+        	   $('#non_hiv_related_fte_total').text("0");
+           } else{            
+               $('#non_hiv_related_fte_total').text(non_hiv_fte_Accumulate);
+           }
+           if((hiv_fte_Accumulate + non_hiv_fte_Accumulate) != $('#funded_hours_per_week').val()){
+          	 $("#hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
+           	$("#non_hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
+               alert("Totals of '<?php echo t('HIV related FTE (Hrs)');?>' and '<?php echo t('Non-HIV related FTE (Hrs)');?>' \nmust be equal to '<?php echo t('Funded hours per week')?>' value");
+               return false;
+           }else{
+           	$("#hiv_related_fte_total").attr('class', "totalMechanismPercentageYes");
+           	$("#non_hiv_related_fte_total").attr('class', "totalMechanismPercentageYes");
+           } 
+           if(sites_count == 0){
+               alert("'<?php echo t('Site Name');?>' is required.");
+               return false;
+           } 
+           return true;
+        };
+
+        //TA:#224
+        function deleteToggleSite(element) {
+        	var $element = $(element);  
+            var id = $element.parent().parent().attr("id");   	
+        	$('#multi_sites_table').dataTable().fnDeleteRow($element.parent().parent()[0]);
+            calculateSiteTable();
+            if(id){
+                if($('#multi_sites_table_data_delete').val() != ''){
+                	$('#multi_sites_table_data_delete').val($('#multi_sites_table_data_delete').val() + ",");
+                }
+                $('#multi_sites_table_data_delete').val($('#multi_sites_table_data_delete').val() + id);
+            }
+            return true;
+        }
+
     </script>
 
 </head>
@@ -424,7 +564,7 @@
         <?php require_once 'views/scripts/status.phtml' ?>
 
         <h1><?php $this->mode == 'add' ? print(t('Add') . space . t('Employee')) : print(t('Edit') . space . t('Employee')); ?></h1>
-        <form action="" method="post" class="form_employee">
+        <form action="" method="post" class="form_employee"  onsubmit='return calculateSiteTable();'>
             <legend></legend>
 
             <?php if ($this->employee['id'] && $this->hasACL('edit_employee') && $this->hasACL('delete_employee')): ?>
@@ -447,7 +587,7 @@
             ?>
 
             <!-- TA:#256 -->
-            <table style="width:100%">
+            <table style="width:100%" border=0>
                 <tr><td>
 
                         <!-- TA:#309 -->
@@ -535,23 +675,141 @@
                             echo '</div></div>';
 
                         }
-
-                        //TA:#293 show multiple locations
-                        region_filters_dropdown($this, $this->locations, $this->employee, true, false, '', true);
-
-                        $facDropDown = renderFacilityDropDown($this->facilities, $this->employee['site_id'], $this->viewonly);
-                        if ($this->hasACL('edit_facility')) {
-                            $facDropDown .= '<a href="' . $this->base_url . '/site/add">' . t('Insert a New') . space . t('Site') . '</a> ';
-                            $facDropDown .= '<a href="' . $this->base_url . '/site/search">' . t('View/Edit') . space . t('Site') . '</a>'; // need to put the links inside of the div so they dont wrap to the next line
+                        
+                        //TA:#224 => START
+                        ?>
+                        </td>
+                        <td style="width:20%" valign='top' align='left'>
+                        <div class="historyDiv">
+                            <b><?php echo t("Date created");?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>
+                            <b><?php echo t("Created by");?></b>&nbsp;<?php echo $this->creator; ?><br>
+                            <b><?php echo t("Date updated");?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
+                            <b><?php echo t("Updated by");?></b>&nbsp;<?php echo $this->updater; ?><br>
+                        </div>
+                    </td>
+                    <tr><td colspan=2>
+                    <!-- TA: 'add' site functionality: site_id,hiv_fte_related, hiv_fte_related; ....-->
+                    <input type='hidden' id='multi_sites_table_data_add' name='multi_sites_table_data_add'/>
+                    <!-- TA: 'delete' site functionality: link_site_id, ....-->
+                    <input type='hidden' id='multi_sites_table_data_delete' name='multi_sites_table_data_delete'/>
+                    <!-- TA: may be TODO: 'edit' site functionality: link_site_id=site_id,hiv_fte_related, hiv_fte_related; ....-->
+                    <input type='hidden' id='multi_sites_table_data_edit' name='multi_sites_table_data_edit'/>
+                        <table cellpadding="0" cellspacing="0" border="1" class="display tablegrid" id="multi_sites_table" style="width:100%">
+                   <thead>
+                <tr>
+                    <th><?php echo "<font color='red'>*</font>" . t('Region A (Province)'); ?></th>
+                    <th><?php echo "<font color='red'>*</font>" . t('Region B (Health District)'); ?></th>
+                    <th><?php echo "<font color='red'>*</font>" . t('Region C (Local Region)'); ?></th>
+                    <th><?php tp('Site Type'); ?></th>
+                    <th><?php echo "<font color='red'>*</font>" .t('Site Name'); ?></th>
+                    <th width='100px'><?php echo "<font color='red'>*</font>" . t('HIV Related FTE (Hrs)'); ?></th>
+                    <th width='100px'><?php echo "<font color='red'>*</font>" . t('Non-HIV related FTE (Hrs)'); ?></th>
+                    <th width='100px'><?php tp("Delete?"); ?></th>               
+                </tr>
+                </thead>
+                <tfoot>
+                <tr style="font-weight:bold; background-color:#f2f2f2;">
+                    <td class="siteTableFooter">Totals:</td>
+                    <td class="siteTableFooter"></td>
+                    <td class="siteTableFooter"></td>
+                    <td class="siteTableFooter"></td>
+                    <td class="siteTableFooter"></td>
+                    <td class="siteTableFooter" id="hiv_related_fte_total">0</td>
+                    <td class="siteTableFooter" id="non_hiv_related_fte_total">0</td>
+                    <td class="siteTableFooter"></td>
+                </tr>
+                </tfoot>
+                <tbody id="multi_sites_table_body">
+                <?php
+                foreach ($this->employee['sites'] as $id => $siteData) {
+                    ?>
+                    <tr id='<?php echo $siteData['site_link_id'];?>'>
+                        <td><?php echo $siteData['province_name']; ?></td>
+                        <td><?php echo $siteData['district_name']; ?></td>
+                        <td><?php echo $siteData['region_name']; ?></td>
+                        <td><?php echo $siteData['facility_type_phrase']; ?></td>
+                        <td id='<?php echo $siteData['facility_id'];?>'><?php echo $siteData['facility_name']; ?></td>
+                        <td><?php echo $siteData['hiv_fte_related']; ?></td>
+                        <td><?php echo $siteData['non_hiv_fte_related']; ?></td>
+                        <td><input type="checkbox" onclick="deleteToggleSite(this);"/></td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+                   </table>      
+                   <table width=100% border=0>
+                   <tr>
+                   <?php
+                   $helper = new Helper();
+                   $db_locations_arr = $helper->get3TiersLocationsParentIds();
+                   $label = "<span style='font-size:11px; font-weight:bold; color:#696969;'>";
+                   echo  "<td style='padding-right: 10px;' valign='bottom'>" . $label . t('Region A (Province)') . "</span><br>";
+                   renderFilter($this->locations, 1,'province_id', '', 'district_id', false, $this->viewonly);
+                   echo "</td>";
+                   echo "<td style='padding-right: 10px;' valign='bottom'>" . $label . t('Region B (Health District)') . "</span><br>";
+                   renderFilter($this->locations, 2, 'district_id', '', 'region_c_id', false, $this->viewonly); 
+                   echo "</td>";
+                   echo "<td style='padding-right: 10px;' valign='bottom'>" . $label . t('Region C (Local Region)') . "</span><br>";
+                   renderFilter($this->locations, 3, 'region_c_id', '', 'region_d_id', false, $this->viewonly);
+                   echo "</td>";
+                   echo "<td style='padding-right: 10px;' valign='bottom'>" . $label . t('Site Type') . "</span><br>";
+                   echo renderFacilityTypesDropDown($this->site_types, '', $this->viewonly, '');  
+                   echo "</td>";
+                   echo "<td style='padding-right: 10px;' valign='bottom'>" . $label . t('Site Name') . "</span><br>";
+                   echo renderFacilityDropDownWithType($db_locations_arr, $this->facilities, '', $this->viewonly, '', true);
+                   echo "</td>";
+                   echo "<td style='padding-right: 10px;' valign='bottom'>" . $label . t('HIV Related FTE (Hrs)') . "</span><br>";
+                   echo "<input type='text' id='hiv_fte_related' name='hiv_fte_related' value='' style='width:110px;'/>";
+                   echo "</td>";
+                   echo "<td style='padding-right: 10px;' valign='bottom'>" . $label . t('Non-HIV related FTE (Hrs)') . "</span><br>";
+                    echo "<input type='text' id='non_hiv_fte_related' name='non_hiv_fte_related' value='' style='width:110px;'/>";
+                   echo "</td>";
+                   echo "<td style='padding-right: 10px;' valign='bottom'>" . $label . "&nbsp;" . "</span><br>";
+                   echo '<input type="button" name="multiSite" value="'. t("Add") . '" class="insert"
+                       id="siteInsertButton" onclick="addSite();"/>';
+                   echo "</td>";
+                   ?>
+                   </tr>
+                   <tr><td></td><td></td><td></td><td></td><td colspan=2>
+                   <a href="' . $this->base_url . '/site/add"><?php echo t('Insert a New') . space . t('Site');?></a>&nbsp;&nbsp;
+                   <a href="' . $this->base_url . '/site/search"><?php echo t('View/Edit') . space . t('Site');?></a>&nbsp;&nbsp;
+                   </td></tr>
+                   </table>
+                   <br><br>
+                   <script>
+                    elSubDistrict = YAHOO.util.Dom.get('region_c_id');
+                    elFacilityType = YAHOO.util.Dom.get('facilityType');
+                    elFacilityName = YAHOO.util.Dom.get('facilityInput');
+                    elHIV_field = YAHOO.util.Dom.get('hiv_fte_related');
+                    elNONHIV_field = YAHOO.util.Dom.get('non_hiv_fte_related');
+                    YAHOO.util.Event.onDOMReady(function () {
+                            elSubDistrict.onchange();
+                    });
+                    elSubDistrict.onchange = function () {
+                        if(this.selectedIndex == 0){
+                            elFacilityType.disabled = true;
+                            elFacilityName.disabled = true;
+                            elFacilityType.selectedIndex = 0;
+                            elFacilityName.selectedIndex = 0;
+                        }else{
+                            elFacilityType.disabled = false;
+                            elFacilityName.disabled = false;
                         }
-                        echo labelAndField($this, t('Site') . space . t('Name'), $facDropDown, 'facilityInput');
-
-                        if ($this->setting['display_employee_site_type']) {
-                            // Disable data requirement until further notice, issue #339
-                            // echo labelAndField($this, '<span class="required">*</span>' . t('Site') . space . t('Type'), $this->site_types);
-
-                            echo labelAndField($this, t('Site') . space . t('Type'), $this->site_types);
+                         elFacilityName.onchange();
+                    }
+                    elFacilityName.onchange = function () {
+                        if(this.selectedIndex == 0){
+                        	elHIV_field.disabled = true;
+                        	elNONHIV_field.disabled = true;
+                            elHIV_field.value = '';
+                            elNONHIV_field.value = '';
+                        }else{
+                        	elHIV_field.disabled = false;
+                        	elNONHIV_field.disabled = false;
                         }
+                    }
+                    </script>
+                        <?php
+                        //TA:#224 => END
 
                         if ($this->setting['display_employee_staff_category']) {
                             echo labelAndField($this, t('Staff Category'), $this->categories);
@@ -642,14 +900,6 @@
                         ?>
 
                         <!-- TA:#256 -->
-                    </td>
-                    <td style="width:20%" valign='top' align='left'>
-                        <div class="historyDiv">
-                            <b><?php echo t("Date created");?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>
-                            <b><?php echo t("Created by");?></b>&nbsp;<?php echo $this->creator; ?><br>
-                            <b><?php echo t("Date updated");?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
-                            <b><?php echo t("Updated by");?></b>&nbsp;<?php echo $this->updater; ?><br>
-                        </div>
                     </td>
                 </tr>
             </table>

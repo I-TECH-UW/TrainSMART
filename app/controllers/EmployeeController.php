@@ -285,8 +285,6 @@ class EmployeeController extends ReportFilterHelpers
             else {
 
                 //validate then save
-                //TA:#293 take multiple locations
-                $params['location_id'] = regionFiltersGetLastIDMultiple('', $params);
                 $params['dob'] = $this->_euro_date_to_sql($params['dob']);
                 $params['agreement_end_date'] = $this->_euro_date_to_sql($params['agreement_end_date']);
                 $params['transition_date'] = $this->_euro_date_to_sql($params['transition_date']);
@@ -327,7 +325,7 @@ class EmployeeController extends ReportFilterHelpers
                 if ($this->setting('display_employee_partner')) {
                     $status->checkRequired($this, 'partner_id', t('Partner'));
                 }
-
+                    
                 if ($this->setting('display_employee_base')) {
                     $hasBase = $status->checkRequired($this, 'employee_base_option_id', t('Employee Based at'));
 
@@ -345,20 +343,7 @@ class EmployeeController extends ReportFilterHelpers
                     }
                 }
 
-                // It's safe to assume that if region_c_id is selected then province and district also are, but now we
-                // also need to trigger the error handling code that displays errors on the front-end
-
-                $status->checkRequired($this, 'province_id', t('Region A (Province)'));
-                $status->checkRequired($this, 'district_id', t('Region B (Health District)'));
-
-                //TA:#293.2
-                $status->checkRequired($this, 'region_c_id', t('Region C (Local Region)'));//TA:#293.1
-
-                $status->checkRequired($this, 'facilityInput', t('Site') . ' ' . t('Name'));
-
-                // Disabled until further notice - issue #339
-                // $status->checkRequired($this, 'employee_site_type_option_id', t('Site') . ' ' . t('Type'));
-
+          
                 if ($this->setting('display_employee_contract_end_date')) {
                     $status->checkRequired($this, 'agreement_end_date', t('Contract End Date'));
                 }
@@ -377,7 +362,7 @@ class EmployeeController extends ReportFilterHelpers
                 }         
 
                 $status->checkRequired($this, 'funded_hours_per_week', t('Funded hours per week'));
-
+                
                 $costaccum = 0;
                 if ($this->setting('display_employee_salary')) {
                     $status->checkRequired($this, 'salary', t('Salary'));
@@ -429,24 +414,22 @@ class EmployeeController extends ReportFilterHelpers
                             }
                         }
                         
-                        //TA:#293 multiple location
-                        if ($params['location_id']) {
-                            $param_loc = $params['location_id'];
-                            sort($param_loc);
-                            $db_emp_loc = Employee::getEmployeeLocations($id);
-                            if(!empty($db_emp_loc)){
-                                sort($db_emp_loc);
-                            }
-                            if(!(empty(array_diff($param_loc, $db_emp_loc)) && empty(array_diff($db_emp_loc, $param_loc)))){
-                                if (!Employee::saveLocations($id, $param_loc)) {
-                                    $status->setStatusMessage(t('Error saving locations.'));
-                                }
-                            }
-                        }else{//remove all employee locations
-                            if (!Employee::removeLocations($id)) {
-                                $status->setStatusMessage(t('Error removing locations.'));
+                        //TA:#224
+                        if($params['multi_sites_table_data_delete'] && $params['multi_sites_table_data_delete'] !==''){
+                            if(!Employee::removeSites($id, $params['multi_sites_table_data_delete'])){
+                                $status->setStatusMessage(t('Error removing employee sites.'));
                             }
                         }
+                        if($params['multi_sites_table_data_add']){
+                            $sites_to_add = explode(";",$params['multi_sites_table_data_add']);
+                            foreach($sites_to_add as $i => $loc) {
+                                $site_to_add = explode(",",$loc);
+                                if(!Employee::saveSites($id, $site_to_add[0], $site_to_add[1],$site_to_add[2])){
+                                    $status->setStatusMessage(t('Error saving employee sites.'));
+                                }
+                            }
+                        }
+                        ///
                         
                         $status->setStatusMessage(t('The position was saved.'));
                         $this->_redirect("employee/edit/id/$id");
@@ -468,16 +451,22 @@ class EmployeeController extends ReportFilterHelpers
                 $status->setStatusMessage(t('Error finding that record in the database.'));
             } else {
                 $params = $row; // reassign form data
-
-                //TA:#293 get multiple employee locations
-                $location_ids = Employee::getEmployeeLocations($id);
-                $result = array();
-                foreach($location_ids as $i => $loc) {
-                    $region_ids = Location::getCityInfo($location_ids[$i], $this->setting('num_location_tiers'));
-                    $region_ids = Location::regionsToHash($region_ids);
-                    $result = array_merge_recursive($result, $region_ids);
+            //TA:#224
+            $sites_info = Employee::getEmployeeSites($id);
+                $result_sites = array();
+                $helper = new Helper();
+                foreach($sites_info as $i => $loc) {
+                    $result_site = $helper->getFacility3TiersLocationsParentInfo($sites_info[$i]['facility_id'], $sites_info[$i]['location_id']);
+                    $result_site['site_link_id'] = $sites_info[$i]['site_link_id'];
+                    $result_site['hiv_fte_related'] = $sites_info[$i]['hiv_fte_related'];
+                    $result_site['non_hiv_fte_related'] = $sites_info[$i]['non_hiv_fte_related'];
+                    $result_site['type_option_id'] = $sites_info[$i]['type_option_id'];
+                    $result_site['facility_type_phrase'] = $sites_info[$i]['facility_type_phrase'];
+                    $result_site['facility_id'] = $sites_info[$i]['facility_id'];
+                    $result_site['facility_name'] = $sites_info[$i]['facility_name'];
+                    array_push($result_sites,$result_site);
                 }
-                $params = array_merge($params, $result);
+                $params['sites'] = $result_sites;
             }
         }
 
@@ -501,11 +490,8 @@ class EmployeeController extends ReportFilterHelpers
         $this->viewAssignEscaped('locations', Location::getAll());
         $titlesArray = OptionList::suggestionList('person_title_option', 'title_phrase', false, 9999);
         $this->view->assign('titles', DropDown::render('title_option_id', $this->translation['Title'], $titlesArray, 'title_phrase', 'id', $params['title_option_id']));
-
         $this->view->assign('partners', DropDown::generateHtml('partner', 'partner', $params['partner_id'], false, !$this->hasACL("edit_employee"), array_keys($this->getAvailablePartnersAssoc()), false, array("onchange" => "availableMechanisms();")));
-
         $this->view->assign('bases', $bases);
-        $this->view->assign('site_types', DropDown::generateHtml('employee_site_type_option', 'site_type_phrase', $params['facility_type_option_id'], false, !$this->hasACL("edit_employee")));
         $this->view->assign('cadres', DropDown::generateHtml('employee_qualification_option', 'qualification_phrase', $params['employee_qualification_option_id'], false, !$this->hasACL("edit_employee")));
         $this->view->assign('categories', DropDown::generateHtml('employee_category_option', 'category_phrase', $params['employee_category_option_id'], false, !$this->hasACL("edit_employee"), false));
         $this->view->assign('fulltime', DropDown::generateHtml('employee_fulltime_option', 'fulltime_phrase', $params['employee_fulltime_option_id'], false, !$this->hasACL("edit_employee"), false));
@@ -515,6 +501,7 @@ class EmployeeController extends ReportFilterHelpers
         $this->view->assign('transitions_complete', DropDown::generateHtml('employee_transition_option', 'transition_phrase', $params['employee_transition_complete_option_id'], false, !$this->hasACL("edit_employee"), false, false, array('name' => 'employee_transition_complete_option_id'), true));
         $helper = new Helper();
         $this->viewAssignEscaped('facilities', $helper->getFacilities());
+        $this->viewAssignEscaped('site_types', $helper->getFacilityTypes()); //TA:#224
         $this->view->assign('relationships', DropDown::generateHtml('employee_relationship_option', 'relationship_phrase', $params['employee_relationship_option_id'], false, !$this->hasACL("edit_employee"), false));
         $this->view->assign('referrals', DropDown::generateHtml('employee_referral_option', 'referral_phrase', $params['employee_referral_option_id'], false, !$this->hasACL("edit_employee"), false));
         $this->view->assign('provided', DropDown::generateHtml('employee_training_provided_option', 'training_provided_phrase', $params['employee_training_provided_option_id'], false, !$this->hasACL("edit_employee"), false));
@@ -559,11 +546,12 @@ class EmployeeController extends ReportFilterHelpers
             $select = $db->select()
                 ->from('employee', array());
 
-            $select->joinLeft('link_employee_location', 'employee.id = link_employee_location.id_employee', array());
+            $select->joinLeft('link_employee_facility', 'employee.id = link_employee_facility.employee_id', array());//TA:#224
+            $select->joinLeft('facility', 'facility.id = link_employee_facility.facility_id', array());//TA:#224
             $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')),
-                'location.id = link_employee_location.id_location', array());
+                'location.id = facility.location_id', array());//TA:#224
             $select->joinLeft('partner', 'partner.id = employee.partner_id', array());
-            $select->joinLeft('facility', 'facility.id = employee.site_id', array());
+          //  $select->joinLeft('facility', 'facility.id = employee.site_id', array()); //TA:#224
             $select->joinLeft('employee_qualification_option',
                 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
 
