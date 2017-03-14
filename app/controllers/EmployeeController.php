@@ -584,9 +584,9 @@ class EmployeeController extends ReportFilterHelpers
             }
 
             if (isset($criteria['employee_code']) && $criteria['employee_code']) {
-                $select->where('employee.employee_code like %?%', $criteria['employee_code']);
+                $select->where('employee.employee_code like ?', "%" . $criteria['employee_code'] . "%");//TA:#364 never use %?% it will generate wrong sql string %'1'%
             }
-
+            
             if (isset($criteria['partner_id']) && $criteria['partner_id']) {
                 $select->where('employee.partner_id = ?', $criteria['partner_id']);
             }
