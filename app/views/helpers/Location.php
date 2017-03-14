@@ -715,7 +715,7 @@ function training_location_dropdown_as_a_return_value(&$tlocations, $selectedVal
   return "<select $selectContainerAttrs>$options</select>";
 }
 
-//TA:224
+//TA:#224
 function renderFacilityTypesDropDown($facilities_types, $selected_index, $readonly, $prefix = ''){
     if ( $prefix )
         $prefix .= '_';
@@ -746,7 +746,7 @@ function renderFacilityTypesDropDown($facilities_types, $selected_index, $readon
 
 }
 
-//TA:224
+//TA:#224
 function renderFacilityDropDownWithType($rowArray, $facilities, $selected_index, $readonly, $prefix = '', $add_dupe = true){
     if ( $prefix )
         $prefix .= '_';
