@@ -520,13 +520,11 @@
            } else{            
                $('#non_hiv_related_fte_total').text(non_hiv_fte_Accumulate);
            }
-           if((hiv_fte_Accumulate + non_hiv_fte_Accumulate) != $('#funded_hours_per_week').val()){
-          	 $("#hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
-           	$("#non_hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
-           	   if(verify){
+           if((hiv_fte_Accumulate + non_hiv_fte_Accumulate) != $('#funded_hours_per_week').val() && verify){
+       		    $("#hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
+       		    $("#non_hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
                 alert("Totals of '<?php echo t('HIV related FTE (Hrs)');?>' and '<?php echo t('Non-HIV related FTE (Hrs)');?>' \nmust be equal to '<?php echo t('Funded hours per week')?>' value");
                 return false;
-           	   }
            }else{
            	$("#hiv_related_fte_total").attr('class', "totalMechanismPercentageYes");
            	$("#non_hiv_related_fte_total").attr('class', "totalMechanismPercentageYes");
