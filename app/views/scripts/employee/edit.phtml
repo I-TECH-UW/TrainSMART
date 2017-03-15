@@ -490,7 +490,7 @@
                   }
                   $('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + data);
                
-                 calculateSiteTable(true);
+                 calculateSiteTable(false);
                  $('#hiv_fte_related').val('');
                  $('#non_hiv_fte_related').val('');
                 return true;   
@@ -520,11 +520,13 @@
            } else{            
                $('#non_hiv_related_fte_total').text(non_hiv_fte_Accumulate);
            }
-           if((hiv_fte_Accumulate + non_hiv_fte_Accumulate) != $('#funded_hours_per_week').val() && verify){
+           if((hiv_fte_Accumulate + non_hiv_fte_Accumulate) != $('#funded_hours_per_week').val()){
           	 $("#hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
            	$("#non_hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
-               alert("Totals of '<?php echo t('HIV related FTE (Hrs)');?>' and '<?php echo t('Non-HIV related FTE (Hrs)');?>' \nmust be equal to '<?php echo t('Funded hours per week')?>' value");
-               return false;
+           	   if(verify){
+                alert("Totals of '<?php echo t('HIV related FTE (Hrs)');?>' and '<?php echo t('Non-HIV related FTE (Hrs)');?>' \nmust be equal to '<?php echo t('Funded hours per week')?>' value");
+                return false;
+           	   }
            }else{
            	$("#hiv_related_fte_total").attr('class', "totalMechanismPercentageYes");
            	$("#non_hiv_related_fte_total").attr('class', "totalMechanismPercentageYes");
@@ -541,7 +543,7 @@
         	var $element = $(element);  
             var id = $element.parent().parent().attr("id");   	
         	$('#multi_sites_table').dataTable().fnDeleteRow($element.parent().parent()[0]);
-            calculateSiteTable(true);
+            calculateSiteTable(false);
             if(id){
                 if($('#multi_sites_table_data_delete').val() != ''){
                 	$('#multi_sites_table_data_delete').val($('#multi_sites_table_data_delete').val() + ",");
@@ -564,7 +566,7 @@
         <?php require_once 'views/scripts/status.phtml' ?>
 
         <h1><?php $this->mode == 'add' ? print(t('Add') . space . t('Employee')) : print(t('Edit') . space . t('Employee')); ?></h1>
-        <form action="" method="post" class="form_employee"  onsubmit='return calculateSiteTable(true);'>
+        <form action="" method="post" class="form_employee"  onsubmit='return calculateSiteTable(false);'>
             <legend></legend>
 
             <?php if ($this->employee['id'] && $this->hasACL('edit_employee') && $this->hasACL('delete_employee')): ?>
