@@ -116,7 +116,7 @@
             availableMechanisms();
             calculateMechanismTable();
 
-            calculateSiteTable();//TA:#224
+            calculateSiteTable(false);//TA:#224
         });
 
         function basedAtOther() {
@@ -490,14 +490,14 @@
                   }
                   $('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + data);
                
-                 calculateSiteTable();
+                 calculateSiteTable(true);
                  $('#hiv_fte_related').val('');
                  $('#non_hiv_fte_related').val('');
                 return true;   
         }
 
         //TA:#224
-        var calculateSiteTable = function () {
+        var calculateSiteTable = function (verify) {
             var sites_count = 0;
         	var $rows = $("#multi_sites_table > tbody > tr");
             var hiv_fte_Accumulate = 0;
@@ -520,7 +520,7 @@
            } else{            
                $('#non_hiv_related_fte_total').text(non_hiv_fte_Accumulate);
            }
-           if((hiv_fte_Accumulate + non_hiv_fte_Accumulate) != $('#funded_hours_per_week').val()){
+           if((hiv_fte_Accumulate + non_hiv_fte_Accumulate) != $('#funded_hours_per_week').val() && verify){
           	 $("#hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
            	$("#non_hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
                alert("Totals of '<?php echo t('HIV related FTE (Hrs)');?>' and '<?php echo t('Non-HIV related FTE (Hrs)');?>' \nmust be equal to '<?php echo t('Funded hours per week')?>' value");
@@ -541,7 +541,7 @@
         	var $element = $(element);  
             var id = $element.parent().parent().attr("id");   	
         	$('#multi_sites_table').dataTable().fnDeleteRow($element.parent().parent()[0]);
-            calculateSiteTable();
+            calculateSiteTable(true);
             if(id){
                 if($('#multi_sites_table_data_delete').val() != ''){
                 	$('#multi_sites_table_data_delete').val($('#multi_sites_table_data_delete').val() + ",");
@@ -564,7 +564,7 @@
         <?php require_once 'views/scripts/status.phtml' ?>
 
         <h1><?php $this->mode == 'add' ? print(t('Add') . space . t('Employee')) : print(t('Edit') . space . t('Employee')); ?></h1>
-        <form action="" method="post" class="form_employee"  onsubmit='return calculateSiteTable();'>
+        <form action="" method="post" class="form_employee"  onsubmit='return calculateSiteTable(true);'>
             <legend></legend>
 
             <?php if ($this->employee['id'] && $this->hasACL('edit_employee') && $this->hasACL('delete_employee')): ?>
@@ -686,26 +686,26 @@
                             <b><?php echo t("Date updated");?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
                             <b><?php echo t("Updated by");?></b>&nbsp;<?php echo $this->updater; ?><br>
                         </div>
-                    </td>
-                    <tr><td colspan=2>
+                    </td></tr></table>
+                    
                     <!-- TA: 'add' site functionality: site_id,hiv_fte_related, hiv_fte_related; ....-->
                     <input type='hidden' id='multi_sites_table_data_add' name='multi_sites_table_data_add'/>
                     <!-- TA: 'delete' site functionality: link_site_id, ....-->
                     <input type='hidden' id='multi_sites_table_data_delete' name='multi_sites_table_data_delete'/>
                     <!-- TA: may be TODO: 'edit' site functionality: link_site_id=site_id,hiv_fte_related, hiv_fte_related; ....-->
                     <input type='hidden' id='multi_sites_table_data_edit' name='multi_sites_table_data_edit'/>
-                    <table width=80%><tr><td>
+                    <!--  <table style="width:100%"><tr><td>-->
                         <table cellpadding="0" cellspacing="0" border="1" class="display tablegrid" id="multi_sites_table" style="width:100%">
                    <thead>
                 <tr>
-                    <th width='200px'><?php echo "<font color='red'>*</font>" . t('Region A (Province)'); ?></th>
-                    <th width='200px'><?php echo "<font color='red'>*</font>" . t('Region B (Health District)'); ?></th>
-                    <th width='200px'><?php echo "<font color='red'>*</font>" . t('Region C (Local Region)'); ?></th>
-                    <th width='200px'><?php echo "<font color='red'>*</font>" . t('Site Type'); ?></th>
+                    <th width='10%'><?php echo "<font color='red'>*</font>" . t('Region A (Province)'); ?></th>
+                    <th width='15%'><?php echo "<font color='red'>*</font>" . t('Region B (Health District)'); ?></th>
+                    <th width='15%'><?php echo "<font color='red'>*</font>" . t('Region C (Local Region)'); ?></th>
+                    <th width='10%'><?php echo "<font color='red'>*</font>" . t('Site Type'); ?></th>
                     <th><?php echo "<font color='red'>*</font>" .t('Site Name'); ?></th>
-                    <th width='100px'><?php echo "<font color='red'>*</font>" . t('HIV Related FTE (Hrs)'); ?></th>
-                    <th width='100px'><?php echo "<font color='red'>*</font>" . t('Non-HIV related FTE (Hrs)'); ?></th>
-                    <th width='100px'><?php tp("Delete?"); ?></th>               
+                    <th width='5%'><?php echo "<font color='red'>*</font>" . t('HIV Related FTE (Hrs)'); ?></th>
+                    <th width='5%'><?php echo "<font color='red'>*</font>" . t('Non-HIV related FTE (Hrs)'); ?></th>
+                    <th width='5%'><?php tp("Delete?"); ?></th>               
                 </tr>
                 </thead>
                 <tfoot>
@@ -737,33 +737,33 @@
                 <?php } ?>
                 </tbody>
                    </table>
-                   </td></tr></table>      
-                   <table border=0 style='table-layout: fixed; width: 80%;'>
+                   <!--  </td></tr></table>   -->   
+                   <table border=0 style='width: 700px;'>
                    <tr>
                    <?php
                    $helper = new Helper();
                    $db_locations_arr = $helper->get3TiersLocationsParentIds();
                    $label = "<span style='font-size:11px; font-weight:bold; color:#696969;'>";
-                   echo  "<td width='200px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Region A (Province)') . "</span><br>";
+                   echo  "<td width='150px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Region A (Province)') . "</span><br>";
                    renderFilter($this->locations, 1,'province_id', '', 'district_id', false, $this->viewonly);
                    echo "</td>";
-                   echo "<td width='200px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Region B (Health District)') . "</span><br>";
+                   echo "<td width='150px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Region B (Health District)') . "</span><br>";
                    renderFilter($this->locations, 2, 'district_id', '', 'region_c_id', false, $this->viewonly); 
                    echo "</td>";
-                   echo "<td width='200px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Region C (Local Region)') . "</span><br>";
+                   echo "<td width='150px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Region C (Local Region)') . "</span><br>";
                    renderFilter($this->locations, 3, 'region_c_id', '', 'region_d_id', false, $this->viewonly);
                    echo "</td>";
-                   echo "<td width='200px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Site Type') . "</span><br>";
+                   echo "<td width='150px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Site Type') . "</span><br>";
                    echo renderFacilityTypesDropDown($this->site_types, '', $this->viewonly, '');  
                    echo "</td>";
-                   echo "<td width='265px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Site Name') . "</span><br>";
+                   echo "<td width='230px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Site Name') . "</span><br>";
                    echo renderFacilityDropDownWithType($db_locations_arr, $this->facilities, '', $this->viewonly, '', true);
                    echo "</td>";
-                   echo "<td width='100px' style='padding-right: 10px;' valign='bottom'>" . $label . t('HIV Related FTE (Hrs)') . "</span><br>";
-                   echo "<input type='text' id='hiv_fte_related' name='hiv_fte_related' value='' style='width:90px;'/>";
+                   echo "<td width='50px' style='padding-right: 10px;' valign='bottom'>" . $label . t('HIV Related FTE (Hrs)') . "</span><br>";
+                   echo "<input type='text' id='hiv_fte_related' name='hiv_fte_related' value='' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntegerKeyPress(this);'/>";
                    echo "</td>";
-                   echo "<td width='100px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Non-HIV related FTE (Hrs)') . "</span><br>";
-                    echo "<input type='text' id='non_hiv_fte_related' name='non_hiv_fte_related' value='' style='width:90px;'/>";
+                   echo "<td width='50px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Non-HIV related FTE (Hrs)') . "</span><br>";
+                    echo "<input type='text' id='non_hiv_fte_related' name='non_hiv_fte_related' value='' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntegerKeyPress(this);'/>";
                    echo "</td>";
                    echo "<td style='padding-right: 10px;' valign='bottom'>" . $label . "&nbsp;" . "</span><br>";
                    echo '<input type="button" name="multiSite" value="'. t("Add") . '" class="insert"
@@ -778,11 +778,11 @@
                    </table>
                    <br><br>
                    <script>
-                    $('#province_id').attr('style', 'width: 200px !important; min-width: 200px; max-width: 200px;');
-                    $('#district_id').attr('style', 'width: 200px !important; min-width: 200px; max-width: 200px;');
-                    $('#region_c_id').attr('style', 'width: 200px !important; min-width: 200px; max-width: 200px;');
-                    $('#facilityInput').attr('style', 'width: 265px !important; min-width: 265px; max-width: 265px;');
-                    $('#facilityType').attr('style', 'width: 200px !important; min-width: 200px; max-width: 200px;');
+                    $('#province_id').attr('style', 'width: 150px !important; min-width: 150px; max-width: 150px;');
+                    $('#district_id').attr('style', 'width: 150px !important; min-width: 150px; max-width: 150px;');
+                    $('#region_c_id').attr('style', 'width: 150px !important; min-width: 150px; max-width: 150px;');
+                    $('#facilityInput').attr('style', 'width: 230px !important; min-width: 230px; max-width: 230px;');
+                    $('#facilityType').attr('style', 'width: 150px !important; min-width: 150px; max-width: 150px;');
                     elSubDistrict = YAHOO.util.Dom.get('region_c_id');
                     elFacilityType = YAHOO.util.Dom.get('facilityType');
                     elFacilityName = YAHOO.util.Dom.get('facilityInput');
@@ -907,9 +907,6 @@
                         ?>
 
                         <!-- TA:#256 -->
-                    </td>
-                </tr>
-            </table>
 
             <div class="clear"></div>
             <br/><br/>
