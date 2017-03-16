@@ -337,9 +337,10 @@ function makeEditTableTraining(labelAdd, tableData, columnDefs, jsonUrl, linkInf
 					// SUCCESS
 				var status = YAHOO.lang.JSON.parse(o.responseText); // , true);
 
-				if (oCellEditor.column.editorOptions && oCellEditor.column.editorOptions.dropdownOptions) { // is dropdown
-					oCellEditor.value = oCellEditor.column.editorOptions.dropdownOptions[oCellEditor.value].text;
-				}
+				//TA:#373 remove those lines beacuse it does not work for some items selection ???????
+//				if (oCellEditor.column.editorOptions && oCellEditor.column.editorOptions.dropdownOptions) { // is dropdown
+//					oCellEditor.value = oCellEditor.column.editorOptions.dropdownOptions[oCellEditor.value].text;
+//				}
 
 				// error handling
 				if (status.error != null) {
