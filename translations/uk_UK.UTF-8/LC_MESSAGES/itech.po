@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Trainsmart\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-09-24 16:51-0800\n"
-"PO-Revision-Date: 2017-03-02 14:36-0800\n"
+"PO-Revision-Date: 2017-03-16 13:46-0800\n"
 "Last-Translator: DB\n"
 "Language-Team: Fuse IQ <todd@fuseiq.com>\n"
 "Language: uk_UA\n"
@@ -4155,3 +4155,9 @@ msgstr "Виконавець  тренiнгу"
 
 msgid "Signature"
 msgstr "Підпис"
+
+msgid "New Trainer Form"
+msgstr "Додати нового тренера"
+
+msgid "New Participant Form"
+msgstr "Додати нового учасника"
