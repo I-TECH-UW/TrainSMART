@@ -342,6 +342,12 @@ class EmployeeController extends ReportFilterHelpers
                         }
                     }
                 }
+                
+                //TA:#224
+                if($params['multi_sites_table_data_count'] == 0){
+                    print "yes";
+                    $status->checkRequired($this, 'multi_sites_table_data_count_0', t('Site Name'));
+                }
 
           
                 if ($this->setting('display_employee_contract_end_date')) {

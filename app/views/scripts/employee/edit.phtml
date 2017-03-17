@@ -466,19 +466,29 @@
                 return false;
             } 
              var hiv_fte_related = $('#hiv_fte_related' ).val();
-            if(hiv_fte_related === "" || isNaN(hiv_fte_related)){
-                alert("Specify integer value for '<?php tp('HIV Related FTE (Hrs)');?>'.");
-                $('#hiv_fte_related' ).val('');
-                return false;
+             if(hiv_fte_related == ""){
+            	 hiv_fte_related = 0;
+             }else{
+                if(isNaN(hiv_fte_related)){
+                	alert("Specify integer value for '<?php tp('HIV Related FTE (Hrs)');?>'.");
+                    $('#hiv_fte_related' ).val('');
+                    return false;
+                }else{
+                	hiv_fte_related = parseInt(hiv_fte_related);
+                }
             }
-            hiv_fte_related = parseInt(hiv_fte_related);
             var non_hiv_fte_related = $('#non_hiv_fte_related' ).val();
-            if(non_hiv_fte_related === "" || isNaN(non_hiv_fte_related)){
-                alert("Specify integer value for '<?php tp('Non-HIV Related FTE (Hrs)');?>'.");
-                $('#non_hiv_fte_related' ).val('');
-                return false;
+            if(non_hiv_fte_related == ""){
+            	non_hiv_fte_related = 0;
+            }else{
+                if(isNaN(non_hiv_fte_related)){
+               	 alert("Specify integer value for '<?php tp('Non-HIV Related FTE (Hrs)');?>'.");
+                 $('#non_hiv_fte_related' ).val('');
+                 return false;
+                }else{
+                	non_hiv_fte_related = parseInt(non_hiv_fte_related);
+                }
             }
-            non_hiv_fte_related = parseInt(non_hiv_fte_related);
                 var newRowIDs = $oTable.fnAddData([province, district, region, site_type, site_name, hiv_fte_related, 
                                                    non_hiv_fte_related,
                 '<input type="checkbox" onclick="deleteToggleSite(this);"/>']);
@@ -491,8 +501,19 @@
                   $('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + data);
                
                  calculateSiteTable(false);
+                 $('#province_id').val('0');
+                 $('#district_id').val('0');
+                 $('#district_id').attr('disabled', true);
+                 $('#region_c_id').val('0');
+                 $('#region_c_id').attr('disabled', true);
+                 $('#facilityType').val('0');
+                 $('#facilityType').attr('disabled', true);
+                 $('#facilityInput').val('0');
+                 $('#facilityInput').attr('disabled', true);
                  $('#hiv_fte_related').val('');
+                 $('#hiv_fte_related').attr('disabled', true);
                  $('#non_hiv_fte_related').val('');
+                 $('#non_hiv_fte_related').attr('disabled', true);
                 return true;   
         }
 
@@ -521,18 +542,15 @@
                $('#non_hiv_related_fte_total').text(non_hiv_fte_Accumulate);
            }
            if((hiv_fte_Accumulate + non_hiv_fte_Accumulate) != $('#funded_hours_per_week').val() && verify){
-       		    $("#hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
-       		    $("#non_hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
+       		    //uncomment leter by request $("#hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
+       		    //uncomment leter by request$("#non_hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
                 alert("Totals of '<?php echo t('HIV related FTE (Hrs)');?>' and '<?php echo t('Non-HIV related FTE (Hrs)');?>' \nmust be equal to '<?php echo t('Funded hours per week')?>' value");
                 return false;
            }else{
-           	$("#hiv_related_fte_total").attr('class', "totalMechanismPercentageYes");
-           	$("#non_hiv_related_fte_total").attr('class', "totalMechanismPercentageYes");
-           } 
-           if(sites_count == 0){
-               alert("'<?php echo t('Site Name');?>' is required.");
-               return false;
-           } 
+           	//uncomment leter by request$("#hiv_related_fte_total").attr('class', "totalMechanismPercentageYes");
+           	//uncomment leter by request$("#non_hiv_related_fte_total").attr('class', "totalMechanismPercentageYes");
+           }
+           $("#multi_sites_table_data_count").val(sites_count); 
            return true;
         };
 
@@ -694,6 +712,7 @@
                     <input type='hidden' id='multi_sites_table_data_delete' name='multi_sites_table_data_delete'/>
                     <!-- TA: may be TODO: 'edit' site functionality: link_site_id=site_id,hiv_fte_related, hiv_fte_related; ....-->
                     <input type='hidden' id='multi_sites_table_data_edit' name='multi_sites_table_data_edit'/>
+                    <input type='hidden' id='multi_sites_table_data_count' name='multi_sites_table_data_count'/>
                     <!--  <table style="width:100%"><tr><td>-->
                         <table cellpadding="0" cellspacing="0" border="1" class="display tablegrid" id="multi_sites_table" style="width:100%">
                    <thead>
