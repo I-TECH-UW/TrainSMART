@@ -435,10 +435,11 @@
             endif; // fi historyDiv
 
             //TA:#279.2 add 'transition_other' and 'transition_complete_other' to required fields
+            //TA:#374 add 'agreement_start_date'
             $this->required_fields = array('employee_code', 'partner_id', 'employee_base_option_id',
                 'employee_qualification_option_id', 'salary', 'benefits', 'additional_expenses', 'stipend',
                 'employee_transition_option_id', 'employee_role_option_id', 'disability_option_id',
-                'disability_comments', 'funded_hours_per_week', 'agreement_end_date', 'facilityInput',
+                'disability_comments', 'funded_hours_per_week', 'agreement_start_date', 'agreement_end_date', 'facilityInput',
                 'transition_other', 'transition_complete_other');
             
             if (!$this->hasACL('edit_employee')) {
@@ -559,6 +560,8 @@
                         if ($this->setting['display_employee_registration_number']) {
                             echo labelAndField($this, t('Registration Number'), 'text', 'registration_number', $this->employee['registration_number']);
                         }
+                        //TA:#374
+                        echo labelAndField($this, t('Contract Start Date'), 'date', 'agreement_start_date', $this->employee['agreement_start_date']);
                         if ($this->setting['display_employee_contract_end_date']) {
                             echo labelAndField($this, t('Contract End Date'), 'date', 'agreement_end_date', $this->employee['agreement_end_date']);
                         }

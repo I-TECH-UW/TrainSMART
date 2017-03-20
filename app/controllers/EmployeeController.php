@@ -288,6 +288,7 @@ class EmployeeController extends ReportFilterHelpers
                 //TA:#293 take multiple locations
                 $params['location_id'] = regionFiltersGetLastIDMultiple('', $params);
                 $params['dob'] = $this->_euro_date_to_sql($params['dob']);
+                $params['agreement_start_date'] = $this->_euro_date_to_sql($params['agreement_start_date']);//TA:#374
                 $params['agreement_end_date'] = $this->_euro_date_to_sql($params['agreement_end_date']);
                 $params['transition_date'] = $this->_euro_date_to_sql($params['transition_date']);
                 $params['transition_complete_date'] = $this->_euro_date_to_sql($params['transition_complete_date']);
@@ -359,9 +360,19 @@ class EmployeeController extends ReportFilterHelpers
                 // Disabled until further notice - issue #339
                 // $status->checkRequired($this, 'employee_site_type_option_id', t('Site') . ' ' . t('Type'));
 
+                $status->checkRequired($this, 'agreement_start_date', t('Contract Start Date'));//TA:#374
+                
                 if ($this->setting('display_employee_contract_end_date')) {
                     $status->checkRequired($this, 'agreement_end_date', t('Contract End Date'));
                 }
+                
+                //TA:#374
+                if($params['agreement_start_date'] && $params['agreement_end_date']){
+                    if(strtotime($params['agreement_start_date']) > strtotime($params['agreement_end_date'])){
+                        $status->addError('agreement_dates_wrong', t('Contract Start Date must be less than Contract End Date'));
+                    }
+                }
+                
 
                 if ($this->setting('display_employee_intended_transition')) {
                     $status->checkRequired($this, 'employee_transition_option_id', t('Intended Transition'));
@@ -483,6 +494,7 @@ class EmployeeController extends ReportFilterHelpers
 
         // assign form drop downs
         $params['dob'] = formhelperdate($params['dob']);
+        $params['agreement_start_date'] = formhelperdate($params['agreement_start_date']);//TA:#374
         $params['agreement_end_date'] = formhelperdate($params['agreement_end_date']);
         $params['transition_date'] = formhelperdate($params['transition_date']);
         $params['transition_complete_date'] = formhelperdate($params['transition_complete_date']);
