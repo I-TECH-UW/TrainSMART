@@ -10284,10 +10284,10 @@ die (__LINE__ . " - " . $sql);
                     $select->join(array('partner'), 'partner.id = employee.partner_id', array());
                 }
                 if (!array_key_exists('location', $parts)) {
-                    //TA:#293 take multiple locations
-                   // $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
-                    $select->join('link_employee_location', 'link_employee_location.id_employee = employee.id', array());
-                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = link_employee_location.id', array());
+                    //TA:#224 
+                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 }
                 if (!array_key_exists('employee_qualification_option', $parts)) {
                     $select->join('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
@@ -10624,10 +10624,10 @@ die (__LINE__ . " - " . $sql);
                     $select->join(array('partner'), 'partner.id = employee.partner_id', array());
                 }
                 if (!array_key_exists('location', $parts)) {
-                    //TA:#293 take multiple locations 
-                   // $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
-                    $select->join('link_employee_location', 'link_employee_location.id_employee = employee.id', array());
-                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = link_employee_location.id', array());
+                    //TA:#224 
+                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 }
                 if (!array_key_exists('employee_role_option', $parts)) {
                     $select->join('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());

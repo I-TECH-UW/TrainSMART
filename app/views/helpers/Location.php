@@ -715,3 +715,117 @@ function training_location_dropdown_as_a_return_value(&$tlocations, $selectedVal
   return "<select $selectContainerAttrs>$options</select>";
 }
 
+//TA:#224
+function renderFacilityTypesDropDown($facilities_types, $selected_index, $readonly, $prefix = ''){
+    if ( $prefix )
+        $prefix .= '_';
+
+    $output = '<select id="' . $prefix .'facilityType" name="' . $prefix .'facilityType"';
+    if ($readonly)
+    {
+        $output .= ' disabled="disabled"';
+    }
+    $output .= '>';
+    $output .= '<option class="defaultval" value="">--'.t('choose').'--</option>';
+    foreach ( $facilities_types as $vals ) {
+        $output .= '<option value="'.$vals['id'].'" '.($selected_index == $vals['id']?'SELECTED':'').'>'.$vals['facilitytypename'].'</option>';
+    }
+    $output .= '</select>';
+
+    $js = '
+          $(function () {
+            regionSelectElements = $("#' . $prefix .'facilityInput")
+            .change(function () {
+            $("#' . $prefix .'facilityType").val($("option:selected", this).attr("type_id"));
+              });
+          });
+      ';
+
+   $output .= '<script type="text/JavaScript">'.$js.'</script>';
+    return $output;
+
+}
+
+//TA:#224
+function renderFacilityDropDownWithType($rowArray, $facilities, $selected_index, $readonly, $prefix = '', $add_dupe = true){
+    if ( $prefix )
+        $prefix .= '_';
+
+    $location_classes = array();
+    foreach($rowArray as $row){
+        // store parent location ids in a hash. hash[id] = "zone1id zone2id zone3id"
+        $location_classes[$row['id']] = trim($row['zone1'].' '.$row['zone2'].' '.$row['zone3']);
+    }
+    $dupe = '';
+    // lets build a visible <select> and also a display:none <select> with all locations
+    $output = '<select id="' . $prefix .'facilityInput" name="' . $prefix .'facilityInput"';
+    if ($readonly){
+        $output .= ' disabled="disabled"';
+    }
+    $output .= '>';
+    $output .= '<option class="defaultval" value="">--'.t('choose').'--</option>';
+    foreach ( $facilities as $vals ) {
+        $output .= '<option type_id="' . $vals['type_option_id'] . '" class="'.$location_classes[$vals['id']].'" value="'.$vals['id'].'" '.($selected_index == $vals['id']?'SELECTED':'').'>'.$vals['facility_name'].'</option>';
+        if($add_dupe){
+            $dupe .= '<option  type_id="' . $vals['type_option_id'] . '" class="'.$location_classes[$vals['id']].'" value="'.$vals['id'].'" '.($selected_index == $vals['id']?'SELECTED':'').'>'.$vals['facility_name'].'</option>';
+        }
+    }
+    $output .= '</select>';
+    if($add_dupe){
+        $output .= '<div style="display:none;">';
+        $output .= '<select id="facilityInputHidden" name="facilityInputHidden" style="display:none;visibility:hidden;">';
+        $output .= '<option class="defaultval" value="">--'.t('choose').'--</option>';
+        $output .= $dupe;
+        $output .= '</select>';
+        $output .= '</div>';
+    }
+    // selects have a value attribute "region1_region2_region3", ie: 555_423_1
+    $js = '
+          $(function () {
+            regionSelectElements = $("#' . $prefix .'province_id,#' . $prefix .'district_id,#' . $prefix .'region_c_id,#' . $prefix .'facilityType")
+            .change(function () {
+                var compare_id = "";
+                var type_id = "";
+                if ($(this).val() != ""){
+                        if($(this).attr("id") == "' . $prefix .'facilityType"){
+                            type_id = $(this).val().split("_").pop();
+
+                        }else{
+                             compare_id = $(this).val().split("_").pop();
+                        }
+                }
+                if(compare_id == ""){
+                    compare_id = $("#' . $prefix .'region_c_id").val().split("_").pop();
+                    if(compare_id == ""){
+                        compare_id = $("#' . $prefix .'district_id").val().split("_").pop();
+                        if(compare_id == ""){
+                        compare_id = $("#' . $prefix .'province_id").val().split("_").pop();
+                        }
+                    }
+                }
+                if(type_id == ""){
+                    type_id = $("#' . $prefix .'facilityType").val();
+                }
+                    allFacilities = $("#facilityInputHidden").children();
+                    var facilityInput = $("#' . $prefix .'facilityInput");
+                    facilityInput.empty();
+                    for(i = 0; i < allFacilities.length; i++){
+                      row = $(allFacilities[i]);
+                      if((compare_id == "" && type_id == "") ||
+                          (compare_id == "" && row.attr("type_id") == type_id) ||
+                          (type_id == "" && row.hasClass(compare_id)) ||
+                            (row.attr("type_id") == type_id && row.hasClass(compare_id)) ||
+                            row.hasClass("defaultval")
+                        ){
+                           facilityInput.append(row.clone());
+                        }
+                    }
+              });
+          });
+      ';
+
+    $output .= '<script type="text/JavaScript">'.$js.'</script>';
+    return $output;
+
+}
+

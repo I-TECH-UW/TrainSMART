@@ -434,3 +434,26 @@ function validateFloatKeyPress(el) {
     var v = parseFloat(el.value);
     el.value = (isNaN(v)) ? '' : v.toFixed(2);
 }
+
+//TA:#224
+function isIntegerNumber(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    //digits [48..57], [8] - backSpace
+    if ((charCode >= 48 && charCode <= 57) || charCode == 8) {
+        return true;
+    }
+    //[46] - delete and .
+    if (charCode == 46){//skip . (dot)
+    	evt.preventDefault();
+	}
+    return false;
+}
+
+//TA:#224
+function validateIntegerKeyPress(el) {
+    var v = parseInt(el.value);
+    el.value = (isNaN(v)) ? '' : v.toFixed(0);
+}
+
+
