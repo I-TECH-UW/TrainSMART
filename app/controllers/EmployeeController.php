@@ -345,7 +345,6 @@ class EmployeeController extends ReportFilterHelpers
                 }
                 
                 //TA:#224
-                //print "=".$params['multi_sites_table_data_count'] . "=";
                 if($params['multi_sites_table_data_count'] == 0){
                     $status->checkRequired($this, 'multi_sites_table_data_count_0', t('Site Name'));
                 }
@@ -567,7 +566,6 @@ class EmployeeController extends ReportFilterHelpers
             $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')),
                 'location.id = facility.location_id', array());//TA:#224
             $select->joinLeft('partner', 'partner.id = employee.partner_id', array());
-          //  $select->joinLeft('facility', 'facility.id = employee.site_id', array()); //TA:#224
             $select->joinLeft('employee_qualification_option',
                 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
 
