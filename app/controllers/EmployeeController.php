@@ -345,24 +345,10 @@ class EmployeeController extends ReportFilterHelpers
                 }
                 
                 //TA:#224
+                //print "=".$params['multi_sites_table_data_count'] . "=";
                 if($params['multi_sites_table_data_count'] == 0){
-                    print "yes";
                     $status->checkRequired($this, 'multi_sites_table_data_count_0', t('Site Name'));
                 }
-
-                // It's safe to assume that if region_c_id is selected then province and district also are, but now we
-                // also need to trigger the error handling code that displays errors on the front-end
-
-                $status->checkRequired($this, 'province_id', t('Region A (Province)'));
-                $status->checkRequired($this, 'district_id', t('Region B (Health District)'));
-
-                //TA:#293.2
-                $status->checkRequired($this, 'region_c_id', t('Region C (Local Region)'));//TA:#293.1
-
-                $status->checkRequired($this, 'facilityInput', t('Site') . ' ' . t('Name'));
-
-                // Disabled until further notice - issue #339
-                // $status->checkRequired($this, 'employee_site_type_option_id', t('Site') . ' ' . t('Type'));
 
                 $status->checkRequired($this, 'agreement_start_date', t('Contract Start Date'));//TA:#374
                 
@@ -473,8 +459,7 @@ class EmployeeController extends ReportFilterHelpers
         $mechanismData['assigned_mechanisms'] = $employeeMechanisms;
 
 
-        if ($id && !$status->hasError())  // read data from db
-        {
+        if ($id){
             $select = $db->select()->from('employee')->where('id = ?', $id);
             $row = $db->fetchRow($select);
             if (!$row) {
