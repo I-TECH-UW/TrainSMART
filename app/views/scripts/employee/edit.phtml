@@ -792,8 +792,9 @@
                    ?>
                    </tr>
                    <tr><td></td><td></td><td></td><td></td><td colspan=2>
-                   <a href="' . $this->base_url . '/site/add"><?php echo t('Insert a New') . space . t('Site');?></a>&nbsp;&nbsp;
-                   <a href="' . $this->base_url . '/site/search"><?php echo t('View/Edit') . space . t('Site');?></a>&nbsp;&nbsp;
+                   <!-- TA:#381 -->
+                   <a href='<?php echo$this->base_url;?>/site/add'><?php echo t('Insert a New') . space . t('Site');?></a>&nbsp;&nbsp;
+                   <a href='<?php echo$this->base_url;?>/site/search'><?php echo t('View/Edit') . space . t('Site');?></a>&nbsp;&nbsp;
                    </td></tr>
                    </table>
                    <br><br>
