@@ -187,10 +187,27 @@ select personid from student where id not in
               ON t.institutionid = i1.id
             LEFT JOIN institution i2
               ON lti.id_institution = i2.id
-        ) AS t
+                    ';
+      
+      //TA:#361 also show in-service trainers
+    $trainerLink = Settings::$COUNTRY_BASE_URL . "/person/edit/id/";
+        $sql .= ' 
+        UNION
+SELECT \'tutor\' AS tutor_type, 
+            tr.person_id AS tutor_id,
+            tr.person_id AS person_id,
+            \'0\' as is_keypersonal,
+            CONCAT(\'' . $trainerLink . '\', CAST(person_id AS CHAR (20))) AS tutor_link,
+            \'N/A\' AS tutor_institutionname,
+            \'0\' AS tutor_inst_id
+    FROM trainer tr
+      ';/////
+        
+        $sql .= ') AS t
           ON p.id = t.person_id
-      ';
+      ';  
     }
+   
 
     // WHERE CLAUSES
     $where[] = ' p.is_deleted = 0 ';
@@ -243,7 +260,6 @@ select personid from student where id not in
     // ORDER BY CLAUSE
     $sql .= $where_inst . ' ORDER BY last_name, first_name;';
     
-   // print $sql;
     return $sql;
     
   }
