@@ -6641,32 +6641,37 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			}
 		}
 
+		//TA:#334
 		if (isset($params['showactive']) && $params['showactive']) {
-			$headers[] = "Active";
-			$s->where("p.active = 'active'");
-		}
-
-		if (isset($params['showterminated']) && $params['showterminated']) {
-			if (!$cohortJoined) {
-				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
-				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
-				$cohortJoined = true;
+			if (isset($params['showterminated']) && $params['showterminated']) {//active=on, terminated=on => show both active and dropped students (=8513)
+			    $s->where("p.active = 'active'");
+			}else{//active=on, terminated=off => show both active and dropped students (=8513)
+			    $s->where("p.active = 'active'");
 			}
-			$s->columns("IF(lsc.isgraduated = 0 AND lsc.dropdate != '0000-00-00', 'Terminated Early', '')");
-			$headers[] = "Terminated Early";
+		}else{
+		    if (isset($params['showterminated']) && $params['showterminated']) {//active=off, terminated=on => Show only terminated students with termination reasons (=209)
+		        if (!$cohortJoined) {
+		            $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		            $cohortJoined = true;
+		        }
+		        $s->joinLeft(array('lr' => 'lookup_reasons'), 'lr.id = lsc.dropreason', array());
+		        $s->where("lsc.isgraduated = 0");
+		        $s->where("lsc.dropdate != '0000-00-00'");
+		        $s->where("lr.reasontype = 'drop'"); //we need to take only drop reason
+		        $s->columns("lr.reason");
+		        $headers[] = "Terminated Early";
+		    }else{//active=off, terminated=off => Show active students, excluding dropped students (=8264)
+		        if (!$cohortJoined) {
+		            $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		            $cohortJoined = true;
+		        }
+		        $s->where("lsc.isgraduated = 0");
+		        $s->where("lsc.dropdate = '0000-00-00'");
+		        $s->where("p.active = 'active'");
+		    } 
 		}
-
-        if (isset($params['termination_status']) && $params['termination_status'] == 2) {
-            if (!$cohortJoined) {
-                $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
-                $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
-                $cohortJoined = true;
-            }
-            if ($params['termination_status'] == 2) {
-                $s->where("lsc.isgraduated = 0");
-                $s->where("lsc.dropdate != '0000-00-00'");
-            }
-        }
 
 		if ((isset($params['showdegrees'])) && $params['showdegrees'] ||
 			(isset($params['degrees']) && $params['degrees'])) {
@@ -6923,7 +6928,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$this->view->assign('coursetypes', $helper->AdminCourseTypes());
 		$this->view->assign('degrees', $helper->getDegrees());
 		$this->view->assign('site_style', $this->setting('site_style'));
-        $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
+        //TA:#334 $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
 
 		if ($this->getSanParam('process')) {
 			$criteria = $this->getAllParams();
@@ -6958,7 +6963,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$this->view->assign ( 'coursetypes', $helper->AdminCourseTypes());
 		$this->view->assign ( 'degrees', $helper->getDegrees());
 		$this->view->assign('site_style', $this->setting('site_style'));
-        $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
+        //TA:#334 $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
 
 		if ($this->getSanParam ('process')) {
 			$criteria = $this->getAllParams();
