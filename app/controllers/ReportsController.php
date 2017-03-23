@@ -6643,8 +6643,16 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 		//TA:#334
 		if (isset($params['showactive']) && $params['showactive']) {
-			if (isset($params['showterminated']) && $params['showterminated']) {//active=on, terminated=on => show both active and dropped students (=8513)
+			if (isset($params['showterminated']) && $params['showterminated']) {//active=on, terminated=on => show both active and dropped students with termination reasons (=8513)
+			    if (!$cohortJoined) {
+			        $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+			        $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+			        $cohortJoined = true;
+			    }
+			    $s->joinLeft(array('lr' => 'lookup_reasons'), 'lr.id = lsc.dropreason', array());
 			    $s->where("p.active = 'active'");
+			    $s->columns("lr.reason");
+			    $headers[] = "Terminated Early";
 			}else{//active=on, terminated=off => show both active and dropped students (=8513)
 			    $s->where("p.active = 'active'");
 			}
