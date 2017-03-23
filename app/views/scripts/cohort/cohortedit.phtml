@@ -471,7 +471,14 @@
 			<div id="content">
 				<div id="subcontent">
 					<div id="contentheader">
-						<h2><?php echo t('Edit/View Cohort Record'); ?>
+						<h2><?php 
+						//TA:#380
+						if ( $this->hasACL('edit_people')	){
+						    echo t('Edit/View Cohort Record');
+						}else{
+						  echo t('View Cohort Record'); 
+						}
+						?>
 						</h2>
 					</div>
 					<div class="pad50 clear"></div>
@@ -488,10 +495,12 @@
 							<input type="text" class="required" name="cohortid" readonly  value="<?php echo $this->escape($this->cohortid);?>">
 
 							<label><?php echo t('Cohort Name'); ?></label>
-							<input type="text" class="required" name="cohortname"  value="<?php echo $this->escape($this->cohortname);?>">
+							<!-- TA:#380 -->
+							<input type="text" class="required" name="cohortname"  <?php echo $this->hasACL('edit_people')?'':'readonly';?> value="<?php echo $this->escape($this->cohortname);?>">
 
 							<label><?php echo t('Degree Information'); ?></label>
-							<select name="degreeinfo" class="comboeditable">
+							<!-- TA:#380 -->
+							<select name="degreeinfo" class="comboeditable" <?php echo $this->hasACL('edit_people')?'':'disabled=disabled';?>>
 								<option value="0"><?php echo t('Select...'); ?></option>
 								<?php
 									foreach ($this->lookupdegrees as $degree){
@@ -503,7 +512,8 @@
 							</select>
 
 							<label><?php echo t('Institution'); ?></label>
-							<select name="institution" id="institution">
+							<!-- TA:#380 -->
+							<select name="institution" id="institution" <?php echo $this->hasACL('edit_people')?'':'disabled=disabled';?>>
 								<?php
 									foreach ($this->institutions as $institution){
 									?>
@@ -514,7 +524,8 @@
 							</select>
 
 							<label><?php echo t('Cadre'); ?></label>
-							<select name="cadre" id="cadre">
+							<!-- TA:#380 -->
+							<select name="cadre" id="cadre" <?php echo $this->hasACL('edit_people')?'':'disabled=disabled';?>>
 								<?php
 								foreach ($this->institution_cadres as $cadre){
 									?>
@@ -525,10 +536,12 @@
 							</select>
 
 							<label><?php echo t('Cohort Start Date'); ?></label>
-							<input type="text" name="cohortstart" class="calendarbox required" value="<?php echo $this->escape($this->startname);?>">
+							<!-- TA:#380 -->
+							<input type="text" name="cohortstart" <?php echo $this->hasACL('edit_people')?' class="calendarbox required" ':'readonly';?> value="<?php echo $this->escape($this->startname);?>">
 
 							<label><?php echo t('Cohort Graduation Date'); ?></label>
-							<input type="text" name="cohortgrade" class="calendarbox required" value="<?php echo $this->escape($this->graddate);?>">
+							<!-- TA:#380 -->
+							<input type="text" name="cohortgrade" <?php echo $this->hasACL('edit_people')?' class="calendarbox required" ':'readonly';?> value="<?php echo $this->escape($this->graddate);?>">
 
 							<label><?php echo t('Cohort Participants at Start'); ?></label>
 							<input type="text" name="startdate" readonly value="<?php echo $this->escape($this->studentsatstart);?>">
@@ -540,10 +553,18 @@
 							<input type="text" name="graddate" readonly value="<?php echo $this->escape($this->studentsgraduating);?>">
 
 							<div class="rightdiv" style="margin-top:10px; margin-right:12px;">
-							<!-- TA:44 add button Delete -->
+							
+							<?php 
+						//TA:#380
+						if ( $this->hasACL('edit_people')	){?>
+						    <!-- TA:44 add button Delete -->
 								<input type="submit" name="deletecohort" value="<?php echo t('Delete'); ?>" class="tsbutton green large" 
 								onclick="<?php if(sizeof($this->cohortStudents) !=0 ) echo 'alert(\'Please remove all Students associated with the cohort first\'); return false;'; ?>">
 								<input type="submit" name="updatecohort" value="<?php echo t('Update'); ?> &raquo;" class="tsbutton green large">
+						<?php }else{?>
+						   <a href="../../../cohort/cohort"> <input type="button"  value="Back" class="tsbutton green large"></a>
+						<?php } ////?>
+						
 							</div>
 						</div>
 				</td>
@@ -554,10 +575,12 @@
 						<b><?php echo t('Created by'); ?></b>&nbsp;<?php echo $this->creator; ?><br>
 						<b><?php echo t('Date updated'); ?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
 						<b><?php echo t('Updated by'); ?></b>&nbsp;<?php echo $this->updater; ?><br>
+						<?php //TA:#380
+						if ( $this->hasACL('edit_people')	){?> 
 						<!-- TA:#362 -->
 						<hr>
 						<a href="<?php echo Settings::$COUNTRY_BASE_URL; ?>/cohort/transcript/id/<?php echo $this->escape($this->id); ?>" target="_blank" ><?php echo t('Create a new Official Transcript')?></a> <br/>
-                          
+                          <?php }?>
 						</div>
 				</td>
 				</td></tr>
@@ -608,7 +631,11 @@
 						</table>
 						<div style="text-align : right;">
 							<br>
+							<?php 
+							//TA:#380
+						if ( $this->hasACL('edit_people')	){?>
 							<input type="submit" name="studentpopupbutton" id="studentpopupbutton" value="<?php echo t('Update associated students'); ?>" class="tsbutton green large">
+							<?php }?>
 						</div>
 					</div>
 <?php
@@ -633,9 +660,20 @@
 	foreach ($this->licenses as $license){
 ?>
 								<tr class="GradeA">
-									<td style="cursor : pointer;" onclick="licenseedititem('<?php echo $license['id'] . "','" . $license['licensename'] . "','" . $license['licensedate']; ?>');"><?php echo $license['licensename'];?></td>
-									<td style="cursor : pointer; width : 120px;" onclick="licenseedititem('<?php echo $license['id'] . "','" . $license['licensename'] . "','" . $license['licensedate']; ?>');"><?php echo date("m/d/Y", strtotime($license['licensedate']));?></td>
-									<td style="cursor : pointer; width : 80px;"><form method="post"><input type="submit" value="<?php echo t('Delete'); ?>" style="width : 100%; padding : 3px;"><input type="hidden" name="dellicense" id="dellicense" value="<?php echo $license['id'] ?>"></form></td>
+									<td style="cursor : pointer;"
+                            <?php //TA:#380
+						if ( $this->hasACL('edit_people')	){?>  
+									onclick="licenseedititem('<?php echo $license['id'] . "','" . $license['licensename'] . "','" . $license['licensedate']; ?>');"
+									<?php }?>
+									><?php echo $license['licensename'];?></td>
+									<td style="cursor : pointer; width : 120px;"><?php echo date("m/d/Y", strtotime($license['licensedate']));?></td>
+									<td style="cursor : pointer; width : 80px;">
+									<?php //TA:#380
+						if ( $this->hasACL('edit_people')	){?>
+									<form method="post"><input type="submit" value="<?php echo t('Delete'); ?>" style="width : 100%; padding : 3px;"><input type="hidden" name="dellicense" id="dellicense" value="<?php echo $license['id'] ?>"></form>
+									<?php }?>
+									</td>
+								
 								</tr>
 <?php
 	}
@@ -644,7 +682,11 @@
 						</table>
 						<div style="text-align : right;">
                             <br>
+                            <?php 
+							//TA:#380
+						if ( $this->hasACL('edit_people')	){?>
 							<input type="submit" name="licensepopupbutton" id="licensepopupbutton" value="<?php echo t('Add a license'); ?>" class="tsbutton green large">
+							<?php }?>
 						</div>
 					</div>
 <?php
@@ -669,7 +711,12 @@
 							<?php
 								foreach ($this->fetchcurrentclasses as $classes){
 									?>
-									<tr class="GradeA" style="cursor : pointer;" onclick='classedititem(<?php echo json_encode($classes, JSON_HEX_QUOT|JSON_HEX_APOS); ?>);'>
+									<tr class="GradeA" style="cursor : pointer;" 
+									<?php //TA:#380
+						if ( $this->hasACL('edit_people')	){?> 
+									onclick='classedititem(<?php echo json_encode($classes, JSON_HEX_QUOT|JSON_HEX_APOS); ?>);'
+									<?php }?>
+									>
 										<td class="">
 											<?php if ($this->setting['site_style'] == 'skillsmart') {
 												echo $classes['custom_1'];
@@ -687,8 +734,12 @@
 						</table>
 						<div style="text-align : right;">
                             <br>
+                            <?php 
+							//TA:#380
+						if ( $this->hasACL('edit_people')	){?>
                             <input type="button" name="addclassbutton" id="addclassbutton" value="<?php echo t('Add Class'); ?>" class="tsbutton green large">
 							<input type="submit" name="classpopupbutton" id="classpopupbutton" value="<?php echo t('Update associated classes'); ?>" class="tsbutton green large">
+							<?php }?>
 						</div>
 					</div>
 <?php
@@ -716,12 +767,22 @@
 	foreach ($this->practicumfetch as $practicum){
 ?>
 								<tr class="GradeA">
-									<td style="cursor : pointer;" onclick="practicumedititem('<?php echo addslashes($practicum['id']) . "','" . addslashes($practicum['practicumname']) . "','" . addslashes($practicum['practicumdate']) . "','" . addslashes($practicum['facilityid']) . "','" . addslashes($practicum['advisorid']) . "','" . addslashes($practicum['hoursrequired']); ?>');"><?php echo $practicum['practicumname'];?></td>
-									<td style="cursor : pointer; width : 120px;" onclick="practicumedititem('<?php echo addslashes($practicum['id']) . "','" . addslashes($practicum['practicumname']) . "','" . addslashes($practicum['practicumdate']) . "','" . addslashes($practicum['facilityid']) . "','" . addslashes($practicum['advisorid']) . "','" . addslashes($practicum['hoursrequired']); ?>');"><?php echo $practicum['practicumdate'];?></td>
-									<td style="cursor : pointer; width : 120px;" onclick="practicumedititem('<?php echo addslashes($practicum['id']) . "','" . addslashes($practicum['practicumname']) . "','" . addslashes($practicum['practicumdate']) . "','" . addslashes($practicum['facilityid']) . "','" . addslashes($practicum['advisorid']) . "','" . addslashes($practicum['hoursrequired']); ?>');"><?php echo $practicum['facilityid'];?></td>
-									<td style="cursor : pointer; width : 120px;" onclick="practicumedititem('<?php echo addslashes($practicum['id']) . "','" . addslashes($practicum['practicumname']) . "','" . addslashes($practicum['practicumdate']) . "','" . addslashes($practicum['facilityid']) . "','" . addslashes($practicum['advisorid']) . "','" . addslashes($practicum['hoursrequired']); ?>');"><?php echo $practicum['advisorid'];?></td>
-									<td style="cursor : pointer; width : 120px;" onclick="practicumedititem('<?php echo addslashes($practicum['id']) . "','" . addslashes($practicum['practicumname']) . "','" . addslashes($practicum['practicumdate']) . "','" . addslashes($practicum['facilityid']) . "','" . addslashes($practicum['advisorid']) . "','" . addslashes($practicum['hoursrequired']); ?>');"><?php echo $practicum['hoursrequired'];?></td>
-									<td style="cursor : pointer; width : 80px;"><form method="post"><input type="submit" value="<?php echo t('Delete'); ?>" style="width : 100%; padding : 3px;"><input type="hidden" name="delpracticum" id="delpracticum" value="<?php echo $practicum['id'] ?>"></form></td>
+									<td style="cursor : pointer;"
+                                    <?php //TA:#380
+						if ( $this->hasACL('edit_people')	){?>  
+									onclick="practicumedititem('<?php echo addslashes($practicum['id']) . "','" . addslashes($practicum['practicumname']) . "','" . addslashes($practicum['practicumdate']) . "','" . addslashes($practicum['facilityid']) . "','" . addslashes($practicum['advisorid']) . "','" . addslashes($practicum['hoursrequired']); ?>');"
+									<?php }?>
+									><?php echo $practicum['practicumname'];?></td>
+									<td style="cursor : pointer; width : 120px;"><?php echo $practicum['practicumdate'];?></td>
+									<td style="cursor : pointer; width : 120px;"><?php echo $practicum['facilityid'];?></td>
+									<td style="cursor : pointer; width : 120px;"><?php echo $practicum['advisorid'];?></td>
+									<td style="cursor : pointer; width : 120px;"><?php echo $practicum['hoursrequired'];?></td>
+									<td style="cursor : pointer; width : 80px;">
+									<?php //TA:#380
+						if ( $this->hasACL('edit_people')	){?> 
+									<form method="post"><input type="submit" value="<?php echo t('Delete'); ?>" style="width : 100%; padding : 3px;"><input type="hidden" name="delpracticum" id="delpracticum" value="<?php echo $practicum['id'] ?>"></form>
+									<?php }?>
+									</td>
 								</tr>
 <?php
 	}
@@ -730,7 +791,11 @@
 						</table>
 						<div style="text-align : right;">
                             <br>
+                            <?php 
+							//TA:#380
+						if ( $this->hasACL('edit_people')	){?>
 							<input type="submit" name="practicumpopupbutton" id="practicumpopupbutton" value="<?php echo t('Add a practicum'); ?>" class="tsbutton green large">
+							<?php }?>
 						</div>
 					</div>
 <?php
