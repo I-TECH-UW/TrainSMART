@@ -6727,13 +6727,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 		if ((isset($params['showtutor']) && $params['showtutor']) ||
 			(isset($params['tutor']) && $params['tutor'])) {
-			if (!$cohortJoined) {
-				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
-				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
-				$cohortJoined = true;
-			}
-			$s->joinLeft(array('lct' => 'link_cadre_tutor'), 'lct.id_cadre = c.cadreid', array());
-			$s->joinLeft(array('tut' => 'tutor'), 'tut.id = lct.id_tutor', array());
+			$s->joinLeft(array('tut' => 'tutor'), 'tut.id = s.advisorid', array()); //TA:#337
 			$s->joinLeft(array('tutp' => 'person'), 'tutp.id = tut.personid', array());
 
 			if (isset($params['tutor']) && $params['tutor']) {

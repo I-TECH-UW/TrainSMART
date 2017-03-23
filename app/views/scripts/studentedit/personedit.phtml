@@ -663,8 +663,10 @@ if($column_count === 3){
 								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
 	foreach ($this->gettutors as $tutor){
+	    
 ?>                              
-								<option value="<?php echo $tutor['personid']; ?>"<?php echo ($this->escape($this->advisor) == $tutor['personid'] ? " selected" : "") ?>><?php echo $tutor['first_name'] . " " . $tutor['last_name']; ?></option>
+<!-- TA:#337  student.advisorid=tutor.id where student.advisorid = tutor.personid ..... replace personid to id_tutor-->
+								<option value="<?php echo $tutor['id_tutor']; ?>"<?php echo ($this->escape($this->advisor) == $tutor['id_tutor'] ? " selected" : "") ?>><?php echo $tutor['first_name'] . " " . $tutor['last_name']; ?></option>
 <?php
 	}
 ?>
