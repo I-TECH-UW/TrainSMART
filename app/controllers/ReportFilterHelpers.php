@@ -1011,13 +1011,13 @@ class ReportFilterHelpers extends ITechController
         // facility type
         if (isset($criteria['show_facility_type']) && $criteria['show_facility_type']) {
             if (!array_key_exists('facility_type_option', $joined)) {
-                $select->joinLeft('facility_type_option', 'facility_type_option.id = employee.facility_type_option_id', array());
+                $select->joinLeft('facility_type_option', 'facility_type_option.id = facility.type_option_id', array());//TA:#386
                 $joined['facility_type_option'] = 1;
             }
             $select->columns('facility_type_option.facility_type_phrase');
         }
         if (isset($criteria['facility_type']) && $criteria['facility_type']) {
-            $select->where('facility_type_option_id = ?', $criteria['facility_type']);
+            $select->where('facility.type_option_id = ?', $criteria['facility_type']); //TA:#386
         }
 
         // classification
