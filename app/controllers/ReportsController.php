@@ -6667,6 +6667,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		        $s->where("lsc.isgraduated = 0");
 		        $s->where("lsc.dropdate != '0000-00-00'");
 		        $s->where("lr.reasontype = 'drop'"); //we need to take only drop reason
+		        $s->where("lr.reason != 'Upgrading'"); //we need exclude student who has 'Upgrading' reson
 		        $s->columns("lr.reason");
 		        $headers[] = "Terminated Early";
 		    }else{//active=off, terminated=off => Show active students, excluding dropped students (=8264)
