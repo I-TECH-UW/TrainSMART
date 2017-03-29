@@ -594,11 +594,12 @@
 
             //TA:#279.2 add 'transition_other' and 'transition_complete_other' to required fields
             //TA:#374 add 'agreement_start_date'
+            //TA:#383 add 'transition_date'
             $this->required_fields = array('employee_code', 'partner_id', 'employee_base_option_id',
                 'employee_qualification_option_id', 'salary', 'benefits', 'additional_expenses', 'stipend',
                 'employee_transition_option_id', 'employee_role_option_id', 'disability_option_id',
                 'disability_comments', 'funded_hours_per_week', 'agreement_start_date', 'agreement_end_date', 'facilityInput',
-                'transition_other', 'transition_complete_other');
+                'transition_other', 'transition_complete_other', 'transition_date');
             
             if (!$this->hasACL('edit_employee')) {
                 $this->viewonly = true;
