@@ -86,8 +86,8 @@ link_employee_facility.hiv_fte_related, link_employee_facility.non_hiv_fte_relat
  facility.location_id 
 FROM link_employee_facility 
 LEFT JOIN facility ON link_employee_facility.facility_id = facility.id
-join  facility_type_option on facility_type_option.id=facility.type_option_id
-WHERE (employee_id = $employee_id) order by link_employee_facility.id";
+LEFT join  facility_type_option on facility_type_option.id=facility.type_option_id
+WHERE (employee_id = $employee_id) order by link_employee_facility.id"; //#387
 	    $select = $db->query($query);
 	    return $select->fetchAll();
 	}
