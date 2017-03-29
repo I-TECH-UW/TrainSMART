@@ -6641,7 +6641,9 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			}
 		}
 
-		//TA:#334
+		//TA:#334 
+		//TA:#391 apply those conditions only for reports where we have showactive and showterminated checkboxes
+		if(isset($params['action']) && ($params['action'] === 'ps-students-by-name' || $params['action'] === 'ps-students-trained')){
 		if (isset($params['showactive']) && $params['showactive']) {
 			if (isset($params['showterminated']) && $params['showterminated']) {//active=on, terminated=on => show both active and dropped students with termination reasons (=8513)
 			    if (!$cohortJoined) {
@@ -6657,7 +6659,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			    $s->where("p.active = 'active'");
 			}
 		}else{
-		    if (isset($params['showterminated']) && $params['showterminated']) {//active=off, terminated=on => Show only terminated students with termination reasons (=209)
+		    if (isset($params['showterminated']) && $params['showterminated']) {//active=off, terminated=on => Show only terminated students  with termination reasons (=104) (excluding reason 'Upgrading')
 		        if (!$cohortJoined) {
 		            $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
 		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
@@ -6680,6 +6682,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		        $s->where("lsc.dropdate = '0000-00-00'");
 		        $s->where("p.active = 'active'");
 		    } 
+		}
 		}
 
 		if ((isset($params['showdegrees'])) && $params['showdegrees'] ||
@@ -6849,7 +6852,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 		if ($this->getSanParam('process')) {
 			$criteria = $this->getAllParams();
-
+			
 			list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
 		
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
@@ -6888,7 +6891,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
             // report is changed.
             unset($criteria['showterminated']);
             unset($criteria['termination_status']);
-
+            
 	        if (isset($criteria['cohort']) && $criteria['cohort'] ||
 	            isset($criteria['showcohort']) && $criteria['showcohort']) {
 	
@@ -6908,7 +6911,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	            }else{
 	                list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
 	                //take only repeated students (who dropped one cohort and joined to another)
-	                $query = $query . " and s.id in (select id_student from link_student_cohort where dropdate != '0000-00-00' and id_student in (SELECT id_student FROM link_student_cohort group by id_student having count(*) > 1))";
+	                $query = $query . " and s.id in (select id_student from link_student_cohort where dropdate != '0000-00-00' and id_student in (SELECT id_student FROM link_student_cohort group by id_student having count(*) > 1))"; 
 	            }
 
 	            $db = Zend_Db_Table_Abstract::getDefaultAdapter();
