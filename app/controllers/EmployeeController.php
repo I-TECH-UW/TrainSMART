@@ -472,18 +472,20 @@ class EmployeeController extends ReportFilterHelpers
             $sites_info = Employee::getEmployeeSites($id);
                 $result_sites = array();
                 $helper = new Helper();
-                foreach($sites_info as $i => $loc) {
-                    $result_site = $helper->getFacility3TiersLocationsParentInfo($sites_info[$i]['facility_id'], $sites_info[$i]['location_id']);
-                    $result_site['site_link_id'] = $sites_info[$i]['site_link_id'];
-                    $result_site['hiv_fte_related'] = $sites_info[$i]['hiv_fte_related'];
-                    $result_site['non_hiv_fte_related'] = $sites_info[$i]['non_hiv_fte_related'];
-                    $result_site['type_option_id'] = $sites_info[$i]['type_option_id'];
-                    $result_site['facility_type_phrase'] = $sites_info[$i]['facility_type_phrase'];
-                    $result_site['facility_id'] = $sites_info[$i]['facility_id'];
-                    $result_site['facility_name'] = $sites_info[$i]['facility_name'];
-                    array_push($result_sites,$result_site);
+                if($sites_info[$i]['facility_id'] && $sites_info[$i]['location_id']){//TA:#393
+                    foreach($sites_info as $i => $loc) {
+                        $result_site = $helper->getFacility3TiersLocationsParentInfo($sites_info[$i]['facility_id'], $sites_info[$i]['location_id']);
+                        $result_site['site_link_id'] = $sites_info[$i]['site_link_id'];
+                        $result_site['hiv_fte_related'] = $sites_info[$i]['hiv_fte_related'];
+                        $result_site['non_hiv_fte_related'] = $sites_info[$i]['non_hiv_fte_related'];
+                        $result_site['type_option_id'] = $sites_info[$i]['type_option_id'];
+                        $result_site['facility_type_phrase'] = $sites_info[$i]['facility_type_phrase'];
+                        $result_site['facility_id'] = $sites_info[$i]['facility_id'];
+                        $result_site['facility_name'] = $sites_info[$i]['facility_name'];
+                        array_push($result_sites,$result_site);
+                    }
+                    $params['sites'] = $result_sites;
                 }
-                $params['sites'] = $result_sites;
             }
         }
 
