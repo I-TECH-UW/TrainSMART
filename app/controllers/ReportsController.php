@@ -6645,7 +6645,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		//TA:#391 apply those conditions only for reports where we have showactive and showterminated checkboxes
 		if(isset($params['action']) && ($params['action'] === 'ps-students-by-name' || $params['action'] === 'ps-students-trained')){
 		if (isset($params['showactive']) && $params['showactive']) {
-			if (isset($params['showterminated']) && $params['showterminated']) {//active=on, terminated=on => show both active and dropped students with termination reasons (=8513)
+			if (isset($params['showterminated']) && $params['showterminated']) {//active=on, terminated=on => show both active and dropped students with termination reasons (=8499) 
 			    if (!$cohortJoined) {
 			        $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
 			        $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
@@ -6655,11 +6655,18 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			    $s->where("p.active = 'active'");
 			    $s->columns("lr.reason");
 			    $headers[] = "Terminated Early";
-			}else{//active=on, terminated=off => show both active and dropped students (=8513)
-			    $s->where("p.active = 'active'");
+			}else{//active=on, terminated=off => show active students, excluding dropped students (=8231)
+			    if (!$cohortJoined) {
+		            $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		            $cohortJoined = true;
+		        }
+		        $s->where("lsc.isgraduated = 0");
+		        $s->where("lsc.dropdate = '0000-00-00'");
+		        $s->where("p.active = 'active'");
 			}
 		}else{
-		    if (isset($params['showterminated']) && $params['showterminated']) {//active=off, terminated=on => Show only terminated students  with termination reasons (=104) (excluding reason 'Upgrading')
+		    if (isset($params['showterminated']) && $params['showterminated']) {//active=off, terminated=on => Show only terminated students  with termination reasons (=131) (excluding reason 'Upgrading')
 		        if (!$cohortJoined) {
 		            $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
 		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
@@ -6672,7 +6679,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		        $s->where("lr.reason != 'Upgrading'"); //we need exclude student who has 'Upgrading' reson
 		        $s->columns("lr.reason");
 		        $headers[] = "Terminated Early";
-		    }else{//active=off, terminated=off => Show active students, excluding dropped students (=8264)
+		    }else{//active=off, terminated=off => Show active students, excluding dropped students (=8231)
 		        if (!$cohortJoined) {
 		            $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
 		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
@@ -6827,7 +6834,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		        $s->where('c.graddate <= ?', $grad_end_date);
 		    }
 		}
-		//print $s;
+		//print "AAAA:   " . $s;
 		return(array($s, $headers));
 	}
 
