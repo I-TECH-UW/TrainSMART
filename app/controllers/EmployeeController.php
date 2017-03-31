@@ -470,10 +470,12 @@ class EmployeeController extends ReportFilterHelpers
                 $params = $row; // reassign form data
             //TA:#224
             $sites_info = Employee::getEmployeeSites($id);
+            
+            print_r($sites_info);
                 $result_sites = array();
                 $helper = new Helper();
-                if($sites_info[$i]['facility_id'] && $sites_info[$i]['location_id']){//TA:#393
                     foreach($sites_info as $i => $loc) {
+                        if($sites_info[$i]['facility_id'] && $sites_info[$i]['location_id']){//TA:#393
                         $result_site = $helper->getFacility3TiersLocationsParentInfo($sites_info[$i]['facility_id'], $sites_info[$i]['location_id']);
                         $result_site['site_link_id'] = $sites_info[$i]['site_link_id'];
                         $result_site['hiv_fte_related'] = $sites_info[$i]['hiv_fte_related'];
