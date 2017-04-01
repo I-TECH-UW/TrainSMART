@@ -87,6 +87,8 @@ class FacilityController extends ReportFilterHelpers {
 		$this->viewAssignEscaped ( 'locations', Location::getAll () );
 		$this->viewAssignEscaped ( 'facility_types', OptionList::suggestionList ( 'facility_type_option', 'facility_type_phrase', false, false ) );
 		$this->viewAssignEscaped ( 'facility_sponsors', OptionList::suggestionList ( 'facility_sponsor_option', 'facility_sponsor_phrase', false, false ) );
+		
+		print "=" . $_SERVER ['SERVER_NAME'] . "=";
 	}
 	
 	protected function validateAndSave($facilityRow, $checkName = true) {
