@@ -1007,6 +1007,7 @@ class Helper extends ITechTable
 			->join(array("p" => "person"),
 					"t.personid = p.id",
 					array("first_name","last_name"))
+					->where("p.is_deleted=0") //TA:#337
 			->order(array('first_name','last_name'));
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
