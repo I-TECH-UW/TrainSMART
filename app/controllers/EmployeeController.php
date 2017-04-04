@@ -471,7 +471,6 @@ class EmployeeController extends ReportFilterHelpers
             //TA:#224
             $sites_info = Employee::getEmployeeSites($id);
             
-            print_r($sites_info);
                 $result_sites = array();
                 $helper = new Helper();
                     foreach($sites_info as $i => $loc) {
