@@ -517,6 +517,70 @@
                 return true;   
         }
 
+        //TA:#394 They want to make validation on client side, do not lose entered data if validation is failed
+        var validateRequiredFields = function () {  	
+        	$('#statusBox').remove();
+            var validated = true;   
+            validated = validateField(validated, 'select_employee_role_option', '<?php echo t("Primary Role");?>');
+            validated = validateField(validated, 'employee_qualification_option_id', 'Occupational Classification');
+            validated = validateField(validated, 'employee_code', '<?php echo t("Employee Code");?>');
+            validated = validateField(validated, 'select_partner', '<?php echo t("Employer");?>');
+            validated = validateField(validated, 'employee_base_option_id', '<?php echo t("Employee Based at");?>');
+            if($('#employee_base_option_id').val() == 4){
+            	validated = validateField(validated, 'based_at_other', '<?php echo t("Other, Specify");?>');
+            }
+            validated = calculateSiteTable(false);
+            if($("#multi_sites_table_data_count").val() == 0){
+            	displayErrorMessage('', '<?php echo t("Site Name");?> (required)');
+            	validated = false;
+            }
+            validated = validateField(validated, 'agreement_start_date', '<?php echo t("Contract Start Date");?>');
+            validated = validateField(validated, 'agreement_end_date', '<?php echo t("Contract End Date");?>');
+            //validates dates
+            if((new Date($('#agreement_start_date').val())).valueOf() > (new Date($('#agreement_end_date').val())).valueOf()){
+            	displayErrorMessage('agreement_end_date', 'Contract Start Date must be less Contract End Date.');
+            	validated = false;
+            }
+            validated = validateField(validated, 'select_employee_transition_option', '<?php echo t("Intended Transition");?>');
+            if($('#select_employee_transition_option').val() == 8){
+            	validated = validateField(validated, 'transition_other', '<?php echo t("Intended Transition Other");?>');
+            }
+            validated = validateField(validated, 'transition_date', '<?php echo t("Intended Transition Date");?>');
+            if($("#funded_hours_per_week").val() == 0 || $("#funded_hours_per_week").val() == ''){
+            	displayErrorMessage('', '<?php echo t("Funded hours per week");?> (required)');
+            	validated = false;
+            }
+            if($("#salary").val() == 0 || $("#salary").val() == ''){
+            	displayErrorMessage('salary', '<?php echo t("Salary");?> (required)');
+            	validated = false;
+            }
+            if($("#benefits").val() == 0 || $("#benefits").val() == ''){
+            	displayErrorMessage('benefits', '<?php echo t("Benefits");?> (required)');
+            	validated = false;
+            }
+            if($("#additional_expenses").val() == 0 || $("#additional_expenses").val() == ''){
+            	displayErrorMessage('additional_expenses', '<?php echo t("Additional Expenses");?> (required)');
+            	validated = false;
+            }
+            if($("#stipend").val() == 0 || $("#stipend").val() == ''){
+            	displayErrorMessage('stipend', '<?php echo t("Stipend");?> (required)');
+            	validated = false;
+            }
+            window.scroll(0,0);
+            return validated;
+        }
+
+        //TA:#394
+        var validateField = function (validated, field_id, field_name) {
+       	 if($('#' + field_id).val() == ''){
+         	   displayErrorMessage(field_id, field_name + ' (required)');
+          	   validated = false;
+            }else{
+        	    removeErrorMessage(field_id);
+            }
+          return validated;  
+        }
+
         //TA:#224
         var calculateSiteTable = function (verify) {
             var sites_count = 0;
@@ -582,7 +646,7 @@
         <?php require_once 'views/scripts/status.phtml' ?>
 
         <h1><?php $this->mode == 'add' ? print(t('Add') . space . t('Employee')) : print(t('Edit') . space . t('Employee')); ?></h1>
-        <form action="" method="post" class="form_employee"  onsubmit='return calculateSiteTable(false);'>
+        <form action="" method="post" class="form_employee"  onsubmit='return validateRequiredFields();'>
             <legend></legend>
 
             <?php if ($this->employee['id'] && $this->hasACL('edit_employee') && $this->hasACL('delete_employee')): ?>
