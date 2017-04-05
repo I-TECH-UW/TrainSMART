@@ -546,7 +546,7 @@
             	validated = validateField(validated, 'transition_other', '<?php echo t("Intended Transition Other");?>');
             }
             validated = validateField(validated, 'transition_date', '<?php echo t("Intended Transition Date");?>');
-            if($("#funded_hours_per_week").val() == ''){
+            if($("#funded_hours_per_week").val() == 0 || $("#funded_hours_per_week").val() == ''){
             	displayErrorMessage('', '<?php echo t("Funded hours per week");?> (required)');
             	validated = false;
             }
