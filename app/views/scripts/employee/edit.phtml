@@ -546,23 +546,23 @@
             	validated = validateField(validated, 'transition_other', '<?php echo t("Intended Transition Other");?>');
             }
             validated = validateField(validated, 'transition_date', '<?php echo t("Intended Transition Date");?>');
-            if($("#funded_hours_per_week").val() == 0 || $("#funded_hours_per_week").val() == ''){
+            if($("#funded_hours_per_week").val() == ''){
             	displayErrorMessage('', '<?php echo t("Funded hours per week");?> (required)');
             	validated = false;
             }
-            if($("#salary").val() == 0 || $("#salary").val() == ''){
+            if($("#salary").val() == ''){
             	displayErrorMessage('salary', '<?php echo t("Salary");?> (required)');
             	validated = false;
             }
-            if($("#benefits").val() == 0 || $("#benefits").val() == ''){
+            if($("#benefits").val() == ''){
             	displayErrorMessage('benefits', '<?php echo t("Benefits");?> (required)');
             	validated = false;
             }
-            if($("#additional_expenses").val() == 0 || $("#additional_expenses").val() == ''){
+            if($("#additional_expenses").val() == ''){
             	displayErrorMessage('additional_expenses', '<?php echo t("Additional Expenses");?> (required)');
             	validated = false;
             }
-            if($("#stipend").val() == 0 || $("#stipend").val() == ''){
+            if($("#stipend").val() == ''){
             	displayErrorMessage('stipend', '<?php echo t("Stipend");?> (required)');
             	validated = false;
             }
