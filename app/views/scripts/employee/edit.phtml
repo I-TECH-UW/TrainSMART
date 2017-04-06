@@ -805,29 +805,31 @@
                     <td class="siteTableFooter"></td>
                 </tr>
                 </tfoot>
-                <tbody id="multi_sites_table_body">
+                <!-- TA:#397 START make table cells editable -->
+                <tbody id="multi_sites_table_body"> 
                 <?php
+                $helper = new Helper();
+                $db_locations_arr = $helper->get3TiersLocationsParentIds();
                 foreach ($this->employee['sites'] as $id => $siteData) {
                     ?>
                     <tr id='<?php echo $siteData['site_link_id'];?>'>
-                        <td><?php echo $siteData['province_name']; ?></td>
-                        <td><?php echo $siteData['district_name']; ?></td>
-                        <td><?php echo $siteData['region_name']; ?></td>
-                        <td><?php echo $siteData['facility_type_phrase']; ?></td>
-                        <td id='<?php echo $siteData['facility_id'];?>'><?php echo $siteData['facility_name']; ?></td>
-                        <td><?php echo $siteData['hiv_fte_related']; ?></td>
-                        <td><?php echo $siteData['non_hiv_fte_related']; ?></td>
+                        <td><?php renderFilter($this->locations, 1, $id.'province_id', $siteData['province_id'], $id.'district_id', false, $this->viewonly); ?></td>
+                        <td><?php renderFilter($this->locations, 2, $id.'district_id', $siteData['district_id'], $id.'region_c_id', false, $this->viewonly);?></td>
+                        <td><?php renderFilter($this->locations, 3, $id.'region_c_id', $siteData['region_id'], $id.'region_d_id', false, $this->viewonly);?></td>
+                        <td><?php echo renderFacilityTypesDropDown($this->site_types, $siteData['type_option_id'], $this->viewonly, $id);?></td>
+                        <td id='<?php echo $siteData['facility_id']. $id;?>'><?php echo renderFacilityDropDownWithType($db_locations_arr, $this->facilities, $siteData['facility_id'], $this->viewonly, $id , true); ?></td>
+                        <td><input type='text' id='<?php echo $id;?>hiv_fte_related' name='<?php echo $id;?>hiv_fte_related' value='<?php echo $siteData['hiv_fte_related']; ?>' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntegerKeyPress(this);'/></td>
+                        <td><input type='text' id='<?php echo $id;?>non_hiv_fte_related' name='<?php echo $id;?>non_hiv_fte_related' value='<?php echo $siteData['non_hiv_fte_related']; ?>' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntegerKeyPress(this);'/></td>
                         <td><input type="checkbox" onclick="deleteToggleSite(this);"/></td>
                     </tr>
+                    
                 <?php } ?>
-                </tbody>
+                </tbody> <!-- TA:#397 END -->
                    </table>
                    <!--  </td></tr></table>   -->   
                    <table border=0 style='width: 700px;'>
                    <tr>
                    <?php
-                   $helper = new Helper();
-                   $db_locations_arr = $helper->get3TiersLocationsParentIds();
                    $label = "<span style='font-size:11px; font-weight:bold; color:#696969;'>";
                    echo  "<td width='150px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Region A (Province)') . "</span><br>";
                    renderFilter($this->locations, 1,'province_id', '', 'district_id', false, $this->viewonly);

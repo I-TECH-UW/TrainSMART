@@ -547,6 +547,8 @@ class EmployeeController extends ReportFilterHelpers
         $this->viewAssignEscaped('creator', $created_by);
         $update_by = $params['modified_by'] ? $userObj->getUserFullName($params['modified_by']) : t("N/A");
         $this->viewAssignEscaped('updater', $update_by);
+        
+        print_r($params ['sites']);
     }
 
     public function searchAction()
