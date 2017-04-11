@@ -6,6 +6,8 @@ user=mysql
 symbolic-links=0
 general_log=1
 general_log_file=/vagrant/vagrant/logs/mysql-query.log
+max-allowed-packet                   = 64M
+
 
 [mysqld_safe]
 log-error=/var/log/mysqld.log
