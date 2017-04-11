@@ -614,9 +614,12 @@
 							<div class="pad20 clear"></div>
 							<p style="float:left;font-size:14px;"><?php echo t('Funding'); ?></p>
 							<div class="pad20 clear"></div>
-
-							<div style="float : right; width : 350px;">
+							
+							<!-- TA:#379 START -->
+							<div style="width : 1400px;">
+                            <br><table border=0>
 <?php
+$column_count = 0;
 	foreach ($this->lookupfunding as $funding){
 		$checked = false;
 		$amount = "";
@@ -626,28 +629,33 @@
 				$amount = $sf['fundingamount'];
 			}
 		}
+		if($column_count === 0){
+		    echo "<tr>";
+		}
 ?>
-	<div style="width : 100%; height : 25px; position : relative; top : 0px; left : 0px; margin-bottom : 5px;">
-		<div style="position : absolute; top : 0px; left : 0px; width : 45px;">
-			<input type="checkbox" name="funding[<?php echo $funding['id']; ?>]" id="funding[<?php echo $funding['id']; ?>]" value="<?php echo $funding['id']; ?>" style="position : relative; top : 3px;"<?php echo $checked ? " checked" : ""; ?>>
-		</div>
-		<div style="position : absolute; top : 0px; left : 50px; width : 190px; padding-top : 3px;">
-			<?php echo $funding['fundingname']; ?>
-		</div>
-		<div style="position : absolute; top : 0px; left : 240px; width : 95px;">
-			<input type="text" name="fundingamount[<?php echo $funding['id']; ?>]" id="funding[<?php echo $funding['id']; ?>]" value="<?php echo $amount; ?>" style="text-align : right; width : 95px; float : right; margin : 0px;">
-		</div>
-	</div>
+<td style='padding: 0px 30px 10px 0px;'>
+<input type="checkbox" name="funding[<?php echo $funding['id']; ?>]" id="funding[<?php echo $funding['id']; ?>]" value="<?php echo $funding['id']; ?>" style="position : relative; top : 3px;"<?php echo $checked ? " checked" : ""; ?>>
+<?php echo $funding['fundingname']; ?></input>
+<input type="text" name="fundingamount[<?php echo $funding['id']; ?>]" id="funding[<?php echo $funding['id']; ?>]" value="<?php echo $amount; ?>" style="text-align : right; width : 95px; float : right; margin : 0px;"/>
+</td>
 <?php
+$column_count++;
+if($column_count === 3){
+    echo "</tr>";
+    $column_count=0;
+}
 }
 ?>
+</table>
+<!-- TA:#379 END -->
+
 							</div>
 							<div class="clear pad20"></div>
 
 							<div class="pad20 clear"></div>
 							
 							<!-- TA: added 7/25/2014-->
-							<p style="float:left;"><?php echo $this->translation['ps tutor'] . ' ' . t('Advisor'); ?></p>
+							<p style="float:left;"><?php echo $this->translation['ps tutor'] . ' ' . t('Advisor'); ?></p> 
 							<div class="pad20 clear"></div>
 
 							<label><?php echo $this->translation['ps tutor'] . ' ' . t('Advisor'); ?></label>
@@ -655,8 +663,10 @@
 								<option value="0"><?php echo t('Select...'); ?></option>
 <?php
 	foreach ($this->gettutors as $tutor){
+	    
 ?>                              
-								<option value="<?php echo $tutor['personid']; ?>"<?php echo ($this->escape($this->advisor) == $tutor['personid'] ? " selected" : "") ?>><?php echo $tutor['first_name'] . " " . $tutor['last_name']; ?></option>
+<!-- TA:#337  student.advisorid=tutor.id where student.advisorid = tutor.personid ..... replace personid to id_tutor-->
+								<option value="<?php echo $tutor['id_tutor']; ?>"<?php echo ($this->escape($this->advisor) == $tutor['id_tutor'] ? " selected" : "") ?>><?php echo $tutor['first_name'] . " " . $tutor['last_name']; ?></option>
 <?php
 	}
 ?>

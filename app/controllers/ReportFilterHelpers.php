@@ -843,10 +843,10 @@ class ReportFilterHelpers extends ITechController
         // TODO: support n-tiers of regions.
         if (isset($criteria['showProvince']) && $criteria['showProvince']) {
             if (!array_key_exists('location', $joined)) {
-                //TA:#293 take multiple locations
-                //$select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
-                $select->join('link_employee_location', 'link_employee_location.id_employee = employee.id', array());
-                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = link_employee_location.id_location', array());
+                 //TA:#224 
+                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
             $select->columns('location.province_name');
@@ -859,10 +859,10 @@ class ReportFilterHelpers extends ITechController
                 (isset($criteria['region_c_id']) && count($criteria['region_c_id'])))) {
             $ids = $criteria['province_id'];
             if (!array_key_exists('location', $joined)) {
-                //TA:#293 take multiple locations
-                //$select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
-                $select->join('link_employee_location', 'link_employee_location.id_employee = employee.id', array());
-                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = link_employee_location.id_location', array());
+                 //TA:#224 
+                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
             if (is_array($ids)) {
@@ -879,10 +879,10 @@ class ReportFilterHelpers extends ITechController
 
         if (isset($criteria['showDistrict']) && $criteria['showDistrict']) {
             if (!array_key_exists('location', $joined)) {
-                //TA:#293 take multiple locations
-                //$select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
-                $select->join('link_employee_location', 'link_employee_location.id_employee = employee.id', array());
-                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = link_employee_location.id_location', array());
+                 //TA:#224 
+                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
             $select->columns('location.district_name');
@@ -902,10 +902,10 @@ class ReportFilterHelpers extends ITechController
             }
 
             if (!array_key_exists('location', $joined)) {
-                //TA:#293 take multiple locations
-                //$select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
-                $select->join('link_employee_location', 'link_employee_location.id_employee = employee.id', array());
-                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = link_employee_location.id_location', array());
+                 //TA:#224 
+                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
 
@@ -918,10 +918,10 @@ class ReportFilterHelpers extends ITechController
 
         if (isset($criteria['showRegionC']) && $criteria['showRegionC']) {
             if (!array_key_exists('location', $joined)) {
-                //TA:#293 take multiple locations
-                //$select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
-                $select->join('link_employee_location', 'link_employee_location.id_employee = employee.id', array());
-                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = link_employee_location.id_location', array());
+                 //TA:#224 
+                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
             $select->columns('location.region_c_name');
@@ -940,10 +940,10 @@ class ReportFilterHelpers extends ITechController
                 $ids = end(explode('_', $criteria['region_c_id']));
             }
             if (!array_key_exists('location', $joined)) {
-                //TA:#293 take multiple locations 
-                //$select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
-                $select->join('link_employee_location', 'link_employee_location.id_employee = employee.id', array());
-                $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = link_employee_location.id_location', array());
+                 //TA:#224 
+                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
 
@@ -1011,13 +1011,13 @@ class ReportFilterHelpers extends ITechController
         // facility type
         if (isset($criteria['show_facility_type']) && $criteria['show_facility_type']) {
             if (!array_key_exists('facility_type_option', $joined)) {
-                $select->joinLeft('facility_type_option', 'facility_type_option.id = employee.facility_type_option_id', array());
+                $select->joinLeft('facility_type_option', 'facility_type_option.id = facility.type_option_id', array());//TA:#386
                 $joined['facility_type_option'] = 1;
             }
             $select->columns('facility_type_option.facility_type_phrase');
         }
         if (isset($criteria['facility_type']) && $criteria['facility_type']) {
-            $select->where('facility_type_option_id = ?', $criteria['facility_type']);
+            $select->where('facility.type_option_id = ?', $criteria['facility_type']); //TA:#386
         }
 
         // classification

@@ -744,7 +744,7 @@ if ($this->row['has_known_participants']) :
                 <input type="button" value="<?php tp('Insert'); ?>" class="insert"
                        onclick="addTrainer(this);return false;">
                 &nbsp;&nbsp;&nbsp;
-                <a href="javascript:submitThenRedirect('<?php echo $this->base_url; ?>/person/add/trainingredirect/<?php echo $this->row['id']; ?>/maketrainer/1');"><?php tp('New Person Form'); ?></a>
+                <a href="javascript:submitThenRedirect('<?php echo $this->base_url; ?>/person/add/trainingredirect/<?php echo $this->row['id']; ?>/maketrainer/1');"><?php tp('New Trainer Form'); ?></a>
             </div>
 
             <div style="z-index:9001;">
@@ -980,7 +980,7 @@ if ($this->setting ['display_region_c']) {
             <input type="button" name="Insert" value="<?php tp("Insert"); ?>" class="insert" id="personInsertButton"
                    onclick="addPerson(this);return false;">
             &nbsp;&nbsp;&nbsp;
-            <a href="javascript:submitThenRedirect('<?php echo $this->base_url; ?>/person/add/trainingredirect/<?php echo $this->row['id']; ?>');"><?php tp('New Person Form'); ?></a>
+            <a href="javascript:submitThenRedirect('<?php echo $this->base_url; ?>/person/add/trainingredirect/<?php echo $this->row['id']; ?>');"><?php tp('New Participant Form'); ?></a>
         </div>
 
 

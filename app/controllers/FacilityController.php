@@ -87,6 +87,7 @@ class FacilityController extends ReportFilterHelpers {
 		$this->viewAssignEscaped ( 'locations', Location::getAll () );
 		$this->viewAssignEscaped ( 'facility_types', OptionList::suggestionList ( 'facility_type_option', 'facility_type_phrase', false, false ) );
 		$this->viewAssignEscaped ( 'facility_sponsors', OptionList::suggestionList ( 'facility_sponsor_option', 'facility_sponsor_phrase', false, false ) );
+		
 	}
 	
 	protected function validateAndSave($facilityRow, $checkName = true) {
@@ -102,7 +103,9 @@ class FacilityController extends ReportFilterHelpers {
 		}
 		
 		// validate fields
-		//$status->checkRequired ( $this, 'facility_type_id', t ( 'Facility type' ) ); //TA:17: 09/03/2014
+		if($_SERVER ['SERVER_NAME'] !== 'phc.trainingdata.org'){ //TA: do not make facility type required for Ukraine
+		  $status->checkRequired ( $this, 'facility_type_id', t ( 'Facility type' ) ); //TA:#382
+		}
 		$status->checkRequired ( $this, 'facility_province_id', $this->tr ( 'Region A (Province)' ) );
 		if ($this->setting ( 'display_region_b' ))
 			$status->checkRequired ( $this, 'facility_district_id', $this->tr ( 'Region B (Health District)' ) );
@@ -122,6 +125,7 @@ class FacilityController extends ReportFilterHelpers {
 			$status->checkRequired ( $this, 'facility_region_i_id', $this->tr ( 'Region I' ) );
 			// $status->checkRequired ( $this, 'facility_city', t ( "City is required." ) );
 			// validate lat & long
+		
 		require_once 'Zend/Validate/Float.php';
 		require_once 'Zend/Validate/Between.php';
 		$lat = $this->getSanParam ( 'facility_latitude' );
@@ -245,7 +249,7 @@ class FacilityController extends ReportFilterHelpers {
 					
 					
 					$status->setStatusMessage ( t ( 'The facility was saved.' ) );
-					$status->setRedirect ( '/facility/view/id/' . $obj_id );
+					$status->setRedirect ( '/site/edit/id/' . $obj_id );//TA:#382
 					return $obj_id;
 				} else {
 					unset ( $_SESSION ['status'] );
@@ -305,7 +309,7 @@ class FacilityController extends ReportFilterHelpers {
 			$status = ValidationContainer::instance ();
 			if ($validateOnly) {
 				if ($rslt) {
-					$status->setRedirect ( '/facility/view/id/' . $id );
+					$status->setRedirect ( '/site/edit/id/' . $id ); //TA:#382
 				}
 				$this->sendData ( $status );
 			} else {

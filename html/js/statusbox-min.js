@@ -45,3 +45,21 @@ function displayErrorMessage(fieldID, msg) {
     displayStatus(msg, true);
 }
 
+//TA:#394
+function removeErrorMessage(fieldID) {
+	var $labelElement = $("label[for='" + fieldID + "']");
+    if (!$labelElement.length) {
+        // see if we can find it
+        $labelElement = $('#' + fieldID + '_lbl');
+        if (!$labelElement.length) {
+            // walk the DOM
+            $labelElement = $('#' + fieldID).parent().prev("div.fieldLabel, div.fieldLabelThin");
+        }
+    }
+    // unhighlight the incorrect field
+    if ($labelElement.length) {
+        $labelElement.removeClass("errorText");
+    }
+
+}
+

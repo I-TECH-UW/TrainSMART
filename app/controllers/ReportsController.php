@@ -6641,32 +6641,56 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			}
 		}
 
+		//TA:#334 
+		//TA:#391 apply those conditions only for reports where we have showactive and showterminated checkboxes
+		if(isset($params['action']) && ($params['action'] === 'ps-students-by-name' || $params['action'] === 'ps-students-trained')){
 		if (isset($params['showactive']) && $params['showactive']) {
-			$headers[] = "Active";
-			$s->where("p.active = 'active'");
-		}
-
-		if (isset($params['showterminated']) && $params['showterminated']) {
-			if (!$cohortJoined) {
-				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
-				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
-				$cohortJoined = true;
+			if (isset($params['showterminated']) && $params['showterminated']) {//active=on, terminated=on => show both active and dropped students with termination reasons (=8499) 
+			    if (!$cohortJoined) {
+			        $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+			        $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+			        $cohortJoined = true;
+			    }
+			    $s->joinLeft(array('lr' => 'lookup_reasons'), 'lr.id = lsc.dropreason', array());
+			    $s->where("p.active = 'active'");
+			    $s->columns("lr.reason");
+			    $headers[] = "Terminated Early";
+			}else{//active=on, terminated=off => show active students, excluding dropped students (=8231)
+			    if (!$cohortJoined) {
+		            $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		            $cohortJoined = true;
+		        }
+		        $s->where("lsc.isgraduated = 0");
+		        $s->where("lsc.dropdate = '0000-00-00'");
+		        $s->where("p.active = 'active'");
 			}
-			$s->columns("IF(lsc.isgraduated = 0 AND lsc.dropdate != '0000-00-00', 'Terminated Early', '')");
-			$headers[] = "Terminated Early";
+		}else{
+		    if (isset($params['showterminated']) && $params['showterminated']) {//active=off, terminated=on => Show only terminated students  with termination reasons (=131) (excluding reason 'Upgrading')
+		        if (!$cohortJoined) {
+		            $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		            $cohortJoined = true;
+		        }
+		        $s->joinLeft(array('lr' => 'lookup_reasons'), 'lr.id = lsc.dropreason', array());
+		        $s->where("lsc.isgraduated = 0");
+		        $s->where("lsc.dropdate != '0000-00-00'");
+		        $s->where("lr.reasontype = 'drop'"); //we need to take only drop reason
+		        $s->where("lr.reason != 'Upgrading'"); //we need exclude student who has 'Upgrading' reson
+		        $s->columns("lr.reason");
+		        $headers[] = "Terminated Early";
+		    }else{//active=off, terminated=off => Show active students, excluding dropped students (=8231)
+		        if (!$cohortJoined) {
+		            $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		            $cohortJoined = true;
+		        }
+		        $s->where("lsc.isgraduated = 0");
+		        $s->where("lsc.dropdate = '0000-00-00'");
+		        $s->where("p.active = 'active'");
+		    } 
 		}
-
-        if (isset($params['termination_status']) && $params['termination_status'] == 2) {
-            if (!$cohortJoined) {
-                $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
-                $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
-                $cohortJoined = true;
-            }
-            if ($params['termination_status'] == 2) {
-                $s->where("lsc.isgraduated = 0");
-                $s->where("lsc.dropdate != '0000-00-00'");
-            }
-        }
+		}
 
 		if ((isset($params['showdegrees'])) && $params['showdegrees'] ||
 			(isset($params['degrees']) && $params['degrees'])) {
@@ -6727,13 +6751,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 		if ((isset($params['showtutor']) && $params['showtutor']) ||
 			(isset($params['tutor']) && $params['tutor'])) {
-			if (!$cohortJoined) {
-				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
-				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
-				$cohortJoined = true;
-			}
-			$s->joinLeft(array('lct' => 'link_cadre_tutor'), 'lct.id_cadre = c.cadreid', array());
-			$s->joinLeft(array('tut' => 'tutor'), 'tut.id = lct.id_tutor', array());
+			$s->joinLeft(array('tut' => 'tutor'), 'tut.id = s.advisorid', array()); //TA:#337
 			$s->joinLeft(array('tutp' => 'person'), 'tutp.id = tut.personid', array());
 
 			if (isset($params['tutor']) && $params['tutor']) {
@@ -6816,7 +6834,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		        $s->where('c.graddate <= ?', $grad_end_date);
 		    }
 		}
-		//print $s;
+		//print "AAAA:   " . $s;
 		return(array($s, $headers));
 	}
 
@@ -6841,7 +6859,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 		if ($this->getSanParam('process')) {
 			$criteria = $this->getAllParams();
-
+			
 			list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
 		
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
@@ -6880,7 +6898,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
             // report is changed.
             unset($criteria['showterminated']);
             unset($criteria['termination_status']);
-
+            
 	        if (isset($criteria['cohort']) && $criteria['cohort'] ||
 	            isset($criteria['showcohort']) && $criteria['showcohort']) {
 	
@@ -6900,7 +6918,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	            }else{
 	                list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
 	                //take only repeated students (who dropped one cohort and joined to another)
-	                $query = $query . " and s.id in (select id_student from link_student_cohort where dropdate != '0000-00-00' and id_student in (SELECT id_student FROM link_student_cohort group by id_student having count(*) > 1))";
+	                $query = $query . " and s.id in (select id_student from link_student_cohort where dropdate != '0000-00-00' and id_student in (SELECT id_student FROM link_student_cohort group by id_student having count(*) > 1))"; 
 	            }
 
 	            $db = Zend_Db_Table_Abstract::getDefaultAdapter();
@@ -6929,7 +6947,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$this->view->assign('coursetypes', $helper->AdminCourseTypes());
 		$this->view->assign('degrees', $helper->getDegrees());
 		$this->view->assign('site_style', $this->setting('site_style'));
-        $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
+        //TA:#334 $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
 
 		if ($this->getSanParam('process')) {
 			$criteria = $this->getAllParams();
@@ -6964,7 +6982,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$this->view->assign ( 'coursetypes', $helper->AdminCourseTypes());
 		$this->view->assign ( 'degrees', $helper->getDegrees());
 		$this->view->assign('site_style', $this->setting('site_style'));
-        $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
+        //TA:#334 $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
 
 		if ($this->getSanParam ('process')) {
 			$criteria = $this->getAllParams();
@@ -10284,10 +10302,10 @@ die (__LINE__ . " - " . $sql);
                     $select->join(array('partner'), 'partner.id = employee.partner_id', array());
                 }
                 if (!array_key_exists('location', $parts)) {
-                    //TA:#293 take multiple locations
-                   // $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
-                    $select->join('link_employee_location', 'link_employee_location.id_employee = employee.id', array());
-                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = link_employee_location.id', array());
+                    //TA:#224 
+                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 }
                 if (!array_key_exists('employee_qualification_option', $parts)) {
                     $select->join('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
@@ -10624,10 +10642,10 @@ die (__LINE__ . " - " . $sql);
                     $select->join(array('partner'), 'partner.id = employee.partner_id', array());
                 }
                 if (!array_key_exists('location', $parts)) {
-                    //TA:#293 take multiple locations 
-                   // $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = employee.location_id', array());
-                    $select->join('link_employee_location', 'link_employee_location.id_employee = employee.id', array());
-                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = link_employee_location.id', array());
+                    //TA:#224 
+                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 }
                 if (!array_key_exists('employee_role_option', $parts)) {
                     $select->join('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());

@@ -1007,6 +1007,7 @@ class Helper extends ITechTable
 			->join(array("p" => "person"),
 					"t.personid = p.id",
 					array("first_name","last_name"))
+					->where("p.is_deleted=0") //TA:#337
 			->order(array('first_name','last_name'));
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
@@ -3030,6 +3031,40 @@ class Helper extends ITechTable
 				`cadreid` NOT IN (" . implode(",", $parsed) . ")";
             $db->query($query);
         }
+    }
+    
+    //TA:#224.2
+    public function get3TiersLocationsParentIds(){
+        $db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+        $sql = 'SELECT DISTINCT
+       f.id as id,
+       f.location_id AS "zone1",
+       l2.id as "zone2",
+       l2.parent_id AS "zone3"
+      FROM facility f
+      LEFT JOIN location l1 ON f.location_id = l1.id
+      LEFT JOIN location l2 ON l1.parent_id = l2.id
+      ';
+        return $db->fetchAll($sql);
+    }
+    
+    //TA:#224
+    public function getFacility3TiersLocationsParentInfo($facility_id, $loc_id){
+        $db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+        $sql = 'SELECT DISTINCT 
+f.id as "f_id",  
+l1.id AS "region_id", 
+l1.location_name AS "region_name", 
+l2.id AS "district_id", 
+l2.location_name AS "district_name",
+l3.id AS "province_id",
+l3.location_name AS "province_name"
+FROM facility f 
+LEFT JOIN location l1 ON f.location_id = l1.id 
+LEFT JOIN location l2 ON l1.parent_id = l2.id 
+LEFT JOIN location l3 ON l2.parent_id = l3.id
+where f.id = ' . $facility_id;
+        return $db->fetchRow($sql);
     }
 }
 
