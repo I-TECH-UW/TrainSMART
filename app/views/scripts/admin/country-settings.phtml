@@ -15,9 +15,8 @@ $nav = ob_get_contents();
 ob_end_clean();
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
     <!--  <title><?php echo $this->translation['Application Name']; ?> | <?php echo $this->pageTitle; ?></title>-->
     <?php
@@ -63,7 +62,7 @@ ob_end_clean();
                 </script>
                 <div class="fieldInput"><input type="text" name="application_name_clone"
                                                value="<?php echo $this->translation['Application Name']; ?>"
-                                               onchange="return update_app_name(this.value);" />
+                                               onchange="return update_app_name(this.value);"/>
                 </div>
                 <br/>
                 <?php if (isset($this->setting['logo_id'])) { ?>
@@ -271,7 +270,8 @@ ob_end_clean();
                                        value="<?php echo $this->fiscal_year_start; ?>">
 
                                 <span id="calendarpicker" class="yui-button yui-menu-button"><span class="first-child"><button
-                                            type="button" title="<?php tp('Pick a Date'); ?>"></button></span></span>
+                                                type="button"
+                                                title="<?php tp('Pick a Date'); ?>"></button></span></span>
                                 <script type="text/javascript">
                                     $(document).ready(function () {
                                         $('.datepicker').datepicker({dateFormat: "yy-mm-dd 00:00:01"});
@@ -353,74 +353,6 @@ ob_end_clean();
                             </td>
                             <td></td>
                         </tr>
-
-
-												<div>
-													<div class="fieldInput"><div class="fieldLabel"><?php tp('Evaluation');?></div>
-														<input type="checkbox" name="check_mod_eval" <?php if($this->check_mod_eval) echo 'checked'; ?> id="check_mod_eval"><label for="check_mod_eval"><?php tp('Enable');?></label>
-													</div>
-													<div style="clear : both;"></div>
-												</div>
-												<div>
-													<div class="fieldInput"><div class="fieldLabel"><?php tp('Approvals');?></div>
-														<input type="checkbox" name="check_mod_approvals" <?php if($this->check_mod_approvals) echo 'checked'; ?> id="check_mod_approvals"><label for="check_mod_approvals"><?php tp('Enable');?></label>
-													</div>
-													<div style="clear : both;"></div>
-												</div>
-												<div>
-													<div class="fieldInput"><div class="fieldLabel"><?php tp('Change History');?></div>
-														<input type="checkbox" name="check_mod_historical" <?php if($this->check_mod_historical) echo 'checked'; ?> id="check_mod_historical"><label for="check_mod_historical"><?php tp('Enable');?></label>
-													</div>
-													<div style="clear : both;"></div>
-												</div>
-												<div>
-													<div class="fieldInput"><div class="fieldLabel"><?php tp('Unknown Participants');?></div>
-														<input type="checkbox" name="check_mod_unknown" <?php if($this->check_mod_unknown) echo 'checked'; ?> id="check_mod_unknown"><label for="check_mod_unknown"><?php tp('Enable');?></label>
-													</div>
-													<div style="clear : both;"></div>
-												</div>
-												<div>
-													<div class="fieldInput"><div class="fieldLabel"><?php tp('Attendance Tracking');?></div>
-														<input type="checkbox" name="check_mod_attendance" <?php if($this->check_mod_attendance) echo 'checked'; ?> id="check_mod_attendance"><label for="check_mod_attendance"><?php tp('Enable');?></label>
-													</div>
-													<div style="clear : both;"></div>
-												</div>
-												<div>
-													<div class="fieldInput"><div class="fieldLabel"><?php tp('Training Organizer Partners');?></div>
-														<input type="checkbox" name="display_training_partner" id="display_training_partner" <?php if($this->display_training_partner == 1) echo 'checked'; ?>><label for="display_training_partner"><?php tp('Enable');?></label>
-													</div>
-													<div style="clear : both;"></div>
-												</div>
-												<div>
-													<div class="fieldInput"><div class="fieldLabel"><?php tp('SkillSmart');?></div>
-														<input type="checkbox" name="display_mod_skillsmart" id="display_mod_skillsmart" <?php if($this->display_mod_skillsmart == 1) echo 'checked'; ?>><label for="display_mod_skillsmart"><?php tp('Enable');?></label>
-													</div>
-													<div style="clear : both;"></div>
-												</div>
-							<div>
-								<div class="fieldInput"><div class="fieldLabel"><?php tp('Employee Tracking');?></div>
-									<input type="checkbox" name="check_mod_employee" id="check_mod_employee" <?php if($this->check_mod_employee == 1) echo 'checked'; ?>><label for="check_mod_employee"><?php tp('Enable');?></label>
-								</div>
-								<div style="clear : both;"></div>
-							</div>
-							
-							<div>
-								<div class="fieldInput"><div class="fieldLabel"><?php tp('Assessment');?></div>
-									<input type="checkbox" name="check_mod_assessment" id="check_mod_assessment" <?php if($this->check_mod_assessment == 1) echo 'checked'; ?>><label for="check_mod_assessment"><?php tp('Enable');?></label>
-								</div>
-								<div style="clear : both;"></div>
-							</div>
-							
-							
-							<!-- TA:17: 09/11/2014 -->
-							<div>
-								<div class="fieldInput"><div class="fieldLabel"><?php tp('Reports');?></div>
-									<input type="checkbox" name="check_country_reports" id="check_country_reports" <?php if($this->check_country_reports == 1) echo 'checked'; ?>><label for="check_country_reports"><?php tp('Enable');?></label>
-								</div>
-								<div style="clear : both;"></div>
-							</div>
-							
-											</fieldset>
                     </table>
             </fieldset>
 
@@ -451,7 +383,7 @@ ob_end_clean();
                         <input type="checkbox"
                                name="check_mod_historical" <?php if ($this->check_mod_historical) echo 'checked'; ?>
                                id="check_mod_historical"><label
-                            for="check_mod_historical"><?php tp('Enable'); ?></label>
+                                for="check_mod_historical"><?php tp('Enable'); ?></label>
                     </div>
                     <div style="clear : both;"></div>
                 </div>
@@ -470,7 +402,7 @@ ob_end_clean();
                         <input type="checkbox"
                                name="check_mod_attendance" <?php if ($this->check_mod_attendance) echo 'checked'; ?>
                                id="check_mod_attendance"><label
-                            for="check_mod_attendance"><?php tp('Enable'); ?></label>
+                                for="check_mod_attendance"><?php tp('Enable'); ?></label>
                     </div>
                     <div style="clear : both;"></div>
                 </div>
@@ -479,7 +411,7 @@ ob_end_clean();
                         <div class="fieldLabel"><?php tp('Training Organizer Partners'); ?></div>
                         <input type="checkbox" name="display_training_partner"
                                id="display_training_partner" <?php if ($this->display_training_partner == 1) echo 'checked'; ?>><label
-                            for="display_training_partner"><?php tp('Enable'); ?></label>
+                                for="display_training_partner"><?php tp('Enable'); ?></label>
                     </div>
                     <div style="clear : both;"></div>
                 </div>
@@ -488,7 +420,7 @@ ob_end_clean();
                         <div class="fieldLabel"><?php tp('SkillSmart'); ?></div>
                         <input type="checkbox" name="display_mod_skillsmart"
                                id="display_mod_skillsmart" <?php if ($this->display_mod_skillsmart == 1) echo 'checked'; ?>><label
-                            for="display_mod_skillsmart"><?php tp('Enable'); ?></label>
+                                for="display_mod_skillsmart"><?php tp('Enable'); ?></label>
                     </div>
                     <div style="clear : both;"></div>
                 </div>
@@ -497,7 +429,7 @@ ob_end_clean();
                         <div class="fieldLabel"><?php tp('Employee Tracking'); ?></div>
                         <input type="checkbox" name="check_mod_employee"
                                id="check_mod_employee" <?php if ($this->check_mod_employee == 1) echo 'checked'; ?>><label
-                            for="check_mod_employee"><?php tp('Enable'); ?></label>
+                                for="check_mod_employee"><?php tp('Enable'); ?></label>
                     </div>
                     <div style="clear : both;"></div>
                 </div>
@@ -507,7 +439,7 @@ ob_end_clean();
                         <div class="fieldLabel"><?php tp('Reports'); ?></div>
                         <input type="checkbox" name="check_country_reports"
                                id="check_country_reports" <?php if ($this->check_country_reports == 1) echo 'checked'; ?>><label
-                            for="check_country_reports"><?php tp('Enable'); ?></label>
+                                for="check_country_reports"><?php tp('Enable'); ?></label>
                     </div>
                     <div style="clear : both;"></div>
                 </div>
@@ -517,7 +449,16 @@ ob_end_clean();
                         <div class="fieldLabel"><?php tp('Use offline app'); ?></div>
                         <input type="checkbox" name="display_use_offline_app"
                                id="display_use_offline_app" <?php if ($this->display_use_offline_app == 1) echo 'checked'; ?>><label
-                            for="display_use_offline_app"><?php tp('Enable'); ?></label>
+                                for="display_use_offline_app"><?php tp('Enable'); ?></label>
+                    </div>
+                    <div style="clear : both;"></div>
+                </div>
+                <div>
+                    <div class="fieldInput">
+                        <div class="fieldLabel"><?php tp('Assessment'); ?></div>
+                        <input type="checkbox" name="check_mod_assessment"
+                               id="check_mod_assessment" <?php if ($this->check_mod_assessment == 1) echo 'checked'; ?>><label
+                                for="check_mod_assessment"><?php tp('Enable'); ?></label>
                     </div>
                     <div style="clear : both;"></div>
                 </div>
@@ -533,11 +474,11 @@ ob_end_clean();
                     <div class="fieldInput">
                         <input type="checkbox" name="locales[]" value="<?php echo $key; ?>"
                                id="<?php echo $key; ?>"<?php if (in_array($key, $this->locale_enabled) || $key == $this->locale) print 'checked'; ?>><label
-                            for="<?php echo $key; ?>"><?php tp('Enable'); ?></label>
+                                for="<?php echo $key; ?>"><?php tp('Enable'); ?></label>
                         &nbsp;
                         <input type="radio" name="locale_default" value="<?php echo $key; ?>"
                                id="d<?php echo $key; ?>" <?php if ($this->locale == $key) print 'checked'; ?>><label
-                            for="d<?php echo $key; ?>"><?php tp('Default'); ?></label>
+                                for="d<?php echo $key; ?>"><?php tp('Default'); ?></label>
                     </div>
 
                 <?php } ?>
