@@ -152,7 +152,7 @@ print ScriptContainer::$instance->renderJSHead();
   <?php 
   print DropDown::render('active_trainer_option_id', t('Active').' '.t('trainer'), $this->active_trainer,'active_trainer_phrase','id', $this->person['active_trainer_option_id'],false,false, false  );
   ?>
-  	<div class="fieldLabel" ><?php echo t('Trainer').' '.t('Type');?></div>
+  	<div class="fieldLabel" ><?php echo t('Trainer type');?></div>
 	<div class="fieldInput"><input readonly="readonly" type="text" size="40" maxlength="128" value="<?php
 			foreach ( $this->trainer_types as $vals ) {
 				if ( $this->person['trainer_type_option_id'] == $vals['id'] )
@@ -169,7 +169,7 @@ print ScriptContainer::$instance->renderJSHead();
 		?>" /></div>
 	<?php } ?>
 <div class="clear" ></div>
-	<div class="fieldLabel" ><?php echo t('Trainer').' '.t('skills');?></div>
+	<div class="fieldLabel" ><?php echo t('Trainer skills');?></div>
 	<div class="fieldInput">
 	       <span class="checkBoxes">
 	 <?php

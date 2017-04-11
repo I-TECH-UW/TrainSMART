@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
 	<title><?php echo $this->translation['Application Name'] . " | " . $this->pageTitle; ?></title>
 	<?php
@@ -7,8 +7,17 @@
 	require_once('views/helpers/ScriptContainer.php');
 	print ScriptContainer::$instance->renderCSSHead();
 	print ScriptContainer::$instance->renderJSHead();
+	echo $this->partial('reports/employee-reports-common-javascript-header-partial.phtml');
 	?>
 
+    <script type="text/javascript">
+        function toggle_date_requirement() {
+            $('#capture_complete_required').toggle($('#show_complete_captures').checked);
+            return true;
+        }
+        $(document).ready(function () { toggle_date_requirement(); });
+
+    </script>
 </head>
 <body class="yui-skin-sam">
 
@@ -16,6 +25,7 @@
 
 		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
 		<div id="content">
+            <?php require_once 'views/scripts/status.phtml' ?>
 
 			<h1><?php tp('Search Partners');?></h1>
 			<form action="" method="get" class="form_employee">
@@ -23,136 +33,57 @@
 					<?php
 						$this->required_fields = array();
 						echo '<input type="text" width="0" style="width: 0; height: 0; top: -100px; position: absolute;"/>'; // bugfix so jquery datepicker doesnt open on dom ready (first element in chrome thats a textbox will focus and trigger..=[)
-						if($this->setting['display_employee_partner'])
-						echo labelAndField($this, t('Partner').space.t('Name'), $this->partners);
-						if($this->setting['display_employee_sub_partner'])
-						echo labelAndField($this, t('Sub Partner'), $this->subpartners);
+						if($this->setting['display_employee_partner']) {
+							echo labelAndField($this, t('Partner') . space . t('Name'), $this->partners);
+						}
 						echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, false );
 						$cal = '<a class="calendarbtn" href="#"><img src="'.$this->base_url.'/js/yui/assets/calbtn.gif"></a>';
-						if($this->setting['display_employee_funder'])
-						echo '<div class="fieldLabel">'.t('Funding End Date Between').'</div>	<div class="fieldInput">'
-							. '<input type="text" id="start_date" class="datepicker" name="start_date" value="'.$this->criteria['start_date'].'" /> '.$cal
-							. ' <label class="label">'.t('to').' </label>'
-							. '<span><input type="text" id="end_date" class="datepicker" name="end_date" value="'.$this->criteria['end_date'].'" /> '.$cal.'</span>'
-							. '</div>';
+						if ($this->setting['display_employee_funder']) {
+							echo $this->partial('/reports/date-range-partial.phtml',
+								array('label' => t('Funding End Date Between'),
+									'prefix' => 'funding_',
+									'start_date' => $this->criteria['funding_start_date'],
+									'end_date' => $this->criteria['funding_end_date'],
+									'show_value' => false)
+							);
+						}
+
+                        echo '<div class="fieldLabel">';
+                        echo $this->formLabel("", t('Show Only Complete Data Captures'));
+                        echo '</div>';
+                        echo '<div class="fieldInput">';
+                        echo $this->formCheckbox("show_complete_captures", $this->criteria['show_complete_captures'],
+                            array('onClick' => 'toggle_date_requirement();', 'style' => 'margin-top: .25em;',
+                                'checked' => $this->criteria['show_complete_captures'] === "1"));
+                        echo '</div><div class="clear"></div>';
+
+						echo $this->partial('/reports/date-range-partial.phtml',
+							array('label' => t('Data Capture Completion Date'),
+								'prefix' => 'capture_complete_',
+								'start_date' => $this->criteria['capture_complete_start_date'],
+								'end_date' => $this->criteria['capture_complete_end_date'],
+                                'required' => $this->criteria['show_complete_captures'],
+								'show_value' => false)
+						);
 					?>
 					<div class="clear"></div>
 					<input type="hidden" name="limit" id="limit" value="1" />
-					<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+                    <?php
+                    echo $this->partial('reports/ps-search-preview-button-partial.phtml', array());
+                    ?>
+
 				</fieldset>
 			</form>
+            <?php if (isset($this->output)) {
+                echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
+                    array('output' => $this->output, 'headers' => $this->headers, 'row_click_key' => 'id',
+                        'row_click_prefix' => "location='$this->base_url/partner/edit/id/",
+                        'row_click_suffix' => "';"));
+                ?>
+                <input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large"
+                       onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=csv"?>')">
+            <?php } ?>
 
-
-			<script type="text/javascript">
-				$(function () {
-					$('.datepicker').datepicker({
-						changeMonth: true,
-						changeYear: true,
-						dateFormat: "dd/mm/yy"
-					});
-					$('.calendarbtn').click(openNearestDatePicker);
-				});
-			</script>
-
-
-			<?php if ( $this->criteria['go'] ) { ?>
-			<div class="hrGrey"></div>
-			<div class="fieldIndentNoMargin"><?php tp('Partners');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
-			<a href="<?php echo $this->base_url;?>/partner/add"><?php tp('Add New Partner');?></a><br/><br/>
-			<div id="partners"></div>
-			<script type="text/javascript">
-			var partnersData = [
-			<?php
-			$cnt = 0;
-			$isFirstRow = true;
-			foreach($this->results as $row) {
-
-				if ( ( $cnt < 100 ) or ( isset($_REQUEST['limit']) AND !$_REQUEST['limit'] ) ) {
-					if ( !$isFirstRow ) {
-						echo ',';
-					}
-					$isFirstRow = false;
-
-					$data = array();
-
-					echo '[';
-						echo $row['id'] . ','; 		//no quotes
-						if($this->setting['display_employee_partner'])
-						$data[] = $row['partner'];
-						$data[] = $row['province_name'];
-						if($this->setting['display_region_b']) $data[] = $row['district_name'];
-						if($this->setting['display_region_c']) $data[] = $row['region_c_name'];
-						if($this->setting['display_region_d']) $data[] = $row['region_d_name'];
-						if($this->setting['display_region_e']) $data[] = $row['region_e_name'];
-						if($this->setting['display_region_f']) $data[] = $row['region_f_name'];
-						if($this->setting['display_region_g']) $data[] = $row['region_g_name'];
-						if($this->setting['display_region_h']) $data[] = $row['region_h_name'];
-						if($this->setting['display_region_i']) $data[] = $row['region_i_name'];
-						if($this->setting['display_employee_sub_partner']) $data[] = $row['subPartner'];
-						if($this->setting['display_employee_funder']) {
-							$data[] = $row['partnerFunder'];
-							$data[] = $row['mechanism'];
-							$data[] = formhelperdate($row['funding_end_date']);
-						}
-						echo '"' .implode('","', $data). '"';
-					echo "] \n";
-					$cnt++;
-				}
-			}
-			?>];
-
-			var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
-				if ( (sData == null) || (sData.length == 0) )
-					sData = '&nbsp;&nbsp;&nbsp;';
-				elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/partner/edit/id/" + oRecord.getData("id") + "' >" + sData + "</a>";
-			}
-
-			var partnerColDefs = [
-			{key:"id", label: "<?php tp("ID");?>", sortable:true, resizable:false, formatter: formatViewUrl},
-			<?php if ( $this->setting['display_employee_partner'] ) { ?>
-			{key:"partner", label: "<?php echo t('Partner').space.t('Name');?>", sortable:true, resizeable:true},
-			<?php } ?>
-			{key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true},
-			<?php if ( $this->setting['display_region_b'] ) { ?>
-			{key:"district_name", label: "<?php echo (@$this->translation['Region B (Health District)']); ?>", sortable:true, resizeable:true},
-			<?php } ?>
-			<?php if ( $this->setting['display_region_c'] ) { ?>
-			{key:"region_c_name", label: "<?php echo (@$this->translation['Region C (Local Region)']); ?>", sortable:true, resizeable:true},
-			<?php } ?>
-			<?php if ( $this->setting['display_region_d'] ) { ?>
-			{key:"region_d_name", label: "<?php echo (@$this->translation['Region D']); ?>", sortable:true, resizeable:true},
-			<?php } ?>
-			<?php if ( $this->setting['display_region_e'] ) { ?>
-			{key:"region_e_name", label: "<?php echo (@$this->translation['Region E']); ?>", sortable:true, resizeable:true},
-			<?php } ?>
-			<?php if ( $this->setting['display_region_f'] ) { ?>
-			{key:"region_f_name", label: "<?php echo (@$this->translation['Region F']); ?>", sortable:true, resizeable:true},
-			<?php } ?>
-			<?php if ( $this->setting['display_region_g'] ) { ?>
-			{key:"region_g_name", label: "<?php echo (@$this->translation['Region G']); ?>", sortable:true, resizeable:true},
-			<?php } ?>
-			<?php if ( $this->setting['display_region_h'] ) { ?>
-			{key:"region_h_name", label: "<?php echo (@$this->translation['Region H']); ?>", sortable:true, resizeable:true},
-			<?php } ?>
-			<?php if ( $this->setting['display_region_i'] ) { ?>
-			{key:"region_i_name", label: "<?php echo (@$this->translation['Region I']); ?>", sortable:true, resizeable:true},
-			<?php } ?>
-			<?php if ( $this->setting['display_employee_sub_partner'] ) { ?>
-			{key:"subpartners", label: "<?php tp('Sub Partner');?>", sortable:true, resizeable:true},
-			<?php } ?>
-			<?php if ( $this->setting['display_employee_funder'] ) { ?>
-			{key:"partnerFunder", label: "<?php tp('Funder');?>", sortable:true, resizeable:true},
-			{key:"mechanism", label: "<?php tp('Mechanism');?>", sortable:true, resizeable:true},
-			{key:"funding_end_date", label: "<?php tp('Funder End Date');?>", sortable:true, resizeable:true}
-			<?php } ?>
-											];
-
-			makeDataTable("partners", null, partnersData, partnerColDefs);
-		</script>
-			<?php if ($cnt < count($this->results)) { ?>
-			[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a>
-			<?php } ?>
-			<?php } ?>
 		</div>
 	</body>
 </html>

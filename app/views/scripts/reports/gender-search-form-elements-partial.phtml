@@ -1,0 +1,10 @@
+<div class="fieldquestion"><?php echo t('Gender'); ?></div>
+<div class="fieldshow"><input type="checkbox" name="showgender" id="showgender" value="1"<?php if (isset($this->criteria['showgender']) && $this->criteria['showgender']) { echo " checked"; } ?>></div>
+<div class="fieldselect"><select name="gender" id="gender" style="" size="10">
+        <?php
+        echo "<option value=\"0\"" . ($this->criteria['gender'] == 0 ? " selected" : "") . ">All</option>\n";
+        echo "<option value=\"1\"" . ($this->criteria['gender'] == 1 ? " selected" : "") . ">Male</option>\n";
+        echo "<option value=\"2\"" . ($this->criteria['gender'] == 2 ? " selected" : "") . ">Female</option>\n";
+        ?>
+    </select></div>
+<div class="clear pad20">&nbsp;</div>

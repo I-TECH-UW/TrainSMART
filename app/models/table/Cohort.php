@@ -26,7 +26,10 @@ class Cohortedit extends ITechTable
 			'institutionid'	 => $param['institution'],
 		);
 		
-		$rowArray = $this->dbfunc()->insert($this->_name,$insert);
+		//TA:82 use this function to insert 'created_by' and 'timestamp_created' fields
+		//        $rowArray = $this->dbfunc()->insert($this->_name,$insert);
+		$rowArray = $this->insert($insert);
+		
 		$id = $this->dbfunc()->lastInsertId(); 
 		return $id;
 	}
@@ -39,7 +42,7 @@ class Cohortedit extends ITechTable
 		return $row;	
 	}
 	
-	public function Listcohort($fetchlist) {
+	public function Listcohort() {
 		$db = $this->dbfunc();
 		$select = $db->query("select * from cohort ");
 		$row = $select->fetchAll();
@@ -82,7 +85,10 @@ class Cohortedit extends ITechTable
 			$db->query("UPDATE student SET cadre = {$param['cadre']} WHERE id = {$student['id_student']}");
 		}
 		
-		$db->update('cohort',$data,'id = ' . $param['id']);
+		//TA:82 use this function to insert 'modified_by' and 'timestamp_updated' fields
+		//         $db->update('cohort',$data,'id = ' . $param['id']);
+		$this->update($data, "id = '" . $param['id'] . "'");
+		
 		return $data;
 	}
 	 
@@ -222,7 +228,7 @@ class Cohortedit extends ITechTable
 		return $output;
 	} 
 	
-	public function getAllStudents($cid = false, $unassigned_only = false){
+	public function getAllStudents($cid = false, $unassigned_only = false, $inst_id=false){
 		
 		if($unassigned_only){
 			
@@ -232,9 +238,15 @@ class Cohortedit extends ITechTable
 				->join(array('s' => 'student'),
 						's.personid = p.id',
 						array("sid"=>'id'))
-				->order('p.first_name','p.last_name')
-				->where("s.id NOT IN (SELECT id_student FROM link_student_cohort WHERE id_cohort != {$cid})");
-			
+				->order('p.first_name','p.last_name');
+				
+				//TA:#304 it is not clear why this condition was here, it reproduce BUG, 
+				//if remove this condition then it take all students about 8,000 it is too much for user to make a selection 
+				//->where("s.id NOT IN (SELECT id_student FROM link_student_cohort WHERE id_cohort != {$cid})");
+				//TA:#304 Let's take all students from this institution only
+				if($inst_id){
+				    $select->where("s.institutionid=?", $inst_id);
+				}	
 		} else {
 			
 			if ($cid !== false){
@@ -261,6 +273,8 @@ class Cohortedit extends ITechTable
 			
 		}
 		
+		$select->where('p.is_deleted=0');//TA:#277
+	
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
@@ -420,7 +434,7 @@ class Cohortedit extends ITechTable
 		$rowArray = $this->dbfunc()->insert($this->_exams,$insert);
 	}
 	 
-	public function ListExams($fetchexams) {
+	public function ListExams() {
 		$db = $this->dbfunc();
 		$select = $db->query("select * from exams");
 		$row = $select->fetchAll();

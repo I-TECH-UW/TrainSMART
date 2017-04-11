@@ -13,57 +13,69 @@ require_once('ITechTable.php');
 class EditTable extends ITechTable
 {
 	
-	/**
-	 * $cols can be a single string or an array of strings where the first array item is the column to match on
-	 */
-	public static function getRowsSingle($table, $cols, $where = false, $limit = false) {
-        	
-      $topicTable = new EditTable(array('name' => $table));
-    	if ( is_string($cols) )
-    		$cols = array($cols, 'id');
-    	else
-    		$cols []= 'id';        
-    		
-      $default_sort = $cols[0];
-    		
-    	if ( (array_search('creator_id', $cols) !== false) || (array_search('creator_name', $cols) !== false) ) {
-        if ( array_search('creator_id', $cols) !== false ) 
-    		  unset($cols[array_search('creator_id', $cols)]);
-        if ( array_search('creator_name', $cols) !== false ) 
-          unset($cols[array_search('creator_name', $cols)]);
-         $default_sort = reset($cols);
-         $select = $topicTable->select()->from($table,$cols)->setIntegrityCheck(false);
-         $select->join(array('u' => 'user'), $table.".created_by = u.id",array("creator_name"=>'CONCAT(u.first_name," ", u.last_name)'));
-    	} else {
-        $select = $topicTable->select()->from($table,$cols);  		
-    	}
-     	
-    	//look for char start
-    	if ( $where ) {
-    		$select->where($where);
-        //$select->where(($cols[0]).' LIKE ? ', $match.'%');
-     	}
-     	$select->where('is_deleted = 0');
-     	$select->order($default_sort.' ASC');
-     	
-     	if ( $limit )
-    		$select->limit($limit,0);
-    	
-     	try {
-        $rows = $topicTable->fetchAll($select);
-      } catch(Zend_Exception $e) {        
-        error_log($e);
-      }
-          	
-      $rowArray = $rows->toArray();
-    		//	unset 'unknown'
-    	foreach($rowArray as $key => $row) {
-    		if ( $row[$cols[0]] == 'unknown' )
-    			unset($rowArray[$key]);
-    	}
-   	
-    	return $rowArray;
-	}
+    /**
+     * gets database rows where is_deleted = 0, unsets any result values with the value 'unknown'
+     *
+     * *special behavior if 'creator_id' or 'creator_name' are in the cols array
+     *
+     * @param string       $table - table name
+     * @param array|string $cols  - can be a single string or an array of strings where the first array item is the column to match on
+     * @param string|bool  $where - where clause or false
+     * @param int|bool     $limit - number of records to return or false
+     * @return array
+     */
+    public static function getRowsSingle($table, $cols, $where = false, $limit = false)
+    {
+
+        $topicTable = new EditTable(array('name' => $table));
+        if (is_string($cols)) {
+            $cols = array($cols, 'id');
+        } else {
+            $cols[] = 'id';
+        }
+        $default_sort = $cols[0];
+
+        if ( (array_search('creator_id', $cols) !== false) || (array_search('creator_name', $cols) !== false) ) {
+            if ( array_search('creator_id', $cols) !== false ) {
+                unset($cols[array_search('creator_id', $cols)]);
+            }
+            if ( array_search('creator_name', $cols) !== false ) {
+                unset($cols[array_search('creator_name', $cols)]);
+            }
+            $default_sort = reset($cols);
+            $select = $topicTable->select()->from($table, $cols)->setIntegrityCheck(false);
+            $select->join(array('u' => 'user'), $table.".created_by = u.id", array("creator_name"=>'CONCAT(u.first_name," ", u.last_name)'));
+        } else {
+            $select = $topicTable->select()->from($table, $cols);
+        }
+
+        // look for char start
+        if ( $where ) {
+            $select->where($where);
+        }
+        $select->where('is_deleted = 0');
+        $select->order($default_sort.' ASC');
+
+        if ( $limit ) {
+            $select->limit($limit, 0);
+        }
+
+        try {
+            $rows = $topicTable->fetchAll($select);
+        } catch(Zend_Exception $e) {
+            error_log($e);
+        }
+
+        $rowArray = $rows->toArray();
+
+        //	unset 'unknown'
+        foreach($rowArray as $key => $row) {
+            if ( $row[$cols[0]] == 'unknown' )
+                unset($rowArray[$key]);
+        }
+
+        return $rowArray;
+    }
 	
 	/**
    * Check for associations, return array of ids that are foreign keys in the dependent table
@@ -100,10 +112,14 @@ class EditTable extends ITechTable
   }
   
   
-	/**
-	 * Merge SQL
-	 */
-	public static function merge($table, $table_dependent, array $ids, $id_primary) { 
+    /**
+     * Merge SQL
+     * @param $table
+     * @param $table_dependent
+     * @param array $ids
+     * @param $id_primary
+     */
+	public static function merge($table, $table_dependent, array $ids, $id_primary) {
     $topicTable = new EditTable(array('name' => $table));    
     $dependTable = new EditTable(array('name' => $table_dependent));
     
@@ -124,7 +140,10 @@ class EditTable extends ITechTable
 
 	/**
 	 * Update default SQL.
-	 */
+     * @param $table
+     * @param $id
+     * @param null $extraWhere
+     */
 	public static function setDefault($table, $id, $extraWhere = NULL) { 
     $topicTable = new EditTable(array('name' => $table));    
 

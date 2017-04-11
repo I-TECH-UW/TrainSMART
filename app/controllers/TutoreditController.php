@@ -73,6 +73,15 @@ class TutoreditController extends ITechController
              */
             $this->_redirect("/tutoredit/tutoredit/id/" . $tutorid);
         }
+
+//TA:51 10/05/2015
+        if (isset($params['delete'])) {
+             $tutoredit = new Tutoredit();
+             $tutoredit->DeleteTutor($params);
+            ValidationContainer::instance()->setStatusMessage(t('The tutor was deleted.'));
+            $_SESSION['status'] = t('The tutor was deleted');
+            $this->_redirect(Settings::$COUNTRY_BASE_URL . '/people/people');
+        }
         
         if (isset($params['update'])) {
             $tutoredit = new Tutoredit();
@@ -109,8 +118,6 @@ class TutoreditController extends ITechController
         $Tutoredit = new Tutoredit();
         $details = $Tutoredit->EditTutor($tutorid);
         
-        // print_r ($details);
-        
         $dob = formHelperDate($details['person'][0]['birthdate']);
         
         $this->view->assign('id', $tutorid);
@@ -125,6 +132,7 @@ class TutoreditController extends ITechController
         // $this->view->assign('cell2',$details['person'][0]['phone_mobile_2']);
         $this->view->assign('cell2', $details['person'][0]['phone_home']);
         $this->view->assign('dob', $dob);
+        $this->view->assign('tutor_not_active', $details['person'][0]['active']);//TA:#254
         
         // TA:6: added 8/8/2014 - 8/10/2014
         $dc = strtotime($details['person'][0]['timestamp_created']);

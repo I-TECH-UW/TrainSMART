@@ -18,7 +18,7 @@ class EditTableHelper {
 	}
 	
 	/**
-	 * Generate HTML & JavaScript for our EditTable
+	 * Generate HTML & JavaScript string for an EditTable
 	 *
 	 * @param  string  $label                   - label for the table
 	 * @param  array   $rowRay                  - array of column-indexed arrays of data from the database
@@ -26,7 +26,7 @@ class EditTableHelper {
 	 * @param  array   $customColDefs = array() - column formatting and settings for the table display
 	 * @param  array   $noDelete      = array() - array of ids that are not allowed to be deleted (default is to allow deletion)
 	 * @param  boolean $noEdit        = false   - is this table read-only?
-	 * @return string containing HTML & JavaScript table
+	 * @return string                           - string containing HTML & JavaScript table
 	 */
 	
 	public static function generateHtml($label, array $rowRay, array $colDefs, array $customColDefs = array(), array $noDelete = array(), $noEdit = false) {
@@ -43,7 +43,7 @@ class EditTableHelper {
 				$def .= ', editor:"textbox"';
 			}
 
-			$colDefs[$key] = "{{$def}}";
+            $colDefs[$key] = '{' . $def .'}';
 		}
 		if (isset($customColDefs['id'])) {
 			$colDefs[] = '{key:"id",'.$customColDefs['id'].'}';
@@ -60,7 +60,6 @@ class EditTableHelper {
 
 		$noEdit = ($noEdit) ? 'true' : 'false';
 
-		$js = '';
 		$js = "<div id=\"{$labelSafe}Table\"></div>\n\n";
 		$js .= "<script type='text/javascript'>\n\n";
 		$js .= "<!--//--><![CDATA[//><!-- \n\n";
@@ -103,8 +102,27 @@ class EditTableHelper {
 		foreach($colDefs as $key => $lbl) {
 
 			$customDef = (isset($customColDefs[$key])) ? ', ' . $customColDefs[$key] : '';
-
-			$colDefsClone[$key] = '{key:"' . htmlspecialchars($key) . '", width:'.($key == 'facility_name'?80:$key == 'training_title'?120:(strlen($lbl)*6)).', resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+            //TA:106 set width for some columns
+            if($key == 'id'){
+                $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) .
+                '", width:15, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+                
+            }else if($key == 'training_start_date'){//TA:#278 => The best way to add column width
+                $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) .
+                '", width:50, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+                
+            }else if($key == 'creator' || $key == 'creator_name' || $key == 'first_name' || $key == 'last_name'){//TA:#278 => The best way to add column width
+                $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) .
+                '", width:100, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+                
+            }else if($key == 'facility_name' || $key == 'location_name'){//TA:#317 wrap text
+                            $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) . 
+ 			 '", style:"overflow:auto;", resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+            }
+            else{//TA if width is not working then use above way (//TA:#278) how to set up column width
+                $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) . 
+  			 '", width:'.($key == 'training_title'?120:(strlen($lbl)*6)).', resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+                      			 }
 		}
 
 		// Format data
@@ -123,7 +141,7 @@ class EditTableHelper {
 			//      $rowRay[$key] .= '"]';
 		}
 
-		$labelSafe = strtolower(str_replace(' ','', $label)); // remove spaces
+		$labelSafe = strtolower(str_replace(' ','', $label)); // remove space
 
 		// links to add to fields
 		if($linkInfo) {

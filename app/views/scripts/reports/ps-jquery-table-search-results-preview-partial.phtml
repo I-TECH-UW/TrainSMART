@@ -1,0 +1,50 @@
+<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+    <thead>
+
+    <?php if (count($this->output) == 0){ ?>
+    <tr>
+        <th><?php tp('Output'); ?></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><?php tp('Your search criteria returned no results'); ?></td>
+    </tr>
+
+    <?php } else { ?>
+    <tr>
+        <?php
+        foreach ($this->headers as $key => $value) {
+            echo '<th>' . t($value) . '</th>';
+        }
+        ?>
+    </tr>
+    </thead>
+    <tbody>
+    <?php
+        foreach ($this->output as $row) {
+            $rowstring = '<tr style="cursor : pointer;" class="GradeA"';
+            if (isset($this->row_click_prefix) && $this->row_click_prefix) {
+                $suffix = '';
+                if (isset($this->row_click_suffix) && $this->row_click_suffix) {
+                    $suffix = $this->row_click_suffix;
+                }
+                if (isset($this->row_click_key) && $this->row_click_key) {
+                    $rowstring .= ' onclick="' . $this->row_click_prefix . $row[$this->row_click_key] . $suffix . '"';
+                }
+                else {
+                    $rowstring .= ' onclick="' . $this->row_click_prefix . $suffix . '"';
+                }
+
+            }
+            $rowstring .= '>';
+            echo $rowstring;
+            foreach ($row as $key => $value) {
+                echo '<td>' . $value . '</td>';
+            }
+            echo "</tr>\n";
+        }
+    }
+    ?>
+    </tbody>
+</table>

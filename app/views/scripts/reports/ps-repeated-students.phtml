@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><?php echo $this->translation['Application Name'];?> | <?php tp('Repeated Students By Name Report');?></title>
+		<?php
+		require_once('views/helpers/Location.php');
+		require_once('views/helpers/ScriptContainer.php');
+		print ScriptContainer::$instance->renderCSSHead();
+		print ScriptContainer::$instance->renderJSHead();
+
+		?>
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+			} );
+
+			function gotoPage(objId) {
+				var reportSelector = YAHOO.util.Dom.get(objId);
+				if ( reportSelector[reportSelector.selectedIndex].value ) {
+					window.location = '<?php echo $this->base_url;?>' + reportSelector[reportSelector.selectedIndex].value + '?<?php echo $_SERVER['QUERY_STRING'];?>';
+				}
+			}
+
+		</script>
+        <style>
+            .termination {
+                display: none;
+            }
+        </style>
+	</head>
+	<body class="yui-skin-sam" >
+		<div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+			<div id="content">
+				<div id="subcontent">
+					<?php
+					echo $this->partial('reports/student-report-types-partial.phtml', array('site_style' => $this->site_style));
+					?>
+
+					<div class="clear"></div>
+
+					<div id="contentheader">
+						<h2><?php tp('Repeated Students');?></h2><br>
+					</div>
+					<div class="pad50 clear"></div>
+					<form  action="" method="get">
+						<div class="mainformholder" style="height:100%;">
+							<input type="hidden" name="process" id="process" value="1">
+							<?php tp('Select Criteria');?><br>
+
+							<?php
+							echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
+								array('translation' => $this->translation, 'locations' => $this->locations,
+									'criteria' => $this->criteria, 'setting' => $this->setting));
+
+							echo $this->partial('reports/ps-institution-cadre-cohort-search-form-elements.phtml',
+								array('institutions' => $this->institutions, 'cadres' => $this->cadres,
+									'cohorts' => $this->cohorts, 'criteria' => $this->criteria));
+							?>
+
+							<div class="fieldquestion"><?php echo t('Gender'); ?></div>
+							<div class="fieldshow"><input type="checkbox" name="showgender" id="showgender" value="1"<?php echo $this->criteria['showgender'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"><select name="gender" id="gender" style="" size="10">
+									<?php
+									echo "<option value=\"male\">Male</option>\n";
+									echo "<option value=\"female\">Female</option>\n";
+									?>
+								</select></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<!-- TA:#251 -->
+							<div class="fieldquestion"><?php echo t('Marital Status'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_marital_status" id="show_marital_status" value="1"<?php echo $this->criteria['show_marital_status'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+
+							<?php echo $this->partial('reports/ps-nationality-search-form-elements.phtml',
+								array('nationalities' => $this->nationalities, 'criteria' => $this->criteria));
+							?>
+							
+							<!-- TA:#251 -->
+							<div class="fieldquestion"><?php tp("Date of Birth"); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="showdob" id="showdob" value="1"<?php echo $this->criteria['showdob'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+
+							<div class="fieldquestion"><?php echo t('Age'); ?></div>
+							<div class="fieldshow"><input type="checkbox" name="showage" id="showage" value="1"<?php echo $this->criteria['showage'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"><input type="text" name="age" id="age" value="" style=""></div>
+							<div class="clear pad20">&nbsp;</div>
+
+							<?php echo $this->partial('reports/ps-student-data-search-form-elements-partial.phtml',
+                                array('tutors' => $this->tutors, 'criteria' => $this->criteria,
+                                    'termination_statuses' => $this->termination_statuses));
+							?>
+							
+							<!-- TA:#251 -->
+                            <div class="fieldquestion"><?php echo t('Graduation date'); ?></div>
+                            <div class="fieldshow"><input type="checkbox" name="showgraduation" id="showgraduation" value="1"<?php echo $_GET['showgraduation'] ? " checked" : "" ?>></div>
+                            <div class="fieldselect"></div>
+                            <div class="clear pad20">&nbsp;</div>
+
+							<div class="fieldquestion"><?php echo t('Course Name And Exam Scores To Date'); ?></div>
+							<div class="fieldshow"><input type="checkbox" name="shownamedate" id="shownamedate" value="1"<?php echo $this->criteria['shownamedate'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+
+						</div>
+
+						<div class="pad20 clear"></div>
+
+						<?php echo $this->partial('reports/ps-search-preview-button-partial.phtml', array('criteria' => $this->criteria)); ?>
+					</form>
+					<?php if (isset($this->output)) {
+					echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
+						array('output' => $this->output, 'headers' => $this->headers));
+					?>
+					<input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large"
+					       onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=csv"?>')">
+					<?php } ?>
+					<div class="clear" style=""></div>
+				</div>
+				<div class="clear" style=""></div>
+			</div>   
+			<div class="clear" style="height : 100px;"></div>
+			<div class="clear" style=""></div>
+							
+	
+			<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+			</div>
+		</div>
+	</body>
+</html>
+
+
+

@@ -19,12 +19,13 @@
  */
 
 /**
- * @param  view   $view       - the view object
+ * creates html string for a labelled input field, uses view object to control readonly/required data
+ * @param  $view   $view       - the view object
  * @param  string $label      - label text
  * @param  string $content    - 'text', 'textarea', 'date', '%' or any html blob
  * @param  string $id    = '' - html element id
  * @param  string $val   = '' - value to display for input tags
- * @return html string
+ * @return string - html string
  * returns:
  * string <div class="$class $id">$required$label</div>
  * <div class="fieldInput">$reportcheck$content$cal1</div>
@@ -39,23 +40,34 @@ function labelAndField($view, $label, $content, $id = '', $val = '')
         $required = '<span class="required">*</span>';
     }
 
+    $labelId = '';
+    if ($id) {
+        $labelId = 'id="' . $id . '_lbl"';
+    }
+
 	$cal = '<a class="calendarbtn" href="#"><img src="'.$view->base_url.'/js/yui/assets/calbtn.gif"></a>';
 	if (!$view->calendar_fields) $view->calendar_fields = array();
 	$cal1 = (array_search($id, $view->calendar_fields) === false) ? '' : $cal;
 	if ($view->autoheight_labels)
 		$class .= ' autoHeight ';
-	$reportcheck = $view->is_report ? '<div class="leftBorderPad"><input type="checkbox" name="show_'.$id.'"'. (($view->criteria['show_'.$id]) ? 'CHECKED' : '').'/></div></div><div class="leftBorder">' : '';
+	$reportcheck = $view->is_report ? '<div class="leftBorderPad"><input type="checkbox" name="show_'.$id.'"'. ((isset($view->criteria['show_'.$id]) && $view->criteria['show_'.$id]) ? 'CHECKED' : '').'/></div></div><div class="leftBorder">' : '';
 
 	if ($content == 'text')
 		$content = '<input type="text" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/>';
+	else if ($content == 'phone_10') //TA:#279
+		$content = '<input type="text" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.' onkeypress="return isNumber(event)" maxlength="10"/>';
+	else if ($content == 'email') //TA:#279
+	    $content = '<input type="email" style="border:1px solid #7f9db9; padding:1px 2px; font-family:verdana;" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/>';
 	else if ($content == 'date')
 		$content = '<input type="text" class="datepicker" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/> '.$cal;
 	else if ($content == 'textarea')
 		$content = '<textarea id="'.$id.'" name="'.$id.'" '.$readonly.'>'.$val.'</textarea>';
 	else if ($content == '%') //TA:20: 08/29/2014 
 		$content = '<input type="number" min="0" max="100" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.'/>';
-	$o = <<< EOF
-	<div class="$class $id">$required$label</div>
+	else if ($content == 'currency') //TA:#282
+ 	    $content = '<input placeholder="0.00" type="number" min="0.00" step="0.01" id="'.$id.'" name="'.$id.'" value="'.$val.'" '.$readonly.' onkeypress="return isNumber(event)" onchange="validateFloatKeyPress(this);"/>';
+	    $o = <<< EOF
+	<div class="$class $id" $labelId>$required$label</div>
 	<div class="fieldInput">$reportcheck$content$cal1</div>
 EOF;
 
@@ -71,7 +83,7 @@ EOF;
  */
 
 /* returns:
- * 	<div class="$class $id">$required$label</div>" 
+ * 	<div class="$class $id" $labelId>$required$label</div>"
  *	<div class="fieldInput">$reportcheck<input type="checkbox" id="$id" name="$id" $checked $readonly /></div>
  */
 function labelAndCheckBox($view, $label, $id = '', $val = '')
@@ -81,9 +93,13 @@ function labelAndCheckBox($view, $label, $id = '', $val = '')
 	$class = $view->thin_labels ? 'fieldLabelThin' : 'fieldLabel';
 	$checked = $val ? 'checked="checked"' : '';
 	$reportcheck = $view->is_report ? '<div class="leftBorderPad"><input type="checkbox" name="show_'.$id.'"'. (($view->criteria['show_'.$id]) ? 'CHECKED' : '').'/></div></div><div class="leftBorder">' : '';
+    $labelId = '';
+    if ($id) {
+        $labelId = 'id="' . $id . '_lbl"';
+    }
 
 	$o = <<< EOF
-	<div class="$class $id">$required$label</div>
+	<div class="$class $id" $labelId>$required$label</div>
 	<div class="fieldInput">$reportcheck<input type="checkbox" id="$id" name="$id" $checked $readonly /></div>
 EOF;
 	return $o;
@@ -91,18 +107,18 @@ EOF;
 }
 
 /**
- * @param  view    $view        - the view object
+ * @param  $view    $view        - the view object
  * @param  string  $label1      - label text
  * @param  string  $label2      - label text
  * @param  string  $id1         - html element id
  * @param  string  $id2         - html element id
  * @param  string  $val1 = ''   - value to display for input tags
  * @param  string  $val2 = ''   - value to display for input tags
- * @return html string
+ * @return string  - html string
  */
  
 /*  returns:
- * 	<div class="$class $id">$required$label1</div>
+ * 	<div class="$class $id" $labelId>$required$label1</div>
  *	<div class="fieldInput">$reportcheck
  *		<input type="text" id="$id1" name="$id1" value="$val1" $readonly/> $cal1
  *		<span class="$id2">
@@ -122,10 +138,15 @@ function labelTwoFields($view, $label1, $label2, $id1, $id2, $val1 = '', $val2 =
 	$class2 = ($cal2 ? ' class="datepicker"':'');
 	if ($view->autoheight_labels)
 		$class .= ' autoHeight ';
-	$reportcheck = $view->is_report ? '<div class="leftBorderPad"><input type="checkbox" name="show_'.$id1.'"'. (($view->criteria['show_'.$id1]) ? 'CHECKED' : '').'/></div></div><div class="leftBorder">' : '';
+	$reportcheck = $view->is_report ? '<div class="leftBorderPad"><input type="checkbox" name="show_'.$id1.'"'. ((isset($view->criteria['show_'.$id1]) && $view->criteria['show_'.$id1]) ? 'CHECKED' : '').'/></div></div><div class="leftBorder">' : '';
+
+    $labelId = '';
+    if ($id1) {
+        $labelId = 'id="' . $id1 . '_lbl"';
+    }
 
 	$o = <<< EOF
-	<div class="$class $id">$required$label1</div>
+	<div class="$class $id1" $labelId>$required$label1</div>
 	<div class="fieldInput">$reportcheck
 		<input type="text" id="$id1" name="$id1" value="$val1" $class1 $readonly/> $cal1
 		<span class="$id2">
@@ -141,10 +162,10 @@ EOF;
 }
 
 /**
- * @param  view    $view            - the view object
+ * @param  $view   $view            - the view object
  * @param  string  $label           - label text
- * @param  string  $float50 = false - html element id
- * @return html string
+ * @param  bool  $float50 = false - html element id
+ * @return string  - html string
  */
 
 /* 
@@ -166,7 +187,7 @@ function label($view, $label, $float50 = false) {
  * mysql timestamp -> m/d/Y output
  * 
  * @param  array or string    $value 
- * @param  string  $formatAsDMY = true - show day of month first (euro style)
+ * @param  bool  $formatAsDMY = true - show day of month first (euro style)
  * @return string - date or empty string
  */
 
@@ -193,11 +214,11 @@ function formhelperdate($value, $formatAsDMY = true)
 }
 
 /**
- * @param  view    $view    - the view object
+ * @param  $view   $view    - the view object
  * @param  string  $label   - label text
  * @param  string  $id      - html element id
  * @param  string  $val     - value to display for input tags
- * @return html string
+ * @return string - html
  */
 
 function genderDropdown($view, $label, $id, $val)
@@ -227,7 +248,7 @@ function genderDropdown($view, $label, $id, $val)
  * @param  string  $label   - label text
  * @param  string  $id      - html element id
  * @param  string  $val     - value to display for input tags
- * @return html string
+ * @return string - html string
  */
 
 function confirmDropdown($view, $label, $id, $val)
@@ -239,8 +260,13 @@ function confirmDropdown($view, $label, $id, $val)
 	$reportcheck = $view->is_report ? '<div class="leftBorderPad"><input type="checkbox" name="show_'.$id.'"'. (($view->criteria['show_'.$id]) ? 'CHECKED' : '').'/></div></div><div class="leftBorder">' : '';
 	$required = ( in_array($id,$view->required_fields) ) ? '<span class="required">*</span>' : '';
 
-	$o = '
-	<div class="'.$class.'">'.$required.$label.'</div>
+    $labelId = '';
+    if ($id) {
+        $labelId = 'id="' . $id . '_lbl"';
+    }
+
+    $o = '
+	<div class="'.$class.'" ' . $labelId . '>'.$required.$label.'</div>
 	<div class="fieldInput">'.$reportcheck.
 	'<select id="'.$id.'" name="'.$id.'" '.$readonly.'>
 		<option value="">--'.t('choose').'--</option>

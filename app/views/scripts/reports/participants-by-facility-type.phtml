@@ -41,7 +41,7 @@ function setDistrictStatus(selectedIndex)  {
     <h1><?php tp('Participant Reports');?></h1>
     	<?php require_once('peopleReportsPicker.phtml'); ?>
 	   <form action="" method="get">
-   <fieldset id="criteria"><legend><?php tp('Select Criteria');?></legend>
+   <fieldset id="criteria" ><legend><?php tp('Select Criteria');?></legend>
  <div id="dividers">
 
       	<div class="fieldLabel" ></div>
@@ -54,7 +54,8 @@ function setDistrictStatus(selectedIndex)  {
 	    <div class="fieldLabel" id="facilityInput_lbl"><?php tp('Facility');?></div>
 	    <div class="fieldInput">
 	    <div  class="leftBorderPad"><input type="checkbox" name="showFacility" <?php  if ($this->criteria['showFacility']) echo 'CHECKED';?> /></div>
-	    <div  class="leftBorder"><select id="facilityInput" name="facilityInput" >
+	    <div  class="leftBorder">
+	    <select id="facilityInput" name="facilityInput" >
 	<option value="">--<?php tp('choose');?>--</option>
 	<?php
 		foreach ( $this->facilities as $vals ) {
@@ -87,15 +88,18 @@ function setDistrictStatus(selectedIndex)  {
 		?>
 	</select></div></div>
 	<div class="fieldLabel" id="training_title_option_id_lbl"><?php echo (@$this->translation['Training Name']); ?></div>
-	<div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showTrainingTitle" <?php  if ($this->criteria['showTrainingTitle']) echo 'CHECKED';?> /></div>
-  	<div  class="leftBorder autoHeight">
-	<select id="training_title_id" name="training_title_id[]" multiple="multiple" size="10">
+	<div class="fieldInput">
+	<div  class="leftBorderPad"><input type="checkbox" name="showTrainingTitle" <?php  if ($this->criteria['showTrainingTitle']) echo 'CHECKED';?> /></div>
+  	<div class="leftBorder autoHeight autoWidth">
+  	<!-- TA:69 expend to ??? style="min-width:780px;" -->
+	<select id="training_title_id" name="training_title_id[]" multiple="multiple" size="10" style="min-width:600px;">
 		<option value="" <?php if (is_array($this->criteria['training_title_id']) && in_array("", $this->criteria['training_title_id'])) echo "selected"; ?>>--<?php tp('All');?>--</option>
 		<?php
+		//TA:69 remove trancate values, show whole values, display titles=item value as mouse over
 			foreach ( $this->courses as $vals ) {
-				echo '<option value="'.$vals['id'].'"
+				echo '<option title="'.$vals['training_title_phrase'].'" value="'.$vals['id'].'"
 				     '.((@$this->criteria['training_title_id']) == $vals['id'] || @in_array($vals['id'], $this->criteria['training_title_id'])? 'SELECTED':'').' >'
-				     .$this->truncate($vals['training_title_phrase']).'</option>';
+				     .$vals['training_title_phrase'].'</option>';
 
 		}
 		?>
@@ -275,7 +279,7 @@ function setDistrictStatus(selectedIndex)  {
 		<option value="inactive"  <?php echo (@$this->criteria['training_active'] == 'inactive'? 'SELECTED':''); ?> ><?php tp('inactive');?></option>
 	</select></div></div>
 <?php } ?>
-<?php if ( strstr($path[2], 'participantsByName') !== FALSE ) { ?>
+<?php if ( strstr($path[2], 'participantsByName') !== FALSE  OR ( strstr($path[2], 'participants-by-name') !== FALSE )) { //TA:63?>
 	<div class="fieldLabel" id="training_phone_lbl"><?php tp('Email');?></div>
 	<div class="fieldInput">
 	<div  class="leftBorderPad"><input type="checkbox" name="showEmail" <?php  if ($this->criteria['showEmail']) echo 'CHECKED';?> /></div>
@@ -348,7 +352,9 @@ if ( $this->criteria['showTrainingTitle'] or $this->criteria['showTopic'] or $th
 
 ?>
 <div class="hrGrey"></div>
-    <div class="fieldIndentNoMargin"><?php tp('Participants');?> <span class="total"><?php echo $this->count;?> <?php tp('Participants');?> </span><?php echo $this->printAndExport();?>
+<!-- TA:80 -->
+    <div class="fieldIndentNoMargin"><?php tp('Participants');?> <span class="total"><?php echo $this->count;?> <?php tp('Participants');?> </span>
+    <?php echo $this->printAndExport("trainings");?>
     <?php echo ($hasTrainingInfo? '<br/><span class="total">*'.t('Note: This report may contain multiple rows for participants who attended multiple').' '.t('trainings').'.</span>':''); ?>
     </div>
 

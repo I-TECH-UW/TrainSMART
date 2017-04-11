@@ -414,7 +414,7 @@
 			echo labelAndField($this, t('Date of Enrollment'), 'date', 'joindate', $this->studentCohortData['joindate']);
 			echo labelAndField($this, t('Date of Separation'), 'date', 'dropdate', $this->studentCohortData['dropdate']);
 			echo labelAndField($this, t('Date of Final Integrated External Assessment'), 'date', 'examdate', $this->studentCohortData['examdate']);
-			echo labelAndField($this, t('ps program enrolled in'), $this->assessment_center); // Dropdown
+			echo labelAndField($this, t('ps program enrolled in'), $this->cadre); // Dropdown
 			echo labelAndField($this, t('ps last university attended'), 'text', 'lastunivatt', $this->studentData['lastunivatt']);
 			echo labelAndField($this, t('Contact Number of Assessment Centre/Site'), 'text', 'emergcontact', $this->studentData['emergcontact']);
 			?>
@@ -425,6 +425,7 @@
 			echo '<legend>' . t('Qualified Learners') . '</legend>';
 			echo labelAndField($this, t('Date Certificate was Received From the AQP'), 'date', 'certificate_issue_date', $this->studentCohortData['certificate_issue_date']);
 			echo labelAndField($this, t('Certificate Number'), 'text', 'certificate_number', $this->studentCohortData['certificate_number']);
+			echo labelAndField($this, t('Certificate Issuer'), $this->certificate_issuer); // Dropdown
 			echo labelAndField($this, t('Date Learner Received Certificate'), 'date', 'certificate_received_date', $this->studentCohortData['certificate_received_date']);
 			?>
 		</fieldset>

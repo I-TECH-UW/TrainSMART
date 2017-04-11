@@ -17,7 +17,7 @@ class IndexController extends ITechController {
 
 	public function indexAction() {
 
-		if($this->hasACL('edit_employee') && $this->setting('employees_module')){
+		if($this->hasACL('edit_employee') && $this->setting('module_employee_enabled')){
 			if($this->hasACL('in_service') == false && $this->hasACL('pre_service') == false) {
 				$this->_redirect('employee');
 				exit();
@@ -48,7 +48,7 @@ class IndexController extends ITechController {
 		$rowsArray = $db->fetchAll ( $sql );
 		$NIMART = 0;
 		foreach($rowsArray as $key => $row) {
-			$NIMARTsplit=preg_split("/§/",$rowsArray[$key]['comments']);
+			$NIMARTsplit=preg_split("/ï¿½/",$rowsArray[$key]['comments']);
 			if(strlen($NIMARTsplit[21])>0) {
 				if($NIMARTsplit[21] = "Nurse Initiating ART") {
 					$NIMART = $NIMART + 1;
@@ -67,7 +67,8 @@ class IndexController extends ITechController {
 			$uid = Session::getCurrentUserId ();
 
 			// Find incomplete training and future trainings
-			$trainingFields = array ('id' => t('ID'),'training_title' => t ( 'Course Name' ), 'training_start_date' => t ( 'Start Date' ), 'training_location_name' => t ( 'Training Center' ), 'budget_code' => t('Budget Code'),'creator' => t ( 'Created By' ) );
+			$trainingFields = array ('id' => t('ID'),'training_title' => t ( 'Course Name' ), 'training_start_date' => t ( 'Start Date' ), 'training_organizer_phrase'  => t('Training Organizer'), 'training_location_name' => t ( 'Training Location' ), 
+			    'budget_code' => t('Budget Code'),'funding'  => t('Funding'), 'creator' => t ( 'Created By' ));
 			if(!$this->setting('display_budget_code')) {
 				unset($trainingFields['budget_code']);
 			}
@@ -98,17 +99,17 @@ class IndexController extends ITechController {
 
 			// Incomplete
 			$tableObj = new Training ( );
-			$rowsPast = $tableObj->getIncompleteTraining ( $uid, 'training_start_date < NOW() '.$allowedWhereClause );
+			$rowsPast = $tableObj->getIncompleteTraining ( $uid, $this->setting('display_budget_code'), 'training_start_date < NOW() '.$allowedWhereClause );
 			if ($rowsPast) {
-				$html = EditTableHelper::generateHtmlTraining ( 'TrainingPast', $rowsPast, $trainingFields, $colStatic, $linkInfo, $editLinkInfo, $colCustom );
+				$html = EditTableHelper::generateHtmlTraining ( 'TrainingPast', $rowsPast->toArray(), $trainingFields, $colStatic, $linkInfo, $editLinkInfo, $colCustom );
 				$this->view->assign ( 'tableTrainingPast', $html );
 			}
 
 			// Future
 			$tableObj = new Training ( );
-			$rowsFuture = $tableObj->getIncompleteTraining ( $uid, 'training_start_date >= NOW()'.$allowedWhereClause, '' );
+			$rowsFuture = $tableObj->getIncompleteTraining ( $uid, $this->setting('display_budget_code'), 'training_start_date >= NOW()'.$allowedWhereClause, '' );
 			if ($rowsFuture) {
-				$html = EditTableHelper::generateHtmlTraining ( 'TrainingFuture', $rowsFuture, $trainingFields, $colStatic, $linkInfo, $editLinkInfo, $colCustom );
+				$html = EditTableHelper::generateHtmlTraining ( 'TrainingFuture', $rowsFuture->toArray(), $trainingFields, $colStatic, $linkInfo, $editLinkInfo, $colCustom );
 				$this->view->assign ( 'tableTrainingFuture', $html );
 			}
 
@@ -234,33 +235,11 @@ class IndexController extends ITechController {
 	}
 
 	public function jsAggregateAction() {
-		#$headers = apache_request_headers ();
-
-		// Checking if the client is validating his cache and if it is current.
-		/*
-	    if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) > time() - 60*60*24)) {
-	        // Client's cache IS current, so we just respond '304 Not Modified'.
-	        header('Last-Modified: '.gmdate('D, d M Y H:i:s',  time()).' GMT', true, 304);
-			$this->setNoRenderer();
-	    }
-		#echo Globals::$BASE_PATH.Globals::$WEB_FOLDER.$file;
-		#exit;
-		*/
-
 		$response = $this->getResponse ();
 		$response->clearHeaders ();
 
-		//allow cache
-		#$response->setHeader ( 'Expires', gmdate ( 'D, d M Y H:i:s', time () + 60 * 60 * 30 ) . ' GMT', true );
-		#$response->setHeader ( 'Cache-Control', 'max-age=7200, public', true );
-		#$response->setHeader ( 'Last-Modified', '', true );
-		#$response->setHeader ( 'Cache-Control',  "public, must-revalidate, max-age=".(60*60*24*7), true ); // new ver TS new JS file
 		$response->setHeader ( 'Cache-Control',  "must-revalidate, max-age=".(60*60*24*7), true ); // new ver TS new JS file
-		#$response->setHeader ( 'Pragma', 'public', true );
 		$response->setHeader ( 'Last-Modified',''.date('D, d M Y H:i:s', strtotime('18 March 2013 19:20')).' GMT', true ); // todo update this when thers a new javascript file to force re dl
 		$response->setHeader ( 'Content-type', 'application/javascript' ); // should fix inspector warnings (was text/html)
-
 	}
-
 }
-?>

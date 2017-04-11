@@ -1,0 +1,49 @@
+<?php
+
+    $prefix = "";
+    if (property_exists($this, 'prefix')) {
+        $prefix = $this->prefix;
+    }
+
+    $startname = $prefix . 'start_date';
+    $endname = $prefix . 'end_date';
+
+    $startval = "";
+    $endval = "";
+
+    if (property_exists($this, 'start_date')) {
+        $startval = $this->start_date;
+    }
+    if (property_exists($this, 'end_date')) {
+        $endval = $this->end_date;
+    }
+
+    echo '<div class="fieldLabel">';
+    if (property_exists($this, 'required')) {
+        $requiredID = $prefix . 'required';
+        echo "<span class='required' id='$requiredID'>*</span>";
+    }
+
+    if (property_exists($this, 'label')) {
+        echo $this->formLabel("", $this->label);
+    }
+    echo '</div>';
+
+    echo '<div class="fieldInput">';
+    if (property_exists($this, 'show_value') && $this->show_value) {
+        echo $this->formCheckbox($prefix . 'show_date');
+    }
+
+    $cal = ' <a class="calendarbtn" href="#"><img src="' . $this->base_url . '/js/yui/assets/calbtn.gif"></a>';
+
+    echo $this->formText($startname, $startval, array('id' => $startname, 'class' => 'datepicker'));
+    echo $cal;
+    echo ' ' . $this->formLabel("", t('to'), array('class' => 'fieldLabelFont')) . ' ';
+    echo $this->formText($endname, $endval, array('id' => $endname, 'class' => 'datepicker'));
+    echo $cal;
+    echo '</span>';
+    echo '</div>';
+
+    ?>
+
+    <div class="clear pad20"></div>

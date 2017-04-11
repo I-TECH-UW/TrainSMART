@@ -123,7 +123,8 @@ class Person extends ITechTable
 			;
 		}
         if (array_search('q.qualification_phrase', $fieldsSelect))
-            $select->setIntegrityCheck(false)->join(array('q' => 'person_qualification_option'), 'p.primary_qualification_option_id = q.id');
+            //TA:87 use left join to retrieve duplicate persons list, otherwise it works for 'demo', but does not work for 'cham'
+            $select->setIntegrityCheck(false)->joinLeft(array('q' => 'person_qualification_option'), 'p.primary_qualification_option_id = q.id');
 
 		$select->where(' p.is_deleted = 0');
 
@@ -154,7 +155,6 @@ class Person extends ITechTable
 		$select->limit($limit,0);
 
 		$rows = $topicTable->fetchAll($select);
-
 		return $rows;
 	}
 
@@ -165,11 +165,67 @@ class Person extends ITechTable
 		$historyTable = new History('person');
 		//cheezy way to get the id
 		$parts = explode('=',$where[0]);
-		$historyTable->insert($this, trim($parts[1]));
+		$historyTable->tableInsert($this, trim($parts[1]));
 
 		$rslt = parent::update($data,$where);
 
 		return $rslt;
+	}
+	
+	//TA:#331.1
+	public function getPersonEducation($person_id) {
+	   $select = $this->dbfunc()->select()
+		->from('person_to_education')->where("person_id=$person_id")
+	   ->joinLeft('education_type_option', 'education_type_option_id=education_type_option.id')
+	   ->joinLeft('education_school_name_option', 'education_school_name_option_id=education_school_name_option.id')
+	   ->joinLeft('education_country_option', 'education_country_option_id=education_country_option.id');
+		$result = $this->dbfunc()->fetchAll($select);
+		return $result;
+	}
+	
+	//TA:#331.1
+		public function deletePersonEducation($person_id, $education_type_option, $education_school_name_option, $education_country_option, $education_date_graduation) {
+		    $db = $this->dbfunc();
+		    //delete by ids
+// 		    $db->query("DELETE FROM person_to_education WHERE person_id=" . $person_id . " AND education_type_option_id=" . $education_type_option . " AND  education_school_name_option_id=" .  
+// 		        $education_school_name_option . " AND education_country_option_id=" .  $education_country_option . " AND  education_date_graduation=" .  $education_date_graduation);
+          //delete by names
+		    $db->query("DELETE FROM person_to_education WHERE person_id=" . $person_id . 
+		        " AND education_type_option_id=(SELECT ID FROM education_type_option where education_type_phrase='" . $education_type_option . "') " . 
+		        " AND  education_school_name_option_id=(SELECT ID FROM education_school_name_option where school_name_phrase='" . $education_school_name_option . "') " .  
+		        " AND education_country_option_id=(SELECT ID FROM education_country_option where education_country_phrase='" .  $education_country_option . "') AND  education_date_graduation=" .  $education_date_graduation);
+		}
+	
+	//TA:#331.1
+	public function addPersonEducation($person_id, $education_type_option_id, $education_school_name_option_id, $education_country_option_id, $education_date_graduation) {
+	    $db = $this->dbfunc()->query("INSERT INTO person_to_education (person_id, education_type_option_id, education_school_name_option_id, education_country_option_id, education_date_graduation)
+values ($person_id, $education_type_option_id, $education_school_name_option_id, $education_country_option_id, $education_date_graduation)");
+	}
+	
+	//TA:#331.2
+	public function getPersonAttestation($person_id) {
+	    $select = $this->dbfunc()->select()
+	    ->from('person_to_attestation')->where("person_id=$person_id")
+	    ->joinLeft('attestation_category_option', 'attestation_category_option_id=attestation_category_option.id')
+	    ->joinLeft('attestation_level_option', 'attestation_level_option_id=attestation_level_option.id');
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return $result;
+	}
+	
+	//TA:#331.2
+	public function deletePersonAttestation($person_id, $attestation_category_option, $attestation_level_option, $attestation_date) {
+	    $db = $this->dbfunc();
+	    //delete by names
+	    $db->query("DELETE FROM person_to_attestation WHERE person_id=" . $person_id .
+	        " AND attestation_category_option_id=(SELECT ID FROM attestation_category_option where attestation_category_phrase='" . $attestation_category_option . "') " .
+	        " AND  attestation_level_option_id=(SELECT ID FROM attestation_level_option where attestation_level_phrase='" . $attestation_level_option . "') " .
+	        " AND  attestation_date=" .  $attestation_date);
+	}
+	
+	//TA:#331.2
+	public function addPersonAttestation($person_id, $attestation_category_option, $attestation_level_option, $attestation_date) {
+	    $db = $this->dbfunc()->query("INSERT INTO person_to_attestation (person_id, attestation_category_option_id, attestation_level_option_id, attestation_date)
+	        values ($person_id, $attestation_category_option, $attestation_level_option, $attestation_date)");
 	}
 }
 

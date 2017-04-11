@@ -13,9 +13,7 @@ class Peoplefind extends ITechTable
     $select = $this->dbfunc()->query($query);
     return $select->fetchAll();
 
-  }
-  
-  
+  } 
   
   public function buildquery($param){
     $sql = '';
@@ -23,6 +21,35 @@ class Peoplefind extends ITechTable
     
     $studentLink = Settings::$COUNTRY_BASE_URL . "/studentedit/personview/id/";
     $tutorLink = Settings::$COUNTRY_BASE_URL . "/tutoredit/tutoredit/id/";
+    
+    //TA:81 filter people by user id login
+    $str_pid = " p.id ";
+    $str_inst = " IS NOT NULL ";
+    $helper = new Helper();
+    $institutions = $helper->getUserInstitutions($helper->myid(), false);
+    if ((is_array($institutions)) && (count($institutions) > 0)) {
+        $insids = implode(",", $institutions);
+        $str_pid = " distinct(p.id) ";
+        $str_inst = ' in (' . $insids . ') ';
+        $where_inst = ' AND (p.id in (
+select personid from tutor where personid in
+(select id_tutor from link_tutor_institution where id_institution in
+(' . $insids . ')))
+or
+id in (
+select personid from student where id in(
+select id_student from link_student_cohort where id_cohort in (
+select id from cohort where institutionid in
+(' . $insids . '))))
+or
+id in (
+select personid from tutor where personid not in
+(select id_tutor from link_tutor_institution))
+or
+id in (
+select personid from student where id not in
+(select id_student from link_student_cohort))) ';
+    }
     
     // There is still room for optimization here (only include the join that is
     // needed based on requested person type- student, tutor, etc.), but this is
@@ -33,7 +60,7 @@ class Peoplefind extends ITechTable
       case "every":
         // If person was a student, then became a tutor- always show as tutor
         //TA:36 add cohort id to the returned fields
-        $sql = 'SELECT p.id, first_name, last_name, gender,
+        $sql = 'SELECT '. $str_pid. ', first_name, last_name, gender,
           CASE
             WHEN tutor_type IS NOT NULL THEN tutor_type
             WHEN student_type IS NOT NULL THEN student_type
@@ -68,10 +95,18 @@ class Peoplefind extends ITechTable
         break;
       case "key":
       case "tutor":
-        $sql = 'SELECT p.id, first_name, last_name, gender,
+//         $sql = 'SELECT p.id, first_name, last_name, gender,
+//           tutor_type AS type,
+//           tutor_link AS link,
+//           tutor_institutionname AS institutionname,
+//         		tutor_inst_id,
+//         		facility_id,
+//           \'N/A\' AS cohort ';
+          //TA:#254 if tutor is not active then institution is blank
+          $sql = 'SELECT p.id, first_name, last_name, gender,
           tutor_type AS type,
           tutor_link AS link,
-          tutor_institutionname AS institutionname,
+          CASE WHEN p.active=\'active\' THEN tutor_institutionname ELSE \'N/A\' END AS institutionname,
         		tutor_inst_id,
         		facility_id,
           \'N/A\' AS cohort ';
@@ -92,8 +127,9 @@ class Peoplefind extends ITechTable
             personid AS person_id, 
             CONCAT(\'' . $studentLink . '\', CAST(personid AS CHAR(20)) ) AS student_link,
             CASE 
-              WHEN c.institutionid IS NOT NULL THEN i2.institutionname 
-              WHEN s.institutionid IS NOT NULL THEN i1.institutionname 
+              WHEN c.institutionid ' . $str_inst . ' THEN i2.institutionname 
+              WHEN s.institutionid ' . $str_inst . ' THEN i1.institutionname
+                  ELSE \'N/A\' 
             END AS student_institutionname,
             CASE 
               WHEN sc.id_cohort IS NOT NULL 
@@ -108,8 +144,8 @@ class Peoplefind extends ITechTable
             sc.id_cohort as cohort_id,
             cadre as cadre,
             		CASE 
-              WHEN c.institutionid IS NOT NULL THEN c.institutionid 
-              WHEN s.institutionid IS NOT NULL THEN s.institutionid 
+              WHEN c.institutionid ' . $str_inst . ' THEN c.institutionid 
+              WHEN s.institutionid ' . $str_inst . ' THEN s.institutionid 
             END AS student_inst_id
           FROM student s 
             LEFT JOIN link_student_cohort sc
@@ -136,12 +172,13 @@ class Peoplefind extends ITechTable
             is_keypersonal,
             CONCAT(\'' . $tutorLink . '\', CAST(personid AS CHAR(20)) ) AS tutor_link,
             CASE 
-              WHEN lti.id_institution IS NOT NULL THEN i2.institutionname 
-              WHEN t.institutionid IS NOT NULL THEN i1.institutionname 
+              WHEN lti.id_institution ' . $str_inst . ' THEN i2.institutionname
+              WHEN t.institutionid ' . $str_inst . ' THEN i1.institutionname
+                  ELSE \'N/A\' 
             END AS tutor_institutionname,
             CASE
-                WHEN lti.id_institution IS NOT NULL THEN lti.id_institution
-                WHEN t.institutionid IS NOT NULL THEN t.institutionid
+                WHEN lti.id_institution ' . $str_inst . ' THEN lti.id_institution
+                WHEN t.institutionid ' . $str_inst . ' THEN t.institutionid
             END AS tutor_inst_id
           FROM tutor t
             LEFT JOIN link_tutor_institution lti
@@ -150,10 +187,27 @@ class Peoplefind extends ITechTable
               ON t.institutionid = i1.id
             LEFT JOIN institution i2
               ON lti.id_institution = i2.id
-        ) AS t
+                    ';
+      
+      //TA:#361 also show in-service trainers
+    $trainerLink = Settings::$COUNTRY_BASE_URL . "/person/edit/id/";
+        $sql .= ' 
+        UNION
+SELECT \'tutor\' AS tutor_type, 
+            tr.person_id AS tutor_id,
+            tr.person_id AS person_id,
+            \'0\' as is_keypersonal,
+            CONCAT(\'' . $trainerLink . '\', CAST(person_id AS CHAR (20))) AS tutor_link,
+            \'N/A\' AS tutor_institutionname,
+            \'0\' AS tutor_inst_id
+    FROM trainer tr
+      ';/////
+        
+        $sql .= ') AS t
           ON p.id = t.person_id
-      ';
+      ';  
     }
+   
 
     // WHERE CLAUSES
     $where[] = ' p.is_deleted = 0 ';
@@ -187,7 +241,8 @@ class Peoplefind extends ITechTable
     }
     if($param['inst']){
     	if($param['type'] == 'tutor'){
-    	 $where[] = " AND tutor_inst_id =" . $param['inst'];
+    	    //TA:#254 show only active tutors for selected institution
+    	 $where[] = " AND p.active='active' AND tutor_inst_id =" . $param['inst'];
     	}else if($param['type'] == 'student'){
     		$where[] = " AND student_inst_id =" . $param['inst'];
     	}
@@ -203,7 +258,7 @@ class Peoplefind extends ITechTable
     }
     
     // ORDER BY CLAUSE
-    $sql .= ' ORDER BY last_name, first_name;';
+    $sql .= $where_inst . ' ORDER BY last_name, first_name;';
     
     return $sql;
     

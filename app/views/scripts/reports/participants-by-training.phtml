@@ -23,7 +23,8 @@ if ( $this->mode == 'count' )
   <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
   <div id="content">
 
-<?php if( strstr($path[2], 'trainers-by-name') === FALSE ):?>
+<?php   
+if( strstr($path[2], 'trainers-by-name') === FALSE ):?>
     <h1><?php tp('Participant Reports');?></h1>
     	<?php require_once('peopleReportsPicker.phtml'); ?>
 <?php else :?>
@@ -56,15 +57,21 @@ if ( $this->mode == 'count' )
 
 	<div class="fieldLabel" id="training_title_option_id_lbl"><?php echo (@$this->translation['Training Name']); ?></div>
 	<div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showTrainingTitle" <?php  if ($this->criteria['showTrainingTitle']) echo 'CHECKED';?> /></div>
-  	<div  class="leftBorder autoHeight">
-	<select id="training_title_id" name="training_title_id[]" multiple="multiple" size="10">
+	
+  	<div  class="leftBorder autoHeight autoWidth">
+  	<!-- TA:69 expend to ??? style="min-width:780px;" -->
+	<select id="training_title_id" name="training_title_id[]" multiple="multiple" size="10" style="min-width:600px;">
 		<option value="" <?php if (is_array($this->criteria['training_title_id']) && in_array("", $this->criteria['training_title_id'])) echo "selected"; ?>>--<?php tp('All');?>--</option>
 		<?php
+		//TA:69 remove trancate values, show whole values, display titles=item value as mouse over
 			foreach ( $this->courses as $vals ) {
-				echo '<option value="'.$vals['id'].'" '.(@$this->criteria['training_title_id'] == $vals['id'] || @in_array($vals['id'], $this->criteria['training_title_id'])? 'SELECTED':'').' >'.$this->truncate($vals['training_title_phrase']).'</option>';
+				echo '<option value="'.$vals['id'].'" '.(@$this->criteria['training_title_id'] == $vals['id'] || @in_array($vals['id'], $this->criteria['training_title_id'])? 'SELECTED':'').' >'.
+				$vals['training_title_phrase'].'</option>';
 		}
 		?>
 	</select></div></div>
+	
+	
 
 <!--
 	<div class="fieldLabel" id="qualification_id_lbl"><?php tp('Qualification');?></div>
@@ -134,7 +141,7 @@ if ( $this->mode == 'count' )
 
 	<?php
 
-	if (( strstr($path[2], 'trainers-by-name') !== FALSE ) OR ( strstr($path[2], 'participantsByName') !== FALSE )) { ?>
+	if (( strstr($path[2], 'trainers-by-name') !== FALSE ) OR ( strstr($path[2], 'participantsByName') !== FALSE ) OR ( strstr($path[2], 'participants-by-name') !== FALSE )) { //TA:63?>
 
 		<!-- Highest Education Level -->
 		<?php if ($this->setting['display_highest_ed_level']) { ?>
@@ -354,7 +361,7 @@ if ( $this->setting['display_viewing_location'] && $this->mode != 'search' && ! 
 	</select></div></div>
 <?php } ?>
 
-<?php if (( strstr($path[2], 'trainers-by-name') !== FALSE ) OR ( strstr($path[2], 'participantsByName') !== FALSE )) { ?>
+<?php if (( strstr($path[2], 'trainers-by-name') !== FALSE ) OR ( strstr($path[2], 'participantsByName') !== FALSE ) OR ( strstr($path[2], 'participants-by-name') !== FALSE )) { //TA:63?>
 
 	<?php if ($this->setting['display_people_suffix']) { ?>
 		<div class="fieldLabel" id="person_suffix_lbl"><?php echo (@$this->translation['Suffix']); ?></div>
@@ -404,24 +411,30 @@ if ( $this->setting['display_viewing_location'] && $this->mode != 'search' && ! 
   </div></div>
 
 	<div class="fieldLabel" id="is_tot_lbl"><?php tp('Show score increase above') ?></div>
-	<div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" style="visibility:hidden;"></div>
-
+	<div class="fieldInput"><div  class="leftBorderPad">
+	<!-- TA:#313 -->
+	<input type="checkbox" name="show_score_increase" <?php  if ($this->criteria['show_score_increase']) echo 'CHECKED';?> /></div>
 	<div  class="leftBorder">
   <input type="text" name="score_percent_min" value="<?php echo @$this->criteria['score_percent_min']; ?>" size="5" />%
   </div></div>
-
+  
+  <!-- TA:#313 -->
+  <div class="fieldLabel" id="is_tot_lbl">Other Scores</div>
+   <div class="fieldInput"><div  class="leftBorderPad">
+   <input type="checkbox" name="show_other_scores" <?php  if ($this->criteria['show_other_scores']) echo 'CHECKED';?> /></div><label for="showTot" ></label></div>
+	
 
 <?php } ?>
 
 </div>
 
-<?php if(strstr($path[2], 'participantsByTraining') == TRUE or strstr($path[2], 'participantsByName') == TRUE) { ?>
+<?php if(strstr($path[2], 'participantsByTraining') == TRUE or strstr($path[2], 'participantsByName') == TRUE OR ( strstr($path[2], 'participants-by-name') == TRUE )) { //TA:63?>
   <div class="clear"></div>
 	<div class="fieldLabel">&nbsp;</div>
    	<div class="fieldInput" style="margin-top:1em;"><input type="checkbox" name="distinctCount" id="distinctCount" 
    	<?php  if ($this->criteria['distinctCount']) echo 'checked="checked"';?> /><label for="distinctCount" > 
    	<?php if(strstr($path[2], 'participantsByTraining') == TRUE) tp('Return Unique Participants');?>
-   	<?php if(strstr($path[2], 'participantsByName') == TRUE) tp('Return Unique Participants By Training Names');?>
+   	<?php if(strstr($path[2], 'participantsByName') == TRUE OR ( strstr($path[2], 'participants-by-name') == TRUE )) tp('Return Unique Participants By Training Names'); //TA:63?>
    	
    	</label></div><?php }; ?>
 
@@ -461,7 +474,9 @@ if ( $this->setting['display_viewing_location'] && $this->mode != 'search' && ! 
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
 <div class="hrGrey"></div>
-    <div class="fieldIndentNoMargin"><?php tp('Participants')?> <span class="total"><?php echo $this->count;?> <?php echo t('Trainings Attended');?></span><?php echo $this->printAndExport();?></div>
+<!-- TA:80 -->
+    <div class="fieldIndentNoMargin"><?php tp('Participants')?> <span class="total"><?php echo $this->count;?> <?php echo t('Trainings Attended');?></span>
+    <?php echo $this->printAndExport("trainings");?></div>
 
     <div id="trainings"  class="itechTable"></div>
     <script type="text/javascript">
@@ -495,6 +510,7 @@ foreach($this->results as $row) {
 	if ( isset($row['id']) and $this->criteria['showEmail'])
 		echo ',"'.$row['email'].'"';
 	if ( isset($row['id']) and $this->criteria['showPhone']){
+	    //TA:73 it can be phone_home or phone_work or phone_mobile
 		if (! array_key_exists('phone', $row))
 			$row['phone'] = t('(no phone)');
 			echo ',"'. (isset ($row['phone']) ? $row['phone'] : t("N/A")) .'"';
@@ -574,6 +590,9 @@ foreach($this->results as $row) {
     }
     echo ',"'.$row['score_pre'].'"';
     echo ',"'.$row['score_post'].'"';
+     if($this->setting['display_training_pt_pass']){//TA:#271
+         echo ',"'.$row['pass_fail'].'"'; 
+    }
     echo ',"'.$row['score_percent_change'].'"';
     echo ',"'.$row['labels'].'"';
     echo ',"'.$row['scores'].'"';
@@ -747,9 +766,14 @@ var trainingColumnDefs = [
   <?php if ( $this->isScoreReport) { ?>
   ,{key:"score_pre", label: "<?php echo tp('Pre-Test'); ?>", sortable:true, sortOptions: { sortFunction: myScorePreSortFunction }, resizeable:true}
   ,{key:"score_post", label: "<?php echo tp('Post-Test'); ?>", sortable:true, sortOptions: { sortFunction: myScorePostSortFunction }, resizeable:true}
+  <?php if($this->setting['display_training_pt_pass']){ //TA:#271 ?> 
+  ,{key:"pass_fail", label: "<?php echo tp('Pass/Fail'); ?>", sortable:true, resizeable:true} 
+  <?php }if ($this->criteria ['show_score_increase']) { //TA:#313?>
   ,{key:"score_percent_change", label: "<?php echo tp('% Change'); ?>", sortable:true, sortOptions: { sortFunction: myScorePercentSortFunction }, resizeable:true}
+  <?php } if ($this->criteria ['show_other_scores']) {//TA:#313?>
   ,{key:"labels", label: "<?php echo tp('Other Scores'); ?>", sortable:true, resizeable:true}
-  ,{key:"scores", label: "<?php echo tp('Other Scores'); ?>", sortable:true, resizeable:true}
+  ,{key:"scores", label: "<?php echo tp('Other Scores'); ?>", sortable:true, resizeable:true}  
+  <?php } ?>   
   <?php } ?>
 
 

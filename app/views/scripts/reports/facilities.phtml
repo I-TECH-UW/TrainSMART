@@ -211,16 +211,18 @@ if ($this->mode == 'search' ) {
 		<?php } ?>
 		<div class="fieldLabel" id="district_id_lbl"><?php tp('Qualification'); ?></div><div class="fieldInput">
 		<div  class="leftBorderPad"><input type="checkbox" name="showQual" <?php  if ($this->criteria['showQual']) echo 'CHECKED';?> /></div>
-	  	<div  class="leftBorder"><select id="qualification_id" name="qualification_id">
+	  	<div  class="leftBorder">
+	  	<select id="qualification_id" name="qualification_id">
 			<option value="">--<?php tp('All');?>--</option>
 			<?php
 				$lastParent = null;
 				foreach ( $this->qualifications as $vals ) {
+				    //TA:75 qualification id should be stay selected when report is generated
 					if ( !$vals['id'] ) {
 						$lastParent = ($vals['parent_phrase']);
-						echo '<option value="'.$vals['parent_id'].'" '.($this->criteria['qualification_option_id'] == $vals['parent_id'] ?'selected="selected"':'').'>'.htmlspecialchars($vals['parent_phrase']).'</option>';
+						echo '<option value="'.$vals['parent_id'].'" '.($this->criteria['qualification_id'] === $vals['parent_id'] ?'selected="selected"':'').'>'.htmlspecialchars($vals['parent_phrase']).'</option>';
 					} else {
-						echo '<option value="'.$vals['id'].'" '.($this->criteria['qualification_option_id'] == $vals['id'] ?'selected="selected"':'').'>&nbsp;&nbsp;'. htmlspecialchars($vals['qualification_phrase']).'</option>';
+						echo '<option value="'.$vals['id'].'" '.($this->criteria['qualification_id'] === $vals['id'] ?'selected="selected"':'').'>&nbsp;&nbsp;'. htmlspecialchars($vals['qualification_phrase']).'</option>';
 					}
 				}
 			?>
@@ -261,7 +263,8 @@ if ($this->mode == 'search' ) {
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
 <div class="hrGrey"></div>
-    <div class="fieldIndentNoMargin"><?php echo t('Trainings matched with Facilities');?> <span class="total"><?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span><?php echo $this->printAndExport();?></div>
+<!-- TA:80 print only trainings part -->
+    <div class="fieldIndentNoMargin"><?php echo t('Trainings matched with Facilities');?> <span class="total"><?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span><?php echo $this->printAndExport("trainings");?></div>
 <?php } ?>
     <div id="trainings" class="itechTable"></div>
     <script type="text/javascript">
@@ -376,7 +379,7 @@ var trainingColumnDefs = [
    ,{key:"training_title", label: "<?php echo (@$this->translation['Training Name']); ?>", sortable:true, resizeable:true}
  <?php } ?>
 <?php if ( $this->criteria['showLocation'] ) { ?>
-   ,{key:"training_location_name", label: "<?php echo t('Training').' '.t('Location');?>", sortable:true, resizeable:true}
+   ,{key:"training_location_name", label: "<?php echo t('Training Location');?>", sortable:true, resizeable:true} //TA:66 translation
  <?php } ?>
 <?php if ( $this->criteria['showOrganizer'] ) { ?>
    ,{key:"training_organizer_phrase", label: "<?php echo (@$this->translation['Training Organizer']); ?>", sortable:true, resizeable:true}

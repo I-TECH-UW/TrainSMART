@@ -15,9 +15,13 @@ class Trainer extends ITechTable
 
 	public static function suggestionList($match = false, $limit = 100, $middleNameLast = false, $priority = array('last_name','first_name','middle_name')) {
 		if ( !$middleNameLast )
-			$additionalCols = array('p.first_name','p.middle_name','p.last_name','p.id');
+		    //TA:113
+			//$additionalCols = array('p.first_name','p.middle_name','p.last_name','p.id');
+		    $additionalCols = array('p.first_name','p.middle_name','p.last_name','p.id','f.facility_name','f.location_id', 'p.birthdate');
 		else
-			$additionalCols = array('p.first_name','p.last_name','p.middle_name','p.id');
+		    //TA:113
+			//$additionalCols = array('p.first_name','p.last_name','p.middle_name','p.id');
+		    $additionalCols = array('p.first_name','p.last_name','p.middle_name','p.id','f.facility_name','f.location_id', 'p.birthdate');
 
 		$rowArray = array();
 
@@ -52,6 +56,14 @@ class Trainer extends ITechTable
       $select = $topicTable->select()->from(array('p'=>'person'),$fieldsSelect)->setIntegrityCheck(false);
   		$select->joinLeft(array('t' => 'trainer'),
        						"p.id = t.person_id", array('is_trainer' => '(!ISNULL(t.type_option_id))'));
+  		
+  		//TA:113
+  		if ( count($fieldsSelect) > 1 ) { //if there's only one field, then assume we just want distinct names and nothing else
+  		    $select->setIntegrityCheck(false)
+  		    ->join(array('f' => 'facility'), "p.facility_id = f.id",array('facility_name'))
+  		    //->join(array('l' => 'location'), "f.location_id = l.id",array('location_id', 'p.birthdate'))
+  		    ;
+  		}
 
     	//look for char start
     	if ( $match ) {
@@ -90,7 +102,7 @@ class Trainer extends ITechTable
     $personHistoryTable = new History('person');
     $hrow = $personHistoryTable->fetchAll( "person_id = $pid" ,"vid DESC" ,1);
     
-    $historyTable->insert($this, $hrow->current()->vid);
+    $historyTable->tableInsert($this, $hrow->current()->vid);
     
     $rslt = parent::update($data,$where);
 

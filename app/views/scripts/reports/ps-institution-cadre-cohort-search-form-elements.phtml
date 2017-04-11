@@ -1,0 +1,47 @@
+<div class="fieldquestion"><?php echo t('Institution'); ?></div>
+<div class="fieldshow">
+    <input type="checkbox" name="showinstitution" id="showinstitution"
+           value="1"<?php if (isset($this->criteria['showinstitution']) && $this->criteria['showinstitution']) { echo " checked"; } ?>>
+</div>
+<div class="fieldselect">
+    <select name="institution" id="institution" style="" size="10">
+        <?php
+        foreach ($this->institutions as $item) {
+            echo "<option value=\"" . $item['id'] . "\">" . $item['institutionname'] . "</option>\n";
+        }
+        ?>
+    </select>
+</div>
+<div class="clear pad20">&nbsp;</div>
+
+<div class="fieldquestion"><?php echo t('Cadre'); ?></div>
+<div class="fieldshow">
+    <input type="checkbox" name="showcadre" id="showcadre"
+           value="1"<?php if (isset($this->criteria['showcadre']) && $this->criteria['showcadre']) { echo " checked"; } ?>>
+</div>
+<div class="fieldselect">
+    <select name="cadre" id="cadre" style="" size="10">
+        <?php
+        foreach ($this->cadres as $item) {
+            echo "<option value=\"" . $item['id'] . "\">" . $item['cadrename'] . "</option>\n";
+        }
+        ?>
+    </select>
+</div>
+<div class="clear pad20">&nbsp;</div>
+
+<div class="fieldquestion"><?php echo t('Cohort'); ?></div>
+<div class="fieldshow">
+    <input type="checkbox" name="showcohort" id="showcohort"
+           value="1"<?php if (isset($this->criteria['showcohort']) && $this->criteria['showcohort']) { echo " checked"; } ?>>
+</div>
+<div class="fieldselect">
+    <select name="cohort" id="cohort" style="" size="10">
+        <?php
+        foreach ($this->cohorts as $item) {
+            echo "<option value=\"" . $item['id'] . "\">" . $item['cohortname'] . "</option>\n";
+        }
+        ?>
+    </select>
+</div>
+<div class="clear pad20">&nbsp;</div>

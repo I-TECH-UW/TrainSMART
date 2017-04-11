@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @param $requireACL
+ * @param $linkURL
+ * @param $view
+ * @return null|string
+ */
 function hasACLEdit($requireACL, $linkURL, &$view)
 {
   if(! $view->hasACL('edit_country_options') && ! $view->hasACL($requireACL))
@@ -8,6 +14,10 @@ function hasACLEdit($requireACL, $linkURL, &$view)
   return '<a href="'.$view->base_url.'/'.$linkURL.'" onclick="submitThenRedirect(\''.$view->base_url.'/'.$linkURL.'\');return false;">'.t('Edit').'</a>';
 }
 
+/**
+ * @param $criteria
+ * @return string
+ */
 function implode_criteria_to_url (&$criteria)
 {
 	if ( empty($criteria) )
@@ -26,7 +36,12 @@ function implode_criteria_to_url (&$criteria)
 	return $o;
 }
 
-function implode_ids (&$results) // get a list of ids from a result set, and return them in url form ids/1,2,3,4&
+/**
+ * get a list of ids from a result set, and return them in url form ids/1,2,3,4&
+ * @param $results
+ * @return string
+ */
+function implode_ids (&$results)
 {
 	if ( empty($results) )
 		return '';
@@ -42,15 +57,19 @@ function implode_ids (&$results) // get a list of ids from a result set, and ret
 		return '';
 }
 
-// what organizers' trainings can we see (by user)
+/**
+ * what organizers' trainings can we see (by user)
+ * @param $itechthis
+ * @return array|bool
+ */
 function allowed_organizer_access (&$itechthis)
 {
 	require_once('models/table/MultiOptionList.php');
 
 	$allowIds = false;
 	if (! $itechthis->hasACL ( 'training_organizer_option_all' )) {
-		$allowIds = array ();
-		$user_id = $itechthis->isLoggedIn ();
+		$allowIds = array();
+		$user_id = $itechthis->isLoggedIn();
 		$training_organizer_array = MultiOptionList::choicesList ( 'user_to_organizer_access', 'user_id', $user_id, 'training_organizer_option', 'training_organizer_phrase', false, false );
 		foreach ( $training_organizer_array as $orgOption ) {
 			if ($orgOption ['user_id'])
@@ -61,14 +80,24 @@ function allowed_organizer_access (&$itechthis)
 	return $allowIds;
 }
 
-// get allowed_organizer_access() as array then return as a comma seperated list
+/**
+ * get allowed_organizer_access() as array then return as a comma separated list
+ * @param $itechthis
+ * @return bool|string
+ */
 function allowed_org_access_full_list (&$itechthis) {
 	$orgs = allowed_organizer_access($itechthis);
 	return $orgs ? implode(',', $orgs) : false;
 }
 
 
-// return a comma seperated list of organizers allowed in this site (site rollup feature)
+
+/**
+ * TODO: find out if this is used for any sites at all - it goes as far back as our code history does.
+ * return a comma separated list of organizers allowed in this site (site rollup feature)
+ * @param $itechthis
+ * @return bool|string
+ */
 function allowed_organizer_in_this_site(&$itechthis)
 {
 	// determine site

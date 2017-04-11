@@ -62,7 +62,8 @@
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
 		    <div class="hrGrey"></div>
-		    <div class="fieldIndentNoMargin"><?php tp('People');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+		    <!-- TA:80 print only people part -->
+		    <div class="fieldIndentNoMargin"><?php tp('People');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport("people");?></div>
 			<a href="<?php echo $this->base_url;?>/person/add"><?php tp('Add New Person');?></a><br/><br/>
 		    <div id="people"></div>
 		    <script type="text/javascript">

@@ -15,12 +15,43 @@ require_once ('models/table/Helper.php');
 
 class ReportsController extends ReportFilterHelpers {
 
-	public function __construct(Zend_Controller_Request_Abstract $request, Zend_Controller_Response_Abstract $response, array $invokeArgs = array()) {
-		parent::__construct ( $request, $response, $invokeArgs );
-	}
+	/**
+	 * set up ZF's ContextSwitch functionality to use for generating CSV output and other output types
+	 * assign CSV output type to actions that prepare data in a compatible way for this output method
+	 * (see postCsvCallback())
+	 * assign other output types to actions where relevant.
+	 */
 
 	public function init() {
+
+		$contextSwitch = $this->_helper->getHelper('contextSwitch');
+
+		$contextSwitch->addContext('csv', array(
+						'headers' => array('Content-Type' => 'text/csv'),
+						'callbacks' => array(
+								'post' => array($this, 'postCsvCallback'),
+								'init' => array($this, 'preCsvCallback')
+						)
+				)
+		);
+		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'csv');
+		$contextSwitch->addActionContext('ps-students-by-name', 'csv');
+		$contextSwitch->addActionContext('ps-students-trained', 'csv');
+        $contextSwitch->addActionContext('ps-graduated-students', 'csv');
+        $contextSwitch->addActionContext('ps-repeated-students', 'csv');
+		$contextSwitch->addActionContext('employee-report-occupational-category', 'csv');
+        $contextSwitch->addActionContext('employees', 'csv');
+        $contextSwitch->addActionContext('employee-report-mechanism-transition-description', 'csv');
+        $contextSwitch->addActionContext('employee-report-mechanism-transition', 'csv');
+        $contextSwitch->addActionContext('employee-report-primary-role', 'csv');
+
+		$contextSwitch->addContext('chwreport', array('suffix' => 'chwreport'));
+		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'chwreport');
+
+		$contextSwitch->initContext();
+
 	}
+
 
 	public function indexAction() {
 
@@ -85,13 +116,55 @@ class ReportsController extends ReportFilterHelpers {
 			$headersSpecific = array ('peopleByFacility' => array ('qualification_phrase' => t ( 'Qualification' ) ), 'participantsByCategory' => array ('cnt' => t ( 'Participants' ), 'person_cnt' => t ( 'Unique participants' ) ) );
 		} else {
 			$headers = array (// fieldname => label
-			'id' => 'ID', 'cnt' => t ( 'Count' ), 'active' => @$translation ['Is Active'], 'first_name' => @$translation ['First Name'], 'middle_name' => @$translation ['Middle Name'], 'last_name' => @$translation ['Last Name'], 'training_title' => t('Training').' '.t('Name'), 'province_name' => @$translation ['Region A (Province)'], 'district_name' => @$translation ['Region B (Health District)'], 'pepfar_category_phrase' => @$translation ['PEPFAR Category'], 'training_organizer_phrase' => t('Training').' '.t('Organizer'), 'training_level_phrase' => t('Training').' '.t('Level'), 'trainer_language_phrase' => t ( 'Language' ), 'training_location_name' => t ( 'Location' ), 'training_start_date' => t ( 'Date' ), 'training_topic_phrase' => t ('Training').' '.t('Topic'), 'funding_phrase' => t ( 'Funding' ), 'is_tot' => t ( 'TOT' ), 'facility_name' => t ('Facility').' '.t('Name'), 'facility_type_phrase' => t ('Facility').' '.t('Type'), 'facility_sponsor_phrase' => t ('Facility').' '.t('Sponsor'), 'course_recommended' => t ( 'Recommended classes' ), 'recommended' => t ( 'Recommended' ), 'qualification_phrase' => t ( 'Qualification' ) . ' ' . t ( '(primary)' ), 'qualification_secondary_phrase' => t ( 'Qualification' ) . ' ' . t ( '(secondary)' ), 'gender' => t ( 'Gender' ), 'name' => t ( 'Name' ), 'email' => t ( 'Email' ), 'phone' => t ( 'Phone' ), 'cat' => t ( 'Category' ), 'language_phrase' => t ( 'Language' ), 'trainer_type_phrase' => t ( 'Type' ), 'trainer_skill_phrase' => t ( 'Skill' ), 'trainer_language_phrase' => t ( 'Language' ), 'trainer_topic_phrase' => t ( 'Topics Taught' ), 'phone_work' => t ( 'Work Phone' ), 'phone_home' => t ( 'Home Phone' ), 'phone_mobile' => t ( 'Mobile Phone' ), 'type_option_id' => 'Type' );
+			'id' => 'ID', 
+			'cnt' => t ( 'Count' ), 
+			'active' => @$translation ['Is Active'], 
+			'first_name' => @$translation ['First Name'], 
+			'middle_name' => @$translation ['Middle Name'], 
+			    'last_name' => @$translation ['Last Name'], 
+			    'training_title' => t('Training').' '.t('Name'), 
+			    'province_name' => @$translation ['Region A (Province)'], 
+			    'district_name' => @$translation ['Region B (Health District)'], 
+			    'pepfar_category_phrase' => @$translation ['PEPFAR Category'], 
+			    'training_organizer_phrase' => t('Training').' '.t('Organizer'), 
+			    'training_level_phrase' => t('Training Mathod'),  
+			    'trainer_language_phrase' => t ( 'Language' ), 
+			    'training_location_name' => t ( 'Location' ), 
+			    'training_topic_phrase' => t('Topic'), 
+			    'funding_phrase' => t ( 'Funding' ), 'is_tot' => t ( 'TOT' ), 
+			    'facility_name' => t ('Facility').' '.t('Name'), 
+			    'facility_type_phrase' => t ('Facility').' '.t('Type'), 
+			    'facility_sponsor_phrase' => t ('Facility').' '.t('Sponsor'), 
+			    'course_recommended' => t ( 'Recommended classes' ), 
+			    'recommended' => t ( 'Recommended' ), 
+			    'qualification_phrase' => t ( 'Qualification' ) . ' ' . t ( '(primary)' ), 
+			    'qualification_secondary_phrase' => t ( 'Qualification' ) . ' ' . t ( '(secondary)' ), 
+			    'gender' => t ( 'Gender' ), 
+			    'name' => t ( 'Name' ), 
+			    'email' => t ( 'Email' ), 
+			    'phone' => t ( 'Phone' ), 
+			    'cat' => t ( 'Category' ), 
+			    'language_phrase' => t ( 'Language' ), 
+			    'trainer_type_phrase' => t ( 'Type' ), 
+			    'trainer_skill_phrase' => t ( 'Skill' ), 
+			    'trainer_language_phrase' => t ( 'Language' ), 
+			    'trainer_topic_phrase' => t ( 'Topics Taught' ), 
+			    'phone_work' => t ( 'Work Phone' ), 
+			    'phone_home' => t ( 'Home Phone' ), 
+			    'phone_mobile' => t ( 'Mobile Phone' ), 
+			    'type_option_id' => 'Type',
+			    //TA:110 change titles
+			    'pcnt' => 'Participants', 
+			    'training_start_date' => t ( 'Start Date' ),
+			    'training_end_date' => t ( 'End Date' ),
+			    'training_category_phrase' => t('Program Area'),  
+			    'has_known_participants' => 'Has known participants',
+			 );
 
 			// action => array(field => label)
 			$headersSpecific = array ('peopleByFacility' => array ('qualification_phrase' => t ( 'Qualification' ) ), 'participantsByCategory' => array ('cnt' => t ( 'Participants' ), 'person_cnt' => t ( 'Unique Participants' ) ) );
 		}
-
-		if ($rowRay) {
+        if ($rowRay) {
 			$keys = array_keys ( reset ( $rowRay ) );
 			foreach ( $keys as $k ) {
 				$csvheaders [] = $this->reportHeaders ( $k );
@@ -242,7 +315,7 @@ class ReportsController extends ReportFilterHelpers {
 					}
 				}
 				if ($count > 0){
-					$total = number_format((($total/(4*$ount))*100),2);
+					$total = number_format((($total/(4*$count))*100),2);
 				}
 				$return[$thiscomp['label']] = $total;
 			}
@@ -1198,12 +1271,11 @@ echo $sql . "<br>";
 			if ($criteria ['doCount']) {
 				$sql .= ' COUNT(pt.person_id) as "cnt" ';
 			} else {
-				$sql .= ' DISTINCT pt.id as "id", ptc.pcnt, pt.training_start_date, pt.training_end_date, pt.has_known_participants  ';
+				//TA:110 show only those column in export Excel report
+ 		//		$sql .= ' DISTINCT pt.id as "id", ptc.pcnt, pt.training_start_date, pt.training_end_date, pt.has_known_participants  ';
+			    $sql .= ' DISTINCT pt.id as "id", pt.training_start_date, pt.training_end_date ';
 			}
 
-			if ($criteria ['showTrainingTitle']) {
-				$sql .= ', training_title ';
-			}
 			if ($criteria ['showRegionI']) {
 				$sql .= ', pt.region_i_name ';
 			}
@@ -1225,12 +1297,21 @@ echo $sql . "<br>";
 			if ($criteria ['showRegionC']) {
 				$sql .= ', pt.region_c_name ';
 			}
+			if ($criteria ['showProvince']) {
+			    $sql .= ', pt.province_name ';
+			}
 			if ($criteria ['showDistrict']) {
 				$sql .= ', pt.district_name ';
 			}
-			if ($criteria ['showProvince']) {
-				$sql .= ', pt.province_name ';
+			
+		    if ($criteria ['showCategory']) {
+				$sql .= ', tcat.training_category_phrase ';
 			}
+			
+			if ($criteria ['showTrainingTitle']) {
+			    $sql .= ', training_title ';
+			}
+			
 
 			if ($criteria ['showLocation']) {
 				$sql .= ', pt.training_location_name ';
@@ -1247,9 +1328,9 @@ echo $sql . "<br>";
 			if ($criteria ['showLevel']) {
 				$sql .= ', tlev.training_level_phrase ';
 			}
-
-			if ($criteria ['showCategory']) {
-				$sql .= ', tcat.training_category_phrase ';
+			
+			if ($criteria ['showMethod']) {
+			    $sql .= ', tmeth.training_method_phrase ';
 			}
 
 			if ($criteria ['showPepfar'] || $criteria ['training_pepfar_id'] || $criteria ['training_pepfar_id'] === '0') {
@@ -1258,10 +1339,6 @@ echo $sql . "<br>";
 				} else {
 					$sql .= ', GROUP_CONCAT(DISTINCT tpep.pepfar_category_phrase) as "pepfar_category_phrase" ';
 				}
-			}
-
-			if ($criteria ['showMethod']) {
-				$sql .= ', tmeth.training_method_phrase ';
 			}
 
 			if ($criteria ['showTopic']) {
@@ -1339,6 +1416,13 @@ echo $sql . "<br>";
 			if (($criteria['doCount'] && $criteria ['showQualSecond']) || ($criteria['doName'] && $criteria ['showQualSecond'])) {
 				$sql .= ', pqs.qualification_phrase AS qualification_secondary_phrase';
 			}
+			
+			//TA:110 show participant column as a last
+			if ($criteria ['doCount']) {
+			} else {
+			    $sql .= ', ptc.pcnt  ';
+			}
+			
 
 			// prepare the location sub query
 			$num_locs = $this->setting('num_location_tiers');
@@ -1366,10 +1450,14 @@ echo $sql . "<br>";
 				'         LEFT JOIN training_location ON training.training_location_id = training_location.id ' .
 				'         LEFT JOIN ('.$location_sub_query.') as l ON training_location.location_id = l.id ' .
 				'  WHERE training.is_deleted=0) as pt ';
-				$sql .= " LEFT JOIN (SELECT COUNT(id) as `pcnt`,training_id FROM person_to_training GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
+ 				//$sql .= " LEFT JOIN (SELECT COUNT(id) as `pcnt`,training_id FROM person_to_training GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
+                //TA:64 12/18/2015 take only persons which are not deleted
+				$sql .= " LEFT JOIN (SELECT COUNT(person_to_training.id) as `pcnt`,training_id FROM person_to_training left join person on person.id=person_to_training.person_id where person.is_deleted=0 GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
 			}
 			if ($criteria ['doName']) {
-				$sql .= " LEFT JOIN (SELECT COUNT(id) as `pcnt`,training_id FROM person_to_training GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
+ 				//$sql .= " LEFT JOIN (SELECT COUNT(id) as `pcnt`,training_id FROM person_to_training GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
+			    //TA:64 12/18/2015 take only persons which are not deleted
+			    $sql .= " LEFT JOIN (SELECT COUNT(person_to_training.id) as `pcnt`,training_id FROM person_to_training left join person on person.id=person_to_training.person_id where person.is_deleted=0 GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
 			}
 			if (!($criteria['doCount'] || $criteria['doName']) && ($criteria['showViewingLoc'] || $criteria['person_to_training_viewing_loc_option_id'])) {
 				$sql .= ' LEFT JOIN person_to_training ON person_id = person_to_training.person_id AND person_to_training.training_id = pt.id ';
@@ -1689,8 +1777,9 @@ echo $sql . "<br>";
 				$sql .= ' ORDER BY training_start_date DESC';
 			}
 			
-
 			$rowArray = $db->fetchAll ( $sql );
+			
+			//print_r($rowArray);
 
 			if ($criteria ['doCount']) {
 				$count = 0;
@@ -1701,8 +1790,9 @@ echo $sql . "<br>";
 				$count = count ( $rowArray );
 			}
 
-			if ($this->getParam ( 'outputType' ))
-			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
+			if ($this->getParam ( 'outputType' )){
+			   $this->sendData ( $this->reportHeaders ( false, $rowArray ) ); //TA:110 export Excel/csv report
+			}
 
 		} else {
 			$count = 0;
@@ -2592,6 +2682,8 @@ echo $sql . "<br>";
 		$criteria ['showSuffix']        = ($this->getSanParam ( 'showSuffix' ));
 		$criteria ['showEmail']         = ($this->getSanParam ( 'showEmail' ));
 		$criteria ['showPhone']         = ($this->getSanParam ( 'showPhone' ));
+		$criteria ['show_score_increase']         = ($this->getSanParam ( 'show_score_increase' ));//TA:#313
+		$criteria ['show_other_scores']         = ($this->getSanParam ( 'show_other_scores' ));//TA:#313
 		$criteria ['showTot']           = ($this->getSanParam ( 'showTot' ) or ($criteria ['doCount'] and $criteria ['is_tot'] !== '' or $criteria ['is_tot'] === '0'));
 		$criteria ['showOrganizer']     = ($this->getSanParam ( 'showOrganizer' ) or ($criteria ['doCount'] and ($criteria ['training_organizer_option_id'])));
 		$criteria ['showFunding']       = ($this->getSanParam ( 'showFunding' ) or ($criteria ['doCount'] and $criteria ['funding_id'] or $criteria ['funding_id'] === '0'));
@@ -2774,15 +2866,22 @@ echo $sql . "<br>";
 			if ( $criteria['showViewingLoc']) {
 				$sql .= ', person_to_training_viewing_loc_option.location_phrase '; // wont work on is_trainers report
 			}
-
+			
 			if ($this->view->isScoreReport) {
-				$sql .= ', spre.score_value AS score_pre, spost.score_value AS score_post, ' . 'ROUND((spost.score_value - spre.score_value) / spre.score_value * 100) AS score_percent_change';
-				$sql .= ', scoreother.labels, scoreother.scores ';
+				$sql .= ', spre.score_value AS score_pre, spost.score_value AS score_post';
+				if ($criteria ['show_score_increase']) { //TA:#313
+				    $sql .= ', ROUND((spost.score_value - spre.score_value) / spre.score_value * 100) AS score_percent_change';
+				}
+				if ($criteria ['show_other_scores']) {//TA:#313
+				    $sql .= ', scoreother.labels, scoreother.scores ';
+				}
+				if($this->setting('display_training_pt_pass') !== '0'){
+				 $sql .= ',spost.pass_fail as pass_fail ';//TA:#271
+				}
 			}
 
 			$num_locs = $this->setting('num_location_tiers');
 			list($field_name,$location_sub_query) = Location::subquery($num_locs, $location_tier, $location_id, true);
-
 
 			$intersection_table = 'person_to_training';
 			$intersection_person_id = 'person_id';
@@ -2810,6 +2909,9 @@ echo $sql . "<br>";
 			$sql .= '    INNER JOIN facility ON person.facility_id = facility.id ';
 			$sql .= '    LEFT JOIN ('.$location_sub_query.') AS l ON facility.location_id = l.id ';
 			$sql .= '    LEFT  JOIN person_suffix_option suffix ON person.suffix_option_id = suffix.id ';
+			if($criteria ['province_id'] && $criteria ['province_id'][0] !== ''){  //TA:74 filtering by province name is fixed
+			     $sql .= ' where l.province_id IN ( ' . implode(",", $criteria ['province_id']) . ") ";
+			}
 			$sql .= ' ) as pt ';
 
 			if ($criteria ['showPepfar'] || $criteria ['training_pepfar_id'] || $criteria ['training_pepfar_id'] === '0') {
@@ -3026,7 +3128,8 @@ echo $sql . "<br>";
 			if ($where)
 			$sql .= ' WHERE ' . implode ( ' AND ', $where );
 
-			if ($this->view->isScoreReport && $criteria ['score_percent_min']) {
+			//TA:#313
+			if ($this->view->isScoreReport && $criteria ['score_percent_min'] && $criteria ['show_score_increase']) {
 				$sql .= ' HAVING score_percent_change > ' . $criteria ['score_percent_min'];
 			}
 
@@ -3126,7 +3229,7 @@ echo $sql . "<br>";
 				}
 			}
 			
-			
+    //print $sql;
 			$rowArray = $db->fetchAll ( $sql);
 			
 
@@ -3147,25 +3250,46 @@ echo $sql . "<br>";
 		}
 
 		$criteria ['go'] = $this->getSanParam ( 'go' );
+		
+		//TA:73 show all phones
+		if ($rowArray) {
+		    $first = reset ( $rowArray );
+// 		    if (isset ( $first ['phone_work'] )) {
+		        foreach ( $rowArray as $key => $val ) {
+		            $phones = array ();
+		            if ($val ['phone_work'])
+		                $phones [] = str_replace ( ' ', '', trim ( $val ['phone_work'] ) ) . ' (w)';
+		            if ($val ['phone_home'])
+		                $phones [] = str_replace ( ' ', '', trim ( $val ['phone_home'] ) ) . ' (h)';
+		            if ($val ['phone_mobile'])
+		                $phones [] = str_replace ( ' ', '', trim ( $val ['phone_mobile'] ) ) . ' (m)';
+		            $rowArray [$key] ['phone'] = implode ( ', ', $phones );
+		        }
+		        $this->view->assign ( 'results', $rowArray );
+//		    }
+		}
 
 		$this->viewAssignEscaped ( 'results', $rowArray );
 		
-		if ($rowArray) {
-			$first = reset ( $rowArray );
-			if (isset ( $first ['phone_work'] )) {
-				foreach ( $rowArray as $key => $val ) {
-					$phones = array ();
-					if ($val ['phone_work'])
-					$phones [] = str_replace ( ' ', '&nbsp;', trim ( $val ['phone_work'] ) ) . '&nbsp;(w)';
-					if ($val ['phone_home'])
-					$phones [] = str_replace ( ' ', '&nbsp;', trim ( $val ['phone_home'] ) ) . '&nbsp;(h)';
-					if ($val ['phone_mobile'])
-					$phones [] = str_replace ( ' ', '&nbsp;', trim ( $val ['phone_mobile'] ) ) . '&nbsp;(m)';
-					$rowArray [$key] ['phone'] = implode ( ', ', $phones );
-				}
-				$this->view->assign ( 'results', $rowArray );
-			}
-		}
+//		print_r($rowArray);
+		
+// 		if ($rowArray) {
+// 			$first = reset ( $rowArray );
+// 		   if (isset ( $first ['phone_work'] )) {
+// 				foreach ( $rowArray as $key => $val ) {
+// 					$phones = array ();
+// 					if ($val ['phone_work'])
+// 					$phones [] = str_replace ( ' ', '&nbsp;', trim ( $val ['phone_work'] ) ) . '&nbsp;(w)';
+// 					if ($val ['phone_home'])
+// 					$phones [] = str_replace ( ' ', '&nbsp;', trim ( $val ['phone_home'] ) ) . '&nbsp;(h)';
+// 					if ($val ['phone_mobile'])
+// 					$phones [] = str_replace ( ' ', '&nbsp;', trim ( $val ['phone_mobile'] ) ) . '&nbsp;(m)';
+// 					$rowArray [$key] ['phone'] = implode ( ', ', $phones );
+// 				}
+// 				$this->view->assign ( 'results', $rowArray );
+// 			}
+// 		}
+		
 		
 		$this->view->assign ( 'count', $count );
 		$this->view->assign ( 'criteria', $criteria );
@@ -3396,6 +3520,7 @@ echo $sql . "<br>";
 		//TA:38 fixing bug to filter by geography
 		$criteria ['province_id'] = $this->getSanParam ( 'province_id' );
 		$arr_dist = $this->getSanParam ( 'district_id' );
+		//print "+" . $criteria ['province_id'] . "+"; // this is array of ids
 		// level 2 location has parameter as [parent_location_id]_[location_id], we need to take only location_ids
 		for($i=0;$i<sizeof($arr_dist); $i++){
 			if ( strstr($arr_dist[$i], '_') !== false ) {
@@ -3642,6 +3767,11 @@ echo $sql . "<br>";
 // 			}
 			if($criteria['district_id'] && !empty($criteria['district_id']) && $criteria['district_id'][0]){
 				$where [] = "pt.district_id IN (" . implode(',', $criteria['district_id']) . ")";
+			}
+			
+			//TA:67 filter by province
+			if ($criteria ['province_id'] && ! empty ( $criteria ['province_id'] && $criteria['province_id'][0])) {
+			    $where [] = ' pt.province_id IN (' . implode ( ',', $criteria ['province_id'] ) . ')';
 			}
 
 			if ($criteria ['age_min']) {
@@ -4383,6 +4513,7 @@ echo $sql . "<br>";
 		$criteria ['facility_sponsor_id'] = $this->getSanParam ( 'facility_sponsor_id' );
 		$criteria ['facilityInput'] = $this->getSanParam ( 'facilityInput' );
 		$criteria ['is_tot'] = $this->getSanParam ( 'is_tot' );
+		$criteria ['qualification_id'] = $this->getSanParam ( 'qualification_id' );//TA:75 fixing filtering by qualification
 
 		$criteria ['go'] = $this->getSanParam ( 'go' );
 		$criteria ['doCount'] = ($this->view->mode == 'count');
@@ -4495,8 +4626,13 @@ echo $sql . "<br>";
 					            FROM person
 				               JOIN person_to_training ON person_to_training.person_id = person.id
 				               JOIN facility as f ON person.facility_id = f.id
-				               JOIN person_qualification_option qual ON qual.id = person.primary_qualification_option_id
-				               ) as fac ON training.id = fac.training_id
+				               JOIN person_qualification_option qual ON qual.id = person.primary_qualification_option_id ';
+				    //TA:75 fixing filtering by qualification
+				    if($criteria ['qualification_id'] && $criteria ['qualification_id'] !== ''){
+				        $sql .=  ' where qual.id = ' . $criteria ['qualification_id'];
+				    }
+				
+				   $sql .= ' ) as fac ON training.id = fac.training_id
 				         LEFT JOIN ('.$location_sub_query.') as l ON fac.location_id = l.id WHERE training.is_deleted=0) as pt ';
 			} else {
 				$sql .= ' FROM (SELECT training.*, fac.facility_id as "facility_id", fac.type_option_id, fac.sponsor_option_id ,fac.facility_name as "facility_name" , tto.training_title_phrase AS training_title,training_location.training_location_name, l.'.implode(', l.',$field_name).
@@ -4526,7 +4662,9 @@ echo $sql . "<br>";
 				$sql .= '	LEFT JOIN (SELECT training_id, ttpco.training_pepfar_categories_option_id, pepfar_category_phrase FROM training_to_training_pepfar_categories_option as ttpco JOIN training_pepfar_categories_option as tpco ON ttpco.training_pepfar_categories_option_id = tpco.id) as tpep ON tpep.training_id = pt.id ';
 			}
 
-			if ($criteria ['showTopic']) {
+			//TA:72
+			//if ($criteria ['showTopic']) {
+			if ($criteria ['showTopic'] or $criteria ['training_topic_id'] or $criteria ['training_topic_id'] === '0') {
 				$sql .= '	LEFT JOIN (SELECT training_id, ttto.training_topic_option_id, training_topic_phrase FROM training_to_training_topic_option as ttto JOIN training_topic_option as tto ON ttto.training_topic_option_id = tto.id) as ttopic ON ttopic.training_id = pt.id ';
 			}
 
@@ -4580,6 +4718,11 @@ echo $sql . "<br>";
 			if ($criteria ['is_tot'] or $criteria ['is_tot'] === '0') {
 				$where []= ' pt.is_tot = ' . $criteria ['is_tot'];
 			}
+			
+			//TA:71
+			if ($criteria ['showProvince']) {
+			    $where []= ' pt.province_name IS NOT NULL ';
+			}
 
 			// restricted access?? only show trainings we have the ACL to view
 			require_once('views/helpers/TrainingViewHelper.php');
@@ -4625,6 +4768,8 @@ echo $sql . "<br>";
 					$sql .= ' GROUP BY pt.id';
 				}
 			}
+			
+			//print $sql;
 
 			$rowArray = $db->fetchAll ( $sql . ' ORDER BY facility_name ASC ' );
 
@@ -4999,12 +5144,12 @@ echo $sql . "<br>";
 			if ($criteria ['first_name']) {
 				if (strlen ( $where ))
 				$where .= ' AND ';
-				$where .= " first_name = '" . mysql_escape_string ( $criteria ['first_name'] ) . "'";
+				$where .= $db->quoteInto(" first_name = ?", $criteria['first_name']);
 			}
 			if ($criteria ['last_name']) {
 				if (strlen ( $where ))
 				$where .= ' AND ';
-				$where .= " last_name = '" . mysql_escape_string ( $criteria ['last_name'] ) . "'";
+				$where .= $db->quoteInto(" last_name = ?", $criteria['last_name']);
 			}
 
 			if (intval ( $criteria ['end-year'] ) and $criteria ['start-year']) {
@@ -5686,6 +5831,16 @@ echo $sql . "<br>";
 
 			list($a, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
 			list($locationFlds, $locationsubquery) = Location::subquery($this->setting('num_location_tiers'), $location_tier, $location_id, true);
+			
+			$helper = new Helper();
+			
+			//TA:79 make filtering by orginizer
+			$user_orginizer_sql = " join training_organizer_option on training_organizer_option.id=training.training_organizer_option_id
+join user_to_organizer_access on user_to_organizer_access.training_organizer_option_id = training.training_organizer_option_id and user_to_organizer_access.user_id=" . $helper->myid();
+			
+			if ( array_search('training_organizer_option_all',User::getACLs ( $helper->myid() )) !== false ){
+			    $user_orginizer_sql = "";
+			}
 
 			$sql = " SELECT
 						tl.training_location_name,
@@ -5712,8 +5867,11 @@ echo $sql . "<br>";
 						evaluation_question_response eqr
 						LEFT JOIN evaluation_response er      ON  eqr.evaluation_response_id = er.id
 						INNER JOIN evaluation_to_training ett ON  ett.id = er.evaluation_to_training_id AND ett.training_id IS NOT NULL
-						INNER JOIN training                   ON  training.id = ett.training_id AND training.is_deleted = 0
-						LEFT JOIN training_location tl        ON  tl.id = training.training_location_id
+						INNER JOIN training                   ON  training.id = ett.training_id AND training.is_deleted = 0 " .
+						//TA:79 make filtering by orginizer 
+						    $user_orginizer_sql .
+						    
+						" LEFT JOIN training_location tl        ON  tl.id = training.training_location_id
 						LEFT JOIN training_title_option tto   ON  training.training_title_option_id = tto.id
 						LEFT JOIN evaluation                  ON  evaluation.id = ett.evaluation_id
 						LEFT JOIN evaluation_question eq      ON  eq.id = eqr.evaluation_question_id
@@ -5745,7 +5903,7 @@ echo $sql . "<br>";
 
 			$sql .= " GROUP BY eq.id,evaluation.id,training_id,person_full_name, trainer_full_name";
 			$sql .= " ORDER BY ett.training_id, ett.evaluation_id, er.timestamp_created, weight";
-
+			
 			$rows = $db->fetchAll($sql);
 			if ($rows) {
 
@@ -6225,908 +6383,586 @@ echo $sql . "<br>";
 		return $found;
 	}
 
-	public function psStudentsTrainedAction() {
-		//locations
-		$this->viewAssignEscaped ( 'locations', Location::getAll () );
+	/**
+	 * @param $params - query criteria
+	 * @return array containing a Zend_Db_Select object and the column headers for output
+	 */
 
+	protected function psStudentReportsBuildQuery(&$params) {
+
+		$headers = array();
+		$headers[] = "ID";//TA:#217
+		$headers[] = "First Name";
+		$headers[] = "Last Name";
+		$cohortJoined = false;
+		$institutionJoined = false;
+
+		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		$helper = new Helper();
-		$this->view->assign ( 'mode', 'id' );
-		$this->view->assign ( 'institutions', $helper->getInstitutions());
-		$this->view->assign ( 'cadres', $helper->getCadres());
-		$this->view->assign ( 'institutiontypes', $helper->AdminInstitutionTypes());
-		$this->view->assign ( 'cohorts', $helper->getCohorts());
-		$this->view->assign ( 'nationalities', $helper->getNationalities());
-		$this->view->assign ( 'funding', $helper->getFunding());
-		$this->view->assign ( 'tutors', $helper->getTutors());
-		$this->view->assign ( 'facilities', $helper->getFacilities());
-		$this->view->assign ( 'coursetypes', $helper->AdminCourseTypes());
-		$this->view->assign ( 'degrees', $helper->getDegrees());
 
-		if ($this->getSanParam ( 'process' )){
+		$s = $db->select()
+			->from(array('p' => 'person'), array('p.id', 'p.first_name', 'p.last_name')) //TA:#217
+			->joinInner(array('s' => 'student'), 's.personid = p.id', array())
+			->where('p.is_deleted = 0');
 
-			$maintable = "person p";
-			$select = array();
-			//$select[] = "p.id as personid";
-			$select[] = "p.first_name";
-			$select[] = "p.last_name";
+		if ((isset($params['showProvince']) && $params['showProvince']) ||
+			(isset($params['province_id']) && $params['province_id'])) {
 
-			$headers[] = "First Name";
-			$headers[] = "Last Name";
+		    if (!$institutionJoined) {
+                $s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
+                $institutionJoined = true;
+            }
 
-			$join = array();
-			$join[] = array(
-				"table" => "student",
-				"abbreviation" => "s",
-				"compare" => "s.personid = p.id",
-				"type" => "inner"
-			);
+            $s->joinLeft(array('loc1' => 'location'), 'loc1.id = i.geography1', array());
 
-			$where = array();
-			$where[] = "p.is_deleted = 0";
-
-			$sort = array();
-			$locations = Location::getAll ();
-			$translation = Translation::getAll ();
-
-
-			// region
-			if( $this->getSanParam('showProvince') || $this->getSanParam('province_id') || $this->getSanParam('showDistrict') || $this->getSanParam('district_id')){
-				$join[] = array(
-					"table" => "location",
-					"abbreviation" => "loc",
-					"compare" => "loc.id = s.geog1",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "location_district",
-					"abbreviation" => "locd",
-					"compare" => "locd.id = s.geog2",
-					"type" => "left"
-				);
-
-				if( $this->getSanParam('showProvince') ){
-					$select[] = "loc.location_name";
-					$headers[] = "Province";
-				}
-				if( $this->getSanParam('showDistrict') ){
-					$select[] = "locd.district_name";
-					$headers[] = "District";
-				}
+			if (isset($params['showProvince']) && $params['showProvince']) {
+				$headers[] = t("Region A (Province)");
+				$s->columns('loc1.location_name');
 			}
-			$province_arr = $this->getSanParam('province_id');
-			if( !empty($province_arr) ){
-				$clause = ''; $or_str = '';
-				foreach($province_arr as $item){
-					$clause .= "{$or_str}loc.id = '{$item}'";
-					$or_str = " OR ";
-				}
-				$clause = "({$clause})";
-				$where[] = $clause;
+			if (isset($params['province_id']) && $params['province_id']) {
+				$s->where('loc1.id IN (?)', $params['province_id']);
 			}
-			$district_arr = $this->getSanParam('district_id');
-			if( !empty($district_arr) ){
-				$clause = ''; $or_str = '';
-				foreach($district_arr as $item){
-					$clause .= "{$or_str}locd.id = '{$item}'";
-					$or_str = " OR ";
-				}
-				$clause = "({$clause})";
-				$where[] = $clause;
-			}
+		}
 
-			if ($this->getSanParam ( 'showinstitution' )){
-				$select[] = "i.institutionname";
-				$headers[] = "Institution";
+		if ((isset($params['showDistrict']) && $params['showDistrict']) ||
+			(isset($params['district_id']) && $params['district_id'])) {
+            if (!$institutionJoined) {
+                $s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
+                $institutionJoined = true;
+            }
 
-				$join[] = array(
-					"table" => "institution",
-					"abbreviation" => "i",
-					"compare" => "i.id = s.institutionid",
-					"type" => "left"
-				);
-				if ($this->getSanParam('institution')){
-					$where[] = "i.id = " . $this->getSanParam('institution');
-				}
+            $s->joinLeft(array('loc2' => 'location'), 'loc2.id = i.geography2', array());
+
+            if (isset($params['showDistrict']) && $params['showDistrict']) {
+                $headers[] = t("Region B (Health District)");
+                $s->columns('loc2.location_name');
+            }
+            if (isset($params['district_id']) && $params['district_id']) {
+                $ids = "";
+                foreach ($params['district_id'] as $l) {
+                    $ids .= array_pop(explode('_', $l)) .", ";
+                }
+                $ids = trim($ids, ', ');
+                $s->where('loc2.id IN (?)', $ids);
+            }
+		}
+
+        if ((isset($params['showRegionC']) && $params['showRegionC']) ||
+            (isset($params['region_c_id']) && $params['region_c_id'])) {
+            if (!$institutionJoined) {
+                $s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
+                $institutionJoined = true;
+            }
+
+            $s->joinLeft(array('loc3' => 'location'), 'loc3.id = i.geography3', array());
+
+            if (isset($params['showRegionC']) && $params['showRegionC']) {
+                $headers[] = t("Region C (Local Region)");
+                $s->columns('loc3.location_name');
+            }
+            if (isset($params['region_c_id']) && $params['region_c_id']) {
+                $ids = "";
+                foreach ($params['region_c_id'] as $l) {
+                    $ids .= array_pop(explode('_', $l)) .", ";
+                }
+                $ids = trim($ids, ', ');
+                $s->where('loc3.id IN (?)', $ids);
+            }
+        }
+
+        if (isset($params['institution']) && $params['institution'] ||
+			isset($params['showinstitution']) && $params['showinstitution']) {
+
+			//TA:#247 use link_student_cohort to get institution
+			    if (!$cohortJoined) {
+ 			$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+ 			$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+ 			$cohortJoined = true;
+			    }
+			///////
+			if (!$institutionJoined) {
+			    //TA:#247 use link_student_cohort to get institution
+			    //$s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
+			    $s->joinLeft(array('i' => 'institution'), 'i.id = c.institutionid', array());
+			    $institutionJoined = true;
 			}
 
-
-			if ($this->getSanParam ( 'showcohort' )){
-				$select[] = "c.cohortname";
-				$headers[] = "Cohort";
-
-				$join[] = array(
-					"table" => "link_student_cohort",
-					"abbreviation" => "lsc",
-					"compare" => "lsc.id_student = s.id",
-					"type" => "left"
-				);
-
-				$join[] = array(
-					"table" => "cohort",
-					"abbreviation" => "c",
-					"compare" => "c.id = lsc.id_cohort",
-					"type" => "left"
-				);
-
-				if ($this->getSanParam('cohort')){
-					$where[] = "c.id = " . $this->getSanParam('cohort');
-				}
+			if (isset($params['showinstitution']) && $params['showinstitution']) {
+			    $headers[] = "Institution";
+			    $s->columns('i.institutionname');
+			}
+			if (isset($params['institution']) && $params['institution']) {
+			    $s->where('i.id = ?', $params['institution']);
 			}
 
-			if ($this->getSanParam ( 'showcadre' )){
-				$select[] = "ca.cadrename";
+		}
+
+		if (isset($params['cohort']) && $params['cohort'] ||
+			isset($params['showcohort']) && $params['showcohort']) {
+			    //TA:#247 use table joinonly ones
+			if (!$cohortJoined) {
+			     $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+			 $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+			 $cohortJoined = true;
+			}
+			if (isset($params['showcohort']) && $params['showcohort']) {
+			//TA:#217
+			    if((isset($params['show_old_cohorts']))){
+			        $headers[] = "Current Cohorts";
+			        $s->columns('GROUP_CONCAT(c.cohortname) as old_cohortname');
+			        $s->group('p.id');
+			        if ($cohortJoined){
+			         $s->where('lsc.dropdate != ?','0000-00-00');
+			        }
+			    }else if((isset($params['show_current_cohort']))){
+			        $headers[] = "Current Cohorts";
+			        $s->columns('GROUP_CONCAT(c.cohortname) as current_cohortname');
+			        $s->group('p.id');
+			        if ($cohortJoined){
+			         $s->where('lsc.dropdate = ?','0000-00-00');
+			        }
+			    }else{
+				    $headers[] = "Cohort";
+				    $s->columns('c.cohortname');
+			    }
+			}
+			if (isset($params['cohort']) && $params['cohort']) {
+				$s->where('c.id = ?', $params['cohort']);
+			}
+			//TA  filter cohort by institution access as well
+  			$uid = $helper->myid();
+ 			$user_institutions = $helper->getUserInstitutions($uid);
+ 		    if (!empty($user_institutions)) {
+ 			   $s->where("c.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = ?)", $uid);
+ 		    }
+		}
+		else{
+		    //TA:#217 show students with only current cohort (avoid duplications students names in report)
+		    $s->distinct(true);
+		}
+
+		if (isset($params['cadre']) && $params['cadre'] ||
+			isset($params['showcadre']) && $params['showcadre']) {
+
+			//TA:#247 use link_student_cohort and cohort to get cadres
+			// do not use to get cadre by student table, beacuse when new student is added cadre is 0 by defualt
+			//and when we assign student to cohort new record in added only to link_student_cohort table, but student.cadre value is not updated
+			//$s->joinLeft(array('ca' => 'cadres'), 'ca.id = s.cadre', array());
+			if (!$cohortJoined) {
+			     $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+			     $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+			     $cohortJoined = true;
+			}
+			$s->joinLeft(array('ca' => 'cadres'), 'ca.id = c.cadreid', array());
+
+			if (isset($params['showcadre']) && $params['showcadre']) {
 				$headers[] = "Cadre";
-
-				$join[] = array(
-					"table" => "cadres",
-					"abbreviation" => "ca",
-					"compare" => "ca.id = s.cadre",
-					"type" => "left"
-				);
-
-				if ($this->getSanParam('cadre')){
-					$where[] = "ca.id = " . $this->getSanParam('cadre');
-				}
+				$s->columns('ca.cadrename');
 			}
-
-
-			if ($this->getSanParam ( 'showyearinschool' )){
-
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){
-					if ($j['table'] == "cohort"){
-						$found = true;
-					}
-				}
-				if (!$found){
-					$join[] = array(
-						"table" => "link_student_cohort",
-						"abbreviation" => "lsc",
-						"compare" => "lsc.id_student = s.id",
-						"type" => "left"
-					);
-
-					$join[] = array(
-						"table" => "cohort",
-						"abbreviation" => "c",
-						"compare" => "c.id = lsc.id_cohort",
-						"type" => "left"
-					);
-				}
-
-				$select[] = "c.startdate";
-				$headers[] = "Start Date";
-				if ($this->getSanParam('yearinschool')){
-					$where[] = "c.startdate LIKE '" . mysql_real_escape_string(substr($this->getSanParam('yearinschool'), 0, 4)) . "%'";
-				}
+			if (isset($params['cadre']) && $params['cadre']) {
+				$s->where('ca.id = ?', $params['cadre']);
 			}
+		}
 
-			// gender
-			if( $this->getSanParam('showgender') ){
-				$select[] = "p.gender";
-				$headers[] = "Gender";
+		if (isset($params['showyearinschool']) && $params['showyearinschool']) {
+			if (!$cohortJoined) {
+				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+				$cohortJoined = true;
 			}
-			if ( $this->getSanParam('gender') ){
-				$gender_id = $this->getSanParam('gender');
-				if($gender_id > 0){
-					$gender_arr = array(1 => 'male', 2 => 'female');
-					$where[] = "p.gender = '{$gender_arr[$gender_id]}'";
-				}
+			$s->columns('c.startdate');
+			$headers[] = "Start Date";
+			if (isset($params['yearinschool']) && $params['yearinschool']) {
+				$s->where($db->quoteInto("c.startdate LIKE ?", substr($params['yearinschool'], 0, 4) . '%'));
 			}
+		}
 
-			// nationalities
-			if( $this->getSanParam('shownationality') ){
-				$select[] = "ln.nationality";
+		if (isset($params['showgender']) && $params['showgender']) {
+			$s->columns('p.gender');
+			$headers[] = "Gender";
+		}
+		if (isset($params['gender']) && $params['gender']) {
+			$gender_id = $params['gender'];
+			if ($gender_id > 0) {
+				$gender_arr = array(1 => 'male', 2 => 'female');
+				$s->where('p.gender = ?', $gender_arr[$gender_id]);
+			}
+		}
+
+		//TA:#251
+		if ((isset($params['show_marital_status'])) && $params['show_marital_status']) {
+		    $headers[] = t("Marital Status");
+		    $s->columns('p.marital_status');
+		}
+
+		if ((isset($params['shownationality'])) && $params['shownationality'] ||
+			(isset($params['nationality']) && $params['nationality'])) {
+
+			$s->joinLeft(array('ln' => 'lookup_nationalities'), 'ln.id = s.nationalityid', array());
+			if (isset($params['shownationality']) && $params['shownationality']) {
 				$headers[] = "Nationality";
-
-				$join[] = array(
-					"table" => "lookup_nationalities",
-					"abbreviation" => "ln",
-					"compare" => "ln.id = s.nationalityid",
-					"type" => "left"
-				);
+				$s->columns('ln.nationality');
 			}
+			if (isset($params['nationality']) && $params['nationality']) {
+				$s->where('ln.id = ?', $params['nationality']);
+			}
+		}
 
-			// age
-			if( $this->getSanParam('showage') ){
-				$select[] = "DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(p.birthdate)), '%Y')+0 AS age";
+		//TA:#251
+		if ((isset($params['showdob'])) && $params['showdob']) {
+		    $headers[] = t("Date of Birth");
+		    $s->columns('p.birthdate');
+		}
+
+		if ((isset($params['showage']) && $params['showage']) ||
+			(isset($params['agemin']) && $params['agemin']) ||
+			(isset($params['agemax']) && $params['agemax'])) {
+
+			if (isset($params['showage']) && $params['showage']) {
 				$headers[] = "Age";
+				$s->columns(new Zend_Db_Expr("DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(p.birthdate)), '%Y')+0 AS age"));
+
+				if (isset($params['agemin']) && $params['agemin']) {
+					$s->having('age >= ?', $params['agemin']);
+				}
+				if (isset($params['agemax']) && $params['agemax']) {
+					$s->having('age <= ?', $params['agemax']);
+				}
+
 			}
-			if($this->getSanParam('agemin') || $this->getSanParam('agemax')){
-				$year_secs = 60 * 60 * 24 * 365;
-				if($this->getSanParam('agemin') && $this->getSanParam('agemax')){
-					$min_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemin') * $year_secs)));
-					$max_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemax') * $year_secs)));
-					$where[] = "p.birthdate BETWEEN '{$max_age_birthdate}' AND '{$min_age_birthdate}'";
-				} else {
-					if ( $this->getSanParam('agemin') ){
-						$min_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemin') * $year_secs)));
-						$where[] = "p.birthdate <= '{$min_age_birthdate}'";
-					}
-					if ( $this->getSanParam('agemax') ){
-						$max_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemax') * $year_secs)));
-						$where[] = "p.birthdate >= '{$max_age_birthdate}'";
-					}
+			else {
+				$ageExpr = new Zend_Db_Expr("DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(p.birthdate)), '%Y')+0");
+				if (isset($params['agemin']) && $params['agemin']) {
+					$s->where($ageExpr . ' >= ?', $params['agemin']);
+				}
+				if (isset($params['agemax']) && $params['agemax']) {
+					$s->where($ageExpr . ' <= ?', $params['agemax']);
 				}
 			}
+		}
 
-			// active
-			if( $this->getSanParam('showactive') ){
-				$select[] = "p.active";
-				$headers[] = "Active";
-				$where[] = "p.active = 'active'";
+		//TA:#334 
+		//TA:#391 apply those conditions only for reports where we have showactive and showterminated checkboxes
+		if(isset($params['action']) && ($params['action'] === 'ps-students-by-name' || $params['action'] === 'ps-students-trained')){
+		if (isset($params['showactive']) && $params['showactive']) {
+			if (isset($params['showterminated']) && $params['showterminated']) {//active=on, terminated=on => show both active and dropped students with termination reasons (=8499) 
+			    if (!$cohortJoined) {
+			        $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+			        $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+			        $cohortJoined = true;
+			    }
+			    $s->joinLeft(array('lr' => 'lookup_reasons'), 'lr.id = lsc.dropreason', array());
+			    $s->where("p.active = 'active'");
+			    $s->columns("lr.reason");
+			    $headers[] = "Terminated Early";
+			}else{//active=on, terminated=off => show active students, excluding dropped students (=8231)
+			    if (!$cohortJoined) {
+		            $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		            $cohortJoined = true;
+		        }
+		        $s->where("lsc.isgraduated = 0");
+		        $s->where("lsc.dropdate = '0000-00-00'");
+		        $s->where("p.active = 'active'");
+			}
+		}else{
+		    if (isset($params['showterminated']) && $params['showterminated']) {//active=off, terminated=on => Show only terminated students  with termination reasons (=131) (excluding reason 'Upgrading')
+		        if (!$cohortJoined) {
+		            $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		            $cohortJoined = true;
+		        }
+		        $s->joinLeft(array('lr' => 'lookup_reasons'), 'lr.id = lsc.dropreason', array());
+		        $s->where("lsc.isgraduated = 0");
+		        $s->where("lsc.dropdate != '0000-00-00'");
+		        $s->where("lr.reasontype = 'drop'"); //we need to take only drop reason
+		        $s->where("lr.reason != 'Upgrading'"); //we need exclude student who has 'Upgrading' reson
+		        $s->columns("lr.reason");
+		        $headers[] = "Terminated Early";
+		    }else{//active=off, terminated=off => Show active students, excluding dropped students (=8231)
+		        if (!$cohortJoined) {
+		            $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		            $cohortJoined = true;
+		        }
+		        $s->where("lsc.isgraduated = 0");
+		        $s->where("lsc.dropdate = '0000-00-00'");
+		        $s->where("p.active = 'active'");
+		    } 
+		}
+		}
+
+		if ((isset($params['showdegrees'])) && $params['showdegrees'] ||
+			(isset($params['degrees']) && $params['degrees'])) {
+
+			if (!$institutionJoined) {
+				$s->joinLeft(array('i' => 'institution'), 'i.id = s.institutionid', array());
+				$institutionJoined = true;
 			}
 
-			// terminated early
-			if( $this->getSanParam('showterminated') ){
-				$select[] = "IF(lsc.isgraduated = 0 AND lsc.dropdate != '0000-00-00', 'Terminated Early', '')";
-				$headers[] = "Terminated Early";
+			$s->joinLeft(array('liddeg' => 'link_institution_degrees'), 'liddeg.id_institution = i.id', array());
+			$s->joinLeft(array('ldeg' => 'lookup_degrees'), 'ldeg.id = liddeg.id_degree', array());
 
-				$where[] = "lsc.isgraduated = 0";
-				$where[] = "lsc.dropdate != '0000-00-00'";
-
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){ if ($j['table'] == "cohort"){ $found = true; } }
-				if (!$found){
-					$join[] = array("table" => "link_student_cohort", "abbreviation" => "lsc", "compare" => "lsc.id_student = s.id", "type" => "left");
-					$join[] = array("table" => "cohort", "abbreviation" => "c", "compare" => "c.id = lsc.id_cohort", "type" => "left");
-				}
+			if ((isset($params['showdegrees'])) && $params['showdegrees']) {
+				$headers[] = "Degree";
+				$s->columns('ldeg.degree');
 			}
-
-			// graduated
-			if( $this->getSanParam('showgraduated') ){
-				$select[] = "IF(lsc.isgraduated = 1, 'Graduated', '')";
-				$headers[] = "Graduated";
-				$where[] = "lsc.isgraduated = 1";
-
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){ if ($j['table'] == "cohort"){ $found = true; } }
-				if (!$found){
-					$join[] = array("table" => "link_student_cohort", "abbreviation" => "lsc", "compare" => "lsc.id_student = s.id", "type" => "left");
-					$join[] = array("table" => "cohort", "abbreviation" => "c", "compare" => "c.id = lsc.id_cohort", "type" => "left");
-				}
+			if (isset($params['degrees']) && $params['degrees']) {
+				$s->where('ldeg.id = ?', $params['degrees']);
 			}
+		}
 
-			// funding source
-			if( $this->getSanParam('showfunding') ){
-				$select[] = "lf.fundingname";
-				$headers[] = "Funding";
-
-				$join[] = array(
-					"table" => "link_student_funding",
-					"abbreviation" => "lsf",
-					"compare" => "lsf.studentid = s.id",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "lookup_fundingsources",
-					"abbreviation" => "lf",
-					"compare" => "lf.id = lsf.fundingsource",
-					"type" => "left"
-				);
+		if (isset($params['showgraduated']) && $params['showgraduated']) {
+			if (!$cohortJoined) {
+				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+				$cohortJoined = true;
 			}
+			$s->columns("IF(lsc.isgraduated = 1, 'Graduated', '')");
+			$headers[] = "Graduated";
+			$s->where("lsc.isgraduated = 1");;
+		}
 
-			// facility
-			if( $this->getSanParam('showfacility') ){
-				$select[] = "fac.facility_name";
+		if (isset($params['showfunding']) && $params['showfunding']) {
+			$s->joinLeft(array('lsf' => 'link_student_funding'), 'lsf.studentid = s.id', array());
+			$s->joinLeft(array('lf' => 'lookup_fundingsources'), 'lf.id = lsf.fundingsource', array());
+			//$s->columns('lf.fundingname');
+			//TA:103 to display multiple sources for one person in one row
+			//TA:#251 to display amount of funding also
+			$s->columns("GROUP_CONCAT( ' ' , lf.fundingname, ': ',lsf.fundingamount)");
+			$s->group('p.id');
+
+			$headers[] = "Funding";
+		}
+
+		if ((isset($params['showfacility']) && $params['showfacility']) ||
+			(isset($params['facility']) && $params['facility'])) {
+			$s->joinLeft(array('lsfac' => 'link_student_facility'), 'lsfac.id_student = s.id', array());
+			$s->joinLeft(array('fac' => 'facility'), 'fac.id = lsfac.id_facility', array());
+
+			if ((isset($params['showfacility']) && $params['showfacility'])) {
+				$s->columns('fac.facility_name');
 				$headers[] = "Facility";
 			}
-			if( $this->getSanParam('facility') ){
-				$where[] = "fac.id = ".$this->getSanParam('facility');
+			if (isset($params['facility']) && $params['facility']) {
+				$s->where('fac.id = ?', $params['facility']);
 			}
-			if( $this->getSanParam('showfacility') || $this->getSanParam('facility') ){
-				$join[] = array(
-					"table" => "link_student_facility",
-					"abbreviation" => "lsfac",
-					"compare" => "lsfac.id_student = s.id",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "facility",
-					"abbreviation" => "fac",
-					"compare" => "fac.id = lsfac.id_facility",
-					"type" => "left"
-				);
+		}
+
+		if ((isset($params['showtutor']) && $params['showtutor']) ||
+			(isset($params['tutor']) && $params['tutor'])) {
+			$s->joinLeft(array('tut' => 'tutor'), 'tut.id = s.advisorid', array()); //TA:#337
+			$s->joinLeft(array('tutp' => 'person'), 'tutp.id = tut.personid', array());
+
+			if (isset($params['tutor']) && $params['tutor']) {
+				$s->where('tut.id = ?', $params['tutor']);
 			}
 
-			// tutor advisor
-			if( $this->getSanParam('showtutor') ){
-				$select[] = "CONCAT(tutp.first_name,' ',tutp.last_name) AS tutor_name";
+			if (isset($params['showtutor']) && $params['showtutor']) {
+				$s->columns("CONCAT(tutp.first_name,' ',tutp.last_name) AS tutor_name");
 				$headers[] = "Tutor Advisor";
 			}
-			if( $this->getSanParam('tutor') ){
-				$where[] = "tut.id = ".$this->getSanParam('tutor');
+		}
+
+		$start_date = '';
+		if((isset($params['startday']) && $params['startday']) &&
+			(isset($params['startmonth']) && $params['startmonth']) &&
+			(isset($params['startyear']) && $params['startyear'])) {
+			if (!$cohortJoined) {
+				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+				$cohortJoined = true;
 			}
-			if( $this->getSanParam('showtutor') || $this->getSanParam('tutor') ){
+			$start_date = $params['startyear'].'-'.$params['startmonth'].'-'.$params['startday'];
+		}
 
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){
-					if ($j['table'] == "cohort"){
-						$found = true;
-					}
-				}
-				if (!$found){
-					$join[] = array(
-					"table" => "link_student_cohort",
-					"abbreviation" => "lsc",
-					"compare" => "lsc.id_student = s.id",
-					"type" => "left"
-					);
-
-					$join[] = array(
-					"table" => "cohort",
-					"abbreviation" => "c",
-					"compare" => "c.id = lsc.id_cohort",
-					"type" => "left"
-					);
-				}
-
-				$join[] = array(
-					"table" => "link_cadre_tutor",
-					"abbreviation" => "lct",
-					"compare" => "lct.id_cadre = c.cadreid",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "tutor",
-					"abbreviation" => "tut",
-					"compare" => "tut.id = lct.id_tutor",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "person",
-					"abbreviation" => "tutp",
-					"compare" => "tutp.id = tut.personid",
-					"type" => "left"
-				);
+		$end_date = '';
+		if ((isset($params['endday']) && $params['endday']) &&
+			(isset($params['endmonth']) && $params['endmonth']) &&
+			(isset($params['endyear']) && $params['endyear'])) {
+			if (!$cohortJoined) {
+				$s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+				$s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+				$cohortJoined = true;
 			}
+			$end_date = $params['endyear'].'-'.$params['endmonth'].'-'.$params['endday'];
+		}
 
-			// return unique participants
-			// ..
-
-			// start date between
-			$start_date = '';
-			if($this->getSanParam('startday') && $this->getSanParam('startmonth') && $this->getSanParam('startyear')){
-				$start_date = $this->getSanParam('startyear').'-'.$this->getSanParam('startmonth').'-'.$this->getSanParam('startday');
+		//TA:#251 show start date as well
+		if ((isset($params['showstartdate']) && $params['showstartdate']) || ($start_date !== '') || ($end_date !== '')) {
+			$s->columns('c.startdate');
+			$headers[] = "Start Date";
+			if ($start_date !== '') {
+				$s->where('c.startdate >= ?', $start_date);
 			}
-			$end_date = '';
-			if($this->getSanParam('endday') && $this->getSanParam('endmonth') && $this->getSanParam('endyear')){
-				$end_date = $this->getSanParam('endyear').'-'.$this->getSanParam('endmonth').'-'.$this->getSanParam('endday');
+			if ($end_date !== '') {
+				$s->where('c.startdate <= ?', $end_date);
 			}
-			if(($start_date != '') || ($end_date != '')){
-				$select[] = "c.startdate";
-				$headers[] = "Start Date";
+		}
 
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){
-					if ($j['table'] == "cohort"){
-						$found = true;
-					}
-				}
-				if (!$found){
-					$join[] = array(
-						"table" => "link_student_cohort",
-						"abbreviation" => "lsc",
-						"compare" => "lsc.id_student = s.id",
-						"type" => "left"
-					);
+		//TA:#251 show grad date as well
+		$grad_start_date = '';
+		if((isset($params['gradstartday']) && $params['gradstartday']) &&
+		    (isset($params['gradstartmonth']) && $params['gradstartmonth']) &&
+		    (isset($params['gradstartyear']) && $params['gradstartyear'])) {
+		        if (!$cohortJoined) {
+		            $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		            $cohortJoined = true;
+		        }
+		        $grad_start_date = $params['gradstartyear'].'-'.$params['gradstartmonth'].'-'.$params['gradstartday'];
+		    }
 
-					$join[] = array(
-						"table" => "cohort",
-						"abbreviation" => "c",
-						"compare" => "c.id = lsc.id_cohort",
-						"type" => "left"
-					);
-				}
-			}
-			if(($start_date != '') && ($end_date != '')){
-				$where[] = "c.startdate BETWEEN '{$start_date}' AND '{$end_date}'";
-			} else {
-				if ($start_date != ''){
-					$where[] = "c.startdate >= '{$start_date}'";
-				}
-				if ($end_date != ''){
-					$where[] = "c.startdate <= '{$end_date}'";
-				}
-			}
+		    $grad_end_date = '';
+		    if ((isset($params['gradendday']) && $params['gradendday']) &&
+		        (isset($params['gradendmonth']) && $params['gradendmonth']) &&
+		        (isset($params['gradendyear']) && $params['gradendyear'])) {
+		            if (!$cohortJoined) {
+		                $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		                $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		                $cohortJoined = true;
+		            }
+		            $grad_end_date = $params['gradendyear'].'-'.$params['gradendmonth'].'-'.$params['gradendday'];
+		        }
+		if ((isset($params['showgraduation']) && $params['showgraduation']) || ($grad_start_date !== '') || ($grad_end_date !== '')) {
+		    $s->columns('c.graddate');
+		    $headers[] = "Graduation Date";
+		    if ($grad_start_date !== '') {
+		        $s->where('c.graddate >= ?', $grad_start_date);
+		    }
+		    if ($grad_end_date !== '') {
+		        $s->where('c.graddate <= ?', $grad_end_date);
+		    }
+		}
+		//print "AAAA:   " . $s;
+		return(array($s, $headers));
+	}
 
-			/*
-			if( !$this->institution_link_exists($join) ){
-				$join[] = array(
-					"table" => "link_student_institution",
-					"abbreviation" => "lsi",
-					"compare" => "lsi.id_student = s.id",
-					"type" => "left"
-				);
-			}
-			*/
 
-			// filter by user institution
-			$login_user_id = $helper->myid();
-			$ins_results = $helper->getUserInstitutions($login_user_id);
-			if( !empty($ins_results) ){
-				$where[] = "s.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = {$login_user_id})";
-			}
+	public function psStudentsTrainedAction() {
+		$this->viewAssignEscaped ('locations', Location::getAll());
 
-			$query = "SELECT " . implode(", ", $select) . "\n";
-			$query .= " FROM " . $maintable . "\n";
-			if (count ($join) > 0){
-				foreach ($join as $j){
-					$query .= strtoupper($j['type']) . " JOIN " . $j['table'] . " " . $j['abbreviation'] . " ON " . $j['compare'] . "\n";
-				}
-			}
-			if (count ($where) > 0){
-				$query .= "WHERE " . implode(" AND ", $where) . "\n";
-			}
+		$helper = new Helper();
+		$this->view->assign('mode', 'id');
+		$this->view->assign('institutions', $helper->getInstitutions());
+		$this->view->assign('cadres', $helper->getCadres());
+		$this->view->assign('institutiontypes', $helper->AdminInstitutionTypes());
+		$this->view->assign('cohorts', $helper->getCohorts());
+		$this->view->assign('nationalities', $helper->getNationalities());
+		$this->view->assign('funding', $helper->getFunding());
+		$this->view->assign('tutors', $helper->getTutors());
+		$this->view->assign('facilities', $helper->getFacilities());
+		$this->view->assign('coursetypes', $helper->AdminCourseTypes());
+		$this->view->assign('degrees', $helper->getDegrees());
+		$this->view->assign('site_style', $this->setting('site_style'));
+        $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
 
-			//echo $query;
-
-			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
-			$rowArray = $db->fetchAll ($query);
-			$this->view->assign('output',$rowArray);
-			$this->view->assign('query', $query);
-			//echo $query;
+		if ($this->getSanParam('process')) {
+			$criteria = $this->getAllParams();
+			
+			list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
+		
+			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+			$rowArray = $db->fetchAll($query);
+			$this->view->assign('query', $query->__toString());
 
 			$this->viewAssignEscaped("headers", $headers);
 			$this->viewAssignEscaped("output", $rowArray);
-			$this->view->assign('query', "");
 
-			$this->view->criteria = $_GET;
+			$this->view->assign('criteria', $criteria);
 		}
-		#		return $this->trainingReport ();
+	}
+	
+	//TA:#217 add repeated student report
+	public function psRepeatedStudentsAction() {
+	    $this->viewAssignEscaped ('locations', Location::getAll());
+	
+	    $helper = new Helper();
+	    $this->view->assign('mode', 'id');
+	    $this->view->assign('institutions', $helper->getInstitutions());
+	    $this->view->assign('cadres', $helper->getCadres());
+	    $this->view->assign('institutiontypes', $helper->AdminInstitutionTypes());
+	    $this->view->assign('cohorts', $helper->getCohorts());
+	    $this->view->assign('nationalities', $helper->getNationalities());
+	    $this->view->assign('funding', $helper->getFunding());
+	    $this->view->assign('tutors', $helper->getTutors());
+	    $this->view->assign('facilities', $helper->getFacilities());
+	    $this->view->assign('coursetypes', $helper->AdminCourseTypes());
+	    $this->view->assign('degrees', $helper->getDegrees());
+	    $this->view->assign('site_style', $this->setting('site_style'));
+        $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
+
+	    if ($this->getSanParam('process')) {
+	        $criteria = $this->getAllParams();
+            // these two variables may be brought over from a different student report when the
+            // report is changed.
+            unset($criteria['showterminated']);
+            unset($criteria['termination_status']);
+            
+	        if (isset($criteria['cohort']) && $criteria['cohort'] ||
+	            isset($criteria['showcohort']) && $criteria['showcohort']) {
+	
+	                //TA:#217 add to $criteria addition param 'show_current_cohort'
+	                $criteria['show_current_cohort'] = '1';
+	                list($query1, $headers) = $this->psStudentReportsBuildQuery($criteria);
+	                 
+	                //TA:#217 add to $criteria addition param 'show_old_cohorts'
+	                $criteria['show_current_cohort'] = '0';
+	                $criteria['show_old_cohorts'] = '1';
+	                list($query2, $headers) = $this->psStudentReportsBuildQuery($criteria);
+	                $headers[] = "Old Cohorts";
+	                 
+	                //TA:#217 create query, take only repeated students (who dropped one cohort and joined to another)
+	                $query = "select t1.*, t2.old_cohortname from (" . $query1 . ") as t1 ".
+	                    "left join (" . $query2 . ") as t2 on t1.id=t2.id where t2.old_cohortname is not null";
+	            }else{
+	                list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
+	                //take only repeated students (who dropped one cohort and joined to another)
+	                $query = $query . " and s.id in (select id_student from link_student_cohort where dropdate != '0000-00-00' and id_student in (SELECT id_student FROM link_student_cohort group by id_student having count(*) > 1))"; 
+	            }
+
+	            $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+	            $rowArray = $db->fetchAll($query);
+	            $this->viewAssignEscaped("headers", $headers);
+	            $this->viewAssignEscaped("output", $rowArray);
+	
+	            $this->view->assign('criteria', $criteria);
+	    }
 	}
 
 
 	public function psStudentsByNameAction() {
-
-		//locations
-		$this->viewAssignEscaped ( 'locations', Location::getAll () );
+		$this->viewAssignEscaped ('locations', Location::getAll());
 
 		$helper = new Helper();
-		$this->view->assign ( 'mode', 'id' );
-		$this->view->assign ( 'institutions', $helper->getInstitutions());
-		$this->view->assign ( 'cadres', $helper->getCadres());
-		$this->view->assign ( 'institutiontypes', $helper->AdminInstitutionTypes());
-		$this->view->assign ( 'cohorts', $helper->getCohorts());
-		$this->view->assign ( 'nationalities', $helper->getNationalities());
-		$this->view->assign ( 'funding', $helper->getFunding());
-		$this->view->assign ( 'tutors', $helper->getTutors());
-		$this->view->assign ( 'facilities', $helper->getFacilities());
-		$this->view->assign ( 'coursetypes', $helper->AdminCourseTypes());
-		$this->view->assign ( 'degrees', $helper->getDegrees());
-		#		return $this->trainingReport ();
+		$this->view->assign('mode', 'id');
+		$this->view->assign('institutions', $helper->getInstitutions());
+		$this->view->assign('cadres', $helper->getCadres());
+		$this->view->assign('institutiontypes', $helper->AdminInstitutionTypes());
+		$this->view->assign('cohorts', $helper->getCohorts());
+		$this->view->assign('nationalities', $helper->getNationalities());
+		$this->view->assign('funding', $helper->getFunding());
+		$this->view->assign('tutors', $helper->getTutors());
+		$this->view->assign('facilities', $helper->getFacilities());
+		$this->view->assign('coursetypes', $helper->AdminCourseTypes());
+		$this->view->assign('degrees', $helper->getDegrees());
+		$this->view->assign('site_style', $this->setting('site_style'));
+        //TA:#334 $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
 
-		if ($this->getSanParam ( 'process' )){
+		if ($this->getSanParam('process')) {
+			$criteria = $this->getAllParams();
 
-			$maintable = "person p";
-			$select = array();
-			//$select[] = "p.id as personid";
-			$select[] = "p.first_name";
-			$select[] = "p.last_name";
+			list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
 
-			$headers[] = "First Name";
-			$headers[] = "Last Name";
-
-			$join = array();
-			$join[] = array(
-				"table" => "student",
-				"abbreviation" => "s",
-				"compare" => "s.personid = p.id",
-				"type" => "inner"
-			);
-
-			$where = array();
-			$where[] = "p.is_deleted = 0";
-
-			$sort = array();
-			$locations = Location::getAll ();
-			$translation = Translation::getAll ();
-
-			// region
-			if( $this->getSanParam('showProvince') || $this->getSanParam('province_id') || $this->getSanParam('showDistrict') || $this->getSanParam('district_id')){
-				$join[] = array(
-					"table" => "location",
-					"abbreviation" => "loc",
-					"compare" => "loc.id = s.geog1",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "location_district",
-					"abbreviation" => "locd",
-					"compare" => "locd.id = s.geog2",
-					"type" => "left"
-				);
-
-				if( $this->getSanParam('showProvince') ){
-					$select[] = "loc.location_name";
-					$headers[] = "Province";
-				}
-				if( $this->getSanParam('showDistrict') ){
-					$select[] = "locd.district_name";
-					$headers[] = "District";
-				}
-			}
-			$province_arr = $this->getSanParam('province_id');
-			if( !empty($province_arr) ){
-				$clause = ''; $or_str = '';
-				foreach($province_arr as $item){
-					$clause .= "{$or_str}loc.id = '{$item}'";
-					$or_str = " OR ";
-				}
-				$clause = "({$clause})";
-				$where[] = $clause;
-			}
-			$district_arr = $this->getSanParam('district_id');
-			if( !empty($district_arr) ){
-				$clause = ''; $or_str = '';
-				foreach($district_arr as $item){
-					$clause .= "{$or_str}locd.id = '{$item}'";
-					$or_str = " OR ";
-				}
-				$clause = "({$clause})";
-				$where[] = $clause;
-			}
-
-			// institution
-			if ($this->getSanParam ( 'showinstitution' )){
-				$select[] = "i.institutionname";
-				$headers[] = "Institution";
-
-				$join[] = array(
-					"table" => "institution",
-					"abbreviation" => "i",
-					"compare" => "i.id = s.institutionid",
-					"type" => "left"
-				);
-				if ($this->getSanParam('institution')){
-					$where[] = "i.id = " . $this->getSanParam('institution');
-				}
-			}
-
-			// cadre
-			if ($this->getSanParam ( 'showcadre' )){
-				$select[] = "ca.cadrename";
-				$headers[] = "Cadre";
-
-				$join[] = array(
-					"table" => "cadres",
-					"abbreviation" => "ca",
-					"compare" => "ca.id = s.cadre",
-					"type" => "left"
-				);
-
-				if ($this->getSanParam('cadre')){
-				$where[] = "ca.id = " . $this->getSanParam('cadre');
-				}
-			}
-
-			// cohort
-			if ($this->getSanParam ( 'showcohort' )){
-				$select[] = "c.cohortname";
-				$headers[] = "Cohort";
-
-				$join[] = array(
-					"table" => "link_student_cohort",
-					"abbreviation" => "lsc",
-					"compare" => "lsc.id_student = s.id",
-					"type" => "left"
-				);
-
-				$join[] = array(
-					"table" => "cohort",
-					"abbreviation" => "c",
-					"compare" => "c.id = lsc.id_cohort",
-					"type" => "left"
-				);
-
-				if ($this->getSanParam('cohort')){
-				$where[] = "c.id = " . $this->getSanParam('cohort');
-				}
-			}
-
-			// year in school
-			if ($this->getSanParam ( 'showyearinschool' )){
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){
-					if ($j['table'] == "cohort"){
-					$found = true;
-					}
-				}
-
-				if (!$found){
-					$join[] = array(
-					"table" => "link_student_cohort",
-					"abbreviation" => "lsc",
-					"compare" => "lsc.id_student = s.id",
-					"type" => "left"
-					);
-
-					$join[] = array(
-					"table" => "cohort",
-					"abbreviation" => "c",
-					"compare" => "c.id = lsc.id_cohort",
-					"type" => "left"
-					);
-				}
-				$select[] = "c.startdate";
-				$headers[] = "Start Date";
-				if ($this->getSanParam('yearinschool')){
-					$where[] = "c.startdate LIKE '" . mysql_real_escape_string(substr($this->getSanParam('yearinschool'), 0, 4)) . "%'";
-				}
-			}
-
-			// gender
-			if( $this->getSanParam('showgender') ){
-				$select[] = "p.gender";
-				$headers[] = "Gender";
-			}
-			if ( $this->getSanParam('gender') ){
-				$gender_id = $this->getSanParam('gender');
-				if($gender_id > 0){
-					$gender_arr = array(1 => 'male', 2 => 'female');
-					$where[] = "p.gender = '{$gender_arr[$gender_id]}'";
-				}
-			}
-
-			// nationalities
-			if($this->getSanParam('shownationality') || $this->getSanParam('nationality')){
-				$join[] = array(
-					"table" => "lookup_nationalities",
-					"abbreviation" => "ln",
-					"compare" => "ln.id = s.nationalityid",
-					"type" => "left"
-				);
-			}
-			if( $this->getSanParam('shownationality') ){
-				$select[] = "ln.nationality";
-				$headers[] = "Nationality";
-			}
-			if( $this->getSanParam('nationality') ){
-				$where[] = "ln.id = ".$this->getSanParam('nationality');
-			}
-
-			// age
-			if( $this->getSanParam('showage') ){
-				$select[] = "DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(p.birthdate)), '%Y')+0 AS age";
-				$headers[] = "Age";
-			}
-			if($this->getSanParam('agemin') || $this->getSanParam('agemax')){
-				$year_secs = 60 * 60 * 24 * 365;
-				if($this->getSanParam('agemin') && $this->getSanParam('agemax')){
-					$min_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemin') * $year_secs)));
-					$max_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemax') * $year_secs)));
-					$where[] = "p.birthdate BETWEEN '{$max_age_birthdate}' AND '{$min_age_birthdate}'";
-				} else {
-					if ( $this->getSanParam('agemin') ){
-						$min_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemin') * $year_secs)));
-						$where[] = "p.birthdate <= '{$min_age_birthdate}'";
-					}
-					if ( $this->getSanParam('agemax') ){
-						$max_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemax') * $year_secs)));
-						$where[] = "p.birthdate >= '{$max_age_birthdate}'";
-					}
-				}
-			}
-
-			// Course Name And Exam Scores To Date
-			// ..
-
-			// active
-			if( $this->getSanParam('showactive') ){
-				$select[] = "p.active";
-				$headers[] = "Active";
-				$where[] = "p.active = 'active'";
-			}
-
-			// terminated early
-			if( $this->getSanParam('showterminated') ){
-				$select[] = "IF(lsc.isgraduated = 0 AND lsc.dropdate != '0000-00-00', 'Terminated Early', '')";
-				$headers[] = "Terminated Early";
-
-				$where[] = "lsc.isgraduated = 0";
-				$where[] = "lsc.dropdate != '0000-00-00'";
-
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){ if ($j['table'] == "cohort"){ $found = true; } }
-				if (!$found){
-					$join[] = array("table" => "link_student_cohort", "abbreviation" => "lsc", "compare" => "lsc.id_student = s.id", "type" => "left");
-					$join[] = array("table" => "cohort", "abbreviation" => "c", "compare" => "c.id = lsc.id_cohort", "type" => "left");
-				}
-			}
-
-			// graduated
-			if( $this->getSanParam('showgraduated') ){
-				$select[] = "IF(lsc.isgraduated = 1, 'Graduated', '')";
-				$headers[] = "Graduated";
-				$where[] = "lsc.isgraduated = 1";
-
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){ if ($j['table'] == "cohort"){ $found = true; } }
-				if (!$found){
-					$join[] = array("table" => "link_student_cohort", "abbreviation" => "lsc", "compare" => "lsc.id_student = s.id", "type" => "left");
-					$join[] = array("table" => "cohort", "abbreviation" => "c", "compare" => "c.id = lsc.id_cohort", "type" => "left");
-				}
-			}
-
-			// funding source
-			if( $this->getSanParam('showfunding') ){
-				$select[] = "lf.fundingname";
-				$headers[] = "Funding";
-
-				$join[] = array(
-					"table" => "link_student_funding",
-					"abbreviation" => "lsf",
-					"compare" => "lsf.studentid = s.id",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "lookup_fundingsources",
-					"abbreviation" => "lf",
-					"compare" => "lf.id = lsf.fundingsource",
-					"type" => "left"
-				);
-			}
-
-			// facility
-			if( $this->getSanParam('showfacility') ){
-				$select[] = "fac.facility_name";
-				$headers[] = "Facility";
-			}
-			if( $this->getSanParam('facility') ){
-				$where[] = "fac.id = ".$this->getSanParam('facility');
-			}
-			if( $this->getSanParam('showfacility') || $this->getSanParam('facility') ){
-				$join[] = array(
-					"table" => "link_student_facility",
-					"abbreviation" => "lsfac",
-					"compare" => "lsfac.id_student = s.id",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "facility",
-					"abbreviation" => "fac",
-					"compare" => "fac.id = lsfac.id_facility",
-					"type" => "left"
-				);
-			}
-
-			// tutor advisor
-			if( $this->getSanParam('showtutor') ){
-				$select[] = "CONCAT(tutp.first_name,' ',tutp.last_name) AS tutor_name";
-				$headers[] = "Tutor Advisor";
-			}
-			if( $this->getSanParam('tutor') ){
-				$where[] = "tut.id = ".$this->getSanParam('tutor');
-			}
-			if( $this->getSanParam('showtutor') || $this->getSanParam('tutor') ){
-
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){
-					if ($j['table'] == "cohort"){
-						$found = true;
-					}
-				}
-				if (!$found){
-					$join[] = array(
-					"table" => "link_student_cohort",
-					"abbreviation" => "lsc",
-					"compare" => "lsc.id_student = s.id",
-					"type" => "left"
-					);
-
-					$join[] = array(
-					"table" => "cohort",
-					"abbreviation" => "c",
-					"compare" => "c.id = lsc.id_cohort",
-					"type" => "left"
-					);
-				}
-
-				$join[] = array(
-					"table" => "link_cadre_tutor",
-					"abbreviation" => "lct",
-					"compare" => "lct.id_cadre = c.cadreid",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "tutor",
-					"abbreviation" => "tut",
-					"compare" => "tut.id = lct.id_tutor",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "person",
-					"abbreviation" => "tutp",
-					"compare" => "tutp.id = tut.personid",
-					"type" => "left"
-				);
-			}
-
-			// start date between
-			$start_date = '';
-			if($this->getSanParam('startday') && $this->getSanParam('startmonth') && $this->getSanParam('startyear')){
-				$start_date = $this->getSanParam('startyear').'-'.$this->getSanParam('startmonth').'-'.$this->getSanParam('startday');
-			}
-			$end_date = '';
-			if($this->getSanParam('endday') && $this->getSanParam('endmonth') && $this->getSanParam('endyear')){
-				$end_date = $this->getSanParam('endyear').'-'.$this->getSanParam('endmonth').'-'.$this->getSanParam('endday');
-			}
-			if(($start_date != '') || ($end_date != '')){
-				$select[] = "c.startdate";
-				$headers[] = "Start Date";
-
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){
-					if ($j['table'] == "cohort"){
-						$found = true;
-					}
-				}
-				if (!$found){
-					$join[] = array(
-						"table" => "link_student_cohort",
-						"abbreviation" => "lsc",
-						"compare" => "lsc.id_student = s.id",
-						"type" => "left"
-					);
-
-					$join[] = array(
-						"table" => "cohort",
-						"abbreviation" => "c",
-						"compare" => "c.id = lsc.id_cohort",
-						"type" => "left"
-					);
-				}
-			}
-			if(($start_date != '') && ($end_date != '')){
-				$where[] = "c.startdate BETWEEN '{$start_date}' AND '{$end_date}'";
-			} else {
-				if ($start_date != ''){
-					$where[] = "c.startdate >= '{$start_date}'";
-				}
-				if ($end_date != ''){
-					$where[] = "c.startdate <= '{$end_date}'";
-				}
-			}
-
-			// filter by user institution
-			$login_user_id = $helper->myid();
-			$ins_results = $helper->getUserInstitutions($login_user_id);
-			if( !empty($ins_results) ){
-				$where[] = "s.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = {$login_user_id})";
-			}
-
-			$query = "SELECT " . implode(", ", $select) . "\n";
-			$query .= " FROM " . $maintable . "\n";
-			if (count ($join) > 0){
-				foreach ($join as $j){
-					$query .= strtoupper($j['type']) . " JOIN " . $j['table'] . " " . $j['abbreviation'] . " ON " . $j['compare'] . "\n";
-				}
-			}
-			if (count ($where) > 0){
-				$query .= "WHERE " . implode(" AND ", $where) . "\n";
-			}
-			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
-			$rowArray = $db->fetchAll ($query);
-			$this->view->assign('output',$rowArray);
-			$this->view->assign('query',$query);
+			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+			$rowArray = $db->fetchAll($query);
+			$this->view->assign('query', $query->__toString());
 
 			$this->viewAssignEscaped("headers", $headers);
-			$this->view->assign('output', $rowArray);
-			$this->view->assign('query',"");
+			$this->viewAssignEscaped("output", $rowArray);
 
-			$this->view->criteria = $_GET;
+			$this->view->assign('criteria', $criteria);
 		}
-
 	}
 
 	public function psGraduatedStudentsAction() {
@@ -7145,351 +6981,26 @@ echo $sql . "<br>";
 		$this->view->assign ( 'facilities', $helper->getFacilities());
 		$this->view->assign ( 'coursetypes', $helper->AdminCourseTypes());
 		$this->view->assign ( 'degrees', $helper->getDegrees());
-		#		return $this->trainingReport ();
-		if ($this->getSanParam ( 'process' )){
+		$this->view->assign('site_style', $this->setting('site_style'));
+        //TA:#334 $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
 
-			$maintable = "person p";
-			$select = array();
-			//$select[] = "p.id as personid";
-			$select[] = "p.first_name";
-			$select[] = "p.last_name";
+		if ($this->getSanParam ('process')) {
+			$criteria = $this->getAllParams();
 
-			$headers[] = "First Name";
-			$headers[] = "Last Name";
+			// these two variables may be brought over from a different student report when the
+            // report is changed.
+			unset($criteria['showterminated']);
+			unset($criteria['termination_status']);
 
-			$join = array();
-			$join[] = array(
-				"table" => "student",
-				"abbreviation" => "s",
-				"compare" => "s.personid = p.id",
-				"type" => "inner"
-			);
-
-			$where = array();
-			$where[] = "p.is_deleted = 0";
-
-			$sort = array();
-			$locations = Location::getAll ();
-			$translation = Translation::getAll ();
-
-			// institution
-			if ($this->getSanParam ( 'showinstitution' )){
-				$select[] = "i.institutionname";
-				$headers[] = "Institution";
-
-				$join[] = array(
-					"table" => "institution",
-					"abbreviation" => "i",
-					"compare" => "i.id = s.institutionid",
-					"type" => "left"
-				);
-				if ($this->getSanParam('institution')){
-					$where[] = "i.id = " . $this->getSanParam('institution');
-				}
-			}
-
-			// cadre
-			if ($this->getSanParam ('showcadre')){
-				$select[] = "ca.cadrename";
-				$headers[] = "Cadre";
-
-				$join[] = array(
-					"table" => "cadres",
-					"abbreviation" => "ca",
-					"compare" => "ca.id = s.cadre",
-					"type" => "left"
-				);
-
-				if ($this->getSanParam('cadre')){
-					$where[] = "ca.id = " . $this->getSanParam('cadre');
-				}
-			}
-
-			// cohort
-			if ($this->getSanParam ( 'showcohort' )){
-				$select[] = "c.cohortname";
-				$headers[] = "Cohort";
-
-				$join[] = array(
-					"table" => "link_student_cohort",
-					"abbreviation" => "lsc",
-					"compare" => "lsc.id_student = s.id",
-					"type" => "left"
-				);
-
-				$join[] = array(
-					"table" => "cohort",
-					"abbreviation" => "c",
-					"compare" => "c.id = lsc.id_cohort",
-					"type" => "left"
-				);
-
-				if ($this->getSanParam('cohort')){
-					$where[] = "c.id = " . $this->getSanParam('cohort');
-				}
-			}
-
-			// degree
-			if($this->getSanParam('showdegrees') || $this->getSanParam('degrees')){
-				# REQUIRES INSTITUTION LINK
-				$found = false;
-				foreach ($join as $j){
-					if ($j['table'] == "institution"){
-						$found = true;
-					}
-				}
-				if (!$found){
-					$join[] = array(
-						"table" => "institution",
-						"abbreviation" => "i",
-						"compare" => "i.id = s.institutionid",
-						"type" => "left"
-					);
-				}
-
-				$join[] = array(
-					"table" => "link_institution_degrees",
-					"abbreviation" => "liddeg",
-					"compare" => "liddeg.id_institution = i.id",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "lookup_degrees",
-					"abbreviation" => "ldeg",
-					"compare" => "ldeg.id = liddeg.id_degree",
-					"type" => "left"
-				);
-			}
-			if( $this->getSanParam('showdegrees') ){
-				$select[] = "ldeg.degree";
-				$headers[] = "Degree";
-			}
-			if( $this->getSanParam('degrees') ){
-				$where[] = "ldeg.id = ".$this->getSanParam('degrees');
-			}
-
-			// gender
-			if( $this->getSanParam('showgender') ){
-				$select[] = "p.gender";
-				$headers[] = "Gender";
-			}
-			if ( $this->getSanParam('gender') ){
-				$gender_id = $this->getSanParam('gender');
-				if($gender_id > 0){
-					$gender_arr = array(1 => 'male', 2 => 'female');
-					$where[] = "p.gender = '{$gender_arr[$gender_id]}'";
-				}
-			}
-
-			// nationalities
-			if($this->getSanParam('shownationality') || $this->getSanParam('nationality')){
-				$join[] = array(
-					"table" => "lookup_nationalities",
-					"abbreviation" => "ln",
-					"compare" => "ln.id = s.nationalityid",
-					"type" => "left"
-				);
-			}
-			if( $this->getSanParam('shownationality') ){
-				$select[] = "ln.nationality";
-				$headers[] = "Nationality";
-			}
-			if( $this->getSanParam('nationality') ){
-				$where[] = "ln.id = ".$this->getSanParam('nationality');
-			}
-
-			// age
-			if( $this->getSanParam('showage') ){
-				$select[] = "DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(p.birthdate)), '%Y')+0 AS age";
-				$headers[] = "Age";
-			}
-			if($this->getSanParam('agemin') || $this->getSanParam('agemax')){
-				$year_secs = 60 * 60 * 24 * 365;
-				if($this->getSanParam('agemin') && $this->getSanParam('agemax')){
-					$min_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemin') * $year_secs)));
-					$max_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemax') * $year_secs)));
-					$where[] = "p.birthdate BETWEEN '{$max_age_birthdate}' AND '{$min_age_birthdate}'";
-				} else {
-					if ( $this->getSanParam('agemin') ){
-						$min_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemin') * $year_secs)));
-						$where[] = "p.birthdate <= '{$min_age_birthdate}'";
-					}
-					if ( $this->getSanParam('agemax') ){
-						$max_age_birthdate = date('Y-m-d', (time() - ($this->getSanParam('agemax') * $year_secs)));
-						$where[] = "p.birthdate >= '{$max_age_birthdate}'";
-					}
-				}
-			}
-
-			// graduation date
-			if($this->getSanParam('showgraduation')){
-				$select[] = "c.graddate";
-				$headers[] = "Graduation Date";
-				$where[] = "lsc.isgraduated = 1";
-
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){ if ($j['table'] == "cohort"){ $found = true; } }
-				if (!$found){
-					$join[] = array("table" => "link_student_cohort", "abbreviation" => "lsc", "compare" => "lsc.id_student = s.id", "type" => "left");
-					$join[] = array("table" => "cohort", "abbreviation" => "c", "compare" => "c.id = lsc.id_cohort", "type" => "left");
-				}
-			}
-
-			// facility
-			if( $this->getSanParam('showfacility') ){
-				$select[] = "fac.facility_name";
-				$headers[] = "Facility";
-			}
-			if( $this->getSanParam('facility') ){
-				$where[] = "fac.id = ".$this->getSanParam('facility');
-			}
-			if( $this->getSanParam('showfacility') || $this->getSanParam('facility') ){
-				$join[] = array(
-					"table" => "link_student_facility",
-					"abbreviation" => "lsfac",
-					"compare" => "lsfac.id_student = s.id",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "facility",
-					"abbreviation" => "fac",
-					"compare" => "fac.id = lsfac.id_facility",
-					"type" => "left"
-				);
-			}
-
-			// tutor advisor
-			if( $this->getSanParam('showtutor') ){
-				$select[] = "CONCAT(tutp.first_name,' ',tutp.last_name) AS tutor_name";
-				$headers[] = "Tutor Advisor";
-			}
-			if( $this->getSanParam('tutor') ){
-				$where[] = "tut.id = ".$this->getSanParam('tutor');
-			}
-			if( $this->getSanParam('showtutor') || $this->getSanParam('tutor') ){
-
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){
-					if ($j['table'] == "cohort"){
-						$found = true;
-					}
-				}
-				if (!$found){
-					$join[] = array(
-					"table" => "link_student_cohort",
-					"abbreviation" => "lsc",
-					"compare" => "lsc.id_student = s.id",
-					"type" => "left"
-					);
-
-					$join[] = array(
-					"table" => "cohort",
-					"abbreviation" => "c",
-					"compare" => "c.id = lsc.id_cohort",
-					"type" => "left"
-					);
-				}
-
-				$join[] = array(
-					"table" => "link_cadre_tutor",
-					"abbreviation" => "lct",
-					"compare" => "lct.id_cadre = c.cadreid",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "tutor",
-					"abbreviation" => "tut",
-					"compare" => "tut.id = lct.id_tutor",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "person",
-					"abbreviation" => "tutp",
-					"compare" => "tutp.id = tut.personid",
-					"type" => "left"
-				);
-			}
-
-			// start date between
-			$start_date = '';
-			if($this->getSanParam('startday') && $this->getSanParam('startmonth') && $this->getSanParam('startyear')){
-				$start_date = $this->getSanParam('startyear').'-'.$this->getSanParam('startmonth').'-'.$this->getSanParam('startday');
-			}
-			$end_date = '';
-			if($this->getSanParam('endday') && $this->getSanParam('endmonth') && $this->getSanParam('endyear')){
-				$end_date = $this->getSanParam('endyear').'-'.$this->getSanParam('endmonth').'-'.$this->getSanParam('endday');
-			}
-			if(($start_date != '') || ($end_date != '')){
-				$select[] = "c.startdate";
-				$headers[] = "Start Date";
-
-				# REQUIRES COHORT LINK
-				$found = false;
-				foreach ($join as $j){
-					if ($j['table'] == "cohort"){
-						$found = true;
-					}
-				}
-				if (!$found){
-					$join[] = array(
-						"table" => "link_student_cohort",
-						"abbreviation" => "lsc",
-						"compare" => "lsc.id_student = s.id",
-						"type" => "left"
-					);
-
-					$join[] = array(
-						"table" => "cohort",
-						"abbreviation" => "c",
-						"compare" => "c.id = lsc.id_cohort",
-						"type" => "left"
-					);
-				}
-			}
-			if(($start_date != '') && ($end_date != '')){
-				$where[] = "c.startdate BETWEEN '{$start_date}' AND '{$end_date}'";
-			} else {
-				if ($start_date != ''){
-					$where[] = "c.startdate >= '{$start_date}'";
-				}
-				if ($end_date != ''){
-					$where[] = "c.startdate <= '{$end_date}'";
-				}
-			}
-
-			// filter by user institution
-			$login_user_id = $helper->myid();
-			$ins_results = $helper->getUserInstitutions($login_user_id);
-			if( !empty($ins_results) ){
-				$where[] = "s.institutionid IN (SELECT institutionid FROM link_user_institution WHERE userid = {$login_user_id})";
-			}
-
-			$query = "SELECT " . implode(", ", $select) . "\n";
-			$query .= " FROM " . $maintable . "\n";
-			if (count ($join) > 0){
-				foreach ($join as $j){
-					$query .= strtoupper($j['type']) . " JOIN " . $j['table'] . " " . $j['abbreviation'] . " ON " . $j['compare'] . "\n";
-				}
-			}
-			if (count ($where) > 0){
-				$query .= "WHERE " . implode(" AND ", $where) . "\n";
-			}
-
-			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
-			$rowArray = $db->fetchAll ($query);
-			$this->view->assign('output',$rowArray);
-			$this->view->assign('query',$query);
-
-			//echo $query;
-			# exit;
+			list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
+			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+			$rowArray = $db->fetchAll($query);
+			$this->view->assign('query', $query->__toString());
 
 			$this->viewAssignEscaped("headers", $headers);
-			$this->view->assign('output', $rowArray);
-			$this->view->assign('query', "");
+			$this->viewAssignEscaped("output", $rowArray);
 
-			$this->view->criteria = $_GET;
+			$this->view->assign('criteria', $criteria);
 		}
 	}
 
@@ -7671,7 +7182,8 @@ echo $sql . "<br>";
 				$select[] = "coh.startdate";
 				$headers[] = "Start Date";
 				if ($this->getSanParam('yearinschool')){
-					$where[] = "coh.startdate LIKE '" . mysql_real_escape_string(substr($this->getSanParam('yearinschool'), 0, 4)) . "%'";
+					$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+					$where[] = $db->quoteInto("coh.startdate LIKE ", substr($this->getSanParam('yearinschool'), 0, 4) . '%');
 				}
 			}
 
@@ -8005,16 +7517,10 @@ echo $sql . "<br>";
 				$select[] = "coh.startdate";
 				$headers[] = "Start Date";
 				if ($this->getSanParam('yearinschool')){
-					$where[] = "coh.startdate LIKE '" . mysql_real_escape_string(substr($this->getSanParam('yearinschool'), 0, 4)) . "%'";
+					$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+					$where[] = $db->quoteInto("coh.startdate LIKE ", substr($this->getSanParam('yearinschool'), 0, 4)) . '%';
 				}
 			}
-
-			/*
-			if ( $this->getSanParam('showcoursename') ){
-				$select[] = "class.classname";
-				$headers[] = "Course Name";
-			}
-			*/
 
 			if( $this->getSanParam('coursename') ){
 				$course_name = $this->getSanParam('coursename');
@@ -8037,22 +7543,6 @@ echo $sql . "<br>";
 			if( $this->getSanParam('coursetype') ){
 				$where[] = "ctype.id = ".$this->getSanParam('coursetype');
 			}
-
-			/*
-			if( $this->getSanParam('showgrades') || $this->getSanParam('grades') ){
-				///////
-			}
-
-			// grades
-			if( $this->getSanParam('showgrades') ){
-				$select[] = "lsclass.grade";
-				$headers[] = "Grade";
-			}
-			if( $this->getSanParam('grades') ){
-				$grade = $this->getSanParam('grades');
-				$where[] = "lsclass.grade LIKE '%{$grade}%'";
-			}
-			*/
 
 			// topic
 			if( $this->getSanParam('showtopic') ){
@@ -8275,18 +7765,24 @@ echo $sql . "<br>";
 					);
 					$institution_set = true;
 				}
-
+//TA:94 fixing bugs because it displays all cadres of institution, but should display only one
+// 				$join[] = array(
+// 					"table" => "link_cadre_institution",
+// 					"abbreviation" => "cai",
+// 					"compare" => "cai.id_institution = i.id",
+// 					"type" => "left"
+// 				);
+// 				$join[] = array(
+// 					"table" => "cadres",
+// 					"abbreviation" => "cad",
+// 					"compare" => "cad.id = cai.id_cadre",
+// 					"type" => "left"
+// 				);
 				$join[] = array(
-					"table" => "link_cadre_institution",
-					"abbreviation" => "cai",
-					"compare" => "cai.id_institution = i.id",
-					"type" => "left"
-				);
-				$join[] = array(
-					"table" => "cadres",
-					"abbreviation" => "cad",
-					"compare" => "cad.id = cai.id_cadre",
-					"type" => "left"
+				    "table" => "cadres",
+				    "abbreviation" => "cad",
+				    "compare" => "cad.id = coh.cadreid",
+				    "type" => "left"
 				);
 
 				if ($this->getSanParam('cadre')){
@@ -8791,7 +8287,8 @@ echo $sql . "<br>";
 			);
 
 			$where = array();
-			$where[] = "p.is_deleted = 0";
+			//TA:#254 only active tutors
+			$where[] = "p.is_deleted = 0 and p.active = 'active' " ;
 			$sort = array();
 			$locations = Location::getAll ();
 			$translation = Translation::getAll ();
@@ -8868,17 +8365,24 @@ echo $sql . "<br>";
 					}
 				}
 				if (!$found){
+				    //TA:95 fix bug with institution for tutor (link_tutor_institution does not have info about all tutors)
+// 					$join[] = array(
+// 						"table" => "link_tutor_institution",
+// 						"abbreviation" => "lti",
+// 						"compare" => "lti.id_tutor = tut.id",
+// 						"type" => "left"
+// 					);
+// 					$join[] = array(
+// 						"table" => "institution",
+// 						"abbreviation" => "i",
+// 						"compare" => "i.id = lti.id_institution",
+// 						"type" => "left"
+// 					);
 					$join[] = array(
-						"table" => "link_tutor_institution",
-						"abbreviation" => "lti",
-						"compare" => "lti.id_tutor = tut.id",
-						"type" => "left"
-					);
-					$join[] = array(
-						"table" => "institution",
-						"abbreviation" => "i",
-						"compare" => "i.id = lti.id_institution",
-						"type" => "left"
+					    "table" => "institution",
+					    "abbreviation" => "i",
+					    "compare" => "i.id = tut.institutionid",
+					    "type" => "left"
 					);
 				}
 
@@ -9030,11 +8534,21 @@ echo $sql . "<br>";
 
 			// # of students advised
 			if( $this->getSanParam('showstudentsadvised') ){
-				$select[] = "(SELECT COUNT(*) FROM student sub_s
-									   INNER JOIN cadres sub_c ON sub_c.id = sub_s.cadre
-									   INNER JOIN link_cadre_tutor sub_lct ON sub_lct.id_cadre = sub_c.id
-									   INNER JOIN tutor sub_t ON sub_t.id = sub_lct.id_tutor
-									   WHERE sub_t.id = tut.id) AS students_advised";
+			    //TA:109 fixed student advised results
+// 				$select[] = "(SELECT COUNT(*) FROM student sub_s
+// 									   INNER JOIN cadres sub_c ON sub_c.id = sub_s.cadre
+// 									   INNER JOIN link_cadre_tutor sub_lct ON sub_lct.id_cadre = sub_c.id
+// 									   INNER JOIN tutor sub_t ON sub_t.id = sub_lct.id_tutor
+// 									   WHERE sub_t.id = tut.id) AS students_advised";
+
+			    $select[] = "IFNULL(temp.students_advised, 0)";
+			    $join[] = array(
+			        "table" => "(select count(*) as students_advised, student.advisorid as adid from student join tutor on tutor.personid=student.advisorid group by advisorid)",
+			        "abbreviation" => "temp",
+			        "compare" => "temp.adid=p.id",
+			        "type" => "left"
+			    );
+			    
 				$headers[] = "Students Advised";
 			}
 
@@ -9147,11 +8661,12 @@ echo $sql . "<br>";
 					$query .= strtoupper($j['type']) . " JOIN " . $j['table'] . " " . $j['abbreviation'] . " ON " . $j['compare'] . "\n";
 				}
 			}
+			
 			if (count ($where) > 0){
 				$query .= "WHERE " . implode(" AND ", $where) . "\n";
 			}
-			//echo $query; exit;
 
+		
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 			$rowArray = $db->fetchAll ($query);
 			$this->viewAssignEscaped("headers", $headers);
@@ -9441,24 +8956,105 @@ echo $sql . "<br>";
 
 
 	public function ssChwStatementOfResultsAction() {
-		if (! $this->hasACL('view_people')) {
+		if (!$this->hasACL('view_people') and !$this->hasACL('edit_people')) {
 			$this->doNoAccessError ();
 		}
+		$this->viewAssignEscaped ('locations', Location::getAll());
+		$helper = new Helper();
+		$this->view->assign('mode', 'id');
+		$this->view->assign('institutions', $helper->getInstitutions());
+		$this->view->assign('cadres', $helper->getCadres());
+		$this->view->assign('institutiontypes', $helper->AdminInstitutionTypes());
+		$this->view->assign('cohorts', $helper->getCohorts());
+		$this->view->assign('nationalities', $helper->getNationalities());
+		$this->view->assign('funding', $helper->getFunding());
+		$this->view->assign('tutors', $helper->getTutors());
+		$this->view->assign('facilities', $helper->getFacilities());
+		$this->view->assign('coursetypes', $helper->AdminCourseTypes());
+		$this->view->assign('degrees', $helper->getDegrees());
+		$this->view->assign('site_style', $this->setting('site_style'));
+        $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
 
-		if ($this->getRequest()->isPost()) {
-			$id = $this->getSanParam('id');
-			$db = $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+        $criteria = array();
+        $criteria['showinstitution'] = true;
+        $criteria['showcadre'] = true;
+        $criteria['showcohort'] = true;
 
+		if ($this->getSanParam('process')) {
+			$criteria = $this->getAllParams();
 
-			// TODO: Finish query
-			$select = $db->select()
-				->from(array('p' => 'person'),
-					array('p.first_name', 'p.middle_name', 'p.last_name'))
-				->join(array('s' => 'student'), 'p.id = s.personid')
-				->join(array('lsc' => 'link_student_classes'), 's.id = lsc.studentid')
-				->where("p.id = $id");
+			$criteria['showinstitution'] = true;
+			$criteria['showcadre'] = true;
+			$criteria['showcohort'] = true;
+
+			list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
+
+			$query->joinLeft(array('ci' => 'certificate_issuers'), 'lsc.certificate_issuer_id = ci.id',
+				array('issuer_name', 'issuer_email', 'issuer_phone_number', 'issuer_logo_file_id')
+			);
+			
+			$query->joinInner(array('lscl' => 'link_student_classes'), 'lscl.studentid = s.id',
+				array("grades" => "(CASE WHEN SUM(camark * classes.custom_2 / 100.0) >= 50.0 then '" . t('Pass') . "' else '" . t('Fail') . "' end)"))
+				->joinLeft(array('classes'), 'classes.id = lscl.classid', array('credits' => 'SUM(maxcredits)'))
+				->joinLeft(array('cm' => 'class_modules'), 'classes.class_modules_id = cm.id',
+					array('nqf_level' => 'custom_1', 'title', 'external_id'))
+				->joinLeft(array('lc' => 'lookup_coursetype'), 'lc.id = cm.lookup_coursetype_id', array('coursetype'))
+			;
+
+			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+
+			$query->columns(array(
+					'p.national_id',
+					'lsc.examdate',
+					'lsc.certificate_issuer_id',
+					'i.address1',
+					'i.address2',
+					'i.city',
+					'i.postalcode',
+					'i.phone',
+					'i.fax',
+					'saqa_id' => 'p.custom_field2',
+					'nqf_max' => new Zend_Db_Expr($db->quote('3')),
+					'student_id' => 's.id',
+				)
+			);
+
+			$query->group(array('cm.id', 's.id'));
+			$headers[] = "AQP";
+			$headers[] = "AQP E-mail";
+			$headers[] = "AQP Phone";
+			$headers[] = "AQP Logo";
+
+			$headers[] = "Grade";
+			$headers[] = "Credits";
+			$headers[] = "NQF Level";
+			$headers[] = "Module Name";
+			$headers[] = "Course Type";
+			$headers[] = "Module Number";
+
+			$headers[] = "National ID";
+			$headers[] = "Exam Date";
+			$headers[] = "Certificate Issuer";
+			$headers[] = "Institution Address 1";
+			$headers[] = "Institution Address 2";
+			$headers[] = "Institution City";
+			$headers[] = "Institution Postal Code";
+			$headers[] = "Institution Phone Number";
+			$headers[] = "Institution Fax Number";
+			$headers[] = "SAQA ID";
+			$headers[] = "NQF Max";
+			$headers[] = "Student ID";
+
+			$query->order(array('p.last_name', 'p.first_name', 'p.national_id', 'lc.coursetype', 'cm.external_id'));
+
+			$rowArray = $db->fetchAll($query);
+			$this->view->assign('query', $query->__toString());
+
+			$this->viewAssignEscaped("headers", $headers);
+			$this->viewAssignEscaped("output", $rowArray);
 
 		}
+        $this->view->assign('criteria', $criteria);
 	}
 
 	public function ssCompAction() {
@@ -10316,151 +9912,843 @@ die (__LINE__ . " - " . $sql);
 		$this->viewAssignEscaped ( 'f',  $f);
 	}
 
+    public function employeesAction()
+    {
+        $locations = Location::getAll();
+        $criteria = $this->getAllParams();
 
-	public function employeesAction() {
-		require_once ('models/table/Helper.php');
-		require_once ('views/helpers/FormHelper.php');
-		require_once ('views/helpers/DropDown.php');
-		require_once ('views/helpers/Location.php');
-		require_once ('views/helpers/CheckBoxes.php');
-		require_once ('views/helpers/TrainingViewHelper.php');
+        $db = $this->dbfunc();
 
+        if (isset($criteria['go']) && $criteria['go']) {
+            $select = self::employeeFilterQuery($criteria);
+            if (!is_a($select, "Zend_Db_Select", false)) {
+                $status = ValidationContainer::instance();
+                $status->setStatusMessage(t('Error'));
+            } else {
+
+                $select->distinct();
+
+                $tables = $select->getPart(Zend_Db_Select::FROM);
+                $cols = $select->getPart(Zend_Db_Select::COLUMNS);
+                if (!array_key_exists('link_mechanism_employee', $tables)) {
+                    $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                }
+                if (!array_key_exists('mechanism_option', $tables)) {
+                    $select->join('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                }
+
+                if (!array_key_exists('mechanism_option.mechanism_phrase', $cols)) {
+                    $select->columns('mechanism_option.mechanism_phrase');
+                }
+                if (!array_key_exists('mechanism_option.end_date', $cols)) {
+                    $select->columns(array('mechanism_end_date' => new Zend_Db_Expr("DATE_FORMAT(mechanism_option.end_date, '%d/%m/%Y')")));
+                }
+                if (!array_key_exists('employee.employee_code', $cols)) {
+                    $select->columns('employee.employee_code');
+                }
+
+                $c = array_map(
+                    function ($item) {
+                        $header_names = array(
+                            'partner' => t('Partner'),
+                            'province_name' => t('Region A (Province)'),
+                            'district_name' => t('Region B (Health District)'),
+                            'region_c_name' => t('Region C (Local Region)'),
+                            'base_phrase' => t('Employee Based at'),
+                            'based_at_other' => t('Other, Specify'),
+                            'facility_name' => t('Facility') . ' ' . t('Name'),
+                            'facility_type_phrase' => t('Facility Type'),
+                            'qualification_phrase' => t('Staff Cadre'),
+                            'funded_hours_per_week' => t('Funded hours per week'),
+                            'annual_cost' => t('Annual Cost'),
+                            'role_phrase' => t('Primary Role'),
+                            'intended_transition' => t('Intended Transition'),
+                            'actual_transition' => t('Actual Transition'),
+                            'transition_complete_date' => t('Actual Transition Date'),
+                            'salary' => t('Salary'),
+                            'benefits' => t('Benefits'),
+                            'additional_expenses' => t('Additional Expenses'),
+                            'stipend' => t('Stipend'),
+                            'employee_code' => t('Employee Code'),
+                            'mechanism_phrase' => t('Mechanism'),
+                            'mechanism_end_date' => t('Mechanism') . ' ' . t('End Date'),
+                        );
+                        if ($item[2] !== null) {
+                            return $header_names[$item[2]];
+                        }
+                        return $header_names[$item[1]];
+                    },
+                    $select->getPart(Zend_Db_Select::COLUMNS)
+                );
+
+                if (count($c)) {
+                    $this->view->assign('headers', $c);
+                    $f = $db->fetchAll($select);
+                    $this->view->assign('output', $f);
+                }
+            }
+        }
+
+        $choose = array("0" => '--' . t("choose") . '--');
+
+        $select = $db->select()
+            ->from('partner', array('id', 'partner'))
+            ->order('partner ASC');
+
+        if (!$this->hasACL('training_organizer_option_all')) {
+            $uid = $this->isLoggedIn();
+            $select->join(array('user_to_organizer_access'),
+                'user_to_organizer_access.training_organizer_option_id = partner.organizer_option_id', array())
+                ->where('user_to_organizer_access.user_id = ?', $uid);
+        }
+
+        $partners = $choose + $db->fetchPairs($select);
+
+        $facilities = $choose + $db->fetchPairs($db->select()
+                ->from('facility', array('id', 'facility_name'))
+                ->order('facility_name ASC')
+            );
+
+        $facilityTypes = $choose + $db->fetchPairs($db->select()
+                ->from('facility_type_option', array('id', 'facility_type_phrase'))
+                ->order('facility_type_phrase ASC')
+            );
+
+        $classifications = $choose + $db->fetchPairs($db->select()
+                ->from('employee_qualification_option', array('id', 'qualification_phrase'))
+                ->order('qualification_phrase ASC')
+            );
+
+        $roles = $choose + $db->fetchPairs($db->select()
+                ->from('employee_role_option', array('id', 'role_phrase'))
+                ->order('role_phrase ASC')
+            );
+
+        $transitions = $choose + $db->fetchPairs($db->select()
+                ->from('employee_transition_option', array('id', 'transition_phrase'))
+                ->order('transition_phrase ASC')
+            );
+
+        $bases = $choose + $db->fetchPairs($db->select()
+                ->from('employee_base_option', array('id', 'base_phrase'))
+                ->order('base_phrase ASC')
+            );
+
+        $this->view->assign('partners', $partners);
+        $this->view->assign('facilities', $facilities);
+        $this->view->assign('facilityTypes', $facilityTypes);
+        $this->view->assign('classifications', $classifications);
+        $this->view->assign('roles', $roles);
+        $this->view->assign('transitions', $transitions);
+        $this->view->assign('locations', $locations);
+        $this->view->assign('bases', $bases);
+        
+        //TA:#293 set location multiple selection
+        require_once ('views/helpers/Location.php');
+        $criteria['district_id'] = regionFiltersGetDistrictIDMultiple($criteria);
+        $criteria['region_c_id'] = regionFiltersGetLastIDMultiple('', $criteria);
+         
+        //TA:#293.1
+        $helper = new Helper();
+        $this->viewAssignEscaped('sites', $helper->getFacilities());
+        
+        $this->view->assign('criteria', $criteria);
+    }
+
+
+    /**
+     * @param $rows - reference to database roles returned by filtered query
+     * @param $column - the database column to use for data collection
+     * @param bool $regional - whether results should be organized by province or not
+     * @return array - nested array with processed data and totals
+     */
+
+    protected function organizeEmployeeResults(&$rows, $column, $regional = false) {
+        $allData = array('fulltimecount' => 0, 'parttimecount' => 0, 'cost' => 0, 'rows' => $rows);
+
+        $allData['byPartner'] = array();
+        $byPartner = &$allData['byPartner'];
+
+        $allData[$column] = array();
+        $byColumn = &$allData[$column];
+
+        $allData['byProvince'] = array();
+        $byProvince = &$allData['byProvince'];
+
+        foreach($rows as $r) {
+
+            // post-process the data into a more useful model for the report and add up the costs.
+            $partner = $r['partner'] ? $r['partner'] : 'unknown partner';
+            $province = $r['province_name'] ? $r['province_name'] : 'unknown province';
+            $key = $r[$column] ? $r[$column] : 'unknown ' . $column;
+
+            $allData['fulltimecount'] += $r['fulltimecount'];
+            $allData['parttimecount'] += $r['parttimecount'];
+            $allData['cost'] += $r['cost'];
+
+            if ($regional) {
+                // by Province
+                if (!array_key_exists($province, $byProvince)) {
+                    $byProvince[$province] = array(
+                        'fulltimecount' => 0,
+                        'parttimecount' => 0,
+                        'cost' => 0,
+                        'rows' => array(),
+                        'byPartner' => array(),
+                        $column => array(),
+                    );
+                }
+                $p = &$byProvince[$province];
+                $p['rows'][] = &$r;
+
+                $p['fulltimecount'] += $r['fulltimecount'];
+                $p['parttimecount'] += $r['parttimecount'];
+                $p['cost'] += $r['cost'];
+
+                // get partner province totals
+                $p = &$byProvince[$province]['byPartner'];
+                if (!array_key_exists($partner, $p)) {
+                    $p[$partner] = array(
+                        'fulltimecount' => 0,
+                        'parttimecount' => 0,
+                        'cost' => 0,
+                        $column => array(),
+                        'rows' => array()
+                    );
+                }
+                $p = &$p[$partner];
+                $p['rows'][] = $r;
+
+                $p['fulltimecount'] += $r['fulltimecount'];
+                $p['parttimecount'] += $r['parttimecount'];
+                $p['cost'] += $r['cost'];
+
+                $p = &$byProvince[$province]['byPartner'][$partner][$column];
+                if (!array_key_exists($key, $p)) {
+                    $p[$key] = $r;
+                }
+
+                // organize by category per province
+                $p = &$byProvince[$province][$column];
+                if (!array_key_exists($key, $p)) {
+                    $p[$key] = array(
+                        'fulltimecount' => 0,
+                        'parttimecount' => 0,
+                        'cost' => 0,
+                        'rows' => array()
+                    );
+                }
+                $p = &$p[$key];
+
+                $p['rows'][] = $r;
+                $p['fulltimecount'] += $r['fulltimecount'];
+                $p['parttimecount'] += $r['parttimecount'];
+                $p['cost'] += $r['cost'];
+            }
+
+            // by partner
+            if (!array_key_exists($partner, $byPartner)) {
+                $byPartner[$partner] = array(
+                    'fulltimecount' => 0,
+                    'parttimecount' => 0,
+                    'cost' => 0,
+                    'rows' => array()
+                );
+                $byPartner[$partner][$column] = array();
+            }
+            $p = &$byPartner[$partner];
+            $p['fulltimecount'] += $r['fulltimecount'];
+            $p['parttimecount'] += $r['parttimecount'];
+            $p['cost'] += $r['cost'];
+            $p['rows'][] = $r;
+
+            // by province partner category
+            if (!array_key_exists($key, $p[$column])) {
+                $p[$column][$key] = array(
+                    'fulltimecount' => 0,
+                    'parttimecount' => 0,
+                    'cost' => 0,
+                    'rows' => array()
+                );
+            }
+            $p = &$p[$column][$key];
+            $p['fulltimecount'] += $r['fulltimecount'];
+            $p['parttimecount'] += $r['parttimecount'];
+            $p['cost'] += $r['cost'];
+            $p['rows'][] = $r;
+
+            // by column totals
+            $p = &$byColumn;
+            if (!array_key_exists($key, $p)) {
+                $p[$key] = array(
+                    'fulltimecount' => 0,
+                    'parttimecount' => 0,
+                    'cost' => 0,
+                    'rows' => array()
+                );
+            }
+            $p = &$p[$key];
+            $p['fulltimecount'] += $r['fulltimecount'];
+            $p['parttimecount'] += $r['parttimecount'];
+            $p['cost'] += $r['cost'];
+            $p['rows'][] = $r;
+        }
+        return ($allData);
+    }
+
+    /**
+     * creates an array of output rows for report tables
+     * relies on incoming data rows to be ordered by province and by partner
+     *
+     * @param $data - a data structure processed by organizeEmployeeResults
+     * @param $column - the column to group by
+     * @param $columnValues - the possible values for the columns, can vary by region
+     * @param $partners - a list of partners for the table, cannot vary per region
+     * @param bool $regional - whether to sort by region also
+     * @return array
+     */
+    protected function formatEmployeeResultsForTable(&$data, $column, $columnValues, $partners, $regional = false) {
+
+        if ($regional) {
+            $outputRows = array();
+            $numPartnerColumns = (count($data['byPartner']) + 1) * 3 + 1;
+            foreach ($data['byProvince'] as $province => $provinceData) {
+
+                $outputRows[] = array_pad(array($province), $numPartnerColumns, ' ');
+
+                $outputRows = array_merge($outputRows,
+                    $this->formatEmployeeResultsForTable($provinceData, $column, array_keys($provinceData[$column]), $partners, false));
+
+                $lastRow = count($outputRows) - 1;
+                $outputRows[$lastRow][0] = $province . ' ' . t('Total');
+            }
+            $grandTotals = array(t('Grand Total'));
+            foreach ($data['byPartner'] as $partner => $partnerValues) {
+                array_push($grandTotals, number_format($partnerValues['fulltimecount']),
+                    number_format($partnerValues['parttimecount']), number_format($partnerValues['cost']));
+            }
+            array_push($grandTotals, number_format($data['fulltimecount']), number_format($data['parttimecount']),
+                number_format($data['cost']));
+            $outputRows[] = $grandTotals;
+        }
+        else {
+            $outputRows = array_combine(array_flip($columnValues), array_map(function($v) { return array($v); }, $columnValues));
+            $outputRows[] = array(t('Totals'));
+            $lastRow = count($outputRows) - 1;
+            $columnIndexes = array_flip($columnValues);
+
+            // partner category totals
+            foreach ($partners as $partner) {
+                foreach ($columnValues as $v) {
+                    if (array_key_exists($partner, $data['byPartner']) && array_key_exists($v, $data['byPartner'][$partner][$column])) {
+                        array_push($outputRows[$columnIndexes[$v]], number_format($data['byPartner'][$partner][$column][$v]['fulltimecount']),
+                            number_format($data['byPartner'][$partner][$column][$v]['parttimecount']),
+                            number_format($data['byPartner'][$partner][$column][$v]['cost']));
+                    }
+                    else {
+                        array_push($outputRows[$columnIndexes[$v]], 0, 0, 0);
+                    }
+                }
+
+                if (array_key_exists($partner, $data['byPartner'])) {
+                    array_push($outputRows[$lastRow], number_format($data['byPartner'][$partner]['fulltimecount']),
+                        number_format($data['byPartner'][$partner]['parttimecount']),
+                        number_format($data['byPartner'][$partner]['cost']));
+                }
+                else {
+                    array_push($outputRows[$lastRow], 0, 0, 0);
+                }
+
+            }
+
+            array_push($outputRows[$lastRow],  number_format($data['fulltimecount']),
+                number_format($data['parttimecount']),
+                number_format($data['cost']));
+
+            // category totals
+            foreach ($columnValues as $v) {
+                if (array_key_exists($v, $data[$column])) {
+                    array_push($outputRows[$columnIndexes[$v]], number_format($data[$column][$v]['fulltimecount']),
+                        number_format($data[$column][$v]['parttimecount']),
+                        number_format($data[$column][$v]['cost']));
+                }
+                else {
+                    array_push($outputRows[$columnIndexes[$v]], 0, 0, 0);
+                }
+            }
+        }
+        return $outputRows;
+    }
+
+	public function employeeReportOccupationalCategoryAction() {
+		$locations = Location::getAll();
 		$criteria = $this->getAllParams();
-		
-		$HOURS_FOR_FULL_WORK_WEEK = 40.0;
-		
-		if ($criteria['go'])
-		{
-			$where = array();
-#todo is_Deleted not implemented
-			$criteria['last_selected_rgn'] = regionFiltersGetLastID('', $criteria); // prefix, $criteria
-			list($a, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
-			list($locationFlds, $locationsubquery) = Location::subquery($this->setting('num_location_tiers'), $location_tier, $location_id);
-			$sql = "SELECT
-					partner.*,
-					employee.*,".implode(',',$locationFlds)."
-					,qual.qualification_phrase as staff_cadre
-					,facility.facility_name
-					,category.category_phrase as staff_category
-					-- ,subp.partner as 'sub_partner'
-					,CASE WHEN annual_cost REGEXP '[^!0-9,\.][0-9\.,]+' THEN SUBSTRING(annual_cost, 2) ELSE annual_cost END AS 'annual_cost_to_compare'
-					,eto.transition_phrase
-					,CASE WHEN employee.transition_confirmed = 1 THEN 'yes' WHEN employee.transition_confirmed = 0 THEN 'no' ELSE employee.transition_confirmed END AS 'transition_confirmed'
-					,fto.facility_type_phrase
-					,ero.role_phrase
-					,pio.importance_phrase
-					,funders.funding_end_date
-					,employee_to_partner_to_subpartner_to_funder_to_mechanism.percentage as percentage
-					,employee.comments as comments
-					FROM employee LEFT JOIN ($locationsubquery) as l ON l.id = employee.location_id
-					LEFT JOIN employee_qualification_option qual ON qual.id = employee.employee_qualification_option_id
-					LEFT JOIN partner on partner.id = partner_id
-					-- LEFT JOIN partner subp on subp.id = subpartner_id
-					LEFT JOIN facility ON site_id = facility.id
-					LEFT JOIN facility_type_option fto          ON fto.id = facility.type_option_id
-					LEFT JOIN employee_category_option category ON category.id = employee.employee_category_option_id
-					LEFT JOIN employee_transition_option eto    ON eto.id = employee.employee_transition_option_id
-					LEFT JOIN employee_role_option ero          ON ero.id = employee.employee_role_option_id
-					LEFT JOIN partner_importance_option pio     ON pio.id = partner.partner_importance_option_id
-					-- LEFT JOIN partner_to_funder funders         ON funders.partner_id = partner.id
-					LEFT JOIN partner_to_subpartner_to_funder_to_mechanism funders ON partner.id = funders.partner_id
-					LEFT JOIN employee_to_partner_to_subpartner_to_funder_to_mechanism ON employee.id = employee_to_partner_to_subpartner_to_funder_to_mechanism.employee_id
-					"; //annual cost regex logic is: 'if non-number followed by numbers, ex: $1234, then select substring(1) of ($1234), result: 1234'
 
-			// restricted access?? only show partners by organizers that we have the ACL to view
-			$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'
-			if ($org_allowed_ids)                              $where[] = "partner.organizer_option_id in ($org_allowed_ids)";
-			// restricted access?? only show organizers that belong to this site if its a multi org site
-			$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
-			if ($site_orgs)                                    $where[] = "partner.organizer_option_id in ($site_orgs) ";
+		$db = $this->dbfunc();
 
-			// criteria
-			if ($criteria['partner_id'])                       $where[] = 'employee.partner_id = '.$criteria['partner_id'];
+		if ($criteria['go']) {
 
-			if ($criteria['last_selected_rgn'])                $where[] = 'province_name is not null'; // bugfix - location subquery is not working like a inner join or whereclause, not sure why
+            $select = self::employeeFilterQuery($criteria);
+            if (!is_a($select, "Zend_Db_Select", false)) {
+                $status = ValidationContainer::instance();
+                $status->setStatusMessage($select);
+            } else {
 
-			if ($criteria['facilityInput'])                    $where[] = 'facility.id = '.$criteria['facilityInput'];
+                $parts = $select->getPart(Zend_Db_Select::FROM);
+                if (!array_key_exists('link_mechanism_employee', $parts)) {
+                    $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id', array());
+                }
+                if (!array_key_exists('partner', $parts)) {
+                    $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+                }
+                if (!array_key_exists('location', $parts)) {
+                    //TA:#224 
+                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
+                }
+                if (!array_key_exists('employee_qualification_option', $parts)) {
+                    $select->join('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
+                }
+                $select->columns(
+                    array(
+                        'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
+                        'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
+                        'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
+                        'partner.partner', 'employee_qualification_option.qualification_phrase', 'location.province_name'
+                    )
+                );
 
-			if ($criteria['facility_type_option_id'])          $where[] = 'facility.type_option_id = '.$criteria['facility_type_option_id'];
+                $select->group('province_id');
+                $select->group('employee_qualification_option_id');
+                $select->group('employee.partner_id');
+                $select->order('province_id');
+                $select->order('employee_qualification_option.qualification_phrase');
+                $select->order('partner.partner ASC');
 
-			if ($criteria['employee_qualification_option_id']) $where[] = 'employee_qualification_option_id = '.$criteria['employee_qualification_option_id'];
+                // the rows and columns are not static and dependent on the contents of the data, so we need to manage a
+                // data structure for the table.
+                $data = $this->organizeEmployeeResults($db->fetchAll($select), 'qualification_phrase', true);
 
-			if ($criteria['employee_category_option_id'])      $where[] = 'employee_category_option_id = '.$criteria['employee_category_option_id'];
+                $headers = array(t('Province & Occupational Category'));
 
-			if ($criteria['hours_min'])                        $where[] = 'funded_hours_per_week >=' .$criteria['hours_min'];
-			if ($criteria['hours_max'])                        $where[] = 'funded_hours_per_week <=' .$criteria['hours_min'];
+                $output = $this->formatEmployeeResultsForTable($data, 'qualification_phrase', array_keys($data['qualification_phrase']), array_keys($data['byPartner']), true);
 
-			if ($criteria['cost_min'])                         $where[] = 'annual_cost_to_compare =' .$criteria['cost_min'];
-			if ($criteria['cost_max'])                         $where[] = 'annual_cost_to_compare =' .$criteria['cost_max'];
+                foreach (array_keys($data['byPartner']) as $partner) {
+                    array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
+                        $partner . ' - ' . t('Annual Cost'));
+                }
+                array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
+                    t('Total') . ' ' . t('Annual Cost'));
 
-			if ($criteria['employee_role_option_id'])          $where[] = 'employee_role_option_id = '.$criteria['employee_role_option_id'];
-
-			if ($criteria['partner_importance_option_id'])     $where[] = 'partner.partner_importance_option_id = ' .$criteria['partner_importance_option_id'];
-
-			if ($criteria['start_date'])                       $where[] = 'funding_end_date >= \''.$this->_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
-			if ($criteria['end_date'])                         $where[] = 'funding_end_date <= \''.$this->_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
-
-			if ($criteria['employee_transition_option_id'])    $where[] = 'employee.employee_transition_option_id = ' .$criteria['employee_transition_option_id'];
-
-			if ($criteria['transition_confirmed'])             $where[] = 'employee.transition_confirmed = 1';
-
-			// BS:8,9:20141013 add employee per-mechanism hours and costs
-			if ($criteria['hours_per_mechanism_min'] || $criteria['hours_per_mechanism_max'] || $criteria['employee_cost_per_mechanism_min'] || $criteria['employee_cost_per_mechanism_max']) 
-			{
-			    $where[] = 'percentage > 0';
-			}
-			
-			if ($criteria['hours_per_mechanism_min'])          $where[] = 'percentage >= '.($criteria['hours_per_mechanism_min']/$HOURS_FOR_FULL_WORK_WEEK) * 100;
-			if ($criteria['hours_per_mechanism_max'])          $where[] = 'employee_to_partner_to_subpartner_to_funder_to_mechanism.percentage <= '.($criteria['hours_per_mechanism_max']/$HOURS_FOR_FULL_WORK_WEEK) * 100;
-			
-			if ($criteria['employee_cost_per_mechanism_min'])  $where[] = 'employee_to_partner_to_subpartner_to_funder_to_mechanism.percentage >= ('.$criteria['employee_cost_per_mechanism_min'].'/employee.annual_cost) * 100';
-			if ($criteria['employee_cost_per_mechanism_max'])  $where[] = 'employee_to_partner_to_subpartner_to_funder_to_mechanism.percentage <= ('.$criteria['employee_cost_per_mechanism_max'].'/employee.annual_cost) * 100';
-			
-			if ( count ($where) ){
-				$sql .= ' WHERE ' . implode(' AND ', $where);
-			}
-
-			$sql .= ' GROUP BY employee.id ';
-
-			$db = $this->dbfunc();
-			$rowArray = $db->fetchAll( $sql );
-			$this->viewAssignEscaped ('results', $rowArray );
-
-			$locations = Location::getAll();
-			// hack #TODO - seems Region A -> ASDF, Region B-> *Multiple Province*, Region C->null Will not produce valid locations with Location::subquery
-			// the proper solution is to add "Default" districts under these subdistricts, not sure if i can at this point the table is 12000 rows, todo later
-			foreach ($rowArray as $i => $row) {
-				if ($row['province_name'] == "" && $row['location_id']){ // empty province
-					$updatedRegions = Location::getCityandParentNames($row['location_id'], $locations, $this->setting('num_location_tiers'));
-					$rowArray[$i] = array_merge($row, $updatedRegions);
-				}
-			}
-
-			$this->view->assign ('count', count($rowArray) );
-
-			if ($criteria ['outputType']) {
-				$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
-			}
+                $this->view->assign('headers', $headers);
+                $this->view->assign('output', $output);
+            }
 		}
 
+		$choose = array("0" => '--' . t("choose") . '--');
+        $transition_types = $choose + array("1" => t("Actual Transition"), "2" => t("Intended Transition"));
 
-		// assign form drop downs
-		$this->view->assign( 'status',   $status );
-		$this->view->assign( 'criteria', $criteria );
-		$this->view->assign ( 'pageTitle', t('Reports'));
-		$this->viewAssignEscaped ( 'locations', $locations );
-		$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false ) ); //table, col, selected_value
-		$this->view->assign ( 'importance',  DropDown::generateHtml ( 'partner_importance_option', 'importance_phrase', $criteria['partner_importance_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'transitions', DropDown::generateHtml ( 'employee_transition_option', 'transition_phrase', $criteria['employee_transition_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'incomingPartners', DropDown::generateHtml ( 'partner', 'partner', $criteria['incoming_partner'], false, $this->view->viewonly, false, true, array('name' => 'incoming_partner'), true ) );
-		$helper = new Helper();
-		$this->viewAssignEscaped ( 'facilities', $helper->getFacilities() );
-		$this->view->assign ( 'facilitytypes', DropDown::generateHtml ( 'facility_type_option', 'facility_type_phrase', $criteria['facility_type_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'cadres',        DropDown::generateHtml ( 'employee_qualification_option', 'qualification_phrase', $criteria['employee_qualification_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'categories',    DropDown::generateHtml ( 'employee_category_option', 'category_phrase', $criteria['employee_category_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'roles',         DropDown::generateHtml ( 'employee_role_option', 'role_phrase', $criteria['employee_role_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'transitions',   DropDown::generateHtml ( 'employee_transition_option', 'transition_phrase', $criteria['employee_transition_option_id'], false, $this->view->viewonly, false ) );
+		if (!$this->hasACL('training_organizer_option_all')) {
+			// limit data to user's access to mechanisms only available to partners and
+			// subpartners that the user account can access
+			$uid = $this->isLoggedIn();
+
+			$mechanismFilter = $db->select();
+			$mechanismFilter->from(array('mo' => 'mechanism_option'), array('mo.id', 'mo.mechanism_phrase'));
+			$mechanismFilter->join(array('lmp' => 'link_mechanism_partner'), 'mo.id = lmp.mechanism_option_id', array());
+			$mechanismFilter->join(array('p' => 'partner'), 'p.id = lmp.partner_id', array());
+			$mechanismFilter->join(array('utoa' => 'user_to_organizer_access'),
+				'utoa.training_organizer_option_id = p.organizer_option_id', array());
+
+			$mechanismFilter->where('utoa.user_id = ?', $uid);
+			$mechanismFilter->order('mechanism_phrase ASC');
+
+			$mechanisms = $choose + $db->fetchPairs($mechanismFilter);
+		} else {
+			$mechanisms = $choose + $db->fetchPairs($db->select()
+				->from('mechanism_option', array('id', 'mechanism_phrase'))
+				->order('mechanism_phrase ASC')
+			);
+		}
+
+		$funders = $choose + $db->fetchPairs($db->select()
+				->from('partner_funder_option', array('id', 'funder_phrase'))
+				->order('funder_phrase ASC')
+		);
+
+		$transitions = $choose + $db->fetchPairs($db->select()
+				->from('employee_transition_option', array('id', 'transition_phrase'))
+				->order('transition_phrase ASC')
+		);
+
+		$classifications = $choose + $db->fetchPairs($db->select()
+				->from('employee_qualification_option', array('id', 'qualification_phrase'))
+				->order('qualification_phrase ASC')
+		);
+
+		$this->view->assign('locations', $locations);
+		$this->view->assign('classifications', $classifications);
+		$this->view->assign('transitions', $transitions);
+        $this->view->assign('transition_types', $transition_types);
+        
+        //TA:#293 set location multiple selection
+        require_once ('views/helpers/Location.php');
+        $criteria['district_id'] = regionFiltersGetDistrictIDMultiple($criteria);
+        $criteria['region_c_id'] = regionFiltersGetLastIDMultiple('', $criteria);
+        
+		$this->view->assign('criteria', $criteria);
+		$this->view->assign('funders', $funders);
+		$this->view->assign('mechanisms', $mechanisms);
 	}
+
+	public function employeeReportMechanismTransitionDescriptionAction() {
+        $locations = Location::getAll();
+        $criteria = $this->getAllParams();
+
+        $db = $this->dbfunc();
+
+        if ($criteria['go']) {
+            $select = self::employeeFilterQuery($criteria);
+            if (!is_a($select, "Zend_Db_Select", false)) {
+                $status = ValidationContainer::instance();
+                $status->setStatusMessage($select);
+            } else {
+
+                $parts = $select->getPart(Zend_Db_Select::FROM);
+                if (!array_key_exists('link_mechanism_employee', $parts)) {
+                    $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id',
+                        array());
+                }
+                if (!array_key_exists('employee_transition_option', $parts)) {
+                    $select->join(array('employee_transition_option'),
+                        'employee.employee_transition_option_id = employee_transition_option.id', array());
+                }
+                if (!array_key_exists('partner', $parts)) {
+                    $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+                }
+
+                $select->columns(
+                    array(
+                        'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
+                        'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
+                        'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
+                        'partner.partner', 'employee_transition_option.transition_phrase'
+                    )
+                );
+
+                $select->group('employee_transition_option.id');
+                $select->group('partner.id');
+                $select->order('employee_transition_option.transition_phrase');
+
+                $rows = $db->fetchAll($select);
+                $descriptions = array_keys($db->fetchAssoc($db->select()->from('employee_transition_option', array('transition_phrase'))->order('transition_phrase')));
+                $data = $this->organizeEmployeeResults($rows, 'transition_phrase');
+                $output = $this->formatEmployeeResultsForTable($data, 'transition_phrase', $descriptions, array_keys($data['byPartner']));
+                $headers = array(t('Transition Description'));
+
+                foreach (array_keys($data['byPartner']) as $partner) {
+                    array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
+                        $partner . ' - ' . t('Annual Cost'));
+                }
+                array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
+                    t('Total') . ' ' . t('Annual Cost'));
+
+                $this->view->assign('headers', $headers);
+                $this->view->assign('output', $output);
+            }
+        }
+
+        $choose = array("0" => '--' . t("choose") . '--');
+        $transition_types = $choose + array("1" => t("Actual Transition"), "2" => t("Intended Transition"));
+
+        if (!$this->hasACL('training_organizer_option_all')) {
+            // limit data to user's access to mechanisms only available to partners and
+            // subpartners that the user account can access
+            $uid = $this->isLoggedIn();
+
+            $mechanismFilter = $db->select();
+            $mechanismFilter->from(array('mo' => 'mechanism_option'), array('mo.id', 'mo.mechanism_phrase'));
+            $mechanismFilter->join(array('lmp' => 'link_mechanism_partner'), 'mo.id = lmp.mechanism_option_id', array());
+            $mechanismFilter->join(array('p' => 'partner'), 'p.id = lmp.partner_id', array());
+            $mechanismFilter->join(array('utoa' => 'user_to_organizer_access'),
+                'utoa.training_organizer_option_id = p.organizer_option_id', array());
+
+            $mechanismFilter->where('utoa.user_id = ?', $uid);
+            $mechanismFilter->order('mechanism_phrase ASC');
+
+            $mechanisms = $choose + $db->fetchPairs($mechanismFilter);
+        } else {
+            $mechanisms = $choose + $db->fetchPairs($db->select()
+                    ->from('mechanism_option', array('id', 'mechanism_phrase'))
+                    ->order('mechanism_phrase ASC')
+                );
+        }
+
+        $funders = $choose + $db->fetchPairs($db->select()
+                ->from('partner_funder_option', array('id', 'funder_phrase'))
+                ->order('funder_phrase ASC')
+            );
+
+        $transitions = $choose + $db->fetchPairs($db->select()
+                ->from('employee_transition_option', array('id', 'transition_phrase'))
+                ->order('transition_phrase ASC')
+            );
+
+        $classifications = $choose + $db->fetchPairs($db->select()
+                ->from('employee_qualification_option', array('id', 'qualification_phrase'))
+                ->order('qualification_phrase ASC')
+            );
+
+        $roles = $choose + $db->fetchPairs($db->select()
+                ->from('employee_role_option', array('id', 'role_phrase'))
+                ->order('role_phrase ASC')
+            );
+
+        $this->view->assign('roles', $roles);
+        $this->view->assign('locations', $locations);
+        $this->view->assign('classifications', $classifications);
+        $this->view->assign('transitions', $transitions);
+        $this->view->assign('transition_types', $transition_types);
+        
+        //TA:#293 set location multiple selection
+        require_once ('views/helpers/Location.php');
+        $criteria['district_id'] = regionFiltersGetDistrictIDMultiple($criteria);
+        $criteria['region_c_id'] = regionFiltersGetLastIDMultiple('', $criteria);
+        
+        $this->view->assign('criteria', $criteria);
+        $this->view->assign('funders', $funders);
+        $this->view->assign('mechanisms', $mechanisms);
+    }
+
+    public function employeeReportMechanismTransitionAction() {
+        $criteria = $this->getAllParams();
+
+        $db = $this->dbfunc();
+
+        if ($criteria['go']) {
+            $select = self::employeeFilterQuery($criteria);
+            if (!is_a($select, "Zend_Db_Select", false)) {
+                $status = ValidationContainer::instance();
+                $status->setStatusMessage($select);
+            } else {
+
+                $parts = $select->getPart(Zend_Db_Select::FROM);
+                if (!array_key_exists('link_mechanism_employee', $parts)) {
+                    $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id',
+                        array());
+                }
+                if (!array_key_exists('mechanism_option', $parts)) {
+                    $select->join(array('mechanism_option'),
+                        'mechanism_option.id = link_mechanism_employee.mechanism_option_id',
+                        array());
+                }
+                if (!array_key_exists('partner', $parts)) {
+                    $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+                }
+
+                $select->columns(
+                    array(
+                        'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
+                        'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
+                        'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
+                        'partner.partner',
+                        'mechanism_option.mechanism_phrase',
+                    )
+                );
+                $select->group('mechanism_option.id');
+                $select->group('partner.id');
+                $select->order('mechanism_option.mechanism_phrase');
+
+                $headers = array(t('Mechanism'));
+                $data = $this->organizeEmployeeResults($rows = $db->fetchAll($select), 'mechanism_phrase');
+                $output = $this->formatEmployeeResultsForTable($data, 'mechanism_phrase', array_keys($data['mechanism_phrase']), array_keys($data['byPartner']), false);
+
+                foreach (array_keys($data['byPartner']) as $partner) {
+                    array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
+                        $partner . ' - ' . t('Annual Cost'));
+                }
+                array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
+                    t('Total') . ' ' . t('Annual Cost'));
+
+                $this->view->assign('headers', $headers);
+                $this->view->assign('output', $output);
+            }
+        }
+
+        $choose = array("0" => '--' . t("choose") . '--');
+        $transition_types = $choose + array("1" => t("Actual Transition"), "2" => t("Intended Transition"));
+
+        if (!$this->hasACL('training_organizer_option_all')) {
+            // limit data to user's access to mechanisms only available to partners and
+            // subpartners that the user account can access
+            $uid = $this->isLoggedIn();
+
+            $mechanismFilter = $db->select();
+            $mechanismFilter->from(array('mo' => 'mechanism_option'), array('mo.id', 'mo.mechanism_phrase'));
+            $mechanismFilter->join(array('lmp' => 'link_mechanism_partner'), 'mo.id = lmp.mechanism_option_id', array());
+            $mechanismFilter->join(array('p' => 'partner'), 'p.id = lmp.partner_id', array());
+            $mechanismFilter->join(array('utoa' => 'user_to_organizer_access'),
+                'utoa.training_organizer_option_id = p.organizer_option_id', array());
+
+            $mechanismFilter->where('utoa.user_id = ?', $uid);
+            $mechanismFilter->order('mechanism_phrase ASC');
+
+            $mechanisms = $choose + $db->fetchPairs($mechanismFilter);
+        } else {
+            $mechanisms = $choose + $db->fetchPairs($db->select()
+                    ->from('mechanism_option', array('id', 'mechanism_phrase'))
+                    ->order('mechanism_phrase ASC')
+                );
+        }
+
+        $funders = $choose + $db->fetchPairs($db->select()
+                ->from('partner_funder_option', array('id', 'funder_phrase'))
+                ->order('funder_phrase ASC')
+            );
+
+        $transitions = $choose + $db->fetchPairs($db->select()
+                ->from('employee_transition_option', array('id', 'transition_phrase'))
+                ->order('transition_phrase ASC')
+            );
+
+        $this->view->assign('transitions', $transitions);
+        $this->view->assign('transition_types', $transition_types);
+        $this->view->assign('criteria', $criteria);
+        $this->view->assign('funders', $funders);
+        $this->view->assign('mechanisms', $mechanisms);
+
+    }
+
+    public function employeeReportPrimaryRoleAction() {
+        $locations = Location::getAll();
+        $criteria = $this->getAllParams();
+
+        $db = $this->dbfunc();
+
+        if ($criteria['go']) {
+
+            $select = self::employeeFilterQuery($criteria);
+            if (!is_a($select, "Zend_Db_Select", false)) {
+                $status = ValidationContainer::instance();
+                $status->setStatusMessage($select);
+            } else {
+
+                $parts = $select->getPart(Zend_Db_Select::FROM);
+                if (!array_key_exists('link_mechanism_employee', $parts)) {
+                    $select->join(array('link_mechanism_employee'), 'employee.id = link_mechanism_employee.employee_id', array());
+                }
+                if (!array_key_exists('partner', $parts)) {
+                    $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+                }
+                if (!array_key_exists('location', $parts)) {
+                    //TA:#224 
+                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
+                }
+                if (!array_key_exists('employee_role_option', $parts)) {
+                    $select->join('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
+                }
+                $select->columns(
+                    array(
+                        'cost' => 'ROUND(SUM(annual_cost * link_mechanism_employee.percentage/100), 0)',
+                        'fulltimecount' => 'SUM(case when link_mechanism_employee.percentage = 100 then 1 else 0 end)',
+                        'parttimecount' => 'SUM(case when (link_mechanism_employee.percentage < 100) and (link_mechanism_employee.percentage > 0) then 1 else 0 end)',
+                        'partner.partner', 'employee_role_option.role_phrase', 'location.province_name'
+                    )
+                );
+
+                $select->group('location.province_id');
+                $select->group('employee.employee_role_option_id');
+                $select->group('employee.partner_id');
+                $select->order('location.province_id');
+                $select->order('employee_role_option.role_phrase');
+                $select->order('partner.partner');
+
+                // the rows and columns are not static and dependent on the contents of the data, so we need to manage a
+                // data structure for the table.
+                $data = $this->organizeEmployeeResults($db->fetchAll($select), 'role_phrase', true);
+
+                $headers = array(t('Province & Primary Role'));
+
+                $output = $this->formatEmployeeResultsForTable($data, 'role_phrase', array_keys($data['role_phrase']), array_keys($data['byPartner']), true);
+
+                foreach (array_keys($data['byPartner']) as $partner) {
+                    array_push($headers, $partner . ' - ' . t('Full Time Staff'), $partner . ' - ' . t('Part Time Staff'),
+                        $partner . ' - ' . t('Annual Cost'));
+                }
+                array_push($headers, t('Total') . ' ' . t('Full Time Staff'), t('Total') . ' ' . t('Part Time Staff'),
+                    t('Total') . ' ' . t('Annual Cost'));
+
+                $this->view->assign('headers', $headers);
+                $this->view->assign('output', $output);
+            }
+        }
+
+        $choose = array("0" => '--' . t("choose") . '--');
+        $transition_types = $choose + array("1" => t("Actual Transition"), "2" => t("Intended Transition"));
+
+        if (!$this->hasACL('training_organizer_option_all')) {
+            // limit data to user's access to mechanisms only available to partners and
+            // subpartners that the user account can access
+            $uid = $this->isLoggedIn();
+
+            $mechanismFilter = $db->select();
+            $mechanismFilter->from(array('mo' => 'mechanism_option'), array('mo.id', 'mo.mechanism_phrase'));
+            $mechanismFilter->join(array('lmp' => 'link_mechanism_partner'), 'mo.id = lmp.mechanism_option_id', array());
+            $mechanismFilter->join(array('p' => 'partner'), 'p.id = lmp.partner_id', array());
+            $mechanismFilter->join(array('utoa' => 'user_to_organizer_access'),
+                'utoa.training_organizer_option_id = p.organizer_option_id', array());
+
+            $mechanismFilter->where('utoa.user_id = ?', $uid);
+            $mechanismFilter->order('mechanism_phrase ASC');
+
+            $mechanisms = $choose + $db->fetchPairs($mechanismFilter);
+        }
+        else {
+            $mechanisms = $choose + $db->fetchPairs($db->select()
+                    ->from('mechanism_option', array('id', 'mechanism_phrase'))
+                    ->order('mechanism_phrase ASC')
+                );
+        }
+
+        $funders = $choose + $db->fetchPairs($db->select()
+                ->from('partner_funder_option', array('id', 'funder_phrase'))
+                ->order('funder_phrase ASC')
+            );
+
+        $transitions = $choose + $db->fetchPairs($db->select()
+                ->from('employee_transition_option', array('id', 'transition_phrase'))
+                ->order('transition_phrase ASC')
+            );
+
+        $classifications = $choose + $db->fetchPairs($db->select()
+                ->from('employee_qualification_option', array('id', 'qualification_phrase'))
+                ->order('qualification_phrase ASC')
+            );
+
+        $roles = $choose + $db->fetchPairs($db->select()
+                ->from('employee_role_option', array('id', 'role_phrase'))
+                ->order('role_phrase ASC')
+            );
+
+        $this->view->assign('roles', $roles);
+        $this->view->assign('locations', $locations);
+        $this->view->assign('classifications', $classifications);
+        $this->view->assign('transitions', $transitions);
+        $this->view->assign('transition_types', $transition_types);
+        
+        //TA:#293 set location multiple selection
+        require_once ('views/helpers/Location.php');
+        $criteria['district_id'] = regionFiltersGetDistrictIDMultiple($criteria);
+        $criteria['region_c_id'] = regionFiltersGetLastIDMultiple('', $criteria);
+        
+        $this->view->assign('criteria', $criteria);
+        $this->view->assign('funders', $funders);
+        $this->view->assign('mechanisms', $mechanisms);
+
+    }
 
 	public function partnersAction() {
 		require_once ('models/table/Helper.php');
@@ -10575,118 +10863,166 @@ die (__LINE__ . " - " . $sql);
 	}
 
 
-  public function mechanismsAction() {
-	require_once ('models/table/Helper.php');
-	require_once ('views/helpers/FormHelper.php');
-	require_once ('views/helpers/DropDown.php');
-	require_once ('views/helpers/Location.php');
-	require_once ('views/helpers/CheckBoxes.php');
-	require_once ('views/helpers/TrainingViewHelper.php');
+	public function mechanismsAction() {
+		require_once ('models/table/Helper.php');
+		require_once ('views/helpers/FormHelper.php');
+		require_once ('views/helpers/DropDown.php');
+		require_once ('views/helpers/Location.php');
+		require_once ('views/helpers/CheckBoxes.php');
+		require_once ('views/helpers/TrainingViewHelper.php');
 
-	$criteria = $this->getAllParams();
-
-	if ($criteria['go'])
-	{
-
-		$where = array();
-		
-		switch ($criteria['report']) {
-			case "defined":
-				
-				$sql = "
-select sfm.id, subp.partner as subpartner, funder_phrase, mechanism_phrase, sfm.funding_end_date
-from subpartner_to_funder_to_mechanism sfm
-left join partner subp on subp.id = sfm.subpartner_id
-left join partner_funder_option pf on pf.id = sfm.partner_funder_option_id
-left join mechanism_option m on m.id = sfm.mechanism_option_id
-";
-				break;
-				
-			case "definedByPartner":
-				
-				$sql = "
-select psfm.id, p.partner, subp.partner as subpartner, funder_phrase, mechanism_phrase, psfm.funding_end_date
-from partner_to_subpartner_to_funder_to_mechanism psfm
-left join partner p on p.id = psfm.partner_id
-left join partner subp on subp.id = psfm.subpartner_id
-left join partner_funder_option pf on pf.id = psfm.partner_funder_option_id
-left join mechanism_option m on m.id = psfm.mechanism_option_id
-";
-				break;
-				
-			case "definedByEmployee":
-				
-				$sql = "
-select epsfm.id, e.employee_code, p.partner, subp.partner as subpartner, funder_phrase, mechanism_phrase, epsfm.percentage
-from employee_to_partner_to_subpartner_to_funder_to_mechanism epsfm
-left join employee e on e.id = epsfm.employee_id
-left join partner p on p.id = epsfm.partner_id
-left join partner subp on subp.id = epsfm.subpartner_id
-left join partner_funder_option pf on pf.id = epsfm.partner_funder_option_id
-left join mechanism_option m on m.id = epsfm.mechanism_option_id
-";
-				break;
-		}
-		
-		
-				// criteria
-		if ($criteria['partner_id'] && $criteria['report'] != 'defined' ) $where[] = 'p.id = '.$criteria['partner_id'];
-		if ($criteria['subpartner_id'])                   $where[] = 'subp.id = '.$criteria['subpartner_id'];
-
-		if ($criteria['start_date'])                      $where[] = 'funding_end_date >= \''.$this->_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
-
-		if ($criteria['end_date'])                        $where[] = 'funding_end_date <= \''.$this->_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
-
-
-		
-		switch ($criteria['report']) {
-			case "defined":
-				if ( count ($where) ){
-					$sql .= ' WHERE ' . implode(' AND ', $where);
-					$sql .= ' AND sfm.is_deleted = false ';
-				}
-				else  $sql .= ' WHERE sfm.is_deleted = false ';
-				$sql .= ' order by subp.partner, funder_phrase, mechanism_phrase ';
-				break;
-			case "definedByPartner":
-				if ( count ($where) ){
-					$sql .= ' WHERE ' . implode(' AND ', $where);
-					$sql .= ' AND psfm.is_deleted = false ';
-				}
-				else  $sql .= ' WHERE psfm.is_deleted = false ';
-				$sql .= ' order by p.partner, subp.partner, funder_phrase, mechanism_phrase ';
-				break;
-			case "definedByEmployee":
-				if ( count ($where) ){
-					$sql .= ' WHERE ' . implode(' AND ', $where);
-					$sql .= ' AND epsfm.is_deleted = false ';
-				}
-				else  $sql .= ' WHERE epsfm.is_deleted = false ';
-				$sql .= ' order by e.employee_code, p.partner, subp.partner, funder_phrase, mechanism_phrase ';
-				break;
-		}
-
+		$criteria = $this->getAllParams();
 		$db = $this->dbfunc();
-		$rowArray = $db->fetchAll( $sql );
-		$this->viewAssignEscaped ('results', $rowArray );
-		$this->view->assign ('count', count($rowArray) );
 
-		if ($criteria ['outputType']) {
-			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
+		if ($criteria['go'])
+		{
+
+			$where = array();
+
+			// TODO: This special case report is bad
+			if($criteria['report'] == "subpartnerEmployees") {
+				$sql = "SELECT partner.partner, link_mechanism_partner.partner_id
+						FROM link_mechanism_partner
+						INNER JOIN partner ON link_mechanism_partner.partner_id = partner.id
+						WHERE link_mechanism_partner.mechanism_option_id = {$criteria['mechanism_id']}";
+				$sql = "SELECT
+partner.partner,
+link_mechanism_partner.partner_id,
+mechanism_option.mechanism_phrase
+FROM
+link_mechanism_partner
+INNER JOIN partner ON link_mechanism_partner.partner_id = partner.id
+INNER JOIN mechanism_option ON link_mechanism_partner.mechanism_option_id = mechanism_option.id
+WHERE link_mechanism_partner.mechanism_option_id = {$criteria['mechanism_id']}";
+				$rowArray = $db->fetchAll($sql);
+				foreach($rowArray as &$row) {
+					$sql = "SELECT COUNT(*) as numberEmployees
+							FROM employee
+							INNER JOIN link_mechanism_employee ON link_mechanism_employee.employee_id = employee.id
+							WHERE employee.partner_id = {$row['partner_id']} AND
+							link_mechanism_employee.mechanism_option_id = {$criteria['mechanism_id']}";
+					$row['numberEmployees'] = $db->fetchOne($sql);
+				}
+				$this->viewAssignEscaped('results', $rowArray);
+				$this->view->assign('count', count($rowArray));
+
+				if ($criteria ['outputType']) {
+					$this->sendData($this->reportHeaders(false, $rowArray));
+				}
+
+			}
+
+			switch ($criteria['report']) {
+				case "defined":
+
+					$sql = "
+							select sfm.id, subp.partner as subpartner, funder_phrase, mechanism_phrase, sfm.funding_end_date
+							from subpartner_to_funder_to_mechanism sfm
+							left join partner subp on subp.id = sfm.subpartner_id
+							left join partner_funder_option pf on pf.id = sfm.partner_funder_option_id
+							left join mechanism_option m on m.id = sfm.mechanism_option_id
+							";
+					break;
+
+				case "definedByPartner":
+
+					$sql = "
+							select psfm.id, p.partner, subp.partner as subpartner, funder_phrase, mechanism_phrase, psfm.funding_end_date
+							from partner_to_subpartner_to_funder_to_mechanism psfm
+							left join partner p on p.id = psfm.partner_id
+							left join partner subp on subp.id = psfm.subpartner_id
+							left join partner_funder_option pf on pf.id = psfm.partner_funder_option_id
+							left join mechanism_option m on m.id = psfm.mechanism_option_id
+							";
+					break;
+
+				case "definedByEmployee":
+
+					$sql = "
+							select epsfm.id, e.employee_code, p.partner, subp.partner as subpartner, funder_phrase, mechanism_phrase, epsfm.percentage
+							from employee_to_partner_to_subpartner_to_funder_to_mechanism epsfm
+							left join employee e on e.id = epsfm.employee_id
+							left join partner p on p.id = epsfm.partner_id
+							left join partner subp on subp.id = epsfm.subpartner_id
+							left join partner_funder_option pf on pf.id = epsfm.partner_funder_option_id
+							left join mechanism_option m on m.id = epsfm.mechanism_option_id
+							";
+					break;
+			}
+
+			// criteria
+			if ($criteria['partner_id'] && $criteria['report'] != 'defined' ) {
+				$where[] = 'p.id = '.$criteria['partner_id'];
+			}
+
+			if ($criteria['subpartner_id']) {
+				$where[] = 'subp.id = '.$criteria['subpartner_id'];
+			}
+
+			if ($criteria['start_date']) {
+				$where[] = 'funding_end_date >= \'' . $this->_date_to_sql($criteria['start_date']) . ' 00:00:00\'';
+			}
+			if ($criteria['end_date']) {
+				$where[] = 'funding_end_date <= \'' . $this->_date_to_sql($criteria['end_date']) . ' 23:59:59\'';
+			}
+
+			switch ($criteria['report']) {
+
+				case "defined":
+					if ( count ($where) ){
+						$sql .= ' WHERE ' . implode(' AND ', $where);
+						$sql .= ' AND sfm.is_deleted = false ';
+					}
+					else  {
+						$sql .= ' WHERE sfm.is_deleted = false ';
+					}
+					$sql .= ' order by subp.partner, funder_phrase, mechanism_phrase ';
+					break;
+				case "definedByPartner":
+					if ( count ($where) ){
+						$sql .= ' WHERE ' . implode(' AND ', $where);
+						$sql .= ' AND psfm.is_deleted = false ';
+					}
+					else {
+						$sql .= ' WHERE psfm.is_deleted = false ';
+					}
+					$sql .= ' order by p.partner, subp.partner, funder_phrase, mechanism_phrase ';
+					break;
+				case "definedByEmployee":
+					if ( count ($where) ){
+						$sql .= ' WHERE ' . implode(' AND ', $where);
+						$sql .= ' AND epsfm.is_deleted = false ';
+					}
+					else {
+						$sql .= ' WHERE epsfm.is_deleted = false ';
+					}
+					$sql .= ' order by e.employee_code, p.partner, subp.partner, funder_phrase, mechanism_phrase ';
+					break;
+			}
+			// TODO: This special case is bad.
+			if($criteria['report'] != "subpartnerEmployees") {
+				$rowArray = $db->fetchAll($sql);
+				$this->viewAssignEscaped('results', $rowArray);
+				$this->view->assign('count', count($rowArray));
+
+				if ($criteria ['outputType']) {
+					$this->sendData($this->reportHeaders(false, $rowArray));
+				}
+			}
 		}
-	}
 
-    $sql = '';
-	// assign form drop downs
-	$this->view->assign ( 'status',   $status );
-	$this->view->assign ( 'criteria', $criteria );
-	$this->view->assign ( 'pageTitle', t('Reports'));
-	$this->view->assign ( 'report', $criteria['report']);
-	
-	$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false ) ); //table, col, selected_value
-	$this->view->assign ( 'subpartners', DropDown::generateHtml ( 'partner', 'partner', $criteria['subpartner_id'], false, $this->view->viewonly, false, true, array('name' => 'subpartner_id'), true ) );
-	
-  }
+		$sql = "SELECT id, mechanism_phrase from mechanism_option where is_deleted = 0 order by mechanism_phrase ASC";
+		$mechanisms = $db->fetchAll($sql);
+
+		// assign form drop downs
+		$this->view->assign('criteria', $criteria);
+		$this->view->assign('pageTitle', t('Reports'));
+		$this->view->assign('report', $criteria['report']);
+		$this->view->assign('mechanisms', $mechanisms);
+
+		$this->view->assign ('partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false)); //table, col, selected_value
+		$this->view->assign ('subpartners', DropDown::generateHtml ( 'partner', 'partner', $criteria['subpartner_id'], false, $this->view->viewonly, false, true, array('name' => 'subpartner_id'), true));
+	}
   
   public function assessmentAction() {
  	    require_once ('models/table/OptionList.php');

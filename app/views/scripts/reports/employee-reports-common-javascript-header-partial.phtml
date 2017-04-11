@@ -1,0 +1,13 @@
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function () {
+        $('.datepicker').datepicker( {dateFormat: "dd/mm/yy"} );
+        $('.calendarbtn').click(openNearestDatePicker);
+
+        /* Init the table */
+        var oTable = $('.tablegrid').dataTable({
+            "bJQueryUI": true,
+            "bSort": true,
+            "sPaginationType": "full_numbers"
+        });
+    } );
+</script>

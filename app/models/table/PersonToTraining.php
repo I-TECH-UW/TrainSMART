@@ -22,7 +22,7 @@ class PersonToTraining extends ITechTable
     $select = $tableObj->select()
         ->from(array('ptt' => $tableObj->_name), array('id', 'person_id', 'duration_days', 'award_id', 'score_percent_change' => new Zend_Db_Expr('ROUND((spost.score_value - spre.score_value) / spre.score_value * 100)')))
         ->setIntegrityCheck(false)
-        ->join(array('p' => 'person'), "p.id = ptt.person_id",array('first_name','middle_name', 'last_name','birthdate'))
+        ->join(array('p' => 'person'), "p.id = ptt.person_id",array('p.first_name','p.middle_name', 'p.last_name','p.birthdate', 'p.phone_home')) //TA:#317
         //->join(array('f' => 'facility'), "p.facility_id = f.id",array('facility_name', 'location_id')) //TA:17: 10/15/2014 - commented: display only persons with known facility id
         ->joinLeft(array('f' => 'facility'), "p.facility_id = f.id",array('facility_name', 'location_id')) //TA:17: 10/15/2014 
         ->joinLeft(array('pq' => 'person_qualification_option'), "p.primary_qualification_option_id = pq.id",array('qualification' => 'qualification_phrase'))
@@ -31,7 +31,9 @@ class PersonToTraining extends ITechTable
    //     ->joinLeft(array('sr' => 'person_responsibility_option'), "p.secondary_responsibility_option_id = sr.id",array('secondary_responsibility'=>'responsibility_phrase'))
    //     ->joinLeft(array('l' => 'location'), "f.location_id = l.id",array('location_id'))
         ->joinLeft(array('spre' => 'score'), "spre.person_to_training_id = ptt.id AND spre.score_label = 'Pre-Test'", array('score_pre' => 'score_value'))
-        ->joinLeft(array('spost' => 'score'), "spost.person_to_training_id = ptt.id AND spost.score_label = 'Post-Test'", array('score_post' => 'score_value'))
+        //TA:#271 get pass_fail also
+//         ->joinLeft(array('spost' => 'score'), "spost.person_to_training_id = ptt.id AND spost.score_label = 'Post-Test'", array('score_post' => 'score_value'))
+    ->joinLeft(array('spost' => 'score'), "spost.person_to_training_id = ptt.id AND spost.score_label = 'Post-Test'", array('score_post' => 'score_value', 'pass_fail'=>'pass_fail'))
         ->joinLeft(array('scoreother' => 'score'), "scoreother.person_to_training_id = ptt.id AND scoreother.score_label != 'Post-Test' AND scoreother.score_label != 'Pre-Test'", array('score_other_k' => 'GROUP_CONCAT(scoreother.score_label)', 'score_other_v' => 'GROUP_CONCAT(scoreother.score_value)'))
         ->joinLeft(array('award'   => 'person_to_training_award_option'),        "award.id   = award_id"                  ,  array('award_phrase' => 'award_phrase'))
         ->joinLeft(array('budget'  => 'person_to_training_budget_option'),       "budget.id  = budget_code_option_id"     ,  array('budget_code_phrase' => 'budget_code_phrase'))

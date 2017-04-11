@@ -125,4 +125,12 @@ class User extends ITechTable
 		return $rtn;
 
  	}
+ 	
+ 	//TA:97
+ 	public function getUserFullName($user_id) {
+ 	    $db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+ 	    $select = $db->query("select first_name, last_name from user WHERE id = " . $user_id);
+ 	    $row = $select->fetch();
+ 	    return $row['first_name'] . " " . $row['last_name'];
+ 	}
 }

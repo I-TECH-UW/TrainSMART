@@ -79,10 +79,20 @@ class ITechController extends Zend_Controller_Action
         } catch (exception $e) {
 
             throw new Exception('Could not connect to a database associated with this country. Please double check that you have the correct URL and that the site is configured correctly.');
-
         }
 
-        $response->setHeader('Content-Type', 'text/html; charset=utf-8', true);
+        // NOTE 20151124 BS: The following commented-out line of code code forced the content type all output to the
+        // html content-type, which other parts of the application were overriding with php's lower-level header()
+        // function instead of through Zend Framework.
+        // This made it difficult to correctly send non-html files (such as csv and json) over the wire and breaks parts
+        // of Zend Framework capabilities with regard to HTTP responses
+
+        // If removing this hack hasn't had any negative consequences after six months of deployment, it's safe to just
+        // delete. Any problems it does cause should be fixed by correct using Zend Framework tools (using setHeader or
+        // addHeader to responses when needed, instead of here in a parent class that forces the response to every
+        // request to be html content)
+
+        // $response->setHeader('Content-Type', 'text/html; charset=utf-8', true);
 
     }
 
@@ -330,6 +340,10 @@ protected function sendData($data) {
     	return false;
     }
 
+    /**
+     * returns user id if logged in, false if not
+     * @return bool|int
+     */
     public function isLoggedIn() {
         $auth = Zend_Auth::getInstance();
         if ($auth->hasIdentity() )
@@ -389,21 +403,58 @@ protected function sendData($data) {
    	return $dataRow;
    }
 
-   /**
+    /**
+     * @param $arr - array of things that needs to be filtered
+     * @param $remove - single item or array of items to remove from $arr
+     *
+     * Sanitizes form input data
+     * Recursively removes empty array elements and any specified in $remove from $arr
+     *
+     * This does not actually need to be a method on a class
+     */
+    public function array_unset_recursive(&$arr, $remove) {
+        if (!is_array($remove)) {
+            $remove = array($remove);
+        }
+        foreach ($arr as $key => &$value) {
+            if (is_array($value)) {
+                $this->array_unset_recursive($value, $remove);
+                if (count($value) < 1) {
+                    unset($arr[$key]);
+                }
+            }
+            else {
+                if (in_array($value, $remove)) {
+                    unset($arr[$key]);
+                }
+                else {
+                    $value = $this->sanitize(trim($value));
+                    if (count($value) < 1) {
+                        unset($arr[$key]);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
     * Return an array of sanitized data, post and get.
     *
     * do not use this on post or get variables with names: action,controller or module
     */
-	public function getAllParams() {
-  	// this might not work on arrays with arrays in them, TODO, might be a security flaw, sanitize() wont handle arrays we should array_walk_recursive here. (but will probably just say: ARRAY)
-		$ret = array_merge($_GET,$_POST,$this->getRequest()->getParams());
-		foreach ($ret as $key => $value) {
-            // BS 20150317 - strip leading and trailing whitespace from form values
-			$ret[$key] = trim($this->getSanParam($key));
-		}
+    public function getAllParams() {
+        // BS20150915 note: changed from array_merge($_GET, $_POST, $this->getRequest()->getParams()); because
+        // it does nearly the same thing as getParams alone, but may change the precedence of GET and POST data
+        //
+        // code that relied on that precedence should be updated
+        // see http://framework.zend.com/manual/1.12/en/zend.controller.request.html#zend.controller.request.http
+        // in the Note: Superglobal Data section
 
-		return $ret;
-	}
+        $ret = $this->getRequest()->getParams();
+        $this->array_unset_recursive($ret, "");
+
+        return $ret;
+    }
 
    /**
     * Putting this here since we can't get the Zend function to work correctly
@@ -462,24 +513,26 @@ protected function sendData($data) {
  		$xlsx = new SimpleXLSX( $filepath);
  		return $xlsx->rows(); //take all rows
  	}
+ 	
+ 	protected function _csv_get_row($filepath, $reset = FALSE) {
+ 	    ini_set('auto_detect_line_endings',true);
+ 	
+ 	    if ($filepath == '') {
+ 	        $this->_csvHandle = null;
+ 	        return FALSE;
+ 	    }
+ 	
+ 	    if (!$this->_csvHandle || $reset) {
+ 	        if ($this->_csvHandle) {
+ 	            fclose($this->_csvHandle);
+ 	        }
+ 	        $this->_csvHandle = fopen($filepath, 'r');
+ 	    }
+ 	
+ 	    return fgetcsv($this->_csvHandle, 10000, ',');
+ 	    
+ 	}
 
-  protected function _csv_get_row($filepath, $reset = FALSE) {
-    ini_set('auto_detect_line_endings',true);
-
-    if ($filepath == '') {
-      $this->_csvHandle = null;
-      return FALSE;
-    }
-
-    if (!$this->_csvHandle || $reset) {
-      if ($this->_csvHandle) {
-        fclose($this->_csvHandle);
-      }
-      $this->_csvHandle = fopen($filepath, 'r');
-    }
-
-    return fgetcsv($this->_csvHandle, 10000, ',');
-  }
 
   /**
    * string or comma seperated list to array
@@ -563,7 +616,7 @@ protected function sendData($data) {
 
   protected function _money_to_int ($str)
   {
-    return ereg_replace("[^0-9]", "", $str);
+    return preg_replace("/[^0-9]/", "", $str);
   }
 
   /**
@@ -772,12 +825,17 @@ protected function sendData($data) {
 			$row = $tableCustom->createRow();
 		}
 
+		//TA:#171 catch error
+		try {
 		$this->fillFromArray($row, $valueArray);                                               // fill data from array
 		if(isset($row->is_default) && !isset($valueArray['is_default']))                       // breaks otherwise
 			$row->is_default = 0;
 
 		$id = $row->save();
 		return $id;
+		} catch (Exception $e) {
+		    return false;
+		}
 	}
 }
 ?>

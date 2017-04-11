@@ -159,7 +159,8 @@
 
     //{key:"input", width:0, resizeable:true , label:"", hidden:"true", width:"0", className:"hidden"},
     var dupeColDefs =
-        [ {key:"person_id", label: "<?php tp('ID')?>", sortable:false, resizable:false, formatter: formatViewUrl},
+        [{key:"input", width:15, resizeable:true , label:""}, //TA:57 10/08/2015 
+         {key:"person_id", label: "<?php tp('ID')?>", sortable:false, resizable:false, formatter: formatViewUrl},
             {key:"first_name", width:60, sortable:true, resizeable:true , label:"<?php tp("First Name"); ?>"},
             <?php if ( !$this->setting['display_middle_name_last'] ) { ?>
             {key:"middle_name", width:66, sortable:true, resizeable:true , label:"<?php echo (@$this->translation['Middle Name']); ?>"},
@@ -246,6 +247,7 @@
         }
     }
 
+
     function continueClick() {
 
         // find checked radio
@@ -297,6 +299,7 @@
         <?php } ?>
     });
     //--><!]]>
+    
 </script>
 
 
@@ -425,9 +428,11 @@
                 <div class="clear"></div>
                 <div class="fieldLabel"><?php tp('Birth date');?></div>
                 <div class="fieldInput">
-                    <?php tp('Day');?> <input id="birth-day" onchange="updateAge()" class="dayfield" type="text" value="<?php echo $this->person['birthdate-day'];?>" name="birth-day" />
-                    / <?php tp('Month');?> <input id="birth-month" onchange="updateAge()" class="monthfield" type="text" value="<?php echo $this->person['birthdate-month'];?>" name="birth-month" />
-                    / <?php tp('Year');?> <input id="birth-year" onchange="updateAge()" class="yearfield" type="text" value="<?php echo $this->person['birthdate-year'];?>" name="birth-year" />
+                    <!-- TA:70 limit dates by two digits -->
+                    <?php tp('Day');?> <input type="number" min="0" max="31" style="width:40px; height:22px;" id="birth-day" onchange="updateAge()" 
+                     value="<?php echo $this->person['birthdate-day'];?>" name="birth-day" />
+                    / <?php tp('Month');?> <input type="number" min="0" max="12" style="width:40px; height:22px;" id="birth-month" onchange="updateAge()" class="monthfield" type="text" value="<?php echo $this->person['birthdate-month'];?>" name="birth-month" />
+                    / <?php tp('Year');?> <input type="number" min="0" max="3000" style="width:60px; height:22px;" id="birth-year" onchange="updateAge()" class="yearfield" type="text" value="<?php echo $this->person['birthdate-year'];?>" name="birth-year" />
                 </div>
             <?php }?>
             <?php if ( $this->setting['display_people_age'] ) : ?>
@@ -654,7 +659,7 @@
 
                 <div class="clear"></div>
                 <div class="actionBtn">
-                    <button type="button" id="submitPerson"><?php tp('Save changes');?></button><br />
+                      <button type="button" id="submitPerson"><?php tp('Save changes');?></button><br />
                 </div>
 
                 <?php if($this->mode == 'add')

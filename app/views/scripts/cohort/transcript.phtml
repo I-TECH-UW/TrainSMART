@@ -1,0 +1,85 @@
+<!-- TA:#362 generate student transcript templates --> 
+<?php if (count($this->students) == 0){ ?>
+    tp('Your search criteria returned no results');
+ <?php }else{
+     foreach ($this->students as $row) {
+       $student_name = $row['first_name'] . " " . $row['last_name'];
+       $address = array();
+       if($this->institution['address1']){
+        array_push($address,$this->institution['address1']);
+       }
+       if($this->institution['address2']){
+        array_push($address,$this->institution['address2']);
+       }
+       if($this->institution['city']){
+        array_push($address,$this->institution['city']);
+       }
+       if($this->institution['postalcode']){
+        array_push($address,$this->institution['postalcode']);
+       }
+       if($this->location['region_c_name']){
+           array_push($address,$this->location['region_c_name']);
+       }
+       if($this->location['district_name']){
+           array_push($address,$this->location['district_name']);
+       }
+       if($this->location['province_name']){
+           array_push($address,$this->location['province_name']);
+       }
+       if($this->setting['country']){
+           array_push($address,$this->setting['country']);
+       }
+       $date= date("j F Y");
+       
+       ?>
+         <table width=800px>
+ 	        <tr><td colspan=3 align='center'><b>Transcript</b><br><br></td><tr>
+ 	        <tr>
+ 	        <td valign='top'><?php echo $address = implode('<br>', $address);?></td>
+ 	        <td valign='top'><?php echo $this->institution['institutionname'];?></td>
+ 	        <td valign='top' align='right'>Tel: <?php echo $this->institution['phone'];?><br>Fax: <?php echo $this->institution['fax'];?></td>
+ 	        <tr>
+ 	        <tr><td colspan=3 align='center'><hr style='border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff;'></td><tr>
+ 	        <tr><td colspan=2><b>Inquiries: <?php echo $student_name;?></b></td><td align='right'><b>Date: <?php echo $date;?></b></td><tr>
+ 	        </table>
+ 	        <br>
+ 	        <table width=800px>
+ 	        <tr><td width=200px><b>NATIONAL DIPLOMA:</b></td><td><?php echo $this->degree;?></td></tr>
+ 	        <tr><td><b>FIRST YEAR:</b></td><td><?php echo explode('-', $this->cohort['startdate'])[0];?></td></tr>
+ 	        <tr><td><b>FINAL MARKS:</b></td><td><?php echo explode('-', $this->cohort['graddate'])[0];?></td></tr>
+ 	        <tr><td>NAME:</td><td><?php echo $student_name;?></td></tr>
+ 	        <tr><td>STUDENT NUMBER:</td><td><?php echo $row['id'];?></td></tr>
+ 	        </table>
+ 	        <br>
+ 	        <b>TRAINING CENTRE: <?php echo $this->institution['institutionname'];?></b><br>
+ 	        <table border=1 width=800px style='border-collapse: collapse;'>
+ 	         <tr><th>SUBJECTS</th><th width=100px>RESULTS (%)</th></tr>
+ 	        <?php
+ 	        foreach ($row['classes'] as $class) {
+ 	            echo  " <tr><td>" . $class['classname'] . "</td><td>" . $class['grade'] . "</td></tr>";
+ 	        } 
+ 	        ?>
+ 	        </table>
+ 	        <br>
+ 	        <table width=800px>
+ 	        <tr><td>Pass with a distinction (P/D)    80-100%</td><td>Good/Very good          65-79%</td></tr>
+ 	        <tr><td>Pass/Good    50-64%</td><td>Fail/Supplementary    45-49%</td></tr>
+ 	        <tr><td>Fail/Repeat   0-44%</td><td></td></tr>
+ 	        </table>  
+            <br><br>
+            SUPPLEMENTARY EXAMINATION<br>
+            Subject:<br>    
+            Date:<br> 
+            Time:<br> 
+            Venue:<br>
+            <table width=800px><tr><td>----------------------------------------------------</td><tr></table>
+            <br><br><br>
+            <b><?php echo $this->signor['title_phrase'] . " " . $this->signor['first_name'] . " " . $this->signor['last_name']?><br></b>
+            <b><?php echo $this->signor['tutor_title'];?><br></b>
+            <br><br><br>
+            <p style="page-break-after:always;">
+            </p>
+            <!--  <table width=800px><tr><td><hr style='border-top: 1px dashed #8c8b8b;'></td><tr></table>-->
+   <?php   }
+ }?>
+ 

@@ -1,0 +1,28 @@
+<?php require_once('views/helpers/Location.php'); ?>
+<label class="fieldLabel"><?php echo t('Region A (Province)')  ?></label>
+<?php if ($this->showRegionCheckboxes) { ?>
+    <div class="fieldshow"><input type="checkbox" name="showProvince" <?php if (isset($this->criteria['showProvince']) && $this->criteria['showProvince']) { echo 'checked="checked"'; } ?> /></div>
+<?php } ?>
+    <div class="fieldselect"><?php renderFilter($this->locations, 1, 'province_id', (isset($this->criteria['province_id']) ? $this->criteria['province_id'] : false), 'district_id', true); ?></div>
+<div class="clear pad20">&nbsp;</div>
+<?php
+if ($this->setting['display_region_b']) {
+    ?>
+    <label class="fieldLabel"><?php echo t('Region B (Health District)') ?></label>
+    <?php if ($this->showRegionCheckboxes) { ?>
+        <div class="fieldshow"><input type="checkbox" name="showDistrict" <?php if (isset($this->criteria['showDistrict']) && $this->criteria['showDistrict']) { echo 'checked="checked"'; } ?> /></div>
+    <?php } ?>
+    <div class="fieldselect"><?php renderFilter($this->locations, 2, 'district_id', (isset($this->criteria['district_id']) ? $this->criteria['district_id'] : false), ($this->setting['display_region_c']?'region_c_id':false), true); ?></div>
+    <div class="clear pad20">&nbsp;</div>
+    <?php
+}
+if ($this->setting['display_region_c']) {
+    ?>
+    <label class="fieldLabel"><?php echo t('Region C (Local Region)'); ?></label>
+    <?php if ($this->showRegionCheckboxes) { ?>
+        <div class="fieldshow"><input type="checkbox" name="showRegionC" <?php if (isset($this->criteria['showRegionC']) && $this->criteria['showRegionC']) { echo 'checked="checked"'; }?> /></div>
+    <?php } ?>
+        <div class="fieldselect"><?php renderFilter($this->locations, 3, 'region_c_id', (isset($this->criteria['region_c_id']) ? $this->criteria['region_c_id'] : false), false, true); ?></div>
+    <div class="clear pad20">&nbsp;</div>
+    <?php
+}

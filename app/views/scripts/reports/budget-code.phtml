@@ -57,7 +57,9 @@
 
 			<?php if ( $this->criteria['go'] ) { ?>
 			<div class="hrGrey"></div>
-			<div class="fieldIndentNoMargin"><?php tp('Budget Code');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+			<!-- TA:80 print only report part -->
+			<div class="fieldIndentNoMargin"><?php tp('Budget Code');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span>
+			<?php echo $this->printAndExport("participants");?></div>
 			<div id="participants"></div>
 			<script type="text/javascript">
 			var participantsData = [

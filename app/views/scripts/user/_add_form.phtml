@@ -67,14 +67,15 @@ YAHOO.util.Event.onDOMReady(setOrgAccessStatus);
 		<div class="fieldLabelThin"> <?php print(t('Employee Module'));?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="employees_module" id="employees_module" /><label for="employees_module"> <?php print(t('Access Employees'));?></label></div></div>
 		<?php endif; ?>
 		<br/><br/>
-		<div class="fieldLabelThin"> <?php tp('Restrict Access');?></div>
-		<div class="fieldInput"><div class="float50">
-		<label for="acl_restrict">
-		<input type="radio" id="" name="acl_restrict" value="" CHECKED onchange="setOrgAccessStatus();"> 
-		<?php tp('All organizations data');?></label></div>
-		<label for="acl_restrict">
-		<input type="radio" id="acl_restrict" name="acl_restrict" value="acl_restrict"  onchange="setOrgAccessStatus();"> 
-		<?php tp('Only selected organizations');?></label></div>
+
+        <?php
+            // don't allow users access to all training organizers for pepfarskillsmart
+            $default_all_orgs = true;
+            if (strpos(strtolower($_SERVER['HTTP_HOST']), "pepfarskillsmart.trainingdata.org") > -1) {
+                $default_all_orgs = false;
+            }
+        ?>
+		<div class="fieldLabelThin"> <?php tp('Restrict Access');?></div><div class="fieldInput"><div class="float50"><label for="acl_restrict"><input type="radio" id="" name="acl_restrict" value="" <?php if ($default_all_orgs) {echo "CHECKED";}?> onchange="setOrgAccessStatus();"> <?php tp('All organizations data');?></label></div><label for="acl_restrict"><input type="radio" id="acl_restrict" name="acl_restrict" value="acl_restrict" <?php if (!$default_all_orgs) {echo "CHECKED";}?> onchange="setOrgAccessStatus();"> <?php tp('Only selected organizations');?></label></div>
 		<br/><br/>
 		<div class="fieldLabelThin"> <?php tp('Reports');?></div><div class="fieldInput width100"><div class=""><input type="checkbox" id="view_create_reports" name="view_create_reports" CHECKED /><label for="view_create_reports"> <?php tp('View/create reports');?></label></div></div>
 		<div class="fieldLabelThin"> <?php tp('Trainings');?></div>
@@ -96,11 +97,14 @@ YAHOO.util.Event.onDOMReady(setOrgAccessStatus);
 
 	</fieldset>
 	<fieldset id="orgs" style="display:none;"><legend><?php tp('Organizer access');?></legend>
-		<div class="fieldLabelThin"></div><div class="fieldInput"><input type="checkbox" name="training_organizer_option_all" id="training_organizer_option_all" value="training_organizer_option_all" CHECKED onchange="setOrgAccessStatus();" /><label for="training_organizer_option_all"> <?php tp('All Training Organizers');?></label></div>
+		<div class="fieldLabelThin"></div><div class="fieldInput"><input type="checkbox" name="training_organizer_option_all" id="training_organizer_option_all" value="training_organizer_option_all" <?php if ($default_all_orgs) {echo "CHECKED";}?> onchange="setOrgAccessStatus();" /><label for="training_organizer_option_all"> <?php tp('All Training Organizers');?></label></div>
 		<div class="fieldLabelThin"></div><div class="fieldInput"><a href="#" id="orgcheckall"> <?php tp('check all'); ?></a> <a href="#" id="orguncheckall"> <?php tp('uncheck all'); ?></a></div>
 		<?php
 		foreach( $this->training_organizer as $org ) {
-			echo '<div><div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><input type="checkbox" name="training_organizer_option_id[]" id="training_organizer_option_'.$org['id'].'" value="'.$org['id'].'" '.(@$org['user_id']? 'CHECKED':'').' '.($org['id'] == 999? 'onchange="setOrgAccessStatus();"':'').' /><label for="training_organizer_option_'.$org['id'].'">'.$org['training_organizer_phrase'].'</label></div></div>';
+            if ($default_all_orgs) {
+                $orgChecked = @$org['user_id']? 'CHECKED':'';
+            }
+			echo '<div><div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><input type="checkbox" name="training_organizer_option_id[]" id="training_organizer_option_'.$org['id'].'" value="'.$org['id'].'" '.$orgChecked.' '.($org['id'] == 999? 'onchange="setOrgAccessStatus();"':'').' /><label for="training_organizer_option_'.$org['id'].'">'.$org['training_organizer_phrase'].'</label></div></div>';
 		}
 		?>
 	</fieldset>

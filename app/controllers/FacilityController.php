@@ -87,6 +87,7 @@ class FacilityController extends ReportFilterHelpers {
 		$this->viewAssignEscaped ( 'locations', Location::getAll () );
 		$this->viewAssignEscaped ( 'facility_types', OptionList::suggestionList ( 'facility_type_option', 'facility_type_phrase', false, false ) );
 		$this->viewAssignEscaped ( 'facility_sponsors', OptionList::suggestionList ( 'facility_sponsor_option', 'facility_sponsor_phrase', false, false ) );
+		
 	}
 	
 	protected function validateAndSave($facilityRow, $checkName = true) {
@@ -106,7 +107,9 @@ class FacilityController extends ReportFilterHelpers {
 		}
 		
 		// validate fields
-		//$status->checkRequired ( $this, 'facility_type_id', t ( 'Facility type' ) ); //TA:17: 09/03/2014
+		if($_SERVER ['SERVER_NAME'] !== 'phc.trainingdata.org'){ //TA: do not make facility type required for Ukraine
+		  $status->checkRequired ( $this, 'facility_type_id', t ( 'Facility type' ) ); //TA:#382
+		}
 		$status->checkRequired ( $this, 'facility_province_id', $this->tr ( 'Region A (Province)' ) );
 		if ($this->setting ( 'display_region_b' ))
 			$status->checkRequired ( $this, 'facility_district_id', $this->tr ( 'Region B (Health District)' ) );
@@ -126,6 +129,7 @@ class FacilityController extends ReportFilterHelpers {
 			$status->checkRequired ( $this, 'facility_region_i_id', $this->tr ( 'Region I' ) );
 			// $status->checkRequired ( $this, 'facility_city', t ( "City is required." ) );
 			// validate lat & long
+		
 		require_once 'Zend/Validate/Float.php';
 		require_once 'Zend/Validate/Between.php';
 		$lat = $this->getSanParam ( 'facility_latitude' );
@@ -249,7 +253,7 @@ class FacilityController extends ReportFilterHelpers {
 					
 					
 					$status->setStatusMessage ( t ( 'The facility was saved.' ) );
-					$status->setRedirect ( '/facility/view/id/' . $obj_id );
+					$status->setRedirect ( '/site/edit/id/' . $obj_id );//TA:#382
 					return $obj_id;
 				} else {
 					unset ( $_SESSION ['status'] );
@@ -309,7 +313,7 @@ class FacilityController extends ReportFilterHelpers {
 			$status = ValidationContainer::instance ();
 			if ($validateOnly) {
 				if ($rslt) {
-					$status->setRedirect ( '/facility/view/id/' . $id );
+					$status->setRedirect ( '/site/edit/id/' . $id ); //TA:#382
 				}
 				$this->sendData ( $status );
 			} else {
@@ -473,7 +477,7 @@ class FacilityController extends ReportFilterHelpers {
 					'training_location.is_deleted = 0' 
 			);
 			if ($criteria ['training_location_name']) {
-				$where [] = " training_location_name='" . mysql_escape_string ( $criteria ['training_location_name'] ) . "'";
+				$where [] = $db->quoteInto(" training_location_name=?", $criteria ['training_location_name']);
 			}
 			$locationWhere = $this->getLocationCriteriaWhereClause ( $criteria, '', '' );
 			if ($locationWhere) {
@@ -509,8 +513,8 @@ class FacilityController extends ReportFilterHelpers {
 		// facilities list
 		$criteria = array ();
 		list ( $criteria, $location_tier, $location_id ) = $this->getLocationCriteriaValues ( $criteria );
+		$params = $this->getAllParams();//TA:115 by some reason params is not taken by above function, then take it again
         $criteria ['facility_name'] = $this->getSanParam ( 'facility_name' );
-		$criteria ['facility_name_text'] = $this->getSanParam ( 'facility_name_text' );
 		$criteria ['type_id'] = $this->getSanParam ( 'type_id' );
 		$criteria ['sponsor_id'] = $this->getSanParam ( 'sponsor_id' );
 		$criteria ['outputType'] = $this->getSanParam ( 'outputType' );
@@ -579,10 +583,11 @@ class FacilityController extends ReportFilterHelpers {
 				$where[] = " facility_name like '%{$criteria['facility_name']}%'"; //TA:17:14:
 			}
 			
-			if ($criteria ['facility_name_text']) {
-				$where [] = " facility_name LIKE '%" . mysql_escape_string ( $criteria ['facility_name_text'] ) . "%'";
+			//TA:115 this another way to take parameters
+			if ($params ['facility_name_text']) {
+			    $where[] = " facility_name like '%{$params['facility_name_text']}%'"; 
 			}
-			
+
 			if ($where)
 				$sql .= ' WHERE ' . implode ( ' AND ', $where );
 			
@@ -732,6 +737,15 @@ class FacilityController extends ReportFilterHelpers {
 			$facilityObj = new Facility ();
 			$errs = array ();
 			while ( $row = $this->_csv_get_row ( $filename ) ) {
+			
+			    //TA:#213
+			    //INFORCE user to create files only in UTF-8 encoded:
+			    //Option 1: Excel:Save as Unicode Text -> Notepad: replace tabs with commas, save as csv UTF-8
+			    //Option 2: OpenOffice
+			    //It is not required for english, but absolutelly required for special characteristics.
+			    //If files saved in UTF-8 encoded, so we do not need this line
+			    // $row = array_map("utf8_encode", $row); 
+			
 				$values = array ();
 				if (! is_array ( $row ))
 					continue; // sanity?
@@ -956,6 +970,13 @@ class FacilityController extends ReportFilterHelpers {
 			$trainingLocationObj = new TrainingLocation ();
 			$errs = array ();
 			while ( $row = $this->_csv_get_row ( $filename ) ) {
+			    //TA:#213
+			    //INFORCE user to create files only in UTF-8 encoded:
+			    //Option 1: Excel:Save as Unicode Text -> Notepad: replace tabs with commas, save as csv UTF-8
+			    //Option 2: OpenOffice
+			    //It is not required for english, but absolutelly required for special characteristics.
+			    //If files saved in UTF-8 encoded, so we do not need this line
+			    // $row = array_map("utf8_encode", $row); 
 				$values = array ();
 				if (! is_array ( $row ))
 					continue; // sanity?
@@ -1106,4 +1127,20 @@ class FacilityController extends ReportFilterHelpers {
 		if ($this->getSanParam ( 'outputType' ) == 'csv')
 			$this->sendData ( $this->reportHeaders ( false, $sorted ) );
 	}
+	
+// 	public function is_utf8($string) {
+	
+// 	    // From http://w3.org/International/questions/qa-forms-utf-8.html
+// 	    return preg_match('%^(?:
+//           [\x09\x0A\x0D\x20-\x7E]            # ASCII
+//         | [\xC2-\xDF][\x80-\xBF]             # non-overlong 2-byte
+//         |  \xE0[\xA0-\xBF][\x80-\xBF]        # excluding overlongs
+//         | [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}  # straight 3-byte
+//         |  \xED[\x80-\x9F][\x80-\xBF]        # excluding surrogates
+//         |  \xF0[\x90-\xBF][\x80-\xBF]{2}     # planes 1-3
+//         | [\xF1-\xF3][\x80-\xBF]{3}          # planes 4-15
+//         |  \xF4[\x80-\x8F][\x80-\xBF]{2}     # plane 16
+//     )*$%xs', $string);
+	
+// 	}
 }

@@ -2,18 +2,18 @@
 
 // Aggregate all our JS files into one file
 
-// gzip
-// Sean Smith: Commented out compression. Wasn't working on some sites. Couldn't find compress() 
-//   When viewing source, then clicking on script link, error was: 
-//		"The page you are trying to view cannot be shown because it uses an invalid or unsupported form of compression."
-//ob_start("ob_gzhandler");
-//ob_start("compress");
+// it would be better to build this aggregate just once when the javascript code is updated
+// (perhaps when updates are deployed) instead of generating it dynamically each time.
+// this would also allow web browsers to cache the file instead of downloading it every request.
 
 require_once('views/helpers/ScriptContainer.php');
 
-foreach(ScriptContainer::$jsfiles as $file) {
-  readfile(Globals::$BASE_PATH.Globals::$WEB_FOLDER.$file);
-  echo "\n\n";  
+foreach (ScriptContainer::$jsfiles as $file) {
+    $didRead = readfile(Globals::$BASE_PATH . Globals::$WEB_FOLDER . $file);
+    echo "\n\n";
+    if (!$didRead) {
+        throw new Exception("Problem loading JavaScript file $file");
+    }
 }
 
 ob_flush();

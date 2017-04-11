@@ -1,69 +1,65 @@
-function displayStatus(msg) {
-	if ( msg && msg != '' ) {
-		var statusDiv = YAHOO.util.Dom.get('statusBox');
+function displayStatus(msg, isError) {
+    if (msg && msg != '') {
+        isError = (typeof isError === 'undefined') ? false : isError;
 
-		if(statusDiv == null) {		  
-			var contentDiv =  YAHOO.util.Dom.get('content');
-			statusDiv = document.createElement('div');
-			statusDiv.id = "statusBox";
+        var $statusDiv = $('#statusBox');
 
-			if(document.location.href.indexOf("/admin/") > 0) {
-				YAHOO.util.Dom.addClass(statusDiv, "admin");
-			}
+        if (!$statusDiv.length) {
+            $statusDiv = $(document.createElement('div')).prop('id', 'statusBox');
 
-			YAHOO.util.Dom.insertBefore(statusDiv, YAHOO.util.Dom.getFirstChild(contentDiv));
-		}		
-		
-		YAHOO.util.Dom.removeClass(statusDiv, "statusError");    		
-		statusDiv.innerHTML = msg;
-		scroll(0,0);
-	}
+            if (document.location.href.indexOf("/admin/") >= 0) {
+                $('#contentAdmin').prepend($statusDiv);
+            }
+            else {
+                $('#content').prepend($statusDiv);
+            }
+        }
+
+        var $newMessage = $(document.createElement('div')).text(msg);
+        if (isError) {
+            $newMessage.prop("class", "errorText");
+        }
+        $statusDiv.append($newMessage);
+        window.scroll(0,0);
+    }
 }
 
-function setStatusBoxError() {  
-	var statusDiv = YAHOO.util.Dom.get('statusBox');
-	if(statusDiv != null) {
-		YAHOO.util.Dom.addClass(statusDiv, "statusError");
-	}
+function displayErrorMessage(fieldID, msg) {
+    var $labelElement = $("label[for='" + fieldID + "']");
+
+    if (!$labelElement.length) {
+        // see if we can find it
+        $labelElement = $('#' + fieldID + '_lbl');
+        if (!$labelElement.length) {
+            // walk the DOM
+            $labelElement = $('#' + fieldID).parent().prev("div.fieldLabel, div.fieldLabelThin");
+        }
+    }
+
+    // highlight the incorrect field
+    if ($labelElement.length) {
+        $labelElement.addClass("errorText");
+    }
+
+    // add it to the status box at the top of the page whether we found the element or not
+    displayStatus(msg, true);
 }
 
-function displayErrorMessage(fieldId, msg) {
-	var lblElement =  YAHOO.util.Dom.get(fieldId + '_lbl');
-	if ( lblElement == null ) {
-		var fieldElement = YAHOO.util.Dom.get(fieldId);
-		if ( fieldElement ) {
-			//try the previous 3 elements
-			node = YAHOO.util.Dom.getAncestorByClassName(fieldElement,'fieldInput');
-			for(var i = 0; i < 3; i++) {
-				if ( lblElement == null) {
-					if (YAHOO.util.Dom.hasClass(node,'fieldLabel')) {
-						lblElement = node;
-					} else {
-						node = YAHOO.util.Dom.getPreviousSibling(node);
-					}
-				}
-			}
-		}
-	}
-	
-	if ( lblElement == null )
-		displayStatus(msg);
-	else
-		lblElement.innerHTML = lblElement.innerHTML + '<span class="errorText">' + msg + '</span>';
+//TA:#394
+function removeErrorMessage(fieldID) {
+	var $labelElement = $("label[for='" + fieldID + "']");
+    if (!$labelElement.length) {
+        // see if we can find it
+        $labelElement = $('#' + fieldID + '_lbl');
+        if (!$labelElement.length) {
+            // walk the DOM
+            $labelElement = $('#' + fieldID).parent().prev("div.fieldLabel, div.fieldLabelThin");
+        }
+    }
+    // unhighlight the incorrect field
+    if ($labelElement.length) {
+        $labelElement.removeClass("errorText");
+    }
+
 }
 
-// reposition statusbox in admin pages
-YAHOO.util.Event.onDOMReady(function () {
-	
-	var statusDiv = YAHOO.util.Dom.get('statusBox');
-	if (statusDiv != null)
-	{
-		var contentAdmin = YAHOO.util.Dom.get('contentAdmin');
-		if (contentAdmin != null) {
-			YAHOO.util.Dom.insertBefore(statusDiv, YAHOO.util.Dom.getFirstChild(contentAdmin));
-			YAHOO.util.Dom.removeClass(statusDiv, 'admin');
-			YAHOO.util.Dom.setStyle(statusDiv, 'margin-left', '0');
-			
-		}
-	}
-});

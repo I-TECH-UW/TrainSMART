@@ -311,12 +311,20 @@ class Helper extends ITechTable
 		return $result;
 	}
 
+	
+	//TA:#254 count only active tutors
 	public function getInstitutionTutorCount($iid) {
-		$select = $this->dbfunc()->select()
-			->from("link_tutor_institution")
-			->where('id_institution = ?',$iid);
-		$result = $this->dbfunc()->fetchAll($select);
-		return count($result);
+	    $select = $this->dbfunc()->select()
+	    ->from("link_tutor_institution")
+	    ->join(array("t" => "tutor"),
+	        "link_tutor_institution.id_tutor = t.id",
+	        array())
+	    ->join(array("p" => "person"),
+	        "p.id = t.personid",
+	        array())
+	    ->where('p.active="active" and p.is_deleted=0 and id_institution = ?',$iid);
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return count($result);
 	}
 
 	######################################
@@ -833,6 +841,15 @@ class Helper extends ITechTable
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
+	
+	//TA:#362
+	public function getDegree($id) {
+	    $select = $this->dbfunc()->select()
+	    ->from("lookup_degrees")
+	    ->where("id = ?",$id);
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return $result;
+	}
 
 	public function getDegreeTypes() {
 		$select = $this->dbfunc()->select()
@@ -1009,6 +1026,7 @@ class Helper extends ITechTable
 			->join(array("p" => "person"),
 					"t.personid = p.id",
 					array("first_name","last_name"))
+					->where("p.is_deleted=0") //TA:#337
 			->order(array('first_name','last_name'));
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
@@ -1058,11 +1076,20 @@ class Helper extends ITechTable
 			->from(array ("s" => "student"),
 					array("id"))
 			->join(array ("t" => "tutor"),
-					"s.advisorid = t.id",
+					"s.advisorid = t.personid", //TA:109 "s.advisorid = t.id",
 					array())
 			->join(array ("p2" => "person"),
 					"s.personid = p2.id",
 					array("first_name","last_name"))
+			
+			//TA:109
+			->join(array ("lsc" => "link_student_cohort"),
+			    "s.id = lsc.id_student",
+			    array())
+			 ->join(array ("c" => "cohort"),
+			        "c.id = lsc.id_cohort",
+			        array("cohortname", "graddate"))
+			 //   
 			->where('s.isgraduated = 0')
 			->where('t.personid = ?',$tid)
 			->order('first_name');
@@ -1134,14 +1161,6 @@ class Helper extends ITechTable
 			->from("translation")
 			->where("key_phrase IN ('" . implode("','",$labels) . "')")
 			->order('key_phrase');
-		$result = $this->dbfunc()->fetchAll($select);
-		return $result;
-	}
-
-	public function AdminClasses(){
-		$select = $this->dbfunc()->select()
-			->from("classes")
-			->order('classname');
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
@@ -1599,7 +1618,7 @@ class Helper extends ITechTable
             $params['enddate'] = date("Y-m-d", strtotime($params['enddate']));
         }
         $this->dbfunc()->insert($linktable, $params);
-
+		return ($this->dbfunc()->lastInsertId($linktable));
 	}
 
 	public function addCadres($params){
@@ -1936,7 +1955,7 @@ class Helper extends ITechTable
 		}
 	}
 
-	public function updateCohortClasses($cid,$param){
+	public function updateCohortClasses($cid,$param, $delete = true){
 		$db = $this->dbfunc();
 		$ids = array();
 		foreach ($param['class'] as $class){
@@ -1955,15 +1974,17 @@ class Helper extends ITechTable
 				$this->dbfunc()->insert("link_cohorts_classes", $insert);
 			}
 		}
-		if (count ($ids) == 0){
-			# DELETED ALL LINKS
-			$query = "DELETE FROM link_cohorts_classes WHERE cohortid = '" . $cid . "'";
-			$db->query($query);
-		} else {
-			# REMOVE ANYTHING THAT'S NOT SELECTED
-			$query = "DELETE FROM link_cohorts_classes WHERE cohortid = " . $cid . " AND classid NOT IN (" . implode(",", $ids) . ")";
-			$select = $db->query($query);
-		}
+		if ($delete) {
+            if (count($ids) == 0) {
+                # DELETED ALL LINKS
+                $query = "DELETE FROM link_cohorts_classes WHERE cohortid = '" . $cid . "'";
+                $db->query($query);
+            } else {
+                # REMOVE ANYTHING THAT'S NOT SELECTED
+                $query = "DELETE FROM link_cohorts_classes WHERE cohortid = " . $cid . " AND classid NOT IN (" . implode(",", $ids) . ")";
+                $select = $db->query($query);
+            }
+        }
 	}
 
 	public function updateCohortPracticums($cid,$param){
@@ -2030,7 +2051,7 @@ class Helper extends ITechTable
 				WHERE lcc.cohortid = " . $cid . "
 				ORDER BY c.classname, p.first_name, p.last_name";		
 		}
-		$select = $db->query($query);
+		$select = $db->query($query); 
 		$result = $select->fetchAll();
 		return $result;		
 	}
@@ -2141,7 +2162,28 @@ class Helper extends ITechTable
 
 	function updateStudentClass($sid,$param){
 		$db = $this->dbfunc();
-		foreach (array_keys($param['grade']) as $cid) {
+        //TA:#270 this way does not work to merge 4 arrays keys, each array must be defined before merging
+		//$allclasses = array_unique(array_merge($allclasses, array_keys($param['camark']), array_keys($param['exammark']), array_keys($param['grade']), array_keys($param['credits'])));
+		$allclasses = array();
+		if($param['camark']){
+		   $allclasses = array_unique(array_merge($allclasses, array_keys($param['camark'])));
+		}
+		if($param['exammark']){
+		  $allclasses = array_unique(array_merge($allclasses, array_keys($param['exammark'])));
+		}
+ 		if($param['grade']){
+ 		 $allclasses = array_unique(array_merge($allclasses, array_keys($param['grade'])));
+ 		}
+ 		if($param['credits']){
+ 		 $allclasses = array_unique(array_merge($allclasses, array_keys($param['credits'])));
+ 		}
+ 		//TA:#270 remove all classes that student do not have grades
+ 		if(count($allclasses) === 0){
+ 		 $db->delete("link_student_classes", " studentid=" . $sid . " and  cohortid=" . $param['cohortid']);
+ 		}else{
+ 		    $db->delete("link_student_classes", " studentid=" . $sid . " and  cohortid=" . $param['cohortid'] . " and classid not in (" . implode(",", $allclasses) . ")");
+ 		}
+		foreach ($allclasses as $cid) {
 			$query = "SELECT * FROM link_student_classes WHERE
 				studentid = " . $sid . " AND
 				classid = " . $cid . " AND
@@ -2211,6 +2253,17 @@ class Helper extends ITechTable
 		$db = $this->dbfunc();
 		$query = "DELETE FROM licenses WHERE id = " . addslashes($param['dellicense']);
 		$db->query($query);
+	}
+
+	public function deleteClass($data) {
+		if (isset($data['id']) && $data['id']) {
+            $db = $this->dbfunc();
+            $where = $db->quoteInto('classid = ?', $data['id']);
+            $db->delete('link_cohorts_classes', $where);
+            $db->delete('link_student_classes', $where);
+            $where = $db->quoteInto('id = ?', $data['id']);
+            $db->delete('classes', $where);
+		}
 	}
 
 	public function saveLabels($param){
@@ -3667,6 +3720,11 @@ class Helper extends ITechTable
 		return $ret;
 	}
 
+	public function getCourseTypes() {
+		$db = $this->dbfunc();
+        $s = $db->select()->from('lookup_coursetype', array('id', 'coursetype'))->order('coursetype ASC');
+        return ($db->fetchPairs($s));
+	}
 
     public function saveUserPrograms($uid, $ins)
     {
@@ -3699,6 +3757,40 @@ class Helper extends ITechTable
 				`cadreid` NOT IN (" . implode(",", $parsed) . ")";
             $db->query($query);
         }
+    }
+    
+    //TA:#224.2
+    public function get3TiersLocationsParentIds(){
+        $db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+        $sql = 'SELECT DISTINCT
+       f.id as id,
+       f.location_id AS "zone1",
+       l2.id as "zone2",
+       l2.parent_id AS "zone3"
+      FROM facility f
+      LEFT JOIN location l1 ON f.location_id = l1.id
+      LEFT JOIN location l2 ON l1.parent_id = l2.id
+      ';
+        return $db->fetchAll($sql);
+    }
+    
+    //TA:#224
+    public function getFacility3TiersLocationsParentInfo($facility_id, $loc_id){
+        $db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+        $sql = 'SELECT DISTINCT 
+f.id as "f_id",  
+l1.id AS "region_id", 
+l1.location_name AS "region_name", 
+l2.id AS "district_id", 
+l2.location_name AS "district_name",
+l3.id AS "province_id",
+l3.location_name AS "province_name"
+FROM facility f 
+LEFT JOIN location l1 ON f.location_id = l1.id 
+LEFT JOIN location l2 ON l1.parent_id = l2.id 
+LEFT JOIN location l3 ON l2.parent_id = l3.id
+where f.id = ' . $facility_id;
+        return $db->fetchRow($sql);
     }
 }
 

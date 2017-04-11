@@ -28,11 +28,11 @@ print ScriptContainer::$instance->renderJSHead();
 <div id="pageHolder">
 	<div id="header"><?php echo $header; ?></div>
 	<div id="content">
-
+<!-- TA:80 print only report part -->
 	<div class="fieldIndentNoMargin">
 		<?php tp('Evaluations');?>
 		<!--<span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span>-->
-		<?php echo $this->printAndExport();?>
+		<?php echo $this->printAndExport("evalInfoTable");?>
 	</div>
 
 	<div id="evalInfoTable"></div>

@@ -64,7 +64,8 @@ print ScriptContainer::$instance->renderJSHead();
 
 <?php if ( $this->criteria['go'] ) { ?>
 		    <div class="hrGrey"></div>
-		    <div class="fieldIndentNoMargin"><?php tp('Facilities');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+		    <!-- TA:80 print only facilities part -->
+		    <div class="fieldIndentNoMargin"><?php tp('Facilities');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport("facilities");?></div>
 		    
 		    <!-- TA;17:12: 10/05/2014 -->
 <?php if ($this->hasACL('add_new_facility') ) { ?>

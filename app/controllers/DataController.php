@@ -91,17 +91,33 @@ class DataController extends ITechController {
    //fill participants
    require_once('models/table/Person.php');
    $personTable = new Person();
-   $select = $personTable->select()->from('person', array('id', 'first_name', 'middle_name', 'last_name'))->setIntegrityCheck(false)->join(array('pt'=>'person_to_training'), "pt.person_id = person.id", array('training_id'));
+   $select = $personTable->select()
+   ->from('person', array('count(*) as count')) //TA:#245 NEW code, if we need just participants count for each training
+  // ->from('person', array('id', 'first_name', 'middle_name', 'last_name')) 
+   ->setIntegrityCheck(false)
+   ->join(array('pt'=>'person_to_training'), "pt.person_id = person.id", array('training_id'));
+   //TA:#287
+   if($this->getSanParam('ids')){
+        $select->where("training_id in (" . $this->getSanParam('ids') . ")");//new, it makes sence to leave it to take just trainings from the list not all of them
+   }
+   $select->group("training_id");//new
+   
    $rows = $table->fetchAll($select);
    
-   foreach($rows as $row) {
-    $tid = $row->training_id;
-    if ($ids && array_search ($tid, $ids) === false)
-      continue; // dont print this training, the user has filtered by the url param ('ids')
-    $ra = $row->toArray();
-    unset($ra['training_id']);
-    $sorted[$tid]['participants'][] = $ra;
-   }
+   //TA:#245 OLD code
+//    foreach($rows as $row) {
+//     $tid = $row->training_id;
+//     if ($ids && array_search ($tid, $ids) === false)
+//       continue; // dont print this training, the user has filtered by the url param ('ids')
+//     $ra = $row->toArray();
+//     unset($ra['training_id']);
+//     $sorted[$tid]['participants'][] = $ra;
+//    }
+//
+//TA:#245  NEW code - if they wnat to show just count
+foreach($rows as $row) {
+    $sorted[$row->training_id]['participants'] = $row->count;
+}
    
    //fill participants
    require_once('models/table/OptionList.php');
@@ -125,22 +141,36 @@ class DataController extends ITechController {
    //fill trainers
    require_once('models/table/TrainingToTrainer.php');
    $personTable = new TrainingToTrainer();
-   $select = $personTable->select()->from('training_to_trainer', array('training_id'))->setIntegrityCheck(false)->join(array('p'=>'person'), "training_to_trainer.trainer_id = p.id", array('id', 'first_name', 'middle_name', 'last_name'));
+   $select = $personTable->select()
+   ->from('training_to_trainer', array('training_id'))
+   ->setIntegrityCheck(false)
+   //->join(array('p'=>'person'), "training_to_trainer.trainer_id = p.id", array('id', 'first_name', 'middle_name', 'last_name'))
+   ->join(array('p'=>'person'), "training_to_trainer.trainer_id = p.id", array('count(*) as count')); //TA:#245
+   //TA:#287
+   if($this->getSanParam('ids')){
+        $select->where("training_id in (" . $this->getSanParam('ids') . ")");//TA:#245 it makes sence to leave it to take just trainings from the list not all of them
+   }
+   $select->group("training_id");//TA:#245 remove it if they want to show persons names;
    $rows = $table->fetchAll($select);
    
+//    foreach($rows as $row) {
+//     $tid = $row->training_id;
+//     if ($ids && array_search ($tid, $ids) === false)
+//       continue; // dont print this training, the user has filtered by the url param ('ids')
+//     $ra = $row->toArray();
+//     unset($ra['training_id']);
+//     $sorted[$tid]['trainers'][] = $ra;
+//    }
+   //TA:#245  NEW code - if they wnat to show just count
    foreach($rows as $row) {
-    $tid = $row->training_id;
-    if ($ids && array_search ($tid, $ids) === false)
-      continue; // dont print this training, the user has filtered by the url param ('ids')
-    $ra = $row->toArray();
-    unset($ra['training_id']);
-    $sorted[$tid]['trainers'][] = $ra;
+       $sorted[$row->training_id]['trainers'] = $row->count;
    }
    
    $this->view->assign('data', $sorted);
 
-   if ($this->getSanParam('outputType') == 'csv') 
-      $this->sendData ( $this->reportHeaders ( false, $sorted ) );    
+   if ($this->getSanParam('outputType') == 'csv'){
+     $this->sendData ( $this->reportHeaders ( false, $sorted ) );  
+   }
        
     } catch (Exception $e) {
       echo $e->getMessage();
@@ -215,7 +245,7 @@ class DataController extends ITechController {
   		$personTable = new Person();
   		$select = $personTable->select()
   		->from('person', array('*'))
-  		//->where('first_name', '=', 'Emily')
+  		->where('is_deleted=0') //TA:104
   		->setIntegrityCheck(false);
   		$rowRay = $personTable->fetchAll($select);
   		$rowRay = @$rowRay->toArray();
@@ -251,8 +281,11 @@ class DataController extends ITechController {
   				$new_row[$translation['Address 2']] = $row['home_address_2'];
   			}
   			if($settings['display_people_home_phone']){$new_row[$translation['Home phone']] = $row['phone_home'];}
+  			$new_row['Work phone'] = $row['phone_work']; //TA:55 10/7/2015 
+  			$new_row['Mobile phone'] = $row['phone_mobile']; //TA:55 10/7/2015
   			if($settings['display_people_fax']){$new_row['Fax'] = $row['fax'];}
   			$new_row['Email'] = $row['email'];
+  			$new_row['Secondary email'] = $row['email_secondary']; //TA:55 10/7/2015
   			
   			if($settings['display_national_id']){$new_row[$translation['National ID']] = $row['national_id'];}
   			if($settings['display_people_file_num']){$new_row[$translation['File Number']] = $row['file_number'];}
@@ -345,20 +378,34 @@ class DataController extends ITechController {
   			$sorted[$pid]['courses'][] = $ra;
   		}
   			
-  		//fill trainers
-  			
+  		//fill trainers	
   		$select = $personTable->select()->from('trainer', array('person_id'))->setIntegrityCheck(false)
   		->join(array('pt'=>'training_to_trainer'), "pt.trainer_id = trainer.person_id", array('training_id'))
   		->join(array('t'=>'training'), "pt.training_id = t.id", array())
   		->join(array('tt'=>'training_title_option'), "t.training_title_option_id = tt.id", array('training_title_phrase'));
   		$rows = $personTable->fetchAll($select);
-  
+  		
   		foreach($rows as $row) {
-  			$pid = $row->person_id;
-  			$ra = $row->toArray();
-  			unset($ra['person_id']);
-  			$sorted[$pid]['trained'][] = $ra;
+  		    $pid = $row->person_id;
+  		    $ra = $row->toArray();
+  		    unset($ra['person_id']);
+  		    $sorted[$pid]['trained'][] = $ra;
   		}
+  		
+  		//TA:55 10/7/2015 fill tutor language spoken
+  		$select = $personTable->select()->from('tutor', array('personid'))->setIntegrityCheck(false)
+  		->join(array('pt'=>'link_tutor_languages'), "pt.id_tutor = tutor.id", array('id_language'))
+  		->join(array('tt'=>'lookup_languages'), "pt.id_language = tt.id", array('language'));
+  		$rows = $personTable->fetchAll($select);
+  		foreach($rows as $row) {
+  		    $pid = $row->personid;
+  		    $ra = $row->toArray();
+  		    unset($ra['personid']);
+  		    $sorted[$pid]['Languages spoken'][] = $ra;
+  		}
+  		
+  
+  		
   			
   		if ($this->getSanParam('outputType') == 'csv')
   			$this->sendData ( $this->reportHeaders ( false, $sorted ) );

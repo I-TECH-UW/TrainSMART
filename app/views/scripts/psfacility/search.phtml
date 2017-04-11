@@ -78,7 +78,8 @@ print ScriptContainer::$instance->renderJSHead();
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
 		    <div class="hrGrey"></div>
-		    <div class="fieldIndentNoMargin"><?php tp('Facilities');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+		     <!-- TA:80 print only locations part -->
+		    <div class="fieldIndentNoMargin"><?php tp('Facilities');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport("facilities");?></div>
 			<a href="<?php echo $this->base_url;?>/facility/add"><?php tp('Add New Facility');?></a><br/><br/>
 		    <div id="facilities"></div>
 		    <script type="text/javascript">

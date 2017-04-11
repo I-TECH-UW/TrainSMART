@@ -1,433 +1,416 @@
 <?php
-require_once ('ReportFilterHelpers.php');
-require_once ('models/table/OptionList.php');
-require_once ('models/table/MultiAssignList.php');
-require_once ('models/table/MultiOptionList.php');
-require_once ('models/table/Location.php');
-require_once ('views/helpers/FormHelper.php');
-require_once ('views/helpers/DropDown.php');
-require_once ('views/helpers/Location.php');
-require_once ('views/helpers/CheckBoxes.php');
-require_once ('views/helpers/TrainingViewHelper.php');
-require_once ('models/table/Helper.php');
+require_once('ReportFilterHelpers.php');
+require_once('models/table/OptionList.php');
+require_once('models/table/MultiAssignList.php');
+require_once('models/table/MultiOptionList.php');
+require_once('models/table/Location.php');
+require_once('views/helpers/FormHelper.php');
+require_once('views/helpers/DropDown.php');
+require_once('views/helpers/Location.php');
+require_once('views/helpers/CheckBoxes.php');
+require_once('views/helpers/TrainingViewHelper.php');
+require_once('models/table/Helper.php');
 
-class PartnerController extends ReportFilterHelpers {
-	public function init() {	}
+class PartnerController extends ReportFilterHelpers
+{
+    public function init()
+    {
+        $contextSwitch = $this->_helper->getHelper('contextSwitch');
 
-	public function preDispatch() {
-		parent::preDispatch ();
+        $contextSwitch->addContext('csv', array(
+                'headers' => array('Content-Type' => 'text/csv'),
+                'callbacks' => array(
+                    'post' => array($this, 'postCsvCallback'),
+                    'init' => array($this, 'preCsvCallback')
+                )
+            )
+        );
+        $contextSwitch->addActionContext('search', 'csv');
+        $contextSwitch->initContext();
 
-		if (! $this->isLoggedIn ())
-			$this->doNoAccessError ();
+    }
 
-		if (! $this->setting('module_employee_enabled'))
-			$this->_redirect('select/select');
-	}
+    public function preDispatch()
+    {
+        parent::preDispatch();
 
-	public function indexAction()
-	{
-		$this->_redirect('partner/search');
-	}
+        if (!$this->isLoggedIn())
+            $this->doNoAccessError();
 
-	public function deleteAction() {
-		if (! $this->hasACL ( 'employees_module' )) {
-			$this->doNoAccessError ();
-		}
+        if (!$this->setting('module_employee_enabled'))
+            $this->_redirect('select/select');
+    }
 
-		require_once('models/table/Partner.php');
-		$status = ValidationContainer::instance ();
-		$id = $this->getSanParam ( 'id' );
+    protected function calculateCurrentQuarter() {
+        $now = new DateTime();
+        $thisYear = $now->format('Y');
+        $quarterStarts = array(DateTime::createFromFormat('Y-m-d', $thisYear . '-01-01'),
+            DateTime::createFromFormat('Y-m-d', $thisYear . '-04-01'),
+            DateTime::createFromFormat('Y-m-d', $thisYear . '-07-01'),
+            DateTime::createFromFormat('Y-m-d', $thisYear . '-10-01'),
+        );
+        $currentQuarterStartDate = $quarterStarts[0];
+        $size = count($quarterStarts);
+        for ($i = 0; $i < $size; $i++) {
+            if (($i + 1) >= $size) {
+                $currentQuarterStartDate = $quarterStarts[$i];
+                break;
+            }
+            if ($quarterStarts[$i] < $now && $quarterStarts[$i + 1] > $now) {
+                $currentQuarterStartDate = $quarterStarts[$i];
+                break;
+            }
+        }
+        return $currentQuarterStartDate;
+    }
 
-		if ($id) {
-			$partner = new Partner ( );
-			$rows = $partner->find ( $id );
-			$row = $rows->current ();
-			if ($row) {
-				$partner->delete ( 'id = ' . $row->id );
-			}
-			$status->setStatusMessage ( t ( 'That partner was deleted.' ) );
-		} else {
-			$status->setStatusMessage ( t ( 'That partner could not be found.' ) );
-		}
+    public function indexAction()
+    {
+        $this->_redirect('partner/search');
+    }
 
-		//validate
-		$this->view->assign ( 'status', $status );
+    public function deleteAction()
+    {
+        if (!$this->hasACL('employees_module') || !($this->hasACL("delete_partners"))) {
+            $this->doNoAccessError();
+        }
 
-	}
-	
-	public function deleteFunderAction() {
-		if (! $this->hasACL ( 'employees_module' )) {
-			$this->doNoAccessError ();
-		}
-	
-		require_once('models/table/Partner.php');
-		require_once('views/helpers/Location.php'); // funder stuff
-	
-		$db     = $this->dbfunc();
-		$status = ValidationContainer::instance ();
-		$params = $this->getAllParams();
-			
-		if ($params['id']) {
-			$recArr = explode('_', $params['id']); 
+        require_once('models/table/Partner.php');
+        $status = ValidationContainer::instance();
+        $id = $this->getSanParam('id');
 
-			//find in epsfm, should not find to delete
-			$sql = 'SELECT * FROM employee_to_partner_to_subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
-			$where = "partner_id = $recArr[0] and subpartner_id = $recArr[1] and partner_funder_option_id = $recArr[2] and mechanism_option_id = $recArr[3] and is_deleted = false";
-			$sql .= $where;
-			
-			$row = $db->fetchRow( $sql );
-			if ($row){
-				$status->setStatusMessage ( t('That record is in use.') );
-			}
-			else { // not in use
-				
-			  //find in psfm, should find to delete
-			  $sql = 'SELECT * FROM partner_to_subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
-			  $where = "partner_id = $recArr[0] and subpartner_id = $recArr[1] and partner_funder_option_id = $recArr[2] and mechanism_option_id = $recArr[3] and is_deleted = false";
-			  $sql .= $where;
-			
-			  $row = $db->fetchRow( $sql );
-			  if (! $row){
-				$status->setStatusMessage ( t('Cannot find that record in the database.') );
-			  }
-			  
-			  else { // found, safe to delete
-			  	
-                $update_result = $db->update('partner_to_subpartner_to_funder_to_mechanism', array('is_deleted' => 1), 'id = '.$row['id']);
+        if ($id) {
+            $partner = new Partner ();
+            $rows = $partner->find($id);
+            $row = $rows->current();
+            if ($row) {
+                $partner->delete('id = ' . $row->id);
+            }
+            $status->setStatusMessage(t('That partner was deleted.'));
+        } else {
+            $status->setStatusMessage(t('That partner could not be found.'));
+        }
 
-				if($update_result){
-					$status->setStatusMessage ( t ( 'That mechanism was deleted.' ) );
-				}
-				else{
-					$status->setStatusMessage ( t ( 'That mechanism was not deleted.' ) );
-				}
-			  }
-			}			
-			 	
-		}
-		$this->_redirect("partner/edit/id/" . $recArr[0]);
-	}
-	
-	
-	public function addFunderToPartnerAction() {
-		if (! $this->hasACL ( 'employees_module' )) {
-			$this->doNoAccessError ();
-		}
-	
-		require_once('models/table/Partner.php');
-		require_once('views/helpers/Location.php'); // funder stuff
-	
-		$db     = $this->dbfunc();
-		$status = ValidationContainer::instance ();
-		$params = $this->getAllParams();
-		$id     = $params['id'];
-			
-		if ($id) {
-			$helper = new Helper();
-			
-			if ( $this->getRequest()->isPost() ) {
+        //validate
+        $this->view->assign('status', $status);
 
-		      $params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-		      foreach ($params['funding_end_date'] as $i => $value) $params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
-		  
-				// test for all values
-				if(!($params['subPartner0'] && $params['partnerFunder0'] && $params['mechanism0'] && $params['funding_end_date'][0]))
-					$status->addError('', t ( 'All fields' ) . space . t('are required'));
-				
-				if ( $status->hasError() )
-					$status->setStatusMessage( t('That funding mechanism could not be saved.') );
-			
-				else {
-					//save
-					$psfm = new ITechTable(array('name' => 'partner_to_subpartner_to_funder_to_mechanism'));
-					$sfmArr = explode('_', $params[mechanism0]); // eg: 13_3_106
-					$sfm_id = $helper->getSfmId($sfmArr);
-					$data = array(
-							'subpartner_to_funder_to_mechanism_id' => $sfm_id['id'],
-							'partner_id' => $params['id'],
-							'subpartner_id'  => $sfmArr[0],
-							'partner_funder_option_id' => $sfmArr[1],
-							'mechanism_option_id' => $sfmArr[2],
-							'funding_end_date' => $params['funding_end_date'][0],
-					);
+    }
 
-					$insert_result = $psfm->insert($data);
-					$status->setStatusMessage( t('The funding mechanism was saved.') );
-				}
-			}
-			
-			//exclude current funders
-			$partner = $helper->getPartner($id);
-			$this->viewAssignEscaped ( 'partner', $partner );
-			
-			$subPartner = $helper->getSfmSubPartnerExclude($id);
-			$this->viewAssignEscaped ( 'subPartner', $subPartner );
-			
-			$partnerFunder = $helper->getSfmFunderExclude($id);
-			$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-			
-			$mechanism = $helper->getSfmMechanismExclude($id);
-			$this->viewAssignEscaped ( 'mechanism', $mechanism );
 
-		} // if ($id)
-	
-		//validate
-		$this->view->assign ( 'status', $status );
-	
-	}
+    public function addAction()
+    {
+        $this->view->assign('mode', 'add');
+        return $this->editAction();
+    }
 
-	public function addAction() {
-		$this->view->assign ( 'mode', 'add' );
-		return $this->editAction ();
-	}
+    public function editAction()
+    {
+        if (!$this->hasACL('employees_module')) {
+            $this->doNoAccessError();
+        }
 
-	public function editAction() {
-		if (! $this->hasACL ( 'employees_module' )) {
-			$this->doNoAccessError ();
-		}
+        $db = $this->dbfunc();
+        $uid = $this->isLoggedIn();
+        $params = $this->getAllParams();
+        $id = $params['id'];
+        $status = ValidationContainer::instance();
 
-		$db     = $this->dbfunc();
-		$status = ValidationContainer::instance ();
-		$params = $this->getAllParams();
-		$id     = $params['id'];
+        if (!$uid) {
+            $this->doNoAccessError();
+        }
 
-		// restricted access?? only show partners by organizers that we have the ACL to view // - removed 5/1/13, they dont want this, its used by site-rollup (datashare), and user-restrict by org.
-		$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'
-		$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
-		$siteOrgsClause = $site_orgs ? " AND partner.organizer_option_id IN ($site_orgs)" : "";
-		if ($org_allowed_ids && $this->view->mode != 'add') {
-			$validID = $db->fetchCol("SELECT partner.id FROM partner WHERE partner.id = $id AND partner.organizer_option_id in ($org_allowed_ids) $siteOrgsClause");
-			if(empty($validID))
-				$this->doNoAccessError ();
-		}
+        $p = $this->getAvailablePartnersAssoc();
 
-		if ( $this->getRequest()->isPost() )
-		{
-		    if (!$this->hasACL("edit_partner"))
-		    {
-		        $this->doNoAccessError();
-		    }
-		    else 
-		    {
-    			//validate then save
-    			$status->checkRequired ( $this, 'partner', t ( 'Partner' ) );
-    			$status->checkRequired ( $this, 'address1',                           t ( 'Address 1' ) );
-    			$status->checkRequired ( $this, 'city',                               t ( 'City' ) );
-    			$status->checkRequired ( $this, 'province_id',                        t ( 'Region A (Province)' ) );
-    			if ($this->setting('display_employee_agreement_end_date'))
-    				$status->checkRequired ( $this, 'agreement_end_date',             t ( 'Agreement End Date' ) );
-    			if ($this->setting('display_employee_importance'))
-    				$status->checkRequired ( $this, 'partner_importance_option_id',   t ( 'Importance' ) );
-    			$status->checkRequired ( $this, 'hr_contact_name',                    t ( 'HR Contact Person Name' ) );
-    			$status->checkRequired ( $this, 'hr_contact_phone',                   t ( 'HR Contact Office Phone' ) );
-    			$status->checkRequired ( $this, 'hr_contact_email',                   t ( 'HR Contact Email' ) );
-    			
-    			
-    			
-    			$params['subPartner'] = $this->_array_me($params['subPartner']);
-    			
-    			$params['subpartner_id'] = $this->_array_me($params['subpartner_id']);
-    			foreach ($params['subpartner_id'] as $i => $value) { // strip empty values (it breaks MultiOptionList apparently)
-    				if (empty($value))
-    					unset($params['subpartner_id'][$i]);
-    			}
-    				
-    			$params['partnerFunder'] = $this->_array_me($params['partnerFunder']);
-    			$params['mechanism'] = $this->_array_me($params['mechanism']);
-    			
-        		$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-    			
-    			foreach ($params['funding_end_date'] as $i => $value) 
-    			  $params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
-    			
-    			
-    			
-    			$params['transition_confirmed'] = $params['transition_confirmed'] == 'on' ? 1 : 0;
-    			$params['agreement_end_date'] = $this->_euro_date_to_sql($params['agreement_end_date']);
-    			
-    			
-    			//location save stuff
-    			$params['location_id'] = regionFiltersGetLastID(null, $params); // formprefix, criteria
-    			if ( $params['city'] ) {
-    				$params['location_id'] = Location::insertIfNotFound ( $params['city'], $params['location_id'], $this->setting ( 'num_location_tiers' ) );
-    			}
-    
-    			if (! $status->hasError() ) {
-    				$id = $this->_findOrCreateSaveGeneric('partner', $params);
-    
-    				if(!$id) {
-    					$status->setStatusMessage( t('That partner could not be saved.') );
-    				} else {
+        if (!array_key_exists($id, $p) && !($this->view->mode == 'add')) {
+            $this->doNoAccessError();
+        }
 
-    					$status->setStatusMessage( t('The partner was saved.') );
-    					$this->_redirect("partner/edit/id/$id");
-    				}
-    			}		
-		    }
-		}
-		
-		if ($id && ! $status->hasError()) { // read data from db
+        if ($this->getRequest()->isPost()) {
+            if (!$this->hasACL("edit_partners")) {
+                $this->doNoAccessError();
+            } else {
+                //validate then save
+                $status->checkRequired($this, 'partner', t('Partner'));
+                $status->checkRequired($this, 'organizer_option_id', t('Organizer'));//TA:#279
+                $status->checkRequired($this, 'address1', t('Address 1'));
+                $status->checkRequired($this, 'city', t('City'));
+                $status->checkRequired($this, 'province_id', t('Region A (Province)'));
+                $status->checkRequired($this, 'district_id', t('District'));//TA:#279
+                $status->checkRequired($this, 'region_c_id', t('Sub-District'));//TA:#279
+                $status->checkRequired($this, 'hr_contact_name', t('HR Contact Person Name'));
+                $status->checkRequired($this, 'hr_contact_phone', t('HR Contact Office Phone'));
+                $status->checkRequired($this, 'hr_contact_email', t('HR Contact Email'));
+                //TA:#279
+                if($params['capture_complete']){
+                    $status->checkRequired($this, 'capture_complete_date', t('Data Capture Completion Date'));
+                }
 
-			// restricted access?? only show partners by organizers that we have the ACL to view
-			$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'
-			$orgWhere = ($org_allowed_ids) ? " AND partner.organizer_option_id in ($org_allowed_ids) " : "";
-			// restricted access?? only show organizers that belong to this site if its a multi org site
-			$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
-			$allowedWhereClause .= $site_orgs ? " AND partner.organizer_option_id in ($site_orgs) " : "";
+                $status->isAcceptableSAPhoneNumber('hr_contact_phone', t('HR Contact Office Phone'), $params['hr_contact_phone']);
 
-			// continue reading data
-			$sql = 'SELECT * FROM partner WHERE id = '.$id.space.$orgWhere;
-			$row = $db->fetchRow( $sql );
-			if (! $row)
-				$status->setStatusMessage ( t('Error finding that record in the database.') );
-			else
-			{
-				$params = $row; // reassign form data
+                if (isset($params['hr_contact_fax']) && $params['hr_contact_fax']) {
+                    $status->isAcceptableSAPhoneNumber('hr_contact_fax', t('HR Contact Office Fax'), $params['hr_contact_fax']);
+                }
 
-				$region_ids = Location::getCityInfo($params['location_id'], $this->setting('num_location_tiers'));
-				$params['city'] = $region_ids[0];
-				$region_ids = Location::regionsToHash($region_ids);
-				$params = array_merge($params, $region_ids);
+                if (isset($params['hr_contact_email']) && $params['hr_contact_email'] &&
+                    !(strstr($params['hr_contact_email'], '@'))
+                ) {
+                    $status->addError('hr_contact_email', t('HR Contact Email') . ' ' . t('invalid email address format.'));
+                }
 
-				//get linked table data from option tables
-				$sql = "SELECT subpartner_to_funder_to_mechanism_id, partner_id, subpartner_id, partner_funder_option_id, mechanism_option_id, funding_end_date 
-				        FROM partner_to_subpartner_to_funder_to_mechanism WHERE is_deleted = false and partner_id = $id";
-				$params['funder'] = $db->fetchAll($sql);
+                $isValidDate = false;
+                if (isset($params['capture_complete']) && $params['capture_complete']) {
+                    $isValidDate = $status->isValidDateDDMMYYYY('capture_complete_date', t('Data Capture Completion Date'), $params['capture_complete_date']);
+                }else{//TA:#279 write date as null
+                    $params['capture_complete_date'] = null;
+                }
 
-				
-				$helper = new Helper();
-				
-				$subPartner = $helper->getPartnerSubpartner($id); 
-				$this->viewAssignEscaped ( 'subPartner', $subPartner );
-				
-				$partnerFunder = $helper->getPartnerFunder($id);
-				$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
-				
-				$mechanism = $helper->getPartnerMechanism($id);
-				$this->viewAssignEscaped ( 'mechanism', $mechanism );
-				
-			}
-		}
+                // location save stuff
+                $params['location_id'] = regionFiltersGetLastID(null, $params);
+                if ($params['city']) {
+                    $params['location_id'] = Location::insertIfNotFound($params['city'], $params['location_id'],
+                        $this->setting('num_location_tiers'));
+                }
 
-		// make sure form data is valid for display
-		if (empty($params['subpartner']))
-			$params['subpartner'] = array(array());
-		if (empty($params['funder']))
-			$params['funder'] = array(array());
-		if (empty($params['mechanism_option_id']))
-			$params['mechanism_option_id'] = array(array());
-		
-        if (!$this->hasACL("edit_partners"))
-        {
+                if (!$status->hasError()) {
+                    if ($isValidDate) {
+                        $d = DateTime::createFromFormat('d/m/Y', $params['capture_complete_date']);
+                        $params['capture_complete_date'] = $d->format('Y-m-d');
+                    }
+                    $id = $this->_findOrCreateSaveGeneric('partner', $params);
+
+                    if (!$id) {
+                        $status->setStatusMessage(t('That partner could not be saved.'));
+                    } else {
+
+                        $status->setStatusMessage(t('The partner was saved.'));
+                        $this->_redirect("partner/edit/id/$id");
+                    }
+                }
+            }
+        } else if ($id) { // read data from db
+
+            $row = $db->fetchRow($db->select()->from('partner')->where('id = ?', $id));
+            if (!$row) {
+                $status->setStatusMessage(t('Error finding that record in the database.'));
+            } else {
+                $params = $row; // reassign form data
+
+                $params['capture_complete'] = 0;
+                if (isset($params['capture_complete_date']) && $params['capture_complete_date']) {
+                    $d = DateTime::createFromFormat('Y-m-d', $params['capture_complete_date']);
+                    $params['capture_complete_date'] = $d->format('d/m/Y');
+                    $params['capture_complete'] = 1;
+                }
+
+                $region_ids = Location::getCityInfo($params['location_id'], $this->setting('num_location_tiers'));
+                $params['city'] = $region_ids[0];
+                $region_ids = Location::regionsToHash($region_ids);
+                $params = array_merge($params, $region_ids);
+
+                $currentQuarterStartDate = $this->calculateCurrentQuarter();
+
+                $joinClause = $db->quoteInto('link_mechanism_partner.partner_id = subpartner.id AND link_mechanism_partner.partner_id != ?', $id);
+                $select = $db->select()
+                    ->from('mechanism_option', array())
+                    ->joinLeft('partner_funder_option', 'mechanism_option.funder_id = partner_funder_option.id', array())
+                    ->joinLeft('link_mechanism_partner', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array())
+                    ->joinLeft(array('subpartner' => 'partner'), $joinClause, array())
+                    ->joinLeft('partner', 'mechanism_option.owner_id = partner.id', array())
+                    ->where('mechanism_option.owner_id = ?', $id)
+                    ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'))
+                    ->group('mechanism_option.id');
+
+                if (!$this->hasACL('training_organizer_option_all')) {
+                    $select->joinInner('user_to_organizer_access',
+                        'partner.organizer_option_id = user_to_organizer_access.training_organizer_option_id OR ' .
+                        'subpartner.organizer_option_id = user_to_organizer_access.training_organizer_option_id', array())
+                        ->where('user_to_organizer_access.user_id = ?', $uid);
+                }
+
+                $select->columns(array('mechanism_option.id', 'mechanism_option.mechanism_phrase', 'mechanism_option.end_date',
+                    'partner_funder_option.funder_phrase', 'partner.partner'));
+
+                $select->columns(array('subpartners' => "GROUP_CONCAT(DISTINCT subpartner.partner ORDER BY subpartner.partner ASC SEPARATOR ',,,')"));
+
+                $primeMechanisms = $db->fetchAssoc($select);
+                foreach ($primeMechanisms as $partner_id => &$row) {
+                    if (strlen($row['subpartners'])) {
+                        $row['subpartners'] = explode(',,,', $row['subpartners']);
+                    }
+                }
+
+                $this->view->assign('primeMechanisms', $primeMechanisms);
+
+                $select = $db->select()
+                    ->from('link_mechanism_partner', array())
+                    ->joinLeft('mechanism_option', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array())
+                    ->joinLeft('partner', 'partner.id = mechanism_option.owner_id')
+                    ->where('mechanism_option.owner_id != ?', $id)
+                    ->where('link_mechanism_partner.partner_id = ?', $id)
+                    ->where('link_mechanism_partner.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
+
+                $select->columns(array('mechanism_option.mechanism_phrase', 'partner.partner', 'link_mechanism_partner.end_date'));
+
+                $secondaryMechanisms = $db->fetchAll($select);
+                $this->view->assign('secondaryMechanisms', $secondaryMechanisms);
+            }
+        }
+
+        if (!$this->hasACL("edit_partners")) {
             $this->view->viewonly = true;
         }
-		// assign form drop downs
-		$this->view->assign( 'status', $status );
-		$this->view->assign ( 'pageTitle', $this->view->mode == 'add' ? t ( 'Add Partner' ) : t( 'View Partner' ) );
-		$this->viewAssignEscaped ( 'partner', $params );
-		$this->viewAssignEscaped ( 'locations', Location::getAll () );
-		$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $params['partner_type_option_id'], false, $this->view->viewonly, false ) ); //table, col, selected_value
-		$this->view->assign ( 'subpartners', DropDown::generateHtml ( 'partner', 'partner', 0, false, $this->view->viewonly, false, true, array('name' => 'subpartner_id[]'), true ) );
-		$this->view->assign ( 'types',       DropDown::generateHtml ( 'partner_type_option', 'type_phrase', $params['partner_type_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'importance',  DropDown::generateHtml ( 'partner_importance_option', 'importance_phrase', $params['partner_importance_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'transitions', DropDown::generateHtml ( 'employee_transition_option', 'transition_phrase', $params['employee_transition_option_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'incomingPartners', DropDown::generateHtml ( 'partner', 'partner', $params['incoming_partner'], false, $this->view->viewonly, false, true, array('name' => 'incoming_partner'), true ) );
-		$this->view->assign ( 'organizers',  DropDown::generateHtml ( 'training_organizer_option', 'training_organizer_phrase', $params['organizer_option_id'], false, $this->view->viewonly, false, true, array('name' => 'organizer_option_id'), true ) );
-		$helper = new Helper();
-		$this->viewAssignEscaped ( 'facilities', $helper->getFacilities() );
-	}
+        // assign form drop downs
+        $this->view->assign('required_fields', array('partner', 'address1', 'city', 'province_id', 'hr_contact_name', 'hr_contact_phone', 'hr_contact_email', 'capture_complete_date'));
+        $this->view->assign('status', $status);
+        $this->view->assign('pageTitle', $this->view->mode == 'add' ? t('Add Partner') : t('View Partner'));
+        $this->viewAssignEscaped('partner', $params);
+        $this->viewAssignEscaped('locations', Location::getAll());
+        $this->view->assign('organizers', DropDown::generateHtml('training_organizer_option', 'training_organizer_phrase', $params['organizer_option_id'], false, $this->view->viewonly, false, true, array('name' => 'organizer_option_id'), true));
+    }
 
-	public function searchAction()
-	{
-		if (! $this->hasACL ( 'employees_module' )) {
-			$this->doNoAccessError ();
-		}
+    public function searchAction()
+    {
+        if (!$this->hasACL('employees_module')) {
+            $this->doNoAccessError();
+        }
 
-		$criteria = $this->getAllParams();
+        $criteria = $this->getAllParams();
+        $status = ValidationContainer::instance();
+        $locations = Location::getAll(); // used in view also
+        $db = $this->dbfunc();
 
-		if ($criteria['go'])
-		{
-			// process search
-			$where = array();
-			list($a, $location_tier, $location_id) = $this->getLocationCriteriaValues($criteria);
-			list($locationFlds, $locationsubquery) = Location::subquery($this->setting('num_location_tiers'), $location_tier, $location_id, true);
-			$sql = "SELECT DISTINCT
-					partner.id, partner.partner, partner.location_id, ".implode(',',$locationFlds)."
-					,GROUP_CONCAT(sub.partner) as subPartner
-					,GROUP_CONCAT(pfo.funder_phrase) as partnerFunder
-					,GROUP_CONCAT(mo.mechanism_phrase) as mechanism
-					,GROUP_CONCAT(psfm.funding_end_date) as funding_end_date
-					FROM partner 
-					LEFT JOIN ($locationsubquery) as l  ON l.id = partner.location_id
-					LEFT JOIN partner_to_subpartner_to_funder_to_mechanism psfm  ON partner.id = psfm.partner_id
-					LEFT JOIN partner_funder_option pfo         ON psfm.partner_funder_option_id = pfo.id
-					LEFT JOIN mechanism_option mo        		ON psfm.mechanism_option_id = mo.id
-					LEFT JOIN partner sub                       ON sub.id = psfm.subpartner_id 
-					LEFT JOIN location parent_loc               ON parent_loc.id = partner.location_id";
+        if ($criteria['go']) {
 
-			// restricted access?? only show partners by organizers that we have the ACL to view
-			$org_allowed_ids = allowed_org_access_full_list($this); // doesnt have acl 'training_organizer_option_all'
-			if($org_allowed_ids)
-				$where[] = " partner.organizer_option_id in ($org_allowed_ids) ";
-			// restricted access?? only show organizers that belong to this site if its a multi org site
-			$site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
-			if ($site_orgs)
-				$where[] = " partner.organizer_option_id in ($site_orgs) ";
+            // a less hacky version of this should probably be a helper function
+            $tier_id = null;
+            $location_id = null;
+            if (isset($criteria['region_c_id']) && $criteria['region_c_id']) {
+                $tmp = explode('_', $criteria['region_c_id']);
+                $location_id = array_pop($tmp);
+                $tier_id = 'region_c_id';
+            }
+            else if (isset($criteria['district_id']) && $criteria['district_id']) {
+                $tmp = explode('_', $criteria['district_id']);
+                $location_id = array_pop($tmp);
+                $tier_id = 'district_id';
 
-			if ($locationWhere = $this->getLocationCriteriaWhereClause($criteria, '', '')) {
-				#$where[] = $locationWhere;
-				$where[] = "($locationWhere OR parent_loc.parent_id = $location_id)"; #todo the subquery and parent_id is not working
-			}
+            }
+            else if (isset($criteria['province_id']) && $criteria['province_id']) {
+                $location_id = $criteria['province_id'];
+                $tier_id = 'province_id';
+            }
 
-			if ($criteria['subpartner_id'])     $where[] = 'subpartners.subpartner_id = '.$criteria['subpartner_id'];
-			if ($criteria['partner_id'])        $where[] = 'partner.id = '.$criteria['partner_id'];
-			if ($criteria['start_date'])        $where[] = 'funding_end_date >= \''.$this->_euro_date_to_sql( $criteria['start_date'] ) .' 00:00:00\'';
-			if ($criteria['end_date'])          $where[] = 'funding_end_date <= \''.$this->_euro_date_to_sql( $criteria['end_date'] ) .' 23:59:59\'';
-			if ( count ($where))
-  			  $sql .= ' WHERE ' . implode(' AND ', $where);
-			
-			    
-			$sql .= ' GROUP BY partner.id ';
+            $currentQuarterStartDate = $this->calculateCurrentQuarter();
 
-			$db = $this->dbfunc();
-			$rows = $db->fetchAll( $sql );
+            $select = $db->select()
+                ->from('partner', array('id', 'partner'))
+                ->joinLeft('mechanism_option', 'partner.id = mechanism_option.owner_id and mechanism_option.end_date >= ' . $currentQuarterStartDate->format('Y-m-d'), array())
+                ->joinLeft('link_mechanism_partner', 'link_mechanism_partner.mechanism_option_id = mechanism_option.id', array())
+                ->joinLeft(array('subpartner' => 'partner'), 'link_mechanism_partner.partner_id = subpartner.id AND link_mechanism_partner.partner_id <> mechanism_option.owner_id',
+                    array())
+                ->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array())
+                ->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = partner.location_id', array())
+                ->group('partner.id');
 
-			$locations = Location::getAll (); // used in view also
-			// hack #TODO - seems Region A -> ASDF, Region B-> *Multiple Province*, Region C->null Will not produce valid locations with Location::subquery
-			foreach ($rows as $i => $row) {
-				if ($row['province_id'] == ""){ // empty province
-					$updatedRegions = Location::getCityandParentNames($row['location_id'], $locations, $this->setting('num_location_tiers'));
-					$rows[$i] = array_merge($row, $updatedRegions);
-				}
-			}
+            if (!$this->hasACL('training_organizer_option_all')) {
+                $uid = $this->isLoggedIn();
+                $select->joinInner('user_to_organizer_access',
+                    'partner.organizer_option_id = user_to_organizer_access.training_organizer_option_id OR ' .
+                    'subpartner.organizer_option_id = user_to_organizer_access.training_organizer_option_id', array())
+                    ->where('user_to_organizer_access.user_id = ?', $uid);
+            }
 
-			$this->viewAssignEscaped('results', $rows);
-			$this->view->assign ('count', count($rows) );
+            $select->columns(array('location.province_name', 'location.district_name', 'location.region_c_name'));
+            $select->columns(array('subpartners' => "GROUP_CONCAT(DISTINCT subpartner.partner ORDER BY subpartner.partner ASC SEPARATOR ', ')"));
 
-			if ($criteria ['outputType']) {
-				foreach($rows as $i => $row) {
-					unset($rows[$i]['city_id']);
-					unset($rows[$i]['location_id']);
-					unset($rows[$i]['province_id']);
-					unset($rows[$i]['district_id']);
-					unset($rows[$i]['region_c_id']);
-					unset($rows[$i]['region_d_id']);
-					unset($rows[$i]['region_e_id']);
-					unset($rows[$i]['region_f_id']);
-					unset($rows[$i]['region_g_id']);
-					unset($rows[$i]['region_h_id']);
-					unset($rows[$i]['region_i_id']);
-				}
-				$this->sendData ( $this->reportHeaders ( false, $rows ) );
-			}
-		}
-		// assign form drop downs
-		$this->view->assign('status', $status);
-		$this->viewAssignEscaped ( 'criteria', $criteria );
-		$this->viewAssignEscaped ( 'locations', $locations );
-		$this->view->assign ( 'partners',    DropDown::generateHtml ( 'partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, false ) );
-		$this->view->assign ( 'subpartners', DropDown::generateHtml ( 'partner', 'partner', $criteria['subpartner_id'], false, $this->view->viewonly, false, true, array('name' => 'subpartner_id'), true ) );
-	}
+            // selecting the funder phrase and end date with the mechanism so the output matches in each column
+            $select->columns(array('mechanism_info' => "GROUP_CONCAT(DISTINCT mechanism_phrase, ',,,', funder_phrase, ',,,', mechanism_option.end_date ORDER BY mechanism_phrase ASC SEPARATOR ',,,')"));
+
+            if ($location_id) {
+                $select->where($tier_id . ' = ?', $location_id);
+            }
+
+            if (isset($criteria['partner_id']) && $criteria['partner_id']) {
+                $select->where('partner.id = ?', $criteria['partner_id']);
+            }
+
+            if (isset($criteria['funding_start_date']) &&
+                $status->isValidDateDDMMYYYY('funding_start_date', t('Data Capture Completion Date'), $criteria['funding_start_date'])) {
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_start_date']);
+                $select->where('mechanism_option.end_date >= ?', $d->format('Y-m-d'));
+            }
+            if (isset($criteria['funding_end_date']) &&
+                $status->isValidDateDDMMYYYY('funding_end_date', t('Data Capture Completion Date'), $criteria['funding_end_date'])) {
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_end_date']);
+                $select->where('mechanism_option.end_date <= ?', $d->format('Y-m-d'));
+            }
+
+            $complete_start = null;
+            if (isset($criteria['capture_complete_start_date']) && $status->isValidDateDDMMYYYY('capture_complete_start_date', t('Data Capture Completion Date'), $criteria['capture_complete_start_date'])) {
+                $complete_start = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_start_date']);
+            }
+            $complete_end = null;
+            if (isset($criteria['capture_complete_end_date']) && $status->isValidDateDDMMYYYY('capture_complete_end_date', t('Data Capture Completion Date'), $criteria['capture_complete_end_date'])) {
+                $complete_end = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_end_date']);
+            }
+
+            if (isset($criteria['show_complete_captures']) && $criteria['show_complete_captures']) {
+                if (!$complete_start && !$complete_end) {
+                    $status->addError('capture_complete_start_date', t('Data Capture Completion Date') . ' ' . t('is required.'));
+                }
+                if ($complete_start) {
+                    $select->where('partner.capture_complete_date >= ?', $complete_start->format('Y-m-d'));
+                }
+                if ($complete_end) {
+                    $select->where('partner.capture_complete_date <= ?', $complete_end->format('Y-m-d'));
+                }
+            }
+            else {
+                $completeclause = null;
+                if ($complete_start && $complete_end) {
+                    $completeclause = $db->quoteInto('((partner.capture_complete_date >= ? AND ', $complete_start->format('Y-m-d'));
+                    $completeclause .= $db->quoteInto('partner.capture_complete_date <= ?) OR partner.capture_complete_date IS NULL)', $complete_end->format('Y-m-d'));
+                }
+                else if ($complete_start) {
+                    $completeclause = $db->quoteInto('((partner.capture_complete_date >= ?) OR partner.capture_complete_date IS NULL)', $complete_start->format('Y-m-d'));
+                }
+                else if ($complete_end) {
+                    $completeclause = $db->quoteInto('((partner.capture_complete_date <= ?) OR partner.capture_comlplete_date IS NULL)', $complete_end->format('Y-m-d'));
+                }
+                if ($completeclause !== null) {
+                    $select->where($completeclause);
+                }
+            }
+
+            if (!$status->hasError()) {
+                $headers = array(t('ID'), t('Partner') . ' ' . t('Name'), t('Region A (Province)'),
+                    t('Region B (Health District)'), t('Region C (Local Region)'), t('Sub Partner'),
+                    t('Funder'), t('Mechanism'), t('Funder End Date'));
+                $output = $db->fetchAll($select);
+
+                // post-process the mechanism_info column into 3 columns
+                foreach ($output as &$r) {
+                    $mechanism_info = explode(',,,', $r['mechanism_info']);
+                    $numitems = count($mechanism_info);
+                    unset($r['mechanism_info']);
+                    for ($i = 0; $i < $numitems; $i += 3) {
+                        $r['funder_phrase'] .= $mechanism_info[$i + 1] . ', ';
+                        $r['mechanisms'] .= $mechanism_info[$i] . ', ';
+                        $r['end_date'] .= $mechanism_info[$i + 2] . ', ';
+                    }
+                    $r['funder_phrase'] = trim($r['funder_phrase'], ', ');
+                    $r['mechanisms'] = trim($r['mechanisms'], ', ');
+                    $r['end_date'] = trim($r['end_date'], ', ');
+
+                }
+                $this->viewAssignEscaped('output', $output);
+                $this->viewAssignEscaped('headers', $headers);
+            }
+        }
+
+        $this->viewAssignEscaped('criteria', $criteria);
+        $this->viewAssignEscaped('locations', $locations);
+        $this->view->assign('partners', DropDown::generateHtml('partner', 'partner', $criteria['partner_id'], false, $this->view->viewonly, $this->getAvailablePartners()));
+    }
 }
 
-?>

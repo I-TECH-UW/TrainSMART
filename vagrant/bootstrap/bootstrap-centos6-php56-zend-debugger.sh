@@ -20,7 +20,7 @@ mv /home/vagrant/selinux-config /etc/selinux/config
 
 # update base packages
 yum update -y
-yum install yum-plugin-replace nano dkms php php-devel php-xml php-mysql mysql-server mysql-devel git-core dos2unix telnet nano mod_ssl -y
+yum install yum-plugin-replace nano dkms php php-devel php-mbstring php-gd php-xml php-mysql mysql-server mysql-devel git-core dos2unix telnet nano mod_ssl php-pecl-xdebug.x86_64 -y
 
 yum replace mysql-libs --replace-with mysql56u-libs -y
 yum replace php --replace-with php56u -y
@@ -66,8 +66,8 @@ chkconfig mysqld on
 service mysqld start
 mysql -u root </home/vagrant/grant-privileges.sql
 mysql -u admin </home/vagrant/data.sql
-rm /home/vagrant/data.sql
-rm /home/vagrant/grant-privileges.sql
+#rm /home/vagrant/data.sql
+#rm /home/vagrant/grant-privileges.sql
 service mysqld restart
 
 # let's make it so we can look at the log files without being root

@@ -126,6 +126,10 @@
 		      if(typeof aResultItem[5] != "undefined" && aResultItem[5] != "" && aResultItem[5] != "0") {
 		        aMarkup [aMarkup.length] = " - " + aResultItem[5] + "";  
 		      }
+		      // TA:113 is trainer
+		      if(typeof aResultItem[8] != "undefined" && aResultItem[8] != "" && aResultItem[8] != "0") {
+		        aMarkup [aMarkup.length] = " - " + aResultItem[8] + "";  
+		      }
 		      
 		      
 		      aMarkup [aMarkup.length]= "</div>";

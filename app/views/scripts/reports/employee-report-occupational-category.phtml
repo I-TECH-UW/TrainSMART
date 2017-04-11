@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><?php echo $this->translation['Application Name'];?> | <?php echo t('Employee') . " " . t('Reports'); ?></title>
+<?php
+require_once('views/helpers/ScriptContainer.php');
+print ScriptContainer::$instance->renderCSSHead();
+print ScriptContainer::$instance->renderJSHead();
+echo $this->partial('reports/employee-reports-common-javascript-header-partial.phtml');
+?>
+
+</head>
+<body class="yui-skin-sam">
+<div id="pageHolder">
+    <div id="header"><?php require_once('views/scripts/header.phtml');?></div>
+    <div id="content">
+        <?php require_once 'views/scripts/status.phtml' ?>
+        <div id="subcontent">
+            <?php
+            echo $this->partial('reports/employee-reports-report-types-partial.phtml', array('site_style' => $this->site_style, 'base_url' => $this->base_url));
+            ?>
+
+            <div class="clear"></div>
+            <div id="contentheader">
+                <h2><?php echo t("Employee") . " " . t("Reports"); ?></h2><br/>
+            </div>
+            <div class="pad50 clear"></div>
+            <form action="" method="get" class="form_employee">
+                <?php
+                    echo $this->partial('reports/employee-reports-occupational-category-partial.phtml',
+                        array('classifications' => $this->classifications));
+                    echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
+                        array('translation' => $this->translation, 'locations' => $this->locations,
+                            'criteria' => $this->criteria, 'setting' => $this->setting));
+                    echo $this->partial('reports/employee-reports-common-partial.phtml',
+                        array('mechanisms' => $this->mechanisms, 'funders' => $this->funders,
+                            'transitions' => $this->transitions, 'transition_types' => $this->transition_types));
+                    echo $this->partial('/reports/date-range-partial.phtml',
+                        array('label' => t('Contract end date'), 'prefix' => 'contract_',
+                            'start_date' => $this->criteria['contract_start_date'],
+                            'end_date' => $this->criteria['contract_end_date'], 'show_value' => false)
+                    );
+                    echo $this->partial('reports/ps-search-preview-button-partial.phtml', array());
+                ?>
+
+            </form>
+            <?php if (isset($this->output)) {
+                echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
+                    array('output' => $this->output, 'headers' => $this->headers));
+                ?>
+                <input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large"
+                       onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=csv"?>')">
+            <?php } ?>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

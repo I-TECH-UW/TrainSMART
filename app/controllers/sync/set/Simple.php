@@ -17,6 +17,12 @@ class SyncSetSimple
 	public $tableName = null;
 	public $syncfile_id = null;
 	
+	public $log = ""; //TA:50
+	public $error = ""; //TA:#313
+	public $last_id = null;
+	
+	//public static $used_ids = array();//TA:50
+	
 	/**
 	 * Use getLeftTable or getRightTable to access these 
 	 */
@@ -119,7 +125,9 @@ class SyncSetSimple
 	 */
 	public function fetchLeftPool()
 	{
-		$rows = $this->getLeftTable()->fetchAll('(timestamp_updated > "' . SyncCompare::$lastSyncCompleted . '")');
+	    //TA:50 remove condition by 'timestamp_updated'
+		//$rows = $this->getLeftTable()->fetchAll('(timestamp_updated > "' . SyncCompare::$lastSyncCompleted . '")');
+		$rows = $this->getLeftTable()->fetchAll();
 		return $rows;
 	}
 	
@@ -184,8 +192,12 @@ class SyncSetSimple
 	{
 		$table = $this->getRightTable($refTableName);
 				
+		$table_PK = $table->PK(); //TA:50 this part is not working
+		if(!$table_PK) //TA:50 do trick to fix it, by default usually primary key id 'id'
+		    $table_PK = "id";
+		
 		// we have a uuid, return the unique match 
-		$row = $table->fetchRow( $table->PK()." = ".$id);
+		$row = $table->fetchRow( $table_PK ." = ".$id);
 		
 		if ( $row ) return $row;
 		
@@ -210,8 +222,24 @@ class SyncSetSimple
 		
 		return null;
 	}
+	
+	//TA:50 
+	function fetchLeftItemById($id, $refTableName = null){
+	    
+	    $table = $this->getLeftTable($refTableName);
+	
+	    $table_PK = $table->PK(); //TA:50 this part is not working 
+	    if(!$table_PK) //TA:50 do trick to fix it, by default usually primary key id 'id'
+	        $table_PK = "id";
+	    
+	    if($id) {
+	        return $table->fetchRow('(' . $table_PK . '=' . $id . ')');
+	    }
+	
+	    return null;
+	}
 
-	function fetchLeftItemById($id, $refTableName = null)
+	function fetchLeftItemByIdOld($id, $refTableName = null)
 	{
 		$table = $this->getLeftTable($refTableName);
 				
@@ -253,7 +281,6 @@ class SyncSetSimple
 	 */
 	public function isConflict($ld, $rd)
 	{
-		
 		if ( !array_key_exists('timestamp_updated',$ld->toArray()) || !array_key_exists('timestamp_updated',$rd->toArray()))
 			return true;
 		
@@ -307,8 +334,8 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 	 * @param (string) $rightUuid right-uuid from log table 
 	 * @return results of an insert or update OR, false if failed 
 	 */
-	public function updateMember($left_id, $right_id)
-	{
+	public function updateMember($left_id, $right_id){
+	    $this->log = $this->log . "UPDATE: id:" . $right_id . ", ";
 		$lItem = $this->fetchLeftItemById($left_id, $this->tableName);
 		$rItem = $this->fetchRightItemById($right_id, $this->tableName);
 		$lTable = $this->getLeftTable();
@@ -316,13 +343,18 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 		
 		foreach($this->getColumns() as $col) {
 			if(is_array($col)) {
-				list($fk, $type) = $col;
+			    list($fk, $type) = $col;
 				$rItem->$fk = $this->_map_fk($lItem, $fk, $type);
 			} else {
 				//update value
+				if($rItem->$col !== $lItem->$col){
+	                $this->log = $this->log . $col . ":" . $rItem->$col . "=>" . $lItem->$col . ", ";
+	            }
 				$rItem->$col = $lItem->$col;
 			}
 		}
+		
+		$this->log = $this->log . "\n";
 		
 		//undelete right side if necessary
 		if ( $lTable->has_is_deleted_col() && $rTable->has_is_deleted_col()) {
@@ -333,7 +365,8 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 		// update existing item 
 		$result = $rItem->save();
 		if(!$result) {
-			throw new Exception('Update failed @'. $left_id .' @'. $right_id .' Could not update item.');
+		    $this->log = $this->log .  "UPDATE ERROR: id=" . $lItem->id . "\n";
+			//throw new Exception("Update failed for table'" . $this->tableName . "':" . $left_id .'=>'. $right_id .' Could not update item.');
 		}
 		
 		return $result;
@@ -364,7 +397,8 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 			if ( ($type == 'location') && !intval($lref->is_created_offline)) {
         $rref = $this->fetchRightItemById($lref->id, $type);
 			} else {
- 			  $rref = $this->fetchRightItemByUuid($lref->uuid, $type);
+ 			  //TA:50 do not take by UUID, only by id $rref = $this->fetchRightItemByUuid($lref->uuid, $type);
+			    $rref = $this->fetchRightItemById($lref->id, $type);
 			}
  			if(!$rref) {
 				throw new Exception('FK lookup failed. Could not find required reference item. '. $type . ':'.$lref->uuid.' It is possible that the referenced item was deleted from the website.');
@@ -379,9 +413,21 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 		return $rref->$pk;
 	}
 	
-	public function deleteMember($right_id) {
-		$rtable = $this->getRightTable();
-		$rtable->delete($rtable->PK().' = '.$right_id);
+	public function deleteMember($right_id, $commit=false) {
+	    if($commit){
+		  $rtable = $this->getRightTable();
+		  $rtable->delete($rtable->PK().' = '.$right_id);
+	    }
+	}
+	
+	//TA:50
+	public function getNextId(){
+	    if(!$this->last_id){
+	        $db_opt = Zend_Db_Table_Abstract::getDefaultAdapter();
+	        $this->last_id = $db_opt->fetchRow("select max(id) from " . $this->tableName)['max(id)'];
+	    }
+	    $this->last_id = $this->last_id +1;
+	    return $this->last_id;
 	}
 	
 	/**
@@ -395,14 +441,18 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 		$lItem = $this->fetchLeftItemById($left_id, $this->tableName);
 		$rItem = $this->fetchRightItemById($right_id, $this->tableName);
 		
-		if ( !$lItem OR !$rItem OR !$lItem->uuid OR !$rItem->uuid )
+// TA:50 we do not use uuid		
+//if ( !$lItem OR !$rItem OR !$lItem->uuid OR !$rItem->uuid )
+		if ( !$lItem OR !$rItem)
 			throw new Exception('Alias failed @'. $left_id .' @'. $right_id .' Could not alias item.');
 		
-		if ( $lItem->uuid == $rItem->uuid ) {
-			throw new Exception('Alias not needed. Uuids match @'. $lItem->uuid);
-		}
+// TA:50 we do not use uuid		
+//if ( $lItem->uuid == $rItem->uuid ) {
+// 			throw new Exception('Alias not needed. Uuids match @'. $lItem->uuid);
+// 		}
 				
-		$alias = array('syncfile_id'=>$this->syncfile_id, 'right_id'=> $right_id, 'right_uuid'=>$rItem->uuid, 'item_type'=> $this->tableName, 'left_uuid'=> $lItem->uuid, 'left_id'=>$left_id); 
+//TA:50 we do not use uuid 		$alias = array('syncfile_id'=>$this->syncfile_id, 'right_id'=> $right_id, 'right_uuid'=>$rItem->uuid, 'item_type'=> $this->tableName, 'left_uuid'=> $lItem->uuid, 'left_id'=>$left_id); 
+		$alias = array('syncfile_id'=>$this->syncfile_id, 'right_id'=> $right_id, 'right_uuid'=>'', 'item_type'=> $this->tableName, 'left_uuid'=> '', 'left_id'=>$left_id);
 		if(!self::$aliasTable->insert($alias)) {
 			throw new Exception('Alias failed @'. $left_id .' @'. $right_id .' Could not alias item.');
 		}
@@ -434,12 +484,12 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
       }
       
     } catch(Exception $e) {
-       throw new Exception('Foreign key verification failed. The '.$this->tableName.' reference to '.$fk.' '.$lItem->$fk.' does not exist.' );
+       throw new Exception('Foreign key verification failed. The '.$this->tableName.' reference to '.$fk.' '.$lItem->$fk.' does not exist.' . $e->getTraceAsString());
     }		
 	}
 	
 	
-	public function insertMember($left_id) {
+	public function insertMember($left_id, $path= null, $field=null, $commit= false) {
 
 		//check for insert of deleted item
 		try {
@@ -459,13 +509,18 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 				}
 			}
 			
+// 			//TA:50 also copy id
+// 			$rItem->id = $lItem->id;
+			
 			//also copy uuid and timestamp_created
 			if ( $lTable->has_uuid_col() && $rTable->has_uuid_col() ) {
 				$rItem->uuid = $lItem->uuid;
 			} else if ( $rTable->has_uuid_col() ) {
 				$rItem->uuid = uniqid();
 			}
-			$rItem->timestamp_created = $lItem->timestamp_created;
+			if($lTable->has_time_created_col() && $rTable->has_time_created_col()){//TA:50
+			     $rItem->timestamp_created = $lItem->timestamp_created;
+			}
 			if ( $rTable->has_is_default_col() )
 				$rItem->is_default = 0;
 					
@@ -479,6 +534,16 @@ SyncCompare::scratchData('is conflict match @'. $ld->{$col} .' @'. $rd->{$col});
 			if ( strstr($e->getMessage(),'Integrity constraint violation: 1062 Duplicate entry') === false)
 			 throw $e;
 		}
+	}
+	
+	//TA:50
+	public function getLog() {
+	    return $this->log;
+	}
+	
+	//TA:#315
+	public function getError() {
+	    return $this->error;
 	}
 	
 }

@@ -60,7 +60,7 @@ input[type='checkbox'] { margin-right: .5em;}
 
 .clear { clear:both; margin-top:0px;}
 
-.errorText, #statusBox.statusError, .required { color: #F22; }
+.errorText, #statusBox.statusError, .required { color: #F22 !important; }
 
 .hrGrey { background:url(../images/grad_grey.gif) center repeat-x; height:30px; margin-top:5px; }
 
@@ -83,6 +83,9 @@ input[type='checkbox'] { margin-right: .5em;}
 /* Forms */
 
 .fieldLabel,.fieldLabelThin { float:left; width:240px; text-align:right; margin-right:1em; margin-bottom:1em; font-size:11px; font-weight:bold; padding-top:0.3em; color:#696969; clear:left; }
+
+.fieldLabelNoFloat { width:240px; text-align:right; margin-right:1em; margin-bottom:1em; font-size:11px; font-weight:bold; padding-top:0.3em; color:#696969; }
+.fieldLabelFont { font-size:11px; font-weight:bold; color:#696969; }
 
 .fieldInput { margin-bottom:1em;}
 
@@ -207,7 +210,9 @@ table.tableChoices td { padding-bottom:0.5em; } /* checkbox choices */
 
 }
 
-#criteria .autoHeight { height: auto; padding-bottom:1em; }
+#criteria .autoHeight { height: auto; padding-bottom:1em;}
+
+#criteria .autoWidth { width:auto;}
 
 #criteria.multiselect_report .leftBorder { height:auto; padding-bottom:1em; }
 
@@ -319,9 +324,6 @@ table.tableChoices td { padding-bottom:0.5em; } /* checkbox choices */
 
 #editTableSaving { margin-top:0.3em; }
 
-/* IE7 fix? */
-
-.yui-dt-editor { margin-top:expression('-35px'); }
 
 
 
@@ -1115,8 +1117,6 @@ table {
 
 	font-size: 11px; 
 
-	padding: ; 
-
 }
 
 .tsbutton, .tsbutton:visited, .medium.tsbutton, .medium.tsbutton:visited { 
@@ -1348,8 +1348,8 @@ table {
 	-webkit-border-radius	: 3px;
 }
 
-.form_employee input:not([type="submit"]):not([type="checkbox"]),
-.form_styled input:not([type="submit"]):not([type="checkbox"]) {
+.form_employee input:not([type="submit"]):not([type="checkbox"]):not([type="button"]):not([type="text"]),
+.form_styled input:not([type="submit"]):not([type="checkbox"]):not([type="button"]):not([type="text"]) {
 	width:250px;
 }
 
@@ -1359,13 +1359,7 @@ table {
 	max-width:250px;
 }
 
-.form_employee #hours_min,  .form_employee #hours_max,
-.form_employee #cost_min,   .form_employee #cost_max,
-.form_employee #start_date, .form_employee #end_date,
-.form_employee #percentage,
-.form_employee #hours_per_mechanism_min, .form_employee #hours_per_mechanism_max,
-.form_employee #employee_cost_per_mechanism_min, .form_employee #employee_cost_per_mechanism_max,
-.datepicker,.datepicker {
+.form_employee input[type="text"] .datepicker {
 	max-width: 100px;
 	min-width: 100px;
 	width:100px;

@@ -156,9 +156,6 @@ class AdminController extends UserController
 			'label_training_center'  => 'Training Center',
 			'label_participant'      => 'Participant',
 			'label_participants'     => 'Participants',
-			'label_employee'         => 'Employee',
-			'label_employees'        => 'Employees',
-			'label_employer'         => 'Employer',
 		    'label_assessment'       => 'Assessment',
 		);
 
@@ -175,6 +172,7 @@ class AdminController extends UserController
 			'check_mod_employee'       => 'module_employee_enabled',
 		    'check_mod_assessment'     => 'module_assessment_enabled',
 			'check_country_reports' => 'display_country_reports',//TA:17: 9/11/2014
+			'display_use_offline_app' => 'display_use_offline_app' //TA:50:1
 		);
 
 
@@ -385,6 +383,7 @@ class AdminController extends UserController
 			'check_course_objectives' => 'display_course_objectives',
 			'check_training_pre'      => 'display_training_pre_test',
 			'check_training_post'     => 'display_training_post_test',
+		    'check_training_final_mark'     => 'display_training_final_mark',//TA:#313
 			'check_training_custom1'  => 'display_training_custom1',
 			'check_training_custom2'  => 'display_training_custom2',
 			'check_training_custom3'     => 'display_training_custom3',
@@ -405,6 +404,7 @@ class AdminController extends UserController
 			'check_facilitator_info' => 'display_facilitator_info',//TA:17: 9/03/2014
 			'check_training_score' => 'display_training_score',//TA:17: 9/03/2014
 			'check_training_location'          => 'display_training_location', //TA:17:14 11/20/2014
+		    'check_training_pt_pass' => 'display_training_pt_pass',//TA:#271
 		);
 
 		if($this->getRequest()->isPost()) { // Update db
@@ -472,6 +472,13 @@ class AdminController extends UserController
 			if ( $filename ) {
 				$location_obj = new ITechTable(array('name' => 'location'));
 				while ($row = $this->_csv_get_row($filename) ) {
+				    //TA:#213
+			    //INFORCE user to create files only in UTF-8 encoded:
+			    //Option 1: Excel:Save as Unicode Text -> Notepad: replace tabs with commas, save as csv UTF-8
+			    //Option 2: OpenOffice
+			    //It is not required for english, but absolutelly required for special characteristics.
+			    //If files saved in UTF-8 encoded, so we do not need this line
+			    // $row = array_map("utf8_encode", $row); 
 					if ( is_array($row) ) {
 						//add province
 						if ( isset($row[0] ) ) {
@@ -719,6 +726,8 @@ class AdminController extends UserController
 		);
 		$checkboxFields = array(
 			'check_approval_mod'     => 'module_facility_approval',
+		    'check_education_mod'     => 'module_people_education',//TA:#331.1
+		    'check_participants_attestation'     => 'module_participants_attestation',//TA:#331.2
 			'check_multi_sponsors'   => 'allow_multi_sponsors',
 			'check_display_dates'    => 'display_sponsor_dates',
 			'check_require_dates'    => 'require_sponsor_dates',
@@ -820,7 +829,16 @@ class AdminController extends UserController
 			'label_comments'    => 'Qualification Comments',
 			'label_address1'		=> 'Address 1',
 			'label_address2'		=> 'Address 2',
-			'label_home_phone'  => 'Home phone'
+			'label_home_phone'  => 'Home phone',
+		    'label_education_history'  => 'Education History',//TA:#331.1
+		    'label_type_of_education'  => 'Type of Education',//TA:#331.1
+		    'label_official_school_name'  => 'Official School Name',//TA:#331.1
+		    'label_education_country'  => 'Education Country',//TA:#331.1
+		    'label_year_graduation'  => 'Year of Graduation/Completion',//TA:#331.1
+		    'label_attestation_progress'  => 'Attestation Progress',//TA:#331.2
+		    'label_attestation_category'  => 'Attestation Category',//TA:#331.2
+		    'label_attestation_level'  => 'Attestation Level',//TA:#331.2
+		    'label_attestation_year'  => 'Attestation Year',//TA:#331.2
 		);
 
 		// _system settings
@@ -852,6 +870,8 @@ class AdminController extends UserController
 			'check_primary_responsibility'  => 'display_primary_responsibility',
 			'check_secondary_responsibility'  => 'display_secondary_responsibility',
 			'check_approval_mod'              => 'module_person_approval',
+		    'check_education_mod'              => 'module_people_education',//TA:#331.1
+		    'check_attestation_mod'              => 'module_participants_attestation',//TA:#331.2
 			'check_people_comments'	=> 'display_people_comments', //TA:17: 09/09/2014
 			'check_people_facilitator' => 'display_people_facilitator', //TA:17: 09/09/2014
 			'check_people_birthdate' => 'display_people_birthdate', //TA:17: 09/10/2014
@@ -863,8 +883,7 @@ class AdminController extends UserController
 			// update translation labels
 			$tranTable = new Translation();
 			foreach($labelNames as $input_key => $db_key) {
-
-				if ( $this->getParam($input_key) ) {
+			    if ( $this->getParam($input_key) ) {
 					try {
 						$tranTable->update(
 							array('phrase' => $this->getParam($input_key)),
@@ -1601,6 +1620,23 @@ class AdminController extends UserController
 			if(!$db->fetchCol ( 'SELECT person_id FROM trainer WHERE person_id=?', $mergeToID)){ //TA:21: 09/26/2014
 				$db->query ("UPDATE trainer SET person_id = $mergeToID WHERE person_id = $mergeFromID");
 			}
+			//TA:52 10/06/2015
+			$db->query ("UPDATE trainer SET is_deleted=1 WHERE person_id = $mergeFromID");
+			
+			//TA:52 10/06/2015
+			$table = 'training_to_trainer';
+ 			$from_trainer_training = $db->fetchCol ( 'SELECT training_id FROM training_to_trainer WHERE trainer_id=?', $mergeFromID);
+ 			$to_trainer_training = $db->fetchCol ( 'SELECT training_id FROM training_to_trainer WHERE trainer_id=?', $mergeToID);
+ 			$arr = array();
+			for($i=0; $i<count($from_trainer_training); $i++){
+				if(!in_array($from_trainer_training[$i], $to_trainer_training)){
+					array_push($arr, $from_trainer_training[$i]);
+				}
+			}
+			for($i=0; $i<count($arr); $i++){// training ids list to update
+				$db->query ("UPDATE training_to_trainer SET trainer_id = $mergeToID WHERE trainer_id = $mergeFromID and training_id=$arr[$i]");
+			}
+			$db->query ("DELETE from training_to_trainer WHERE trainer_id = $mergeFromID");
 
 			$table = 'trainer_history';
 			$affectedIDs = implode( $db->fetchCol ( 'SELECT vid FROM trainer_history WHERE person_id = ?', $mergeFromID ) );
@@ -2014,6 +2050,7 @@ class AdminController extends UserController
 		$this->viewAssignEscaped ( 'facility_sponsors', $sponsorsArray );
 	}
 
+	
 	protected function facilityMerge($mergeFromID, $mergeToID)
 	{
 		$status = ValidationContainer::instance();
@@ -2046,6 +2083,16 @@ class AdminController extends UserController
 
 			$table = 'facility';
 			$db->query ("UPDATE facility SET is_deleted = 1 WHERE id = $mergeFromID");
+			
+			//TA:54 10/06/2015
+			$table = 'facility_sponsors';
+			$db->query ("UPDATE facility_sponsors SET facility_id = $mergeToID WHERE facility_id = $mergeFromID");
+			//TA:54 10/06/2015
+			$table = 'commodity';
+			$db->query ("UPDATE commodity SET facility_id = $mergeToID WHERE facility_id = $mergeFromID");
+			//TA:54 10/06/2015
+			$table = 'link_facility_addresses';
+			$db->query ("UPDATE link_facility_addresses SET id_facility = $mergeToID WHERE id_facility = $mergeFromID");
 
 		} catch (Exception $e) {
 			$status->addError( null, t('Error updating facilities. Table:').space.$table );
@@ -2165,28 +2212,58 @@ class AdminController extends UserController
 			}
 
 			switch($params['_action']) {
-				case "addnew":
-					$helper->addClasses($data);
-					break;
-				case "update":
-					$helper->updateClasses($data);
-					break;
+				case "addnew": {
+                    $helper->addClasses($data);
+                    break;
+                }
+				case "update": {
+                    $helper->updateClasses($data);
+                    break;
+                }
+                case "delete": {
+                    $helper->deleteClass($data);
+                }
 			}
 			$this->_redirect ( 'admin/preservice-classes' );
 		}
 
 		$db = $this->dbfunc();
-		$q = "select id, external_id, title from class_modules ORDER BY title ASC";
-		// this view relies on the indexes of the resulting array from fetchAssoc to be the db ids
-		// which relies, in turn, on id being the first column selected
+		$q = $db->select()->from('class_modules', array('id', 'external_id', 'title'))->order('title ASC');
 		$modules = $db->fetchAssoc($q);
 
-		$list = $helper->AdminClasses();
+        $select = $db->select()
+            ->from('classes', array())
+            ->joinLeft('lookup_coursetype', 'classes.coursetypeid = lookup_coursetype.id', array())
+            ->joinLeft('tutor', 'classes.instructorid = tutor.id', array())
+            ->joinLeft('person',
+                'tutor.personid = person.id AND CHAR_LENGTH(person.first_name) > 0 AND CHAR_LENGTH(person.last_name) > 0',
+                array())
+            ->order('classname')
+            ->columns(array('classes.id', 'classname', 'coursetypeid' => 'lookup_coursetype.id',
+                'lookup_coursetype.coursetype', 'coursetopic',
+                'startdate' => new Zend_Db_Expr("DATE_FORMAT(classes.startdate, '%d/%m/%Y')"),
+                'enddate' => new Zend_Db_Expr("DATE_FORMAT(classes.enddate, '%d/%m/%Y')"),
+                'instructorid' => 'tutor.id', 'instructor' => 'CONCAT_WS(", ", person.last_name, person.first_name)',
+                'class_modules_id', 'custom_1', 'maxcredits', 'custom_2'
+            ));
 
-		$q = "select id, coursetype from lookup_coursetype ORDER BY coursetype ASC";
-		$coursetypes = $db->fetchAssoc($q);
+        $list = $this->dbfunc()->fetchAll($select);
 
-		$tutors = $helper->getAllTutors();
+		$q = $db->select()
+            ->from('lookup_coursetype', array('id', 'coursetype'))
+            ->order('coursetype ASC');
+
+		$coursetypes = $db->fetchPairs($q);
+
+		$q = $db->select()
+            ->from('tutor', array())
+            ->joinInner('person',
+                'tutor.personid = person.id AND CHAR_LENGTH(person.first_name) > 0 AND CHAR_LENGTH(person.last_name) > 0',
+                array())
+            ->columns(array('tutor.id', 'name' => 'CONCAT(person.last_name, ", ", person.first_name)'))
+            ->order('name');
+        $tutors = array('' => t('--choose--')) + $db->fetchPairs($q);
+
 		$this->view->assign("lookup", $list);
 		$this->view->assign("coursetypes", $coursetypes);
 		$this->view->assign("tutors", $tutors);
@@ -2291,6 +2368,7 @@ class AdminController extends UserController
 			'label_ps_ca_mark' => 'ps ca mark',
 			'label_ps_credits' => 'ps credits',
 			'label_ps_class_modules_custom_1' => 'ps class modules custom 1',
+		    'label_ps_inst_sponsor' => 'ps inst sponsor',//TA:88
 
 		);
 
@@ -3160,7 +3238,7 @@ class AdminController extends UserController
 		$this->view->assign('parent', $parent);
 	}
 
-	public function skillsmartChwPersonFieldsAction() {
+	public function skillsmartChwSettingsAction() {
 
 		$labelOrder = array(
 			'label_last_name',
@@ -3171,6 +3249,7 @@ class AdminController extends UserController
 			'label_age',
 			'label_gender',
 			'label_ps_spouse_name',
+		    'label_ps_inst_sponsor',//TA:88
 			'.label_highest_qualification_achieved.',
 			'label_ps_local_address',
 			'label_province',
@@ -3208,6 +3287,12 @@ class AdminController extends UserController
 			'label_date_certificate_was_received_from_the_aqp',
 			'label_certificate_number',
 			'label_date_learner_received_certificate',
+			'-Certificate Issuers-',
+			'label_certificate_issuer',
+			'label_certificate_issuer_name',
+			'label_certificate_issuer_phone',
+			'label_certificate_issuer_email',
+			'label_certificate_issuer_logo',
 		);
 
 		$dropdownLinks = array(
@@ -3230,6 +3315,7 @@ class AdminController extends UserController
 			'label_age'                                          => 'Age',
 			'label_gender'                                       => 'Gender',
 			'label_ps_spouse_name'                               => 'ps spouse name',
+		    'label_ps_inst_sponsor'                              => 'ps inst sponsor',//TA:88
 			'label_highest_qualification_achieved'               => 'Highest Qualification Achieved',
 			'label_ps_local_address'                             => 'ps local address',
 			'label_province'                                     => 'Province',
@@ -3267,34 +3353,91 @@ class AdminController extends UserController
             'label_date_certificate_was_received_from_the_aqp'   => 'Date Certificate was Received From the AQP',
 			'label_certificate_number'                           => 'Certificate Number',
 			'label_date_learner_received_certificate'            => 'Date Learner Received Certificate',
+
+			'label_certificate_issuer'                           => 'Certificate Issuer',
+			'label_certificate_issuer_name'                      => 'Certificate Issuer Name',
+			'label_certificate_issuer_phone'                     => 'Certificate Issuer Phone Number',
+			'label_certificate_issuer_email'                     => 'Certificate Issuer Email',
+			'label_certificate_issuer_logo'                      => 'Certificate Issuer Logo',
+
 		);
 
+
+		# TODO: add Certificate Issuer translation
 		if ($this->getRequest()->isPost()) {
 			$params = $this->getAllParams();
 
-			require_once('models/table/Translation.php');
+			if (isset($params['operation']) && $params['operation']) {
+				$db = $this->dbfunc();
 
-			$tranTable = new Translation();
-			$translations = $tranTable->getAll();
-
-			foreach($params as $k => $v) {
-				if (strpos($k, 'label_') === 0) {
-					try {
-						if (!array_key_exists($labelNames[$k], $translations)) {
-							// This key_phrase is not in the translation table, so add it
-							$tranTable->insert(array('phrase' => $v, 'key_phrase' => $labelNames[$k]));
-						} else {
-							$tranTable->update(array('phrase' => $v), "key_phrase = '{$labelNames[$k]}'");
-						}
+				$op = null;
+				if ($params['operation'] === "save") {
+					if ($params['issuer_id'] === "0") {
+						# TODO: update database column id to be auto-increment
+						$db->insert('certificate_issuers',
+							array('issuer_name' => $params['issuer_name'],
+								'issuer_email' => $params['issuer_email'],
+								'issuer_phone_number' => $params['issuer_phone_number'],
+								# TODO: change database column name to issuer_logo_id
+								'issuer_logo_file_id' => $params['issuer_logo']
+							)
+						);
 					}
-					catch(Zend_Exception $e) {
-						error_log($e);
+					else {
+						$db->update('certificate_issuers',
+							array('issuer_name' => $params['issuer_name'],
+								'issuer_email' => $params['issuer_email'],
+								'issuer_phone_number' => $params['issuer_phone_number'],
+								# TODO: change database column name to issuer_logo_id
+								'issuer_logo_file_id' => $params['issuer_logo']
+							),
+							array('id = ?' => $params['issuer_id'])
+						);
 					}
 				}
+				else if ($params['operation'] === "delete") {
+					$db->delete('certificate_issuers', array('id = ?' => $params['issuer_id']));
+				}
+			} 
+			else {
+				require_once('models/table/Translation.php');
+
+				$tranTable = new Translation();
+				$translations = $tranTable->getAll();
+
+				foreach ($params as $k => $v) {
+					if (strpos($k, 'label_') === 0) {
+						try {
+							if (!array_key_exists($labelNames[$k], $translations)) {
+								// This key_phrase is not in the translation table, so add it
+								$tranTable->insert(array('phrase' => $v, 'key_phrase' => $labelNames[$k]));
+							} else {
+								$tranTable->update(array('phrase' => $v), "key_phrase = '{$labelNames[$k]}'");
+							}
+						} catch (Zend_Exception $e) {
+							error_log($e);
+						}
+					}
+				}
+				$this->updateTranslations();
 			}
-			$this->updateTranslations();
 		}
 
+		$db = $this->dbfunc();
+		$s = $db->select()
+			->from('certificate_issuers');
+		$issuers = array('0' => array('id' => "0", 'issuer_name' => t('New') . ' ' . t('Certificate Issuer'))) + $db->fetchAssoc($s);
+
+
+		$s = $db->select()
+			->from('file', array('id', 'filename'))
+			->where("parent_table = 'certificate_issuers' AND filemime IN ('image/png', 'image/jpeg', 'image/gif')");
+
+		$o = $s->__toString();
+		$images = array('0' => '--' . t('choose') . '--') + $db->fetchPairs($s);
+
+		$this->view->assign('issuers', $issuers);
+		$this->view->assign('issuer_images', $images);
 		$this->view->assign('labelOrder', $labelOrder);
 		$this->view->assign('labelNames', $labelNames);
 		$this->view->assign('dropdownLinks', $dropdownLinks);
@@ -3310,6 +3453,10 @@ class AdminController extends UserController
 		// same logic as other Settings pages - except the employee_header setting below
 		require_once('models/table/Translation.php');
 		$labelNames = array( // input name => key_phrase
+			'label_employee'                 => 'Employee',
+			'label_employees'                => 'Employees',
+			'label_employer'                 => 'Employer',
+			'label_employee_code'            => 'Employee Code',
 			'label_partner'                  => 'Partner',
 			'label_sub_partner'              => 'Sub Partner',
 			'label_type'                     => 'Type of Partner',
@@ -3386,49 +3533,40 @@ class AdminController extends UserController
 		);
 
 		if($this->getRequest()->isPost()) { // Update db
-			$updateData = array();
+            $updateData = array();
 
-			// update translation labels
-			$tranTable = new Translation();
-			foreach($labelNames as $input_key => $db_key) {
+            $params = $this->getAllParams();
+            // update translation labels
+            if (isset($params['reset_capture_dates']) && $params['reset_capture_dates']) {
+                $db = $this->dbfunc();
+                $db->update('partner', array('capture_complete_date' => null));
+            } else {
+                $tranTable = new Translation();
+                foreach ($labelNames as $input_key => $db_key) {
 
-				if ( $this->getParam($input_key) ) {
-					try {
-						$tranTable->update(
-							array('phrase' => $this->getParam($input_key)),
-							"key_phrase = '$db_key'"
-						);
-						$this->viewAssignEscaped($input_key, $this->getParam($input_key));
-					} catch(Zend_Exception $e) {
-						error_log($e);
-					}
-				}
-			}
-			// update _system (checkboxes)
-			foreach($checkboxFields as $input_key => $db_field) {
-				$value = ($this->getParam($input_key) == NULL) ? 0 : 1;
-				$updateData[$db_field] = $value;
-				$this->view->assign($input_key, $value);
-			}
-			$updateData['employee_header'] = $this->getParam('employee_header');
-			$this->view->assign('employee_header', $this->getParam('employee_header') ? $this->getParam('employee_header') : '');
-			$sysTable->update($updateData, '');
-
-		} else { // view
-			// checkboxes
-			$sysRows = $sysTable->fetchRow($sysTable->select()->limit(1));
-			$this->view->assign('employee_header', isset($sysRows->employee_header) ? $sysRows->employee_header : '');
-			foreach($checkboxFields as $input_key => $field_key) {
-				if ( isset($sysRows->$field_key) )
-					$this->view->assign($input_key, $sysRows->$field_key);
-			}
-			// labels
-			$t = Translation::getAll();
-			foreach($labelNames as $input_key => $db_key) {
-				$this->viewAssignEscaped($input_key, $t[$db_key]);
-			}
-
-		}
+                    if (isset($params[$input_key]) && $params[$input_key]) {
+                        try {
+                            $tranTable->update(
+                                array('phrase' => $params[$input_key]),
+                                "key_phrase = '$db_key'"
+                            );
+                            $this->viewAssignEscaped($input_key, $params[$input_key]);
+                        } catch (Zend_Exception $e) {
+                            error_log($e);
+                        }
+                    }
+                }
+                // update _system (checkboxes)
+                foreach ($checkboxFields as $input_key => $db_field) {
+                    $value = ($params[$input_key] == NULL) ? 0 : 1;
+                    $updateData[$db_field] = $value;
+                    $this->view->assign($input_key, $value);
+                }
+                $updateData['employee_header'] = $params['employee_header'];
+                $this->view->assign('employee_header', $params['employee_header'] ? $params['employee_header'] : '');
+                $sysTable->update($updateData, '');
+            }
+        }
 
 		// redirect to next page
 		if($this->getParam('redirect')) {
@@ -3437,7 +3575,21 @@ class AdminController extends UserController
 		} else if($this->getParam('saveonly')) {
 			$status = ValidationContainer::instance();
 			$status->setStatusMessage(t('Your settings have been updated.'));
+		    $this->view->assign('status', $status);
 		}
+
+        // checkboxes
+        $sysRows = $sysTable->fetchRow($sysTable->select()->limit(1));
+        $this->view->assign('employee_header', isset($sysRows->employee_header) ? $sysRows->employee_header : '');
+        foreach($checkboxFields as $input_key => $field_key) {
+            if ( isset($sysRows->$field_key) )
+                $this->view->assign($input_key, $sysRows->$field_key);
+        }
+        // labels
+        $t = Translation::getAll();
+        foreach($labelNames as $input_key => $db_key) {
+            $this->viewAssignEscaped($input_key, $t[$db_key]);
+        }
 	}
 
 	public function employeePartnerTypeAction()
@@ -3667,19 +3819,164 @@ class AdminController extends UserController
 
 	public function employeeMechanismAction()
 	{
+        $db = $this->dbfunc();
+        $status = ValidationContainer::instance();
 
-		/* edit table */
-		$controller = &$this;
-        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
-        $editTable->setParentController($controller);
-		$editTable->table   = 'mechanism_option';
-		$editTable->fields  = array('mechanism_phrase' => t('Mechanism'));
-		$editTable->label   = t('Mechanism');
-		$editTable->dependencies = array('mechanism_option_id' => 'subpartner_to_funder_to_mechanism');
-		$editTable->execute($controller->getRequest());
+        if ($this->getRequest()->isPost()) {
+            $params = $this->getAllParams();
+
+            if (isset($params['mechanism_operation']) && $params['mechanism_operation']) {
+                if ($params['mechanism_operation'] === 'new') {
+
+                    if ($status->isValidDateDDMMYYYY('mechanism_end_date', t('Funding End Date'), $params['mechanism_end_date'])) {
+                        $d = DateTime::createFromFormat('d/m/Y', $params['mechanism_end_date']);
+                        $params['mechanism_end_date'] = $d->format('Y-m-d');
+
+                        $db->insert('mechanism_option',
+                            array('mechanism_phrase' => $params['mechanism_phrase'],
+                                'owner_id' => $params['partner_id'],
+                                'funder_id' => $params['funder_id'],
+                                'external_id' => $params['external_id'],
+                                'end_date' => $params['mechanism_end_date']
+                            ));
+                        $id = $db->lastInsertId();
+                        $db->insert('link_mechanism_partner', array('partner_id' => $params['partner_id'],
+                            'mechanism_option_id' => $id));
+                    }
+                }
+                elseif ($params['mechanism_operation'] === 'update') {
+                    $status = ValidationContainer::instance();
+                    if ($status->isValidDateDDMMYYYY('mechanism_end_date', t('Funding End Date'), $params['mechanism_end_date'])) {
+
+                        if (isset($params['partner_id']) && $params['partner_id']) {
+                            $id = $db->fetchOne($db->select()->from('mechanism_option', array('owner_id'))->where('mechanism_option.id = ?', $params['mechanism_id']));
+
+                            if ($id != $params['partner_id']) {
+                                $db->update('link_mechanism_partner', array('partner_id' => $params['partner_id']),
+                                    "link_mechanism_partner.mechanism_option_id = {$params['mechanism_id']}");
+                            }
+                        }
+
+                        $d = DateTime::createFromFormat('d/m/Y', $params['mechanism_end_date']);
+                        $params['mechanism_end_date'] = $d->format('Y-m-d');
+
+                        $db->update('mechanism_option',
+                            array('mechanism_phrase' => $params['mechanism_phrase'],
+                                'owner_id' => $params['partner_id'],
+                                'funder_id' => $params['funder_id'],
+                                'external_id' => $params['external_id'],
+                                'end_date' => $params['mechanism_end_date']
+                            ),
+                            "mechanism_option.id = {$params['mechanism_id']}"
+                        );
+                    }
+                }
+                elseif ($params['mechanism_operation'] === 'delete') {
+                    $db->delete('mechanism_option', "mechanism_option.id = {$params['mechanism_id']}");
+                    $db->delete('link_mechanism_partner', "link_mechanism_partner.mechanism_option_id = {$params['mechanism_id']}");
+                    $status->setStatusMessage(t('Mechanism') . ' ' . t('Deleted') . ': ' . $params['mechanism_phrase']);
+                }
+            }
+        }
+
+        $choose = array("0" => '--' . t("choose") . '--');
+
+        $partners = $choose + $db->fetchPairs($db->select()
+                ->from('partner', array('id', 'partner'))
+                ->order('partner ASC')
+            );
+
+        $funders = $choose + $db->fetchPairs($db->select()
+                ->from('partner_funder_option', array('id', 'funder_phrase'))
+                ->order('funder_phrase ASC')
+            );
+
+
+        $select = $db->select()
+            ->from('mechanism_option', array())
+            ->joinLeft('partner', 'mechanism_option.owner_id = partner.id', array())
+            ->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array())
+            ->order('mechanism_phrase ASC');
+
+        $select->columns(array('mechanism_option.id', 'mechanism_phrase', 'partner.partner',
+            'partner_funder_option.funder_phrase', 'external_id', 'end_date' => new Zend_Db_Expr("DATE_FORMAT(mechanism_option.end_date, '%d/%m/%Y')")));
+
+        $s = $select->__toString();
+
+        $headers = array(t('ID'), t('Mechanism'), t('Prime') . ' ' . t('Partner'), t('Funder'), t('Mechanism') . ' ' . t('ID'), t('Funding End Date'));
+        $output = $db->fetchAll($select);
+
+        $select->columns(array('mechanism_option.funder_id', 'mechanism_option.owner_id'));
+        $mechanisms = $db->fetchAssoc($select);
+
+        $this->view->assign('headers', $headers);
+        $this->view->assign('output', $output);
+        $this->view->assign('mechanisms', $mechanisms);
+        $this->view->assign('partners', $partners);
+        $this->view->assign('funders', $funders);
+        $this->view->assign('status', $status);
+        $this->view->assign('pageTitle', t('Mechanism'));
+
 	}
 
-	//$editTable->dependencies = array('partner_importance_option_id' => 'partner');
+	public function employeeMechanismToSubpartnerAction()
+    {
+        $db = $this->dbfunc();
+
+        if ($this->getRequest()->isPost()) {
+            $params = $this->getAllParams();
+
+            if ($params['outputType'] == 'json') {
+                $id = $this->getSanParam('id');
+                $ret = array();
+
+                if (!$id) {
+                    $ret['error'] = "No record id %s found.";
+                }
+                elseif ($this->getSanParam('delete') == 1) {
+                    $rv = $db->delete('link_mechanism_partner', "id = $id");
+                    if (!$rv) {
+                        $ret['error'] = "Could not delete %s";
+                    } else {
+                        $ret['msg'] = 'ok';
+                    }
+                }
+                $this->sendData($ret);
+            }
+        }
+
+        // fill in null values in the partner column so the edittable visibly updates when a user selects a
+        // value for a field that came in null - probably a YUI DataTable beta quirk
+        $sql = 'SELECT
+            link_mechanism_partner.id,
+            mechanism_option.mechanism_phrase,
+            partner.partner,
+            link_mechanism_partner.end_date
+            FROM
+            link_mechanism_partner
+            INNER JOIN mechanism_option ON link_mechanism_partner.mechanism_option_id = mechanism_option.id
+            INNER JOIN partner ON link_mechanism_partner.partner_id = partner.id
+            WHERE mechanism_option.owner_id != link_mechanism_partner.partner_id
+            ORDER BY mechanism_phrase ASC;
+            ';
+        $tableRows = $db->fetchAll($sql);
+
+        require_once 'views/helpers/EditTableHelper.php';
+
+        $customColDefs = array(
+            'mechanism_phrase' => "sortable:true",
+            'partner'          => "sortable:true",
+            // formatDate is defined in the view file
+            'end_date'         => "sortable:true, formatter:formatDate"
+        );
+
+        $this->view->assign('pageTitle', t('Sub-Partner').space.t('Mechanism'));
+        $columnNames = array('mechanism_phrase' => t('Mechanism'), 'partner' => t('Sub-Partner'),
+            'end_date' => t('Funding End Date'));
+        $this->view->assign('editTable', EditTableHelper::generateHtml('SubPartner', $tableRows, $columnNames,
+            $customColDefs, array(), true));
+
+    }
 
 	public function employeeSubpartnerToFunderToMechanismAction()
 	{
@@ -3696,70 +3993,72 @@ class AdminController extends UserController
 
 	}
 
-	public function employeeBuildFundingAction()
-	{
 
-		require_once('views/helpers/Location.php'); // funder stuff
-		require_once('models/table/Partner.php');
+    public function employeeBuildFundingAction()
+    {
 
-		if ( $this->getRequest()->isPost() ) {
+        require_once('models/table/Partner.php');
+
+        if ( $this->getRequest()->isPost() ) {
 			$db     = $this->dbfunc();
-			$status = ValidationContainer::instance ();
-			$params = $this->getAllParams();
-
-			// prepare date for database
-			$params['funding_end_date'] = $this->_array_me($params['funding_end_date']);
-
-			foreach ($params['funding_end_date'] as $i => $value)
-				$params['funding_end_date'][$i] = $this->_euro_date_to_sql($value);
+            $status = ValidationContainer::instance();
+            $params = $this->getAllParams();
 
 			// test for all values
-			if(!($params['subPartner'] && $params['partnerFunder'] && $params['mechanism'] && $params['funding_end_date'][0]))
-				$status->addError('', t ( 'All fields' ) . space . t('are required'));
-			else {
-				// test for existing record
-				$recArr = array(0 => $params['subPartner'],  1 => $params['partnerFunder'], 2 => $params['mechanism'],);
+            if (!($params['subPartner'] && $params['mechanism'] && $params['end_date'])) {
+                $status->addError('', t('All fields') . space . t('are required'));
+            }
+            else {
+                // prepare date for database
+                $params['end_date'] = $this->_euro_date_to_sql($params['end_date']);
 
-				$sql = 'SELECT * FROM subpartner_to_funder_to_mechanism  WHERE '; // .$id.space.$orgWhere;
-				$where = "subpartner_id = $recArr[0] and partner_funder_option_id = $recArr[1] and mechanism_option_id = $recArr[2] and is_deleted = false";
-				$sql .= $where;
+                $subpartnerMechanismTable = new ITechTable(array('name' => 'link_mechanism_partner'));
 
-				$row = $db->fetchRow( $sql );
-				if ($row){
-					$status->addError('', t('Record exists'));
-				}
+                foreach ($params['subPartner'] as $value) {
 
-				if ( $status->hasError() )
-					$status->setStatusMessage( t('That funding mechanism could not be saved.') );
-				else {	//save
-					$sfm = new ITechTable(array('name' => 'subpartner_to_funder_to_mechanism'));
+                    $query = $subpartnerMechanismTable->select()
+                        ->where('partner_id = ?', $value)
+                        ->where('mechanism_option_id = ?', $params['mechanism']);
 
-					$data = array(
-						'subpartner_id'  => $params['subPartner'],
-						'partner_funder_option_id' => $params['partnerFunder'],
-						'mechanism_option_id' => $params['mechanism'],
-						'funding_end_date' => $params['funding_end_date'][0],
-					);
+                    $row = $subpartnerMechanismTable->fetchRow($query);
+                    if ($row) {
+                        $data = array('end_date' => $params['end_date']);
+                        $subpartnerMechanismTable->update($data, "id = $row->id");
 
-					$insert_result = $sfm->insert($data);
-					$status->setStatusMessage( t('The funding mechanism was saved.') );
-					$this->_redirect("admin/employee-build_funding");
-				}
-			}
-		}
+                    }
+                    else {
+                        $data = array(
+                            'partner_id' => $value,
+                            'mechanism_option_id' => $params['mechanism'],
+                            'end_date' => $params['end_date']
+                        );
+                        $result = $subpartnerMechanismTable->insert($data);
 
-		$helper = new Helper();
+                        if (!$result) {
+                            $status->addError('', t('Unable to store all subpartners.'));
+                            break;
+                        }
+                    }
+                }
 
-		$subPartner = $helper->getAllSubPartners();
-		$this->viewAssignEscaped ( 'subPartner', $subPartner );
+                if ( $status->hasError() ) {
+                    $status->setStatusMessage(t('That funding mechanism could not be saved.'));
+                } else {
+                    $status->setStatusMessage(t('Mechanism data saved.'));
+                    $this->_redirect("admin/employee-build-funding");
+                }
+            }
+        }
 
-		$partnerFunder = $helper->getAllFunders();
-		$this->viewAssignEscaped ( 'partnerFunder', $partnerFunder );
+        $helper = new Helper();
 
-		$mechanism = $helper->getAllMechanisms();
-		$this->viewAssignEscaped ( 'mechanism', $mechanism );
+        $subPartner = $helper->getAllSubPartners();
+        $this->viewAssignEscaped ( 'subPartner', $subPartner );
 
-	} //employeeBuildFundingAction
+        $mechanism = $helper->getAllMechanisms();
+        $this->viewAssignEscaped ( 'mechanism', $mechanism );
+
+    } //employeeBuildFundingAction
 
 	public function employeeFunderFilterAction()
 	{
@@ -3806,7 +4105,7 @@ class AdminController extends UserController
 
 				$insert_result = $sfm->insert($data);
 				$status->setStatusMessage( t('The funding mechanism was saved.') );
-				$this->_redirect("admin/employee-build_funding");
+				$this->_redirect("admin/employee-build-funding");
 			}
 		}
 
@@ -3872,7 +4171,7 @@ class AdminController extends UserController
 
 				$insert_result = $sfm->insert($data);
 				$status->setStatusMessage( t('The funding mechanism was saved.') );
-				$this->_redirect("admin/employee-build_funding");
+				$this->_redirect("admin/employee-build-funding");
 			}
 		}
 
@@ -3935,7 +4234,7 @@ class AdminController extends UserController
 
 				$insert_result = $sfm->insert($data);
 				$status->setStatusMessage( t('The funding mechanism was saved.') );
-				$this->_redirect("admin/employee-build_funding");
+				$this->_redirect("admin/employee-build-funding");
 			}
 		}
 
@@ -4002,7 +4301,7 @@ class AdminController extends UserController
 
 				$insert_result = $sfm->insert($data);
 				$status->setStatusMessage( t('The funding mechanism was saved.') );
-				$this->_redirect("admin/employee-build_funding");
+				$this->_redirect("admin/employee-build-funding");
 			}
 		}
 
@@ -4109,6 +4408,129 @@ class AdminController extends UserController
 				$style_id, false
 			)
 		);
+	}
+	
+	//TA:#331.1
+	public function peopleEducationtypeAction(){
+	    if($this->getRequest()->isPost()) {
+			// form submit
+			$updateData = array();
+			$require_trainer_skill = $this->getParam('require_trainer_skill');
+			if (empty($require_trainer_skill)) { $require_trainer_skill = 0; }
+			$this->putSetting('require_trainer_skill', $require_trainer_skill);
+		}
+
+		$controller = &$this;
+        $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());  
+		$editTable->setParentController($controller);
+		$editTable->table   = 'education_type_option';
+		$editTable->fields  = array('education_type_phrase' => t('Type Of Education'));
+		$editTable->label   = t('Type Of Education');
+		$editTable->execute($controller->getRequest());
+	
+	}
+	
+	//TA:#331.1
+	public function peopleSchoolnameAction(){    
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'education_school_name_option';
+	    $editTable->fields  = array('school_name_phrase' => t('Official School Name'));
+	    $editTable->label   = t('Official School Name');
+	    $editTable->dependencies = array('person_to_education');
+	    $editTable->allowMerge = true;
+	    $editTable->execute($controller->getRequest());	
+	}
+	
+	//TA:#331.1
+	public function peopleEducationcountryAction(){
+	    if($this->getRequest()->isPost()) {
+	        // form submit
+	        $updateData = array();
+	        $require_trainer_skill = $this->getParam('require_trainer_skill');
+	        if (empty($require_trainer_skill)) { $require_trainer_skill = 0; }
+	        $this->putSetting('require_trainer_skill', $require_trainer_skill);
+	    }
+	
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'education_country_option';
+	    $editTable->fields  = array('education_country_phrase' => t('Country'));
+	    $editTable->label   = t('Country');
+	    $editTable->execute($controller->getRequest());
+	
+	}
+	
+	//TA:#331.1
+public function peopleSchoolmergeAction(){
+    $status = ValidationContainer::instance();
+		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+		$this->view->assign('showMerge', true);
+		$status = ValidationContainer::instance();
+
+		if($this->getSanParam('submitted') ){
+			$fromID = $this->getSanParam('school_from_id');
+			$toID = $this->getSanParam('school_to_id');
+			if (!$fromID or !$toID or $fromID == $toID){
+				$status->addError( null, t('You must select a valid school to merge') );
+			} else {
+			    try {
+			     $db2 = $this->dbfunc();
+			     $db2->query("UPDATE person_to_education set education_school_name_option_id=$toID WHERE education_school_name_option_id=$fromID");
+			     $db2->delete('education_school_name_option', "id=$fromID");
+			    }catch (Exception $e) {
+			         $status->addError( null, t('Error merge.') );
+			         return;
+		          }
+
+		          $_SESSION['status'] = t( 'Merge was saved.' );
+		          $status->setStatusMessage( t( 'Merge was saved.' ) );
+			}
+		}
+		
+		$rowArray = $db->fetchAll ( "select * from education_school_name_option");
+		$this->viewAssignEscaped ( 'results', $rowArray );
+
+	}
+	
+	//TA:#331.2
+	public function peopleAttestationcategoryAction(){
+	    if($this->getRequest()->isPost()) {
+	        // form submit
+	        $updateData = array();
+	        $require_trainer_skill = $this->getParam('require_trainer_skill');
+	        if (empty($require_trainer_skill)) { $require_trainer_skill = 0; }
+	        $this->putSetting('require_trainer_skill', $require_trainer_skill);
+	    }
+	
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'attestation_category_option';
+	    $editTable->fields  = array('attestation_category_phrase' => t('Attestation Category'));
+	    $editTable->label   = t('Attestation Category');
+	    $editTable->execute($controller->getRequest());
+	}
+	
+	//TA:#331.2
+	public function peopleAttestationlevelAction(){
+	    if($this->getRequest()->isPost()) {
+	        // form submit
+	        $updateData = array();
+	        $require_trainer_skill = $this->getParam('require_trainer_skill');
+	        if (empty($require_trainer_skill)) { $require_trainer_skill = 0; }
+	        $this->putSetting('require_trainer_skill', $require_trainer_skill);
+	    }
+	
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'attestation_level_option';
+	    $editTable->fields  = array('attestation_level_phrase' => t('Attestation Level'));
+	    $editTable->label   = t('Attestation Level');
+	    $editTable->execute($controller->getRequest());
 	}
 }
 

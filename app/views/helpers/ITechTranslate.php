@@ -1,11 +1,10 @@
 <?php
 require_once('Zend/Translate.php');
 require_once('controllers/ITechController.php');
+
 /**
- * Translate
- *
- * @param str $string
- * @return str
+ * @param $string
+ * @return null|string
  */
 function t($string) {
 	//first check our label list for the phrase

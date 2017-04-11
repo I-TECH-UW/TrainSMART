@@ -42,7 +42,9 @@ print ScriptContainer::$instance->renderJSHead();
    </form>
 <?php if ( $this->criteria['go'] ) { ?>
 		    <div class="hrGrey"></div>
-		    <div class="fieldIndentNoMargin"><?php echo t('Training').' '.t('locations');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
+		    <!-- TA:80 -->
+		    <div class="fieldIndentNoMargin"><?php echo t('Training').' '.t('locations');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span>
+		    <?php echo $this->printAndExport("locations");?></div>
 			<a href="<?php echo $this->base_url;?>/facility/add-location"><?php echo t('Add new').' '.t('Training').' '.t('location');?></a><br/><br/>
 		    <div id="locations"></div>
 		    <script type="text/javascript">

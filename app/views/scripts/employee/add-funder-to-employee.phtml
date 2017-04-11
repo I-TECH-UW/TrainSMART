@@ -56,8 +56,8 @@ $this->required_fields = array();
 	    }
 
         var jsonAdd = { }
-        jsonAdd.mechanism = oMechanism.selectedOptions[0].label;
-        jsonAdd.combined_id = oMechanism.value;
+        jsonAdd.mechanism_phrase = oMechanism.selectedOptions[0].label;
+        jsonAdd.id = oMechanism.value;
         jsonAdd.percentage = oPercent.value;
         var percent = jsonAdd.percentage / 100.0;
         

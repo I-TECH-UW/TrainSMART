@@ -357,6 +357,12 @@ class PersonController extends ReportFilterHelpers
 
     public function doAddEditView()
     {
+        
+        // TA:#331.1, TA:#331.2 edittable ajax 
+        if ($this->getParam ( 'edittable' )) {
+            $this->ajaxEditTable ();
+            return;
+        }
 
         try {
 
@@ -404,7 +410,6 @@ class PersonController extends ReportFilterHelpers
             $this->viewAssignEscaped('other_reason_option_id', $other_reason_option_id);
 
             if ($request->isPost()) {
-
                 $errortext = "";
                 if ($dupe_id = $this->getSanParam('dupe_id')) {
                     if ($this->getSanParam('maketrainer')) {
@@ -620,8 +625,7 @@ class PersonController extends ReportFilterHelpers
                             $training_recieved_data = json_encode($training_recieved_results);
                         }
                         $personrow->training_recieved_data = $training_recieved_data;
-
-
+                        
                         if ($person_id) {
                             $trainsaved = array();
                             $train = $this->getSanParam('train');
@@ -756,7 +760,6 @@ class PersonController extends ReportFilterHelpers
 
                                 $comps = $helper->getPersonCompetenciesDetailed($person_id);
                                 $status->setRedirect('/person/edit/id/' . $person_id);
-
                             } else {
                                 $status->setRedirect('/person/edit/id/' . $person_id);
                             }
@@ -884,6 +887,97 @@ class PersonController extends ReportFilterHelpers
             $this->viewAssignEscaped('primaryResponsibilities', $primaryResponsibilitiesArray);
             $secondaryResponsibilitiesArray = OptionList::suggestionList('person_secondary_responsibility_option', 'responsibility_phrase', false, false);
             $this->viewAssignEscaped('secondaryResponsibilities', $secondaryResponsibilitiesArray);
+            
+            //TA:#331.1
+            if ( $this->setting('module_people_education')  && $person_id){
+                $educationTypeArray = OptionList::suggestionList('education_type_option', 'education_type_phrase', false, false);
+                $this->viewAssignEscaped('people_education_type', $educationTypeArray);
+                $educationSchoolNameArray = OptionList::suggestionList('education_school_name_option', 'school_name_phrase', false, false);
+                $this->viewAssignEscaped('people_education_school_name', $educationSchoolNameArray);
+                $educationCountryArray = OptionList::suggestionList('education_country_option', 'education_country_phrase', false, false);
+                $this->viewAssignEscaped('people_education_country', $educationCountryArray);
+                $person = new Person ();
+                $education = $person->getPersonEducation($person_id);
+                $tableFields = array ('education_type_phrase' => t( 'Type of Education' ), 'school_name_phrase' => t( 'Official School Name' ), 
+                'education_country_phrase' => t ( 'Education Country' ), 'education_date_graduation' => t ( 'Year of Graduation/Completion' ) );
+                $customColDefs = array();
+                $elements = array(0 => array('text' => ' ', 'value' => 0));
+               foreach ($educationTypeArray as $i => $tablerow) {
+                    $elements[$i+1]['text']  = $tablerow['education_type_phrase'];
+                    $elements[$i+1]['value'] = $tablerow['id'];
+                }
+                $elements = json_encode($elements); 
+                //$customColDefs['education_type_phrase']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }"; //allow edit
+                $elements = array(0 => array('text' => ' ', 'value' => 0));
+               foreach ($educationSchoolNameArray as $i => $tablerow) {
+                    $elements[$i+1]['text']  = $tablerow['school_name_phrase'];
+                    $elements[$i+1]['value'] = $tablerow['id'];
+                }
+                $elements = json_encode($elements);
+               // $customColDefs['school_name_phrase']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";//allow edit
+                $elements = array(0 => array('text' => ' ', 'value' => 0));
+              foreach ($educationCountryArray as $i => $tablerow) {
+                    $elements[$i+1]['text']  = $tablerow['education_country_phrase'];
+                    $elements[$i+1]['value'] = $tablerow['id'];
+                }
+                $elements = json_encode($elements);
+               // $customColDefs['education_country_phrase']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";//allow edit
+                $elements = array(0 => array('text' => ' ', 'value' => 0));
+                $k=0;
+                for($i = date('Y') ; $i > '1920'; $i--){
+                    $elements[$k]['text']  = $i;
+                    $elements[$k]['value'] = $i;
+                    $k++;
+                }
+                $elements = json_encode($elements);
+               // $customColDefs['education_date_graduation']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";//allow edit
+                $this->view->assign ( 'education', $education );
+                require_once 'views/helpers/EditTableHelper.php';
+                $html = EditTableHelper::generateHtml('education', $education, $tableFields, $customColDefs, array(), !$this->viewonly);//working editable cells
+                $this->view->assign ( 'tableEducation', $html );
+            }
+            //////////////////////////////////////////////////////////////////////
+            
+            //TA:#331.2
+            if ( $this->setting('module_participants_attestation')  && $person_id){
+                $attestationCategoryArray = OptionList::suggestionList('attestation_category_option', 'attestation_category_phrase', false, false);
+                $this->viewAssignEscaped('people_attestation_category', $attestationCategoryArray);
+                $attestationLevelArray = OptionList::suggestionList('attestation_level_option', 'attestation_level_phrase', false, false);
+                $this->viewAssignEscaped('people_attestation_level', $attestationLevelArray);
+                $person = new Person ();
+                $attestation = $person->getPersonAttestation($person_id);
+                $tableFields = array ('attestation_category_phrase' => t( 'Attestation Category' ), 'attestation_level_phrase' => t( 'Attestation Level' ),
+                   'attestation_date' => t ( 'Attestation Year' ) );
+                $customColDefs = array();
+                $elements = array(0 => array('text' => ' ', 'value' => 0));
+                foreach ($attestationCategoryArray as $i => $tablerow) {
+                    $elements[$i+1]['text']  = $tablerow['attestation_category_phrase'];
+                    $elements[$i+1]['value'] = $tablerow['id'];
+                }
+                $elements = json_encode($elements);
+                //$customColDefs['attestation_category_phrase']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }"; //allow edit
+                $elements = array(0 => array('text' => ' ', 'value' => 0));
+                foreach ($attestationLevelArray as $i => $tablerow) {
+                    $elements[$i+1]['text']  = $tablerow['attestation_level_phrase'];
+                    $elements[$i+1]['value'] = $tablerow['id'];
+                }
+                $elements = json_encode($elements);
+                // $customColDefs['attestation_level_phrase']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";//allow edit
+                $elements = array(0 => array('text' => ' ', 'value' => 0));
+                $k=0;
+                for($i = date('Y') ; $i > '1920'; $i--){
+                    $elements[$k]['text']  = $i;
+                    $elements[$k]['value'] = $i;
+                    $k++;
+                }
+                $elements = json_encode($elements);
+                // $customColDefs['attestation_date']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";//allow edit
+                $this->view->assign ( 'attestation', $attestation );
+                require_once 'views/helpers/EditTableHelper.php';
+                $html = EditTableHelper::generateHtml('attestation', $attestation, $tableFields, $customColDefs, array(), !$this->viewonly);//working editable cells
+                $this->view->assign ( 'tableAttestation', $html ); 
+            }
+            //////////////////////////////////////////////////////////////////////
 
 
             $educationlevelsArray = OptionList::suggestionList('person_education_level_option', 'education_level_phrase', false, false);
@@ -1136,7 +1230,6 @@ class PersonController extends ReportFilterHelpers
 
             $sql .= " ORDER BY " . " `p`.`last_name` ASC, " . " `p`.`first_name` ASC";
 
-            //print($sql);
             $rowArray = $db->fetchAll($sql);
 
             if ($criteria ['outputType']) {
@@ -1537,7 +1630,8 @@ class PersonController extends ReportFilterHelpers
 
         foreach ($rowArray as $key => $row) {
             //$rowArray [$key] = array_merge ( array ('input' => '<a href="'.Settings::$COUNTRY_BASE_URL.'/person/edit/id/'.$rowArray [$key] ['id'].'">'.$rowArray[$key]['id'].'</a>' ), $row );
-            $rowArray [$key] = array_merge(array('input' => '<input type="radio" name="dupe_id" value="' . $rowArray [$key] ['id'] . '">'), $row);
+            //$rowArray [$key] = array_merge(array('input' => '<input type="radio" name="dupe_id" value="' . $rowArray [$key] ['id'] . '">'), $row);
+        	$rowArray [$key] = array_merge(array('input' => '<input type="radio" name="dupe_id" value="' . $rowArray [$key] ['person_id'] . '">'), $row); //TA:57
         }
 
         $this->sendData($rowArray);
@@ -1668,6 +1762,13 @@ class PersonController extends ReportFilterHelpers
             $personObj = new Person ();
             $errs = array();
             while ($row = $this->_csv_get_row($filename)) {
+                //TA:#213
+			    //INFORCE user to create files only in UTF-8 encoded:
+			    //Option 1: Excel:Save as Unicode Text -> Notepad: replace tabs with commas, save as csv UTF-8
+			    //Option 2: OpenOffice
+			    //It is not required for english, but absolutelly required for special characteristics.
+			    //If files saved in UTF-8 encoded, so we do not need this line
+			    // $row = array_map("utf8_encode", $row); 
                 $values = array();
                 if (!is_array($row))
                     continue;           // sanity?
@@ -1690,6 +1791,7 @@ class PersonController extends ReportFilterHelpers
                             $values[$cols[$i]] = $this->sanitize($v);
                     }
                 }
+        
                 // done now all fields are named and in $values[my_field]
                 if ($countValidFields) {
                     //validate
@@ -1893,5 +1995,37 @@ class PersonController extends ReportFilterHelpers
         //done, output a csv
         if ($this->getSanParam('outputType') == 'csv')
             $this->sendData($this->reportHeaders(false, $sorted));
+    }
+    
+    /**
+     * editTable ajax TA:#331.1, TA:#331.2
+     */
+    private function ajaxEditTable() {
+        $person_id = $this->getParam ( 'id' );
+        $do = $this->getParam ( 'edittable' );
+        $action = $this->getParam ( 'a' );
+        if (! $person_id) { // user is adding a new session (which does not have an id yet)
+            $this->sendData ( array ('0' => 0 ) );
+            return;
+        }   
+        if ($do == 'person_education') {//update person education table
+            $person = new Person ();
+            if ($action == 'add') {
+                $person->addPersonEducation($person_id, $this->getParam ( 'education_type_option_id' ),
+                    $this->getParam ( 'education_school_name_option_id' ), $this->getParam ( 'education_country_option_id' ), $this->getParam ( 'education_date_graduation' ));
+            }else if ($action == 'del') {
+                $person->deletePersonEducation($person_id, $this->getParam ( 'education_type_option_id' ),
+                    $this->getParam ( 'education_school_name_option_id' ), $this->getParam ( 'education_country_option_id' ), $this->getParam ( 'education_date_graduation' ));
+            }
+        }else if ($do == 'person_attestation') {//update person attestation table
+            $person = new Person ();
+            if ($action == 'add') {
+                $person->addPersonAttestation($person_id, $this->getParam ( 'attestation_category_option_id' ),
+                    $this->getParam ( 'attestation_level_option_id' ), $this->getParam ( 'attestation_date' ));
+            }else if ($action == 'del') {
+                $person->deletePersonAttestation($person_id, $this->getParam ( 'attestation_category_option_id' ),
+                    $this->getParam ( 'attestation_level_option_id' ), $this->getParam ( 'attestation_date' ));
+            }
+        }
     }
 }

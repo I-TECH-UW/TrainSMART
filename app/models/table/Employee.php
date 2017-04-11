@@ -12,56 +12,111 @@ require_once ('ITechTable.php');
 class Employee extends ITechTable {
 	protected $_name = 'employee';
 	protected $_primary = 'id';
-	
-	public static function disassociateMechanismFromEmployee($mechanism_ids)
+
+    /**
+     * deletes mechanism associations from an employee
+     * @param $employee_id     - employee id
+     * @param $association_ids - the ids to remove
+     * @return bool
+     */
+    public static function disassociateMechanismsFromEmployee($employee_id, $mechanism_ids)
 	{
-	    if ($mechanism_ids === "")
-		  return false;
+	    if ((!$mechanism_ids) || (!$employee_id) ||
+            (!preg_match('/^\d+[,\d+]*$/', $mechanism_ids))) {
+            return false;
+        }
 	    
-	    $table = new ITechTable ( array ('name' => 'employee_to_partner_to_subpartner_to_funder_to_mechanism' ) );
-	    try{
-	        $table->delete("id in ($mechanism_ids)");
-	    }catch(Exception $e){
-	        print $e;
+	    $table = new ITechTable ( array ('name' => 'link_mechanism_employee' ) );
+	    $rv = false;
+	    try {
+	        $rv = $table->delete("mechanism_option_id IN ($mechanism_ids) AND employee_id = $employee_id");
+	    } catch(Exception $e) {
+	        error_log($e);
 	        return false;
 	    }
-	    return true;
+	    return $rv;
 	     
 	}
-	
-	public static function saveMechanismAssociation ( $id, $mechanism_association)
+
+    /**
+     * associate mechanisms and percentages with an employee
+     * @param int    $employee_id           - employee id
+     * @param string $mechanism_ids         - comma-delimited string of ids to associate with the employee
+     * @param string $mechanism_percentages - comma-delimited string of percentages to associate with each id in $mechanism_ids
+     * @return bool
+     */
+	public static function saveMechanismAssociations ( $employee_id, $mechanism_ids, $mechanism_percentages)
 	{
-	    if (empty($mechanism_association))
-	        return false;
-	
-	    $psfmTable = new ITechTable(array('name' => 'partner_to_subpartner_to_funder_to_mechanism'));
-	    $stable = new ITechTable ( array ('name' => 'employee_to_partner_to_subpartner_to_funder_to_mechanism' ) );
-	    foreach($mechanism_association as $i => $mech){
-	        try{
-	            $ids = explode('_', $mech['combined_id']);
-	            $mechanism_id = $ids[0];
-	            $psfm_id = $ids[1];
-        	    $psfm = $psfmTable->fetchRow($psfmTable->select()->where("id = ?", $psfm_id));
-        	    	            	
-	            $row = $stable->createRow();
-	            $row->partner_to_subpartner_to_funder_to_mechanism_id = $psfm->id;
-	            $row->employee_id = $id;
-	            $row->partner_id = $psfm->partner_id;
-	            $row->subpartner_id = $psfm->subpartner_id;
-	            $row->partner_funder_option_id = $psfm->partner_funder_option_id;
-	            $row->mechanism_option_id = $psfm->mechanism_option_id;
-	            $row->percentage = $mech['percentage'];
-	            $row->created_by = $psfm->created_by;
-	            $row->is_deleted = 0;
-	            $row->timestamp_created = $psfm->timestamp_created;
-	            
-	            $row->save();
-	        }catch(Exception $e){
-	            print $e;
+
+        $ids = explode(',', $mechanism_ids);
+        $percentages = explode(',', $mechanism_percentages);
+
+        if (count($ids) != count($percentages)) {
+            return false;
+        }
+
+        $linkTable = new ITechTable ( array ('name' => 'link_mechanism_employee' ) );
+	    foreach($ids as $i => $mechID) {
+	        try {
+                $row = $linkTable->createRow(array('employee_id' => $employee_id, 'mechanism_option_id' => $ids[$i], 'percentage' => $percentages[$i]));
+                $row->save();
+
+	        } catch(Exception $e) {
+	            error_log($e);
 	            return false;
 	        }
 	    }
 	    return true;
 	}
 	
+	//TA:#329
+	public static function getAllEmployeeQualifications(){
+	    $linkTable = new ITechTable ( array ('name' => 'employee_qualification_option' ));
+	    $select = $linkTable->select()->order('qualification_phrase');
+	    return $linkTable->fetchAll($select)->toArray();
+	}
+	
+	//TA:#224
+	public static function getEmployeeSites($employee_id){
+	    $tableObj = new Employee();
+	    $db = $tableObj->dbfunc();
+	    $query = "SELECT link_employee_facility.id as site_link_id, link_employee_facility.facility_id, facility.facility_name, 
+facility.type_option_id, facility_type_option.facility_type_phrase,
+link_employee_facility.hiv_fte_related, link_employee_facility.non_hiv_fte_related, 
+ facility.location_id 
+FROM link_employee_facility 
+LEFT JOIN facility ON link_employee_facility.facility_id = facility.id
+LEFT join  facility_type_option on facility_type_option.id=facility.type_option_id
+WHERE (employee_id = $employee_id) order by link_employee_facility.id"; //#387
+	    $select = $db->query($query);
+	    return $select->fetchAll();
+	}
+	
+	//TA:#224
+	public static function removeSites($employee_id, $ids){
+	    if($ids and $ids !== ''){
+	$table = new ITechTable ( array ('name' => 'link_employee_facility' ) );
+	    try {
+		    $table->delete("employee_id=$employee_id and id in ($ids)");
+		    } catch(Exception $e) {
+		    error_log($e);
+		        return false;
+		    }
+	    }
+	    return true;
+	}
+	
+	//TA:#224
+	public static function saveSites ( $employee_id, $site_id, $hiv_related_fte, $non_hiv_related_fte){
+	Employee::removeSites($employee_id);
+	$linkTable = new ITechTable ( array ('name' => 'link_employee_facility' ) );
+	    try {
+	    $row = $linkTable->createRow(array('employee_id' => $employee_id, 'facility_id' => $site_id, 'hiv_fte_related' => $hiv_related_fte, 'non_hiv_fte_related' => $non_hiv_related_fte));
+	        $row->save();
+	    } catch(Exception $e) {
+	    error_log($e);
+	    return false;
+	    }
+	    return true;
+	    }
 }

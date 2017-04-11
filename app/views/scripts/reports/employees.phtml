@@ -1,250 +1,128 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-	<title><?php echo $this->translation['Application Name'] . " | " . $this->pageTitle; ?></title>
-	<?php
-	require_once('views/helpers/Location.php');
-	require_once('views/helpers/ScriptContainer.php');
-	print ScriptContainer::$instance->renderCSSHead();
-	print ScriptContainer::$instance->renderJSHead();
-	?>
+    <title><?php echo $this->translation['Application Name']; ?>
+        | <?php echo t('Employee') . " " . t('Reports'); ?></title>
+    <?php
+    require_once('views/helpers/ScriptContainer.php');
+    require_once('views/helpers/FormHelper.php');
+    require_once('views/helpers/DropDown.php');
+    require_once('views/helpers/Location.php');
+    require_once('views/helpers/CheckBoxes.php');
+
+    print ScriptContainer::$instance->renderCSSHead();
+    print ScriptContainer::$instance->renderJSHead();
+    echo $this->partial('reports/employee-reports-common-javascript-header-partial.phtml');
+    ?>
 
 </head>
-<body class="yui-skin-sam"  >
+<body class="yui-skin-sam">
+<div id="pageHolder">
+    <div id="header"><?php require_once('views/scripts/header.phtml'); ?></div>
+    <div id="content">
+        <?php require_once 'views/scripts/status.phtml' ?>
+        <div id="subcontent">
+            <?php
+            echo $this->partial('reports/employee-reports-report-types-partial.phtml', array('site_style' => $this->site_style, 'base_url' => $this->base_url));
+            ?>
 
-	<div id="pageHolder">
+            <div class="clear"></div>
+            <div id="contentheader">
+                <h2><?php echo t("Employee") . " " . t("Reports"); ?></h2><br/>
+            </div>
+            <div class="pad50 clear"></div>
+            <form action="" method="get" class="form_employee">
+                <fieldset id="criteria">
+                    <legend><?php tp('Select Criteria'); ?></legend>
+                    <div class="fieldLabel"></div>
+                    <div class="fieldInput criteria-header">
+                        <div class="criteria-label"><?php tp('show'); ?></div>
+                        <div class="criteria-label" style="padding-left: 20px;"><?php tp('filter'); ?></div>
+                    </div>
+                    <div class="clear"></div>
+                    <div id="dividers">
 
-		<div id="header"><?php require_once('views/scripts/header.phtml');?></div>
-		<div id="content">
-
-			<h1><?php print(t('Employee').space.t('Report'));?></h1>
-			<form action="" method="get" class="form_employee">
-				<fieldset id="criteria"><legend><?php tp('Select Criteria');?></legend>
-					<div class="fieldLabel"></div><div class="fieldInput criteria-header"><div class="criteria-label" ><?php tp('show');?></div><div  class="criteria-label" style="padding-left: 20px;"><?php tp('filter');?></div></div>
-					<div class="clear"></div>
-					<div id="dividers">
-
-					<?php
-						$this->required_fields = array();
-						$this->calendar_fields = array('start_date','end_date');
-						$this->is_report = true;
+                        <?php
+                        $this->required_fields = array();
+                        $this->calendar_fields = array('transition_start_date', 'transition_end_date');
+                        $this->is_report = true;
 
 
-						if ( $this->setting['display_employee_partner'] )
-							echo labelAndField($this, t('Partner'), $this->partners, 'partner');
-						echo region_filters_dropdown( $this, $this->locations, $this->criteria, false, true );
-						if ( $this->setting['display_employee_site_name'] )
-							echo labelAndField($this, t('Site').space.t('Name'), renderFacilityDropDown($this->facilities, $this->criteria['facilityInput'], $this->viewonly), 'site');
-						if ( $this->setting['display_employee_site_name'] )
-							echo labelAndField($this, t('Facility Type'), $this->facilitytypes, 'facility_type');
-						echo labelAndField($this, t('Staff Cadre'), $this->cadres, 'staff_cadre');
-						if ( $this->setting['display_employee_staff_category'] )
-							echo labelAndField($this, t('Staff Category'), $this->categories, 'staff_category');
-						if($this->setting['display_employee_funded_hours_per_week'])
-							echo labelTwoFields($this, t('Funded Hours per week'), t('to'), 'hours_min', 'hours_max', $this->criteria['hours_min'], $this->criteria['hours_max']);
-						if($this->setting['display_employee_annual_cost'])
-							echo labelTwoFields($this, t('Annual Cost'), t('to'), 'cost_min', 'cost_max', $this->criteria['hours_min'], $this->criteria['hours_max']);
-						if($this->setting['display_employee_primary_role'])
-							echo labelAndField($this, t('Primary Role'), $this->roles, 'primary_role');
-						if ($this->setting['display_employee_importance'])
-							echo labelAndField($this, t('Importance'), $this->importance, 'importance');
-						if($this->setting['display_employee_funder'])
-							echo labelTwoFields($this, t('Funding End Date Between'), t('to'), 'start_date', 'end_date', $this->criteria['start_date'], $this->criteria['end_date']);
-						if($this->setting['display_employee_intended_transition'])
-							echo labelAndField($this, t('Intended Transition'), $this->transitions, 'intended_transition');
-						if($this->setting['display_employee_transition_confirmed'])
-						echo confirmDropdown($this, t('Transition Confirmed'), 'transition_confirmed', $this->criteria['transition_confirmed']);
-						
-						// BS:8,9:20141010:Add hours and cost per employee per mechanism
-    					if($this->setting['display_hours_per_mechanism'])
-    					{
-    					    echo labelTwoFields($this, t('Hours per Mechanism'), t('to'), 'hours_per_mechanism_min', 'hours_per_mechanism_max', $this->criteria['hours_per_mechanism_min'], $this->criteria['hours_per_mechanism_max']);
-    					}
-    					if($this->setting['display_annual_cost_to_mechanism'])
-    					{
-							echo labelTwoFields($this, t('Annual Cost to Mechanism').space.'('.$this->translation['Employee Local Currency'].')', 
-							    t('to'), 'employee_cost_per_mechanism_min', 'employee_cost_per_mechanism_max', 
-							    $this->criteria['employee_cost_per_mechanism_min'], $this->criteria['employee_cost_per_mechanism_max']);
-    					}
+                        echo labelAndField($this, t('Partner'),
+                            $this->formSelect('partner', isset($this->criteria['partner']) ? $this->criteria['partner'] : null, array(), $this->partners), 'partner');
 
-					?>
-					</div>
-					<div class="clear"></div>
-					<input type="hidden" name="limit" id="limit" value="1" />
-					<input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
-				</fieldset>
-			</form>
+                        //TA:#293 multiple locations
+                       // echo region_filters_dropdown($this, $this->locations, $this->criteria, false, true);
+                       //TA:#293.1
+                        region_filters_dropdown( $this, $this->locations, $this->criteria, true, true );
+                       
+                        echo labelAndField($this, t('Based at'),
+                            $this->formSelect('based_at', isset($this->criteria['based_at']) ? $this->criteria['based_at'] : null, array(), $this->bases), 'based_at');
 
-			<script type="text/javascript">
-				$(document).ready(function () {
-					$('.datepicker').datepicker({changeMonth:true, changeYear:true});
-					$('.calendarbtn').click(openNearestDatePicker);
-				});
-			</script>
+                        //TA:#293.1
+//                         echo labelAndField($this, t('Site') . space . t('Name'),
+//                             $this->formSelect('site', isset($this->criteria['site']) ? $this->criteria['site'] : null, array(), $this->facilities), 'site');   
+                        echo labelAndField($this, t('Site Name'), renderFacilityDropDown($this->sites, $this->criteria['facilityInput'], $this->viewonly), 'facilityInput');
 
-			<?php if ( $this->criteria['go'] ) { ?>
-			<div class="hrGrey"></div>
-			<div class="fieldIndentNoMargin"><?php tp('Employees');?> <span class="total"><?php echo $this->count;?>  <?php tp('Results');?></span><?php echo $this->printAndExport();?></div>
-			<div id="employees"></div>
-			
-			<?php // BS:8:20141013 
-					$HOURS_FOR_FULL_WORK_WEEK = 40.0; ?>
-			<script type="text/javascript">
-			var employeesData = [
-			<?php
-			$cnt = 0;
-			$isFirstRow = true;
-			
-			foreach($this->results as $row) {
+                        echo labelAndField($this, t('Facility Type'),
+                            $this->formSelect('facility_type', isset($this->criteria['facility_type']) ? $this->criteria['facility_type'] : null, array(), $this->facilityTypes), 'facility_type');
 
-				if ( ( $cnt < 100 ) or ( isset($_REQUEST['limit']) AND !$_REQUEST['limit'] ) ) {
-					if ( !$isFirstRow ) {
-						echo ',';
-					}
-					$isFirstRow = false;
-					$percent = $row['percentage']/100.0;
-						
-					echo '[';
-						echo $row['id'].',';
-						$data = array();
-						// $data[] = $row['first_name'];
-						// $data[] = $row['last_name'];
-						$data[] = $row['employee_code'];
-						//$data[] = $row['gender'];
-						if ($this->criteria['showProvince'])              $data[] = $row['province_name'];
-						if ($this->criteria['showDistrict'])              $data[] = $row['district_name'];
-						if ($this->criteria['showRegionC'])               $data[] = $row['region_c_name'];
-						if ($this->criteria['showRegionD'])               $data[] = $row['region_d_name'];
-						if ($this->criteria['showRegionE'])               $data[] = $row['region_e_name'];
-						if ($this->criteria['showRegionF'])               $data[] = $row['region_f_name'];
-						if ($this->criteria['showRegionG'])               $data[] = $row['region_g_name'];
-						if ($this->criteria['showRegionH'])               $data[] = $row['region_h_name'];
-						if ($this->criteria['showRegionI'])               $data[] = $row['region_i_name'];
-						if ($this->criteria['show_partner'])              $data[] = $row['partner'];
-						if ($this->criteria['show_sub_partner'])          $data[] = $row['sub_partner'];
-						if ($this->criteria['show_site'])                 $data[] = $row['facility_name'];
-						if ($this->criteria['show_facility_type'])        $data[] = $row['facility_type_phrase'];
-						if ($this->criteria['show_staff_cadre'])          $data[] = $row['staff_cadre'];
-						if ($this->criteria['show_staff_category'])       $data[] = $row['staff_category'];
-						if ($this->criteria['show_hours_min'])            $data[] = $row['funded_hours_per_week'];
-						if ($this->criteria['show_cost_min'])             $data[] = $row['annual_cost'];
-						if ($this->criteria['show_primary_role'])         $data[] = $row['role_phrase'];
-						if ($this->criteria['show_importance'])           $data[] = $row['importance_phrase'];
-						if ($this->criteria['show_start_date'])           $data[] = formhelperdate($row['funder_end_date']);
-						if ($this->criteria['show_staff_category'])       $data[] = $row['staff_category'];
-						if ($this->criteria['show_intended_transition'])  $data[] = $row['transition_phrase'];
-						if ($this->criteria['show_transition_confirmed']) $data[] = $row['transition_confirmed'];
-						
-						if ($this->criteria['show_hours_per_mechanism_min'])         $data[] = sprintf('%0.2f', $percent * $HOURS_FOR_FULL_WORK_WEEK);
-						if ($this->criteria['show_employee_cost_per_mechanism_min']) $data[] = sprintf('%0.2f', $percent * $row['annual_cost']).space.$this->translation['Employee Local Currency'];
-#						if ($this->criteria['show_comments'])             $data[] = $row['comments'];
-						echo '"'.implode('","', $data).'"';
-					echo ']';
-					$cnt++;
-				}
-			}
-			?>];
+                        echo labelAndField($this, t('Staff Cadre'),
+                            $this->formSelect('classification', isset($this->criteria['classification']) ? $this->criteria['classification'] : null, array(), $this->classifications), 'classification');
 
-			var formatViewUrl = function(elCell, oRecord, oColumn, sData) {
-				if ( (sData == null) || (sData.length == 0) )
-					sData = '&nbsp;&nbsp;&nbsp;';
-				elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/employee/edit/id/" + oRecord.getData("id") + "' >" + sData + "</a>";
-			}
+                        echo labelTwoFields($this, t('Funded hours per week'), t('to'), 'hours_min', 'hours_max',
+                            isset($this->criteria['hours_min']) ? $this->criteria['hours_min'] : '',
+                            isset($this->criteria['hours_max']) ? $this->criteria['hours_max'] : '');
 
-			var employeesColumnDefs = [
-				{key:"id", label: "<?php tp("ID");?>", sortable:true, resizable:false,
-				formatter: formatViewUrl},
-				// {key:"first_name",    label: "<?php tp('First Name');?>", sortable:true, resizeable:true},
-				// {key:"last_name",     label: "<?php tp('Last Name');?>",  sortable:true, resizeable:true},
-				{key:"employee_code",     label: "<?php print(t('Employee').space.t('Code'));?>",  sortable:true, resizeable:true},
-				// {key:"gender",        label: "<?php tp('Gender');?>",     sortable:true, resizeable:true},
-				<?php if ( $this->criteria['showProvince'] ) { ?>
-				{key:"province_name", label: "<?php echo (@$this->translation['Region A (Province)']); ?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['showDistrict'] ) { ?>
-				{key:"district_name", label: "<?php echo (@$this->translation['Region B (Health District)']); ?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['showRegionC'] ) { ?>
-				{key:"region_c_name", label: "<?php echo (@$this->translation['Region C (Local Region)']); ?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['showRegionD'] ) { ?>
-				{key:"region_d_name", label: "<?php echo (@$this->translation['Region D']); ?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['showRegionE'] ) { ?>
-				{key:"region_e_name", label: "<?php echo (@$this->translation['Region E']); ?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['showRegionF'] ) { ?>
-				{key:"region_f_name", label: "<?php echo (@$this->translation['Region F']); ?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['showRegionG'] ) { ?>
-				{key:"region_g_name", label: "<?php echo (@$this->translation['Region G']); ?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['showRegionH'] ) { ?>
-				{key:"region_h_name", label: "<?php echo (@$this->translation['Region H']); ?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['showRegionI'] ) { ?>
-				{key:"region_i_name", label: "<?php echo (@$this->translation['Region I']); ?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['show_partner'] ) { ?>
-				{key:"partner",       label: "<?php tp('Partner');?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['show_sub_partner'] ) { ?>
-				{key:"sub_partner",   label: "<?php tp('Sub Partner');?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['show_site'] ) { ?>
-				{key:"site",          label: "<?php tp('Site');?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['show_facility_type'] ) { ?>
-				{key:"facility_type_phrase", label: "<?php tp('Site Type');?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['show_staff_cadre'] ) { ?>
-				{key:"staff_cadre",   label: "<?php tp('Staff Cadre');?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['show_staff_category'] ) { ?>
-				{key:"staff_category",label: "<?php tp('Staff Category');?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['show_hours_min'] ) { ?>
-				{key:"funded_hours",  label: "<?php tp('Funded hours per week');?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['show_cost_min'] ) { ?>
-				{key:"annual_cost",   label: "<?php tp('Annual Cost');?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['show_primary_role'] ) { ?>
-				{key:"primary_role",  label: "<?php tp('Primary Role');?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['show_importance'] ) { ?>
-				{key:"importance",    label: "<?php tp('Importance');?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['show_start_date'] ) { ?>
-				{key:"funder_end_date", label: "<?php tp('Funding End Date');?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['show_intended_transition'] ) { ?>
-				{key:"intended_transition", label: "<?php tp('Intented Transition');?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['show_transition_confirmed'] ) { ?>
-				{key:"transition_confirmed", label: "<?php tp('Transition Confirmed');?>", sortable:true, resizeable:true},
-				<?php } ?>
-				
-				<?php if ( $this->criteria['show_hours_per_mechanism_min'] ) { ?>
-				{key:"hours_per_mechanism", label: "<?php tp('Hours per Mechanism');?>", sortable:true, resizeable:true},
-				<?php } ?>
-				<?php if ( $this->criteria['show_employee_cost_per_mechanism_min'] ) { ?>
-				{key:"annual_cost_to_mechanism", label: "<?php tp('Annual Cost to Mechanism');?>", sortable:true, resizeable:true},
-				<?php } ?>
-				
-				<?php /*if ( $this->criteria['show_comments'] ) {
-				{key:"employee_comments", label: "<?php print (t('Employee Comments');?>", sortable:true, resizeable:true}
-				 #} */ ?>
-			];
+                        echo labelTwoFields($this, t('Annual Cost'), t('to'), 'cost_min', 'cost_max',
+                            isset($this->criteria['cost_min']) ? $this->criteria['cost_min'] : '',
+                            isset($this->criteria['cost_max']) ? $this->criteria['cost_max'] : '');
 
-			makeDataTable("employees", null, employeesData, employeesColumnDefs);
-		</script>
-			<?php if ($cnt < count($this->results)) { ?>
-			[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a>
-			<?php } ?>
-			<?php } ?>
-		</div>
-	</body>
+                        echo labelAndField($this, t('Primary Role'),
+                            $this->formSelect('primary_role', isset($this->criteria['primary_role']) ? $this->criteria['primary_role'] : null, array(), $this->roles), 'primary_role');
+
+                        echo labelAndField($this, t('Intended Transition'),
+                            $this->formSelect('intended_transition', isset($this->criteria['intended_transition']) ? $this->criteria['intended_transition'] : null, array(), $this->transitions), 'intended_transition');
+
+                        echo labelAndField($this, t('Actual Transition Outcome'),
+                            $this->formSelect('actual_transition', isset($this->criteria['actual_transition']) ? $this->criteria['actual_transition'] : null, array(), $this->transitions), 'actual_transition');
+
+                        echo labelTwoFields($this, t('Actual Transition Date'), t('to'), 'transition_start_date', 'transition_end_date',
+                            isset($this->criteria['transition_start_date']) ? $this->criteria['transition_start_date'] : '',
+                            isset($this->criteria['transition_end_date']) ? $this->criteria['transition_end_date'] : '');
+
+                        echo labelTwoFields($this, t('Salary'), t('to'), 'salary_min', 'salary_max',
+                            isset($this->criteria['salary_min']) ? $this->criteria['salary_min'] : '',
+                            isset($this->criteria['salary_max']) ? $this->criteria['salary_max'] : '');
+
+                        echo labelTwoFields($this, t('Benefits'), t('to'), 'benefits_min', 'benefits_max',
+                            isset($this->criteria['benefits_min']) ? $this->criteria['benefits_min'] : '',
+                            isset($this->criteria['benefits_max']) ? $this->criteria['benefits_max'] : '');
+
+                        echo labelTwoFields($this, t('Additional Expenses'), t('to'), 'expenses_min', 'expenses_max',
+                            isset($this->criteria['expenses_min']) ? $this->criteria['expenses_min'] : '',
+                            isset($this->criteria['expenses_max']) ? $this->criteria['expenses_max'] : '');
+
+                        echo labelTwoFields($this, t('Stipend'), t('to'), 'stipend_min', 'stipend_max',
+                            isset($this->criteria['stipend_min']) ? $this->criteria['stipend_min'] : '',
+                            isset($this->criteria['stipend_max']) ? $this->criteria['stipend_max'] : '');
+
+                        echo $this->partial('reports/ps-search-preview-button-partial.phtml', array());
+                        ?>
+                    </div>
+                    <div class="clear"></div>
+
+            </form>
+            <?php if (isset($this->output)) {
+                echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
+                    array('output' => $this->output, 'headers' => $this->headers));
+                ?>
+                <input type="button" name="go" value="<?php tp('Download'); ?> &raquo;" class="tsbutton green large"
+                       onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=csv" ?>')">
+            <?php } ?>
+        </div>
+    </div>
+</div>
+
+</body>
 </html>
-
-

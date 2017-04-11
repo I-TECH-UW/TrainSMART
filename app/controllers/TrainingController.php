@@ -149,7 +149,7 @@ class TrainingController extends ReportFilterHelpers {
 		if ($request->isPost () && ! $this->getSanParam ( 'edittabledelete' )) {
 
 			//$status->checkRequired($this, 'training_title_option_id',t('Training Name'));
-			//$status->checkRequired($this, 'training_category_and_title_option_id',t('Training Name'));
+			$status->checkRequired($this, 'training_category_and_title_option_id',t('Training Name')); //TA:53 10/06/2015 
 			//$status->checkRequired ( $this, 'training_length_value', t ( 'Training' ).' '.t( 'Length' ) );//TA:17: 09/3/2014
 			//$status->checkRequired ( $this, 'training_length_interval', t ( 'Training' ).' '.t( 'Interval' ) ); //TA:17: 09/3/2014
 			//$status->checkRequired($this, 'training_organizer_option_id',t('Training Organizer'));
@@ -178,6 +178,14 @@ class TrainingController extends ReportFilterHelpers {
 				} elseif ($score < 0 || $score > 100) {
 					$status->addError ( 'post', $this->view->translation ['Post Test Score'] . ' ' . t ( 'must be between 1-100.' ) );
 				}
+			}
+			//TA:#313
+			if ($final_mark = trim ( $this->getSanParam ( 'final_mark' ) )) {
+			    if (! is_numeric ( $final_mark )) {
+			        $status->addError ( 'final_mark', 'Final Course Mark must be numeric.'  );
+			    } elseif ($final_mark < 0 || $final_mark > 100) {
+			        $status->addError ( 'final_mark', 'Final Course Mark must be between 1-100.'  );
+			    }
 			}
 
 			//TA:17: 9/2/2014 Start date is not required
@@ -222,7 +230,7 @@ class TrainingController extends ReportFilterHelpers {
 					$pepfarTotal = 0;
 					foreach ( $this->getSanParam ( 'pepfar_days' ) as $key => $value ) {
 						if (! is_numeric ( $value ))
-						$value = ereg_replace ( "/^[.0-9]", "", $value );
+						$value = preg_replace ( "/\/^[.0-9]/", "", $value );
 						//$daysRay [$pepfar_array[$key]] = $value; //set the days key to  the pepfar id
 						$daysRay [$key] = $value; //set the days key to  the pepfar id
 						$pepfarTotal += $value;
@@ -546,8 +554,12 @@ class TrainingController extends ReportFilterHelpers {
 		$this->view->assign ( 'categoryTitle', $categoryTitle);
 		// add title link
 		if ($this->hasACL ( 'training_title_option_all' )) {
-			$this->view->assign ( 'titleInsertLink', " <a href=\"#\" onclick=\"addToSelect('" . str_replace ( "'", "\\" . "'", t ( 'Please enter your new' ) ) . " " . strtolower ( $this->view->translation ['Training'] . t('Name') ) . ":', 'select_training_title_option', '" . Settings::$COUNTRY_BASE_URL . "/training/insert-table/table/training_title_option/column/training_title_phrase/outputType/json'); return false;\">" . t ( 'Insert new' ) . "</a>" );
-			//$this->view->assign ( 'pageTitle', t ( 'View/Edit' ).' '.t( 'Training' )); //TA:11:
+			//TA:68 fixed bug : did not shaw up for Ukranian translation 
+			//$this->view->assign ( 'titleInsertLink', " <a href=\"#\" onclick=\"addToSelect('" . str_replace ( "'", "\\" . "'", t ( 'Please enter your new' ) ) . " " . strtolower ( $this->view->translation ['Training'] . t('Name') ) . ":', 'select_training_title_option', '" . Settings::$COUNTRY_BASE_URL . "/training/insert-table/table/training_title_option/column/training_title_phrase/outputType/json'); return false;\">" . t ( 'Insert new' ) . "</a>" );
+		    $this->view->assign ( 'titleInsertLink', 
+		        " <a href=\"#\" onclick=\"addToSelect('" . str_replace ( "'", "\\" . "'", t ( 'Please enter your new' )  . " " . 
+		        strtolower ( $this->view->translation ['Training'] . t('Name') )) . ":', 'select_training_title_option', '" . Settings::$COUNTRY_BASE_URL . "/training/insert-table/table/training_title_option/column/training_title_phrase/outputType/json'); return false;\">" . t ( 'Insert new' ) . "</a>" );
+		    //$this->view->assign ( 'pageTitle', t ( 'View/Edit' ).' '.t( 'Training' )); //TA:11:
 		}
 
 		//get assigned evaluation
@@ -727,8 +739,55 @@ class TrainingController extends ReportFilterHelpers {
 
 		/****************************************************************************************************************
 		* Trainers */
+		$locations = Location::getAll ();
 		if ($training_id) {
 			$trainers = TrainingToTrainer::getTrainers ( $training_id )->toArray ();
+			
+			//TA:107
+			foreach ( $trainers as $pid => $p ) {
+			    $region_ids = Location::getCityInfo ( $p ['location_id'], $this->setting ( 'num_location_tiers' ) ); // todo expensive call, getcityinfo loads all locations each time??
+			    $trainers [$pid] ['province_name'] = ($region_ids[1] ? $locations [$region_ids['1']] ['name'] : 'unknown');
+			    if ($region_ids[2])
+			        $trainers [$pid] ['district_name'] = $locations [$region_ids[2]] ['name'];
+			    else
+			        $trainers [$pid] ['district_name'] = 'unknown';
+			
+			    if ($region_ids[3])
+			        $trainers [$pid] ['region_c_name'] = $locations [$region_ids[3]] ['name'];
+			    else
+			        $trainers [$pid] ['region_c_name'] = 'unknown';
+			
+			    if ($region_ids[4])
+			        $trainers [$pid] ['region_d_name'] = $locations [$region_ids[4]] ['name'];
+			    else
+			        $trainers [$pid] ['region_d_name'] = 'unknown';
+			
+			    if ($region_ids[5])
+			        $trainers [$pid] ['region_e_name'] = $locations [$region_ids[5]] ['name'];
+			    else
+			        $trainers [$pid] ['region_e_name'] = 'unknown';
+			
+			    if ($region_ids[6])
+			        $trainers [$pid] ['region_f_name'] = $locations [$region_ids[6]] ['name'];
+			    else
+			        $trainers [$pid] ['region_f_name'] = 'unknown';
+			
+			    if ($region_ids[7])
+			        $trainers [$pid] ['region_g_name'] = $locations [$region_ids[7]] ['name'];
+			    else
+			        $trainers [$pid] ['region_g_name'] = 'unknown';
+			
+			    if ($region_ids[8])
+			        $trainers [$pid] ['region_h_name'] = $locations [$region_ids[8]] ['name'];
+			    else
+			        $trainers [$pid] ['region_h_name'] = 'unknown';
+			
+			    if ($region_ids[9])
+			        $trainers [$pid] ['region_i_name'] = $locations [$region_ids[9]] ['name'];
+			    else
+			        $trainers [$pid] ['region_i_name'] = 'unknown';
+			}
+			/////
 		} else {
 			$trainers = array ();
 		}
@@ -751,6 +810,41 @@ class TrainingController extends ReportFilterHelpers {
 
 			$colStatic = array ('first_name', 'middle_name', 'last_name' );
 		}
+		
+		//TA:107
+		$trainerFields ['birthdate'] = $this->tr ( 'Date of Birth' );
+		$trainerFields ['facility_name'] = $this->tr ( 'Facility Name' );
+		///
+		
+		//TA:107
+		if ( $this->setting ( 'display_region_i' )) {
+		    $trainerFields ['region_i_name'] = $this->tr ( 'Region I' );
+		}
+		else if ( $this->setting ( 'display_region_h' )) {
+		    $trainerFields ['region_h_name'] = $this->tr ( 'Region H' );
+		}
+		else if ( $this->setting ( 'display_region_g' )) {
+		    $trainerFields ['region_g_name'] = $this->tr ( 'Region G' );
+		}
+		else if ( $this->setting ( 'display_region_f' )) {
+		    $trainerFields ['region_f_name'] = $this->tr ( 'Region F' );
+		}
+		else if ( $this->setting ( 'display_region_e' )) {
+		    $trainerFields ['region_e_name'] = $this->tr ( 'Region E' );
+		}
+		else if ( $this->setting ( 'display_region_d' )) {
+		    $trainerFields ['region_d_name'] = $this->tr ( 'Region D' );
+		}
+		else if ( $this->setting ( 'display_region_c' )) {
+		    $trainerFields ['region_c_name'] = $this->tr ( 'Region C (Local Region)' );
+		}
+		else if ($this->setting ( 'display_region_b' )) {
+		    $trainerFields ['district_name'] = $this->tr ( 'Region B (Health District)' );
+		}
+		else {
+		    $trainerFields ['province_name'] = $this->tr ( 'Region A (Province)' );
+		}
+		//////
 
 		if ($this->view->viewonly) {
 			$editLinkInfo ['disabled'] = 1;
@@ -765,18 +859,24 @@ class TrainingController extends ReportFilterHelpers {
 		}
 
 		$html = EditTableHelper::generateHtmlTraining ( 'Trainer', $trainers, $trainerFields, $colStatic, $linkInfo, $editLinkInfo );
-		$this->view->assign ( 'tableTrainers', $html );
+		$this->view->assign ( 'tableTrainers', $html ); 
 
 		/****************************************************************************************************************
 		* Participants */
 
 		$locations = Location::getAll ();
 		$customColDefs = array();
+		//TA:#271
+		$pass = 0;
 
 		if ($training_id) {
 			$persons = PersonToTraining::getParticipants ( $training_id )->toArray ();
 
 			foreach ( $persons as $pid => $p ) {
+			    //TA:#271
+			    if($persons [$pid] ['pass_fail'] === 'pass'){
+			        $pass++;
+			    }
 				$region_ids = Location::getCityInfo ( $p ['location_id'], $this->setting ( 'num_location_tiers' ) ); // todo expensive call, getcityinfo loads all locations each time??
 				$persons [$pid] ['province_name'] = ($region_ids[1] ? $locations [$region_ids['1']] ['name'] : 'unknown');
 				if ($region_ids[2])
@@ -942,7 +1042,6 @@ class TrainingController extends ReportFilterHelpers {
 
 
 		}
-
 		$html = EditTableHelper::generateHtmlTraining ( 'Persons', $persons, $personsFields, $colStatic, $linkInfo, $editLinkInfo, $customColDefs);
 		$this->view->assign ( 'tablePersons', $html );
 
@@ -1022,7 +1121,11 @@ class TrainingController extends ReportFilterHelpers {
 
 		// row values
 		$this->view->assign ( 'row', $rowRay );
-
+		
+		//TA:#271  calcualte pass/fail
+		if($this->setting('display_training_pt_pass')){
+		  $this->view->assign ( 'pass', ($pass/count($persons))*100 . "%" );
+		}
 	}
 
 	/**
@@ -1123,10 +1226,12 @@ class TrainingController extends ReportFilterHelpers {
 			if ($action == 'add') {
 
 				$days = $this->getParam ( 'days' );
-				$result = TrainingToTrainer::addTrainerToTraining ( $row_id, $training_id, $days );
+ 				$result = TrainingToTrainer::addTrainerToTraining ( $row_id, $training_id, $days );
 				$sendRay ['insert'] = $result;
 				if ($result == - 1) {
 					$sendRay ['error'] = t ( 'This' ).' '.t( 'trainer' ).' '.t( 'is already in this training session.' );
+				}else if($result == null){//TA:#345
+				    $sendRay ['error'] = t ( 'This person cannot be added to this training session.' );
 				}
 				$this->sendData ( $sendRay );
 
@@ -1154,7 +1259,10 @@ class TrainingController extends ReportFilterHelpers {
 
 			}
 
-		} else if ($do == 'persons') { // update person table
+		} else if($do == 'file'){ //TA:#301
+		    require_once 'views/helpers/FileUpload.php';
+		    FileUpload::deleteFile ( $this);
+		}else if ($do == 'persons') { // update person table
 			require_once ('models/table/PersonToTraining.php');
 			$tableObj = new PersonToTraining ( );
 
@@ -1237,7 +1345,7 @@ class TrainingController extends ReportFilterHelpers {
 	* Import a training
 	*/
 	
-	public function importAction() {
+	public function importActionExcel() {
 		$errs = array();
 		$this->view->assign('pageTitle', t( 'Import a training' ));
 		
@@ -1376,7 +1484,7 @@ class TrainingController extends ReportFilterHelpers {
 										$errs [] = "Error locating facility: '" . $mes_facility . "', Person: '" . $mes_person . "' will have no assigned facility.";
 									}
 									
-									$personrow = $personObj->createRow();
+									$personrow = $personObj->createTableRow();
 									$personrow = ITechController::fillFromArray($personrow, $values_person);
 									$trainer_id = $personrow->save();
 									if(!$trainer_id){
@@ -1416,8 +1524,8 @@ class TrainingController extends ReportFilterHelpers {
 			
 		}	
 	}
-	
-	public function importActionOld() {
+	//TA:66:1 return CSV import
+	public function importAction() {
 	
 		//ini_set('max_execution_time','300');
 		$errs = array();
@@ -1440,8 +1548,14 @@ class TrainingController extends ReportFilterHelpers {
 	
 			$trainingObj = new Training ();
 			$personToTraining = new PersonToTraining();
-			while ($row = $this->_csv_get_row($filename) )
-			{
+			while ($row = $this->_csv_get_row($filename) ){
+			    //TA:#213
+			    //INFORCE user to create files only in UTF-8 encoded:
+			    //Option 1: Excel:Save as Unicode Text -> Notepad: replace tabs with commas, save as csv UTF-8
+			    //Option 2: OpenOffice
+			    //It is not required for english, but absolutelly required for special characteristics.
+			    //If files saved in UTF-8 encoded, so we do not need this line
+			    // $row = array_map("utf8_encode", $row); 
 				$values = array();
 				if (! is_array($row) )
 					continue;
@@ -2051,15 +2165,21 @@ class TrainingController extends ReportFilterHelpers {
 		$editTable = new EditTableController ($this->getRequest(), $this->getResponse());
 		$editTable->setParentController($this);
 		$editTable->table = 'score';
-		$editTable->fields = array ('score_label' => t ( 'Label' ), 'score_value' => t ( 'Score' ) ); // TODO: Label translations
-		$editTable->label = 'Score';
+		if ($this->setting('display_training_pt_pass') === '0') {
+		    $editTable->fields = array ('score_label' => t ( 'Label' ), 'score_value' => t ( 'Score' )); // TODO: Label translations
+		    $editTable->customColDef = array('score_value' => 'formatter:fickle');/*Todo rename this*/
+		}else{
+		  //TA:#271 add pass/fail options
+		  $editTable->fields = array ('score_label' => t ( 'Label' ), 'score_value' => t ( 'Score' ), 'pass_fail'=>t('Pass/Fail')); // TODO: Label translations
+		  $elements = array(array('text' => ' ', 'value' => ' '), array('text' => 'pass', 'value' => 'pass'), array('text' => 'fail', 'value' => 'fail'));
+		  $elements = json_encode($elements);
+		  $editTable->customColDef = array('score_value' => 'formatter:fickle', 'pass_fail' => "editor:'dropdown', editorOptions: {dropdownOptions: $elements }");/*Todo rename this*/
+		}
+		$editTable->label = t('Score'); //TA:66
 		$editTable->where = "person_to_training_id = {$personTrainingRow->id}";
 		$editTable->insertExtra = array ('person_to_training_id' => $personTrainingRow->id );
 		//$editTable->customColDef = array('training_date' => 'formatter:YAHOO.widget.DataTable.formatDate, editor:"date"');
 		//$editTable->customColDef = array('training_date' => 'width:120');
-		$editTable->customColDef = array('score_value' => 'formatter:fickle');/*Todo rename this*/
-
-
 		$editTable->execute ($this->getRequest());
 	}
 
@@ -2104,6 +2224,13 @@ class TrainingController extends ReportFilterHelpers {
 				$ppl = $db->fetchAll($sql);
 
 				while ($row = $this->_csv_get_row($filename) ) {
+				    //TA:#213
+			    //INFORCE user to create files only in UTF-8 encoded:
+			    //Option 1: Excel:Save as Unicode Text -> Notepad: replace tabs with commas, save as csv UTF-8
+			    //Option 2: OpenOffice
+			    //It is not required for english, but absolutelly required for special characteristics.
+			    //If files saved in UTF-8 encoded, so we do not need this line
+			    // $row = array_map("utf8_encode", $row); 
 					if ( is_array($row) ) {
 						if ( isset($row[0]) && isset($row[4]) && !empty($row[0]) && !empty($row[4]) ) {
 
@@ -2258,7 +2385,9 @@ class TrainingController extends ReportFilterHelpers {
 		/* Trainers */
 		$trainers = TrainingToTrainer::getTrainers ( $training_id )->toArray ();
 
-		$trainerFields = array ('last_name' => $this->tr ( 'Last Name' ), 'first_name' => $this->tr ( 'First Name' ), 'duration_days' => t ( 'Days' ) );
+		//$trainerFields = array ('last_name' => t ( 'Last name' ), 'first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'duration_days' => t ( 'Days' ) );
+		//TA: for Ukraine site (ucdc) it should use this titles
+		$trainerFields = array ('first_name' => t ( 'Last name' ), 'middle_name' => t ( 'First name' ), 'last_name' => t ( 'Middle name' ), 'duration_days' => t ( 'Days' ) );
 		$colStatic = array_keys ( $trainerFields ); // all
 		$editLinkInfo = array ('disabled' => 1 ); // no edit/remove links
 		$html = EditTableHelper::generateHtmlTraining ( 'Trainer', $trainers, $trainerFields, $colStatic, array (), $editLinkInfo );
@@ -2266,26 +2395,33 @@ class TrainingController extends ReportFilterHelpers {
 
 		/* Participants */
 		$persons = PersonToTraining::getParticipants ( $training_id )->toArray ();
-		$personsFields = array ('last_name' => $this->tr ( 'Last Name' ), 'first_name' => $this->tr ( 'First Name' ));
+		//TA:#317
+		//$personsFields = array ('first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'last_name' => t ( 'Last name' ));
+		//TA: for Ukraine site (ucdc) it should use this titles
+		$personsFields = array ('first_name' => t ( 'Last name' ), 'middle_name' => t ( 'First name' ), 'last_name' => t ( 'Middle name' ));
+		
+		//TA:#317
+		$personsFields = array_merge($personsFields, array ( 'facility_name' => t ( 'Facility' ) )); 
 
 		if ( $this->setting('module_attendance_enabled') ) {
 			if( strtotime( $rowRay ['training_start_date'] ) < time() ) {
-				$personsFields = array_merge($personsFields, array ( 'duration_days' => t ( 'Days' ) )); // already had class(es) - show the days attended
+			    //TA:106
+				$personsFields = array_merge($personsFields, array ( 'duration_days' => t ( 'Duration' ) )); // already had class(es) - show the days attended
 			}
 			$personsFields['award_phrase']  = $this->tr ( 'Complete' );
 		}
-		$personsFields = array_merge($personsFields, array ('birthdate' => t ( 'Date of Birth' ), 'facility_name' => t ( 'Facility' )));
+		//TA:#317 $personsFields = array_merge($personsFields, array ('birthdate' => t ( 'Date of Birth' ), 'facility_name' => t ( 'Facility' )));
 
 		if ( $this->setting('display_viewing_location') ) {
 			$personsFields['location_phrase'] = $this->tr ( 'Viewing Location' );
 		}
 		if ( $this->setting('display_budget_code') ) {
-			$personsFields['budget_code_phrase'] = $this->tr ( 'Budget Code' );
+			//TA:#317 $personsFields['budget_code_phrase'] = $this->tr ( 'Budget Code' );
 		}
 
 
 		//if ($this->setting ( 'display_region_b' ))
-		$personsFields ['location_name'] = t ( 'Location' );
+		$personsFields ['location_name'] = t ( 'Region' );
 		//add location
 		$locations = Location::getAll ();
 		foreach ( $persons as $pid => $person ) {
@@ -2298,11 +2434,19 @@ class TrainingController extends ReportFilterHelpers {
 				else
 					break;
 			}
-			$persons [$pid] ['location_name'] = implode ( ', ', $ordered_l );
+			//$persons [$pid] ['facility_name'] = substr_replace($persons[$pid]['facility_name'], " ", "<br>");
+			//$persons [$pid] ['facility_name'] =implode ( '<br>', explode(" " , $persons [$pid] ['facility_name']));
+			//TA:#317 add <br> to wrap text
+			 $persons [$pid] ['location_name'] = str_replace(",", "<br>", trim(implode ( ',', $ordered_l ), ","));
+			
 		}
+		
+		//TA:#317
+		$personsFields = array_merge($personsFields, array ( 'phone_home' => t ( 'Phone' ) )); 
+		$personsFields = array_merge($personsFields, array ( 'empty_column' => t ( 'Signature' ) . '     ' ));
 
 		$colStatic = array_keys ( $personsFields ); // all
-		$editLinkInfo = array ('disabled' => 1 ); // no edit/remove links
+		$editLinkInfo = array ('disabled' => 1 ); // no edit/remove link
 		$html = EditTableHelper::generateHtmlTraining ( 'Persons', $persons, $personsFields, $colStatic, array (), $editLinkInfo );
 		$this->view->assign ( 'tablePersons', $html );
 

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><?php echo $this->translation['Application Name'];?> | <?php tp('Roster Reports');?></title>
+    <?php
+    require_once('views/helpers/ScriptContainer.php');
+    print ScriptContainer::$instance->renderCSSHead();
+    print ScriptContainer::$instance->renderJSHead();
+    ?>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+            /* Init the table */
+            var oTable = $('.tablegrid').dataTable({
+                "bJQueryUI": true,
+                "sPaginationType": "full_numbers"
+            });
+        } );
+
+        function gotoPage(objId) {
+            var reportSelector = YAHOO.util.Dom.get(objId);
+            if ( reportSelector[reportSelector.selectedIndex].value ) {
+                window.location = '<?php echo $this->base_url;?>' + reportSelector[reportSelector.selectedIndex].value + '?<?php echo $_SERVER['QUERY_STRING'];?>';
+            }
+        }
+    </script>
+
+</head>
+<body class="yui-skin-sam">
+<div id="pageHolder">
+    <div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+    <div id="content">
+        <div id="subcontent">
+            <?php
+            echo $this->partial('reports/student-report-types-partial.phtml', array('site_style' => $this->site_style));
+            ?>
+            <div class="clear"></div>
+            <div id="contentheader">
+                <h2><?php tp('CHW Statement of Results'); ?></h2><br/>
+            </div>
+            <div class="pad50 clear"></div>
+            <form action="" method="get">
+                <div class="mainformholder" style="height:100%;">
+                    <input type="hidden" name="process" id="process" value="1">
+                    <?php tp('Select Criteria'); ?><br>
+
+                    <?php
+                    echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
+                        array('translation' => $this->translation, 'locations' => $this->locations,
+                            'criteria' => $this->criteria, 'setting' => $this->setting));
+
+                    echo $this->partial('reports/ps-institution-cadre-cohort-search-form-elements.phtml',
+                        array('institutions' => $this->institutions, 'cadres' => $this->cadres,
+                            'cohorts' => $this->cohorts, 'criteria' => $this->criteria));
+
+                    echo $this->partial('reports/gender-search-form-elements-partial.phtml', array('criteria' => $this->criteria));
+
+                    echo $this->partial('reports/ps-nationality-search-form-elements.phtml',
+                        array('nationalities' => $this->nationalities, 'criteria' => $this->criteria));
+
+                    echo $this->partial('reports/age-range-form-elements-partial.phtml', array('criteria' => $this->criteria));
+
+                    echo $this->partial('reports/ps-student-data-search-form-elements-partial.phtml',
+                        array('tutors' => $this->tutors, 'criteria' => $this->criteria,
+                            'termination_statuses' => $this->termination_statuses));
+                    ?>
+                    
+                </div>
+                <?php echo $this->partial('reports/ps-search-preview-button-partial.phtml'); ?>
+            </form>
+            <?php if (isset($this->output)) {
+            echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
+                array('output' => $this->output, 'headers' => $this->headers));
+            ?>
+            <input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large"
+                   onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=csv"?>')">
+            <input type="button" name="chwbutton" value="<?php tp('CHW Report');?> &raquo;" class="tsbutton green large"
+                   onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=chwreport"?>')">
+            <?php } ?>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

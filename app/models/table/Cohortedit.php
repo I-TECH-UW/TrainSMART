@@ -38,4 +38,5 @@ die();
 		$db->update('cohort',$data,'id ='.$param[id]);  
 		return $data;
 	}
+	
 }

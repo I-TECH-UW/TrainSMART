@@ -51,6 +51,16 @@ class ITechTable extends Zend_Db_Table_Abstract
 
       return false;
 	}
+	
+	//TA:50
+	public function has_time_created_col() {
+	    $info = $this->info();
+	    if ( (array_search('timestamp_created',$info['cols']) !== false) ) {
+	        return  true;
+	    }
+	
+	    return false;
+	}
 
   public function get_uuid($pkOrID)
   {
@@ -115,6 +125,12 @@ class ITechTable extends Zend_Db_Table_Abstract
 
 		return parent::insert($data);
 	}
+	
+	//TA:81 inserts exactly with data as it is
+	public function insertAllAsItIS(array $data) {
+	    require_once('models/Session.php');
+	    return parent::insert($data);
+	}
 
 	public function update(array $data,$where) {
 		require_once('models/Session.php');
@@ -124,9 +140,12 @@ class ITechTable extends Zend_Db_Table_Abstract
 		return parent::update($data,$where);
 	}
 
-	/**
-   * Override to use is_deleted field
-   */
+    /**
+     * Override Zend_Db_Table_Abstract::delete to use is_deleted field, if present
+     * @param string|bool $where - where clause for deletion
+     * @param bool        $force - delete row from database even if table has an is_deleted field, rather than mark deleted
+     * @return int
+     */
 	public function delete($where=false, $force = false) {
 		$info = $this->info();
 		if ( $force or (array_search('is_deleted',$info['cols']) == false) )

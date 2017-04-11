@@ -1,0 +1,43 @@
+
+<?php
+// Period (Date Range)
+echo $this->partial('/reports/date-range-partial.phtml',
+    array('label' => t('Period'), 'prefix' => 'period_', 'start_date' => $this->criteria['period_start_date'],
+        'end_date' => $this->criteria['period_end_date'], 'show_value' => false));
+?>
+
+<span>
+    <?php
+    // Implementing Agency (multiselect)
+    echo $this->formLabel('', t('Funder'), array('class' => 'fieldLabel'));
+    echo $this->formSelect('funder', '', array('multiple' => true), $this->funders);
+    ?>
+</span>
+<div class="clear pad20">&nbsp;</div>
+
+<span>
+<?php
+    // Mechanism (multiselect)
+    echo $this->formLabel('', t('Mechanism'), array('class' => 'fieldLabel'));
+    echo $this->formSelect('mechanism', '', array('multiple' => true), $this->mechanisms);
+?>
+</span>
+<div class="clear pad20">&nbsp;</div>
+
+<span>
+<?php
+    // Transition type
+    echo $this->formLabel('', t('Transition Type'), array('class' => 'fieldLabel'));
+    echo $this->formSelect('transition_type', '', array(), $this->transition_types);
+?>
+</span>
+<div class="clear pad20">&nbsp;</div>
+
+<span>
+<?php
+// Transition description
+echo $this->formLabel('', t('Transition Description'), array('class' => 'fieldLabel'));
+echo $this->formSelect('transition', '', array(), $this->transitions);
+?>
+</span>
+<div class="clear pad20">&nbsp;</div>

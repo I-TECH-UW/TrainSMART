@@ -343,7 +343,7 @@
 							
 							<div class="clear pad20"></div>
 							
-							<label><?php echo t('Student ID'); ?></label>
+							<label><?php echo t('TS ID'); ?></label>
 							<input readonly type="text" name="studentid" id="studentid" value="<?php echo $this->escape($this->id);?>">
 							
 
@@ -394,8 +394,7 @@
 
 							<label><?php echo t('Age'); ?></label>
 <?php
-	if ($this->escape($this->dob) != "31-12-1969"){
-
+	if ($this->escape($this->dob) != ""){
 		$birthDate = date("m/d/Y", strtotime($this->dob));
 		//explode the date to get month, day and year
 		$birthDate = explode("/", $birthDate);
@@ -511,9 +510,10 @@
 							<p style="float:left;font-size:14px;"><?php echo t('Student Information'); ?></p>
 							<div class="pad20 clear"></div><br>
 
-							<label><?php echo t('Student ID'); ?></label>
-							<input readonly type="text" name="studentid" id="studentid" value="<?php echo $this->escape($this->studentid);?>">
-
+							<!-- TA:83 <label><?php //echo t('Student ID'); ?></label>
+							<input readonly type="text" name="studentid" id="studentid" value="<?php //echo $this->escape($this->studentid);?>">
+                            -->
+                            
 							<!-- TA: added 07/22/2014 START -->
 							<?php
 								if($this->escape($this->label_ps_religious_denomin)){

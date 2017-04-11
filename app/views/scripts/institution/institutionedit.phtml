@@ -39,6 +39,8 @@
 				// INITIATE DORMS AND HOUSING
 				setselector('dorm',<?php echo($this->hasdormitories); ?>);
 				setselector('housing',<?php echo($this->tutorhousing); ?>);
+
+				setSignor();//TA:#362
 			} );
 
 			/* Get the rows which are currently selected */
@@ -77,6 +79,29 @@
 					break;
 				}
 			}
+
+			//TA:#362
+			function setSignor(){
+			var val = $("#transcript_signor").val('');			
+			$("#staff_table > tbody > tr >td >#transcript_signor_ch").each(function(){
+				if(this.checked){
+					if($("#transcript_signor").val() != ''){
+						$("#transcript_signor").val($("#transcript_signor").val() + ",");
+					}
+					$("#transcript_signor").val($("#transcript_signor").val() + this.name);
+				}
+			});
+
+			var val = $("#tutor_title_info").val('');
+			$("#staff_table > tbody > tr >td >#tutor_title").each(function(){
+				if(this.value != ''){
+					if($("#tutor_title_info").val() != ''){
+						$("#tutor_title_info").val($("#tutor_title_info").val() + ";");
+					}
+					$("#tutor_title_info").val($("#tutor_title_info").val() + this.name + "=" + this.value);
+				}
+			});		
+	}
 		</script>
 	</head>
 	<body>
@@ -90,7 +115,11 @@
 	
 					<div class="pad50 clear"></div>
 
-					<form action="" id="peopleadd" method="post" name="inspost" class="formvalidate">
+					<form action="" id="peopleadd" method="post" name="inspost" class="formvalidate" onclick='return setSignor();'>
+					
+					<!-- TA:97 -->
+	<table style="width:100%">
+				<tr><td>
 					
 					<input type="hidden" name="editid" id="editid" value="<?php echo $this->escape($this->id);?>">
 					<div class="mainformholder">
@@ -201,7 +230,7 @@
 						<label><?php echo t('Number of Tutors'); ?></label>
 						<input type="text" name="tutor" readonly value="<?php echo $this->escape($this->tutor);?>">
 						
-						<label><?php echo t('Number of Students'); ?></label>
+						<label><?php echo t('Active Students'); ?></label>
 						<input type="text" name="students" readonly value="<?php echo $this->escape($this->students);?>">
 						
 						<label><?php echo t('Tutor to Student Ratio'); ?></label>
@@ -241,39 +270,67 @@
 						<div class="clear pad50"></div>
 				</div>
 				<div>
+				</td>
+				<td style="width:20%" valign='top' align='left'>
+				<div class="historyDiv">
+						<b><?php echo t('ID'); ?></b>&nbsp;<?php echo $this->escape($this->id);?><br>
+						<b><?php echo t('Date created'); ?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>						
+						<b><?php echo t('Created by'); ?></b>&nbsp;<?php echo ($this->creator == "N/A" ? t("N/A") : "{$this->creator->first_name} {$this->creator->last_name}") ?><br>
+						<b><?php echo t('Date updated'); ?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
+						<b><?php echo t('Updated by'); ?></b>&nbsp;<?php echo ($this->updater == "N/A" ? t("N/A") : "{$this->updater->first_name} {$this->updater->last_name}") ?><br>
+						
+						</div>
+				</td>
+				</td></tr>
+				</table>
+				
+				<input type='hidden' id='transcript_signor' name='transcript_signor'/><!-- TA:#362 -->
+				<input type='hidden' id='tutor_title_info' name='tutor_title_info'/><!-- TA:#362 -->
+				
 					</form>
+					<br><br>
 					<div class="clear pad50"></div>
 					<p style="" ><?php echo t('Principal/Key Staff Members'); ?></p>
 	
 	
 					<div style="width :100%;">
-						<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+						<table id="staff_table" cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
 							<thead>
 								<tr>
 									<th><?php echo t('Name'); ?></th>
+									<th><?php echo t('Prefix'); ?></th>
 									<th><?php echo t('Title'); ?></th>
 									<th><?php echo t('Phone'); ?></th>
 									<th><?php echo t('Email'); ?></th>
+									<th><?php echo t('Transcript<br>Signor'); ?></th><!-- TA:#362 -->
 								</tr>
 							</thead>
 							<tbody>
 					
 <?php
+
 	foreach ($this->fetchins as $staff){
 ?>
-								<tr class="GradeA" onclick="location = '../../../tutoredit/tutoredit/id/<?php echo $staff['id']; ?>'">
-									<td><?php echo $staff['first_name'] . " " . $staff['last_name']; ?></td>
+								<tr class="GradeA" id='<?php echo $staff['tutorid']; ?>'>
+									<td onclick="location = '../../../tutoredit/tutoredit/id/<?php echo $staff['id']; ?>'"><?php echo $staff['first_name'] . " " . $staff['last_name']; ?></td>
 									<td class=""><?php echo $staff['title_phrase']; ?></td>
+									<!-- TA:#362  -->
+									<td class="" ><input type='text' id='tutor_title' name='<?php echo $staff['tutorid']; ?>' value='<?php echo $staff['tutor_title']; ?>'/></td>
 									<td class=""><?php echo $staff['phone_work']; ?></td>
 									<td class=""><?php echo $staff['email']; ?></td>
+									
+									<!-- TA:#362 -->
+									<?php $checked = ($staff['transcript_signor']==='1')? "checked":"";?>
+									<td class=""><input type='checkbox' id='transcript_signor_ch' name='<?php echo $staff['tutorid']; ?>' <?php echo $checked; ?>/></td>
 								</tr>
 <?php
 	}
 ?>
 							</tbody>
 						</table >
+						
 					</div>
-
+                    <br>
 					<div style="text-align : right;">
 						<input type="button" value="<?php echo t('Add/Edit Staff Members'); ?>" class="tsbutton green large" onclick="location='<?php echo Settings::$COUNTRY_BASE_URL ?>/institution/addstaff/id/<?php echo $this->id ?>'" >
 					</div>

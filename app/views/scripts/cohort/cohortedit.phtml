@@ -1,3 +1,4 @@
+
 <html>
 	<head>
 		<title><?php echo $this->escape($this->title);?></title>
@@ -15,6 +16,7 @@
 			h1 { font-size: 1.2em; margin: .6em 0; }
 			.ui-dialog .ui-state-error { padding: .3em; }
 			.validateTips { border: 1px solid transparent; padding: 0.3em; }
+            .dataTables_wrapper { min-height: 0; }
 		</style>
 		<script>
 			$(function() {
@@ -34,9 +36,6 @@
 						<?php echo t('Cancel')?>: function() {
 							$( this ).dialog( "close" );
 						}
-					},
-					close: function() {
-						//allFields.val( "" ).removeClass( "ui-state-error" );
 					}
 				});
 
@@ -59,9 +58,6 @@
 						<?php echo t('Cancel')?>: function() {
 							$( this ).dialog( "close" );
 						}
-					},
-					close: function() {
-						//allFields.val( "" ).removeClass( "ui-state-error" );
 					}
 				});
 
@@ -77,7 +73,61 @@
 						$( "#dialog-form-license" ).dialog( "open" );
 				});
 
-				$( "#dialog-form-class" ).dialog({
+                $( "#dialog-form-edit-class" ).dialog({
+                    autoOpen: false,
+                    width: 550,
+                    modal: true,
+                    buttons: {
+                        "<?php echo t('Save') ?>": function() {
+
+                            if ($("#currentid").val() == 0){
+                                $("#_action").val("addnew");
+                            } else {
+                                $("#_action").val("update");
+                            }
+
+                            if ($("#classname").val() == "") {
+                                alert('Class Name is required');
+                                $("#classname").focus();
+                            }
+                            else if ($("#startdate").val() == ""){
+                                alert ('Please enter a start date');
+                                $("#startdate").focus();
+                            } else if ($("#enddate").val() == ""){
+                                alert ('Please enter an end date');
+                                $("#enddate").focus();
+                            } else if (Date.parse($("#enddate").val()) <= Date.parse($("#startdate").val())){
+                                alert ('<?php //echo t('The end date cannot be before the start date')?>');
+                                $("#enddate").focus();
+                            } else {
+                                $( this ).dialog( "close" );
+                                document.getElementById("editclass").submit();
+                            }
+                        },
+                        "<?php echo t('Cancel') ?>": function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+
+                $( "#addclassbutton" )
+                    .button()
+                    .click(function() {
+                        $('#dialog-form-edit-class').dialog('option', 'title', '<?php echo t('Add class')?>');
+                        $("#currentid").val("0");
+
+                        <?php // Note: the form action is being changed here by JavaScript ?>
+                        $("#editclassaction").val('addclass');
+
+                        $("#classname").val("");
+                        $("#startdate").val("");
+                        $("#enddate").val("");
+                        $("#coursetopic").val("");
+
+                        $("#dialog-form-edit-class" ).dialog("open");
+                    });
+
+            $( "#dialog-form-class" ).dialog({
 					autoOpen: false,
 					height: 460,
 					width: 750,
@@ -89,9 +139,6 @@
 						<?php echo t('Cancel')?>: function() {
 							$( this ).dialog( "close" );
 						}
-					},
-					close: function() {
-						//allFields.val( "" ).removeClass( "ui-state-error" );
 					}
 				});
 
@@ -114,9 +161,6 @@
 						<?php echo t('Cancel')?>: function() {
 							$( this ).dialog( "close" );
 						}
-					},
-					close: function() {
-						//allFields.val( "" ).removeClass( "ui-state-error" );
 					}
 				});
 
@@ -134,10 +178,32 @@
 
 						$( "#dialog-form-practicum" ).dialog( "open" );
 				});
-
-
 			});
-			function licenseedititem(iid,nm,dt){
+
+            function classedititem(d){
+
+                $('#dialog-form-edit-class').dialog('option', 'title', '<?php echo t('Update class')?>');
+                $("#currentid").val(d['id']);
+
+                <?php // Note: the form action is being changed here by JavaScript ?>
+                $("#editclassaction").val('editclass');
+
+                $("#classname").val(d['classname']);
+                $("#startdate").val(d['startdate']);
+                $("#enddate").val(d['enddate']);
+                $("#instructorid").val(d['instructorid']);
+                $("#coursetypeid").val(d['coursetypeid']);
+                $("#coursetopic").val(d['coursetopic']);
+
+                $("#class_modules_id").val(d['class_modules_id']);
+                $("#custom_1").val(d['custom_1']);
+                $("#credits").val(d['maxcredits']);
+                $("#custom_2").val(d['custom_2']);
+
+                $( "#dialog-form-edit-class" ).dialog( "open" );
+            }
+
+            function licenseedititem(iid,nm,dt){
 				$('#dialog-form-license').dialog('option', 'title', '<?php echo t('Update a license'); ?>');
 				$("#licenseid").val(iid);
 
@@ -178,18 +244,22 @@
 					$(event.target.parentNode).addClass('row_selected');
 				});
 
-				/* Add a click handler for the delete row */
-/*
-				$('#delete').click( function() {
-					var anSelected = fnGetSelected( oTable );
-					oTable.fnDeleteRow( anSelected[0] );
-				} );
-*/
-				/* Init the table */
+				/* Init the tables */
 				oTable = $('.tablegrid').dataTable({
 					"bJQueryUI": true,
 					"sPaginationType": "full_numbers"
 				});
+
+                /* init non-paging tables - workaround for the checkboxes that are not registering because they
+                 are not visible
+                 */
+                var fullTable = $('.tablegrid_show_all').dataTable({
+                    "bJQueryUI": true,
+                    "bFilter": false,
+                    "iDisplayLength": -1,
+                    "bLengthChange": false
+                });
+
 			} );
 
 			/* Get the rows which are currently selected */
@@ -210,9 +280,9 @@
 
 <div id="dialog-form-student" title="<?php echo t("Update students")?>">
 	<form method="post" name="studentform" id="studentform">
-		<input type="hidden" name="action" id="action" value="students">
+		<input type="hidden" name="formaction" value="students">
 		<input type="hidden" name="id" id="id" value="<?php echo $this->id; ?>">
-		<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+		<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid_show_all" id="" style="width:100%">
 			<thead>
 				<tr>
 					<th><?php echo t('Student Id'); ?></th>
@@ -264,11 +334,60 @@
 	</form>
 </div>
 
+<div id="dialog-form-edit-class" title="Update class">
+    <form method="post" name="editclass" id="editclass">
+        <input type="hidden" name="formaction" id="editclassaction">
+
+        <fieldset>
+            <label for="classname"><?php echo t('Class name');?></label>
+            <input type="text" name="classname" id="classname" class="text ui-widget-content ui-corner-all" />
+            <label for="coursetypeid"><?php echo t('Course Type');?></label>
+            <?php echo $this->formSelect('coursetypeid', '',
+                array('id' => 'coursetypeid', 'class' => 'text ui-widget-content ui-corner-all'),
+                $this->coursetypes); ?>
+            <label for="coursetopic"><?php echo t('Topic');?></label>
+            <input type="text" name="coursetopic" id="coursetopic" class="text ui-widget-content ui-corner-all" />
+            <label for="startdate"><?php echo t('Start date');?></label>
+            <input type="text" name="startdate" id="startdate" class="calendarbox text ui-widget-content ui-corner-all" />
+            <label for="enddate"><?php echo t('End date');?></label>
+            <input type="text" name="enddate" id="enddate" class="calendarbox text ui-widget-content ui-corner-all" />
+            <label for="instructorid"><?php echo t('Instructor');?></label>
+
+            <select name="instructorid" id="instructorid" class="text ui-widget-content ui-corner-all">
+                <?php
+                foreach ($this->advisors as $advisor) {
+                    echo "<option value='{$advisor['id']}'>{$advisor['first_name']} {$advisor['last_name']}</option>\n";
+                }
+                ?>
+            </select>
+            <?php if ($this->setting['site_style'] == 'skillsmart') { ?>
+                <label for="class_modules_id">Module</label>
+                <select name="class_modules_id" id="class_modules_id" class="text ui-widget-content ui-corner-all">
+                    <?php
+                    foreach ($this->modules as $module){
+                        echo "<option value=\"" . $module['id'] . "\">" . $module['external_id'] . " - " . $module['title'] . "</option>\n";
+                    }
+                    ?>
+                </select>
+                <label for="custom_1">Short Name</label>
+                <input type="text" name="custom_1" id="custom_1" class="text ui-widget-content ui-corner_all" />
+                <label for="credits">Credits</label>
+                <input type="text" name="credits" id="credits" class="text ui-widget-content ui-corner_all" />
+                <label for="custom_2">Weight</label>
+                <input type="text" name="custom_2" id="custom_2" class="text ui-widget-content ui-corner_all" />
+            <?php } ?>
+
+        </fieldset>
+        <input type="hidden" name="currentid" id="currentid" class="text ui-widget-content ui-corner-all" />
+    </form>
+</div>
+
+
 <div id="dialog-form-class" title="<?php echo t('Update classes')?>">
 	<form method="post" name="classform" id="classform">
 		<input type="hidden" name="classaction" id="classaction" value="classaction">
 		<input type="hidden" name="classid" id="classid" value="<?php echo $this->id; ?>">
-		<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+		<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid_show_all" id="" style="width:100%">
 			<thead>
 				<tr>
 					<th><?php echo t('Class Name'); ?></th>
@@ -293,9 +412,9 @@
 							<?php } else { ?>
 								<td><input type="checkbox" name="class[<?php echo $classes['id']; ?>][id]" id="class[<?php echo $classes['id']; ?>][id]" value="<?php echo $classes['id']; ?>"<?php echo ($found ? " checked" : "") ?>> <?php echo $classes['classname']; ?></td>
 							<?php } ?>
-							<td class=""><?php echo $classes['first_name'] . " " . $classes['last_name']; ?></td>
-							<td class=""><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); } ?></td>
-							<td class=""><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); } ?></td>
+							<td><?php echo $classes['first_name'] . " " . $classes['last_name']; ?></td>
+							<td><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); } ?></td>
+							<td><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); } ?></td>
 						</tr>
 						<?php
 					}
@@ -352,11 +471,23 @@
 			<div id="content">
 				<div id="subcontent">
 					<div id="contentheader">
-						<h2><?php echo t('Edit/View Cohort Record'); ?></h2>
+						<h2><?php 
+						//TA:#380
+						if ( $this->hasACL('edit_people')	){
+						    echo t('Edit/View Cohort Record');
+						}else{
+						  echo t('View Cohort Record'); 
+						}
+						?>
+						</h2>
 					</div>
 					<div class="pad50 clear"></div>
 					<form  id="cohortedit" method="post" class="formvalidate">
-						<input type="hidden" name="id" value="<?php echo $this->escape($this->id);?>">
+					
+					<!-- TA:97 -->
+	<table style="width:100%">
+				<tr><td>
+				<input type="hidden" name="id" value="<?php echo $this->escape($this->id);?>">
 						<div class="mainformholder">
 							<p style=""><?php echo t('Cohort details'); ?></p><br>
 
@@ -364,10 +495,12 @@
 							<input type="text" class="required" name="cohortid" readonly  value="<?php echo $this->escape($this->cohortid);?>">
 
 							<label><?php echo t('Cohort Name'); ?></label>
-							<input type="text" class="required" name="cohortname"  value="<?php echo $this->escape($this->cohortname);?>">
+							<!-- TA:#380 -->
+							<input type="text" class="required" name="cohortname"  <?php echo $this->hasACL('edit_people')?'':'readonly';?> value="<?php echo $this->escape($this->cohortname);?>">
 
 							<label><?php echo t('Degree Information'); ?></label>
-							<select name="degreeinfo" class="comboeditable">
+							<!-- TA:#380 -->
+							<select name="degreeinfo" class="comboeditable" <?php echo $this->hasACL('edit_people')?'':'disabled=disabled';?>>
 								<option value="0"><?php echo t('Select...'); ?></option>
 								<?php
 									foreach ($this->lookupdegrees as $degree){
@@ -379,7 +512,8 @@
 							</select>
 
 							<label><?php echo t('Institution'); ?></label>
-							<select name="institution" id="institution" disabled="true">
+							<!-- TA:#380 -->
+							<select name="institution" id="institution" <?php echo $this->hasACL('edit_people')?'':'disabled=disabled';?>>
 								<?php
 									foreach ($this->institutions as $institution){
 									?>
@@ -390,7 +524,8 @@
 							</select>
 
 							<label><?php echo t('Cadre'); ?></label>
-							<select name="cadre" id="cadre">
+							<!-- TA:#380 -->
+							<select name="cadre" id="cadre" <?php echo $this->hasACL('edit_people')?'':'disabled=disabled';?>>
 								<?php
 								foreach ($this->institution_cadres as $cadre){
 									?>
@@ -401,10 +536,12 @@
 							</select>
 
 							<label><?php echo t('Cohort Start Date'); ?></label>
-							<input type="text" name="cohortstart" class="calendarbox required" value="<?php echo $this->escape($this->startname);?>">
+							<!-- TA:#380 -->
+							<input type="text" name="cohortstart" <?php echo $this->hasACL('edit_people')?' class="calendarbox required" ':'readonly';?> value="<?php echo $this->escape($this->startname);?>">
 
 							<label><?php echo t('Cohort Graduation Date'); ?></label>
-							<input type="text" name="cohortgrade" class="calendarbox required" value="<?php echo $this->escape($this->graddate);?>">
+							<!-- TA:#380 -->
+							<input type="text" name="cohortgrade" <?php echo $this->hasACL('edit_people')?' class="calendarbox required" ':'readonly';?> value="<?php echo $this->escape($this->graddate);?>">
 
 							<label><?php echo t('Cohort Participants at Start'); ?></label>
 							<input type="text" name="startdate" readonly value="<?php echo $this->escape($this->studentsatstart);?>">
@@ -416,12 +553,40 @@
 							<input type="text" name="graddate" readonly value="<?php echo $this->escape($this->studentsgraduating);?>">
 
 							<div class="rightdiv" style="margin-top:10px; margin-right:12px;">
-							<!-- TA:44 add button Delete -->
+							
+							<?php 
+						//TA:#380
+						if ( $this->hasACL('edit_people')	){?>
+						    <!-- TA:44 add button Delete -->
 								<input type="submit" name="deletecohort" value="<?php echo t('Delete'); ?>" class="tsbutton green large" 
 								onclick="<?php if(sizeof($this->cohortStudents) !=0 ) echo 'alert(\'Please remove all Students associated with the cohort first\'); return false;'; ?>">
 								<input type="submit" name="updatecohort" value="<?php echo t('Update'); ?> &raquo;" class="tsbutton green large">
+						<?php }else{?>
+						   <a href="../../../cohort/cohort"> <input type="button"  value="Back" class="tsbutton green large"></a>
+						<?php } ////?>
+						
 							</div>
 						</div>
+				</td>
+				<td style="width:20%" valign='top' align='left'>
+				<div class="historyDiv">
+						<b><?php echo t('ID'); ?></b>&nbsp;<?php echo $this->escape($this->id);?><br>
+						<b><?php echo t('Date created'); ?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateCreated));?><br>						
+						<b><?php echo t('Created by'); ?></b>&nbsp;<?php echo $this->creator; ?><br>
+						<b><?php echo t('Date updated'); ?></b>&nbsp;<?php echo str_replace(' ','&nbsp;',$this->escape($this->dateModified));?><br>
+						<b><?php echo t('Updated by'); ?></b>&nbsp;<?php echo $this->updater; ?><br>
+						<?php //TA:#380
+						if ( $this->hasACL('edit_people')	){?> 
+						<!-- TA:#362 -->
+						<hr>
+						<a href="<?php echo Settings::$COUNTRY_BASE_URL; ?>/cohort/transcript/id/<?php echo $this->escape($this->id); ?>" target="_blank" ><?php echo t('Create a new Official Transcript')?></a> <br/>
+                          <?php }?>
+						</div>
+				</td>
+				</td></tr>
+				</table>
+				
+						
 					</form>
 
 					<div class="clear50"></div>
@@ -466,7 +631,11 @@
 						</table>
 						<div style="text-align : right;">
 							<br>
+							<?php 
+							//TA:#380
+						if ( $this->hasACL('edit_people')	){?>
 							<input type="submit" name="studentpopupbutton" id="studentpopupbutton" value="<?php echo t('Update associated students'); ?>" class="tsbutton green large">
+							<?php }?>
 						</div>
 					</div>
 <?php
@@ -491,9 +660,20 @@
 	foreach ($this->licenses as $license){
 ?>
 								<tr class="GradeA">
-									<td style="cursor : pointer;" onclick="licenseedititem('<?php echo $license['id'] . "','" . $license['licensename'] . "','" . $license['licensedate']; ?>');"><?php echo $license['licensename'];?></td>
-									<td style="cursor : pointer; width : 120px;" onclick="licenseedititem('<?php echo $license['id'] . "','" . $license['licensename'] . "','" . $license['licensedate']; ?>');"><?php echo date("m/d/Y", strtotime($license['licensedate']));?></td>
-									<td style="cursor : pointer; width : 80px;"><form method="post"><input type="submit" value="<?php echo t('Delete'); ?>" style="width : 100%; padding : 3px;"><input type="hidden" name="dellicense" id="dellicense" value="<?php echo $license['id'] ?>"></form></td>
+									<td style="cursor : pointer;"
+                            <?php //TA:#380
+						if ( $this->hasACL('edit_people')	){?>  
+									onclick="licenseedititem('<?php echo $license['id'] . "','" . $license['licensename'] . "','" . $license['licensedate']; ?>');"
+									<?php }?>
+									><?php echo $license['licensename'];?></td>
+									<td style="cursor : pointer; width : 120px;"><?php echo date("m/d/Y", strtotime($license['licensedate']));?></td>
+									<td style="cursor : pointer; width : 80px;">
+									<?php //TA:#380
+						if ( $this->hasACL('edit_people')	){?>
+									<form method="post"><input type="submit" value="<?php echo t('Delete'); ?>" style="width : 100%; padding : 3px;"><input type="hidden" name="dellicense" id="dellicense" value="<?php echo $license['id'] ?>"></form>
+									<?php }?>
+									</td>
+								
 								</tr>
 <?php
 	}
@@ -501,7 +681,12 @@
 							</tbody>
 						</table>
 						<div style="text-align : right;">
+                            <br>
+                            <?php 
+							//TA:#380
+						if ( $this->hasACL('edit_people')	){?>
 							<input type="submit" name="licensepopupbutton" id="licensepopupbutton" value="<?php echo t('Add a license'); ?>" class="tsbutton green large">
+							<?php }?>
 						</div>
 					</div>
 <?php
@@ -526,16 +711,21 @@
 							<?php
 								foreach ($this->fetchcurrentclasses as $classes){
 									?>
-									<tr class="GradeA">
+									<tr class="GradeA" style="cursor : pointer;" 
+									<?php //TA:#380
+						if ( $this->hasACL('edit_people')	){?> 
+									onclick='classedititem(<?php echo json_encode($classes, JSON_HEX_QUOT|JSON_HEX_APOS); ?>);'
+									<?php }?>
+									>
 										<td class="">
 											<?php if ($this->setting['site_style'] == 'skillsmart') {
 												echo $classes['custom_1'];
 											} else {
 												echo $classes['classname'];
 											}?></td>
-										<td class="" style=" width : 160px;"><?php echo $classes['first_name'] . " " . $classes['last_name'];?></td>
-										<td class="" style=" width : 120px;"><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); }?></td>
-										<td class="" style=" width : 120px;"><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); }?></td>
+										<td style="width : 160px;"><?php echo $classes['first_name'] . " " . $classes['last_name'];?></td>
+										<td style="width : 120px;"><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); }?></td>
+										<td style="width : 120px;"><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); }?></td>
 									</tr>
 									<?php
 								}
@@ -543,7 +733,13 @@
 							</tbody>
 						</table>
 						<div style="text-align : right;">
+                            <br>
+                            <?php 
+							//TA:#380
+						if ( $this->hasACL('edit_people')	){?>
+                            <input type="button" name="addclassbutton" id="addclassbutton" value="<?php echo t('Add Class'); ?>" class="tsbutton green large">
 							<input type="submit" name="classpopupbutton" id="classpopupbutton" value="<?php echo t('Update associated classes'); ?>" class="tsbutton green large">
+							<?php }?>
 						</div>
 					</div>
 <?php
@@ -571,12 +767,22 @@
 	foreach ($this->practicumfetch as $practicum){
 ?>
 								<tr class="GradeA">
-									<td style="cursor : pointer;" onclick="practicumedititem('<?php echo addslashes($practicum['id']) . "','" . addslashes($practicum['practicumname']) . "','" . addslashes($practicum['practicumdate']) . "','" . addslashes($practicum['facilityid']) . "','" . addslashes($practicum['advisorid']) . "','" . addslashes($practicum['hoursrequired']); ?>');"><?php echo $practicum['practicumname'];?></td>
-									<td style="cursor : pointer; width : 120px;" onclick="practicumedititem('<?php echo addslashes($practicum['id']) . "','" . addslashes($practicum['practicumname']) . "','" . addslashes($practicum['practicumdate']) . "','" . addslashes($practicum['facilityid']) . "','" . addslashes($practicum['advisorid']) . "','" . addslashes($practicum['hoursrequired']); ?>');"><?php echo $practicum['practicumdate'];?></td>
-									<td style="cursor : pointer; width : 120px;" onclick="practicumedititem('<?php echo addslashes($practicum['id']) . "','" . addslashes($practicum['practicumname']) . "','" . addslashes($practicum['practicumdate']) . "','" . addslashes($practicum['facilityid']) . "','" . addslashes($practicum['advisorid']) . "','" . addslashes($practicum['hoursrequired']); ?>');"><?php echo $practicum['facilityid'];?></td>
-									<td style="cursor : pointer; width : 120px;" onclick="practicumedititem('<?php echo addslashes($practicum['id']) . "','" . addslashes($practicum['practicumname']) . "','" . addslashes($practicum['practicumdate']) . "','" . addslashes($practicum['facilityid']) . "','" . addslashes($practicum['advisorid']) . "','" . addslashes($practicum['hoursrequired']); ?>');"><?php echo $practicum['advisorid'];?></td>
-									<td style="cursor : pointer; width : 120px;" onclick="practicumedititem('<?php echo addslashes($practicum['id']) . "','" . addslashes($practicum['practicumname']) . "','" . addslashes($practicum['practicumdate']) . "','" . addslashes($practicum['facilityid']) . "','" . addslashes($practicum['advisorid']) . "','" . addslashes($practicum['hoursrequired']); ?>');"><?php echo $practicum['hoursrequired'];?></td>
-									<td style="cursor : pointer; width : 80px;"><form method="post"><input type="submit" value="<?php echo t('Delete'); ?>" style="width : 100%; padding : 3px;"><input type="hidden" name="delpracticum" id="delpracticum" value="<?php echo $practicum['id'] ?>"></form></td>
+									<td style="cursor : pointer;"
+                                    <?php //TA:#380
+						if ( $this->hasACL('edit_people')	){?>  
+									onclick="practicumedititem('<?php echo addslashes($practicum['id']) . "','" . addslashes($practicum['practicumname']) . "','" . addslashes($practicum['practicumdate']) . "','" . addslashes($practicum['facilityid']) . "','" . addslashes($practicum['advisorid']) . "','" . addslashes($practicum['hoursrequired']); ?>');"
+									<?php }?>
+									><?php echo $practicum['practicumname'];?></td>
+									<td style="cursor : pointer; width : 120px;"><?php echo $practicum['practicumdate'];?></td>
+									<td style="cursor : pointer; width : 120px;"><?php echo $practicum['facilityid'];?></td>
+									<td style="cursor : pointer; width : 120px;"><?php echo $practicum['advisorid'];?></td>
+									<td style="cursor : pointer; width : 120px;"><?php echo $practicum['hoursrequired'];?></td>
+									<td style="cursor : pointer; width : 80px;">
+									<?php //TA:#380
+						if ( $this->hasACL('edit_people')	){?> 
+									<form method="post"><input type="submit" value="<?php echo t('Delete'); ?>" style="width : 100%; padding : 3px;"><input type="hidden" name="delpracticum" id="delpracticum" value="<?php echo $practicum['id'] ?>"></form>
+									<?php }?>
+									</td>
 								</tr>
 <?php
 	}
@@ -584,7 +790,12 @@
 							</tbody>
 						</table>
 						<div style="text-align : right;">
+                            <br>
+                            <?php 
+							//TA:#380
+						if ( $this->hasACL('edit_people')	){?>
 							<input type="submit" name="practicumpopupbutton" id="practicumpopupbutton" value="<?php echo t('Add a practicum'); ?>" class="tsbutton green large">
+							<?php }?>
 						</div>
 					</div>
 <?php

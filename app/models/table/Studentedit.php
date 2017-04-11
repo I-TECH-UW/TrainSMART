@@ -43,8 +43,12 @@ class Studentedit extends ITechTable
 		# GETTING COHORT LINK
 		$select = $this->dbfunc()->select()
 			->from('link_student_cohort')
+			->join(array('c' => 'cohort'),
+			    'c.id = link_student_cohort.id_cohort')
 			->where('id_student = ?',$output['student'][0]['id']);
-		$row = $this->dbfunc()->fetchAll($select);
+			//$row = $this->dbfunc()->fetchAll($select);
+			//TA:#217 add to select: order by dropdate, joindate desc;
+		$row = $this->dbfunc()->fetchAll($select . " order by dropdate, joindate desc ");
 		$output['link_cohort'] = $row;
 
 		# GETTING PERMANENT ADDRESS
@@ -57,13 +61,6 @@ class Studentedit extends ITechTable
 			->where('a.id_addresstype = 1');
 		$row = $this->dbfunc()->fetchAll($select);
 		$output['permanent_address'] = $row;
-
-		// DETERMINING IF A LINK EXISTS
-		$select = $this->dbfunc()->select()
-			->from('link_student_cohort')
-			->where('id_student = ?',$output['student'][0]['id']);
-		$row = $this->dbfunc()->fetchAll($select);
-		$output['link_cohort'] = $row;
 
 		# GETTING COHORT IF EXISTS
 		if (count ($output['link_cohort']) > 0){
@@ -212,7 +209,11 @@ class Studentedit extends ITechTable
 	public function UpdatePerson($param){
 
 		$datepick=$param['dob'];
-		$dobymd=date("Y-m-d",strtotime($datepick));
+		if($datepick == ''){
+		    $dobymd = null;
+		}else{
+		  $dobymd=date("Y-m-d",strtotime($datepick));
+		}
 		$db = $this->dbfunc();
 		$data = array(
 			"title_option_id"	=>	$param['title'],
@@ -240,7 +241,10 @@ class Studentedit extends ITechTable
 			'custom_field3'	=>	$param['custom_field3'], //TA: added 7/22/2014
 			'marital_status'	=>	$param['marital_status'], //TA: added 7/22/2014
 			'spouse_name'	=>	$param['spouse_name'], //TA: added 7/22/2014
-
+			
+		    'timestamp_updated' => $this->now_expr(), //TA:105
+		    'modified_by' => Session::getCurrentUserId(),//TA:105
+		    
 			//'home_location_id'=>"$param[city]"
 		);
 
@@ -309,15 +313,17 @@ class Studentedit extends ITechTable
 			$param['enrollmentreason'] = $id;
 		}
 
-
+		
 		# DETERMINING IF A LINK ALREADY EXISTS BETWEEN STUDENT AND A COHORT
 		$select = $this->dbfunc()->select()
 			->from('link_student_cohort')
 			->where('id_student = ?',$studentid);
 		$result = $this->dbfunc()->fetchAll($select);
-		if (count ($result) == 0){
-			# LINK DOES NOT EXIST YET. CREATE LINK
-
+		
+		if (count ($result) == 0){  
+		    # LINK DOES NOT EXIST YET OR ADD aANOTHER COHORT
+		 
+		    
 			$link = array(
 				'id_cohort'			=>	$param['cohortid'],
 			    'id_student'		=>	$studentid,
@@ -335,27 +341,48 @@ class Studentedit extends ITechTable
 
 			return $id;
 		} else {
-			# LINK EXISTS - UPDATE
-
-			# RETRIEVING LINK ROW
-			$row = $result[0];
-			$linkid = $row['id'];
-
-			// UPDATING ADDRESS ROW
-			$db = $this->dbfunc();
-			$link = array(
+		    //TA:#217 try to find existing cohort
+		    for ($k=0; $k<count ($result); $k++){
+		        if($result[$k]['id_cohort'] == $param['cohortid']){
+		            $linkid = $result[$k]['id'];
+		            break;
+		        }
+		    }
+		
+		    if($linkid){
+			 // UPDATING ADDRESS ROW
+			 $db = $this->dbfunc();
+			 $link = array(
 				'id_cohort'			=>	$param['cohortid'],
 			    'joindate'			=>	$joindate,
 			    'dropdate'			=>	$dropdate,
 			    'joinreason'		=>	$param['enrollmentreason'],
 			    'dropreason'		=>	$param['separationreason'],
-			);
+			 );
+			
+			 $helper = new helper();
+			 $helper->updatePersonInstitution("student",$studentid,$param['cohortid']);
+			 $db->update('link_student_cohort',$link,"id = '".$linkid."' AND id_student = " . $studentid);
+			 return $link;
+		    }else{//TA:#217 add another cohort
 
-			$helper = new helper();
-			$helper->updatePersonInstitution("student",$studentid,$param['cohortid']);
-
-			$db->update('link_student_cohort',$link,"id = '".$linkid."' AND id_student = " . $studentid);
-			return $link;
+		        $link = array(
+		            'id_cohort'			=>	$param['cohortid'],
+		            'id_student'		=>	$studentid,
+		            'joindate'			=>	$joindate,
+		            'dropdate'			=>	$dropdate,
+		            'joinreason'		=>	($param['enrollmentreason'] ? $param['enrollmentreason'] : 0),
+		            'dropreason'		=>	($param['separationreason'] ? $param['separationreason'] : 0),
+		        );
+		        
+		        $rowArray = $db->insert("link_student_cohort",$link);
+		        $id = $db->lastInsertId();
+		        
+		        $helper = new helper();
+		        $helper->updatePersonInstitution("student",$studentid,$param['cohortid']);
+		        
+		        return $id;
+		    }
 		}
 
 	}
@@ -606,6 +633,45 @@ class Studentedit extends ITechTable
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 
+	}
+//TA:51 10/05/2015
+	public function DeleteStudent($param){
+	    $person_id = $param['id'];
+	    $student_primary_id = $param['sid'];
+	    
+	    // remove student
+	    $sql = "DELETE FROM student WHERE personid = {$person_id}";
+	    $result = $this->dbfunc()->query($sql);
+	    
+	    // set person as deleted
+	    $sql = "UPDATE person SET is_deleted=1 where id = {$person_id}";
+	    $result = $this->dbfunc()->query($sql);
+	
+	    // remove student cohort link
+	    $sql = "DELETE FROM link_student_cohort WHERE id_student = {$student_primary_id}";
+	    $result = $this->dbfunc()->query($sql);
+	    
+	    // remove student classes link
+	    $sql = "DELETE FROM link_student_classes WHERE studentid = {$student_primary_id}";
+	    $result = $this->dbfunc()->query($sql);
+	    
+	    // remove student practicums link
+	    $sql = "DELETE FROM link_student_practicums WHERE studentid = {$person_id}";
+	    $result = $this->dbfunc()->query($sql);
+	    
+	    // remove student licenses link
+	    $sql = "DELETE FROM link_student_licenses WHERE studentid = {$student_primary_id}";
+	    $result = $this->dbfunc()->query($sql);
+	
+	    // remove student licenses link
+	    $sql = "DELETE FROM link_student_funding WHERE studentid = {$student_primary_id}";
+	    $result = $this->dbfunc()->query($sql);
+	    
+	    // remove student licenses link
+	    $sql = "DELETE FROM link_student_addresses WHERE id_student = {$student_primary_id}";
+	    $result = $this->dbfunc()->query($sql);
+	    
+	    return true;
 	}
 
  }

@@ -1,0 +1,21 @@
+<div class="fieldLabel" id="training_lbl">
+<?php echo t('Select student report');?>
+</div>
+
+<?php
+$options = array(
+    "" => "--" . t('choose') . "--",
+    "/reports/ps-students-trained" => t('Students Trained'),
+    "/reports/ps-students-by-name" => t('Students By Name'),
+    "/reports/ps-graduated-students" => t('Graduated Students'),
+    "/reports/ps-repeated-students" => t('Repeated Students')//TA:#217
+);
+
+if ($this->site_style === 'skillsmart') {
+    $options["/reports/ss-chw-statement-of-results"] = t('CHW Statement of Results');
+}
+
+$r = Zend_Controller_Front::getInstance()->getRequest();
+$selected = "/" . $r->getControllerName() . "/" .$r->getActionName();
+echo $this->formSelect('pstraining', $selected, array('id' => 'pstraining', 'onchange' => "gotoPage('pstraining');"), $options);
+echo "<br/><br>";

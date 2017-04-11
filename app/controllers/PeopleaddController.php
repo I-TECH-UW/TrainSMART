@@ -26,6 +26,11 @@ class PeopleaddController extends ITechController {
 
 		if ( $this->getRequest()->isPost() ){
 			if (isset ($params['addpeople'])){
+			    
+			    //TA:87 !!!! DO NOT REMOVE: in PS add people for duplicat chjeck used first_name and last_name
+			    $params['firstname'] = $params['first_name'];
+			    $params['lastname'] = $params['last_name'];
+			    
 				$tutorid = $peopleadd->addTutor($params);
 
 				if ($tutorid) {
@@ -117,6 +122,8 @@ class PeopleaddController extends ITechController {
             )
         );
 
+		$db = $this->dbfunc();
+
         // doc says this field is for SAQA ID but I don't understand how that can be a dropdown
         //$this->view->assign('nationality_dropdown', DropDown::generateSelectionFromQuery('select id, nationality as value from lookup_nationalities', array('name' => 'nationalityid')));
 
@@ -134,7 +141,7 @@ class PeopleaddController extends ITechController {
             )
         );
 
-        $this->view->assign('assessment_center',
+        $this->view->assign('cadre',
             DropDown::generateSelectionFromQuery(
                 'select id, cadrename as val from cadres order by val',
                 array('name' => 'cadre')
@@ -147,6 +154,13 @@ class PeopleaddController extends ITechController {
                 array('name' => 'studenttype', 'id' => 'studenttype')
             )
         );
-    }
+		$s = $db->select()->from('certificate_issuers', array('id', 'val' => 'issuer_name'));
+
+		$this->view->assign('certificate_issuer',
+			DropDown::generateSelectionFromQuery($s,
+				array('name' => 'certificate_issuer', 'id' => 'certificate_issuer')
+			)
+		);
+
+	}
 }
-?>

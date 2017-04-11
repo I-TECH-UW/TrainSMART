@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        @page {
+            size: auto;
+        }
+
+        @media screen {
+            body {
+                margin: 64pt 64pt 64pt 64pt;
+            }
+            .SORFooter {
+                padding-bottom: 100px;
+            }
+        }
+
+        @media print {
+            .SORFooter {
+                page-break-after: always;
+            }
+            table tr td, table tr th {
+                page-break-inside: avoid;
+                page-break-after: auto;
+                page-break-before: auto;
+            }
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+                page-break-before: auto;
+            }
+            .resultsTable {
+                width: 100%;
+                page-break-after: always;
+            }
+        }
+        .resultsTable {
+            width: 100%;
+        }
+        .SORHeader {
+            margin-top: 20pt;
+            margin-bottom: 20pt;
+        }
+        .AQPTable {
+            margin: 20pt auto;
+        }
+        .lightGrayBackground {
+            background-color: #DDDDDD;
+        }
+        .cellBorders {
+            border: 1px solid black;
+        }
+        .center {
+            text-align: center;
+        }
+        .signatureTable {
+            margin: 20pt auto;
+        }
+        .sigline {
+            width: 200px;
+            border-bottom: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+
+<?php
+    $lastid = $this->output[0]['id'];
+    $lastmodule = null;
+    $numrows = count($this->output);
+    $i = 0;
+    $studentcount = 0;
+    while ($i < $numrows) {
+        $student = &$this->output[$i];
+    ?>
+    <div>
+        <span>
+            <strong>Skills Development Provider (SDP):</strong>
+            <?php echo $student['institutionname']; ?>
+        </span>
+        <br>
+        <span>
+            <strong>Address:</strong>
+            <?php
+            $iaddress = '';
+            if ($student['address1']) {
+                $iaddress .= $student['address1'];
+            }
+            if ($student['address2']) {
+                $iaddress .= ', ' . $student['address2'];
+            }
+            if ($student['city']) {
+                $iaddress .= ', ' . $student['city'];
+            }
+            if ($student['postalcode']) {
+                $iaddress .= ', ' . $student['postalcode'];
+            }
+
+            echo $iaddress;
+            ?>
+        </span>
+        <br>
+        <span>
+            <strong>Contact Number:</strong>
+            <?php
+            $iphone = '';
+            if ($student['phone']) {
+                $iphone = $student['phone'];
+            }
+            if ($student['phone'] && $student['fax']) {
+                $iphone .= ' / ' . $student['fax'];
+            }
+            echo $iphone;
+            ?>
+        </span>
+        <br>
+    </div>
+    <div class="center SORHeader">
+        <strong>STATEMENT OF RESULTS</strong>
+        <br>
+        OCCUPATIONAL CERTIFICATE: <?php echo strtoupper($student['cadrename']) . ": SAQA ID " .
+            $student['saqa_id'] . " (NQF Level {$student['nqf_max']})"; ?>
+        <br>
+        Issued to
+        <br>
+        <strong><?php echo $student['first_name'] . ' ' . $student['last_name'];?></strong>
+        <br>
+        ID / Passport number: <?php echo $student['national_id']; ?>
+    </div>
+    <div>
+    <table class="resultsTable" cellspacing="0">
+        <thead>
+            <tr>
+                <th class="cellBorders center"><?php echo t('Date Assessed');?></th>
+                <th class="cellBorders center"><?php echo t('Module type');?></th>
+                <th class="cellBorders center"><?php echo t('Module number');?></th>
+                <th class="cellBorders center"><?php echo t('Module');?></th>
+                <th class="cellBorders center"><?php echo t('NQF Level');?></th>
+                <th class="cellBorders center"><?php echo t('Credits');?></th>
+                <th class="cellBorders center"><?php echo t('Achievement Pass/Fail');?></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        <?php
+        $lastmodule = null;
+        while (($i < $numrows) && $lastid == $student['id']) {
+
+            if ($lastmodule != $student['coursetype']) {
+                $lastmodule = $student['coursetype'];
+                echo "<tr><td colspan='7' class='lightGrayBackground center cellBorders'><strong>" . t($lastmodule) . "</strong></td></tr>";
+            }
+        ?>
+
+        <tr>
+            <td class="cellBorders center"><?php echo $student['examdate']; ?></td>
+            <td class="cellBorders center"><?php echo $student['coursetype']; ?></td>
+            <td class="cellBorders center"><?php echo $student['external_id']; ?></td>
+            <td class="cellBorders center"><?php echo $student['title']; ?></td>
+            <td class="cellBorders center"><?php echo $student['nqf_level']; ?></td>
+            <td class="cellBorders center"><?php echo $student['credits']; ?></td>
+            <td class="cellBorders center"><?php echo $student['grades']; ?></td>
+        </tr>
+            
+
+        <?php
+            if (($i + 1 > $numrows) || ($lastid != $this->output[$i + 1]['id'])) {
+                // exit the while loop while we still have the current student data to populate the remainder of the page
+                $studentcount += 1;
+                break;
+            }
+            $i += 1;
+            $student = &$this->output[$i];
+        }
+        ?>
+        <tr>
+            <td colspan="7">The learner has successfully completed the knowledge, workplace and practical requirements as
+                stipulated in the Occupational Certificate: <?php echo $student['cadrename'] . ": SAQA ID " . $student['saqa_id']; ?> qualification.
+                The learner is now ready to apply for the external summative assessment component to complete the
+                qualification.</td>
+        </tr>
+
+        </tbody>
+    </table>
+    </div>
+    <div>
+    <table class="cellBorders AQPTable" cellspacing="0">
+        <tbody>
+        <tr>
+            <td rowspan="2" class="lightGrayBackground cellBorders center"><?php echo t('Assessment Quality Partner');?></td>
+            <td class="lightGrayBackground cellBorders center">Name</td>
+            <td class="lightGrayBackground cellBorders center">E-mail</td>
+            <td class="lightGrayBackground cellBorders center">Phone</td>
+            <td class="lightGrayBackground cellBorders center">Logo</td>
+        </tr>
+        <tr>
+            <td class="cellBorders center"><?php echo $student['issuer_name']; ?></td>
+            <td class="cellBorders center"><?php echo $student['issuer_email']; ?></td>
+            <td class="cellBorders center"><?php echo $student['issuer_phone_number']; ?></td>
+            <td class="cellBorders center"><img src="<?php echo Settings::$COUNTRY_BASE_URL . '/file/download/id/' . $student['issuer_logo_file_id']; ?>" /></td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+    <div>
+        <table class="signatureTable">
+            <tr>
+                <td>Signature:</td>
+                <td class="sigline">&nbsp;</td>
+                <td>Date:</td>
+                <td class="sigline">&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+    <div class="SORFooter">
+    <strong><em>This Statement of Results is not an Occupational Certificate. The learner has complied with the requirement of the practical, workplace and knowledge components of the qualification.  The Quality Council for Trades and Occupations may issue the Occupational Certificate after the candidate has successfully completed the External Summative Assessment requirements.</em></strong>
+    </div>
+    <?php
+        $i += 1;
+        $student = &$this->output[$i];
+        $lastid = $student['id'];
+    }
+?>
+</body>
+</html>
+

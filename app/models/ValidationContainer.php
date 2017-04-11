@@ -35,8 +35,7 @@ class ValidationContainer {
 
 	public function checkRequired($controller, $name, $textName) {
 		$val = $controller->getRequest()->getParam($name);
-		if ( ($val === null) or ($val == '') ) {
-    			//$this->addError($name,' (required)');
+		if (($val === null) || ($val == '') || (is_array($val) && count($val) == 1 && ($val[0] === null || $val[0] == ''))) {
           		$this->addError($name, $textName.' ('.t('required').')');
 			return false;
 		}
@@ -50,6 +49,18 @@ class ValidationContainer {
 		}
 		return true;
 	}
+
+	public function isAcceptableSAPhoneNumber($fieldName, $textName, $value) {
+
+        $phNumber = str_replace(' ', '', $value);
+        if ((strlen($phNumber) == 10) && ctype_digit($phNumber)) {
+            return true;
+        }
+        else {
+            $this->addError($fieldName, t('Please enter a 10-digit') . ' '. $textName);
+            return false;
+        }
+    }
 
 	public function isValidDate($controller, $fieldname, $textName, $dateString) {
 		require_once('Zend/Date.php');
@@ -79,6 +90,32 @@ class ValidationContainer {
 
 		return $rtn;
 	}
+
+	public function isValidDateDDMMYYYY($fieldName, $textName, $dateString) {
+        $errorMessage = null;
+        try {
+            $date = DateTime::createFromFormat('d/m/Y', $dateString);
+        }
+        catch (Exception $e) {
+            $errorMessage = $textName . ' ' . t('is not a valid date');
+        }
+
+        // But wait, there's more! DateTime can interpret the date into a different day without
+        // throwing an exception.
+        if (!$errorMessage) {
+            $errors = DateTime::getLastErrors();
+            if (count($errors) && ((isset($errors['warning_count']) && $errors['warning_count'] > 0) ||
+                    (isset($errors['error_count']) && $errors['error_count']) > 0)) {
+                $errorMessage = $textName . ' ' . t('is not a valid date');
+            }
+        }
+
+        if ($errorMessage) {
+            $this->addError($fieldName, $errorMessage);
+            return false;
+        }
+        return true;
+    }
 
 	public function hasError() {
 		return count($this->messages);

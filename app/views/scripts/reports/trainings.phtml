@@ -39,7 +39,7 @@
 					<option value="/reports/training-by-title" <?php if ($this->expand_lists) echo 'selected="selected"';?>><?php echo t('Trainings by Multiple Names');?></option>
 					<option value="/reports/training-by-participants" <?php if ($this->mode == 'count') echo 'selected="selected"';?>><?php echo t('Trainings by Participant Count');?></option>
 					<?php if ($this->setting['display_viewing_location']) { ?>
-					<option value="/reports/budget-code"><?php echo t('Trainings by Participants Viewing Location'); ?></option>
+					<!--  <option value="/reports/budget-code"><?php echo t('Trainings by Participants Viewing Location'); ?></option> -->
 					<?php } ?>
 					<?php if ($this->setting['module_unknown_participants_enabled']) { ?>
 					<option value="/reports/training-unknown" <?php if ($this->mode == 'unknown') echo 'selected="selected"';?>><?php echo t('Trainings with Unknown Participants');?></option>
@@ -81,7 +81,9 @@
 											
 											<div class="fieldLabel" id="training_title_option_id_lbl"><?php echo (@$this->translation['Training Name']); ?></div>
 											<div class="fieldInput"><div class="leftBorderPad" ><input type="checkbox" name="showTrainingTitle"  <?php  if ($this->criteria['showTrainingTitle']) echo 'checked="checked"';?> /></div><label for="showTrainingTitle" ></label>
-												<div  class="leftBorder"><select <?php echo ($this->expand_lists?'multiple="multiple" size="10"':'class="fixed"'); ?> id="select_training_title_option" name="training_category_and_title_id<?php if ($this->expand_lists) echo '[]'; ?>" >
+												<div  class="leftBorder">
+												<select <?php echo ($this->expand_lists?'multiple="multiple" size="10"':'class="fixed"'); ?> 
+												id="select_training_title_option" name="training_category_and_title_id<?php if ($this->expand_lists) echo '[]'; ?>"  style="min-width:600px;">
 													<option value="">--<?php tp('All');?>--</option>
 													<?php
 													$lastId = NULL;
@@ -91,10 +93,10 @@
 
 														// Also list empty prefix to allow all titles to be displayed
 														if($vals['training_category_option_id'] && $vals['id'] != $lastId) {
-															echo '<option value="_'.$vals['id'].'"'.$isselected.'>'.$vals['training_title_phrase'].'</option>';
+															echo '<option value="_'.$vals['id'].'" '.$isselected.'>'.$vals['training_title_phrase'].'</option>';
 														}
 
-														echo '<option value="'. $vals['training_category_option_id'].'_'.$vals['id'].'"'.$isselected.'>'.$vals['training_title_phrase'].'</option>';
+														echo '<option value="'. $vals['training_category_option_id'].'_'.$vals['id'].'" '.$isselected.'>'.$vals['training_title_phrase'].' </option>';
 														$lastId = $vals['id'];
 													}
 													?>
@@ -111,7 +113,7 @@
 
 												<!-- TA:17:14 -->
 												<?php if($this->setting['display_training_location']){?>
-												<div class="fieldLabel" id="training_location_id_lbl"><?php echo t('Training').' '.t('location');?></div>
+												<div class="fieldLabel" id="training_location_id_lbl"><?php echo t('Training Location');?> </div> <!-- TA:66 translation  -->
 												<div class="fieldInput"><div  class="leftBorderPad"><input type="checkbox" name="showLocation"  <?php  if ($this->criteria['showLocation']) echo 'checked="checked"';?> /></div><label for="showLocation" ></label>
 
 													<div  class="leftBorder">
@@ -403,7 +405,8 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 													</form>
 													<?php if ( $this->criteria['go'] ) { ?>
 													<div class="hrGrey"></div>
-													<div class="fieldIndentNoMargin"><?php tp('Trainings');?> <span class="total"><?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span><?php echo $this->printAndExport();?><span class="datadownload" style="float:right;"><?php if(count($this->results)) { ?><a href="<?php echo $this->base_url; ?>/data/trainings/outputType/csv/<?php echo implode_ids($this->results); ?>"><?php tp('Download Complete Excel Data for these trainings'); ?></a><?php } ?></span></div>
+													 <!-- TA:80 print only trainings part -->
+													<div class="fieldIndentNoMargin"><?php tp('Trainings');?> <span class="total"><?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span><?php echo $this->printAndExport("trainings");?><span class="datadownload" style="float:right;"><?php if(count($this->results)) { ?><a href="<?php echo $this->base_url; ?>/data/trainings/outputType/csv/<?php echo implode_ids($this->results); ?>"><?php tp('Download Complete Excel Data for these trainings'); ?></a><?php } ?></span></div>
 														<?php if ($this->mode == 'search' ) { ?>
 														<a href="<?php echo $this->base_url;?>/training/add"><?php echo t('Add').' '.t('New').' '.t('Training');?></a><br/><br/>
 														<?php } ?>
@@ -428,7 +431,9 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 																	echo ((array_key_exists('cnt', $row) !== false )? ','.$row['id']: $row['id']);
 																	if ( isset($row['id']) && $this->setting['display_training_start_date']) //TA:17: 09/09/2014
 																	echo ',"'.@$row['training_start_date'].'"';
-																	if ( $this->criteria['showEndDate'] )
+																	//TA:110 show end date as well with start date
+																	//if ( $this->criteria['showEndDate'] )
+																	if ( $this->criteria['showEndDate'] || (isset($row['id']) && $this->setting['display_training_start_date']))
 																	echo ',"'.$row['training_end_date'].'"';
 																	if ( $this->criteria['showProvince'] )
 																	echo ',"'.$row['province_name'].'"';
@@ -489,7 +494,10 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 																	if ( $this->criteria['showCustom4'] )
 																	echo ',"'.$row['custom_4'].'"';
 																	if (array_key_exists('pcnt', $row) !== false )
-																	echo ','.( ($row['has_known_participants']? ($row['pcnt'] ? $row['pcnt'] :0):'"-"') );
+																	//TA:110 Malawi does not wnat to show 'has_known_participants' in the Export Excel report
+																	// that is why we do not get it from query
+																	//echo ','.( ($row['has_known_participants']? ($row['pcnt'] ? $row['pcnt'] :0):'"-"') );
+																	echo ',"'.$row['pcnt'].'"';
 																	if ( $this->criteria['showCreatedBy'] )
 																	echo ',"'.$row['created_by_user'].'"';
 																	if ( $this->criteria['showCreationDate'] )
@@ -521,7 +529,8 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 																	,{key:"training_start_date", label: "<?php tp('Start Date');?>", sortable:true, resizeable:true}
 																	<?php }?>
 																<?php } ?>
-																<?php if ( $this->criteria['showEndDate'] ) { ?>
+																<?php //TA:110 show end date with start date
+																if ( $this->criteria['showEndDate'] || (isset($row['id']) && $this->setting['display_training_start_date'])) { ?>
 																	,{key:"training_end_date", label: "<?php tp('End Date');?>", sortable:true, resizeable:true}
 																<?php } ?>
 																<?php if ( $this->criteria['showProvince'] ) { ?>
@@ -612,7 +621,9 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 																	,{key:"custom4_phrase", label: "<?php echo (@$this->translation['Training Custom 4']); ?>", sortable:true, resizeable:true}
 																<?php } ?>
 																//TA:17: 09/09/2014  
-																<?php if ($this->results[0] && array_key_exists('pcnt', $this->results[0]) !== false && $this->setting['display_training_pepfar']) { ?>
+																<?php if ($this->results[0] && array_key_exists('pcnt', $this->results[0]) !== false 
+																/*TA:75 should we have this condition???? I removed it beacuse it did not displayed for Ukraine, but should be 
+																 && $this->setting['display_training_pepfar']*/) { ?>
 																	,{key:"pcnt", label: "<?php tp('Participants');?>", sortable:true, resizeable:true}
 																<?php } ?>
 																<?php   if ( $this->criteria['showCreatedBy'] ) { ?>
