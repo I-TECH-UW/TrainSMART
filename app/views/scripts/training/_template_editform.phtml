@@ -297,7 +297,13 @@
                         <?php if (!$this->viewonly) : ?>
                             <script type="text/javascript">
                                 YAHOO.util.Event.onDOMReady(function () {
-                                    makeCalendar("startdate", "start-day", "start-month", "start-year", dateCalc);
+                                    <?php //TA:#350
+                                    $locale = ITechTranslate::getLocale();
+                                    if ( $locale !== null && $locale == 'uk_UK.UTF-8'){ ?>
+                                         makeCalendarUkraine("startdate", "start-day", "start-month", "start-year", dateCalc, "calendarpicker", "buttoncalendar1");
+                                    <?php }else{?>
+                                         makeCalendarDefault("startdate", "start-day", "start-month", "start-year", dateCalc, "calendarpicker", "buttoncalendar1");
+                                    <?php }?>
                                 });
                             </script>
                         <?php endif; ?>
@@ -320,7 +326,13 @@
                         <?php if (!$this->viewonly) : ?>
                             <script type="text/javascript">
                                 YAHOO.util.Event.onDOMReady(function () {
-                                    makeAdditionalCalendar("enddate", "end-day", "end-month", "end-year", dateCalc);
+                                    <?php //TA:#350
+                                    $locale = ITechTranslate::getLocale();
+                                    if ( $locale !== null && $locale == 'uk_UK.UTF-8'){ ?>
+                                        makeCalendarUkraine("enddate", "end-day", "end-month", "end-year", dateCalc, "calendarpicker2","buttoncalendar2");
+                                    <?php }else{?>
+                                        makeCalendarDefault("enddate", "end-day", "end-month", "end-year", dateCalc, "calendarpicker2","buttoncalendar2");
+                                    <?php }?>
                                 });
                             </script>
                         <?php endif; ?>

@@ -30,7 +30,14 @@ print ScriptContainer::$instance->renderJSHead();
         / <?php tp('Year');?> <input id="from-year" class="yearfield" type="text" name="from-year" value="" />
         <script type="text/javascript">
 		    YAHOO.util.Event.onDOMReady(function () {
-		    	makeCalendar("fromdate", "from-day", "from-month", "from-year");
+		    	//makeCalendar("fromdate", "from-day", "from-month", "from-year");
+		    	<?php //TA:#350
+                        $locale = ITechTranslate::getLocale();
+                        if ( $locale !== null && $locale == 'uk_UK.UTF-8'){ ?>
+                             makeCalendarUkraine("fromdate", "from-day", "from-month", "from-year", null, "calendarpicker", "buttoncalendar1");
+                        <?php }else{?>
+                             makeCalendarDefault("fromdate", "from-day", "from-month", "from-year", null, "calendarpicker", "buttoncalendar1");
+                        <?php }?>
 		    });
 		</script>
         </div>
@@ -48,7 +55,14 @@ print ScriptContainer::$instance->renderJSHead();
         </div>
         <script type="text/javascript">
 		    YAHOO.util.Event.onDOMReady(function () {
-		    	makeAdditionalCalendar("todate", "to-day", "to-month", "to-year");
+		    	//makeAdditionalCalendar("todate", "to-day", "to-month", "to-year");
+		    	<?php //TA:#350
+                        $locale = ITechTranslate::getLocale();
+                        if ( $locale !== null && $locale == 'uk_UK.UTF-8'){ ?>
+                            makeCalendarUkraine("todate", "to-day", "to-month", "to-year", null, "calendarpicker2","buttoncalendar2");
+                        <?php }else{?>
+                            makeCalendarDefault("todate", "to-day", "to-month", "to-year", null, "calendarpicker2","buttoncalendar2");
+                        <?php }?>
 		    });
 		</script>
                 </td>
