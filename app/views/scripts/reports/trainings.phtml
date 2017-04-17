@@ -675,7 +675,18 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 														</div>
 <script type="text/javascript">
 $(document).ready( function	() {
-	$('.trainingReportCreationDate').datepicker({dateFormat: 'mm/dd/yy'});
+	<?php //TA:#350
+            $locale = ITechTranslate::getLocale();
+            if ( $locale !== null && $locale == 'uk_UK.UTF-8'){ ?>
+            $('.trainingReportCreationDate').datepicker({
+        		monthNames: ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"], 
+        		dayNamesMin: ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+        		firstDay: 1,
+        		dateFormat: 'mm/dd/yy'
+        			});
+            <?php }else{?>
+            $('.trainingReportCreationDate').datepicker({dateFormat: 'mm/dd/yy'});
+            <?php }?>
 	$('.calendarbtn').click(openNearestDatePicker);
 });
 </script>
