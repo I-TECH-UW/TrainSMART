@@ -2384,10 +2384,8 @@ class TrainingController extends ReportFilterHelpers {
 
 		/* Trainers */
 		$trainers = TrainingToTrainer::getTrainers ( $training_id )->toArray ();
-
-		//$trainerFields = array ('last_name' => t ( 'Last name' ), 'first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'duration_days' => t ( 'Days' ) );
-		//TA: for Ukraine site (ucdc) it should use this titles
-		$trainerFields = array ('first_name' => t ( 'Last name' ), 'middle_name' => t ( 'First name' ), 'last_name' => t ( 'Middle name' ), 'duration_days' => t ( 'Days' ) );
+        //TA:#363
+		$trainerFields = array ('last_name' => t ( 'Last name' ), 'first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'duration_days' => t ( 'Days' ) );
 		$colStatic = array_keys ( $trainerFields ); // all
 		$editLinkInfo = array ('disabled' => 1 ); // no edit/remove links
 		$html = EditTableHelper::generateHtmlTraining ( 'Trainer', $trainers, $trainerFields, $colStatic, array (), $editLinkInfo );
