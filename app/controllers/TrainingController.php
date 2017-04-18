@@ -2395,10 +2395,9 @@ class TrainingController extends ReportFilterHelpers {
 
 		/* Participants */
 		$persons = PersonToTraining::getParticipants ( $training_id )->toArray ();
-		//TA:#317
-		//$personsFields = array ('first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'last_name' => t ( 'Last name' ));
-		//TA: for Ukraine site (ucdc) it should use this titles
-		$personsFields = array ('first_name' => t ( 'Last name' ), 'middle_name' => t ( 'First name' ), 'last_name' => t ( 'Middle name' ));
+		//TA:#363
+		$personsFields = array ('first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'last_name' => t ( 'Last name' ));
+		
 		
 		//TA:#317
 		$personsFields = array_merge($personsFields, array ( 'facility_name' => t ( 'Facility' ) )); 
