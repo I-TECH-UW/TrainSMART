@@ -429,92 +429,65 @@
         //TA:#224
         function addSite() {    
             var $oTable = $('#multi_sites_table').dataTable();
-            var province = '';
-            var province_id = $('#province_id').val();
-            if(province_id){
-            	province = $('#province_id option:selected' ).text();
-            }else{
-            	alert("Specify value for '<?php tp('Region A (Province)');?>'.");
-                return false;
-            }    
-            var district = '';
-            var district_id = $('#district_id').val();
-            if(district_id){
-            	district = $('#district_id option:selected' ).text();
-            }else{
-            	alert("Specify value for '<?php tp('Region B (Health District)');?>'.");
-                return false;
-            } 
-            var region = '';
-            var region_id = $('#region_c_id').val();
-            if(region_id){
-            	region = $('#region_c_id option:selected' ).text();
-            }else{
-            	alert("Specify value for '<?php tp('Region C (Local Region)');?>'.");
-                return false;
-            } 
-            var site_type = '';
-            if($('#facilityType').val()){
-            	site_type = $('#facilityType option:selected' ).text();
-            }
-            var site_name = '';
-            var site_id = $('#facilityInput').val();
-            if(site_id){
-            	site_name = $('#facilityInput option:selected' ).text();
-            }else{
-            	alert("Specify value for '<?php tp('Site Name');?>'.");
-                return false;
-            } 
-             var hiv_fte_related = $('#hiv_fte_related' ).val();
-             if(hiv_fte_related == ""){
-            	 hiv_fte_related = 0;
-             }else{
-                if(isNaN(hiv_fte_related)){
-                	alert("Specify integer value for '<?php tp('HIV Related FTE (Hrs)');?>'.");
-                    $('#hiv_fte_related' ).val('');
-                    return false;
-                }else{
-                	hiv_fte_related = parseInt(hiv_fte_related);
-                }
-            }
-            var non_hiv_fte_related = $('#non_hiv_fte_related' ).val();
-            if(non_hiv_fte_related == ""){
-            	non_hiv_fte_related = 0;
-            }else{
-                if(isNaN(non_hiv_fte_related)){
-               	 alert("Specify integer value for '<?php tp('Non-HIV Related FTE (Hrs)');?>'.");
-                 $('#non_hiv_fte_related' ).val('');
-                 return false;
-                }else{
-                	non_hiv_fte_related = parseInt(non_hiv_fte_related);
-                }
-            }
-                var newRowIDs = $oTable.fnAddData([province, district, region, site_type, site_name, hiv_fte_related, 
-                                                   non_hiv_fte_related,
-                '<input type="checkbox" onclick="deleteToggleSite(this);"/>']);
+            var rows = $("#multi_sites_table > tbody > tr").length;
+     
+           var province = "<select id='" + rows + "province_id' name='" + rows + "province_id' onchange='setChildStatus_" + rows + "province_id();'>";
+           province += "<option value=''>--<?php tp('choose');?>--</option>";
+           <?php
+       	        foreach ($this->locations as $val) {
+       	            if ($val['tier'] === '1') {
+       	                echo "province += \"<option value='" . buildId('1', $this->locations, $val['id']) ."'>" . $val['name'] . "</option>\";";
+       	            }
+       	        }
+       	        ?>
+           province += "</select>";
+           province += "<script type='text/javascript'>";
+           province += "function setChildStatus_" + rows + "province_id() {";
+        	   province += "var widgetObj = YAHOO.util.Dom.get('" + rows + "province_id');";
+        		   province += "setChildStatus(widgetObj.selectedIndex,'" + rows + "district_id','" + rows + "province_id', '0');";
+        		   province += "}";
+           province += "YAHOO.util.Event.onDOMReady(function () {";
+        	   province += "setChildStatus_" + rows + "province_id();";
+        		   province += "});";
+           province += "<\/script>";
+
+           var district = "<select id='" + rows + "district_id' name='" + rows + "district_id' onchange='setChildStatus_" + rows + "district_id();'>";
+           district += "<option value=''>--<?php tp('choose');?>--</option>";
+           <?php
+       	        foreach ($this->locations as $val) {
+       	            if ($val['tier'] === '2') {
+       	                echo "district += \"<option value='" . buildId('2', $this->locations, $val['id']) ."'>" . $val['name'] . "</option>\";";
+       	            }
+       	        }
+       	        ?>
+          	     district += "</select>";
+            	   district += "<script type='text/javascript'>";
+            	   district += "function setChildStatus_" + rows + "district_id() {";
+            	   district += "var widgetObj = YAHOO.util.Dom.get('" + rows + "district_id');";
+            	   district += "setChildStatus(widgetObj.selectedIndex,'" + rows + "district_id','" + rows + "district_id', '0');";
+            	   district += "}";
+            	   district += "YAHOO.util.Event.onDOMReady(function () {";
+            	   district += "setChildStatus_" + rows + "district_id();";
+            	   district += "});";
+            	   district += "<\/script>";
+
+           
+           
+                var newRowIDs = $oTable.fnAddData([province, district, '', 
+                                                   '', 
+                                                   '', '', '',
+                                                   '<input type="checkbox" onclick="deleteToggleSite(this);"/>']);
                var newRow = $($oTable.fnSettings().aoData[newRowIDs[0]].nTr);
                
-               var data = site_id + "," + hiv_fte_related + "," + non_hiv_fte_related;
-               if($('#multi_sites_table_data_add').val() != ''){
-                  	$('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + ";");
-                  }
-                  $('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + data);
+//                var data = "" + "," + "" + "," + "";//change here
+//                if($('#multi_sites_table_data_add').val() != ''){
+//                   	$('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + ";");
+//                   }
+//                   $('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + data);
                
-                 calculateSiteTable(false);
-                 $('#province_id').val('0');
-                 $('#district_id').val('0');
-                 $('#district_id').attr('disabled', true);
-                 $('#region_c_id').val('0');
-                 $('#region_c_id').attr('disabled', true);
-                 $('#facilityType').val('0');
-                 $('#facilityType').attr('disabled', true);
-                 $('#facilityInput').val('0');
-                 $('#facilityInput').attr('disabled', true);
-                 $('#hiv_fte_related').val('');
-                 $('#hiv_fte_related').attr('disabled', true);
-                 $('#non_hiv_fte_related').val('');
-                 $('#non_hiv_fte_related').attr('disabled', true);
-                return true;   
+                // calculateSiteTable(false);
+            
+                return false;   
         }
 
         //TA:#394 They want to make validation on client side, do not lose entered data if validation is failed
@@ -826,44 +799,12 @@
                 <?php } ?>
                 </tbody> <!-- TA:#397 END -->
                    </table>
-                   <!--  </td></tr></table>   -->   
-                   <table border=0 style='width: 700px;'>
-                   <tr>
-                   <?php
-                   $label = "<span style='font-size:11px; font-weight:bold; color:#696969;'>";
-                   echo  "<td width='150px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Region A (Province)') . "</span><br>";
-                   renderFilter($this->locations, 1,'province_id', '', 'district_id', false, $this->viewonly);
-                   echo "</td>";
-                   echo "<td width='150px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Region B (Health District)') . "</span><br>";
-                   renderFilter($this->locations, 2, 'district_id', '', 'region_c_id', false, $this->viewonly); 
-                   echo "</td>";
-                   echo "<td width='150px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Region C (Local Region)') . "</span><br>";
-                   renderFilter($this->locations, 3, 'region_c_id', '', 'region_d_id', false, $this->viewonly);
-                   echo "</td>";
-                   echo "<td width='150px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Site Type') . "</span><br>";
-                   echo renderFacilityTypesDropDown($this->site_types, '', $this->viewonly, '');  
-                   echo "</td>";
-                   echo "<td width='230px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Site Name') . "</span><br>";
-                   echo renderFacilityDropDownWithType($db_locations_arr, $this->facilities, '', $this->viewonly, '', true);
-                   echo "</td>";
-                   echo "<td width='50px' style='padding-right: 10px;' valign='bottom'>" . $label . t('HIV Related FTE (Hrs)') . "</span><br>";
-                   echo "<input type='text' id='hiv_fte_related' name='hiv_fte_related' value='' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntegerKeyPress(this);'/>";
-                   echo "</td>";
-                   echo "<td width='50px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Non-HIV related FTE (Hrs)') . "</span><br>";
-                    echo "<input type='text' id='non_hiv_fte_related' name='non_hiv_fte_related' value='' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntegerKeyPress(this);'/>";
-                   echo "</td>";
-                   echo "<td style='padding-right: 10px;' valign='bottom'>" . $label . "&nbsp;" . "</span><br>";
-                   echo '<input type="button" name="multiSite" value="'. t("Add") . '" class="insert"
-                       id="siteInsertButton" onclick="addSite();"/>';
-                   echo "</td>";
-                   ?>
-                   </tr>
-                   <tr><td></td><td></td><td></td><td></td><td colspan=2>
-                   <!-- TA:#381 -->
+                   
+                   
                    <a href='<?php echo$this->base_url;?>/site/add'><?php echo t('Insert a New') . space . t('Site');?></a>&nbsp;&nbsp;
-                   <a href='<?php echo$this->base_url;?>/site/search'><?php echo t('View/Edit') . space . t('Site');?></a>&nbsp;&nbsp;
-                   </td></tr>
-                   </table>
+                   <a href='<?php echo$this->base_url;?>/site/search'><?php echo t('View/Edit') . space . t('Site');?></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                   <a href='' onclick='return addSite();'><?php echo t('Add') . space . t('Site');?></a>&nbsp;&nbsp;
+                   
                    <br><br>
                    <script>
                     $('#province_id').attr('style', 'width: 150px !important; min-width: 150px; max-width: 150px;');

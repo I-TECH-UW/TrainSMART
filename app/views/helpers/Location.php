@@ -184,7 +184,7 @@ function renderFilter(&$locations, $tier, $widget_id, $default_val_id = false, $
     <?php
     if ( $child_widget_id ) {?>
         <script type="text/javascript">
-            <!--//--><![CDATA[//><!--
+            
 
             function setChildStatus_<?php echo str_replace('-', '_', $widget_id);?>() {
                 var widgetObj = YAHOO.util.Dom.get('<?php echo $widget_id;?>');
@@ -194,7 +194,7 @@ function renderFilter(&$locations, $tier, $widget_id, $default_val_id = false, $
             YAHOO.util.Event.onDOMReady(function () {
                 setChildStatus_<?php echo str_replace('-', '_', $widget_id);?>();
             });
-            //--><!]]>
+           
         </script>
     <?php }
 }
