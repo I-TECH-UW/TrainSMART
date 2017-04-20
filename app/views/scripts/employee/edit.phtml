@@ -426,12 +426,15 @@
             $('#new_mechanism').html(optList);
         }
 
-        //TA:#224
+        //TA:#224 => TA:#397
         function addSite() {    
             var $oTable = $('#multi_sites_table').dataTable();
             var rows = $("#multi_sites_table > tbody > tr").length;
      
-           var province = "<select id='" + rows + "province_id' name='" + rows + "province_id' onchange='setChildStatus_" + rows + "province_id();'>";
+           var province = "<select id='" + rows + "province_id' name='" + rows + "province_id' onchange='";
+           province += " var widgetObj = YAHOO.util.Dom.get(\"" + rows + "province_id\");";
+           province += " setChildStatus(widgetObj.selectedIndex,\"" + rows + "district_id\",\"" + rows + "province_id\", \"0\");";
+           province += "'>";
            province += "<option value=''>--<?php tp('choose');?>--</option>";
            <?php
        	        foreach ($this->locations as $val) {
@@ -439,19 +442,13 @@
        	                echo "province += \"<option value='" . buildId('1', $this->locations, $val['id']) ."'>" . $val['name'] . "</option>\";";
        	            }
        	        }
-       	        ?>
+       	   ?>
            province += "</select>";
-           province += "<script type='text/javascript'>";
-           province += "function setChildStatus_" + rows + "province_id() {";
-        	   province += "var widgetObj = YAHOO.util.Dom.get('" + rows + "province_id');";
-        		   province += "setChildStatus(widgetObj.selectedIndex,'" + rows + "district_id','" + rows + "province_id', '0');";
-        		   province += "}";
-           province += "YAHOO.util.Event.onDOMReady(function () {";
-        	   province += "setChildStatus_" + rows + "province_id();";
-        		   province += "});";
-           province += "<\/script>";
 
-           var district = "<select id='" + rows + "district_id' name='" + rows + "district_id' onchange='setChildStatus_" + rows + "district_id();'>";
+           var district = "<select id='" + rows + "district_id' name='" + rows + "district_id' disabled='disabled' onchange='";
+           district += " var widgetObj = YAHOO.util.Dom.get(\"" + rows + "district_id\");";
+           district += " setChildStatus(widgetObj.selectedIndex,\"" + rows + "region_c_id\",\"" + rows + "district_id\", \"0\");";
+           district += "'>";
            district += "<option value=''>--<?php tp('choose');?>--</option>";
            <?php
        	        foreach ($this->locations as $val) {
@@ -459,21 +456,26 @@
        	                echo "district += \"<option value='" . buildId('2', $this->locations, $val['id']) ."'>" . $val['name'] . "</option>\";";
        	            }
        	        }
-       	        ?>
-          	     district += "</select>";
-            	   district += "<script type='text/javascript'>";
-            	   district += "function setChildStatus_" + rows + "district_id() {";
-            	   district += "var widgetObj = YAHOO.util.Dom.get('" + rows + "district_id');";
-            	   district += "setChildStatus(widgetObj.selectedIndex,'" + rows + "district_id','" + rows + "district_id', '0');";
-            	   district += "}";
-            	   district += "YAHOO.util.Event.onDOMReady(function () {";
-            	   district += "setChildStatus_" + rows + "district_id();";
-            	   district += "});";
-            	   district += "<\/script>";
+       	   ?>
+          	district += "</select>";
+
+          	var region = "<select id='" + rows + "region_c_id' name='" + rows + "region_c_id' disabled='disabled' onchange='";
+          	region += " var widgetObj = YAHOO.util.Dom.get(\"" + rows + "region_c_id\");";
+          	region += " setChildStatus(widgetObj.selectedIndex,\"" + rows + "region_d_id\",\"" + rows + "region_c_id\", \"0\");";
+          	region += "'>";
+          	region += "<option value=''>--<?php tp('choose');?>--</option>";
+            <?php
+        	        foreach ($this->locations as $val) {
+        	            if ($val['tier'] === '3') {
+        	                echo "region += \"<option value='" . buildId('3', $this->locations, $val['id']) ."'>" . $val['name'] . "</option>\";";
+        	            }
+        	        }
+        	   ?>
+        	   region += "</select>";
 
            
            
-                var newRowIDs = $oTable.fnAddData([province, district, '', 
+                var newRowIDs = $oTable.fnAddData([province, district, region, 
                                                    '', 
                                                    '', '', '',
                                                    '<input type="checkbox" onclick="deleteToggleSite(this);"/>']);
