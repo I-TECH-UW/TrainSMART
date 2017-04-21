@@ -370,9 +370,10 @@ function renderFacilityDropDown($facilities, $selected_index, $readonly)
   // selects have a value attribute "region1_region2_region3", ie: 555_423_1
   // lets filter facility list by the last value when the user chooses something
   //TA:#293.1 make it working for multiple selection as well
+  //TA:#410  add for #person_facility_province_id as well
   $js = '
       $(function () {
-        regionSelectElements = $("#province_id,#district_id,#region_c_id,#region_d_id,#region_e_id,#region_f_id,#region_g_id,#region_h_id,#region_i_id")
+        regionSelectElements = $("#province_id,#district_id,#region_c_id,#region_d_id,#region_e_id,#region_f_id,#region_g_id,#region_h_id,#region_i_id,#person_facility_province_id")
         .change(function () {
         
         if(Array.isArray($(this).val())){

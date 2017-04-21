@@ -1,13 +1,40 @@
+var dSelected = YAHOO.util.Dom.get(monthId).value + '/' + YAHOO.util.Dom.get(dayId).value + '/' + YAHOO.util.Dom.get(yearId).value;
+    var dPage = YAHOO.util.Dom.get(monthId).value + '/' + YAHOO.util.Dom.get(yearId).value;
+    if ( dPage == '/' ) {
+    	dPage = '01/1980';
+    } else if( dPage.substring(0,1) == '/' ) { // year entered, but no month
+      var today = new Date();
+      dPage = (today.getMonth() + 1) + dPage;
+    }
+    
+    /* @DEPRICATED */
+    function makeCalendar(containerId, dayId, monthId, yearId, extra_callback) {
+    	var config = { pagedate:dPage, selected:dSelected, navigator:true };
+    	makeCalendarInstance(containerId, dayId, monthId, yearId,  "calendarpicker", "buttoncalendar1", extra_callback, config);
+    }
 
-        function makeCalendar(containerId, dayId, monthId, yearId, extra_callback) {
-        	makeCalendarInstance(containerId, dayId, monthId, yearId, "calendarpicker", "buttoncalendar1", extra_callback);
-        }
+    /* @DEPRICATED */
+   function makeAdditionalCalendar(containerId, dayId, monthId, yearId, extra_callback) {
+	   var config = { pagedate:dPage, selected:dSelected, navigator:true };
+    	makeCalendarInstance(containerId, dayId, monthId, yearId, "calendarpicker2","buttoncalendar2", extra_callback, config);
+    }
+    
+    function makeCalendarDefault(containerId, dayId, monthId, yearId, extra_callback, calendarpicker, buttoncalendar) {
+    	var config = { pagedate:dPage, selected:dSelected, navigator:true };
+    	makeCalendarInstance(containerId, dayId, monthId, yearId, calendarpicker, buttoncalendar, extra_callback, config);
+    }
+       
+       function makeCalendarUkraine(containerId, dayId, monthId, yearId, extra_callback, calendarpicker, buttoncalendar) {
+       	var config = { pagedate:dPage, selected:dSelected, 
+       			navigator:false,
+       			MONTHS_LONG: ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"],
+       			           WEEKDAYS_SHORT : ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"] ,
+       			           START_WEEKDAY: 1
+       			};
+       	makeCalendarInstance(containerId, dayId, monthId, yearId, calendarpicker, buttoncalendar, extra_callback, config);
+       }
 
-       function makeAdditionalCalendar(containerId, dayId, monthId, yearId, extra_callback) {
-        	makeCalendarInstance(containerId, dayId, monthId, yearId, "calendarpicker2","buttoncalendar2", extra_callback);
-        }
-
-        function makeCalendarInstance(containerId, dayId, monthId, yearId, pickerId, buttonCalendarId, extra_callback) {
+        function makeCalendarInstance(containerId, dayId, monthId, yearId, pickerId, buttonCalendarId, extra_callback, config) {
 
         function onButtonClick() {
 
@@ -19,43 +46,11 @@
             oCalendarMenu.setBody("&#32;");
 
             oCalendarMenu.body.id = containerId + "container";
-
-            // Render the Overlay instance into the Button's parent element
-
             oCalendarMenu.render(this.get("container"));
-
-
-            // Align the Overlay to the Button instance
-
             oCalendarMenu.align();
-
-
-            /*
-                 Create a Calendar instance and render it into the body
-                 element of the Overlay.
-            */
-            var dSelected = YAHOO.util.Dom.get(monthId).value + '/' + YAHOO.util.Dom.get(dayId).value + '/' + YAHOO.util.Dom.get(yearId).value;
-            var dPage = YAHOO.util.Dom.get(monthId).value + '/' + YAHOO.util.Dom.get(yearId).value;
-
-
-            if ( dPage == '/' ) {
-            	dPage = '01/1980';
-            } else if( dPage.substring(0,1) == '/' ) { // year entered, but no month
-              var today = new Date();
-              dPage = (today.getMonth() + 1) + dPage;
-            }
-
-            var oCalendar = new YAHOO.widget.Calendar(buttonCalendarId, oCalendarMenu.body.id, { pagedate:dPage, selected:dSelected, navigator:true });
+            var oCalendar = new YAHOO.widget.Calendar(buttonCalendarId, oCalendarMenu.body.id, config);
 
             oCalendar.render();
-
-
-            /*
-                Subscribe to the Calendar instance's "changePage" event to
-                keep the Overlay visible when either the previous or next page
-                controls are clicked.
-            */
-
             oCalendar.changePageEvent.subscribe(function () {
 
                 window.setTimeout(function () {
@@ -94,16 +89,6 @@
             if ( extra_callback ) {
                 oCalendar.selectEvent.subscribe(extra_callback);
             }
-            
-
-            /*
-                 Unsubscribe from the "click" event so that this code is
-                 only executed once
-            */
-
-            // JE: don't unsubscribe because user may change dates then click again...
-
-            //this.unsubscribe("click", onButtonClick);
 
         }
 

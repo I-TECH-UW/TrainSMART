@@ -2384,10 +2384,8 @@ class TrainingController extends ReportFilterHelpers {
 
 		/* Trainers */
 		$trainers = TrainingToTrainer::getTrainers ( $training_id )->toArray ();
-
-		//$trainerFields = array ('last_name' => t ( 'Last name' ), 'first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'duration_days' => t ( 'Days' ) );
-		//TA: for Ukraine site (ucdc) it should use this titles
-		$trainerFields = array ('first_name' => t ( 'Last name' ), 'middle_name' => t ( 'First name' ), 'last_name' => t ( 'Middle name' ), 'duration_days' => t ( 'Days' ) );
+        //TA:#363
+		$trainerFields = array ('first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'last_name' => t ( 'Last name' ), 'duration_days' => t ( 'Days' ) );
 		$colStatic = array_keys ( $trainerFields ); // all
 		$editLinkInfo = array ('disabled' => 1 ); // no edit/remove links
 		$html = EditTableHelper::generateHtmlTraining ( 'Trainer', $trainers, $trainerFields, $colStatic, array (), $editLinkInfo );
@@ -2395,10 +2393,9 @@ class TrainingController extends ReportFilterHelpers {
 
 		/* Participants */
 		$persons = PersonToTraining::getParticipants ( $training_id )->toArray ();
-		//TA:#317
-		//$personsFields = array ('first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'last_name' => t ( 'Last name' ));
-		//TA: for Ukraine site (ucdc) it should use this titles
-		$personsFields = array ('first_name' => t ( 'Last name' ), 'middle_name' => t ( 'First name' ), 'last_name' => t ( 'Middle name' ));
+		//TA:#363
+		$personsFields = array ('first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'last_name' => t ( 'Last name' ));
+		
 		
 		//TA:#317
 		$personsFields = array_merge($personsFields, array ( 'facility_name' => t ( 'Facility' ) )); 

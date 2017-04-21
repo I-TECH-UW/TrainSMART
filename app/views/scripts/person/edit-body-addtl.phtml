@@ -8,6 +8,7 @@
 <?php region_filters_dropdown ($this, $this->locations, $this->person, false, false, 'person_facility'); ?>
 
   <!-- filter the facility drop down by region -->
+  <!-- ???? TA:#410 not sure that this part works, see another code below-->
 <script type="text/javascript">
 	$(document).ready(function () {
 		var sels = $('#facwrapper select').not('#facilityInput'); // all selects
@@ -64,9 +65,11 @@ if ($this->setting['display_mod_skillsmart']) {
 } else {
 
 	// ! skillsmart
+    //TA:#410 new version of facility dropdown to be filtered by location
+    echo renderFacilityDropDown($this->facilities, $this->person['facility']['id'], $this->viewonly);
 
 ?>
-  <select id="facilityInput" name="facilityInput">
+  <!-- TA:#410 <select id="facilityInput" name="facilityInput">
   <option value="">--<?php tp('choose');?>--</option>
 <?php
     foreach ( $this->facilities as $vals ) {
@@ -77,7 +80,7 @@ if ($this->setting['display_mod_skillsmart']) {
       echo '<option value="'.$value.'" '.($this->person['facility']['id'] == $vals['id']?'selected="selected"':'').'>'.$vals['facility_name'].'</option>';
   }
 ?>
-</select>
+</select> -->
 <?php
 }
   if (! @$this->setting['desktop_disable_people_insert_facility'])   // tanzania request - only their DB's will have this, but anyone could add this setting to _system

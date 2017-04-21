@@ -368,7 +368,14 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 																/ <?php tp('Year');?> <input id="start-year" class="yearfield" type="text" name="start-year" maxlength="4" value="<?php echo $this->criteria['start-year'];  ?>" />
 																<script  type="text/javascript">
 																	YAHOO.util.Event.onDOMReady(function () {
-																		makeCalendar("startdate","start-day", "start-month", "start-year");
+																		//makeCalendar("startdate","start-day", "start-month", "start-year");
+																		<?php //TA:#350
+											                                    $locale = ITechTranslate::getLocale();
+											                                    if ( $locale !== null && $locale == 'uk_UK.UTF-8'){ ?>
+											                                         makeCalendarUkraine("startdate", "start-day", "start-month", "start-year", null, "calendarpicker", "buttoncalendar1");
+											                                    <?php }else{?>
+											                                         makeCalendarDefault("startdate", "start-day", "start-month", "start-year", null, "calendarpicker", "buttoncalendar1");
+											                                    <?php }?>
 																	});
 																</script>
 															</div>
@@ -385,7 +392,14 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 																/ <?php tp('Year');?> <input id="end-year" class="yearfield" type="text" name="end-year" maxlength="4" value="<?php echo $this->criteria['end-year'];  ?>" />
 																<script  type="text/javascript">
 																	YAHOO.util.Event.onDOMReady(function () {
-																		makeAdditionalCalendar("enddate","end-day", "end-month", "end-year");
+																		//makeAdditionalCalendar("enddate","end-day", "end-month", "end-year");
+																		<?php //TA:#350
+											                                    $locale = ITechTranslate::getLocale();
+											                                    if ( $locale !== null && $locale == 'uk_UK.UTF-8'){ ?>
+											                                        makeCalendarUkraine("enddate", "end-day", "end-month", "end-year", null, "calendarpicker2","buttoncalendar2");
+											                                    <?php }else{?>
+											                                        makeCalendarDefault("enddate", "end-day", "end-month", "end-year", null, "calendarpicker2","buttoncalendar2");
+											                                    <?php }?>
 																	});
 																</script>
 															</div>
@@ -661,7 +675,18 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 														</div>
 <script type="text/javascript">
 $(document).ready( function	() {
-	$('.trainingReportCreationDate').datepicker({dateFormat: 'mm/dd/yy'});
+	<?php //TA:#350
+            $locale = ITechTranslate::getLocale();
+            if ( $locale !== null && $locale == 'uk_UK.UTF-8'){ ?>
+            $('.trainingReportCreationDate').datepicker({
+        		monthNames: ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"], 
+        		dayNamesMin: ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+        		firstDay: 1,
+        		dateFormat: 'mm/dd/yy'
+        			});
+            <?php }else{?>
+            $('.trainingReportCreationDate').datepicker({dateFormat: 'mm/dd/yy'});
+            <?php }?>
 	$('.calendarbtn').click(openNearestDatePicker);
 });
 </script>
