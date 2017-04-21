@@ -39,9 +39,6 @@ class AssessmentController extends ITechController {
 
     protected function validateAndSave($paRow, $checkName = true)
     {
-        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'assessmentController validateAndSave >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
-        
         try {
         $status = ValidationContainer::instance();
         $status->checkRequired($this, 'first_name', $this->tr('First Name'));
@@ -60,10 +57,6 @@ class AssessmentController extends ITechController {
         $criteria['add-day'] = $this->getSanParam('add-day');
         $criteria['add-month'] = $this->getSanParam('add-month');
         $criteria['add-year'] = $this->getSanParam('add-year');
-        
-        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'assessmentController save0 >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-        var_dump("criteria=", $criteria, "END");
-        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
         
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
         $link = mysqli_connect(Settings::$DB_SERVER, Settings::$DB_USERNAME, Settings::$DB_PWD, "");
@@ -149,18 +142,7 @@ where ';
         $paRow->facility_id = $row['facility_id'];
         $paRow->date_created = "'" . $criteria['add-year'] . '-' . $criteria['add-month'] . '-' . $criteria['add-day'] . "'";
         $date_created_without_quotes = $criteria['add-year'] . '-' . $criteria['add-month'] . '-' . $criteria['add-day'];
-        
-        
-        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'assessmentController save1 >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-        //var_dump("paRow=", $paRow, "END");
-        var_dump("paRow->id=", $paRow->id, "END");
-        var_dump("paRow->person_id=", $paRow->person_id, "END");
-        var_dump("paRow->facility_id=", $paRow->facility_id, "END");
-        var_dump("paRow->assessment_id=", $paRow->assessment_id, "END");
-        var_dump("paRow->date_created=", $paRow->date_created, "END");
-        var_dump("paRow->user_id=", $paRow->user_id, "END");
-        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
-        
+
         $dupe = new PersonToAssessments();
         
         $select = $dupe->select()->where( 
@@ -168,12 +150,7 @@ where ';
             ' and facility_id = ' . $paRow->facility_id .
             ' and assessment_id = ' . $paRow->assessment_id .
             ' and date_created = ' . $paRow->date_created  );
-        
-        
-        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'assessmentController save1a >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-        //var_dump("select=", $select, "END");
-        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
-        
+
         if($dupe->fetchRow($select)) {
             $status->addError(null, 'Duplicate assessment record found.');
             throw new Exception('Error');
@@ -361,13 +338,7 @@ where';
 	
 	public function testaddAction() {
 	    require_once ('models/table/OptionList.php');
-	    //if ( ! $this->hasACL ( 'edit_assessment' )) { 
-			//$this->doNoAccessError ();
-		//}
-		
-		file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'assessmentController testaddAction >'.PHP_EOL, FILE_APPEND | LOCK_EX);	ob_start();
-		$toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
-		
+
 		$criteria = array ();
 		$criteria ['first_name'] = $this->getSanParam ( 'first_name' );
 		$criteria ['last_name'] = $this->getSanParam ( 'last_name' );

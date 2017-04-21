@@ -1081,11 +1081,6 @@ class PersonController extends ReportFilterHelpers
     public function searchAction()
     {
         
-        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'personController save0 >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-        //var_dump("criteria=", $criteria, "END");
-        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
-        
-        
         require_once('models/table/Person.php');
         if ($this->setting('display_mod_skillsmart')) {
             // SKILLSMART-ENABLED SYSTEM USES DIFFERENT SEARCH FOR ADDITIONAL FIELDS

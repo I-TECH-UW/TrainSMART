@@ -2734,11 +2734,7 @@ class Helper extends ITechTable
 	//assessment admin begin
 	
 	public function getSkillSmartAssessments($aid = 0){
-	    
-	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper getSkillSmartAssessments >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-	    var_dump("aid=", $aid, "END");
-	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
-	     
+
 	    if (!$aid){
 	        $db = $this->dbfunc();
 	        $select = $db->select()
@@ -2795,11 +2791,7 @@ class Helper extends ITechTable
 	    $maincolumn		= "assessment_type";
 	    $id				= $_POST["_id"];
 	    $value			= $_POST['_fieldtoupdate'];
-	    
-	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper addSkillsmartAssessment >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-	    var_dump("value=", $value, "END");
-	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
-	    
+
 	    $select = $this->dbfunc()->select()
 	    ->from($linktable)
 	    ->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)));
@@ -2816,11 +2808,7 @@ class Helper extends ITechTable
 	        ->from("lookup_assessment_types")
 	        ->where('LOWER(TRIM(' . assessment_type . ')) = ?', trim(strtolower($value)));
 	        $lat_result = $this->dbfunc()->fetchAll($select);
-	        
-	        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper addSkillsmartAssessment insert0 >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-	        var_dump("lat result id =", $lat_result[0]['id'], "END");
-	        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
-	        
+
 	        if (count ($lat_result) == 1){
 	            # ADDING to assessments
 
@@ -2830,20 +2818,12 @@ class Helper extends ITechTable
 	            'status' => 1,   
 	            );
 	            $instypeinsert = $this->dbfunc()->insert('assessments',$i_arr);
-	        
-    	        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper addSkillsmartAssessment insert1 >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-    	        var_dump("instypeinsert=", $instypeinsert, "END");
-    	        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
 	        }
 	    }
 	}
 	
 	public function updateSkillsmartAssessment($params){
-	    
-	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper updateSkillsmartAssessment >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-	    var_dump("params=", $params, "END");
-	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
-	    
+
 	    // lookup type_id from assessments where id = param._id,
 	    // update lookup_type.assessment_type = param._fieldtoupdate where lat.id = a.type_id
 	     
@@ -2852,11 +2832,6 @@ class Helper extends ITechTable
 	    $id				= $_POST["_id"];
 	    $value			= $_POST['_fieldtoupdate'];
 
-	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper updateSkillsmartAssessment >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-	    var_dump("select=", $id, $value, "END");
-	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
-	     
-	    
 	    $select = $this->dbfunc()->select()
 	    ->from($linktable)
 	    // ->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)))
@@ -2864,10 +2839,6 @@ class Helper extends ITechTable
 	    ->where('id = ?', $id);
 	    $a_result = $this->dbfunc()->fetchAll($select);
 	    
-	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper updateSkillsmartAssessment >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-	    var_dump("a_result=", $a_result, "END");
-	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
-	     
 		if (count ($a_result) == 1){
     	    # updating lat
     	    $i_arr = array(
@@ -2875,18 +2846,11 @@ class Helper extends ITechTable
     	    'assessment_type' => $value,   
     	    );
 
-    	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper addSkillsmartAssessment insert >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-    	    var_dump("i_arr=", $i_arr, "END");
-    	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
-    	    
     	    $titleupdate = $this->dbfunc()->update('lookup_assessment_types',$i_arr, 'id = ' . $a_result[0]['assessment_type_id'] );
 		}
 	}
 	
 	public function getDropdownGroups(){
-	
-	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper getDropdownGroups >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
 	
 	    $db = $this->dbfunc();
 	    $select = $db->select()
@@ -2909,9 +2873,6 @@ class Helper extends ITechTable
 	
 	public function getSkillSmartAssessmentsQuestions($cid = 0){
 	    
-	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'helper getSkillSmartAssessmentsQuestions >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
-	     
 	    $db = $this->dbfunc();
 	    $select = $db->select()
 	    ->from("assessments_questions")
@@ -3002,13 +2963,7 @@ class Helper extends ITechTable
 			itemtype = '" . addslashes($itemtype) . "',
 			dropdowngroup_id = '" . addslashes($dropdown) . "'
 			WHERE id = " . $id;
-	    #die($query);
-	    
-	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'updateSkillsmartAssessmentQuestion>' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-	    var_dump("query", $query);
-	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
-	     
-	    
+
 	    $db->query($query);
 	    $this->skillsmartAssessmentCloseGaps($assessid);
 	}

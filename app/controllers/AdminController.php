@@ -3085,11 +3085,7 @@ class AdminController extends UserController
 	}
 	
 	public function assessmentSettingsAction(){
-	    
-	    
-	    file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'adminController assessmentSettingsAction start >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-	    $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
-	    
+
 	    $helper = new Helper();
 	
 	    $assessid = $this->getSanParam('assess');
@@ -3117,9 +3113,6 @@ class AdminController extends UserController
 	                $helper->addSkillsmartAssessmentQuestion($_POST,$assessid);
 	                break;
 	            case "update":
-	                file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'adminController assessmentSettingsAction call updateSkillsmartAssessmentQuestion >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-	                $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
-	                 
 	                $helper->updateSkillsmartAssessmentQuestion($_POST,$assessid);
 	                break;
 	        }
@@ -3138,10 +3131,6 @@ class AdminController extends UserController
 	        $this->view->assign("lookup", $list);
 	        $this->view->assign("header",t("Assessments"));
 	    } else {
-	        
-	        // ASSESSMENT SPECIFIC OUTPUT
-	        file_put_contents('/vagrant/vagrant/logs/php_debug.log', 'adminController assessmentSettingsAction >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
-	        $toss = ob_get_clean(); file_put_contents('/vagrant/vagrant/logs/php_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
 	        
 	        $assessment = $helper->getSkillSmartAssessments($assessid);
 	        $questions = $helper->getSkillSmartAssessmentsQuestions($assessid);
