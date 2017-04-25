@@ -569,11 +569,20 @@
             	validated = false;
             }
 
-            //TA:#413
-            if($("#employee_mechanism_table > tbody").children().first().children().first().text() == 'No data available in table'){
+            //TA:#413 mechanism is required
+            var $rows = $("#employee_mechanism_table > tbody > tr");
+            var mechanism_count = 0;
+            for (var i = 0; i < $rows.length; i++) {
+            	var $node = $($rows[i]).children().first().next();
+                if (!$node.hasClass('toDeleteMechanism')) {
+                	mechanism_count++;
+                }
+            }
+            if($("#employee_mechanism_table > tbody").children().first().children().first().text() == 'No data available in table' || mechanism_count == 0){
             	displayErrorMessage('', '<?php echo t("Mechanism");?> (required)');
             	validated = false;
             }
+            ////
             
             window.scroll(0,0);
             return validated;
