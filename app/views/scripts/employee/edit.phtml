@@ -538,11 +538,16 @@
             }
             validated = validateField(validated, 'agreement_start_date', '<?php echo t("Contract Start Date");?>');
             validated = validateField(validated, 'agreement_end_date', '<?php echo t("Contract End Date");?>');
-            //validates dates
-            if((new Date($('#agreement_start_date').val())).valueOf() > (new Date($('#agreement_end_date').val())).valueOf()){
+            
+            //TA:#409 validates dates
+            var date_start =$('#agreement_start_date').val();
+            var date_end =$('#agreement_end_date').val();
+            if(new Date(date_start.split("/")[2], date_start.split("/")[1], date_start.split("/")[0]) >= new Date(date_end.split("/")[2], date_end.split("/")[1], date_end.split("/")[0])){
             	displayErrorMessage('agreement_end_date', 'Contract Start Date must be less Contract End Date.');
             	validated = false;
             }
+            //
+            
             validated = validateField(validated, 'select_employee_transition_option', '<?php echo t("Intended Transition");?>');
             if($('#select_employee_transition_option').val() == 8){
             	validated = validateField(validated, 'transition_other', '<?php echo t("Intended Transition Other");?>');
