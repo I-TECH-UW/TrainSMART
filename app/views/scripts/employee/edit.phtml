@@ -343,6 +343,8 @@
                 return false;
             }
             if ($("#new_mechanism").val() === "") {
+                //TA:#413
+                alert("Mechanism selection is required.");
                 return false;
             }
 
@@ -566,6 +568,13 @@
             	displayErrorMessage('stipend', '<?php echo t("Stipend");?> (required)');
             	validated = false;
             }
+
+            //TA:#413
+            if($("#employee_mechanism_table > tbody").children().first().children().first().text() == 'No data available in table'){
+            	displayErrorMessage('', '<?php echo t("Mechanism");?> (required)');
+            	validated = false;
+            }
+            
             window.scroll(0,0);
             return validated;
         }
@@ -1071,7 +1080,8 @@
             <br/>
             <div class="clear"></div>
             <div>
-                <label class="label">Add Mechanism</label>
+            <!-- TA:#413 required -->
+                <label class="label"><span class="required">*</span>Add Mechanism</label>
                 <select id="new_mechanism" name="new_mechanism"></select>
                 <span>
                         <label class="label">Percentage</label>
