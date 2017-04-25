@@ -371,7 +371,7 @@ function renderFacilityDropDown($facilities, $selected_index, $readonly)
   //TA:#293.1 make it working for multiple selection as well
   $js = '
       $(function () {
-        regionSelectElements = $("#province_id,#district_id,#region_c_id,#region_d_id,#region_e_id,#region_f_id,#region_g_id,#region_h_id,#region_i_id")
+        regionSelectElements = $("#province_id,#district_id,#region_c_id,#region_d_id,#region_e_id,#region_f_id,#region_g_id,#region_h_id,#region_i_id,#person_facility_province_id")
         .change(function () {
         
         if(Array.isArray($(this).val())){
@@ -715,10 +715,8 @@ function training_location_dropdown_as_a_return_value(&$tlocations, $selectedVal
   return "<select $selectContainerAttrs>$options</select>";
 }
 
-//TA:#224
+//TA:#224 => TA:#397
 function renderFacilityTypesDropDown($facilities_types, $selected_index, $readonly, $prefix = ''){
-    if ( $prefix )
-        $prefix .= '_';
 
     $output = '<select id="' . $prefix .'facilityType" name="' . $prefix .'facilityType"';
     if ($readonly)
@@ -746,10 +744,8 @@ function renderFacilityTypesDropDown($facilities_types, $selected_index, $readon
 
 }
 
-//TA:#224
+//TA:#224 => TA:#397
 function renderFacilityDropDownWithType($rowArray, $facilities, $selected_index, $readonly, $prefix = '', $add_dupe = true){
-    if ( $prefix )
-        $prefix .= '_';
 
     $location_classes = array();
     foreach($rowArray as $row){
@@ -782,17 +778,14 @@ function renderFacilityDropDownWithType($rowArray, $facilities, $selected_index,
     // selects have a value attribute "region1_region2_region3", ie: 555_423_1
     $js = '
           $(function () {
-            regionSelectElements = $("#' . $prefix .'province_id,#' . $prefix .'district_id,#' . $prefix .'region_c_id,#' . $prefix .'facilityType")
+            regionSelectElements = $("#' . $prefix .'province_id,#' . $prefix .'district_id,#' . $prefix .'region_c_id")
             .change(function () {
                 var compare_id = "";
                 var type_id = "";
                 if ($(this).val() != ""){
-                        if($(this).attr("id") == "' . $prefix .'facilityType"){
-                            type_id = $(this).val().split("_").pop();
-
-                        }else{
+                        
                              compare_id = $(this).val().split("_").pop();
-                        }
+                        
                 }
                 if(compare_id == ""){
                     compare_id = $("#' . $prefix .'region_c_id").val().split("_").pop();
@@ -803,9 +796,7 @@ function renderFacilityDropDownWithType($rowArray, $facilities, $selected_index,
                         }
                     }
                 }
-                if(type_id == ""){
-                    type_id = $("#' . $prefix .'facilityType").val();
-                }
+                
                     allFacilities = $("#facilityInputHidden").children();
                     var facilityInput = $("#' . $prefix .'facilityInput");
                     facilityInput.empty();

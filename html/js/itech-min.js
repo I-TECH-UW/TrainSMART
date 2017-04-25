@@ -450,10 +450,10 @@ function isIntegerNumber(evt) {
     return false;
 }
 
-//TA:#224
+//TA:#224 => TA:#397 START
 function validateIntegerKeyPress(el) {
     var v = parseInt(el.value);
-    el.value = (isNaN(v)) ? '' : v.toFixed(0);
+    el.value = (isNaN(v)) ? '0' : v.toFixed(0);
 }
 
 

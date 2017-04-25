@@ -427,68 +427,30 @@
         }
 
         //TA:#224 => TA:#397
+        function siteCount(){
+            var count =0;
+       	 var $rows = $("#multi_sites_table > tbody > tr");
+         var len = $rows.length;
+          for( var i=0; i<len; i++){ 
+              if($($rows[i]).css('display') == ''){
+            	  count++;
+              }
+          }
+          return count;
+        }
+
+        //TA:#224 => TA:#397
         function addSite() {    
-            var $oTable = $('#multi_sites_table').dataTable();
-            var rows = $("#multi_sites_table > tbody > tr").length;
-     
-           var province = "<select id='" + rows + "province_id' name='" + rows + "province_id' onchange='";
-           province += " var widgetObj = YAHOO.util.Dom.get(\"" + rows + "province_id\");";
-           province += " setChildStatus(widgetObj.selectedIndex,\"" + rows + "district_id\",\"" + rows + "province_id\", \"0\");";
-           province += "'>";
-           province += "<option value=''>--<?php tp('choose');?>--</option>";
-           <?php
-       	        foreach ($this->locations as $val) {
-       	            if ($val['tier'] === '1') {
-       	                echo "province += \"<option value='" . buildId('1', $this->locations, $val['id']) ."'>" . $val['name'] . "</option>\";";
-       	            }
-       	        }
-       	   ?>
-           province += "</select>";
-
-           var district = "<select id='" + rows + "district_id' name='" + rows + "district_id' disabled='disabled' onchange='";
-           district += " var widgetObj = YAHOO.util.Dom.get(\"" + rows + "district_id\");";
-           district += " setChildStatus(widgetObj.selectedIndex,\"" + rows + "region_c_id\",\"" + rows + "district_id\", \"0\");";
-           district += "'>";
-           district += "<option value=''>--<?php tp('choose');?>--</option>";
-           <?php
-       	        foreach ($this->locations as $val) {
-       	            if ($val['tier'] === '2') {
-       	                echo "district += \"<option value='" . buildId('2', $this->locations, $val['id']) ."'>" . $val['name'] . "</option>\";";
-       	            }
-       	        }
-       	   ?>
-          	district += "</select>";
-
-          	var region = "<select id='" + rows + "region_c_id' name='" + rows + "region_c_id' disabled='disabled' onchange='";
-          	region += " var widgetObj = YAHOO.util.Dom.get(\"" + rows + "region_c_id\");";
-          	region += " setChildStatus(widgetObj.selectedIndex,\"" + rows + "region_d_id\",\"" + rows + "region_c_id\", \"0\");";
-          	region += "'>";
-          	region += "<option value=''>--<?php tp('choose');?>--</option>";
-            <?php
-        	        foreach ($this->locations as $val) {
-        	            if ($val['tier'] === '3') {
-        	                echo "region += \"<option value='" . buildId('3', $this->locations, $val['id']) ."'>" . $val['name'] . "</option>\";";
-        	            }
-        	        }
-        	   ?>
-        	   region += "</select>";
-
-           
-           
-                var newRowIDs = $oTable.fnAddData([province, district, region, 
-                                                   '', 
-                                                   '', '', '',
-                                                   '<input type="checkbox" onclick="deleteToggleSite(this);"/>']);
-               var newRow = $($oTable.fnSettings().aoData[newRowIDs[0]].nTr);
-               
-//                var data = "" + "," + "" + "," + "";//change here
-//                if($('#multi_sites_table_data_add').val() != ''){
-//                   	$('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + ";");
-//                   }
-//                   $('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + data);
-               
-                // calculateSiteTable(false);
-            
+          //  var $oTable = $('#multi_sites_table').dataTable();
+            var $rows = $("#multi_sites_table > tbody > tr");
+            var len = $rows.length;
+             for( var i=0; i<len; i++){ 
+                 if($($rows[i]).css('display') == 'none'){
+                	 $($rows[i]).css('display', '');
+                	 break;
+                 }
+             }
+                calculateSiteTable(false);
                 return false;   
         }
 
@@ -505,10 +467,7 @@
             	validated = validateField(validated, 'based_at_other', '<?php echo t("Other, Specify");?>');
             }
             validated = calculateSiteTable(false);
-            if($("#multi_sites_table_data_count").val() == 0){
-            	displayErrorMessage('', '<?php echo t("Site Name");?> (required)');
-            	validated = false;
-            }
+            validated = validateSite();
             validated = validateField(validated, 'agreement_start_date', '<?php echo t("Contract Start Date");?>');
             validated = validateField(validated, 'agreement_end_date', '<?php echo t("Contract End Date");?>');
             //validates dates
@@ -556,24 +515,99 @@
           return validated;  
         }
 
-        //TA:#224
+        //TA:#397 START
+        function validateSite(){
+        	$('#multi_sites_table_data').val("");
+            var validated = true;
+        	var $rows = $("#multi_sites_table > tbody > tr");
+        	var province_err = false;
+        	var district_err = false;
+        	var region_err = false;
+        	var site_type_err = false;
+        	var site_name_err = false;
+        	var hiv_fte_err = false;
+        	var non_hiv_fte_err = false;
+            for (var i = 0; i < $rows.length; i++) {
+                if($($rows[i]).css('display') == 'none'){
+                    continue;
+                }
+                var site_data = $($rows[i]).attr('id') + ",";
+         	   var province =    parseInt($($rows[i]).children().first().children().first().val());
+          	  if (isNaN(province) && !province_err){
+            		displayErrorMessage('', '<?php echo t('Region A (Province)');?> (required)');
+            		province_err = true;
+            		validated = false;
+          	  }else{
+            		site_data += province + ",";
+          	  }
+         	   var district =    parseInt($($rows[i]).children().first().next().children().first().val());
+          	  if (isNaN(district) && !district_err){
+            		displayErrorMessage('', '<?php echo t('Region B (Health District)');?> (required)');
+            		district_err = true;
+            		validated = false;
+          	  }else{
+            		site_data += district + ",";
+          	  }
+         	   var region =      parseInt($($rows[i]).children().first().next().next().children().first().val());
+          	  if (isNaN(region) && !region_err){
+            		displayErrorMessage('', '<?php echo t('Region C (Local Region)');?> (required)');
+            		region_err = true;
+            		validated = false;
+          	  }else{
+            		site_data += region + ",";
+          	  }
+         	   var site_type =   parseInt($($rows[i]).children().first().next().next().next().children().first().val());
+          	  if (isNaN(site_type) && !site_type_err){
+            		displayErrorMessage('', '<?php echo t('Site Type');?> (required)');
+            		site_type_err = true;
+            		validated = false;
+          	  }else{
+            		site_data += site_type + ",";
+          	  }
+         	   var site_name =   parseInt($($rows[i]).children().first().next().next().next().next().children().first().val());
+          	  if (isNaN(site_name) && !site_name_err){
+            		displayErrorMessage('', '<?php echo t('Site Name');?> (required)');
+            		site_name_err = true;
+            		validated = false;
+          	  }else{
+            		site_data += site_name + ",";
+          	  }
+        	       var hiv_fte =     parseInt($($rows[i]).children().first().next().next().next().next().next().children().first().val());
+        	       if ((isNaN(hiv_fte) || hiv_fte == '0') && !hiv_fte_err){
+                  		displayErrorMessage('', '<?php echo t('HIV Related FTE (Hrs)');?> (required)');
+                  		hiv_fte_err = true;
+                  		validated = false;
+                	  }else{
+                  		site_data += hiv_fte + ",";
+                  	  }
+            	   var non_hiv_fte = parseInt($($rows[i]).children().first().next().next().next().next().next().next().children().first().val());
+            	   if ((isNaN(non_hiv_fte) || non_hiv_fte == '0') && !non_hiv_fte_err){
+                		displayErrorMessage('', '<?php echo t('Non-HIV Related FTE (Hrs)');?> (required)');
+                		non_hiv_fte_err = true;
+                		validated = false;
+              	  }else{
+                		site_data += non_hiv_fte + ";";
+              	  }
+            	  $('#multi_sites_table_data').val($('#multi_sites_table_data').val() + site_data);
+            }
+          return validated;
+        }
+
+        //TA:#224 => TA:#397 START
         var calculateSiteTable = function (verify) {
-            var sites_count = 0;
         	var $rows = $("#multi_sites_table > tbody > tr");
             var hiv_fte_Accumulate = 0;
             var non_hiv_fte_Accumulate = 0;
            for (var i = 0; i < $rows.length; i++) {
-           	var hiv_fte = parseInt($($rows[i]).children().first().next().next().next().next().next().text());
-           	var non_hiv_fte = parseInt($($rows[i]).children().first().next().next().next().next().next().next().text());
+           	var hiv_fte =     parseInt($($rows[i]).children().first().next().next().next().next().next().children().first().val());
+           	var non_hiv_fte = parseInt($($rows[i]).children().first().next().next().next().next().next().next().children().first().val());
            	hiv_fte_Accumulate = hiv_fte_Accumulate + hiv_fte;
            	non_hiv_fte_Accumulate = non_hiv_fte_Accumulate + non_hiv_fte;
            }
            if (isNaN(hiv_fte_Accumulate)){
         	   $('#hiv_related_fte_total').text("0");
-        	   sites_count = 0;
            } else{            
                $('#hiv_related_fte_total').text(hiv_fte_Accumulate);
-               sites_count = $rows.length;
            }
            if (isNaN(non_hiv_fte_Accumulate)){
         	   $('#non_hiv_related_fte_total').text("0");
@@ -589,7 +623,6 @@
            	//uncomment leter by request$("#hiv_related_fte_total").attr('class', "totalMechanismPercentageYes");
            	//uncomment leter by request$("#non_hiv_related_fte_total").attr('class', "totalMechanismPercentageYes");
            }
-           $("#multi_sites_table_data_count").val(sites_count); 
            return true;
         };
 
@@ -604,6 +637,10 @@
                 	$('#multi_sites_table_data_delete').val($('#multi_sites_table_data_delete').val() + ",");
                 }
                 $('#multi_sites_table_data_delete').val($('#multi_sites_table_data_delete').val() + id);
+            }
+
+            if(siteCount() == 0){
+                addSite();
             }
             return true;
         }
@@ -735,7 +772,7 @@
 
                         }
                         
-                        //TA:#224 => START
+                        //TA:#224 => TA:#397 START
                         ?>
                         </td>
                         <td style="width:20%" valign='top' align='left'>
@@ -747,24 +784,24 @@
                         </div>
                     </td></tr></table>
                     
+                    <input type='hidden' id='multi_sites_table_data' name='multi_sites_table_data'/>
                     <!-- TA: 'add' site functionality: site_id,hiv_fte_related, hiv_fte_related; ....-->
-                    <input type='hidden' id='multi_sites_table_data_add' name='multi_sites_table_data_add'/>
+                    <!--<input type='hidden' id='multi_sites_table_data_add' name='multi_sites_table_data_add'/>-->
                     <!-- TA: 'delete' site functionality: link_site_id, ....-->
-                    <input type='hidden' id='multi_sites_table_data_delete' name='multi_sites_table_data_delete'/>
+                    <!--<input type='hidden' id='multi_sites_table_data_delete' name='multi_sites_table_data_delete'/>-->
                     <!-- TA: may be TODO: 'edit' site functionality: link_site_id=site_id,hiv_fte_related, hiv_fte_related; ....-->
-                    <input type='hidden' id='multi_sites_table_data_edit' name='multi_sites_table_data_edit'/>
-                    <input type='hidden' id='multi_sites_table_data_count' name='multi_sites_table_data_count'/>
+                    <!--<input type='hidden' id='multi_sites_table_data_edit' name='multi_sites_table_data_edit'/>-->
                     <!--  <table style="width:100%"><tr><td>-->
                         <table cellpadding="0" cellspacing="0" border="1" class="display tablegrid" id="multi_sites_table" style="width:100%">
                    <thead>
                 <tr>
                     <th width='10%'><?php echo "<font color='red'>*</font>" . t('Region A (Province)'); ?></th>
-                    <th width='15%'><?php echo "<font color='red'>*</font>" . t('Region B (Health District)'); ?></th>
-                    <th width='15%'><?php echo "<font color='red'>*</font>" . t('Region C (Local Region)'); ?></th>
-                    <th width='10%'><?php echo "<font color='red'>*</font>" . t('Site Type'); ?></th>
+                    <th width='10%'><?php echo "<font color='red'>*</font>" . t('Region B (Health District)'); ?></th>    
+                    <th width='10%'><?php echo "<font color='red'>*</font>" . t('Region C (Local Region)'); ?></th>
+                    <th width='15%'><?php echo "<font color='red'>*</font>" . t('Site Type'); ?></th>
                     <th><?php echo "<font color='red'>*</font>" .t('Site Name'); ?></th>
-                    <th width='5%'><?php echo t('HIV Related FTE (Hrs)'); ?></th>
-                    <th width='5%'><?php echo t('Non-HIV related FTE (Hrs)'); ?></th>
+                    <th width='5%'><?php echo "<font color='red'>*</font>" . t('HIV Related FTE (Hrs)'); ?></th>
+                    <th width='5%'><?php echo "<font color='red'>*</font>" . t('Non-HIV related FTE (Hrs)'); ?></th>
                     <th width='5%'><?php tp("Delete?"); ?></th>               
                 </tr>
                 </thead>
@@ -780,74 +817,46 @@
                     <td class="siteTableFooter"></td>
                 </tr>
                 </tfoot>
-                <!-- TA:#397 START make table cells editable -->
                 <tbody id="multi_sites_table_body"> 
                 <?php
                 $helper = new Helper();
                 $db_locations_arr = $helper->get3TiersLocationsParentIds();
-                foreach ($this->employee['sites'] as $id => $siteData) {
+                $add_dupe = true;
+                for($id=0; $id<10; $id++){
+                    $siteData = $this->employee['sites'][$id];
+                      $display = "";
+                     if(count($this->employee['sites']) == 0 && $id = 0){
+                          $display = "";
+                     }else if(count($this->employee['sites']) <= $id ){
+                         $display = "style='display: none'";
+                     }
                     ?>
-                    <tr id='<?php echo $siteData['site_link_id'];?>'>
-                        <td><?php renderFilter($this->locations, 1, $id.'province_id', $siteData['province_id'], $id.'district_id', false, $this->viewonly); ?></td>
-                        <td><?php renderFilter($this->locations, 2, $id.'district_id', $siteData['district_id'], $id.'region_c_id', false, $this->viewonly);?></td>
-                        <td><?php renderFilter($this->locations, 3, $id.'region_c_id', $siteData['region_id'], $id.'region_d_id', false, $this->viewonly);?></td>
-                        <td><?php echo renderFacilityTypesDropDown($this->site_types, $siteData['type_option_id'], $this->viewonly, $id);?></td>
-                        <td id='<?php echo $siteData['facility_id']. $id;?>'><?php echo renderFacilityDropDownWithType($db_locations_arr, $this->facilities, $siteData['facility_id'], $this->viewonly, $id , true); ?></td>
-                        <td><input type='text' id='<?php echo $id;?>hiv_fte_related' name='<?php echo $id;?>hiv_fte_related' value='<?php echo $siteData['hiv_fte_related']; ?>' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntegerKeyPress(this);'/></td>
-                        <td><input type='text' id='<?php echo $id;?>non_hiv_fte_related' name='<?php echo $id;?>non_hiv_fte_related' value='<?php echo $siteData['non_hiv_fte_related']; ?>' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntegerKeyPress(this);'/></td>
+                    <tr <?php echo $display;?>  id='<?php echo $siteData['site_link_id'];?>'>
+                        <td><?php renderFilter($this->locations, 1, $id.'province_id', $siteData['province_id']?$siteData['province_id']:'', $id.'district_id', false, $this->viewonly); ?></td>
+                        <td><?php renderFilter($this->locations, 2, $id.'district_id', $siteData['district_id']?$siteData['district_id']:'', $id.'region_c_id', false, $this->viewonly);?></td>
+                        <td><?php renderFilter($this->locations, 3, $id.'region_c_id', $siteData['region_id']?$siteData['region_id']:'', $id.'region_d_id', false, $this->viewonly);?></td>
+                        <td><?php echo renderFacilityTypesDropDown($this->site_types, $siteData['type_option_id']?$siteData['type_option_id']:'', $this->viewonly, $id);?></td>
+                        <td id='<?php echo $siteData['facility_id']. $id;?>'><?php echo renderFacilityDropDownWithType($db_locations_arr, $this->facilities, $siteData['facility_id']?$siteData['facility_id']:'', $this->viewonly, $id , $add_dupe); ?></td>
+                        <td><input type='text' id='<?php echo $id;?>hiv_fte_related' name='<?php echo $id;?>hiv_fte_related' value='<?php echo $siteData['hiv_fte_related']?$siteData['hiv_fte_related']:'0'; ?>' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntegerKeyPress(this);calculateSiteTable(false);'/></td>
+                        <td><input type='text' id='<?php echo $id;?>non_hiv_fte_related' name='<?php echo $id;?>non_hiv_fte_related' value='<?php echo $siteData['non_hiv_fte_related']?$siteData['non_hiv_fte_related']:'0'; ?>' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntegerKeyPress(this);calculateSiteTable(false)'/></td>
                         <td><input type="checkbox" onclick="deleteToggleSite(this);"/></td>
+                        <script  type="text/JavaScript">
+                              $('#<?php echo $id?>facilityType').attr('style', 'width: 100% !important; min-width: 100%; max-width: 100%;');
+                              $('#<?php echo $id?>facilityInput').attr('style', 'width: 100% !important; min-width: 100%; max-width: 100%;');
+                        </script>
                     </tr>
-                    
-                <?php } ?>
-                </tbody> <!-- TA:#397 END -->
-                   </table>
-                   
-                   
+                <?php 
+                    $add_dupe = false;
+                } 
+                ?>
+                </tbody>  
+                   </table> 
                    <a href='<?php echo$this->base_url;?>/site/add'><?php echo t('Insert a New') . space . t('Site');?></a>&nbsp;&nbsp;
                    <a href='<?php echo$this->base_url;?>/site/search'><?php echo t('View/Edit') . space . t('Site');?></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                    <a href='' onclick='return addSite();'><?php echo t('Add') . space . t('Site');?></a>&nbsp;&nbsp;
-                   
                    <br><br>
-                   <script>
-                    $('#province_id').attr('style', 'width: 150px !important; min-width: 150px; max-width: 150px;');
-                    $('#district_id').attr('style', 'width: 150px !important; min-width: 150px; max-width: 150px;');
-                    $('#region_c_id').attr('style', 'width: 150px !important; min-width: 150px; max-width: 150px;');
-                    $('#facilityInput').attr('style', 'width: 230px !important; min-width: 230px; max-width: 230px;');
-                    $('#facilityType').attr('style', 'width: 150px !important; min-width: 150px; max-width: 150px;');
-                    elSubDistrict = YAHOO.util.Dom.get('region_c_id');
-                    elFacilityType = YAHOO.util.Dom.get('facilityType');
-                    elFacilityName = YAHOO.util.Dom.get('facilityInput');
-                    elHIV_field = YAHOO.util.Dom.get('hiv_fte_related');
-                    elNONHIV_field = YAHOO.util.Dom.get('non_hiv_fte_related');
-                    YAHOO.util.Event.onDOMReady(function () {
-                            elSubDistrict.onchange();
-                    });
-                    elSubDistrict.onchange = function () {
-                        if(this.selectedIndex == 0){
-                            elFacilityType.disabled = true;
-                            elFacilityName.disabled = true;
-                            elFacilityType.selectedIndex = 0;
-                            elFacilityName.selectedIndex = 0;
-                        }else{
-                            elFacilityType.disabled = false;
-                            elFacilityName.disabled = false;
-                        }
-                         elFacilityName.onchange();
-                    }
-                    elFacilityName.onchange = function () {
-                        if(this.selectedIndex == 0){
-                        	elHIV_field.disabled = true;
-                        	elNONHIV_field.disabled = true;
-                            elHIV_field.value = '';
-                            elNONHIV_field.value = '';
-                        }else{
-                        	elHIV_field.disabled = false;
-                        	elNONHIV_field.disabled = false;
-                        }
-                    }
-                    </script>
                         <?php
-                        //TA:#224 => END
+                        //TA:#224 => TA:#397 END
 
                         if ($this->setting['display_employee_staff_category']) {
                             echo labelAndField($this, t('Staff Category'), $this->categories);
