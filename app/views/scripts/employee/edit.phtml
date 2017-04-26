@@ -172,17 +172,16 @@
             });
 
             $('#select_employee_transition_option').change(function (e) { /* watch the two transition drop downs */
-                var selected = $(this).find('option:selected').text();
-                if (selected.indexOf("Other") != -1) {
+                if ($(this).find('option:selected').val() == 8) {//TA:#398 use value to text
                     $('.transition_other,#transition_other').show();
                 } else {
                     $('.transition_other,#transition_other').hide();
+                    $('.transition_other,#transition_other').val(''); //TA:#408
                 }
             }).change(); // fire once
 
             $('select[name=employee_transition_complete_option_id]').change(function (e) { /* watch the two transition drop downs */
-                var selected = $(this).find('option:selected').text();
-                if (selected.indexOf("Other") != -1) {
+                if ($(this).find('option:selected').val() == 8) {//TA:#398 use value to text
                     $('.transition_complete_other,#transition_complete_other').show();
                 } else {
                     $('.transition_complete_other,#transition_complete_other').hide();
