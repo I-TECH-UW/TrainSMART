@@ -542,8 +542,8 @@
             //TA:#409 validates dates
             var date_start =$('#agreement_start_date').val();
             var date_end =$('#agreement_end_date').val();
-            if(new Date(date_start.split("/")[2], date_start.split("/")[1], date_start.split("/")[0]) >= new Date(date_end.split("/")[2], date_end.split("/")[1], date_end.split("/")[0])){
-            	displayErrorMessage('agreement_end_date', 'Contract Start Date must be less Contract End Date.');
+            if(new Date(date_start.split("/")[2], date_start.split("/")[1], date_start.split("/")[0]) > new Date(date_end.split("/")[2], date_end.split("/")[1], date_end.split("/")[0])){
+            	displayErrorMessage('agreement_end_date', 'Contract Start Date can be less than or equal to Contract End Date.');
             	validated = false;
             }
             //
