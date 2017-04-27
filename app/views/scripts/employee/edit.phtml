@@ -172,7 +172,8 @@
             });
 
             $('#select_employee_transition_option').change(function (e) { /* watch the two transition drop downs */
-                if ($(this).find('option:selected').val() == 8) {//TA:#398 use value to text
+            	var selected = $(this).find('option:selected').text();
+                if (selected == 'Other, Specify') { //TA:#398 use whole string for condition
                     $('.transition_other,#transition_other').show();
                 } else {
                     $('.transition_other,#transition_other').hide();
@@ -181,7 +182,8 @@
             }).change(); // fire once
 
             $('select[name=employee_transition_complete_option_id]').change(function (e) { /* watch the two transition drop downs */
-                if ($(this).find('option:selected').val() == 8) {//TA:#398 use value to text
+            	var selected = $(this).find('option:selected').text();
+                if (selected == 'Other, Specify') { //TA:#398 use whole string for condition
                     $('.transition_complete_other,#transition_complete_other').show();
                 } else {
                     $('.transition_complete_other,#transition_complete_other').hide();
@@ -656,6 +658,22 @@
             return true;
         }
 
+        //TA:#411
+        function validateIsActive(){
+//             var validated = true;
+//             if($("#is_active").is(":checked")){
+//             	var date = new Date();
+//             	var today = date.getTime();
+//             	var tomorrow= new Date(today + 86400000);
+//             	var strDate = tomorrow.getDate()  + "/" + (tomorrow.getMonth()+1) + "/" + tomorrow.getFullYear();
+//                 $('#agreement_end_date').val(strDate);
+//                 $('#transition_complete_date').val('');
+//                 $('#transition_complete_other').val('');
+//                 $('#employee_transition_complete_option_id').val('');              
+//             }
+//             return validated;
+        }
+
     </script>
 
 </head>
@@ -699,7 +717,8 @@
 
                         <!-- TA:#309 -->
                         <div class="fieldLabel"><label><?php echo t('Active'); ?> HRH</label></div>
-                        <input type="checkbox" name="is_active" id="is_active" style="margin : 4px 5px 12px 0px;" <?php echo ($this->employee['is_active'] === '1'  || $this->mode == 'add')?'checked="checked"':'';?>>
+                        <!-- TA:#411 by default is off and add action on check-->
+                        <input type="checkbox" name="is_active" id="is_active" style="margin : 4px 5px 12px 0px;" <?php echo ($this->employee['is_active'] === '1')?'checked="checked"':'';?> onchange=setActive();>
 
                         <?php
                         //TA:#329 change order those two fields and add filter
