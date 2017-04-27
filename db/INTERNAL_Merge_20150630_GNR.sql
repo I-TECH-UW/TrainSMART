@@ -20,17 +20,6 @@ CREATE TABLE `assessments` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `assessments_questions` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `assessment_id` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `question` text COLLATE utf8_unicode_ci NOT NULL,
-  `itemorder` int(11) NOT NULL DEFAULT '1',
-  `itemtype` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'question',
-  `status` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `idx2` (`itemtype`,`assessment_id`,`itemorder`,`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 CREATE TABLE `lookup_assessment_types` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `assessment_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',

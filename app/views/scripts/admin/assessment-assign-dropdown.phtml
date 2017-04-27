@@ -26,6 +26,15 @@ require_once('views/helpers/ScriptContainer.php');
 print ScriptContainer::$instance->renderCSSHead();
 print ScriptContainer::$instance->renderJSHead();
 ?>
+
+    <script type="text/javascript">
+        $(document).ready(function()
+        {
+            if (!$('#select_assessment_dropdowngroup_option').val()) {
+                $(':checkbox').attr('disabled', true);
+            }
+        });
+    </script>
 </head>
 <body  class="yui-skin-sam">
 <div id="pageHolder">
