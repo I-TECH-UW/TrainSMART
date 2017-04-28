@@ -3087,40 +3087,39 @@ class AdminController extends UserController
 	public function assessmentSettingsAction(){
 
 	    $helper = new Helper();
-	
-	    $assessid = $this->getSanParam('assess');
+
+	    $params = $this->getAllParams();
+	    $assessid = $params['assess'];
 	    $assess = false;
 	    if (is_numeric($assessid)){
 	        $assess = true;
 	    }
 	
-	    if (isset ($_POST['_action'])){
+	    if (isset ($params['_action'])){
 	        // UPDATING ASSESSMENT NAME
-	        switch ($_POST['_action']){
+	        switch ($params['_action']){
 	            case "addnew":
-	                $helper->addSkillsmartAssessment($_POST);
+	                $helper->addSkillsmartAssessment($params);
 	                break;
 	            case "update":
-	                
-	                 
-	                $helper->updateSkillsmartAssessment($_POST);
+	                $helper->updateSkillsmartAssessment($params);
 	                break;
 	        }
 	        $this->_redirect ( 'admin/assessment-settings' );
-	    } elseif (isset ($_POST['_actiondetail'])){
-	        switch ($_POST['_actiondetail']){
+	    } elseif (isset ($params['_actiondetail'])){
+	        switch ($params['_actiondetail']){
 	            case "addnew":
-	                $helper->addSkillsmartAssessmentQuestion($_POST,$assessid);
+	                $helper->addSkillsmartAssessmentQuestion($params,$assessid);
 	                break;
 	            case "update":
-	                $helper->updateSkillsmartAssessmentQuestion($_POST,$assessid);
+	                $helper->updateSkillsmartAssessmentQuestion($params,$assessid);
 	                break;
 	        }
 	        $this->_redirect ( 'admin/assessment-settings/assess/' . $assessid );
-	    } elseif (isset ($_POST['actionqual'])){
-	        $helper->skillsmartLinkQualAssess($_POST);
+	    } elseif (isset ($params['actionqual'])){
+	        $helper->skillsmartLinkQualAssess($params);
 	        $this->_redirect ( 'admin/assessment-settings/assess/' . $assessid );
-	        //			var_dump ($_POST['qual']);
+	        //			var_dump ($params['qual']);
 	        //			exit;
 	    }
 	

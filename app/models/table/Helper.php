@@ -2903,11 +2903,12 @@ class Helper extends ITechTable
 	
 	public function addSkillsmartAssessmentQuestion($params,$assessid){
 	    $db = $this->dbfunc();
-	
-	    $id = $_POST['_iddetail'];
-	    $question = $_POST['_fieldtoupdatedetail'];
-	    $itemorder = $_POST['_orderdetail'];
-	    $itemtype = $_POST['_qtypedetail'];
+
+	    $id = $params['_iddetail'];
+	    $question = $params['_fieldtoupdatedetail'];
+	    $itemorder = $params['_orderdetail'];
+	    $itemtype = $params['_qtypedetail'];
+	    $dropdown_group = $params['_dropdowndetail'];
 	
 	    $query = "SELECT * FROM assessments_questions WHERE assessment_id = " . $assessid . " AND itemorder >= " . $itemorder;
 	    #die($query);
@@ -2926,6 +2927,7 @@ class Helper extends ITechTable
 			question = '" . addslashes($question) . "',
 			itemorder = '" . addslashes($itemorder) . "',
 			itemtype = '" . addslashes($itemtype) . "',
+			dropdowngroup_id = '" . addslashes($dropdown_group) . "',
 			status = 1";
 	    #die($query);
 	    $db->query($query);
