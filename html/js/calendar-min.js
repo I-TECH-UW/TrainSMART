@@ -1,4 +1,5 @@
-var dSelected = YAHOO.util.Dom.get(monthId).value + '/' + YAHOO.util.Dom.get(dayId).value + '/' + YAHOO.util.Dom.get(yearId).value;
+/*
+    var dSelected = YAHOO.util.Dom.get(monthId).value + '/' + YAHOO.util.Dom.get(dayId).value + '/' + YAHOO.util.Dom.get(yearId).value;
     var dPage = YAHOO.util.Dom.get(monthId).value + '/' + YAHOO.util.Dom.get(yearId).value;
     if ( dPage == '/' ) {
     	dPage = '01/1980';
@@ -6,7 +7,7 @@ var dSelected = YAHOO.util.Dom.get(monthId).value + '/' + YAHOO.util.Dom.get(day
       var today = new Date();
       dPage = (today.getMonth() + 1) + dPage;
     }
-    
+  */
     /* @DEPRICATED */
     function makeCalendar(containerId, dayId, monthId, yearId, extra_callback) {
     	var config = { pagedate:dPage, selected:dSelected, navigator:true };
