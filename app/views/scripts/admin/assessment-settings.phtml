@@ -249,10 +249,8 @@ ob_end_clean();
 			<label for="name"><?php echo t('Dropdown Group') ?></label>
 			<select name="dropdowndetail" id="dropdowndetail" class="text ui-widget-content ui-corner-all" style="display : block; width : 100%; padding : .4em;" />
 <?php
-    $i = 0;
     foreach($this->dropdowngroups as $ddgrps){
-        echo "<option value=\"" . ($i + 1) . "\">" . $ddgrps['dropdowngroup_phrase'] . "</option>\n";
-        $i++;
+        echo "<option value=\"{$ddgrps['id']}\">{$ddgrps['dropdowngroup_phrase']}</option>\n";
     }
 ?>
 			</select>
