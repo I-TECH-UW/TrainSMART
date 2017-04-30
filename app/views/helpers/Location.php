@@ -374,7 +374,6 @@ function renderFacilityDropDown($facilities, $selected_index, $readonly)
       $(function () {
         regionSelectElements = $("#province_id,#district_id,#region_c_id,#region_d_id,#region_e_id,#region_f_id,#region_g_id,#region_h_id,#region_i_id,#person_facility_province_id")
         .change(function () {
-        
         if(Array.isArray($(this).val())){
             var compare_id = [];
             if ($(this).val() != ""){
