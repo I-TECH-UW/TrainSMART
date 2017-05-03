@@ -7,8 +7,13 @@ define('space', " ");
  * TrainSMART to use it.
  */
 
-function redirect_to_www() {
-    header("Location: //www.trainingdata.org");
+function redirect_to_location($newLocation) {
+	header("Location: $newLocation");
+	exit();
+}
+
+function showSiteMovedPage($newLocation) {
+    echo "<html><title>Site Moved</title><body><h3>This website has been moved to <a href='$newLocation'>$newLocation</a>.</h3> Please update your bookmarks.</body></html>";
     exit();
 }
 
@@ -19,16 +24,28 @@ class Globals
     public static $COUNTRY = null;
     public static $SITE_TITLE = 'TrainSMART';
 
+	public static $REDIRECTS = array(
+        // redirect to front-facing, non TrainSMART website
+		'trainingdata.org' => '//www.trainingdata.org/',
+    );
+
+    public static $SITE_MOVED = array(
+        'tanzaniapartners.trainingdata.org' => 'http://trainsmart.moh.go.tz/',
+    );
+
     public function __construct()
     {
         // use subdomain to determine database
         $host = strtolower($_SERVER['HTTP_HOST']);
 
-        // redirect to front-facing, non TrainSMART website
-        if ($host === 'trainingdata.org') {
-            redirect_to_www();
+        if (array_key_exists($host, self::$REDIRECTS)) {
+            redirect_to_location(self::$REDIRECTS[$host]);
         }
 
+		if (array_key_exists($host, self::$SITE_MOVED)) {
+            showSiteMovedPage(self::$SITE_MOVED[$host]);
+		}
+		
         $parts = explode('.', $host);
         $rparts = array_reverse($parts);
         $subMostDomain = $parts[0];
@@ -46,8 +63,7 @@ class Globals
         if ($subMostDomain === 'www' && ($rparts[1] === 'eventsmart' || $rparts[1] === 'trainingdata')) {
             // redirect to sitename.trainingdata.org if we get a request for www.sitename.trainingdata.org
             $newUrl = implode('.', array_slice($parts, 1));
-            header("Location: //$newUrl");
-            exit();
+            redirect_to_location("//$newUrl");
         }
 
         if (count($parts) === 2) {
@@ -102,8 +118,8 @@ class Globals
 
         // redirect to front-facing, non-TrainSMART website
         if (!$countryLoaded) {
-            redirect_to_www();
-        }
+            redirect_to_location('//www.trainingdata.org');
+		}
 
         set_include_path(
             (Globals::$BASE_PATH) . PATH_SEPARATOR .

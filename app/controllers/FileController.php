@@ -34,10 +34,10 @@ class FileController extends ITechController
         $uploadDir = $fileDir . '/' . Settings::$DB_DATABASE;
 
         if (!file_exists($fileDir)) {
-            mkdir($fileDir);
+            mkdir($fileDir, 0775);
         }
         if (!file_exists($uploadDir)) {
-            mkdir($uploadDir);
+            mkdir($uploadDir, 0775);
         }
 
         return $uploadDir;
