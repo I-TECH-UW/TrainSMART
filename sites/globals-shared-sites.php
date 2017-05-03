@@ -14,6 +14,7 @@ function redirect_to_location($newLocation) {
 
 function showSiteMovedPage($newLocation) {
     echo "<html><title>Site Moved</title><body><h3>This website has been moved to <a href='$newLocation'>$newLocation</a>.</h3> Please update your bookmarks.</body></html>";
+    exit();
 }
 
 class Globals
