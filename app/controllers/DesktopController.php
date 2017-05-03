@@ -133,11 +133,11 @@ $archive->add($core_file_collection,array('remove_path'=>Globals::$BASE_PATH.$DI
 			// Make sure directory structure exists. All files in this tree, plus /app/desktop/distro tree will be zipped together
 			$old = umask(0); 
 			if (!file_exists($this->package_dir)) {
-				if (! mkdir($this->package_dir, 0777, true)) throw new Exception('Could not create site directory'); // Make recursive dir structure (make all dirs)
-				chmod($this->package_dir,0777);
+				if (! mkdir($this->package_dir, 0775, true)) throw new Exception('Could not create site directory'); // Make recursive dir structure (make all dirs)
+				chmod($this->package_dir,0775);
 			}
 			if (!file_exists($this->package_dir.'/data')) {
-				if (! mkdir($this->package_dir.'/data',0777)) throw new Exception('Could not create site data directory'); 
+				if (! mkdir($this->package_dir.'/data',0775)) throw new Exception('Could not create site data directory');
 			}
 			umask($old); 
 		} catch (Exception $e) {

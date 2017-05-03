@@ -77,7 +77,7 @@ class SyncController extends ReportFilterHelpers
 			
 			$name = implode('.', array($user->id, $user->last_name, $user->first_name, date('Y-m-d'), $_FILES['upload']['name'])); 
 			$path = rtrim(Globals::$BASE_PATH, '/') . '/files_sync/';
-			if(!file_exists($path) && !mkdir($path, 0777, true)) { // make storage dir 
+			if(!file_exists($path) && !mkdir($path, 0775, true)) { // make storage dir
 				$this->status->setStatusMessage(t('There was a problem creating <code>' . $path . '</code>'));
 				return;
 			}
