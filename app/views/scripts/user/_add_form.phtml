@@ -43,7 +43,41 @@ function setOrgAccessStatus() {
 		}
 	}
 }
+
+//TA:#415
+function setMechanismAccessStatus(){
+	if ($('#acl_mechanism_restrict').attr('checked') == 'checked') {
+		$('#mechanisms').slideDown();
+		$('#mechanisms input').removeAttr('disabled');
+	}
+	else {
+		$('#mechanism_option_all').attr('checked', 'checked');
+		$('#mechanisms').slideUp();
+	}
+
+	var edCourseRB = YAHOO.util.Dom.get("edit_course");
+	var orgFields = YAHOO.util.Dom.get("mechanisms").getElementsByTagName('input');
+	for(var i = 0; i < orgFields.length; i++) {
+		var isDisabled = false;
+		if (edCourseRB.checked == false) isDisabled = true;
+		orgFields[i].disabled = isDisabled;
+	}
+	var allOrgsRB = YAHOO.util.Dom.get("mechanism_option_all");
+	if ( allOrgsRB.checked &&  edCourseRB.checked ) {
+		for(var i = 0; i < orgFields.length; i++) {
+			orgFields[i].checked = true;
+			orgFields[i].disabled = true;
+		}
+		allOrgsRB.disabled = false;
+	} else if ( edCourseRB.checked ) {
+		for(var i = 0; i < orgFields.length; i++) {
+			orgFields[i].disabled = false;
+		}
+	}
+}
+
 YAHOO.util.Event.onDOMReady(setOrgAccessStatus);
+YAHOO.util.Event.onDOMReady(setMechanismAccessStatus);//TA:#415
 
 </script>
 
@@ -71,11 +105,33 @@ YAHOO.util.Event.onDOMReady(setOrgAccessStatus);
         <?php
             // don't allow users access to all training organizers for pepfarskillsmart
             $default_all_orgs = true;
+            $default_all_mechanisms = true;//TA:#415
             if (strpos(strtolower($_SERVER['HTTP_HOST']), "pepfarskillsmart.trainingdata.org") > -1) {
                 $default_all_orgs = false;
+                $default_all_mechanisms = false;//TA:#415
             }
         ?>
-		<div class="fieldLabelThin"> <?php tp('Restrict Access');?></div><div class="fieldInput"><div class="float50"><label for="acl_restrict"><input type="radio" id="" name="acl_restrict" value="" <?php if ($default_all_orgs) {echo "CHECKED";}?> onchange="setOrgAccessStatus();"> <?php tp('All organizations data');?></label></div><label for="acl_restrict"><input type="radio" id="acl_restrict" name="acl_restrict" value="acl_restrict" <?php if (!$default_all_orgs) {echo "CHECKED";}?> onchange="setOrgAccessStatus();"> <?php tp('Only selected organizations');?></label></div>
+		<div class="fieldLabelThin"> <?php tp('Restrict Access');?></div>
+		<div class="fieldInput"><div class="float50"><label for="acl_restrict">
+		<input type="radio" id="" name="acl_restrict" value="" <?php if ($default_all_orgs) {echo "CHECKED";}?> onchange="setOrgAccessStatus();"> 
+		<?php tp('All organizations data');?></label></div>
+		<label for="acl_restrict"><input type="radio" id="acl_restrict" name="acl_restrict" value="acl_restrict" <?php if (!$default_all_orgs) {echo "CHECKED";}?> onchange="setOrgAccessStatus();"> 
+		<?php tp('Only selected organizations');?></label></div>
+		
+		<!-- TA:#415 START -->
+					<div class="fieldLabelThin"> </div>
+					<div class="fieldInput">
+						<div class="float50">
+							<label for="acl_mechanismAll"><input type="radio" id="acl_mechanismAll"
+								name="acl_mechanism_restrict" value="" <?php if ($default_all_orgs) {echo "CHECKED";}?> onchange="setMechanismAccessStatus();"> <?php tp('All mechanism data');?></label>
+						</div>
+						<label for="acl_mechanism_restrict"><input type="radio" id="acl_mechanism_restrict"
+							name="acl_mechanism_restrict" value="acl_mechanism_restrict" <?php if (!$default_all_orgs) {echo "CHECKED";}?>
+							onchange="setMechanismAccessStatus();"> <?php tp('Only selected mechanisms');?></label>
+					</div>
+	   <!-- TA:#415 END -->
+		
+		
 		<br/><br/>
 		<div class="fieldLabelThin"> <?php tp('Reports');?></div><div class="fieldInput width100"><div class=""><input type="checkbox" id="view_create_reports" name="view_create_reports" CHECKED /><label for="view_create_reports"> <?php tp('View/create reports');?></label></div></div>
 		<div class="fieldLabelThin"> <?php tp('Trainings');?></div>
@@ -108,6 +164,25 @@ YAHOO.util.Event.onDOMReady(setOrgAccessStatus);
 		}
 		?>
 	</fieldset>
+	
+	<!-- TA:#415 START -->
+	<fieldset id="mechanisms" style="display:none;"><legend><?php tp('Mechanism access');?></legend>
+		<div class="fieldLabelThin"></div><div class="fieldInput"><input type="checkbox" name="mechanism_option_all" id="mechanism_option_all" value="mechanism_option_all" <?php if ($default_all_mechanisms) {echo "CHECKED";}?> onchange="setMechanismAccessStatus();" />
+		<label for="mechanism_option_all"> <?php tp('All Mechanisms');?></label></div>
+		<div class="fieldLabelThin"></div><div class="fieldInput"><a href="#" id="mechanismcheckall"> <?php tp('check all'); ?></a> 
+		<a href="#" id="mechanismuncheckall"> <?php tp('uncheck all'); ?></a></div>
+		<?php
+		foreach( $this->mechanism as $org ) {
+            if ($default_all_mechanisms) {
+                $orgChecked = @$org['user_id']? 'CHECKED':'';
+            }
+			echo '<div><div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50">
+	    <input type="checkbox" name="mechanism_option_id[]" id="mechanism_option_'.$org['id'].'" value="'.$org['id'].'" '.$orgChecked.' '.($org['id'] == 999? 'onchange="setMechanismAccessStatus();"':'').' />
+	    <label for="mechanism_option_'.$org['id'].'">'.$org['mechanism_phrase'].'</label></div></div>';
+		}
+		?>
+	</fieldset>
+	<!-- TA:#415 END -->
 
 	<?php
 	if ($this->showinstitutions){
@@ -203,6 +278,17 @@ $(document).ready(function () {
 		e.preventDefault();
 		$('#training_organizer_option_all,#orgs input[name="training_organizer_option_id[]"]').removeAttr('checked').removeAttr('readonly').removeAttr('disabled');
 	});
+
+	//TA:#415
+	$('#mechanismcheckall').click(function (e) {   /* check all btn  */
+		e.preventDefault();
+		$('#mechanisms input[name="mechanism_option_id[]"]').attr('checked', 'checked');
+	});
+	$('#mechanismuncheckall').click(function (e) { /* check none btn */
+		e.preventDefault();
+		$('#mechanism_option_all,#mechanisms input[name="mechanism_option_id[]"]').removeAttr('checked').removeAttr('readonly').removeAttr('disabled');
+	});
+	///
 
 	$('#edit_country_options').click(function (e) { /* edit country options checkbox (this is master admin) */
 		$('#admin_box input[type="checkbox"]').attr('checked', $(this).is(':checked'));
