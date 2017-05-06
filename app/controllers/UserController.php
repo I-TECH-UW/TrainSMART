@@ -403,6 +403,7 @@ class UserController extends ReportFilterHelpers {
 		//TA:#415
 		$mechanism_array = MultiOptionList::choicesList ( 'user_to_mechanism_access', 'user_id', $user_id, 'mechanism_option', 'mechanism_phrase', false, false );
 			$this->viewAssignEscaped ( 'mechanism', $mechanism_array );
+			//print_r($mechanism_array);
 		///
 		
 		$this->viewAssignEscaped ( 'user', $userArray );

@@ -356,7 +356,7 @@
 								<input type="checkbox" name="mechanism_option_all"
 									id="mechanism_option_all"
 									value="mechanism_option_all"
-									<?php if ( array_search('training_organizer_option_all',$this->user['acls']) !== false ) echo 'CHECKED'; ?>
+									<?php if ( array_search('mechanism_option_all',$this->user['acls']) !== false ) echo 'CHECKED'; ?>
 									onchange="setMechanismAccessStatus();" /><label
 									for="mechanism_option_all"> <?php tp('All Mechanisms');?></label>
 							</div>
