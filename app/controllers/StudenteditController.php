@@ -759,7 +759,12 @@ class StudenteditController extends ITechController
 		$this->view->assign('gettitle', $listtitle);
 
 		# GETTING COHORTS
-		$listcohort = $studentedit->ListCohort();
+		//TA:#385
+		if($details['student'][0]['institutionid']){
+		    $listcohort = $studentedit->ListCohortByInst($details['student'][0]['institutionid']);
+		}else{
+		  $listcohort = $studentedit->ListCohort();
+		}	
 		$this->view->assign('getcohorts', $listcohort);
 
 		# GETTING CADRES
