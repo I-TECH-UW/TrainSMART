@@ -6396,6 +6396,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$headers[] = "Last Name";
 		$cohortJoined = false;
 		$institutionJoined = false;
+	    $linkstudentclassesJoined = false; //TA:#392
 
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		$helper = new Helper();
@@ -6834,7 +6835,20 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		        $s->where('c.graddate <= ?', $grad_end_date);
 		    }
 		}
-		//print "AAAA:   " . $s;
+		
+		//TA:#392
+		if ((isset($params['shownamedate'])) && $params['shownamedate'] ) {
+		    if (!$linkstudentclassesJoined) {
+		        $s->joinLeft(array('lscl' => 'link_student_classes'), 'lscl.studentid=s.id', array());
+		        $linkstudentclassesJoined = true;
+		    }
+ 		    $s->joinLeft(array('cl' => 'classes'), 'cl.id=lscl.classid', array());
+ 		    $headers[] = "Course Name";
+ 		    $headers[] = "Exam Score";
+ 		    $s->columns("cl.classname");
+ 		    $s->columns("lscl.exammark");
+		}
+	//	print $s;
 		return(array($s, $headers));
 	}
 
