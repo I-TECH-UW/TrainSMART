@@ -8425,8 +8425,8 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				);
 			}
 
-			// degree
-			if($this->getSanParam('showdegrees') || $this->getSanParam('degrees')){
+			// degree TA:#390
+			if($this->getSanParam('showdegree') || $this->getSanParam('degree')){
 
 				# REQUIRES INSTITUTION LINK
 				$found = false;
@@ -8463,12 +8463,12 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					"type" => "left"
 				);
 			}
-			if( $this->getSanParam('showdegrees') ){
+			if( $this->getSanParam('showdegree') ){ //TA:#390
 				$select[] = "ldeg.degree";
 				$headers[] = "Degree";
 			}
-			if( $this->getSanParam('degrees') ){
-				$where[] = "ldeg.id = ".$this->getSanParam('degrees');
+			if( $this->getSanParam('degree') ){ //TA:#390
+				$where[] = "ldeg.id = ".$this->getSanParam('degree');
 			}
 
 			// degree institution
