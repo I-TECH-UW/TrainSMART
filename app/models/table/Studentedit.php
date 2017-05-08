@@ -453,6 +453,7 @@ class Studentedit extends ITechTable
 			//'studenttype'=>"$param[studenttype]",
 			'personid'			=>	$param['id'],
 			'studentid'			=>	$param['studentid'],
+		    'index_number'			=>	$param['index_number'],//TA:#400
 			'nationalityid'		=>	$param['nationality'],
 			'studenttype'		=>	$param['studenttype'],
 			'isgraduated'		=>	$param['graduated'],

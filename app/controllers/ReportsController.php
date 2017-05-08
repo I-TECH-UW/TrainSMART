@@ -6608,6 +6608,12 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				$s->where('ln.id = ?', $params['nationality']);
 			}
 		}
+		
+		//TA:#400
+		if ((isset($params['showindexnumber'])) && $params['showindexnumber'] ) {
+		    $headers[] = "Index Number";
+		    $s->columns('s.index_number');
+		 }
 
 		//TA:#251
 		if ((isset($params['showdob'])) && $params['showdob']) {

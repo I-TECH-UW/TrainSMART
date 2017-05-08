@@ -321,6 +321,7 @@ class StudenteditController extends ITechController
 		$this->view->assign('cell', $details['person'][0]['phone_mobile']);
 		$this->view->assign('cell2', $details['person'][0]['phone_home']);
 		$this->view->assign('nationalid', $details['person'][0]['national_id']);
+		$this->view->assign('index_number', $details['person'][0]['index_number']);//TA:#400
 		$this->view->assign('graduated', $details['student'][0]['isgraduated']);
 		$this->view->assign('cohortid', $details['link_cohort'][0]['id_cohort']);
 
@@ -612,6 +613,7 @@ class StudenteditController extends ITechController
 		$this->view->assign('cell', $details['person'][0]['phone_mobile']);
 		$this->view->assign('cell2', $details['person'][0]['phone_home']);
 		$this->view->assign('nationalid', $details['person'][0]['national_id']);
+		$this->view->assign('index_number', $details['student'][0]['index_number']);//TA:#400
 		$this->view->assign('graduated', $details['student'][0]['isgraduated']);
 		$this->view->assign('cohortid', $details['link_cohort'][0]['id_cohort']);
 
@@ -895,6 +897,7 @@ class StudenteditController extends ITechController
 		$this->view->assign('phone', $details['person'][0]['phone_work']);
 		$this->view->assign('cell', $details['person'][0]['phone_mobile']);
 		$this->view->assign('nationalid', $details['person'][0]['national_id']);
+		$this->view->assign('index_number', $details['person'][0]['index_number']);//TA:#400
 		$this->view->assign('graduated', $details['student'][0]['isgraduated']);
 		$this->view->assign('cohortid', $details['link_cohort'][0]['id_cohort']);
 
