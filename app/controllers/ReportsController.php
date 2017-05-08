@@ -6850,9 +6850,9 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		    }
  		    $s->joinLeft(array('cl' => 'classes'), 'cl.id=lscl.classid', array());
  		    $headers[] = "Course Name";
- 		    $headers[] = "Exam Score";
+ 		    $headers[] = "Grade";
  		    $s->columns("cl.classname");
- 		    $s->columns("lscl.exammark");
+ 		    $s->columns("lscl.grade");
 		}
 	//	print $s;
 		return(array($s, $headers));
