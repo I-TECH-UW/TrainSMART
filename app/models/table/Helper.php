@@ -1166,10 +1166,15 @@ class Helper extends ITechTable
 		return $result;
 	}
 
+	//TA:#404
 	public function AdminFunding(){
-		$select = $this->dbfunc()->select()
-			->from("lookup_fundingsources")
-			->order('fundingname');
+	    $select = $this->dbfunc()->select()
+	     			->from("lookup_fundingsources")
+	     			->joinLeft("link_student_funding", "link_student_funding.fundingsource = lookup_fundingsources.id")
+	     			->columns("lookup_fundingsources.*")
+	     			->columns("link_student_funding.id as used")
+	     			->group("lookup_fundingsources.id")
+	     			->order('fundingname');
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
