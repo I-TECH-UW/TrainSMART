@@ -2487,6 +2487,10 @@ class AdminController extends UserController
 				case "update":
 					$helper->updateFunding($_POST);
 					break;
+					//TA:#404
+			 case "delete":
+					    $helper->deleteFunding($_POST);
+					    break;
 			}
 			$this->_redirect ( 'admin/preservice-funding' );
 		}

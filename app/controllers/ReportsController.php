@@ -6396,6 +6396,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$headers[] = "Last Name";
 		$cohortJoined = false;
 		$institutionJoined = false;
+	    $linkstudentclassesJoined = false; //TA:#392
 
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		$helper = new Helper();
@@ -6607,6 +6608,12 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				$s->where('ln.id = ?', $params['nationality']);
 			}
 		}
+		
+		//TA:#400
+		if ((isset($params['showindexnumber'])) && $params['showindexnumber'] ) {
+		    $headers[] = "Index Number";
+		    $s->columns('s.index_number');
+		 }
 
 		//TA:#251
 		if ((isset($params['showdob'])) && $params['showdob']) {
@@ -6834,7 +6841,20 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		        $s->where('c.graddate <= ?', $grad_end_date);
 		    }
 		}
-		//print "AAAA:   " . $s;
+		
+		//TA:#392
+		if ((isset($params['shownamedate'])) && $params['shownamedate'] ) {
+		    if (!$linkstudentclassesJoined) {
+		        $s->joinLeft(array('lscl' => 'link_student_classes'), 'lscl.studentid=s.id', array());
+		        $linkstudentclassesJoined = true;
+		    }
+ 		    $s->joinLeft(array('cl' => 'classes'), 'cl.id=lscl.classid', array());
+ 		    $headers[] = "Course Name";
+ 		    $headers[] = "Grade";
+ 		    $s->columns("cl.classname");
+ 		    $s->columns("lscl.grade");
+		}
+	//	print $s;
 		return(array($s, $headers));
 	}
 
@@ -8425,8 +8445,8 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				);
 			}
 
-			// degree
-			if($this->getSanParam('showdegrees') || $this->getSanParam('degrees')){
+			// degree TA:#390
+			if($this->getSanParam('showdegree') || $this->getSanParam('degree')){
 
 				# REQUIRES INSTITUTION LINK
 				$found = false;
@@ -8463,12 +8483,12 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					"type" => "left"
 				);
 			}
-			if( $this->getSanParam('showdegrees') ){
+			if( $this->getSanParam('showdegree') ){ //TA:#390
 				$select[] = "ldeg.degree";
 				$headers[] = "Degree";
 			}
-			if( $this->getSanParam('degrees') ){
-				$where[] = "ldeg.id = ".$this->getSanParam('degrees');
+			if( $this->getSanParam('degree') ){ //TA:#390
+				$where[] = "ldeg.id = ".$this->getSanParam('degree');
 			}
 
 			// degree institution

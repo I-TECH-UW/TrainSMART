@@ -114,6 +114,14 @@ class Studentedit extends ITechTable
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
+	
+	//TA:#385 RETRIEVING COHORTS only for particular institution
+	public function ListCohortByInst($inst_id){
+	    $select = $this->dbfunc()->select()
+	    ->from('cohort')->where('institutionid=?', $inst_id);
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return $result;
+	}
 
 	// RETRIEVING TUTORS FOR ADVISORS
 	public function ListTutors($cohort_id = 0){
@@ -445,6 +453,7 @@ class Studentedit extends ITechTable
 			//'studenttype'=>"$param[studenttype]",
 			'personid'			=>	$param['id'],
 			'studentid'			=>	$param['studentid'],
+		    'index_number'			=>	$param['index_number'],//TA:#400
 			'nationalityid'		=>	$param['nationality'],
 			'studenttype'		=>	$param['studenttype'],
 			'isgraduated'		=>	$param['graduated'],

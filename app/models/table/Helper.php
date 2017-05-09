@@ -1423,6 +1423,13 @@ class Helper extends ITechTable
 			$instypeinsert = $this->dbfunc()->update($linktable,$i_arr,'id = ' . $id);
 		}
 	}
+	
+	//TA:#404
+	public function deleteFunding($params){
+	    $db = $this->dbfunc();
+	    $query = "DELETE FROM lookup_fundingsources WHERE id = " . $_POST["_id"];
+	    $db->query($query);
+	}
 
 	public function updateInstitutiontypes($params){
 		$linktable = "lookup_institutiontype";
