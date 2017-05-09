@@ -8479,7 +8479,8 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				$join[] = array(
 					"table" => "lookup_degrees",
 					"abbreviation" => "ldeg",
-					"compare" => "ldeg.id = liddeg.id_degree",
+					//"compare" => "ldeg.id = liddeg.id_degree", //TA:#390
+				    "compare" => "ldeg.id = tut.degree",
 					"type" => "left"
 				);
 			}
@@ -8685,7 +8686,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			if (count ($where) > 0){
 				$query .= "WHERE " . implode(" AND ", $where) . "\n";
 			}
-
+			
 		
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 			$rowArray = $db->fetchAll ($query);
