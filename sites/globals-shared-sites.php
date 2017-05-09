@@ -31,6 +31,7 @@ class Globals
 
     public static $SITE_MOVED = array(
         'tanzaniapartners.trainingdata.org' => 'http://trainsmart.moh.go.tz/',
+        'kzn.trainingdata.org' => 'https://skillsmart.trainingdata.org/',
     );
 
     public function __construct()
