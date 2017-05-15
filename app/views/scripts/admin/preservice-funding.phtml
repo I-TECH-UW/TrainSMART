@@ -149,14 +149,16 @@ ob_end_clean();
 			}
 
 			//TA:#404
-			function deleteitem(sel_row, iid){
-				oTable.fnDeleteRow( sel_row );
-				$("#currentid").val(iid);
-				$("#_id").val($("#currentid").val());
-				if ($("#currentid").val() != 0){
-					$("#_action").val("delete");
+			function deleteitem(sel_row, iid, itxt){
+				if (confirm("Do you want to delete '" + itxt + "' funding?")) {
+				    oTable.fnDeleteRow( sel_row );
+				    $("#currentid").val(iid);
+				    $("#_id").val($("#currentid").val());
+				    if ($("#currentid").val() != 0){
+				    	   $("#_action").val("delete");
+				    }
+				    document.getElementById("adminform").submit();
 				}
-				document.getElementById("adminform").submit();
 			}
 
 		</script>
@@ -332,7 +334,7 @@ $i = 0;//TA:#404
 									<!-- TA:#404 -->
 									<td><a href="javascript:edititem('<?php echo $lookup['id']; ?>','<?php echo ($lookup['fundingname']); ?>');">Edit</a>
 									<?php if(!$lookup['used']){?>
-									 <a href="javascript:deleteitem('<?php echo $i; ?>','<?php echo $lookup['id']; ?>');">Delete</a>
+									 <a href="javascript:deleteitem('<?php echo $i; ?>','<?php echo $lookup['id']; ?>','<?php echo $lookup['fundingname']; ?>');">Delete</a>
 									<?php }?>
 									</td>
 

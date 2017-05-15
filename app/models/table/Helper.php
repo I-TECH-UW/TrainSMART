@@ -1969,12 +1969,14 @@ class Helper extends ITechTable
 			/* Sean: Had to redo. Was using personid in place of studentid
 			 * Sean: Converted foreach loop (one query per iteration) to a single query
 			 */ 
+		    //TA:#402
 			$query = "
 				SELECT c.*, p.first_name, p.last_name, lct.coursetype,
 					CASE WHEN sc.linkclasscohortid IS NULL THEN 0 ELSE sc.linkclasscohortid END linkid,
 					CASE WHEN sc.classid IS NULL OR LENGTH(camark) = 0 OR camark IS NULL THEN 'N/A' ELSE camark END camark,
 					CASE WHEN sc.classid IS NULL OR LENGTH(exammark) = 0 OR exammark IS NULL THEN 'N/A' ELSE exammark END exammark,
 					CASE WHEN sc.classid IS NULL OR LENGTH(grade) = 0 OR grade IS NULL THEN 'N/A' ELSE grade END grade,
+			    CASE WHEN sc.classid IS NULL OR LENGTH(grade_description) = 0 OR grade_description IS NULL THEN '' ELSE grade_description END grade_description,
 					CASE WHEN sc.classid IS NULL OR LENGTH(credits) = 0 OR credits IS NULL THEN 'N/A' ELSE credits END credits
 
 				FROM  classes c
@@ -1983,7 +1985,7 @@ class Helper extends ITechTable
 				LEFT JOIN person p ON t.personid = p.id
 				LEFT JOIN lookup_coursetype lct ON lct.id = c.coursetypeid
 				LEFT JOIN (
-					SELECT classid, linkclasscohortid, camark, exammark, grade, credits
+					SELECT classid, linkclasscohortid, camark, exammark, grade, credits, grade_description
 					FROM   link_student_classes 
 					WHERE	studentid = " . $sid . "
 					AND		classid IN (SELECT classid FROM link_cohorts_classes WHERE cohortid = " . $cid . ")
@@ -2114,6 +2116,10 @@ class Helper extends ITechTable
  		if($param['grade']){
  		 $allclasses = array_unique(array_merge($allclasses, array_keys($param['grade'])));
  		}
+ 		//TA:#402
+ 		if($param['grade_description']){
+ 		 		 $allclasses = array_unique(array_merge($allclasses, array_keys($param['grade_description'])));
+ 		}
  		if($param['credits']){
  		 $allclasses = array_unique(array_merge($allclasses, array_keys($param['credits'])));
  		}
@@ -2130,6 +2136,11 @@ class Helper extends ITechTable
 				cohortid = " . $param['cohortid'];
 			$select = $db->query($query);
 			$result = $select->fetchAll();
+			//TA:#402 allthose fields are required in 'link_student_classes' table 
+			//TODO: just do nothing if any of the undefined
+			if(!$param['camark'][$cid] || !$param['exammark'][$cid] || !$param['grade'][$cid]){
+			    continue;
+			}
 			if (count ($result) == 0) {
 				$insert = array(
 					'studentid'		=> $sid, 
@@ -2138,6 +2149,7 @@ class Helper extends ITechTable
 					'camark'		=> $param['camark'][$cid],
 					'exammark'		=> $param['exammark'][$cid],
 					'grade'			=> $param['grade'][$cid],
+				    'grade_description'			=> $param['grade_description'][$cid],//TA:#402
 					'credits'	=> $param['credits'][$cid]
 				);
 				$db->insert("link_student_classes", $insert);
@@ -2147,6 +2159,7 @@ class Helper extends ITechTable
 					'camark'		=> $param['camark'][$cid],
 					'exammark'		=> $param['exammark'][$cid],
 					'grade'			=> $param['grade'][$cid],
+				    'grade_description'			=> $param['grade_description'][$cid],//TA:#402
 					'credits'	=> $param['credits'][$cid]
 				);
 				$db->update("link_student_classes", $insert,'id = ' . $row['id']);

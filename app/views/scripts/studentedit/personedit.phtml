@@ -248,6 +248,8 @@
 					<th><?php echo t($this->translation['ps exam mark']); ?></th>
 					<?php endif; ?>
 					<th><?php echo t('Grade'); ?></th>
+					<!-- TA:#402 -->
+					<th><?php echo t('Grade Description'); ?></th>
 					<?php if($this->setting['ps_display_credits']) : ?>
 					<th><?php echo t($this->translation['ps credits']); ?></th>
 					<?php endif; ?>
@@ -255,7 +257,9 @@
 			</thead>
 			<tbody>
 <?php
+//print_r($this->currentclasses);
 	foreach ($this->currentclasses as $classes){
+	   // print $classes['grade_description']. ",";
 ?>
 				<tr class="GradeA">
 					<td><?php echo $classes['classname']; ?></td>
@@ -269,6 +273,15 @@
 						<td class="" style="width : 120px;"><input type="text" name="exammark[<?php echo $classes['id'] ?>]" id="exammark[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['exammark'])) != "n/a" ? $classes['exammark'] : ""; ?>" style="width : 100%;"></td>
 					<?php endif; ?>
 					<td class="" style="width : 120px;"><input type="text" name="grade[<?php echo $classes['id'] ?>]" id="grade[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['grade'])) != "n/a" ? $classes['grade'] : ""; ?>" style="width : 100%;"></td>
+					<!-- TA:#402 -->
+					<td class="" style="width : 120px;">
+					<select name="grade_description[<?php echo $classes['id'] ?>]" id="grade_description[<?php echo $classes['id'] ?>]" style="width : 100%;">
+					<option value="">-- select --</option>
+					<option value="Fail" <?php if($classes['grade_description']==="Fail"){echo ' selected';}?>>Fail</option>
+					<option value="General Pass" <?php if($classes['grade_description']==="General Pass"){echo ' selected';}?>>General Pass</option>
+					<option value="Pass with Credit" <?php if($classes['grade_description']==="Pass with Credit"){echo ' selected';}?>>Pass with Credit</option>
+					<option value="Pass with Distinction" <?php if($classes['grade_description']==="Pass with Distinction"){echo ' selected';}?>>Pass with Distinction</option>
+					</select></td>
 					<?php if($this->setting['ps_display_credits']) : ?>
 						<td class="" style="width : 120px;"><input type="text" name="credits[<?php echo $classes['id'] ?>]" id="credits[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['credits'])) != "n/a" ? $classes['credits'] : ""; ?>" style="width : 100%;"></td>
 					<?php endif; ?>				
@@ -842,6 +855,7 @@ if($column_count === 3){
 										<th><?php echo t($this->translation['ps exam mark']); ?></th>
 									<?php endif; ?>
 									<th><?php echo t('Grade'); ?></th>
+									<th><?php echo t('Grade Description'); ?></th><!-- TA:#402 -->
 									<?php if($this->setting['ps_display_credits']) : ?>
 									<th class=""><?php echo t($this->translation['ps credits']); ?></th>
 									<?php endif; ?>
@@ -867,6 +881,8 @@ if($column_count === 3){
 									<?php endif; ?>
 									
 									<td class="" style="width : 120px;"><?php echo $row['grade']; ?></td>
+									
+									<td class="" style="width : 120px;"><?php echo $row['grade_description']; ?></td><!-- TA:#402 -->
 									
 									<?php if($this->setting['ps_display_credits']) : ?>
 										<td class="" style="width : 120px;"><?php echo $row['credits']; ?></td>
