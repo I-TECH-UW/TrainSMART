@@ -579,7 +579,7 @@
                 //new Date() generates month starts with 0
             	var today = new Date();
                 if(new Date(today.getFullYear(), today.getMonth() + 1, today.getDate()) > new Date(date_end.split("/")[2], date_end.split("/")[1], date_end.split("/")[0])){
-                	displayErrorMessage('agreement_end_date', 'Contract End Date must be after the Current Date.');
+                	displayErrorMessage('agreement_end_date', 'Contract End Date must be after Today.');
                	   validated = false;
             	}
             }
@@ -607,7 +607,7 @@
                 //new Date() generates month starts with 0
             	var today = new Date();
                 if(new Date(today.getFullYear(), today.getMonth() + 1, today.getDate()) > new Date($('#transition_date').val().split("/")[2], $('#transition_date').val().split("/")[1], $('#transition_date').val().split("/")[0])){
-                	displayErrorMessage('transition_date', 'Date of Intended Transition should be after the Current Date.');
+                	displayErrorMessage('transition_date', '<?php echo t("Intended Transition Date");?> must be after Today.');
                	   validated = false;
             	}
             }
@@ -653,10 +653,18 @@
                     	validated = false;
                     }
                 }
-            	//Actual transition date should be filled in
+            	//Actual transition date should be filled and should be before or equal to Today
             	if(!validateTextField(validated, 'transition_complete_date', '<?php echo t("Actual Transition Date");?>')){
                 	validated = false;
                 }
+            	//new Date() generates month starts with 0
+            	var today = new Date();
+                if(new Date(today.getFullYear(), today.getMonth() + 1, today.getDate()) < new Date($('#transition_complete_date').val().split("/")[2], 
+                        $('#transition_complete_date').val().split("/")[1], $('#transition_complete_date').val().split("/")[0])){
+                	displayErrorMessage('transition_complete_date', '<?php echo t("Actual Transition Date");?> should be before or equal to Today.');
+               	   validated = false;
+            	}
+                
             }
 
             window.scroll(0,0);
