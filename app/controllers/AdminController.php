@@ -2099,6 +2099,30 @@ class AdminController extends UserController
 		$sponsorsArray = OptionList::suggestionList ( 'facility_sponsor_option', 'facility_sponsor_phrase', false, false );
 		$this->viewAssignEscaped ( 'facility_sponsors', $sponsorsArray );
 	}
+	
+	//TA:#416
+	public function employeeDsdmodelAction()
+	{
+	    $controller = &$this;  
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'employee_dsdmodel_option';
+	    $editTable->fields  = array('employee_dsdmodel_phrase' => t('Direct Service Delivery Model'));
+	    $editTable->label   = t('Direct Service Delivery Model');
+	     $editTable->execute($controller->getRequest());
+	}
+	
+	//TA:#416
+	public function employeeDsdteamAction()
+	{
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'employee_dsdteam_option';
+	    $editTable->fields  = array('employee_dsdteam_phrase' => t('Direct Service Delivery Team'));
+	    $editTable->label   = t('Direct Service Delivery Team');
+	    $editTable->execute($controller->getRequest());
+	}
 	/************************************************************************************
 	 * Internal
 	 */
@@ -4106,6 +4130,8 @@ class AdminController extends UserController
 			'employee-relationship'       => 'employees_module',
 			'employee-referral'           => 'employees_module',
 			'employee-training-provided'  => 'employees_module',
+		    'employee-dsdmodel'         => 'acl_editor_employee_dsdmodel',//TA:#416
+		    'employee-dsdteam'         => 'acl_editor_employee_dsdteam',//TA:#416
 			'tutorspecialty'                => 'acl_editor_tutor_specialty', //TA: added 7/22/2014
 			'tutorcontract'                => 'acl_editor_tutor_contract', //TA: added 7/24/2014
 			'commodityname'                => 'acl_editor_commodityname', //TA:17: added 9/19/2014
