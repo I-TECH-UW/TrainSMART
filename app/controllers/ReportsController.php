@@ -8292,6 +8292,17 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			$maintable = "tutor tut";
 			$select = array();
 			//$select[] = "tut.id";
+			
+			//TA:#390 to avoid names duplications only for fields with single values
+			//for multiple display name duplications
+			if( $this->getSanParam('showdegree') ){ 
+			    $headers[] = "ID";
+			    $select[] = "distinct(p.id)"; 
+			}else{
+			    $headers[] = "ID";
+			    $select[] = "p.id";
+			}
+			
 			$select[] = "p.first_name";
 			$select[] = "p.last_name";
 
