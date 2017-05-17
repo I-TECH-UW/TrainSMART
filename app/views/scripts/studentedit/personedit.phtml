@@ -44,6 +44,16 @@
 					"sPaginationType": "full_numbers"
 				});
 
+				/*TA:#407 Init the table */
+				oTable = $('.tablegrid_short').dataTable({
+					"bJQueryUI": true,
+	                "bPaginate": false,
+	                "bSort": true,
+	                "bInfo": false,
+	                "bFilter": false,
+	                "bAutoWidth": false,
+				});
+
                 <?php
                 /* init non-paging tables - workaround for the checkboxes that are not registering because they
                     are not visible
@@ -175,6 +185,27 @@
 				}
 				return false;
 			}
+
+			//TA:#407
+			$( "#precoursesbutton" )
+			.button()
+			.click(function() {
+
+				
+// 				var $oTable = $('#courses_taken_table').dataTable();
+// 				var newRowIDs = $oTable.fnAddData(['aaa', 
+// 					                   				'bbb',
+//               '<input type="checkbox" onclick="deleteToggleSite(this);"/>']);
+// // 				var newRowIDs = $oTable.fnAddData(['<input type="text" id="precourse_name" name="precourse_name" value=""/>', 
+// // 					                   				'<input type="text" id="precourse_grade" name="precourse_grade" value=""/>',
+// //                 '<input type="checkbox" onclick="deleteToggleSite(this);"/>']);
+//                var newRow = $($oTable.fnSettings().aoData[newRowIDs[0]].nTr);
+
+				
+				var text = "<input type='text'></input>";
+				
+		});
+			
 		</script>
 	</head>
 	<body>
@@ -708,6 +739,45 @@ if($column_count === 3){
 									echo "<label>" . t($this->escape($this->label_schoolstartdate)) . "</label>";
 									echo "<input type='text' class='calendarbox' name='schoolstartdate' id='schoolstartdate' value='" . $this->escape($this->schoolstartdate) . "';>";
 								}
+								
+								//TA:#407 START
+								echo "<label>MSCE Grades</label>";
+								?>
+								<div id='msce_grades'></div>
+																
+								<span style="width:200px">AAAAAAAAAAAAAAAAA</span>							
+								<table cellpadding="0" cellspacing="0" border="1" class="display tablegrid_short" id="courses_taken_table" style="width:600px;">
+																<thead>
+								                                <tr>
+								                                <th width='80%'> <?php echo t('Subjects Taken'); ?></th>
+								                                <th> <?php echo t('Grade'); ?></th> 
+								                                <th><?php tp("Delete?"); ?></th>              
+								                                </tr>
+								                                </thead>
+								                                <tfoot></tfoot>
+								                                <tbody>
+								<?php
+									foreach ($this->precourses as $row){
+								?>
+																<tr class="GradeA" style="">
+																	<td><?php echo $row['name']; ?></td>
+																	<td><?php echo $row['grade']; ?></td>
+																	<td><input type="checkbox" onclick="deleteToggleSite(this);"/></td>
+																</tr>
+								<?php
+									}
+								?>
+															</tbody>
+																</table>
+																
+												<div style="text-align : right;">		
+															<input type="submit" name="precoursesbutton" id="precoursesbutton" value="<?php echo t('Add Course'); ?>" class="tsbutton green large">
+														</div><br>
+								           
+																<?php 
+																//TA:#407 END
+																
+																
 								if($this->escape($this->label_equivalence)){
 									echo "<label>" . t($this->escape($this->label_equivalence)) . "</label>";
 									$val = 0;
