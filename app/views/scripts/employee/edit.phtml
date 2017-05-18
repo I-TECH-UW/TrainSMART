@@ -466,14 +466,6 @@
             if($('#facilityType').val()){
             	site_type = $('#facilityType option:selected' ).text();
             }
-            var site_name = '';
-            var site_id = $('#facilityInput').val();
-            if(site_id){
-            	site_name = $('#facilityInput option:selected' ).text();
-            }else{
-            	alert("Specify value for '<?php tp('Site Name');?>'.");
-                return false;
-            } 
              var hiv_fte_related = $('#hiv_fte_related' ).val();
              if(hiv_fte_related == ""){
             	 hiv_fte_related = 0;
@@ -503,6 +495,29 @@
             var dsd_model = $('#dsd_model option:selected' ).text();
             var dsd_team_id = $('#dsd_team option:selected' ).val();
             var dsd_team = $('#dsd_team option:selected' ).text();
+            if(dsd_model == 'Facility site - Roving') {
+            	if(dsd_team_id == ""){
+            		alert("Specify value for '<?php tp('Direct Service Delivery Team');?>'.");
+            		return false;
+            	}
+            }
+            var site_name = '';
+            var site_id = $('#facilityInput').val();
+            if(dsd_model == 'Facility site - Roving' || dsd_model == 'Facility site - Surge' ||
+            		dsd_model == 'Facility site - Seconded' || dsd_model == 'Community site'){ 
+                if(site_id){
+                	site_name = $('#facilityInput option:selected' ).text();
+                }else{
+                	alert("Specify value for '<?php tp('Site Name');?>'.");
+                    return false;
+                } 
+            }
+            if(dsd_model_id == ""){
+            	dsd_model = "";
+            }
+            if(dsd_team_id == ""){
+            	dsd_team = "";
+            }
             //
                 var newRowIDs = $oTable.fnAddData([province, district, region, site_name, site_type, dsd_model, dsd_team, hiv_fte_related, 
                                                    non_hiv_fte_related,
@@ -526,12 +541,12 @@
                  $('#facilityInput').val('0');
                  $('#facilityInput').attr('disabled', true);
                  $('#hiv_fte_related').val('');
-                 $('#hiv_fte_related').attr('disabled', true);
+                // $('#hiv_fte_related').attr('disabled', true);
                  $('#non_hiv_fte_related').val('');
-                 $('#non_hiv_fte_related').attr('disabled', true);
+               //  $('#non_hiv_fte_related').attr('disabled', true);
                  //TA:#416
                  $('#dsd_model').val('');
-                 $('#dsd_model').attr('disabled', true);
+                // $('#dsd_model').attr('disabled', true);
                  $('#dsd_team').val('');
                  $('#dsd_team').attr('disabled', true);
                 return true;   
@@ -1053,20 +1068,33 @@
                     }
                     elFacilityName.onchange = function () {
                         if(this.selectedIndex == 0){
-                        	elHIV_field.disabled = true;
-                        	elNONHIV_field.disabled = true;
-                        	eldsdmodel_field.disabled = true;//TA:#416
+                        	//elHIV_field.disabled = true;
+                        	//elNONHIV_field.disabled = true;
                         	eldsdteam_field.disabled = true;//TA:#416
                             elHIV_field.value = '';
                             elNONHIV_field.value = '';
                             eldsdmodel_field.value = '';//TA:#416
                             eldsdteam_field.value = '';//TA:#416
                         }else{
-                        	elHIV_field.disabled = false;
-                        	elNONHIV_field.disabled = false;
-                        	eldsdmodel_field.disabled = false;//TA:#416
-                        	eldsdteam_field.disabled = false;//TA:#416
+                        	//elHIV_field.disabled = false;
+                        	//elNONHIV_field.disabled = false;
                         }
+                    }
+                    //TA:#416
+                    eldsdmodel_field.onchange = function () {
+                    	var selected = $(this).find('option:selected').text();
+                        if (selected == 'Facility site - Roving') {
+                        	eldsdteam_field.disabled = false;
+                        }else{
+                        	eldsdteam_field.disabled = true;
+                        }
+                        if (selected == 'Health systems strengthening only' ||
+                        		selected == 'Partner management and operations only'   ) {
+                        	elFacilityName.disabled = true;
+                        }else{
+                        	elFacilityName.disabled = false;
+                        }   	
+                         eldsdteam_field.onchange();
                     }
                     </script>
                         <?php
