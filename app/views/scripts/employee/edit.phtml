@@ -173,7 +173,7 @@
 
             $('#select_employee_transition_option').change(function (e) { /* watch the two transition drop downs */
                 var selected = $(this).find('option:selected').text();
-                if (selected.indexOf("Other") != -1) {
+                if (selected == 'Other, Specify') { //TA:#398 use whole string for condition
                     $('.transition_other,#transition_other').show();
                 } else {
                     $('.transition_other,#transition_other').hide();
@@ -182,7 +182,7 @@
 
             $('select[name=employee_transition_complete_option_id]').change(function (e) { /* watch the two transition drop downs */
                 var selected = $(this).find('option:selected').text();
-                if (selected.indexOf("Other") != -1) {
+                if (selected == 'Other, Specify') { //TA:#398 use whole string for condition
                     $('.transition_complete_other,#transition_complete_other').show();
                 } else {
                     $('.transition_complete_other,#transition_complete_other').hide();
