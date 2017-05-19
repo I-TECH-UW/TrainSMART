@@ -173,11 +173,11 @@ class PartnerController extends ReportFilterHelpers
 
                 if (!$status->hasError()) {
                     if ($isValidDate) {
-                        $captureText = t("Partner Data Capture Complete");
+                        $captureText = t('Partner Data Capture Complete');
                         $subjectText = $captureText . ': ' . $params['partner'];
 
                         $captureText .= ".\n\n";
-                        $captureText .= t("Partner") . ': ' . $params['partner'] . "\n";
+                        $captureText .= t('Partner') . ': ' . $params['partner'] . "\n";
                         $captureText .= t('Date') . ': ' . $params['capture_complete_date'];
 
                         $d = DateTime::createFromFormat('d/m/Y', $params['capture_complete_date']);
@@ -188,8 +188,8 @@ class PartnerController extends ReportFilterHelpers
 
                             $mail = new Zend_Mail();
                             $mail->setBodyText($captureText);
-                            $mail->setFrom(Settings::$EMAIL_ADDRESS, Settings::$EMAIL_NAME);
-                            $mail->addTo('bens23@uw.edu');
+                            $mail->setFrom(Settings::$EMAIL_ADDRESS, 'SkillSMART Administrator');
+                            $mail->addTo('skillsmart@itech-southafrica.org');
                             $mail->setSubject($subjectText);
                             $mail->send();
                         } catch (Exception $e) {
