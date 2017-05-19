@@ -173,9 +173,10 @@ class PartnerController extends ReportFilterHelpers
 
                 if (!$status->hasError()) {
                     if ($isValidDate) {
-                        $captureText = t("Partner Data Capture Complete\n");
+                        $captureText = t("Partner Data Capture Complete");
                         $subjectText = $captureText . ': ' . $params['partner'];
 
+                        $captureText .= ".\n\n";
                         $captureText .= t("Partner") . ': ' . $params['partner'] . "\n";
                         $captureText .= t('Date') . ': ' . $params['capture_complete_date'];
 
