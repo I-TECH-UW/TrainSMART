@@ -173,8 +173,28 @@ class PartnerController extends ReportFilterHelpers
 
                 if (!$status->hasError()) {
                     if ($isValidDate) {
+                        $captureText = t("Partner Data Capture Complete\n");
+                        $subjectText = $captureText . ': ' . $params['partner'];
+
+                        $captureText .= t("Partner") . ': ' . $params['partner'] . "\n";
+                        $captureText .= t('Date') . ': ' . $params['capture_complete_date'];
+
                         $d = DateTime::createFromFormat('d/m/Y', $params['capture_complete_date']);
                         $params['capture_complete_date'] = $d->format('Y-m-d');
+
+                        try {
+                            $mail = new Zend_Mail();
+                            $mail->setBodyText($captureText);
+                            $mail->setFrom(Settings::$EMAIL_ADDRESS, Settings::$EMAIL_NAME);
+                            $mail->addTo('bens23@uw.edu');
+                            $mail->setSubject($subjectText);
+                            $mail->send();
+                        } catch (Exception $e) {
+                            $writer = new Zend_Log_Writer_Stream('php://stderr');
+                            $logger = new Zend_Log($writer);
+                            $logger->info('Email Notification Failure: '. $e->getMessage());
+                        }
+
                     }
                     $id = $this->_findOrCreateSaveGeneric('partner', $params);
 
