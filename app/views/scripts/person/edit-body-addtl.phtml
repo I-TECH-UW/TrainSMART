@@ -122,7 +122,13 @@ if ($this->setting['display_mod_skillsmart']) {
   <?php } ?>
   <div class="fieldLabel" ><?php tp('Work phone');?></div>
   <div class="fieldInput"><input type="text" id="phone_work" name="phone_work" size="32" maxlength="32" value="<?php echo $this->person['phone_work'];?>"/></div>
+
+    <?php if ($this->setting['display_mod_skillsmart']) { ?>
+  <div class="fieldLabel" ><span class="required">*</span><?php tp('Mobile phone');?></div>
+    <?php } else { ?>
   <div class="fieldLabel" ><?php tp('Mobile phone');?></div>
+    <?php } ?>
+
   <div class="fieldInput"><input type="text" id="phone_mobile" name="phone_mobile" size="32" maxlength="32" value="<?php echo $this->person['phone_mobile'];?>"/></div>
   <div class="fieldLabel"  id="email_lbl"><?php tp('Email');?></div>
   <div class="fieldInput"><input type="text" id="email" name="email" size="32" maxlength="64" value="<?php echo $this->person['email'];?>"/><br/><span style="color: #696969;">johndoe@example.net</span></div>

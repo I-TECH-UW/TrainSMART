@@ -1,5 +1,9 @@
 <?php require_once("views/helpers/DropDown.php"); ?>
-<div class="fieldLabel" id="home_address_1_lbl"><?php tp('Address 1');?></div>
+<?php if ($this->setting['display_mod_skillsmart']) { ?>
+    <div class="fieldLabel" id="home_address_1_lbl"><span class="required">*</span><?php tp('Address 1');?></div>
+<?php } else { ?>
+    <div class="fieldLabel" id="home_address_1_lbl"><?php tp('Address 1');?></div>
+<?php } ?>
 	  <div class="fieldInput"><input type="text" name="home_address_1" id="home_address_1" value="<?php echo $this->person['home_address_1'];?>" size="40" maxlength="40"/></div>
 	<div class="fieldLabel" id="home_address_2_lbl"><?php tp('Address 2');?></div>
 	  <div class="fieldInput"><input type="text" name="home_address_2" id="home_address_2" value="<?php echo $this->person['home_address_2'];?>" size="40" maxlength="40"/></div>

@@ -437,6 +437,9 @@ class PersonController extends ReportFilterHelpers
                         //$status->checkRequired ( $this, 'govemp_option_id', t ( 'Government Employee' ) );
                         //$status->checkRequired ( $this, 'occupational_category_id', t ( 'Occupational category' ) );
                         $status->checkRequired($this, 'persal_number', t('Persal Number'));
+                        $status->checkRequired($this, 'national_id', t('National ID'));
+                        $status->checkRequired($this, 'home_address_1', t('Address 1'));
+                        $status->checkRequired($this, 'phone_mobile', t('Mobile Phone'));
                     }
                 } else {
                     $status->checkRequired($this, 'primary_qualification_option_id', t('Professional qualification'));
@@ -531,12 +534,7 @@ class PersonController extends ReportFilterHelpers
                 }
 
 
-                if ($status->hasError()) {
-                    foreach ($status->messages as $k => $v) {
-                        $errortext .= $v . "<br>";
-                    }
-                    $status->setStatusMessage(t('The person could not be saved.') . '<br>' . $errortext);
-                } else {
+                if (!$status->hasError()) {
 
                     $personrow = self::fillFromArray($personrow, $this->getAllParams());
                     if (($city_id === false) && $this->getSanParam('is_new_home_city')) {
