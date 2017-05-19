@@ -183,6 +183,8 @@ class PartnerController extends ReportFilterHelpers
                         $params['capture_complete_date'] = $d->format('Y-m-d');
 
                         try {
+                            require_once ('Zend/Mail.php');
+
                             $mail = new Zend_Mail();
                             $mail->setBodyText($captureText);
                             $mail->setFrom(Settings::$EMAIL_ADDRESS, Settings::$EMAIL_NAME);
@@ -190,6 +192,7 @@ class PartnerController extends ReportFilterHelpers
                             $mail->setSubject($subjectText);
                             $mail->send();
                         } catch (Exception $e) {
+                            echo "ASDF";
                             $writer = new Zend_Log_Writer_Stream('php://stderr');
                             $logger = new Zend_Log($writer);
                             $logger->info('Email Notification Failure: '. $e->getMessage());
