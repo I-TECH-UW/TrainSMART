@@ -378,8 +378,11 @@ class Helper extends ITechTable
 	
 	//TA:#416
 	public function getEmployeeDSDTeams() {
+	    
 	    $select = $this->dbfunc()->select()
-	    ->from("employee_dsdteam_option",array('id','dsdteam' => 'employee_dsdteam_phrase'))
+	    ->from("employee_dsdteam_option",array('team_id' => 'id','dsdteam' => 'employee_dsdteam_phrase'))
+	   ->joinLeft(array('ept' => "employee_partner_option_to_employee_team_option"), 'ept.employee_dsdteam_option_id = employee_dsdteam_option.id')
+	   ->columns("ept.partner_id")
 	    ->order('employee_dsdteam_phrase');
 	    $result = $this->dbfunc()->fetchAll($select);
 	    return $result;

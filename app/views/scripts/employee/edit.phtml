@@ -1026,7 +1026,7 @@
                    echo "<select id='dsd_team' name='dsd_team' style='max-width: 100px; min-width: 100px; width: 100px !important'>";
                    echo "<option value=''>-- select --</option>";
                    foreach ($this->dsd_team as $ID => $team) {
-                       echo "<option value='" . $team['id'] . "'>" . $team['dsdteam'] . "</option>";
+                       echo "<option value='" . $team['partner_id'] . "_" . $team['team_id'] . "'>" . $team['dsdteam'] . "</option>";
                    }
                    echo "</select>";
                    //
@@ -1115,6 +1115,18 @@
                         }   	
                          eldsdteam_field.onchange();
                     }
+
+                   
+                    //TA:#416.2
+               elPartner = YAHOO.util.Dom.get("select_partner");
+               elSDSTeam = YAHOO.util.Dom.get("dsd_team");
+               elPartner.onchange = function () {
+               	setFilteredOption(this.selectedIndex, 'select_partner', 'dsd_team');
+               }
+               setFilteredOption(elPartner.selectedIndex, 'select_partner', 'dsd_team');
+               ///
+          
+           
                     </script>
                         <?php
                         //TA:#224 => END

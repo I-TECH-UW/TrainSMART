@@ -40,6 +40,19 @@ ALTER TABLE `link_employee_facility`
 ADD COLUMN `dsd_model_id` INT(10) DEFAULT NULL,
 ADD COLUMN `dsd_team_id` INT(10) DEFAULT NULL;
 
+CREATE TABLE `employee_partner_option_to_employee_team_option` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uuid` char(36) DEFAULT NULL,
+  `partner_id` int(11) NOT NULL,
+  `employee_dsdteam_option_id` int(11) NOT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `timestamp_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_employee_par` (`partner_id`,`employee_dsdteam_option_id`),
+  KEY `employee_parther_option_id` (`partner_id`),
+  KEY `created_by` (`created_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 /**************   FOR pepfarskillsmart ONLY  ********************/
 insert into facility_type_option (facility_type_phrase) values ('N/A');
 insert into facility (facility_name, location_id,type_option_id) 

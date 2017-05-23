@@ -1441,6 +1441,40 @@ class AdminController extends UserController
 		}
 
 	}
+	
+	//TA:#416.2
+	public function employeeAssignTeamAction(){
+	    require_once('views/helpers/MultiAssign.php');
+	    
+	    $multiAssign = new multiAssign();
+	    $multiAssign->table = 'employee_partner_option_to_employee_team_option';
+	    
+	    $multiAssign->option_table = 'employee_dsdteam_option';
+	    $multiAssign->option_field = array('employee_dsdteam_phrase' => t('Direct Service Delivery Team'));
+	    
+	    $multiAssign->parent_table = 'partner';
+	    $multiAssign->parent_field = array('partner' => t('Partner'));
+	    
+	    $output = $multiAssign->init($this);
+	    if(is_array($output)) { // json
+	        $this->sendData($output);
+	    } else {
+	        $this->view->assign('multiAssign', $output);
+	    }
+	    
+	    if($this->getRequest()->isPost()) { // Redirect
+	        // redirect to next page
+	        if($this->getParam('redirect')) {
+	            header("Location: " . $this->getParam('redirect'));
+	            exit;
+	        } else if($this->getParam('saveonly')) {
+	            $status = ValidationContainer::instance();
+	            $status->setStatusMessage('Your assigned team have been saved.');
+	        }
+	    }
+	
+	    
+	}
 
 	public function listByRecommendAction() {
 		require_once('models/table/TrainingRecommend.php');
