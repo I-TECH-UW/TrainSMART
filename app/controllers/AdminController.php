@@ -1450,7 +1450,7 @@ class AdminController extends UserController
 	    $multiAssign->table = 'employee_partner_option_to_employee_team_option';
 	    
 	    $multiAssign->option_table = 'employee_dsdteam_option';
-	    $multiAssign->option_field = array('employee_dsdteam_phrase' => t('Direct Service Delivery Team'));
+	    $multiAssign->option_field = array('employee_dsdteam_phrase' => t('Service Delivery Team'));
 	    
 	    $multiAssign->parent_table = 'partner';
 	    $multiAssign->parent_field = array('partner' => t('Partner'));
@@ -1469,7 +1469,7 @@ class AdminController extends UserController
 	            exit;
 	        } else if($this->getParam('saveonly')) {
 	            $status = ValidationContainer::instance();
-	            $status->setStatusMessage('Your assigned team have been saved.');
+	            $status->setStatusMessage('Your assigned Service Delivery Team have been saved.');
 	        }
 	    }
 	
@@ -2141,8 +2141,8 @@ class AdminController extends UserController
 	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
 	    $editTable->setParentController($controller);
 	    $editTable->table   = 'employee_dsdmodel_option';
-	    $editTable->fields  = array('employee_dsdmodel_phrase' => t('Direct Service Delivery Model'));
-	    $editTable->label   = t('Direct Service Delivery Model');
+	    $editTable->fields  = array('employee_dsdmodel_phrase' => t('Service Delivery Model'));
+	    $editTable->label   = t('Service Delivery Model');
 	    $editTable->execute($controller->getRequest());
 	}
 	
@@ -2153,8 +2153,8 @@ class AdminController extends UserController
 	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
 	    $editTable->setParentController($controller);
 	    $editTable->table   = 'employee_dsdteam_option';
-	    $editTable->fields  = array('employee_dsdteam_phrase' => t('Direct Service Delivery Team'));
-	    $editTable->label   = t('Direct Service Delivery Team');
+	    $editTable->fields  = array('employee_dsdteam_phrase' => t('Service Delivery Team'));
+	    $editTable->label   = t('Service Delivery Team');
 	    $editTable->execute($controller->getRequest());
 	}
 	

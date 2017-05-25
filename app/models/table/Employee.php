@@ -84,7 +84,7 @@ class Employee extends ITechTable {
 facility.type_option_id, facility_type_option.facility_type_phrase, 
 employee_dsdmodel_option.id as dsd_model_id, employee_dsdmodel_option.employee_dsdmodel_phrase as sds_model_name, 
 employee_dsdteam_option.id as dsd_team_id,employee_dsdteam_option.employee_dsdteam_phrase as sds_team_name,
-link_employee_facility.hiv_fte_related, link_employee_facility.non_hiv_fte_related, 
+link_employee_facility.hiv_fte_related, 
  facility.location_id 
 FROM link_employee_facility 
 LEFT JOIN facility ON link_employee_facility.facility_id = facility.id
@@ -111,11 +111,11 @@ WHERE (employee_id = $employee_id) order by link_employee_facility.id"; //#387
 	}
 	
 //TA:#224, TA:#416
-	public static function saveSites ( $employee_id, $site_id, $dsd_model_id, $dsd_team_id, $hiv_related_fte, $non_hiv_related_fte){
+	public static function saveSites ( $employee_id, $site_id, $dsd_model_id, $dsd_team_id, $hiv_related_fte){
 	Employee::removeSites($employee_id);
 	$linkTable = new ITechTable ( array ('name' => 'link_employee_facility' ) );
 	    try {
-	    $row = $linkTable->createRow(array('employee_id' => $employee_id, 'facility_id' => $site_id, 'dsd_model_id' => $dsd_model_id, 'dsd_team_id' => $dsd_team_id, 'hiv_fte_related' => $hiv_related_fte, 'non_hiv_fte_related' => $non_hiv_related_fte));
+	    $row = $linkTable->createRow(array('employee_id' => $employee_id, 'facility_id' => $site_id, 'dsd_model_id' => $dsd_model_id, 'dsd_team_id' => $dsd_team_id, 'hiv_fte_related' => $hiv_related_fte));
 	        $row->save();
 	    } catch(Exception $e) {
 	    error_log($e);

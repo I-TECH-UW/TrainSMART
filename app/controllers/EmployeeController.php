@@ -442,7 +442,7 @@ class EmployeeController extends ReportFilterHelpers
                             $sites_to_add = explode(";",$params['multi_sites_table_data_add']);
                             foreach($sites_to_add as $i => $loc) {
                                 $site_to_add = explode(",",$loc);
-                                if(!Employee::saveSites($id, $site_to_add[0], $site_to_add[1],$site_to_add[2],$site_to_add[3],$site_to_add[4])){//TA:#416
+                                if(!Employee::saveSites($id, $site_to_add[0], $site_to_add[1],$site_to_add[2],$site_to_add[3])){//TA:#416
                                     $status->setStatusMessage(t('Error saving employee sites.'));
                                 }
                             }
