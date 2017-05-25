@@ -182,21 +182,23 @@ class PartnerController extends ReportFilterHelpers
 
                         $d = DateTime::createFromFormat('d/m/Y', $params['capture_complete_date']);
                         $params['capture_complete_date'] = $d->format('Y-m-d');
+                        $oldDate = DateTime::createFromFormat('d/m/Y', $params['previous_date']);
 
-                        try {
-                            require_once ('Zend/Mail.php');
+                        if ($oldDate != $d) {
+                            try {
+                                require_once('Zend/Mail.php');
 
-                            $mail = new Zend_Mail();
-                            $mail->setBodyText($captureText);
-                            $mail->setFrom(Settings::$EMAIL_ADDRESS, 'SkillSMART Administrator');
-                            $mail->addTo('skillsmart@itech-southafrica.org');
-                            $mail->setSubject($subjectText);
-                            $mail->send();
-                        } catch (Exception $e) {
-                            echo "ASDF";
-                            $writer = new Zend_Log_Writer_Stream('php://stderr');
-                            $logger = new Zend_Log($writer);
-                            $logger->info('Email Notification Failure: '. $e->getMessage());
+                                $mail = new Zend_Mail();
+                                $mail->setBodyText($captureText);
+                                $mail->setFrom(Settings::$EMAIL_ADDRESS, 'SkillSMART Administrator');
+                                $mail->addTo('skillsmart@itech-southafrica.org');
+                                $mail->setSubject($subjectText);
+                                $mail->send();
+                            } catch (Exception $e) {
+                                $writer = new Zend_Log_Writer_Stream('php://stderr');
+                                $logger = new Zend_Log($writer);
+                                $logger->info('Email Notification Failure: ' . $e->getMessage());
+                            }
                         }
 
                     }

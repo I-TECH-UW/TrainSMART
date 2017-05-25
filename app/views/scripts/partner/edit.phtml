@@ -156,6 +156,7 @@
                 array('class' => 'fieldInput', 'onclick' => 'toggleRequired(this);', 'checked' => $this->partner['capture_complete'] ? "1" : "0", 'disableHidden' => true)); ?>
             <div id="add_date" style = "display:none">
             <?php echo labelAndField($this, t('Data Capture Completion Date'), 'date', 'capture_complete_date', $this->partner['capture_complete_date']); ?>
+                <input type="hidden" name="previous_date" value="<?php echo $this->partner['capture_complete_date']; ?>">
             </div><br/>
 
             <?php
