@@ -160,6 +160,14 @@ class PartnerController extends ReportFilterHelpers
                 $isValidDate = false;
                 if (isset($params['capture_complete']) && $params['capture_complete']) {
                     $isValidDate = $status->isValidDateDDMMYYYY('capture_complete_date', t('Data Capture Completion Date'), $params['capture_complete_date']);
+                    if ($isValidDate) {
+                        $d = DateTime::createFromFormat('d/m/Y', $params['capture_complete_date']);
+                        $now = new DateTime(null, new DateTimeZone('Africa/Johannesburg'));
+                        if ($d > $now) {
+                            $isValidDate = false;
+                            $status->addError('capture_complete_date', t('Data Capture Complete Date') . ' must not be in the future.');
+                        }
+                    }
                 }else{//TA:#279 write date as null
                     $params['capture_complete_date'] = null;
                 }
@@ -184,6 +192,7 @@ class PartnerController extends ReportFilterHelpers
                         $params['capture_complete_date'] = $d->format('Y-m-d');
                         $oldDate = DateTime::createFromFormat('d/m/Y', $params['previous_date']);
 
+                        // only send email update if date has changed
                         if ($oldDate != $d) {
                             try {
                                 require_once('Zend/Mail.php');
