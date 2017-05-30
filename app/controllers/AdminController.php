@@ -1441,6 +1441,40 @@ class AdminController extends UserController
 		}
 
 	}
+	
+	//TA:#416.2
+	public function employeeAssignTeamAction(){
+	    require_once('views/helpers/MultiAssign.php');
+	    
+	    $multiAssign = new multiAssign();
+	    $multiAssign->table = 'employee_partner_option_to_employee_team_option';
+	    
+	    $multiAssign->option_table = 'employee_dsdteam_option';
+	    $multiAssign->option_field = array('employee_dsdteam_phrase' => t('Service Delivery Team'));
+	    
+	    $multiAssign->parent_table = 'partner';
+	    $multiAssign->parent_field = array('partner' => t('Partner'));
+	    
+	    $output = $multiAssign->init($this);
+	    if(is_array($output)) { // json
+	        $this->sendData($output);
+	    } else {
+	        $this->view->assign('multiAssign', $output);
+	    }
+	    
+	    if($this->getRequest()->isPost()) { // Redirect
+	        // redirect to next page
+	        if($this->getParam('redirect')) {
+	            header("Location: " . $this->getParam('redirect'));
+	            exit;
+	        } else if($this->getParam('saveonly')) {
+	            $status = ValidationContainer::instance();
+	            $status->setStatusMessage('Your assigned Service Delivery Team have been saved.');
+	        }
+	    }
+	
+	    
+	}
 
 	public function listByRecommendAction() {
 		require_once('models/table/TrainingRecommend.php');
@@ -2099,6 +2133,31 @@ class AdminController extends UserController
 		$sponsorsArray = OptionList::suggestionList ( 'facility_sponsor_option', 'facility_sponsor_phrase', false, false );
 		$this->viewAssignEscaped ( 'facility_sponsors', $sponsorsArray );
 	}
+	
+	//TA:#416
+	public function employeeDsdmodelAction()
+	{
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'employee_dsdmodel_option';
+	    $editTable->fields  = array('employee_dsdmodel_phrase' => t('Service Delivery Model'));
+	    $editTable->label   = t('Service Delivery Model');
+	    $editTable->execute($controller->getRequest());
+	}
+	
+	//TA:#416
+	public function employeeDsdteamAction()
+	{
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'employee_dsdteam_option';
+	    $editTable->fields  = array('employee_dsdteam_phrase' => t('Service Delivery Team'));
+	    $editTable->label   = t('Service Delivery Team');
+	    $editTable->execute($controller->getRequest());
+	}
+	
 	/************************************************************************************
 	 * Internal
 	 */
@@ -4110,6 +4169,8 @@ class AdminController extends UserController
 			'employee-relationship'       => 'employees_module',
 			'employee-referral'           => 'employees_module',
 			'employee-training-provided'  => 'employees_module',
+		    'employee-dsdmodel'         => 'acl_editor_employee_dsdmodel',//TA:#416
+		    'employee-dsdteam'         => 'acl_editor_employee_dsdteam',//TA:#416
 			'tutorspecialty'                => 'acl_editor_tutor_specialty', //TA: added 7/22/2014
 			'tutorcontract'                => 'acl_editor_tutor_contract', //TA: added 7/24/2014
 			'commodityname'                => 'acl_editor_commodityname', //TA:17: added 9/19/2014

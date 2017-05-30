@@ -820,6 +820,10 @@ function renderFacilityDropDownWithType($rowArray, $facilities, $selected_index,
                            facilityInput.append(row.clone());
                         }
                     }
+    //TA:#416
+    selectNASiteName();
+    /////
+        
               });
           });
       ';
