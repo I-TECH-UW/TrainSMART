@@ -402,11 +402,7 @@
             <?php } ?>
 
             <?php if ( $this->setting['display_national_id'] ) { ?>
-                <?php if ($this->setting['display_mod_skillsmart']) { ?>
-                    <div class="fieldLabel" id="national_id_lbl"><span class="required">*</span><?php echo (@$this->translation['National ID']); ?></div>
-                    <?php } else { ?>
-                    <div class="fieldLabel" id="national_id_lbl"><?php echo (@$this->translation['National ID']); ?></div>
-                <?php } ?>
+                <div class="fieldLabel" id="national_id_lbl"><?php echo (@$this->translation['National ID']); ?></div>
                 <div class="fieldInput"><input type="text" id="national_id" name="national_id" size="24" maxlength="32" value="<?php echo $this->person['national_id'];?>"/></div>
             <?php } ?>
 

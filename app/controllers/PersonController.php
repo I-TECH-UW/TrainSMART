@@ -437,9 +437,6 @@ class PersonController extends ReportFilterHelpers
                         //$status->checkRequired ( $this, 'govemp_option_id', t ( 'Government Employee' ) );
                         //$status->checkRequired ( $this, 'occupational_category_id', t ( 'Occupational category' ) );
                         $status->checkRequired($this, 'persal_number', t('Persal Number'));
-                        $status->checkRequired($this, 'national_id', t('National ID'));
-                        $status->checkRequired($this, 'home_address_1', t('Address 1'));
-                        $status->checkRequired($this, 'phone_mobile', t('Mobile Phone'));
                     }
                 } else {
                     $status->checkRequired($this, 'primary_qualification_option_id', t('Professional qualification'));
