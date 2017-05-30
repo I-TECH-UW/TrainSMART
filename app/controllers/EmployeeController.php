@@ -442,7 +442,7 @@ class EmployeeController extends ReportFilterHelpers
                             $sites_to_add = explode(";",$params['multi_sites_table_data_add']);
                             foreach($sites_to_add as $i => $loc) {
                                 $site_to_add = explode(",",$loc);
-                                if(!Employee::saveSites($id, $site_to_add[0], $site_to_add[1],$site_to_add[2])){
+                                if(!Employee::saveSites($id, $site_to_add[0], $site_to_add[1],$site_to_add[2],$site_to_add[3])){//TA:#416
                                     $status->setStatusMessage(t('Error saving employee sites.'));
                                 }
                             }
@@ -483,6 +483,8 @@ class EmployeeController extends ReportFilterHelpers
                         $result_site['facility_type_phrase'] = $sites_info[$i]['facility_type_phrase'];
                         $result_site['facility_id'] = $sites_info[$i]['facility_id'];
                         $result_site['facility_name'] = $sites_info[$i]['facility_name'];
+                        $result_site['sds_model_name'] = $sites_info[$i]['sds_model_name'];//TA:#416
+                        $result_site['sds_team_name'] = $sites_info[$i]['sds_team_name'];//TA:#416
                         array_push($result_sites,$result_site);
                     }
                     $params['sites'] = $result_sites;
@@ -523,6 +525,8 @@ class EmployeeController extends ReportFilterHelpers
         $helper = new Helper();
         $this->viewAssignEscaped('facilities', $helper->getFacilities());
         $this->viewAssignEscaped('site_types', $helper->getFacilityTypes()); //TA:#224
+        $this->viewAssignEscaped('dsd_model', $helper->getEmployeeDSDModels()); //TA:#416
+        $this->viewAssignEscaped('dsd_team', $helper->getEmployeeDSDTeams()); //TA:#416
         $this->view->assign('relationships', DropDown::generateHtml('employee_relationship_option', 'relationship_phrase', $params['employee_relationship_option_id'], false, !$this->hasACL("edit_employee"), false));
         $this->view->assign('referrals', DropDown::generateHtml('employee_referral_option', 'referral_phrase', $params['employee_referral_option_id'], false, !$this->hasACL("edit_employee"), false));
         $this->view->assign('provided', DropDown::generateHtml('employee_training_provided_option', 'training_provided_phrase', $params['employee_training_provided_option_id'], false, !$this->hasACL("edit_employee"), false));

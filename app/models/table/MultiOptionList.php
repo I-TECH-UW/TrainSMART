@@ -117,11 +117,17 @@ class MultiOptionList extends ITechTable
 
 	public static function hardDeleteOption($table, $owner_col, $owner_id, $option_col, $option_id) {
     	$optionsTable = new MultiOptionList(array('name' => $table));
-    	$select = $optionsTable->select()->from($table)->where("$owner_col = ?",$owner_id)->where("$option_col = ?",$option_id);
-      	$row = $optionsTable->fetchAll($select)->current();
- 		if ( $row ) {
-            $row->delete();
+//     	$select = $optionsTable->select()->from($table)->where("$owner_col = ?",$owner_id)->where("$option_col = ?",$option_id);
+//       	$row = $optionsTable->fetchAll($select)->current();
+//  		if ( $row ) {
+//             $row->delete();
+//         }
+        //TA:#416.2
+        $where = "$owner_col = $owner_id";
+        if($option_col && $option_id){
+            $where .= " and " . $option_col . "=" . $option_id;
         }
+        $select = $optionsTable->delete("$owner_col = $owner_id");
 	}
 
 	public static function insertOption($table, $owner_col, $owner_id, $option_col, $option_id, $extra_col = '', $extra_value = '') {

@@ -435,9 +435,28 @@
             $('#new_mechanism').html(optList);
         }
 
-        //TA:#224
+        //TA:#224   TA:#416
         function addSite() {    
             var $oTable = $('#multi_sites_table').dataTable();
+            
+            var dsd_model_id = $('#dsd_model option:selected' ).val();
+            if(dsd_model_id == ""){
+        		alert("Specify value for '<?php tp('Service Delivery Model');?>'.");
+        		return false;
+        	}
+            var dsd_model = $('#dsd_model option:selected' ).text();
+            var dsd_team_id = $('#dsd_team option:selected' ).val();
+            var dsd_team = $('#dsd_team option:selected' ).text();
+            if(dsd_model == 'Facility site - Roving') {
+            	if(dsd_team_id == ""){
+            		alert("Specify value for '<?php tp('Service Delivery Team');?>'.");
+            		return false;
+            	}
+            }
+            if(dsd_team_id == ""){
+            	dsd_team = "";
+            }
+
             var province = '';
             var province_id = $('#province_id').val();
             if(province_id){
@@ -462,6 +481,19 @@
             	alert("Specify value for '<?php tp('Region C (Local Region)');?>'.");
                 return false;
             } 
+            
+            var site_name = '';
+            var site_id = $('#facilityInput').val();
+                if(site_id){
+                	site_name = $('#facilityInput option:selected' ).text();
+                }else{
+                	if(dsd_model == 'Facility site - Roving' || dsd_model == 'Facility site - Surge' ||
+                    		dsd_model == 'Facility site - Seconded' || dsd_model == 'Community site'){ 
+                	alert("Specify value for '<?php tp('Site Name');?>'.");
+                    return false;
+                	}
+                } 
+            
             var site_type = '';
             if($('#facilityType').val()){
             	site_type = $('#facilityType option:selected' ).text();
@@ -486,43 +518,17 @@
                 	hiv_fte_related = parseInt(hiv_fte_related);
                 }
             }
-            var non_hiv_fte_related = $('#non_hiv_fte_related' ).val();
-            if(non_hiv_fte_related == ""){
-            	non_hiv_fte_related = 0;
-            }else{
-                if(isNaN(non_hiv_fte_related)){
-               	 alert("Specify integer value for '<?php tp('Non-HIV Related FTE (Hrs)');?>'.");
-                 $('#non_hiv_fte_related' ).val('');
-                 return false;
-                }else{
-                	non_hiv_fte_related = parseInt(non_hiv_fte_related);
-                }
-            }
-                var newRowIDs = $oTable.fnAddData([province, district, region, site_type, site_name, hiv_fte_related, 
-                                                   non_hiv_fte_related,
+                var newRowIDs = $oTable.fnAddData([dsd_model, dsd_team, province, district, region, site_name, site_type, hiv_fte_related, 
                 '<input type="checkbox" onclick="deleteToggleSite(this);"/>']);
                var newRow = $($oTable.fnSettings().aoData[newRowIDs[0]].nTr);
                
-               var data = site_id + "," + hiv_fte_related + "," + non_hiv_fte_related;
+               var data = site_id + "," + dsd_model_id  + "," +  dsd_team_id  + "," +  hiv_fte_related;
                if($('#multi_sites_table_data_add').val() != ''){
                   	$('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + ";");
                   }
                   $('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + data);
                
                  calculateSiteTable(false);
-                 $('#province_id').val('0');
-                 $('#district_id').val('0');
-                 $('#district_id').attr('disabled', true);
-                 $('#region_c_id').val('0');
-                 $('#region_c_id').attr('disabled', true);
-                 $('#facilityType').val('0');
-                 $('#facilityType').attr('disabled', true);
-                 $('#facilityInput').val('0');
-                 $('#facilityInput').attr('disabled', true);
-                 $('#hiv_fte_related').val('');
-                 $('#hiv_fte_related').attr('disabled', true);
-                 $('#non_hiv_fte_related').val('');
-                 $('#non_hiv_fte_related').attr('disabled', true);
                 return true;   
         }
 
@@ -686,12 +692,9 @@
             var sites_count = 0;
         	var $rows = $("#multi_sites_table > tbody > tr");
             var hiv_fte_Accumulate = 0;
-            var non_hiv_fte_Accumulate = 0;
            for (var i = 0; i < $rows.length; i++) {
-           	var hiv_fte = parseInt($($rows[i]).children().first().next().next().next().next().next().text());
-           	var non_hiv_fte = parseInt($($rows[i]).children().first().next().next().next().next().next().next().text());
-           	hiv_fte_Accumulate = hiv_fte_Accumulate + hiv_fte;
-           	non_hiv_fte_Accumulate = non_hiv_fte_Accumulate + non_hiv_fte;
+        	   var hiv_fte = parseInt($($rows[i]).children().first().next().next().next().next().next().next().next().text());//TA:#416
+            hiv_fte_Accumulate = hiv_fte_Accumulate + hiv_fte;
            }
            if (isNaN(hiv_fte_Accumulate)){
         	   $('#hiv_related_fte_total').text("0");
@@ -700,23 +703,32 @@
                $('#hiv_related_fte_total').text(hiv_fte_Accumulate);
                sites_count = $rows.length;
            }
-           if (isNaN(non_hiv_fte_Accumulate)){
-        	   $('#non_hiv_related_fte_total').text("0");
-           } else{            
-               $('#non_hiv_related_fte_total').text(non_hiv_fte_Accumulate);
-           }
-           if((hiv_fte_Accumulate + non_hiv_fte_Accumulate) != $('#funded_hours_per_week').val() && verify){
-       		    //uncomment leter by request $("#hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
-       		    //uncomment leter by request$("#non_hiv_related_fte_total").attr('class', "totalMechanismPercentageNo");
-                alert("Totals of '<?php echo t('HIV related FTE (Hrs)');?>' and '<?php echo t('Non-HIV related FTE (Hrs)');?>' \nmust be equal to '<?php echo t('Funded hours per week')?>' value");
-                return false;
-           }else{
-           	//uncomment leter by request$("#hiv_related_fte_total").attr('class', "totalMechanismPercentageYes");
-           	//uncomment leter by request$("#non_hiv_related_fte_total").attr('class', "totalMechanismPercentageYes");
-           }
-           $("#multi_sites_table_data_count").val(sites_count); 
+           $("#multi_sites_table_data_count").val(sites_count);
+
+           //TA:#416
+           setDefaultSitesFields();
+            
            return true;
         };
+
+        //TA:#416
+        function setDefaultSitesFields(){
+       	 $('#province_id').val('0');
+         $('#province_id').attr('disabled', true);
+         $('#district_id').val('0');
+         $('#district_id').attr('disabled', true);
+         $('#region_c_id').val('0');
+         $('#region_c_id').attr('disabled', true);
+         $('#facilityType').val('');//TA:#416
+         $('#facilityType').attr('disabled', true);
+         $('#facilityInput').val('0');
+         $('#facilityInput').attr('disabled', true);
+         $('#hiv_fte_related').val('');
+         $('#hiv_fte_related').attr('disabled', true);
+         $('#dsd_model').val('');
+         $('#dsd_team').val('');
+         $('#dsd_team').attr('disabled', true);
+        }
 
         //TA:#224
         function deleteToggleSite(element) {
@@ -906,13 +918,14 @@
                         <table cellpadding="0" cellspacing="0" border="1" class="display tablegrid" id="multi_sites_table" style="width:100%">
                    <thead>
                 <tr>
+                    <th width='5%'><?php echo "<font color='red'>*</font>" . t('Service Delivery Model'); ?></th><!-- TA:#416 -->
+                    <th width='5%'><?php echo t('Service Delivery Team'); ?></th><!-- TA:#416 -->
                     <th width='10%'><?php echo "<font color='red'>*</font>" . t('Region A (Province)'); ?></th>
                     <th width='15%'><?php echo "<font color='red'>*</font>" . t('Region B (Health District)'); ?></th>
                     <th width='15%'><?php echo "<font color='red'>*</font>" . t('Region C (Local Region)'); ?></th>
-                    <th width='10%'><?php echo "<font color='red'>*</font>" . t('Site Type'); ?></th>
                     <th><?php echo "<font color='red'>*</font>" .t('Site Name'); ?></th>
+                    <th width='10%'><?php echo "<font color='red'>*</font>" . t('Site Type'); ?></th>
                     <th width='5%'><?php echo t('HIV Related FTE (Hrs)'); ?></th>
-                    <th width='5%'><?php echo t('Non-HIV related FTE (Hrs)'); ?></th>
                     <th width='5%'><?php tp("Delete?"); ?></th>               
                 </tr>
                 </thead>
@@ -923,8 +936,9 @@
                     <td class="siteTableFooter"></td>
                     <td class="siteTableFooter"></td>
                     <td class="siteTableFooter"></td>
+                    <td class="siteTableFooter"></td><!-- TA:#416 -->
+                    <td class="siteTableFooter"></td><!-- TA:#416 -->
                     <td class="siteTableFooter" id="hiv_related_fte_total">0</td>
-                    <td class="siteTableFooter" id="non_hiv_related_fte_total">0</td>
                     <td class="siteTableFooter"></td>
                 </tr>
                 </tfoot>
@@ -933,13 +947,15 @@
                 foreach ($this->employee['sites'] as $id => $siteData) {
                     ?>
                     <tr id='<?php echo $siteData['site_link_id'];?>'>
+                         <!-- TA:#416 -->
+                        <td id='<?php echo $siteData['dsd_model_id'];?>'><?php echo $siteData['sds_model_name']; ?></td>
+                        <td id='<?php echo $siteData['dsd_team_id'];?>'><?php echo $siteData['sds_team_name']; ?></td>
                         <td><?php echo $siteData['province_name']; ?></td>
                         <td><?php echo $siteData['district_name']; ?></td>
                         <td><?php echo $siteData['region_name']; ?></td>
-                        <td><?php echo $siteData['facility_type_phrase']; ?></td>
                         <td id='<?php echo $siteData['facility_id'];?>'><?php echo $siteData['facility_name']; ?></td>
+                        <td><?php echo $siteData['facility_type_phrase']; ?></td>
                         <td><?php echo $siteData['hiv_fte_related']; ?></td>
-                        <td><?php echo $siteData['non_hiv_fte_related']; ?></td>
                         <td><input type="checkbox" onclick="deleteToggleSite(this);"/></td>
                     </tr>
                 <?php } ?>
@@ -952,6 +968,22 @@
                    $helper = new Helper();
                    $db_locations_arr = $helper->get3TiersLocationsParentIds();
                    $label = "<span style='font-size:11px; font-weight:bold; color:#696969;'>";
+                   //TA:#416
+                   echo "<td width='80px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Service Delivery Model') . "</span><br>";
+                   echo "<select id='dsd_model' name='dsd_model' style='max-width: 100px; min-width: 100px; width: 100px !important'>";
+                   echo "<option value=''>-- select --</option>";
+                   foreach ($this->dsd_model as $ID => $model) {
+                       echo "<option value='" . $model['id'] . "'>" . $model['dsdmodel'] . "</option>";
+                   }
+                   echo "</select>";
+                   echo "<td width='80px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Service Delivery Team') . "</span><br>";
+                   echo "<select id='dsd_team' name='dsd_team' style='max-width: 100px; min-width: 100px; width: 100px !important'>";
+                   echo "<option value=''>-- select --</option>";
+                   foreach ($this->dsd_team as $ID => $team) {
+                       echo "<option value='" . $team['partner_id'] . "_" . $team['team_id'] . "'>" . $team['dsdteam'] . "</option>";
+                   }
+                   echo "</select>";
+                   //
                    echo  "<td width='150px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Region A (Province)') . "</span><br>";
                    renderFilter($this->locations, 1,'province_id', '', 'district_id', false, $this->viewonly);
                    echo "</td>";
@@ -961,17 +993,14 @@
                    echo "<td width='150px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Region C (Local Region)') . "</span><br>";
                    renderFilter($this->locations, 3, 'region_c_id', '', 'region_d_id', false, $this->viewonly);
                    echo "</td>";
-                   echo "<td width='150px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Site Type') . "</span><br>";
-                   echo renderFacilityTypesDropDown($this->site_types, '', $this->viewonly, '');  
-                   echo "</td>";
                    echo "<td width='230px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Site Name') . "</span><br>";
                    echo renderFacilityDropDownWithType($db_locations_arr, $this->facilities, '', $this->viewonly, '', true);
                    echo "</td>";
+                   echo "<td width='150px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Site Type') . "</span><br>";
+                   echo renderFacilityTypesDropDown($this->site_types, '', $this->viewonly, '');
+                   echo "</td>";
                    echo "<td width='50px' style='padding-right: 10px;' valign='bottom'>" . $label . t('HIV Related FTE (Hrs)') . "</span><br>";
                    echo "<input type='text' id='hiv_fte_related' name='hiv_fte_related' value='' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntegerKeyPress(this);'/>";
-                   echo "</td>";
-                   echo "<td width='50px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Non-HIV related FTE (Hrs)') . "</span><br>";
-                    echo "<input type='text' id='non_hiv_fte_related' name='non_hiv_fte_related' value='' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntegerKeyPress(this);'/>";
                    echo "</td>";
                    echo "<td style='padding-right: 10px;' valign='bottom'>" . $label . "&nbsp;" . "</span><br>";
                    echo '<input type="button" name="multiSite" value="'. t("Add") . '" class="insert"
@@ -979,7 +1008,7 @@
                    echo "</td>";
                    ?>
                    </tr>
-                   <tr><td></td><td></td><td></td><td></td><td colspan=2>
+                   <tr><td></td><td></td><td></td><td></td><td></td><td colspan=2>
                    <!-- TA:#381 -->
                    <a href='<?php echo$this->base_url;?>/site/add'><?php echo t('Insert a New') . space . t('Site');?></a>&nbsp;&nbsp;
                    <a href='<?php echo$this->base_url;?>/site/search'><?php echo t('View/Edit') . space . t('Site');?></a>&nbsp;&nbsp;
@@ -992,37 +1021,90 @@
                     $('#region_c_id').attr('style', 'width: 150px !important; min-width: 150px; max-width: 150px;');
                     $('#facilityInput').attr('style', 'width: 230px !important; min-width: 230px; max-width: 230px;');
                     $('#facilityType').attr('style', 'width: 150px !important; min-width: 150px; max-width: 150px;');
+                    elSubProvince = YAHOO.util.Dom.get('province_id');
                     elSubDistrict = YAHOO.util.Dom.get('region_c_id');
                     elFacilityType = YAHOO.util.Dom.get('facilityType');
                     elFacilityName = YAHOO.util.Dom.get('facilityInput');
                     elHIV_field = YAHOO.util.Dom.get('hiv_fte_related');
-                    elNONHIV_field = YAHOO.util.Dom.get('non_hiv_fte_related');
+                    eldsdmodel_field = YAHOO.util.Dom.get('dsd_model');//TA:#416
+                    eldsdteam_field = YAHOO.util.Dom.get('dsd_team');//TA:#416
                     YAHOO.util.Event.onDOMReady(function () {
                             elSubDistrict.onchange();
                     });
                     elSubDistrict.onchange = function () {
                         if(this.selectedIndex == 0){
-                            elFacilityType.disabled = true;
-                            elFacilityName.disabled = true;
-                            elFacilityType.selectedIndex = 0;
+                        	elFacilityName.disabled = true;
                             elFacilityName.selectedIndex = 0;
+                            elFacilityType.disabled = true;
+                            elFacilityType.selectedIndex = 0;
+                            elHIV_field.disabled = true;
+                        	elHIV_field.value = '';
                         }else{
-                            elFacilityType.disabled = false;
-                            elFacilityName.disabled = false;
+                       	 var selected = $("#dsd_model").find('option:selected').text();
+                         if($("#dsd_model").selectedIndex != 0){
+                             if (selected == 'Health systems strengthening only' ||
+                         		selected == 'Partner management and operations only'   ){
+                          	   $("#facilityInput option:contains(N/A)").attr('selected', true);
+                          	   $("#facilityType option:contains(N/A)").attr('selected', true);
+                          	   $("#facilityInput").disabled = true;
+                                 $("#facilityType").disabled = true;
+                         	    }else{
+                         	    	elFacilityName.disabled = false;
+                                    elFacilityType.disabled = false;
+                         	    }
+                         }
+//                          	elFacilityName.disabled = false;
+//                             elFacilityType.disabled = false;
+                            elHIV_field.disabled = false;
                         }
-                         elFacilityName.onchange();
                     }
-                    elFacilityName.onchange = function () {
-                        if(this.selectedIndex == 0){
-                        	elHIV_field.disabled = true;
-                        	elNONHIV_field.disabled = true;
-                            elHIV_field.value = '';
-                            elNONHIV_field.value = '';
+                    //TA:#416
+                    eldsdmodel_field.onchange = function () {
+                    	var selected = $(this).find('option:selected').text();
+                        if (selected == 'Facility site - Roving') {
+                        	eldsdteam_field.disabled = false;
                         }else{
-                        	elHIV_field.disabled = false;
-                        	elNONHIV_field.disabled = false;
+                        	eldsdteam_field.disabled = true;
                         }
+                        if(this.selectedIndex != 0){
+                            if (selected == 'Health systems strengthening only' ||
+                        		selected == 'Partner management and operations only'   ){
+                         	   $("#facilityInput option:contains(N/A)").attr('selected', true);
+                         	   $("#facilityType option:contains(N/A)").attr('selected', true);
+                         	   elFacilityName.disabled = true;
+                         	   elFacilityType.disabled = true;
+                        	    }else{
+                     	    	   elSubProvince.disabled = false;
+                    	    	    } 
+                            elSubProvince.disabled = false; 
+                        } 	
+                         eldsdteam_field.onchange();
                     }
+
+                   
+                    //TA:#416.2
+               elPartner = YAHOO.util.Dom.get("select_partner");
+               elSDSTeam = YAHOO.util.Dom.get("dsd_team");
+               elPartner.onchange = function () {
+               	setFilteredOption(this.selectedIndex, 'select_partner', 'dsd_team');
+               }
+               setFilteredOption(elPartner.selectedIndex, 'select_partner', 'dsd_team');
+               ///
+
+               function selectNASiteName(){
+            	   var selected = $("#dsd_model").find('option:selected').text();
+                   if($("#dsd_model").selectedIndex != 0){
+                       if (selected == 'Health systems strengthening only' ||
+                   		selected == 'Partner management and operations only'   ){
+                    	   $("#facilityInput option:contains(N/A)").attr('selected', true);
+                    	   $("#facilityType option:contains(N/A)").attr('selected', true);
+                    	   $("#facilityInput").disabled = true;
+                           $("#facilityType").disabled = true;
+                   	    }
+                   }
+               }
+          
+           
                     </script>
                         <?php
                         //TA:#224 => END

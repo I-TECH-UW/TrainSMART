@@ -53,6 +53,11 @@ class MultiAssign {
     // 
     
     // deleting   
+    if($delete_id = $this->controller->getSanParam('delete')) {
+        if($this->table === 'employee_partner_option_to_employee_team_option'){
+            MultiAssignList::hardDeleteOption($this->table, 'partner_id', $delete_id);   
+        }   
+    }
     
     // editing
     if($edit_id = $this->controller->getSanParam('edit')) {
@@ -60,11 +65,7 @@ class MultiAssign {
       foreach($assignedArray as $row) {
         $checked[] = $row["{$this->option_table}_id"];
       }
-    }
-    
-   
-    
-    
+    } 
 
     $output .= '
   	<div id="jsonTableHolder"></div>
