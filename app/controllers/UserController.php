@@ -124,6 +124,20 @@ class UserController extends ReportFilterHelpers {
 		} else {
 			$training_organizer_array = MultiOptionList::choicesList ( 'user_to_organizer_access', 'user_id', 0, 'training_organizer_option', 'training_organizer_phrase', false, false );
 			$this->viewAssignEscaped ( 'training_organizer', $training_organizer_array );
+			
+			//TA:#415
+			//$mechanism_array = MultiOptionList::choicesList ( 'user_to_mechanism_access', 'user_id', 0, 'mechanism_option', 'mechanism_phrase', false, false );
+			$db = $this->dbfunc();
+		$select = $db->select()
+		->from('mechanism_option', array())
+		->joinLeft('user_to_mechanism_access', 'user_to_mechanism_access.mechanism_option_id = mechanism_option.id', array())
+		->joinLeft('user_to_organizer_access', 'user_to_organizer_access.training_organizer_option_id=mechanism_option.owner_id', array())
+		->order('mechanism_phrase')
+		->columns(array('distinct(mechanism_option.id)', 'mechanism_option.owner_id' ,'mechanism_option.mechanism_phrase', 'user_to_mechanism_access.user_id'
+		));
+        $mechanism_array = $this->dbfunc()->fetchAll($select);
+        $this->viewAssignEscaped ( 'mechanism', $mechanism_array );
+			///
 
 			$this->view->assign ( 'status', $status );
 
@@ -160,6 +174,7 @@ class UserController extends ReportFilterHelpers {
 		//BS:#3,#4: add edit_partners, edit_mechanisms 20141014
 		//RR:11/17/2014 add 'edit_studenttutorinst', 'acl_delete_ps_cohort', 'view_studenttutorinst', 'acl_delete_ps_student', 'acl_delete_ps_grades'
         //BS:#3,#4: add delete_partners, delete_employee
+		//TA:#415 add 'mechanism_option_all'
 		$checkboxes = array('training_organizer_all', 'in_service', 'edit_course', 'view_course', 'edit_people', 
 				'view_people', 'edit_facility', 'view_create_reports', 'employees_module', 'edit_country_options', 
 				'add_edit_users', 'training_organizer_option_all', 'training_title_option_all', 'approve_trainings', 
@@ -175,8 +190,8 @@ class UserController extends ReportFilterHelpers {
 		        'acl_editor_refresher_course', 'import_training', 'import_training_location', 'import_facility', 'import_person', 'acl_editor_tutor_specialty', 
 		        'acl_editor_tutor_contract', 'acl_editor_commodityname', 'acl_editor_commoditytype', 'add_new_facility',
 		        'edit_employee', 'edit_partners', 'edit_mechanisms', 'edit_training_location','edit_studenttutorinst', 'acl_delete_ps_cohort', 'acl_delete_ps_grades', 'view_studenttutorinst',
-				'acl_delete_ps_student', 'delete_partners', 'delete_employee'
-		); 
+				'acl_delete_ps_student', 'delete_partners', 'delete_employee', 'mechanism_option_all'
+		);
 		foreach ($checkboxes as $value) {
 			$acl [$value] = ( ( $this->getParam ( $value ) == $value || $this->getParam($value) == 'on' ) ? $value : null);
 		}
@@ -197,10 +212,20 @@ class UserController extends ReportFilterHelpers {
 		foreach ($checkboxes as $key => $value) {
 			$acl [$value] = ( $this->getParam ( $key ) == $value ? $value : null );
 		}
-		
 		MultiOptionList::updateOptions ( 'user_to_acl', 'acl', 'user_id', $user_id, 'acl_id', $acl );
-		MultiOptionList::updateOptions ( 'user_to_organizer_access', 'training_organizer_option', 'user_id', $user_id, 'training_organizer_option_id', $this->getParam ( 'training_organizer_option_id' ) );
-
+		//TA:#145
+		if($this->getParam ( 'training_organizer_option_all' )){
+		    MultiOptionList::hardDeleteOption('user_to_organizer_access', 'user_id', $user_id,null, null);
+		}else{
+		    MultiOptionList::updateOptions ( 'user_to_organizer_access', 'training_organizer_option', 'user_id', $user_id, 'training_organizer_option_id', $this->getParam ( 'training_organizer_option_id' ) );
+		}
+		if($this->getParam ( 'mechanism_option_all' )){
+		    MultiOptionList::hardDeleteOption('user_to_mechanism_access', 'user_id', $user_id,null, null);
+		}else{
+		    MultiOptionList::updateOptions ( 'user_to_mechanism_access', 'mechanism_option', 'user_id', $user_id, 'mechanism_option_id', $this->getParam ( 'mechanism_option_id' ) );
+		}
+		/////
+		
 		// Capturing the institution access if necessary
 
 		if ($this->hasACL ( 'pre_service' )) {
@@ -391,6 +416,21 @@ class UserController extends ReportFilterHelpers {
 
 		$training_organizer_array = MultiOptionList::choicesList ( 'user_to_organizer_access', 'user_id', $user_id, 'training_organizer_option', 'training_organizer_phrase', false, false );
 		$this->viewAssignEscaped ( 'training_organizer', $training_organizer_array );
+		
+		//TA:#415
+		//$mechanism_array = MultiOptionList::choicesList ( 'user_to_mechanism_access', 'user_id', $user_id, 'mechanism_option', 'mechanism_phrase', false, false );
+		$db = $this->dbfunc();
+		$select = $db->select()
+		->from('mechanism_option', array())
+		->joinLeft('user_to_mechanism_access', 'user_to_mechanism_access.mechanism_option_id = mechanism_option.id', array())
+		->joinLeft('user_to_organizer_access', 'user_to_organizer_access.training_organizer_option_id=mechanism_option.owner_id', array())
+		->order('mechanism_phrase')
+		->columns(array('distinct(mechanism_option.id)', 'mechanism_option.owner_id' ,'mechanism_option.mechanism_phrase', 'user_to_mechanism_access.user_id'
+		));
+        $mechanism_array = $this->dbfunc()->fetchAll($select);
+		$this->viewAssignEscaped ( 'mechanism', $mechanism_array );
+		///
+		
 		$this->viewAssignEscaped ( 'user', $userArray );
 
         if ($this->hasACL('pre_service')) {
@@ -477,8 +517,6 @@ class UserController extends ReportFilterHelpers {
 		if ($user_id = $this->getSanParam ( 'id' )) {
 			$this->view->assign ( 'mode', 'edit' );
 			//set template
-
-
 			return $this->myaccountAction ();
 		} else {
 			$status = ValidationContainer::instance ();
