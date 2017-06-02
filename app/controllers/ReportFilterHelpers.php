@@ -1298,17 +1298,17 @@ class ReportFilterHelpers extends ITechController
                 $joined['link_mechanism_partner'] = 1;
             }
 
-            if (!array_key_exists('user_to_organizer_access', $joined)) {
-                $select->joinLeft(array('user_to_organizer_access'),
-                    'user_to_organizer_access.training_organizer_option_id = partner.organizer_option_id', array());
-                $joined['user_to_organizer_access'] = 1;
-            }
-
-            $select->where('user_to_organizer_access.user_id = ?', $uid);
+            //TA:#415 make visible results by user mechanism accessebility, it will be added by next code
+//             if (!array_key_exists('user_to_organizer_access', $joined)) {
+//                 $select->joinLeft(array('user_to_organizer_access'),
+//                     'user_to_organizer_access.training_organizer_option_id = partner.organizer_option_id', array());
+//                 $joined['user_to_organizer_access'] = 1;
+//             }
+//             $select->where('user_to_organizer_access.user_id = ?', $uid);           
+            ////
         }
 
         $s = $select->__toString();
-        //print $select;
         return $select;
     }
 }
