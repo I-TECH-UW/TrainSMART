@@ -424,8 +424,9 @@ class UserController extends ReportFilterHelpers {
 		->from('mechanism_option', array())
 		->joinLeft('user_to_mechanism_access', 'user_to_mechanism_access.mechanism_option_id = mechanism_option.id', array())
 		->joinLeft('user_to_organizer_access', 'user_to_organizer_access.training_organizer_option_id=mechanism_option.owner_id', array())
+		->group('mechanism_option.id')
 		->order('mechanism_phrase')
-		->columns(array('distinct(mechanism_option.id)', 'mechanism_option.owner_id' ,'mechanism_option.mechanism_phrase', 'user_to_mechanism_access.user_id'
+		->columns(array('mechanism_option.id', 'mechanism_option.owner_id' ,'mechanism_option.mechanism_phrase', 'user_to_mechanism_access.user_id'
 		));
         $mechanism_array = $this->dbfunc()->fetchAll($select);
 		$this->viewAssignEscaped ( 'mechanism', $mechanism_array );

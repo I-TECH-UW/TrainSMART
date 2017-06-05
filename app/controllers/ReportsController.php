@@ -9968,9 +9968,17 @@ die (__LINE__ . " - " . $sql);
                 if (!array_key_exists('mechanism_option', $tables)) {
                     $select->join('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
                     //TA:#415 make visible results by user mechanism accessebility
-                    $select->joinLeft(array('user_to_mechanism_access'),
-                        'user_to_mechanism_access.mechanism_option_id = mechanism_option.id', array());
-                    $select->where('user_to_mechanism_access.user_id = ?', $this->isLoggedIn());
+                    if (!$this->hasACL('mechanism_option_all')) {
+                        $select->joinLeft(array('user_to_mechanism_access'),
+                            'user_to_mechanism_access.mechanism_option_id = mechanism_option.id', array());
+                        $select->where('user_to_mechanism_access.user_id = ?', $this->isLoggedIn());
+                    }else{
+                        if (!$this->hasACL('training_organizer_option_all')) {
+                            $select->joinLeft(array('user_to_organizer_access'),
+                                'user_to_organizer_access.training_organizer_option_id = mechanism_option.owner_id', array());
+                            $select->where('user_to_organizer_access.user_id = ?', $this->isLoggedIn());
+                        }
+                    }
                     ////
                 }
 
