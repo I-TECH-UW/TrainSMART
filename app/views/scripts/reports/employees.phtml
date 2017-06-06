@@ -56,8 +56,11 @@
                        //TA:#293.1
                         region_filters_dropdown( $this, $this->locations, $this->criteria, true, true );
                        
+                        //TA:#423
+                        if ($this->setting['display_employee_base']) {
                         echo labelAndField($this, t('Based at'),
                             $this->formSelect('based_at', isset($this->criteria['based_at']) ? $this->criteria['based_at'] : null, array(), $this->bases), 'based_at');
+                        }
 
                         //TA:#293.1
 //                         echo labelAndField($this, t('Site') . space . t('Name'),
