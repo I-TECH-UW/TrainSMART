@@ -60,6 +60,17 @@ class EmployeeController extends ReportFilterHelpers
         $partners = new DashviewEmployee();
         $details = $partners->fetchdetails($allowedWhereClause);
         $this->view->assign('getins', $details);
+        
+        //TA:#412
+        $db = $this->dbfunc(); 
+        $select = $db->select()->from('employee', array());
+        $select->where('agreement_end_date < now()');
+        $select->columns('agreement_end_date');
+        print $select . "<br><br>";
+        $position_updates = $db->fetchAll($select);
+        print_r($position_updates);
+         $this->view->assign('position_updates', $position_updates);
+        ///
 
         /****************************************************************************************************************/
         /* Attached Files */
