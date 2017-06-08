@@ -115,7 +115,7 @@ class MultiOptionList extends ITechTable
     	return $rowArray;
 	}
 
-	public static function hardDeleteOption($table, $owner_col, $owner_id, $option_col, $option_id) {
+public static function hardDeleteOption($table, $owner_col, $owner_id, $option_col, $option_id) {
     	$optionsTable = new MultiOptionList(array('name' => $table));
 //     	$select = $optionsTable->select()->from($table)->where("$owner_col = ?",$owner_id)->where("$option_col = ?",$option_id);
 //       	$row = $optionsTable->fetchAll($select)->current();
