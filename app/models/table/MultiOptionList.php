@@ -166,9 +166,10 @@ public static function hardDeleteOption($table, $owner_col, $owner_id, $option_c
     * @param array $extra_values - array or array of arrays with values to update ; the indexes must match $valuesFromPost and $extra_col
     */
     public static function updateOptions($linktable, $optionLookupTable, $owner_col, $owner_id, $option_col, $valuesFromPost, $extra_col = '', $extra_values = array()) {
-        if ( $valuesFromPost === null ) {
-            return;
-        }
+        //TA:#415.2 it does not work if all checkboxes are off
+//         if ( $valuesFromPost === null ) {
+//             return;
+//         }
         $optionRowsArray = MultiOptionList::choicesList($linktable,$owner_col,$owner_id, $optionLookupTable, false, $option_col);
 
         // get extra field value(s) associate drop-down
@@ -192,7 +193,6 @@ public static function hardDeleteOption($table, $owner_col, $owner_id, $option_c
             //turn off
             if ( $option_row[$owner_col] and (($valuesFromPost == null) or ((array_search($option_id,$valuesFromPost) === false) and
                 (!isset($valuesFromPost[$option_id]) or !$valuesFromPost[$option_id])))) {
-
                 MultiOptionList::hardDeleteOption($linktable, $owner_col,$owner_id,$option_col, $option_id);
             //turn on
             } else if ( (!$option_row[$owner_col]) and $valuesFromPost and (array_search($option_id,$valuesFromPost) !== false) ) {
