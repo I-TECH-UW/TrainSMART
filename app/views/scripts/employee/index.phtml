@@ -92,9 +92,9 @@ print ScriptContainer::$instance->renderJSHead();
 ?>
 <tr style="cursor : pointer;" class="GradeA" onclick="location='<?php echo $link;?>'">
 							<td class=""><?php echo $getresult['employee_code'];  ?></td>
-							<td class=""><?php echo explode(" ",$getresult['agreement_end_date'])[0];  ?></td>
-							<td class=""><?php echo explode(" ",$getresult['transition_date'])[0];  ?></td>
-							<td class=""><?php echo explode(" ",$getresult['transition_complete_date'])[0];  ?></td>
+							<td class=""><?php echo $getresult['agreement_end_date'];  ?></td>
+							<td class=""><?php echo $getresult['transition_date'];  ?></td>
+							<td class=""><?php echo $getresult['transition_complete_date'];  ?></td>
 							<td class=""><?php echo $getresult['mechanism_end_date'];  ?></td>						
 						</tr>
 <?php

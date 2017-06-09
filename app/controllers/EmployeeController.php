@@ -63,13 +63,16 @@ class EmployeeController extends ReportFilterHelpers
         
         //TA:#412
         $db = $this->dbfunc(); 
-        $select = $db->select()->from('employee', array());
-        $select->joinLeft('link_mechanism_employee','employee.id = link_mechanism_employee.employee_id', array());
-        $select->joinLeft('mechanism_option','link_mechanism_employee.mechanism_option_id = mechanism_option.id', array());
-        $select->where('is_active=1');
-        $select->where('partner_id in (select training_organizer_option_id from user_to_organizer_access where user_id=' . $this->isLoggedIn() . ')');
-        $select->where('agreement_end_date < now() OR transition_date < now() OR transition_complete_date < now() OR mechanism_option.end_date > now()');
-        $select->columns(array('employee.id', 'employee_code' ,'agreement_end_date', 'transition_date', 'transition_complete_date', 'mechanism_option.end_date as mechanism_end_date'));
+        $select = "SELECT employee.id, employee.employee_code,
+    SUBSTRING_INDEX(employee.agreement_end_date, ' ', 1) as agreement_end_date,
+    SUBSTRING_INDEX(employee.transition_date, ' ', 1) as transition_date, 
+    SUBSTRING_INDEX(employee.transition_complete_date, ' ', 1) as transition_complete_date,
+    mechanism_option.end_date as mechanism_end_date
+FROM employee
+LEFT JOIN link_mechanism_employee ON employee.id = link_mechanism_employee.employee_id
+LEFT JOIN mechanism_option ON link_mechanism_employee.mechanism_option_id = mechanism_option.id
+WHERE (is_active = 1) AND (partner_id in (select training_organizer_option_id from user_to_organizer_access where user_id = " . $this->isLoggedIn() . "))
+AND (agreement_end_date < now() OR transition_date < now() OR transition_complete_date < now() OR mechanism_option.end_date > now())";
         $position_updates = $db->fetchAll($select);
          $this->view->assign('position_updates', $position_updates);
         ///
