@@ -521,7 +521,8 @@ class EmployeeController extends ReportFilterHelpers
         $this->view->assign('roles', DropDown::generateHtml('employee_role_option', 'role_phrase', $params['employee_role_option_id'], false, !$this->hasACL("edit_employee"), false));
         $this->view->assign('cadres_data',Employee::getAllEmployeeQualifications()); //TA:#329
         $this->view->assign('transitions', DropDown::generateHtml('employee_transition_option', 'transition_phrase', $params['employee_transition_option_id'], false, !$this->hasACL("edit_employee"), false));
-        $this->view->assign('transitions_complete', DropDown::generateHtml('employee_transition_option', 'transition_phrase', $params['employee_transition_complete_option_id'], false, !$this->hasACL("edit_employee"), false, false, array('name' => 'employee_transition_complete_option_id'), true));
+        //TA:#422 $this->view->assign('transitions_complete', DropDown::generateHtml('employee_transition_option', 'transition_phrase', $params['employee_transition_complete_option_id'], false, !$this->hasACL("edit_employee"), false, false, array('name' => 'employee_transition_complete_option_id'), true));
+        $this->view->assign('transitions_complete', DropDown::generateHtml('employee_transition_complete_option', 'transition_complete_phrase', $params['employee_transition_complete_option_id'], false, !$this->hasACL("edit_employee"), false, false, array('name' => 'employee_transition_complete_option_id'), true));
         $helper = new Helper();
         $this->viewAssignEscaped('facilities', $helper->getFacilities());
         $this->viewAssignEscaped('site_types', $helper->getFacilityTypes()); //TA:#224
