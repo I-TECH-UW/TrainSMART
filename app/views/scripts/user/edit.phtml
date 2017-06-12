@@ -99,6 +99,16 @@
 								for=employees_module> <?php print(t('Employees Access'));?></label>
 						</div>
 					</div>
+					<!-- TA:#421 START -->
+					<div class="fieldLabelThin"> <?php print(t('Positions'));?></div>
+					<div class="fieldInput width100">
+						<div class="float50">
+							<input type="checkbox" name="position_access" id="position_access"
+								<?php if ( array_search('position_access', $this->user['acls']) !== false) echo 'CHECKED'; ?> /><label
+								for=position_access> <?php print(t('View/add positions'));?></label>
+						</div>
+					</div>
+					<!-- TA:#421 END -->
 						<?php endif; ?>
 						<br /> <br />
 					<div class="fieldLabelThin"> <?php tp('Restrict Access');?></div>
@@ -890,6 +900,23 @@
 			e.preventDefault();
 			adminChecks(0);
 		})
+
+		//TA:#421
+		if($('#employees_module').attr('checked')){
+			$("#position_access").prop('disabled',false);
+		}else{
+			 $("#position_access").prop('disabled',true);
+		}
+		$('#employees_module').click(function (e) {
+			if($('#employees_module').attr('checked')){
+				$("#position_access").prop('disabled',false);
+			}else{
+				 $("#position_access").prop('disabled',true);
+				 $("#position_access").prop('checked',false);
+			}
+		})	
+		///
+		
 	});
 
 	function adminChecks(val) { /* check all admin options btn */

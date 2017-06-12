@@ -162,6 +162,12 @@ class EmployeeController extends ReportFilterHelpers
         if (!$this->hasACL('employees_module')) {
             $this->doNoAccessError();
         }
+        
+        //TA:#421
+        if (!$this->hasACL('position_access')) {
+            $this->doNoAccessError();
+        }
+        
         require_once('models/table/Employee.php');
         $status = ValidationContainer::instance();
         $id = $this->getSanParam('id');
@@ -246,6 +252,11 @@ class EmployeeController extends ReportFilterHelpers
         
         require_once('models/table/Employee.php');//TA:#293 
         if (!$this->hasACL('employees_module')) {
+            $this->doNoAccessError();
+        }
+        
+        //TA:#421
+        if (!$this->hasACL('position_access')) {
             $this->doNoAccessError();
         }
 

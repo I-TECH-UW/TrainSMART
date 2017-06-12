@@ -175,6 +175,7 @@ class UserController extends ReportFilterHelpers {
 		//RR:11/17/2014 add 'edit_studenttutorinst', 'acl_delete_ps_cohort', 'view_studenttutorinst', 'acl_delete_ps_student', 'acl_delete_ps_grades'
         //BS:#3,#4: add delete_partners, delete_employee
 		//TA:#415 add 'mechanism_option_all'
+		//TA:#421 add 'position_access'
 		$checkboxes = array('training_organizer_all', 'in_service', 'edit_course', 'view_course', 'edit_people', 
 				'view_people', 'edit_facility', 'view_create_reports', 'employees_module', 'edit_country_options', 
 				'add_edit_users', 'training_organizer_option_all', 'training_title_option_all', 'approve_trainings', 
@@ -190,7 +191,7 @@ class UserController extends ReportFilterHelpers {
 		        'acl_editor_refresher_course', 'import_training', 'import_training_location', 'import_facility', 'import_person', 'acl_editor_tutor_specialty', 
 		        'acl_editor_tutor_contract', 'acl_editor_commodityname', 'acl_editor_commoditytype', 'add_new_facility',
 		        'edit_employee', 'edit_partners', 'edit_mechanisms', 'edit_training_location','edit_studenttutorinst', 'acl_delete_ps_cohort', 'acl_delete_ps_grades', 'view_studenttutorinst',
-				'acl_delete_ps_student', 'delete_partners', 'delete_employee', 'mechanism_option_all'
+				'acl_delete_ps_student', 'delete_partners', 'delete_employee', 'mechanism_option_all', 'position_access'
 		);
 		foreach ($checkboxes as $value) {
 			$acl [$value] = ( ( $this->getParam ( $value ) == $value || $this->getParam($value) == 'on' ) ? $value : null);
