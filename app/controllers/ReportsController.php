@@ -9981,6 +9981,10 @@ die (__LINE__ . " - " . $sql);
                     }
                     ////
                 }
+                
+                if (!array_key_exists('employee.employee_code', $cols)) {
+                    $select->columns('employee.employee_code');
+                }
 
                 if (!array_key_exists('mechanism_option.mechanism_phrase', $cols)) {
                     $select->columns('mechanism_option.mechanism_phrase');
@@ -9988,13 +9992,14 @@ die (__LINE__ . " - " . $sql);
                 if (!array_key_exists('mechanism_option.end_date', $cols)) {
                     $select->columns(array('mechanism_end_date' => new Zend_Db_Expr("DATE_FORMAT(mechanism_option.end_date, '%d/%m/%Y')")));
                 }
-                if (!array_key_exists('employee.employee_code', $cols)) {
-                    $select->columns('employee.employee_code');
-                }
 
                 $c = array_map(
                     function ($item) {
                         $header_names = array(
+                             'is_active' => t('Is Active'), //TA:#419
+                            'employee_dsdmodel_phrase' => t('Service Delivery Model'), //TA:#419
+                            'employee_dsdteam_phrase' => t('Service Delivery Team'), //TA:#419
+                            'hiv_fte_related' => t('HIV Related FTE (Hrs)'), //TA:#419
                             'partner' => t('Partner'),
                             'province_name' => t('Region A (Province)'),
                             'district_name' => t('Region B (Health District)'),
@@ -10029,6 +10034,7 @@ die (__LINE__ . " - " . $sql);
                 if (count($c)) {
                     $this->view->assign('headers', $c);
                     $f = $db->fetchAll($select);
+                    print "<br><br>" .$select;
                     $this->view->assign('output', $f);
                 }
             }
@@ -10063,6 +10069,24 @@ die (__LINE__ . " - " . $sql);
                 ->from('employee_qualification_option', array('id', 'qualification_phrase'))
                 ->order('qualification_phrase ASC')
             );
+        
+        //TA:#419
+        $employee_codes = $choose + $db->fetchPairs($db->select()
+            ->from('employee', array('id', 'employee_code'))
+            ->order('employee_code ASC')
+        );
+        
+        //TA:#419
+        $dsd_models = $choose + $db->fetchPairs($db->select()
+            ->from('employee_dsdmodel_option', array('id', 'employee_dsdmodel_phrase'))
+            ->order('employee_dsdmodel_phrase ASC')
+        );
+        
+        //TA:#419
+        $dsd_teams = $choose + $db->fetchPairs($db->select()
+            ->from('employee_dsdteam_option', array('id', 'employee_dsdteam_phrase'))
+            ->order('employee_dsdteam_phrase ASC')
+        );
 
         $roles = $choose + $db->fetchPairs($db->select()
                 ->from('employee_role_option', array('id', 'role_phrase'))
@@ -10083,6 +10107,9 @@ die (__LINE__ . " - " . $sql);
         $this->view->assign('facilities', $facilities);
         $this->view->assign('facilityTypes', $facilityTypes);
         $this->view->assign('classifications', $classifications);
+        $this->view->assign('employee_codes', $employee_codes); //TA:#419
+        $this->view->assign('dsd_models', $dsd_models); //TA:#419
+        $this->view->assign('dsd_teams', $dsd_teams); //TA:#419
         $this->view->assign('roles', $roles);
         $this->view->assign('transitions', $transitions);
         $this->view->assign('locations', $locations);

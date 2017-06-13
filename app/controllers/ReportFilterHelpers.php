@@ -823,6 +823,21 @@ class ReportFilterHelpers extends ITechController
 
         $select = $db->select()
             ->from('employee', array());
+        
+        print_r($criteria);
+        //TA:#419
+        if (isset($criteria['show_is_active']) && $criteria['show_is_active']) {
+           $select->columns("IF(employee.is_active = 1,'Active','Inactive') as is_active");
+        }
+        if(isset($criteria['is_active'])) {
+            $select->where('is_active=' . $criteria['is_active']);
+        }
+        if (isset($criteria['show_employee_code']) && $criteria['show_employee_code']) {
+        } 
+        if(isset($criteria['employee_code'])) {
+             $select->where('employee.id IN (?)', $criteria['employee_code']);
+        }
+        /////////
 
         if (isset($criteria['show_partner']) && $criteria['show_partner']) {
             if (!array_key_exists('partner', $joined)) {
@@ -942,6 +957,7 @@ class ReportFilterHelpers extends ITechController
             if (!array_key_exists('location', $joined)) {
                  //TA:#224 
                     $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $joined['link_employee_facility'] = 1;//TA:#419
                     $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
                     $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
@@ -953,6 +969,56 @@ class ReportFilterHelpers extends ITechController
                 $select->where('region_c_id = ?', $ids);
             }
         }
+        
+        //TA:#419
+        if ((isset($criteria['show_dsd_model']) && $criteria['show_dsd_model']) || isset($criteria['dsd_model'])) {
+            if (!array_key_exists('link_employee_facility', $joined)) {
+                $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                $joined['link_employee_facility'] = 1;
+            }
+            if (!array_key_exists('employee_dsdmodel_option', $joined)) {
+                $select->join('employee_dsdmodel_option', 'link_employee_facility.dsd_model_id = employee_dsdmodel_option.id', array());
+                $joined['employee_dsdmodel_option'] = 1;
+            }
+            if(isset($criteria['show_dsd_model']) && $criteria['show_dsd_model']){
+                $select->columns("employee_dsdmodel_option.employee_dsdmodel_phrase");
+            }
+            if(isset($criteria['dsd_model'])) {
+                $select->where('link_employee_facility.dsd_model_id IN (?)', $criteria['dsd_model']);
+            }
+        }
+        if ((isset($criteria['show_dsd_team']) && $criteria['show_dsd_team']) || isset($criteria['dsd_team'])) {
+            if (!array_key_exists('link_employee_facility', $joined)) {
+                $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                $joined['link_employee_facility'] = 1;
+            }
+            if (!array_key_exists('employee_dsdteam_option', $joined)) {
+                $select->join('employee_dsdteam_option', 'link_employee_facility.dsd_team_id = employee_dsdteam_option.id', array());
+                $joined['employee_dsdteam_option'] = 1;
+            }
+            if(isset($criteria['show_dsd_team']) && $criteria['show_dsd_team']){
+                $select->columns("employee_dsdteam_option.employee_dsdteam_phrase");
+            }
+            if(isset($criteria['dsd_team'])) {
+                $select->where('link_employee_facility.dsd_team_id IN (?)', $criteria['dsd_team']);
+            }
+        }
+        if ((isset($criteria['show_fte_min']) && $criteria['show_fte_min']) || $criteria['fte_min'] || $criteria['fte_max']) {
+            if (!array_key_exists('link_employee_facility', $joined)) {
+                $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                $joined['link_employee_facility'] = 1;
+            }
+            if(isset($criteria['show_fte_min']) && $criteria['show_fte_min']){
+                $select->columns("link_employee_facility.hiv_fte_related");
+            }
+            if($criteria['fte_min']){
+                $select->where("link_employee_facility.hiv_fte_related > " . $criteria['fte_min']);
+            }
+            if($criteria['fte_max']){
+                $select->where("link_employee_facility.hiv_fte_related < " . $criteria['fte_max']);
+            }
+        }
+        ////
 
         // based at
         if (isset($criteria['show_based_at']) && $criteria['show_based_at']) {
@@ -1309,6 +1375,7 @@ class ReportFilterHelpers extends ITechController
         }
 
         $s = $select->__toString();
+        print $s;
         return $select;
     }
 }
