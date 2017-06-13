@@ -570,6 +570,10 @@ class EmployeeController extends ReportFilterHelpers
         if (!$this->hasACL('employees_module')) {
             $this->doNoAccessError();
         }
+        //TA:#421
+        if (!$this->hasACL('position_access')) {
+            $this->doNoAccessError();
+        }
 
         $db = $this->dbfunc();
 
