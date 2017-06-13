@@ -9,11 +9,18 @@
 	print ScriptContainer::$instance->renderCSSHead();
 	print ScriptContainer::$instance->renderJSHead();	?>
 
+        <style>
+            .dataTables_wrapper { min-height: 0; }
+        </style>
 		<script type="text/javascript" charset="utf-8">
 
 		var cohort_ids = [];
-		
+		var prior_courses = <?php echo json_encode(array_flip($this->prior_education_courses), JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+
 			$(document).ready(function() {
+
+			    $('#prior_courses_to_delete').data('assoc_ids', []);
+
 				/* Funding - set checkbox if not empty*/
 				$("input[name^=fundingamount]").keyup(function (e) {
 					var id = $(this).attr('id');
@@ -54,6 +61,27 @@
                     "bFilter": false,
                     "iDisplayLength": -1,
                     "bLengthChange": false
+                });
+
+                $("#prior_course_transcript tbody").click(function(event) {
+                    var $n = $(event.target.parentNode);
+                    var children = $n.children('td');
+                    var oTable = $('#prior_course_transcript').dataTable();
+
+                    if (confirm("Do you want to delete the " + children[0].innerText + " course?")) {
+                        var associd = $n.data('associd');
+                        if ((associd !== null) && (typeof associd !== 'undefined')) {
+                            $('#prior_courses_to_delete').data('assoc_ids').push(associd);
+                        }
+                        else {
+                            delete $('#prior_courses_to_add').data('new_courses')[prior_courses[children[0].innerText]];
+                        }
+                        oTable.fnDeleteRow($n[0]);
+                    }
+                    $(oTable.fnSettings().aoData).each(function (){
+                        $(this.nTr).removeClass('row_selected');
+                    });
+                    $(event.target.parentNode).addClass('row_selected');
                 });
 
 				$( "#dialog-form-license" ).dialog({
@@ -119,9 +147,34 @@
 						$( "#dialog-form-practicum" ).dialog( "open" );
 				});
 
-
-
+                $('#prior_courses_to_add').data('new_courses', {});
 			});
+
+			function savePriorCourse() {
+			    var $courseBox = $('#prior_course_id option:selected');
+			    var $gradeBox = $('#prior_course_grade');
+                var courseID = $courseBox.val();
+                var courseName = $courseBox.text();
+                var grade = $gradeBox.val();
+
+                if (courseID != '0' && grade.length > 0) {
+
+                    $('#prior_courses_to_add').data('new_courses')[courseID] = grade;
+                    var oTable = $('#prior_course_transcript').dataTable();
+                    oTable.fnAddData([courseName, grade]);
+
+                    $('#prior_course_id').val('0').change();
+                    $gradeBox.val('');
+                }
+            }
+
+            function processCoursesAndSubmit() {
+                var $newCoursesElement = $('#prior_courses_to_add');
+                var $deleteCoursesElement = $('#prior_courses_to_delete');
+                $newCoursesElement.val(JSON.stringify($newCoursesElement.data('new_courses')));
+                $deleteCoursesElement.val(JSON.stringify($deleteCoursesElement.data('assoc_ids')));
+                document.getElementById('peopleadd').submit();
+            }
 
 			/* Get the rows which are currently selected */
 			function fnGetSelected( oTableLocal ){
@@ -708,7 +761,49 @@ if($column_count === 3){
 									echo "<label>" . t($this->escape($this->label_schoolstartdate)) . "</label>";
 									echo "<input type='text' class='calendarbox' name='schoolstartdate' id='schoolstartdate' value='" . $this->escape($this->schoolstartdate) . "';>";
 								}
-								if($this->escape($this->label_equivalence)){
+
+                            if ($this->setting['display_student_prior_transcript']) {
+
+                                ?>
+
+                                <p style="margin-bottom: 2em;">&nbsp;</p>
+                                <table cellpadding="0" cellspacing="0" border="0" class="tablegrid_show_all"
+                                       id="prior_course_transcript" style="width: 100%;">
+                                    <thead>
+                                    <tr>
+                                        <th><?php echo t('Course Name'); ?></th>
+                                        <th><?php echo t('Course Grade'); ?></th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    <?php
+                                    foreach ($this->prior_education as $course_info) {
+                                        ?>
+                                        <tr class="GradeA" style="cursor : pointer;" data-associd="<?php echo $course_info['id'] ?>">
+                                            <td><?php echo $course_info['course_name'] ?></td>
+                                            <td><?php echo $course_info['course_grade'] ?></td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
+                                    </tbody>
+                                </table>
+                                <input type="hidden" id="prior_courses_to_add" name="prior_courses_to_add">
+                                <input type="hidden" id="prior_courses_to_delete" name="prior_courses_to_delete">
+
+                                <?php
+                                echo "<br>";
+                                echo $this->formLabel('prior_course_id', t('Prior Education Course:'), array());
+                                echo $this->formSelect('prior_course_id', '', array('class' => 'fieldInput'), $this->prior_education_courses);
+                                echo $this->formLabel('prior_course_grade', t('Grade:'), array());
+                                echo $this->formText('prior_course_grade', '', array('class' => 'fieldInput'));
+                                echo $this->formLabel('save_prior_course', '', array());
+                                echo $this->formButton('save_prior_course', 'Record Grade', array('class' => 'tsbutton green large', 'style' => 'margin-bottom: 2em;',
+                                    'onclick' => 'savePriorCourse();'));
+                            }
+                                if($this->escape($this->label_equivalence)){
 									echo "<label>" . t($this->escape($this->label_equivalence)) . "</label>";
 									$val = 0;
 									$checked = '';
@@ -826,7 +921,7 @@ if($column_count === 3){
 							<div  style="float : right; margin-right:12px;" >
 							     <!-- TA:51  10/05/2015-->
 							    <input type="submit" name="persondelete" value="<?php echo t('Delete')?> &raquo;" class="tsbutton green large" onClick="return deleteConfirm();">
-								<input type="submit" name="personupdate" value="<?php echo t('Update')?> &raquo;" class="tsbutton green large">
+								<input type="submit" id="personupdate" name="personupdate" value="<?php echo t('Update')?> &raquo;" class="tsbutton green large" onClick="processCoursesAndSubmit();">
 								<a href="../../../people/people"> <input type="button"  value="<?php echo t('Back')?>" class="tsbutton green large"></a>
 							</div>
 							<div class="clear pad20"></div>
