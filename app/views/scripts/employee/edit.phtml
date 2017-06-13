@@ -811,7 +811,8 @@
                         <!-- TA:#309 -->
                         <div class="fieldLabel"><label><?php echo t('Active'); ?> HRH</label></div>
                         <!-- TA:#411 by default is off and add action on check-->
-                        <input type="checkbox" name="is_active" id="is_active" style="margin : 4px 5px 12px 0px;" <?php echo ($this->employee['is_active'] === '1')?'checked="checked"':'';?> onchange=setActive();>
+                        <!-- TA:#428 by default is on -->
+                        <input type="checkbox" name="is_active" id="is_active" style="margin : 4px 5px 12px 0px;" <?php echo ($this->employee['is_active'] === '1' || $this->mode == 'add')?'checked="checked"':'';?> onchange=setActive();>
                         
                         <?php
                         //TA:#329 change order those two fields and add filter

@@ -105,14 +105,28 @@
 					<div class="fieldInput">
 						<div class="float50">
 							<label for="acl_orgAll"><input type="radio" id="acl_orgAll"
-								name="acl_restrict" value="" onchange="setOrgAccessStatus();"
-								<?php if ( array_search('training_organizer_option_all',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('All organizations data');?></label>
+								name="training_organizer_option_all" value="training_organizer_option_all" onchange="setOrgAccessStatus();"
+								<?php if ( array_search('training_organizer_option_all',$this->user['acls']) !== false ) echo 'CHECKED'; ?>/> <?php tp('All organizations data');?></label>
 						</div>
-						<label for="acl_restrict"><input type="radio" id="acl_restrict"
-							name="acl_restrict" value="acl_restrict"
+						<label for="acl_org_restrict"><input type="radio" id="acl_org_restrict"
+							name="training_organizer_option_all" value=""
 							<?php if ( array_search('training_organizer_option_all',$this->user['acls']) === false ) echo 'CHECKED'; ?>
-							onchange="setOrgAccessStatus();"> <?php tp('Only selected organizations');?></label>
+							onchange="setOrgAccessStatus();"/> <?php tp('Only selected organizations');?></label>
 					</div>
+					<!-- TA:#415 START -->
+					<div class="fieldLabelThin"> </div>
+					<div class="fieldInput">
+						<div class="float50">
+							<label for="acl_mechanismAll"><input type="radio" id="acl_mechanismAll"
+								name="mechanism_option_all" value="mechanism_option_all" onchange="setMechanismAccessStatus();"
+								<?php if ( array_search('mechanism_option_all',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('All mechanism data');?></label>
+						</div>
+						<label for="acl_mechanism_restrict"><input type="radio" id="acl_mechanism_restrict"
+							name="mechanism_option_all" value=""
+							<?php if ( array_search('mechanism_option_all',$this->user['acls']) === false ) echo 'CHECKED'; ?>
+							onchange="setMechanismAccessStatus();"> <?php tp('Only selected mechanisms');?></label>
+					</div>
+					<!-- TA:#415 END -->
 					<br /> <br />
 					<div class="fieldLabelThin"> <?php tp('Reports');?></div>
 					<div class="fieldInput width100">
@@ -310,12 +324,12 @@
 						<div class="fieldLabelThin"></div>
 						<div class="fieldInput">
 							<div class="float50">
-								<input type="checkbox" name="training_organizer_option_all"
+								<!-- TA: #415 we do not need this check box it redundant with 'check all' <input type="checkbox" name="training_organizer_option_all"
 									id="training_organizer_option_all"
 									value="training_organizer_option_all"
 									<?php if ( array_search('training_organizer_option_all',$this->user['acls']) !== false ) echo 'CHECKED'; ?>
 									onchange="setOrgAccessStatus();" /><label
-									for="training_organizer_option_all"> <?php tp('All Training Organizers');?></label>
+									for="training_organizer_option_all"> <?php tp('All Training Organizers');?></label>-->
 							</div>
 						</div>
 						<div class="fieldLabelThin"></div>
@@ -325,14 +339,38 @@
 						</div>
 							<?php
 							foreach( $this->training_organizer as $org ) {
-								echo '<div><div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50"><input type="checkbox" name="training_organizer_option_id[]" id="training_organizer_option_'.$org['id'].'" value="'.$org['id'].'" '.(@$org['user_id']? 'CHECKED':'').' /><label for="training_organizer_option_'.$org['id'].'">'.$org['training_organizer_phrase'].'</label></div></div></div>';
+								echo '<div><div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50">
+    <input type="checkbox" name="training_organizer_option_id[]" id="training_organizer_option_'.$org['id'].'" value="'.$org['id'].'" '.(@$org['user_id']? 'CHECKED':'').' onclick="orginizer_selected(this);"/><label for="training_organizer_option_'.$org['id'].'">'.$org['training_organizer_phrase'].'</label></div></div></div>';
+							}
+							?>	
+				</fieldset>
+				
+				<!-- TA:#415 START -->
+				<fieldset id="mechanisms">
+					<legend><?php tp('Mechanism access');?></legend>
+					<div>
+						<div class="fieldLabelThin"></div>
+						<div class="fieldInput">
+							<div class="float50">
+							</div>
+						</div>
+						<div class="fieldLabelThin"></div>
+						<div class="fieldInput">
+							<a href="#" id="mechanismcheckall"> <?php tp('check all'); ?></a> <a
+								href="#" id="mechanismuncheckall"> <?php tp('uncheck all'); ?></a>
+						</div>
+						<div id="mechanisms_box">
+							<?php
+							foreach( $this->mechanism as $org ) {
+							    $display = 'style="display:none;"';
+								echo '<div id="' . $org['owner_id'] . '" ' . $display . '><div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50">
+    <input type="checkbox" name="mechanism_option_id[]" id="mechanism_option_'.$org['id'].'" value="'.$org['id'].'" '.(@$org['user_id']? 'CHECKED':'').' />
+			    <label for="mechanism_option_'.$org['id'].'">'.$org['mechanism_phrase'].'</label></div></div></div>';
 							}
 							?>
-					
-				
-				
-				
+							</div>
 				</fieldset>
+				<!-- TA:#415 END -->
 
 	<?php
 	if ($this->showinstitutions && $this->showprograms){
@@ -805,11 +843,40 @@
 		$('#orgcheckall').click(function (e) {   /* check all btn  */
 			e.preventDefault();
 			$('#orgs input[name="training_organizer_option_id[]"]').attr('checked', 'checked');
+			//TA:#415
+			var mech_fields = YAHOO.util.Dom.get("mechanisms_box").getElementsByTagName('input');
+			for(var i = 0; i < mech_fields.length; i++) {
+				$(mech_fields[i]).parent().parent().parent().show();
+			}			
 		});
 		$('#orguncheckall').click(function (e) { /* check none btn */
 			e.preventDefault();
 			$('#training_organizer_option_all,#orgs input[name="training_organizer_option_id[]"]').removeAttr('checked').removeAttr('readonly').removeAttr('disabled');
+			//TA:#415
+			var mech_fields = YAHOO.util.Dom.get("mechanisms_box").getElementsByTagName('input');
+			for(var i = 0; i < mech_fields.length; i++) {
+ 				$(mech_fields[i]).parent().parent().parent().hide();
+ 				$(mech_fields[i]).attr('checked', false);
+			}
 		});
+
+		//TA:#415
+		$('#mechanismcheckall').click(function (e) {   /* check all btn  */
+			e.preventDefault();
+			var mech_fields = YAHOO.util.Dom.get("mechanisms_box").getElementsByTagName('input');
+			for(var i = 0; i < mech_fields.length; i++) {
+				if($(mech_fields[i]).is(':hidden')){
+					mech_fields[i].checked = false;
+				}else{
+					mech_fields[i].checked = true;
+				}
+			}
+		});
+		$('#mechanismuncheckall').click(function (e) { /* check none btn */
+			e.preventDefault();
+			$('#mechanism_option_all,#mechanisms input[name="mechanism_option_id[]"]').removeAttr('checked').removeAttr('readonly').removeAttr('disabled');
+		});
+		///
 
 		$('#edit_country_options').click(function (e) { /* edit country options checkbox (this is master admin) */
 			$('#admin_box input[type="checkbox"]').attr('checked', $(this).is(':checked'));
@@ -840,14 +907,29 @@
 		}
 	}
 
+	//TA:#415
 	function setOrgAccessStatus() { /* organizer logic (restrict access), show hide, uncheck and check */
-		if ($('#acl_restrict').attr('checked') == 'checked') {
-			$('#orgs').slideDown();
-			$('#orgs input').removeAttr('disabled');
-		}
-		else {
-			$('#training_organizer_option_all').attr('checked', 'checked');
+		if ($('#acl_org_restrict').attr('checked') == 'checked') {
+			$('#orgs').slideDown();	
+			if ($('#acl_mechanism_restrict').attr('checked') == 'checked') {
+				 var mechFields = YAHOO.util.Dom.get("mechanisms").getElementsByTagName('input');
+				 for(var i = 0; i < mechFields.length; i++) {
+					 $(mechFields[i]).parent().parent().parent().hide();
+					 orginizer_selected(mechFields[i]);
+				 }
+			}
+		}else {
 			$('#orgs').slideUp();
+			if ($('#acl_mechanism_restrict').attr('checked') == 'checked') {
+			 var mechFields = YAHOO.util.Dom.get("mechanisms").getElementsByTagName('input');
+			 for(var i = 0; i < mechFields.length; i++) {
+				    $(mechFields[i]).parent().parent().parent().show();
+			 }
+			 var orgFields = YAHOO.util.Dom.get("orgs").getElementsByTagName('input');
+				for(var i = 0; i < orgFields.length; i++) {
+					$(orgFields[i]).attr('checked', false);
+				}
+			}
 		}
 
 		var edCourseRB = YAHOO.util.Dom.get("edit_course");
@@ -856,22 +938,46 @@
 			var isDisabled = false;
 			if (edCourseRB.checked == false) isDisabled = true;
 			orgFields[i].disabled = isDisabled;
+			orginizer_selected(orgFields[i]);//TA:#415.2
 		}
-		var allOrgsRB = YAHOO.util.Dom.get("training_organizer_option_all");
-		if ( allOrgsRB.checked &&  edCourseRB.checked ) {
-			for(var i = 0; i < orgFields.length; i++) {
-				orgFields[i].checked = true;
-				orgFields[i].disabled = true;
-			}
-			allOrgsRB.disabled = false;
-		} else if ( edCourseRB.checked ) {
-			for(var i = 0; i < orgFields.length; i++) {
-				orgFields[i].disabled = false;
-			}
+		
+	}
+
+	//TA:#415
+	function setMechanismAccessStatus(){
+		if ($('#acl_mechanism_restrict').attr('checked') == 'checked') {
+			$('#mechanisms').slideDown();
+		}else {
+			$('#mechanisms').slideUp();
+		}
+
+		var edCourseRB = YAHOO.util.Dom.get("edit_course");
+		var orgFields = YAHOO.util.Dom.get("mechanisms").getElementsByTagName('input');
+		for(var i = 0; i < orgFields.length; i++) {
+			var isDisabled = false;
+			if (edCourseRB.checked == false) isDisabled = true;
+			orgFields[i].disabled = isDisabled;
 		}
 	}
 
+	//TA:#415.2
+	var orginizer_selected = function (elem) {
+		var org_id = $(elem).attr('id').replace("training_organizer_option_", "");    
+		var mech_fields = YAHOO.util.Dom.get("mechanisms_box").getElementsByTagName('input');
+		for(var i = 0; i < mech_fields.length; i++) {
+			if($(mech_fields[i]).parent().parent().parent().attr('id') == org_id){
+				if($(elem).attr('checked')){
+				  $(mech_fields[i]).parent().parent().parent().show();
+				}else{
+					$(mech_fields[i]).parent().parent().parent().hide();
+					$(mech_fields[i]).attr('checked', false);
+				}
+			}
+		}				
+	}
+
 	$(document).ready(setOrgAccessStatus);
+	$(document).ready(setMechanismAccessStatus);//TA:#415
 
 
 	<?php
