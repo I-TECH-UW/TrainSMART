@@ -3558,6 +3558,21 @@ class AdminController extends UserController
 		$editTable->dependencies = array('employee_transition_option_id' => 'employee');
 		$editTable->execute($controller->getRequest());
 	}
+	
+	//TA:#422
+	public function employeeTransitionCompleteAction()
+	{
+	
+	    /* edit table */
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'employee_transition_complete_option';
+	    $editTable->fields  = array('transition_complete_phrase' => t('Intended Transition Complete'));
+	    $editTable->label   = t('Intended Transitions Complete');
+	    $editTable->dependencies = array('employee_transition_complete_option_id' => 'employee');
+	    $editTable->execute($controller->getRequest());
+	}
 
 	public function employeeRelationshipAction()
 	{
