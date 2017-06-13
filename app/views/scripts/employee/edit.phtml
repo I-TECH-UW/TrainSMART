@@ -446,7 +446,10 @@
         	}
             var dsd_model = $('#dsd_model option:selected' ).text();
             var dsd_team_id = $('#dsd_team option:selected' ).val();
-            var dsd_team = $('#dsd_team option:selected' ).text();
+            if(dsd_team_id != ""){
+            	dsd_team_id = dsd_team_id.split("_")[1];
+           	    dsd_team = $('#dsd_team option:selected' ).text();
+            }
             if(dsd_model == 'Facility site - Roving') {
             	if(dsd_team_id == ""){
             		alert("Specify value for '<?php tp('Service Delivery Team');?>'.");
@@ -456,7 +459,7 @@
             if(dsd_team_id == ""){
             	dsd_team = "";
             }
-
+            
             var province = '';
             var province_id = $('#province_id').val();
             if(province_id){
