@@ -28,6 +28,9 @@ yum replace php --replace-with php56u -y
 # install the Zend Debugger for php 5.6
 mv /home/vagrant/ZendDebugger.so /usr/lib64/php/modules/ZendDebugger.so
 
+# remove xdebug settings, xdebug is an alternate configuration that doesn't play well with Zend Studio, but works great for other IDEs
+rm /etc/php.d/15-xdebug.ini
+
 # this is a hack to make zend debugger work - it presents the newer (1.0) libcrypto and libssl as the old (0.9.8) 
 # version. this will work fine if and only if the functions that zend debugger calls in libcrypto 
 # and libssl 0.9.8 are compatible with the implementations in 1.0

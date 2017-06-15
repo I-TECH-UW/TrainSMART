@@ -3,7 +3,29 @@ require_once('ITechTable.php');
 
 class Helper extends ITechTable
 {
-	#################################
+
+    /**
+     * retrieves a list of the prior education course subjects in the database
+     *
+     * @return array|null
+     */
+    public function getPriorEducationCourses() {
+		$db = $this->dbfunc();
+		return $db->fetchPairs($db->select()->from('lookup_prior_education_courses', array('id', 'course_name')));
+    }
+
+    public function addPriorEducationCourse($coursename) {
+		$db = $this->dbfunc();
+		$db->insert('lookup_prior_education_courses', array('course_name' => $coursename));
+	}
+
+	public function deletePriorEducationCourse($coursename) {
+    	$db = $this->dbfunc();
+    	$w = $db->quoteInto('course_name = ?', $coursename);
+    	$db->delete('lookup_prior_education_courses', $w);
+	}
+
+    #################################
 	#                               #
 	#   COHORT SPECIFIC FUNCTIONS   #
 	#                               #

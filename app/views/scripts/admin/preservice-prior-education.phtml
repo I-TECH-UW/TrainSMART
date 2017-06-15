@@ -1,0 +1,172 @@
+<?php
+
+// template for page that contains an EditTable
+
+// need $pageTitle and $nextUri variables from these includes
+
+
+ob_start();
+require_once('views/scripts/header.phtml');
+$header = ob_get_contents();
+ob_end_clean();
+
+ob_start();
+require_once('views/scripts/nav-admin.phtml');
+$nav = ob_get_contents();
+ob_end_clean();
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title><?php echo $this->translation['Application Name'];?> | <?php echo $this->pageTitle; ?></title>
+    <?php
+    require_once('views/helpers/ScriptContainer.php');
+    print ScriptContainer::$instance->renderCSSHead();
+    print ScriptContainer::$instance->renderJSHead();
+    ?>
+
+    <style>
+        fieldset input[type=text], fieldset select { margin-bottom:12px; width:95%; padding: .4em; }
+        fieldset { padding:0; border:0; margin-top:25px; text-align : left; font-size : .9em }
+        h1 { font-size: 1.2em; margin: .6em 0; }
+        .ui-dialog .ui-state-error { padding: .3em; }
+        .validateTips { border: 1px solid transparent; padding: 0.3em;
+        }
+    </style>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+
+            $('#new_courses').data("course_names", []);
+            $('#delete_courses').data('course_ids', []);
+
+            /* Add a click handler to the rows - this could be used as a callback */
+            $(".tablegrid tbody").click(function(event) {
+                var $n = $(event.target.parentNode);
+                var children = $n.children();
+                var oTable = $('#course_table').dataTable();
+
+                if (confirm("Do you want to delete the " + children[1].innerText + " course?")) {
+                    var inner = children[0].innerText;
+                    if (((inner !== null) && (typeof inner !== 'undefined') && inner.length > 0) &&
+                        isNumber(children[0].innerText)) {
+                        $('#delete_courses').data('course_ids').push(children[0].innerText);
+                    }
+                    else {
+                        var $ary = $('#new_courses').data('course_names');
+                        $ary.splice($.inArray(children[1].innerText, $ary), 1);
+                    }
+                    oTable.fnDeleteRow($n[0]);
+                }
+                $(oTable.fnSettings().aoData).each(function (){
+                    $(this.nTr).removeClass('row_selected');
+                });
+                $(event.target.parentNode).addClass('row_selected');
+            });
+
+            $('#activate_prior_education').click(function() {
+                $('#new_course_name').prop("disabled", !this.checked);
+            });
+
+            $('#new_course_name').prop("disabled", !$('#activate_prior_education').is(':checked'));
+
+            /* Init the table */
+            var oTable = $('.tablegrid').dataTable({
+                "bJQueryUI": true,
+                "sPaginationType": "full_numbers"
+            });
+        } );
+
+        function add_new_course() {
+            var $courseInput = $('#new_course_name');
+            var newCourse = $courseInput.val();
+            if (newCourse.length > 0) {
+                $('#new_courses').data('course_names').push(newCourse);
+                var oTable = $('#course_table').dataTable();
+                oTable.fnAddData(['', newCourse]);
+                $courseInput.val("");
+            }
+        }
+
+        function processChanges() {
+            var $newCoursesElement = $('#new_courses');
+            var $deleteCoursesElement = $('#delete_courses');
+            $newCoursesElement.val(JSON.stringify($newCoursesElement.data('course_names')));
+            $deleteCoursesElement.val(JSON.stringify($deleteCoursesElement.data('course_ids')));
+            document.getElementById('courses').submit();
+        }
+
+    </script>
+</head>
+<body  class="yui-skin-sam">
+<div id="pageHolder">
+
+    <div id="header"><?php echo $header; ?></div>
+    <div id="content" class="adminDiv">
+        <div id="navAdmin"><?php echo $nav;?></div>
+        <div id="contentAdmin">
+            <?php require_once 'views/scripts/status.phtml' ?>
+
+            <div id="contentheader">
+                <h2><?php echo $this->header; ?></h2>
+            </div>
+            <form method="POST" id="courses">
+                <input type="checkbox" id="activate_prior_education" name="activate_prior_education"
+                       <?php echo $this->setting['display_student_prior_transcript'] ? 'checked' : ''; ?>
+
+                <label for="activate_prior_education" class="fieldLabel" style="width: auto; margin-bottom: 2em;">
+                    <?php echo t('Activate Prior Education Transcripts'); ?>
+                </label>
+
+
+                <div class="pad20"></div>
+                <div style="width :100%;">
+                    <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="course_table" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th><?php echo t('Course ID'); ?></th>
+                            <th><?php echo t('Course Name'); ?></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <?php
+                        foreach ($this->prior_courses as $course_id => $course_name){
+                            ?>
+                            <tr class="GradeA" style="cursor : pointer;">
+                                <td><?php echo $course_id ?></td>
+                                <td><?php echo $course_name ?></td>
+                            </tr>
+                            <?php
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                    <div style="width : 100%; text-align: center; margin-top : 2em;">
+                        <div style="float : left;">
+                            <label for="new_course_name" class="fieldLabel"><?php echo t("New Course Name"); ?></label>
+                            <input type="text" name="new_course_name" id="new_course_name" maxlength="25">
+                        </div>
+                        <div style="float : right;">
+                            <input type="hidden" name="new_courses" id="new_courses">
+                            <input type="hidden" name="delete_courses" id="delete_courses">
+                            <input type="button" name="new_course_button" class="tsbutton green large"
+                                   onclick="add_new_course();"
+                                   value="<?php echo t("Add Prior Education Course Name"); ?>">
+                        </div>
+                    </div>
+
+                    <div class="clear"></div>
+                    <div style="text-align : right;">
+                        <input type="submit" style="margin-top : 4em;" name="save_changes" id="save_changes" class="tsbutton green large"
+                               onclick="processChanges();"
+                               value="<?php echo t('Save All Changes'); ?>">
+                    </div>
+            </form>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+</div>
+</body>
+</html>

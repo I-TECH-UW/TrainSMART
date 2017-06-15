@@ -2352,6 +2352,49 @@ class AdminController extends UserController
 		));
 	}
 
+    public function preservicePriorEducationAction()
+    {
+        require_once('models/table/Helper.php');
+        $helper = new Helper();
+
+        if ($this->getRequest()->isPost()) {
+            $params = $this->getAllParams();
+            $db = $this->dbfunc();
+
+            if (isset($params['activate_prior_education']) && $params['activate_prior_education']) {
+
+                $db->update('_system', array('display_student_prior_transcript' => '1'));
+
+                if (isset($params['new_courses'])) {
+                    $newCourses = json_decode($params['new_courses']);
+                    foreach ($newCourses as $course) {
+                        $db->insert('lookup_prior_education_courses', array('course_name' => $course));
+                    }
+                }
+
+                if (isset($params['delete_courses'])) {
+                    $deleteCourses = json_decode($params['delete_courses']);
+                    foreach ($deleteCourses as $delete) {
+                        $w = $db->quoteInto('id = ?', $delete);
+                        $db->delete('lookup_prior_education_courses', $w);
+                    }
+                }
+            }
+            else if ((isset($params['new_courses']) && count(json_decode($params['new_courses'])) > 0) ||
+                (isset($params['delete_courses']) && count(json_decode($params['delete_courses'])) > 0)) {
+                $status = ValidationContainer::instance();
+                $status->addError('new_course_name', t('Prior Education Transcript must be enabled.'));
+            }
+            else {
+                if ($this->setting('display_student_prior_transcript')) {
+                    $db->update('_system', array('display_student_prior_transcript' => '0'));
+                }
+            }
+        }
+        $this->view->assign('setting', System::getAll());
+        $this->view->assign('prior_courses', $helper->getPriorEducationCourses());
+    }
+
 	//TA: changed on 7/21/2014
 	public function preserviceLabelsAction(){
 		require_once('models/table/System.php');
@@ -2617,14 +2660,6 @@ class AdminController extends UserController
 		$list = $helper->AdminNationalities();
 		$this->view->assign("lookup", $list);
 		$this->view->assign("header",t("Nationalities"));
-	}
-
-	public function priorLearningAction() {
-
-	}
-
-	public function qualificationsAction() {
-
 	}
 
 	public function preserviceJoindropreasonsAction(){
@@ -3523,6 +3558,21 @@ class AdminController extends UserController
 		$editTable->dependencies = array('employee_transition_option_id' => 'employee');
 		$editTable->execute($controller->getRequest());
 	}
+	
+	//TA:#422
+	public function employeeTransitionCompleteAction()
+	{
+	
+	    /* edit table */
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'employee_transition_complete_option';
+	    $editTable->fields  = array('transition_complete_phrase' => t('Intended Transition Complete'));
+	    $editTable->label   = t('Intended Transitions Complete');
+	    $editTable->dependencies = array('employee_transition_complete_option_id' => 'employee');
+	    $editTable->execute($controller->getRequest());
+	}
 
 	public function employeeRelationshipAction()
 	{
@@ -4157,6 +4207,7 @@ class AdminController extends UserController
 			'preservice-tutortypes'       => 'acl_editor_ps_tutortypes',
 			'preservice-coursetypes'      => 'acl_editor_ps_coursetypes',
 			'preservice-religion'         => 'acl_editor_ps_religions',
+			'preservice-prior-education'  => 'acl_editor_ps_classes',
 			'users-add'                   => 'add_edit_users',
 			'training-settings'           => 'acl_admin_training',
 			'people-settings'             => 'acl_admin_people',

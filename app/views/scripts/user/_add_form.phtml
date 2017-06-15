@@ -121,6 +121,16 @@ YAHOO.util.Event.onDOMReady(setMechanismAccessStatus);//TA:#415
 		<div class="fieldLabelThin"> <?php tp('Pre-Service');?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="pre_service" id="pre_service"/><label for="pre_service"> <?php tp('Pre-service access');?></label></div></div>
 		<?php if ($this->setting['module_employee_enabled']): ?>
 		<div class="fieldLabelThin"> <?php print(t('Employee Module'));?></div><div class="fieldInput width100"><div class="float50"><input type="checkbox" name="employees_module" id="employees_module" /><label for="employees_module"> <?php print(t('Access Employees'));?></label></div></div>
+		<!-- TA:#421 START -->
+					<div class="fieldLabelThin"> <?php print(t('Positions'));?></div>
+					<div class="fieldInput width100">
+						<div class="float50">
+							<input type="checkbox" name="position_access" id="position_access"
+								<?php if ( array_search('position_access', $this->user['acls']) !== false) echo 'CHECKED'; ?> /><label
+								for=position_access> <?php print(t('View/add positions'));?></label>
+						</div>
+					</div>
+					<!-- TA:#421 END -->
 		<?php endif; ?>
 		<br/><br/>
 
@@ -354,6 +364,22 @@ $(document).ready(function () {
 		e.preventDefault();
 		adminChecks(0);
 	});
+
+	//TA:#421
+	if($('#employees_module').attr('checked')){
+		$("#position_access").prop('disabled',false);
+	}else{
+		 $("#position_access").prop('disabled',true);
+	}
+	$('#employees_module').click(function (e) {
+		if($('#employees_module').attr('checked')){
+			$("#position_access").prop('disabled',false);
+		}else{
+			 $("#position_access").prop('disabled',true);
+			 $("#position_access").prop('checked',false);
+		}
+	})	
+	///
 });
 
 function toggleinstitution(sender){

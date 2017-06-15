@@ -17,8 +17,6 @@ class System extends Zend_Db_Table_Abstract
         } catch(Zend_Exception $e) {
             error_log($e);
         }
-
-
     }
 
     public static function getAll() {

@@ -395,6 +395,22 @@ class Studentedit extends ITechTable
 
 	}
 
+	public function UpdatePriorEducationTranscript($params) {
+	    $add_courses = json_decode($params['prior_courses_to_add'], true);
+	    $delete_courses = json_decode($params['prior_courses_to_delete']);
+
+	    $db = $this->dbfunc();
+
+        foreach ($delete_courses as $assoc_id) {
+            $db->delete('student_prior_education', $db->quoteInto('id = ?', $assoc_id));
+        }
+
+	    foreach ($add_courses as $course_id => $course_grade) {
+	        $db->insert('student_prior_education', array('student_id' => $params['sid'],
+                'lookup_prior_education_courses_id' => $course_id, 'course_grade' => $course_grade));
+        }
+    }
+
 	public function UpdateStudent($param){
 
 		$db = $this->dbfunc();
@@ -609,14 +625,75 @@ class Studentedit extends ITechTable
 		}
 	}
 
-	/* public function getstudent($pupiladd){
+    /**
+     *
+     * returns an array of the student's course names and grades from their education prior to entry in
+     * their pre-service program
+     *
+     * @param $studentid
+     *
+     * @return array|null
+     */
+	public function getStudentPriorEducation($studentid) {
+        $db = $this->dbfunc();
+        $q = $db->select()
+            ->from('student_prior_education', array())
+            ->joinInner('lookup_prior_education_courses', 'lookup_prior_education_courses.id = student_prior_education.lookup_prior_education_courses_id', array())
+            ->columns(array('student_prior_education.id', 'lookup_prior_education_courses.course_name', 'student_prior_education.course_grade'))
+            ->where('student_prior_education.student_id = ?', $studentid)
+            ->order('lookup_prior_education_courses.course_name');
 
-		 $select = $this->dbfunc()->select()
-		->from($this->_city);
-		$result = $this->dbfunc()->fetchAll($select);
-		//echo $select->__toString();
-		return $result;
-	 }*/
+        return $db->fetchAll($q);
+    }
+
+    /**
+     * adds courses and grades to a student's prior education history
+     *
+     * @param $studentid
+     * @param $courseids
+     * @param $grades
+     * @return null
+     * @throws Exception
+     */
+    public function addStudentPriorEducation($studentid, $courseids, $grades) {
+        $db = $this->dbfunc();
+        if (!is_array($courseids) && !is_array($grades)) {
+            $courseids = array($courseids);
+            $grades = array($grades);
+        }
+        if (count($courseids) != count($grades)) {
+            throw new Exception('The number of course IDs must match the number of grades.');
+        }
+        $i = 0;
+        $numentries = count($courseids);
+        while ($i < $numentries) {
+            $db->insert('student_prior_education', array('student_id' => $studentid,
+                'lookup_prior_education_courses_id' => $courseids[$i], 'course_grade' => $grades[$i]));
+            $i++;
+        }
+        return null;
+    }
+
+    /**
+     * deletes courses from a student's prior education history
+     *
+     * @param $studentid
+     * @param $courseids
+     * @return null
+     */
+    public function deleteStudentPriorEducation($studentid, $courseids) {
+        $db = $this->dbfunc();
+        if (!is_array($courseids)) {
+            $courseids = array($courseids);
+        }
+        foreach ($courseids as $id) {
+            $db->delete('student_prior_education', array(
+                $db->quoteInto('student_id = ?', $studentid),
+                $db->quoteInto('lookup_prior_education_courses_id = ?', $id)
+            ));
+        }
+        return null;
+    }
 
 	public function addfunding($param) {
 		$db = $this->dbfunc();

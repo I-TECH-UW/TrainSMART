@@ -556,6 +556,7 @@ class StudenteditController extends ITechController
 			$update = $studentupdate->UpdateStudentCohort($params);                # STORING COHORT LINK
 			$update = $studentupdate->UpdatePermanentAddress($params);            # STORING PERMANENT ADDRESS
 			$update = $studentupdate->UpdateFunding($params);                    # STORING FUNDING
+            $update = $studentupdate->UpdatePriorEducationTranscript($params);
 
 			ValidationContainer::instance()->setStatusMessage(t('The person was saved.'));
 			$_SESSION['status'] = t('The person was saved');
@@ -814,8 +815,13 @@ class StudenteditController extends ITechController
 		$this->view->assign('lookupstudenttypes', $helper->getStudentTypes());
 		$this->view->assign('cadre', $cadre);
 
+        if ($this->setting('display_student_prior_transcript')) {
+            $this->view->assign('prior_education', $studentedit->getStudentPriorEducation($details['student'][0]['id']));
+            $this->view->assign('prior_education_courses', array("0" => '--' . t("choose") . '--') + $helper->getPriorEducationCourses());
+        }
 
-		$this->view->assign('lookupfunding', $helper->getFunding());
+
+        $this->view->assign('lookupfunding', $helper->getFunding());
 		$this->view->assign('studentfunding', $studentedit->getStudentFunding($details['student'][0]['id']));
 		
 		//TA:#217 remove top  cohort from the history beacuse it will displyed in student form

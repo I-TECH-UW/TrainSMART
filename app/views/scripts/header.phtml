@@ -139,9 +139,11 @@ if ( $this->isLoggedIn() ) {
     $navMain['partner'] = array( 'index' => t('Partners') );
     $navMain['partner']['add']     = t('Add Partner');
     $navMain['partner']['search']  = t('View/Edit Partner');
-    $navMain['employee'] = array( 'index' => t('Employees') );// BS:1:10/06/2014 translate employee/employees
-    $navMain['employee']['add']    = t('Add Employee'); 
-    $navMain['employee']['search'] = t('View/Edit Employee');
+    if($this->hasACL('position_access')){//TA:#421
+        $navMain['employee'] = array( 'index' => t('Employees') );// BS:1:10/06/2014 translate employee/employees
+        $navMain['employee']['add']    = t('Add Employee'); 
+        $navMain['employee']['search'] = t('View/Edit Employee');
+    }
     #$navMain['site'] = array( 'index' => t('Sites') );
     #$navMain['site']['search']     = t('View/Edit').space.('Site');
     #$navMain['site']['add']        = t('Add').space.('Site');
