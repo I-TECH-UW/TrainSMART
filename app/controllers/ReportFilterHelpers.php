@@ -824,7 +824,7 @@ class ReportFilterHelpers extends ITechController
         $select = $db->select()
             ->from('employee', array());
         
-        print_r($criteria);
+        print_r($criteria);//TA:1000
         //TA:#419
         if (isset($criteria['show_is_active']) && $criteria['show_is_active']) {
            $select->columns("IF(employee.is_active = 1,'Active','Inactive') as active");
@@ -834,7 +834,7 @@ class ReportFilterHelpers extends ITechController
         }
         if (isset($criteria['show_employee_code']) && $criteria['show_employee_code']) {
         } 
-        if(isset($criteria['employee_code'])) {
+        if(isset($criteria['employee_code']) && count($criteria['employee_code']) > 1) {
              $select->where('employee.id IN (?)', $criteria['employee_code']);
         }
         /////////
@@ -846,13 +846,13 @@ class ReportFilterHelpers extends ITechController
             }
             $select->columns('partner.partner');
         }
-
-        if (isset($criteria['partner']) && $criteria['partner']) {
+        //TA:#419
+        if (isset($criteria['partner']) && $criteria['partner'] && count($criteria['partner']) > 1) {
             if (!array_key_exists('partner', $joined)) {
                 $select->joinLeft(array('partner'), 'partner.id = employee.partner_id', array());
                 $joined['partner'] = 1;
             }
-            $select->where('partner.id = ?', $criteria['partner']);
+            $select->where('partner.id in ( ' . implode(",", $criteria['partner']) . ")");
         }
 
         // TODO: support n-tiers of regions.
@@ -1074,7 +1074,7 @@ class ReportFilterHelpers extends ITechController
                 $joined['facility'] = 1;
             }
             $select->columns('facility.facility_name');
-        }else if (isset($criteria['show_facilityInput']) && $criteria['show_facilityInput']) {//TA:#293.1
+        }else if (isset($criteria['show_facilityInput']) && $criteria['show_facilityInput'] ) {//TA:#293.1
             if (!array_key_exists('facility', $joined)) {
                 $select->joinLeft('facility', 'facility.id = employee.site_id', array());
                 $joined['facility'] = 1;
@@ -1088,16 +1088,16 @@ class ReportFilterHelpers extends ITechController
                 $joined['facility'] = 1;
             }
             $select->where('facility.id = ?', $criteria['site']);
-        }else if (isset($criteria['facilityInput']) && $criteria['facilityInput']) {//TA:#293.1
+        }else if (isset($criteria['facilityInput']) && $criteria['facilityInput'] && count($criteria['facilityInput']) > 1) {//TA:#293.1 //TA:#419
             if (!array_key_exists('facility', $joined)) {
                 $select->joinLeft('facility', 'facility.id = employee.site_id', array());
                 $joined['facility'] = 1;
             }
-            $select->where('facility.id = ?', $criteria['facilityInput']);
+            $select->where('facility.id = in ( ' . implode(",", $criteria['facilityInput']) . ")");
         }
 
-        // facility type
-        if (isset($criteria['show_facility_type']) && $criteria['show_facility_type']) {
+        // facility type //TA:#419
+        if (isset($criteria['show_facility_type']) && $criteria['show_facility_type'] && count($criteria['facility_type']) > 1) {
             if (!array_key_exists('facility_type_option', $joined)) {
                 $select->joinLeft('facility_type_option', 'facility_type_option.id = facility.type_option_id', array());//TA:#386
                 $joined['facility_type_option'] = 1;
@@ -1105,7 +1105,7 @@ class ReportFilterHelpers extends ITechController
             $select->columns('facility_type_option.facility_type_phrase');
         }
         if (isset($criteria['facility_type']) && $criteria['facility_type']) {
-            $select->where('facility.type_option_id = ?', $criteria['facility_type']); //TA:#386
+            $select->where('facility.type_option_id in ( ' . implode(",", $criteria['facility_type']) . ")"); //TA:#386
         }
 
         // classification
@@ -1116,12 +1116,13 @@ class ReportFilterHelpers extends ITechController
             }
             $select->columns('employee_qualification_option.qualification_phrase');
         }
-        if (isset($criteria['classification']) && $criteria['classification']) {
+        //TA:#419
+        if (isset($criteria['classification']) && $criteria['classification'] && count($criteria['classification']) > 1) {
             if (!array_key_exists('employee_qualification_option', $joined)) {
                 $select->joinLeft('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
                 $joined['employee_qualification_option'] = 1;
             }
-            $select->where('employee_qualification_option_id = ?', $criteria['classification']);
+            $select->where('employee_qualification_option_id in ( ' . implode(",", $criteria['classification']) . ")");
         }
 
         // funded hours per week
@@ -1156,12 +1157,13 @@ class ReportFilterHelpers extends ITechController
             }
             $select->columns('employee_role_option.role_phrase');
         }
-        if (isset($criteria['primary_role']) && $criteria['primary_role']) {
+        //TA:#419
+        if (isset($criteria['primary_role']) && $criteria['primary_role'] && count($criteria['primary_role']) > 1) {
             if (!array_key_exists('employee_role_option', $joined)) {
                 $select->joinLeft('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
                 $joined['employee_role_option'] = 1;
             }
-            $select->where('employee_role_option.id = ?', $criteria['primary_role']);
+            $select->where('employee_role_option.id in ( ' . implode(",", $criteria['primary_role']) . ")");
         }
 
         // transition (used with transition_type)
@@ -1397,7 +1399,6 @@ class ReportFilterHelpers extends ITechController
         }
 
         $s = $select->__toString();
-        print $s;
         return $select;
     }
 }

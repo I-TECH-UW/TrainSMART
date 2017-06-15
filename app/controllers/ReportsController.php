@@ -9995,8 +9995,9 @@ die (__LINE__ . " - " . $sql);
 
                 $c = array_map(
                     function ($item) {
+                        //TA:#419 a lot of changes with headers
                         $header_names = array(
-                             'is_active' => t('Is Active'), //TA:#419
+                             'active' => t('Active'), 
                             'role_phrase' => t('Primary Role'),
                             'qualification_phrase' => t('Staff Cadre'),
                             'employee_code' => t('Employee Code'),
@@ -10006,24 +10007,30 @@ die (__LINE__ . " - " . $sql);
                             'region_c_name' => t('Region C (Local Region)'),
                             'facility_type_phrase' => t('Facility Type'),
                             'facility_name' => t('Facility') . ' ' . t('Name'),
-                            'employee_dsdmodel_phrase' => t('Service Delivery Model'), //TA:#419
-                            'employee_dsdteam_phrase' => t('Service Delivery Team'), //TA:#419
-                            'hiv_fte_related' => t('HIV Related FTE (Hrs)'), //TA:#419
-                            'contract_start_date' => t('Contract Start Date'), //TA:#419
-                            'contract_end_date' => t('Contract End Date'), //TA:#419
+                            'employee_dsdmodel_phrase' => t('Service Delivery Model'), 
+                            'employee_dsdteam_phrase' => t('Service Delivery Team'), 
+                            'hiv_fte_related' => t('HIV Related FTE (Hrs)'), 
+                            'contract_start_date' => t('Contract Start Date'), 
+                            'contract_end_date' => t('Contract End Date'), 
                             'base_phrase' => t('Employee Based at'),
                             'based_at_other' => t('Other, Specify'),
-                            'funded_hours_per_week' => t('Funded hours per week'),
-                            'annual_cost' => t('Annual Cost'),
                             'intended_transition' => t('Intended Transition'),
-                            'actual_transition' => t('Actual Transition'),
-                            'transition_complete_date' => t('Actual Transition Date'),
+                            'intended_transition_other' => t('Intended Transition Other'),
+                            'intended_transition_start_date' => t('Intended Transition Date'),
+                            'actual_transition' => t('Actual Transition Outcome'),
+                            'actual_transition_other' => t('Actual Transition Outcome, Other'),
+                            'transition_start_date' => t('Actual Transition Date'),
+                            'funded_hours_per_week' => t('Funded hours per week'),
                             'salary' => t('Salary'),
                             'benefits' => t('Benefits'),
                             'additional_expenses' => t('Additional Expenses'),
                             'stipend' => t('Stipend'),
-                            'mechanism_phrase' => t('Mechanism'),
-                            'mechanism_end_date' => t('Mechanism') . ' ' . t('End Date'),
+                            'annual_cost' => t('Annual Cost'),
+                            'agencies' => t('Implementing Agency'),
+                            'mechanism_ids' => t('Implementing Mechanism Identifier'),
+                            'mechanism_phrase' => t('Implementing Mechanism Name'),
+                            'mech_percent' => t('Implementing Mechanism percentage'),
+                            'mechanism_end_date' => t('Implementing Mechanism End Date'),
                         );
                         if ($item[2] !== null) {
                             return $header_names[$item[2]];
@@ -10103,12 +10110,33 @@ die (__LINE__ . " - " . $sql);
         
         //TA:#419
         $transitions_other = $choose + $db->fetchPairs($db->select()
-            ->from('employee', array('distinct(transition_other)'))
+            ->from('employee', array('id', 'transition_other'))
+            ->group('transition_other')
+            ->where('transition_other is not null')
             ->order('transition_other ASC')
         );
-        print $db->select()
-            ->from('employee', array('id', 'distinct(transition_other)'))
-            ->order('transition_other ASC');
+        $transitions_complete = $choose + $db->fetchPairs($db->select()
+            ->from('employee_transition_complete_option', array('id', 'transition_complete_phrase'))
+            ->order('transition_complete_phrase ASC'));
+        $transitions_complete_other = $choose + $db->fetchPairs($db->select()
+            ->from('employee', array('id', 'transition_complete_other'))
+            ->group('transition_complete_other')
+            ->where('transition_complete_other is not null')
+            ->order('transition_complete_other ASC')
+        );
+        $agencies = $choose + $db->fetchPairs($db->select()
+            ->from('partner_funder_option', array('id', 'funder_phrase'))
+            ->order('funder_phrase ASC'));
+        $mechanism_ids = $choose + $db->fetchPairs($db->select()
+            ->from('mechanism_option', array('id', 'external_id'))
+            ->group('external_id')
+            ->where('external_id is not null')
+            ->order('external_id ASC')
+        );
+        $mechanism_names = $choose + $db->fetchPairs($db->select()
+            ->from('mechanism_option', array('id', 'mechanism_phrase'))
+            ->order('mechanism_phrase ASC'));
+        //
 
         $bases = $choose + $db->fetchPairs($db->select()
                 ->from('employee_base_option', array('id', 'base_phrase'))
@@ -10125,6 +10153,11 @@ die (__LINE__ . " - " . $sql);
         $this->view->assign('roles', $roles);
         $this->view->assign('transitions', $transitions);
         $this->view->assign('transitions_other', $transitions_other);//TA:#419
+        $this->view->assign('transitions_complete', $transitions_complete); //TA:#419
+        $this->view->assign('transitions_complete_other', $transitions_complete_other);//TA:#419
+        $this->view->assign('agencies', $agencies);//TA:#419
+        $this->view->assign('mechanism_ids', $mechanism_ids);//TA:#419
+        $this->view->assign('mechanism_names', $mechanism_names);//TA:#419
         $this->view->assign('locations', $locations);
         $this->view->assign('bases', $bases);
         
@@ -10134,8 +10167,8 @@ die (__LINE__ . " - " . $sql);
         $criteria['region_c_id'] = regionFiltersGetLastIDMultiple('', $criteria);
          
         //TA:#293.1
-        $helper = new Helper();
-        $this->viewAssignEscaped('sites', $helper->getFacilities());
+//         $helper = new Helper();
+//         $this->viewAssignEscaped('sites', $helper->getFacilities());
         
         $this->view->assign('criteria', $criteria);
     }
