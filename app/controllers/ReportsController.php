@@ -9997,21 +9997,24 @@ die (__LINE__ . " - " . $sql);
                     function ($item) {
                         $header_names = array(
                              'is_active' => t('Is Active'), //TA:#419
-                            'employee_dsdmodel_phrase' => t('Service Delivery Model'), //TA:#419
-                            'employee_dsdteam_phrase' => t('Service Delivery Team'), //TA:#419
-                            'hiv_fte_related' => t('HIV Related FTE (Hrs)'), //TA:#419
+                            'role_phrase' => t('Primary Role'),
+                            'qualification_phrase' => t('Staff Cadre'),
+                            'employee_code' => t('Employee Code'),
                             'partner' => t('Partner'),
                             'province_name' => t('Region A (Province)'),
                             'district_name' => t('Region B (Health District)'),
                             'region_c_name' => t('Region C (Local Region)'),
+                            'facility_type_phrase' => t('Facility Type'),
+                            'facility_name' => t('Facility') . ' ' . t('Name'),
+                            'employee_dsdmodel_phrase' => t('Service Delivery Model'), //TA:#419
+                            'employee_dsdteam_phrase' => t('Service Delivery Team'), //TA:#419
+                            'hiv_fte_related' => t('HIV Related FTE (Hrs)'), //TA:#419
+                            'contract_start_date' => t('Contract Start Date'), //TA:#419
+                            'contract_end_date' => t('Contract End Date'), //TA:#419
                             'base_phrase' => t('Employee Based at'),
                             'based_at_other' => t('Other, Specify'),
-                            'facility_name' => t('Facility') . ' ' . t('Name'),
-                            'facility_type_phrase' => t('Facility Type'),
-                            'qualification_phrase' => t('Staff Cadre'),
                             'funded_hours_per_week' => t('Funded hours per week'),
                             'annual_cost' => t('Annual Cost'),
-                            'role_phrase' => t('Primary Role'),
                             'intended_transition' => t('Intended Transition'),
                             'actual_transition' => t('Actual Transition'),
                             'transition_complete_date' => t('Actual Transition Date'),
@@ -10019,7 +10022,6 @@ die (__LINE__ . " - " . $sql);
                             'benefits' => t('Benefits'),
                             'additional_expenses' => t('Additional Expenses'),
                             'stipend' => t('Stipend'),
-                            'employee_code' => t('Employee Code'),
                             'mechanism_phrase' => t('Mechanism'),
                             'mechanism_end_date' => t('Mechanism') . ' ' . t('End Date'),
                         );
@@ -10073,6 +10075,7 @@ die (__LINE__ . " - " . $sql);
         //TA:#419
         $employee_codes = $choose + $db->fetchPairs($db->select()
             ->from('employee', array('id', 'employee_code'))
+            ->limit(10) //TA:1000
             ->order('employee_code ASC')
         );
         
@@ -10097,6 +10100,15 @@ die (__LINE__ . " - " . $sql);
                 ->from('employee_transition_option', array('id', 'transition_phrase'))
                 ->order('transition_phrase ASC')
             );
+        
+        //TA:#419
+        $transitions_other = $choose + $db->fetchPairs($db->select()
+            ->from('employee', array('distinct(transition_other)'))
+            ->order('transition_other ASC')
+        );
+        print $db->select()
+            ->from('employee', array('id', 'distinct(transition_other)'))
+            ->order('transition_other ASC');
 
         $bases = $choose + $db->fetchPairs($db->select()
                 ->from('employee_base_option', array('id', 'base_phrase'))
@@ -10112,6 +10124,7 @@ die (__LINE__ . " - " . $sql);
         $this->view->assign('dsd_teams', $dsd_teams); //TA:#419
         $this->view->assign('roles', $roles);
         $this->view->assign('transitions', $transitions);
+        $this->view->assign('transitions_other', $transitions_other);//TA:#419
         $this->view->assign('locations', $locations);
         $this->view->assign('bases', $bases);
         

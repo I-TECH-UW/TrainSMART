@@ -827,7 +827,7 @@ class ReportFilterHelpers extends ITechController
         print_r($criteria);
         //TA:#419
         if (isset($criteria['show_is_active']) && $criteria['show_is_active']) {
-           $select->columns("IF(employee.is_active = 1,'Active','Inactive') as is_active");
+           $select->columns("IF(employee.is_active = 1,'Active','Inactive') as active");
         }
         if(isset($criteria['is_active'])) {
             $select->where('is_active=' . $criteria['is_active']);
@@ -841,7 +841,7 @@ class ReportFilterHelpers extends ITechController
 
         if (isset($criteria['show_partner']) && $criteria['show_partner']) {
             if (!array_key_exists('partner', $joined)) {
-                $select->join(array('partner'), 'partner.id = employee.partner_id', array());
+                $select->joinLeft(array('partner'), 'partner.id = employee.partner_id', array());
                 $joined['partner'] = 1;
             }
             $select->columns('partner.partner');
@@ -859,8 +859,8 @@ class ReportFilterHelpers extends ITechController
         if (isset($criteria['showProvince']) && $criteria['showProvince']) {
             if (!array_key_exists('location', $joined)) {
                  //TA:#224 
-                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
-                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
                     $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
@@ -875,8 +875,8 @@ class ReportFilterHelpers extends ITechController
             $ids = $criteria['province_id'];
             if (!array_key_exists('location', $joined)) {
                  //TA:#224 
-                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
-                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
                     $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
@@ -895,8 +895,8 @@ class ReportFilterHelpers extends ITechController
         if (isset($criteria['showDistrict']) && $criteria['showDistrict']) {
             if (!array_key_exists('location', $joined)) {
                  //TA:#224 
-                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
-                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
                     $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
@@ -918,8 +918,8 @@ class ReportFilterHelpers extends ITechController
 
             if (!array_key_exists('location', $joined)) {
                  //TA:#224 
-                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
-                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
                     $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
@@ -934,8 +934,8 @@ class ReportFilterHelpers extends ITechController
         if (isset($criteria['showRegionC']) && $criteria['showRegionC']) {
             if (!array_key_exists('location', $joined)) {
                  //TA:#224 
-                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
-                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
                     $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
@@ -956,9 +956,9 @@ class ReportFilterHelpers extends ITechController
             }
             if (!array_key_exists('location', $joined)) {
                  //TA:#224 
-                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
                     $joined['link_employee_facility'] = 1;//TA:#419
-                    $select->join('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
                     $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
@@ -973,11 +973,11 @@ class ReportFilterHelpers extends ITechController
         //TA:#419
         if ((isset($criteria['show_dsd_model']) && $criteria['show_dsd_model']) || isset($criteria['dsd_model'])) {
             if (!array_key_exists('link_employee_facility', $joined)) {
-                $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
                 $joined['link_employee_facility'] = 1;
             }
             if (!array_key_exists('employee_dsdmodel_option', $joined)) {
-                $select->join('employee_dsdmodel_option', 'link_employee_facility.dsd_model_id = employee_dsdmodel_option.id', array());
+                $select->joinLeft('employee_dsdmodel_option', 'link_employee_facility.dsd_model_id = employee_dsdmodel_option.id', array());
                 $joined['employee_dsdmodel_option'] = 1;
             }
             if(isset($criteria['show_dsd_model']) && $criteria['show_dsd_model']){
@@ -989,11 +989,11 @@ class ReportFilterHelpers extends ITechController
         }
         if ((isset($criteria['show_dsd_team']) && $criteria['show_dsd_team']) || isset($criteria['dsd_team'])) {
             if (!array_key_exists('link_employee_facility', $joined)) {
-                $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
                 $joined['link_employee_facility'] = 1;
             }
             if (!array_key_exists('employee_dsdteam_option', $joined)) {
-                $select->join('employee_dsdteam_option', 'link_employee_facility.dsd_team_id = employee_dsdteam_option.id', array());
+                $select->joinLeft('employee_dsdteam_option', 'link_employee_facility.dsd_team_id = employee_dsdteam_option.id', array());
                 $joined['employee_dsdteam_option'] = 1;
             }
             if(isset($criteria['show_dsd_team']) && $criteria['show_dsd_team']){
@@ -1005,7 +1005,7 @@ class ReportFilterHelpers extends ITechController
         }
         if ((isset($criteria['show_fte_min']) && $criteria['show_fte_min']) || $criteria['fte_min'] || $criteria['fte_max']) {
             if (!array_key_exists('link_employee_facility', $joined)) {
-                $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
                 $joined['link_employee_facility'] = 1;
             }
             if(isset($criteria['show_fte_min']) && $criteria['show_fte_min']){
@@ -1016,6 +1016,28 @@ class ReportFilterHelpers extends ITechController
             }
             if($criteria['fte_max']){
                 $select->where("link_employee_facility.hiv_fte_related < " . $criteria['fte_max']);
+            }
+        }
+        if ((isset($criteria['show_contract_start_date_from']) && $criteria['show_contract_start_date_from']) || $criteria['contract_start_date_from'] || $criteria['contract_start_date_to']) {
+            if(isset($criteria['show_contract_start_date_from']) && $criteria['show_contract_start_date_from']){
+                $select->columns("SUBSTRING_INDEX(employee.agreement_start_date, ' ', 1) as contract_start_date");
+            }
+            if($criteria['contract_start_date_from']){
+                $select->where("employee.agreement_start_date > '" . $criteria['contract_start_date_from'] . "'");
+            }
+            if($criteria['contract_start_date_to']){
+                $select->where("employee.agreement_start_date < '" . $criteria['contract_start_date_to']. "'");
+            }     
+        }
+        if ((isset($criteria['show_contract_end_date_from']) && $criteria['show_contract_end_date_from']) || $criteria['contract_end_date_from'] || $criteria['contract_end_date_to']) {
+            if(isset($criteria['show_contract_end_date_from']) && $criteria['show_contract_end_date_from']){
+                $select->columns("SUBSTRING_INDEX(employee.agreement_end_date, ' ', 1) as contract_end_date");
+            }
+            if($criteria['contract_end_date_from']){
+                $select->where("employee.agreement_end_date > '" . $criteria['contract_end_date_from']. "'");
+            }
+            if($criteria['contract_end_date_to']){
+                $select->where("employee.agreement_end_date < '" . $criteria['contract_end_date_to']. "'");
             }
         }
         ////
@@ -1089,7 +1111,7 @@ class ReportFilterHelpers extends ITechController
         // classification
         if (isset($criteria['show_classification']) && $criteria['show_classification']) {
             if (!array_key_exists('employee_qualification_option', $joined)) {
-                $select->join('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
+                $select->joinLeft('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
                 $joined['employee_qualification_option'] = 1;
             }
             $select->columns('employee_qualification_option.qualification_phrase');
