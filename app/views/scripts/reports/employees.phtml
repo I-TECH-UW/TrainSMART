@@ -83,16 +83,18 @@
                         //TA:#293.1
                       //  echo labelAndField($this, t('Site Name'), renderFacilityDropDown($this->sites, $this->criteria['facilityInput'], $this->viewonly), 'facilityInput');
                          echo labelAndField($this, t('Site Name'), 
-                           $this->formSelect('site', isset($this->criteria['facilityInput']) ? $this->criteria['facilityInput'] : null, array('multiple' => true), $this->facilities), 'site');
+                           $this->formSelect('facilityInput', isset($this->criteria['facilityInput']) ? $this->criteria['facilityInput'] : null, array('multiple' => true), $this->facilities), 'facilityInput');
                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
                         
                        echo labelAndField($this, t('Facility Type'),
                             $this->formSelect('facility_type', isset($this->criteria['facility_type']) ? $this->criteria['facility_type'] : null, array('multiple' => true), $this->facilityTypes), 'facility_type');
                         echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
 
-                        echo labelAndField($this, t('Service Delivery Model'), $this->formSelect('dsd_model', '', array('multiple' => true), $this->dsd_models), 'dsd_model');
+                        echo labelAndField($this, t('Service Delivery Model'), 
+                            $this->formSelect('dsd_model', isset($this->criteria['dsd_model']) ? $this->criteria['dsd_model'] : null, array('multiple' => true), $this->dsd_models), 'dsd_model');
                         echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
-                        echo labelAndField($this, t('Service Delivery Team'), $this->formSelect('dsd_team', '', array('multiple' => true), $this->dsd_teams), 'dsd_team');
+                        echo labelAndField($this, t('Service Delivery Team'), 
+                            $this->formSelect('dsd_team', isset($this->criteria['dsd_team']) ? $this->criteria['dsd_team'] : null, array('multiple' => true), $this->dsd_teams), 'dsd_team');
                         echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
                         echo labelTwoFields($this, t('HIV Related FTE (Hrs)'), t('to'), 'fte_min', 'fte_max',
                             isset($this->criteria['fte_min']) ? $this->criteria['fte_min'] : '0',

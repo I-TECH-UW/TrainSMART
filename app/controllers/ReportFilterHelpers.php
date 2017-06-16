@@ -820,9 +820,7 @@ class ReportFilterHelpers extends ITechController
         }
 
         $db = $this->dbfunc();
-
-        $select = $db->select()
-            ->from('employee', array());
+        $select = $db->select()->from('employee', array());
         
         print_r($criteria);//TA:1000
         //TA:#419
@@ -847,12 +845,18 @@ class ReportFilterHelpers extends ITechController
             $select->columns('partner.partner');
         }
         //TA:#419
-        if (isset($criteria['partner']) && $criteria['partner'] && count($criteria['partner']) > 1) {
+        if ((isset($criteria['partner']) && $criteria['partner'])) {
             if (!array_key_exists('partner', $joined)) {
                 $select->joinLeft(array('partner'), 'partner.id = employee.partner_id', array());
                 $joined['partner'] = 1;
             }
-            $select->where('partner.id in ( ' . implode(",", $criteria['partner']) . ")");
+            if(is_array($criteria['partner'])){
+               if(count($criteria['partner']) > 1){
+                    $select->where('partner.id in ( ' . implode(",", $criteria['partner']) . ")");
+               }
+            }else{
+                $select->where('partner.id =  ?', $criteria['partner']);
+            }
         }
 
         // TODO: support n-tiers of regions.
@@ -984,7 +988,9 @@ class ReportFilterHelpers extends ITechController
                 $select->columns("employee_dsdmodel_option.employee_dsdmodel_phrase");
             }
             if(isset($criteria['dsd_model'])) {
-                $select->where('link_employee_facility.dsd_model_id IN (?)', $criteria['dsd_model']);
+                if(count($criteria['dsd_model']) > 1){
+                    $select->where('link_employee_facility.dsd_model_id IN (' . implode(",", $criteria['dsd_model']) . ")");
+                }
             }
         }
         if ((isset($criteria['show_dsd_team']) && $criteria['show_dsd_team']) || isset($criteria['dsd_team'])) {
@@ -1000,7 +1006,9 @@ class ReportFilterHelpers extends ITechController
                 $select->columns("employee_dsdteam_option.employee_dsdteam_phrase");
             }
             if(isset($criteria['dsd_team'])) {
-                $select->where('link_employee_facility.dsd_team_id IN (?)', $criteria['dsd_team']);
+                if(count($criteria['dsd_team']) > 1){
+                    $select->where('link_employee_facility.dsd_team_id IN (' . implode(",", $criteria['dsd_team']) . ")");
+                }
             }
         }
         if ((isset($criteria['show_fte_min']) && $criteria['show_fte_min']) || $criteria['fte_min'] || $criteria['fte_max']) {
@@ -1087,25 +1095,46 @@ class ReportFilterHelpers extends ITechController
                 $select->joinLeft('facility', 'facility.id = employee.site_id', array());
                 $joined['facility'] = 1;
             }
-            $select->where('facility.id = ?', $criteria['site']);
-        }else if (isset($criteria['facilityInput']) && $criteria['facilityInput'] && count($criteria['facilityInput']) > 1) {//TA:#293.1 //TA:#419
+            //TA:#419
+            if(is_array($criteria['site'])){
+                if(count($criteria['site']) > 1){
+                    $select->where('facility.id in ( ' . implode(",", $criteria['site']) . ")");
+                }
+            }else{
+                $select->where('facility.id = ?', $criteria['site']);
+            }
+        }else if (isset($criteria['facilityInput']) && $criteria['facilityInput']) {//TA:#293.1 
             if (!array_key_exists('facility', $joined)) {
                 $select->joinLeft('facility', 'facility.id = employee.site_id', array());
                 $joined['facility'] = 1;
             }
-            $select->where('facility.id = in ( ' . implode(",", $criteria['facilityInput']) . ")");
+            //TA:#419
+            if(is_array($criteria['facilityInput'])){
+                if(count($criteria['facilityInput']) > 1){
+                   $select->where('facility.id in ( ' . implode(",", $criteria['facilityInput']) . ")");
+                }
+            }else{
+                $select->where('facility.id = ?', $criteria['facilityInput']);
+            }
         }
 
-        // facility type //TA:#419
-        if (isset($criteria['show_facility_type']) && $criteria['show_facility_type'] && count($criteria['facility_type']) > 1) {
+        // facility type 
+        if (isset($criteria['show_facility_type']) && $criteria['show_facility_type']) {
             if (!array_key_exists('facility_type_option', $joined)) {
                 $select->joinLeft('facility_type_option', 'facility_type_option.id = facility.type_option_id', array());//TA:#386
                 $joined['facility_type_option'] = 1;
             }
             $select->columns('facility_type_option.facility_type_phrase');
         }
+        //TA:#419
         if (isset($criteria['facility_type']) && $criteria['facility_type']) {
-            $select->where('facility.type_option_id in ( ' . implode(",", $criteria['facility_type']) . ")"); //TA:#386
+            if(is_array($criteria['facility_type'])){
+                if(count($criteria['facility_type']) > 1){
+                   $select->where('facility.type_option_id in ( ' . implode(",", $criteria['facility_type']) . ")"); //TA:#386
+                }
+            }else{
+                $select->where('facility.type_option_id =? ' , $criteria['facility_type']); //TA:#386
+            }
         }
 
         // classification
@@ -1117,12 +1146,18 @@ class ReportFilterHelpers extends ITechController
             $select->columns('employee_qualification_option.qualification_phrase');
         }
         //TA:#419
-        if (isset($criteria['classification']) && $criteria['classification'] && count($criteria['classification']) > 1) {
+        if (isset($criteria['classification']) && $criteria['classification']) {
             if (!array_key_exists('employee_qualification_option', $joined)) {
                 $select->joinLeft('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
                 $joined['employee_qualification_option'] = 1;
             }
-            $select->where('employee_qualification_option_id in ( ' . implode(",", $criteria['classification']) . ")");
+            if(is_array($criteria['classification'])){
+                if(count($criteria['classification']) > 1){
+                    $select->where('employee_qualification_option_id in ( ' . implode(",", $criteria['classification']) . ")");
+                }
+            }else{
+                $select->where('employee_qualification_option_id = ?', $criteria['classification']);
+            }
         }
 
         // funded hours per week
@@ -1157,13 +1192,19 @@ class ReportFilterHelpers extends ITechController
             }
             $select->columns('employee_role_option.role_phrase');
         }
-        //TA:#419
-        if (isset($criteria['primary_role']) && $criteria['primary_role'] && count($criteria['primary_role']) > 1) {
+        if (isset($criteria['primary_role']) && $criteria['primary_role']) {
             if (!array_key_exists('employee_role_option', $joined)) {
                 $select->joinLeft('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
                 $joined['employee_role_option'] = 1;
             }
-            $select->where('employee_role_option.id in ( ' . implode(",", $criteria['primary_role']) . ")");
+            //TA:#419
+            if(is_array($criteria['primary_role'])){
+                if(count($criteria['primary_role']) > 1){
+                    $select->where('employee_role_option.id in ( ' . implode(",", $criteria['primary_role']) . ")");
+                }
+            }else{
+                $select->where('employee_role_option.id =?' ,$criteria['primary_role']);
+            }
         }
 
         // transition (used with transition_type)
