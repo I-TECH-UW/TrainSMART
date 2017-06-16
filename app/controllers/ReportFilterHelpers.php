@@ -1026,26 +1026,26 @@ class ReportFilterHelpers extends ITechController
                 $select->where("link_employee_facility.hiv_fte_related < " . $criteria['fte_max']);
             }
         }
-        if ((isset($criteria['show_contract_start_date_from']) && $criteria['show_contract_start_date_from']) || $criteria['contract_start_date_from'] || $criteria['contract_start_date_to']) {
-            if(isset($criteria['show_contract_start_date_from']) && $criteria['show_contract_start_date_from']){
-                $select->columns("SUBSTRING_INDEX(employee.agreement_start_date, ' ', 1) as contract_start_date");
-            }
+        if (isset($criteria['show_contract_start_date_from']) || $criteria['contract_start_date_from'] || $criteria['contract_start_date_to']) {
+            $select->columns("SUBSTRING_INDEX(employee.agreement_start_date, ' ', 1) as contract_start_date");
             if($criteria['contract_start_date_from']){
-                $select->where("employee.agreement_start_date > '" . $criteria['contract_start_date_from'] . "'");
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_start_date_from']);
+                $select->where('employee.agreement_start_date >= ?',  $d->format('Y-m-d'));
             }
             if($criteria['contract_start_date_to']){
-                $select->where("employee.agreement_start_date < '" . $criteria['contract_start_date_to']. "'");
-            }     
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_start_date_to']);
+                $select->where('employee.agreement_start_date <= ?',  $d->format('Y-m-d'));
+            }    
         }
-        if ((isset($criteria['show_contract_end_date_from']) && $criteria['show_contract_end_date_from']) || $criteria['contract_end_date_from'] || $criteria['contract_end_date_to']) {
-            if(isset($criteria['show_contract_end_date_from']) && $criteria['show_contract_end_date_from']){
-                $select->columns("SUBSTRING_INDEX(employee.agreement_end_date, ' ', 1) as contract_end_date");
-            }
+        if (isset($criteria['show_contract_end_date_from']) || $criteria['contract_end_date_from'] || $criteria['contract_end_date_to']) {
+            $select->columns("SUBSTRING_INDEX(employee.agreement_end_date, ' ', 1) as contract_end_date");
             if($criteria['contract_end_date_from']){
-                $select->where("employee.agreement_end_date > '" . $criteria['contract_end_date_from']. "'");
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_end_date_from']);
+                $select->where('employee.agreement_end_date >= ?',  $d->format('Y-m-d'));
             }
             if($criteria['contract_end_date_to']){
-                $select->where("employee.agreement_end_date < '" . $criteria['contract_end_date_to']. "'");
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_end_date_to']);
+                $select->where('employee.agreement_end_date <= ?',  $d->format('Y-m-d'));    
             }
         }
         ////
@@ -1121,7 +1121,7 @@ class ReportFilterHelpers extends ITechController
         // facility type 
         if (isset($criteria['show_facility_type']) && $criteria['show_facility_type']) {
             if (!array_key_exists('facility_type_option', $joined)) {
-                $select->joinLeft('facility_type_option', 'facility_type_option.id = facility.type_option_id', array());//TA:#386
+                $select->joinLeft('facility_type_option', 'facility_type_option.id = facility.type_option_id', array());
                 $joined['facility_type_option'] = 1;
             }
             $select->columns('facility_type_option.facility_type_phrase');
@@ -1130,7 +1130,7 @@ class ReportFilterHelpers extends ITechController
         if (isset($criteria['facility_type']) && $criteria['facility_type']) {
             if(is_array($criteria['facility_type'])){
                 if(count($criteria['facility_type']) > 1){
-                   $select->where('facility.type_option_id in ( ' . implode(",", $criteria['facility_type']) . ")"); //TA:#386
+                   $select->where('facility.type_option_id in ( ' . implode(",", $criteria['facility_type']) . ")"); 
                 }
             }else{
                 $select->where('facility.type_option_id =? ' , $criteria['facility_type']); //TA:#386
@@ -1209,7 +1209,6 @@ class ReportFilterHelpers extends ITechController
 
         // transition (used with transition_type)
         if (isset($criteria['transition']) && $criteria['transition']) {
-
             if (isset($criteria['transition_type']) && $criteria['transition_type']) {
                 if ($criteria['transition_type'] == '1') {
                     // Actual Transition
@@ -1239,17 +1238,50 @@ class ReportFilterHelpers extends ITechController
                 $select->joinLeft(array('intended_employee_transition_option' => 'employee_transition_option'), 'intended_employee_transition_option.id = employee.employee_transition_option_id', array());
                 $joined['intended_employee_transition_option'] = 1;
             }
-            $select->where('intended_employee_transition_option.id = ?', $criteria['intended_transition']);
+            //TA:#419
+            if(is_array($criteria['intended_transition'])){
+                if(count($criteria['intended_transition']) > 1){
+                    $select->where('intended_employee_transition_option.id in ( ' . implode(",", $criteria['intended_transition']) . ")");
+                }
+            }else{
+                $select->where('intended_employee_transition_option.id = ?', $criteria['intended_transition']);
+            }
         }
+        
+        //TA:#419
+        if (isset($criteria['show_intended_transition_other']) && $criteria['show_intended_transition_other']) {
+            $select->columns('employee.transition_other');
+        }
+        if (isset($criteria['intended_transition_other']) && $criteria['intended_transition_other']) {
+            if(is_array($criteria['intended_transition_other'])){
+                if(count($criteria['intended_transition_other']) > 1){
+                    $select->where('employee.transition_other in ( ' . "'" . implode("','", $criteria['intended_transition_other']) . "')");
+                }
+            }else{
+                $select->where('employee.transition_other = ?', $criteria['intended_transition_other']);
+            }
+        }
+        if (isset($criteria['show_intended_transition_start_date']) || $criteria['intended_transition_start_date'] || $criteria['intended_transition_end_date']) {
+            $select->columns("SUBSTRING_INDEX(employee.transition_date, ' ', 1) as transition_date");
+            if($criteria['intended_transition_start_date']){
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['intended_transition_start_date']);
+                $select->where('employee.transition_date >= ?',  $d->format('Y-m-d'));
+            }
+            if($criteria['intended_transition_end_date']){
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['intended_transition_end_date']);
+                $select->where('employee.transition_date <= ?',  $d->format('Y-m-d'));    
+            }
+        }
+        //
 
         // transition outcome
         if (isset($criteria['show_actual_transition']) && $criteria['show_actual_transition']) {
             if (!array_key_exists('actual_employee_transition_option', $joined)) {
-                $select->joinLeft(array('actual_employee_transition_option' => 'employee_transition_option'),
+                $select->joinLeft(array('actual_employee_transition_option' => 'employee_transition_complete_option'), //TA:#419
                     'actual_employee_transition_option.id = employee.employee_transition_complete_option_id', array());
                 $joined['actual_employee_transition_option'] = 1;
             }
-            $select->columns('actual_employee_transition_option.transition_phrase AS actual_transition');
+            $select->columns('actual_employee_transition_option.transition_complete_phrase AS actual_transition');
 
         }
         if (isset($criteria['actual_transition']) && $criteria['actual_transition']) {
@@ -1258,9 +1290,30 @@ class ReportFilterHelpers extends ITechController
                     'actual_employee_transition_option.id = employee.employee_transition_complete_option_id', array());
                 $joined['actual_employee_transition_option'] = 1;
             }
-            $select->where('actual_employee_transition_option.id = ?', $criteria['actual_transition']);
-
+            //TA:#419
+            if(is_array($criteria['actual_transition'])){
+                if(count($criteria['actual_transition']) > 1){
+                    $select->where('actual_employee_transition_option.id in ( ' . implode(",", $criteria['actual_transition']) . ")");
+                }
+            }else{
+                $select->where('actual_employee_transition_option.id = ?', $criteria['actual_transition']);
+            }
         }
+        
+        //TA:#419
+        if (isset($criteria['show_actual_transition_other']) && $criteria['show_actual_transition_other']) {
+            $select->columns('employee.transition_complete_other');
+        }
+        if (isset($criteria['actual_transition_other']) && $criteria['actual_transition_other']) {
+            if(is_array($criteria['actual_transition_other'])){
+                if(count($criteria['actual_transition_other']) > 1){
+                    $select->where('employee.transition_complete_other in ( ' . "'" . implode("','", $criteria['actual_transition_other']) . "')");
+                }
+            }else{
+                $select->where('employee.transition_complete_other = ?', $criteria['actual_transition_other']);
+            }
+        }
+        //
 
         // transition date
         // labelTwoFields uses the name of the first field for the 'show' checkbox
@@ -1376,7 +1429,6 @@ class ReportFilterHelpers extends ITechController
                 $select->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array());
                 $joined['partner_funder_option'] = 1;
             }
-
             $select->columns('funder_phrase');
         }
         if (isset($criteria['funder']) && ($criteria['funder'])) {
@@ -1392,10 +1444,12 @@ class ReportFilterHelpers extends ITechController
                 $select->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array());
                 $joined['partner_funder_option'] = 1;
             }
-
-            if (count($criteria['funder']) > 1) {
-                $select->where('partner_funder_option.id in (?)', $criteria['funder']);
-            } elseif (count($criteria['funder']) == 1) {
+           //TA:#419
+            if(is_array($criteria['funder'])){
+                if(count($criteria['funder']) > 1){
+                    $select->where('partner_funder_option.id in ( ' . implode(",", $criteria['funder']) . ")");
+                }
+            }else{
                 $select->where('partner_funder_option.id = ?', $criteria['funder']);
             }
         }
@@ -1436,8 +1490,117 @@ class ReportFilterHelpers extends ITechController
 //                 $joined['user_to_organizer_access'] = 1;
 //             }
 //             $select->where('user_to_organizer_access.user_id = ?', $uid);           
-            ////
+            ////         
         }
+        
+        //TA:#419
+        if ((isset($criteria['show_agencies']) && $criteria['show_agencies']) || (isset($criteria['agencies']) && $criteria['agencies'])) {
+            if (!array_key_exists('link_mechanism_employee', $joined)) {
+                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                $joined['link_mechanism_employee'] = 1;
+            }
+            if (!array_key_exists('mechanism_option', $joined)) {
+                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $joined['mechanism_option'] = 1;
+            }
+            if (!array_key_exists('partner_funder_option', $joined)) {
+                $select->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array());
+                $joined['partner_funder_option'] = 1;
+            }
+           if (isset($criteria['show_agencies']) && $criteria['show_agencies']){
+                $select->columns('partner_funder_option.funder_phrase');
+           }
+           if (isset($criteria['agencies']) && $criteria['agencies']){
+               if(is_array($criteria['agencies'])){
+                   if(count($criteria['agencies']) > 1){
+                       $select->where('mechanism_option.funder_id in ( ' . implode(",", $criteria['agencies']) . ")");
+                   }
+               }else{
+                   $select->where('mechanism_option.funder_id = ?', $criteria['agencies']);
+               }
+           }
+        }
+        if ((isset($criteria['show_mechanism_ids']) && $criteria['show_mechanism_ids']) || (isset($criteria['mechanism_ids']) && $criteria['mechanism_ids'])) {
+            if (!array_key_exists('link_mechanism_employee', $joined)) {
+                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                $joined['link_mechanism_employee'] = 1;
+            }
+            if (!array_key_exists('mechanism_option', $joined)) {
+                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $joined['mechanism_option'] = 1;
+            }
+            if (isset($criteria['show_mechanism_ids']) && $criteria['show_mechanism_ids']){
+                $select->columns('mechanism_option.external_id');
+            }
+            if (isset($criteria['mechanism_ids']) && $criteria['mechanism_ids']){
+                if(is_array($criteria['mechanism_ids'])){
+                    if(count($criteria['mechanism_ids']) > 1){
+                        $select->where('mechanism_option.external_id in ( ' . implode(",", $criteria['mechanism_ids']) . ")");
+                    }
+                }else{
+                    $select->where('mechanism_option.external_id = ?', $criteria['mechanism_ids']);
+                }
+            }
+        }
+        if ((isset($criteria['show_mechanism_names']) && $criteria['show_mechanism_names']) || (isset($criteria['mechanism_names']) && $criteria['mechanism_names'])) {
+            if (!array_key_exists('link_mechanism_employee', $joined)) {
+                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                $joined['link_mechanism_employee'] = 1;
+            }
+            if (!array_key_exists('mechanism_option', $joined)) {
+                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $joined['mechanism_option'] = 1;
+            }
+            if (isset($criteria['show_mechanism_names']) && $criteria['show_mechanism_names']){
+                $select->columns('mechanism_option.mechanism_phrase'); 
+            }
+            if (isset($criteria['mechanism_names']) && $criteria['mechanism_names']){
+                if(is_array($criteria['mechanism_names'])){
+                    if(count($criteria['mechanism_names']) > 1){
+                        $select->where('mechanism_option.id in ( ' . implode(",", $criteria['mechanism_names']) . ")");
+                    }
+                }else{
+                    $select->where('mechanism_option.id = ?', $criteria['mechanism_names']);
+                }
+            }
+        }
+        if ((isset($criteria['show_mech_percent_min']) && $criteria['show_mech_percent_min']) || 
+            (isset($criteria['mech_percent_min']) && $criteria['mech_percent_min']) ||
+            (isset($criteria['mech_percent_max']) && $criteria['mech_percent_max'])) {
+            if (!array_key_exists('link_mechanism_employee', $joined)) {
+                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                $joined['link_mechanism_employee'] = 1;
+            }
+            if (isset($criteria['show_mech_percent_min']) && $criteria['show_mech_percent_min']){
+                $select->columns('link_mechanism_employee.percentage');
+            }
+            if (isset($criteria['mech_percent_min']) && intval($criteria['mech_percent_min']) >= 0) {
+                $select->where('link_mechanism_employee.percentage >= ?', intval($criteria['mech_percent_min']));
+            }
+            if (isset($criteria['mech_percent_max']) && $criteria['mech_percent_max']) {
+                $select->where('link_mechanism_employee.percentage <= ?', intval($criteria['mech_percent_max']));
+            }
+        }
+        if ((isset($criteria['show_mech_fund_date_start']) || $criteria['show_mech_fund_date_start']) || 
+            (isset($criteria['mech_fund_date_start']) && $criteria['mech_fund_date_start']) || 
+            (isset($criteria['mech_fund_date_end']) && $criteria['mech_fund_date_end'])) {
+            if (!array_key_exists('mechanism_option', $joined)) {
+                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $joined['mechanism_option'] = 1;
+            }
+            if(isset($criteria['show_mech_fund_date_start']) || $criteria['show_mech_fund_date_start']){
+                $select->columns("SUBSTRING_INDEX(mechanism_option.end_date, ' ', 1) as mechanism_end_date");// then it breack table output beacuse mechanism name is added in any case
+            }
+            if(isset($criteria['mech_fund_date_start']) && $criteria['mech_fund_date_start']){
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['mech_fund_date_start']);
+                $select->where('mechanism_option.end_date >= ?',  $d->format('Y-m-d'));
+            }
+            if(isset($criteria['mech_fund_date_end']) && $criteria['mech_fund_date_end']){
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['mech_fund_date_end']);
+                $select->where('mechanism_option.end_date <= ?',  $d->format('Y-m-d'));
+            }
+        }
+        //
 
         $s = $select->__toString();
         return $select;

@@ -9958,15 +9958,15 @@ die (__LINE__ . " - " . $sql);
                 $status->setStatusMessage(t('Error'));
             } else {
 
-                $select->distinct();
+               //TA:#419 $select->distinct();
 
                 $tables = $select->getPart(Zend_Db_Select::FROM);
                 $cols = $select->getPart(Zend_Db_Select::COLUMNS);
                 if (!array_key_exists('link_mechanism_employee', $tables)) {
-                    $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                    $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());//TA:#419 join left
                 }
                 if (!array_key_exists('mechanism_option', $tables)) {
-                    $select->join('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                    $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array()); //TA:#419 join left
                     //TA:#415 make visible results by user mechanism accessebility
                     if (!$this->hasACL('mechanism_option_all')) {
                         $select->joinLeft(array('user_to_mechanism_access'),
@@ -9986,12 +9986,12 @@ die (__LINE__ . " - " . $sql);
                     $select->columns('employee.employee_code');
                 }
 
-                if (!array_key_exists('mechanism_option.mechanism_phrase', $cols)) {
-                    $select->columns('mechanism_option.mechanism_phrase');
-                }
-                if (!array_key_exists('mechanism_option.end_date', $cols)) {
-                    $select->columns(array('mechanism_end_date' => new Zend_Db_Expr("DATE_FORMAT(mechanism_option.end_date, '%d/%m/%Y')")));
-                }
+//                 if (!array_key_exists('mechanism_option.mechanism_phrase', $cols)) {
+//                     $select->columns('mechanism_option.mechanism_phrase');
+//                 }
+//                 if (!array_key_exists('mechanism_option.end_date', $cols)) {
+//                     $select->columns(array('mechanism_end_date' => new Zend_Db_Expr("DATE_FORMAT(mechanism_option.end_date, '%d/%m/%Y')")));
+//                 }
 
                 $c = array_map(
                     function ($item) {
@@ -10015,21 +10015,21 @@ die (__LINE__ . " - " . $sql);
                             'base_phrase' => t('Employee Based at'),
                             'based_at_other' => t('Other, Specify'),
                             'intended_transition' => t('Intended Transition'),
-                            'intended_transition_other' => t('Intended Transition Other'),
-                            'intended_transition_start_date' => t('Intended Transition Date'),
+                            'transition_other' => t('Intended Transition Other'),
+                            'transition_date' => t('Intended Transition Date'),
                             'actual_transition' => t('Actual Transition Outcome'),
-                            'actual_transition_other' => t('Actual Transition Outcome, Other'),
-                            'transition_start_date' => t('Actual Transition Date'),
+                            'transition_complete_other' => t('Actual Transition Outcome, Other'),
+                            'transition_complete_date' => t('Actual Transition Date'),
                             'funded_hours_per_week' => t('Funded hours per week'),
                             'salary' => t('Salary'),
                             'benefits' => t('Benefits'),
                             'additional_expenses' => t('Additional Expenses'),
                             'stipend' => t('Stipend'),
                             'annual_cost' => t('Annual Cost'),
-                            'agencies' => t('Implementing Agency'),
-                            'mechanism_ids' => t('Implementing Mechanism Identifier'),
+                            'funder_phrase' => t('Implementing Agency'),
+                            'external_id' => t('Implementing Mechanism Identifier'),
                             'mechanism_phrase' => t('Implementing Mechanism Name'),
-                            'mech_percent' => t('Implementing Mechanism percentage'),
+                            'percentage' => t('Implementing Mechanism percentage'),
                             'mechanism_end_date' => t('Implementing Mechanism End Date'),
                         );
                         if ($item[2] !== null) {
@@ -10040,16 +10040,16 @@ die (__LINE__ . " - " . $sql);
                     $select->getPart(Zend_Db_Select::COLUMNS)
                 );
 
+                print "<br><br>"; print_r($c); print "<br><br>";
                 if (count($c)) {
                     $this->view->assign('headers', $c);
-                    $f = $db->fetchAll($select);
-                    print "<br><br>" .$select;
-                    $this->view->assign('output', $f);
+                    print "<br><br>" .$select; 
+                    $this->view->assign('output',$db->fetchAll($select));
                 }
             }
         }
 
-        $choose = array("0" => '--' . t("choose") . '--');
+        $choose = array("0" => '--' . t("All") . '--');
 
         $select = $db->select()
             ->from('partner', array('id', 'partner'))
@@ -10110,7 +10110,7 @@ die (__LINE__ . " - " . $sql);
         
         //TA:#419
         $transitions_other = $choose + $db->fetchPairs($db->select()
-            ->from('employee', array('id', 'transition_other'))
+            ->from('employee', array('transition_other', 'transition_other'))
             ->group('transition_other')
             ->where('transition_other is not null')
             ->order('transition_other ASC')
@@ -10119,7 +10119,7 @@ die (__LINE__ . " - " . $sql);
             ->from('employee_transition_complete_option', array('id', 'transition_complete_phrase'))
             ->order('transition_complete_phrase ASC'));
         $transitions_complete_other = $choose + $db->fetchPairs($db->select()
-            ->from('employee', array('id', 'transition_complete_other'))
+            ->from('employee', array('transition_complete_other', 'transition_complete_other'))
             ->group('transition_complete_other')
             ->where('transition_complete_other is not null')
             ->order('transition_complete_other ASC')
@@ -10128,7 +10128,7 @@ die (__LINE__ . " - " . $sql);
             ->from('partner_funder_option', array('id', 'funder_phrase'))
             ->order('funder_phrase ASC'));
         $mechanism_ids = $choose + $db->fetchPairs($db->select()
-            ->from('mechanism_option', array('id', 'external_id'))
+            ->from('mechanism_option', array('external_id', 'external_id'))
             ->group('external_id')
             ->where('external_id is not null')
             ->order('external_id ASC')

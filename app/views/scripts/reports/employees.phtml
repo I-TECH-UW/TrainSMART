@@ -14,6 +14,20 @@
     print ScriptContainer::$instance->renderJSHead();
     echo $this->partial('reports/employee-reports-common-javascript-header-partial.phtml');
     ?>
+    
+     <script type="application/javascript">
+
+     //TA:#419
+     $(document).ready(function () {
+    	
+    	 var show_employee_code_cb = document.getElementsByName("show_employee_code")[0];
+    	 show_employee_code_cb.checked = true;
+    	 show_employee_code_cb.disabled = true;
+
+   		
+     });
+    
+     </script>
 
 </head>
 <body class="yui-skin-sam">
@@ -155,15 +169,15 @@
                             isset($this->criteria['cost_max']) ? $this->criteria['cost_max'] : '');
 
                         echo labelAndField($this, t('Implementing Agency'),
-                            $this->formSelect('agencies', isset($this->criteria['agency']) ? $this->criteria['agency'] : null, array('multiple' => true), $this->agencies), 'agencies');
+                            $this->formSelect('agencies', isset($this->criteria['agencies']) ? $this->criteria['agencies'] : null, array('multiple' => true), $this->agencies), 'agencies');
                         echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
                         
                         echo labelAndField($this, t('Implementing Mechanism Identifier'),
-                            $this->formSelect('mechanism_ids', isset($this->criteria['mechanism_id']) ? $this->criteria['mechanism_id'] : null, array('multiple' => true), $this->mechanism_ids), 'mechanism_ids');
+                            $this->formSelect('mechanism_ids', isset($this->criteria['mechanism_ids']) ? $this->criteria['mechanism_ids'] : null, array('multiple' => true), $this->mechanism_ids), 'mechanism_ids');
                         echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
                         
                         echo labelAndField($this, t('Implementing Mechanism Name'),
-                            $this->formSelect('mechanism_names', isset($this->criteria['mechanism_name']) ? $this->criteria['mechanism_name'] : null, array('multiple' => true), $this->mechanism_names), 'mechanism_names');
+                            $this->formSelect('mechanism_names', isset($this->criteria['mechanism_names']) ? $this->criteria['mechanism_names'] : null, array('multiple' => true), $this->mechanism_names), 'mechanism_names');
                         echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
                         
                         echo labelTwoFields($this, t('Implementing Mechanism percentage'), t('to'), 'mech_percent_min', 'mech_percent_max',
