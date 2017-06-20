@@ -21,8 +21,8 @@
      $(document).ready(function () {
     	
     	 var show_employee_code_cb = document.getElementsByName("show_employee_code")[0];
-    	 show_employee_code_cb.checked = true;
-    	 show_employee_code_cb.disabled = true;
+     	 show_employee_code_cb.checked = true;
+     	 show_employee_code_cb.disabled = true;
 
    		
      });
@@ -78,10 +78,10 @@
                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';                      
                        
                        echo labelAndField($this, t('Employee Code'), 
-                           $this->formSelect('employee_code', isset($this->criteria['employee_code']) ? $this->criteria['employee_code'] : null, array('multiple' => true), $this->employee_codes), 'employee_code');
+                           $this->formSelect('employee_code', (isset($this->criteria['employee_code']) && $this->criteria['employee_code'][0] !== '0') ? $this->criteria['employee_code'] : null, array('multiple' => true), $this->employee_codes), 'employee_code');
                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
                        
-                       echo labelAndField($this, t('Partner'), 
+                       echo labelAndField($this, t('Partner Name'), 
                            $this->formSelect('partner', isset($this->criteria['partner']) ? $this->criteria['partner'] : null, array('multiple' => true), $this->partners), 'partner');
                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
                         
@@ -167,6 +167,10 @@
                         echo labelTwoFields($this, t('Annual Cost'), t('to'), 'cost_min', 'cost_max',
                             isset($this->criteria['cost_min']) ? $this->criteria['cost_min'] : '',
                             isset($this->criteria['cost_max']) ? $this->criteria['cost_max'] : '');
+                        
+                        echo labelAndField($this, t('Implementing Mechanism Prime Partner Name'), 
+                           $this->formSelect('mech_partners', isset($this->criteria['mech_partners']) ? $this->criteria['mech_partners'] : null, array('multiple' => true), $this->mech_partners), 'mech_partners');
+                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
 
                         echo labelAndField($this, t('Implementing Agency'),
                             $this->formSelect('agencies', isset($this->criteria['agencies']) ? $this->criteria['agencies'] : null, array('multiple' => true), $this->agencies), 'agencies');
@@ -191,7 +195,7 @@
                         
                         //TA:#419 a lot of changes with all fields -> END
 
-                        echo $this->partial('reports/ps-search-preview-button-partial.phtml', array());
+                        echo "<br>" . $this->partial('reports/ps-search-preview-button-partial.phtml', array());
                         ?>
                     </div>
                     <div class="clear"></div>

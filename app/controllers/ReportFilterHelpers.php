@@ -822,8 +822,10 @@ class ReportFilterHelpers extends ITechController
         $db = $this->dbfunc();
         $select = $db->select()->from('employee', array());
         
-        print_r($criteria);//TA:1000
         //TA:#419
+        if (isset($criteria['action']) && $criteria['action'] === 'employees') {
+            $select->columns("employee.employee_code");
+        }
         if (isset($criteria['show_is_active']) && $criteria['show_is_active']) {
            $select->columns("IF(employee.is_active = 1,'Active','Inactive') as active");
         }
@@ -832,8 +834,8 @@ class ReportFilterHelpers extends ITechController
         }
         if (isset($criteria['show_employee_code']) && $criteria['show_employee_code']) {
         } 
-        if(isset($criteria['employee_code']) && count($criteria['employee_code']) > 1) {
-             $select->where('employee.id IN (?)', $criteria['employee_code']);
+        if(isset($criteria['employee_code']) && $criteria['employee_code'][0] !== '0') {
+             $select->where('employee.employee_code IN (?)', $criteria['employee_code']);
         }
         /////////
 
@@ -851,7 +853,7 @@ class ReportFilterHelpers extends ITechController
                 $joined['partner'] = 1;
             }
             if(is_array($criteria['partner'])){
-               if(count($criteria['partner']) > 1){
+               if($criteria['partner'][0] > 0){
                     $select->where('partner.id in ( ' . implode(",", $criteria['partner']) . ")");
                }
             }else{
@@ -988,7 +990,7 @@ class ReportFilterHelpers extends ITechController
                 $select->columns("employee_dsdmodel_option.employee_dsdmodel_phrase");
             }
             if(isset($criteria['dsd_model'])) {
-                if(count($criteria['dsd_model']) > 1){
+                if($criteria['dsd_model'][0] > 0){
                     $select->where('link_employee_facility.dsd_model_id IN (' . implode(",", $criteria['dsd_model']) . ")");
                 }
             }
@@ -1006,7 +1008,7 @@ class ReportFilterHelpers extends ITechController
                 $select->columns("employee_dsdteam_option.employee_dsdteam_phrase");
             }
             if(isset($criteria['dsd_team'])) {
-                if(count($criteria['dsd_team']) > 1){
+                if($criteria['dsd_team'][0] > 0){
                     $select->where('link_employee_facility.dsd_team_id IN (' . implode(",", $criteria['dsd_team']) . ")");
                 }
             }
@@ -1097,7 +1099,7 @@ class ReportFilterHelpers extends ITechController
             }
             //TA:#419
             if(is_array($criteria['site'])){
-                if(count($criteria['site']) > 1){
+                if($criteria['site'][0] > 0){
                     $select->where('facility.id in ( ' . implode(",", $criteria['site']) . ")");
                 }
             }else{
@@ -1110,7 +1112,7 @@ class ReportFilterHelpers extends ITechController
             }
             //TA:#419
             if(is_array($criteria['facilityInput'])){
-                if(count($criteria['facilityInput']) > 1){
+                if($criteria['facilityInput'][0] > 0){
                    $select->where('facility.id in ( ' . implode(",", $criteria['facilityInput']) . ")");
                 }
             }else{
@@ -1129,7 +1131,7 @@ class ReportFilterHelpers extends ITechController
         //TA:#419
         if (isset($criteria['facility_type']) && $criteria['facility_type']) {
             if(is_array($criteria['facility_type'])){
-                if(count($criteria['facility_type']) > 1){
+                if($criteria['facility_type'][0] > 0){
                    $select->where('facility.type_option_id in ( ' . implode(",", $criteria['facility_type']) . ")"); 
                 }
             }else{
@@ -1152,7 +1154,7 @@ class ReportFilterHelpers extends ITechController
                 $joined['employee_qualification_option'] = 1;
             }
             if(is_array($criteria['classification'])){
-                if(count($criteria['classification']) > 1){
+                if($criteria['classification'][0] > 0){
                     $select->where('employee_qualification_option_id in ( ' . implode(",", $criteria['classification']) . ")");
                 }
             }else{
@@ -1199,7 +1201,7 @@ class ReportFilterHelpers extends ITechController
             }
             //TA:#419
             if(is_array($criteria['primary_role'])){
-                if(count($criteria['primary_role']) > 1){
+                if($criteria['primary_role'][0] > 0){
                     $select->where('employee_role_option.id in ( ' . implode(",", $criteria['primary_role']) . ")");
                 }
             }else{
@@ -1240,7 +1242,7 @@ class ReportFilterHelpers extends ITechController
             }
             //TA:#419
             if(is_array($criteria['intended_transition'])){
-                if(count($criteria['intended_transition']) > 1){
+                if($criteria['intended_transition'][0] > 0){
                     $select->where('intended_employee_transition_option.id in ( ' . implode(",", $criteria['intended_transition']) . ")");
                 }
             }else{
@@ -1254,7 +1256,7 @@ class ReportFilterHelpers extends ITechController
         }
         if (isset($criteria['intended_transition_other']) && $criteria['intended_transition_other']) {
             if(is_array($criteria['intended_transition_other'])){
-                if(count($criteria['intended_transition_other']) > 1){
+                if($criteria['intended_transition_other'][0] !== '0'){
                     $select->where('employee.transition_other in ( ' . "'" . implode("','", $criteria['intended_transition_other']) . "')");
                 }
             }else{
@@ -1292,7 +1294,7 @@ class ReportFilterHelpers extends ITechController
             }
             //TA:#419
             if(is_array($criteria['actual_transition'])){
-                if(count($criteria['actual_transition']) > 1){
+                if($criteria['actual_transition'][0] > 0){
                     $select->where('actual_employee_transition_option.id in ( ' . implode(",", $criteria['actual_transition']) . ")");
                 }
             }else{
@@ -1306,7 +1308,7 @@ class ReportFilterHelpers extends ITechController
         }
         if (isset($criteria['actual_transition_other']) && $criteria['actual_transition_other']) {
             if(is_array($criteria['actual_transition_other'])){
-                if(count($criteria['actual_transition_other']) > 1){
+                if($criteria['actual_transition_other'][0] !== '0'){
                     $select->where('employee.transition_complete_other in ( ' . "'" . implode("','", $criteria['actual_transition_other']) . "')");
                 }
             }else{
@@ -1446,7 +1448,7 @@ class ReportFilterHelpers extends ITechController
             }
            //TA:#419
             if(is_array($criteria['funder'])){
-                if(count($criteria['funder']) > 1){
+                if($criteria['funder'][0] > 0){
                     $select->where('partner_funder_option.id in ( ' . implode(",", $criteria['funder']) . ")");
                 }
             }else{
@@ -1512,7 +1514,7 @@ class ReportFilterHelpers extends ITechController
            }
            if (isset($criteria['agencies']) && $criteria['agencies']){
                if(is_array($criteria['agencies'])){
-                   if(count($criteria['agencies']) > 1){
+                   if($criteria['agencies'][0] > 0){
                        $select->where('mechanism_option.funder_id in ( ' . implode(",", $criteria['agencies']) . ")");
                    }
                }else{
@@ -1534,7 +1536,7 @@ class ReportFilterHelpers extends ITechController
             }
             if (isset($criteria['mechanism_ids']) && $criteria['mechanism_ids']){
                 if(is_array($criteria['mechanism_ids'])){
-                    if(count($criteria['mechanism_ids']) > 1){
+                    if($criteria['mechanism_ids'][0] > 0){
                         $select->where('mechanism_option.external_id in ( ' . implode(",", $criteria['mechanism_ids']) . ")");
                     }
                 }else{
@@ -1556,11 +1558,37 @@ class ReportFilterHelpers extends ITechController
             }
             if (isset($criteria['mechanism_names']) && $criteria['mechanism_names']){
                 if(is_array($criteria['mechanism_names'])){
-                    if(count($criteria['mechanism_names']) > 1){
+                    if($criteria['mechanism_names'][0] > 0){
                         $select->where('mechanism_option.id in ( ' . implode(",", $criteria['mechanism_names']) . ")");
                     }
                 }else{
                     $select->where('mechanism_option.id = ?', $criteria['mechanism_names']);
+                }
+            }
+        }
+        if ((isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']) || (isset($criteria['mech_partners']) && $criteria['mech_partners'])) {
+            if (!array_key_exists('link_mechanism_employee', $joined)) {
+                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                $joined['link_mechanism_employee'] = 1;
+            }
+            if (!array_key_exists('mechanism_option', $joined)) {
+                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $joined['mechanism_option'] = 1;
+            }
+            if (!array_key_exists('mech_partner', $joined)) {
+                $select->joinLeft(array('partner'), 'partner.id = mechanism_option.owner_id', array());
+                $joined['mech_partner'] = 1;
+            }
+            if (isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']){
+                $select->columns('partner.partner as impl_mech_partner_name');
+            }
+            if (isset($criteria['mech_partners']) && $criteria['mech_partners']){
+                if(is_array($criteria['mech_partners'])){
+                    if($criteria['mech_partners'][0] > 0){
+                        $select->where('mechanism_option.owner_id in ( ' . implode(",", $criteria['mech_partners']) . ")");
+                    }
+                }else{
+                    $select->where('mechanism_option.owner_id = ?', $criteria['mech_partners']);
                 }
             }
         }
@@ -1584,6 +1612,10 @@ class ReportFilterHelpers extends ITechController
         if ((isset($criteria['show_mech_fund_date_start']) || $criteria['show_mech_fund_date_start']) || 
             (isset($criteria['mech_fund_date_start']) && $criteria['mech_fund_date_start']) || 
             (isset($criteria['mech_fund_date_end']) && $criteria['mech_fund_date_end'])) {
+            if (!array_key_exists('link_mechanism_employee', $joined)) {
+                    $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                    $joined['link_mechanism_employee'] = 1;
+            }
             if (!array_key_exists('mechanism_option', $joined)) {
                 $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
                 $joined['mechanism_option'] = 1;

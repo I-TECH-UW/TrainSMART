@@ -9948,10 +9948,12 @@ die (__LINE__ . " - " . $sql);
     {
         $locations = Location::getAll();
         $criteria = $this->getAllParams();
+        
 
         $db = $this->dbfunc();
 
         if (isset($criteria['go']) && $criteria['go']) {
+            //print_r($criteria);//TA:1000
             $select = self::employeeFilterQuery($criteria);
             if (!is_a($select, "Zend_Db_Select", false)) {
                 $status = ValidationContainer::instance();
@@ -9959,7 +9961,7 @@ die (__LINE__ . " - " . $sql);
             } else {
 
                //TA:#419 $select->distinct();
-
+         
                 $tables = $select->getPart(Zend_Db_Select::FROM);
                 $cols = $select->getPart(Zend_Db_Select::COLUMNS);
                 if (!array_key_exists('link_mechanism_employee', $tables)) {
@@ -9982,9 +9984,10 @@ die (__LINE__ . " - " . $sql);
                     ////
                 }
                 
-                if (!array_key_exists('employee.employee_code', $cols)) {
-                    $select->columns('employee.employee_code');
-                }
+                
+//                 if (!array_key_exists('employee.employee_code', $cols)) {
+//                     $select->columns('employee.employee_code');
+//                 }
 
 //                 if (!array_key_exists('mechanism_option.mechanism_phrase', $cols)) {
 //                     $select->columns('mechanism_option.mechanism_phrase');
@@ -10001,7 +10004,7 @@ die (__LINE__ . " - " . $sql);
                             'role_phrase' => t('Primary Role'),
                             'qualification_phrase' => t('Staff Cadre'),
                             'employee_code' => t('Employee Code'),
-                            'partner' => t('Partner'),
+                            'partner' => t('Partner Name'),
                             'province_name' => t('Region A (Province)'),
                             'district_name' => t('Region B (Health District)'),
                             'region_c_name' => t('Region C (Local Region)'),
@@ -10031,6 +10034,7 @@ die (__LINE__ . " - " . $sql);
                             'mechanism_phrase' => t('Implementing Mechanism Name'),
                             'percentage' => t('Implementing Mechanism percentage'),
                             'mechanism_end_date' => t('Implementing Mechanism End Date'),
+                            'impl_mech_partner_name' => t('Implementing Mechanism Prime Partner Name'),
                         );
                         if ($item[2] !== null) {
                             return $header_names[$item[2]];
@@ -10040,10 +10044,9 @@ die (__LINE__ . " - " . $sql);
                     $select->getPart(Zend_Db_Select::COLUMNS)
                 );
 
-                print "<br><br>"; print_r($c); print "<br><br>";
+                //TA:10000 print "<br><br>"; print_r($c); print "<br><br>$select<br><br>";
                 if (count($c)) {
                     $this->view->assign('headers', $c);
-                    print "<br><br>" .$select; 
                     $this->view->assign('output',$db->fetchAll($select));
                 }
             }
@@ -10081,8 +10084,7 @@ die (__LINE__ . " - " . $sql);
         
         //TA:#419
         $employee_codes = $choose + $db->fetchPairs($db->select()
-            ->from('employee', array('id', 'employee_code'))
-            ->limit(10) //TA:1000
+            ->from('employee', array('employee_code', 'employee_code'))
             ->order('employee_code ASC')
         );
         
@@ -10144,6 +10146,7 @@ die (__LINE__ . " - " . $sql);
             );
 
         $this->view->assign('partners', $partners);
+        $this->view->assign('mech_partners', $partners);//TA:#419
         $this->view->assign('facilities', $facilities);
         $this->view->assign('facilityTypes', $facilityTypes);
         $this->view->assign('classifications', $classifications);
