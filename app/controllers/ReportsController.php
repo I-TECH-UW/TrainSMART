@@ -10012,7 +10012,7 @@ die (__LINE__ . " - " . $sql);
                             'facility_name' => t('Facility') . ' ' . t('Name'),
                             'employee_dsdmodel_phrase' => t('Service Delivery Model'), 
                             'employee_dsdteam_phrase' => t('Service Delivery Team'), 
-                            'hiv_fte_related' => t('HIV Related FTE (Hrs)'), 
+                            'hiv_fte_related' => t('Hours Worked per Week'), //TA:#439
                             'contract_start_date' => t('Contract Start Date'), 
                             'contract_end_date' => t('Contract End Date'), 
                             'base_phrase' => t('Employee Based at'),

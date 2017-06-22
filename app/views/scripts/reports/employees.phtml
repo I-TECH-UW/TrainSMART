@@ -110,7 +110,8 @@
                         echo labelAndField($this, t('Service Delivery Team'), 
                             $this->formSelect('dsd_team', isset($this->criteria['dsd_team']) ? $this->criteria['dsd_team'] : null, array('multiple' => true), $this->dsd_teams), 'dsd_team');
                         echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
-                        echo labelTwoFields($this, t('HIV Related FTE (Hrs)'), t('to'), 'fte_min', 'fte_max',
+                        //TA:#439
+                        echo labelTwoFields($this, t('Hours Worked per Week'), t('to'), 'fte_min', 'fte_max',
                             isset($this->criteria['fte_min']) ? $this->criteria['fte_min'] : '0',
                             isset($this->criteria['fte_max']) ? $this->criteria['fte_max'] : '');
                         echo labelTwoFields($this, t('Contract Start Date'), t('to'), 'contract_start_date_from', 'contract_start_date_to',

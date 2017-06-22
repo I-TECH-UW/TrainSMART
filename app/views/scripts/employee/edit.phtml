@@ -514,7 +514,8 @@
             	 hiv_fte_related = 0;
              }else{
                 if(isNaN(hiv_fte_related)){
-                	alert("Specify integer value for '<?php tp('HIV Related FTE (Hrs)');?>'.");
+                    //TA:#439
+                	alert("Specify integer value for '<?php tp('Hours Worked per Week');?>'.");
                     $('#hiv_fte_related' ).val('');
                     return false;
                 }else{
@@ -929,7 +930,7 @@
                     <th width='15%'><?php echo "<font color='red'>*</font>" . t('Region C (Local Region)'); ?></th>
                     <th><?php echo "<font color='red'>*</font>" .t('Site Name'); ?></th>
                     <th width='10%'><?php echo "<font color='red'>*</font>" . t('Site Type'); ?></th>
-                    <th width='5%'><?php echo t('HIV Related FTE (Hrs)'); ?></th>
+                    <th width='5%'><?php echo t('Hours Worked per Week'); ?></th><!-- TA:#439 -->
                     <th width='5%'><?php tp("Delete?"); ?></th>               
                 </tr>
                 </thead>
@@ -1003,7 +1004,7 @@
                    echo "<td width='150px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Site Type') . "</span><br>";
                    echo renderFacilityTypesDropDown($this->site_types, '', $this->viewonly, '');
                    echo "</td>";
-                   echo "<td width='50px' style='padding-right: 10px;' valign='bottom'>" . $label . t('HIV Related FTE (Hrs)') . "</span><br>";
+                   echo "<td width='50px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Hours Worked per Week') . "</span><br>";//TA:#439
                    echo "<input type='text' id='hiv_fte_related' name='hiv_fte_related' value='' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntegerKeyPress(this);'/>";
                    echo "</td>";
                    echo "<td style='padding-right: 10px;' valign='bottom'>" . $label . "&nbsp;" . "</span><br>";
