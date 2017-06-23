@@ -490,8 +490,9 @@
                 if(site_id){
                 	site_name = $('#facilityInput option:selected' ).text();
                 }else{
+                	//TA:#441
                 	if(dsd_model == 'Facility site - Roving' || dsd_model == 'Facility site - Surge' ||
-                    		dsd_model == 'Facility site - Seconded' || dsd_model == 'Community site'){ 
+                    		dsd_model == 'Facility site - Seconded'){ 
                 	alert("Specify value for '<?php tp('Site Name');?>'.");
                     return false;
                 	}
@@ -501,14 +502,16 @@
             if($('#facilityType').val()){
             	site_type = $('#facilityType option:selected' ).text();
             }
-            var site_name = '';
-            var site_id = $('#facilityInput').val();
-            if(site_id){
-            	site_name = $('#facilityInput option:selected' ).text();
-            }else{
-            	alert("Specify value for '<?php tp('Site Name');?>'.");
-                return false;
-            } 
+            //TA:#441 remove those lines
+//             var site_name = '';
+//             var site_id = $('#facilityInput').val();
+//             if(site_id){
+//             	site_name = $('#facilityInput option:selected' ).text();
+//             }else{
+   //alert("Specify value for '<?php //tp('Site Name');?>'.");
+//                 return false;
+//             } 
+            
              var hiv_fte_related = $('#hiv_fte_related' ).val();
              if(hiv_fte_related == ""){
             	 hiv_fte_related = 0;
@@ -1035,53 +1038,29 @@
                     YAHOO.util.Event.onDOMReady(function () {
                             elSubDistrict.onchange();
                     });
+                    //TA:#441
                     elSubDistrict.onchange = function () {
                         if(this.selectedIndex == 0){
-                        	elFacilityName.disabled = true;
-                            elFacilityName.selectedIndex = 0;
-                            elFacilityType.disabled = true;
-                            elFacilityType.selectedIndex = 0;
-                            elHIV_field.disabled = true;
-                        	elHIV_field.value = '';
+                        	setDefaultSitesFields();
                         }else{
-                       	 var selected = $("#dsd_model").find('option:selected').text();
-                         if($("#dsd_model").selectedIndex != 0){
-                             if (selected == 'Health systems strengthening only' ||
-                         		selected == 'Partner management and operations only'   ){
-                          	   $("#facilityInput option:contains(N/A)").attr('selected', true);
-                          	   $("#facilityType option:contains(N/A)").attr('selected', true);
-                          	   $("#facilityInput").disabled = true;
-                                 $("#facilityType").disabled = true;
-                         	    }else{
-                         	    	elFacilityName.disabled = false;
-                                    elFacilityType.disabled = false;
-                         	    }
-                         }
-//                          	elFacilityName.disabled = false;
-//                             elFacilityType.disabled = false;
+                        	selectNASiteName();
                             elHIV_field.disabled = false;
                         }
                     }
-                    //TA:#416
+                    //TA:#416 TA:#441
                     eldsdmodel_field.onchange = function () {
-                    	var selected = $(this).find('option:selected').text();
-                        if (selected == 'Facility site - Roving') {
-                        	eldsdteam_field.disabled = false;
+                        if(this.selectedIndex == 0){
+                        	setDefaultSitesFields(); 
                         }else{
-                        	eldsdteam_field.disabled = true;
-                        }
-                        if(this.selectedIndex != 0){
-                            if (selected == 'Health systems strengthening only' ||
-                        		selected == 'Partner management and operations only'   ){
-                         	   $("#facilityInput option:contains(N/A)").attr('selected', true);
-                         	   $("#facilityType option:contains(N/A)").attr('selected', true);
-                         	   elFacilityName.disabled = true;
-                         	   elFacilityType.disabled = true;
-                        	    }else{
-                     	    	   elSubProvince.disabled = false;
-                    	    	    } 
+                        	var selected = $(this).find('option:selected').text();
+                            if (selected == 'Facility site - Roving') {
+                            	eldsdteam_field.disabled = false;
+                            }else{
+                            	eldsdteam_field.disabled = true;
+                            }
+                        	selectNASiteName();
                             elSubProvince.disabled = false; 
-                        } 	
+                        }
                          eldsdteam_field.onchange();
                     }
 
@@ -1095,15 +1074,21 @@
                setFilteredOption(elPartner.selectedIndex, 'select_partner', 'dsd_team');
                ///
 
+               //TA:#441
                function selectNASiteName(){
-            	   var selected = $("#dsd_model").find('option:selected').text();
-                   if($("#dsd_model").selectedIndex != 0){
-                       if (selected == 'Health systems strengthening only' ||
-                   		selected == 'Partner management and operations only'   ){
+            	   var selected = $("#dsd_model").find('option:selected');
+                   if(selected.val() != ''){
+                       if (selected.text() == 'Community site' ||
+                               selected.text() == 'Health systems strengthening' ||
+                   		selected.text() == 'Partner management and operations'   ){
                     	   $("#facilityInput option:contains(N/A)").attr('selected', true);
                     	   $("#facilityType option:contains(N/A)").attr('selected', true);
-                    	   $("#facilityInput").disabled = true;
-                           $("#facilityType").disabled = true;
+                    	   $("#facilityInput").attr('disabled', 'disabled');
+                           $("#facilityType").attr('disabled', 'disabled');
+                   	    }else{
+                        	  if( $("#region_c_id").find('option:selected').val() != ''){
+                        	   $("#facilityInput").removeAttr('disabled');
+                        	  }
                    	    }
                    }
                }
