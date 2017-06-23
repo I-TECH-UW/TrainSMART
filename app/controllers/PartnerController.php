@@ -142,7 +142,7 @@ class PartnerController extends ReportFilterHelpers
                 $status->checkRequired($this, 'hr_contact_email', t('HR Contact Email'));
                 //TA:#279
                 if($params['capture_complete']){
-                    $status->checkRequired($this, 'capture_complete_date', t('Data Capture Completion Date'));
+                    $status->checkRequired($this, 'capture_complete_date', t('Submission Date')); //TA:#440
                 }
 
                 $status->isAcceptableSAPhoneNumber('hr_contact_phone', t('HR Contact Office Phone'), $params['hr_contact_phone']);
@@ -159,13 +159,15 @@ class PartnerController extends ReportFilterHelpers
 
                 $isValidDate = false;
                 if (isset($params['capture_complete']) && $params['capture_complete']) {
-                    $isValidDate = $status->isValidDateDDMMYYYY('capture_complete_date', t('Data Capture Completion Date'), $params['capture_complete_date']);
+                    //TA:#440
+                    $isValidDate = $status->isValidDateDDMMYYYY('capture_complete_date', t('Submission Date'), $params['capture_complete_date']);
                     if ($isValidDate) {
                         $d = DateTime::createFromFormat('d/m/Y', $params['capture_complete_date']);
                         $now = new DateTime(null, new DateTimeZone('Africa/Johannesburg'));
                         if ($d > $now) {
                             $isValidDate = false;
-                            $status->addError('capture_complete_date', t('Data Capture Completion Date') . ' must not be in the future.');
+                            //TA:#440
+                            $status->addError('capture_complete_date', t('Submission Date') . ' must not be in the future.');
                         }
                     }
                 }else{//TA:#279 write date as null
@@ -369,29 +371,34 @@ class PartnerController extends ReportFilterHelpers
                 $select->where('partner.id = ?', $criteria['partner_id']);
             }
 
+            //TA:#440
             if (isset($criteria['funding_start_date']) &&
-                $status->isValidDateDDMMYYYY('funding_start_date', t('Data Capture Completion Date'), $criteria['funding_start_date'])) {
+                $status->isValidDateDDMMYYYY('funding_start_date', t('Submission Date'), $criteria['funding_start_date'])) {
                 $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_start_date']);
                 $select->where('mechanism_option.end_date >= ?', $d->format('Y-m-d'));
             }
+            //TA:#440
             if (isset($criteria['funding_end_date']) &&
-                $status->isValidDateDDMMYYYY('funding_end_date', t('Data Capture Completion Date'), $criteria['funding_end_date'])) {
+                $status->isValidDateDDMMYYYY('funding_end_date', t('Submission Date'), $criteria['funding_end_date'])) {
                 $d = DateTime::createFromFormat('d/m/Y', $criteria['funding_end_date']);
                 $select->where('mechanism_option.end_date <= ?', $d->format('Y-m-d'));
             }
 
             $complete_start = null;
-            if (isset($criteria['capture_complete_start_date']) && $status->isValidDateDDMMYYYY('capture_complete_start_date', t('Data Capture Completion Date'), $criteria['capture_complete_start_date'])) {
+            //TA:#440
+            if (isset($criteria['capture_complete_start_date']) && $status->isValidDateDDMMYYYY('capture_complete_start_date', t('Submission Date'), $criteria['capture_complete_start_date'])) {
                 $complete_start = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_start_date']);
             }
             $complete_end = null;
-            if (isset($criteria['capture_complete_end_date']) && $status->isValidDateDDMMYYYY('capture_complete_end_date', t('Data Capture Completion Date'), $criteria['capture_complete_end_date'])) {
+            //TA:#440
+            if (isset($criteria['capture_complete_end_date']) && $status->isValidDateDDMMYYYY('capture_complete_end_date', t('Submission Date'), $criteria['capture_complete_end_date'])) {
                 $complete_end = DateTime::createFromFormat('d/m/Y', $criteria['capture_complete_end_date']);
             }
 
             if (isset($criteria['show_complete_captures']) && $criteria['show_complete_captures']) {
+                //TA:#440
                 if (!$complete_start && !$complete_end) {
-                    $status->addError('capture_complete_start_date', t('Data Capture Completion Date') . ' ' . t('is required.'));
+                    $status->addError('capture_complete_start_date', t('Submission Date') . ' ' . t('is required.'));
                 }
                 if ($complete_start) {
                     $select->where('partner.capture_complete_date >= ?', $complete_start->format('Y-m-d'));

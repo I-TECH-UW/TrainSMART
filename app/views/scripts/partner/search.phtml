@@ -49,7 +49,7 @@
 						}
 
                         echo '<div class="fieldLabel">';
-                        echo $this->formLabel("", t('Show Only Complete Data Captures'));
+                        echo $this->formLabel("", t('Show Only Submit for Verification'));//TA:#440
                         echo '</div>';
                         echo '<div class="fieldInput">';
                         echo $this->formCheckbox("show_complete_captures", $this->criteria['show_complete_captures'],
@@ -57,8 +57,9 @@
                                 'checked' => $this->criteria['show_complete_captures'] === "1"));
                         echo '</div><div class="clear"></div>';
 
+                        //TA:#440
 						echo $this->partial('/reports/date-range-partial.phtml',
-							array('label' => t('Data Capture Completion Date'),
+							array('label' => t('Submission Date'),
 								'prefix' => 'capture_complete_',
 								'start_date' => $this->criteria['capture_complete_start_date'],
 								'end_date' => $this->criteria['capture_complete_end_date'],
