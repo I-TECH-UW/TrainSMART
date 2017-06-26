@@ -73,7 +73,7 @@ LEFT JOIN partner ON partner.id = employee.partner_id
 LEFT JOIN link_mechanism_employee ON employee.id = link_mechanism_employee.employee_id
 LEFT JOIN mechanism_option ON link_mechanism_employee.mechanism_option_id = mechanism_option.id
 WHERE (is_active = 1) AND (partner.organizer_option_id in (select training_organizer_option_id from user_to_organizer_access where user_id = " . $this->isLoggedIn() . "))
-AND (employee.agreement_end_date < now() OR transition_date < now() OR transition_complete_date < now() OR mechanism_option.end_date > now())";
+AND (employee.agreement_end_date < now() OR transition_date < now() OR mechanism_option.end_date < now() OR  transition_complete_date > now())";
         $position_updates = $db->fetchAll($select);
          $this->view->assign('position_updates', $position_updates);
         ///
