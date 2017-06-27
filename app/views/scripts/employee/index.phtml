@@ -67,6 +67,44 @@ print ScriptContainer::$instance->renderJSHead();
 				</div>
 
 			</div>
+			
+<!-------   TA:#412 START ////////////////////// -->
+			<div class="clear"></div>
+			<div class="hrGrey"></div>
+			    <div class="clear"></div>
+			    <div class="fieldIndentNoMargin"><?php tp('Anticipated Updates'); ?></div>
+			    <div class="fieldIndent2">
+			      <div style="width:100%;">
+			      <table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
+			      <thead>
+						<tr>
+							<th><?php tp('Position'); ?></th>
+							<th><?php tp('Contract End Date'); ?></th>
+							<th><?php tp('Intended Transition Date'); ?></th>
+							<th><?php tp('Actual Transition Date'); ?></th>
+							<th><?php tp('Mechanism End Date'); ?></th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php
+	foreach ($this->position_updates as $getresult){
+	    $link = Settings::$COUNTRY_BASE_URL . "/employee/edit/id/" . $getresult['id'];
+?>
+<tr style="cursor : pointer;" class="GradeA" onclick="location='<?php echo $link;?>'">
+							<td class=""><?php echo $getresult['employee_code'];  ?></td>
+							<td class=""><?php echo $getresult['agreement_end_date'];  ?></td>
+							<td class=""><?php echo $getresult['transition_date'];  ?></td>
+							<td class=""><?php echo $getresult['transition_complete_date'];  ?></td>
+							<td class=""><?php echo $getresult['mechanism_end_date'];  ?></td>						
+						</tr>
+<?php
+	}
+?>
+					</tbody>
+			      </table>
+			      </div>
+			   </div>
+<!-- TA:#412 END -->
 
 <!-------   /////////////////////////// attached docs ////////////////////// -->
 			<div class="clear"></div>
