@@ -53,7 +53,9 @@ class Peopleadd extends ITechTable
 			"home_address_1"	=>	$param['address1'],
 			"home_address_2"	=>	$param['address2'],
 			"home_postal_code"	=>	$param['zip'],
-			"home_location_id"	=>	$param['city']
+			"home_location_id"	=>	$param['city'],
+		    'created_by'		=>	Session::getCurrentUserId(), //TA:#384
+		    'timestamp_created'		=>	new Zend_Db_Expr('NOW()'),//TA:#384
 		);
 
 		$db = $this->dbfunc();
@@ -119,6 +121,8 @@ class Peopleadd extends ITechTable
 					'home_postal_code'	=>	$param['zip'],
 					'home_location_id'	=>	$param['city'],
 					'facility_id'		=>	$param['facility'],
+				    'created_by'		=>	Session::getCurrentUserId(), //TA:#384
+				    'timestamp_created'		=>	new Zend_Db_Expr('NOW()'),//TA:#384
 				);
 
 				#echo "<pre>";
@@ -151,7 +155,8 @@ class Peopleadd extends ITechTable
 				//$db->query($link_sql);
 
 			} elseif ($param['type'] == "tutorNORUN") { // TODO i think this is effectively commented out, marked for ivestigation then removal.
-				$insert = array(
+			   
+			        $insert = array(
 					"title_option_id"	=>	$param['title'],
 					"facility_id"		=>	$param['facility'],
 					"first_name"		=>	$param['firstname'],
@@ -163,6 +168,8 @@ class Peopleadd extends ITechTable
 					"home_address_2"	=>	$param['address2'],
 					"home_postal_code"	=>	$param['zip'],
 					"home_location_id"	=>	$param['city'],
+				    'created_by'		=>	Session::getCurrentUserId(), //TA:#384
+				    'timestamp_created'		=>	new Zend_Db_Expr('NOW()'),//TA:#384
 				);
 
 				$db = $this->dbfunc();
