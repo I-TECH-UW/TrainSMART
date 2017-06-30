@@ -58,6 +58,10 @@ class ScriptContainer {
 			$this->addJSLink('/js/scripts/jquery-1.7.1-min.js');
 			$this->addJSLink('/js/scripts/jquery.dataTables.min.js');
 			$this->addJSLink('/js/scripts/jquery-ui-1.8.17.custom-min.js');	
+			
+			$this->addJSLink('/js/scripts/jspdf.debug.js');//TA:#407.2
+			$this->addJSLink('/js/scripts/jspdf.min.js');//TA:#407.2
+			$this->addJSLink('/js/scripts/jspdf.plugin.autotable.js');//TA:#407.2
 
 			# Javascript - PRESERVICE
 			$this->addJSLink('/js/scripts/validate/jquery.validate.js');

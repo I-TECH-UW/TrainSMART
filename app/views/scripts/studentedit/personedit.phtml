@@ -150,6 +150,32 @@
                 $('#prior_courses_to_add').data('new_courses', {});
 			});
 
+			//TA:#407.2
+			function downloadPriorCourse() {
+				var doc = new jsPDF();
+				doc.setFontSize(14);
+				doc.text(20, 20, 'Prior Education Report/Transcript');
+				doc.setFontSize(12);
+				doc.text(20, 30, 'Student Name: ' + $('#firstname').val() + " "  + $('#middlename').val() + " " + $('#lastname').val());
+				doc.text(20, 40, 'Last School Attended: ' + $('#lastinstatt').val() );
+				doc.text(20, 50, 'High School Completion Date: ' + $('#hscomldate').val() );
+				doc.text(20, 60, 'List of course names and grades:');
+				var elem = document.getElementById("prior_course_transcript");
+				var res = doc.autoTableHtmlToJson(elem);
+				doc.autoTable(res.columns, res.data,
+						{
+					startX: 20,
+				    startY: 80,
+				    tableWidth: 'auto',
+				    columnWidth: 'auto',
+				    styles: {
+				      overflow: 'linebreak',
+				      rowHeight: 12
+				    }
+				  });
+				doc.save('prior_education_report.pdf');
+			}
+
 			function savePriorCourse() {
 			    var $courseBox = $('#prior_course_id option:selected');
 			    var $gradeBox = $('#prior_course_grade');
@@ -457,13 +483,16 @@
 							</select>
 
 							<label><?php echo t('First name'); ?></label>
-							<input type="text" name="firstname" value="<?php echo $this->escape($this->firstname);?>">
+							<!-- TA:#407.2 -->
+							<input type="text" id="firstname" name="firstname" value="<?php echo $this->escape($this->firstname);?>">
 
+							<!-- TA:#407.2 -->
 							<label><?php echo t('Middle name'); ?></label>
-							 <input type="text" name="middlename" value="<?php echo $this->escape($this->middlename);?>">
-
+							 <input type="text" id="middlename" name="middlename" value="<?php echo $this->escape($this->middlename);?>">
+                            
+                            <!-- TA:#407.2 -->
 							<label><?php echo t('Last name'); ?></label>
-							<input type="text" name="lastname" value="<?php echo $this->escape($this->lastname);?>">
+							<input type="text" id="lastname" name="lastname" value="<?php echo $this->escape($this->lastname);?>">
 
 							<label><?php echo t('Student ID'); ?></label>
 							<input type="text" name="nationalid" value="<?php echo $this->escape($this->nationalid);?>">
@@ -802,6 +831,9 @@ if($column_count === 3){
                                 echo $this->formLabel('save_prior_course', '', array());
                                 echo $this->formButton('save_prior_course', 'Record Grade', array('class' => 'tsbutton green large', 'style' => 'margin-bottom: 2em;',
                                     'onclick' => 'savePriorCourse();'));
+                                //TA:#407.2
+                                echo " " . $this->formButton('download_prior_course', 'Download', array('class' => 'tsbutton green large', 'style' => 'margin-bottom: 2em;',
+                                    'onclick' => 'downloadPriorCourse();'));
                             }
                                 if($this->escape($this->label_equivalence)){
 									echo "<label>" . t($this->escape($this->label_equivalence)) . "</label>";
