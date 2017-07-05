@@ -317,7 +317,9 @@
 			<thead>
 				<tr>
 					<th><?php echo t('Class Name'); ?></th>
+					<!-- TA:#402 
 					<th><?php echo t('Instructor'); ?></th>
+					-->
 					<th><?php echo t('Start date'); ?></th>
 					<th><?php echo t('End date'); ?></th>
 					<?php if($this->setting['ps_display_ca_mark']) : ?>
@@ -342,7 +344,7 @@
 ?>
 				<tr class="GradeA">
 					<td><?php echo $classes['classname']; ?></td>
-					<td class="" style="width : 200px;"><?php echo $classes['first_name'] . " " . $classes['last_name']; ?></td>
+					<!-- TA:#402 td class="" style="width : 200px;"><?php echo $classes['first_name'] . " " . $classes['last_name']; ?></td>-->
 					<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($classes['startdate'])); ?></td>
 					<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($classes['enddate'])); ?></td>
 					<?php if($this->setting['ps_display_ca_mark']) : ?>
@@ -970,10 +972,10 @@ if($column_count === 3){
 							<thead>
 								<tr>
 									<th><?php echo t('Class Name'); ?></th>
-									<th><?php echo t('Topic'); ?></th>
+									<!-- TA:#402 <th><?php echo t('Topic'); ?></th>-->
 									<th><?php echo t('Start date'); ?></th>
 									<th><?php echo t('End date'); ?></th>
-									<th><?php echo t('Instructor'); ?></th>
+									<!-- TA:#402 <th><?php echo t('Instructor'); ?></th>-->
 									<th><?php echo t('Course type'); ?></th>
 									<?php if($this->setting['ps_display_ca_mark']) : ?>
 										<th><?php echo t($this->translation['ps ca mark']); ?></th>
@@ -994,10 +996,10 @@ if($column_count === 3){
 ?>
 								<tr class="GradeA" style="">
 									<td class="" style="width : 250px;"><?php echo $row['classname']; ?></td>
-									<td class="" style=""><?php echo $row['coursetopic']; ?></td>
+									<!-- TA:#402 <td class="" style=""><?php echo $row['coursetopic']; ?></td>-->
 									<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($row['startdate'])); ?></td>
 									<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($row['enddate'])); ?></td>
-									<td class="" style="width : 120px;"><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
+									<!-- TA:#402<td class="" style="width : 120px;"><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>-->
 									<td class="" style="width : 120px;"><?php echo $row['coursetype']; ?></td>
 									<?php if($this->setting['ps_display_ca_mark']) : ?>
 										<td class="" style="width : 120px;"><?php echo $row['camark']; ?></td>
