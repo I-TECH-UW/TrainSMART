@@ -2058,18 +2058,20 @@ class Helper extends ITechTable
 		} else {
 			/* Sean: Had to redo. Was using personid in place of studentid
 			 * Sean: Converted foreach loop (one query per iteration) to a single query
-			 */ 
+			 */
+		    //TA:#402.2 
 			$query = "
 				SELECT p.*, f.facility_name, pe.first_name, pe.last_name, pe.id AS personid,
 					CASE WHEN sp.linkcohortpracticumid IS NULL THEN 0 ELSE sp.linkcohortpracticumid END linkid,
 					CASE WHEN sp.practicumid IS NULL OR LENGTH(grade) = 0 OR grade IS NULL THEN 'N/A' ELSE grade END grade,
+			        CASE WHEN sp.practicumid IS NULL OR LENGTH(grade_description) = 0 OR grade_description IS NULL THEN '' ELSE grade_description END grade_description,
 					CASE WHEN sp.practicumid IS NULL OR LENGTH(hourscompleted) = 0 OR hourscompleted IS NULL THEN 'N/A' ELSE hourscompleted END hourscompleted
 				FROM practicum p
 				LEFT JOIN facility f ON f.id = p.facilityid
 				LEFT JOIN tutor t ON t.id = p.advisorid
 				LEFT JOIN person pe ON pe.id = t.personid
 				LEFT JOIN (
-					SELECT practicumid, linkcohortpracticumid, grade, hourscompleted
+					SELECT practicumid, linkcohortpracticumid, grade, hourscompleted, grade_description
 					FROM   link_student_practicums 
 					WHERE	studentid = " . $sid . "
 					AND		practicumid IN (SELECT id FROM practicum WHERE cohortid = " . $cid . ")
@@ -2096,14 +2098,16 @@ class Helper extends ITechTable
 			/* Sean: Had to redo. Was using personid in place of studentid
 			 * Sean: Converted foreach loop (one query per iteration) to a single query
 			 */ 
+		    //TA:#402.2
 			$query = "
 				SELECT l.id, licensename, licensedate,
 					CASE WHEN sl.linkclasslicenseid IS NULL THEN 0 ELSE sl.linkclasslicenseid END linkid,
 					CASE WHEN sl.licenseid IS NULL OR LENGTH(grade) = 0 OR grade IS NULL THEN 'N/A' ELSE grade END grade,
-					CASE WHEN sl.licenseid IS NULL OR LENGTH(credits) = 0 OR credits IS NULL THEN 'N/A' ELSE credits END credits
+					CASE WHEN sl.licenseid IS NULL OR LENGTH(credits) = 0 OR credits IS NULL THEN 'N/A' ELSE credits END credits,
+			        CASE WHEN sl.licenseid IS NULL OR LENGTH(grade_description) = 0 OR grade_description IS NULL THEN '' ELSE grade_description END grade_description
 				FROM licenses l 
 				LEFT JOIN (
-					SELECT licenseid, linkclasslicenseid, grade, credits
+					SELECT licenseid, linkclasslicenseid, grade, credits, grade_description
 					FROM   link_student_licenses 
 					WHERE  studentid = " . $sid . "
 					AND    licenseid IN (SELECT id FROM licenses WHERE cohortid = " . $cid . ")
@@ -2117,9 +2121,10 @@ class Helper extends ITechTable
 	}
 
 
+	//TA:#402.2
 	function updateStudentLicense($sid,$param){
 		$db = $this->dbfunc();
-		foreach ($param['grade'] as $key=>$value){
+		foreach ($param['license'] as $key=>$value){
 			$query = "SELECT * FROM link_student_licenses WHERE
 				studentid = " . $sid . " AND
 				licenseid = " . $key . " AND
@@ -2131,14 +2136,15 @@ class Helper extends ITechTable
 					'studentid'		=> $sid, 
 					'licenseid'		=> $key,
 					'cohortid'		=> $param['cohortid'],
-					'grade'			=> $value,
+					'grade'			=> $value['grade'],
+				    'grade_description'	=> $value['grade_desciption'],
 				);
 				$db->insert("link_student_licenses", $insert);
-
 			} else {
 				$row = $result[0];
 				$insert = array(
-					'grade'			=> $value,
+					'grade'			=> $value['grade'],
+				    'grade_description'	=> $value['grade_desciption'],
 				);
 				$db->update("link_student_licenses", $insert,'id = ' . $row['id']);
 			}
@@ -2210,9 +2216,13 @@ class Helper extends ITechTable
 		}
 	}
 
+	//TA:#402.2
 	function updateStudentPracticum($sid,$param){
 		$db = $this->dbfunc();
 		foreach ($param['practicum'] as $key=>$value){
+		    if(!$value['grade']){
+		        $value['grade'] = '';
+		    }
 			$query = "SELECT * FROM link_student_practicums WHERE
 				studentid = " . $sid . " AND 
 				practicumid = " . $key . " AND
@@ -2226,6 +2236,7 @@ class Helper extends ITechTable
 					'cohortid'			=> $param['cohortid'],
 					'hourscompleted'	=> $value['completed'],
 					'grade'				=> $value['grade'],
+				    'grade_description'	=> $value['grade_desciption'],
 				);
 				$db->insert("link_student_practicums", $insert);
 			} else {
@@ -2233,9 +2244,10 @@ class Helper extends ITechTable
 				$insert = array(
 					'hourscompleted'	=> $value['completed'],
 					'grade'				=> $value['grade'],
+				    'grade_description'	=> $value['grade_desciption'],
 				);
-				$db->update("link_student_practicums", $insert,'id = ' . $row['id']);
-			}
+			    $db->update("link_student_practicums", $insert,'id = ' . $row['id']);
+		    }
 		}
 	}
 
