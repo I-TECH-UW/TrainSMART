@@ -6730,7 +6730,9 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			$s->where("lsc.isgraduated = 1");;
 		}
 
-		if (isset($params['showfunding']) && $params['showfunding']) {
+		//TA:#389
+		if ((isset($params['showfunding']) && $params['showfunding']) ||
+		    (isset($params['funding']) && $params['funding'])) {
 			$s->joinLeft(array('lsf' => 'link_student_funding'), 'lsf.studentid = s.id', array());
 			$s->joinLeft(array('lf' => 'lookup_fundingsources'), 'lf.id = lsf.fundingsource', array());
 			//$s->columns('lf.fundingname');
@@ -6738,7 +6740,9 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			//TA:#251 to display amount of funding also
 			$s->columns("GROUP_CONCAT( ' ' , lf.fundingname, ': ',lsf.fundingamount)");
 			$s->group('p.id');
-
+			if((isset($params['funding']) && $params['funding'])){
+			 $s->where('lf.id=' . $params['funding']);
+			}
 			$headers[] = "Funding";
 		}
 

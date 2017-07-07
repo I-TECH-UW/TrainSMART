@@ -27,7 +27,21 @@
 <div class="fieldshow">
     <input type="checkbox" name="showfunding" id="showfunding"
            value="1"<?php if (isset($this->criteria['showfunding']) && $this->criteria['showfunding']) { echo " checked"; } ?>></div>
-<div class="fieldselect"></div>
+<div class="fieldselect">
+<!-- TA:#389 -->
+<?php
+require_once ('models/table/Helper.php');
+$helper = new Helper();
+$funds = $helper->getFunding();
+?>
+<select name="funding" id="funding" size="10">
+        <?php
+        foreach ($funds as $item) {
+            echo "<option value=\"" . $item['id'] . "\">" . $item['fundingname'] . "</option>\n";
+        }
+        ?>
+    </select>
+    </div>
 <div class="clear pad20">&nbsp;</div>
 
 <div class="fieldquestion"><?php echo t('Tutor advisor'); ?></div>
