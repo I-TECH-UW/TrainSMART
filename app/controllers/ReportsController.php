@@ -9960,7 +9960,7 @@ die (__LINE__ . " - " . $sql);
                 $status->setStatusMessage(t('Error'));
             } else {
 
-               //TA:#419 $select->distinct();
+               $select->distinct();
          
                 $tables = $select->getPart(Zend_Db_Select::FROM);
                 $cols = $select->getPart(Zend_Db_Select::COLUMNS);
@@ -10048,7 +10048,7 @@ die (__LINE__ . " - " . $sql);
                 if (count($c)) {
                     $this->view->assign('headers', $c);
                     print $select;
-                    $select = $select . " limit 100"; 
+                    //$select = $select . " limit 100"; 
                     $this->view->assign('output',$db->fetchAll($select));
                 }
             }
