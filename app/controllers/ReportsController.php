@@ -10047,7 +10047,7 @@ die (__LINE__ . " - " . $sql);
                 //TA:10000 print "<br><br>"; print_r($c); print "<br><br>$select<br><br>";
                 if (count($c)) {
                     $this->view->assign('headers', $c);
-                    print $select;
+                    //print $select;
                     //$select = $select . " limit 100"; 
                     $this->view->assign('output',$db->fetchAll($select));
                 }
