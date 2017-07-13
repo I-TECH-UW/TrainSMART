@@ -24,9 +24,14 @@ class Tutoredit extends ITechTable
 		$output['person'] = $row;
 
 		# GETTING TUTOR RECORD
-		$select = $this->dbfunc()->select()
-			->from('tutor')
-			->where('personid = ?',$teacherid);
+//  		$select = $this->dbfunc()->select()
+//  			->from('tutor')
+//  			->where('personid = ?',$teacherid);
+//TA:#417
+		$select = 'SELECT tutor. *, facility.location_id as facility_location_id
+    FROM tutor
+    LEFT JOIN facility ON tutor.facilityid = facility.id
+    where personid =' . $teacherid;
 		$row = $this->dbfunc()->fetchAll($select);
 		$output['tutor'] = $row;
 

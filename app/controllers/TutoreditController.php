@@ -86,6 +86,17 @@ class TutoreditController extends ITechController
         if (isset($params['update'])) {
             $tutoredit = new Tutoredit();
             $updateperson = $tutoredit->UpdatePerson($params);
+            //TA:#417
+            if(!isset($params['province_id'])){
+                $params['province_id'] = $params['permanent_geo1'];
+            }
+            if(!isset($params['district_id'])){
+                $params['district_id'] = $params['permanent_geo2'];
+            }
+            if(!isset($params['region_c_id'])){
+                $params['region_c_id'] = $params['permanent_geo3'];
+            }
+            //
             $updateperson = $tutoredit->UpdateTutor($params);
             
             // STORE LANGUAGES ON EDIT
@@ -106,6 +117,7 @@ class TutoreditController extends ITechController
             if ($tutorid) { // sucess
                 $status->setStatusMessage(t('The person was saved.'));
                 $_SESSION['status'] = t('The person was saved.');
+                $this->_redirect("/tutoredit/tutoredit/id/" . $tutorid);//TA:#417
             }
         }
         
@@ -204,6 +216,14 @@ class TutoreditController extends ITechController
         // $this->view->assign('localgeo1',$details['tutor'][0]['geog1']);
         // $this->view->assign('localgeo2',$details['tutor'][0]['geog2']);
         // $this->view->assign('localgeo3',$details['tutor'][0]['geog3']);
+        
+        //TA:#417
+        require_once('views/helpers/Location.php');
+        $facility_loc_arr = locationIDTo3TierCriteriaArray($details['tutor'][0]['facility_location_id'], '');
+         $this->view->assign('localgeo1',$facility_loc_arr['province_id']);
+         $this->view->assign('localgeo2',$facility_loc_arr['district_id']);
+         $this->view->assign('localgeo3',$facility_loc_arr['region_c_id']);
+        ///
         
         $this->view->assign('facilityid', $details['tutor'][0]['facilityid']);
         $facility = $helper->getFacilities();
