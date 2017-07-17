@@ -953,7 +953,14 @@ if($column_count === 3){
 						<hr>
 						<!-- TA:6: added 8/8/2014 END -->
 						
-						<a href="<?php echo Settings::$COUNTRY_BASE_URL; ?>/studentedit/transcript/id/<?php echo $this->escape($this->id); ?>" target="_blank" ><?php echo t('Student Transcript Report')?></a> <br/>
+						<!-- TA:#406 -->
+						<?php 
+						  $transcript = 'transcript';
+						  if(Settings::$COUNTRY_NAME === 'test' || Settings::$COUNTRY_NAME === 'cham'){
+						      $transcript = 'transcript2';
+						  }
+						?>
+						<a href="<?php echo Settings::$COUNTRY_BASE_URL; ?>/studentedit/<?php echo $transcript;?>/id/<?php echo $this->escape($this->id); ?>" target="_blank" ><?php echo t('Student Transcript Report')?></a> <br/>
                             
                             <?php if ( $this->hasACL( 'acl_delete_ps_student' )){?> 
 							<a href="#" onclick="doDelete(); return false;"><?php t('Delete this Person');?></a>

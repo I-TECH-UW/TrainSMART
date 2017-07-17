@@ -20,16 +20,21 @@ class Studentedit extends ITechTable
 		$output = array();
 
 		# GETTING BASIC PERSON RECORD
-		$select = $this->dbfunc()->select()
-			->from('person')
-			->where('id = ?',$pupilid);
+		$select = 'select person.*, person_title_option.title_phrase from person 
+		    LEFT JOIN person_title_option on person.title_option_id=person_title_option.id 
+		    where person.id=' . $pupilid;
 		$row = $this->dbfunc()->fetchAll($select);
 		$output['person'] = $row;
 
 		# GETTING STUDENT RECORD
-		$select = $this->dbfunc()->select()
-			->from('student')
-			->where('personid = ?',$pupilid);
+			//TA:#406
+		$select = 'SELECT student.*, institution.institutionname, institution.address1 as inst_address1, 
+		    institution.address2 as inst_address2, 
+		    institution.city as inst_city, institution.postalcode as inst_postalcode, institution.phone as inst_phone, 
+		    institution.fax as inst_fax, lookup_nationalities.nationality FROM student 
+		    LEFT JOIN institution ON institution.id=student.institutionid 
+		    LEFT JOIN lookup_nationalities on student.nationalityid=lookup_nationalities.id
+		    WHERE personid = ' . $pupilid;
 		$row = $this->dbfunc()->fetchAll($select);
 		$output['student'] = $row;
 

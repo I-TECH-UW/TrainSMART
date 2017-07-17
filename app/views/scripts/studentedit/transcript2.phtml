@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title><?php echo $this->escape($this->title); ?></title>
+    <style type="text/css">
+       
+
+        .tsbutton {
+            -webkit-border-radius: 5px;
+            background-color: #91bd09;
+            padding: 8px 14px 9px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .tsbutton:hover {
+            background-color: #749a02;
+        }
+
+       
+
+        .blockleft {
+            width: 30%;
+            float: left;
+            font-weight: bold;
+        }
+
+        .blockright {
+            width: 70%;
+            float: left;
+        }
+
+        .blockheader {
+            border-bottom: 1pt solid #000000;
+            margin-bottom: 8pt;
+            margin-top: 24pt;
+            font-weight: bold;
+        }
+
+        .clear {
+            clear: both;
+        }
+    </style>
+</head>
+
+<body>
+<input type="button" class='no-print tsbutton' onclick="window.print();" value="Print">
+<div id="content">
+<center><table width=80%><tr><td>
+<center>
+<h2><?php echo $this->inst_name;?></h2>
+<b><?php echo $this->inst_address1 . " " . $this->inst_address2;?></b><br>
+<b><?php echo $this->inst_city . " " . $this->inst_country;?></b><br>
+<b>Tel: <?php echo $this->inst_phone . " Fax: " . $this->inst_fax;?></b><br>
+</center>
+<hr>
+<br>
+<center><h2>Confidential Student Transcript</h2></center>
+<h3>Personal Information</h3>
+<table>
+<tr><td><b>Title:</b></td><td><?php echo $this->title;?></td></tr>
+<tr><td><b>Full Name:</b></td><td><?php echo $this->fullname;?></td></tr>
+<tr><td><b>Student ID:</b></td><td><?php echo $this->index_number;?></td></tr>
+<tr><td><b>Nationality:</b></td><td><?php echo $this->nationality;?></td></tr>
+<tr><td><b>Gender:</b></td><td><?php echo $this->gender;?></td></tr>
+<tr><td><b>Date of birth:</b></td><td><?php echo $this->dob;?></td></tr>
+<tr><td><b>Cohort:</b></td><td><?php echo $this->cohortname;?></td></tr>
+<tr><td><b>Date of Enrolment:</b></td><td><?php echo $this->joindate;?></td></tr>
+<tr><td><b>Program Enrolled in:</b></td><td><?php echo $this->cadrename;?></td></tr>
+<tr><td><b>Year of Study:</b></td><td><?php echo $this->years_study;?></td></tr>
+<tr><td valign='top'><b>Funding sources:</b></td><td>
+<?php
+    $shown = false;
+    foreach ($this->lookupfunding as $funding) {
+        $checked = false;
+        $amount = "";
+        foreach ($this->studentfunding as $sf) {
+            if ($sf['fundingsource'] == $funding['id']) {
+                $checked = true;
+                $amount = $sf['fundingamount'];
+            }
+        }
+        if ($checked) {
+            echo $funding['fundingname'] . " - " . $amount . "<br>";
+            $shown = true;
+        }
+    }
+    if (!$shown) {
+        echo "None";
+    }
+    ?>
+</td></tr>
+</table>
+
+<br>
+<table border=1>
+        <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Grade</th>
+            <th>Remarks</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        foreach ($this->currentclasses as $row) {
+            ?>
+            <tr>
+                <td><?php echo $row['classname']; ?></td>
+                <td style="width : 120px;"><?php echo $row['grade']; ?></td>
+                <td style="width : 120px;"><?php
+                if(is_numeric($row['grade'])){ 
+                if($row['grade']>=0 && $row['grade']<=40){
+                    echo "Undoubted failure";
+                }else if($row['grade']>=41 && $row['grade']<=54){
+                    echo "Marginal failure";
+                }else if($row['grade']>=55 && $row['grade']<=64){
+                    echo "Pass";
+                }else if($row['grade']>=65 && $row['grade']<=74){
+                    echo "Credit";
+                }else if($row['grade']>=75){
+                    echo "Distinction";
+                }
+                }else{
+                    echo "N/A";
+                }
+                ?></td>
+            </tr>
+            <?php
+        }
+        ?>
+        </tbody>
+    </table>
+
+    <table>
+    <br><br>
+<tr><td><b>Practical Placement Grade:</b></td><td></td></tr>
+<tr><td><b>Final Award:</b></td><td></td></tr>
+<tr><td><b>Year:</b></td><td></td></tr>
+<tr><td><b>General Remarks:</b></td><td></td></tr>
+</table>
+<br>
+<br>
+<h3>Notes for Explanation and Interpretation</h3>
+
+<table>
+<tr><td><b>Grades</b></td><td></td></tr>
+<tr><td>0-40</td><td>Undoubted failure</td></tr>
+<tr><td>41-54</td><td>Marginal failure</td></tr>
+<tr><td>55-64</td><td>Pass</td></tr>
+<tr><td>65-74</td><td>Credit</td></tr>
+<tr><td>75-100</td><td>Distinction</td></tr>
+</table>
+<br>
+This document is an official document only when it bears signature and stamp of the College Principal:
+<br><br><br>
+E.  Kasonda<br>
+<b>COLLEGE PRINCIPAL</b>
+    
+
+</td></tr></table></center>
+
+  
+    
+<br>
+<input type="button" class='no-print tsbutton' onclick="window.print();" value="Print">
+</body>
+</html>
