@@ -1197,6 +1197,15 @@ class Helper extends ITechTable
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
+	
+	//TA:#402.3
+	public function AdminGradeDescription(){
+	    $select = $this->dbfunc()->select()
+	    ->from("lookup_grade_description")
+	    ->order('grade_description_name');
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return $result;
+	}
 
 	//TA:35 
 	public function AdminDegrees(){
@@ -1883,6 +1892,21 @@ class Helper extends ITechTable
 			);
 			$instypeinsert = $this->dbfunc()->insert($linktable,$i_arr);
 		}
+	}
+	
+	//TA:#402.3
+	public function addGradeDescription($params){
+	    $grade_description_name = $_POST['grade_description_name'];
+	    $grade_description_type = $_POST['grade_description_type'];
+	        $this->dbfunc()->insert('lookup_grade_description',array(
+	        'grade_description_name'=>$grade_description_name,
+	        'grade_description_type'=>$grade_description_type,
+	        ));
+	}
+	
+	//TA:#402.3
+	public function deleteGradeDescription($params){
+		$this->dbfunc()->delete('lookup_grade_description','id=' . $_POST['id']);
 	}
 
 	public function updateCohortLicense($cid,$param){

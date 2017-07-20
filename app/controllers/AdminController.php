@@ -2741,6 +2741,26 @@ class AdminController extends UserController
 		$this->view->assign("lookup", $list);
 		$this->view->assign("header",t("Tutor types"));
 	}
+	
+	//TA:#402.2
+	public function preserviceGradedescriptionAction(){
+	    $helper = new Helper();
+
+		if (isset ($_POST['action'])){
+			switch ($_POST['action']){
+				case "addnew":
+					$helper->addGradeDescription($_POST);
+					break;
+				case "delete":
+					$helper->deleteGradeDescription($_POST);
+					break;
+			}
+			$this->_redirect ( 'admin/preservice-gradedescription' );
+		}
+		$list = $helper->AdminGradeDescription();
+		$this->view->assign("lookup", $list);
+		$this->view->assign("header",t("Grade description"));
+	}
 
 	public function preserviceReligionAction(){
 		$helper = new Helper();

@@ -291,15 +291,18 @@
 					<td><?php echo $classes['licensename']; ?></td>
 					<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($classes['licensedate'])); ?></td>
 					<td class="" style="width : 120px;"><input type="text" name="license[<?php echo $classes['id'] ?>][grade]" id="license[<?php echo $classes['id'] ?>][grade]" value="<?php echo trim(strtolower($classes['grade'])) != "n/a" ? $classes['grade'] : ""; ?>" style="width : 100%;"></td>
-				<!-- TA:#402.2 -->
+				<!-- TA:#402.3 -->
 					<td class="" style="width : 120px;">
 					<select name="license[<?php echo $classes['id'] ?>][grade_desciption]" id="license[<?php echo $classes['id'] ?>][grade_desciption]" style="width : 100%;">
 					<option value="">-- select --</option>
-					<option value="Pass" <?php if($classes['grade_description']==="Pass"){echo ' selected';}?>>Pass</option>
-					<option value="Outstanding" <?php if($classes['grade_description']==="Outstanding"){echo ' selected';}?>>Outstanding</option>
-					<option value="Fail" <?php if($classes['grade_description']==="Fail"){echo ' selected';}?>>Fail</option>
-					<option value="Not Written" <?php if($classes['grade_description']==="Not Written"){echo ' selected';}?>>Not Written</option>
-					<option value="Repeat" <?php if($classes['grade_description']==="Repeat"){echo ' selected';}?>>Repeat</option>
+					<?php foreach ($this->grade_desc as $lookup){
+					    if($lookup['grade_description_type'] === 'licensing'){
+					        $select = '';
+					        if($classes['grade_description']=== $lookup['grade_description_name']){
+					            $select = 'selected';
+					        }
+					       echo "<option value='" . $lookup['grade_description_name'] . "' " . $select . ">" . $lookup['grade_description_name'] . "</option>";
+					}}?>
 					</select></td>
 				</tr>
 <?php
@@ -366,14 +369,18 @@
 						<td class="" style="width : 120px;"><input type="text" name="exammark[<?php echo $classes['id'] ?>]" id="exammark[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['exammark'])) != "n/a" ? $classes['exammark'] : ""; ?>" style="width : 100%;"></td>
 					<?php endif; ?>
 					<td class="" style="width : 120px;"><input type="text" name="grade[<?php echo $classes['id'] ?>]" id="grade[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['grade'])) != "n/a" ? $classes['grade'] : ""; ?>" style="width : 100%;"></td>
-					<!-- TA:#402 -->
+					<!-- TA:#403 -->
 					<td class="" style="width : 120px;">
 					<select name="grade_description[<?php echo $classes['id'] ?>]" id="grade_description[<?php echo $classes['id'] ?>]" style="width : 100%;">
 					<option value="">-- select --</option>
-					<option value="Fail" <?php if($classes['grade_description']==="Fail"){echo ' selected';}?>>Fail</option>
-					<option value="General Pass" <?php if($classes['grade_description']==="General Pass"){echo ' selected';}?>>General Pass</option>
-					<option value="Pass with Credit" <?php if($classes['grade_description']==="Pass with Credit"){echo ' selected';}?>>Pass with Credit</option>
-					<option value="Pass with Distinction" <?php if($classes['grade_description']==="Pass with Distinction"){echo ' selected';}?>>Pass with Distinction</option>
+					<?php foreach ($this->grade_desc as $lookup){
+					    if($lookup['grade_description_type'] === 'class'){
+					        $select = '';
+					        if($classes['grade_description'] === $lookup['grade_description_name']){
+					            $select = 'selected';
+					        }
+					       echo "<option value='" . $lookup['grade_description_name'] . "' " . $select . ">" . $lookup['grade_description_name'] . "</option>";
+					}}?>
 					</select></td>
 					<?php if($this->setting['ps_display_credits']) : ?>
 						<td class="" style="width : 120px;"><input type="text" name="credits[<?php echo $classes['id'] ?>]" id="credits[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['credits'])) != "n/a" ? $classes['credits'] : ""; ?>" style="width : 100%;"></td>
@@ -424,14 +431,18 @@
 					<td class="" style="width : 120px;"><?php echo $classes['hoursrequired']; ?></td>
 					<td class="" style="width : 150px;"><input type="text" name="practicum[<?php echo $classes['id'] ?>][completed]" id="practicum[<?php echo $classes['id'] ?>][completed]" value="<?php echo is_numeric($classes['hourscompleted']) ? $classes['hourscompleted'] : "0"; ?>" style="width : 100%;"></td>
 					<td class="" style="width : 120px;"><input type="text" name="practicum[<?php echo $classes['id'] ?>][grade]" id="practicum[<?php echo $classes['id'] ?>][grade]" value="<?php echo trim(strtolower($classes['grade'])) != "n/a" ? $classes['grade'] : ""; ?>" style="width : 100%;"></td>
-					<!-- TA:#402.2 -->
+					<!-- TA:#402.3 -->
 					<td class="" style="width : 120px;">
 					<select name="practicum[<?php echo $classes['id'] ?>][grade_desciption]" id="grade_description[<?php echo $classes['id'] ?>]" style="width : 100%;">
 					<option value="">-- select --</option>
-					<option value="Fail" <?php if($classes['grade_description']==="Fail"){echo ' selected';}?>>Fail</option>
-					<option value="General Pass" <?php if($classes['grade_description']==="General Pass"){echo ' selected';}?>>General Pass</option>
-					<option value="Pass with Credit" <?php if($classes['grade_description']==="Pass with Credit"){echo ' selected';}?>>Pass with Credit</option>
-					<option value="Pass with Distinction" <?php if($classes['grade_description']==="Pass with Distinction"){echo ' selected';}?>>Pass with Distinction</option>
+					<?php foreach ($this->grade_desc as $lookup){
+					    if($lookup['grade_description_type'] === 'clinical'){
+					        $select = '';
+					        if($classes['grade_description']=== $lookup['grade_description_name']){
+					            $select = 'selected';
+					        }
+					       echo "<option value='" . $lookup['grade_description_name'] . "' " . $select . ">" . $lookup['grade_description_name'] . "</option>";
+					}}?>
 					</select></td>
 				</tr>
 <?php

@@ -617,6 +617,8 @@ class StudenteditController extends ITechController
 		$this->view->assign('index_number', $details['student'][0]['index_number']);//TA:#400
 		$this->view->assign('graduated', $details['student'][0]['isgraduated']);
 		$this->view->assign('cohortid', $details['link_cohort'][0]['id_cohort']);
+		$this->view->assign('grade_desc', $helper->AdminGradeDescription());//TA:#402.3
+		
 
 		//TA:6: added 8/8/2014 - 8/10/2014
 		$dc = strtotime($details['person'][0]['timestamp_created']);
