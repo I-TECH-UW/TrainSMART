@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><?php echo $this->translation['Application Name'];?> | <?php tp('Repeated Students By Name Report');?></title>
+		<title><?php echo $this->translation['Application Name'];?> | <?php tp('Separated Students By Name Report');?></title>
 		<?php
 		require_once('views/helpers/Location.php');
 		require_once('views/helpers/ScriptContainer.php');
@@ -44,7 +44,7 @@
 					<div class="clear"></div>
 
 					<div id="contentheader">
-						<h2><?php tp('Repeated Students');?></h2><br>
+						<h2><?php tp('Separated Students');?></h2><br>
 					</div>
 					<div class="pad50 clear"></div>
 					<form  action="" method="get">
@@ -116,6 +116,27 @@
 							<div class="fieldshow"><input type="checkbox" name="shownamedate" id="shownamedate" value="1"<?php echo $this->criteria['shownamedate'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"></div>
 							<div class="clear pad20">&nbsp;</div>
+							
+							<!-- TA:#405 START -->
+							<div class="fieldquestion"><?php echo t('Reason for Separation'); ?></div>
+<div class="fieldshow">
+    <input type="checkbox" name="showreasonsep" id="showreasonsep"
+           value="1"<?php if (isset($this->criteria['showreasonsep']) && $this->criteria['showreasonsep']) { echo " checked"; } ?>></div>
+<div class="fieldselect">
+<?php
+require_once ('models/table/Helper.php');
+$helper = new Helper();
+$reasons = $helper->getReasons('drop');
+?>
+<select name="reasonsep" id="reasonsep" size="10">
+        <?php
+        foreach ($reasons as $item) {
+            echo "<option value=\"" . $item['id'] . "\">" . $item['reason'] . "</option>\n";
+        }
+        ?>
+    </select>
+    </div>
+    <!-- TA:#405 END -->
 
 						</div>
 

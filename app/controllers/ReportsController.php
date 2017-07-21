@@ -6397,6 +6397,8 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$cohortJoined = false;
 		$institutionJoined = false;
 	    $linkstudentclassesJoined = false; //TA:#392
+	    $reasonJoined = false;//TA:#405
+	    $take_drop_reason = true;//TA:#405
 
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		$helper = new Helper();
@@ -6516,6 +6518,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			         $s->where('lsc.dropdate != ?','0000-00-00');
 			        }
 			    }else if((isset($params['show_current_cohort']))){
+			        $take_drop_reason = false;//TA:#405
 			        $headers[] = "Current Cohorts";
 			        $s->columns('GROUP_CONCAT(c.cohortname) as current_cohortname');
 			        $s->group('p.id');
@@ -6658,7 +6661,9 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			        $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
 			        $cohortJoined = true;
 			    }
-			    $s->joinLeft(array('lr' => 'lookup_reasons'), 'lr.id = lsc.dropreason', array());
+			    if (!$reasonJoined) {
+			     $s->joinLeft(array('lr' => 'lookup_reasons'), 'lr.id = lsc.dropreason', array());
+			    }
 			    $s->where("p.active = 'active'");
 			    $s->columns("lr.reason");
 			    $headers[] = "Terminated Early";
@@ -6679,7 +6684,9 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
 		            $cohortJoined = true;
 		        }
-		        $s->joinLeft(array('lr' => 'lookup_reasons'), 'lr.id = lsc.dropreason', array());
+		        if(!$reasonJoined){//TA:#405
+		          $s->joinLeft(array('lr' => 'lookup_reasons'), 'lr.id = lsc.dropreason', array());
+		        }
 		        $s->where("lsc.isgraduated = 0");
 		        $s->where("lsc.dropdate != '0000-00-00'");
 		        $s->where("lr.reasontype = 'drop'"); //we need to take only drop reason
@@ -6739,12 +6746,31 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			//TA:103 to display multiple sources for one person in one row
 			//TA:#251 to display amount of funding also
 			$s->columns("GROUP_CONCAT( ' ' , lf.fundingname, ': ',lsf.fundingamount)");
-			$s->group('p.id');
+			//TA:#405 $s->group('p.id');
 			if((isset($params['funding']) && $params['funding'])){
 			 $s->where('lf.id=' . $params['funding']);
 			}
 			$headers[] = "Funding";
 		}
+		
+		//TA:#405
+		if ((isset($params['showreasonsep']) && $params['showreasonsep']) ||
+		    (isset($params['reasonsep']) && $params['reasonsep'])) {
+		        if (!$cohortJoined) {
+		            $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		            $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		            $cohortJoined = true;
+		        }
+		        if (!$reasonJoined) {
+		          $s->joinLeft(array('lr' => 'lookup_reasons'), 'lr.id = lsc.dropreason', array());
+		        }
+		        $s->columns('lr.reason');
+		        if((isset($params['reasonsep']) && $params['reasonsep']) &&  $take_drop_reason === true){
+		            $s->where('lr.id=' . $params['reasonsep']);
+		        }
+		        $headers[] = "Reason for Separation";
+		    }
+		    //////
 
 		if ((isset($params['showfacility']) && $params['showfacility']) ||
 			(isset($params['facility']) && $params['facility'])) {
@@ -6858,7 +6884,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
  		    $s->columns("cl.classname");
  		    $s->columns("lscl.grade");
 		}
-	//	print $s;
+		//print $s;
 		return(array($s, $headers));
 	}
 
@@ -6937,15 +6963,22 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	                $headers[] = "Old Cohorts";
 	                 
 	                //TA:#217 create query, take only repeated students (who dropped one cohort and joined to another)
-	                $query = "select t1.*, t2.old_cohortname from (" . $query1 . ") as t1 ".
-	                    "left join (" . $query2 . ") as t2 on t1.id=t2.id where t2.old_cohortname is not null";
+// 	                $query = "select t1.*, t2.old_cohortname from (" . $query1 . ") as t1 ".
+// 	                    "left join (" . $query2 . ") as t2 on t1.id=t2.id where t2.old_cohortname is not null";
+	                //TA:#405 change columns output to take drop reason from t2
+                    $query = "select t2.*, t1.current_cohortname from (" . $query1 . ") as t1 ".
+ 	                    "left join (" . $query2 . ") as t2 on t1.id=t2.id where t2.old_cohortname is not null";
 	            }else{
 	                list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
 	                //take only repeated students (who dropped one cohort and joined to another)
-	                $query = $query . " and s.id in (select id_student from link_student_cohort where dropdate != '0000-00-00' and id_student in (SELECT id_student FROM link_student_cohort group by id_student having count(*) > 1))"; 
+	                //TA:#405 group by of the end of whole query
+	                $query = $query . " and s.id in (select id_student from link_student_cohort where dropdate != '0000-00-00' 
+	                    and id_student in (SELECT id_student FROM link_student_cohort group by id_student having count(*) > 1)) 
+	                    GROUP BY p.id";
 	            }
 
 	            $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+	           // print $query;
 	            $rowArray = $db->fetchAll($query);
 	            $this->viewAssignEscaped("headers", $headers);
 	            $this->viewAssignEscaped("output", $rowArray);
