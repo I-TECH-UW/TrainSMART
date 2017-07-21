@@ -6884,6 +6884,13 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
  		    $s->columns("cl.classname");
  		    $s->columns("lscl.grade");
 		}
+		
+		//TA:#433
+		$login_user_id = $helper->myid();
+		$ins_results = $helper->getUserInstitutions($login_user_id);
+		if( !empty($ins_results) ){
+		    $s->where("p.id in (select personid from student where institutionid in (SELECT institutionid FROM link_user_institution WHERE userid = {$login_user_id}))");
+		}
 		//print $s;
 		return(array($s, $headers));
 	}
@@ -6913,6 +6920,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
 		
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+			//print $query;
 			$rowArray = $db->fetchAll($query);
 			$this->view->assign('query', $query->__toString());
 
@@ -6978,7 +6986,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	            }
 
 	            $db = Zend_Db_Table_Abstract::getDefaultAdapter();
-	           // print $query;
+	           //print $query;
 	            $rowArray = $db->fetchAll($query);
 	            $this->viewAssignEscaped("headers", $headers);
 	            $this->viewAssignEscaped("output", $rowArray);
