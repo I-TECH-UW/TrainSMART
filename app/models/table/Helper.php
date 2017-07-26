@@ -1908,6 +1908,14 @@ class Helper extends ITechTable
 	public function deleteGradeDescription($params){
 		$this->dbfunc()->delete('lookup_grade_description','id=' . $_POST['id']);
 	}
+	
+	//TA:#402.3
+	public function editGradeDescription($params){
+	    $grade_description_name = $_POST['grade_description_name'];
+	        $this->dbfunc()->update('lookup_grade_description', array(
+	        'grade_description_name'=>$grade_description_name
+	        ), "id=" . $_POST['id']);
+	}
 
 	public function updateCohortLicense($cid,$param){
 		if ($param['licenseid'] == 0){

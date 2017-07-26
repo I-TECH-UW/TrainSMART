@@ -90,14 +90,13 @@ $(document).ready(function() {
 			$(function() {
 				$( "#dialog-form-class" ).dialog({
 					autoOpen: false,
-					height: 250,
+					height: 210,
 					width: 350,
 					modal: true,
 					buttons: {
 						"<?php echo t('Save') ?>": function() {
 							$("#grade_description_type").val("class");
 							$("#grade_description_name").val($("#grade_description_name_class").val());
-							$("#action").val("addnew");
 							var $rows = $(".tablegrid_class tbody tr");
 				            for (var i = 0; i < $rows.length; i++) {
 				            	if($($rows[i]).children().first().text() == $("#grade_description_name").val()){
@@ -116,6 +115,8 @@ $(document).ready(function() {
 				$( "#add-grade-description-class" ).button().click(function() {
 						$('#dialog-form-class').dialog('option', 'title', 'Add class grade description');
 						$( "#dialog-form-class" ).dialog( "open" );
+						$("#grade_description_name_class").val("");
+						$("#action").val("addnew");
 					});
 
 			});
@@ -123,14 +124,13 @@ $(document).ready(function() {
 			$(function() {
 				$( "#dialog-form-clinical" ).dialog({
 					autoOpen: false,
-					height: 250,
+					height: 210,
 					width: 350,
 					modal: true,
 					buttons: {
 						"<?php echo t('Save') ?>": function() {
 							$("#grade_description_type").val("clinical");
 							$("#grade_description_name").val($("#grade_description_name_clinical").val());
-							$("#action").val("addnew");
 							var $rows = $(".tablegrid_clinical tbody tr");
 				            for (var i = 0; i < $rows.length; i++) {
 				            	if($($rows[i]).children().first().text() == $("#grade_description_name").val()){
@@ -149,6 +149,8 @@ $(document).ready(function() {
 				$( "#add-grade-description-clinical" ).button().click(function() {
 						$('#dialog-form-clinical').dialog('option', 'title', 'Add clinical grade description');
 						$( "#dialog-form-clinical" ).dialog( "open" );
+						$("#grade_description_name_clinical").val("");
+						$("#action").val("addnew");
 					});
 
 			});
@@ -156,14 +158,13 @@ $(document).ready(function() {
 			$(function() {
 				$( "#dialog-form-licensing" ).dialog({
 					autoOpen: false,
-					height: 250,
+					height: 210,
 					width: 350,
 					modal: true,
 					buttons: {
 						"<?php echo t('Save') ?>": function() {
 							$("#grade_description_type").val("licensing");
 							$("#grade_description_name").val($("#grade_description_name_licensing").val());
-							$("#action").val("addnew");
 							var $rows = $(".tablegrid_licensing tbody tr");
 				            for (var i = 0; i < $rows.length; i++) {
 				            	if($($rows[i]).children().first().text() == $("#grade_description_name").val()){
@@ -182,6 +183,8 @@ $(document).ready(function() {
 				$( "#add-grade-description-licensing" ).button().click(function() {
 						$('#dialog-form-licensing').dialog('option', 'title', 'Add licensing grade description');
 						$( "#dialog-form-licensing" ).dialog( "open" );
+						$("#grade_description_name_licensing").val("");
+						$("#action").val("addnew");
 					});
 
 			});
@@ -194,13 +197,20 @@ $(document).ready(function() {
 				}
 			}
 
+			function edititem(form, name, id,itxt){
+				$('#' + form).dialog('option', 'title', '<?php echo t('Update grade description') ?>');
+				$("#id").val(id);
+				$("#" + name).val(itxt);
+				$("#action").val("edit");
+				$( "#" + form ).dialog( "open" );
+			}
+
 		</script>
 	</head>
 	
 	<body  class="yui-skin-sam">
 
-<div id="dialog-form-class" title="Add class grade description">
-	<p class="validateTips"><?php echo t('All form fields are required.')?></p>
+<div id="dialog-form-class" title="Update class grade description">
 	<form method="post">
 		<fieldset>
 			<label for="name"><?php echo t('Grade description')?></label>
@@ -209,8 +219,7 @@ $(document).ready(function() {
 	</form>
 </div>
 
-<div id="dialog-form-clinical" title="Add clinical grade description">
-	<p class="validateTips"><?php echo t('All form fields are required.')?></p>
+<div id="dialog-form-clinical" title="Update clinical grade description">
 	<form method="post">
 		<fieldset>
 			<label for="name"><?php echo t('Grade description')?></label>
@@ -219,8 +228,7 @@ $(document).ready(function() {
 	</form>
 </div>
 
-<div id="dialog-form-licensing" title="Add licensing grade description">
-	<p class="validateTips"><?php echo t('All form fields are required.')?></p>
+<div id="dialog-form-licensing" title="Update licensing grade description">
 	<form method="post">
 		<fieldset>
 			<label for="name"><?php echo t('Grade description')?></label>
@@ -254,7 +262,9 @@ $i = 0;
 ?>
 <tr>
 	<td class=""><?php echo $lookup['grade_description_name']; ?></td>
-	<td><a href="javascript:deleteitem('<?php echo $lookup['id']; ?>','<?php echo $lookup['grade_description_name']; ?>');">Delete</a></td>
+	<td>
+	<a href="javascript:edititem('dialog-form-class','grade_description_name_class','<?php echo $lookup['id']; ?>','<?php echo $lookup['grade_description_name']; ?>');">Edit</a> 
+	<a href="javascript:deleteitem('<?php echo $lookup['id']; ?>','<?php echo $lookup['grade_description_name']; ?>');">Delete</a></td>
 </tr>
 <?php
 $i = $i+1;
@@ -287,7 +297,9 @@ $i = 0;
 ?>
 <tr>
 	<td class=""><?php echo $lookup['grade_description_name']; ?></td>
-	<td><a href="javascript:deleteitem('<?php echo $lookup['id']; ?>', '<?php echo $lookup['grade_description_name']; ?>');">Delete</a></td>
+	<td>
+	<a href="javascript:edititem('dialog-form-clinical','grade_description_name_clinical','<?php echo $lookup['id']; ?>','<?php echo $lookup['grade_description_name']; ?>');">Edit</a> 
+	<a href="javascript:deleteitem('<?php echo $lookup['id']; ?>', '<?php echo $lookup['grade_description_name']; ?>');">Delete</a></td>
 </tr>
 <?php
 $i = $i+1;
@@ -320,7 +332,9 @@ $i = 0;
 ?>
 <tr>
 	<td class=""><?php echo $lookup['grade_description_name']; ?></td>
-	<td><a href="javascript:deleteitem('<?php echo $lookup['id']; ?>','<?php echo $lookup['grade_description_name']; ?>');">Delete</a></td>
+	<td>
+	<a href="javascript:edititem('dialog-form-licensing','grade_description_name_licensing','<?php echo $lookup['id']; ?>','<?php echo $lookup['grade_description_name']; ?>');">Edit</a> 
+	<a href="javascript:deleteitem('<?php echo $lookup['id']; ?>','<?php echo $lookup['grade_description_name']; ?>');">Delete</a></td>
 </tr>
 <?php
 $i = $i+1;

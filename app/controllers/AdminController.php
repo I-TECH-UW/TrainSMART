@@ -2754,6 +2754,9 @@ class AdminController extends UserController
 				case "delete":
 					$helper->deleteGradeDescription($_POST);
 					break;
+			     case "edit":
+					    $helper->editGradeDescription($_POST);
+					    break;
 			}
 			$this->_redirect ( 'admin/preservice-gradedescription' );
 		}
