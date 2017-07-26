@@ -49,6 +49,27 @@
 					<div class="pad50 clear"></div>
 					<form  action="" method="get">
 						<div class="mainformholder" style="height:100%;">
+						
+						<!-- TA:#405 START -->
+							<div class="fieldquestion"><?php echo t('Reason for Separation'); ?></div>
+<div class="fieldshow">
+    <input type="checkbox" name="showreasonsep" id="showreasonsep"
+           value="1"<?php if (isset($this->criteria['showreasonsep']) && $this->criteria['showreasonsep']) { echo " checked"; } ?>></div>
+<div class="fieldselect">
+<?php
+require_once ('models/table/Helper.php');
+$helper = new Helper();
+$reasons = $helper->getReasons('drop');
+?>
+<select name="reasonsep" id="reasonsep" size="10">
+        <?php
+        foreach ($reasons as $item) {
+            echo "<option value=\"" . $item['id'] . "\">" . $item['reason'] . "</option>\n";
+        }
+        ?>
+    </select>
+    </div>
+    <!-- TA:#405 END -->
 							<input type="hidden" name="process" id="process" value="1">
 							<?php tp('Select Criteria');?><br>
 
@@ -116,27 +137,6 @@
 							<div class="fieldshow"><input type="checkbox" name="shownamedate" id="shownamedate" value="1"<?php echo $this->criteria['shownamedate'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"></div>
 							<div class="clear pad20">&nbsp;</div>
-							
-							<!-- TA:#405 START -->
-							<div class="fieldquestion"><?php echo t('Reason for Separation'); ?></div>
-<div class="fieldshow">
-    <input type="checkbox" name="showreasonsep" id="showreasonsep"
-           value="1"<?php if (isset($this->criteria['showreasonsep']) && $this->criteria['showreasonsep']) { echo " checked"; } ?>></div>
-<div class="fieldselect">
-<?php
-require_once ('models/table/Helper.php');
-$helper = new Helper();
-$reasons = $helper->getReasons('drop');
-?>
-<select name="reasonsep" id="reasonsep" size="10">
-        <?php
-        foreach ($reasons as $item) {
-            echo "<option value=\"" . $item['id'] . "\">" . $item['reason'] . "</option>\n";
-        }
-        ?>
-    </select>
-    </div>
-    <!-- TA:#405 END -->
 
 						</div>
 
