@@ -3,72 +3,11 @@
 
 <head>
     <title>Confidential Student Transcript</title>
-    <style type="text/css" media="print">
-       
-@page 
-    {
-        size:  auto;   /* auto is the initial value */
-        margin: -12px 0px 0px 0px;  /* this affects the margin in the printer settings: top, right, bottom, left */
-    }
-
-        .tsbutton {
-            -webkit-border-radius: 5px;
-            background-color: #91bd09;
-            padding: 8px 14px 9px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #fff;
-        }
-
-        .tsbutton:hover {
-            background-color: #749a02;
-        }
-
-       
-
-        .blockleft {
-            width: 30%;
-            float: left;
-            font-weight: bold;
-        }
-
-        .blockright {
-            width: 70%;
-            float: left;
-        }
-
-        .blockheader {
-            border-bottom: 1pt solid #000000;
-            margin-bottom: 8pt;
-            margin-top: 24pt;
-            font-weight: bold;
-        }
-
-        .clear {
-            clear: both;
-        }
-        
-}     
-    </style>
-    
-    <script type="text/javascript">
-    function printDiv(divName) {
-        var printContents = document.getElementById(divName).innerHTML;
-        var originalContents = document.body.innerHTML;
-
-        document.body.innerHTML = printContents;
-
-        window.print();
-
-        document.body.innerHTML = originalContents;
-   }
-    </script>
 </head>
 
 <body>
-<input type="button" class='no-print tsbutton' onclick="window.print();" value="Print"><br><br>
 <div id="content">
-<center><table width=80%><tr><td>
+<center><table width=90%><tr><td>
 <center>
 <h2><?php echo $this->inst_name;?></h2>
 <b><?php echo $this->inst_address1 . " " . $this->inst_address2;?></b><br>
