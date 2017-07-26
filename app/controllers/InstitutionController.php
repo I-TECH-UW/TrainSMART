@@ -135,6 +135,7 @@ class InstitutionController extends ITechController
 		$this->view->assign('zip',$details['postalcode']);
 		$this->view->assign('phone',$details['phone']);
 		$this->view->assign('fax',$details['fax']);
+		$this->view->assign('email',$details['email']);//TA:#406
 		$this->view->assign('degree',$details['degrees']);
 		$this->view->assign('type',$details['type']);
 		$this->view->assign('hasdormitories',$details['hasdormitories']);

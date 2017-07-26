@@ -31,7 +31,7 @@ class Studentedit extends ITechTable
 		$select = 'SELECT student.*, institution.institutionname, institution.address1 as inst_address1, 
 		    institution.address2 as inst_address2, 
 		    institution.city as inst_city, institution.postalcode as inst_postalcode, institution.phone as inst_phone, 
-		    institution.fax as inst_fax, lookup_nationalities.nationality FROM student 
+		    institution.fax as inst_fax, institution.email as inst_email, lookup_nationalities.nationality FROM student 
 		    LEFT JOIN institution ON institution.id=student.institutionid 
 		    LEFT JOIN lookup_nationalities on student.nationalityid=lookup_nationalities.id
 		    WHERE personid = ' . $pupilid;
