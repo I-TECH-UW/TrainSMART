@@ -6774,8 +6774,10 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 		if ((isset($params['showfacility']) && $params['showfacility']) ||
 			(isset($params['facility']) && $params['facility'])) {
-			$s->joinLeft(array('lsfac' => 'link_student_facility'), 'lsfac.id_student = s.id', array());
-			$s->joinLeft(array('fac' => 'facility'), 'fac.id = lsfac.id_facility', array());
+			//TA:#431 it seems that this table isnot using any more 
+			//$s->joinLeft(array('lsfac' => 'link_student_facility'), 'lsfac.id_student = s.id', array());
+			//$s->joinLeft(array('fac' => 'facility'), 'fac.id = lsfac.id_facility', array());
+			    $s->joinLeft(array('fac' => 'facility'), 'fac.id = p.facility_id', array());
 
 			if ((isset($params['showfacility']) && $params['showfacility'])) {
 				$s->columns('fac.facility_name');
@@ -6918,6 +6920,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			$criteria = $this->getAllParams();
 			
 			list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
+			//print $query;
 		
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 			//print $query;
