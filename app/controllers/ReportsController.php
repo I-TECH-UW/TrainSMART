@@ -6772,12 +6772,13 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		    }
 		    //////
 
+		    //TA: this is facility at GRADUATION    !!!!!!!
 		if ((isset($params['showfacility']) && $params['showfacility']) ||
 			(isset($params['facility']) && $params['facility'])) {
 			//TA:#431 it seems that this table isnot using any more 
 			//$s->joinLeft(array('lsfac' => 'link_student_facility'), 'lsfac.id_student = s.id', array());
 			//$s->joinLeft(array('fac' => 'facility'), 'fac.id = lsfac.id_facility', array());
-			    $s->joinLeft(array('fac' => 'facility'), 'fac.id = p.facility_id', array());
+			$s->joinLeft(array('fac' => 'facility'), 'fac.id = s.postfacilityname', array());
 
 			if ((isset($params['showfacility']) && $params['showfacility'])) {
 				$s->columns('fac.facility_name');
