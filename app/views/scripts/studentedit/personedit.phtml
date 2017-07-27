@@ -750,6 +750,46 @@
 							<p style="float:left;font-size:14px;"><?php echo t('Funding'); ?></p>
 							<div class="pad20 clear"></div>
 							
+							<!-- TA:#388 START -->
+							 <table cellpadding="0" cellspacing="0" border="0" class="tablegrid_show_all"
+                                       id="prior_course_transcript" style="width: 100%;">
+                                    <thead>
+                                    <tr>
+                                        <th><?php echo t('Course Name'); ?></th>
+                                        <th><?php echo t('Course Grade'); ?></th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    <?php
+                                    foreach ($this->prior_education as $course_info) {
+                                        ?>
+                                        <tr class="GradeA" style="cursor : pointer;" data-associd="<?php echo $course_info['id'] ?>">
+                                            <td><?php echo $course_info['course_name'] ?></td>
+                                            <td><?php echo $course_info['course_grade'] ?></td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
+                                    </tbody>
+                                </table>
+                                <?php 
+                                echo "<br>";
+                                echo $this->formLabel('funding_year', t('Year of study:'), array());
+                                print $this->yearofstudy;
+                                print_r($this->lookupfunding);
+                                echo $this->formSelect('funding_year', '', array('class' => 'fieldInput'), $this->lookupfunding);
+                                echo $this->formLabel('funding_id', t('Funder:'), array());
+                                echo $this->formSelect('funding_id', '', array('class' => 'fieldInput'), $this->lookupfunding);
+                                echo $this->formLabel('funding_amount', t('Funding Amount:'), array());
+                                echo $this->formText('funding_amount', '', array('class' => 'fieldInput'));
+                                echo $this->formLabel('save_funding', '', array());
+                                echo $this->formButton('save_funding', 'Funding', array('class' => 'tsbutton green large', 'style' => 'margin-bottom: 2em;',
+                                    'onclick' => 'saveFunding();'));
+                                ?>
+                              <!-- TA:#388 END -->  
+							
 							<!-- TA:#379 START -->
 							<div style="width : 1400px;">
                             <br><table border=0>
@@ -861,6 +901,7 @@ if($column_count === 3){
                                 <?php
                                 echo "<br>";
                                 echo $this->formLabel('prior_course_id', t('Prior Education Course:'), array());
+                                print_r($this->prior_education_courses);
                                 echo $this->formSelect('prior_course_id', '', array('class' => 'fieldInput'), $this->prior_education_courses);
                                 echo $this->formLabel('prior_course_grade', t('Grade:'), array());
                                 echo $this->formText('prior_course_grade', '', array('class' => 'fieldInput'));
