@@ -1173,6 +1173,12 @@ class Helper extends ITechTable
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
+	
+	//TA:#388
+	public function getFundingPairs() {
+	    $db = $this->dbfunc();
+	    return $db->fetchPairs($db->select()->from('lookup_fundingsources', array('id', 'fundingname'))->where('status = 1'));
+	}
 
 	################################
 	#                              #

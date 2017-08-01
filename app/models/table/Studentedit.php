@@ -586,6 +586,25 @@ class Studentedit extends ITechTable
 			return $address;
 		}
 	}
+	
+	//TA:#388
+	public function UpdateFundingWithYear($params){
+	    $db = $this->dbfunc();
+	    if($params['funding_to_delete']){
+	        $delete_funding = explode("|", $params['funding_to_delete']);
+	        foreach ($delete_funding as $assoc_id) {
+	            $db->delete('link_student_funding', $db->quoteInto('id = ?', $assoc_id));
+	        }
+	    }
+	    if($params['funding_to_add']){
+	       $add_funding = explode("|", $params['funding_to_add']);  
+	       foreach ($add_funding as $id => $fundarr) {
+	        $fund = explode("=", $fundarr);
+	        $db->insert('link_student_funding', array('studentid' => $params['sid'],
+	            'fundingsource' => $fund[1], 'fundingamount' => $fund[3], 'fundingyear' => $fund[0]));
+	       }
+	    }
+	}
 
 	public function UpdateFunding($param){
 		// GETTING STUDENT RECORD
@@ -717,14 +736,14 @@ class Studentedit extends ITechTable
 	}
 
 	public function getStudentFunding($sid){
-		$db = $this->dbfunc();
-		$select = $db->select()
-			->from('link_student_funding')
-			->where('studentid = ?',$sid);
+//TA:#388
+		$select = "select link_student_funding.*, lookup_fundingsources.fundingname from link_student_funding 
+		    left join lookup_fundingsources on lookup_fundingsources.id=link_student_funding.fundingsource where studentid =" . $sid;
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 
 	}
+	
 //TA:51 10/05/2015
 	public function DeleteStudent($param){
 	    $person_id = $param['id'];
