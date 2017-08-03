@@ -16,10 +16,13 @@
 
 		var cohort_ids = [];
 		var prior_courses = <?php echo json_encode(array_flip($this->prior_education_courses), JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
-
+		//TA:#388
+	    var funding = <?php echo json_encode(array_flip($this->lookupfunding), JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+	    
 			$(document).ready(function() {
 
 			    $('#prior_courses_to_delete').data('assoc_ids', []);
+			    $('#funding_to_delete').data('assoc_ids_funding', []);//TA:#388
 
 				/* Funding - set checkbox if not empty*/
 				$("input[name^=fundingamount]").keyup(function (e) {
@@ -83,6 +86,46 @@
                     });
                     $(event.target.parentNode).addClass('row_selected');
                 });
+
+                //TA:#388
+                $("#funding tbody").click(function(event) {
+                    var $n = $(event.target.parentNode);
+                    var children = $n.children('td');
+                    var oTable = $('#funding').dataTable();
+                    var year = children[0].innerText;
+                    var year_txt = "";
+                    if(year != ""){
+                    	year_txt = " " + year + " year of study ";
+                    }
+                    if (confirm("Do you want to delete the '" + children[1].innerText + "' funding" + year_txt + "?")) {
+                        var associd = $n.data('associd');
+                        if ((associd !== null) && (typeof associd !== 'undefined')) {
+                            if($('#funding_to_delete').val() !=""){
+                            	$('#funding_to_delete').val($('#funding_to_delete').val() + "|");
+                            }
+                            $('#funding_to_delete').val($('#funding_to_delete').val() + associd);
+                        }else {
+                            var add_data = ($('#funding_to_add').val()).split("|");
+                            $('#funding_to_add').val("");
+                            for(i=0; i<add_data.length; i++){
+                                var d = add_data[i].split("=");
+                                if(!(d[0] == year && d[2] ==  children[1].innerText)){
+                                	if($('#funding_to_add').val() !=""){
+                                    	$('#funding_to_add').val($('#funding_to_add').val() + "|");
+                                    }
+                                    $('#funding_to_add').val($('#funding_to_add').val() + add_data[i]);
+                                }
+                            }
+                            
+                        }
+                        oTable.fnDeleteRow($n[0]);
+                    }
+                    $(oTable.fnSettings().aoData).each(function (){
+                        $(this.nTr).removeClass('row_selected');
+                    });
+                    $(event.target.parentNode).addClass('row_selected');
+                });
+                //////
 
 				$( "#dialog-form-license" ).dialog({
 					autoOpen: false,
@@ -148,6 +191,7 @@
 				});
 
                 $('#prior_courses_to_add').data('new_courses', {});
+                $('#funding_to_add').data('new_funding', {});//TA:#388
 			});
 
 			//TA:#407.2
@@ -214,6 +258,29 @@
 				}
 				return aReturn;
 			}
+
+			//TA:#388
+			function saveFunding() {
+				var $fundingYearBox = $('#funding_year option:selected');
+			    var $fundingBox = $('#funding_id option:selected');
+			    var $amountBox = $('#funding_amount');
+                var fundingID = $fundingBox.val();
+                var fundingYear = $fundingYearBox.text();
+                var fundingName = $fundingBox.text();
+                var amount = $amountBox.val();
+                if (fundingID != '0' && amount.length > 0) {
+                    if($('#funding_to_add').val() !=""){
+                    	$('#funding_to_add').val($('#funding_to_add').val() + "|");
+                    }
+                    //data: [fundingYear]=[fundingID]=[fundingName]=[amount]|[fundingYear]=[fundingID]=[fundingName]=[amount]....
+                    $('#funding_to_add').val($('#funding_to_add').val() + fundingYear + "=" + fundingID + "=" + fundingName + "=" + amount);
+                    var oTable = $('#funding').dataTable();
+                    oTable.fnAddData([fundingYear, fundingName, amount]);
+                    $('#funding_id').val('0').change();
+                    $('#funding_year').val('0').change();
+                    $amountBox.val('');
+                }
+            }
 
 			function checkcohort(){//TA:#217
 				if ($("#cohortid").val() == 0){
@@ -750,43 +817,48 @@
 							<p style="float:left;font-size:14px;"><?php echo t('Funding'); ?></p>
 							<div class="pad20 clear"></div>
 							
-							<!-- TA:#379 START -->
-							<div style="width : 1400px;">
-                            <br><table border=0>
-<?php
-$column_count = 0;
-	foreach ($this->lookupfunding as $funding){
-		$checked = false;
-		$amount = "";
-		foreach ($this->studentfunding as $sf){
-			if ($sf['fundingsource'] == $funding['id']){
-				$checked = true;
-				$amount = $sf['fundingamount'];
-			}
-		}
-		if($column_count === 0){
-		    echo "<tr>";
-		}
-?>
-<td style='padding: 0px 30px 10px 0px;'>
-<input type="checkbox" name="funding[<?php echo $funding['id']; ?>]" id="funding[<?php echo $funding['id']; ?>]" value="<?php echo $funding['id']; ?>" style="position : relative; top : 3px;"<?php echo $checked ? " checked" : ""; ?>>
-<?php echo $funding['fundingname']; ?></input>
-<input type="text" name="fundingamount[<?php echo $funding['id']; ?>]" id="funding[<?php echo $funding['id']; ?>]" value="<?php echo $amount; ?>" style="text-align : right; width : 95px; float : right; margin : 0px;"/>
-</td>
-<?php
-$column_count++;
-if($column_count === 3){
-    echo "</tr>";
-    $column_count=0;
-}
-}
-?>
-</table>
-<!-- TA:#379 END -->
-
-							</div>
+							<!-- TA:#388 START -->
+							<input type="hidden" id="funding_to_add" name="funding_to_add">
+                            <input type="hidden" id="funding_to_delete" name="funding_to_delete">
+							 <br><table cellpadding="0" cellspacing="0" border="0" class="tablegrid_show_all"
+                                       id="funding" style="width: 100%;">
+                                    <thead>
+                                    <tr>
+                                        <th><?php echo t('Year of study'); ?></th>
+                                        <th width='70%'><?php echo t('Funder'); ?></th>
+                                        <th><?php echo t('Funding Amount'); ?></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+                                    foreach ($this->studentfunding as $sf) {
+                                        ?>
+                                        <tr class="GradeA" style="cursor : pointer;" data-associd="<?php echo $sf['id'] ?>">
+                                            <td><?php echo $sf['fundingyear'] ?></td>
+                                            <td data-fundingid="<?php echo $sf['fundingsource'] ?>"><?php echo $sf['fundingname'] ?></td>
+                                            <td><?php echo $sf['fundingamount'] ?></td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
+                                    </tbody>
+                                </table>
+                                <?php 
+                                echo "<br>";
+                                echo $this->formLabel('funding_year', t('Year of study:'), array());
+                                $years = array('0'=>'--' . t("choose") . '--','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6');
+                                echo $this->formSelect('funding_year', '', array('class' => 'fieldInput'), $years);
+                                echo $this->formLabel('funding_id', t('Funder:'), array());
+                                echo $this->formSelect('funding_id', '', array('class' => 'fieldInput'), $this->lookupfunding);
+                                echo $this->formLabel('funding_amount', t('Funding Amount:'), array());
+                                echo $this->formText('funding_amount', '', array('class' => 'fieldInput'));
+                                echo $this->formLabel('save_funding', '', array());
+                                echo $this->formButton('save_funding', 'Add Funding', array('class' => 'tsbutton green large', 'style' => 'margin-bottom: 2em;',
+                                    'onclick' => 'saveFunding();'));
+                                ?>
+                              <!-- TA:#388 END -->  
+							
 							<div class="clear pad20"></div>
-
 							<div class="pad20 clear"></div>
 							
 							<!-- TA: added 7/25/2014-->
