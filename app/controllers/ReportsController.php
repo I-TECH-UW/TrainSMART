@@ -6746,7 +6746,8 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			//TA:103 to display multiple sources for one person in one row
 			//TA:#251 to display amount of funding also
 			$s->columns("GROUP_CONCAT( ' ' , lf.fundingname, ': ',lsf.fundingamount)");
-			//TA:#405 $s->group('p.id');
+			//TA: we commented it for #405, but it does not work for GROUP_CONCAT
+			$s->group('p.id');
 			if((isset($params['funding']) && $params['funding'])){
 			 $s->where('lf.id=' . $params['funding']);
 			}
