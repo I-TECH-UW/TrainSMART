@@ -1987,7 +1987,7 @@ class TrainingController extends ReportFilterHelpers {
 					if ($location_id === false)
 					$status->addError ( 'city', t ( 'Could not save that city.' ) );
 				} else {
-					if ( $city_id ) {
+					if ( $city_id && $location_params ['city_parent_id']) {//TA:#444 add city_parent_id check
 						$location_id = $city_id;
 					} else if ($this->setting ( 'display_region_i' )) {
 						$location_id = $this->getSanParam('region_i_id');

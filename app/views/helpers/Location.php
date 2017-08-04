@@ -67,7 +67,7 @@ function getCriteriaValues($params, $settings, $criteria = array(), $prefix = ''
         }
     }
 
-    $city_parent_id = 0; // todo: small bug here, on receiving array input for region_ids, city_parent_id returns an array of ids, possibly even wrong ids -- probably ok - its not used in reports anyway...
+    $city_parent_id = 0; 
     if ($settings['display_region_i']) {
         $city_parent_id = $criteria[$prefix.'region_i_id'];
     } else if ($settings['display_region_h']) {
@@ -83,8 +83,13 @@ function getCriteriaValues($params, $settings, $criteria = array(), $prefix = ''
     } else if ($settings['display_region_c']) {
         $city_parent_id = $criteria[$prefix.'region_c_id'];
     } else if ($settings['display_region_b']) {
-        $city_parent_id = $criteria[$prefix.'region_b_id'];
-    } else {
+        //TA:#444
+        if($criteria[$prefix.'region_b_id']){
+            $city_parent_id = $criteria[$prefix.'region_b_id'];
+        }else if($criteria[$prefix.'district_id']){
+            $city_parent_id = $criteria[$prefix.'district_id'];
+        }
+    }else {
         $city_parent_id = $criteria['_id'];
     }
     $criteria [$prefix.'city_parent_id'] = $city_parent_id;
