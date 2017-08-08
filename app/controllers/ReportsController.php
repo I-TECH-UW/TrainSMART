@@ -8555,7 +8555,16 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 			// degree institution
 			if( $this->getSanParam('showdegreeinstitution') ){
-				$select[] = "tut.degreeinst";
+				//$select[] = "tut.degreeinst";
+				//TA:#420
+				$join[] = array(
+				    "table" => "lookup_degree_institution",
+				    "abbreviation" => "ldi",
+				    "compare" => "ldi.id = tut.degreeinst",
+				    "type" => "left"
+				);
+				$select[] = "ldi.degree_institution as degreeinst";
+				//
 				$headers[] = "Degree Institution";
 			}
 

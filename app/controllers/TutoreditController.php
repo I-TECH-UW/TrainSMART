@@ -168,6 +168,7 @@ class TutoreditController extends ITechController
         $this->view->assign('lookupnationalities', $helper->getNationalities());
         $this->view->assign('lookupfacilities', $helper->getNationalities());
         $this->view->assign('lookupdegrees', $helper->getDegrees());
+        $this->view->assign('lookupdegreeinst', $helper->getDegreeInst());
         $this->view->assign('tutorlanguages', $helper->getLanguages());
         
         $known = array();

@@ -866,6 +866,15 @@ class Helper extends ITechTable
 		return $result;
 	}
 	
+	//TA:#420
+	public function getDegreeInst() {
+	    $select = $this->dbfunc()->select()
+	    ->from("lookup_degree_institution")
+	    ->order('degree_institution');
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return $result;
+	}
+	
 	//TA:#362
 	public function getDegree($id) {
 	    $select = $this->dbfunc()->select()
@@ -1215,13 +1224,18 @@ class Helper extends ITechTable
 
 	//TA:35 
 	public function AdminDegrees(){
-// 		$select = $this->dbfunc()->select()
-// 			->from("lookup_degrees")
-// 			->order('degree');
 		$select = "select lookup_degrees.id, lookup_degrees.degree,  link_institution_degrees.id as used from lookup_degrees
 		left join link_institution_degrees on link_institution_degrees.id_degree = lookup_degrees.id group by lookup_degrees.id";
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
+	}
+	
+	//TA:#420
+	public function AdminDegreeInst(){
+	    $select = "SELECT lookup_degree_institution.*, tutor.id AS used FROM lookup_degree_institution 
+	     		    LEFT JOIN tutor ON tutor.degreeinst = lookup_degree_institution.id GROUP BY lookup_degree_institution.id ORDER BY degree_institution ASC";
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return $result;
 	}
 
 	//TA:#404
@@ -1440,11 +1454,38 @@ class Helper extends ITechTable
 		}
 	}
 	
+	//TA:#420
+	public function updateDegreeInst($params){
+	    $linktable = "lookup_degree_institution";
+	    $maincolumn = "degree_institution";
+	    $id = $_POST["id"];
+	    $value = $_POST['degree_institution'];
+	
+	    $select = $this->dbfunc()->select()
+	    ->from($linktable)
+	    ->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)))
+	    ->where('id <> ?', $id);
+	    $result = $this->dbfunc()->fetchAll($select);
+	    if (count ($result) == 0){
+	        $i_arr = array(
+	        $maincolumn	=> $value
+	        );
+	        $instypeinsert = $this->dbfunc()->update($linktable,$i_arr,'id = ' . $id);
+	    }
+	}
+	
 	//TA:35 able to delete a degree
 	public function deleteDegrees($params){
 		$db = $this->dbfunc();
 		$query = "DELETE FROM lookup_degrees WHERE id = " . $_POST["_id"];
 		$db->query($query);
+	}
+
+	//TA:#420
+	public function deleteDegreeInst($params){
+	    $db = $this->dbfunc();
+	    $query = "DELETE FROM lookup_degree_institution WHERE id = " . $_POST["id"];
+	    $db->query($query);
 	}
 
 	public function updateReligion($params){
@@ -1702,6 +1743,25 @@ class Helper extends ITechTable
 			);
 			$instypeinsert = $this->dbfunc()->insert($linktable,$i_arr);
 		}
+	}
+	
+	//TA:#420
+	public function addDegreeInst($params){
+	    $linktable = "lookup_degree_institution";
+	    $maincolumn = "degree_institution";
+	    $id = $_POST["id"];
+	    $value = $_POST['degree_institution'];
+	
+	    $select = $this->dbfunc()->select()
+	    ->from($linktable)
+	    ->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)));
+	    $result = $this->dbfunc()->fetchAll($select);
+	    if (count ($result) == 0){
+	        $i_arr = array(
+	        $maincolumn	=> $value
+	        );
+	        $instypeinsert = $this->dbfunc()->insert($linktable,$i_arr);
+	    }
 	}
 
 	public function addCoursetypes($params){

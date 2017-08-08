@@ -243,7 +243,14 @@ for ($i = date("Y"); $i >= (date("Y") - 100); $i--){
 							<input type="checkbox" name="tutor_not_active" id="tutor_not_active" style="margin : 8px 5px 12px 25px;" <?php echo ($this->tutor_not_active === 'inactive'?'checked="checked"':'');?>">
 
 							<label><?php echo t('Degree Institution'); ?></label>
-							<input type="text" name="degreeinst" value="<?php echo $this->escape($this->degreeinst);?>">
+							<!-- TA:#420 START -->
+							<select name="degreeinst">
+								<option value="0"><?php echo t('Select...'); ?></option>
+<?php foreach ($this->lookupdegreeinst as $degree_inst){?>
+								<option value="<?php echo $degree_inst['id']; ?>"<?php echo $degree_inst['id'] == $this->escape($this->degreeinst) ? " selected" : ""; ?>><?php echo $degree_inst['degree_institution']; ?></option>
+<?php } ?>
+							</select>
+							<!-- TA:#420 END -->
 
 							<label><?php echo t('Degree'); ?></label>
 							<select name="degree" class="comboeditable">

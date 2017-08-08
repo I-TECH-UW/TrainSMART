@@ -2557,6 +2557,31 @@ class AdminController extends UserController
 		$this->view->assign("header",t("Degrees"));
 
 	}
+	
+	//TA:#420
+	public function preserviceDegreeinstAction(){
+	    $helper = new Helper();
+	  
+	    if (isset ($_POST['action'])){
+	        switch ($_POST['action']){
+	            case "addnew":
+	                $helper->addDegreeInst($_POST);
+	                break;
+	            case "update":
+	                $helper->updateDegreeInst($_POST);
+	                break;
+	            case "delete":
+	                $helper->deleteDegreeInst($_POST);
+	                break;
+	        }
+	        $this->_redirect ( 'admin/preservice-degreeinst' );
+	    }
+	
+	    $list = $helper->AdminDegreeInst();
+	    $this->view->assign("lookup", $list);
+	    $this->view->assign("header",t("Degree Institution"));
+	
+	}
 
 	public function preserviceCoursetypesAction(){
 		$helper = new Helper();
