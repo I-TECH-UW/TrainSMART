@@ -241,9 +241,10 @@
                             $isSelected = ($vals['id'] && $vals['id'] === $this->row['training_title_option_id']) ? ' selected="selected"' : '';
 
                             // Also list empty prefix to allow all titles to be displayed
-                            if ($vals['training_category_option_id'] && $vals['id'] != $lastId) {
-                                echo '<option value="_' . $vals['id'] . '">' . $vals['training_title_phrase'] . '</option>';
-                            }
+                            //TA: titles are duplicated, we do not need this
+//                             if ($vals['training_category_option_id'] && $vals['id'] != $lastId) {
+//                                 echo '<option value="_' . $vals['id'] . '">' . $vals['training_title_phrase'] . '</option>';
+//                             }
 
                             echo '<option value="' . $vals['training_category_option_id'] . '_' . $vals['id'] . '"' . $isSelected . '>' . $vals['training_title_phrase'] . '</option>';
                             $lastId = $vals['id'];
