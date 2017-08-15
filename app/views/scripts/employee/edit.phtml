@@ -1060,6 +1060,7 @@
                             	eldsdteam_field.disabled = false;
                             }else{
                             	eldsdteam_field.disabled = true;
+                            	$('#dsd_team').val('');//TA:#443
                             }
                         	selectNASiteName();
                             elSubProvince.disabled = false; 
@@ -1072,9 +1073,9 @@
                elPartner = YAHOO.util.Dom.get("select_partner");
                elSDSTeam = YAHOO.util.Dom.get("dsd_team");
                elPartner.onchange = function () {
-               	setFilteredOption(this.selectedIndex, 'select_partner', 'dsd_team');
+                  setFilteredOption(this.selectedIndex, 'select_partner', 'dsd_team');
                }
-               setFilteredOption(elPartner.selectedIndex, 'select_partner', 'dsd_team');
+               //it seems taht we do not need this, otherwise team list is empty setFilteredOption(elPartner.selectedIndex, 'select_partner', 'dsd_team');
                ///
 
                //TA:#441
