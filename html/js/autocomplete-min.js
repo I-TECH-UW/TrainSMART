@@ -107,7 +107,7 @@
 					if (aMarkup.length > 1)
 						aMarkup [aMarkup.length]= ' ';
 		            // match an additional result item (e.g., when searching both last and first names)
-					//TA: toUpperCase() does not work for some international chars. It is bug in https://bugzilla.mozilla.org/show_bug.cgi?id=394604 that was not fixed . 
+					//TA: toUpperCase() does not work for some international chars. It is bug in https://bugzilla.mozilla.org/show_bug.cgi?id=394604 that was not fixed 
 		            if(sQuery.toUpperCase() == aResultItem[i].substr(0,sQuery.length).toUpperCase()) {
 		              aMarkup [aMarkup.length] = SPAN_BEGIN;
 		              aMarkup [aMarkup.length] = aResultItem[i].substr(0,sQuery.length);
