@@ -38,10 +38,12 @@ print ScriptContainer::$instance->renderJSHead();
     <div class="simpleLabel longerWidth"><?php tp('Course Length');?></div>
     <div class="simpleValueNoMargin"> <?php echo str_replace("days", "", $this->row['duration']); tp('days'); ?> </div>
 
+     <?php if ($this->setting['display_training_topic']) { ?>
     <div class="simpleLabel longerWidth"><?php tp('Training topic');?></div>
     <div class="simpleValueNoMargin">
       <?php echo $this->row['training_topic_phrase']; ?>
     </div>
+    <?php } ?>
     
     <div class="simpleLabel longerWidth"><?php tp('Funding');?></div>
     <div class="simpleValueNoMargin">
