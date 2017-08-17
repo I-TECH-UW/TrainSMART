@@ -92,7 +92,11 @@
 		// This function returns markup that bolds the original query,
 		// and also displays to additional pieces of supplemental data.
 		autoComp.formatResult = function(aResultItem, sQuery) {
-		   var sKey = aResultItem[0]; // the entire result key
+//		   var sKey = aResultItem[0]; // the entire result key
+			//TA: make case non-sensetive for cyrilic as well
+			var sKey = aResultItem[0].toUpperCase(); // the entire result key
+			sQuery = sQuery.toUpperCase();
+			///
 		   var sKeyQuery = sKey.substr(0, sQuery.length); // the query itself
 		   var sKeyRemainder = sKey.substr(sQuery.length); // the rest of the result
 
