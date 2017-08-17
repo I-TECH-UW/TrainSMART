@@ -102,24 +102,13 @@
 		   var aMarkup = ["<div id='ysearchresult'>"];
 
 		   var spanInner = '';
-		   
-		   var block = "\\w\\u0400-\\u04FF";
-			var rx = new RegExp("([^" + block + "]|^)([" + block + "])", "g");
 
 		      for(var i = 1; i <= 3; i++) {
 					if (aMarkup.length > 1)
 						aMarkup [aMarkup.length]= ' ';
 		            // match an additional result item (e.g., when searching both last and first names)
-//		            if(sQuery.toUpperCase() == aResultItem[i].substr(0,sQuery.length).toUpperCase()) {
 					//TA: toUpperCase() does not work for some international chars. It is bug in https://bugzilla.mozilla.org/show_bug.cgi?id=394604 that was not fixed
-					var sQuery_new = sQuery.replace(/\b[\wа-яА-Я]/g, function(l){ 
-					    return l.toUpperCase();
-					}); 
-					var aResultItem_new = aResultItem[i].substr(0,sQuery.length).replace(/\b[\wа-яА-Я]/g, function(l){ 
-					    return l.toUpperCase();
-					});
-					if(sQuery_new == aResultItem_new) {
-			       /////
+		            if(sQuery.toUpperCase() == aResultItem[i].substr(0,sQuery.length).toUpperCase()) {
 		              aMarkup [aMarkup.length] = SPAN_BEGIN;
 		              aMarkup [aMarkup.length] = aResultItem[i].substr(0,sQuery.length);
 		              aMarkup [aMarkup.length] = SPAN_END;
