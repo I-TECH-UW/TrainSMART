@@ -9960,7 +9960,7 @@ die (__LINE__ . " - " . $sql);
                 $status->setStatusMessage(t('Error'));
             } else {
 
-               $select->distinct();
+            //   $select->distinct();
          
                 $tables = $select->getPart(Zend_Db_Select::FROM);
                 $cols = $select->getPart(Zend_Db_Select::COLUMNS);
