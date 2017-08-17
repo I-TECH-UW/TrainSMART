@@ -92,11 +92,7 @@
 		// This function returns markup that bolds the original query,
 		// and also displays to additional pieces of supplemental data.
 		autoComp.formatResult = function(aResultItem, sQuery) {
-//		   var sKey = aResultItem[0]; // the entire result key
-			//TA: make case non-sensetive for cyrilic as well
-			var sKey = aResultItem[0].toUpperCase(); // the entire result key
-			sQuery = sQuery.toUpperCase();
-			///
+		   var sKey = aResultItem[0]; // the entire result key
 		   var sKeyQuery = sKey.substr(0, sQuery.length); // the query itself
 		   var sKeyRemainder = sKey.substr(sQuery.length); // the rest of the result
 
@@ -111,6 +107,7 @@
 					if (aMarkup.length > 1)
 						aMarkup [aMarkup.length]= ' ';
 		            // match an additional result item (e.g., when searching both last and first names)
+					//TA: toUpperCase() does not work for some international chars. It is bug in https://bugzilla.mozilla.org/show_bug.cgi?id=394604 that was not fixed
 		            if(sQuery.toUpperCase() == aResultItem[i].substr(0,sQuery.length).toUpperCase()) {
 		              aMarkup [aMarkup.length] = SPAN_BEGIN;
 		              aMarkup [aMarkup.length] = aResultItem[i].substr(0,sQuery.length);
