@@ -865,8 +865,14 @@ class ReportFilterHelpers extends ITechController
         if (isset($criteria['showProvince']) && $criteria['showProvince']) {
             if (!array_key_exists('location', $joined)) {
                  //TA:#224 
+            if (!array_key_exists('link_employee_facility', $joined)) {//TA:#419
                     $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $joined['link_employee_facility'] = 1;//TA:#419
+                }
+                if (!array_key_exists('facility', $joined)) {//TA:#419
                     $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $joined['facility'] = 1;//TA:#419
+                }
                     $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
@@ -881,8 +887,14 @@ class ReportFilterHelpers extends ITechController
             $ids = $criteria['province_id'];
             if (!array_key_exists('location', $joined)) {
                  //TA:#224 
+            if (!array_key_exists('link_employee_facility', $joined)) {//TA:#419
                     $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $joined['link_employee_facility'] = 1;//TA:#419
+                }
+                if (!array_key_exists('facility', $joined)) {//TA:#419
                     $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $joined['facility'] = 1;//TA:#419
+                }
                     $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
@@ -901,8 +913,14 @@ class ReportFilterHelpers extends ITechController
         if (isset($criteria['showDistrict']) && $criteria['showDistrict']) {
             if (!array_key_exists('location', $joined)) {
                  //TA:#224 
+            if (!array_key_exists('link_employee_facility', $joined)) {//TA:#419
                     $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $joined['link_employee_facility'] = 1;//TA:#419
+                }
+                if (!array_key_exists('facility', $joined)) {//TA:#419
                     $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $joined['facility'] = 1;//TA:#419
+                }
                     $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
@@ -924,8 +942,14 @@ class ReportFilterHelpers extends ITechController
 
             if (!array_key_exists('location', $joined)) {
                  //TA:#224 
+            if (!array_key_exists('link_employee_facility', $joined)) {//TA:#419
                     $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $joined['link_employee_facility'] = 1;//TA:#419
+                }
+                if (!array_key_exists('facility', $joined)) {//TA:#419
                     $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $joined['facility'] = 1;//TA:#419
+                }
                     $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
@@ -940,8 +964,14 @@ class ReportFilterHelpers extends ITechController
         if (isset($criteria['showRegionC']) && $criteria['showRegionC']) {
             if (!array_key_exists('location', $joined)) {
                  //TA:#224 
+            if (!array_key_exists('link_employee_facility', $joined)) {//TA:#419
                     $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $joined['link_employee_facility'] = 1;//TA:#419
+                }
+                if (!array_key_exists('facility', $joined)) {//TA:#419
                     $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $joined['facility'] = 1;//TA:#419
+                }
                     $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
@@ -962,9 +992,14 @@ class ReportFilterHelpers extends ITechController
             }
             if (!array_key_exists('location', $joined)) {
                  //TA:#224 
+                if (!array_key_exists('link_employee_facility', $joined)) {//TA:#419
                     $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
                     $joined['link_employee_facility'] = 1;//TA:#419
+                }
+                if (!array_key_exists('facility', $joined)) {//TA:#419
                     $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $joined['facility'] = 1;//TA:#419
+                }
                     $select->joinLeft(array('location' => new Zend_Db_Expr('(' . Location::fluentSubquery() . ')')), 'location.id = facility.location_id', array());
                 $joined['location'] = 1;
             }
@@ -1079,16 +1114,24 @@ class ReportFilterHelpers extends ITechController
 
         // site
         if (isset($criteria['show_site']) && $criteria['show_site']) {
-            if (!array_key_exists('facility', $joined)) {
-                $select->joinLeft('facility', 'facility.id = employee.site_id', array());
-                $joined['facility'] = 1;
-            }
+              if (!array_key_exists('link_employee_facility', $joined)) {//TA:#419
+                    $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $joined['link_employee_facility'] = 1;//TA:#419
+                }
+                if (!array_key_exists('facility', $joined)) {//TA:#419
+                    $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $joined['facility'] = 1;//TA:#419
+                }
             $select->columns('facility.facility_name');
         }else if (isset($criteria['show_facilityInput']) && $criteria['show_facilityInput'] ) {//TA:#293.1
-            if (!array_key_exists('facility', $joined)) {
-                $select->joinLeft('facility', 'facility.id = employee.site_id', array());
-                $joined['facility'] = 1;
-            }
+               if (!array_key_exists('link_employee_facility', $joined)) {//TA:#419
+                    $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                    $joined['link_employee_facility'] = 1;//TA:#419
+                }
+                if (!array_key_exists('facility', $joined)) {//TA:#419
+                    $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
+                    $joined['facility'] = 1;//TA:#419
+                }
             $select->columns('facility.facility_name');
         }
       
@@ -1392,7 +1435,8 @@ class ReportFilterHelpers extends ITechController
 
         if (isset($criteria['show_mechanism']) && $criteria['show_mechanism']) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
-                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                //TA:#419 using LEFT JOIN is cause of query execution delay we can use JOIN but it will display only employee records with mechanisms
+                $select->joinLEFT('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                 $joined['link_mechanism_employee'] = 1;
             }
             if (!array_key_exists('mechanism_option', $joined)) {
@@ -1404,7 +1448,8 @@ class ReportFilterHelpers extends ITechController
         }
         if (isset($criteria['mechanism']) && $criteria['mechanism']) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
-                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                //TA:#419 using LEFT JOIN is cause of query execution delay we can use JOIN but it will display only employee records with mechanisms
+                $select->joinLEFT('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                 $joined['link_mechanism_employee'] = 1;
             }
             if (!array_key_exists('mechanism_option', $joined)) {
@@ -1420,7 +1465,8 @@ class ReportFilterHelpers extends ITechController
 
         if (isset($criteria['show_funder']) && $criteria['show_funder']) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
-                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                //TA:#419 using LEFT JOIN is cause of query execution delay we can use JOIN but it will display only employee records with mechanisms
+                $select->joinLEFT('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                 $joined['link_mechanism_employee'] = 1;
             }
             if (!array_key_exists('mechanism_option', $joined)) {
@@ -1435,7 +1481,8 @@ class ReportFilterHelpers extends ITechController
         }
         if (isset($criteria['funder']) && ($criteria['funder'])) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
-                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                //TA:#419 using LEFT JOIN is cause of query execution delay we can use JOIN but it will display only employee records with mechanisms
+                $select->joinLEFT('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                 $joined['link_mechanism_employee'] = 1;
             }
             if (!array_key_exists('mechanism_option', $joined)) {
@@ -1498,7 +1545,8 @@ class ReportFilterHelpers extends ITechController
         //TA:#419
         if ((isset($criteria['show_agencies']) && $criteria['show_agencies']) || (isset($criteria['agencies']) && $criteria['agencies'])) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
-                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                //TA:#419 using LEFT JOIN is cause of query execution delay we can use JOIN but it will display only employee records with mechanisms
+                $select->joinLEFT('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                 $joined['link_mechanism_employee'] = 1;
             }
             if (!array_key_exists('mechanism_option', $joined)) {
@@ -1524,7 +1572,8 @@ class ReportFilterHelpers extends ITechController
         }
         if ((isset($criteria['show_mechanism_ids']) && $criteria['show_mechanism_ids']) || (isset($criteria['mechanism_ids']) && $criteria['mechanism_ids'])) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
-                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                //TA:#419 using LEFT JOIN is cause of query execution delay we can use JOIN but it will display only employee records with mechanisms
+                $select->joinLEFT('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                 $joined['link_mechanism_employee'] = 1;
             }
             if (!array_key_exists('mechanism_option', $joined)) {
@@ -1546,7 +1595,8 @@ class ReportFilterHelpers extends ITechController
         }
         if ((isset($criteria['show_mechanism_names']) && $criteria['show_mechanism_names']) || (isset($criteria['mechanism_names']) && $criteria['mechanism_names'])) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
-                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                //TA:#419 using LEFT JOIN is cause of query execution delay we can use JOIN but it will display only employee records with mechanisms
+                $select->joinLEFT('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                 $joined['link_mechanism_employee'] = 1;
             }
             if (!array_key_exists('mechanism_option', $joined)) {
@@ -1566,9 +1616,12 @@ class ReportFilterHelpers extends ITechController
                 }
             }
         }
-        if ((isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']) || (isset($criteria['mech_partners']) && $criteria['mech_partners'])) {
+        //TA:#419 join partner table for mechanisms only if where selection criteria is selected
+       // if ((isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']) || (isset($criteria['mech_partners']) && $criteria['mech_partners'])) {
+        if ((isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']) && (isset($criteria['mech_partners']) && $criteria['mech_partners'])) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
-                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                //TA:#419 using LEFT JOIN is cause of query execution delay we can use JOIN but it will display only employee records with mechanisms
+                $select->joinLEFT('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                 $joined['link_mechanism_employee'] = 1;
             }
             if (!array_key_exists('mechanism_option', $joined)) {
@@ -1596,7 +1649,8 @@ class ReportFilterHelpers extends ITechController
             (isset($criteria['mech_percent_min']) && $criteria['mech_percent_min']) ||
             (isset($criteria['mech_percent_max']) && $criteria['mech_percent_max'])) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
-                $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                //TA:#419 using LEFT JOIN is cause of query execution delay we can use JOIN but it will display only employee records with mechanisms
+                $select->joinLEFT('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                 $joined['link_mechanism_employee'] = 1;
             }
             if (isset($criteria['show_mech_percent_min']) && $criteria['show_mech_percent_min']){
@@ -1613,7 +1667,8 @@ class ReportFilterHelpers extends ITechController
             (isset($criteria['mech_fund_date_start']) && $criteria['mech_fund_date_start']) || 
             (isset($criteria['mech_fund_date_end']) && $criteria['mech_fund_date_end'])) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
-                    $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                //TA:#419 using LEFT JOIN is cause of query execution delay we can use JOIN but it will display only employee records with mechanisms
+                    $select->joinLEFT('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                     $joined['link_mechanism_employee'] = 1;
             }
             if (!array_key_exists('mechanism_option', $joined)) {

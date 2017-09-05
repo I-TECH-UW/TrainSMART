@@ -9960,7 +9960,7 @@ die (__LINE__ . " - " . $sql);
                 $status->setStatusMessage(t('Error'));
             } else {
 
-            //   $select->distinct();
+               $select->distinct();
          
                 $tables = $select->getPart(Zend_Db_Select::FROM);
                 $cols = $select->getPart(Zend_Db_Select::COLUMNS);
@@ -10044,12 +10044,18 @@ die (__LINE__ . " - " . $sql);
                     $select->getPart(Zend_Db_Select::COLUMNS)
                 );
 
-                //TA:10000 print "<br><br>"; print_r($c); print "<br><br>$select<br><br>";
                 if (count($c)) {
                     $this->view->assign('headers', $c);
-                    //print $select;
-                    //$select = $select . " limit 100"; 
-                    $this->view->assign('output',$db->fetchAll($select));
+                    //TA:#419
+                    // query was huge and took about 10 minutes to be run on DB (employee table LEFT JOIN with link_mechanism_employee 26,000*25,000=650,000,000 records in MYSQL cash)
+                    // and finally crushed on client browser - javascript error
+                    //then I use INNER JOIN instead of LEFT JOIN, so do not show employee records with no mechanism (may be it is OK)
+                    //IF we will decide to show all employee records then we have to use limit and show results by portions
+                    // LIMIT [start with row],[offset]
+                    $select = $select . " LIMIT 0,1000"; // show rows since 1 to 1000 including
+                    //$select = $select . " LIMIT 5,10"; // show rows since 6 to 15 including
+                    print $select . "<br><br>";
+                   $this->view->assign('output',$db->fetchAll($select));
                 }
             }
         }
