@@ -443,6 +443,11 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                 // save
                 if (!$status->hasError()) {
                     require_once('models/table/Employee.php');
+                    
+                    //TA:#408 trim strings
+                    preg_replace('/\s+/', '', $params['transition_other']);
+                    preg_replace('/\s+/', '', $params['transition_complete_other']);
+                                     
                     $id = $this->_findOrCreateSaveGeneric('employee', $params);
 
                     if (!$id) {
