@@ -1083,7 +1083,7 @@
             	   var selected = $("#dsd_model").find('option:selected');
                    if(selected.val() != ''){
                        if (selected.text() == 'Community site' ||
-                               selected.text() == 'Health systems strengthening' ||
+                               selected.text().startsWith('Health Systems Strengthening') ||
                    		selected.text() == 'Partner management and operations'   ){
                     	   $("#facilityInput option:contains(N/A)").attr('selected', true);
                     	   $("#facilityType option:contains(N/A)").attr('selected', true);
@@ -1093,6 +1093,8 @@
                         	  if( $("#region_c_id").find('option:selected').val() != ''){
                         	   $("#facilityInput").removeAttr('disabled');
                         	  }
+                        	  $("#facilityInput").val('');
+                        	  $("#facilityType").val('');
                    	    }
                    }
                }
