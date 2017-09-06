@@ -514,7 +514,8 @@
             
              var hiv_fte_related = $('#hiv_fte_related' ).val();
              if(hiv_fte_related == ""){
-            	 hiv_fte_related = 0;
+            	 alert("Specify value for '<?php tp('Hours Worked per Week');?>'.");
+            	 return false;
              }else{
                 if(isNaN(hiv_fte_related)){
                     //TA:#439
@@ -523,6 +524,10 @@
                     return false;
                 }else{
                 	hiv_fte_related = parseInt(hiv_fte_related);
+                	if(hiv_fte_related > 45 || hiv_fte_related <0){
+                		alert("Value for '<?php tp('Hours Worked per Week');?>' cannot be greater than 45.");
+                		return false;
+                	}
                 }
             }
                 var newRowIDs = $oTable.fnAddData([dsd_model, dsd_team, province, district, region, site_name, site_type, hiv_fte_related, 
