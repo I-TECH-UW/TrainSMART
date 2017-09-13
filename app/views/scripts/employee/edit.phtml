@@ -524,12 +524,19 @@
                     return false;
                 }else{
                 	hiv_fte_related = parseInt(hiv_fte_related);
-                	if(hiv_fte_related > 45 || hiv_fte_related <0){
-                		alert("Value for '<?php tp('Hours Worked per Week');?>' cannot be greater than 45.");
+                	if(hiv_fte_related > 45 || hiv_fte_related <1){
+                		alert("Value for '<?php tp('Hours Worked per Week');?>' should be between 1 and 45.");
                 		return false;
                 	}
                 }
             }
+            //TA:#446
+             var hiv_total = parseInt($('#hiv_related_fte_total').text()) + hiv_fte_related;
+             if(hiv_total > $('#funded_hours_per_week').val()){
+            	 alert("Site cannot be added.\nThe total '<?php tp('Hours Worked per Week');?>' should be less or equal to '<?php tp('Funded hours per week');?>' in the funding section.");
+          		 return false;
+             }
+             
                 var newRowIDs = $oTable.fnAddData([dsd_model, dsd_team, province, district, region, site_name, site_type, hiv_fte_related, 
                 '<input type="checkbox" onclick="deleteToggleSite(this);"/>']);
                var newRow = $($oTable.fnSettings().aoData[newRowIDs[0]].nTr);
