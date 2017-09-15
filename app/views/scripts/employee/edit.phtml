@@ -116,7 +116,8 @@
             availableMechanisms();
             calculateMechanismTable();
 
-            calculateSiteTable(false);//TA:#224
+            calculateSiteTable();//TA:#438
+            setDefaultSitesFields(); //TA:#438
             setActive();//TA:#411
         });
 
@@ -536,18 +537,32 @@
             	 alert("Site cannot be added.\nThe total '<?php tp('Hours Worked per Week');?>' should be less or equal to '<?php tp('Funded hours per week');?>' in the funding section.");
           		 return false;
              }
+
+             //TA:#438 - REMOVE
+//                 var newRowIDs = $oTable.fnAddData([dsd_model, dsd_team, province, district, region, site_name, site_type, hiv_fte_related, 
+//                 '<input type="checkbox" onclick="deleteToggleSite(this);"/>']);
+             ///
+             //TA:#438 
+             var newRowIDs = $oTable.fnAddData([dsd_model, dsd_team, province, district, region, site_name, site_type, 
+                          '<input type="text" value="' + hiv_fte_related + '" style="width:50px;" onkeypress="return isIntegerNumber(event);" onchange="validateIntRange(this);"/>', 
+                                                '<input type="checkbox" onclick="deleteToggleSite(this);"/>']);
+             ///
              
-                var newRowIDs = $oTable.fnAddData([dsd_model, dsd_team, province, district, region, site_name, site_type, hiv_fte_related, 
-                '<input type="checkbox" onclick="deleteToggleSite(this);"/>']);
-               var newRow = $($oTable.fnSettings().aoData[newRowIDs[0]].nTr);
+              var newRow = $($oTable.fnSettings().aoData[newRowIDs[0]].nTr);
+               //TA:#438 - REMOVE
+//                var data = site_id + "," + dsd_model_id  + "," +  dsd_team_id  + "," +  hiv_fte_related;
+//                if($('#multi_sites_table_data_add').val() != ''){
+//                   	$('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + ";");
+//                   }
+//                   $('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + data);
+               ///
+              newRow.children().first()[0].setAttribute("id",dsd_model_id);//TA:#438
+              newRow.children().first().next()[0].setAttribute("id",dsd_team_id);//TA:#438
+              newRow.children().first().next().next().next().next().next()[0].setAttribute("id", site_id);//TA:#438
                
-               var data = site_id + "," + dsd_model_id  + "," +  dsd_team_id  + "," +  hiv_fte_related;
-               if($('#multi_sites_table_data_add').val() != ''){
-                  	$('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + ";");
-                  }
-                  $('#multi_sites_table_data_add').val($('#multi_sites_table_data_add').val() + data);
-               
-                 calculateSiteTable(false);
+                 calculateSiteTable(); //TA:#438
+                 setDefaultSitesFields(); //TA:#438
+                  	
                 return true;   
         }
 
@@ -578,6 +593,11 @@
             if($("#multi_sites_table_data_count").val() =='0'){
             	displayErrorMessage('agreement_end_date', '<?php echo t("Site Name");?> (required)');
             	validated = false;
+            }else{ //TA:#438
+                if(!getSiteTableData()){
+                	displayErrorMessage('', "The total '<?php tp('Hours Worked per Week');?>' should be less or equal to '<?php tp('Funded hours per week');?>' in the funding section.");
+                	validated = false;
+                } 
             }
             if(!validateTextField(validated, 'agreement_start_date', '<?php echo t("Contract Start Date");?>')){
             	validated = false;
@@ -706,14 +726,41 @@
             return validated;  
           }
 
-        //TA:#224
-        var calculateSiteTable = function (verify) {
+        //TA:#438
+        var getSiteTableData = function () {
+        	$('#multi_sites_table_data').val("");
+        	var $rows = $("#multi_sites_table > tbody > tr");
+        	var hiv_fte_Accumulate = 0; 
+        	for (var i = 0; i < $rows.length; i++) {
+        		var table_cell_obj = $($rows[i]).children().first().next().next().next().next().next().next().next()[0];
+          	   var input_obj = $(table_cell_obj).children().first()[0];
+          	   var hiv_fte = parseInt($(input_obj).val());
+            	 hiv_fte_Accumulate = hiv_fte_Accumulate + hiv_fte;
+        		var site_id = $($rows[i]).children().first().next().next().next().next().next()[0].id;
+                var dsd_model_id = $($rows[i]).children().first()[0].id;
+                var dsd_team_id = $($rows[i]).children().first().next()[0].id;
+                var data = site_id + "," + dsd_model_id  + "," +  dsd_team_id  + "," +  hiv_fte;
+                if($('#multi_sites_table_data').val() != ''){
+                   	$('#multi_sites_table_data').val($('#multi_sites_table_data').val() + ";");
+                }
+                $('#multi_sites_table_data').val($('#multi_sites_table_data').val() + data);
+        	}
+        	if(hiv_fte_Accumulate > $('#funded_hours_per_week').val()){
+             	 return false;
+             }
+        	return true; 
+        }
+
+        //TA:#224, #438
+        var calculateSiteTable = function () {
             var sites_count = 0;
         	var $rows = $("#multi_sites_table > tbody > tr");
             var hiv_fte_Accumulate = 0;
            for (var i = 0; i < $rows.length; i++) {
-        	   var hiv_fte = parseInt($($rows[i]).children().first().next().next().next().next().next().next().next().text());//TA:#416
-            hiv_fte_Accumulate = hiv_fte_Accumulate + hiv_fte;
+        	   var table_cell_obj = $($rows[i]).children().first().next().next().next().next().next().next().next()[0];
+        	   var input_obj = $(table_cell_obj).children().first()[0];
+        	   var hiv_fte = parseInt($(input_obj).val());
+               hiv_fte_Accumulate = hiv_fte_Accumulate + hiv_fte;
            }
            if (isNaN(hiv_fte_Accumulate)){
         	   $('#hiv_related_fte_total').text("0");
@@ -724,8 +771,16 @@
            }
            $("#multi_sites_table_data_count").val(sites_count);
 
-           //TA:#416
-           setDefaultSitesFields();
+          
+           if(hiv_fte_Accumulate > $('#funded_hours_per_week').val()){
+          	 alert("The total '<?php tp('Hours Worked per Week');?>' should be less or equal to '<?php tp('Funded hours per week');?>' in the funding section.");
+           	 $('#hiv_related_fte_total').css('color', 'red');
+           	 return false;
+           }else{
+        	   $('#hiv_related_fte_total').css('color', 'black');
+           }
+
+          //TA:#438 setDefaultSitesFields(); 
             
            return true;
         };
@@ -754,13 +809,15 @@
         	var $element = $(element);  
             var id = $element.parent().parent().attr("id");   	
         	$('#multi_sites_table').dataTable().fnDeleteRow($element.parent().parent()[0]);
-            calculateSiteTable(false);
-            if(id){
-                if($('#multi_sites_table_data_delete').val() != ''){
-                	$('#multi_sites_table_data_delete').val($('#multi_sites_table_data_delete').val() + ",");
-                }
-                $('#multi_sites_table_data_delete').val($('#multi_sites_table_data_delete').val() + id);
-            }
+            calculateSiteTable(); //TA:#438
+            setDefaultSitesFields(); //TA:#438
+            //TA:#438 REMOVE
+//             if(id){
+//                 if($('#multi_sites_table_data_delete').val() != ''){
+//                 	$('#multi_sites_table_data_delete').val($('#multi_sites_table_data_delete').val() + ",");
+//                 }
+//                 $('#multi_sites_table_data_delete').val($('#multi_sites_table_data_delete').val() + id);
+//             }
             return true;
         }
 
@@ -783,6 +840,18 @@
             	$("#transition_complete_other").attr('disabled', false);
             	$('select[name=employee_transition_complete_option_id]').attr('disabled', false);   	
             }
+        }
+
+        //TA:#438
+        function validateIntRange(el){
+       	    var v = parseInt(el.value);
+        	if(isNaN(v) || (v < 1 || v > 45)){
+        	    alert("Value for '<?php tp('Hours Worked per Week');?>' should be between 1 and 45.");
+        	    el.style.color = 'red';
+        	}else{
+        		el.style.color = 'black';
+        	}
+        	calculateSiteTable();
         }
 
     </script>
@@ -927,22 +996,26 @@
                         </div>
                     </td></tr></table>
                     
-                    <!-- TA: 'add' site functionality: site_id,hiv_fte_related, hiv_fte_related; ....-->
-                    <input type='hidden' id='multi_sites_table_data_add' name='multi_sites_table_data_add'/>
-                    <!-- TA: 'delete' site functionality: link_site_id, ....-->
-                    <input type='hidden' id='multi_sites_table_data_delete' name='multi_sites_table_data_delete'/>
-                    <!-- TA: may be TODO: 'edit' site functionality: link_site_id=site_id,hiv_fte_related, hiv_fte_related; ....-->
-                    <input type='hidden' id='multi_sites_table_data_edit' name='multi_sites_table_data_edit'/>
+                    <!-- TA#438: 'add' site functionality: site_id,hiv_fte_related, hiv_fte_related; ....-->
+                    <input type='hidden' id='multi_sites_table_data' name='multi_sites_table_data'/>
+                     
+                    <!-- TA:#438 'add' site functionality: site_id,hiv_fte_related, hiv_fte_related; ....
+                    <input type='hidden' id='multi_sites_table_data_add' name='multi_sites_table_data_add'/>-->
+                    <!-- TA:#438 'delete' site functionality: link_site_id, ....
+                    <input type='hidden' id='multi_sites_table_data_delete' name='multi_sites_table_data_delete'/>-->
+                    <!-- TA:#438 may be TODO: 'edit' site functionality: link_site_id=site_id,hiv_fte_related, hiv_fte_related; ....
+                    <input type='hidden' id='multi_sites_table_data_edit' name='multi_sites_table_data_edit'/>-->
+                    <!-- TODO: TA:#438 we can use count of arr for multi site from  'multi_sites_table_data' -->
                     <input type='hidden' id='multi_sites_table_data_count' name='multi_sites_table_data_count'/>
                     <!--  <table style="width:100%"><tr><td>-->
                         <table cellpadding="0" cellspacing="0" border="1" class="display tablegrid" id="multi_sites_table" style="width:100%">
                    <thead>
                 <tr>
-                    <th width='5%'><?php echo "<font color='red'>*</font>" . t('Service Delivery Model'); ?></th><!-- TA:#416 -->
+                    <th width='10%'><?php echo "<font color='red'>*</font>" . t('Service Delivery Model'); ?></th><!-- TA:#416 -->
                     <th width='5%'><?php echo t('Service Delivery Team'); ?></th><!-- TA:#416 -->
                     <th width='10%'><?php echo "<font color='red'>*</font>" . t('Region A (Province)'); ?></th>
-                    <th width='15%'><?php echo "<font color='red'>*</font>" . t('Region B (Health District)'); ?></th>
-                    <th width='15%'><?php echo "<font color='red'>*</font>" . t('Region C (Local Region)'); ?></th>
+                    <th width='10%'><?php echo "<font color='red'>*</font>" . t('Region B (Health District)'); ?></th>
+                    <th width='10%'><?php echo "<font color='red'>*</font>" . t('Region C (Local Region)'); ?></th>
                     <th><?php echo "<font color='red'>*</font>" .t('Site Name'); ?></th>
                     <th width='10%'><?php echo "<font color='red'>*</font>" . t('Site Type'); ?></th>
                     <th width='5%'><?php echo "<font color='red'>*</font>" . t('Hours Worked per Week'); ?></th><!-- TA:#439 -->
@@ -967,15 +1040,43 @@
                 foreach ($this->employee['sites'] as $id => $siteData) {
                     ?>
                     <tr id='<?php echo $siteData['site_link_id'];?>'>
-                         <!-- TA:#416 -->
-                        <td id='<?php echo $siteData['dsd_model_id'];?>'><?php echo $siteData['sds_model_name']; ?></td>
-                        <td id='<?php echo $siteData['dsd_team_id'];?>'><?php echo $siteData['sds_team_name']; ?></td>
+                         <!-- TA:#438 START -->
+                        <td id='<?php echo $siteData['dsd_model_id'];?>'>
+                        <select style='max-width: 200px; min-width: 200px; width: 200px !important'>
+                        <option value=''>-- select --</option>
+                        <?php
+                        foreach ($this->dsd_model as $ID => $model) {
+                            $selected_model = "";
+                            if($model['id'] === $siteData['dsd_model_id']){
+                                $selected_model = " selected='selected' ";
+                            }
+                            echo "<option value='" . $model['id'] . "' " . $selected_model . ">" . $model['dsdmodel'] . "</option>";
+                        } 
+                        ?>
+                        </select>
+                        </td>
+                        <td id='<?php echo $siteData['dsd_team_id'];?>'>
+                        <select style='max-width: 200px; min-width: 200px; width: 200px !important'>
+                        <option value=''>-- select --</option>
+                        <?php
+                        foreach ($this->dsd_team as $ID => $team) {
+                            $selected_team = "";
+                            if($team['team_id'] === $siteData['dsd_team_id']){
+                                $selected_team = " selected='selected' ";
+                            }
+                            echo "<option value='" . $team['team_id'] . "' " . $selected_team . ">" . $team['dsdteam'] . "</option>";
+                        } 
+                        ?>
+                        </select>
+                        </td>
+                        <!-- TA:#438 END -->
                         <td><?php echo $siteData['province_name']; ?></td>
                         <td><?php echo $siteData['district_name']; ?></td>
                         <td><?php echo $siteData['region_name']; ?></td>
                         <td id='<?php echo $siteData['facility_id'];?>'><?php echo $siteData['facility_name']; ?></td>
                         <td><?php echo $siteData['facility_type_phrase']; ?></td>
-                        <td><?php echo $siteData['hiv_fte_related']; ?></td>
+                        <!-- TA:#438 -->
+                        <td><input type="text" value="<?php echo $siteData['hiv_fte_related']; ?>" style="width:50px;" onkeypress="return isIntegerNumber(event);" onchange="validateIntRange(this);"/></td>
                         <td><input type="checkbox" onclick="deleteToggleSite(this);"/></td>
                     </tr>
                 <?php } ?>
@@ -1021,7 +1122,8 @@
                    echo "</td>";
                    //TA:#439
                    echo "<td width='50px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Hours Worked per Week') . "</span><br>";
-                   echo "<input type='text' id='hiv_fte_related' name='hiv_fte_related' value='' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntegerKeyPress(this);'/>";
+                   //TA: #438
+                   echo "<input type='text' id='hiv_fte_related' name='hiv_fte_related' value='' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntRange(this);'/>";
                    echo "</td>";
                    echo "<td style='padding-right: 10px;' valign='bottom'>" . $label . "&nbsp;" . "</span><br>";
                    echo '<input type="button" name="multiSite" value="'. t("Add") . '" class="insert"

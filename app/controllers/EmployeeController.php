@@ -466,14 +466,19 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                             }
                         }
                         
-                        //TA:#224
-                        if($params['multi_sites_table_data_delete'] && $params['multi_sites_table_data_delete'] !==''){
-                            if(!Employee::removeSites($id, $params['multi_sites_table_data_delete'])){
-                                $status->setStatusMessage(t('Error removing employee sites.'));
-                            }
+                        //TA:#438
+                        //TA:#224 REMOVE
+//                         if($params['multi_sites_table_data_delete'] && $params['multi_sites_table_data_delete'] !==''){
+//                             if(!Employee::removeSites($id, $params['multi_sites_table_data_delete'])){
+//                                 $status->setStatusMessage(t('Error removing employee sites.'));
+//                             }
+//                         }
+                        if(!Employee::removeAllSites($id)){
+                            $status->setStatusMessage(t('Error saving employee sites.'));    
                         }
-                        if($params['multi_sites_table_data_add']){
-                            $sites_to_add = explode(";",$params['multi_sites_table_data_add']);
+                        print $params['multi_sites_table_data'];
+                        if($params['multi_sites_table_data']){
+                            $sites_to_add = explode(";",$params['multi_sites_table_data']);
                             foreach($sites_to_add as $i => $loc) {
                                 $site_to_add = explode(",",$loc);
                                 if(!Employee::saveSites($id, $site_to_add[0], $site_to_add[1],$site_to_add[2],$site_to_add[3])){//TA:#416
@@ -481,10 +486,10 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                                 }
                             }
                         }
-                        ///
+                        //////
                         
                         $status->setStatusMessage(t('The position was saved.'));
-                        $this->_redirect("employee/edit/id/$id");
+                      //TA:#438  $this->_redirect("employee/edit/id/$id");
                     }
                 }
             } // else we have edit_employee acl
@@ -519,6 +524,8 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                         $result_site['facility_name'] = $sites_info[$i]['facility_name'];
                         $result_site['sds_model_name'] = $sites_info[$i]['sds_model_name'];//TA:#416
                         $result_site['sds_team_name'] = $sites_info[$i]['sds_team_name'];//TA:#416
+                        $result_site['dsd_model_id'] = $sites_info[$i]['dsd_model_id'];//TA:#438
+                        $result_site['dsd_team_id'] = $sites_info[$i]['dsd_team_id'];//TA:#438
                         array_push($result_sites,$result_site);
                     }
                     $params['sites'] = $result_sites;
