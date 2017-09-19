@@ -467,16 +467,9 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                         }
                         
                         //TA:#438
-                        //TA:#224 REMOVE
-//                         if($params['multi_sites_table_data_delete'] && $params['multi_sites_table_data_delete'] !==''){
-//                             if(!Employee::removeSites($id, $params['multi_sites_table_data_delete'])){
-//                                 $status->setStatusMessage(t('Error removing employee sites.'));
-//                             }
-//                         }
                         if(!Employee::removeAllSites($id)){
                             $status->setStatusMessage(t('Error saving employee sites.'));    
                         }
-                        print $params['multi_sites_table_data'];
                         if($params['multi_sites_table_data']){
                             $sites_to_add = explode(";",$params['multi_sites_table_data']);
                             foreach($sites_to_add as $i => $loc) {
@@ -489,7 +482,7 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                         //////
                         
                         $status->setStatusMessage(t('The position was saved.'));
-                      //TA:#438  $this->_redirect("employee/edit/id/$id");
+                        $this->_redirect("employee/edit/id/$id");
                     }
                 }
             } // else we have edit_employee acl
