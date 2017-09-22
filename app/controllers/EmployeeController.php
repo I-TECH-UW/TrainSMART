@@ -409,6 +409,10 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                 $status->checkRequired($this, 'transition_date', t('Intended Transition Date'));
 
                 $status->checkRequired($this, 'funded_hours_per_week', t('Funded hours per week'));
+                //TA:#447
+                if ($params['funded_hours_per_week'] < 1 || $params['funded_hours_per_week'] > 45) {
+                    $status->addError('funded_hours_per_week',  t('Funded hours per week') . ' should be between 1 and 45');
+                }
                 
                 $costaccum = 0;
                 if ($this->setting('display_employee_salary')) {
