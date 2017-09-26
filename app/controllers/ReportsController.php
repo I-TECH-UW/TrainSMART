@@ -10052,9 +10052,9 @@ die (__LINE__ . " - " . $sql);
                     //then I use INNER JOIN instead of LEFT JOIN, so do not show employee records with no mechanism (may be it is OK)
                     //IF we will decide to show all employee records then we have to use limit and show results by portions
                     // LIMIT [start with row],[offset]
-                    $select = $select . " LIMIT 0,1000"; // show rows since 1 to 1000 including
+                   // $select = $select . " LIMIT 0,1000"; // show rows since 1 to 1000 including
                     //$select = $select . " LIMIT 5,10"; // show rows since 6 to 15 including
-                    print $select . "<br><br>";
+                   // print $select . "<br><br>";
                    $this->view->assign('output',$db->fetchAll($select));
                 }
             }
