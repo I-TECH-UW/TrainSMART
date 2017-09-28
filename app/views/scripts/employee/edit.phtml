@@ -718,6 +718,12 @@
             	}
             }
 
+            //TA:#447
+            if(parseInt($('#funded_hours_per_week').val())< 1 || parseInt($('#funded_hours_per_week').val()) > 45){
+            	displayErrorMessage('funded_hours_per_week', '<?php echo t('Funded hours per week');?> should be between 1 and 45');
+            	validated = false;
+            }
+
             //TA:438
             getSiteTableData();
             if(parseInt($('#funded_hours_per_week').val()) < parseInt($('#multi_sites_table_data_fte_total').val())){
