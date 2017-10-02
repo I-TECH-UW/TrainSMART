@@ -14,6 +14,20 @@
     print ScriptContainer::$instance->renderJSHead();
     echo $this->partial('reports/employee-reports-common-javascript-header-partial.phtml');
     ?>
+    
+     <script type="application/javascript">
+
+     //TA:#419
+     $(document).ready(function () {
+    	
+    	 var show_employee_code_cb = document.getElementsByName("show_employee_code")[0];
+     	 show_employee_code_cb.checked = true;
+     	 show_employee_code_cb.disabled = true;
+
+   		
+     });
+    
+     </script>
 
 </head>
 <body class="yui-skin-sam">
@@ -44,15 +58,33 @@
 
                         <?php
                         $this->required_fields = array();
-                        $this->calendar_fields = array('transition_start_date', 'transition_end_date');
+                        //TA:#419                        
+                        $this->calendar_fields = array('transition_start_date', 'transition_end_date', 'contract_start_date_from', 'contract_start_date_to',
+                            'contract_end_date_from', 'contract_end_date_to', 'intended_transition_start_date', 'intended_transition_end_date',
+                            'mech_fund_date_start', 'mech_fund_date_end'
+                        );
                         $this->is_report = true;
 
+                        //TA:#419 a lot of changes with all fields -> START
+                      echo labelAndField($this, t('Active') . ' HRH', 
+                          $this->formSelect('is_active', isset($this->criteria['is_active']) ? $this->criteria['is_active'] : null, array(), array(""=>"-- choose --", "1"=>"Active", "0"=>"Inactive")), 'is_active');
 
-                        echo labelAndField($this, t('Partner'),
-                            $this->formSelect('partner', isset($this->criteria['partner']) ? $this->criteria['partner'] : null, array(), $this->partners), 'partner');
-
-                        //TA:#293 multiple locations
-                       // echo region_filters_dropdown($this, $this->locations, $this->criteria, false, true);
+                       echo labelAndField($this, t('Primary Role'), 
+                           $this->formSelect('primary_role', isset($this->criteria['primary_role']) ? $this->criteria['primary_role'] : null, array('multiple' => true), $this->roles), 'primary_role');
+                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                       echo labelAndField($this, t('Staff Cadre'),
+                           $this->formSelect('classification', isset($this->criteria['classification']) ? $this->criteria['classification'] : null, array('multiple' => true), $this->classifications), 'classification');
+                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';                      
+                       
+                       echo labelAndField($this, t('Employee Code'), 
+                           $this->formSelect('employee_code', (isset($this->criteria['employee_code']) && $this->criteria['employee_code'][0] !== '0') ? $this->criteria['employee_code'] : null, array('multiple' => true), $this->employee_codes), 'employee_code');
+                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                       
+                       echo labelAndField($this, t('Partner Name'), 
+                           $this->formSelect('partner', isset($this->criteria['partner']) ? $this->criteria['partner'] : null, array('multiple' => true), $this->partners), 'partner');
+                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
                        //TA:#293.1
                         region_filters_dropdown( $this, $this->locations, $this->criteria, true, true );
                        
@@ -61,56 +93,110 @@
                         echo labelAndField($this, t('Based at'),
                             $this->formSelect('based_at', isset($this->criteria['based_at']) ? $this->criteria['based_at'] : null, array(), $this->bases), 'based_at');
                         }
-
+                        
                         //TA:#293.1
-//                         echo labelAndField($this, t('Site') . space . t('Name'),
-//                             $this->formSelect('site', isset($this->criteria['site']) ? $this->criteria['site'] : null, array(), $this->facilities), 'site');   
-                        echo labelAndField($this, t('Site Name'), renderFacilityDropDown($this->sites, $this->criteria['facilityInput'], $this->viewonly), 'facilityInput');
+                      //  echo labelAndField($this, t('Site Name'), renderFacilityDropDown($this->sites, $this->criteria['facilityInput'], $this->viewonly), 'facilityInput');
+                         echo labelAndField($this, t('Site Name'), 
+                           $this->formSelect('facilityInput', isset($this->criteria['facilityInput']) ? $this->criteria['facilityInput'] : null, array('multiple' => true), $this->facilities), 'facilityInput');
+                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                       echo labelAndField($this, t('Facility Type'),
+                            $this->formSelect('facility_type', isset($this->criteria['facility_type']) ? $this->criteria['facility_type'] : null, array('multiple' => true), $this->facilityTypes), 'facility_type');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
 
-                        echo labelAndField($this, t('Facility Type'),
-                            $this->formSelect('facility_type', isset($this->criteria['facility_type']) ? $this->criteria['facility_type'] : null, array(), $this->facilityTypes), 'facility_type');
-
-                        echo labelAndField($this, t('Staff Cadre'),
-                            $this->formSelect('classification', isset($this->criteria['classification']) ? $this->criteria['classification'] : null, array(), $this->classifications), 'classification');
-
-                        echo labelTwoFields($this, t('Funded hours per week'), t('to'), 'hours_min', 'hours_max',
-                            isset($this->criteria['hours_min']) ? $this->criteria['hours_min'] : '',
-                            isset($this->criteria['hours_max']) ? $this->criteria['hours_max'] : '');
-
-                        echo labelTwoFields($this, t('Annual Cost'), t('to'), 'cost_min', 'cost_max',
-                            isset($this->criteria['cost_min']) ? $this->criteria['cost_min'] : '',
-                            isset($this->criteria['cost_max']) ? $this->criteria['cost_max'] : '');
-
-                        echo labelAndField($this, t('Primary Role'),
-                            $this->formSelect('primary_role', isset($this->criteria['primary_role']) ? $this->criteria['primary_role'] : null, array(), $this->roles), 'primary_role');
-
-                        echo labelAndField($this, t('Intended Transition'),
-                            $this->formSelect('intended_transition', isset($this->criteria['intended_transition']) ? $this->criteria['intended_transition'] : null, array(), $this->transitions), 'intended_transition');
-
+                        echo labelAndField($this, t('Service Delivery Model'), 
+                            $this->formSelect('dsd_model', isset($this->criteria['dsd_model']) ? $this->criteria['dsd_model'] : null, array('multiple' => true), $this->dsd_models), 'dsd_model');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        echo labelAndField($this, t('Service Delivery Team'), 
+                            $this->formSelect('dsd_team', isset($this->criteria['dsd_team']) ? $this->criteria['dsd_team'] : null, array('multiple' => true), $this->dsd_teams), 'dsd_team');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        //TA:#439
+                        echo labelTwoFields($this, t('Hours Worked per Week'), t('to'), 'fte_min', 'fte_max',
+                            isset($this->criteria['fte_min']) ? $this->criteria['fte_min'] : '0',
+                            isset($this->criteria['fte_max']) ? $this->criteria['fte_max'] : '');
+                        echo labelTwoFields($this, t('Contract Start Date'), t('to'), 'contract_start_date_from', 'contract_start_date_to',
+                            isset($this->criteria['contract_start_date_from']) ? $this->criteria['contract_start_date_from'] : '',
+                            isset($this->criteria['contract_start_date_to']) ? $this->criteria['contract_start_date_to'] : '');
+                        echo labelTwoFields($this, t('Contract End Date'), t('to'), 'contract_end_date_from', 'contract_end_date_to',
+                            isset($this->criteria['contract_end_date_from']) ? $this->criteria['contract_end_date_from'] : '',
+                            isset($this->criteria['contract_end_date_to']) ? $this->criteria['contract_end_date_to'] : ''); 
+                        
+                        echo labelAndField($this, t('Intended Transition'), 
+                           $this->formSelect('intended_transition', isset($this->criteria['intended_transition']) ? $this->criteria['intended_transition'] : null, array('multiple' => true), $this->transitions), 'intended_transition');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                        echo labelAndField($this, t('Intended Transition Other'),
+                            $this->formSelect('intended_transition_other', isset($this->criteria['intended_transition_other']) ? $this->criteria['intended_transition_other'] : null, array('multiple' => true), $this->transitions_other), 'intended_transition_other');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                        echo labelTwoFields($this, t('Intended Transition Date'), t('to'), 'intended_transition_start_date', 'intended_transition_end_date',
+                            isset($this->criteria['intended_transition_start_date']) ? $this->criteria['intended_transition_start_date'] : '',
+                            isset($this->criteria['intended_transition_end_date']) ? $this->criteria['intended_transition_end_date'] : '');
+                        
                         echo labelAndField($this, t('Actual Transition Outcome'),
-                            $this->formSelect('actual_transition', isset($this->criteria['actual_transition']) ? $this->criteria['actual_transition'] : null, array(), $this->transitions), 'actual_transition');
-
+                            $this->formSelect('actual_transition', isset($this->criteria['actual_transition']) ? $this->criteria['actual_transition'] : null, array('multiple' => true), $this->transitions_complete), 'actual_transition');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                        echo labelAndField($this, t('Actual Transition Outcome, Other'),
+                            $this->formSelect('actual_transition_other', isset($this->criteria['actual_transition_other']) ? $this->criteria['actual_transition_other'] : null, array('multiple' => true), $this->transitions_complete_other), 'actual_transition_other');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
                         echo labelTwoFields($this, t('Actual Transition Date'), t('to'), 'transition_start_date', 'transition_end_date',
                             isset($this->criteria['transition_start_date']) ? $this->criteria['transition_start_date'] : '',
                             isset($this->criteria['transition_end_date']) ? $this->criteria['transition_end_date'] : '');
-
+                           
+                        echo labelTwoFields($this, t('Funded hours per week'), t('to'), 'hours_min', 'hours_max',
+                            isset($this->criteria['hours_min']) ? $this->criteria['hours_min'] : '',
+                            isset($this->criteria['hours_max']) ? $this->criteria['hours_max'] : '');
+                        
                         echo labelTwoFields($this, t('Salary'), t('to'), 'salary_min', 'salary_max',
                             isset($this->criteria['salary_min']) ? $this->criteria['salary_min'] : '',
                             isset($this->criteria['salary_max']) ? $this->criteria['salary_max'] : '');
-
+                        
                         echo labelTwoFields($this, t('Benefits'), t('to'), 'benefits_min', 'benefits_max',
                             isset($this->criteria['benefits_min']) ? $this->criteria['benefits_min'] : '',
                             isset($this->criteria['benefits_max']) ? $this->criteria['benefits_max'] : '');
-
+                        
                         echo labelTwoFields($this, t('Additional Expenses'), t('to'), 'expenses_min', 'expenses_max',
                             isset($this->criteria['expenses_min']) ? $this->criteria['expenses_min'] : '',
                             isset($this->criteria['expenses_max']) ? $this->criteria['expenses_max'] : '');
-
+                        
                         echo labelTwoFields($this, t('Stipend'), t('to'), 'stipend_min', 'stipend_max',
                             isset($this->criteria['stipend_min']) ? $this->criteria['stipend_min'] : '',
                             isset($this->criteria['stipend_max']) ? $this->criteria['stipend_max'] : '');
 
-                        echo $this->partial('reports/ps-search-preview-button-partial.phtml', array());
+                        echo labelTwoFields($this, t('Annual Cost'), t('to'), 'cost_min', 'cost_max',
+                            isset($this->criteria['cost_min']) ? $this->criteria['cost_min'] : '',
+                            isset($this->criteria['cost_max']) ? $this->criteria['cost_max'] : '');
+                        
+                        echo labelAndField($this, t('Implementing Mechanism Prime Partner Name'), 
+                           $this->formSelect('mech_partners', isset($this->criteria['mech_partners']) ? $this->criteria['mech_partners'] : null, array('multiple' => true), $this->mech_partners), 'mech_partners');
+                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+
+                        echo labelAndField($this, t('Implementing Agency'),
+                            $this->formSelect('agencies', isset($this->criteria['agencies']) ? $this->criteria['agencies'] : null, array('multiple' => true), $this->agencies), 'agencies');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                        echo labelAndField($this, t('Implementing Mechanism Identifier'),
+                            $this->formSelect('mechanism_ids', isset($this->criteria['mechanism_ids']) ? $this->criteria['mechanism_ids'] : null, array('multiple' => true), $this->mechanism_ids), 'mechanism_ids');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                        echo labelAndField($this, t('Implementing Mechanism Name'),
+                            $this->formSelect('mechanism_names', isset($this->criteria['mechanism_names']) ? $this->criteria['mechanism_names'] : null, array('multiple' => true), $this->mechanism_names), 'mechanism_names');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                        echo labelTwoFields($this, t('Implementing Mechanism percentage'), t('to'), 'mech_percent_min', 'mech_percent_max',
+                            isset($this->criteria['mech_percent_min']) ? $this->criteria['mech_percent_min'] : '',
+                            isset($this->criteria['mech_percent_max']) ? $this->criteria['mech_percent_max'] : '');
+                       
+                        echo labelTwoFields($this, t('Implementing Mechanism Funding End Date'), t('to'), 'mech_fund_date_start', 'mech_fund_date_end',
+                            isset($this->criteria['mech_fund_date_start']) ? $this->criteria['mech_fund_date_start'] : '',
+                            isset($this->criteria['mech_fund_date_end']) ? $this->criteria['mech_fund_date_end'] : '');
+                        
+                        
+                        //TA:#419 a lot of changes with all fields -> END
+
+                        echo "<br>" . $this->partial('reports/ps-search-preview-button-partial.phtml', array());
                         ?>
                     </div>
                     <div class="clear"></div>

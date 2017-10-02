@@ -10007,25 +10007,27 @@ die (__LINE__ . " - " . $sql);
     {
         $locations = Location::getAll();
         $criteria = $this->getAllParams();
+        
 
         $db = $this->dbfunc();
 
         if (isset($criteria['go']) && $criteria['go']) {
+            //print_r($criteria);//TA:1000
             $select = self::employeeFilterQuery($criteria);
             if (!is_a($select, "Zend_Db_Select", false)) {
                 $status = ValidationContainer::instance();
                 $status->setStatusMessage(t('Error'));
             } else {
 
-                $select->distinct();
-
+               $select->distinct();
+         
                 $tables = $select->getPart(Zend_Db_Select::FROM);
                 $cols = $select->getPart(Zend_Db_Select::COLUMNS);
                 if (!array_key_exists('link_mechanism_employee', $tables)) {
-                    $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                    $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());//TA:#419 join left
                 }
                 if (!array_key_exists('mechanism_option', $tables)) {
-                    $select->join('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                    $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array()); //TA:#419 join left
                     //TA:#415 make visible results by user mechanism accessebility
                     if (!$this->hasACL('mechanism_option_all')) {
                         $select->joinLeft(array('user_to_mechanism_access'),
@@ -10040,42 +10042,58 @@ die (__LINE__ . " - " . $sql);
                     }
                     ////
                 }
+                
+                
+//                 if (!array_key_exists('employee.employee_code', $cols)) {
+//                     $select->columns('employee.employee_code');
+//                 }
 
-                if (!array_key_exists('mechanism_option.mechanism_phrase', $cols)) {
-                    $select->columns('mechanism_option.mechanism_phrase');
-                }
-                if (!array_key_exists('mechanism_option.end_date', $cols)) {
-                    $select->columns(array('mechanism_end_date' => new Zend_Db_Expr("DATE_FORMAT(mechanism_option.end_date, '%d/%m/%Y')")));
-                }
-                if (!array_key_exists('employee.employee_code', $cols)) {
-                    $select->columns('employee.employee_code');
-                }
+//                 if (!array_key_exists('mechanism_option.mechanism_phrase', $cols)) {
+//                     $select->columns('mechanism_option.mechanism_phrase');
+//                 }
+//                 if (!array_key_exists('mechanism_option.end_date', $cols)) {
+//                     $select->columns(array('mechanism_end_date' => new Zend_Db_Expr("DATE_FORMAT(mechanism_option.end_date, '%d/%m/%Y')")));
+//                 }
 
                 $c = array_map(
                     function ($item) {
+                        //TA:#419 a lot of changes with headers
                         $header_names = array(
-                            'partner' => t('Partner'),
+                             'active' => t('Active'), 
+                            'role_phrase' => t('Primary Role'),
+                            'qualification_phrase' => t('Staff Cadre'),
+                            'employee_code' => t('Employee Code'),
+                            'partner' => t('Partner Name'),
                             'province_name' => t('Region A (Province)'),
                             'district_name' => t('Region B (Health District)'),
                             'region_c_name' => t('Region C (Local Region)'),
+                            'facility_type_phrase' => t('Facility Type'),
+                            'facility_name' => t('Facility') . ' ' . t('Name'),
+                            'employee_dsdmodel_phrase' => t('Service Delivery Model'), 
+                            'employee_dsdteam_phrase' => t('Service Delivery Team'), 
+                            'hiv_fte_related' => t('Hours Worked per Week'), //TA:#439
+                            'contract_start_date' => t('Contract Start Date'), 
+                            'contract_end_date' => t('Contract End Date'), 
                             'base_phrase' => t('Employee Based at'),
                             'based_at_other' => t('Other, Specify'),
-                            'facility_name' => t('Facility') . ' ' . t('Name'),
-                            'facility_type_phrase' => t('Facility Type'),
-                            'qualification_phrase' => t('Staff Cadre'),
-                            'funded_hours_per_week' => t('Funded hours per week'),
-                            'annual_cost' => t('Annual Cost'),
-                            'role_phrase' => t('Primary Role'),
                             'intended_transition' => t('Intended Transition'),
-                            'actual_transition' => t('Actual Transition'),
+                            'transition_other' => t('Intended Transition Other'),
+                            'transition_date' => t('Intended Transition Date'),
+                            'actual_transition' => t('Actual Transition Outcome'),
+                            'transition_complete_other' => t('Actual Transition Outcome, Other'),
                             'transition_complete_date' => t('Actual Transition Date'),
+                            'funded_hours_per_week' => t('Funded hours per week'),
                             'salary' => t('Salary'),
                             'benefits' => t('Benefits'),
                             'additional_expenses' => t('Additional Expenses'),
                             'stipend' => t('Stipend'),
-                            'employee_code' => t('Employee Code'),
-                            'mechanism_phrase' => t('Mechanism'),
-                            'mechanism_end_date' => t('Mechanism') . ' ' . t('End Date'),
+                            'annual_cost' => t('Annual Cost'),
+                            'funder_phrase' => t('Implementing Agency'),
+                            'external_id' => t('Implementing Mechanism Identifier'),
+                            'mechanism_phrase' => t('Implementing Mechanism Name'),
+                            'percentage' => t('Implementing Mechanism percentage'),
+                            'mechanism_end_date' => t('Implementing Mechanism End Date'),
+                            'impl_mech_partner_name' => t('Implementing Mechanism Prime Partner Name'),
                         );
                         if ($item[2] !== null) {
                             return $header_names[$item[2]];
@@ -10087,13 +10105,21 @@ die (__LINE__ . " - " . $sql);
 
                 if (count($c)) {
                     $this->view->assign('headers', $c);
-                    $f = $db->fetchAll($select);
-                    $this->view->assign('output', $f);
+                    //TA:#419
+                    // query was huge and took about 10 minutes to be run on DB (employee table LEFT JOIN with link_mechanism_employee 26,000*25,000=650,000,000 records in MYSQL cash)
+                    // and finally crushed on client browser - javascript error
+                    //then I use INNER JOIN instead of LEFT JOIN, so do not show employee records with no mechanism (may be it is OK)
+                    //IF we will decide to show all employee records then we have to use limit and show results by portions
+                    // LIMIT [start with row],[offset]
+                   // $select = $select . " LIMIT 0,1000"; // show rows since 1 to 1000 including
+                    //$select = $select . " LIMIT 5,10"; // show rows since 6 to 15 including
+                   // print $select . "<br><br>";
+                   $this->view->assign('output',$db->fetchAll($select));
                 }
             }
         }
 
-        $choose = array("0" => '--' . t("choose") . '--');
+        $choose = array("0" => '--' . t("All") . '--');
 
         $select = $db->select()
             ->from('partner', array('id', 'partner'))
@@ -10122,6 +10148,24 @@ die (__LINE__ . " - " . $sql);
                 ->from('employee_qualification_option', array('id', 'qualification_phrase'))
                 ->order('qualification_phrase ASC')
             );
+        
+        //TA:#419
+        $employee_codes = $choose + $db->fetchPairs($db->select()
+            ->from('employee', array('employee_code', 'employee_code'))
+            ->order('employee_code ASC')
+        );
+        
+        //TA:#419
+        $dsd_models = $choose + $db->fetchPairs($db->select()
+            ->from('employee_dsdmodel_option', array('id', 'employee_dsdmodel_phrase'))
+            ->order('employee_dsdmodel_phrase ASC')
+        );
+        
+        //TA:#419
+        $dsd_teams = $choose + $db->fetchPairs($db->select()
+            ->from('employee_dsdteam_option', array('id', 'employee_dsdteam_phrase'))
+            ->order('employee_dsdteam_phrase ASC')
+        );
 
         $roles = $choose + $db->fetchPairs($db->select()
                 ->from('employee_role_option', array('id', 'role_phrase'))
@@ -10132,6 +10176,36 @@ die (__LINE__ . " - " . $sql);
                 ->from('employee_transition_option', array('id', 'transition_phrase'))
                 ->order('transition_phrase ASC')
             );
+        
+        //TA:#419
+        $transitions_other = $choose + $db->fetchPairs($db->select()
+            ->from('employee', array('transition_other', 'transition_other'))
+            ->group('transition_other')
+            ->where('transition_other is not null')
+            ->order('transition_other ASC')
+        );
+        $transitions_complete = $choose + $db->fetchPairs($db->select()
+            ->from('employee_transition_complete_option', array('id', 'transition_complete_phrase'))
+            ->order('transition_complete_phrase ASC'));
+        $transitions_complete_other = $choose + $db->fetchPairs($db->select()
+            ->from('employee', array('transition_complete_other', 'transition_complete_other'))
+            ->group('transition_complete_other')
+            ->where('transition_complete_other is not null')
+            ->order('transition_complete_other ASC')
+        );
+        $agencies = $choose + $db->fetchPairs($db->select()
+            ->from('partner_funder_option', array('id', 'funder_phrase'))
+            ->order('funder_phrase ASC'));
+        $mechanism_ids = $choose + $db->fetchPairs($db->select()
+            ->from('mechanism_option', array('external_id', 'external_id'))
+            ->group('external_id')
+            ->where('external_id is not null')
+            ->order('external_id ASC')
+        );
+        $mechanism_names = $choose + $db->fetchPairs($db->select()
+            ->from('mechanism_option', array('id', 'mechanism_phrase'))
+            ->order('mechanism_phrase ASC'));
+        //
 
         $bases = $choose + $db->fetchPairs($db->select()
                 ->from('employee_base_option', array('id', 'base_phrase'))
@@ -10139,11 +10213,21 @@ die (__LINE__ . " - " . $sql);
             );
 
         $this->view->assign('partners', $partners);
+        $this->view->assign('mech_partners', $partners);//TA:#419
         $this->view->assign('facilities', $facilities);
         $this->view->assign('facilityTypes', $facilityTypes);
         $this->view->assign('classifications', $classifications);
+        $this->view->assign('employee_codes', $employee_codes); //TA:#419
+        $this->view->assign('dsd_models', $dsd_models); //TA:#419
+        $this->view->assign('dsd_teams', $dsd_teams); //TA:#419
         $this->view->assign('roles', $roles);
         $this->view->assign('transitions', $transitions);
+        $this->view->assign('transitions_other', $transitions_other);//TA:#419
+        $this->view->assign('transitions_complete', $transitions_complete); //TA:#419
+        $this->view->assign('transitions_complete_other', $transitions_complete_other);//TA:#419
+        $this->view->assign('agencies', $agencies);//TA:#419
+        $this->view->assign('mechanism_ids', $mechanism_ids);//TA:#419
+        $this->view->assign('mechanism_names', $mechanism_names);//TA:#419
         $this->view->assign('locations', $locations);
         $this->view->assign('bases', $bases);
         
@@ -10153,8 +10237,8 @@ die (__LINE__ . " - " . $sql);
         $criteria['region_c_id'] = regionFiltersGetLastIDMultiple('', $criteria);
          
         //TA:#293.1
-        $helper = new Helper();
-        $this->viewAssignEscaped('sites', $helper->getFacilities());
+//         $helper = new Helper();
+//         $this->viewAssignEscaped('sites', $helper->getFacilities());
         
         $this->view->assign('criteria', $criteria);
     }
