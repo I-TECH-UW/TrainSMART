@@ -206,6 +206,7 @@
                 echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
                     array('output' => $this->output, 'headers' => $this->headers));
                 ?>
+                <br>
                 <input type="button" name="go" value="<?php tp('Download'); ?> &raquo;" class="tsbutton green large"
                        onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=csv" ?>')">
             <?php } ?>

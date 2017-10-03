@@ -10024,7 +10024,8 @@ die (__LINE__ . " - " . $sql);
                 $tables = $select->getPart(Zend_Db_Select::FROM);
                 $cols = $select->getPart(Zend_Db_Select::COLUMNS);
                 if (!array_key_exists('link_mechanism_employee', $tables)) {
-                    $select->joinLeft('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());//TA:#419 join left
+                    //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
+                    $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());//TA:#419 join left
                 }
                 if (!array_key_exists('mechanism_option', $tables)) {
                     $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array()); //TA:#419 join left
@@ -10113,7 +10114,7 @@ die (__LINE__ . " - " . $sql);
                     // LIMIT [start with row],[offset]
                    // $select = $select . " LIMIT 0,1000"; // show rows since 1 to 1000 including
                     //$select = $select . " LIMIT 5,10"; // show rows since 6 to 15 including
-                   // print $select . "<br><br>";
+                  // print $select . "<br><br>";
                    $this->view->assign('output',$db->fetchAll($select));
                 }
             }
