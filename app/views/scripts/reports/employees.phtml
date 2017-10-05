@@ -225,7 +225,7 @@
                             $this->formSelect('mechanism_names', isset($this->criteria['mechanism_names']) ? $this->criteria['mechanism_names'] : null, array('multiple' => true), $this->mechanism_names), 'mechanism_names');
                         echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
                         
-                        echo labelTwoFields($this, t('Implementing Mechanism percentage'), t('to'), 'mech_percent_min', 'mech_percent_max',
+                        echo labelTwoFields($this, t('FTE percentage'), t('to'), 'mech_percent_min', 'mech_percent_max',
                             isset($this->criteria['mech_percent_min']) ? $this->criteria['mech_percent_min'] : '',
                             isset($this->criteria['mech_percent_max']) ? $this->criteria['mech_percent_max'] : '');
                        

@@ -10091,7 +10091,7 @@ die (__LINE__ . " - " . $sql);
                             'funder_phrase' => t('Implementing Agency'),
                             'external_id' => t('Implementing Mechanism Identifier'),
                             'mechanism_phrase' => t('Implementing Mechanism Name'),
-                            'percentage' => t('Implementing Mechanism percentage'),
+                            'percentage' => t('FTE percentage'),
                             'mechanism_end_date' => t('Implementing Mechanism Funding End Date'),
                         );
                         if ($item[2] !== null) {
