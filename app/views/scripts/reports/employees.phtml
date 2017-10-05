@@ -124,6 +124,13 @@
                            $this->formSelect('partner', isset($this->criteria['partner']) ? $this->criteria['partner'] : null, array('multiple' => true), $this->partners), 'partner');
                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
                         
+                       echo labelAndField($this, t('Service Delivery Model'),
+                           $this->formSelect('dsd_model', isset($this->criteria['dsd_model']) ? $this->criteria['dsd_model'] : null, array('multiple' => true), $this->dsd_models), 'dsd_model');
+                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                       echo labelAndField($this, t('Service Delivery Team'),
+                           $this->formSelect('dsd_team', isset($this->criteria['dsd_team']) ? $this->criteria['dsd_team'] : null, array('multiple' => true), $this->dsd_teams), 'dsd_team');
+                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                       
                        //TA:#293.1
                         region_filters_dropdown( $this, $this->locations, $this->criteria, true, true );
                        
@@ -143,14 +150,8 @@
                             $this->formSelect('facility_type', isset($this->criteria['facility_type']) ? $this->criteria['facility_type'] : null, array('multiple' => true), $this->facilityTypes), 'facility_type');
                         echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
 
-                        echo labelAndField($this, t('Service Delivery Model'), 
-                            $this->formSelect('dsd_model', isset($this->criteria['dsd_model']) ? $this->criteria['dsd_model'] : null, array('multiple' => true), $this->dsd_models), 'dsd_model');
-                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
-                        echo labelAndField($this, t('Service Delivery Team'), 
-                            $this->formSelect('dsd_team', isset($this->criteria['dsd_team']) ? $this->criteria['dsd_team'] : null, array('multiple' => true), $this->dsd_teams), 'dsd_team');
-                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
                         //TA:#439
-                        echo labelTwoFields($this, t('Hours Worked per Week'), t('to'), 'fte_min', 'fte_max',
+                        echo labelTwoFields($this, t('Hours Worked per Week (per Site)'), t('to'), 'fte_min', 'fte_max',
                             isset($this->criteria['fte_min']) ? $this->criteria['fte_min'] : '0',
                             isset($this->criteria['fte_max']) ? $this->criteria['fte_max'] : '');
                         echo labelTwoFields($this, t('Contract Start Date'), t('to'), 'contract_start_date_from', 'contract_start_date_to',
@@ -184,7 +185,7 @@
                             isset($this->criteria['transition_start_date']) ? $this->criteria['transition_start_date'] : '',
                             isset($this->criteria['transition_end_date']) ? $this->criteria['transition_end_date'] : '');
                            
-                        echo labelTwoFields($this, t('Funded hours per week'), t('to'), 'hours_min', 'hours_max',
+                        echo labelTwoFields($this, t('Hours Worked per Week (FTE)'), t('to'), 'hours_min', 'hours_max',
                             isset($this->criteria['hours_min']) ? $this->criteria['hours_min'] : '',
                             isset($this->criteria['hours_max']) ? $this->criteria['hours_max'] : '');
                         

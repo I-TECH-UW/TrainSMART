@@ -809,6 +809,7 @@ class ReportFilterHelpers extends ITechController
      *
      * @param $criteria - form input filter criteria
      * @return string|Zend_Db_Select
+     * //TA:#419
      */
     protected function employeeFilterQuery($criteria)
     {
@@ -822,23 +823,69 @@ class ReportFilterHelpers extends ITechController
         $db = $this->dbfunc();        
         $select = $db->select()->from('employee', array());
         
-        //TA:#419
-        if (isset($criteria['action']) && $criteria['action'] === 'employees') {
-            $select->columns("employee.employee_code");
-        }
+        //ACTIVE HRH
         if (isset($criteria['show_is_active']) && $criteria['show_is_active']) {
            $select->columns("IF(employee.is_active = 1,'Active','Inactive') as active");
         }
         if(isset($criteria['is_active'])) {
             $select->where('is_active=' . $criteria['is_active']);
         }
-        if (isset($criteria['show_employee_code']) && $criteria['show_employee_code']) {
-        } 
-        if(isset($criteria['employee_code']) && $criteria['employee_code'][0] !== '0') {
-             $select->where('employee.employee_code IN (?)', $criteria['employee_code']);
-        }
-        /////////
         
+        // ROLE
+        if (isset($criteria['show_primary_role']) && $criteria['show_primary_role']) {
+            if (!array_key_exists('employee_role_option', $joined)) {
+                $select->joinLeft('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
+                $joined['employee_role_option'] = 1;
+            }
+            $select->columns('employee_role_option.role_phrase');
+        }
+        if (isset($criteria['primary_role']) && $criteria['primary_role']) {
+            if (!array_key_exists('employee_role_option', $joined)) {
+                $select->joinLeft('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
+                $joined['employee_role_option'] = 1;
+            }
+            if(is_array($criteria['primary_role'])){
+                if($criteria['primary_role'][0] > 0){
+                    $select->where('employee_role_option.id in ( ' . implode(",", $criteria['primary_role']) . ")");
+                }
+            }else{
+                $select->where('employee_role_option.id =?' ,$criteria['primary_role']);
+            }
+        }
+        
+        // CLASSIFICATION
+        if (isset($criteria['show_classification']) && $criteria['show_classification']) {
+            if (!array_key_exists('employee_qualification_option', $joined)) {
+                $select->joinLeft('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
+                $joined['employee_qualification_option'] = 1;
+            }
+            $select->columns('employee_qualification_option.qualification_phrase');
+        }
+        if (isset($criteria['classification']) && $criteria['classification']) {
+            if (!array_key_exists('employee_qualification_option', $joined)) {
+                $select->joinLeft('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
+                $joined['employee_qualification_option'] = 1;
+            }
+            if(is_array($criteria['classification'])){
+                if($criteria['classification'][0] > 0){
+                    $select->where('employee_qualification_option_id in ( ' . implode(",", $criteria['classification']) . ")");
+                }
+            }else{
+                $select->where('employee_qualification_option_id = ?', $criteria['classification']);
+            }
+        }
+        
+        // EMPLOYEE CODE
+        if (isset($criteria['action']) && $criteria['action'] === 'employees') {
+            $select->columns("employee.employee_code");
+        }
+        if (isset($criteria['show_employee_code']) && $criteria['show_employee_code']) {
+        }
+        if(isset($criteria['employee_code']) && $criteria['employee_code'][0] !== '0') {
+            $select->where('employee.employee_code IN (?)', $criteria['employee_code']);
+        }
+        
+        // PARTNER
         if (isset($criteria['show_partner']) && $criteria['show_partner']) {
             if (!array_key_exists('partner', $joined)) {
                 $select->joinLeft(array('partner'), 'partner.id = employee.partner_id', array());
@@ -846,7 +893,6 @@ class ReportFilterHelpers extends ITechController
             }
             $select->columns('partner.partner');
         }
-        //TA:#419
         if ((isset($criteria['partner']) && $criteria['partner'])) {
             if (!array_key_exists('partner', $joined)) {
                 $select->joinLeft(array('partner'), 'partner.id = employee.partner_id', array());
@@ -858,6 +904,45 @@ class ReportFilterHelpers extends ITechController
                }
             }else{
                 $select->where('partner.id =  ?', $criteria['partner']);
+            }
+        }
+        
+        // MODEL
+        if ((isset($criteria['show_dsd_model']) && $criteria['show_dsd_model']) || isset($criteria['dsd_model'])) {
+            if (!array_key_exists('link_employee_facility', $joined)) {
+                $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                $joined['link_employee_facility'] = 1;
+            }
+            if (!array_key_exists('employee_dsdmodel_option', $joined)) {
+                $select->joinLeft('employee_dsdmodel_option', 'link_employee_facility.dsd_model_id = employee_dsdmodel_option.id', array());
+                $joined['employee_dsdmodel_option'] = 1;
+            }
+            if(isset($criteria['show_dsd_model']) && $criteria['show_dsd_model']){
+                $select->columns("employee_dsdmodel_option.employee_dsdmodel_phrase");
+            }
+            if(isset($criteria['dsd_model'])) {
+                if($criteria['dsd_model'][0] > 0){
+                    $select->where('link_employee_facility.dsd_model_id IN (' . implode(",", $criteria['dsd_model']) . ")");
+                }
+            }
+        }
+        // TEAM
+        if ((isset($criteria['show_dsd_team']) && $criteria['show_dsd_team']) || isset($criteria['dsd_team'])) {
+            if (!array_key_exists('link_employee_facility', $joined)) {
+                $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                $joined['link_employee_facility'] = 1;
+            }
+            if (!array_key_exists('employee_dsdteam_option', $joined)) {
+                $select->joinLeft('employee_dsdteam_option', 'link_employee_facility.dsd_team_id = employee_dsdteam_option.id', array());
+                $joined['employee_dsdteam_option'] = 1;
+            }
+            if(isset($criteria['show_dsd_team']) && $criteria['show_dsd_team']){
+                $select->columns("employee_dsdteam_option.employee_dsdteam_phrase");
+            }
+            if(isset($criteria['dsd_team'])) {
+                if($criteria['dsd_team'][0] > 0){
+                    $select->where('link_employee_facility.dsd_team_id IN (' . implode(",", $criteria['dsd_team']) . ")");
+                }
             }
         }
 
@@ -1011,43 +1096,77 @@ class ReportFilterHelpers extends ITechController
             }
         }
         
+        // FACILITY NAME - SITE
+        if (isset($criteria['show_site']) && $criteria['show_site']) {
+            if (!array_key_exists('link_employee_facility', $joined)) {//TA:#419
+                $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                $joined['link_employee_facility'] = 1;//TA:#419
+            }
+            if (!array_key_exists('facility', $joined)) {//TA:#419
+                $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
+                $joined['facility'] = 1;//TA:#419
+            }
+            $select->columns('facility.facility_name');
+        }else if (isset($criteria['show_facilityInput']) && $criteria['show_facilityInput'] ) {//TA:#293.1
+            if (!array_key_exists('link_employee_facility', $joined)) {//TA:#419
+                $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                $joined['link_employee_facility'] = 1;//TA:#419
+            }
+            if (!array_key_exists('facility', $joined)) {//TA:#419
+                $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
+                $joined['facility'] = 1;//TA:#419
+            }
+            $select->columns('facility.facility_name');
+        }
+        
+        if (isset($criteria['site']) && $criteria['site']) {
+            if (!array_key_exists('facility', $joined)) {
+                $select->joinLeft('facility', 'facility.id = employee.site_id', array());
+                $joined['facility'] = 1;
+            }
+            //TA:#419
+            if(is_array($criteria['site'])){
+                if($criteria['site'][0] > 0){
+                    $select->where('facility.id in ( ' . implode(",", $criteria['site']) . ")");
+                }
+            }else{
+                $select->where('facility.id = ?', $criteria['site']);
+            }
+        }else if (isset($criteria['facilityInput']) && $criteria['facilityInput']) {//TA:#293.1
+            if (!array_key_exists('facility', $joined)) {
+                $select->joinLeft('facility', 'facility.id = employee.site_id', array());
+                $joined['facility'] = 1;
+            }
+            //TA:#419
+            if(is_array($criteria['facilityInput'])){
+                if($criteria['facilityInput'][0] > 0){
+                    $select->where('facility.id in ( ' . implode(",", $criteria['facilityInput']) . ")");
+                }
+            }else{
+                $select->where('facility.id = ?', $criteria['facilityInput']);
+            }
+        }
+        
+        // FACILITY TYPE
+        if (isset($criteria['show_facility_type']) && $criteria['show_facility_type']) {
+            if (!array_key_exists('facility_type_option', $joined)) {
+                $select->joinLeft('facility_type_option', 'facility_type_option.id = facility.type_option_id', array());
+                $joined['facility_type_option'] = 1;
+            }
+            $select->columns('facility_type_option.facility_type_phrase');
+        }
         //TA:#419
-        if ((isset($criteria['show_dsd_model']) && $criteria['show_dsd_model']) || isset($criteria['dsd_model'])) {
-            if (!array_key_exists('link_employee_facility', $joined)) {
-                $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
-                $joined['link_employee_facility'] = 1;
-            }
-            if (!array_key_exists('employee_dsdmodel_option', $joined)) {
-                $select->joinLeft('employee_dsdmodel_option', 'link_employee_facility.dsd_model_id = employee_dsdmodel_option.id', array());
-                $joined['employee_dsdmodel_option'] = 1;
-            }
-            if(isset($criteria['show_dsd_model']) && $criteria['show_dsd_model']){
-                $select->columns("employee_dsdmodel_option.employee_dsdmodel_phrase");
-            }
-            if(isset($criteria['dsd_model'])) {
-                if($criteria['dsd_model'][0] > 0){
-                    $select->where('link_employee_facility.dsd_model_id IN (' . implode(",", $criteria['dsd_model']) . ")");
+        if (isset($criteria['facility_type']) && $criteria['facility_type']) {
+            if(is_array($criteria['facility_type'])){
+                if($criteria['facility_type'][0] > 0){
+                    $select->where('facility.type_option_id in ( ' . implode(",", $criteria['facility_type']) . ")");
                 }
+            }else{
+                $select->where('facility.type_option_id =? ' , $criteria['facility_type']); //TA:#386
             }
         }
-        if ((isset($criteria['show_dsd_team']) && $criteria['show_dsd_team']) || isset($criteria['dsd_team'])) {
-            if (!array_key_exists('link_employee_facility', $joined)) {
-                $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
-                $joined['link_employee_facility'] = 1;
-            }
-            if (!array_key_exists('employee_dsdteam_option', $joined)) {
-                $select->joinLeft('employee_dsdteam_option', 'link_employee_facility.dsd_team_id = employee_dsdteam_option.id', array());
-                $joined['employee_dsdteam_option'] = 1;
-            }
-            if(isset($criteria['show_dsd_team']) && $criteria['show_dsd_team']){
-                $select->columns("employee_dsdteam_option.employee_dsdteam_phrase");
-            }
-            if(isset($criteria['dsd_team'])) {
-                if($criteria['dsd_team'][0] > 0){
-                    $select->where('link_employee_facility.dsd_team_id IN (' . implode(",", $criteria['dsd_team']) . ")");
-                }
-            }
-        }
+        
+        // HOURS WORKED PER WEEK PER SITE
         if ((isset($criteria['show_fte_min']) && $criteria['show_fte_min']) || $criteria['fte_min'] || $criteria['fte_max']) {
             if (!array_key_exists('link_employee_facility', $joined)) {
                 $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
@@ -1063,6 +1182,8 @@ class ReportFilterHelpers extends ITechController
                 $select->where("link_employee_facility.hiv_fte_related < " . $criteria['fte_max']);
             }
         }
+        
+        // CONTRACT START DATE
         if (isset($criteria['show_contract_start_date_from']) || $criteria['contract_start_date_from'] || $criteria['contract_start_date_to']) {
             $select->columns("SUBSTRING_INDEX(employee.agreement_start_date, ' ', 1) as contract_start_date");
             if($criteria['contract_start_date_from']){
@@ -1074,6 +1195,8 @@ class ReportFilterHelpers extends ITechController
                 $select->where('employee.agreement_start_date <= ?',  $d->format('Y-m-d'));
             }    
         }
+        
+        // CONTRACT START DATE
         if (isset($criteria['show_contract_end_date_from']) || $criteria['contract_end_date_from'] || $criteria['contract_end_date_to']) {
             $select->columns("SUBSTRING_INDEX(employee.agreement_end_date, ' ', 1) as contract_end_date");
             if($criteria['contract_end_date_from']){
@@ -1111,166 +1234,8 @@ class ReportFilterHelpers extends ITechController
             }
             $select->where('employee_base_option.id = ?', $criteria['based_at']);
         }
-
-        // site
-        if (isset($criteria['show_site']) && $criteria['show_site']) {
-              if (!array_key_exists('link_employee_facility', $joined)) {//TA:#419
-                    $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
-                    $joined['link_employee_facility'] = 1;//TA:#419
-                }
-                if (!array_key_exists('facility', $joined)) {//TA:#419
-                    $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
-                    $joined['facility'] = 1;//TA:#419
-                }
-            $select->columns('facility.facility_name');
-        }else if (isset($criteria['show_facilityInput']) && $criteria['show_facilityInput'] ) {//TA:#293.1
-               if (!array_key_exists('link_employee_facility', $joined)) {//TA:#419
-                    $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
-                    $joined['link_employee_facility'] = 1;//TA:#419
-                }
-                if (!array_key_exists('facility', $joined)) {//TA:#419
-                    $select->joinLeft('facility', 'link_employee_facility.facility_id = facility.id', array());
-                    $joined['facility'] = 1;//TA:#419
-                }
-            $select->columns('facility.facility_name');
-        }
-      
-        if (isset($criteria['site']) && $criteria['site']) {
-            if (!array_key_exists('facility', $joined)) {
-                $select->joinLeft('facility', 'facility.id = employee.site_id', array());
-                $joined['facility'] = 1;
-            }
-            //TA:#419
-            if(is_array($criteria['site'])){
-                if($criteria['site'][0] > 0){
-                    $select->where('facility.id in ( ' . implode(",", $criteria['site']) . ")");
-                }
-            }else{
-                $select->where('facility.id = ?', $criteria['site']);
-            }
-        }else if (isset($criteria['facilityInput']) && $criteria['facilityInput']) {//TA:#293.1 
-            if (!array_key_exists('facility', $joined)) {
-                $select->joinLeft('facility', 'facility.id = employee.site_id', array());
-                $joined['facility'] = 1;
-            }
-            //TA:#419
-            if(is_array($criteria['facilityInput'])){
-                if($criteria['facilityInput'][0] > 0){
-                   $select->where('facility.id in ( ' . implode(",", $criteria['facilityInput']) . ")");
-                }
-            }else{
-                $select->where('facility.id = ?', $criteria['facilityInput']);
-            }
-        }
-
-        // facility type 
-        if (isset($criteria['show_facility_type']) && $criteria['show_facility_type']) {
-            if (!array_key_exists('facility_type_option', $joined)) {
-                $select->joinLeft('facility_type_option', 'facility_type_option.id = facility.type_option_id', array());
-                $joined['facility_type_option'] = 1;
-            }
-            $select->columns('facility_type_option.facility_type_phrase');
-        }
-        //TA:#419
-        if (isset($criteria['facility_type']) && $criteria['facility_type']) {
-            if(is_array($criteria['facility_type'])){
-                if($criteria['facility_type'][0] > 0){
-                   $select->where('facility.type_option_id in ( ' . implode(",", $criteria['facility_type']) . ")"); 
-                }
-            }else{
-                $select->where('facility.type_option_id =? ' , $criteria['facility_type']); //TA:#386
-            }
-        }
-
-        // classification
-        if (isset($criteria['show_classification']) && $criteria['show_classification']) {
-            if (!array_key_exists('employee_qualification_option', $joined)) {
-                $select->joinLeft('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
-                $joined['employee_qualification_option'] = 1;
-            }
-            $select->columns('employee_qualification_option.qualification_phrase');
-        }
-        //TA:#419
-        if (isset($criteria['classification']) && $criteria['classification']) {
-            if (!array_key_exists('employee_qualification_option', $joined)) {
-                $select->joinLeft('employee_qualification_option', 'employee_qualification_option.id = employee.employee_qualification_option_id', array());
-                $joined['employee_qualification_option'] = 1;
-            }
-            if(is_array($criteria['classification'])){
-                if($criteria['classification'][0] > 0){
-                    $select->where('employee_qualification_option_id in ( ' . implode(",", $criteria['classification']) . ")");
-                }
-            }else{
-                $select->where('employee_qualification_option_id = ?', $criteria['classification']);
-            }
-        }
-
-        // funded hours per week
-        // labelTwoFields uses the name of the first field for the 'show' checkbox
-        if (isset($criteria['show_hours_min']) && $criteria['show_hours_min']) {
-            $select->columns('funded_hours_per_week');
-        }
-        if (isset($criteria['hours_min']) && intval($criteria['hours_min']) >= 0) {
-            $select->where('funded_hours_per_week >= ?', intval($criteria['hours_min']));
-        }
-        if (isset($criteria['hours_max']) && $criteria['hours_max']) {
-            $select->where('funded_hours_per_week <= ?', intval($criteria['hours_max']));
-        }
-
-        // cost
-        // labelTwoFields uses the name of the first field for the 'show' checkbox
-        if (isset($criteria['show_cost_min']) && $criteria['show_cost_min']) {
-            $select->columns('annual_cost');
-        }
-        if (isset($criteria['cost_min']) && $criteria['cost_min'] >= 0) {
-            $select->where('annual_cost >= ?', intval($criteria['cost_min']));
-        }
-        if (isset($criteria['cost_max']) && $criteria['cost_max']) {
-            $select->where('annual_cost <= ?', intval($criteria['cost_max']));
-        }
-
-        // role
-        if (isset($criteria['show_primary_role']) && $criteria['show_primary_role']) {
-            if (!array_key_exists('employee_role_option', $joined)) {
-                $select->joinLeft('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
-                $joined['employee_role_option'] = 1;
-            }
-            $select->columns('employee_role_option.role_phrase');
-        }
-        if (isset($criteria['primary_role']) && $criteria['primary_role']) {
-            if (!array_key_exists('employee_role_option', $joined)) {
-                $select->joinLeft('employee_role_option', 'employee_role_option.id = employee.employee_role_option_id', array());
-                $joined['employee_role_option'] = 1;
-            }
-            //TA:#419
-            if(is_array($criteria['primary_role'])){
-                if($criteria['primary_role'][0] > 0){
-                    $select->where('employee_role_option.id in ( ' . implode(",", $criteria['primary_role']) . ")");
-                }
-            }else{
-                $select->where('employee_role_option.id =?' ,$criteria['primary_role']);
-            }
-        }
-
-        // transition (used with transition_type)
-        if (isset($criteria['transition']) && $criteria['transition']) {
-            if (isset($criteria['transition_type']) && $criteria['transition_type']) {
-                if ($criteria['transition_type'] == '1') {
-                    // Actual Transition
-                    $select->where('employee.employee_transition_complete_option_id = ?', $criteria['transition']);
-                }
-                elseif ($criteria['transition_type'] == '2') {
-                    // Intended Transition
-                    $select->where('employee.employee_transition_option_id = ?', $criteria['transition']);
-                }
-            }
-            else {
-                $select->where('employee.employee_transition_option_id = ? OR employee.employ_transition_complete_option_id = ?',
-                    $criteria['transition'], $criteria['transition']);
-            }
-        }
-
-        // intended transition
+        
+    // intended transition
         if (isset($criteria['show_intended_transition']) && $criteria['show_intended_transition']) {
             if (!array_key_exists('intended_employee_transition_option', $joined)) {
                 $select->joinLeft(array('intended_employee_transition_option' => 'employee_transition_option'), 'intended_employee_transition_option.id = employee.employee_transition_option_id', array());
@@ -1374,6 +1339,18 @@ class ReportFilterHelpers extends ITechController
             $select->where('transition_complete_date <= ?', $d->format('Y-m-d'));
         }
 
+        // funded hours per week
+        // labelTwoFields uses the name of the first field for the 'show' checkbox
+        if (isset($criteria['show_hours_min']) && $criteria['show_hours_min']) {
+            $select->columns('funded_hours_per_week');
+        }
+        if (isset($criteria['hours_min']) && intval($criteria['hours_min']) >= 0) {
+            $select->where('funded_hours_per_week >= ?', intval($criteria['hours_min']));
+        }
+        if (isset($criteria['hours_max']) && $criteria['hours_max']) {
+            $select->where('funded_hours_per_week <= ?', intval($criteria['hours_max']));
+        }
+        
         // salary
         // labelTwoFields uses the name of the first field for the 'show' checkbox
         if (isset($criteria['show_salary_min']) && $criteria['show_salary_min']) {
@@ -1385,7 +1362,7 @@ class ReportFilterHelpers extends ITechController
         if (isset($criteria['salary_max']) && $criteria['salary_max']) {
             $select->where('salary <= ?', intval($criteria['salary_max']));
         }
-
+        
         // benefits
         // labelTwoFields uses the name of the first field for the 'show' checkbox
         if (isset($criteria['show_benefits_min']) && $criteria['show_benefits_min']) {
@@ -1397,7 +1374,7 @@ class ReportFilterHelpers extends ITechController
         if (isset($criteria['benefits_max']) && $criteria['benefits_max']) {
             $select->where('benefits <= ?', intval($criteria['benefits_max']));
         }
-
+        
         // expenses
         // labelTwoFields uses the name of the first field for the 'show' checkbox
         if (isset($criteria['show_expenses_min']) && $criteria['show_expenses_min']) {
@@ -1406,12 +1383,12 @@ class ReportFilterHelpers extends ITechController
         if (isset($criteria['expenses_min']) && $criteria['expenses_min'] >= 0) {
             $select->where('additional_expenses >= ?', intval($criteria['expenses_min']));
         }
-
+        
         if (isset($criteria['expenses_max']) && $criteria['expenses_max']) {
             $select->where('additional_expenses <= ?', intval($criteria['expenses_max']));
         }
-
-        // stipend
+        
+        // STIPEND
         // labelTwoFields uses the name of the first field for the 'show' checkbox
         if (isset($criteria['show_stipend_min']) && $criteria['show_stipend_min']) {
             $select->columns('stipend');
@@ -1423,125 +1400,50 @@ class ReportFilterHelpers extends ITechController
             $select->where('stipend <= ?', intval($criteria['stipend_max']));
         }
 
-        if (isset($criteria['show_period_start_date']) && $criteria['show_period_start_date']) {
-
-        }
-        if (isset($criteria['period_start_date']) && $criteria['period_start_date']) {
-
-        }
-        if (isset($criteria['period_end_date']) && $criteria['period_end_date']) {
-
-        }
-
-        if (isset($criteria['show_mechanism']) && $criteria['show_mechanism']) {
-            if (!array_key_exists('link_mechanism_employee', $joined)) {
-                //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
-                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
-                $joined['link_mechanism_employee'] = 1;
-            }
-            if (!array_key_exists('mechanism_option', $joined)) {
-                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
-                $joined['mechanism_option'] = 1;
-            }
-            $select->columns('mechanism_phrase');
-
-        }
-        if (isset($criteria['mechanism']) && $criteria['mechanism']) {
-            if (!array_key_exists('link_mechanism_employee', $joined)) {
-                //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
-                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
-                $joined['link_mechanism_employee'] = 1;
-            }
-            if (!array_key_exists('mechanism_option', $joined)) {
-                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
-                $joined['mechanism_option'] = 1;
-            }
-            if (count($criteria['mechanism']) > 1) {
-                $select->where('mechanism_option.id in (?)', $criteria['mechanism']);
-            } elseif (count($criteria['mechanism']) == 1) {
-                $select->where('mechanism_option.id = ?', $criteria['mechanism']);
-            }
-        }
-
-        if (isset($criteria['show_funder']) && $criteria['show_funder']) {
-            if (!array_key_exists('link_mechanism_employee', $joined)) {
-                //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
-                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
-                $joined['link_mechanism_employee'] = 1;
-            }
-            if (!array_key_exists('mechanism_option', $joined)) {
-                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
-                $joined['mechanism_option'] = 1;
-            }
-            if (!array_key_exists('partner_funder_option', $joined)) {
-                $select->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array());
-                $joined['partner_funder_option'] = 1;
-            }
-            $select->columns('funder_phrase');
-        }
-        if (isset($criteria['funder']) && ($criteria['funder'])) {
-            if (!array_key_exists('link_mechanism_employee', $joined)) {
-                //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
-                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
-                $joined['link_mechanism_employee'] = 1;
-            }
-            if (!array_key_exists('mechanism_option', $joined)) {
-                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
-                $joined['mechanism_option'] = 1;
-            }
-            if (!array_key_exists('partner_funder_option', $joined)) {
-                $select->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array());
-                $joined['partner_funder_option'] = 1;
-            }
-           //TA:#419
-            if(is_array($criteria['funder'])){
-                if($criteria['funder'][0] > 0){
-                    $select->where('partner_funder_option.id in ( ' . implode(",", $criteria['funder']) . ")");
-                }
-            }else{
-                $select->where('partner_funder_option.id = ?', $criteria['funder']);
-            }
-        }
-
+        // COST
         // labelTwoFields uses the name of the first field for the 'show' checkbox
-        if (isset($criteria['show_contract_start_date']) && $criteria['show_contract_start_date']) {
-            $select->columns(array('employee.agreement_end_date' => new Zend_Db_Expr("DATE_FORMAT(employee.agreement_end_date, '%d/%m/%Y')")));
-
+        if (isset($criteria['show_cost_min']) && $criteria['show_cost_min']) {
+            $select->columns('annual_cost');
         }
-        if (isset($criteria['contract_start_date']) && $criteria['contract_start_date'] >= 0) {
-            $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_start_date']);
-            $select->where('employee.agreement_end_date >= ?', $d->format('Y-m-d'));
+        if (isset($criteria['cost_min']) && $criteria['cost_min'] >= 0) {
+            $select->where('annual_cost >= ?', intval($criteria['cost_min']));
         }
-
-        if (isset($criteria['contract_end_date']) && $criteria['contract_end_date']) {
-            $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_end_date']);
-            $select->where('employee.agreement_end_date <= ?', $d->format('Y-m-d'));
-        }
-
-        if (!$this->hasACL('training_organizer_option_all')) {
-            // limit results to only mechanisms owned by partners and subpartners that the user account can access
-            $uid = $this->isLoggedIn();
-
-            if (!array_key_exists('partner', $joined)) {
-                $select->joinLeft(array('partner'), 'partner.id = employee.partner_id', array());
-                $joined['partner'] = 1;
-            }
-
-            if (!array_key_exists('link_mechanism_partner', $joined)) {
-                $select->joinLeft(array('link_mechanism_partner'), 'partner.id = link_mechanism_partner.partner_id', array());
-                $joined['link_mechanism_partner'] = 1;
-            }
-
-            //TA:#415 make visible results by user mechanism accessebility, it will be added by next code
-//             if (!array_key_exists('user_to_organizer_access', $joined)) {
-//                 $select->joinLeft(array('user_to_organizer_access'),
-//                     'user_to_organizer_access.training_organizer_option_id = partner.organizer_option_id', array());
-//                 $joined['user_to_organizer_access'] = 1;
-//             }
-//             $select->where('user_to_organizer_access.user_id = ?', $uid);           
-            ////         
+        if (isset($criteria['cost_max']) && $criteria['cost_max']) {
+            $select->where('annual_cost <= ?', intval($criteria['cost_max']));
         }
         
+        //IMPLEMENTING MECHANISM PRIME PARTNER NAME
+    //TA:#419 join partner table for mechanisms only if where selection criteria is selected
+       // if ((isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']) || (isset($criteria['mech_partners']) && $criteria['mech_partners'])) {
+        if ((isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']) || (isset($criteria['mech_partners']) && $criteria['mech_partners'])) {
+            if (!array_key_exists('link_mechanism_employee', $joined)) {
+                //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
+                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                $joined['link_mechanism_employee'] = 1;
+            }
+            if (!array_key_exists('mechanism_option', $joined)) {
+                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $joined['mechanism_option'] = 1;
+            }
+            if (!array_key_exists('mech_partner', $joined)) {
+                $select->joinLeft(array('partner'), 'partner.id = mechanism_option.owner_id', array());
+                $joined['mech_partner'] = 1;
+            }
+            if (isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']){
+                $select->columns('partner.partner as impl_mech_partner_name');
+            }
+            if (isset($criteria['mech_partners']) && $criteria['mech_partners']){
+                if(is_array($criteria['mech_partners'])){
+                    if($criteria['mech_partners'][0] > 0){
+                        $select->where('mechanism_option.owner_id in ( ' . implode(",", $criteria['mech_partners']) . ")");
+                    }
+                }else{
+                    $select->where('mechanism_option.owner_id = ?', $criteria['mech_partners']);
+                }
+            }
+        }
+
+        // AGENCY
         //TA:#419
         if ((isset($criteria['show_agencies']) && $criteria['show_agencies']) || (isset($criteria['agencies']) && $criteria['agencies'])) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
@@ -1557,19 +1459,60 @@ class ReportFilterHelpers extends ITechController
                 $select->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array());
                 $joined['partner_funder_option'] = 1;
             }
-           if (isset($criteria['show_agencies']) && $criteria['show_agencies']){
+            if (isset($criteria['show_agencies']) && $criteria['show_agencies']){
                 $select->columns('partner_funder_option.funder_phrase');
-           }
-           if (isset($criteria['agencies']) && $criteria['agencies']){
-               if(is_array($criteria['agencies'])){
-                   if($criteria['agencies'][0] > 0){
-                       $select->where('mechanism_option.funder_id in ( ' . implode(",", $criteria['agencies']) . ")");
-                   }
-               }else{
-                   $select->where('mechanism_option.funder_id = ?', $criteria['agencies']);
-               }
-           }
+            }
+            if (isset($criteria['agencies']) && $criteria['agencies']){
+                if(is_array($criteria['agencies'])){
+                    if($criteria['agencies'][0] > 0){
+                        $select->where('mechanism_option.funder_id in ( ' . implode(",", $criteria['agencies']) . ")");
+                    }
+                }else{
+                    $select->where('mechanism_option.funder_id = ?', $criteria['agencies']);
+                }
+            }
         }
+//         // may be we do not need this part
+//     if (isset($criteria['show_funder']) && $criteria['show_funder']) {
+//             if (!array_key_exists('link_mechanism_employee', $joined)) {
+//                 //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
+//                 $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+//                 $joined['link_mechanism_employee'] = 1;
+//             }
+//             if (!array_key_exists('mechanism_option', $joined)) {
+//                 $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+//                 $joined['mechanism_option'] = 1;
+//             }
+//             if (!array_key_exists('partner_funder_option', $joined)) {
+//                 $select->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array());
+//                 $joined['partner_funder_option'] = 1;
+//             }
+//             $select->columns('funder_phrase');
+//         }
+//         if (isset($criteria['funder']) && ($criteria['funder'])) {
+//             if (!array_key_exists('link_mechanism_employee', $joined)) {
+//                 //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
+//                 $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+//                 $joined['link_mechanism_employee'] = 1;
+//             }
+//             if (!array_key_exists('mechanism_option', $joined)) {
+//                 $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+//                 $joined['mechanism_option'] = 1;
+//             }
+//             if (!array_key_exists('partner_funder_option', $joined)) {
+//                 $select->joinLeft('partner_funder_option', 'partner_funder_option.id = mechanism_option.funder_id', array());
+//                 $joined['partner_funder_option'] = 1;
+//             }
+//            //TA:#419
+//             if(is_array($criteria['funder'])){
+//                 if($criteria['funder'][0] > 0){
+//                     $select->where('partner_funder_option.id in ( ' . implode(",", $criteria['funder']) . ")");
+//                 }
+//             }else{
+//                 $select->where('partner_funder_option.id = ?', $criteria['funder']);
+//             }
+//         }
+        
         if ((isset($criteria['show_mechanism_ids']) && $criteria['show_mechanism_ids']) || (isset($criteria['mechanism_ids']) && $criteria['mechanism_ids'])) {
             if (!array_key_exists('link_mechanism_employee', $joined)) {
                 //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
@@ -1604,7 +1547,7 @@ class ReportFilterHelpers extends ITechController
                 $joined['mechanism_option'] = 1;
             }
             if (isset($criteria['show_mechanism_names']) && $criteria['show_mechanism_names']){
-                $select->columns('mechanism_option.mechanism_phrase'); 
+                $select->columns('mechanism_option.mechanism_phrase');
             }
             if (isset($criteria['mechanism_names']) && $criteria['mechanism_names']){
                 if(is_array($criteria['mechanism_names'])){
@@ -1616,78 +1559,132 @@ class ReportFilterHelpers extends ITechController
                 }
             }
         }
-        //TA:#419 join partner table for mechanisms only if where selection criteria is selected
-       // if ((isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']) || (isset($criteria['mech_partners']) && $criteria['mech_partners'])) {
-        if ((isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']) && (isset($criteria['mech_partners']) && $criteria['mech_partners'])) {
-            if (!array_key_exists('link_mechanism_employee', $joined)) {
-                //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
-                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
-                $joined['link_mechanism_employee'] = 1;
-            }
-            if (!array_key_exists('mechanism_option', $joined)) {
-                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
-                $joined['mechanism_option'] = 1;
-            }
-            if (!array_key_exists('mech_partner', $joined)) {
-                $select->joinLeft(array('partner'), 'partner.id = mechanism_option.owner_id', array());
-                $joined['mech_partner'] = 1;
-            }
-            if (isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']){
-                $select->columns('partner.partner as impl_mech_partner_name');
-            }
-            if (isset($criteria['mech_partners']) && $criteria['mech_partners']){
-                if(is_array($criteria['mech_partners'])){
-                    if($criteria['mech_partners'][0] > 0){
-                        $select->where('mechanism_option.owner_id in ( ' . implode(",", $criteria['mech_partners']) . ")");
-                    }
-                }else{
-                    $select->where('mechanism_option.owner_id = ?', $criteria['mech_partners']);
-                }
-            }
-        }
-        if ((isset($criteria['show_mech_percent_min']) && $criteria['show_mech_percent_min']) || 
+        
+        if ((isset($criteria['show_mech_percent_min']) && $criteria['show_mech_percent_min']) ||
             (isset($criteria['mech_percent_min']) && $criteria['mech_percent_min']) ||
             (isset($criteria['mech_percent_max']) && $criteria['mech_percent_max'])) {
-            if (!array_key_exists('link_mechanism_employee', $joined)) {
-                //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
-                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
-                $joined['link_mechanism_employee'] = 1;
-            }
-            if (isset($criteria['show_mech_percent_min']) && $criteria['show_mech_percent_min']){
-                $select->columns('link_mechanism_employee.percentage');
-            }
-            if (isset($criteria['mech_percent_min']) && intval($criteria['mech_percent_min']) >= 0) {
-                $select->where('link_mechanism_employee.percentage >= ?', intval($criteria['mech_percent_min']));
-            }
-            if (isset($criteria['mech_percent_max']) && $criteria['mech_percent_max']) {
-                $select->where('link_mechanism_employee.percentage <= ?', intval($criteria['mech_percent_max']));
-            }
-        }
-        if ((isset($criteria['show_mech_fund_date_start']) || $criteria['show_mech_fund_date_start']) || 
-            (isset($criteria['mech_fund_date_start']) && $criteria['mech_fund_date_start']) || 
-            (isset($criteria['mech_fund_date_end']) && $criteria['mech_fund_date_end'])) {
-            if (!array_key_exists('link_mechanism_employee', $joined)) {
-                //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
+                if (!array_key_exists('link_mechanism_employee', $joined)) {
+                    //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
                     $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
                     $joined['link_mechanism_employee'] = 1;
+                }
+                if (isset($criteria['show_mech_percent_min']) && $criteria['show_mech_percent_min']){
+                    $select->columns('link_mechanism_employee.percentage');
+                }
+                if (isset($criteria['mech_percent_min']) && intval($criteria['mech_percent_min']) >= 0) {
+                    $select->where('link_mechanism_employee.percentage >= ?', intval($criteria['mech_percent_min']));
+                }
+                if (isset($criteria['mech_percent_max']) && $criteria['mech_percent_max']) {
+                    $select->where('link_mechanism_employee.percentage <= ?', intval($criteria['mech_percent_max']));
+                }
             }
-            if (!array_key_exists('mechanism_option', $joined)) {
-                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
-                $joined['mechanism_option'] = 1;
-            }
-            if(isset($criteria['show_mech_fund_date_start']) || $criteria['show_mech_fund_date_start']){
-                $select->columns("SUBSTRING_INDEX(mechanism_option.end_date, ' ', 1) as mechanism_end_date");// then it breack table output beacuse mechanism name is added in any case
-            }
-            if(isset($criteria['mech_fund_date_start']) && $criteria['mech_fund_date_start']){
-                $d = DateTime::createFromFormat('d/m/Y', $criteria['mech_fund_date_start']);
-                $select->where('mechanism_option.end_date >= ?',  $d->format('Y-m-d'));
-            }
-            if(isset($criteria['mech_fund_date_end']) && $criteria['mech_fund_date_end']){
-                $d = DateTime::createFromFormat('d/m/Y', $criteria['mech_fund_date_end']);
-                $select->where('mechanism_option.end_date <= ?',  $d->format('Y-m-d'));
-            }
-        }
-        //
+            if ((isset($criteria['show_mech_fund_date_start']) || $criteria['show_mech_fund_date_start']) ||
+                (isset($criteria['mech_fund_date_start']) && $criteria['mech_fund_date_start']) ||
+                (isset($criteria['mech_fund_date_end']) && $criteria['mech_fund_date_end'])) {
+                    if (!array_key_exists('link_mechanism_employee', $joined)) {
+                        //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
+                        $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                        $joined['link_mechanism_employee'] = 1;
+                    }
+                    if (!array_key_exists('mechanism_option', $joined)) {
+                        $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                        $joined['mechanism_option'] = 1;
+                    }
+                    if(isset($criteria['show_mech_fund_date_start']) || $criteria['show_mech_fund_date_start']){
+                        $select->columns("SUBSTRING_INDEX(mechanism_option.end_date, ' ', 1) as mechanism_end_date");// then it breack table output beacuse mechanism name is added in any case
+                    }
+                    if(isset($criteria['mech_fund_date_start']) && $criteria['mech_fund_date_start']){
+                        $d = DateTime::createFromFormat('d/m/Y', $criteria['mech_fund_date_start']);
+                        $select->where('mechanism_option.end_date >= ?',  $d->format('Y-m-d'));
+                    }
+                    if(isset($criteria['mech_fund_date_end']) && $criteria['mech_fund_date_end']){
+                        $d = DateTime::createFromFormat('d/m/Y', $criteria['mech_fund_date_end']);
+                        $select->where('mechanism_option.end_date <= ?',  $d->format('Y-m-d'));
+                    }
+                }
+        
+//         // transition (used with transition_type)
+//         if (isset($criteria['transition']) && $criteria['transition']) {
+//             if (isset($criteria['transition_type']) && $criteria['transition_type']) {
+//                 if ($criteria['transition_type'] == '1') {
+//                     // Actual Transition
+//                     $select->where('employee.employee_transition_complete_option_id = ?', $criteria['transition']);
+//                 }
+//                 elseif ($criteria['transition_type'] == '2') {
+//                     // Intended Transition
+//                     $select->where('employee.employee_transition_option_id = ?', $criteria['transition']);
+//                 }
+//             }
+//             else {
+//                 $select->where('employee.employee_transition_option_id = ? OR employee.employ_transition_complete_option_id = ?',
+//                     $criteria['transition'], $criteria['transition']);
+//             }
+//         }
+//         if (isset($criteria['show_mechanism']) && $criteria['show_mechanism']) {
+//             if (!array_key_exists('link_mechanism_employee', $joined)) {
+//                 //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
+//                 $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+//                 $joined['link_mechanism_employee'] = 1;
+//             }
+//             if (!array_key_exists('mechanism_option', $joined)) {
+//                 $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+//                 $joined['mechanism_option'] = 1;
+//             }
+//             $select->columns('mechanism_phrase');
+
+//         }
+//         if (isset($criteria['mechanism']) && $criteria['mechanism']) {
+//             if (!array_key_exists('link_mechanism_employee', $joined)) {
+//                 //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
+//                 $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+//                 $joined['link_mechanism_employee'] = 1;
+//             }
+//             if (!array_key_exists('mechanism_option', $joined)) {
+//                 $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+//                 $joined['mechanism_option'] = 1;
+//             }
+//             if (count($criteria['mechanism']) > 1) {
+//                 $select->where('mechanism_option.id in (?)', $criteria['mechanism']);
+//             } elseif (count($criteria['mechanism']) == 1) {
+//                 $select->where('mechanism_option.id = ?', $criteria['mechanism']);
+//             }
+//         }
+
+        // labelTwoFields uses the name of the first field for the 'show' checkbox
+//         if (isset($criteria['show_contract_start_date']) && $criteria['show_contract_start_date']) {
+//             $select->columns(array('employee.agreement_end_date' => new Zend_Db_Expr("DATE_FORMAT(employee.agreement_end_date, '%d/%m/%Y')")));
+//         }
+//         if (isset($criteria['contract_start_date']) && $criteria['contract_start_date'] >= 0) {
+//             $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_start_date']);
+//             $select->where('employee.agreement_end_date >= ?', $d->format('Y-m-d'));
+//         }
+//         if (isset($criteria['contract_end_date']) && $criteria['contract_end_date']) {
+//             $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_end_date']);
+//             $select->where('employee.agreement_end_date <= ?', $d->format('Y-m-d'));
+//         }
+//         if (!$this->hasACL('training_organizer_option_all')) {
+//             // limit results to only mechanisms owned by partners and subpartners that the user account can access
+//             $uid = $this->isLoggedIn();
+
+//             if (!array_key_exists('partner', $joined)) {
+//                 $select->joinLeft(array('partner'), 'partner.id = employee.partner_id', array());
+//                 $joined['partner'] = 1;
+//             }
+
+//             if (!array_key_exists('link_mechanism_partner', $joined)) {
+//                 $select->joinLeft(array('link_mechanism_partner'), 'partner.id = link_mechanism_partner.partner_id', array());
+//                 $joined['link_mechanism_partner'] = 1;
+//             }
+
+            //TA:#415 make visible results by user mechanism accessebility, it will be added by next code
+//             if (!array_key_exists('user_to_organizer_access', $joined)) {
+//                 $select->joinLeft(array('user_to_organizer_access'),
+//                     'user_to_organizer_access.training_organizer_option_id = partner.organizer_option_id', array());
+//                 $joined['user_to_organizer_access'] = 1;
+//             }
+//             $select->where('user_to_organizer_access.user_id = ?', $uid);           
+            ////         
+   //     }
 
         $s = $select->__toString();
         return $select;
