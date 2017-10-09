@@ -371,11 +371,12 @@
 						</div>
 						<div id="mechanisms_box">
 							<?php
-							foreach( $this->mechanism as $org ) {
+							//print_r($this->mechanism);
+							foreach( $this->mechanism as $mech ) {
 							    $display = 'style="display:none;"';
-								echo '<div id="' . $org['owner_id'] . '" ' . $display . '><div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50">
-    <input type="checkbox" name="mechanism_option_id[]" id="mechanism_option_'.$org['id'].'" value="'.$org['id'].'" '.(@$org['user_id']? 'CHECKED':'').' />
-			    <label for="mechanism_option_'.$org['id'].'">'.$org['mechanism_phrase'].'</label></div></div></div>';
+								echo '<div id="' . $mech['owner_id'] . '" ' . $display . '><div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50">
+    <input type="checkbox" name="mechanism_option_id[]" id="mechanism_option_'.$mech['id'].'" value="'.$mech['id'].'" '.(@$mech['user_id']? 'CHECKED':'').' />
+			    <label for="mechanism_option_'.$mech['id'].'">'.$mech['mechanism_phrase'].'</label></div></div></div>';
 							}
 							?>
 							</div>

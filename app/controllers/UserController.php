@@ -130,7 +130,7 @@ class UserController extends ReportFilterHelpers {
 			$db = $this->dbfunc();
 		$select = $db->select()
 		->from('mechanism_option', array())
-		->joinLeft('user_to_mechanism_access', 'user_to_mechanism_access.mechanism_option_id = mechanism_option.id', array())
+		->joinLeft('user_to_mechanism_access', 'user_to_mechanism_access.mechanism_option_id = mechanism_option.id and  user_to_mechanism_access.user_id=' . $user_id, array())
 		->joinLeft('user_to_organizer_access', 'user_to_organizer_access.training_organizer_option_id=mechanism_option.owner_id', array())
 		->order('mechanism_phrase')
 		->columns(array('distinct(mechanism_option.id)', 'mechanism_option.owner_id' ,'mechanism_option.mechanism_phrase', 'user_to_mechanism_access.user_id'
@@ -423,7 +423,7 @@ class UserController extends ReportFilterHelpers {
 		$db = $this->dbfunc();
 		$select = $db->select()
 		->from('mechanism_option', array())
-		->joinLeft('user_to_mechanism_access', 'user_to_mechanism_access.mechanism_option_id = mechanism_option.id', array())
+		->joinLeft('user_to_mechanism_access', 'user_to_mechanism_access.mechanism_option_id = mechanism_option.id and  user_to_mechanism_access.user_id=' . $user_id, array())
 		->joinLeft('user_to_organizer_access', 'user_to_organizer_access.training_organizer_option_id=mechanism_option.owner_id', array())
 		->group('mechanism_option.id')
 		->order('mechanism_phrase')

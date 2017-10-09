@@ -1564,6 +1564,7 @@ class ReportFilterHelpers extends ITechController
                 }
 
         $s = $select->__toString();
+        print $s;
         return $select;
     }
 }
