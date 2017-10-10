@@ -1232,7 +1232,8 @@
                    if(selected.val() != ''){
                        if (selected.text() == 'Community site' ||
                                selected.text().startsWith('Health Systems Strengthening') ||
-                   		selected.text() == 'Partner management and operations'   ){
+                   		selected.text() == 'Partner management and operations'   ||
+                   		selected.text() == 'HSS - Not Seconded'){ //TA:#450
                     	   $("#facilityInput option:contains(N/A)").attr('selected', true);
                     	   $("#facilityType option:contains(N/A)").attr('selected', true);
                     	   $("#facilityInput").attr('disabled', 'disabled');
