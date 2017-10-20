@@ -118,11 +118,13 @@ class EditTableHelper {
             }else if($key == 'facility_name' || $key == 'location_name'){//TA:#317 wrap text
                             $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) . 
  			 '", style:"overflow:auto;", resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
-            }
-            else{//TA if width is not working then use above way (//TA:#278) how to set up column width
+            }else if($key == 'training_organizer_phrase'){//TA: 
+                $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) .
+                '", width:60, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+            }else{//TA if width is not working then use above way (//TA:#278) how to set up column width
                 $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) . 
   			 '", width:'.($key == 'training_title'?120:(strlen($lbl)*6)).', resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
-                      			 }
+            }
 		}
 
 		// Format data
