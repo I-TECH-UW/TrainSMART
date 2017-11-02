@@ -1791,8 +1791,7 @@ echo $sql . "<br>";
 			}
 
 			if ($this->getParam ( 'outputType' )){
-			    print_r($this->reportHeaders ( false, $rowArray )); //TA:1000
-			  // $this->sendData ( $this->reportHeaders ( false, $rowArray ) ); //TA:110 export Excel/csv report
+			   $this->sendData ( $this->reportHeaders ( false, $rowArray ) ); //TA:110 export Excel/csv report - array inside has correct encoded cyrillic
 			}
 
 		} else {
