@@ -1779,7 +1779,7 @@ echo $sql . "<br>";
 			
 			$rowArray = $db->fetchAll ( $sql );
 			
-			print_r($rowArray);//TA:1000
+			//print_r($rowArray); output is encoded correctly from cyrillic
 
 			if ($criteria ['doCount']) {
 				$count = 0;
