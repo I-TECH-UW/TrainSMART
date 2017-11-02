@@ -1779,7 +1779,7 @@ echo $sql . "<br>";
 			
 			$rowArray = $db->fetchAll ( $sql );
 			
-			//print_r($rowArray);
+			print_r($rowArray);//TA:1000
 
 			if ($criteria ['doCount']) {
 				$count = 0;

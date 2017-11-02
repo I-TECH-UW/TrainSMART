@@ -562,11 +562,11 @@ class ReportFilterHelpers extends ITechController
         $size = count($quarterStarts);
         for ($i = 0; $i < $size; $i++) {
             if (($i + 1) >= $size) {
-                $currentQuarterStartDate = $quarterStarts[$i];
+                $currentQuarterStartDate = $quarterStarts[$i-1]; //TA:#454 $quarterStarts[$i]
                 break;
             }
             if ($quarterStarts[$i] < $now && $quarterStarts[$i + 1] > $now) {
-                $currentQuarterStartDate = $quarterStarts[$i];
+                $currentQuarterStartDate = $quarterStarts[$i-1];//TA:#454 $quarterStarts[$i]
                 break;
             }
         }
