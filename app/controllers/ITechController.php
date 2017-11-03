@@ -228,7 +228,8 @@ protected function sendData($data) {
 	$processorClass = $this->getProcessorClass($outputType);
 
 	$processor      = new $processorClass($data);
-	print $processorClass . "<br><br>" . $processor;
+	print $processorClass . "<br><br>";
+	print_r($processor);
 //	$this->send($processor);
 	return true;
 
