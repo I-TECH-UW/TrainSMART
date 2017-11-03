@@ -139,7 +139,8 @@ class ITechController extends Zend_Controller_Action
 
              $response->setHeader($header,$value);
         } // foreach($this->processor->getHeaders() as $header)
-         $response->appendBody($processor->getPayload());
+            print_r($processor->getPayload());
+        // $response->appendBody($processor->getPayload());
         return;
     } // protected function send($payload, $type)
 
@@ -228,9 +229,8 @@ protected function sendData($data) {
 	$processorClass = $this->getProcessorClass($outputType);
 
 	$processor      = new $processorClass($data);
-	print $processorClass . "<br><br>";
-	print_r($processor);
-//	$this->send($processor);
+
+	$this->send($processor);
 	return true;
 
 }
