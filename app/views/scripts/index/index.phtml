@@ -27,17 +27,17 @@
 
 	<script type="text/javascript">
  var statsData = [
-		['<?php tp('Participants');?>&nbsp;(<?php echo $this->unique_participants.' '.t('unique');?>)','<?php echo $this->attendees;?>','<?php echo $this->attendees_ytd;?>'],
-		['<?php tp('Trainers');?>&nbsp;(<?php echo $this->unique_trainers.' '.t('unique');?>)','<?php echo $this->trainers;?>','<?php echo $this->trainers_ytd;?>'],
-		['<?php tp('Trainings');?>','<?php echo $this->trainings;?>','<?php echo $this->trainings_ytd;?>']
+		['<?php echo t('Participants');?>&nbsp;(<?php echo $this->unique_participants.' '.t('unique');?>)','<?php echo $this->attendees;?>','<?php echo $this->attendees_ytd;?>'],
+		['<?php echo t('Trainers');?>&nbsp;(<?php echo $this->unique_trainers.' '.t('unique');?>)','<?php echo $this->trainers;?>','<?php echo $this->trainers_ytd;?>'],
+		['<?php echo t('Trainings');?>','<?php echo $this->trainings;?>','<?php echo $this->trainings_ytd;?>']
 
    ];
 
 		var statsColumnDefs = [
-		    {key:"name", label: "<?php echo $this->min_date;?>&nbsp;<?php tp('to');?>&nbsp;<?php echo $this->max_date;?>", sortable:false, resizeable:true},
-		    {key:"total", label: "<?php tp('Total');?>", sortable:false, resizeable:true},
-			{key:"ytd", label: "<?php tp('Fiscal Year');?> ( <?php tp('since'); ?>&nbsp;<?php echo $this->ytdStart;?>)", sortable:false, resizeable:true}
-		];
+			           		    {key:"name", label: "<?php echo $this->min_date;?>&nbsp;<?php echo t('to');?>&nbsp;<?php echo $this->max_date;?>", sortable:false, resizeable:true, width:180},
+			           		    {key:"total", label: "<?php echo t('Total');?>", sortable:false, resizeable:true, width:180},
+			           			{key:"ytd", label: "<?php echo t('Fiscal Year');?> ( <?php echo t('since'); ?>&nbsp;<?php echo $this->ytdStart;?>)", sortable:false, resizeable:true, width:180}
+			           		];
 
 		makeDataTable("trainingStats", null, statsData, statsColumnDefs);
 	</script>
