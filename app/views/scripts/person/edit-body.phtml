@@ -159,7 +159,7 @@
 
     //{key:"input", width:0, resizeable:true , label:"", hidden:"true", width:"0", className:"hidden"},
     var dupeColDefs =
-        [{key:"input", width:15, resizeable:true , label:""}, //TA:57 10/08/2015 
+        [////TA: we do not need this -> {key:"input", width:15, resizeable:true , label:""}, //TA:57 10/08/2015 
          {key:"person_id", label: "<?php tp('ID')?>", sortable:false, resizable:false, formatter: formatViewUrl},
             {key:"first_name", width:60, sortable:true, resizeable:true , label:"<?php tp("First Name"); ?>"},
             <?php if ( !$this->setting['display_middle_name_last'] ) { ?>
@@ -184,7 +184,7 @@
                 YAHOO.util.Dom.get('dupecheck').innerHTML = "<em><?php tp('No duplicates found.'); ?></em>";
             } else {
                 dupeDataSource = eval(o.responseText);
-                makeDynamicDataTable("dupecheck", "<?php tp("If the person already exists, please select their name below."); ?>", dupeDataSource, dupeColDefs);
+                makeDynamicDataTable("dupecheck", "<?php //TA: we do not need this -> tp("If the person already exists, please select their name below."); ?>", dupeDataSource, dupeColDefs);
                 YAHOO.util.Dom.removeClass(YAHOO.util.Dom.get('submitAddContinue'), "hidden");
                 do_dupe_highlight();
             }

@@ -42,6 +42,7 @@ class PersonToTraining extends ITechTable
         ->where("ptt.training_id = $training_id and p.is_deleted=0") //TA:21: 09/29/2014
         ->group("ptt.id")
         ->order("last_name");
+    
     return $tableObj->fetchAll($select);
   }
 
