@@ -60,7 +60,7 @@ Class Output_Csv extends Output_Abstract
 		
 		$this->headers['Expires'] = $now;
 		
-		$this->headers['charset'] = 'utf-8'; //TA:5000
+		//$this->headers['charset'] = 'utf-8'; //TA:5000
 		
 		// lem9 & loic1: IE need specific headers
 		$isIE = strstr( $_SERVER['HTTP_USER_AGENT'], 'MSIE' );
@@ -73,8 +73,7 @@ Class Output_Csv extends Output_Abstract
 			$this->headers['Pragma'] = 'no-cache';
 		}
 		
-    	//$this->payload = $this->makeCSVTable( $csvheaders, $this->input );
-    	$this->payload = implode(', ', $this->input); //TA:5000
+    	$this->payload = $this->makeCSVTable( $csvheaders, $this->input );
 
     } // public function main()
     
