@@ -60,6 +60,8 @@ Class Output_Csv extends Output_Abstract
 		
 		$this->headers['Expires'] = $now;
 		
+		$this->headers['charset'] = 'utf-8'; //TA:5000
+		
 		// lem9 & loic1: IE need specific headers
 		$isIE = strstr( $_SERVER['HTTP_USER_AGENT'], 'MSIE' );
 		if ( $isIE ) {
@@ -76,23 +78,7 @@ Class Output_Csv extends Output_Abstract
     } // public function main()
     
     
-    //TA:5000
-    public function makeCSVTable( $header, $rows ){
-        $result = '';
-        if ( is_array($rows) ) {
-            foreach ( $rows as $row ) {
-                foreach ( $row as $j => $value ) {
-                    $result .= $value;
-                }
-            }
-        }
-        return $result;
-    
-    }
-    
-    
-    
-  public function makeCSVTableOld( $header, $rows )
+  public function makeCSVTable( $header, $rows )
   {
   	$result = '';
     // Handles the "separator" and the optional "enclosed by" characters
