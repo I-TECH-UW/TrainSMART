@@ -71,8 +71,7 @@ Class Output_Csv extends Output_Abstract
 			$this->headers['Pragma'] = 'no-cache';
 		}
 		
-    //TA:5000	$this->payload = $this->makeCSVTable( $csvheaders, $this->input ); 
-		$this->payload = $this->input;
+    	$this->payload = $this->makeCSVTable( $csvheaders, $this->input );        
 
     } // public function main()
     
@@ -201,6 +200,7 @@ Class Output_Csv extends Output_Abstract
 	    
 	}
     
+	$result = mb_convert_encoding($result, 'UTF-8', 'auto');//TA:5000
  	    return $result;
   } // end of the 'getTableCsv()' function
 
