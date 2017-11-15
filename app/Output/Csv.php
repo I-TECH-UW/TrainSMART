@@ -76,7 +76,23 @@ Class Output_Csv extends Output_Abstract
     } // public function main()
     
     
-  public function makeCSVTable( $header, $rows )
+    //TA:5000
+    public function makeCSVTable( $header, $rows ){
+        $result = '';
+        if ( is_array($rows) ) {
+            foreach ( $rows as $row ) {
+                foreach ( $row as $j => $value ) {
+                    $result .= $value;
+                }
+            }
+        }
+        return $result;
+    
+    }
+    
+    
+    
+  public function makeCSVTableOld( $header, $rows )
   {
   	$result = '';
     // Handles the "separator" and the optional "enclosed by" characters
@@ -200,7 +216,6 @@ Class Output_Csv extends Output_Abstract
 	    
 	}
     
-	$result = mb_convert_encoding($result, 'UTF-8', 'auto');//TA:5000
  	    return $result;
   } // end of the 'getTableCsv()' function
 
