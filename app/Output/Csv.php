@@ -71,7 +71,8 @@ Class Output_Csv extends Output_Abstract
 			$this->headers['Pragma'] = 'no-cache';
 		}
 		
-    	$this->payload = $this->makeCSVTable( $csvheaders, $this->input );        
+    //TA:5000	$this->payload = $this->makeCSVTable( $csvheaders, $this->input ); 
+		$this->payload = $this->input;
 
     } // public function main()
     
