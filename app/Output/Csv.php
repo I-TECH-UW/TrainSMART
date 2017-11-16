@@ -60,7 +60,7 @@ Class Output_Csv extends Output_Abstract
 		
 		$this->headers['Expires'] = $now;
 		
-		$this->headers['charset'] = 'UTF-8'; //TA:5000
+		//$this->headers['charset'] = 'UTF-8'; //TA:5000
 		
 		// lem9 & loic1: IE need specific headers
 		$isIE = strstr( $_SERVER['HTTP_USER_AGENT'], 'MSIE' );
@@ -202,6 +202,7 @@ Class Output_Csv extends Output_Abstract
 	    
 	}
     
+	$result = mb_convert_encoding($result,'utf-16','utf-8');
  	    return $result;
   } // end of the 'getTableCsv()' function
 
