@@ -51,8 +51,7 @@ Class Output_Csv extends Output_Abstract
 		$now       = gmdate('D, d M Y H:i:s') . ' GMT';
 		//TA:78
 		//$mime_type = 'text/x-csv; charset=utf-8'; it does not help
-		//TA:5000 $mime_type = 'text/x-csv'; 
-		$mime_type = 'application/vnd.ms-excel';
+		$mime_type = 'text/x-csv'; 
 		
 		$ext       = 'csv';
 		
@@ -61,7 +60,7 @@ Class Output_Csv extends Output_Abstract
 		
 		$this->headers['Expires'] = $now;
 		
-		$this->headers['charset'] = 'UTF-8'; //TA:5000
+		//$this->headers['charset'] = 'UTF-8'; //TA:5000
 		
 		// lem9 & loic1: IE need specific headers
 		$isIE = strstr( $_SERVER['HTTP_USER_AGENT'], 'MSIE' );
