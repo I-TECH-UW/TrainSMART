@@ -202,7 +202,7 @@ Class Output_Csv extends Output_Abstract
 	    
 	}
     
-	$result = mb_convert_encoding($result, 'UTF-8');//TA:5000
+	$result = utf8_encode($result);//TA:5000
  	    return $result;
   } // end of the 'getTableCsv()' function
 
