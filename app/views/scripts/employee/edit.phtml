@@ -25,54 +25,13 @@
         table.dataTable tr.odd td.sorting_1 {
             background-color: #ACCCAC;
         }
-
-        h2.mechanismsHeader {
-            font-size: 14px;
-            color: #51965B;
-            margin-bottom: 0.5em;
-        }
-
-        .newMechanism {
-            color: #749a02;
-            font-weight: bold;
-        }
-
-        .toDeleteMechanism {
-            text-decoration: line-through;
-            color: #ff0202;
-            font-style: italic;
-        }
-
-        .mechanismTableFooter {
-            background-color: #cccccc;
-        }
-
-        .totalMechanismPercentageYes {
-            background-color: #749a02;
-        }
-
-        .totalMechanismPercentageNo {
-            background-color: #ff0202;
-        }
+        
     </style>
     <script type="application/javascript">
         $(document).ready(function () {
 
         	var SITE_ROWS_COUNT = 0;//TA:#438
         	
-            $('#select_partner').on('change', availableMechanisms);
-            window.ITECH.totalPercent = 0;
-
-            /* Init the table */
-            $('#employee_mechanism_table').dataTable({
-                "bJQueryUI": true,
-                "bPaginate": false,
-                "bSort": true,
-                "bInfo": false,
-                "bFilter": false,
-                "bAutoWidth": false
-            });
-
             /*TA:#224 Init the table */
             $('#multi_sites_table').dataTable({
                 "bJQueryUI": true,
@@ -83,41 +42,9 @@
                 "bAutoWidth": false
             });
 
-            window.ITECH.mechData = <?php echo json_encode($this->mechanismData, JSON_HEX_APOS); ?>;
-            <?php
-            $disassociateIDs = isset($this->employee['disassociateMechanisms']) ? json_encode(explode(',', $this->employee['disassociateMechanisms']), JSON_HEX_APOS) : '[]';
-            $associateIDs = isset($this->employee['associateMechanisms']) ? json_encode(explode(',', $this->employee['associateMechanisms']), JSON_HEX_APOS) : '[]';
-            $mechanismPercentages = isset($this->employee['mechanismPercentages']) ? json_encode(explode(',', $this->employee['mechanismPercentages']), JSON_HEX_APOS) : '[]';
-            echo "            var disassociateIDs = $disassociateIDs;", PHP_EOL;
-            echo "            var associateMechanisms = $associateIDs;", PHP_EOL;
-            echo "            var mechanismPercentages = $mechanismPercentages;", PHP_EOL;
-            ?>
-
-            $("#disassociateMechanisms").data("ids", disassociateIDs);
-            $("#associateMechanisms").data("ids", associateMechanisms);
-            $("#mechanismPercentages").data("percents", mechanismPercentages);
-
-            if (disassociateIDs.length > 0) {
-                var selectorString = '';
-                var i;
-                for (i in disassociateIDs) {
-                    selectorString = selectorString + '#table_mechanism_delete_toggle_' + disassociateIDs[i] + ',';
-                }
-
-                // jQuery ignores the trailing comma in the string, nice.
-                $(selectorString).each(function(i, element) {
-                    element.checked = true;
-                    deleteToggle(element);
-                });
-            }
-
-            if ((associateMechanisms.length > 0) && (associateMechanisms.length == mechanismPercentages.length)) {
-                for (i in associateMechanisms) {
-                    addMechanismToTable(associateMechanisms[i], mechanismPercentages[i]);
-                }
-            }
-            availableMechanisms();
-            calculateMechanismTable();
+            //TA:#464
+            window.ITECH.mechData = <?php echo json_encode($this->mechanisms, JSON_HEX_APOS); ?>;
+            mechData_lenght = <?php echo count($this->mechanisms); ?>;
 
             calculateSiteTable();//TA:#438
             setDefaultSitesFields(); //TA:#438
@@ -173,11 +100,11 @@
 
             $('#salary,#benefits,#additional_expenses,#stipend').change(function () { /* calc amounts */
                 $('#annual_cost').calcFieldsMoney('#salary,#benefits,#additional_expenses,#stipend', '#annual_cost');
-                calculateMechanismTable();
+                //calculateMechanismTable();
             });
 
             $('#funded_hours_per_week').change(function () {
-                calculateMechanismTable();
+               // calculateMechanismTable();
             });
 
             $('#select_employee_transition_option').change(function (e) { /* watch the two transition drop downs */
@@ -230,214 +157,6 @@
 
             };
         })(jQuery);
-
-        
-
-        /**
-         * calculate values for mechanism table hours and cost based on mechanism percentages
-         * and employee funded hours and annual cost
-         * Sets page global variable window.ITECH.totalPercent to use for validating added mechanisms
-         * @returns {boolean}
-         */
-        var calculateMechanismTable = function () {
-            //TA:327
-            var hours = parseFloat($('#funded_hours_per_week').val());
-            //TA:#282
-            var cost = parseFloat($('#annual_cost').val());
-
-            if (isNaN(hours) || isNaN(cost)) {
-                return false;
-            }
-
-            // calculate from existing table cells, this is called when hours or cost change
-            // so all hours and cost need to be re-calculated
-
-            var $rows = $("#employee_mechanism_table > tbody > tr");
-            var len = $rows.length;
-            var percentAccumulate = 0;
-            for (var i = 0; i < len; i++) {
-                //TA:#327
-                var pcent = parseFloat($($rows[i]).children().first().next().text());
-                var $node = $($rows[i]).children().first().next();
-
-                var pcent = parseFloat($node.text());
-                if (!isNaN(pcent) && (!$node.hasClass('toDeleteMechanism'))) {
-                    percentAccumulate += pcent;
-                    $node = $node.next();
-                    $node.text(((pcent / 100.0) * hours).toFixed(1));
-                    $node = $node.next();
-                    $node.text(((pcent / 100.0) * cost).toFixed(2));
-                }
-            }
-
-            // update the footer with totals
-            var $footerChildren = $("#employee_mechanism_table > tfoot > tr:first-child").children();
-            var fpercent = percentAccumulate / 100.0;
-            var $totalPercent = $footerChildren.first().next();
-            $totalPercent.text(percentAccumulate);
-            var $totalHours = $totalPercent.next();
-            $totalHours.text((fpercent * hours).toFixed(1));
-            var $totalCost = $totalHours.next();
-            $totalCost.text((fpercent * cost).toFixed(2));
-            if (percentAccumulate > 100) {
-                $("#mechanismTableFooterPercent").attr('class', "totalMechanismPercentageNo");
-            }
-            else {
-                $("#mechanismTableFooterPercent").attr('class', "totalMechanismPercentageYes");
-            }
-            window.ITECH.totalPercent = percentAccumulate;
-        };
-
-
-        /**
-         * handles the action when the delete checkbox is pressed
-         * @param element - the checkbox element clicked on by the user
-         * @returns {boolean}
-         */
-        function deleteToggle(element) {
-            // get jQuery version of the element
-            var $element = $(element);
-            var $siblings = $element.parent().siblings('td');
-            var idList = $("#disassociateMechanisms").data("ids");
-            var mechData = window.ITECH.mechData;
-            var mechID = $element.parent().parent().attr("id").split('_').pop();
-
-            if (element.checked) {
-                if ($element.parent().parent().hasClass('newMechanism')) {
-                    var mechIndex = $.inArray(mechID, $("#associateMechanisms").data('ids'));
-                    $("#associateMechanisms").data('ids').splice(mechIndex, 1);
-                    $("#mechanismPercentages").data('percents').splice(mechIndex, 1);
-                    $('#employee_mechanism_table').dataTable().fnDeleteRow($element.parent().parent()[0]);
-                }
-                else {
-                    idList.push(mechID);
-                    $siblings.addClass('toDeleteMechanism');
-                }
-
-                window.ITECH.mechData.assigned_mechanisms[mechID] = undefined;
-            }
-            else {
-                if (typeof mechID != 'undefined') {
-                    $siblings.removeClass('toDeleteMechanism');
-                    // use jQuery's inArray because IE <9 doesn't support indexOf in arrays
-                    idList.splice($.inArray(mechID, idList), 1);
-                    $element.parent().parent().removeData('toDelete');
-                    window.ITECH.mechData.assigned_mechanisms[mechID] = {'mechanism_option_id' : mechID,
-                        'percentage' : $element.parent().siblings('td.percent').html(),
-                        'mechanism_phrase' : mechData['byMechanism'][mechID]['mechanism_phrase']};
-                }
-            }
-
-            calculateMechanismTable();
-            availableMechanisms();
-
-            return true;
-        }
-        
-
-        /**
-         * add new mechanism and percentage to mechanism table and store data for saving on form submission
-         * @returns {boolean}
-         */
-        function addMechanism() {
-            $(".dataTables_empty").remove();
-            var $percentBox = $("#percentage");
-            //TA:#327
-            var percent = parseFloat($percentBox.val());
-
-            if (isNaN(percent) || (percent < 1)) {
-                alert("Invalid value for percentage");
-                return false;
-            }
-            if ((percent + window.ITECH.totalPercent) > 100) {
-                alert("Total percentage must be 100 or less.");
-                return false;
-            }
-            if ($("#new_mechanism").val() === "") {
-            	//TA:#413
-                alert("Mechanism selection is required.");
-                return false;
-            }
-
-            var $selectedMechanism = $("#new_mechanism option:selected");
-            var mechID = $selectedMechanism.val();
-
-            addMechanismToTable(mechID, percent);
-
-            $("#associateMechanisms").data("ids").push(mechID);
-            $("#mechanismPercentages").data("percents").push(percent);
-            window.ITECH.mechData.assigned_mechanisms[mechID] = {'mechanism_option_id' : mechID, 'percentage' : percent, 'mechanism_phrase' : window.ITECH.mechData['byMechanism'][mechID]['mechanism_phrase']};
-
-            $percentBox.val("");
-            calculateMechanismTable();
-            availableMechanisms();
-
-            return true;
-        }
-
-        function addMechanismToTable(mechID, percent) {
-            //TA:#327
-            var hours = parseFloat($('#funded_hours_per_week').val());
-            //TA:#327
-            var cost = parseFloat($('#annual_cost').val());
-            var fpercent = percent / 100.0;
-            if (isNaN(hours) || isNaN(cost)) {
-                return false;
-            }
-            var $oTable = $('#employee_mechanism_table').dataTable();
-            var newRowIDs = $oTable.fnAddData([window.ITECH.mechData['byMechanism'][mechID]['mechanism_phrase'], percent,
-                (fpercent * hours).toFixed(1), (fpercent * cost).toFixed(2), '<input type="checkbox" onclick="deleteToggle(this);"/>']);
-            var newRow = $($oTable.fnSettings().aoData[newRowIDs[0]].nTr);
-            newRow.addClass('newMechanism');
-            newRow.prop('id', 'table_mechanism_row_' + mechID);
-            newRow.children().last().children()[0].id = 'table_mechanism_delete_toggle_' + mechID;
-            newRow.children().first().data("mechID", mechID);
-        }
-
-        /**
-         * prepare stored data from mechanism table changes for submission to backend
-         * @returns {boolean}
-         */
-        function processMechanismAssociations() {
-            var $associate = $("#associateMechanisms");
-            var $percentages = $("#mechanismPercentages");
-            var $disassociate = $("#disassociateMechanisms");
-
-            if ($associate.data("ids").length && $percentages.data("percents").length) {
-                $associate.val($associate.data("ids").join(','));
-                $percentages.val($percentages.data("percents").join(','));
-            }
-            else {
-                $associate.val("");
-                $percentages.val("");
-            }
-            if ($disassociate.data("ids").length) {
-                $disassociate.val($disassociate.data("ids").join(','));
-            }
-            else {
-                $disassociate.val("");
-            }
-            return true;
-        }
-        var availableMechanisms = function () {
-            var optList = '<option value="">--choose--</option>';
-            var partnerID = $('#select_partner').val();
-            var mechData = window.ITECH.mechData;
-            var mech;
-
-            if (mechData['byPartner'].hasOwnProperty(partnerID)) {
-                var partnerMechanisms = window.ITECH.mechData['byPartner'][partnerID];
-                var numMechs = partnerMechanisms.length;
-                for (var i = 0; i < numMechs; i++) {
-                    if (!mechData.assigned_mechanisms.hasOwnProperty(partnerMechanisms[i]) || mechData.assigned_mechanisms[partnerMechanisms[i]] === undefined) {
-                        mech = mechData['byMechanism'][partnerMechanisms[i]]['mechanism_phrase'];
-                        optList += '<option value="' + partnerMechanisms[i] + '">' + mechData['byMechanism'][partnerMechanisms[i]]['mechanism_phrase'] + '</option>';
-                    }
-                }
-            }
-
-            $('#new_mechanism').html(optList);
-        }
 
         //TA:#224   TA:#416
         function addSite() {    
@@ -506,15 +225,6 @@
             if($('#facilityType').val()){
             	site_type = $('#facilityType option:selected' ).text();
             }
-            //TA:#441 remove those lines
-//             var site_name = '';
-//             var site_id = $('#facilityInput').val();
-//             if(site_id){
-//             	site_name = $('#facilityInput option:selected' ).text();
-//             }else{
-   //alert("Specify value for '<?php //tp('Site Name');?>'.");
-//                 return false;
-//             } 
             
              var hiv_fte_related = $('#hiv_fte_related' ).val();
              if(hiv_fte_related == ""){
@@ -556,9 +266,29 @@
                              team_options +=  "><?php echo $team['dsdteam'];?></option>";
                  <?php }?>
                  team_options += "</select>";
+
+                 //TA:#464
+                 var mech_id = $('#mechanisms option:selected' ).val();
+                 if(mech_id == "" || mech_id == "0"){
+             		alert("Specify value for '<?php tp('Implementing Mechanism');?>'.");
+             		return false;
+             	 }
+                 var mech_options = "<select id='site_mechanism_option_id" + SITE_ROWS_COUNT + "' name='site_mechanism_option_id" + SITE_ROWS_COUNT + "' style='max-width: 200px; min-width: 200px; width: 200px !important'>";
+                 mech_options += "<option value='0'>-- select --</option>"; 
+                 <?php foreach ($this->mechanisms as $mechanismID => $mechData) {?>
+                 mech_options += "<option value='<?php echo $mechData['mechanism_option_id']; ?>' ";
+                             if(mech_id == '<?php echo $mechData['mechanism_option_id'];?>'){
+                            	 mech_options += " selected='selected' ";
+                             }
+                             mech_options +=  "><?php echo $mechData['mechanism_phrase'];?></option>";
+                 <?php }?>
+                 mech_options += "</select>";
+             	 //
+
+               	//TA:#464 
              var newRowIDs = $oTable.fnAddData([model_options, team_options, province, district, region, site_name, site_type, 
                           '<input type="text" value="' + hiv_fte_related + '" style="width:50px;" onkeypress="return isIntegerNumber(event);" onchange="validateIntRange(this);"/>', 
-                                                '<input type="checkbox" onclick="deleteToggleSite(this);"/>']);
+                          mech_options, '<input type="checkbox" onclick="deleteToggleSite(this);"/>']);
              ///
              
               var newRow = $($oTable.fnSettings().aoData[newRowIDs[0]].nTr);
@@ -676,21 +406,6 @@
             	validated = false;
             }
             
-            //TA:#413 mechanism is required
-            var $rows = $("#employee_mechanism_table > tbody > tr");
-            var mechanism_count = 0;
-            for (var i = 0; i < $rows.length; i++) {
-            	var $node = $($rows[i]).children().first().next();
-                if (!$node.hasClass('toDeleteMechanism')) {
-                	mechanism_count++;
-                }
-            }
-            if($("#employee_mechanism_table > tbody").children().first().children().first().text() == 'No data available in table' || mechanism_count == 0){
-            	displayErrorMessage('', '<?php echo t("Mechanism");?> (required)');
-            	validated = false;
-            }
-            ////
-
             //TA:#411 
             if(!$("#is_active").is(":checked")){
             	//Actual transition outcome should be filled in
@@ -724,8 +439,8 @@
             	validated = false;
             }
 
-            //TA:438
-            getSiteTableData();
+            //TA:438, TA:#464
+            validated = getSiteTableData();
             if(parseInt($('#funded_hours_per_week').val()) < parseInt($('#multi_sites_table_data_fte_total').val())){
             	displayErrorMessage('funded_hours_per_week', "The total 'Hours Worked per Week per site' should be less or equal to 'Hours Worked per Week for Annual Cost To Company'.");
             	var $rows = $("#multi_sites_table > tfoot > tr");
@@ -760,7 +475,7 @@
             return validated;  
           }
 
-        //TA:#438
+        //TA:#438, TA:#464
         var getSiteTableData = function () {
         	$('#multi_sites_table_data').val("");
         	var $rows = $("#multi_sites_table > tbody > tr");
@@ -769,11 +484,17 @@
         		var table_cell_obj = $($rows[i]).children().first().next().next().next().next().next().next().next()[0];
           	   var input_obj = $(table_cell_obj).children().first()[0];
           	   var hiv_fte = parseInt($(input_obj).val());
+               var mech_id = $($($($rows[i]).children().first().next().next().next().next().next().next().next().next()[0]).children().first()[0]).val();//TA:#464
+               if(mech_id == "" || mech_id == "0"){
+            	   displayErrorMessage('', '<?php echo t('Implementing Mechanism');?> is required.');
+            	   $($($rows[i]).children().first().next().next().next().next().next().next().next().next()[0]).children().first()[0].style.border = '2px solid red';
+                   return false;
+               }
             	 hiv_fte_Accumulate = hiv_fte_Accumulate + hiv_fte;
         		var site_id = $($rows[i]).children().first().next().next().next().next().next()[0].id;
                 var dsd_model_id = $($($rows[i]).children().first()[0]).children().first()[0].value;
                 var dsd_team_id = $($($rows[i]).children().first().next()[0]).children().first()[0].value;
-                var data = site_id + "," + dsd_model_id  + "," +  dsd_team_id  + "," +  hiv_fte;
+                var data = site_id + "," + dsd_model_id  + "," +  dsd_team_id  + "," +  hiv_fte + "," + mech_id;//TA:#464
                 if($('#multi_sites_table_data').val() != ''){
                    	$('#multi_sites_table_data').val($('#multi_sites_table_data').val() + ";");
                 }
@@ -825,6 +546,9 @@
          $('#dsd_model').val('');
          $('#dsd_team').val('');
          $('#dsd_team').attr('disabled', true);
+         //TA:#464
+         $('#mechanisms').val('0');
+         $('#mechanisms').attr('disabled', true);
         }
 
         //TA:#224, //TA:#438
@@ -862,10 +586,10 @@
         function validateIntRange(el){
        	    var v = parseInt(el.value);
         	if(isNaN(v) || (v < 1 || v > 45)){
+        		el.style.border = '2px solid red';
         	    alert("Value for '<?php tp('Hours Worked per Week');?>' should be between 1 and 45.");
-        	    el.style.color = 'red';
         	}else{
-        		el.style.color = 'black';
+        		el.style.border = '1px solid #7f9db9';
         	}
         	calculateSiteTable();
         }
@@ -1029,6 +753,7 @@
                     <th><?php echo "<font color='red'>*</font>" .t('Site Name'); ?></th>
                     <th width='10%'><?php echo "<font color='red'>*</font>" . t('Site Type'); ?></th>
                     <th width='5%'><?php echo "<font color='red'>*</font>" . t('Hours Worked per Week'); ?></th><!-- TA:#439 -->
+                    <th width='10%'><?php echo "<font color='red'>*</font>" . t('Implementing Mechanism'); ?></th><!-- TA:#464 -->
                     <th width='5%'><?php tp("Delete?"); ?></th>               
                 </tr>
                 </thead>
@@ -1042,12 +767,12 @@
                     <td class="siteTableFooter"></td><!-- TA:#416 -->
                     <td class="siteTableFooter"></td><!-- TA:#416 -->
                     <td class="siteTableFooter" id="hiv_related_fte_total">0</td>
+                    <td class="siteTableFooter"></td><!-- TA:#464 -->
                     <td class="siteTableFooter"></td>
                 </tr>
                 </tfoot>
                 <tbody id="multi_sites_table_body">
                 <?php
-                //print_r($this->dsd_team);
                 $rows = 0;
                 foreach ($this->employee['sites'] as $id => $siteData) {
                     ?>
@@ -1087,6 +812,24 @@
                         <td id='<?php echo $siteData['facility_id'];?>'><?php echo $siteData['facility_name']; ?></td>
                         <td><?php echo $siteData['facility_type_phrase']; ?></td>
                         <td><input type="text" value="<?php echo $siteData['hiv_fte_related']; ?>" style="width:50px;" onkeypress="return isIntegerNumber(event);" onchange="validateIntRange(this);"/></td>
+                        
+                        <!-- TA:#464 START -->
+                        <td id='<?php echo $siteData['mechanism_option_id'];?>'>
+                        <select id='site_mechanism_option_id<?php echo $rows;?>' name='site_mechanism_option_id<?php echo $rows;?>'style='max-width: 200px; min-width: 200px; width: 200px !important'>
+                        <option value='0'>-- select --</option>
+                        <?php
+                        foreach ($this->mechanisms as $mechanismID => $mechData) {
+                            $selected_team = "";
+                            if($mechData['mechanism_option_id'] === $siteData['mechanism_option_id']){
+                                $selected_team = " selected='selected' ";
+                            }
+                            echo "<option value='" . $mechData['mechanism_option_id'] . "' " . $selected_team . ">" . $mechData['mechanism_phrase'] . "</option>";
+                        } 
+                        ?>
+                        </select>
+                        </td>
+                        <!-- TA:#464 END -->
+                        
                         <td><input type="checkbox" onclick="deleteToggleSite(this);"/></td>
                     </tr>
                     <script>
@@ -1159,18 +902,24 @@
                    //TA: #438
                    echo "<input type='text' id='hiv_fte_related' name='hiv_fte_related' value='' style='width:90px;' onkeypress='return isIntegerNumber(event)' onchange='validateIntRange(this);'/>";
                    echo "</td>";
+                   //TA:#464
+                   echo "<td width='80px' style='padding-right: 10px;' valign='bottom'>" . $label . t('Implementing Mechanism') . "</span><br>";
+                   echo "<select id='mechanisms' name='mechanisms' style='max-width: 200px; min-width: 200px; width: 200px !important'>";
+                   echo "<option value='0'>-- select --</option>";
+                   foreach ($this->mechanisms as $mechanismID => $mechData) {
+                       if($mechData['owner_id'] == $this->partner_id && $mechData['available'] == '1'){
+                            echo "<option value='" . $mechData['mechanism_option_id'] . "'>" . $mechData['mechanism_phrase'] . "</option>";
+                       }
+                   }
+                   echo "</select>";
+                   ////
                    echo "<td style='padding-right: 10px;' valign='bottom'>" . $label . "&nbsp;" . "</span><br>";
                    echo '<input type="button" name="multiSite" value="'. t("Add") . '" class="insert"
                        id="siteInsertButton" onclick="addSite();"/>';
                    echo "</td>";
                    ?>
                    </tr>
-                   <tr><td></td><td></td><td></td><td></td><td></td><td colspan=2>
-                   <!-- TA:#381 TA:#436
-                   <a href='<?php echo$this->base_url;?>/site/add'><?php echo t('Insert a New') . space . t('Site');?></a>&nbsp;&nbsp;
-                   <a href='<?php echo$this->base_url;?>/site/search'><?php echo t('View/Edit') . space . t('Site');?></a>&nbsp;&nbsp;
-                   -->
-                   </td></tr>
+                   
                    </table>
                    <br><br>
                    <script>
@@ -1184,6 +933,7 @@
                     elFacilityType = YAHOO.util.Dom.get('facilityType');
                     elFacilityName = YAHOO.util.Dom.get('facilityInput');
                     elHIV_field = YAHOO.util.Dom.get('hiv_fte_related');
+                    elMech_field = YAHOO.util.Dom.get('mechanisms');//TA:#464
                     eldsdmodel_field = YAHOO.util.Dom.get('dsd_model');//TA:#416
                     eldsdteam_field = YAHOO.util.Dom.get('dsd_team');//TA:#416
                     YAHOO.util.Event.onDOMReady(function () {
@@ -1196,6 +946,7 @@
                         }else{
                         	selectNASiteName();
                             elHIV_field.disabled = false;
+                            elMech_field.disabled = false;//TA:#464
                         }
                     }
                     //TA:#416 TA:#441
@@ -1222,8 +973,18 @@
                elSDSTeam = YAHOO.util.Dom.get("dsd_team");
                elPartner.onchange = function () {
                   setFilteredOption(this.selectedIndex, 'select_partner', 'dsd_team');
+                  //TA:#464
+                  $('#mechanisms').empty(); 
+                  var optList = '<option value="">--choose--</option>';
+                  var partnerID = $('#select_partner').val();
+                  var mechData = window.ITECH.mechData;
+                   for (var i = 0; i < mechData_lenght; i++) {
+                      if(mechData[i]['owner_id'] == partnerID && mechData[i]['available'] == '1'){
+                    	  optList += '<option value="' + mechData[i]['mechanism_option_id'] + '">' + mechData[i]['mechanism_phrase'] + '</option>';
+                      }
+                  }
+                  $('#mechanisms').html(optList);
                }
-               //it seems taht we do not need this, otherwise team list is empty setFilteredOption(elPartner.selectedIndex, 'select_partner', 'dsd_team');
                ///
 
                //TA:#441
@@ -1308,7 +1069,7 @@
                         echo '</div>';
 
                         // yearly costs of employee
-                        echo '<div class="clear"></div><br /><br />';
+                        echo '<div class="clear"></div>';
                         if ($this->setting['display_employee_salary']
                             || $this->setting['display_employee_benefits']
                             || $this->setting['display_employee_additional_expenses']
@@ -1351,92 +1112,10 @@
                         <!-- TA:#256 -->
 
             <div class="clear"></div>
-            <br/><br/>
 
             <?php if ($this->setting['display_employee_courses_completed']) require_once('employee_course_table.phtml'); ?>
 
-            <h2 class="mechanismsHeader"><?php tp('Mechanisms'); ?>:</h2>
-
-            <table cellpadding="0" cellspacing="0" border="1" class="display tablegrid" id="employee_mechanism_table"
-                   style="width:100%">
-                <thead>
-                <tr>
-                    <th><?php tp('Mechanism'); ?></th>
-                    <th><?php tp('Percent'); ?></th>
-                    <?php if ($this->setting['display_hours_per_mechanism']) { ?>
-                        <th><?php tp('Hours'); ?></th>
-                    <?php }
-                    if ($this->setting['display_annual_cost_to_mechanism']) { ?>
-                        <th><?php tp('Annual Cost'); ?></th>
-                    <?php } ?>
-                    <th><?php tp("Delete?"); ?></th>
-                </tr>
-                </thead>
-                <tfoot>
-                <tr>
-                    <td class="mechanismTableFooter"><?php tp('Mechanism'); ?> Totals:</td>
-                    <td class="mechanismTableFooter" id="mechanismTableFooterPercent">0</td>
-                    <?php if ($this->setting['display_hours_per_mechanism']) { ?>
-                        <td class="mechanismTableFooter">0</td>
-                    <?php }
-                    if ($this->setting['display_annual_cost_to_mechanism']) { ?>
-                        <td class="mechanismTableFooter">0</td>
-                    <?php } ?>
-                    <td class="mechanismTableFooter"></td>
-                </tr>
-                </tfoot>
-                <tbody id="employee_mechanism_table_body">
-                <?php
-                $percent_total = 0;
-                foreach ($this->employeeMechanisms as $mechanismID => $mechData) {
-                    $percent_total += $mech['percentage'];
-                    ?>
-                    <tr id="table_mechanism_row_<?php echo $mechanismID; ?>">
-                        <td><?php echo $mechData['mechanism_phrase']; ?></td>
-                        <td class="percent"><?php echo $mechData['percentage']; ?></td>
-                        <?php if ($this->setting['display_hours_per_mechanism']) { ?>
-                            <td><?php echo sprintf('%0.1f', $mechData['percentage'] / 100.0 * $this->employee['funded_hours_per_week']); ?></td>
-                        <?php }
-                        if ($this->setting['display_annual_cost_to_mechanism']) { ?>
-                            <td><?php echo sprintf('%0.2f', $mechData['percentage'] / 100.0 * $this->employee['annual_cost']); ?></td>
-                        <?php } ?>
-                        <td><input id="table_mechanism_delete_toggle_<?php echo $mechanismID;?>" type="checkbox" onclick="deleteToggle(this);"/></td>
-                    </tr>
-                <?php } ?>
-
-                </tbody>
-            </table>
-
-            <input type="hidden" id="disassociateMechanisms" name="disassociateMechanisms" <?php
-            if (isset($this->employee['disassociateMechanisms'])) {
-                echo 'value="' . $this->employee['disassociateMechanisms'] . '"';
-            }
-            ?>/>
-
-            <?php if (isset($this->employee['associateMechanisms']) && isset($this->employee['mechanismPercentages'])) {
-                echo '<input type = "hidden" id = "associateMechanisms" name = "associateMechanisms" value="' . $this->employee['associateMechanisms'] . '" />';
-                echo '<input type = "hidden" id = "mechanismPercentages" name = "mechanismPercentages" value="' . $this->employee['mechanismPercentages'] . '" />';
-            }
-            else {
-                echo '<input type = "hidden" id = "associateMechanisms" name = "associateMechanisms" />';
-                echo '<input type = "hidden" id = "mechanismPercentages" name = "mechanismPercentages" />';
-            }
-            ?>
-            <br/>
-            <div class="clear"></div>
-            <div>
-            <!-- TA:#413 required -->
-                <label class="label"><span class="required">*</span>Add Mechanism</label>
-                <select id="new_mechanism" name="new_mechanism"></select>
-                <span>
-                        <label class="label">Percentage</label>
-                        <input type="text" id="percentage" name="percentage" value=""/>
-                      </span>
-                <input type="button" name="associateMechanism" value="<?php tp("Add"); ?>" class="insert"
-                       id="mechanismInsertButton" onclick="addMechanism();"/>
-            </div>
-
-            <div class="clear"></div>
+           
             <input type="hidden" name="limit" id="limit" value="1"/>
 
             <input type="submit" class="submitNoArrow" name="saveonly" onclick="processMechanismAssociations();"

@@ -76,7 +76,7 @@ class Employee extends ITechTable {
 	    return $linkTable->fetchAll($select)->toArray();
 	}
 	
-//TA:#224 TA:#416, TA:#438
+//TA:#224 TA:#416, TA:#438, TA:#464
 	public static function getEmployeeSites($employee_id){
 	    $tableObj = new Employee();
 	    $db = $tableObj->dbfunc();
@@ -85,7 +85,7 @@ facility.type_option_id, facility_type_option.facility_type_phrase,
 employee_dsdmodel_option.id as dsd_model_id, employee_dsdmodel_option.employee_dsdmodel_phrase as sds_model_name, 
 employee_dsdteam_option.id as dsd_team_id,employee_dsdteam_option.employee_dsdteam_phrase as sds_team_name,
 link_employee_facility.hiv_fte_related, 
- facility.location_id, dsd_model_id, dsd_team_id 
+ facility.location_id, dsd_model_id, dsd_team_id, mechanism_option_id
  FROM link_employee_facility 
 LEFT JOIN facility ON link_employee_facility.facility_id = facility.id
 LEFT join  facility_type_option on facility_type_option.id=facility.type_option_id
@@ -122,12 +122,12 @@ WHERE (employee_id = $employee_id) order by link_employee_facility.id"; //#387
 	    return true;
 	}
 	
-//TA:#224, TA:#416
-	public static function saveSites ( $employee_id, $site_id, $dsd_model_id, $dsd_team_id, $hiv_related_fte){
+//TA:#224, TA:#416, TA:#464
+	public static function saveSites ( $employee_id, $site_id, $dsd_model_id, $dsd_team_id, $hiv_related_fte, $mech_option_id){
 	Employee::removeSites($employee_id);
 	$linkTable = new ITechTable ( array ('name' => 'link_employee_facility' ) );
 	    try {
-	    $row = $linkTable->createRow(array('employee_id' => $employee_id, 'facility_id' => $site_id, 'dsd_model_id' => $dsd_model_id, 'dsd_team_id' => $dsd_team_id, 'hiv_fte_related' => $hiv_related_fte));
+	    $row = $linkTable->createRow(array('employee_id' => $employee_id, 'facility_id' => $site_id, 'dsd_model_id' => $dsd_model_id, 'dsd_team_id' => $dsd_team_id, 'hiv_fte_related' => $hiv_related_fte, 'mechanism_option_id' => $mech_option_id));
 	        $row->save();
 	    } catch(Exception $e) {
 	    error_log($e);
