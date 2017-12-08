@@ -19,23 +19,24 @@
 		<div id="content">
 
 			<h1><?php tp("Data Downloads");?></h1>
-			<ul>
-				<li><a href="<?php echo $this->base_url;?>/data/persons" target="_blank"><?php tp('All People Data');?></a>&nbsp;&nbsp;&nbsp;
+
+		 <a href="<?php echo $this->base_url;?>/data/persons" target="_blank"><?php tp('All People Data');?></a>&nbsp;&nbsp;&nbsp;
 					<a href="<?php echo $this->base_url;?>/data/persons/outputType/csv"><?php tp('Export'); ?></a>
 					<a href="<?php echo $this->base_url;?>/data/persons/outputType/csv"><img src="//localhost/d/html/images/excel.jpg"></a>
-				</li>
-				<li><a href="<?php echo $this->base_url;?>/data/facilities" target="_blank"><?php tp('All Facilities Data');?></a>&nbsp;&nbsp;&nbsp;
+					<br><br>
+			  
+			<a href="<?php echo $this->base_url;?>/data/facilities" target="_blank"><?php tp('All Facilities Data');?></a>&nbsp;&nbsp;&nbsp;
 					<a href="<?php echo $this->base_url;?>/data/facilities/outputType/csv"><?php tp('Export'); ?></a>
 					<a href="<?php echo $this->base_url;?>/data/facilities/outputType/csv"><img src="//localhost/d/html/images/excel.jpg"></a>
-				</li>
-				<li><a href="<?php echo $this->base_url;?>/data/trainings" target="_blank"><?php tp('All Training Data');?></a>&nbsp;&nbsp;&nbsp;
+			<br><br>
+			<a href="<?php echo $this->base_url;?>/data/trainings" target="_blank"><?php tp('All Training Data');?></a>&nbsp;&nbsp;&nbsp;
 					<a href="<?php echo $this->base_url;?>/data/trainings/outputType/csv"><?php tp('Export'); ?></a>
 					<a href="<?php echo $this->base_url;?>/data/trainings/outputType/csv"><img src="//localhost/d/html/images/excel.jpg"></a>
-				</li>
-				<li>
+				<br><br>
+			
 					<a href="<?php echo $this->base_url;?>/training/search"><?php tp('Select Trainings'); ?></a>
-				</li>
-			</ul>
+			
+			
 
 		</div>
 		<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
