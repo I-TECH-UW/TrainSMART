@@ -413,7 +413,7 @@ function addPersonAttestation(oButton) {
  <div class="fieldIndentNoMargin"><?php tp('Trainer').' '.t('Information');?> <a href="javascript:toggleDiv('trainingInfo','placeholderTraining');"><?php tp('Show/Hide');?></a></div>
 
 <div id="trainingInfo" style="<?php echo (($this->person['active_trainer_option_id'] || $this->maketrainer) ? 'display:block;' : 'display:none;');?>"><br/>
-  <div class="fieldInput"> <input type="hidden" id="is_trainer" name="is_trainer" <?php if (@$this->person['trainer_is_active']) echo 'checked="checked" ';?>/><label for="is_trainer"><?php echo t('Is person an').' '.t('active').' '.t('trainer?');?></label></div>
+  <div class="fieldInput"> <input type="hidden" id="is_trainer" name="is_trainer" <?php if (@$this->person['trainer_is_active']) echo 'checked="checked" ';?>/></div>
   <?php
   print DropDown::render('active_trainer_option_id', t('Active trainer'), $this->active_trainer,'active_trainer_phrase','id', $this->person['active_trainer_option_id']  );
   ?>
