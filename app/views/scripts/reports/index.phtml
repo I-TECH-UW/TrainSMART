@@ -31,14 +31,14 @@
 				<p></p>
 				<?php require_once('peopleReportsPicker.phtml'); ?><br/><br/>
 				<div class="clear"></div>
-				<div class="fieldLabel" id="trainer_lbl"><?php echo t('Select').' '.t('trainer').' '.t('report');?></div>
+				<div class="fieldLabel" id="trainer_lbl"><?php echo t('Select trainer report');?></div>
 				<select id="trainer" name="trainer" onchange="gotoPage('trainer');">
 					<option value="">--<?php tp('choose');?>--</option>
-					<option value="/reports/trainers"><?php echo t('Trainers').' '.t('by').space.t('Skill, Language, and PEPFAR');?></option>
-					<option value="/reports/trainers-by-name"><?php echo t('Trainers').' '.t('by').space.t('Name');?></option>
+					<option value="/reports/trainers"><?php echo t('Trainers by Skill, Language, and PEPFAR');?></option>
+					<option value="/reports/trainers-by-name"><?php echo t('Trainers by Name');?></option>
 				</select><br/><br/>
 				<div class="clear"></div>
-				<div class="fieldLabel" id="training_lbl"><?php echo t('Select').' '.t('Training').' '.t('report');?></div>
+				<div class="fieldLabel" id="training_lbl"><?php echo t('Select Training report');?></div>
 				<select id="training" name="training" onchange="gotoPage('training');">
 					<option value="">--<?php tp('choose');?>--</option>
 					<option value="/reports/trainings"><?php echo t('Trainings').space.t('by').space.t('Name'); ?></option>
