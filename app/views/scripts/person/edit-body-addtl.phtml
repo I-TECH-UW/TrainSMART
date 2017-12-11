@@ -415,7 +415,7 @@ function addPersonAttestation(oButton) {
 <div id="trainingInfo" style="<?php echo (($this->person['active_trainer_option_id'] || $this->maketrainer) ? 'display:block;' : 'display:none;');?>"><br/>
   <div class="fieldInput"> <input type="hidden" id="is_trainer" name="is_trainer" <?php if (@$this->person['trainer_is_active']) echo 'checked="checked" ';?>/></div>
   <?php
-  print DropDown::renderTranslated('active_trainer_option_id', t('Active trainer'), $this->active_trainer,'active_trainer_phrase','id', $this->person['active_trainer_option_id']  );
+  print DropDown::renderTranslate('active_trainer_option_id', t('Active trainer'), $this->active_trainer,'active_trainer_phrase','id', $this->person['active_trainer_option_id']  );
   ?>
   <div class="fieldLabel" id="trainer_type_option_id_lbl"><span class="required">*</span><?php echo t('Trainer type');?></div>
   <div class="fieldInput">

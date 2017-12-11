@@ -1,4 +1,4 @@
-msgid ""
+﻿msgid ""
 msgstr ""
 "Project-Id-Version: Trainsmart\n"
 "Report-Msgid-Bugs-To: \n"
@@ -4176,3 +4176,9 @@ msgstr "Тренінги з відсутньою інформацією"
 
 msgid "Date Added"
 msgstr "Дата створення"
+
+msgid "Да"
+msgstr "Так"
+
+msgid "Нет"
+msgstr "Ні"
