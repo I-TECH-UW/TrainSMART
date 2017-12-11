@@ -13630,7 +13630,8 @@ onDataReturnSetRecords : function(oRequest, oResponse, oPayload) {
     }
     // Error
     else if(ok && oResponse.error) {
-        this.showTableMessage(DT.MSG_ERROR, DT.CLASS_ERROR);
+        //this.showTableMessage(DT.MSG_ERROR, DT.CLASS_ERROR);
+    	this.showTableMessage(DT.MSG_EMPTY, DT.CLASS_ERROR); //TA: When switch to Ukranian site it gives wrong message ??????
     }
 },
 
