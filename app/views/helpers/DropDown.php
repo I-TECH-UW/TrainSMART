@@ -320,6 +320,26 @@ class DropDown {
 		$html .= '</select></div>';
 	    return $html;
 	}
+	
+	public static function renderTranslated($select_name, $select_title, $vals, $name_key, $val_key, $selected = false, $onchange = false, $required = false, $enabled = true, $is_multiple = false, $multiple_size=10) {
+	
+	    $html = '<div class="fieldLabel"  id="' . $select_name . '_lbl">';
+	    if ($required)
+	        $html .= '<span class="required">*</span>';
+	    $html .= $select_title;
+	    $html .= '</div><div class="fieldInput"><select id="' . $select_name . '" name="' . $select_name . ($is_multiple ? '[]':'') . '" ' .
+	        ($onchange ? "onchange='$onchange'" : '') . ' ' . (!$enabled ? "disabled='disabled'" : '') .
+	        ($is_multiple ? " multiple=\"multiple\" size=\"$multiple_size\"" : '') . '>';
+	    if (!$is_multiple) {
+	        $html .= '<option value="">--' . (t('choose')) . '--</option>';
+	    }
+	    foreach ( $vals as $val ) {
+	        $html .= '<option value="' . $val [$val_key] . '" ' . ($selected == $val [$val_key] ? 'selected="selected"' : '') . '>' . t($val [$name_key]) . '</option>' . "\n";
+	    }
+	
+	    $html .= '</select></div>';
+	    return $html;
+	}
 
 	/**
 	 * @param $id
