@@ -38,7 +38,8 @@
 							<option value="">--<?php tp('All');?>--</option>
 							<?php
 							foreach ( $this->courses as $vals ) {
-								echo '<option value="'.$vals['id'].'" '.((@$this->criteria['training_title_option_id']) == $vals['id']? 'SELECTED':'').' >'.$this->truncate($vals['training_title_phrase']).'</option>';
+							    //TA: do not use $this->truncate($vals['training_title_phrase'])
+								echo '<option value="'.$vals['id'].'" '.((@$this->criteria['training_title_option_id']) == $vals['id']? 'SELECTED':'').' >'. $vals['training_title_phrase'].'</option>';
 							}
 							?>
 						</select></div>
