@@ -468,7 +468,7 @@ function addPersonAttestation(oButton) {
         <div class="checkBoxes">
     <?php
       foreach( $this->trainer_languages as $lang ) {
-        echo '<div class="float50"><input type="checkbox" name="trainer_language_id[]" id="trainer_language_'.$lang['id'].'"  value="'.$lang['id'].'" '.(@$lang['trainer_id']? 'CHECKED':'').' /><label for="trainer_language_'.$lang['id'].'">'.$lang['language_phrase'].'</label></div>';
+        echo '<div style="margin-left:230px;margin-bottom:1px;"><input type="checkbox" name="trainer_language_id[]" id="trainer_language_'.$lang['id'].'"  value="'.$lang['id'].'" '.(@$lang['trainer_id']? 'CHECKED':'').' /><label for="trainer_language_'.$lang['id'].'">'.$lang['language_phrase'].'</label></div><br>';
       }
     ?></div></div>
     
