@@ -73,8 +73,8 @@
 							var lastAuto = makeAutocomplete('last_name', 'lastContainer', '<?php echo $this->base_url;?>/person/last-list/outputType/text/' );
 						</script>
 						<div class="clear"></div>
-      <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_trainer" value="is_trainer" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_trainer') echo 'CHECKED'; ?> /><?php echo t('Trainers').' '.t('only');?></div>
-      <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_participant" value="is_participant" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_participant' ) echo 'CHECKED'; ?> /><?php echo t('Participants').' '.t('only');?></div>
+      <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_trainer" value="is_trainer" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_trainer') echo 'CHECKED'; ?> /><?php echo t('Trainers');?></div>
+      <div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_participant" value="is_participant" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_participant' ) echo 'CHECKED'; ?> /><?php echo t('Participants');?></div>
 						<div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_unattached_person" value="is_unattached_person" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_unattached_person' ) echo 'CHECKED'; ?> /><?php tp('Unattached only');?></div>
 						<div class="fieldLabel"></div><div class="fieldInput" style="font-size:11px; font-weight:bold; color: #696969;"><input type="radio" id="is_everyone" value="is_everyone" name="person_type" <?php if ( $this->criteria['person_type'] == 'is_everyone' ) echo 'CHECKED'; ?> /><?php tp('Everyone');?></div>
 <?php
