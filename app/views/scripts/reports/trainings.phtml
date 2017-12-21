@@ -665,9 +665,12 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 
 
 																<?php if  ( $this->results ) { ?>
+																 
 																	makeDataTable("trainings", null, trainingData, trainingColumnDefs);
 																<?php } ?>
 															</script>
+															
+															
 															<?php if ($cnt < count($this->results)) { ?>
 															<div  class="fieldIndentNoMargin">[<?php tp('Limited to 100 rows');?>]  <a href="<?php echo str_replace('limit=1','limit=0',$_SERVER['REQUEST_URI']);?>"><?php tp('Full Results');?></a></div>
 															<?php } ?>
@@ -688,8 +691,19 @@ $(document).ready( function	() {
             $('.trainingReportCreationDate').datepicker({dateFormat: 'mm/dd/yy'});
             <?php }?>
 	$('.calendarbtn').click(openNearestDatePicker);
+
+	//TA:UK
+// 	$("#btnExport").click(function(e) {
+// 		alert($('#trainings').children().first().html());
+// 	    window.open('data:application/vnd.ms-excel,' + $('#trainings').children().first().html());
+// 	    e.preventDefault();
+// 	});
+	////
 });
 </script>
+
+<!-- TA:UK 
+<input type="button" id="btnExport" value=" Export Table data into Excel " />-->
 
 														<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
 

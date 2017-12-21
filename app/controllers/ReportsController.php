@@ -1777,6 +1777,7 @@ echo $sql . "<br>";
 				$sql .= ' ORDER BY training_start_date DESC';
 			}
 			
+			//TA:UK print $sql;
 			$rowArray = $db->fetchAll ( $sql );
 			
 			//print_r($rowArray); output is encoded correctly from cyrillic
@@ -1801,6 +1802,7 @@ echo $sql . "<br>";
 
 		$criteria ['go'] = $this->getSanParam ( 'go' );
 
+		//TA:UK
 		$this->viewAssignEscaped ( 'results', $rowArray );
 
 		$this->view->assign ( 'count', $count );
