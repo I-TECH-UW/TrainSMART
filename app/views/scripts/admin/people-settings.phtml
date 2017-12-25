@@ -64,7 +64,8 @@ print ScriptContainer::$instance->renderJSHead();
  <tr><td class="fieldTitle"><?php echo t('Last Name'); ?></td>
   	<td></td>
   	<td><input type="text" name="label_people_last" value="<?php echo $this->label_people_last; ?>"></td>
-  	<td></td>
+  	<!-- TA:UK:1712:23 -->
+  	<td><input type="checkbox" name="check_last_name_first" <?php if($this->check_last_name_first) echo 'checked'; ?> id="check_last_name_first"><label for="check_last_name_first"><?php echo t('Display First'); ?></label></td>
   </tr>
    <tr><td class="fieldTitle"><?php echo t('Suffix'); ?></td>
    	<td><input type="checkbox" name="check_people_suffix" <?php if($this->check_people_suffix) echo 'checked'; ?> id="check_people_suffix"></td>

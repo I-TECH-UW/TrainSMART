@@ -56,6 +56,12 @@
 	  <div class="fieldInput"><input type="text" name="facility_fax" id="facility_fax" value="" size="40" maxlength="32"/></div>
 	  <?php }?>
 	  
+	  <!-- TA:UK:1712:25-->
+<?php if($this->setting['display_facility_email']){?>
+	<div class="fieldLabelThin" id="facility_email_lbl"><?php tp('Email');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_email" id="facility_email" value="" size="40" maxlength="32"/></div>
+	  <?php }?>
+	  
 	  <!-- TA:17: 09/04/2014 START-->
 <?php if($this->setting['display_facility_type']){?>
 	<div class="fieldLabelThin" id="facility_type_id_lbl"><?php tp('Facility'); echo ' '; tp('type');?></div>

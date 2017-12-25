@@ -343,7 +343,7 @@ function addPersonAttestation(oButton) {
 </script>
   <?php }?>
 
-  <?php if ( $this->setting['display_people_custom1'] ) { ?>
+  <?php if ( $this->setting['display_people_custom1']) { ?>
   <div id="custom1AutoComplete" >
       <div class="fieldLabel" id="custom1Input_lbl"><?php echo (@$this->translation['People Custom 1']); ?> </div><div class="fieldInput"><input id="custom1Input" name="custom1Input" type="text" size="40" maxlength="128" value="<?php echo @$this->person['custom1'];?>" /><div class="clear"></div><div id="custom1Container" class="autoComplete"></div></div>
   </div><br/>
@@ -358,7 +358,7 @@ function addPersonAttestation(oButton) {
   <div id="custom3AutoComplete" >
       <div class="fieldLabel" id="custom3Input_lbl"><?php echo (@$this->translation['People Custom 3']); ?> </div><div class="fieldInput"><input id="custom_3" name="custom_3" type="text" size="40" maxlength="128" value="<?php echo @$this->person['custom_3'];?>" /><div class="clear"></div><div id="custom3Container" class="autoComplete"></div></div>
   </div><br/>
-  <?php } ?>
+   <?php } ?>
 
   <?php if ( $this->setting['display_people_custom4'] ) { ?>
   <div id="custom4AutoComplete" >

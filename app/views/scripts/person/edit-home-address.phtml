@@ -17,7 +17,7 @@
 	<div class="fieldLabel" id="home_postal_code_lbl"><?php tp('Postal code');?></div>
 	  <div class="fieldInput"><input type="text" name="home_postal_code" id="home_postal_code" value="<?php echo $this->person['home_postal_code'];?>" size="40" maxlength="40"/></div>
 
-	<div class="fieldLabel" id="home_isresidential_lbl"><?php echo (@$this->translation['Residential Address?']); ?></div>
+	<div class="fieldLabel" id="home_isresidential_lbl"><?php echo t('Residential Address?'); ?></div>
 	<div id="home_isresidential">
 	    <div class="fieldInput">
             <input type="checkbox" name="home_is_residential" id="home_is_residential" value="1" <?php echo ( $this->person['home_is_residential'] == 1 ? 'CHECKED' :'');?>>
@@ -25,5 +25,5 @@
 	</div>
 
 	  
-	<label><?php echo t('Residential Address?'); ?></label>
+	
 	

@@ -804,7 +804,12 @@ class TrainingController extends ReportFilterHelpers {
 
 			$colStatic = array ('first_name', 'last_name', 'middle_name' );
 
-		} else {
+		}  else if($this->setting ( 'display_last_name_first' )) {//TA:UK:1712:23 shaw different names order for  PHC and UCFM
+		    
+		    $trainerFields = array ('last_name' => $this->tr ( 'Last Name' ), 'first_name' => $this->tr ( 'First Name' ), 'middle_name' => $this->tr ( 'Middle Name' ) );
+		    
+		    $colStatic = array ('last_name', 'first_name', 'middle_name' );
+		}else {
 
 			$trainerFields = array ('first_name' => $this->tr ( 'First Name' ), 'middle_name' => $this->tr ( 'Middle Name' ), 'last_name' => $this->tr ( 'Last Name' ) );
 
@@ -928,7 +933,9 @@ class TrainingController extends ReportFilterHelpers {
 			$personsFields = array ('first_name' => $this->tr ( 'First Name' ), 'last_name' => $this->tr ( 'Last Name' ), 'birthdate' => t ( 'Date of Birth' ), 'facility_name' => t ( 'Facility' ) );
 		} else if ($this->setting ( 'display_middle_name_last' )) {
 			$personsFields = array ('first_name' => $this->tr ( 'First Name' ), 'last_name' => $this->tr ( 'Last Name' ), 'middle_name' => "..." . $this->tr ( 'Middle Name' ), 'birthdate' => t ( 'Date of Birth' ), 'facility_name' => t ( 'Facility' ) );
-		} else {
+		}  else if($this->setting ( 'display_last_name_first' )) {//TA:UK:1712:23 shaw different names order for  PHC and UCFM  
+		    $personsFields = array ('last_name' => $this->tr ( 'Last Name' ), 'first_name' => $this->tr ( 'First Name' ), 'middle_name' => $this->tr ( 'Middle Name' ) );
+		}else {
 			$personsFields = array ('first_name' => $this->tr ( 'First Name' ), 'middle_name' => "..." . $this->tr ( 'Middle Name' ), 'last_name' => $this->tr ( 'Last Name' ), 'birthdate' => t ( 'Date of Birth' ), 'facility_name' => t ( 'Facility' ) );
 		}
 		if ( $this->setting ( 'module_attendance_enabled' )) {
@@ -2384,8 +2391,12 @@ class TrainingController extends ReportFilterHelpers {
 
 		/* Trainers */
 		$trainers = TrainingToTrainer::getTrainers ( $training_id )->toArray ();
+		if($this->setting ( 'display_last_name_first' )) {//TA:UK:1712:23 shaw different names order for  PHC and UCFM 
+		    $trainerFields = array ('last_name' => t ( 'Last name' ), 'first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ));
+		}else{
         //TA:#363
-		$trainerFields = array ('first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'last_name' => t ( 'Last name' ));
+		    $trainerFields = array ('first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'last_name' => t ( 'Last name' ));
+		}
 		$colStatic = array_keys ( $trainerFields ); // all
 		$editLinkInfo = array ('disabled' => 1 ); // no edit/remove links
 		$html = EditTableHelper::generateHtmlTraining ( 'Trainer', $trainers, $trainerFields, $colStatic, array (), $editLinkInfo );
@@ -2393,8 +2404,12 @@ class TrainingController extends ReportFilterHelpers {
 
 		/* Participants */
 		$persons = PersonToTraining::getParticipants ( $training_id )->toArray ();
+		if($this->setting ( 'display_last_name_first' )) {//TA:UK:1712:23 shaw different names order for  PHC and UCFM
+		    $personsFields = array ('last_name' => t ( 'Last name' ), 'first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ));
+		}else{
 		//TA:#363
-		$personsFields = array ('first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'last_name' => t ( 'Last name' ));
+		  $personsFields = array ('first_name' => t ( 'First name' ), 'middle_name' => t ( 'Middle name' ), 'last_name' => t ( 'Last name' ));
+		}
 		
 		
 		//TA:#317

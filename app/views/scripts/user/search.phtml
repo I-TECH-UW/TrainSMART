@@ -32,8 +32,13 @@ print ScriptContainer::$instance->renderJSHead();
 var userColumnDefs = [
     {key:"id", label: "<?php tp('ID');?>", sortable:false, resizeable:true,
 	                formatter: formatEditUrl},
+<?php if($this->setting['display_last_name_first']){ //TA:UK:1712:23 shaw different names order for  PHC and UCFM?>
+	{key:"last_name", label: "<?php tp('Last Name');?>", sortable:true, resizeable:true},
+	                <?php }?>
     {key:"first_name", label: "<?php tp('First Name');?>", sortable:true, resizeable:true},
+    <?php if(!$this->setting['display_last_name_first']){ //TA:UK:1712:23 shaw different names order for  PHC and UCFM?>
     {key:"last_name", label: "<?php tp('Last Name');?>", sortable:true, resizeable:true},
+    <?php }?>
     {key:"email", label: "<?php tp('Email');?>", sortable:true, resizeable:true},
     {key:"username", label: "<?php tp('Username');?>", sortable:true, resizeable:true},
     {key:"is_blocked", label: "<?php tp('Status');?>", sortable:true, resizeable:true,

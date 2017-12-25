@@ -63,6 +63,9 @@ print ScriptContainer::$instance->renderJSHead();
 	  <div class="fieldInput"><input type="text" name="facility_phone" id="facility_phone" value="<?php echo $this->facility['phone'];?>" size="40" maxlength="32"/></div>
 	<div class="fieldLabel" id="facility_fax_lbl"><?php tp('Fax');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_fax" id="facility_fax" value="<?php echo $this->facility['fax'];?>" size="40" maxlength="32"/></div>
+	<!-- TA:UK:1712:25 -->
+	<div class="fieldLabel" id="facility_email_lbl"><?php tp('Email');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_email" id="facility_email" value="<?php echo $this->facility['email'];?>" size="40" maxlength="32"/></div>	
 	<div class="fieldLabel" id="facility_type_id_lbl"><span class="required">*</span><?php tp('Facility'); echo ' '; tp('type');?></div>
 	  <div class="fieldInput"><select id="facility_type_id" name="facility_type_id">
 		<option value="">--<?php tp('choose');?>--</option>

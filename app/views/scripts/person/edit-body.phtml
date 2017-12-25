@@ -156,16 +156,20 @@
             sData = '&nbsp;&nbsp;&nbsp;';
         elCell.innerHTML = "<a href='<?php echo $this->base_url;?>/person/edit/id/" + oRecord.getData("person_id") + tredirect + "' >" + sData + "</a>";
     }
-
     //{key:"input", width:0, resizeable:true , label:"", hidden:"true", width:"0", className:"hidden"},
     var dupeColDefs =
         [////TA: we do not need this -> {key:"input", width:15, resizeable:true , label:""}, //TA:57 10/08/2015 
          {key:"person_id", label: "<?php tp('ID')?>", sortable:false, resizable:false, formatter: formatViewUrl},
+         <?php if($this->setting['display_last_name_first']){ //TA:UK:1712:23 shaw different names order for  PHC and UCFM?>
+        	 {key:"last_name", width:54, sortable:true, resizeable:true , label:"<?php echo (@$this->translation['Last Name']); ?>"},
+             <?php }?> 
             {key:"first_name", width:60, sortable:true, resizeable:true , label:"<?php tp("First Name"); ?>"},
             <?php if ( !$this->setting['display_middle_name_last'] ) { ?>
             {key:"middle_name", width:66, sortable:true, resizeable:true , label:"<?php echo (@$this->translation['Middle Name']); ?>"},
             <?php } ?>
+            <?php if(!$this->setting['display_last_name_first']){ //TA:UK:1712:23 shaw different names order for  PHC and UCFM?>
             {key:"last_name", width:54, sortable:true, resizeable:true , label:"<?php echo (@$this->translation['Last Name']); ?>"},
+            <?php }?> 
             {key:"birthdate", width:78, sortable:true, resizeable:true , label:"<?php tp("Date of Birth"); ?>"},
             {key:"gender", width:40, sortable:true, resizeable:true , label:"<?php tp("Gender"); ?>"},
             {key:"facility_name", width:120, sortable:true, resizeable:true , label:"<?php tp("Facility");?>"},
@@ -334,14 +338,20 @@
             <?php if ($this->setting['display_people_title']) {
                 echo DropDown::render('title_option_id', $this->translation['Title'], $this->titles, 'title_phrase', 'id', $this->person['title_option_id'] );
             } ?>
+            <?php if($this->setting['display_last_name_first']){ //TA:UK:1712:23 shaw different names order for  PHC and UCFM?>
+            <div class="fieldLabel" id="last_name_lbl"><span class="required">*</span><?php echo (@$this->translation['Last Name']); ?></div>
+            <div class="fieldInput"><input type="text" name="last_name" id="last_name" size="32" maxlength="32" value="<?php echo $this->person['last_name'];?>"/></div>
+            <?php }?>
             <div class="fieldLabel" id="first_name_lbl"><span class="required">*</span><?php echo (@$this->translation['First Name']); ?></div>
             <div class="fieldInput"><input type="text" name="first_name" id="first_name" size="32" maxlength="32" value="<?php echo $this->person['first_name'];?>"/></div>
             <?php if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) { ?>
                 <div class="fieldLabel" id="middle_name_lbl"><?php echo (@$this->translation['Middle Name']); ?></div>
                 <div class="fieldInput"><input type="text" name="middle_name" size="32" maxlength="32" value="<?php echo $this->person['middle_name'];?>"/></div>
             <?php }?>
+            <?php if(!$this->setting['display_last_name_first']){ //TA:UK:1712:23 shaw different names order for  PHC and UCFM?>
             <div class="fieldLabel" id="last_name_lbl"><span class="required">*</span><?php echo (@$this->translation['Last Name']); ?></div>
             <div class="fieldInput"><input type="text" name="last_name" id="last_name" size="32" maxlength="32" value="<?php echo $this->person['last_name'];?>"/></div>
+            <?php }?>
             <?php if ( $this->setting['display_middle_name'] && $this->setting['display_middle_name_last'] ) { ?>
                 <div class="fieldLabel" id="middle_name_lbl"><?php echo (@$this->translation['Middle Name']); ?></div>
                 <div class="fieldInput"><input type="text" name="middle_name" size="32" maxlength="32" value="<?php echo $this->person['middle_name'];?>"/></div>

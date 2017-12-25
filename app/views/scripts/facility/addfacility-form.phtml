@@ -9,11 +9,13 @@
 
 <!-- TA:17: 09/03/2014 START-->
 <?php if($this->setting['display_facility_address']){?>
-<div class="fieldLabelThin" id="facility_address1_lbl"><?php tp('Address 1');?></div>
+<div class="fieldLabelThin" id="facility_address1_lbl"><?php tp('Address');?></div>
 <div class="fieldInput">
 	<input type="text" name="facility_address1" id="facility_address1"
 		value="" size="40" maxlength="128" />
 </div>
+<?php } ?>
+<?php if($this->setting['display_facility_address2']){ //TA:UK:1712:26?>
 <div class="fieldLabelThin" id="facility_address2_lbl"><?php tp('Address 2');?></div>
 <div class="fieldInput">
 	<input type="text" name="facility_address2" id="facility_address2"
@@ -119,6 +121,16 @@
 </div>
 <?php } ?>
 <!-- TA:17: 09/03/2014 END -->
+
+<!-- TA:UK:1712:25 START -->
+<?php if ($this->setting['display_facility_email'] ) { ?>
+<div class="fieldLabelThin" id="facility_email_lbl"><?php tp('Email');?></div>
+<div class="fieldInput">
+	<input type="text" name="facility_email" id="facility_email" value=""
+		size="40" maxlength="32" />
+</div>
+<?php } ?>
+<!-- TA:UK:1712:25 END -->
 
 <?php if ($this->setting['display_facility_custom1'] ) { ?>
 <div class="fieldLabelThin" id="facility_custom1_lbl"><?php tp('Facility Custom 1');?></div>

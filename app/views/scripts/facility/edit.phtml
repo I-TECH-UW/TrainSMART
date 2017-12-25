@@ -41,6 +41,8 @@ print ScriptContainer::$instance->renderJSHead();
 	<?php if($this->setting['display_facility_address']) { ?>
 	<div class="fieldLabel" id="facility_address1_lbl"><?php tp('Address ');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_address1" id="facility_address1" value="<?php echo $this->facility['address_1'];?>" size="40" maxlength="128"/></div>
+	<?php }?>
+	<?php if($this->setting['display_facility_address2']) {////TA:UK:1712:26 ?>
 	<div class="fieldLabel" id="facility_address2_lbl"><?php tp('Address 2');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_address2" id="facility_address2" value="<?php echo $this->facility['address_2'];?>" size="40" maxlength="128"/></div>
 	<?php }?>
@@ -77,6 +79,12 @@ print ScriptContainer::$instance->renderJSHead();
 	<?php if($this->setting['display_facility_fax']) { ?>
 	<div class="fieldLabel" id="facility_fax_lbl"><?php tp('Fax');?></div>
 	  <div class="fieldInput"><input type="text" name="facility_fax" id="facility_fax" value="<?php echo $this->facility['fax'];?>" size="40" maxlength="32"/></div>
+	  <?php }?>
+	  
+	  <!-- TA:UK:1712:25 -->
+	<?php if($this->setting['display_facility_email']) { ?>
+	<div class="fieldLabel" id="facility_email_lbl"><?php tp('Email');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_email" id="facility_email" value="<?php echo $this->facility['email'];?>" size="40" maxlength="32"/></div>
 	  <?php }?>
 	  
 <?php if ( $this->setting['display_facility_custom1'] ) { ?>

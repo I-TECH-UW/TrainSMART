@@ -104,10 +104,16 @@ YAHOO.util.Event.onDOMReady(setMechanismAccessStatus);//TA:#415
 </script>
 
 <form action="" id="userForm" method="POST">
+<?php if($this->setting['display_last_name_first']){ //TA:UK:1712:23 shaw different names order for  PHC and UCFM?>
+<div class="fieldLabel" id="last_name_lbl"><span class="required">*</span><?php echo $this->translation['Last Name'];?></div>
+	<div class="fieldInput"><input type="text" name="last_name" size="32" maxlength="32" value="<?php echo $this->user['last_name'];?>"/></div>
+<?php }?>
 	<div class="fieldLabel" id="first_name_lbl"><span class="required">*</span><?php echo $this->translation['First Name'];?></div>
 	<div class="fieldInput"><input type="text" name="first_name" size="32" maxlength="32" value="<?php echo $this->user['first_name'];?>"/></div>
+	<?php if(!$this->setting['display_last_name_first']){ //TA:UK:1712:23 shaw different names order for  PHC and UCFM?>
 	<div class="fieldLabel" id="last_name_lbl"><span class="required">*</span><?php echo $this->translation['Last Name'];?></div>
 	<div class="fieldInput"><input type="text" name="last_name" size="32" maxlength="32" value="<?php echo $this->user['last_name'];?>"/></div>
+	<?php }?>
 	<div class="fieldLabel"  id="username_lbl"><span class="required">*</span><?php tp('Login');?></div>
 	<div class="fieldInput"><input type="text" name="username" size="32" maxlength="32" value="<?php echo $this->user['username'];?>"/></div>
 	<div class="fieldLabel"  id="password_lbl"><span class="required">*</span><?php tp('Password');?></div>

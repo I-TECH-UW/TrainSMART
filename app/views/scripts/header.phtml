@@ -91,7 +91,9 @@ if ( $this->isLoggedIn() ) {
 			$navMain['reports']['needs-by-person-name']                 = t('Assessment Reports');
 			$navMain['reports']['roster']                            = t('Roster Reports');
 			$navMain['reports']['evaluations']                       = t('Evaluations Reports');
+if($_SERVER ['SERVER_NAME'] !== 'phc.trainingdata.org'){ //TA:UK:1712:4 do not show this link to PHC
 			$navMain['reports']['data']                              = t('Data Downloads');
+}
 			//  '' =>
 
 			if ( !$this->setting['display_training_recommend'] ) {

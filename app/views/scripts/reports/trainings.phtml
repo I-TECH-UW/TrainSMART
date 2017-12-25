@@ -420,7 +420,12 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 													<?php if ( $this->criteria['go'] ) { ?>
 													<div class="hrGrey"></div>
 													 <!-- TA:80 print only trainings part -->
-													<div class="fieldIndentNoMargin"><?php tp('Trainings');?> <span class="total"><?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span><?php echo $this->printAndExport("trainings");?><span class="datadownload" style="float:right;"><?php if(count($this->results)) { ?><a href="<?php echo $this->base_url; ?>/data/trainings/outputType/csv/<?php echo implode_ids($this->results); ?>"><?php tp('Download Complete Excel Data for these trainings'); ?></a><?php } ?></span></div>
+													<div class="fieldIndentNoMargin">
+													<?php tp('Trainings');?> <span class="total"><?php echo $this->count;?> <?php if ( $this->mode == 'count' ) echo t('Participants'); else echo '';?></span><?php echo $this->printAndExport("trainings");?><span class="datadownload" style="float:right;"><?php if(count($this->results)) { ?>
+													<?php if($_SERVER ['SERVER_NAME'] !== 'phc.trainingdata.org'){ //TA:UK:1712:3 do not show this link to PHC?>
+													<a href="<?php echo $this->base_url; ?>/data/trainings/outputType/csv/<?php echo implode_ids($this->results); ?>"><?php tp('Download Complete Excel Data for these trainings'); ?></a>
+													<?php }?>
+													<?php } ?></span></div>
 														<?php if ($this->mode == 'search' ) { ?>
 														<a href="<?php echo $this->base_url;?>/training/add"><?php echo t('Add').' '.t('New').' '.t('Training');?></a><br/><br/>
 														<?php } ?>
@@ -682,8 +687,8 @@ $(document).ready( function	() {
             $locale = ITechTranslate::getLocale();
             if ( $locale !== null && $locale == 'uk_UK.UTF-8'){ ?>
             $('.trainingReportCreationDate').datepicker({
-        		monthNames: ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"], 
-        		dayNamesMin: ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+        		monthNames: ["Ð¡Ñ–Ñ‡ÐµÐ½ÑŒ", "Ð›ÑŽÑ‚Ð¸Ð¹", "Ð‘ÐµÑ€ÐµÐ·ÐµÐ½ÑŒ", "ÐšÐ²Ñ–Ñ‚ÐµÐ½ÑŒ", "Ð¢Ñ€Ð°Ð²ÐµÐ½ÑŒ", "Ð§ÐµÑ€Ð²ÐµÐ½ÑŒ", "Ð›Ð¸Ð¿ÐµÐ½ÑŒ", "Ð¡ÐµÑ€Ð¿ÐµÐ½ÑŒ", "Ð’ÐµÑ€ÐµÑ�ÐµÐ½ÑŒ", "Ð–Ð¾Ð²Ñ‚ÐµÐ½ÑŒ", "Ð›Ð¸Ñ�Ñ‚Ð¾Ð¿Ð°Ð´", "Ð“Ñ€ÑƒÐ´ÐµÐ½ÑŒ"], 
+        		dayNamesMin: ["Ð�Ð´", "ÐŸÐ½", "Ð’Ñ‚", "Ð¡Ñ€", "Ð§Ñ‚", "ÐŸÑ‚", "Ð¡Ð±"],
         		firstDay: 1,
         		dateFormat: 'mm/dd/yy'
         			});

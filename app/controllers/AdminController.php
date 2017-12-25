@@ -734,8 +734,10 @@ class AdminController extends UserController
 			'check_display_sponsor'  => 'display_facility_sponsor',
 			'check_facility_custom1'  => 'display_facility_custom1',
 			'check_facility_address' => 'display_facility_address', //TA:17: 9/03/2014
+		    'check_facility_address2' => 'display_facility_address2', //TA:UK:1712:26
 			'check_facility_phone' => 'display_facility_phone', //TA:17: 9/03/2014
 			'check_facility_fax' => 'display_facility_fax', //TA:17: 9/03/2014
+		    'check_facility_email' => 'display_facility_email', //TA:UK:1712:25
 			'check_facility_comments' => 'display_facility_comments', //TA:17: 9/03/2014
 			'check_facility_type' => 'display_facility_type', //TA:17: 9/03/2014
 			'check_facility_city' => 'display_facility_city', //TA:17: 9/04/2014
@@ -847,6 +849,7 @@ class AdminController extends UserController
 			'check_people_national'   => 'display_national_id',
 			'check_people_middle' => 'display_middle_name',
 			'check_middle_last'   => 'display_middle_name_last',
+		    'check_last_name_first'   => 'display_last_name_first', //TA:UK:1712:23
 			'check_people_gender'     => 'display_gender',
 			'check_people_custom1'    => 'display_people_custom1',
 			'check_people_custom2'    => 'display_people_custom2',

@@ -190,6 +190,7 @@ class PsfacilityController extends ReportFilterHelpers {
 				$facilityRow->postal_code = $this->getSanParam ( 'facility_postal_code' );
 				$facilityRow->phone = $this->getSanParam ( 'facility_phone' );
 				$facilityRow->fax = $this->getSanParam ( 'facility_fax' );
+				$facilityRow->email = $this->getSanParam ( 'facility_email' );//TA:UK:1712:25
 				$facilityRow->sponsor_option_id = $sponsor_id;
 				
 				//dupecheck

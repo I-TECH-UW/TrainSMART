@@ -389,12 +389,18 @@ foreach($this->results as $row) {
 		echo ',';
 	$isFirstRow = false;
 	echo '['.(isset($row['cnt'])?$row['cnt']:$row['id']);
+if($this->setting['display_last_name_first']){ //TA:UK:1712:23 shaw different names order for  PHC and UCFM
+    if ( isset($row['id']) and !$this->criteria['concatNames'])
+        echo ',"'.$row['last_name'].'"';
+}
 	if ( isset($row['id']) and !$this->criteria['concatNames'])
 		echo ',"'.$row['first_name'].'"';
 	if ( isset($row['id']) and !$this->criteria['concatNames'] && $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'])
 		echo ',"'.$row['middle_name'].'"';
+		if(!$this->setting['display_last_name_first']){ //TA:UK:1712:23 shaw different names order for  PHC and UCFM
 	if ( isset($row['id']) and !$this->criteria['concatNames'])
 		echo ',"'.$row['last_name'].'"';
+		}
 	if ( isset($row['id']) and !$this->criteria['concatNames'] && $this->setting['display_middle_name'] &&  $this->setting['display_middle_name_last'])
 		echo ',"'.$row['middle_name'].'"';
 	if ( isset($row['id']) and $this->criteria['concatNames'])
@@ -456,12 +462,17 @@ var trainingColumnDefs = [
 {key:"cnt", label: "<?php tp('Participant Count');?>", sortable:false, resizeable:true}
 <?php } else { ?>
 	{key:"id", label: "<?php tp('ID')?>", sortable:false, resizeable:true, formatter: formatViewUrl}
+	<?php if($this->setting['display_last_name_first']){ //TA:UK:1712:23 shaw different names order for  PHC and UCFM?>
+		,{key:"last_name", label: "<?php echo (@$this->translation['Last Name']); ?>", sortable:true, resizeable:true}
+		<?php }?>
 	<?php if ( !$this->criteria['concatNames'] ) { ?>
 		,{key:"first_name", label: "<?php echo (@$this->translation['First Name']); ?>", sortable:true, resizeable:true}
    <?php if ( $this->setting['display_middle_name'] && !$this->setting['display_middle_name_last'] ) { ?>
 		    ,{key:"middle_name", label: "<?php echo (@$this->translation['Middle Name']); ?>", sortable:true, resizeable:true}
 	<?php }?>
+	<?php if(!$this->setting['display_last_name_first']){ //TA:UK:1712:23 shaw different names order for  PHC and UCFM?>
 		,{key:"last_name", label: "<?php echo (@$this->translation['Last Name']); ?>", sortable:true, resizeable:true}
+		<?php }?>
    <?php if ( $this->setting['display_middle_name'] && $this->setting['display_middle_name_last'] ) { ?>
 		    ,{key:"middle_name", label: "<?php echo (@$this->translation['Middle Name']); ?>", sortable:true, resizeable:true}
 	<?php }?>

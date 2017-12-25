@@ -76,6 +76,12 @@ print ScriptContainer::$instance->renderJSHead();
 	  <div class="fieldInput"><input type="text" name="facility_fax"  readonly="readonly" id="facility_fax" value="<?php echo $this->facility['fax'];?>" size="40" maxlength="40"/></div>
 	  <?php }?>
 	  
+	  <!-- TA:UK:1712:25-->
+<?php if($this->setting['display_facility_email']){?>
+	<div class="fieldLabel" id="facility_email_lbl"><?php tp('Email');?></div>
+	  <div class="fieldInput"><input type="text" name="facility_email"  readonly="readonly" id="facility_email" value="<?php echo $this->facility['email'];?>" size="40" maxlength="40"/></div>
+	  <?php }?>
+	  
 	  <!-- TA:17: 09/04/2014 START-->
 <?php if($this->setting['display_facility_type']){?>
 	<div class="fieldLabel" id="facility_type_id_lbl"><?php tp('Facility type');?></div>
