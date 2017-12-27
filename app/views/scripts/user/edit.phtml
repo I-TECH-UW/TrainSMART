@@ -119,6 +119,17 @@
 						</div>
 					</div>
 					<!-- TA:#421 END -->
+					
+					<!-- TA:#451 START -->
+					<div class="fieldLabelThin"> <?php print(t('Anticipated Updates'));?></div>
+					<div class="fieldInput width100">
+						<div class="float50">
+							<input type="checkbox" name="anticipated_updates_access" id="anticipated_updates_access"
+								<?php if ( array_search('anticipated_updates_access', $this->user['acls']) !== false) echo 'CHECKED'; ?> /><label
+								for=anticipated_updates_access> <?php print(t('View Anticipated Updates'));?></label>
+						</div>
+					</div>
+					<!-- TA:#451 END -->
 						<?php endif; ?>
 						<br /> <br />
 					<div class="fieldLabelThin"> <?php tp('Restrict Access');?></div>

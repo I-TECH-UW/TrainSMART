@@ -67,7 +67,9 @@ print ScriptContainer::$instance->renderJSHead();
 				</div>
 
 			</div>
-			
+
+			<!-- TA:#451 -->
+			<?php if ($this->hasACL('anticipated_updates_access')) {?> 
 <!-------   TA:#412 START ////////////////////// -->
 			<div class="clear"></div>
 			<div class="hrGrey"></div>
@@ -104,6 +106,7 @@ print ScriptContainer::$instance->renderJSHead();
 			      </table>
 			      </div>
 			   </div>
+			   <?php }?>
 <!-- TA:#412 END -->
 
 <!-------   /////////////////////////// attached docs ////////////////////// -->
