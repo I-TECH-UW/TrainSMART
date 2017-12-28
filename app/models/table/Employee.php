@@ -14,6 +14,8 @@ class Employee extends ITechTable {
 	protected $_primary = 'id';
 
     /**
+     * @DEPRICARED
+     * 
      * deletes mechanism associations from an employee
      * @param $employee_id     - employee id
      * @param $association_ids - the ids to remove
@@ -39,6 +41,8 @@ class Employee extends ITechTable {
 	}
 
     /**
+     * @DEPRICARED
+     * 
      * associate mechanisms and percentages with an employee
      * @param int    $employee_id           - employee id
      * @param string $mechanism_ids         - comma-delimited string of ids to associate with the employee

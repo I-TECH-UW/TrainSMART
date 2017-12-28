@@ -63,15 +63,28 @@ class EmployeeController extends ReportFilterHelpers
         
         //TA:#412
         $db = $this->dbfunc(); 
+//         $select = "SELECT employee.id, partner.partner, employee.employee_code,
+//     SUBSTRING_INDEX(employee.agreement_end_date, ' ', 1) as agreement_end_date,
+//     SUBSTRING_INDEX(employee.transition_date, ' ', 1) as transition_date, 
+//     SUBSTRING_INDEX(employee.transition_complete_date, ' ', 1) as transition_complete_date,
+//     mechanism_option.end_date as mechanism_end_date
+// FROM employee
+// LEFT JOIN partner ON partner.id = employee.partner_id
+// LEFT JOIN link_mechanism_employee ON employee.id = link_mechanism_employee.employee_id
+// LEFT JOIN mechanism_option ON link_mechanism_employee.mechanism_option_id = mechanism_option.id
+// WHERE (is_active = 1) AND (partner.organizer_option_id in (select training_organizer_option_id from user_to_organizer_access where user_id = " . $this->isLoggedIn() . "))
+// AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_date < SUBSTRING_INDEX(now(), ' ', 1)
+//      OR mechanism_option.end_date < SUBSTRING_INDEX(now(), ' ', 1) OR  transition_complete_date > SUBSTRING_INDEX(now(), ' ', 1))";
+        //TA:#464
         $select = "SELECT employee.id, partner.partner, employee.employee_code,
     SUBSTRING_INDEX(employee.agreement_end_date, ' ', 1) as agreement_end_date,
-    SUBSTRING_INDEX(employee.transition_date, ' ', 1) as transition_date, 
+    SUBSTRING_INDEX(employee.transition_date, ' ', 1) as transition_date,
     SUBSTRING_INDEX(employee.transition_complete_date, ' ', 1) as transition_complete_date,
     mechanism_option.end_date as mechanism_end_date
 FROM employee
 LEFT JOIN partner ON partner.id = employee.partner_id
-LEFT JOIN link_mechanism_employee ON employee.id = link_mechanism_employee.employee_id
-LEFT JOIN mechanism_option ON link_mechanism_employee.mechanism_option_id = mechanism_option.id
+LEFT JOIN link_employee_facility ON employee.id = link_employee_facility.employee_id
+LEFT JOIN mechanism_option ON link_employee_facility.mechanism_option_id = mechanism_option.id
 WHERE (is_active = 1) AND (partner.organizer_option_id in (select training_organizer_option_id from user_to_organizer_access where user_id = " . $this->isLoggedIn() . "))
 AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_date < SUBSTRING_INDEX(now(), ' ', 1)
      OR mechanism_option.end_date < SUBSTRING_INDEX(now(), ' ', 1) OR  transition_complete_date > SUBSTRING_INDEX(now(), ' ', 1))";

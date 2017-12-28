@@ -1416,13 +1416,22 @@ class ReportFilterHelpers extends ITechController
     //TA:#419 join partner table for mechanisms only if where selection criteria is selected
        // if ((isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']) || (isset($criteria['mech_partners']) && $criteria['mech_partners'])) {
         if ((isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']) || (isset($criteria['mech_partners']) && $criteria['mech_partners'])) {
-            if (!array_key_exists('link_mechanism_employee', $joined)) {
-                //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
-                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
-                $joined['link_mechanism_employee'] = 1;
+            //TA:#464
+//             if (!array_key_exists('link_mechanism_employee', $joined)) {
+//                 //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
+//                 $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+//                 $joined['link_mechanism_employee'] = 1;
+//             }
+            if (!array_key_exists('link_employee_facility', $joined)) {
+                //using LEFT JOIN may cause of query execution delay,  using JOIN will display only employee records with mechanisms
+                $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                $joined['link_employee_facility'] = 1;
             }
+            ///
             if (!array_key_exists('mechanism_option', $joined)) {
-                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                //TA:#464
+//                 $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_employee_facility.mechanism_option_id', array());
                 $joined['mechanism_option'] = 1;
             }
             if (!array_key_exists('mech_partner', $joined)) {
@@ -1446,13 +1455,22 @@ class ReportFilterHelpers extends ITechController
         // AGENCY
         //TA:#419
         if ((isset($criteria['show_agencies']) && $criteria['show_agencies']) || (isset($criteria['agencies']) && $criteria['agencies'])) {
-            if (!array_key_exists('link_mechanism_employee', $joined)) {
-                //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
-                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
-                $joined['link_mechanism_employee'] = 1;
+            //TA:#464
+//             if (!array_key_exists('link_mechanism_employee', $joined)) {
+//                 //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
+//                 $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+//                 $joined['link_mechanism_employee'] = 1;
+//             }
+            if (!array_key_exists('link_employee_facility', $joined)) {
+                //using LEFT JOIN may cause of query execution delay,  using JOIN will display only employee records with mechanisms
+                $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                $joined['link_employee_facility'] = 1;
             }
+            ////
             if (!array_key_exists('mechanism_option', $joined)) {
-                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                //TA:#464
+//                 $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_employee_facility.mechanism_option_id', array());
                 $joined['mechanism_option'] = 1;
             }
             if (!array_key_exists('partner_funder_option', $joined)) {
@@ -1474,13 +1492,22 @@ class ReportFilterHelpers extends ITechController
         }
         
         if ((isset($criteria['show_mechanism_ids']) && $criteria['show_mechanism_ids']) || (isset($criteria['mechanism_ids']) && $criteria['mechanism_ids'])) {
-            if (!array_key_exists('link_mechanism_employee', $joined)) {
-                //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
-                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
-                $joined['link_mechanism_employee'] = 1;
+            //TA:#464
+//             if (!array_key_exists('link_mechanism_employee', $joined)) {
+//                 //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
+//                 $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+//                 $joined['link_mechanism_employee'] = 1;
+//             }
+            if (!array_key_exists('link_employee_facility', $joined)) {
+                //using LEFT JOIN may cause of query execution delay,  using JOIN will display only employee records with mechanisms
+                $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                $joined['link_employee_facility'] = 1;
             }
+            ////
             if (!array_key_exists('mechanism_option', $joined)) {
-                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                //TA:#464
+//                 $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_employee_facility.mechanism_option_id', array());
                 $joined['mechanism_option'] = 1;
             }
             if (isset($criteria['show_mechanism_ids']) && $criteria['show_mechanism_ids']){
@@ -1497,13 +1524,22 @@ class ReportFilterHelpers extends ITechController
             }
         }
         if ((isset($criteria['show_mechanism_names']) && $criteria['show_mechanism_names']) || (isset($criteria['mechanism_names']) && $criteria['mechanism_names'])) {
-            if (!array_key_exists('link_mechanism_employee', $joined)) {
-                //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
-                $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
-                $joined['link_mechanism_employee'] = 1;
+            //TA:#464
+//             if (!array_key_exists('link_mechanism_employee', $joined)) {
+//                 //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
+//                 $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+//                 $joined['link_mechanism_employee'] = 1;
+//             }
+            if (!array_key_exists('link_employee_facility', $joined)) {
+                //using LEFT JOIN may cause of query execution delay,  using JOIN will display only employee records with mechanisms
+                $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                $joined['link_employee_facility'] = 1;
             }
+            /////
             if (!array_key_exists('mechanism_option', $joined)) {
-                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                //TA:#464
+//                 $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                $select->joinLeft('mechanism_option', 'mechanism_option.id = link_employee_facility.mechanism_option_id', array());
                 $joined['mechanism_option'] = 1;
             }
             if (isset($criteria['show_mechanism_names']) && $criteria['show_mechanism_names']){
@@ -1520,34 +1556,45 @@ class ReportFilterHelpers extends ITechController
             }
         }
         
-        if ((isset($criteria['show_mech_percent_min']) && $criteria['show_mech_percent_min']) ||
-            (isset($criteria['mech_percent_min']) && $criteria['mech_percent_min']) ||
-            (isset($criteria['mech_percent_max']) && $criteria['mech_percent_max'])) {
-                if (!array_key_exists('link_mechanism_employee', $joined)) {
-                    //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
-                    $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
-                    $joined['link_mechanism_employee'] = 1;
-                }
-                if (isset($criteria['show_mech_percent_min']) && $criteria['show_mech_percent_min']){
-                    $select->columns('link_mechanism_employee.percentage');
-                }
-                if (isset($criteria['mech_percent_min']) && intval($criteria['mech_percent_min']) >= 0) {
-                    $select->where('link_mechanism_employee.percentage >= ?', intval($criteria['mech_percent_min']));
-                }
-                if (isset($criteria['mech_percent_max']) && $criteria['mech_percent_max']) {
-                    $select->where('link_mechanism_employee.percentage <= ?', intval($criteria['mech_percent_max']));
-                }
-            }
+        //TA:#464
+//         if ((isset($criteria['show_mech_percent_min']) && $criteria['show_mech_percent_min']) ||
+//             (isset($criteria['mech_percent_min']) && $criteria['mech_percent_min']) ||
+//             (isset($criteria['mech_percent_max']) && $criteria['mech_percent_max'])) {
+//                 if (!array_key_exists('link_mechanism_employee', $joined)) {
+//                     //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
+//                     $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+//                     $joined['link_mechanism_employee'] = 1;
+//                 }
+//                 if (isset($criteria['show_mech_percent_min']) && $criteria['show_mech_percent_min']){
+//                     $select->columns('link_mechanism_employee.percentage');
+//                 }
+//                 if (isset($criteria['mech_percent_min']) && intval($criteria['mech_percent_min']) >= 0) {
+//                     $select->where('link_mechanism_employee.percentage >= ?', intval($criteria['mech_percent_min']));
+//                 }
+//                 if (isset($criteria['mech_percent_max']) && $criteria['mech_percent_max']) {
+//                     $select->where('link_mechanism_employee.percentage <= ?', intval($criteria['mech_percent_max']));
+//                 }
+//             }
+            
             if ((isset($criteria['show_mech_fund_date_start']) || $criteria['show_mech_fund_date_start']) ||
                 (isset($criteria['mech_fund_date_start']) && $criteria['mech_fund_date_start']) ||
                 (isset($criteria['mech_fund_date_end']) && $criteria['mech_fund_date_end'])) {
-                    if (!array_key_exists('link_mechanism_employee', $joined)) {
-                        //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
-                        $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
-                        $joined['link_mechanism_employee'] = 1;
+                    //TA:#464
+//                     if (!array_key_exists('link_mechanism_employee', $joined)) {
+//                         //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
+//                         $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+//                         $joined['link_mechanism_employee'] = 1;
+//                     }
+                    if (!array_key_exists('link_employee_facility', $joined)) {
+                        //using LEFT JOIN may cause of query execution delay,  using JOIN will display only employee records with mechanisms
+                        $select->joinLeft('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
+                        $joined['link_employee_facility'] = 1;
                     }
+                  ////  
                     if (!array_key_exists('mechanism_option', $joined)) {
-                        $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                        //TA:#464
+//                         $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array());
+                        $select->joinLeft('mechanism_option', 'mechanism_option.id = link_employee_facility.mechanism_option_id', array());
                         $joined['mechanism_option'] = 1;
                     }
                     if(isset($criteria['show_mech_fund_date_start']) || $criteria['show_mech_fund_date_start']){
