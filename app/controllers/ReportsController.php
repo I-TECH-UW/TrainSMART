@@ -10024,13 +10024,23 @@ die (__LINE__ . " - " . $sql);
          
                 $tables = $select->getPart(Zend_Db_Select::FROM);
                 $cols = $select->getPart(Zend_Db_Select::COLUMNS);
-                if (!array_key_exists('link_mechanism_employee', $tables)) {
+                //TA:#464
+//                 if (!array_key_exists('link_mechanism_employee', $tables)) {
+//                     //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
+//                     $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+//                 }
+//                 if (!array_key_exists('mechanism_option', $tables)) {
+//                     $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array()); 
+//                 }
+                if (!array_key_exists('link_employee_facility', $tables)) {
                     //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
-                    $select->join('link_mechanism_employee', 'link_mechanism_employee.employee_id = employee.id', array());
+                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
                 }
                 if (!array_key_exists('mechanism_option', $tables)) {
-                    $select->joinLeft('mechanism_option', 'mechanism_option.id = link_mechanism_employee.mechanism_option_id', array()); 
+                    $select->joinLeft('mechanism_option', 'mechanism_option.id = link_employee_facility.mechanism_option_id', array());
                 }
+                /////
+                
                 //TA:#415 make visible results by user mechanism accessebility
                 if (!$this->hasACL('mechanism_option_all')) {
                     $select->joinLeft(array('user_to_mechanism_access'),
@@ -10601,11 +10611,17 @@ INNER JOIN mechanism_option ON link_mechanism_partner.mechanism_option_id = mech
 WHERE link_mechanism_partner.mechanism_option_id = {$criteria['mechanism_id']}";
 				$rowArray = $db->fetchAll($sql);
 				foreach($rowArray as &$row) {
-					$sql = "SELECT COUNT(*) as numberEmployees
-							FROM employee
-							INNER JOIN link_mechanism_employee ON link_mechanism_employee.employee_id = employee.id
-							WHERE employee.partner_id = {$row['partner_id']} AND
-							link_mechanism_employee.mechanism_option_id = {$criteria['mechanism_id']}";
+				    //TA:#464
+// 					$sql = "SELECT COUNT(*) as numberEmployees
+// 							FROM employee
+// 							INNER JOIN link_mechanism_employee ON link_mechanism_employee.employee_id = employee.id
+// 							WHERE employee.partner_id = {$row['partner_id']} AND
+// 							link_mechanism_employee.mechanism_option_id = {$criteria['mechanism_id']}";
+				    $sql = "SELECT COUNT(*) as numberEmployees
+				    FROM employee
+				    INNER JOIN link_employee_facility ON link_employee_facility.employee_id = employee.id
+				    WHERE employee.partner_id = {$row['partner_id']} AND
+				    link_employee_facility.mechanism_option_id = {$criteria['mechanism_id']}";
 					$row['numberEmployees'] = $db->fetchOne($sql);
 				}
 				$this->viewAssignEscaped('results', $rowArray);

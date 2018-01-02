@@ -29,6 +29,7 @@
      	 if(!isset($this->criteria['go'])){
      	     echo "(document.getElementsByName('is_active')[0]).value = '1';";
      	     echo "(document.getElementsByName('show_is_active')[0]).checked = true;";
+     	     echo "(document.getElementsByName('show_employee_code')[0]).checked = true;";
      	     echo "(document.getElementsByName('show_primary_role')[0]).checked = true;";
      	     echo "(document.getElementsByName('show_classification')[0]).checked = true;";
      	     echo "(document.getElementsByName('show_partner')[0]).checked = true;";
@@ -225,9 +226,10 @@
                             $this->formSelect('mechanism_names', isset($this->criteria['mechanism_names']) ? $this->criteria['mechanism_names'] : null, array('multiple' => true), $this->mechanism_names), 'mechanism_names');
                         echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
                         
-                        echo labelTwoFields($this, t('FTE percentage'), t('to'), 'mech_percent_min', 'mech_percent_max',
-                            isset($this->criteria['mech_percent_min']) ? $this->criteria['mech_percent_min'] : '',
-                            isset($this->criteria['mech_percent_max']) ? $this->criteria['mech_percent_max'] : '');
+                        //TA:#464
+//                         echo labelTwoFields($this, t('FTE percentage'), t('to'), 'mech_percent_min', 'mech_percent_max',
+//                             isset($this->criteria['mech_percent_min']) ? $this->criteria['mech_percent_min'] : '',
+//                             isset($this->criteria['mech_percent_max']) ? $this->criteria['mech_percent_max'] : '');
                        
                         echo labelTwoFields($this, t('Implementing Mechanism Funding End Date'), t('to'), 'mech_fund_date_start', 'mech_fund_date_end',
                             isset($this->criteria['mech_fund_date_start']) ? $this->criteria['mech_fund_date_start'] : '',

@@ -63,15 +63,28 @@ class EmployeeController extends ReportFilterHelpers
         
         //TA:#412
         $db = $this->dbfunc(); 
+//         $select = "SELECT employee.id, partner.partner, employee.employee_code,
+//     SUBSTRING_INDEX(employee.agreement_end_date, ' ', 1) as agreement_end_date,
+//     SUBSTRING_INDEX(employee.transition_date, ' ', 1) as transition_date, 
+//     SUBSTRING_INDEX(employee.transition_complete_date, ' ', 1) as transition_complete_date,
+//     mechanism_option.end_date as mechanism_end_date
+// FROM employee
+// LEFT JOIN partner ON partner.id = employee.partner_id
+// LEFT JOIN link_mechanism_employee ON employee.id = link_mechanism_employee.employee_id
+// LEFT JOIN mechanism_option ON link_mechanism_employee.mechanism_option_id = mechanism_option.id
+// WHERE (is_active = 1) AND (partner.organizer_option_id in (select training_organizer_option_id from user_to_organizer_access where user_id = " . $this->isLoggedIn() . "))
+// AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_date < SUBSTRING_INDEX(now(), ' ', 1)
+//      OR mechanism_option.end_date < SUBSTRING_INDEX(now(), ' ', 1) OR  transition_complete_date > SUBSTRING_INDEX(now(), ' ', 1))";
+        //TA:#464
         $select = "SELECT employee.id, partner.partner, employee.employee_code,
     SUBSTRING_INDEX(employee.agreement_end_date, ' ', 1) as agreement_end_date,
-    SUBSTRING_INDEX(employee.transition_date, ' ', 1) as transition_date, 
+    SUBSTRING_INDEX(employee.transition_date, ' ', 1) as transition_date,
     SUBSTRING_INDEX(employee.transition_complete_date, ' ', 1) as transition_complete_date,
     mechanism_option.end_date as mechanism_end_date
 FROM employee
 LEFT JOIN partner ON partner.id = employee.partner_id
-LEFT JOIN link_mechanism_employee ON employee.id = link_mechanism_employee.employee_id
-LEFT JOIN mechanism_option ON link_mechanism_employee.mechanism_option_id = mechanism_option.id
+LEFT JOIN link_employee_facility ON employee.id = link_employee_facility.employee_id
+LEFT JOIN mechanism_option ON link_employee_facility.mechanism_option_id = mechanism_option.id
 WHERE (is_active = 1) AND (partner.organizer_option_id in (select training_organizer_option_id from user_to_organizer_access where user_id = " . $this->isLoggedIn() . "))
 AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_date < SUBSTRING_INDEX(now(), ' ', 1)
      OR mechanism_option.end_date < SUBSTRING_INDEX(now(), ' ', 1) OR  transition_complete_date > SUBSTRING_INDEX(now(), ' ', 1))";
@@ -289,21 +302,6 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                 ->order('base_phrase ASC')
         );
 
-        $employeeMechanisms = array();
-        if (!$id && $this->view->mode != 'add') {
-            $this->doNoAccessError();
-        } else if ($this->view->mode !== 'add') {
-            // get current employee mechanisms
-            $select = $db->select()
-                ->from('link_mechanism_employee', array('mechanism_option_id', 'percentage'))
-                ->joinLeft('mechanism_option', 'link_mechanism_employee.mechanism_option_id = mechanism_option.id',
-                    array('mechanism_phrase'))
-                ->where('employee_id = ?', $id)
-                ->order('percentage DESC');
-
-            $employeeMechanisms = $db->fetchAssoc($select);
-        }
-
         $status = ValidationContainer::instance();
 
         if ($this->getRequest()->isPost()) {
@@ -458,17 +456,6 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                         //TA:#171 add more details to error message and redirect to employee edit page for edit or stay on the same page
                         $status->setStatusMessage(t('That position could not be saved. Employee code for this partner exists.'));
                     } else {
-                        if (isset($params['disassociateMechanisms']) && $params['disassociateMechanisms']) {
-                            if (!Employee::disassociateMechanismsFromEmployee($id, $params['disassociateMechanisms'])) {
-                                $status->setStatusMessage(t('Error removing mechanism association.'));
-                            }
-                        }
-
-                        if (isset($params['associateMechanisms']) && $params['associateMechanisms']) {
-                            if (!Employee::saveMechanismAssociations($id, $params['associateMechanisms'], $params['mechanismPercentages'])) {
-                                $status->setStatusMessage(t('Error saving mechanism association.'));
-                            }
-                        }
                         
                         //TA:#438
                         if(!Employee::removeAllSites($id)){
@@ -478,7 +465,7 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                             $sites_to_add = explode(";",$params['multi_sites_table_data']);
                             foreach($sites_to_add as $i => $loc) {
                                 $site_to_add = explode(",",$loc);
-                                if(!Employee::saveSites($id, $site_to_add[0], $site_to_add[1],$site_to_add[2],$site_to_add[3])){//TA:#416
+                                if(!Employee::saveSites($id, $site_to_add[0], $site_to_add[1],$site_to_add[2],$site_to_add[3], $site_to_add[4])){//TA:#416, TA:#464
                                     $status->setStatusMessage(t('Error saving employee sites.'));
                                 }
                             }
@@ -493,8 +480,10 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
         } // if isPost()
 
         // this data is used both for populating mechanisms and checking for subpartner permissions to edit employees
-        $mechanismData = $this->getAvailableMechanisms();
-        $mechanismData['assigned_mechanisms'] = $employeeMechanisms;
+        //TA:#464 may be we will need to check subpartner permissions to edit employees 
+        // $mechanismData = $this->getAvailableMechanisms();
+         //$this->view->assign('mechanismData', $mechanismData);
+//         $mechanismData['assigned_mechanisms'] = $employeeMechanisms;
 
 
         if ($id){
@@ -523,6 +512,7 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                         $result_site['sds_team_name'] = $sites_info[$i]['sds_team_name'];//TA:#416
                         $result_site['dsd_model_id'] = $sites_info[$i]['dsd_model_id'];//TA:#438
                         $result_site['dsd_team_id'] = $sites_info[$i]['dsd_team_id'];//TA:#438
+                        $result_site['mechanism_option_id'] = $sites_info[$i]['mechanism_option_id'];//TA:#464
                         array_push($result_sites,$result_site);
                     }
                     $params['sites'] = $result_sites;
@@ -551,6 +541,7 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
         $this->viewAssignEscaped('locations', Location::getAll());
         $titlesArray = OptionList::suggestionList('person_title_option', 'title_phrase', false, 9999);
         $this->view->assign('titles', DropDown::render('title_option_id', $this->translation['Title'], $titlesArray, 'title_phrase', 'id', $params['title_option_id']));
+        $this->view->assign('partner_id',$params['partner_id']); //TA:#464
         $this->view->assign('partners', DropDown::generateHtml('partner', 'partner', $params['partner_id'], false, !$this->hasACL("edit_employee"), array_keys($this->getAvailablePartnersAssoc()), false, array("onchange" => "availableMechanisms();")));
         $this->view->assign('bases', $bases);
         $this->view->assign('cadres', DropDown::generateHtml('employee_qualification_option', 'qualification_phrase', $params['employee_qualification_option_id'], false, !$this->hasACL("edit_employee")));
@@ -574,8 +565,16 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
         $this->view->assign('nationality', DropDown::generateHtml('lookup_nationalities', 'nationality', $params['lookup_nationalities_id'], false, !$this->hasACL("edit_employee"), false));
         $this->view->assign('race', DropDown::generateHtml('person_race_option', 'race_phrase', $params['race_option_id'], false, !$this->hasACL("edit_employee"), false));
 
-        $this->view->assign('mechanismData', $mechanismData);
-        $this->view->assign('employeeMechanisms', $employeeMechanisms);
+        //TA:#464
+        $mechanisms = array();
+        if (!$id && $this->view->mode != 'add') {
+            $this->doNoAccessError();
+        } else if ($this->view->mode !== 'add') {
+            $select = "select id as mechanism_option_id, mechanism_phrase, owner_id, end_date, CASE WHEN end_date >= (MAKEDATE(YEAR(NOW()),1) + INTERVAL QUARTER(NOW())-2 QUARTER) THEN '1' ELSE '0' END as available from mechanism_option order by mechanism_phrase";
+            $mechanisms = $db->fetchAll($select);
+        }
+        $this->view->assign('mechanisms', $mechanisms);
+        //
        
         //TA:#256
         $dc = strtotime($params['timestamp_created']);
