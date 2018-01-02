@@ -1094,9 +1094,10 @@
                         if ($this->setting['display_employee_benefits']) {
                             echo labelAndField($this, t('Benefits'), 'currency', 'benefits', $this->employee['benefits']);
                         }
-                        if ($this->setting['display_employee_additional_expenses']) {
-                            echo labelAndField($this, t('Additional Expenses'), 'currency', 'additional_expenses', $this->employee['additional_expenses']);
-                        }
+                        //TA:#470
+//                         if ($this->setting['display_employee_additional_expenses']) {
+//                             echo labelAndField($this, t('Additional Expenses'), 'currency', 'additional_expenses', $this->employee['additional_expenses']);
+//                         }
                         if ($this->setting['display_employee_stipend']) {
                             echo labelAndField($this, t('Stipend'), 'currency', 'stipend', $this->employee['stipend']);
                         }

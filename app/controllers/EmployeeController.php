@@ -421,10 +421,11 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                     $status->checkRequired($this, 'benefits', t('Benefits'));
                     $costaccum += $params['benefits'];
                 }
-                if ($this->setting('display_employee_additional_expenses')) {
-                    $status->checkRequired($this, 'additional_expenses', t('Additional Expenses'));
-                    $costaccum += $params['additional_expenses'];
-                }
+                //TA:#470
+//                 if ($this->setting('display_employee_additional_expenses')) {
+//                     $status->checkRequired($this, 'additional_expenses', t('Additional Expenses'));
+//                     $costaccum += $params['additional_expenses'];
+//                 }
                 if ($this->setting('display_employee_stipend')) {
                     $status->checkRequired($this, 'stipend', t('Stipend'));
                     $costaccum += $params['stipend'];

@@ -198,9 +198,10 @@
                             isset($this->criteria['benefits_min']) ? $this->criteria['benefits_min'] : '',
                             isset($this->criteria['benefits_max']) ? $this->criteria['benefits_max'] : '');
                         
-                        echo labelTwoFields($this, t('Additional Expenses'), t('to'), 'expenses_min', 'expenses_max',
-                            isset($this->criteria['expenses_min']) ? $this->criteria['expenses_min'] : '',
-                            isset($this->criteria['expenses_max']) ? $this->criteria['expenses_max'] : '');
+                        //TA:#470
+//                         echo labelTwoFields($this, t('Additional Expenses'), t('to'), 'expenses_min', 'expenses_max',
+//                             isset($this->criteria['expenses_min']) ? $this->criteria['expenses_min'] : '',
+//                             isset($this->criteria['expenses_max']) ? $this->criteria['expenses_max'] : '');
                         
                         echo labelTwoFields($this, t('Stipend'), t('to'), 'stipend_min', 'stipend_max',
                             isset($this->criteria['stipend_min']) ? $this->criteria['stipend_min'] : '',
