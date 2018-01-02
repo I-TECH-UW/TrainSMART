@@ -173,7 +173,7 @@
             	dsd_team_id = dsd_team_id.split("_")[1];
            	    dsd_team = $('#dsd_team option:selected' ).text();
             }
-            if(dsd_model == 'Facility site - Roving') {
+            if(dsd_model == 'Facility site - Roving' || dsd_model == 'Ward Based Outreach Team - WBOT') {
             	if(dsd_team_id == ""){
             		alert("Specify value for '<?php tp('Service Delivery Team');?>'.");
             		return false;
@@ -304,7 +304,7 @@
                      "var eldsdteam_field" + SITE_ROWS_COUNT + " = YAHOO.util.Dom.get('dsd_team" + SITE_ROWS_COUNT + "'); " +
                      "eldsdmodel_field" + SITE_ROWS_COUNT + ".onchange = function () {" +
                               "var selected = $(this).find('option:selected').text(); " +
-                                                 "if (selected == 'Facility site - Roving') {" +
+                                                 "if (selected == 'Facility site - Roving' || selected == 'Ward Based Outreach Team - WBOT') {" +
                                                  	"eldsdteam_field" + SITE_ROWS_COUNT + ".disabled = false; " +
                                                "  }else{" + 
                                                  "	eldsdteam_field" + SITE_ROWS_COUNT + ".disabled = true; "+
@@ -840,7 +840,7 @@
                                             	//setDefaultSitesFields(); 
                                             }else{
                                             	var selected = $(this).find('option:selected').text();
-                                                if (selected == 'Facility site - Roving') {
+                                                if (selected == 'Facility site - Roving' || selected == 'Ward Based Outreach Team - WBOT') {
                                                 	eldsdteam_field<?php echo $rows;?>.disabled = false;
                                                 }else{
                                                 	eldsdteam_field<?php echo $rows;?>.disabled = true;
@@ -955,7 +955,7 @@
                         	setDefaultSitesFields(); 
                         }else{
                         	var selected = $(this).find('option:selected').text();
-                            if (selected == 'Facility site - Roving') {
+                            if (selected == 'Facility site - Roving' || selected == 'Ward Based Outreach Team - WBOT') {
                             	eldsdteam_field.disabled = false;
                             }else{
                             	eldsdteam_field.disabled = true;
