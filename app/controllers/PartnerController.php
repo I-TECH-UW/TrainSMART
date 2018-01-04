@@ -245,7 +245,7 @@ class PartnerController extends ReportFilterHelpers
                 $params = array_merge($params, $region_ids);
 
                 $currentQuarterStartDate = $this->calculateCurrentQuarter();
-
+  
                 $joinClause = $db->quoteInto('link_mechanism_partner.partner_id = subpartner.id AND link_mechanism_partner.partner_id != ?', $id);
                 $select = $db->select()
                     ->from('mechanism_option', array())
@@ -255,7 +255,7 @@ class PartnerController extends ReportFilterHelpers
                     ->joinLeft('partner', 'mechanism_option.owner_id = partner.id', array())
                     ->where('mechanism_option.owner_id = ?', $id)
                    //TA:#454 ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'))
-                ->where('mechanism_option.end_date >= ?', '(MAKEDATE(YEAR(NOW()),1) + INTERVAL QUARTER(NOW())-2 QUARTER)')
+                ->where('mechanism_option.end_date >= (MAKEDATE(YEAR(NOW()),1) + INTERVAL QUARTER(NOW())-2 QUARTER)')
                     ->group('mechanism_option.id');
 
                 if (!$this->hasACL('training_organizer_option_all')) {
@@ -286,11 +286,13 @@ class PartnerController extends ReportFilterHelpers
                     ->joinLeft('partner', 'partner.id = mechanism_option.owner_id')
                     ->where('mechanism_option.owner_id != ?', $id)
                     ->where('link_mechanism_partner.partner_id = ?', $id)
-                    ->where('link_mechanism_partner.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
+                    //TA:#454 ->where('link_mechanism_partner.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'));
+                ->where('link_mechanism_partner.end_date >= (MAKEDATE(YEAR(NOW()),1) + INTERVAL QUARTER(NOW())-2 QUARTER)');
 
                 $select->columns(array('mechanism_option.mechanism_phrase', 'partner.partner', 'link_mechanism_partner.end_date'));
 
                 $secondaryMechanisms = $db->fetchAll($select);
+                
                 $this->view->assign('secondaryMechanisms', $secondaryMechanisms);
             }
         }
