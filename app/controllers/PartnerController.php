@@ -254,7 +254,8 @@ class PartnerController extends ReportFilterHelpers
                     ->joinLeft(array('subpartner' => 'partner'), $joinClause, array())
                     ->joinLeft('partner', 'mechanism_option.owner_id = partner.id', array())
                     ->where('mechanism_option.owner_id = ?', $id)
-                    ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'))
+                   //TA:#454 ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'))
+                ->where('mechanism_option.end_date >= ?', '(MAKEDATE(YEAR(NOW()),1) + INTERVAL QUARTER(NOW())-2 QUARTER)')
                     ->group('mechanism_option.id');
 
                 if (!$this->hasACL('training_organizer_option_all')) {
@@ -270,6 +271,7 @@ class PartnerController extends ReportFilterHelpers
                 $select->columns(array('subpartners' => "GROUP_CONCAT(DISTINCT subpartner.partner ORDER BY subpartner.partner ASC SEPARATOR ',,,')"));
 
                 $primeMechanisms = $db->fetchAssoc($select);
+               
                 foreach ($primeMechanisms as $partner_id => &$row) {
                     if (strlen($row['subpartners'])) {
                         $row['subpartners'] = explode(',,,', $row['subpartners']);
