@@ -570,7 +570,8 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
         $mechanisms = array();
         if (!$id && $this->view->mode != 'add') {
             $this->doNoAccessError();
-        } else if ($this->view->mode !== 'add') {
+        } else {
+           // else if ($this->view->mode !== 'add') { //TA:#454  TA:#464 show mechanisms for add page also
             $select = "select id as mechanism_option_id, mechanism_phrase, owner_id, end_date, CASE WHEN end_date >= (MAKEDATE(YEAR(NOW()),1) + INTERVAL QUARTER(NOW())-2 QUARTER) THEN '1' ELSE '0' END as available from mechanism_option order by mechanism_phrase";
             $mechanisms = $db->fetchAll($select);
         }
