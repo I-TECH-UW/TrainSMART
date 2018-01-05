@@ -242,9 +242,11 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
             ->joinLeft(array('mechanism_partners' => 'link_mechanism_partner'),
                 'mechanism_partners.mechanism_option_id = mechanism_option.id', array())
             ->where('is_deleted = 0')
-            ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'))
+           //TA:#454 ->where('mechanism_option.end_date >= ?', $currentQuarterStartDate->format('Y-m-d'))
+            ->where('mechanism_option.end_date >= (MAKEDATE(YEAR(NOW()),1) + INTERVAL QUARTER(NOW())-2 QUARTER)')
             ->group('mechanism_option.id')
             ->order('mechanism_phrase ASC');
+            
 
         // this allows us to set the order of columns in the returned results. Having the id be the first result is
         // important for $db->fetchAssoc(), since it uses the first column as array keys
@@ -482,7 +484,7 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
 
         // this data is used both for populating mechanisms and checking for subpartner permissions to edit employees
         //TA:#464 may be we will need to check subpartner permissions to edit employees 
-        // $mechanismData = $this->getAvailableMechanisms();
+        //$mechanismData = $this->getAvailableMechanisms();
          //$this->view->assign('mechanismData', $mechanismData);
 //         $mechanismData['assigned_mechanisms'] = $employeeMechanisms;
 
@@ -571,8 +573,15 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
         if (!$id && $this->view->mode != 'add') {
             $this->doNoAccessError();
         } else {
-           // else if ($this->view->mode !== 'add') { //TA:#454  TA:#464 show mechanisms for add page also
-            $select = "select id as mechanism_option_id, mechanism_phrase, owner_id, end_date, CASE WHEN end_date >= (MAKEDATE(YEAR(NOW()),1) + INTERVAL QUARTER(NOW())-2 QUARTER) THEN '1' ELSE '0' END as available from mechanism_option order by mechanism_phrase";
+           // else if ($this->view->mode !== 'add') { //TA:#454 show mechanisms for add page also
+           //show only prime partners 
+           //$select = "select id as mechanism_option_id, mechanism_phrase, owner_id, end_date, CASE WHEN end_date >= (MAKEDATE(YEAR(NOW()),1) + INTERVAL QUARTER(NOW())-2 QUARTER) THEN '1' ELSE '0' END as available from mechanism_option order by mechanism_phrase";
+           //show prime pertners and subpartners
+           $select = "select link_mechanism_partner.mechanism_option_id, mechanism_option.mechanism_phrase, mechanism_option.end_date,
+CASE WHEN mechanism_option.end_date >= (MAKEDATE(YEAR(NOW()),1) + INTERVAL QUARTER(NOW())-2 QUARTER) THEN '1' ELSE '0' END as available,
+GROUP_CONCAT(DISTINCT partner_id SEPARATOR ',') AS owner_id from link_mechanism_partner
+join mechanism_option on mechanism_option.id=link_mechanism_partner.mechanism_option_id
+group by link_mechanism_partner.mechanism_option_id";
             $mechanisms = $db->fetchAll($select);
         }
         $this->view->assign('mechanisms', $mechanisms);

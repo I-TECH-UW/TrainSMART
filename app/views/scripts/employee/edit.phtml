@@ -907,7 +907,8 @@
                    echo "<select id='mechanisms' name='mechanisms' style='max-width: 200px; min-width: 200px; width: 200px !important'>";
                    echo "<option value='0'>-- select --</option>";
                    foreach ($this->mechanisms as $mechanismID => $mechData) {
-                       if($mechData['owner_id'] == $this->partner_id && $mechData['available'] == '1'){
+                       $owners = explode(",", $mechData['owner_id']);
+                       if(in_array($this->partner_id, $owners) && $mechData['available'] == '1'){
                             echo "<option value='" . $mechData['mechanism_option_id'] . "'>" . $mechData['mechanism_phrase'] . "</option>";
                        }
                    }
