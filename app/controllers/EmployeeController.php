@@ -611,7 +611,7 @@ group by link_mechanism_partner.mechanism_option_id";
         //TA:#466
         $finanBenefDescArray = MultiOptionList::choicesList ( 'employee_to_financial_benefits_description_option', 'employee_id', $id, 'employee_financial_benefits_description_option', array ('financial_benefits_description_option', 'is_default' ) );
         $this->viewAssignEscaped('finanBenefDescArray', $finanBenefDescArray);
-        print_r($finanBenefDescArray);
+        
     }
 
     public function searchAction()

@@ -41,15 +41,5 @@ CREATE TABLE `employee_to_financial_benefits_description_option` (
 ALTER TABLE _system ADD COLUMN display_employee_financial_benefits_description_options TINYINT(1) NOT NULL DEFAULT '1';
 
 
- $select = $db->select()
-            ->from('partner', array('id', 'partner'))
-            ->order('partner ASC');
-            
-            $partners = $choose + $db->fetchPairs($select);
-
-
-
-
-salary_or_stipend
-t('Salaried or Stipend')
+ 
 
