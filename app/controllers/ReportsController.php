@@ -10079,6 +10079,7 @@ die (__LINE__ . " - " . $sql);
                             'actual_transition' => t('Actual Transition Outcome'),
                             'transition_complete_other' => t('Actual Transition Outcome, Other'),
                             'transition_complete_date' => t('Actual Transition Date'),
+                            'salary_or_stipend' => t('Salaried or Stipend'), //TA:#465
                             'funded_hours_per_week' => t('Hours Worked per Week (FTE)'),
                             'salary' => t('Annual Salary (R)'),
                             'benefits' => t('Annual Benefits (R)'),

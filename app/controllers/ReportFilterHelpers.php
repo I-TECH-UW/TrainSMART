@@ -1338,6 +1338,15 @@ class ReportFilterHelpers extends ITechController
             $d = DateTime::createFromFormat('d/m/Y', $criteria['transition_end_date']);
             $select->where('transition_complete_date <= ?', $d->format('Y-m-d'));
         }
+        
+        //TA:#465
+        if (isset($criteria['show_salary_or_stipend'])) {
+            $select->columns('salary_or_stipend');
+        }
+        if(isset($criteria['salary_or_stipend'])) {
+            $select->where("salary_or_stipend='" . $criteria['salary_or_stipend'] . "'");
+        }
+        ///
 
         // funded hours per week
         // labelTwoFields uses the name of the first field for the 'show' checkbox
@@ -1610,7 +1619,9 @@ class ReportFilterHelpers extends ITechController
                     }
                 }
 
+                
         $s = $select->__toString();
+        
         return $select;
     }
 }
