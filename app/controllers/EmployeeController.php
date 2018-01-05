@@ -295,6 +295,7 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
 
         $params = $this->getAllParams();
         $id = $params['id'];
+        $this->view->assign('employee_id', $id);//TA:#466
 
         $db = $this->dbfunc();
         $choose = array("" => '--' . t("choose") . '--');
@@ -423,6 +424,12 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                     $status->checkRequired($this, 'benefits', t('Benefits'));
                     $costaccum += $params['benefits'];
                 }
+                
+                //TA:#466
+                if ($this->getSanParam ( 'employee_financial_benefits_description_option_id' )) {
+                    MultiOptionList::updateOptions ( 'employee_to_financial_benefits_description_option', 'employee_financial_benefits_description_option', 'employee_id', $id, 'employee_financial_benefits_description_option_id', $this->getSanParam ( 'employee_financial_benefits_description_option_id' ), null, null );
+                }
+                
                 //TA:#470
 //                 if ($this->setting('display_employee_additional_expenses')) {
 //                     $status->checkRequired($this, 'additional_expenses', t('Additional Expenses'));
@@ -600,6 +607,11 @@ group by link_mechanism_partner.mechanism_option_id";
         $this->viewAssignEscaped('creator', $created_by);
         $update_by = $params['modified_by'] ? $userObj->getUserFullName($params['modified_by']) : t("N/A");
         $this->viewAssignEscaped('updater', $update_by);
+        
+        //TA:#466
+        $finanBenefDescArray = MultiOptionList::choicesList ( 'employee_to_financial_benefits_description_option', 'employee_id', $id, 'employee_financial_benefits_description_option', array ('financial_benefits_description_option', 'is_default' ) );
+        $this->viewAssignEscaped('finanBenefDescArray', $finanBenefDescArray);
+        print_r($finanBenefDescArray);
     }
 
     public function searchAction()

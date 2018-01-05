@@ -1114,6 +1114,36 @@
                         if ($this->setting['display_employee_benefits']) {
                             echo labelAndField($this, t('Benefits'), 'currency', 'benefits', $this->employee['benefits']);
                         }
+                        
+                        //TA:#466 START
+                        ?>
+                        <div class="fieldLabel"><?php tp('Financial Benefits Description'); ?></div>
+                        <div class="fieldInput" id="finbendescContainer">
+        <div style="line-height:1.5em;margin-bottom:0.5em;">
+            <?php if (!$this->viewonly) : ?>
+                <?php tp('Check all that apply below'); ?>
+                <?php echo '<a href="' . Settings::$COUNTRY_BASE_URL . '/admin/employee-financialbenefitsdescription"/>Insert New/Edit</a>'; ?>
+            <?php endif; ?>
+        </div>
+        <?php
+             echo '<div class="fieldLabel">&nbsp;</div><div class="float50"><table class="tableChoices">';
+             foreach ($this->finanBenefDescArray as $item) {
+                $isChecked = ((isset($item['employee_id']) && $item['employee_id']) || (!$this->employee_id && $item['is_default'])) ? ' checked' : '';
+                echo '<tr><td valign="top" width="20px">';
+                echo '<input type="checkbox" name="employee_financial_benefits_description_option_id[]" value="' . $item['id'] . '" id="employee_financial_benefits_description_option_id_' . $item['id'] . '"' . $isChecked . ' ' . $this->viewonly . '> ';
+                echo '</td><td valign="top">';
+                echo '<label for="employee_financial_benefits_description_option_id_' . $item['id'] . '">' . $item['financial_benefits_description_option'] . '</label>';
+                echo '</td>';
+                echo '</tr>';
+         }
+         echo '</table></div>';
+
+        ?>
+    </div><br/><br clear="both"/>
+                        <?php
+                        //TA:#466 END
+                        
+                        
                         //TA:#470
 //                         if ($this->setting['display_employee_additional_expenses']) {
 //                             echo labelAndField($this, t('Additional Expenses'), 'currency', 'additional_expenses', $this->employee['additional_expenses']);

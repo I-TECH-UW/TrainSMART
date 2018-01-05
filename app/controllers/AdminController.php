@@ -1059,6 +1059,28 @@ class AdminController extends UserController
 		$editTable->allowDefault = true;
 		$editTable->execute($controller->getRequest());
 	}
+	
+	//TA:#466
+	public function employeeFinancialbenefitsdescriptionAction()
+	{
+	    /* checkbox */
+	    $fieldSystem = 'display_employee_financial_benefits_description_options';
+	
+	    if($this->getRequest()->isPost() && !$this->getParam("id")) { // Update db
+	        $this->putSetting($fieldSystem, $this->getParam($fieldSystem));
+	    }
+	
+	    /* edit table */
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'employee_financial_benefits_description_option';
+	    $editTable->fields  = array('financial_benefits_description_option' => t('Financial Benefits Description'));
+	    $editTable->label   = t('Financial Benefits Description');
+	    $editTable->dependencies = array('employee_to_financial_benefits_description_option');
+	    $editTable->allowDefault = true;
+	    $editTable->execute($controller->getRequest());
+	}
 
 	public function trainingRefreshercourseAction()
 	{

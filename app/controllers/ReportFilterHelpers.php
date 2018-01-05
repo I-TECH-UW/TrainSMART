@@ -1384,6 +1384,31 @@ class ReportFilterHelpers extends ITechController
             $select->where('benefits <= ?', intval($criteria['benefits_max']));
         }
         
+        //TA:#466    benefits description
+        if ((isset($criteria['show_employee_financial_benefits_description']) && $criteria['show_employee_financial_benefits_description']) || 
+             (isset($criteria['employee_financial_benefits_description']) && $criteria['employee_financial_benefits_description'])) {
+            if (!array_key_exists('employee_to_financial_benefits_description_option', $joined)) {
+                $select->joinLeft('employee_to_financial_benefits_description_option', 'employee_to_financial_benefits_description_option.employee_id = employee.id', array());
+                $joined['employee_to_financial_benefits_description_option'] = 1;
+            }
+            if (!array_key_exists('employee_financial_benefits_description_option', $joined)) {
+                $select->joinLeft('employee_financial_benefits_description_option', 'employee_financial_benefits_description_option.id = employee_to_financial_benefits_description_option.employee_financial_benefits_description_option_id', array());
+                $joined['employee_to_financial_benefits_description_option'] = 1;
+            }
+            if (isset($criteria['show_employee_financial_benefits_description']) && $criteria['show_employee_financial_benefits_description']){
+                $select->columns('employee_financial_benefits_description_option.financial_benefits_description_option');
+            }
+            if (isset($criteria['employee_financial_benefits_description']) && $criteria['employee_financial_benefits_description']){
+                if(is_array($criteria['employee_financial_benefits_description'])){
+                    if($criteria['employee_financial_benefits_description'][0] > 0){
+                        $select->where('employee_to_financial_benefits_description_option.employee_financial_benefits_description_option_id in ( ' . implode(",", $criteria['employee_financial_benefits_description']) . ")");
+                    }
+                }else{
+                    $select->where('employee_to_financial_benefits_description_option.employee_financial_benefits_description_option_id = ?', $criteria['employee_financial_benefits_description']);
+                }
+            }
+        }
+        
         // expenses
         // labelTwoFields uses the name of the first field for the 'show' checkbox
         if (isset($criteria['show_expenses_min']) && $criteria['show_expenses_min']) {

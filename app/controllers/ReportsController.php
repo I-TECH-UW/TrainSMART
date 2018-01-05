@@ -10083,6 +10083,7 @@ die (__LINE__ . " - " . $sql);
                             'funded_hours_per_week' => t('Hours Worked per Week (FTE)'),
                             'salary' => t('Annual Salary (R)'),
                             'benefits' => t('Annual Benefits (R)'),
+                            'financial_benefits_description_option' => t('Financial Benefits Description'),//TA:#466
                             'additional_expenses' => t('Additional Expenses (R)'),
                             'stipend' => t('Annual Stipend (R)'),
                             'annual_cost' => t('Annual Cost (R)'),
@@ -10212,6 +10213,10 @@ die (__LINE__ . " - " . $sql);
 
         $this->view->assign('partners', $partners);
         $this->view->assign('mech_partners', $partners);//TA:#419
+        //TA:#466
+        $select = $db->select()->from('employee_financial_benefits_description_option', array('id', 'financial_benefits_description_option'))->order('financial_benefits_description_option ASC');
+        $this->view->assign('employee_financial_benefits_description', $db->fetchPairs($select));
+        ///
         $this->view->assign('facilities', $facilities);
         $this->view->assign('facilityTypes', $facilityTypes);
         $this->view->assign('classifications', $classifications);

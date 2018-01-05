@@ -204,6 +204,12 @@
                             isset($this->criteria['benefits_min']) ? $this->criteria['benefits_min'] : '',
                             isset($this->criteria['benefits_max']) ? $this->criteria['benefits_max'] : '');
                         
+                        //TA:#466
+                        echo labelAndField($this, t('Financial Benefits Description'),
+                            $this->formSelect('employee_financial_benefits_description', isset($this->criteria['employee_financial_benefits_description']) ? $this->criteria['employee_financial_benefits_description'] : null, array('multiple' => true), $this->employee_financial_benefits_description), 'employee_financial_benefits_description');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        ////
+                        
                         //TA:#470
 //                         echo labelTwoFields($this, t('Additional Expenses'), t('to'), 'expenses_min', 'expenses_max',
 //                             isset($this->criteria['expenses_min']) ? $this->criteria['expenses_min'] : '',
