@@ -980,9 +980,10 @@
                   var partnerID = $('#select_partner').val();
                   var mechData = window.ITECH.mechData;
                    for (var i = 0; i < mechData_lenght; i++) {
-                      if(mechData[i]['owner_id'] == partnerID && mechData[i]['available'] == '1'){
-                    	  optList += '<option value="' + mechData[i]['mechanism_option_id'] + '">' + mechData[i]['mechanism_phrase'] + '</option>';
-                      }
+                	   //var owners = (mechData[i]['owner_id']).split(',');
+                        if((mechData[i]['owner_id']).split(',').includes(partnerID) && mechData[i]['available'] == '1'){
+                     	  optList += '<option value="' + mechData[i]['mechanism_option_id'] + '">' + mechData[i]['mechanism_phrase'] + '</option>';
+                       }
                   }
                   $('#mechanisms').html(optList);
                }
