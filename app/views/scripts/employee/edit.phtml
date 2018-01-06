@@ -1117,14 +1117,9 @@
                         
                         //TA:#466 START
                         ?>
-                        <div class="fieldLabel"><?php tp('Financial Benefits Description'); ?></div>
+                        <div class="fieldLabel"><span class="required">*</span><?php tp('Financial Benefits Description'); ?></div>
                         <div class="fieldInput" id="finbendescContainer">
-        <div style="line-height:1.5em;margin-bottom:0.5em;">
-            <?php if (!$this->viewonly) : ?>
-                <?php tp('Check all that apply below'); ?>
-                <?php //echo '<a href="' . Settings::$COUNTRY_BASE_URL . '/admin/employee-financialbenefitsdescription"/>Insert New/Edit</a>'; ?>
-            <?php endif; ?>
-        </div>
+        <div style="line-height:1.5em;margin-bottom:0.5em;"><?php tp('Check all that apply below'); ?>    </div>
         <?php
              echo '<div class="fieldLabel">&nbsp;</div><div class="float50"><table class="tableChoices">';
              foreach ($this->finanBenefDescArray as $item) {
