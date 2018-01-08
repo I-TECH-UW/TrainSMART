@@ -430,6 +430,11 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                     MultiOptionList::updateOptions ( 'employee_to_financial_benefits_description_option', 'employee_financial_benefits_description_option', 'employee_id', $id, 'employee_financial_benefits_description_option_id', $this->getSanParam ( 'employee_financial_benefits_description_option_id' ), null, null );
                 }
                 
+                //TA:#468
+                if ($this->getSanParam ( 'employee_non_financial_benefits_description_option_id' )) {
+                    MultiOptionList::updateOptions ( 'employee_to_non_financial_benefits_description_option', 'employee_non_financial_benefits_description_option', 'employee_id', $id, 'employee_non_financial_benefits_description_option_id', $this->getSanParam ( 'employee_non_financial_benefits_description_option_id' ), null, null );
+                }
+                
                 //TA:#470
 //                 if ($this->setting('display_employee_additional_expenses')) {
 //                     $status->checkRequired($this, 'additional_expenses', t('Additional Expenses'));
@@ -611,6 +616,10 @@ group by link_mechanism_partner.mechanism_option_id";
         //TA:#466
         $finanBenefDescArray = MultiOptionList::choicesList ( 'employee_to_financial_benefits_description_option', 'employee_id', $id, 'employee_financial_benefits_description_option', array ('financial_benefits_description_option', 'is_default' ) );
         $this->viewAssignEscaped('finanBenefDescArray', $finanBenefDescArray);
+        
+        //TA:#468
+        $nonfinanBenefDescArray = MultiOptionList::choicesList ( 'employee_to_non_financial_benefits_description_option', 'employee_id', $id, 'employee_non_financial_benefits_description_option', array ('non_financial_benefits_description_option', 'is_default' ) );
+        $this->viewAssignEscaped('nonfinanBenefDescArray', $nonfinanBenefDescArray);
         
     }
 

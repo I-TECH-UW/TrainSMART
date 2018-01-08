@@ -1138,6 +1138,34 @@
                         <?php
                         //TA:#466 END
                         
+                        //TA:#467
+                        if ($this->setting['display_employee_benefits']) {
+                            echo labelAndField($this, t('Non-financial Benefits (R)'), 'currency', 'non_financial_benefits', $this->employee['non_financial_benefits']);
+                        }
+                        
+                        //TA:#468 START
+                        ?>
+                                                <div class="fieldLabel"><span class="required">*</span><?php tp('Non-financial Benefits Description'); ?></div>
+                                                <div class="fieldInput" id="finbendescContainer">
+                                <div style="line-height:1.5em;margin-bottom:0.5em;"><?php tp('Check all that apply below'); ?>    </div>
+                                <?php
+                                     echo '<div class="fieldLabel">&nbsp;</div><div class="float50"><table class="tableChoices">';
+                                     foreach ($this->nonfinanBenefDescArray as $item) {
+                                        $isChecked = ((isset($item['employee_id']) && $item['employee_id']) || (!$this->employee_id && $item['is_default'])) ? ' checked' : '';
+                                        echo '<tr><td valign="top" width="20px">';
+                                        echo '<input type="checkbox" name="employee_non_financial_benefits_description_option_id[]" value="' . $item['id'] . '" id="employee_non_financial_benefits_description_option_id_' . $item['id'] . '"' . $isChecked . ' ' . $this->viewonly . '> ';
+                                        echo '</td><td valign="top">';
+                                        echo '<label for="employee_non_financial_benefits_description_option_id_' . $item['id'] . '">' . $item['non_financial_benefits_description_option'] . '</label>';
+                                        echo '</td>';
+                                        echo '</tr>';
+                                 }
+                                 echo '</table></div>';
+                        
+                                ?>
+                            </div><br/><br clear="both"/>
+                                                <?php
+                                                //TA:#468 END
+                        
                         
                         //TA:#470
 //                         if ($this->setting['display_employee_additional_expenses']) {

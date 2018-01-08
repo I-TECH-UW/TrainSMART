@@ -760,6 +760,26 @@ class ReportFilterHelpers extends ITechController
                 return (t('Maximum') . ' ' . t('Annual Benefits') . ' ' . t('must be greater than or equal to 0.'));
             }
         }
+        
+        if (isset($criteria['benefits_min'])) {
+            if (!is_numeric($criteria['benefits_min'])) {
+                return (t('Annual Benefits') . ' ' . t('must be a number'));
+            }
+            if (intval($criteria['benefits_min']) < 0) {
+                return (t('Minimum') . ' ' . t('Annual Benefits') . ' ' . t('must be greater than or equal to 0.'));
+            }
+        }
+        if (isset($criteria['benefits_max']) && $criteria['benefits_max']) {
+            if (!is_numeric($criteria['benefits_max'])) {
+                return (t('Annual Benefits') . ' ' . t('must be a number'));
+            }
+            if (intval($criteria['benefits_max']) < intval($criteria['benefits_min'])) {
+                return (t('Maximum') . ' ' . t('Annual Benefits') . ' ' . t('must be greater than Minimum.'));
+            }
+            if (intval($criteria['benefits_max']) < 0) {
+                return (t('Maximum') . ' ' . t('Annual Benefits') . ' ' . t('must be greater than or equal to 0.'));
+            }
+        }
 
         if (isset($criteria['expenses_min'])) {
             if (!is_numeric($criteria['expenses_min'])) {
@@ -1408,6 +1428,43 @@ class ReportFilterHelpers extends ITechController
                 }
             }
         }
+        
+        // TA:#467 non financial benefits
+        // labelTwoFields uses the name of the first field for the 'show' checkbox
+        if (isset($criteria['show_non_financial_benefits_min']) && $criteria['show_non_financial_benefits_min']) {
+            $select->columns('non_financial_benefits');
+        }
+        if (isset($criteria['non_financial_benefits_min']) && intval($criteria['non_financial_benefits_min']) >= 0) {
+            $select->where('non_financial_benefits >= ?', intval($criteria['non_financial_benefits_min']));
+        }
+        if (isset($criteria['non_financial_benefits_max']) && $criteria['non_financial_benefits_max']) {
+            $select->where('non_financial_benefits <= ?', intval($criteria['non_financial_benefits_max']));
+        }
+        
+        //TA:#468    non financial benefits description
+        if ((isset($criteria['show_employee_non_financial_benefits_description']) && $criteria['show_employee_non_financial_benefits_description']) ||
+            (isset($criteria['employee_non_financial_benefits_description']) && $criteria['employee_non_financial_benefits_description'])) {
+                if (!array_key_exists('employee_to_non_financial_benefits_description_option', $joined)) {
+                    $select->joinLeft('employee_to_non_financial_benefits_description_option', 'employee_to_non_financial_benefits_description_option.employee_id = employee.id', array());
+                    $joined['employee_to_non_financial_benefits_description_option'] = 1;
+                }
+                if (!array_key_exists('employee_non_financial_benefits_description_option', $joined)) {
+                    $select->joinLeft('employee_non_financial_benefits_description_option', 'employee_non_financial_benefits_description_option.id = employee_to_non_financial_benefits_description_option.employee_non_financial_benefits_description_option_id', array());
+                    $joined['employee_to_non_financial_benefits_description_option'] = 1;
+                }
+                if (isset($criteria['show_employee_non_financial_benefits_description']) && $criteria['show_employee_non_financial_benefits_description']){
+                    $select->columns('employee_non_financial_benefits_description_option.non_financial_benefits_description_option');
+                }
+                if (isset($criteria['employee_non_financial_benefits_description']) && $criteria['employee_non_financial_benefits_description']){
+                    if(is_array($criteria['employee_non_financial_benefits_description'])){
+                        if($criteria['employee_non_financial_benefits_description'][0] > 0){
+                            $select->where('employee_to_non_financial_benefits_description_option.employee_non_financial_benefits_description_option_id in ( ' . implode(",", $criteria['employee_non_financial_benefits_description']) . ")");
+                        }
+                    }else{
+                        $select->where('employee_to_non_financial_benefits_description_option.employee_non_financial_benefits_description_option_id = ?', $criteria['employee_non_financial_benefits_description']);
+                    }
+                }
+            }
         
         // expenses
         // labelTwoFields uses the name of the first field for the 'show' checkbox
