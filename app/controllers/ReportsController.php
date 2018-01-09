@@ -10217,17 +10217,18 @@ die (__LINE__ . " - " . $sql);
 
         $this->view->assign('partners', $partners);
         $this->view->assign('mech_partners', $partners);//TA:#419
+       
         //TA:#466
         $select = $db->select()->from('employee_financial_benefits_description_option', array('id', 'financial_benefits_description_option'))->order('financial_benefits_description_option ASC');
-        $this->view->assign('employee_financial_benefits_description', $db->fetchPairs($select));
+        $this->view->assign('employee_financial_benefits_description', $choose + $db->fetchPairs($select));
         ///
         //TA:#468
         $select = $db->select()->from('employee_non_financial_benefits_description_option', array('id', 'non_financial_benefits_description_option'))->order('non_financial_benefits_description_option ASC');
-        $this->view->assign('employee_non_financial_benefits_description', $db->fetchPairs($select));
+        $this->view->assign('employee_non_financial_benefits_description', $choose + $db->fetchPairs($select));
         ///
         //TA:#474
         $select = $db->select()->from('employee_professional_development_description_option', array('id', 'professional_development_description_option'))->order('professional_development_description_option ASC');
-        $this->view->assign('employee_professional_development_description', $db->fetchPairs($select));
+        $this->view->assign('employee_professional_development_description', $choose + $db->fetchPairs($select));
         ///
         $this->view->assign('facilities', $facilities);
         $this->view->assign('facilityTypes', $facilityTypes);

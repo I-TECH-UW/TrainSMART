@@ -77,14 +77,14 @@
         <?php require_once 'views/scripts/status.phtml' ?>
         <div id="subcontent">
             <?php
-            echo $this->partial('reports/employee-reports-report-types-partial.phtml', array('site_style' => $this->site_style, 'base_url' => $this->base_url));
+           // echo $this->partial('reports/employee-reports-report-types-partial.phtml', array('site_style' => $this->site_style, 'base_url' => $this->base_url));
             ?>
 
-            <div class="clear"></div>
+            
             <div id="contentheader">
                 <h2><?php echo t("Employee") . " " . t("Reports"); ?></h2><br/>
             </div>
-            <div class="pad50 clear"></div>
+          
             <form action="" method="get" class="form_employee">
                 <fieldset id="criteria">
                     <legend><?php tp('Select Criteria'); ?></legend>
@@ -244,7 +244,7 @@
                         echo labelTwoFields($this, t('Annual Cost'), t('to'), 'cost_min', 'cost_max',
                             isset($this->criteria['cost_min']) ? $this->criteria['cost_min'] : '',
                             isset($this->criteria['cost_max']) ? $this->criteria['cost_max'] : '');
-                        
+                       
                         echo labelAndField($this, t('Implementing Mechanism Prime Partner Name'), 
                            $this->formSelect('mech_partners', isset($this->criteria['mech_partners']) ? $this->criteria['mech_partners'] : null, array('multiple' => true), $this->mech_partners), 'mech_partners');
                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
@@ -273,10 +273,10 @@
                         
                         //TA:#419 a lot of changes with all fields -> END
 
-                        echo "<br>" . $this->partial('reports/ps-search-preview-button-partial.phtml', array());
+                        
                         ?>
                     </div>
-                    <div class="clear"></div>
+                   <?php echo "<br>" . $this->partial('reports/ps-search-preview-button-partial.phtml', array()); ?>
 
             </form>
             <?php if (isset($this->output)) {
