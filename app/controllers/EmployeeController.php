@@ -435,6 +435,11 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                     MultiOptionList::updateOptions ( 'employee_to_non_financial_benefits_description_option', 'employee_non_financial_benefits_description_option', 'employee_id', $id, 'employee_non_financial_benefits_description_option_id', $this->getSanParam ( 'employee_non_financial_benefits_description_option_id' ), null, null );
                 }
                 
+                //TA:#474
+                if ($this->getSanParam ( 'employee_professional_development_description_option_id' )) {
+                    MultiOptionList::updateOptions ( 'employee_to_professional_development_description_option', 'employee_professional_development_description_option', 'employee_id', $id, 'employee_professional_development_description_option_id', $this->getSanParam ( 'employee_professional_development_description_option_id' ), null, null );
+                }
+                
                 //TA:#470
 //                 if ($this->setting('display_employee_additional_expenses')) {
 //                     $status->checkRequired($this, 'additional_expenses', t('Additional Expenses'));
@@ -620,6 +625,10 @@ group by link_mechanism_partner.mechanism_option_id";
         //TA:#468
         $nonfinanBenefDescArray = MultiOptionList::choicesList ( 'employee_to_non_financial_benefits_description_option', 'employee_id', $id, 'employee_non_financial_benefits_description_option', array ('non_financial_benefits_description_option', 'is_default' ) );
         $this->viewAssignEscaped('nonfinanBenefDescArray', $nonfinanBenefDescArray);
+        
+        //TA:#474
+        $professionalDevelopmentDescArray = MultiOptionList::choicesList ( 'employee_to_professional_development_description_option', 'employee_id', $id, 'employee_professional_development_description_option', array ('professional_development_description_option', 'is_default' ) );
+        $this->viewAssignEscaped('professionalDevelopmentDescArray', $professionalDevelopmentDescArray);
         
     }
 

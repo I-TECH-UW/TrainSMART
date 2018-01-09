@@ -1465,6 +1465,43 @@ class ReportFilterHelpers extends ITechController
                     }
                 }
             }
+            
+            // TA:#469 professional development
+            // labelTwoFields uses the name of the first field for the 'show' checkbox
+            if (isset($criteria['show_professional_development_min']) && $criteria['show_professional_development_min']) {
+                $select->columns('professional_development');
+            }
+            if (isset($criteria['professional_development_min']) && intval($criteria['professional_development_min']) >= 0) {
+                $select->where('professional_development >= ?', intval($criteria['professional_development_min']));
+            }
+            if (isset($criteria['professional_development_max']) && $criteria['professional_development_max']) {
+                $select->where('professional_development <= ?', intval($criteria['professional_development_max']));
+            }
+            
+            //TA:#474    professional development description
+            if ((isset($criteria['show_employee_professional_development_description']) && $criteria['show_employee_professional_development_description']) ||
+                (isset($criteria['employee_professional_development_description']) && $criteria['employee_professional_development_description'])) {
+                    if (!array_key_exists('employee_to_professional_development_description_option', $joined)) {
+                        $select->joinLeft('employee_to_professional_development_description_option', 'employee_to_professional_development_description_option.employee_id = employee.id', array());
+                        $joined['employee_to_professional_development_description_option'] = 1;
+                    }
+                    if (!array_key_exists('employee_professional_development_description_option', $joined)) {
+                        $select->joinLeft('employee_professional_development_description_option', 'employee_professional_development_description_option.id = employee_to_professional_development_description_option.employee_professional_development_description_option_id', array());
+                        $joined['employee_to_professional_development_description_option'] = 1;
+                    }
+                    if (isset($criteria['show_employee_professional_development_description']) && $criteria['show_employee_professional_development_description']){
+                        $select->columns('employee_professional_development_description_option.professional_development_description_option');
+                    }
+                    if (isset($criteria['employee_professional_development_description']) && $criteria['employee_professional_development_description']){
+                        if(is_array($criteria['employee_professional_development_description'])){
+                            if($criteria['employee_professional_development_description'][0] > 0){
+                                $select->where('employee_to_professional_development_description_option.employee_professional_development_description_option_id in ( ' . implode(",", $criteria['employee_professional_development_description']) . ")");
+                            }
+                        }else{
+                            $select->where('employee_to_professional_development_description_option.employee_professional_development_description_option_id = ?', $criteria['employee_professional_development_description']);
+                        }
+                    }
+                }
         
         // expenses
         // labelTwoFields uses the name of the first field for the 'show' checkbox

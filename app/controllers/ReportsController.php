@@ -10086,6 +10086,8 @@ die (__LINE__ . " - " . $sql);
                             'financial_benefits_description_option' => t('Financial Benefits Description'),//TA:#466
                             'non_financial_benefits' => t('Non-financial Benefits (R)'), //TA:#467
                             'non_financial_benefits_description_option' => t('Non-financial Benefits Description'),//TA:#468
+                            'professional_development' => t('Professional Development (R)'), //TA:#469
+                            'professional_development_description_option' => t('Professional Development (R) Description'),//TA:#474
                             'additional_expenses' => t('Additional Expenses (R)'),
                             'stipend' => t('Annual Stipend (R)'),
                             'annual_cost' => t('Annual Cost (R)'),
@@ -10222,6 +10224,10 @@ die (__LINE__ . " - " . $sql);
         //TA:#468
         $select = $db->select()->from('employee_non_financial_benefits_description_option', array('id', 'non_financial_benefits_description_option'))->order('non_financial_benefits_description_option ASC');
         $this->view->assign('employee_non_financial_benefits_description', $db->fetchPairs($select));
+        ///
+        //TA:#474
+        $select = $db->select()->from('employee_professional_development_description_option', array('id', 'professional_development_description_option'))->order('professional_development_description_option ASC');
+        $this->view->assign('employee_professional_development_description', $db->fetchPairs($select));
         ///
         $this->view->assign('facilities', $facilities);
         $this->view->assign('facilityTypes', $facilityTypes);
