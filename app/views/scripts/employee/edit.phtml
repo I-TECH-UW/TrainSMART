@@ -321,7 +321,8 @@
         //TA:#394 They want to make validation on client side, do not lose entered data if validation is failed
         var validateRequiredFields = function () { 
         	$('#statusBox').remove();
-            var validated = true;   
+            var validated = true;  
+           
             if(!validateSelectField(validated, 'select_employee_role_option', '<?php echo t("Primary Role");?>')){
             	validated = false;
             }
@@ -343,7 +344,7 @@
                 }
             }
             if($("#multi_sites_table_data_count").val() =='0'){
-            	displayErrorMessage('agreement_end_date', '<?php echo t("Site Name");?> (required)');
+            	displayErrorMessage('', '<?php echo t("Site Name");?> (required)');
             	validated = false;
             }
             
@@ -405,17 +406,30 @@
             if(!validateTextField(validated, 'benefits', '<?php echo t("Benefits");?>')){
             	validated = false;
             }
-            //TA:#467
+            //TA:#466
+            if(!$(".employee_financial_benefits_description_option_id_class").is(":checked")){
+               displayErrorMessage('employee_financial_benefits_description', '<?php echo t("Financial Benefits Description");?> (required)');
+              	validated = false;
+            }
+            //TA:#466
             if(!validateTextField(validated, 'non_financial_benefits', '<?php echo t("Non-financial Benefits");?>')){
             	validated = false;
+            }
+            //TA:#467
+            if(!$(".employee_non_financial_benefits_description_option_id_class").is(":checked")){
+               displayErrorMessage('employee_non_financial_benefits_description', '<?php echo t("Non-financial Benefits Description");?> (required)');
+              	validated = false;
             }
             //TA:#469
             if(!validateTextField(validated, 'professional_development', '<?php echo t("Professional Development");?>')){
             	validated = false;
             }
-            if(!validateTextField(validated, 'additional_expenses', '<?php echo t("Additional Expenses");?>')){
-            	validated = false;
+            //TA:#474
+            if(!$(".employee_professional_development_description_option_id_class").is(":checked")){
+               displayErrorMessage('employee_professional_development_description', '<?php echo t("Professional Development Description");?> (required)');
+              	validated = false;
             }
+            
             if(!validateTextField(validated, 'stipend', '<?php echo t("Stipend");?>')){
             	validated = false;
             }
@@ -454,7 +468,7 @@
             }
 
             //TA:438, TA:#464
-            validated = getSiteTableData();
+            validated = getSiteTableData(validated);
             if(parseInt($('#funded_hours_per_week').val()) < parseInt($('#multi_sites_table_data_fte_total').val())){
             	displayErrorMessage('funded_hours_per_week', "The total 'Hours Worked per Week per site' should be less or equal to 'Hours Worked per Week for Annual Cost To Company'.");
             	var $rows = $("#multi_sites_table > tfoot > tr");
@@ -489,8 +503,8 @@
             return validated;  
           }
 
-        //TA:#438, TA:#464
-        var getSiteTableData = function () {
+        //TA:#438, TA:#464, TA:#465
+        var getSiteTableData = function (validated) {
         	$('#multi_sites_table_data').val("");
         	var $rows = $("#multi_sites_table > tbody > tr");
         	var hiv_fte_Accumulate = 0; 
@@ -502,7 +516,7 @@
                if(mech_id == "" || mech_id == "0"){
             	   displayErrorMessage('', '<?php echo t('Implementing Mechanism');?> is required.');
             	   $($($rows[i]).children().first().next().next().next().next().next().next().next().next()[0]).children().first()[0].style.border = '2px solid red';
-                   return false;
+            	   validated = false;
                }
             	 hiv_fte_Accumulate = hiv_fte_Accumulate + hiv_fte;
         		var site_id = $($rows[i]).children().first().next().next().next().next().next()[0].id;
@@ -515,7 +529,7 @@
                 $('#multi_sites_table_data').val($('#multi_sites_table_data').val() + data);
         	}
         	$('#multi_sites_table_data_fte_total').val(hiv_fte_Accumulate);
-        	return true; 
+        	return validated; 
         }
 
         //TA:#224, #438
@@ -1129,22 +1143,20 @@
                         
                         //TA:#466 START
                         ?>
-                        <div class="fieldLabel"><span class="required">*</span><?php tp('Financial Benefits Description'); ?></div>
+                        <div class="fieldLabel" id="employee_financial_benefits_description_lbl"><span class="required">*</span><?php tp('Financial Benefits Description'); ?></div>
                         <div class="fieldInput" id="finbendescContainer">
         <div style="line-height:1.5em;margin-bottom:0.5em;"><?php tp('Check all that apply below'); ?>    </div>
         <?php
              echo '<div class="fieldLabel">&nbsp;</div><div class="float50"><table class="tableChoices">';
              foreach ($this->finanBenefDescArray as $item) {
                 $isChecked = ((isset($item['employee_id']) && $item['employee_id']) || (!$this->employee_id && $item['is_default'])) ? ' checked' : '';
-                echo '<tr><td valign="top" width="20px">';
-                echo '<input type="checkbox" name="employee_financial_benefits_description_option_id[]" value="' . $item['id'] . '" id="employee_financial_benefits_description_option_id_' . $item['id'] . '"' . $isChecked . ' ' . $this->viewonly . '> ';
-                echo '</td><td valign="top">';
-                echo '<label for="employee_financial_benefits_description_option_id_' . $item['id'] . '">' . $item['financial_benefits_description_option'] . '</label>';
-                echo '</td>';
-                echo '</tr>';
+                echo '<tr><td valign="top">';
+                echo '<input class="employee_financial_benefits_description_option_id_class" type="checkbox" name="employee_financial_benefits_description_option_id[]" value="' . 
+                    $item['id'] . '" id="employee_financial_benefits_description_option_id_' . $item['id'] . '"' . $isChecked . ' ' . $this->viewonly . '>' .
+                     $item['financial_benefits_description_option'] . '</>';
+                echo '</td></tr>';
          }
          echo '</table></div>';
-
         ?>
     </div><br/><br clear="both"/>
                         <?php
@@ -1155,7 +1167,7 @@
                         
                         //TA:#468 START
                         ?>
-                                                <div class="fieldLabel"><span class="required">*</span><?php tp('Non-financial Benefits Description'); ?></div>
+                                                <div class="fieldLabel" id="employee_non_financial_benefits_description_lbl"><span class="required">*</span><?php tp('Non-financial Benefits Description'); ?></div>
                                                 <div class="fieldInput" id="finbendescContainer">
                                 <div style="line-height:1.5em;margin-bottom:0.5em;"><?php tp('Check all that apply below'); ?>    </div>
                                 <?php
@@ -1163,11 +1175,10 @@
                                      foreach ($this->nonfinanBenefDescArray as $item) {
                                         $isChecked = ((isset($item['employee_id']) && $item['employee_id']) || (!$this->employee_id && $item['is_default'])) ? ' checked' : '';
                                         echo '<tr><td valign="top" width="20px">';
-                                        echo '<input type="checkbox" name="employee_non_financial_benefits_description_option_id[]" value="' . $item['id'] . '" id="employee_non_financial_benefits_description_option_id_' . $item['id'] . '"' . $isChecked . ' ' . $this->viewonly . '> ';
-                                        echo '</td><td valign="top">';
-                                        echo '<label for="employee_non_financial_benefits_description_option_id_' . $item['id'] . '">' . $item['non_financial_benefits_description_option'] . '</label>';
-                                        echo '</td>';
-                                        echo '</tr>';
+                                        echo '<input class="employee_non_financial_benefits_description_option_id_class" type="checkbox" name="employee_non_financial_benefits_description_option_id[]" value="' . 
+                                        $item['id'] . '" id="employee_non_financial_benefits_description_option_id_' . $item['id'] . '"' . $isChecked . ' ' . $this->viewonly . '> ' .
+                                        $item['non_financial_benefits_description_option'] . '</>';
+                                        echo '</td></tr>';
                                  }
                                  echo '</table></div>';
                         
@@ -1182,7 +1193,7 @@
                                                 
                              //TA:#474 START
                              ?>
-                             <div class="fieldLabel"><span class="required">*</span><?php tp('Professional Development Description'); ?></div>
+                             <div class="fieldLabel" id="employee_professional_development_description_lbl"><span class="required">*</span><?php tp('Professional Development Description'); ?></div>
                              <div class="fieldInput" id="finbendescContainer">
                              <div style="line-height:1.5em;margin-bottom:0.5em;"><?php tp('Check all that apply below'); ?>    </div>
                              <?php
@@ -1190,11 +1201,10 @@
                              foreach ($this->professionalDevelopmentDescArray as $item) {
                              $isChecked = ((isset($item['employee_id']) && $item['employee_id']) || (!$this->employee_id && $item['is_default'])) ? ' checked' : '';
                              echo '<tr><td valign="top" width="20px">';
-                             echo '<input type="checkbox" name="employee_professional_development_description_option_id[]" value="' . $item['id'] . '" id="employee_professional_development_description_option_id_' . $item['id'] . '"' . $isChecked . ' ' . $this->viewonly . '> ';
-                             echo '</td><td valign="top">';
-                              echo '<label for="employee_professional_development_description_option_id_' . $item['id'] . '">' . $item['professional_development_description_option'] . '</label>';
-                              echo '</td>';
-                              echo '</tr>';
+                             echo '<input class="employee_professional_development_description_option_id_class" type="checkbox" name="employee_professional_development_description_option_id[]" value="' . 
+                             $item['id'] . '" id="employee_professional_development_description_option_id_' . $item['id'] . '"' . $isChecked . ' ' . $this->viewonly . '> ' .
+                             $item['professional_development_description_option'] . '</>';
+                            echo '</td></tr>';
                               }
                                echo '</table></div>';
                                                                         
