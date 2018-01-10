@@ -405,6 +405,14 @@
             if(!validateTextField(validated, 'benefits', '<?php echo t("Benefits");?>')){
             	validated = false;
             }
+            //TA:#467
+            if(!validateTextField(validated, 'non_financial_benefits', '<?php echo t("Non-financial Benefits");?>')){
+            	validated = false;
+            }
+            //TA:#469
+            if(!validateTextField(validated, 'professional_development', '<?php echo t("Professional Development");?>')){
+            	validated = false;
+            }
             if(!validateTextField(validated, 'additional_expenses', '<?php echo t("Additional Expenses");?>')){
             	validated = false;
             }
@@ -628,11 +636,15 @@
             //TA:#383 add 'transition_date'
             //TA:#411 add 'employee_transition_complete_option_id', 'transition_complete_date'
             //TA:#465 add 'salary_or_stipend'
+            // TA:#467 add 'non_financial_benefits'
+            // TA:#474 add 'professional_development'
             $this->required_fields = array('employee_code', 'partner_id', 'employee_base_option_id',
                 'employee_qualification_option_id', 'salary', 'benefits', 'additional_expenses', 'stipend',
                 'employee_transition_option_id', 'employee_role_option_id', 'disability_option_id',
                 'disability_comments', 'funded_hours_per_week', 'agreement_start_date', 'agreement_end_date', 'facilityInput',
-                'transition_other', 'transition_complete_other', 'transition_date', 'employee_transition_complete_option_id', 'transition_complete_date', 'salary_or_stipend');
+                'transition_other', 'transition_complete_other', 'transition_date', 'employee_transition_complete_option_id', 'transition_complete_date', 'salary_or_stipend', 'non_financial_benefits',
+                'professional_development'
+            );
             
             if (!$this->hasACL('edit_employee')) {
                 $this->viewonly = true;
@@ -1164,9 +1176,7 @@
                                                 <?php
                                                 //TA:#468 END
                                                 
-                                                
-                                                //TA:#469
-                   
+                             //TA:#469
                              echo labelAndField($this, t('Professional Development (R)'), 'currency', 'professional_development', $this->employee['professional_development']);
                    
                                                 
