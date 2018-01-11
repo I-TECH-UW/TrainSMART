@@ -110,3 +110,35 @@ CREATE TABLE `employee_to_professional_development_description_option` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE _system ADD COLUMN display_employee_professional_development_description_options TINYINT(1) NOT NULL DEFAULT '1';
+
+
+
+
+
+<!-- TA:#473 START -->
+                        <?php 
+                        $disabled = "";
+                        if($siteData['sds_model_name'] !== 'Facility site - Roving' && $siteData['sds_model_name'] !== 'Ward Based Outreach Team - WBOT'){
+                            $disabled = " disabled='disabled' ";
+                        }
+                        ?>
+                        <select id='dsd_team<?php echo $rows;?>' name='dsd_team<?php echo $rows;?>'style='max-width: 200px; min-width: 200px; width: 200px !important' <?php echo $disabled;?>>
+                        <!-- TA:#473 END -->
+                        
+                        
+                        
+                        
+
+
+ //TA:#473 START
+                             if ($siteData['sds_model_name'] === 'Facility site - Roving') {
+                               if(strpos($team['dsdteam'], 'WBOT_') === false){
+                                   echo "<option value='" . $team['team_id'] . "' " . $selected_team . ">" . $team['dsdteam'] . "</option>";
+                               }
+                             }else if($siteData['sds_model_name'] === 'Ward Based Outreach Team - WBOT'){
+                                if(strpos($team['dsdteam'], 'WBOT_') !== false){
+                                    echo "<option value='" . $team['team_id'] . "' " . $selected_team . ">" . $team['dsdteam'] . "</option>";
+                                }
+                            }
+                            ////
+
