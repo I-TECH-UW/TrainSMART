@@ -1224,6 +1224,8 @@
                                 <option value="">&mdash; select &mdash;</option>
                                 <option value="salaried" <?php echo ( $this->employee['salary_or_stipend'] !== 'salaried' ? '': 'selected="selected"');?>>Salaried</option>
                                 <option value="stipend" <?php echo ( $this->employee['salary_or_stipend'] !== 'stipend' ? '': 'selected="selected"');?>>Stipend</option>
+                            <!-- TA:#485 -->
+                            <option value="na" <?php echo ( $this->employee['salary_or_stipend'] !== 'na' ? '': 'selected="selected"');?>>Not Applicable</option>
                             </select>
                         </div>
                         <?php
