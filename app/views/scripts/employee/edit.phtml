@@ -103,13 +103,18 @@
             });
             $('.calendarbtn').click(openNearestDatePicker);
 
-            $('#salary,#benefits,#additional_expenses,#stipend').change(function () { /* calc amounts */
-                $('#annual_cost').calcFieldsMoney('#salary,#benefits,#additional_expenses,#stipend', '#annual_cost');
-                //calculateMechanismTable();
-            });
-
-            $('#funded_hours_per_week').change(function () {
-               // calculateMechanismTable();
+            //TA:#481
+            $('#salary,#benefits,#non_financial_benefits,#professional_development,#stipend').change(function () { /* calc amounts */
+                //$('#annual_cost').calcFieldsMoney('#salary,#benefits,#additional_expenses,#stipend', '#annual_cost');
+            	var total = parseFloat($('#salary').val());
+            	total = total + parseFloat($('#benefits').val());
+            	total = total + parseFloat($('#non_financial_benefits').val());
+            	total = total + parseFloat($('#professional_development').val());
+            	total = total + parseFloat($('#stipend').val())
+                if (total > 500000) {
+                    alert('<?php echo t('Annual Cost'); ?>' + ' - total cannot be greater than 500,000');
+                 }
+            	 $('#annual_cost').val(total);
             });
 
             $('#select_employee_transition_option').change(function (e) { /* watch the two transition drop downs */
@@ -133,35 +138,36 @@
             }).change(); // fire once
         });
 
-        (function ($) {
+//         (function ($) {
 
-            $.fn.calcFieldsMoney = function (selector, errField) {
-                var flds = $(selector);
-                if (!flds.length)
-                    return;
+//             $.fn.calcFieldsMoney = function (selector, errField) {
+//                 var flds = $(selector);
+//                 if (!flds.length)
+//                     return;
 
-                var total = 0;
-                $('.dec_warning').remove();
-                flds.each(function (i, val) {
-                    //TA:#282 accept decimal values
-                    var new_val = ($(this).val()) ? parseFloat($(this).val()) : 0;
-                    total += new_val;
-                });
+//                 var total = 0;
+//                 $('.dec_warning').remove();
+//                 flds.each(function (i, val) {
+//                     //TA:#282 accept decimal values
+//                     var new_val = ($(this).val()) ? parseFloat($(this).val()) : 0;
+//                     total += new_val;
+//                 });
 
-                if (isNaN(total))
-                    total = '?';
+//                 if (isNaN(total))
+//                     total = '?';
 
-                if (total > 2000000) {
-                    alert('<?php echo t('Annual Cost'); ?>' + ' - total cannot be greater than 2,000,000');
-                    $(this).val(null);
-                }
-                else {
-                    $(this).val(total);
-                }
-                return this;
+//                 //TA:#477
+//                 if (total > 500000) {
+//                    alert('<?php //echo t('Annual Cost'); ?>' + ' - total cannot be greater than 500,000');
+//                     $(this).val(null);
+//                 }
+//                 else {
+//                     $(this).val(total);
+//                 }
+//                 return this;
 
-            };
-        })(jQuery);
+//             };
+//         })(jQuery);
 
         //TA:#224   TA:#416
         function addSite() {    
@@ -504,6 +510,12 @@
          	    validated = false;
             }
             ///
+
+            //TA:#477
+            if(parseInt($('#annual_cost').val()) > 500000){
+            	displayErrorMessage('annual_cost', '<?php echo t('Annual Cost');?> - total cannot be greater than 500,000');
+            	validated = false;
+            }
 
             window.scroll(0,0);
             return validated;
