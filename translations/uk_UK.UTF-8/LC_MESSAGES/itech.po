@@ -1,9 +1,9 @@
-﻿msgid ""
+msgid ""
 msgstr ""
 "Project-Id-Version: Trainsmart\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-09-24 16:51-0800\n"
-"PO-Revision-Date: 2017-12-11 12:39-0800\n"
+"PO-Revision-Date: 2018-01-22 11:59-0800\n"
 "Last-Translator: DB\n"
 "Language-Team: Fuse IQ <todd@fuseiq.com>\n"
 "Language: uk_UA\n"
@@ -4182,3 +4182,10 @@ msgstr "Так"
 
 msgid "Нет"
 msgstr "Ні"
+
+msgid "Display First"
+msgstr "Показані першими"
+
+msgid "Responsibility for monitoring and quality assurance process"
+msgstr "Відповідальність за моніторинг і процес визначення якості"
+
