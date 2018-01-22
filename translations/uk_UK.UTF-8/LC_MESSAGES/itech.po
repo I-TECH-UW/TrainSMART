@@ -4184,7 +4184,7 @@ msgid "Нет"
 msgstr "Ні"
 
 msgid "Display First"
-msgstr "Показані першими"
+msgstr "Показати першими"
 
 msgid "Responsibility for monitoring and quality assurance process"
 msgstr "Відповідальність за моніторинг і процес визначення якості"
@@ -4200,4 +4200,13 @@ msgstr "Лікувально-профілактичний заклад"
 
 msgid "Comments of the institution"
 msgstr "Коментарі закладу"
+
+msgid "Identification code"
+msgstr "Ідентифікаційний код"
+
+msgid "Source of funding"
+msgstr "Джерело фінансування"
+
+msgid "Amount of funding"
+msgstr "Сума фінансування"
 
