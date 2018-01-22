@@ -4192,3 +4192,6 @@ msgstr "Відповідальність за моніторинг і проце
 msgid "Academic status"
 msgstr "Вчене звання"
 
+msgid "Scientific degree"
+msgstr "Наукова ступінь"
+
