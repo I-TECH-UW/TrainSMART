@@ -2501,7 +2501,7 @@ msgid "Evaluations Reports"
 msgstr "Звіти по процесах визначення якості"
 
 msgid "Select the region level you want to move"
-msgstr "Select the region level you want to move"
+msgstr "Виберіть рівень регіону, який потрібно перемістити"
 
 msgid "Select the region to move to"
 msgstr "Оберіть регіон, щоб перемістити в"
@@ -4209,4 +4209,31 @@ msgstr "Джерело фінансування"
 
 msgid "Amount of funding"
 msgstr "Сума фінансування"
+
+msgid "Education history"
+msgstr "Історія освіти"
+
+msgid "Education type"
+msgstr "Вид освіти"
+
+msgid "Country of study"
+msgstr "Країна навчання"
+
+msgid "Year of Graduation/Completion"
+msgstr "Рік закінчення/завершення"
+
+msgid "Attestation Progress"
+msgstr "Атестаційний процесс"
+
+msgid "Certified in specialty"
+msgstr "Атестований за фахом"
+
+msgid "Attestation Category"
+msgstr "Атестаційна категорія"
+
+msgid "Attestation Year"
+msgstr "Атестаційний рік"
+
+msgid "ВНЗ official name"
+msgstr "Офіційна назва ВНЗ"
 
