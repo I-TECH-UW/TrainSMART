@@ -2270,7 +2270,7 @@ msgid "Country"
 msgstr "Країна"
 
 msgid "Region"
-msgstr "Регіон"
+msgstr "Область"
 
 msgid "Add region"
 msgstr "Додати регіон"
