@@ -4189,3 +4189,6 @@ msgstr "Показані першими"
 msgid "Responsibility for monitoring and quality assurance process"
 msgstr "Відповідальність за моніторинг і процес визначення якості"
 
+msgid "Academic status"
+msgstr "Вчене звання"
+
