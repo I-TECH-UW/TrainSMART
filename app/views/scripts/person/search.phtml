@@ -134,13 +134,22 @@
 
 									$thisrow = array();
 									$thisrow[] = $row['id'];
-									$thisrow[] = addslashes($row['first_name']);
+									//TA:UK:1712:23 shaw different names order for  PHC and UCFM
+									if($this->setting['display_last_name_first']){ 
+									       $thisrow[] = addslashes($row['last_name']);
+									       $thisrow[] = addslashes($row['first_name']);
+									}else{
+									    $thisrow[] = addslashes($row['first_name']);
+									}
+									///
 
 
 									if ( $this->setting['display_middle_name'] &&  !$this->setting['display_middle_name_last'] ) {
 										$thisrow[] = addslashes($row['middle_name']);
 									}
-									$thisrow[] = addslashes($row['last_name']);
+									if(!$this->setting['display_last_name_first']){ //TA:UK:1712:23 shaw different names order for  PHC and UCFM
+									   $thisrow[] = addslashes($row['last_name']);
+									}
 									if ( $this->setting['display_middle_name'] && $this->setting['display_middle_name_last'] ) {
 										$thisrow[] = addslashes($row['middle_name']);
 									}
