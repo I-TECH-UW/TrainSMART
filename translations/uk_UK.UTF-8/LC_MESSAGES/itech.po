@@ -4195,3 +4195,9 @@ msgstr "Вчене звання"
 msgid "Scientific degree"
 msgstr "Наукова ступінь"
 
+msgid "Medical and preventive institution"
+msgstr "Лікувально-профілактичний заклад"
+
+msgid "Comments of the institution"
+msgstr "Коментарі закладу"
+
