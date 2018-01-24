@@ -60,8 +60,6 @@ Class Output_Csv extends Output_Abstract
 		
 		$this->headers['Expires'] = $now;
 		
-		//$this->headers['charset'] = 'UTF-8'; //TA:5000
-		
 		// lem9 & loic1: IE need specific headers
 		$isIE = strstr( $_SERVER['HTTP_USER_AGENT'], 'MSIE' );
 		if ( $isIE ) {
@@ -69,8 +67,8 @@ Class Output_Csv extends Output_Abstract
 			$this->headers['Cache-Control'] = 'must-revalidate, post-check=0, pre-check=0';
 			$this->headers['Pragma'] = 'public';
 		} else {
-			$this->headers['Content-Disposition'] = 'attachment; filename="report.csv"';
-			$this->headers['Pragma'] = 'no-cache';
+			$this->headers['Content-Disposition'] = 'attachment; filename="report.csv"'; 
+			$this->headers['Pragma'] = 'no-cache'; 
 		}
 		
     	$this->payload = $this->makeCSVTable( $csvheaders, $this->input );

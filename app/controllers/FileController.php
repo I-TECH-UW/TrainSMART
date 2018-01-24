@@ -146,7 +146,7 @@ class FileController extends ITechController
         header('Content-type: ' . $file->filemime);
         header('Content-length: ' . filesize($source));
         header('Content-Disposition: attachment; filename="' . str_replace('"', "", $file->filename) . '"');
-
+        
         // Transfer file in 1024 byte chunks to save memory usage.
         if ($fd = fopen($source, 'rb')) {
             while (!feof($fd)) {
