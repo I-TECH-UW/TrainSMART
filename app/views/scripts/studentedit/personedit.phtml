@@ -692,6 +692,18 @@
          if($this->escape($this->label_ps_permanent_address)){
 			echo "<p style='float:left;font-size:14px;'>" . t('Next of Kin') ."/" . t($this->escape($this->label_ps_permanent_address)) . "</p>";
 			echo "<div class='pad20 clear'></div><br>";
+			//TA:#489 START
+			echo "<label>" . t('Name') . "</label>";
+			echo "<input type='text' name='kin_name' value='" . $this->escape($this->kin_name) . "'> ";	
+			?>
+			<label>Relationship</label>
+			<select name="kin_relationship">
+				<option value=""><?php echo t('Select...'); ?></option>
+				<option value="parents" <?php echo ($this->escape($this->kin_relationship) == "parents" ? " selected" : "");?>><?php echo t('Parents'); ?></option>
+				<option value="relative" <?php echo ($this->escape($this->kin_relationship) == "relative" ? " selected" : "");?>><?php echo t('Relative'); ?></option>
+			</select>
+			<?php			
+			// TA:#489 END
 			echo "<label id='province_id_lbl'>" . @$this->translation['Region A (Province)'] . "</label>";
 			renderFilter($this->locations, 1, 'permanent-geo1', $this->escape($this->permanentgeo1), 'permanent-geo2');
 			if ( $this->setting['display_region_b'] ) {
@@ -709,7 +721,12 @@
 			echo"<label>" . t('City') . "</label>";
 			echo"<input type='text' name='permanent-city' value='" . $this->escape($this->permanentcity) . "'>";
 			echo"<label>" . t($this->translation['ps zip code']) . "</label>";
-			echo"<input type='text' name='permanent-postalcode' value='" . $this->escape($this->permanentzip) . "'> ";				
+			echo"<input type='text' name='permanent-postalcode' value='" . $this->escape($this->permanentzip) . "'> ";	
+			
+			//TA:#489
+			echo "<label>" . t('Phone') . "</label>";
+			echo "<input type='text' name='permanent-phone' value='" . $this->escape($this->permanentphone) . "'> ";	
+			///
 }
                             ?>
                             <!-- TA: added 7/22/2014 END -->

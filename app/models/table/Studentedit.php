@@ -57,9 +57,10 @@ class Studentedit extends ITechTable
 		$output['link_cohort'] = $row;
 
 		# GETTING PERMANENT ADDRESS
+		//TA:#489 add 'phone'
 		$select = $this->dbfunc()->select()
 			->from(array('a' => 'addresses'),
-					array('address1','address2','city','postalcode','state','country','id_addresstype','id_geog1','id_geog2','id_geog3'))
+					array('address1','address2','city','postalcode','state','country','id_addresstype','id_geog1','id_geog2','id_geog3', 'phone'))
 			->join(array('l' => 'link_student_addresses'),
 					'a.id = l.id_address')
 			->where('l.id_student = ?',$output['student'][0]['id'])
@@ -545,6 +546,7 @@ class Studentedit extends ITechTable
 				'id_geog1'			=>	$param1,
 				'id_geog2'			=>	$param2,
 				'id_geog3'			=>	$param3,
+			    'phone'			=>	$param['permanent-phone'] ? $param['permanent-phone'] : "",//TA:#489
 			);
 
 			$rowArray = $db->insert("addresses",$address);
@@ -555,6 +557,8 @@ class Studentedit extends ITechTable
 			$linkrec = array(
 				'id_address'		=>	$id,
 				'id_student'		=>	$studentid,
+			    'kin_name'		=>	$param['kin_name'],//TA:#489
+			    'kin_relationship'		=>	$param['kin_relationship'],//TA:#489
 			);
 			$rowArray = $db->insert("link_student_addresses",$linkrec);
 			$id = $db->lastInsertId();
@@ -579,9 +583,19 @@ class Studentedit extends ITechTable
 				'id_geog1'			=>	$param1,
 				'id_geog2'			=>	$param2,
 				'id_geog3'			=>	$param3,
+			    'phone'			=>	$param['permanent-phone'],//TA:#489
 			);
 
 			$db->update('addresses',$address,"id = '".$addressid."' AND id_addresstype = 1");
+			
+			//TA:#489
+			$db = $this->dbfunc();
+			$linkrec = array(
+			    'kin_name'		=>	$param['kin_name'],
+			    'kin_relationship'		=>	$param['kin_relationship'],
+			);
+			$rowArray = $db->update("link_student_addresses",$linkrec, "id_student=" . $studentid);
+			///
 
 			return $address;
 		}

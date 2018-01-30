@@ -365,6 +365,11 @@ class StudenteditController extends ITechController
 		$this->view->assign('permanentaddress2', $details['permanent_address'][0]['address2']);
 		$this->view->assign('permanentcity', $details['permanent_address'][0]['city']);
 		$this->view->assign('permanentzip', $details['permanent_address'][0]['postalcode']);
+		//TA:#489
+		$this->view->assign('kin_name', $details['permanent_address'][0]['kin_name']);
+		$this->view->assign('kin_relationship', $details['permanent_address'][0]['kin_relationship']);
+		$this->view->assign('permanentphone', $details['permanent_address'][0]['phone']);
+		///
 
 		# STUDENT VIEW
 		$this->view->assign('studentid', $details['student'][0]['studentid']);
@@ -666,6 +671,12 @@ class StudenteditController extends ITechController
 		$this->view->assign('permanentaddress2', $details['permanent_address'][0]['address2']);
 		$this->view->assign('permanentcity', $details['permanent_address'][0]['city']);
 		$this->view->assign('permanentzip', $details['permanent_address'][0]['postalcode']);
+		//TA:#489
+		$this->view->assign('kin_name', $details['permanent_address'][0]['kin_name']);
+		$this->view->assign('kin_relationship', $details['permanent_address'][0]['kin_relationship']);
+		$this->view->assign('permanentphone', $details['permanent_address'][0]['phone']);
+		///
+		
 
 		# STUDENT VIEW
 		$this->view->assign('studentid', $details['student'][0]['studentid']);
@@ -950,6 +961,11 @@ class StudenteditController extends ITechController
 		$this->view->assign('permanentaddress2', $details['permanent_address'][0]['address2']);
 		$this->view->assign('permanentcity', $details['permanent_address'][0]['city']);
 		$this->view->assign('permanentzip', $details['permanent_address'][0]['postalcode']);
+		//TA:#489
+		$this->view->assign('kin_name', $details['permanent_address'][0]['kin_name']);
+		$this->view->assign('kin_relationship', $details['permanent_address'][0]['kin_relationship']);
+		$this->view->assign('permanentphone', $details['permanent_address'][0]['phone']);
+		///
 
 		# STUDENT VIEW
 		$this->view->assign('studentid', $details['student'][0]['studentid']);
@@ -1090,174 +1106,6 @@ class StudenteditController extends ITechController
 	    $this->view->assign('lookupfunding', $helper->getFunding());
 	    $this->view->assign('studentfunding', $studentedit->getStudentFunding($details['student'][0]['id']));
 	    $this->view->assign('currentclasses', $helper->listcurrentclasses($details['link_cohort'][0]['id_cohort'], $details['student'][0]['id']));
-	    
-	    ////////////////////////////////////////////
-	    
-	    
-	
-// 	    $this->viewAssignEscaped('locations', Location::getAll());
-// 	    $params = $this->getAllParams();
-	
-	
-// 	    $this->view->assign('id', $pupiladd);
-	
-// 	    $this->viewAssignEscaped('locations', Location::getAll());
-	    
-	    
-// 	    $sid = $details['student'][0]['id']; //TA:#319
-	
-// 	    $this->view->assign('id', $pupiladd);
-	    
-// 	    $this->view->assign('localgeo1', $details['student'][0]['geog1']);
-// 	    $this->view->assign('localgeo2', $details['student'][0]['geog2']);
-// 	    $this->view->assign('localgeo3', $details['student'][0]['geog3']);
-// 	    $this->view->assign('address1', $details['person'][0]['home_address_1']);
-// 	    $this->view->assign('address2', $details['person'][0]['home_address_2']);
-// 	    $this->view->assign('city', $details['person'][0]['home_city']);
-// 	    $this->view->assign('zip', $details['person'][0]['home_postal_code']);
-// 	    $this->view->assign('enroll', $details['person'][0]['home_address_2']);
-// 	    $this->view->assign('email', $details['person'][0]['email']);
-// 	    $this->view->assign('email2', $details['person'][0]['email_secondary']);    
-// 	    $this->view->assign('phone', $details['person'][0]['phone_work']);
-// 	    $this->view->assign('cell', $details['person'][0]['phone_mobile']);    
-// 	    $this->view->assign('graduated', $details['student'][0]['isgraduated']);
-	    
-	
-// 	    $this->view->assign('facilities', $helper->getFacilities());
-	
-// 	    if ($details['link_cohort'][0]['id_cohort'] != 0) {
-// 	        $this->view->assign('allclasses', $helper->listcurrentclasses($details['link_cohort'][0]['id_cohort']));
-// 	        $this->view->assign('allpracticum', $helper->ListCurrentPracticum($details['link_cohort'][0]['id_cohort']));
-// 	        $this->view->assign('alllicenses', $helper->ListCurrentLicenses($details['link_cohort'][0]['id_cohort']));
-// 	        //TA:#319 use $sid not $details['person'][0]['id']
-// 	        $this->view->assign('currentclasses', $helper->listcurrentclasses($details['link_cohort'][0]['id_cohort'], $sid));
-// 	        $this->view->assign('currentpracticum', $helper->ListCurrentPracticum($details['link_cohort'][0]['id_cohort'], $sid));
-// 	        $this->view->assign('currentlicenses', $helper->ListCurrentLicenses($details['link_cohort'][0]['id_cohort'], $sid));
-// 	    } else {
-// 	        $this->view->assign('currentclasses', array());
-// 	        $this->view->assign('currentpracticum', array());
-// 	        $this->view->assign('currentlicenses', array());
-// 	    }
-	
-// 	    //TA:#342 take info about old cohorts
-// 	    array_shift($details['link_cohort']);
-// 	    $old_cohorts = array();
-// 	    foreach ($details['link_cohort'] as $row=>$value) {
-// 	        $old_cohort['id_cohort'] = $value['id_cohort'];
-// 	        $old_cohort['cohortname'] = $value['cohortname'];
-// 	        $old_cohort['joindate'] = $value['joindate'];
-// 	        $old_cohort['dropdate'] = $value['dropdate'];
-// 	        $old_cohort['classes'] = $helper->listcurrentclasses($value['id_cohort'], $sid);
-// 	        $old_cohort['practicum'] = $helper->ListCurrentPracticum($value['id_cohort'], $sid);
-// 	        $old_cohort['licenses'] = $helper->ListCurrentLicenses($value['id_cohort'], $sid);
-// 	        array_push($old_cohorts,$old_cohort);
-// 	    }
-// 	    $this->view->assign('old_cohorts', $old_cohorts);
-	
-// 	    # PERMANENT ADDRESS
-// 	    $this->view->assign('permanentgeo1', $details['permanent_address'][0]['id_geog1']);
-// 	    $this->view->assign('permanentgeo2', $details['permanent_address'][0]['id_geog2']);
-// 	    $this->view->assign('permanentgeo3', $details['permanent_address'][0]['id_geog3']);
-// 	    $this->view->assign('permanentaddress1', $details['permanent_address'][0]['address1']);
-// 	    $this->view->assign('permanentaddress2', $details['permanent_address'][0]['address2']);
-// 	    $this->view->assign('permanentcity', $details['permanent_address'][0]['city']);
-// 	    $this->view->assign('permanentzip', $details['permanent_address'][0]['postalcode']);
-	
-// 	    # STUDENT VIEW
-// 	    $this->view->assign('studentid', $details['student'][0]['studentid']);
-// 	    $this->view->assign('studenttype', $details['student'][0]['studenttype']);
-// 	    $this->view->assign('comments', $details['student'][0]['comments']);
-	
-// 	    if (count($details['link_cohort']) == 0) {
-// 	        $joindate = "";
-// 	        $dropdate = "";
-// 	        $joinreason = 0;
-// 	        $dropreason = 0;
-// 	    } else {
-// 	        $joindate = $details['link_cohort'][0]['joindate'] == "0000-00-00" ? "" : date("m/d/Y", strtotime($details['link_cohort'][0]['joindate']));
-// 	        $dropdate = $details['link_cohort'][0]['dropdate'] == "0000-00-00" ? "" : date("m/d/Y", strtotime($details['link_cohort'][0]['dropdate']));
-// 	        $joinreason = $details['link_cohort'][0]['joinreason'];
-// 	        $dropreason = $details['link_cohort'][0]['dropreason'];
-// 	    }
-// 	    $this->view->assign('enrollmentdate', $joindate);
-// 	    $this->view->assign('enrollmentreason', $joinreason);
-// 	    $this->view->assign('separationdate', $dropdate);
-// 	    $this->view->assign('separationreason', $dropreason);
-	
-// 	    $this->view->assign('cadre', $details['student'][0]['cadre']);
-// 	    $this->view->assign('advisor', $details['student'][0]['advisorid']);
-	
-// 	    $this->view->assign('fundingsource', $details['funding'][0]['fundingsource']);
-// 	    $this->view->assign('fundingamount', $details['funding'][0]['fundingamount']);
-	
-// 	    // POST GRADUATION FIELDS
-// 	    $this->view->assign('postgeo1', $details['student'][0]['postgeo1']);
-// 	    $this->view->assign('postgeo2', $details['student'][0]['postgeo2']);
-// 	    $this->view->assign('postgeo3', $details['student'][0]['postgeo3']);
-// 	    $this->view->assign('postaddress1', $details['student'][0]['postaddress1']);
-// 	    $this->view->assign('postfacilityname', $details['student'][0]['postfacilityname']);
-	
-// 	    $helper = new Helper();
-	
-// 	    $this->view->assign('joinreasons', $helper->getReasons('join'));
-// 	    $this->view->assign('dropreasons', $helper->getReasons('drop'));
-	
-	
-// 	    // For Title List
-// 	    $listtitle = $studentedit->ListTitle();
-// 	    $this->view->assign('gettitle', $listtitle);
-	
-// 	    # GETTING COHORTS
-// 	    $listcohort = $studentedit->ListCohort();
-// 	    $this->view->assign('getcohorts', $listcohort);
-	
-// 	    # GETTING CADRES
-// 	    $listcadre = $studentedit->listCadre();
-// 	    $this->view->assign('getcadres', $listcadre);
-	
-// 	    # GETTING TUTORS
-// 	    $listtutors = $studentedit->ListTutors();
-// 	    $this->view->assign('gettutors', $listtutors);
-	
-// 	    # NATIONALITY INFO
-// 	    $helper = new Helper();
-// 	    $this->view->assign('lookupnationalities', $helper->getNationalities());
-// 	    $this->view->assign('nationalityid', $details['student'][0]['nationalityid']);
-	
-// 	    if (count($details['link_cohort']) > 0) {
-// 	        $this->view->assign('hascohort', true);
-	
-// 	        #$cstartdate = $details['cohort'][0]['startdate'];
-// 	        $cstartdate = $joindate;
-// 	        #echo '<pre>';var_dump($details);die();
-// 	        if ($cstartdate) {
-// 	            $joindate = $details['link_cohort'][0]['joindate'] == "0000-00-00" ? "" : date("m/d/Y", strtotime($details['link_cohort'][0]['joindate']));
-// 	            $dropdate = $details['link_cohort'][0]['dropdate'] == "0000-00-00" ? "" : date("m/d/Y", strtotime($details['link_cohort'][0]['dropdate']));
-	
-// 	            $lastclass = $dropdate ? $dropdate : date("m/d/Y");  // seperate date or today
-// 	            $yearofstudy = intval((strtotime($lastclass) - strtotime($cstartdate)) / 31536000 + 1); // time spent in class / seconds in a year + 1 year to show 1 year if 6mo of class or whatever
-// 	        }
-	
-// 	        $this->view->assign('yearofstudy', $cstartdate ? $yearofstudy : "");
-	
-// 	        if (count($details['cadre']) > 0) {
-// 	            $cadre = $details['cadre'][0]['id'];
-// 	        } else {
-// 	            $cadre = 0;
-// 	        }
-	
-	
-// 	    } else {
-// 	        $this->view->assign('hascohort', false);
-// 	        $this->view->assign('yearofstudy', "");
-// 	        $cadre = 0;
-// 	    }
-	
-// 	    $this->view->assign('lookupstudenttypes', $helper->getStudentTypes());
-// 	    $this->view->assign('cadre', $cadre);
-	
-	
-	    
 	
 	}
 
