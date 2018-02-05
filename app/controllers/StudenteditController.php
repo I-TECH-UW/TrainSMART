@@ -316,6 +316,9 @@ class StudenteditController extends ITechController
 		$this->view->assign('enroll', $details['person'][0]['home_address_2']);
 		$this->view->assign('email', $details['person'][0]['email']);
 		$this->view->assign('email2', $details['person'][0]['email_secondary']);
+		$this->view->assign('home_district', $details['person'][0]['home_district']);//TA:#489.2
+		$this->view->assign('ta', $details['person'][0]['ta']);//TA:#489.2
+		$this->view->assign('gvh', $details['person'][0]['gvh']);//TA:#489.2
 		$this->view->assign('titid', $details['person'][0]['title_option_id']);
 		$this->view->assign('phone', $details['person'][0]['phone_work']);
 		$this->view->assign('cell', $details['person'][0]['phone_mobile']);
@@ -615,6 +618,9 @@ class StudenteditController extends ITechController
 		$this->view->assign('enroll', $details['person'][0]['home_address_2']);
 		$this->view->assign('email', $details['person'][0]['email']);
 		$this->view->assign('email2', $details['person'][0]['email_secondary']);
+		$this->view->assign('home_district', $details['person'][0]['home_district']);//TA:#489.2
+		$this->view->assign('ta', $details['person'][0]['ta']);//TA:#489.2
+		$this->view->assign('gvh', $details['person'][0]['gvh']);//TA:#489.2
 		$this->view->assign('titid', $details['person'][0]['title_option_id']);
 		$this->view->assign('phone', $details['person'][0]['phone_work']);
 		$this->view->assign('cell', $details['person'][0]['phone_mobile']);

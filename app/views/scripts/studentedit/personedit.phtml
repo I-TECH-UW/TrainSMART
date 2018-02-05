@@ -683,6 +683,29 @@
 							echo"<input type='text' name='localcity' value='" . $this->escape($this->city) . "'>";
 							echo"<label>" . $this->translation['ps zip code'] . "</label>";
 							echo"<input type='text' name='localpostalcode' value='" . ($this->escape($this->zip) != '0' ? $this->escape($this->zip) : '') . "'> ";
+							
+							//TA:#489.2 START
+							?>
+							     <label><?php echo t('Phone'); ?></label>
+														<input type="text" name="localphone" value="<?php echo $this->escape($this->phone);?>">
+							
+														<label><?php echo t('Cellphone'); ?></label>
+														<input type="text" name="localcell" value="<?php echo $this->escape($this->cell);?>" >
+							
+														<label><?php echo t('Cellphone'); ?> 2</label>
+														<input type="text" name="localcell2" value="<?php echo $this->escape($this->cell2);?>" >
+							
+														<label><?php echo t('Email'); ?></label>
+														<input type="text" name="email" value="<?php echo $this->escape($this->email);?>">
+							
+														<label><?php echo t('Email'); ?> 2</label>
+														<input type="text" name="email_secondary" value="<?php echo $this->escape($this->email2);?>">
+														
+														<label><?php echo t('Emergency Contact'); ?></label>
+														<input type="text" name="emergcontact" value="<?php echo $this->escape($this->emergcontact);?>">
+							     <?php
+							     //TA:#489.2 END
+							     
 							echo"<label style='display:block; padding-right: 25px' >" . t('Residential Address') . "?</label>";							
                             echo"<input type='checkbox' name='localisresidential' id='localisresidential' value='1' " . ( $this->escape($this->home_is_residential) == 1 ? 'CHECKED' :'') . ">";
      }   // end if
@@ -738,28 +761,17 @@
 							
 
 							<div class="pad20 clear"></div>
-							<p style="float:left;font-size:14px;"><?php echo t('Other Contact Information'); ?></p>
+							<p style="float:left;font-size:14px;"><?php echo t('Home District Address'); ?></p>
 							<div class="pad20 clear"></div><br>
-
-							<label><?php echo t('Phone'); ?></label>
-							<input type="text" name="localphone" value="<?php echo $this->escape($this->phone);?>">
-
-							<label><?php echo t('Cellphone'); ?></label>
-							<input type="text" name="localcell" value="<?php echo $this->escape($this->cell);?>" >
-
-							<label><?php echo t('Cellphone'); ?> 2</label>
-							<input type="text" name="localcell2" value="<?php echo $this->escape($this->cell2);?>" >
-
-							<label><?php echo t('Email'); ?></label>
-							<input type="text" name="email" value="<?php echo $this->escape($this->email);?>">
-
-							<label><?php echo t('Email'); ?> 2</label>
-							<input type="text" name="email_secondary" value="<?php echo $this->escape($this->email2);?>">
 							
-							<!-- TA: add - START  -->
-							<label><?php echo t('Emergency Contact'); ?></label>
-							<input type="text" name="emergcontact" value="<?php echo $this->escape($this->emergcontact);?>">
-							<!-- TA: add - END  -->
+							<!-- TA:#489.2 START -->
+							<label><?php echo t('Home District'); ?></label>
+							<input type="text" name="home_district" value="<?php echo $this->escape($this->home_district);?>">
+							<label><?php echo t('TA'); ?></label>
+							<input type="text" name="ta" value="<?php echo $this->escape($this->ta);?>">
+							<label><?php echo t('GVH'); ?></label>
+							<input type="text" name="gvh" value="<?php echo $this->escape($this->gvh);?>">
+							<!-- TA:#489.2 END -->
 
 							<div class="pad20 clear"></div>
 							<p style="float:left;font-size:14px;"><?php echo t('Student Information'); ?></p>
