@@ -462,10 +462,10 @@
 					var exammark = document.getElementById("exammark[<?php echo $classes['id'] ?>]").value;
 					var grade = 0;
 					if($.isNumeric( camark )){
-						grade = grade + parseInt(camark);
+						grade = grade + parseFloat(camark);
 					}
 					if($.isNumeric( exammark )){
-						grade = grade + parseInt(exammark);
+						grade = grade + parseFloat(exammark);
 					}
 					document.getElementById("grade[<?php echo $classes['id'] ?>]").value = grade;	
 				}
