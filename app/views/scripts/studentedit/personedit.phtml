@@ -430,10 +430,12 @@
 					<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($classes['startdate'])); ?></td>
 					<td class="" style="width : 120px;"><?php echo date("m/d/Y", strtotime($classes['enddate'])); ?></td>
 					<?php if($this->setting['ps_display_ca_mark']) : ?>
-						<td class="" style="width : 120px;"><input type="text" name="camark[<?php echo $classes['id'] ?>]" id="camark[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['camark'])) != "n/a" ? $classes['camark'] : ""; ?>" style="width : 100%;"></td>
+						<td class="" style="width : 120px;"><input type="text" name="camark[<?php echo $classes['id'] ?>]" id="camark[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['camark'])) != "n/a" ? $classes['camark'] : ""; ?>" style="width : 100%;"
+						 oninput="calculate_grade<?php echo $classes['id'] ?>();"></td>
 					<?php endif; ?>
 					<?php if($this->setting['ps_display_exam_mark']) : ?>
-						<td class="" style="width : 120px;"><input type="text" name="exammark[<?php echo $classes['id'] ?>]" id="exammark[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['exammark'])) != "n/a" ? $classes['exammark'] : ""; ?>" style="width : 100%;"></td>
+						<td class="" style="width : 120px;"><input type="text" name="exammark[<?php echo $classes['id'] ?>]" id="exammark[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['exammark'])) != "n/a" ? $classes['exammark'] : ""; ?>" style="width : 100%;" 
+						oninput="calculate_grade<?php echo $classes['id'] ?>();"></td>
 					<?php endif; ?>
 					<td class="" style="width : 120px;"><input type="text" name="grade[<?php echo $classes['id'] ?>]" id="grade[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['grade'])) != "n/a" ? $classes['grade'] : ""; ?>" style="width : 100%;"></td>
 					<!-- TA:#403 -->
@@ -453,6 +455,22 @@
 						<td class="" style="width : 120px;"><input type="text" name="credits[<?php echo $classes['id'] ?>]" id="credits[<?php echo $classes['id'] ?>]" value="<?php echo trim(strtolower($classes['credits'])) != "n/a" ? $classes['credits'] : ""; ?>" style="width : 100%;"></td>
 					<?php endif; ?>				
 				</tr>
+				<!-- TA:#490 START -->
+				<script>
+				function calculate_grade<?php echo $classes['id'] ?>(){
+					var camark = document.getElementById("camark[<?php echo $classes['id'] ?>]").value;
+					var exammark = document.getElementById("exammark[<?php echo $classes['id'] ?>]").value;
+					var grade = 0;
+					if($.isNumeric( camark )){
+						grade = grade + parseInt(camark);
+					}
+					if($.isNumeric( exammark )){
+						grade = grade + parseInt(exammark);
+					}
+					document.getElementById("grade[<?php echo $classes['id'] ?>]").value = grade;	
+				}
+				</script>
+				<!-- TA:#490 END -->
 <?php
 
 	}
