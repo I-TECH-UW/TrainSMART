@@ -6774,6 +6774,47 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		        $headers[] = "Reason for Separation";
 		    }
 		    //////
+		    
+		    //TA:#458 START
+		    $start_date_sep = '';
+		    if((isset($params['startdaysep']) && $params['startdaysep']) &&
+		        (isset($params['startmonthsep']) && $params['startmonthsep']) &&
+		        (isset($params['startyearsep']) && $params['startyearsep'])) {
+		            if (!$cohortJoined) {
+		                $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		                $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		                $cohortJoined = true;
+		            }
+		            $start_date_sep = $params['startyearsep'].'-'.$params['startmonthsep'].'-'.$params['startdaysep'];
+		        }
+		    
+		        $end_date_sep = '';
+		        if ((isset($params['enddaysep']) && $params['enddaysep']) &&
+		            (isset($params['endmonthsep']) && $params['endmonthsep']) &&
+		            (isset($params['endyearsep']) && $params['endyearsep'])) {
+		                if (!$cohortJoined) {
+		                    $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		                    $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		                    $cohortJoined = true;
+		                }
+		                $end_date_sep = $params['endyearsep'].'-'.$params['endmonthsep'].'-'.$params['enddaysep'];
+		            }
+		            if ((isset($params['showdatesep']) && $params['showdatesep']) || ($start_date_sep !== '') || ($end_date_sep !== '')) {
+		                if (!$cohortJoined) {
+		                    $s->joinLeft(array('lsc' => 'link_student_cohort'), 'lsc.id_student = s.id', array());
+		                    $s->joinLeft(array('c' => 'cohort'), 'c.id = lsc.id_cohort', array());
+		                    $cohortJoined = true;
+		                }
+		                $s->columns('lsc.dropdate');
+		                $headers[] = "Date of Separation";
+		                if ($start_date_sep !== '') {
+		                    $s->where('lsc.dropdate >= ?', $start_date_sep);
+		                }
+		                if ($end_date_sep !== '') {
+		                    $s->where('lsc.dropdate <= ?', $end_date_sep);
+		                }
+		            }
+		      //TA:#458 END
 
 		    //TA: this is facility at GRADUATION    !!!!!!!
 		if ((isset($params['showfacility']) && $params['showfacility']) ||

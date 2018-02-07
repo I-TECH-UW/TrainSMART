@@ -46,7 +46,9 @@
 					<div id="contentheader">
 						<h2><?php tp('Separated Students');?></h2><br>
 					</div>
-					<div class="pad50 clear"></div>
+					<br>
+					<?php tp('Select Criteria');?><br>
+					
 					<form  action="" method="get">
 						<div class="mainformholder" style="height:100%;">
 						
@@ -70,8 +72,31 @@ $reasons = $helper->getReasons('drop');
     </select>
     </div>
     <!-- TA:#405 END -->
+    
+    <!-- TA:#458 START -->
+<div class="clear pad20">&nbsp;</div>
+<div class="fieldquestion"><?php echo t('Date of Separation'); ?></div>
+<div class="fieldshow">
+    <input type="checkbox" name="showdatesep" id="showdatesep"
+           value="1"<?php if (isset($this->criteria['showdatesep']) && $this->criteria['showdatesep']) { echo " checked"; } ?>>
+</div>
+<div class="fieldselect">
+    <input type="text" name="startdaysep" id="startdaysep" value="" placeholder="<?php tp('Day') ?>"
+           style="width : 30px; margin-right : 10px; margin-left : 0px;">
+    <input type="text" name="startmonthsep" id="startmonthsep" value="" placeholder="<?php tp('Month') ?>"
+           style="width : 30px; margin-right : 10px; margin-left : 0px;">
+    <input type="text" name="startyearsep" id="startyearsep" value="" placeholder="<?php tp('Year') ?>"
+           style="width : 50px; margin-right : 10px; margin-left : 0px;"><br><br>
+    <?php tp('and') ?><br><br>
+    <input type="text" name="enddaysep" id="enddaysep" value="" placeholder="<?php tp('Day') ?>"
+           style="width : 30px; margin-right : 10px; margin-left : 0px;">
+    <input type="text" name="endmonthsep" id="endmonthsep" value="" placeholder="<?php tp('Month') ?>"
+           style="width : 30px; margin-right : 10px; margin-left : 0px;">
+    <input type="text" name="endyearsep" id="endyearsep" value="" placeholder="<?php tp('Year') ?>"
+           style="width : 50px; margin-right : 10px; margin-left : 0px;"></div>
+<div class="clear pad20">&nbsp;</div>
+    <!-- TA:#458 END -->
 							<input type="hidden" name="process" id="process" value="1">
-							<?php tp('Select Criteria');?><br>
 
 							<?php
 							echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
