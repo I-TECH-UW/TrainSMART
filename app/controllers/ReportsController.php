@@ -6513,7 +6513,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			if (isset($params['showcohort']) && $params['showcohort']) {
 			//TA:#217
 			    if((isset($params['show_old_cohorts']))){
-			        $headers[] = "Current Cohorts";
+			        $headers[] = "Old Cohorts";
 			        $s->columns('GROUP_CONCAT(c.cohortname) as old_cohortname');
 			        $s->group('p.id');
 			        if ($cohortJoined){
@@ -7016,7 +7016,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	                $criteria['show_current_cohort'] = '0';
 	                $criteria['show_old_cohorts'] = '1';
 	                list($query2, $headers) = $this->psStudentReportsBuildQuery($criteria);
-	                $headers[] = "Old Cohorts";
+	                $headers[] = "Current Cohorts";
 	                 
 	                //TA:#217 create query, take only repeated students (who dropped one cohort and joined to another)
 // 	                $query = "select t1.*, t2.old_cohortname from (" . $query1 . ") as t1 ".
