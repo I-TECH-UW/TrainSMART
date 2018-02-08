@@ -6514,7 +6514,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			//TA:#217
 			    if((isset($params['show_old_cohorts']))){
 			        $headers[] = "Old Cohorts";
-			        $s->columns('GROUP_CONCAT(c.cohortname) as old_cohortname');
+			        $s->columns('GROUP_CONCAT(DISTINCT c.cohortname) as old_cohortname');
 			        $s->group('p.id');
 			        if ($cohortJoined){
 			         $s->where('lsc.dropdate != ?','0000-00-00');
@@ -6522,7 +6522,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			    }else if((isset($params['show_current_cohort']))){
 			        $take_drop_reason = false;//TA:#405
 			        $headers[] = "Current Cohorts";
-			        $s->columns('GROUP_CONCAT(c.cohortname) as current_cohortname');
+			        $s->columns('GROUP_CONCAT(DISTINCT c.cohortname) as current_cohortname');
 			        $s->group('p.id');
 			        if ($cohortJoined){
 			         $s->where('lsc.dropdate = ?','0000-00-00');
@@ -7034,7 +7034,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	            }
 
 	            $db = Zend_Db_Table_Abstract::getDefaultAdapter();
-	           //print $query;
+	          // print $query;
 	            $rowArray = $db->fetchAll($query);
 	            $this->viewAssignEscaped("headers", $headers);
 	            $this->viewAssignEscaped("output", $rowArray);
