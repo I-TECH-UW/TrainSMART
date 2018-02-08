@@ -101,6 +101,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showfacility" id="showfacility" value="1"<?php echo $this->criteria['showfacility'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="facility" id="facility" style="" size="10">
 									<?php
+									echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
 									foreach ($this->facilities as $item){
 										echo "<option value=\"" . $item['id'] . "\">" . $item['facility_name'] . "</option>\n";
 									}

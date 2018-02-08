@@ -36,6 +36,7 @@ $funds = $helper->getFunding();
 ?>
 <select name="funding" id="funding" size="10">
         <?php
+        echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
         foreach ($funds as $item) {
             echo "<option value=\"" . $item['id'] . "\">" . $item['fundingname'] . "</option>\n";
         }
@@ -50,6 +51,7 @@ $funds = $helper->getFunding();
            value="1"<?php if (isset($this->criteria['showtutor']) && $this->criteria['showtutor']) { echo " checked"; } ?>></div>
 <div class="fieldselect"><select name="tutor" id="tutor" style="" size="10">
         <?php
+        echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
         foreach ($this->tutors as $item) {
             echo "<option value=\"" . $item['id'] . "\">" . $item['first_name'] . " " . $item['last_name'] . "</option>\n";
         }

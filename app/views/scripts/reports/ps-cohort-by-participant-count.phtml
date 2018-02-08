@@ -98,6 +98,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showinstitution" id="showinstitution" value="1"<?php echo $_GET['showcoursename'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="institution" id="institution" style="" size="10">
 	<?php
+	echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
 		foreach ($this->institutions as $item){
 			echo "<option value=\"" . $item['id'] . "\">" . $item['institutionname'] . "</option>\n";
 		}
@@ -109,6 +110,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showcadre" id="showcadre" value="1"<?php echo $_GET['showcadre'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="cadre" id="cadre" style="" size="10">
 	<?php
+	echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
 		foreach ($this->cadres as $item){
 			echo "<option value=\"" . $item['id'] . "\">" . $item['cadrename'] . "</option>\n";
 		}
@@ -120,6 +122,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showdegree" id="showdegree" value="1"<?php echo $_GET['showdegree'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="degree" id="degree" style="" size="10">
 	<?php
+	echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
 		foreach ($this->degrees as $item){
 			echo "<option value=\"" . $item['id'] . "\">" . $item['degree'] . "</option>\n";
 		}
@@ -131,7 +134,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showgender" id="showgender" value="1"<?php echo $_GET['showgender'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="gender" id="gender" style="" size="10">
 	<?php
-			echo "<option value=\"0\"" . ($_GET['gender'] == 0 ? " checked" : "") . ">All</option>\n";
+			echo "<option value=\"0\"" . ($_GET['gender'] == 0 ? " checked" : "") . ">-- All --</option>\n";
 			echo "<option value=\"1\"" . ($_GET['gender'] == 1 ? " checked" : "") . ">Male</option>\n";
 			echo "<option value=\"2\"" . ($_GET['gender'] == 2 ? " checked" : "") . ">Female</option>\n";
 	?>

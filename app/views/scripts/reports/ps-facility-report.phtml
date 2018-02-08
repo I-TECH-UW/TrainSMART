@@ -97,6 +97,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showfacility" id="showfacility" value="1"<?php echo $_GET['showfacility'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="facility" id="facility" style="" size="10">
 <?php
+echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
 	foreach ($this->facilities as $item){
 		echo "<option value=\"" . $item['id'] . "\">" . $item['facility_name'] . "</option>\n";
 	}
@@ -135,6 +136,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showfacilitytype" id="showfacilitytype" value="1"<?php echo $_GET['showfacilitytype'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="facilitytype" id="facilitytype" style="" size="10">
 <?php
+echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
 	foreach ($this->facilitytypes as $item){
 		echo "<option value=\"" . $item['id'] . "\">" . $item['facilitytypename'] . "</option>\n";
 	}
@@ -147,6 +149,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showinstitutionsponsors" id="showinstitutionsponsors" value="1"<?php echo $_GET['showinstitutionsponsors'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="institutionsponsors" id="institutionsponsors" style="" size="10">
 	<?php
+	echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
 		foreach ($this->sponsors as $item){
 			echo "<option value=\"" . $item['id'] . "\">" . $item['sponsorname'] . "</option>\n";
 		}
@@ -158,6 +161,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showcadre" id="showcadre" value="1"<?php echo $_GET['showcadre'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="cadre" id="cadre" style="" size="10">
 	<?php
+	echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
 		foreach ($this->cadres as $item){
 			echo "<option value=\"" . $item['id'] . "\">" . $item['cadrename'] . "</option>\n";
 		}

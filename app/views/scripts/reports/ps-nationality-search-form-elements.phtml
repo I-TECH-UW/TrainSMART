@@ -2,6 +2,7 @@
 <div class="fieldshow"><input type="checkbox" name="shownationality" id="shownationality" value="1"<?php if (isset($this->criteria['shownationality']) && $this->criteria['shownationality']) { echo " checked"; } ?>></div>
 <div class="fieldselect"><select name="nationality" id="nationality" style="" size="10">
         <?php
+        echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
         foreach ($this->nationalities as $item){
             echo "<option value=\"" . $item['id'] . "\">" . $item['nationality'] . "</option>\n";
         }

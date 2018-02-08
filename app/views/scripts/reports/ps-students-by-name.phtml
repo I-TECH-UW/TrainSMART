@@ -60,6 +60,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showgender" id="showgender" value="1"<?php echo $this->criteria['showgender'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="gender" id="gender" style="" size="10">
 									<?php
+									echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
 									echo "<option value=\"male\">Male</option>\n";
 									echo "<option value=\"female\">Female</option>\n";
 									?>

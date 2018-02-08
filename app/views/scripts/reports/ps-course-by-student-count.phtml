@@ -104,6 +104,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showinstitution" id="showinstitution" value="1"<?php echo $_GET['showcoursename'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="institution" id="institution" style="" size="10">
 	<?php
+	echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
 		foreach ($this->institutions as $item){
 			echo "<option value=\"" . $item['id'] . "\">" . $item['institutionname'] . "</option>\n";
 		}
@@ -115,6 +116,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showcohort" id="showcohort" value="1"<?php echo $_GET['showcohort'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="cohort" id="cohort" style="" size="10">
 	<?php
+	echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
 		foreach ($this->cohorts as $item){
 			echo "<option value=\"" . $item['id'] . "\">" . $item['cohortname'] . "</option>\n";
 		}
@@ -136,6 +138,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showcadre" id="showcadre" value="1"<?php echo $_GET['showcadre'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="cadre" id="cadre" style="" size="10">
 	<?php
+	echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
 		foreach ($this->cadres as $item){
 			echo "<option value=\"" . $item['id'] . "\">" . $item['cadrename'] . "</option>\n";
 		}
@@ -147,7 +150,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showyearinschool" id="showyearinschool" value="1"<?php echo $_GET['showyearinschool'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="yearinschool" id="yearinschool" style="height : 25px;">
 <?php
-	echo "<option value=''>" . t('Select') . "...</option>\n";
+	echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
 	for ($i = 1990; $i <= date("Y"); $i++){
 		echo "<option value='" . $i . "'>" . $i . "</option>\n";
 	}
@@ -159,6 +162,7 @@
 							<div class="fieldshow"><input type="checkbox" name="showcoursetype" id="showcoursetype" value="1"<?php echo $_GET['showcoursetype'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"><select name="coursetype" id="coursetype" style="" size="10">
 	<?php
+	echo "<option value=''>-- " . t('All') . " --</option>\n"; //TA:#462
 		foreach ($this->coursetypes as $item){
 			echo "<option value=\"" . $item['id'] . "\">" . $item['coursetype'] . "</option>\n";
 		}
