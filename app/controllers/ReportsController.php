@@ -7069,6 +7069,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 			$rowArray = $db->fetchAll($query);
+			//print $query;
 			$this->view->assign('query', $query->__toString());
 
 			$this->viewAssignEscaped("headers", $headers);
@@ -7076,6 +7077,42 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 			$this->view->assign('criteria', $criteria);
 		}
+	}
+	
+	//TA:#496
+	public function psStudentsAddressAction() {
+	    $this->viewAssignEscaped ('locations', Location::getAll());
+	
+	    $helper = new Helper();
+	    $this->view->assign('mode', 'id');
+	    $this->view->assign('institutions', $helper->getInstitutions());
+	    $this->view->assign('cadres', $helper->getCadres());
+	    $this->view->assign('institutiontypes', $helper->AdminInstitutionTypes());
+	    $this->view->assign('cohorts', $helper->getCohorts());
+	    $this->view->assign('nationalities', $helper->getNationalities());
+	    $this->view->assign('funding', $helper->getFunding());
+	    $this->view->assign('tutors', $helper->getTutors());
+	    $this->view->assign('facilities', $helper->getFacilities());
+	    $this->view->assign('coursetypes', $helper->AdminCourseTypes());
+	    $this->view->assign('degrees', $helper->getDegrees());
+	    $this->view->assign('site_style', $this->setting('site_style'));
+	    //TA:#334 $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
+	
+	    if ($this->getSanParam('process')) {
+	        $criteria = $this->getAllParams();
+	
+	        list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
+	
+	        $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+	        $rowArray = $db->fetchAll($query);
+	        //print $query;
+	        $this->view->assign('query', $query->__toString());
+	
+	        $this->viewAssignEscaped("headers", $headers);
+	        $this->viewAssignEscaped("output", $rowArray);
+	
+	        $this->view->assign('criteria', $criteria);
+	    }
 	}
 
 	public function psGraduatedStudentsAction() {

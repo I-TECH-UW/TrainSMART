@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><?php echo $this->translation['Application Name'];?> | <?php tp('Students Address');?></title>
+		<?php
+		require_once('views/helpers/Location.php');
+		require_once('views/helpers/ScriptContainer.php');
+		print ScriptContainer::$instance->renderCSSHead();
+		print ScriptContainer::$instance->renderJSHead();
+
+		?>
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+			} );
+
+			function gotoPage(objId) {
+				var reportSelector = YAHOO.util.Dom.get(objId);
+				if ( reportSelector[reportSelector.selectedIndex].value ) {
+					window.location = '<?php echo $this->base_url;?>' + reportSelector[reportSelector.selectedIndex].value + '?<?php echo $_SERVER['QUERY_STRING'];?>';
+				}
+			}
+		</script>
+	</head>
+	<body class="yui-skin-sam" >
+		<div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+			<div id="content">
+				<div id="subcontent">
+					<?php
+					echo $this->partial('reports/student-report-types-partial.phtml', array('site_style' => $this->site_style));
+					?>
+
+					<div id="contentheader">
+						<h2><?php tp('Students Address');?></h2><br>
+					</div>
+					<br>
+					<form  action="" method="get">
+						<div class="mainformholder" style="height:100%;">
+							<input type="hidden" name="process" id="process" value="1">
+
+							<?php tp('Contact Address');?><br>
+							<?php
+							echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
+								array('translation' => $this->translation, 'locations' => $this->locations,
+									'criteria' => $this->criteria, 'setting' => $this->setting));
+							?>
+							
+							<div class="fieldquestion"><?php echo t('Address 1'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_address1" id="show_address1" value="1"<?php echo $this->criteria['show_address1'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('Address 2'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_address2" id="show_address2" value="1"<?php echo $this->criteria['show_address2'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('City'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_city" id="show_city" value="1"<?php echo $this->criteria['show_city'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo $this->translation['ps zip code']; ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_zip" id="show_zip" value="1"<?php echo $this->criteria['show_zip'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('Phone'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_phone" id="show_phone" value="1"<?php echo $this->criteria['show_phone'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('Cellphone'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_cellphone" id="show_cellphone" value="1"<?php echo $this->criteria['show_cellphone'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('Cellphone'); ?> 2</div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_cellphone2" id="show_cellphone2" value="1"<?php echo $this->criteria['show_cellphone2'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('Email'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_email" id="show_email" value="1"<?php echo $this->criteria['show_email'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('Email'); ?> 2</div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_email2" id="show_email2" value="1"<?php echo $this->criteria['show_email2'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('Emergency Contact'); ?> 2</div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_emercontact" id=show_emercontact value="1"<?php echo $this->criteria['show_emercontact'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('Residential Address'); ?>?</div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_resaddress" id=show_resaddress value="1"<?php echo $this->criteria['show_resaddress'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<br><?php tp('Next of Kin/Guardian Address');?><br>
+							
+							<div class="fieldquestion"><?php echo t('Name'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_kinname" id="show_kinname" value="1"<?php echo $this->criteria['show_kinname'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion">Relationship</div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_kinrelationship" id="show_kinrelationship" value="1"<?php echo $this->criteria['show_kinrelationship'] ? " checked" : "" ?>></div>
+							<div class="fieldselect">
+							<select name="kin_relationship" size="5">
+				<option value="">-- <?php echo t('All'); ?> --</option>
+				<option value="parents" <?php echo ($this->escape($this->kin_relationship) == "parents" ? " selected" : "");?>><?php echo t('Parents'); ?></option>
+				<option value="relative" <?php echo ($this->escape($this->kin_relationship) == "relative" ? " selected" : "");?>><?php echo t('Relative'); ?></option>
+			</select>
+							</div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<?php
+							echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
+								array('translation' => $this->translation, 'kin_locations' => $this->locations,
+									'criteria' => $this->criteria, 'setting' => $this->setting));
+							?>
+							
+							<div class="fieldquestion"><?php echo t('Address 1'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_kinaddress1" id="show_kinaddress1" value="1"<?php echo $this->criteria['show_kinaddress1'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('Address 2'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_kinaddress2" id="show_kinaddress2" value="1"<?php echo $this->criteria['show_kinaddress2'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('City'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_kincity" id="show_kincity" value="1"<?php echo $this->criteria['show_kincity'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo $this->translation['ps zip code']; ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_kinzip" id="show_kinzip" value="1"<?php echo $this->criteria['show_kinzip'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('Phone'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_kinphone" id="show_kinphone" value="1"<?php echo $this->criteria['show_kinphone'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+
+							<br><?php tp('Home District Address');?><br>
+							
+							<div class="fieldquestion"><?php echo t('Home District'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_homedistrict" id="show_homedistrict" value="1"<?php echo $this->criteria['show_homedistrict'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('TA'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_ta" id="show_ta" value="1"<?php echo $this->criteria['show_ta'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('GVH'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_gvh" id="show_gvh" value="1"<?php echo $this->criteria['show_gvh'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+
+						</div>
+
+						<div class="pad20 clear"></div>
+
+						<?php echo $this->partial('reports/ps-search-preview-button-partial.phtml', array('criteria' => $this->criteria)); ?>
+					</form>
+					<?php if (isset($this->output)) {
+					echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
+						array('output' => $this->output, 'headers' => $this->headers));
+					?>
+					<br>
+					<input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large"
+					       onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=csv"?>')">
+					<?php } ?>
+					<div class="clear" style=""></div>
+				</div>
+				<div class="clear" style=""></div>
+			</div>   
+			<div class="clear" style="height : 100px;"></div>
+			<div class="clear" style=""></div>
+							
+	
+			<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+			</div>
+		</div>
+	</body>
+</html>
+
+
+
