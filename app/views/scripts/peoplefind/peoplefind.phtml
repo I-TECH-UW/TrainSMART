@@ -89,6 +89,11 @@
 
 				<div class="mainformholder">
                 <form name="peoplefind" action="../peoplefind/peoplefind" method="post">
+                
+                <!-- TA:#492 -->
+                <label><?php echo t('Student ID'); ?></label>
+					<input type="text" name="national_id" value="<?php echo $this->escape($_REQUEST['national_id']);?>">
+					
 					<label><?php echo t('First name'); ?></label>
 					<input type="text" name="firstname" value="<?php echo $this->escape($_REQUEST['firstname']);?>">
 

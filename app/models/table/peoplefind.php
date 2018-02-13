@@ -225,6 +225,11 @@ SELECT \'tutor\' AS tutor_type,
         $where[] = ' AND tutor_id IS NOT NULL ';
       break;
     }  
+    
+    //TA:#492
+    if($param['national_id']){
+        $where[] = " AND national_id ='" . $param['national_id'] . "'";
+    }
 
     //TA:36 fixing bug
     if($param['firstname']){
@@ -265,7 +270,7 @@ SELECT \'tutor\' AS tutor_type,
   }
   
   
-  public function peoplesearch_orig($param) {
+  /*public function peoplesearch_orig($param) {
 		$helper = new Helper();
 		$return = array();
 
@@ -460,7 +465,7 @@ SELECT \'tutor\' AS tutor_type,
 
 
 		return ($query);
-	}
+	}*/
 
 }
 

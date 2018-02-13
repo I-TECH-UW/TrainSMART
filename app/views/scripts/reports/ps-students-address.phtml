@@ -42,6 +42,12 @@
 					<form  action="" method="get">
 						<div class="mainformholder" style="height:100%;">
 							<input type="hidden" name="process" id="process" value="1">
+							
+							<!-- TA:#492 -->
+							<div class="fieldquestion"><?php echo t('Student ID'); ?></div>
+							<div class="fieldshow"><input type="checkbox" name="shownationalid" id="shownationalid" value="1"<?php echo $this->criteria['shownationalid'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
 
 							<?php tp('Contact Address');?><br>
 							<?php

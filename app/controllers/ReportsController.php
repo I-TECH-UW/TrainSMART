@@ -6614,6 +6614,14 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			}
 		}
 		
+		
+		//TA:#492
+		if ((isset($params['shownationalid'])) && $params['shownationalid'] ) {
+		    $headers[] = "Student ID";
+		    $s->columns('p.national_id');
+		}
+		
+		
 		//TA:#400
 		if ((isset($params['showindexnumber'])) && $params['showindexnumber'] ) {
 		    $headers[] = "Index Number";
