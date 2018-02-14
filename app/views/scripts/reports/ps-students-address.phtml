@@ -36,7 +36,7 @@
 					?>
 
 					<div id="contentheader">
-						<h2><?php tp('Students Address');?></h2><br>
+						<h2><?php tp('Student Address');?></h2><br>
 					</div>
 					<br>
 					<form  action="" method="get">
@@ -50,11 +50,28 @@
 							<div class="clear pad20">&nbsp;</div>
 
 							<?php tp('Contact Address');?><br>
-							<?php
-							echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
-								array('translation' => $this->translation, 'locations' => $this->locations,
-									'criteria' => $this->criteria, 'setting' => $this->setting));
-							?>
+							
+<div class="fieldquestion"><?php echo t('Region A (Province)')  ?></div>
+<div class="fieldshow"><input type="checkbox" name="show_contactProvince" <?php if (isset($this->criteria['show_contactProvince']) && $this->criteria['show_contactProvince']) { echo 'checked="checked"'; } ?> /></div>
+<div class="fieldselect"><?php renderFilter($this->locations, 1, 'contact_province_id', (isset($this->criteria['contact_province_id']) ? $this->criteria['contact_province_id'] : false), 'contact_district_id', true); ?></div>
+<div class="clear pad20">&nbsp;</div>
+<?php
+if ($this->setting['display_region_b']) {
+    ?>
+    <div class="fieldquestion"><?php echo t('Region B (Health District)') ?></div>
+        <div class="fieldshow"><input type="checkbox" name="show_contactDistrict" <?php if (isset($this->criteria['show_contactDistrict']) && $this->criteria['show_contactDistrict']) { echo 'checked="checked"'; } ?> /></div>
+    <div class="fieldselect"><?php renderFilter($this->locations, 2, 'contact_district_id', (isset($this->criteria['contact_district_id']) ? $this->criteria['contact_district_id'] : false), ($this->setting['contact_display_region_c']?'region_c_id':false), true); ?></div>
+    <div class="clear pad20">&nbsp;</div>
+    <?php
+}
+if ($this->setting['display_region_c']) {
+    ?>
+    <div class="fieldquestion"><?php echo t('Region C (Local Region)'); ?></div>
+        <div class="fieldshow"><input type="checkbox" name="show_contactRegionC" <?php if (isset($this->criteria['show_contactRegionC']) && $this->criteria['show_contactRegionC']) { echo 'checked="checked"'; }?> /></div>
+        <div class="fieldselect"><?php renderFilter($this->locations, 3, 'contact_region_c_id', (isset($this->criteria['contact_region_c_id']) ? $this->criteria['contact_region_c_id'] : false), false, true); ?></div>
+    <div class="clear pad20">&nbsp;</div>
+    <?php
+}?>
 							
 							<div class="fieldquestion"><?php echo t('Address 1'); ?></div>
 							<div class="fieldshow">
@@ -110,7 +127,7 @@
 							<div class="fieldselect"></div>
 							<div class="clear pad20">&nbsp;</div>
 							
-							<div class="fieldquestion"><?php echo t('Emergency Contact'); ?> 2</div>
+							<div class="fieldquestion"><?php echo t('Emergency Contact'); ?></div>
 							<div class="fieldshow">
 							<input type="checkbox" name="show_emercontact" id=show_emercontact value="1"<?php echo $this->criteria['show_emercontact'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"></div>
@@ -142,11 +159,27 @@
 							</div>
 							<div class="clear pad20">&nbsp;</div>
 							
-							<?php
-							echo $this->partial('reports/three-regions-search-form-elements-partial.phtml',
-								array('translation' => $this->translation, 'kin_locations' => $this->locations,
-									'criteria' => $this->criteria, 'setting' => $this->setting));
-							?>
+<div class="fieldquestion"><?php echo t('Region A (Province)')  ?></div>
+<div class="fieldshow"><input type="checkbox" name="show_kinProvince" <?php if (isset($this->criteria['show_kinProvince']) && $this->criteria['show_kinProvince']) { echo 'checked="checked"'; } ?> /></div>
+<div class="fieldselect"><?php renderFilter($this->locations, 1, 'kin_province_id', (isset($this->criteria['kin_province_id']) ? $this->criteria['kin_province_id'] : false), 'kin_district_id', true); ?></div>
+<div class="clear pad20">&nbsp;</div>
+<?php
+if ($this->setting['display_region_b']) {
+    ?>
+    <div class="fieldquestion"><?php echo t('Region B (Health District)') ?></div>
+        <div class="fieldshow"><input type="checkbox" name="show_kinDistrict" <?php if (isset($this->criteria['show_kinDistrict']) && $this->criteria['show_kinDistrict']) { echo 'checked="checked"'; } ?> /></div>
+    <div class="fieldselect"><?php renderFilter($this->locations, 2, 'kin_district_id', (isset($this->criteria['kin_district_id']) ? $this->criteria['kin_district_id'] : false), ($this->setting['kin_display_region_c']?'region_c_id':false), true); ?></div>
+    <div class="clear pad20">&nbsp;</div>
+    <?php
+}
+if ($this->setting['display_region_c']) {
+    ?>
+    <div class="fieldquestion"><?php echo t('Region C (Local Region)'); ?></div>
+        <div class="fieldshow"><input type="checkbox" name="show_kinRegionC" <?php if (isset($this->criteria['show_kinRegionC']) && $this->criteria['show_kinRegionC']) { echo 'checked="checked"'; }?> /></div>
+        <div class="fieldselect"><?php renderFilter($this->locations, 3, 'kin_region_c_id', (isset($this->criteria['kin_region_c_id']) ? $this->criteria['kin_region_c_id'] : false), false, true); ?></div>
+    <div class="clear pad20">&nbsp;</div>
+    <?php
+}?>
 							
 							<div class="fieldquestion"><?php echo t('Address 1'); ?></div>
 							<div class="fieldshow">

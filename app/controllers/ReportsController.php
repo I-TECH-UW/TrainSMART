@@ -6401,6 +6401,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	    $linkstudentclassesJoined = false; //TA:#392
 	    $reasonJoined = false;//TA:#405
 	    $take_drop_reason = true;//TA:#405
+	    $addressJoined = false; //TA:#496
 
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		$helper = new Helper();
@@ -6940,16 +6941,284 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
  		    $s->columns("lscl.grade");
 		}
 		
+		
+		//TA:#496 STUDENT ADDRESS REPORT: student contact address: province
+		if ((isset($params['show_contactProvince']) && $params['show_contactProvince']) ||
+		    (isset($params['contact_province_id']) && $params['contact_province_id'])) {
+		        $s->joinLeft(array('contact_loc1' => 'location'), 'contact_loc1.id = s.geog1', array());
+		        if (isset($params['show_contactProvince']) && $params['show_contactProvince']) {
+		            $headers[] = t('Contact Address') . " " . t("Region A (Province)");
+		            $s->columns('contact_loc1.location_name as province');
+		        }
+		        if (isset($params['contact_province_id']) && $params['contact_province_id']) {
+		            $s->where('contact_loc1.id IN (?)', $params['contact_province_id']);
+		        }
+		    }
+		    
+		 //TA:#496 STUDENT ADDRESS REPORT: student contact address: district
+		 if ((isset($params['show_contactDistrict']) && $params['show_contactDistrict']) ||
+		        (isset($params['contact_district_id']) && $params['contact_district_id'])) {
+		            $s->joinLeft(array('contact_loc2' => 'location'), 'contact_loc2.id = s.geog2', array());
+		            if (isset($params['show_contactDistrict']) && $params['show_contactDistrict']) {
+		                $headers[] =  t('Contact Address') . " " . t("Region B (Health District)");
+		                $s->columns('contact_loc2.location_name as district');
+		            }
+		            if (isset($params['contact_district_id']) && $params['contact_district_id']) {
+		                $ids = "";
+		                foreach ($params['contact_district_id'] as $l) {
+		                    $ids .= array_pop(explode('_', $l)) .", ";
+		                }
+		                $ids = trim($ids, ', ');
+		                $s->where('contact_loc2.id IN (?)', $ids);
+		            }
+		        }
+		        
+		  //TA:#496 STUDENT ADDRESS REPORT: student contact address: region 
+		  if ((isset($params['show_contactRegionC']) && $params['show_contactRegionC']) ||
+		            (isset($params['contact_region_c_id']) && $params['contact_region_c_id'])) {
+		                $s->joinLeft(array('contact_loc3' => 'location'), 'contact_loc3.id = s.geog2', array());
+		                if (isset($params['show_contactRegionC']) && $params['show_contactRegionC']) {
+		                    $headers[] =  t('Contact Address') . " " . t("Region C (Local Region)");
+		                    $s->columns('contact_loc3.location_name as region');
+		                }
+		                if (isset($params['contact_region_c_id']) && $params['contact_region_c_id']) {
+		                    $ids = "";
+		                    foreach ($params['contact_region_c_id'] as $l) {
+		                        $ids .= array_pop(explode('_', $l)) .", ";
+		                    }
+		                    $ids = trim($ids, ', ');
+		                    $s->where('contact_loc3.id IN (?)', $ids);
+		                }
+		            }
+		            
+	//TA:#496 STUDENT ADDRESS REPORT: student contact address: address 1 
+		  if ((isset($params['show_address1']) && $params['show_address1'])) {
+		      $headers[] =  t('Contact') . " " . t("Address") . " 1";
+		      $s->columns('p.home_address_1');
+		  }
+		  
+		  //TA:#496 STUDENT ADDRESS REPORT: student contact address: address 2
+		  if ((isset($params['show_address2']) && $params['show_address2'])) {
+		      $headers[] =  t('Contact') . " " . t("Address") . " 2";
+		      $s->columns('p.home_address_2');
+		  }
+		  
+		  //TA:#496 STUDENT ADDRESS REPORT: student contact address: city
+		  if ((isset($params['show_city']) && $params['show_city'])) {
+		      $headers[] =  t('Contact Address') . " " . t("City");
+		      $s->columns('p.home_city');
+		  }
+		  
+		  //TA:#496 STUDENT ADDRESS REPORT: student contact address: zip
+		  if ((isset($params['show_zip']) && $params['show_zip'])) {
+		      $headers[] =  t('Contact Address') . " " . t('Postal Code');
+		      $s->columns('p.home_postal_code');
+		  }
+		  
+		  //TA:#496 STUDENT ADDRESS REPORT: student contact address: phone
+		  if ((isset($params['show_phone']) && $params['show_phone'])) {
+		      $headers[] =  t('Contact Address') . " " . t("Phone");
+		      $s->columns('p.phone_work');
+		  }
+		  
+		  //TA:#496 STUDENT ADDRESS REPORT: student contact address: cell phone
+		  if ((isset($params['show_cellphone']) && $params['show_cellphone'])) {
+		      $headers[] =  t('Contact Address') . " " . t("Cellphone");
+		      $s->columns('p.phone_mobile');
+		  }
+		  
+		  //TA:#496 STUDENT ADDRESS REPORT: student contact address: cell phone 2
+		  if ((isset($params['show_cellphone2']) && $params['show_cellphone2'])) {
+		      $headers[] =  t('Contact Address') . " " . t("Cellphone") . " 2";
+		      $s->columns('p.phone_home');
+		  }
+		  
+		  //TA:#496 STUDENT ADDRESS REPORT: student contact address: email
+		  if ((isset($params['show_email']) && $params['show_email'])) {
+		      $headers[] =  t('Contact Address') . " " . t("Email");
+		      $s->columns('p.email');
+		  }
+		  
+		  //TA:#496 STUDENT ADDRESS REPORT: student contact address: email 2
+		  if ((isset($params['show_email2']) && $params['show_email2'])) {
+		      $headers[] =  t('Contact Address') . " " . t("Email") . " 2";
+		      $s->columns('p.email_secondary');
+		  }
+		  
+		  //TA:#496 STUDENT ADDRESS REPORT: student contact address: emergency contact
+		  if ((isset($params['show_emercontact']) && $params['show_emercontact'])) {
+		      $headers[] =  t('Contact Address') . " " . t("Emergency Contact");
+		      $s->columns('s.emergcontact');
+		  }
+		  
+		  //TA:#496 STUDENT ADDRESS REPORT: student contact address: is address residential
+		  if ((isset($params['show_resaddress']) && $params['show_resaddress'])) {
+		      $headers[] =  t('Contact') . " " . t("Residential Address") . "?";
+		      $s->columns("p.home_is_residential");
+		    //  $s->columns(CASE WHEN p.home_is_residential=1 THEN 'Yes' END as aaa);   
+		  }
+		  
+		  //TA:#496 STUDENT ADDRESS REPORT: student kin info: name
+		  if ((isset($params['show_kinname']) && $params['show_kinname'])) {
+		      if (!$addressJoined) {
+		          $s->joinLeft(array('lsa' => 'link_student_addresses'), 'lsa.id_student=s.id', array());
+		          $s->joinLeft(array('permanent_address' => 'addresses'), 'permanent_address.id=lsa.id_address', array());
+		          $addressJoined = true;
+		      }
+		      $headers[] =  t('Next of Kin/Guardian Address') . " " . t("Name");
+		      $s->columns('lsa.kin_name');
+		  }
+		  
+	   //TA:#496 STUDENT ADDRESS REPORT: student kin info: relationship
+		  if ((isset($params['show_kinrelationship']) && $params['show_kinrelationship'])||
+		    (isset($params['kin_relationship']) && $params['kin_relationship'])) {
+		      if (!$addressJoined) {
+		          $s->joinLeft(array('lsa' => 'link_student_addresses'), 'lsa.id_student=s.id', array());
+		          $s->joinLeft(array('permanent_address' => 'addresses'), 'permanent_address.id=lsa.id_address', array());
+		          $addressJoined = true;
+		      }
+		      if (isset($params['show_kinrelationship']) && $params['show_kinrelationship']) {
+		          $headers[] = t('Next of Kin/Guardian Address') . " " . t("Relationship");
+		          $s->columns('lsa.kin_relationship');
+		      }
+		      if (isset($params['kin_relationship']) && $params['kin_relationship']) {
+		          $s->where("lsa.kin_relationship = '" . $params['kin_relationship'] . "'");
+		      }
+		  }
+		  
+	//TA:#496 STUDENT ADDRESS REPORT: student kin info: province
+		if ((isset($params['show_kinProvince']) && $params['show_kinProvince']) ||
+		    (isset($params['kin_province_id']) && $params['contactkin_province_id_province_id'])) {
+		        $s->joinLeft(array('kin_loc1' => 'location'), 'kin_loc1.id = s.geog1', array());
+		        if (isset($params['show_kinProvince']) && $params['show_kinProvince']) {
+		            $headers[] = t('Next of Kin/Guardian Address') . " " . t("Region A (Province)");
+		            $s->columns('kin_loc1.location_name as kinprovince');
+		        }
+		        if (isset($params['kin_province_id']) && $params['kin_province_id']) {
+		            $s->where('kin_loc1.id IN (?)', $params['kin_province_id']);
+		        }
+		    }
+		    
+		 //TA:#496 STUDENT ADDRESS REPORT: student kin info: district
+		 if ((isset($params['show_kinDistrict']) && $params['show_kinDistrict']) ||
+		        (isset($params['kin_district_id']) && $params['kin_district_id'])) {
+		            $s->joinLeft(array('kin_loc2' => 'location'), 'kin_loc2.id = s.geog2', array());
+		            if (isset($params['show_kinDistrict']) && $params['show_kinDistrict']) {
+		                $headers[] =  t('Next of Kin/Guardian Address') . " " . t("Region B (Health District)");
+		                $s->columns('kin_loc2.location_name as district');
+		            }
+		            if (isset($params['kin_district_id']) && $params['kin_district_id']) {
+		                $ids = "";
+		                foreach ($params['kin_district_id'] as $l) {
+		                    $ids .= array_pop(explode('_', $l)) .", ";
+		                }
+		                $ids = trim($ids, ', ');
+		                $s->where('kin_loc2.id IN (?)', $ids);
+		            }
+		        }
+		        
+		  //TA:#496 STUDENT ADDRESS REPORT: student kin info: region 
+		  if ((isset($params['show_kinRegionC']) && $params['show_kinRegionC']) ||
+		            (isset($params['kin_region_c_id']) && $params['kin_region_c_id'])) {
+		                $s->joinLeft(array('kin_loc3' => 'location'), 'kin_loc3.id = s.geog2', array());
+		                if (isset($params['show_kinRegionC']) && $params['show_kinRegionC']) {
+		                    $headers[] =  t('Next of Kin/Guardian Address') . " " . t("Region C (Local Region)");
+		                    $s->columns('kin_loc3.location_name as region');
+		                }
+		                if (isset($params['kin_region_c_id']) && $params['kin_region_c_id']) {
+		                    $ids = "";
+		                    foreach ($params['kin_region_c_id'] as $l) {
+		                        $ids .= array_pop(explode('_', $l)) .", ";
+		                    }
+		                    $ids = trim($ids, ', ');
+		                    $s->where('kin_loc3.id IN (?)', $ids);
+		                }
+		            }
+		  
+		  //TA:#496 STUDENT ADDRESS REPORT: student kin info: address 1
+		  if ((isset($params['show_kinaddress1']) && $params['show_kinaddress1'])) {
+		          if (!$addressJoined) {
+		              $s->joinLeft(array('lsa' => 'link_student_addresses'), 'lsa.id_student=s.id', array());
+		              $s->joinLeft(array('permanent_address' => 'addresses'), 'permanent_address.id=lsa.id_address', array());
+		              $addressJoined = true;
+		          }
+		              $headers[] = t('Next of Kin/Guardian Address') . " " .  t("Address") . " 1";
+		              $s->columns('permanent_address.address1');
+		      }
+		      
+		      //TA:#496 STUDENT ADDRESS REPORT: student kin info: address 2
+		      if ((isset($params['show_kinaddress2']) && $params['show_kinaddress2'])) {
+		          if (!$addressJoined) {
+		              $s->joinLeft(array('lsa' => 'link_student_addresses'), 'lsa.id_student=s.id', array());
+		              $s->joinLeft(array('permanent_address' => 'addresses'), 'permanent_address.id=lsa.id_address', array());
+		              $addressJoined = true;
+		          }
+		          $headers[] = t('Next of Kin/Guardian Address') . " " .  t("Address") . " 2";
+		          $s->columns('permanent_address.address2');
+		      }
+		      
+		      //TA:#496 STUDENT ADDRESS REPORT: student kin info: city
+		      if ((isset($params['show_kincity']) && $params['show_kincity'])) {
+		          if (!$addressJoined) {
+		              $s->joinLeft(array('lsa' => 'link_student_addresses'), 'lsa.id_student=s.id', array());
+		              $s->joinLeft(array('permanent_address' => 'addresses'), 'permanent_address.id=lsa.id_address', array());
+		              $addressJoined = true;
+		          }
+		          $headers[] = t('Next of Kin/Guardian Address') . " " .  t("City");
+		          $s->columns('permanent_address.city');
+		      }
+		      
+		      //TA:#496 STUDENT ADDRESS REPORT: student kin info: zip
+		      if ((isset($params['show_kinzip']) && $params['show_kinzip'])) {
+		          if (!$addressJoined) {
+		              $s->joinLeft(array('lsa' => 'link_student_addresses'), 'lsa.id_student=s.id', array());
+		              $s->joinLeft(array('permanent_address' => 'addresses'), 'permanent_address.id=lsa.id_address', array());
+		              $addressJoined = true;
+		          }
+		          $headers[] = t('Next of Kin/Guardian Address') . " " .  t("Postal Code / ZIP");
+		          $s->columns('permanent_address.postalcode');
+		      }
+		      
+		      //TA:#496 STUDENT ADDRESS REPORT: student kin info: phone
+		      if ((isset($params['show_kinphone']) && $params['show_kinphone'])) {
+		          if (!$addressJoined) {
+		              $s->joinLeft(array('lsa' => 'link_student_addresses'), 'lsa.id_student=s.id', array());
+		              $s->joinLeft(array('permanent_address' => 'addresses'), 'permanent_address.id=lsa.id_address', array());
+		              $addressJoined = true;
+		          }
+		          $headers[] = t('Next of Kin/Guardian Address') . " " .  t("Phone");
+		          $s->columns('permanent_address.phone');
+		      }
+		      
+		      //TA:#496 STUDENT ADDRESS REPORT: Home District Address: Home District
+		      if ((isset($params['show_homedistrict']) && $params['show_homedistrict'])) {
+		          $headers[] = t('Home District Address') . " " .  t("Home District");
+		          $s->columns('p.home_district');
+		      }
+		      
+		      //TA:#496 STUDENT ADDRESS REPORT: Home District Address: TA
+		      if ((isset($params['show_ta']) && $params['show_ta'])) {
+		          $headers[] = t('Home District Address') . " " .  t("TA");
+		          $s->columns('p.ta');
+		      }
+		      
+		      //TA:#496 STUDENT ADDRESS REPORT: Home District Address: TA
+		      if ((isset($params['show_gvh']) && $params['show_gvh'])) {
+		          $headers[] = t('Home District Address') . " " .  t("GVH");
+		          $s->columns('p.gvh');
+		      }
+		      	
+		 
+		  
 		//TA:#433
 		$login_user_id = $helper->myid();
 		$ins_results = $helper->getUserInstitutions($login_user_id);
 		if( !empty($ins_results) ){
 		    $s->where("p.id in (select personid from student where institutionid in (SELECT institutionid FROM link_user_institution WHERE userid = {$login_user_id}))");
 		}
-		//print $s;
+	  //  print $s;
 		return(array($s, $headers));
 	}
-
 
 	public function psStudentsTrainedAction() {
 		$this->viewAssignEscaped ('locations', Location::getAll());

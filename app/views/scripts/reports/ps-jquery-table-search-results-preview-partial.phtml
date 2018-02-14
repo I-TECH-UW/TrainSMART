@@ -40,6 +40,10 @@
             $rowstring .= '>';
             echo $rowstring;
             foreach ($row as $key => $value) {
+                //TA:#496
+                if($key === 'home_is_residential' && $value === '1'){
+                    $value = "Yes";
+                }
                 echo '<td>' . $value . '</td>';
             }
             echo "</tr>\n";
