@@ -7407,10 +7407,10 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	
 	    $helper = new Helper();
 	    $this->view->assign('mode', 'id');
-// 	    $this->view->assign('institutions', $helper->getInstitutions());
-// 	    $this->view->assign('cadres', $helper->getCadres());
-// 	    $this->view->assign('institutiontypes', $helper->AdminInstitutionTypes());
-// 	    $this->view->assign('cohorts', $helper->getCohorts());
+	    $this->view->assign('institutions', $helper->getInstitutions());
+	    $this->view->assign('cadres', $helper->getCadres());
+	    $this->view->assign('institutiontypes', $helper->AdminInstitutionTypes());
+	    $this->view->assign('cohorts', $helper->getCohorts());
 // 	    $this->view->assign('nationalities', $helper->getNationalities());
 // 	    $this->view->assign('funding', $helper->getFunding());
 // 	    $this->view->assign('tutors', $helper->getTutors());

@@ -48,6 +48,12 @@
 							<div class="fieldshow"><input type="checkbox" name="shownationalid" id="shownationalid" value="1"<?php echo $this->criteria['shownationalid'] ? " checked" : "" ?>></div>
 							<div class="fieldselect"></div>
 							<div class="clear pad20">&nbsp;</div>
+							
+							<?php //TA:#501
+							echo $this->partial('reports/ps-institution-cadre-cohort-search-form-elements.phtml',
+								array('institutions' => $this->institutions, 'cadres' => $this->cadres,
+									'cohorts' => $this->cohorts, 'criteria' => $this->criteria));
+							?>
 
 							<?php tp('Contact Address');?><br>
 							
