@@ -57,6 +57,15 @@ class Helper extends ITechTable
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
+	
+	//TA:#486
+	public function getLicenses(){  
+	        $select = $this->dbfunc()->select(array('licensename'))->distinct()
+	        ->from("licenses")
+	        ->order('licensename');
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return $result;
+	}
 
 	public function getCohortStudents($cid, $tp = "all",$output = "result") {
 		switch ($tp){

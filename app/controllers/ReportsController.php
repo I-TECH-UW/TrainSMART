@@ -44,6 +44,8 @@ class ReportsController extends ReportFilterHelpers {
         $contextSwitch->addActionContext('employee-report-mechanism-transition-description', 'csv');
         $contextSwitch->addActionContext('employee-report-mechanism-transition', 'csv');
         $contextSwitch->addActionContext('employee-report-primary-role', 'csv');
+        $contextSwitch->addActionContext('ps-students-licensing', 'csv'); //TA:#486
+        $contextSwitch->addActionContext('ps-students-address', 'csv'); //TA:#496
 
 		$contextSwitch->addContext('chwreport', array('suffix' => 'chwreport'));
 		$contextSwitch->addActionContext('ss-chw-statement-of-results', 'chwreport');
@@ -6402,6 +6404,8 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	    $reasonJoined = false;//TA:#405
 	    $take_drop_reason = true;//TA:#405
 	    $addressJoined = false; //TA:#496
+	    $licensesJoined = false; //TA:#486
+	    
 
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		$helper = new Helper();
@@ -7207,9 +7211,51 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		          $headers[] = t('Home District Address') . " " .  t("GVH");
 		          $s->columns('p.gvh');
 		      }
-		      	
-		 
-		  
+		      
+		      //TA:#486 STUDENT LICENSING REPORT: License
+		      if ((isset($params['show_licenses']) && $params['show_licenses'])) {
+		          if (!$licensesJoined) {
+		              $s->joinLeft(array('lsl' => 'link_student_licenses'), 'lsl.studentid=s.id', array());
+		              $s->joinLeft(array('licenses' => 'licenses'), 'licenses.id=lsl.licenseid', array());
+		              $licensesJoined = true;
+		          }
+		          $headers[] = t('License Name');
+		          $s->columns('licenses.licensename');
+		      }
+		      
+		      //TA:#486 STUDENT LICENSING REPORT: Date
+		      if ((isset($params['show_licensedate']) && $params['show_licensedate'])) {
+		          if (!$licensesJoined) {
+		              $s->joinLeft(array('lsl' => 'link_student_licenses'), 'lsl.studentid=s.id', array());
+		              $s->joinLeft(array('licenses' => 'licenses'), 'licenses.id=lsl.licenseid', array());
+		              $licensesJoined = true;
+		          }
+		          $headers[] = t('License Date');
+		          $s->columns('licenses.licensedate');
+		      }
+		      
+		      //TA:#486 STUDENT LICENSING REPORT: License Grade
+		      if ((isset($params['show_licensegrade']) && $params['show_licensegrade'])) {
+		          if (!$licensesJoined) {
+		              $s->joinLeft(array('lsl' => 'link_student_licenses'), 'lsl.studentid=s.id', array());
+		              $s->joinLeft(array('licenses' => 'licenses'), 'licenses.id=lsl.licenseid', array());
+		              $licensesJoined = true;
+		          }
+		          $headers[] = t('License Grade');
+		          $s->columns('lsl.grade');
+		      }
+		      
+		      //TA:#486 STUDENT LICENSING REPORT: Grade Desciption
+		      if ((isset($params['show_licensedescription']) && $params['show_licensedescription'])) {
+		          if (!$licensesJoined) {
+		              $s->joinLeft(array('lsl' => 'link_student_licenses'), 'lsl.studentid=s.id', array());
+		              $s->joinLeft(array('licenses' => 'licenses'), 'licenses.id=lsl.licenseid', array());
+		              $licensesJoined = true;
+		          }
+		          $headers[] = t('License Grade Desciption');
+		          $s->columns('lsl.grade_description');
+		      }
+		      
 		//TA:#433
 		$login_user_id = $helper->myid();
 		$ins_results = $helper->getUserInstitutions($login_user_id);
@@ -7242,7 +7288,6 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 			$criteria = $this->getAllParams();
 			
 			list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
-			//print $query;
 		
 			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 			//print $query;
@@ -7362,18 +7407,18 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	
 	    $helper = new Helper();
 	    $this->view->assign('mode', 'id');
-	    $this->view->assign('institutions', $helper->getInstitutions());
-	    $this->view->assign('cadres', $helper->getCadres());
-	    $this->view->assign('institutiontypes', $helper->AdminInstitutionTypes());
-	    $this->view->assign('cohorts', $helper->getCohorts());
-	    $this->view->assign('nationalities', $helper->getNationalities());
-	    $this->view->assign('funding', $helper->getFunding());
-	    $this->view->assign('tutors', $helper->getTutors());
-	    $this->view->assign('facilities', $helper->getFacilities());
-	    $this->view->assign('coursetypes', $helper->AdminCourseTypes());
-	    $this->view->assign('degrees', $helper->getDegrees());
-	    $this->view->assign('site_style', $this->setting('site_style'));
-	    //TA:#334 $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
+// 	    $this->view->assign('institutions', $helper->getInstitutions());
+// 	    $this->view->assign('cadres', $helper->getCadres());
+// 	    $this->view->assign('institutiontypes', $helper->AdminInstitutionTypes());
+// 	    $this->view->assign('cohorts', $helper->getCohorts());
+// 	    $this->view->assign('nationalities', $helper->getNationalities());
+// 	    $this->view->assign('funding', $helper->getFunding());
+// 	    $this->view->assign('tutors', $helper->getTutors());
+// 	    $this->view->assign('facilities', $helper->getFacilities());
+// 	    $this->view->assign('coursetypes', $helper->AdminCourseTypes());
+// 	    $this->view->assign('degrees', $helper->getDegrees());
+// 	    $this->view->assign('site_style', $this->setting('site_style'));
+// 	    //TA:#334 $this->view->assign('termination_statuses', array('1' => t('Any Status'), '2' => t('Only Early Termination')));
 	
 	    if ($this->getSanParam('process')) {
 	        $criteria = $this->getAllParams();
@@ -7391,6 +7436,35 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	        $this->view->assign('criteria', $criteria);
 	    }
 	}
+	
+	//TA:#486
+	public function psStudentsLicensingAction() {
+	
+	    $helper = new Helper();
+	    $this->view->assign('mode', 'id');
+	    $this->view->assign('institutions', $helper->getInstitutions());
+	    $this->view->assign('cadres', $helper->getCadres());
+	    $this->view->assign('institutiontypes', $helper->AdminInstitutionTypes());
+	    $this->view->assign('cohorts', $helper->getCohorts());
+	    $this->view->assign('licenses', $helper->getLicenses());
+	    
+	    if ($this->getSanParam('process')) {
+	        $criteria = $this->getAllParams();
+	
+	        list($query, $headers) = $this->psStudentReportsBuildQuery($criteria);
+	
+	        $db = Zend_Db_Table_Abstract::getDefaultAdapter();
+	        $rowArray = $db->fetchAll($query);
+	        //print $query;
+	        $this->view->assign('query', $query->__toString());
+	
+	        $this->viewAssignEscaped("headers", $headers);
+	        $this->viewAssignEscaped("output", $rowArray);
+	
+	        $this->view->assign('criteria', $criteria);
+	    }
+	}
+	
 
 	public function psGraduatedStudentsAction() {
 		//locations

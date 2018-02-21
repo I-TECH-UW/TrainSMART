@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><?php echo $this->translation['Application Name'];?> | <?php tp('Students Licensing Body');?></title>
+		<?php
+		require_once('views/helpers/Location.php');
+		require_once('views/helpers/ScriptContainer.php');
+		print ScriptContainer::$instance->renderCSSHead();
+		print ScriptContainer::$instance->renderJSHead();
+
+		?>
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				/* Init the table */
+				oTable = $('.tablegrid').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
+				});
+			} );
+
+			function gotoPage(objId) {
+				var reportSelector = YAHOO.util.Dom.get(objId);
+				if ( reportSelector[reportSelector.selectedIndex].value ) {
+					window.location = '<?php echo $this->base_url;?>' + reportSelector[reportSelector.selectedIndex].value + '?<?php echo $_SERVER['QUERY_STRING'];?>';
+				}
+			}
+		</script>
+	</head>
+	<body class="yui-skin-sam" >
+		<div id="pageHolder">
+			<div id="header"><?php require_once('views/scripts/preheader.phtml');?></div>
+			<div id="content">
+				<div id="subcontent">
+					<?php
+					echo $this->partial('reports/student-report-types-partial.phtml', array('site_style' => $this->site_style));
+					?>
+
+					<div id="contentheader">
+						<h2><?php tp('Student Licensing Body');?></h2><br>
+					</div>
+					<br>
+					<form  action="" method="get">
+						<div class="mainformholder" style="height:100%;">
+							<input type="hidden" name="process" id="process" value="1">
+							
+							<?php tp('Select Criteria');?><br>
+							
+							<!-- TA:#492 -->
+							<div class="fieldquestion"><?php echo t('Student ID'); ?></div>
+							<div class="fieldshow"><input type="checkbox" name="shownationalid" id="shownationalid" value="1"<?php echo $this->criteria['shownationalid'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+
+							<?php
+							echo $this->partial('reports/ps-institution-cadre-cohort-search-form-elements.phtml',
+								array('institutions' => $this->institutions, 'cadres' => $this->cadres,
+									'cohorts' => $this->cohorts, 'criteria' => $this->criteria));
+							?>
+							
+							<div class="fieldquestion"><?php echo t('License Name'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_licenses" id="show_licenses" value="1"<?php echo $this->criteria['show_licenses'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('License Date'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_licensedate" id="show_licensedate" value="1"<?php echo $this->criteria['show_licensedate'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('License Grade'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_licensegrade" id="show_licensegrade" value="1"<?php echo $this->criteria['show_licensegrade'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+							
+							<div class="fieldquestion"><?php echo t('License Grade Desciption'); ?></div>
+							<div class="fieldshow">
+							<input type="checkbox" name="show_licensedescription" id="show_licensedescription" value="1"<?php echo $this->criteria['show_licensedescription'] ? " checked" : "" ?>></div>
+							<div class="fieldselect"></div>
+							<div class="clear pad20">&nbsp;</div>
+														
+						</div>
+
+						<div class="pad20 clear"></div>
+
+						<?php echo $this->partial('reports/ps-search-preview-button-partial.phtml', array('criteria' => $this->criteria)); ?>
+					</form>
+					
+					<?php if (isset($this->output)) {
+					    
+					echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
+						array('output' => $this->output, 'headers' => $this->headers));
+					?>
+					<br>
+					
+					<input type="button" name="go" value="<?php tp('Download');?> &raquo;" class="tsbutton green large"
+					       onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=csv"?>')">
+					<?php } ?>
+					<div class="clear" style=""></div>
+				</div>
+				<div class="clear" style=""></div>
+			</div>   
+			<div class="clear" style="height : 100px;"></div>
+			<div class="clear" style=""></div>
+							
+	
+			<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
+			</div>
+		</div>
+	</body>
+</html>
+
+
+
