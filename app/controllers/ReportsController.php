@@ -7208,7 +7208,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		      
 		      //TA:#496 STUDENT ADDRESS REPORT: Home District Address: TA
 		      if ((isset($params['show_gvh']) && $params['show_gvh'])) {
-		          $headers[] = t('Home District Address') . " " .  t("GVH");
+		          $headers[] = t('Home District Address') . " " .  t("Village");
 		          $s->columns('p.gvh');
 		      }
 		      
