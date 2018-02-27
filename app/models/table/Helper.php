@@ -1318,6 +1318,16 @@ class Helper extends ITechTable
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
+	
+	//TA:#504
+	public function AdminRelationship(){
+	    $select = $this->dbfunc()->select()
+	    ->from("lookup_relationship")
+	    ->where("status = 1")
+	    ->order('relationship');
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return $result;
+	}
 
 	public function AdminCourseTypes(){
 		// RETURNS A LIST OF ALL COURSE TYPES ORDERED BY NAME

@@ -2836,6 +2836,27 @@ class AdminController extends UserController
 		$this->view->assign("header",t("Tutor types"));
 	}
 	
+	//TA:#504
+	public function preserviceRelationshipAction(){
+	    $helper = new Helper();
+	    
+	    if (isset ($_POST['_action'])){
+	        switch ($_POST['_action']){
+	            case "addnew":
+	                $helper->addTutortypes($_POST);
+	                break;
+	            case "update":
+	                $helper->updateTutortypes($_POST);
+	                break;
+	        }
+	        $this->_redirect ( 'admin/preservice-relationship' );
+	    }
+	    
+	    $list = $helper->AdminRelationship();
+	    $this->view->assign("lookup", $list);
+	    $this->view->assign("header",t("Relationship"));
+	}
+	
 	//TA:#402.2
 	public function preserviceGradedescriptionAction(){
 	    $helper = new Helper();
