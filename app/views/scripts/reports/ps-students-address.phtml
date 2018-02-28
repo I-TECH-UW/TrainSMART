@@ -159,8 +159,12 @@ if ($this->setting['display_region_c']) {
 							<div class="fieldselect">
 							<select name="kin_relationship" size="5">
 				<option value="">-- <?php echo t('All'); ?> --</option>
-				<option value="parents" <?php echo ($this->escape($this->kin_relationship) == "parents" ? " selected" : "");?>><?php echo t('Parents'); ?></option>
-				<option value="relative" <?php echo ($this->escape($this->kin_relationship) == "relative" ? " selected" : "");?>><?php echo t('Relative'); ?></option>
+				<?php 
+				//TA:#504
+				foreach ($this->relationships as $item) {
+            echo "<option value=\"" . $item['id'] . "\">" . $item['relationship'] . "</option>\n";
+        }
+        ?>
 			</select>
 							</div>
 							<div class="clear pad20">&nbsp;</div>

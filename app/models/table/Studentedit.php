@@ -370,12 +370,21 @@ class Studentedit extends ITechTable
 			 // UPDATING ADDRESS ROW
 			 $db = $this->dbfunc();
 			 $link = array(
-				'id_cohort'			=>	$param['cohortid'],
-			    'joindate'			=>	$joindate,
-			    'dropdate'			=>	$dropdate,
-			    'joinreason'		=>	$param['enrollmentreason'],
-			    'dropreason'		=>	$param['separationreason'],
+			     'id_cohort'			=>	$param['cohortid'],
+			     'joindate'			=>	$joindate,
+			     'dropdate'			=>	$dropdate,
+			     'joinreason'		=>	$param['enrollmentreason'],
+			     'dropreason'		=>	$param['separationreason'],
 			 );
+			 if($dropdate === "0000-00-00"){
+			     $link = array(
+			         'id_cohort'			=>	$param['cohortid'],
+			         'joindate'			=>	$joindate,
+			         'joinreason'		=>	$param['enrollmentreason'],
+			         'dropreason'		=>	$param['separationreason'],
+			     );
+			     
+			 }
 			
 			 $helper = new helper();
 			 $helper->updatePersonInstitution("student",$studentid,$param['cohortid']);
@@ -487,20 +496,20 @@ class Studentedit extends ITechTable
 			'geog1'				=>	$param1,
 			'geog2'				=>	$param2,
 			'geog3'				=>	$param3,
-			'cadre'				=>	$param['cadre'],
-			'comments'			=>	$param['comments'],
+		    'cadre'				=>	$param['cadre'] ? $param['cadre'] : 0,
+		    'comments'			=>	$param['comments'] ? $param['comments'] : '',
 			'postgeo1'			=>	$param4,
 			'postgeo2'			=>	$param5,
 			'postgeo3'			=>	$param6,
-			'postaddress1'		=>	$param['postaddress1'],
+		    'postaddress1'		=>	$param['postaddress1'] ? $param['postaddress1'] : '',
 			'postfacilityname'	=>	$param['postfacilityname'],
 			'hscomldate'	=>	$hscomldate, //TA: added 7/17/2014
-			'lastinstatt'	=>	$param['lastinstatt'], //TA: added 7/17/2014
+		    'lastinstatt'	=>	$param['lastinstatt'] ? $param['lastinstatt'] : '', //TA: added 7/17/2014
 			'schoolstartdate' => $schoolstartdate, //TA: added 7/17/2014
-			'equivalence'	=>	$param['equivalence'], //TA: added 7/17/2014
-			'lastunivatt'	=>	$param['lastunivatt'], //TA: added 7/17/2014
-			'personincharge'	=>	$param['personincharge'], //TA: added 7/17/2014
-			'emergcontact'	=>	$param['emergcontact'], //TA: added 7/18/2014
+		    'equivalence'	=>	$param['equivalence'] ? $param['equivalence'] : 0, //TA: added 7/17/2014
+		    'lastunivatt'	=>	$param['lastunivatt'] ? $param['lastunivatt'] : '', //TA: added 7/17/2014
+		    'personincharge'	=>	$param['personincharge'] ? $param['personincharge'] : '', //TA: added 7/17/2014
+		    'emergcontact'	=>	$param['emergcontact'] ? $param['emergcontact'] : '', //TA: added 7/18/2014
 		);
 
 		$db->update('student',$student,"personid = '".$param['id']."'");
@@ -579,14 +588,14 @@ class Studentedit extends ITechTable
 
 			// UPDATING ADDRESS ROW
 			$address = array(
-				'address1'			=>	$param['permanent-address1'],
-				'address2'			=>	$param['permanent-address2'],
-				'city'				=>	$param['permanent-city'],
-				'postalcode'		=>	$param['permanent-postalcode'],
+			    'address1'			=>	$param['permanent-address1'] ? $param['permanent-address1'] : "",
+			    'address2'			=>	$param['permanent-address2'] ? $param['permanent-address2'] : "",
+			    'city'				=>	$param['permanent-city'] ? $param['permanent-city'] : "",
+			    'postalcode'		=>	$param['permanent-postalcode'] ? $param['permanent-postalcode'] : "",
 				'id_geog1'			=>	$param1,
 				'id_geog2'			=>	$param2,
 				'id_geog3'			=>	$param3,
-			    'phone'			=>	$param['permanent-phone'],//TA:#489
+			    'phone'			=>	$param['permanent-phone'] ? $param['permanent-phone'] : "",//TA:#489
 			);
 
 			$db->update('addresses',$address,"id = '".$addressid."' AND id_addresstype = 1");

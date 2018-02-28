@@ -68,7 +68,7 @@ ob_end_clean();
 
 						"<?php echo t('Save') ?>": function() {
 
-							$("#_tutortype").val($("#title").val());
+							$("#_relationship").val($("#title").val());
 
 							$("#_id").val($("#currentid").val());
 
@@ -112,7 +112,7 @@ ob_end_clean();
 
 					.click(function() {
 
-						$('#dialog-form').dialog('option', 'title', '<?php echo t('Add tutor type'); ?>');
+						$('#dialog-form').dialog('option', 'title', '<?php echo t('Add Relationship'); ?>');
 
 						$("#currentid").val("0");
 
@@ -128,7 +128,7 @@ ob_end_clean();
 
 			function edititem(iid,itxt){
 
-				$('#dialog-form').dialog('option', 'title', '<?php echo t('Update tutor type'); ?>');
+				$('#dialog-form').dialog('option', 'title', '<?php echo t('Update Relationship'); ?>');
 
 				$("#currentid").val(iid);
 
@@ -242,7 +242,7 @@ ob_end_clean();
 
 		<fieldset>
 
-			<label for="name"><?php echo t('Tutor type'); ?></label>
+			<label for="name"><?php echo 'Relationship'; ?></label>
 
 			<input type="text" name="title" id="title" class="text ui-widget-content ui-corner-all" />
 
@@ -336,7 +336,7 @@ ob_end_clean();
 
 <input type="hidden" name="_action" id="_action" value="addnew">
 
-<input type="hidden" name="_tutortype" id="_tutortype" value="">
+<input type="hidden" name="_relationship" id="_relationship" value="">
 
 <input type="hidden" name="_id" id="_id" value="0">
 

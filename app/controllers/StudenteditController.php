@@ -487,6 +487,9 @@ class StudenteditController extends ITechController
 		$helper = new Helper();
 		$this->view->assign('lookupnationalities', $helper->getNationalities());
 		$this->view->assign('nationalityid', $details['student'][0]['nationalityid']);
+		
+		#KIN REALTIONSHIP INFO
+		$this->view->assign('lookuprelationship', $helper->getRelationship());//TA:#504
 
 		if (count($details['link_cohort']) > 0) {
 			$this->view->assign('hascohort', true);
@@ -802,6 +805,9 @@ class StudenteditController extends ITechController
 		$helper = new Helper();
 		$this->view->assign('lookupnationalities', $helper->getNationalities());
 		$this->view->assign('nationalityid', $details['student'][0]['nationalityid']);
+		
+		#KIN REALTIONSHIP INFO
+		$this->view->assign('lookuprelationship', $helper->getRelationship());//TA:#504
 
 		if (count($details['link_cohort']) > 0) {
 			$this->view->assign('hascohort', true);

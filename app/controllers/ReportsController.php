@@ -6405,6 +6405,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	    $take_drop_reason = true;//TA:#405
 	    $addressJoined = false; //TA:#496
 	    $licensesJoined = false; //TA:#486
+	    $relationshipJoined = false; //TA:#504
 	    
 
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
@@ -7073,7 +7074,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		      $s->columns('lsa.kin_name');
 		  }
 		  
-	   //TA:#496 STUDENT ADDRESS REPORT: student kin info: relationship
+	   //TA:#496, TA:#504 STUDENT ADDRESS REPORT: student kin info: relationship
 		  if ((isset($params['show_kinrelationship']) && $params['show_kinrelationship'])||
 		    (isset($params['kin_relationship']) && $params['kin_relationship'])) {
 		      if (!$addressJoined) {
@@ -7081,9 +7082,13 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		          $s->joinLeft(array('permanent_address' => 'addresses'), 'permanent_address.id=lsa.id_address', array());
 		          $addressJoined = true;
 		      }
+		      if (!$relationshipJoined) {
+		          $s->joinLeft(array('lr' => 'lookup_relationship'), 'lr.id=lsa.kin_relationship', array());
+		          $relationshipJoined = true;
+		      }
 		      if (isset($params['show_kinrelationship']) && $params['show_kinrelationship']) {
-		          $headers[] = t('Next of Kin/Guardian Address') . " " . t("Relationship");
-		          $s->columns('lsa.kin_relationship');
+		          $headers[] = t('Next of Kin/Guardian Address') . " " . "Relationship";
+		          $s->columns('lr.relationship');
 		      }
 		      if (isset($params['kin_relationship']) && $params['kin_relationship']) {
 		          $s->where("lsa.kin_relationship = '" . $params['kin_relationship'] . "'");
@@ -7411,6 +7416,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 	    $this->view->assign('cadres', $helper->getCadres());
 	    $this->view->assign('institutiontypes', $helper->AdminInstitutionTypes());
 	    $this->view->assign('cohorts', $helper->getCohorts());
+	    $this->view->assign('relationships', $helper->getRelationship()); //TA:#504
 // 	    $this->view->assign('nationalities', $helper->getNationalities());
 // 	    $this->view->assign('funding', $helper->getFunding());
 // 	    $this->view->assign('tutors', $helper->getTutors());

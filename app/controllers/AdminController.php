@@ -2843,10 +2843,10 @@ class AdminController extends UserController
 	    if (isset ($_POST['_action'])){
 	        switch ($_POST['_action']){
 	            case "addnew":
-	                $helper->addTutortypes($_POST);
+	                $helper->addRelationship($_POST);
 	                break;
 	            case "update":
-	                $helper->updateTutortypes($_POST);
+	                $helper->updateRelationship($_POST);
 	                break;
 	        }
 	        $this->_redirect ( 'admin/preservice-relationship' );
@@ -2854,7 +2854,7 @@ class AdminController extends UserController
 	    
 	    $list = $helper->AdminRelationship();
 	    $this->view->assign("lookup", $list);
-	    $this->view->assign("header",t("Relationship"));
+	    $this->view->assign("header", "Relationship");
 	}
 	
 	//TA:#402.2

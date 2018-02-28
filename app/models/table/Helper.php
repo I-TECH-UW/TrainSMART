@@ -352,6 +352,15 @@ class Helper extends ITechTable
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
+	
+	//TA:#504
+	public function getRelationship() {
+	    $select = $this->dbfunc()->select()
+	    ->from("lookup_relationship")
+	    ->order('relationship');
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return $result;
+	}
 
 	###################################
 	#                                 #
@@ -1323,10 +1332,50 @@ class Helper extends ITechTable
 	public function AdminRelationship(){
 	    $select = $this->dbfunc()->select()
 	    ->from("lookup_relationship")
-	    ->where("status = 1")
 	    ->order('relationship');
 	    $result = $this->dbfunc()->fetchAll($select);
 	    return $result;
+	}
+	
+	//TA:#504
+	public function addRelationship($params){
+	    $linktable = "lookup_relationship";
+	    $maincolumn = "relationship";
+	    $id = $_POST["_id"];
+	    $value = $_POST['_relationship'];
+	    
+	    $select = $this->dbfunc()->select()
+	    ->from($linktable)
+	    ->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)));
+	    $result = $this->dbfunc()->fetchAll($select);
+	    if (count ($result) == 0){
+	        # LINK NOT FOUND - ADDING
+	        $i_arr = array(
+	            $maincolumn	=> $value
+	        );
+	        $instypeinsert = $this->dbfunc()->insert($linktable,$i_arr);
+	    }
+	}
+	
+	//TA:#504
+	public function updateRelationship($params){
+	    $linktable = "lookup_relationship";
+	    $maincolumn = "relationship";
+	    $id = $_POST["_id"];
+	    $value = $_POST['_relationship'];
+	    
+	    $select = $this->dbfunc()->select()
+	    ->from($linktable)
+	    ->where('LOWER(TRIM(' . $maincolumn . ')) = ?', trim(strtolower($value)))
+	    ->where('id <> ?', $id);
+	    $result = $this->dbfunc()->fetchAll($select);
+	    if (count ($result) == 0){
+	        # LINK NOT FOUND - ADDING
+	        $i_arr = array(
+	            $maincolumn	=> $value
+	        );
+	        $instypeinsert = $this->dbfunc()->update($linktable,$i_arr,'id = ' . $id);
+	    }
 	}
 
 	public function AdminCourseTypes(){
