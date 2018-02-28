@@ -803,7 +803,7 @@
 							<?php
 								if($this->escape($this->label_ps_religious_denomin)){
 									echo "<label>" . t($this->escape($this->label_ps_religious_denomin)) . "</label>";
-									echo "<select name='studenttype' id='studenttype' class='comboeditable' " . (!$this->hascohort ? ' disabled' : '') .">";
+									echo "<select name='studenttype' id='studenttype' >";
 								echo "<option value='0'>" . t('Select...') . "</option>";
 								foreach ($this->lookupstudenttypes as $studenttype){
 								echo "<option value='" . $studenttype['id'] . "' " . ($this->studenttype == $studenttype['id'] ? ' selected' : '') . ">";
