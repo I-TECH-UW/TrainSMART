@@ -2848,6 +2848,9 @@ class AdminController extends UserController
 	            case "update":
 	                $helper->updateRelationship($_POST);
 	                break;
+	            case "delete":
+	                $helper->deleteRelationship($_POST);
+	                break;
 	        }
 	        $this->_redirect ( 'admin/preservice-relationship' );
 	    }

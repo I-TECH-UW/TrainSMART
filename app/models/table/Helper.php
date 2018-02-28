@@ -1332,6 +1332,9 @@ class Helper extends ITechTable
 	public function AdminRelationship(){
 	    $select = $this->dbfunc()->select()
 	    ->from("lookup_relationship")
+	    ->joinLeft("link_student_addresses", "link_student_addresses.kin_relationship = lookup_relationship.id")
+	    ->columns("lookup_relationship.*")
+	    ->columns("link_student_addresses.id as used")
 	    ->order('relationship');
 	    $result = $this->dbfunc()->fetchAll($select);
 	    return $result;
@@ -1376,6 +1379,13 @@ class Helper extends ITechTable
 	        );
 	        $instypeinsert = $this->dbfunc()->update($linktable,$i_arr,'id = ' . $id);
 	    }
+	}
+	
+	//TA:#504
+	public function deleteRelationship($params){
+	    $db = $this->dbfunc();
+	    $query = "DELETE FROM lookup_relationship WHERE id = " . $_POST["_id"];
+	    $db->query($query);
 	}
 
 	public function AdminCourseTypes(){

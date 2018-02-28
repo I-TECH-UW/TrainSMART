@@ -138,6 +138,19 @@ ob_end_clean();
 
 			}
 
+			//TA:#404
+			function deleteitem(sel_row, iid, itxt){
+				if (confirm("Do you want to delete '" + itxt + "' relationship?")) {
+				    oTable.fnDeleteRow( sel_row );
+				    $("#currentid").val(iid);
+				    $("#_id").val($("#currentid").val());
+				    if ($("#currentid").val() != 0){
+				    	   $("#_action").val("delete");
+				    }
+				    document.getElementById("adminform").submit();
+				}
+			}
+
 		</script>
 
 
@@ -227,133 +240,71 @@ ob_end_clean();
 			
 
 		</script>
-
 	</head>
-
 	<body  class="yui-skin-sam">
 
 <div id="dialog-form" title="<?php echo t('Update Relationship'); ?>">
-
 	<p class="validateTips"><?php echo t('All form fields are required.')?></p>
-
-
-
 	<form method="post">
-
 		<fieldset>
-
 			<label for="name"><?php echo 'Relationship'; ?></label>
-
 			<input type="text" name="title" id="title" class="text ui-widget-content ui-corner-all" />
-
 		</fieldset>
-
-		<input type="hidden" name="currentid" id="currentid" class="text ui-widget-content ui-corner-all" />
-
+	<input type="hidden" name="currentid" id="currentid" class="text ui-widget-content ui-corner-all" />
 	</form>
-
 </div>
-
 		<div id="pageHolder">
-
 			<div id="header"><?php echo $header; ?></div>
-
 			<div id="content" class="adminDiv">
-
 				<div id="navAdmin"><?php echo $nav;?></div>
-
 				<div id="contentAdmin" style="width : 900px;">
-
 					<div id="contentheader">
-
 						<h2><?php echo $this->header; ?></h2>
-
 					</div>
-
-	
 
 					<div class="pad20"></div>
-
 					<div style="width :100%;">
-
 						<table cellpadding="0" cellspacing="0" border="0" class="display tablegrid" id="" style="width:100%">
-
 							<thead>
-
 								<tr>
-
 									<th><?php echo t('ID')?></th>
-
-									<th><?php echo t('Title')?></th>
-
+									<th><?php echo t('Title')?></th>									
+									<th><?php echo t('Action')?></th>
 								</tr>
-
 							</thead>
-
 							<tbody>
-
-					
-
-<?php
-
-	foreach ($this->lookup as $lookup){
-
-?>
-
-								<tr class="GradeA" style="cursor : pointer;" onclick="edititem('<?php echo $lookup['id']; ?>','<?php echo ($lookup['relationship']); ?>');">
-
+<?php 
+$i = 0;
+foreach ($this->lookup as $lookup){ ?>
+								<tr class="GradeA" style="cursor : pointer;">
 									<td><?php echo $lookup['id']; ?></td>
-
-									<td class=""><?php echo $lookup['relationship']; ?></td>
-
+									<td class=""><?php echo $lookup['relationship']; ?></td>		
+									<td>
+									<a href="javascript:edititem('<?php echo $lookup['id']; ?>','<?php echo ($lookup['relationship']); ?>');">Edit</a>
+									<?php if(!$lookup['used']){?>
+									 <a href="javascript:deleteitem('<?php echo $i; ?>','<?php echo $lookup['id']; ?>','<?php echo $lookup['relationship']; ?>');">Delete</a>
+									<?php }?>
+									</td>
 								</tr>
+<?php $i = $i+1; } ?>
+			</tbody>
+</table>
 
-<?php
-
-	}
-
-?>
-
-							</tbody>
-
-						</table>
-
-
-
-						<div style="text-align : right;">
-
-							<br>
-
+						<div style="text-align : right;"><br>
 							<input type="submit" name="update" id="update" value="<?php echo t('Add Relationship')?>" class="tsbutton green large">
-
 						</div>
-
 					</div>
 
-
-
 <form action="" id="adminform" method="post" class="formvalidate">
-
-<input type="hidden" name="_action" id="_action" value="addnew">
-
-<input type="hidden" name="_relationship" id="_relationship" value="">
-
-<input type="hidden" name="_id" id="_id" value="0">
-
+	<input type="hidden" name="_action" id="_action" value="addnew">
+	<input type="hidden" name="_relationship" id="_relationship" value="">
+	<input type="hidden" name="_id" id="_id" value="0">
 </form>
 
-
-
 				</div>
-
 				<div class="clear"></div>
-
 				<div id="footer"><?php require_once('views/scripts/footer.phtml');?></div>
-
 			</div>
-
 		</div>
-
 	</body>
-
 </html>
