@@ -1335,6 +1335,7 @@ class Helper extends ITechTable
 	    ->joinLeft("link_student_addresses", "link_student_addresses.kin_relationship = lookup_relationship.id")
 	    ->columns("lookup_relationship.*")
 	    ->columns("link_student_addresses.id as used")
+	    ->group("lookup_relationship.id")
 	    ->order('relationship');
 	    $result = $this->dbfunc()->fetchAll($select);
 	    return $result;
