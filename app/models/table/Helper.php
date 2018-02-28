@@ -1313,8 +1313,12 @@ class Helper extends ITechTable
 	public function AdminStudenttypes(){
 		$select = $this->dbfunc()->select()
 			->from("lookup_studenttype")
+			->joinLeft("student", "student.studenttype = lookup_studenttype.id")
+			->columns("lookup_studenttype.*")
+			->columns("student.id as used")
+			->group("lookup_studenttype.id")
 			->where("status = 1")
-			->order('studenttype');
+			->order('lookup_studenttype.studenttype');
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
@@ -1585,6 +1589,13 @@ class Helper extends ITechTable
 			);
 			$instypeinsert = $this->dbfunc()->update($linktable,$i_arr,'id = ' . $id);
 		}
+	}
+	
+	//TA:#503
+	public function deleteReligion($params){
+	    $db = $this->dbfunc();
+	    $query = "DELETE FROM lookup_studenttype WHERE id = " . $_POST["_id"];
+	    $db->query($query);
 	}
 
 	public function updateFunding($params){

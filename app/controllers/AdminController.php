@@ -2894,6 +2894,9 @@ class AdminController extends UserController
 				case "update":
 					$helper->updateReligion($_POST);
 					break;
+				case "delete":
+				    $helper->deleteReligion($_POST);
+				    break;
 			}
 			$this->_redirect ( 'admin/preservice-religion' );
 		}
