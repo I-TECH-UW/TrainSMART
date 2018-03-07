@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><?php echo $this->translation['Application Name']; ?>
+        | <?php echo t('Employee') . " " . t('Reports'); ?></title>
+    <?php
+    require_once('views/helpers/ScriptContainer.php');
+    require_once('views/helpers/FormHelper.php');
+    require_once('views/helpers/DropDown.php');
+    require_once('views/helpers/Location.php');
+    require_once('views/helpers/CheckBoxes.php');
+
+    print ScriptContainer::$instance->renderCSSHead();
+    print ScriptContainer::$instance->renderJSHead();
+    echo $this->partial('reports/employee-reports-common-javascript-header-partial.phtml');
+    ?>
+    
+     <script type="application/javascript">
+
+     //TA:#419
+     $(document).ready(function () {
+    	
+    	 var show_employee_code_cb = document.getElementsByName("show_employee_code")[0];
+     	// show_employee_code_cb.checked = true;
+     	 //show_employee_code_cb.disabled = true;
+
+      	//TA:#419.2 setdefault check box are checked
+     	 <?php 
+     	 if(!isset($this->criteria['go'])){
+//      	     echo "(document.getElementsByName('is_active')[0]).value = '1';";
+//      	     echo "(document.getElementsByName('show_is_active')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_employee_code')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_primary_role')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_classification')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_partner')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('showProvince')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('showDistrict')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('showRegionC')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_facilityInput')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_facility_type')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_dsd_model')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_dsd_team')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_fte_min')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_contract_start_date_from')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_contract_end_date_from')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_intended_transition')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_intended_transition_other')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_actual_transition')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_actual_transition_other')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_intended_transition_start_date')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_transition_start_date')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_hours_min')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_salary_min')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_benefits_min')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_expenses_min')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_stipend_min')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_cost_min')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_mech_partners')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_agencies')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_mechanism_ids')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_mechanism_names')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_mech_percent_min')[0]).checked = true;";
+//      	     echo "(document.getElementsByName('show_mech_fund_date_start')[0]).checked = true;";
+     	 }
+     	 ?>
+
+   		
+     });
+    
+     </script>
+
+</head>
+<body class="yui-skin-sam">
+<div id="pageHolder">
+    <div id="header"><?php require_once('views/scripts/header.phtml'); ?></div>
+    <div id="content">
+        <?php require_once 'views/scripts/status.phtml' ?>
+        <div id="subcontent">
+            <?php
+           // echo $this->partial('reports/employee-reports-report-types-partial.phtml', array('site_style' => $this->site_style, 'base_url' => $this->base_url));
+            ?>
+
+            
+            <div id="contentheader">
+                <h2><?php echo t("Employee") . " " . t("Reports"); ?></h2><br/>
+            </div>
+          
+            <form action="" method="get" class="form_employee">
+                <fieldset id="criteria">
+                    <legend><?php tp('Select Criteria'); ?></legend>
+                    <div class="fieldLabel"></div>
+                    <div class="fieldInput criteria-header">
+                        <div class="criteria-label"><?php tp('show'); ?></div>
+                        <div class="criteria-label" style="padding-left: 20px;"><?php tp('filter'); ?></div>
+                    </div>
+                    <div class="clear"></div>
+                    <div id="dividers">
+
+                        <?php
+                        $this->required_fields = array();                      
+                        $this->calendar_fields = array('transition_start_date', 'transition_end_date', 'contract_start_date_from', 'contract_start_date_to',
+                            'contract_end_date_from', 'contract_end_date_to', 'intended_transition_start_date', 'intended_transition_end_date',
+                            'mech_fund_date_start', 'mech_fund_date_end', 
+                            'timestamp_created_start_date', 'timestamp_created_end_date', 'timestamp_updated_start_date', 'timestamp_updated_end_date'
+                        );
+                        $this->is_report = true;
+                        
+                       //NEW  ?>
+                       <div class="fieldLabel partnerid" id="partnerid_lbl"><?php echo t('Partner ID');?></div>
+                       <div class="fieldInput"><div class="leftBorderPad">
+                       <input type="checkbox" name="show_partnerid" value="1"<?php echo (isset($this->criteria['show_partnerid']) && $this->criteria['show_partnerid']) ? " checked" : "" ?>/>
+                       </div></div>
+                        <?php
+                        echo labelAndField($this, t('Partner Name'),
+                            $this->formSelect('partner', isset($this->criteria['partner']) ? $this->criteria['partner'] : null, array('multiple' => true), $this->partners), 'partner');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                        echo labelAndField($this, t('Active') . ' HRH',
+                            $this->formSelect('is_active', isset($this->criteria['is_active']) ? $this->criteria['is_active'] : null, array(), array(""=>"-- choose --", "1"=>"Active", "0"=>"Inactive")), 'is_active');
+                        
+                        //NEW ?>
+                       <div class="fieldLabel positionid" id="positionid_lbl"><?php echo t('Position ID');?></div>
+                       <div class="fieldInput"><div class="leftBorderPad">
+                       <input type="checkbox" name="show_positionid" value="1"<?php echo (isset($this->criteria['show_positionid']) && $this->criteria['show_positionid']) ? " checked" : "" ?>/>
+                       </div></div>
+                        <?php
+                        
+                       echo labelAndField($this, t('Primary Role'), 
+                           $this->formSelect('primary_role', isset($this->criteria['primary_role']) ? $this->criteria['primary_role'] : null, array('multiple' => true), $this->roles), 'primary_role');
+                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                       echo labelAndField($this, t('Staff Cadre'),
+                           $this->formSelect('classification', isset($this->criteria['classification']) ? $this->criteria['classification'] : null, array('multiple' => true), $this->classifications), 'classification');
+                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';   
+                       
+                       //Do not think that user will select employee code. App too heavy to load so huge number of strings.
+//                        echo labelAndField($this, t('Employee Code'),
+//                            $this->formSelect('employee_code', (isset($this->criteria['employee_code']) && $this->criteria['employee_code'][0] !== '0') ? $this->criteria['employee_code'] : null, array('multiple' => true), $this->employee_codes), 'employee_code');
+//                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        //NEW ?>
+                       <div class="fieldLabel employee_code" id="employee_code_lbl"><?php echo t('Employee Code');?></div>
+                       <div class="fieldInput"><div class="leftBorderPad">
+                       <input type="checkbox" name="show_employee_code" value="1"<?php echo (isset($this->criteria['show_employee_code']) && $this->criteria['show_employee_code']) ? " checked" : "" ?>/>
+                       </div></div>
+                        <?php
+                        
+                       echo labelAndField($this, t('Service Delivery Model'),
+                           $this->formSelect('dsd_model', isset($this->criteria['dsd_model']) ? $this->criteria['dsd_model'] : null, array('multiple' => true), $this->dsd_models), 'dsd_model');
+                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                       echo labelAndField($this, t('Service Delivery Team'),
+                           $this->formSelect('dsd_team', isset($this->criteria['dsd_team']) ? $this->criteria['dsd_team'] : null, array('multiple' => true), $this->dsd_teams), 'dsd_team');
+                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>'; 
+                       
+                        region_filters_dropdown( $this, $this->locations, $this->criteria, true, true );
+                       
+//                         if ($this->setting['display_employee_base']) {
+//                         echo labelAndField($this, t('Based at'),
+//                             $this->formSelect('based_at', isset($this->criteria['based_at']) ? $this->criteria['based_at'] : null, array(), $this->bases), 'based_at');
+//                         }
+                        
+                         echo labelAndField($this, t('Site Name'), 
+                           $this->formSelect('facilityInput', isset($this->criteria['facilityInput']) ? $this->criteria['facilityInput'] : null, array('multiple' => true), $this->facilities), 'facilityInput');
+                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                       //TA:#499 do not remove, I am sure they will ask to add it later :)
+//                        echo labelAndField($this, t('Facility Type'),
+//                             $this->formSelect('facility_type', isset($this->criteria['facility_type']) ? $this->criteria['facility_type'] : null, array('multiple' => true), $this->facilityTypes), 'facility_type');
+//                         echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+
+                        echo labelTwoFields($this, t('Hours Worked per Week (per Site)'), t('to'), 'fte_min', 'fte_max',
+                            isset($this->criteria['fte_min']) ? $this->criteria['fte_min'] : '0',
+                            isset($this->criteria['fte_max']) ? $this->criteria['fte_max'] : '');
+                        
+                        echo labelAndField($this, t('Implementing Mechanism Name'),
+                            $this->formSelect('mechanism_names', isset($this->criteria['mechanism_names']) ? $this->criteria['mechanism_names'] : null, array('multiple' => true), $this->mechanism_names), 'mechanism_names');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                        echo labelAndField($this, t('Implementing Mechanism Identifier'),
+                            $this->formSelect('mechanism_ids', isset($this->criteria['mechanism_ids']) ? $this->criteria['mechanism_ids'] : null, array('multiple' => true), $this->mechanism_ids), 'mechanism_ids');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                        echo labelTwoFields($this, t('Implementing Mechanism Funding End Date'), t('to'), 'mech_fund_date_start', 'mech_fund_date_end',
+                            isset($this->criteria['mech_fund_date_start']) ? $this->criteria['mech_fund_date_start'] : '',
+                            isset($this->criteria['mech_fund_date_end']) ? $this->criteria['mech_fund_date_end'] : '');
+                        
+                        echo labelTwoFields($this, t('Contract Start Date'), t('to'), 'contract_start_date_from', 'contract_start_date_to',
+                            isset($this->criteria['contract_start_date_from']) ? $this->criteria['contract_start_date_from'] : '',
+                            isset($this->criteria['contract_start_date_to']) ? $this->criteria['contract_start_date_to'] : '');
+                        echo labelTwoFields($this, t('Contract End Date'), t('to'), 'contract_end_date_from', 'contract_end_date_to',
+                            isset($this->criteria['contract_end_date_from']) ? $this->criteria['contract_end_date_from'] : '',
+                            isset($this->criteria['contract_end_date_to']) ? $this->criteria['contract_end_date_to'] : '');
+                        
+                        echo labelAndField($this, t('Intended Transition'), 
+                           $this->formSelect('intended_transition', isset($this->criteria['intended_transition']) ? $this->criteria['intended_transition'] : null, array('multiple' => true), $this->transitions), 'intended_transition');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                        echo labelAndField($this, t('Intended Transition Other'),
+                            $this->formSelect('intended_transition_other', isset($this->criteria['intended_transition_other']) ? $this->criteria['intended_transition_other'] : null, array('multiple' => true), $this->transitions_other), 'intended_transition_other');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                        echo labelTwoFields($this, t('Intended Transition Date'), t('to'), 'intended_transition_start_date', 'intended_transition_end_date',
+                            isset($this->criteria['intended_transition_start_date']) ? $this->criteria['intended_transition_start_date'] : '',
+                            isset($this->criteria['intended_transition_end_date']) ? $this->criteria['intended_transition_end_date'] : '');
+                        
+                        echo labelAndField($this, t('Actual Transition Outcome'),
+                            $this->formSelect('actual_transition', isset($this->criteria['actual_transition']) ? $this->criteria['actual_transition'] : null, array('multiple' => true), $this->transitions_complete), 'actual_transition');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                        echo labelAndField($this, t('Actual Transition Outcome, Other'),
+                            $this->formSelect('actual_transition_other', isset($this->criteria['actual_transition_other']) ? $this->criteria['actual_transition_other'] : null, array('multiple' => true), $this->transitions_complete_other), 'actual_transition_other');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                        echo labelTwoFields($this, t('Actual Transition Date'), t('to'), 'transition_start_date', 'transition_end_date',
+                            isset($this->criteria['transition_start_date']) ? $this->criteria['transition_start_date'] : '',
+                            isset($this->criteria['transition_end_date']) ? $this->criteria['transition_end_date'] : '');
+                        
+                        echo labelAndField($this, t('Salaried or Stipend'),
+                            $this->formSelect('salary_or_stipend', isset($this->criteria['salary_or_stipend']) ? $this->criteria['salary_or_stipend'] : null, array(), 
+                                array(""=>"-- choose --", "salaried"=>"Salaried", "stipend"=>"Stipend")), 'salary_or_stipend');
+                          
+                        echo labelTwoFields($this, t('Hours Worked per Week (FTE)'), t('to'), 'hours_min', 'hours_max',
+                            isset($this->criteria['hours_min']) ? $this->criteria['hours_min'] : '',
+                            isset($this->criteria['hours_max']) ? $this->criteria['hours_max'] : '');
+                        
+                        echo labelTwoFields($this, t('Salary'), t('to'), 'salary_min', 'salary_max',
+                            isset($this->criteria['salary_min']) ? $this->criteria['salary_min'] : '',
+                            isset($this->criteria['salary_max']) ? $this->criteria['salary_max'] : '');
+                        
+                        echo labelTwoFields($this, t('Benefits'), t('to'), 'benefits_min', 'benefits_max',
+                            isset($this->criteria['benefits_min']) ? $this->criteria['benefits_min'] : '',
+                            isset($this->criteria['benefits_max']) ? $this->criteria['benefits_max'] : '');
+                          
+                        echo labelAndField($this, t('Financial Benefits Description'),
+                            $this->formSelect('employee_financial_benefits_description', isset($this->criteria['employee_financial_benefits_description']) ? $this->criteria['employee_financial_benefits_description'] : null, array('multiple' => true), $this->employee_financial_benefits_description), 'employee_financial_benefits_description');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                                
+                        echo labelTwoFields($this, t('Non-financial Benefits (R)'), t('to'), 'non_financial_benefits_min', 'non_financial_benefits_max',
+                            isset($this->criteria['non_financial_benefits_min']) ? $this->criteria['non_financial_benefits_min'] : '',
+                            isset($this->criteria['non_financial_benefits_max']) ? $this->criteria['non_financial_benefits_max'] : '');
+                        
+                        echo labelAndField($this, t('Non-financial Benefits Description'),
+                            $this->formSelect('employee_non_financial_benefits_description', isset($this->criteria['employee_non_financial_benefits_description']) ? $this->criteria['employee_non_financial_benefits_description'] : null, array('multiple' => true), $this->employee_non_financial_benefits_description), 'employee_non_financial_benefits_description');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                       
+                        echo labelTwoFields($this, t('Professional Development (R)'), t('to'), 'professional_development_min', 'professional_development_max',
+                            isset($this->criteria['professional_development_min']) ? $this->criteria['professional_development_min'] : '',
+                            isset($this->criteria['professional_development_max']) ? $this->criteria['professional_development_max'] : '');
+                        
+                        
+//                         echo labelAndField($this, t('Professional Development Description'),
+//                             $this->formSelect('employee_professional_development_description', isset($this->criteria['employee_professional_development_description']) ? $this->criteria['employee_professional_development_description'] : null, array('multiple' => true), $this->employee_professional_development_description), 'employee_professional_development_description');
+//                         echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        
+                        
+                       
+//                         echo labelTwoFields($this, t('Additional Expenses'), t('to'), 'expenses_min', 'expenses_max',
+//                             isset($this->criteria['expenses_min']) ? $this->criteria['expenses_min'] : '',
+//                             isset($this->criteria['expenses_max']) ? $this->criteria['expenses_max'] : '');
+                        
+                        echo labelTwoFields($this, t('Stipend'), t('to'), 'stipend_min', 'stipend_max',
+                            isset($this->criteria['stipend_min']) ? $this->criteria['stipend_min'] : '',
+                            isset($this->criteria['stipend_max']) ? $this->criteria['stipend_max'] : '');
+
+                        echo labelTwoFields($this, t('Annual Cost'), t('to'), 'cost_min', 'cost_max',
+                            isset($this->criteria['cost_min']) ? $this->criteria['cost_min'] : '',
+                            isset($this->criteria['cost_max']) ? $this->criteria['cost_max'] : '');
+                        
+                        echo labelAndField($this, t('Implementing Agency'),
+                            $this->formSelect('agencies', isset($this->criteria['agencies']) ? $this->criteria['agencies'] : null, array('multiple' => true), $this->agencies), 'agencies');
+                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                       
+                        echo labelAndField($this, t('Implementing Mechanism Prime Partner Name'), 
+                           $this->formSelect('mech_partners', isset($this->criteria['mech_partners']) ? $this->criteria['mech_partners'] : null, array('multiple' => true), $this->mech_partners), 'mech_partners');
+                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+
+                       //NEW
+                       echo labelTwoFields($this, t('Timestamp Created'), t('to'), 'timestamp_created_start_date', 'timestamp_created_end_date',
+                           isset($this->criteria['timestamp_created_start_date']) ? $this->criteria['timestamp_created_start_date'] : '',
+                           isset($this->criteria['timestamp_created_end_date']) ? $this->criteria['timestamp_created_end_date'] : '');
+                       
+                       //NEW
+                       echo labelTwoFields($this, t('Timestamp Updated'), t('to'), 'timestamp_updated_start_date', 'timestamp_updated_end_date',
+                       isset($this->criteria['timestamp_updated_start_date']) ? $this->criteria['timestamp_updated_start_date'] : '',
+                       isset($this->criteria['timestamp_updated_end_date']) ? $this->criteria['timestamp_updated_end_date'] : '');
+                        
+                        ?>
+                    </div>
+                   <?php echo "<br>" . $this->partial('reports/ps-search-preview-button-partial.phtml', array()); ?>
+
+            </form>
+            <?php if (isset($this->output)) {
+                echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
+                    array('output' => $this->output, 'headers' => $this->headers));
+                ?>
+                <br>
+                <input type="button" name="go" value="<?php tp('Download'); ?> &raquo;" class="tsbutton green large"
+                       onclick="window.open('<?php echo $_SERVER['REQUEST_URI'] . "&format=csv" ?>')">
+            <?php } ?>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
