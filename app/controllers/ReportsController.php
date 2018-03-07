@@ -10706,6 +10706,7 @@ die (__LINE__ . " - " . $sql);
             $select = "";
             $where =  "";
             $group =  "";
+            $order =  "";
             $header_names = array();
             
             //PARTNER ID
@@ -10713,6 +10714,8 @@ die (__LINE__ . " - " . $sql);
                 $header_names['partnerid'] = t('Partner ID');
                 $select .= "partner.id AS partnerid ";
                 $group .= " partnerid ";
+                if($order !== ""){ $order .= ", "; }
+                $order .= " partnerid ";
             }
             
             // PARTNER NAME
@@ -10722,6 +10725,8 @@ die (__LINE__ . " - " . $sql);
                 $select .= "partner.partner AS partner ";
                 if($group !== ""){ $group .= ", "; }
                 $group .= " partner ";
+                if($order !== ""){ $order .= ", "; }
+                $order .= " partner ";
             }
             if ((isset($criteria['partner']) && $criteria['partner'])) {
                 if(is_array($criteria['partner'])){
@@ -10800,6 +10805,8 @@ die (__LINE__ . " - " . $sql);
                 $select .= " employee.employee_code AS employee_code ";
                 if($group !== ""){ $group .= ", "; }
                 $group .= " employee_code ";
+                if($order !== ""){ $order .= ", "; }
+                $order .= " employee_code ";
             }
 //             if(isset($criteria['employee_code']) && $criteria['employee_code'][0] !== '0') {
 //                 if($where !== ""){ $where .= " AND "; }
@@ -10993,15 +11000,28 @@ die (__LINE__ . " - " . $sql);
                 }
             }
             
-            //CONTINUE HERE
-            
+          
+            //IMPLEMENTING MECHANISM FUNDING END DATE
             if ((isset($criteria['show_mech_fund_date_start']) || $criteria['show_mech_fund_date_start']) ||
                 (isset($criteria['mech_fund_date_start']) && $criteria['mech_fund_date_start']) ||
                 (isset($criteria['mech_fund_date_end']) && $criteria['mech_fund_date_end'])) {
                     $header_names['mechanism_end_date'] =  t('Implementing Mechanism Funding End Date');
                     if($select !== ""){ $select .= ", "; }
                     $select .= " mechanism_option.end_date AS mechanism_end_date ";
+                    if($group !== ""){ $group .= ", "; }
+                    $group .= " mechanism_end_date ";
+                    if(isset($criteria['mech_fund_date_start']) && $criteria['mech_fund_date_start']){
+                        if($where !== ""){ $where .= " AND "; }
+                        $d = DateTime::createFromFormat('d/m/Y', $criteria['mech_fund_date_start']);
+                        $where .= ' mechanism_option.end_date >= ' . $d->format('Y-m-d');
+                    }
+                    if(isset($criteria['mech_fund_date_end']) && $criteria['mech_fund_date_end']){
+                        if($where !== ""){ $where .= " AND "; }
+                        $d = DateTime::createFromFormat('d/m/Y', $criteria['mech_fund_date_end']);
+                        $where .= ' mechanism_option.end_date <= '.  $d->format('Y-m-d');
+                    }
                 }
+                
             if (isset($criteria['show_contract_start_date_from']) || $criteria['contract_start_date_from'] 
                     || $criteria['contract_start_date_to']) {
                         $header_names['contract_start_date'] =  t('Contract Start Date');
@@ -11170,13 +11190,209 @@ if($where !== ""){
 if($group !== ""){
     $select = $select . " GROUP BY " . $group ;
 }
-		
-$select = $select .  " ORDER BY
+
+if($order !== ""){
+    $select = $select . " ORDER BY " . $order ;
+}
+
+//TEST version , how query should look like, remove it later --- START
+$header_names2['partnerid'] = t('Partner ID');
+$header_names2['partner'] = t('Partner Name');
+$header_names2['active'] = t('Active HRH');
+$header_names2['positionid'] = t('Position ID');
+$header_names2['role_phrase'] = t('Disaggregate Cadre');
+$header_names2['qualification_phrase'] = t('Occupational Classification');
+$header_names2['employee_code'] = t('Employee Code');
+$header_names2['employee_dsdmodel_phrase'] = t('Service Delivery Model');
+$header_names2['employee_dsdteam_phrase'] = t('Service Delivery Team');
+$header_names2['province_name'] = t('Region A (Province)');
+$header_names2['district_name'] = t('Region B (Health District)');
+$header_names2['region_c_name'] = t('Region C (Local Region)');
+$header_names2['facility_name'] =  t('Facility Name');
+$header_names2['hiv_fte_related'] =  t('Hours Worked per Week (per Site)');
+$header_names2['mechanism_phrase'] =  t('Implementing Mechanism Name');
+$header_names2['external_id'] =  t('Implementing Mechanism Identifier');
+$header_names2['mechanism_end_date'] =  t('Implementing Mechanism Funding End Date');
+$header_names2['contract_start_date'] =  t('Contract Start Date');
+$header_names2['contract_end_date'] =  t('Contract End Date');
+$header_names2['intended_transition'] =  t('Intended Transition');
+$header_names2['transition_other'] =  t('Intended Transition Other');
+$header_names2['transition_date'] =  t('Intended Transition Date');
+$header_names2['actual_transition'] =  t('Actual Transition Outcome');
+$header_names2['transition_complete_other'] =  t('Actual Transition Outcome, Other');
+$header_names2['transition_complete_date'] =  t('Actual Transition Date');
+$header_names2['salary_or_stipend'] =  t('Salaried or Stipend');
+$header_names2['funded_hours_per_week'] =  t('Hours Worked per Week (FTE)');
+$header_names2['salary'] =  t('Annual Salary (R)');
+$header_names2['benefits'] =  t('Annual Benefits (R)');
+$header_names2['financial_benefits_description_option'] = t('Financial Benefits Description');
+$header_names2['non_financial_benefits'] =  t('Non-financial Benefits (R)');
+$header_names2['non_financial_benefits_description_option'] = t('Non-Financial Benefits Description');
+$header_names2['professional_development'] =  t('Professional Development (R)');
+$header_names2['professional_development_description_option'] = t('Professional Development (R) Description');
+$header_names2['stipend'] =  t('Annual Stipend (R)');
+$header_names2['annual_cost'] =  t('Annual Cost (R)');
+$header_names2['funder_phrase'] =  t('Implementing Agency');
+$header_names2['impl_mech_partner_name'] =  t('Implementing Mechanism Prime Partner Name');
+$header_names2['timestamp_created'] =  t('Timestamp Created');
+$header_names2['timestamp_updated'] =  t('Timestamp Updated');
+$this->view->assign('headers', $header_names2);
+
+$select = "
+SELECT
+	partner.id AS partnerid,
+	partner.partner AS partner,
+	IF(employee.is_active = 1,'Active','Inactive') as is_active,
+	employee.id AS positionid,
+	employee_role_option.role_phrase AS role_phrase,
+	employee_qualification_option.qualification_phrase AS qualification_phrase,
+	employee.employee_code AS employee_code,
+	employee_dsdmodel_option.employee_dsdmodel_phrase AS employee_dsdmodel_phrase,
+	employee_dsdteam_option.employee_dsdteam_phrase AS employee_dsdteam_phrase,
+	location_2.location_name AS province_name,
+	location_1.location_name AS district_name,
+	location.location_name AS region_c_name,
+	facility.facility_name AS facility_name,
+	link_employee_facility.hiv_fte_related AS hiv_fte_related,
+	mechanism_option.mechanism_phrase AS mechanism_phrase,
+	mechanism_option.external_id AS external_id,
+	mechanism_option.end_date AS mechanism_end_date,
+	employee.agreement_start_date AS contract_start_date,
+	employee.agreement_end_date AS contract_end_date,
+	employee_transition_option.transition_phrase AS intended_transition,
+	employee.transition_other AS transition_other,
+	employee.transition_date AS transition_date,
+	employee_transition_complete_option.transition_complete_phrase AS actual_transition,
+	employee.transition_complete_other AS transition_complete_other,
+	employee.transition_complete_date AS transition_complete_date,
+	employee.salary_or_stipend AS salary_or_stipend,
+	employee.funded_hours_per_week AS funded_hours_per_week,
+	employee.salary AS salary,
+	employee.benefits AS benefits,
+GROUP_CONCAT(DISTINCT  employee_financial_benefits_description_option.financial_benefits_description_option) as financial_benefits_description_option,
+	employee.non_financial_benefits AS non_financial_benefits,
+GROUP_CONCAT(DISTINCT employee_non_financial_benefits_description_option.non_financial_benefits_description_option) as non_financial_benefits_description_option,
+	employee.professional_development AS professional_development,
+GROUP_CONCAT(DISTINCT employee_professional_development_description_option.professional_development_description_option) as professional_development_description_option,
+	employee.stipend AS stipend,
+	employee.annual_cost AS annual_cost,
+	partner_funder_option.funder_phrase AS funder_phrase,
+	partner_1.partner AS impl_mech_partner_name,
+	employee.timestamp_created,
+	employee.timestamp_updated
+FROM
+	(
+		(
+			employee_dsdteam_option
+		RIGHT JOIN(
+			(
+				(
+					(
+						(
+							facility
+						RIGHT JOIN(
+							link_employee_facility
+						RIGHT JOIN(
+							employee_transition_complete_option
+						RIGHT JOIN(
+							employee_transition_option
+						RIGHT JOIN(
+							(
+								employee_qualification_option
+							RIGHT JOIN(
+								partner
+							LEFT JOIN employee ON partner.id = employee.partner_id
+							)ON employee_qualification_option.id = employee.employee_qualification_option_id
+							)
+						LEFT JOIN employee_role_option ON employee.employee_role_option_id = employee_role_option.id
+						)ON employee_transition_option.id = employee.employee_transition_option_id
+						)ON employee_transition_complete_option.id = employee.employee_transition_complete_option_id
+						)ON link_employee_facility.employee_id = employee.id
+						)ON facility.id = link_employee_facility.facility_id
+						)
+					LEFT JOIN location ON facility.location_id = location.id
+					)
+				LEFT JOIN location AS location_1 ON location.parent_id = location_1.id
+				)
+			LEFT JOIN location AS location_2 ON location_1.parent_id = location_2.id
+			)
+		LEFT JOIN employee_dsdmodel_option ON link_employee_facility.dsd_model_id = employee_dsdmodel_option.id
+		)ON employee_dsdteam_option.id = link_employee_facility.dsd_team_id
+		)
+	LEFT JOIN(
+		partner AS partner_1
+	RIGHT JOIN mechanism_option ON partner_1.id = mechanism_option.owner_id
+	)ON link_employee_facility.mechanism_option_id = mechanism_option.id
+	)
+LEFT JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id
+
+
+LEFT JOIN employee_to_financial_benefits_description_option ON employee_to_financial_benefits_description_option.employee_id = employee.id 
+LEFT JOIN employee_financial_benefits_description_option ON employee_financial_benefits_description_option.id = employee_to_financial_benefits_description_option.employee_financial_benefits_description_option_id 
+LEFT JOIN employee_to_non_financial_benefits_description_option ON employee_to_non_financial_benefits_description_option.employee_id = employee.id 
+LEFT JOIN employee_non_financial_benefits_description_option ON employee_non_financial_benefits_description_option.id = employee_to_non_financial_benefits_description_option.employee_non_financial_benefits_description_option_id 
+LEFT JOIN employee_to_professional_development_description_option ON employee_to_professional_development_description_option.employee_id = employee.id 
+LEFT JOIN employee_professional_development_description_option ON employee_professional_development_description_option.id = employee_to_professional_development_description_option.employee_professional_development_description_option_id
+
+
+WHERE
+	(
+		(
+				employee.transition_complete_date
+			)> '2017/09/30'
+		OR (
+				employee.transition_complete_date
+			)= '0000/00/00'
+		OR(
+			employee.transition_complete_date
+		)IS NULL
+	)
+		GROUP BY
+			partner.id,
+			partner.partner,
+			employee.is_active,
+			employee.id,
+			employee_role_option.role_phrase,
+			employee_qualification_option.qualification_phrase,
+			employee.employee_code,
+			employee_dsdmodel_option.employee_dsdmodel_phrase,
+			employee_dsdteam_option.employee_dsdteam_phrase,
+			location_2.location_name,
+			location_1.location_name,
+			location.location_name,
+			facility.facility_name,
+			link_employee_facility.hiv_fte_related,
+			mechanism_option.mechanism_phrase,
+			mechanism_option.external_id,
+			mechanism_option.end_date,
+			employee.agreement_start_date,
+			employee.agreement_end_date,
+			employee_transition_option.transition_phrase,
+			employee.transition_other,
+			employee.transition_date,
+			employee_transition_complete_option.transition_complete_phrase,
+			employee.transition_complete_other,
+			employee.transition_complete_date,
+			employee.salary_or_stipend,
+			employee.funded_hours_per_week,
+			employee.salary,
+			employee.benefits,
+			employee.non_financial_benefits,
+			employee.professional_development,
+			employee.stipend,
+			employee.annual_cost,
+			partner_funder_option.funder_phrase,
+			partner_1.partner,
+			employee.timestamp_created,
+			employee.timestamp_updated
+		ORDER BY
 			partner.partner,
 			employee.id,
 			employee.employee_code,
 			employee_dsdmodel_option.employee_dsdmodel_phrase,
-			location_2.location_name LIMIT 100";
+			location_2.location_name";
+
+//TEST version , how query should look like, remove it later --- END
 
 print $select;
                 $this->view->assign('output',$db->fetchAll($select));
