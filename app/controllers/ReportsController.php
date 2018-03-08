@@ -11334,7 +11334,6 @@ LEFT JOIN employee_non_financial_benefits_description_option ON employee_non_fin
 LEFT JOIN employee_to_professional_development_description_option ON employee_to_professional_development_description_option.employee_id = employee.id 
 LEFT JOIN employee_professional_development_description_option ON employee_professional_development_description_option.id = employee_to_professional_development_description_option.employee_professional_development_description_option_id
 
-
 WHERE (is_active=1) AND (location_2.id = '12197')
 		GROUP BY
 			partner.id,
