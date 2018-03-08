@@ -11335,18 +11335,7 @@ LEFT JOIN employee_to_professional_development_description_option ON employee_to
 LEFT JOIN employee_professional_development_description_option ON employee_professional_development_description_option.id = employee_to_professional_development_description_option.employee_professional_development_description_option_id
 
 
-WHERE
-	(
-		(
-				employee.transition_complete_date
-			)> '2017/09/30'
-		OR (
-				employee.transition_complete_date
-			)= '0000/00/00'
-		OR(
-			employee.transition_complete_date
-		)IS NULL
-	)
+WHERE (is_active=1) AND (location_2.id = '12197')
 		GROUP BY
 			partner.id,
 			partner.partner,
@@ -11386,11 +11375,7 @@ WHERE
 			employee.timestamp_created,
 			employee.timestamp_updated
 		ORDER BY
-			partner.partner,
-			employee.id,
-			employee.employee_code,
-			employee_dsdmodel_option.employee_dsdmodel_phrase,
-			location_2.location_name";
+			partner.partner";
 
 //TEST version , how query should look like, remove it later --- END
 
