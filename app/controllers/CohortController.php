@@ -449,11 +449,12 @@ class CohortController extends ITechController {
 		
 	}
 	
-	//TA:#362
+	//TA:#497
 	public function transcriptAction(){
 	    $helper = new Helper();
 	    $request = $this->getRequest();
 	    $cohortid = $request->getparam('id');
+	    $this->view->assign('cohortid', $cohortid);
 	    $cohortedit = new Cohortedit();
 		$cohort=$cohortedit->EditCohort($cohortid);
 		$this->view->assign('cohort', $cohort);
@@ -481,8 +482,13 @@ class CohortController extends ITechController {
 		
 		$signor = $institute->getStaffTranscriptSignor($cohort['institutionid']);
 		$this->view->assign('signor', $signor[0]);
+		
+		$this->view->assign('lookupfunding', $helper->getFunding());
+		
 	    
 		}
+		
+		
 
 }
 ?>

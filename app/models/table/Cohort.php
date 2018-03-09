@@ -234,10 +234,27 @@ class Cohortedit extends ITechTable
 			
 			$select = $this->dbfunc()->select()
 				->from(array('p' => 'person'),
-						array('id','first_name','last_name','gender','birthdate'))
+						array('id','first_name','last_name','gender','birthdate', 'national_id'))
 				->join(array('s' => 'student'),
 						's.personid = p.id',
-						array("sid"=>'id'))
+				    array("sid"=>'id','index_number' =>'index_number', 'yearofstudy'=>'yearofstudy'))
+						//TA:#497
+			->join(array('t' => 'person_title_option'),
+			    'p.title_option_id = t.id',
+			    array("title_phrase"=>'title_phrase'))
+			    ->join(array('n' => 'lookup_nationalities'),
+			        's.nationalityid = lookup_nationalities.id',
+			        array("nationality"=>'nationality'))
+			        ->join(array('lsc' => 'link_student_cohort'),
+			            'lsc.id_student = s.id',
+			            array("joindate"=>'joindate'))
+			            ->join(array('c' => 'cohort'),
+			                'lsc.id_cohort = c.id',
+			                array("cohortname"=>'cohortname'))
+			                ->join(array('d' => 'cadres'),
+			                    'd.id = c.cadreid',
+			                    array("cadrename"=>'cadrename'))
+			        ///
 				->order('p.first_name','p.last_name');
 				
 				//TA:#304 it is not clear why this condition was here, it reproduce BUG, 
@@ -252,23 +269,57 @@ class Cohortedit extends ITechTable
 			if ($cid !== false){
 				$select = $this->dbfunc()->select()
 					->from(array('p' => 'person'),
-							array('id','first_name','last_name','gender','birthdate'))
+					    array('id','first_name','last_name','gender','birthdate', 'national_id'))
 					->join(array('s' => 'student'),
 							's.personid = p.id',
-							array("sid"=>'id'))
+					    array("sid"=>'id', 'index_number' =>'index_number', 'yearofstudy'=>'yearofstudy'))
 					->join(array('l' => 'link_student_cohort'),
 							'l.id_student = s.id',
 							array('isgraduated','dropdate','joindate'))
+							//TA:#497
+				->join(array('t' => 'person_title_option'),
+				    'p.title_option_id = t.id',
+				    array("title_phrase"=>'title_phrase'))
+				    ->join(array('n' => 'lookup_nationalities'),
+				        's.nationalityid = n.id',
+				        array("nationality"=>'nationality'))
+				        ->join(array('lsc' => 'link_student_cohort'),
+				            'lsc.id_student = s.id',
+				            array("joindate"=>'joindate'))
+				            ->join(array('c' => 'cohort'),
+				                'lsc.id_cohort = c.id',
+				                array("cohortname"=>'cohortname'))
+				                ->join(array('d' => 'cadres'),
+				                    'd.id = c.cadreid',
+				                    array("cadrename"=>'cadrename'))
+				        ///
 					->where('l.id_cohort = ?',$cid)
 					->order('p.first_name','p.last_name');
 			} else {
 				$select = $this->dbfunc()->select()
 					->from(array('p' => 'person'),
-							array('id','first_name','last_name','gender','birthdate'))
+					    array('id','first_name','last_name','gender','birthdate', 'title_phrase', 'national_id'))
 					->join(array('s' => 'student'),
 							's.personid = p.id',
-							array("sid"=>'id'))
-					->order('p.first_name','p.last_name');
+					    array("sid"=>'id', 'index_number' =>'index_number', 'yearofstudy'=>'yearofstudy'))
+							//TA:#497
+						->join(array('t' => 'person_title_option'),
+							    'p.title_option_id = t.id',
+							    array("title_phrase"=>'title_phrase'))
+						->join(array('n' => 'lookup_nationalities'),
+							        's.nationalityid = n.id',
+							        array("nationality"=>'nationality'))
+							        ->join(array('lsc' => 'link_student_cohort'),
+							            'lsc.id_student = s.id',
+							            array("joindate"=>'joindate'))
+							            ->join(array('c' => 'cohort'),
+							                'lsc.id_cohort = c.id',
+							                array("cohortname"=>'cohortname'))
+							                ->join(array('d' => 'cadres'),
+							                    'd.id = c.cadreid',
+							                    array("cadrename"=>'cadrename'))
+							        ///
+				->order('p.first_name','p.last_name');
 			}
 			
 		}
