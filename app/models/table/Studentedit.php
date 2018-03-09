@@ -44,7 +44,7 @@ class Studentedit extends ITechTable
 			->where('studentid = ?',$output['student'][0]['id']);
 		$row = $this->dbfunc()->fetchAll($select);
 		$output['funding'] = $row;
-
+                                                                                                            
 		# GETTING COHORT LINK
 		$select = $this->dbfunc()->select()
 			->from('link_student_cohort')

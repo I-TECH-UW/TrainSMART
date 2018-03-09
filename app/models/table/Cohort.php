@@ -229,6 +229,58 @@ class Cohortedit extends ITechTable
 	} 
 	
 	public function getAllStudents($cid = false, $unassigned_only = false, $inst_id=false){
+	    
+	    if($unassigned_only){
+	        
+	        $select = $this->dbfunc()->select()
+	        ->from(array('p' => 'person'),
+	            array('id','first_name','last_name','gender','birthdate'))
+	            ->join(array('s' => 'student'),
+	                's.personid = p.id',
+	                array("sid"=>'id'))
+	                ->order('p.first_name','p.last_name');
+	                
+	                //TA:#304 it is not clear why this condition was here, it reproduce BUG,
+	                //if remove this condition then it take all students about 8,000 it is too much for user to make a selection
+	                //->where("s.id NOT IN (SELECT id_student FROM link_student_cohort WHERE id_cohort != {$cid})");
+	                //TA:#304 Let's take all students from this institution only
+	                if($inst_id){
+	                    $select->where("s.institutionid=?", $inst_id);
+	                }
+	    } else {
+	        
+	        if ($cid !== false){
+	            $select = $this->dbfunc()->select()
+	            ->from(array('p' => 'person'),
+	                array('id','first_name','last_name','gender','birthdate'))
+	                ->join(array('s' => 'student'),
+	                    's.personid = p.id',
+	                    array("sid"=>'id'))
+	                    ->join(array('l' => 'link_student_cohort'),
+	                        'l.id_student = s.id',
+	                        array('isgraduated','dropdate','joindate'))
+	                        ->where('l.id_cohort = ?',$cid)
+	                        ->order('p.first_name','p.last_name');
+	        } else {
+	            $select = $this->dbfunc()->select()
+	            ->from(array('p' => 'person'),
+	                array('id','first_name','last_name','gender','birthdate'))
+	                ->join(array('s' => 'student'),
+	                    's.personid = p.id',
+	                    array("sid"=>'id'))
+	                    ->order('p.first_name','p.last_name');
+	        }
+	        
+	    }
+	    
+	    $select->where('p.is_deleted=0');//TA:#277
+	    
+	    $result = $this->dbfunc()->fetchAll($select);
+	    return $result;
+	}
+	
+	//#497
+	public function getAllStudentsForTranscript($cid = false, $unassigned_only = false, $inst_id=false){
 		
 		if($unassigned_only){
 			

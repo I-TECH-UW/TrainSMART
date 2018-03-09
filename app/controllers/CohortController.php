@@ -462,7 +462,7 @@ class CohortController extends ITechController {
 		  $this->view->assign('degree', $helper->getDegree($cohort['degree'])[0]['degree']);
 		}
 		$students_final = array();
-		$students = $cohortedit->getAllStudents($cohortid);
+		$students = $cohortedit->getAllStudentsForTranscript($cohortid);
 		foreach ($students as $row) {
 		    $row['classes'] = $helper->listcurrentclasses($cohortid, $row['sid']);
 		    array_push($students_final,$row);
