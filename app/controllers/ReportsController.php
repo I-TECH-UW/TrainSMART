@@ -7891,7 +7891,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				$join[] = array(
 					"table" => "link_cohorts_classes",
 					"abbreviation" => "lcc",
-					"compare" => "lcc.cohortid = class.id",
+					"compare" => "lcc.classid = class.id",
 					"type" => "left"
 				);
 				$join[] = array(
@@ -7922,7 +7922,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					$join[] = array(
 						"table" => "link_cohorts_classes",
 						"abbreviation" => "lcc",
-						"compare" => "lcc.cohortid = class.id",
+						"compare" => "lcc.classid = class.id",
 						"type" => "left"
 					);
 					$join[] = array(
@@ -7967,7 +7967,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					$join[] = array(
 						"table" => "link_cohorts_classes",
 						"abbreviation" => "lcc",
-						"compare" => "lcc.cohortid = class.id",
+						"compare" => "lcc.classid = class.id",
 						"type" => "left"
 					);
 					$join[] = array(
@@ -8004,7 +8004,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					$join[] = array(
 						"table" => "link_cohorts_classes",
 						"abbreviation" => "lcc",
-						"compare" => "lcc.cohortid = class.id",
+						"compare" => "lcc.classid = class.id",
 						"type" => "left"
 					);
 					$join[] = array(
@@ -8077,7 +8077,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					$join[] = array(
 						"table" => "link_cohorts_classes",
 						"abbreviation" => "lcc",
-						"compare" => "lcc.cohortid = class.id",
+						"compare" => "lcc.classid = class.id",
 						"type" => "left"
 					);
 					$join[] = array(
@@ -8121,7 +8121,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 					$join[] = array(
 						"table" => "link_cohorts_classes",
 						"abbreviation" => "lcc",
-						"compare" => "lcc.cohortid = class.id",
+						"compare" => "lcc.classid = class.id",
 						"type" => "left"
 					);
 					$join[] = array(
@@ -8155,7 +8155,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 				$join[] = array(
 					"table" => "link_cohorts_classes",
 					"abbreviation" => "lcc",
-					"compare" => "lcc.cohortid = class.id",
+					"compare" => "lcc.classid = class.id",
 					"type" => "left"
 				);
 				$join[] = array(
