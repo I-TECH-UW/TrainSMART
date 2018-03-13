@@ -10704,15 +10704,17 @@ die (__LINE__ . " - " . $sql);
         if (isset($criteria['go']) && $criteria['go']) {
             //print_r($criteria);
             $select = "";
+            $more_join = "";
             $where =  "";
-            $group =  "";
-            $order =  "";
+            $group =  " partner.partner ";
+            $order =  " partner ";
             $header_names = array();
             
             //PARTNER ID
             if (isset($criteria['show_partnerid']) && $criteria['show_partnerid']) {
                 $header_names['partnerid'] = t('Partner ID');
                 $select .= "partner.id AS partnerid ";
+                if($group !== ""){ $group .= ", "; }
                 $group .= " partnerid ";
                 if($order !== ""){ $order .= ", "; }
                 $order .= " partnerid ";
@@ -10723,10 +10725,10 @@ die (__LINE__ . " - " . $sql);
                 $header_names['partner'] = t('Partner Name');
                 if($select !== ""){ $select .= ", "; }
                 $select .= "partner.partner AS partner ";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " partner ";
-                if($order !== ""){ $order .= ", "; }
-                $order .= " partner ";
+//                 if($group !== ""){ $group .= ", "; }
+//                 $group .= " partner ";
+//                 if($order !== ""){ $order .= ", "; }
+//                 $order .= " partner ";
             }
             if ((isset($criteria['partner']) && $criteria['partner'])) {
                 if(is_array($criteria['partner'])){
@@ -10769,12 +10771,13 @@ die (__LINE__ . " - " . $sql);
                 $group .= " role_phrase ";
             }
             if (isset($criteria['primary_role']) && $criteria['primary_role']) {
-                if($where !== ""){ $where .= " AND "; }
                 if(is_array($criteria['primary_role'])){
                     if($criteria['primary_role'][0] > 0){
+                        if($where !== ""){ $where .= " AND "; }
                         $where .= 'employee_role_option.id in ( ' . implode(",", $criteria['primary_role']) . ")";
                     }
                 }else{
+                    if($where !== ""){ $where .= " AND "; }
                     $where .= ' employee_role_option.id =' . $criteria['primary_role'];
                 }
             }
@@ -10788,12 +10791,13 @@ die (__LINE__ . " - " . $sql);
                 $group .= " qualification_phrase ";
             }
             if (isset($criteria['classification']) && $criteria['classification']) {
-                if($where !== ""){ $where .= " AND "; }
                 if(is_array($criteria['classification'])){
                     if($criteria['classification'][0] > 0){
+                        if($where !== ""){ $where .= " AND "; }
                         $where .= 'employee_qualification_option_id in ( ' . implode(",", $criteria['classification']) . ")";
                     }
                 }else{
+                    if($where !== ""){ $where .= " AND "; }
                     $where .= ' employee_qualification_option_id = ' . $criteria['classification'];
                 }
             }
@@ -10934,13 +10938,13 @@ die (__LINE__ . " - " . $sql);
                 if($group !== ""){ $group .= ", "; }
                 $group .= " facility_name ";
             }
-            if (isset($criteria['facilityInput']) && $criteria['facilityInput']) {
-                if($where !== ""){ $where .= " AND "; }
-                if(is_array($criteria['facilityInput'])){
+            if (isset($criteria['facilityInput']) && $criteria['facilityInput']) {if(is_array($criteria['facilityInput'])){
                     if($criteria['facilityInput'][0] > 0){
+                        if($where !== ""){ $where .= " AND "; }
                         $where .= ' facility.id in ( ' . implode(",", $criteria['facilityInput']) . ")";
                     }
                 }else{
+                    if($where !== ""){ $where .= " AND "; }
                     $where .= ' facility.id = ' . $criteria['facilityInput'];
                 }
             }
@@ -10971,12 +10975,13 @@ die (__LINE__ . " - " . $sql);
                 $group .= " mechanism_phrase ";
             }
             if((isset($criteria['mechanism_names']) && $criteria['mechanism_names'])){
-                if($where !== ""){ $where .= " AND "; }
                 if(is_array($criteria['mechanism_names'])){
                     if($criteria['mechanism_names'][0] > 0){
+                        if($where !== ""){ $where .= " AND "; }
                         $where .= 'mechanism_option.id in ( ' . implode(",", $criteria['mechanism_names']) . ")";
                     }
                 }else{
+                    if($where !== ""){ $where .= " AND "; }
                     $where .= 'mechanism_option.id = '. $criteria['mechanism_names'];
                 }
             }
@@ -10990,12 +10995,13 @@ die (__LINE__ . " - " . $sql);
                 $group .= " external_id ";
             }
             if (isset($criteria['mechanism_ids']) && $criteria['mechanism_ids']){
-                if($where !== ""){ $where .= " AND "; }
                 if(is_array($criteria['mechanism_ids'])){
                     if($criteria['mechanism_ids'][0] > 0){
+                        if($where !== ""){ $where .= " AND "; }
                         $where .= 'mechanism_option.external_id in ( ' . implode(",", $criteria['mechanism_ids']) . ")";
                     }
                 }else{
+                    if($where !== ""){ $where .= " AND "; }
                     $where .= 'mechanism_option.external_id = ' . $criteria['mechanism_ids'];
                 }
             }
@@ -11007,118 +11013,388 @@ die (__LINE__ . " - " . $sql);
                 (isset($criteria['mech_fund_date_end']) && $criteria['mech_fund_date_end'])) {
                     $header_names['mechanism_end_date'] =  t('Implementing Mechanism Funding End Date');
                     if($select !== ""){ $select .= ", "; }
-                    $select .= " mechanism_option.end_date AS mechanism_end_date ";
+                    $select .= " SUBSTRING_INDEX(mechanism_option.end_date, ' ', 1) AS mechanism_end_date ";
                     if($group !== ""){ $group .= ", "; }
                     $group .= " mechanism_end_date ";
                     if(isset($criteria['mech_fund_date_start']) && $criteria['mech_fund_date_start']){
                         if($where !== ""){ $where .= " AND "; }
                         $d = DateTime::createFromFormat('d/m/Y', $criteria['mech_fund_date_start']);
-                        $where .= ' mechanism_option.end_date >= ' . $d->format('Y-m-d');
+                        $where .= " mechanism_option.end_date >= '" . $d->format('Y-m-d') . "'";
                     }
                     if(isset($criteria['mech_fund_date_end']) && $criteria['mech_fund_date_end']){
                         if($where !== ""){ $where .= " AND "; }
                         $d = DateTime::createFromFormat('d/m/Y', $criteria['mech_fund_date_end']);
-                        $where .= ' mechanism_option.end_date <= '.  $d->format('Y-m-d');
+                        $where .= " mechanism_option.end_date <= '" .  $d->format('Y-m-d') . "'";
                     }
                 }
-                
+             
+                //CONTRECT START DATE
             if (isset($criteria['show_contract_start_date_from']) || $criteria['contract_start_date_from'] 
                     || $criteria['contract_start_date_to']) {
                         $header_names['contract_start_date'] =  t('Contract Start Date');
                         if($select !== ""){ $select .= ", "; }
-                        $select .= " employee.agreement_start_date AS contract_start_date ";
+                        $select .= " SUBSTRING_INDEX(employee.agreement_start_date, ' ', 1) AS contract_start_date ";
+                        if($criteria['contract_start_date_from']){
+                            if($where !== ""){ $where .= " AND "; }
+                            $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_start_date_from']);
+                            $where .= " employee.agreement_start_date >= '" .  $d->format('Y-m-d') . "'";
+                        }
+                        if($criteria['contract_start_date_to']){
+                            if($where !== ""){ $where .= " AND "; }
+                            $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_start_date_to']);
+                            $where .= " employee.agreement_start_date <= '" . $d->format('Y-m-d'). "'";
+                        } 
             }
+            
+            //CONTRECT END DATE
             if (isset($criteria['show_contract_end_date_from']) || $criteria['contract_end_date_from']
                 || $criteria['contract_end_date_to']) {
                     $header_names['contract_end_date'] =  t('Contract End Date');
                     if($select !== ""){ $select .= ", "; }
-                    $select .= " employee.agreement_end_date AS contract_end_date ";
+                    $select .= " SUBSTRING_INDEX(employee.agreement_end_date, ' ', 1) AS contract_end_date ";
+                    if($criteria['contract_end_date_from']){
+                        if($where !== ""){ $where .= " AND "; }
+                        $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_end_date_from']);
+                        $where .= " employee.agreement_end_date >= '" .  $d->format('Y-m-d') . "'";
+                    }
+                    if($criteria['contract_end_date_to']){
+                        if($where !== ""){ $where .= " AND "; }
+                        $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_end_date_to']);
+                        $where .= " employee.agreement_end_date <= '" . $d->format('Y-m-d'). "'";
+                    }
                 }
+                
+             //INTENDENT TRANSITION   
             if (isset($criteria['show_intended_transition']) && $criteria['show_intended_transition']) {
                 $header_names['intended_transition'] =  t('Intended Transition');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " employee_transition_option.transition_phrase AS intended_transition ";
             }
+            if (isset($criteria['intended_transition']) && $criteria['intended_transition']) {
+                if(is_array($criteria['intended_transition'])){
+                    if($criteria['intended_transition'][0] > 0){
+                        if($where !== ""){ $where .= " AND "; }
+                        $where .= ' employee.employee_transition_option_id in ( ' . implode(",", $criteria['intended_transition']) . ")";
+                    }
+                }else{
+                    if($where !== ""){ $where .= " AND "; }
+                    $where .= ' employee.employee_transition_option_id = ' . $criteria['intended_transition'];
+                }
+            }
+            
+            //INTENDENT TRANSITION OTHER
             if (isset($criteria['show_intended_transition_other']) && $criteria['show_intended_transition_other']) {
                 $header_names['transition_other'] =  t('Intended Transition Other');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " employee.transition_other AS transition_other ";
             }
+            if (isset($criteria['intended_transition_other']) && $criteria['intended_transition_other']) {
+                if(is_array($criteria['intended_transition_other'])){
+                    if($criteria['intended_transition_other'][0] !== '0'){
+                        if($where !== ""){ $where .= " AND "; }
+                        $where .= ' employee.transition_other in ( ' . "'" . implode("','", $criteria['intended_transition_other']) . "')";
+                    }
+                }else{
+                    if($where !== ""){ $where .= " AND "; }
+                    $where .= " employee.transition_other = '" . $criteria['intended_transition_other'] . "'";
+                }
+            }
+            
+            //INTENDENT TRANSITION DATE
             if (isset($criteria['show_intended_transition_start_date']) || 
                 $criteria['intended_transition_start_date'] || $criteria['intended_transition_end_date']) {
                     $header_names['transition_date'] =  t('Intended Transition Date');
                     if($select !== ""){ $select .= ", "; }
-                    $select .= " employee.transition_date AS transition_date ";
+                    $select .= " SUBSTRING_INDEX(employee.transition_date, ' ', 1) AS transition_date ";
+                    if($criteria['intended_transition_start_date']){
+                        if($where !== ""){ $where .= " AND "; }
+                        $d = DateTime::createFromFormat('d/m/Y', $criteria['intended_transition_start_date']);
+                        $where .= " employee.transition_date >= '" . $d->format('Y-m-d') . "'";
+                    }
+                    if($criteria['intended_transition_end_date']){
+                        if($where !== ""){ $where .= " AND "; }
+                        $d = DateTime::createFromFormat('d/m/Y', $criteria['intended_transition_end_date']);
+                        $where .= " employee.transition_date <= '" . $d->format('Y-m-d') . "'";
+                    }
             }
+            
+            //transition outcome
             if (isset($criteria['show_actual_transition']) && $criteria['show_actual_transition']) {
                 $header_names['actual_transition'] =  t('Actual Transition Outcome');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " employee_transition_complete_option.transition_complete_phrase AS actual_transition ";
             }
+            if (isset($criteria['actual_transition']) && $criteria['actual_transition']) {
+                if(is_array($criteria['actual_transition'])){
+                    if($criteria['actual_transition'][0] > 0){
+                        if($where !== ""){ $where .= " AND "; }
+                        $where .=' employee_transition_complete_option_id in ( ' . implode(",", $criteria['actual_transition']) . ")";
+                    }
+                }else{
+                    if($where !== ""){ $where .= " AND "; }
+                    $where .=' employee_transition_complete_option_id = ' . $criteria['actual_transition'];
+                }
+            }
+            
+            //transition outcome OTHER
             if (isset($criteria['show_actual_transition_other']) && $criteria['show_actual_transition_other']) {
                 $header_names['transition_complete_other'] =  t('Actual Transition Outcome, Other');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " employee.transition_complete_other AS transition_complete_other ";
             }
+            if (isset($criteria['actual_transition_other']) && $criteria['actual_transition_other']) {
+                if(is_array($criteria['actual_transition_other'])){
+                    if($criteria['actual_transition_other'][0] !== '0'){
+                        if($where !== ""){ $where .= " AND "; }
+                        $where .=' employee.transition_complete_other in ( ' . "'" . implode("','", $criteria['actual_transition_other']) . "')";
+                    }
+                }else{
+                    if($where !== ""){ $where .= " AND "; }
+                    $where .=" employee.transition_complete_other = '" . $criteria['actual_transition_other'] . "'";
+                }
+            }
+            
+            //transition outcome DATE
             if (isset($criteria['show_transition_start_date']) && $criteria['show_transition_start_date']) {
                 $header_names['transition_complete_date'] =  t('Actual Transition Date');
                 if($select !== ""){ $select .= ", "; }
-                $select .= " employee.transition_complete_date AS transition_complete_date ";
+                $select .= " SUBSTRING_INDEX(employee.transition_complete_date, ' ', 1) AS transition_complete_date ";
             }
+            if (isset($criteria['transition_start_date']) && $criteria['transition_start_date']) {
+                if($where !== ""){ $where .= " AND "; }
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['transition_start_date']);
+                $where .=" transition_complete_date >= '" . $d->format('Y-m-d') . "'";
+            }
+            if (isset($criteria['transition_end_date']) && $criteria['transition_end_date']) {
+                if($where !== ""){ $where .= " AND "; }
+                $d = DateTime::createFromFormat('d/m/Y', $criteria['transition_end_date']);
+                $where .=" transition_complete_date <= '" . $d->format('Y-m-d'). "'";
+            }
+            
+            // STIPEND or SALARY
             if (isset($criteria['show_salary_or_stipend'])) {
                 $header_names['salary_or_stipend'] =  t('Salaried or Stipend');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " employee.salary_or_stipend AS salary_or_stipend ";
             }
+            if(isset($criteria['salary_or_stipend'])) {
+                if($where !== ""){ $where .= " AND "; }
+                $where .= " salary_or_stipend='" . $criteria['salary_or_stipend'] . "'";
+            }
+            
+            // hours
             if (isset($criteria['show_hours_min']) && $criteria['show_hours_min']) {
                 $header_names['funded_hours_per_week'] =  t('Hours Worked per Week (FTE)');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " employee.funded_hours_per_week AS funded_hours_per_week ";
             }
+            if (isset($criteria['hours_min']) && intval($criteria['hours_min']) >= 0) {
+                if($where !== ""){ $where .= " AND "; }
+                $where .=' funded_hours_per_week >= ' . intval($criteria['hours_min']);
+            }
+            if (isset($criteria['hours_max']) && $criteria['hours_max']) {
+                if($where !== ""){ $where .= " AND "; }
+                $where .=' funded_hours_per_week <= ' . intval($criteria['hours_max']);
+            }
+            
+            // salary
             if (isset($criteria['show_salary_min']) && $criteria['show_salary_min']) {
                 $header_names['salary'] =  t('Annual Salary (R)');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " employee.salary AS salary ";
             }
+            if (isset($criteria['salary_min']) && intval($criteria['salary_min']) >= 0) {
+                if($where !== ""){ $where .= " AND "; }
+                $where .=' salary >=' . intval($criteria['salary_min']);
+            }
+            if (isset($criteria['salary_max']) && $criteria['salary_max']) {
+                if($where !== ""){ $where .= " AND "; }
+                $where .=' salary <= ' . intval($criteria['salary_max']);
+            }
+            
+            // benefits
             if (isset($criteria['show_benefits_min']) && $criteria['show_benefits_min']) {
                 $header_names['benefits'] =  t('Annual Benefits (R)');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " employee.benefits AS benefits ";
             }
-             // 'financial_benefits_description_option' => t('Financial Benefits Description'),
+            if (isset($criteria['benefits_min']) && intval($criteria['benefits_min']) >= 0) {
+                if($where !== ""){ $where .= " AND "; }
+                $where .=' benefits >=' . intval($criteria['benefits_min']);
+            }
+            if (isset($criteria['benefits_max']) && $criteria['benefits_max']) {
+                if($where !== ""){ $where .= " AND "; }
+                $where .=' benefits <= ' . intval($criteria['benefits_max']);
+            }
+            
+            //benefits description
+            if ((isset($criteria['show_employee_financial_benefits_description']) && $criteria['show_employee_financial_benefits_description']) ||
+                (isset($criteria['employee_financial_benefits_description']) && $criteria['employee_financial_benefits_description'])) {
+                    $header_names['financial_benefits_description_option'] =  t('Financial Benefits Description');
+                    if($select !== ""){ $select .= ", "; }
+                    $select .= " GROUP_CONCAT(DISTINCT  employee_financial_benefits_description_option.financial_benefits_description_option) as financial_benefits_description_option ";
+                   $more_join .= "  
+LEFT JOIN employee_to_financial_benefits_description_option ON employee_to_financial_benefits_description_option.employee_id = employee.id 
+LEFT JOIN employee_financial_benefits_description_option ON employee_financial_benefits_description_option.id = employee_to_financial_benefits_description_option.employee_financial_benefits_description_option_id ";
+                   if (isset($criteria['employee_financial_benefits_description']) && $criteria['employee_financial_benefits_description']){
+                       if(is_array($criteria['employee_financial_benefits_description'])){
+                           if($criteria['employee_financial_benefits_description'][0] > 0){
+                               if($where !== ""){ $where .= " AND "; }
+                               $where .=' employee_to_financial_benefits_description_option.employee_financial_benefits_description_option_id in ( ' . implode(",", $criteria['employee_financial_benefits_description']) . ")";
+                           }
+                       }else{
+                           if($where !== ""){ $where .= " AND "; }
+                           $where .=' employee_to_financial_benefits_description_option.employee_financial_benefits_description_option_id =' . $criteria['employee_financial_benefits_description'];
+                       }
+                   }
+                }
+            
+                //non financial benefits
             if (isset($criteria['show_non_financial_benefits_min']) && $criteria['show_non_financial_benefits_min']) {
                 $header_names['non_financial_benefits'] =  t('Non-financial Benefits (R)');
                 if($select !== ""){ $select .= ", "; }
                 $select .= "employee.non_financial_benefits AS non_financial_benefits ";
             }
-             // 'non_financial_benefits_description_option' => t('Non-financial Benefits Description'),
+            if (isset($criteria['non_financial_benefits_min']) && intval($criteria['non_financial_benefits_min']) >= 0) {
+                if($where !== ""){ $where .= " AND "; }
+                $where .=' non_financial_benefits >= ' . intval($criteria['non_financial_benefits_min']);
+            }
+            if (isset($criteria['non_financial_benefits_max']) && $criteria['non_financial_benefits_max']) {
+                if($where !== ""){ $where .= " AND "; }
+                $where .=' non_financial_benefits <=' . intval($criteria['non_financial_benefits_max']);
+            }
+            
+            //non financial benefits description
+            if ((isset($criteria['show_employee_non_financial_benefits_description']) && $criteria['show_employee_non_financial_benefits_description']) ||
+                (isset($criteria['employee_non_financial_benefits_description']) && $criteria['employee_non_financial_benefits_description'])) {
+                    $more_join .= "
+ LEFT JOIN employee_to_non_financial_benefits_description_option ON employee_to_non_financial_benefits_description_option.employee_id = employee.id 
+ LEFT JOIN employee_non_financial_benefits_description_option ON employee_non_financial_benefits_description_option.id = employee_to_non_financial_benefits_description_option.employee_non_financial_benefits_description_option_id  
+ ";
+                    if (isset($criteria['show_employee_non_financial_benefits_description']) && $criteria['show_employee_non_financial_benefits_description']){
+                        $header_names['non_financial_benefits_description_option'] =  t('Non-financial Benefits Description');
+                        if($select !== ""){ $select .= ", "; }
+                        $select .=  ' GROUP_CONCAT(DISTINCT employee_non_financial_benefits_description_option.non_financial_benefits_description_option) as non_financial_benefits_description_option ';
+                    }
+                    if (isset($criteria['employee_non_financial_benefits_description']) && $criteria['employee_non_financial_benefits_description']){
+                        if(is_array($criteria['employee_non_financial_benefits_description'])){
+                            if($criteria['employee_non_financial_benefits_description'][0] > 0){
+                                if($where !== ""){ $where .= " AND "; }
+                                $where .= ' employee_to_non_financial_benefits_description_option.employee_non_financial_benefits_description_option_id in ( ' . implode(",", $criteria['employee_non_financial_benefits_description']) . ")";
+                            }
+                        }else{
+                            if($where !== ""){ $where .= " AND "; }
+                            $where .=' employee_to_non_financial_benefits_description_option.employee_non_financial_benefits_description_option_id =' . $criteria['employee_non_financial_benefits_description'];
+                        }
+                    }
+                }
+            
+             //   professional development
             if (isset($criteria['show_professional_development_min']) && $criteria['show_professional_development_min']) {
                 $header_names['professional_development'] =  t('Professional Development (R)');
                 if($select !== ""){ $select .= ", "; }
                 $select .= "employee.professional_development AS professional_development ";
             }
-            //  'professional_development_description_option' => t('Professional Development (R) Description'),
-            // 'additional_expenses' => t('Additional Expenses (R)'),
+            if (isset($criteria['professional_development_min']) && intval($criteria['professional_development_min']) >= 0) {
+                if($where !== ""){ $where .= " AND "; }
+                $where .='professional_development >= ' . intval($criteria['professional_development_min']);
+            }
+            if (isset($criteria['professional_development_max']) && $criteria['professional_development_max']) {
+                if($where !== ""){ $where .= " AND "; }
+                $where .='professional_development <= ' . intval($criteria['professional_development_max']);
+            }
+            
+             //professional development description
+            if ((isset($criteria['show_employee_professional_development_description']) && $criteria['show_employee_professional_development_description']) ||
+                (isset($criteria['employee_professional_development_description']) && $criteria['employee_professional_development_description'])) {
+                    $more_join .="
+ LEFT JOIN employee_to_professional_development_description_option ON employee_to_professional_development_description_option.employee_id = employee.id 
+ LEFT JOIN employee_professional_development_description_option ON employee_professional_development_description_option.id = employee_to_professional_development_description_option.employee_professional_development_description_option_id
+";
+                    if (isset($criteria['show_employee_professional_development_description']) && $criteria['show_employee_professional_development_description']){
+                        $header_names['professional_development_description_option'] =  t('Professional Development Description');
+                        if($select !== ""){ $select .= ", "; }
+                        $select .= " GROUP_CONCAT(DISTINCT employee_professional_development_description_option.professional_development_description_option) as professional_development_description_option ";
+                    }
+                    if (isset($criteria['employee_professional_development_description']) && $criteria['employee_professional_development_description']){
+                        if(is_array($criteria['employee_professional_development_description'])){
+                            if($criteria['employee_professional_development_description'][0] > 0){
+                                if($where !== ""){ $where .= " AND "; }
+                                $where .='employee_to_professional_development_description_option.employee_professional_development_description_option_id in ( ' . implode(",", $criteria['employee_professional_development_description']) . ")";
+                            }
+                        }else{
+                            if($where !== ""){ $where .= " AND "; }
+                            $where .='employee_to_professional_development_description_option.employee_professional_development_description_option_id = ' . $criteria['employee_professional_development_description'];
+                        }
+                    }
+                }
+                
+            // stipend min
             if (isset($criteria['show_stipend_min']) && $criteria['show_stipend_min']) {
                 $header_names['stipend'] =  t('Annual Stipend (R)');
                 if($select !== ""){ $select .= ", "; }
                 $select .= "employee.stipend AS stipend ";
             }
+            if (isset($criteria['stipend_min']) && $criteria['stipend_min'] >= 0) {
+                if($where !== ""){ $where .= " AND "; }
+                $where .= ' stipend >= ' . intval($criteria['stipend_min']);
+            }
+            if (isset($criteria['stipend_max']) && $criteria['stipend_max']) {
+                if($where !== ""){ $where .= " AND "; }
+                $where .= ' stipend <= ' . intval($criteria['stipend_max']);
+            }
+            
+            //COST MIN
             if (isset($criteria['show_cost_min']) && $criteria['show_cost_min']) {
                 $header_names['annual_cost'] =  t('Annual Cost (R)');
                 if($select !== ""){ $select .= ", "; }
                 $select .= "employee.annual_cost AS annual_cost ";
             }
+            if (isset($criteria['cost_min']) && $criteria['cost_min'] >= 0) {
+                if($where !== ""){ $where .= " AND "; }
+                $where .= ' annual_cost >= ' . intval($criteria['cost_min']);
+            }
+            if (isset($criteria['cost_max']) && $criteria['cost_max']) {
+                if($where !== ""){ $where .= " AND "; }
+                $where .= ' annual_cost <= ' . intval($criteria['cost_max']);
+            }
+            
+            //AGENCY
             if ((isset($criteria['show_agencies']) && $criteria['show_agencies']) || (isset($criteria['agencies']) && $criteria['agencies'])) {
                 $header_names['funder_phrase'] =  t('Implementing Agency');
                 if($select !== ""){ $select .= ", "; }
                 $select .= "partner_funder_option.funder_phrase AS funder_phrase ";
+                if (isset($criteria['agencies']) && $criteria['agencies']){
+                    if(is_array($criteria['agencies'])){
+                        if($criteria['agencies'][0] > 0){
+                            if($where !== ""){ $where .= " AND "; }
+                            $where .= ' mechanism_option.funder_id in ( ' . implode(",", $criteria['agencies']) . ")";
+                        }
+                    }else{
+                        if($where !== ""){ $where .= " AND "; }
+                        $where .= ' mechanism_option.funder_id = '. $criteria['agencies'];
+                    }
+                }
             }
+            
+            //MECHANISM PARTNERS
             if ((isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']) || (isset($criteria['mech_partners']) && $criteria['mech_partners'])) {
                 $header_names['impl_mech_partner_name'] =  t('Implementing Mechanism Prime Partner Name');
                 if($select !== ""){ $select .= ", "; }
                 $select .= "partner_1.partner AS impl_mech_partner_name ";
+                if (isset($criteria['mech_partners']) && $criteria['mech_partners']){
+                    if(is_array($criteria['mech_partners'])){
+                        if($criteria['mech_partners'][0] > 0){
+                            if($where !== ""){ $where .= " AND "; }
+                            $where .= ' mechanism_option.owner_id in ( ' . implode(",", $criteria['mech_partners']) . ")";
+                        }
+                    }else{
+                        if($where !== ""){ $where .= " AND "; }
+                        $where .= ' mechanism_option.owner_id = ' . $criteria['mech_partners'];
+                    }
+                }
             }
+            
             if (isset($criteria['show_timestamp_created_start_date']) && $criteria['show_timestamp_created_start_date']) {
                 $header_names['timestamp_created'] =  t('Timestamp Created');
                 if($select !== ""){ $select .= ", "; }
@@ -11183,6 +11459,10 @@ FROM
 	)
 LEFT JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id ";
                 
+if($more_join !== ""){
+    $select = $select . " " . $more_join . " ";
+}
+                
 if($where !== ""){
      $select = $select . " WHERE " . $where ;
 }
@@ -11194,189 +11474,6 @@ if($group !== ""){
 if($order !== ""){
     $select = $select . " ORDER BY " . $order ;
 }
-
-//TEST version , how query should look like, remove it later --- START
-$header_names2['partnerid'] = t('Partner ID');
-$header_names2['partner'] = t('Partner Name');
-$header_names2['active'] = t('Active HRH');
-$header_names2['positionid'] = t('Position ID');
-$header_names2['role_phrase'] = t('Disaggregate Cadre');
-$header_names2['qualification_phrase'] = t('Occupational Classification');
-$header_names2['employee_code'] = t('Employee Code');
-$header_names2['employee_dsdmodel_phrase'] = t('Service Delivery Model');
-$header_names2['employee_dsdteam_phrase'] = t('Service Delivery Team');
-$header_names2['province_name'] = t('Region A (Province)');
-$header_names2['district_name'] = t('Region B (Health District)');
-$header_names2['region_c_name'] = t('Region C (Local Region)');
-$header_names2['facility_name'] =  t('Facility Name');
-$header_names2['hiv_fte_related'] =  t('Hours Worked per Week (per Site)');
-$header_names2['mechanism_phrase'] =  t('Implementing Mechanism Name');
-$header_names2['external_id'] =  t('Implementing Mechanism Identifier');
-$header_names2['mechanism_end_date'] =  t('Implementing Mechanism Funding End Date');
-$header_names2['contract_start_date'] =  t('Contract Start Date');
-$header_names2['contract_end_date'] =  t('Contract End Date');
-$header_names2['intended_transition'] =  t('Intended Transition');
-$header_names2['transition_other'] =  t('Intended Transition Other');
-$header_names2['transition_date'] =  t('Intended Transition Date');
-$header_names2['actual_transition'] =  t('Actual Transition Outcome');
-$header_names2['transition_complete_other'] =  t('Actual Transition Outcome, Other');
-$header_names2['transition_complete_date'] =  t('Actual Transition Date');
-$header_names2['salary_or_stipend'] =  t('Salaried or Stipend');
-$header_names2['funded_hours_per_week'] =  t('Hours Worked per Week (FTE)');
-$header_names2['salary'] =  t('Annual Salary (R)');
-$header_names2['benefits'] =  t('Annual Benefits (R)');
-$header_names2['financial_benefits_description_option'] = t('Financial Benefits Description');
-$header_names2['non_financial_benefits'] =  t('Non-financial Benefits (R)');
-$header_names2['non_financial_benefits_description_option'] = t('Non-Financial Benefits Description');
-$header_names2['professional_development'] =  t('Professional Development (R)');
-$header_names2['professional_development_description_option'] = t('Professional Development (R) Description');
-$header_names2['stipend'] =  t('Annual Stipend (R)');
-$header_names2['annual_cost'] =  t('Annual Cost (R)');
-$header_names2['funder_phrase'] =  t('Implementing Agency');
-$header_names2['impl_mech_partner_name'] =  t('Implementing Mechanism Prime Partner Name');
-$header_names2['timestamp_created'] =  t('Timestamp Created');
-$header_names2['timestamp_updated'] =  t('Timestamp Updated');
-$this->view->assign('headers', $header_names2);
-
-$select = "
-SELECT
-	partner.id AS partnerid,
-	partner.partner AS partner,
-	IF(employee.is_active = 1,'Active','Inactive') as is_active,
-	employee.id AS positionid,
-	employee_role_option.role_phrase AS role_phrase,
-	employee_qualification_option.qualification_phrase AS qualification_phrase,
-	employee.employee_code AS employee_code,
-	employee_dsdmodel_option.employee_dsdmodel_phrase AS employee_dsdmodel_phrase,
-	employee_dsdteam_option.employee_dsdteam_phrase AS employee_dsdteam_phrase,
-	location_2.location_name AS province_name,
-	location_1.location_name AS district_name,
-	location.location_name AS region_c_name,
-	facility.facility_name AS facility_name,
-	link_employee_facility.hiv_fte_related AS hiv_fte_related,
-	mechanism_option.mechanism_phrase AS mechanism_phrase,
-	mechanism_option.external_id AS external_id,
-	mechanism_option.end_date AS mechanism_end_date,
-	employee.agreement_start_date AS contract_start_date,
-	employee.agreement_end_date AS contract_end_date,
-	employee_transition_option.transition_phrase AS intended_transition,
-	employee.transition_other AS transition_other,
-	employee.transition_date AS transition_date,
-	employee_transition_complete_option.transition_complete_phrase AS actual_transition,
-	employee.transition_complete_other AS transition_complete_other,
-	employee.transition_complete_date AS transition_complete_date,
-	employee.salary_or_stipend AS salary_or_stipend,
-	employee.funded_hours_per_week AS funded_hours_per_week,
-	employee.salary AS salary,
-	employee.benefits AS benefits,
-GROUP_CONCAT(DISTINCT  employee_financial_benefits_description_option.financial_benefits_description_option) as financial_benefits_description_option,
-	employee.non_financial_benefits AS non_financial_benefits,
-GROUP_CONCAT(DISTINCT employee_non_financial_benefits_description_option.non_financial_benefits_description_option) as non_financial_benefits_description_option,
-	employee.professional_development AS professional_development,
-GROUP_CONCAT(DISTINCT employee_professional_development_description_option.professional_development_description_option) as professional_development_description_option,
-	employee.stipend AS stipend,
-	employee.annual_cost AS annual_cost,
-	partner_funder_option.funder_phrase AS funder_phrase,
-	partner_1.partner AS impl_mech_partner_name,
-	employee.timestamp_created,
-	employee.timestamp_updated
-FROM
-	(
-		(
-			employee_dsdteam_option
-		RIGHT JOIN(
-			(
-				(
-					(
-						(
-							facility
-						RIGHT JOIN(
-							link_employee_facility
-						RIGHT JOIN(
-							employee_transition_complete_option
-						RIGHT JOIN(
-							employee_transition_option
-						RIGHT JOIN(
-							(
-								employee_qualification_option
-							RIGHT JOIN(
-								partner
-							LEFT JOIN employee ON partner.id = employee.partner_id
-							)ON employee_qualification_option.id = employee.employee_qualification_option_id
-							)
-						LEFT JOIN employee_role_option ON employee.employee_role_option_id = employee_role_option.id
-						)ON employee_transition_option.id = employee.employee_transition_option_id
-						)ON employee_transition_complete_option.id = employee.employee_transition_complete_option_id
-						)ON link_employee_facility.employee_id = employee.id
-						)ON facility.id = link_employee_facility.facility_id
-						)
-					LEFT JOIN location ON facility.location_id = location.id
-					)
-				LEFT JOIN location AS location_1 ON location.parent_id = location_1.id
-				)
-			LEFT JOIN location AS location_2 ON location_1.parent_id = location_2.id
-			)
-		LEFT JOIN employee_dsdmodel_option ON link_employee_facility.dsd_model_id = employee_dsdmodel_option.id
-		)ON employee_dsdteam_option.id = link_employee_facility.dsd_team_id
-		)
-	LEFT JOIN(
-		partner AS partner_1
-	RIGHT JOIN mechanism_option ON partner_1.id = mechanism_option.owner_id
-	)ON link_employee_facility.mechanism_option_id = mechanism_option.id
-	)
-LEFT JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id
-
-
-LEFT JOIN employee_to_financial_benefits_description_option ON employee_to_financial_benefits_description_option.employee_id = employee.id 
-LEFT JOIN employee_financial_benefits_description_option ON employee_financial_benefits_description_option.id = employee_to_financial_benefits_description_option.employee_financial_benefits_description_option_id 
-LEFT JOIN employee_to_non_financial_benefits_description_option ON employee_to_non_financial_benefits_description_option.employee_id = employee.id 
-LEFT JOIN employee_non_financial_benefits_description_option ON employee_non_financial_benefits_description_option.id = employee_to_non_financial_benefits_description_option.employee_non_financial_benefits_description_option_id 
-LEFT JOIN employee_to_professional_development_description_option ON employee_to_professional_development_description_option.employee_id = employee.id 
-LEFT JOIN employee_professional_development_description_option ON employee_professional_development_description_option.id = employee_to_professional_development_description_option.employee_professional_development_description_option_id
-
-WHERE (is_active=1) AND (location_2.id = '12197')
-		GROUP BY
-			partner.id,
-			partner.partner,
-			employee.is_active,
-			employee.id,
-			employee_role_option.role_phrase,
-			employee_qualification_option.qualification_phrase,
-			employee.employee_code,
-			employee_dsdmodel_option.employee_dsdmodel_phrase,
-			employee_dsdteam_option.employee_dsdteam_phrase,
-			location_2.location_name,
-			location_1.location_name,
-			location.location_name,
-			facility.facility_name,
-			link_employee_facility.hiv_fte_related,
-			mechanism_option.mechanism_phrase,
-			mechanism_option.external_id,
-			mechanism_option.end_date,
-			employee.agreement_start_date,
-			employee.agreement_end_date,
-			employee_transition_option.transition_phrase,
-			employee.transition_other,
-			employee.transition_date,
-			employee_transition_complete_option.transition_complete_phrase,
-			employee.transition_complete_other,
-			employee.transition_complete_date,
-			employee.salary_or_stipend,
-			employee.funded_hours_per_week,
-			employee.salary,
-			employee.benefits,
-			employee.non_financial_benefits,
-			employee.professional_development,
-			employee.stipend,
-			employee.annual_cost,
-			partner_funder_option.funder_phrase,
-			partner_1.partner,
-			employee.timestamp_created,
-			employee.timestamp_updated
-		ORDER BY
-			partner.partner";
-
-//TEST version , how query should look like, remove it later --- END
 
 print $select;
                 $this->view->assign('output',$db->fetchAll($select));
