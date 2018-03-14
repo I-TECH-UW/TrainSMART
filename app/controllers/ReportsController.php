@@ -10706,18 +10706,54 @@ die (__LINE__ . " - " . $sql);
             $select = "";
             $more_join = "";
             $where =  "";
-            $group =  " partner.partner ";
-            $order =  " partner ";
+            $group =  " 
+            partner.id,
+            partner.partner,
+            employee.is_active,
+            employee.id,
+			employee_role_option.role_phrase,
+			employee_qualification_option.qualification_phrase,
+			employee.employee_code,
+			employee_dsdmodel_option.employee_dsdmodel_phrase,
+			employee_dsdteam_option.employee_dsdteam_phrase,
+			location_2.location_name,
+			location_1.location_name,
+			location.location_name,
+			facility.facility_name,
+			link_employee_facility.hiv_fte_related,
+			mechanism_option.mechanism_phrase,
+			mechanism_option.external_id,
+			mechanism_option.end_date,
+			employee.agreement_start_date,
+			employee.agreement_end_date,
+			employee_transition_option.transition_phrase,
+			employee.transition_other,
+			employee.transition_date,
+			employee_transition_complete_option.transition_complete_phrase,
+			employee.transition_complete_other,
+			employee.transition_complete_date,
+			employee.salary_or_stipend,
+			employee.funded_hours_per_week,
+			employee.salary,
+			employee.benefits,
+			employee.non_financial_benefits,
+			employee.professional_development,
+			employee.stipend,
+			employee.annual_cost,
+			partner_funder_option.funder_phrase,
+			partner_1.partner ";
+            $order =  "
+            partner.partner,
+			employee.id,
+			employee.employee_code,
+			employee_dsdmodel_option.employee_dsdmodel_phrase,
+			location_2.location_name ";
             $header_names = array();
             
             //PARTNER ID
             if (isset($criteria['show_partnerid']) && $criteria['show_partnerid']) {
                 $header_names['partnerid'] = t('Partner ID');
                 $select .= "partner.id AS partnerid ";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " partnerid ";
-                if($order !== ""){ $order .= ", "; }
-                $order .= " partnerid ";
             }
             
             // PARTNER NAME
@@ -10725,10 +10761,6 @@ die (__LINE__ . " - " . $sql);
                 $header_names['partner'] = t('Partner Name');
                 if($select !== ""){ $select .= ", "; }
                 $select .= "partner.partner AS partner ";
-//                 if($group !== ""){ $group .= ", "; }
-//                 $group .= " partner ";
-//                 if($order !== ""){ $order .= ", "; }
-//                 $order .= " partner ";
             }
             if ((isset($criteria['partner']) && $criteria['partner'])) {
                 if(is_array($criteria['partner'])){
@@ -10745,8 +10777,6 @@ die (__LINE__ . " - " . $sql);
                 $header_names['active'] = t('Active HRH');
                 if($select !== ""){ $select .= ", "; }
                 $select .= "IF(employee.is_active = 1,'Active','Inactive') as is_active ";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " is_active ";
             }
             if(isset($criteria['is_active'])) {
                 if($where !== ""){ $where .= " AND "; }
@@ -10758,8 +10788,6 @@ die (__LINE__ . " - " . $sql);
                 $header_names['positionid'] = t('Position ID');
                 if($select !== ""){ $select .= ", "; }
                 $select .= "employee.id AS positionid ";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " positionid ";
             }
             
             // CADRE
@@ -10767,8 +10795,6 @@ die (__LINE__ . " - " . $sql);
                 $header_names['role_phrase'] = t('Disaggregate Cadre');
                 if($select !== ""){ $select .= ", "; }
                 $select .= "employee_role_option.role_phrase AS role_phrase ";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " role_phrase ";
             }
             if (isset($criteria['primary_role']) && $criteria['primary_role']) {
                 if(is_array($criteria['primary_role'])){
@@ -10787,8 +10813,6 @@ die (__LINE__ . " - " . $sql);
                 $header_names['qualification_phrase'] = t('Occupational Classification');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " employee_qualification_option.qualification_phrase AS qualification_phrase ";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " qualification_phrase ";
             }
             if (isset($criteria['classification']) && $criteria['classification']) {
                 if(is_array($criteria['classification'])){
@@ -10807,23 +10831,13 @@ die (__LINE__ . " - " . $sql);
                 $header_names['employee_code'] = t('Employee Code');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " employee.employee_code AS employee_code ";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " employee_code ";
-                if($order !== ""){ $order .= ", "; }
-                $order .= " employee_code ";
             }
-//             if(isset($criteria['employee_code']) && $criteria['employee_code'][0] !== '0') {
-//                 if($where !== ""){ $where .= " AND "; }
-//                 $where .= 'employee.employee_code IN (' . $criteria['employee_code'] . ')';
-//             }
             
             // MODEL
             if (isset($criteria['show_dsd_model']) && $criteria['show_dsd_model']) {
                 $header_names['employee_dsdmodel_phrase'] = t('Service Delivery Model');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " employee_dsdmodel_option.employee_dsdmodel_phrase AS employee_dsdmodel_phrase";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " employee_dsdmodel_phrase ";
             }
             if (isset($criteria['dsd_model']) && $criteria['dsd_model']) {
                 if($criteria['dsd_model'][0] > 0){
@@ -10837,8 +10851,6 @@ die (__LINE__ . " - " . $sql);
                 $header_names['employee_dsdteam_phrase'] = t('Service Delivery Team');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " employee_dsdteam_option.employee_dsdteam_phrase AS employee_dsdteam_phrase ";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " employee_dsdteam_phrase ";
             }
             if (isset($criteria['dsd_team']) && $criteria['dsd_team']) {
                 if($criteria['dsd_team'][0] > 0){
@@ -10852,8 +10864,6 @@ die (__LINE__ . " - " . $sql);
                 $header_names['province_name'] = t('Region A (Province)');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " location_2.location_name AS province_name ";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " location_2.id ";
             }
             if (isset($criteria['province_id']) && count($criteria['province_id']) &&
                 !((isset($criteria['district_id']) && count($criteria['district_id']))  ||
@@ -10876,8 +10886,6 @@ die (__LINE__ . " - " . $sql);
                 $header_names['district_name'] = t('Region B (Health District)');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " location_1.location_name AS district_name ";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " location_1.id ";
             }
             if (isset($criteria['district_id']) && count($criteria['district_id']) &&
                 !((isset($criteria['region_c_id']) && count($criteria['region_c_id'])))) {
@@ -10906,8 +10914,6 @@ die (__LINE__ . " - " . $sql);
                 $header_names['region_c_name'] = t('Region C (Local Region)');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " location.location_name AS region_c_name ";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " location.id ";
             }
             if (isset($criteria['region_c_id']) && count($criteria['region_c_id'])) {
                 if (is_array($criteria['region_c_id'])) {
@@ -10935,8 +10941,6 @@ die (__LINE__ . " - " . $sql);
                 $header_names['facility_name'] =  t('Facility Name');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " facility.facility_name AS facility_name ";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " facility_name ";
             }
             if (isset($criteria['facilityInput']) && $criteria['facilityInput']) {if(is_array($criteria['facilityInput'])){
                     if($criteria['facilityInput'][0] > 0){
@@ -10954,8 +10958,6 @@ die (__LINE__ . " - " . $sql);
                 $header_names['hiv_fte_related'] =  t('Hours Worked per Week (per Site)');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " link_employee_facility.hiv_fte_related AS hiv_fte_related ";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " hiv_fte_related ";
                 if($criteria['fte_min']){
                     if($where !== ""){ $where .= " AND "; }
                     $where .= " link_employee_facility.hiv_fte_related > " . $criteria['fte_min'];
@@ -10971,8 +10973,6 @@ die (__LINE__ . " - " . $sql);
                 $header_names['mechanism_phrase'] =  t('Implementing Mechanism Name');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " mechanism_option.mechanism_phrase AS mechanism_phrase ";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " mechanism_phrase ";
             }
             if((isset($criteria['mechanism_names']) && $criteria['mechanism_names'])){
                 if(is_array($criteria['mechanism_names'])){
@@ -10991,8 +10991,6 @@ die (__LINE__ . " - " . $sql);
                 $header_names['external_id'] =  t('Implementing Mechanism Identifier');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " mechanism_option.external_id AS external_id ";
-                if($group !== ""){ $group .= ", "; }
-                $group .= " external_id ";
             }
             if (isset($criteria['mechanism_ids']) && $criteria['mechanism_ids']){
                 if(is_array($criteria['mechanism_ids'])){
@@ -11014,8 +11012,6 @@ die (__LINE__ . " - " . $sql);
                     $header_names['mechanism_end_date'] =  t('Implementing Mechanism Funding End Date');
                     if($select !== ""){ $select .= ", "; }
                     $select .= " SUBSTRING_INDEX(mechanism_option.end_date, ' ', 1) AS mechanism_end_date ";
-                    if($group !== ""){ $group .= ", "; }
-                    $group .= " mechanism_end_date ";
                     if(isset($criteria['mech_fund_date_start']) && $criteria['mech_fund_date_start']){
                         if($where !== ""){ $where .= " AND "; }
                         $d = DateTime::createFromFormat('d/m/Y', $criteria['mech_fund_date_start']);
@@ -11381,7 +11377,7 @@ LEFT JOIN employee_financial_benefits_description_option ON employee_financial_b
             if ((isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']) || (isset($criteria['mech_partners']) && $criteria['mech_partners'])) {
                 $header_names['impl_mech_partner_name'] =  t('Implementing Mechanism Prime Partner Name');
                 if($select !== ""){ $select .= ", "; }
-                $select .= "partner_1.partner AS impl_mech_partner_name ";
+                $select .= " partner_1.partner AS impl_mech_partner_name ";
                 if (isset($criteria['mech_partners']) && $criteria['mech_partners']){
                     if(is_array($criteria['mech_partners'])){
                         if($criteria['mech_partners'][0] > 0){
@@ -11398,12 +11394,12 @@ LEFT JOIN employee_financial_benefits_description_option ON employee_financial_b
             if (isset($criteria['show_timestamp_created_start_date']) && $criteria['show_timestamp_created_start_date']) {
                 $header_names['timestamp_created'] =  t('Timestamp Created');
                 if($select !== ""){ $select .= ", "; }
-                $select .= "employee.timestamp_created ";
+                $select .= " employee.timestamp_created ";
             }
             if (isset($criteria['show_timestamp_updated_start_date']) && $criteria['show_timestamp_updated_start_date']) {
                 $header_names['timestamp_updated'] =  t('Timestamp Updated');
                 if($select !== ""){ $select .= ", "; }
-                $select .= "employee.timestamp_updated ";
+                $select .= " employee.timestamp_updated ";
             }
             $this->view->assign('headers', $header_names);
            
@@ -11458,6 +11454,20 @@ FROM
 	)ON link_employee_facility.mechanism_option_id = mechanism_option.id
 	)
 LEFT JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id ";
+
+                
+if (!$this->hasACL('mechanism_option_all')) {
+    if($where !== ""){ $where .= " AND "; }
+  $where .= " partner.id in (select id from partner where id in (select owner_id from mechanism_option where id in (select mechanism_option_id from user_to_mechanism_access where user_id=" . $this->isLoggedIn() . ")))        ";  
+}else{
+                    if (!$this->hasACL('training_organizer_option_all')) {
+                        if($where !== ""){ $where .= " AND "; }
+                        $where .= "
+partner.id  in (
+select id from partner where partner.organizer_option_id in
+(select training_organizer_option_id from user_to_organizer_access where user_to_organizer_access.user_id=" . $this->isLoggedIn() . ")) ";
+                    }
+}
                 
 if($more_join !== ""){
     $select = $select . " " . $more_join . " ";
@@ -11475,7 +11485,7 @@ if($order !== ""){
     $select = $select . " ORDER BY " . $order ;
 }
 
-print $select;
+//print $select;
                 $this->view->assign('output',$db->fetchAll($select));
             }
         }
@@ -11617,256 +11627,6 @@ print $select;
         $this->view->assign('criteria', $criteria);
     }
     
-    //TA:#499
-    public function employees2ActionOLD(){
-        $locations = Location::getAll();
-        $criteria = $this->getAllParams();
-        
-        
-        $db = $this->dbfunc();
-        
-        if (isset($criteria['go']) && $criteria['go']) {
-            //print_r($criteria);//TA:1000
-            $select = self::employeeFilterQuery2($criteria);
-            if (!is_a($select, "Zend_Db_Select", false)) {
-                $status = ValidationContainer::instance();
-                $status->setStatusMessage(t('Error'));
-            } else {
-                
-                $select->distinct();
-                
-                $tables = $select->getPart(Zend_Db_Select::FROM);
-                $cols = $select->getPart(Zend_Db_Select::COLUMNS);
-        
-                if (!array_key_exists('link_employee_facility', $tables)) {
-                    //TA:#419 using LEFT JOIN is cause of query execution delay we use JOIN but it will display only employee records with mechanisms
-                    $select->join('link_employee_facility', 'link_employee_facility.employee_id = employee.id', array());
-                }
-                if (!array_key_exists('mechanism_option', $tables)) {
-                    $select->joinLeft('mechanism_option', 'mechanism_option.id = link_employee_facility.mechanism_option_id', array());
-                }
-                /////
-                
-                //TA:#415 make visible results by user mechanism accessebility
-                if (!$this->hasACL('mechanism_option_all')) {
-                    $select->joinLeft(array('user_to_mechanism_access'),
-                        'user_to_mechanism_access.mechanism_option_id = mechanism_option.id', array());
-                    $select->where('user_to_mechanism_access.user_id = ?', $this->isLoggedIn());
-                }else{
-                    if (!$this->hasACL('training_organizer_option_all')) {
-                        $select->joinLeft(array('user_to_organizer_access'),
-                            'user_to_organizer_access.training_organizer_option_id = mechanism_option.owner_id', array());
-                        $select->where('user_to_organizer_access.user_id = ?', $this->isLoggedIn());
-                    }
-                }
-                
-                $c = array_map(
-                    function ($item) {
-                        $header_names = array(
-                            'partnerid' => t('Partner ID'),
-                            'partner' => t('Partner Name'),
-                            'active' => t('Active HRH'),
-                            'positionid' => t('Position ID'),
-                            'role_phrase' => t('Disaggregate Cadre'),
-                            'qualification_phrase' => t('Occupational Classification'),
-                            'employee_code' => t('Employee Code'),                          
-                            'employee_dsdmodel_phrase' => t('Service Delivery Model'),
-                            'employee_dsdteam_phrase' => t('Service Delivery Team'),
-                            'province_name' => t('Region A (Province)'),
-                            'district_name' => t('Region B (Health District)'),
-                            'region_c_name' => t('Region C (Local Region)'),
-                            'facility_name' => t('Facility') . ' ' . t('Name'),
-                            //'facility_type_phrase' => t('Facility Type'),
-                            'hiv_fte_related' => t('Hours Worked per Week (per Site)'), 
-                            'mechanism_phrase' => t('Implementing Mechanism Name'),
-                            'external_id' => t('Implementing Mechanism Identifier'),
-                            'mechanism_end_date' => t('Implementing Mechanism Funding End Date'),
-                            'contract_start_date' => t('Contract Start Date'),
-                            'contract_end_date' => t('Contract End Date'),
-                            'intended_transition' => t('Intended Transition'),
-                            'transition_other' => t('Intended Transition Other'),
-                            'transition_date' => t('Intended Transition Date'),
-                            'actual_transition' => t('Actual Transition Outcome'),
-                            'transition_complete_other' => t('Actual Transition Outcome, Other'),
-                            'transition_complete_date' => t('Actual Transition Date'),
-                            'salary_or_stipend' => t('Salaried or Stipend'), 
-                            'funded_hours_per_week' => t('Hours Worked per Week (FTE)'),
-                            'salary' => t('Annual Salary (R)'),
-                            'benefits' => t('Annual Benefits (R)'),
-                           // 'financial_benefits_description_option' => t('Financial Benefits Description'),//TA:#466
-                            'non_financial_benefits' => t('Non-financial Benefits (R)'), //TA:#467
-                           // 'non_financial_benefits_description_option' => t('Non-financial Benefits Description'),//TA:#468
-                            'professional_development' => t('Professional Development (R)'), //TA:#469
-                          //  'professional_development_description_option' => t('Professional Development (R) Description'),//TA:#474
-                            'additional_expenses' => t('Additional Expenses (R)'),
-                            'stipend' => t('Annual Stipend (R)'),
-                            'annual_cost' => t('Annual Cost (R)'),
-                            'funder_phrase' => t('Implementing Agency'),
-                            'impl_mech_partner_name' => t('Implementing Mechanism Prime Partner Name'),
-                            'employee.timestamp_created' => 'Timestamp Created',
-                            'employee.timestamp_updated' => 'Timestamp Updated',
-                        );
-                        if ($item[2] !== null) {
-                            return $header_names[$item[2]];
-                        }
-                        return $header_names[$item[1]];
-                    },
-                    $select->getPart(Zend_Db_Select::COLUMNS)
-                    );
-                
-                if (count($c)) {
-                    $this->view->assign('headers', $c);
-                    //TA:#419
-                    // query was huge and took about 10 minutes to be run on DB (employee table LEFT JOIN with link_mechanism_employee 26,000*25,000=650,000,000 records in MYSQL cash)
-                    // and finally crushed on client browser - javascript error
-                    //then I use INNER JOIN instead of LEFT JOIN, so do not show employee records with no mechanism (may be it is OK)
-                    //IF we will decide to show all employee records then we have to use limit and show results by portions
-                    // LIMIT [start with row],[offset]
-                    // $select = $select . " LIMIT 0,1000"; // show rows since 1 to 1000 including
-                    //$select = $select . " LIMIT 5,10"; // show rows since 6 to 15 including
-                     print $select . "<br><br>";
-                    $this->view->assign('output',$db->fetchAll($select));
-                }
-            }
-        }
-        
-        $choose = array("0" => '--' . t("All") . '--');
-        
-        $select = $db->select()
-        ->from('partner', array('id', 'partner'))
-        ->order('partner ASC');
-        
-        if (!$this->hasACL('training_organizer_option_all')) {
-            $uid = $this->isLoggedIn();
-            $select->join(array('user_to_organizer_access'),
-                'user_to_organizer_access.training_organizer_option_id = partner.organizer_option_id', array())
-                ->where('user_to_organizer_access.user_id = ?', $uid);
-        }
-        
-        $partners = $choose + $db->fetchPairs($select);
-        
-        $facilities = $choose + $db->fetchPairs($db->select()
-            ->from('facility', array('id', 'facility_name'))
-            ->order('facility_name ASC')
-            );
-        
-        $facilityTypes = $choose + $db->fetchPairs($db->select()
-            ->from('facility_type_option', array('id', 'facility_type_phrase'))
-            ->order('facility_type_phrase ASC')
-            );
-        
-        $classifications = $choose + $db->fetchPairs($db->select()
-            ->from('employee_qualification_option', array('id', 'qualification_phrase'))
-            ->order('qualification_phrase ASC')
-            );
-        
-        //TA:#419
-        $employee_codes = $choose + $db->fetchPairs($db->select()
-            ->from('employee', array('employee_code', 'employee_code'))
-            ->order('employee_code ASC')
-            );
-        
-        //TA:#419
-        $dsd_models = $choose + $db->fetchPairs($db->select()
-            ->from('employee_dsdmodel_option', array('id', 'employee_dsdmodel_phrase'))
-            ->order('employee_dsdmodel_phrase ASC')
-            );
-        
-        //TA:#419
-        $dsd_teams = $choose + $db->fetchPairs($db->select()
-            ->from('employee_dsdteam_option', array('id', 'employee_dsdteam_phrase'))
-            ->order('employee_dsdteam_phrase ASC')
-            );
-        
-        $roles = $choose + $db->fetchPairs($db->select()
-            ->from('employee_role_option', array('id', 'role_phrase'))
-            ->order('role_phrase ASC')
-            );
-        
-        $transitions = $choose + $db->fetchPairs($db->select()
-            ->from('employee_transition_option', array('id', 'transition_phrase'))
-            ->order('transition_phrase ASC')
-            );
-        
-        //TA:#419
-        $transitions_other = $choose + $db->fetchPairs($db->select()
-            ->from('employee', array('transition_other', 'transition_other'))
-            ->group('transition_other')
-            ->where('transition_other is not null')
-            ->order('transition_other ASC')
-            );
-        $transitions_complete = $choose + $db->fetchPairs($db->select()
-            ->from('employee_transition_complete_option', array('id', 'transition_complete_phrase'))
-            ->order('transition_complete_phrase ASC'));
-        $transitions_complete_other = $choose + $db->fetchPairs($db->select()
-            ->from('employee', array('transition_complete_other', 'transition_complete_other'))
-            ->group('transition_complete_other')
-            ->where('transition_complete_other is not null')
-            ->order('transition_complete_other ASC')
-            );
-        $agencies = $choose + $db->fetchPairs($db->select()
-            ->from('partner_funder_option', array('id', 'funder_phrase'))
-            ->order('funder_phrase ASC'));
-        $mechanism_ids = $choose + $db->fetchPairs($db->select()
-            ->from('mechanism_option', array('external_id', 'external_id'))
-            ->group('external_id')
-            ->where('external_id is not null')
-            ->order('external_id ASC')
-            );
-        $mechanism_names = $choose + $db->fetchPairs($db->select()
-            ->from('mechanism_option', array('id', 'mechanism_phrase'))
-            ->order('mechanism_phrase ASC'));
-        //
-        
-        $bases = $choose + $db->fetchPairs($db->select()
-            ->from('employee_base_option', array('id', 'base_phrase'))
-            ->order('base_phrase ASC')
-            );
-        
-        $this->view->assign('partners', $partners);
-        $this->view->assign('mech_partners', $partners);//TA:#419
-        
-        //TA:#466
-        $select = $db->select()->from('employee_financial_benefits_description_option', array('id', 'financial_benefits_description_option'))->order('financial_benefits_description_option ASC');
-        $this->view->assign('employee_financial_benefits_description', $choose + $db->fetchPairs($select));
-        ///
-        //TA:#468
-        $select = $db->select()->from('employee_non_financial_benefits_description_option', array('id', 'non_financial_benefits_description_option'))->order('non_financial_benefits_description_option ASC');
-        $this->view->assign('employee_non_financial_benefits_description', $choose + $db->fetchPairs($select));
-        ///
-        //TA:#474
-        $select = $db->select()->from('employee_professional_development_description_option', array('id', 'professional_development_description_option'))->order('professional_development_description_option ASC');
-        $this->view->assign('employee_professional_development_description', $choose + $db->fetchPairs($select));
-        ///
-        $this->view->assign('facilities', $facilities);
-        $this->view->assign('facilityTypes', $facilityTypes);
-        $this->view->assign('classifications', $classifications);
-        $this->view->assign('employee_codes', $employee_codes); //TA:#419
-        $this->view->assign('dsd_models', $dsd_models); //TA:#419
-        $this->view->assign('dsd_teams', $dsd_teams); //TA:#419
-        $this->view->assign('roles', $roles);
-        $this->view->assign('transitions', $transitions);
-        $this->view->assign('transitions_other', $transitions_other);//TA:#419
-        $this->view->assign('transitions_complete', $transitions_complete); //TA:#419
-        $this->view->assign('transitions_complete_other', $transitions_complete_other);//TA:#419
-        $this->view->assign('agencies', $agencies);//TA:#419
-        $this->view->assign('mechanism_ids', $mechanism_ids);//TA:#419
-        $this->view->assign('mechanism_names', $mechanism_names);//TA:#419
-        $this->view->assign('locations', $locations);
-        $this->view->assign('bases', $bases);
-        
-        //TA:#293 set location multiple selection
-        require_once ('views/helpers/Location.php');
-        $criteria['district_id'] = regionFiltersGetDistrictIDMultiple($criteria);
-        $criteria['region_c_id'] = regionFiltersGetLastIDMultiple('', $criteria);
-        
-        //TA:#293.1
-        //         $helper = new Helper();
-        //         $this->viewAssignEscaped('sites', $helper->getFacilities());
-        
-        $this->view->assign('criteria', $criteria);
-    }
-
 
     /**
      * @param $rows - reference to database roles returned by filtered query
