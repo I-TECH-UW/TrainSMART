@@ -41,6 +41,7 @@ class ReportsController extends ReportFilterHelpers {
         $contextSwitch->addActionContext('ps-repeated-students', 'csv');
 		$contextSwitch->addActionContext('employee-report-occupational-category', 'csv');
         $contextSwitch->addActionContext('employees', 'csv');
+        $contextSwitch->addActionContext('employees2', 'csv');//TA:#499
         $contextSwitch->addActionContext('employee-report-mechanism-transition-description', 'csv');
         $contextSwitch->addActionContext('employee-report-mechanism-transition', 'csv');
         $contextSwitch->addActionContext('employee-report-primary-role', 'csv');
