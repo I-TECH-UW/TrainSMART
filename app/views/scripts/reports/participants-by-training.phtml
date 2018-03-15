@@ -70,8 +70,6 @@ if( strstr($path[2], 'trainers-by-name') === FALSE ):?>
 		}
 		?>
 	</select></div></div>
-	
-	
 
 <!--
 	<div class="fieldLabel" id="qualification_id_lbl"><?php tp('Qualification');?></div>
@@ -184,13 +182,18 @@ if( strstr($path[2], 'trainers-by-name') === FALSE ):?>
 	<div class="fieldInput">
 		 <div  class="leftBorderPad"><input type="checkbox" name="showOrganizer" <?php  if ($this->criteria['showOrganizer']) echo 'CHECKED';?> /></div>
   	<div  class="leftBorder autoHeight">
-  	
-
 <?php echo $this->organizers_dropdown; ?><br />
-	
-	
+</div>
 	</div>
+	
+	<!-- TA:#514 START -->
+<div class="fieldLabel" id="training_method_id_lbl"><?php echo (@$this->translation['Training Method']); ?></div>
+	<div class="fieldInput">
+		 <div  class="leftBorderPad"><input type="checkbox" name="showMethod" <?php  if ($this->criteria['showMethod']) echo 'CHECKED';?> /></div>
+  	<div  class="leftBorder autoHeight">
+<?php echo $this->method_dropdown; ?><br /></div>
 	</div>
+<!-- TA:#514 END -->
 
 
   <?php if ( $this->setting['display_training_topic'] ) { ?>
@@ -583,6 +586,8 @@ if($this->setting['display_last_name_first']){ //TA:UK:1712:23 shaw different na
 		echo ',"'.$row['attend_reason_phrase'].'"';
 	if ( $this->criteria['showOrganizer'] )
 		echo ',"'.$row['training_organizer_phrase'].'"';
+	if ( $this->criteria['showMethod'] )//TA:#514
+		    echo ',"'.$row['training_method_phrase'].'"';
 	if ( $this->criteria['showTopic'] )
 		echo ',"'.$row['training_topic_phrase'].'"';
 	if ( $this->criteria['showPepfar'] )
@@ -760,6 +765,10 @@ var trainingColumnDefs = [
  <?php if ( $this->criteria['showOrganizer'] ) { ?>
    ,{key:"training_organizer_phrase", label: "<?php echo (@$this->translation['Training Organizer']); ?>", sortable:true, resizeable:true}
  <?php } ?>
+ <?php //TA:#514
+ if ( $this->criteria['showMethod'] ) { ?>
+ ,{key:"training_method_phrase", label: "<?php echo (@$this->translation['Training Method']); ?>", sortable:true, resizeable:true}
+<?php } ?>
 <?php if ( $this->criteria['showTopic'] ) { ?>
    ,{key:"training_topic_phrase", label: "<?php echo (@$this->translation['Training Topic']); ?>", sortable:true, resizeable:true}
  <?php } ?>

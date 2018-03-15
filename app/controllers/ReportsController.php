@@ -2193,6 +2193,7 @@ echo $sql . "<br>";
 			if ($criteria ['showOrganizer'] or $criteria ['training_organizer_id']) {
 				$sql .= ' LEFT JOIN training_organizer_option as torg ON torg.id = pt.training_organizer_option_id ';
 			}
+			
 			if ($criteria ['showLevel'] || $criteria ['training_level_id']) {
 				$sql .= ' LEFT JOIN training_level_option as tlev ON tlev.id = pt.training_level_option_id ';
 			}
@@ -2642,6 +2643,7 @@ echo $sql . "<br>";
 		$criteria ['is_tot']                       = $this->getSanParam ( 'is_tot' );
 		$criteria ['training_organizer_id']        = $this->getSanParam ( 'training_organizer_id' );
 		$criteria ['training_organizer_option_id'] = $this->getSanParam ( 'training_organizer_option_id' );
+		$criteria ['training_method_option_id'] = $this->getSanParam ( 'training_method_option_id' );//TA:#514
 		$criteria ['funding_id']                   = $this->getSanParam ( 'funding_id' );
 		$criteria ['custom_1_id']                  = $this->getSanParam ( 'custom_1_id' );
 		$criteria ['custom_2_id']                  = $this->getSanParam ( 'custom_2_id' );
@@ -2691,6 +2693,7 @@ echo $sql . "<br>";
 		$criteria ['show_other_scores']         = ($this->getSanParam ( 'show_other_scores' ));//TA:#313
 		$criteria ['showTot']           = ($this->getSanParam ( 'showTot' ) or ($criteria ['doCount'] and $criteria ['is_tot'] !== '' or $criteria ['is_tot'] === '0'));
 		$criteria ['showOrganizer']     = ($this->getSanParam ( 'showOrganizer' ) or ($criteria ['doCount'] and ($criteria ['training_organizer_option_id'])));
+		$criteria ['showMethod']     = ($this->getSanParam ( 'showMethod' ) or ($criteria ['doCount'] and ($criteria ['training_method_option_id'])));//TA:#514
 		$criteria ['showFunding']       = ($this->getSanParam ( 'showFunding' ) or ($criteria ['doCount'] and $criteria ['funding_id'] or $criteria ['funding_id'] === '0'));
 		$criteria ['showQualPrim']      = ($this->getSanParam ( 'showQualPrim' ) or ($criteria ['doCount'] and ($criteria ['qualification_id'] or $criteria ['qualification_id'] === '0')));
 		$criteria ['showQualSecond']    = ($this->getSanParam ( 'showQualSecond' ) or ($criteria ['doCount'] and ($criteria ['qualification_secondary_id'] or $criteria ['qualification_secondary_id'] === '0')));
@@ -2815,6 +2818,11 @@ echo $sql . "<br>";
 			if ($criteria ['showOrganizer']) {
 				$sql .= ', torg.training_organizer_phrase ';
 			}
+			
+			//TA:#514
+			if ($criteria ['showMethod']) {
+			    $sql .= ', tmet.training_method_phrase ';
+			}
 
 			if ($criteria ['showFunding']) {
 				if ($criteria ['doCount']) {
@@ -2934,6 +2942,11 @@ echo $sql . "<br>";
 
 			if ($criteria ['showOrganizer']) {
 				$sql .= '	JOIN training_organizer_option as torg ON torg.id = pt.training_organizer_option_id ';
+			}
+			
+			//TA:#514
+			if ($criteria ['showMethod']) {
+			    $sql .= '	JOIN training_method_option as tmet ON tmet.id = pt.training_method_option_id ';
 			}
 
 			if ($criteria ['showFunding']) { 
@@ -3108,6 +3121,11 @@ echo $sql . "<br>";
 				$where [] = ' pt.training_organizer_option_id IN (' . implode ( ',', $criteria ['training_organizer_option_id'] ) . ')';
 			}
 			
+			//TA:#514
+			if ($criteria ['training_method_option_id'][0] && is_array ( $criteria ['training_method_option_id'] )) {
+			    $where [] = ' pt.training_method_option_id IN (' . implode ( ',', $criteria ['training_method_option_id'] ) . ')';
+			}
+			
 			if ($criteria ['funding_id'] or $criteria ['funding_id'] === '0') {
 				$where [] = ' tfund.training_funding_option_id = \'' . $criteria ['funding_id'] . '\'';
 			}
@@ -3209,6 +3227,11 @@ echo $sql . "<br>";
 				if ($criteria ['showOrganizer']) {
 					$groupBy []= '  pt.training_organizer_option_id';
 				}
+				
+				//TA:#514
+				if ($criteria ['showMethod']) {
+				    $groupBy []= '  pt.training_method_option_id';
+				}
 
 				if ($criteria ['showFunding']) {
 					$groupBy []= '  tfund.training_funding_option_id';
@@ -3234,7 +3257,7 @@ echo $sql . "<br>";
 				}
 			}
 			
-    //print $sql;
+   
 			$rowArray = $db->fetchAll ( $sql);
 			
 
@@ -3302,7 +3325,7 @@ echo $sql . "<br>";
 		//location
 		$locations = Location::getAll();
 		$this->viewAssignEscaped ( 'locations', $locations );
-
+		
 		//trainingTitle
 		$courseArray = TrainingTitleOption::suggestionList ( false, 10000 );
 		$this->viewAssignEscaped ( 'courses', $courseArray );
@@ -3381,6 +3404,10 @@ echo $sql . "<br>";
 		
 		  $this->view->assign ( 'organizers_dropdown', DropDown::generateHtml ('training_organizer_option', 'training_organizer_phrase',
 		    $criteria['training_organizer_option_id'], true, $this->view->viewonly, false,null,null,null,     true, 10 ) );
+		  
+		  //TA:#514
+		  $this->view->assign ( 'method_dropdown', DropDown::generateHtml ('training_method_option', 'training_method_phrase',
+		      $criteria['training_method_option_id'], true, $this->view->viewonly, false,null,null,null,     true, 10 ) );
 		
 		//facilities list
 		$rowArray = OptionList::suggestionList ( 'facility', array ('facility_name', 'id' ), false, 9999 );
