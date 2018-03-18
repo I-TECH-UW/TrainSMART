@@ -7310,7 +7310,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 		$this->view->assign('cohorts', $helper->getCohorts());
 		$this->view->assign('nationalities', $helper->getNationalities());
 		$this->view->assign('funding', $helper->getFunding());
-		$this->view->assign('tutors', $helper->getTutors());
+		$this->view->assign('tutors', $helper->getTutorsForUser($helper->myid()));//TA:#507
 		$this->view->assign('facilities', $helper->getFacilities());
 		$this->view->assign('coursetypes', $helper->AdminCourseTypes());
 		$this->view->assign('degrees', $helper->getDegrees());

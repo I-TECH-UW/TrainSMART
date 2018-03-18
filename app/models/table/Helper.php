@@ -1082,6 +1082,42 @@ class Helper extends ITechTable
 		$result = $this->dbfunc()->fetchAll($select);
 		return $result;
 	}
+	
+	//TA:#507
+	public function getTutorsForUser($uid){
+	    $select = $this->dbfunc()
+	    ->select()
+	    ->from("link_user_institution")
+	    ->where('userid = ' . $uid);
+	    
+	    $result = $this->dbfunc()->fetchAll($select);
+	    
+	    if (count($result) == 0)    {
+	        $select = $this->dbfunc()->select()
+	        ->from(array ("t" => "tutor"),
+	            array ("id"))
+	            ->join(array("p" => "person"),
+	                "t.personid = p.id",
+	                array("first_name","last_name"))
+	                    ->where("p.is_deleted=0") 
+	                    ->order(array('first_name','last_name'));
+	    }   else    {
+	        $select = $this->dbfunc()->select()
+	        ->from(array ("t" => "tutor"),
+	            array ("id"))
+	            ->join(array("p" => "person"),
+	                "t.personid = p.id",
+	                array("first_name","last_name"))
+	                ->join(array('lui' => "link_user_institution"), 'lui.institutionid = t.institutionid')
+	                ->where("p.is_deleted=0")
+	                ->where('lui.userid = ' . $uid)
+	                ->order(array('first_name','last_name'));
+	    }
+	    
+	    $result = $this->dbfunc()->fetchAll($select);
+	    print $select;
+	    return $result;
+	}
 
 	public function getTutorTypes(){
 		// RETURNS A LIST OF ALL ACTIVE CADRES ORDERED BY CADRE NAME
