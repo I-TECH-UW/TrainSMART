@@ -186,10 +186,10 @@
                             isset($this->criteria['transition_start_date']) ? $this->criteria['transition_start_date'] : '',
                             isset($this->criteria['transition_end_date']) ? $this->criteria['transition_end_date'] : '');
                         
-                        //TA:#465
+                        //TA:#465, TA:#485
                         echo labelAndField($this, t('Salaried or Stipend'),
                             $this->formSelect('salary_or_stipend', isset($this->criteria['salary_or_stipend']) ? $this->criteria['salary_or_stipend'] : null, array(), 
-                                array(""=>"-- choose --", "salaried"=>"Salaried", "stipend"=>"Stipend")), 'salary_or_stipend');
+                                array(""=>"-- choose --", "salaried"=>"Salaried", "stipend"=>"Stipend", "na"=>"Not Applicable")), 'salary_or_stipend');
                         ///
                            
                         echo labelTwoFields($this, t('Hours Worked per Week (FTE)'), t('to'), 'hours_min', 'hours_max',

@@ -110,3 +110,6 @@ CREATE TABLE `employee_to_professional_development_description_option` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE _system ADD COLUMN display_employee_professional_development_description_options TINYINT(1) NOT NULL DEFAULT '1';
+
+
+

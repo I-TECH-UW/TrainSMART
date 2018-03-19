@@ -46,9 +46,14 @@
             window.ITECH.mechData = <?php echo json_encode($this->mechanisms, JSON_HEX_APOS); ?>;
             mechData_lenght = <?php echo count($this->mechanisms); ?>;
 
+            //TA:#473
+            window.ITECH.teamData = <?php echo json_encode($this->dsd_team, JSON_HEX_APOS); ?>;
+            teamData_lenght = <?php echo count($this->dsd_team); ?>;
+
             calculateSiteTable();//TA:#438
             setDefaultSitesFields(); //TA:#438
             setActive();//TA:#411
+
         });
 
         //TA:#411
@@ -98,13 +103,18 @@
             });
             $('.calendarbtn').click(openNearestDatePicker);
 
-            $('#salary,#benefits,#additional_expenses,#stipend').change(function () { /* calc amounts */
-                $('#annual_cost').calcFieldsMoney('#salary,#benefits,#additional_expenses,#stipend', '#annual_cost');
-                //calculateMechanismTable();
-            });
-
-            $('#funded_hours_per_week').change(function () {
-               // calculateMechanismTable();
+            //TA:#481
+            $('#salary,#benefits,#non_financial_benefits,#professional_development,#stipend').change(function () { /* calc amounts */
+                //$('#annual_cost').calcFieldsMoney('#salary,#benefits,#additional_expenses,#stipend', '#annual_cost');
+            	var total = parseFloat($('#salary').val());
+            	total = total + parseFloat($('#benefits').val());
+            	total = total + parseFloat($('#non_financial_benefits').val());
+            	total = total + parseFloat($('#professional_development').val());
+            	total = total + parseFloat($('#stipend').val())
+                if (total > 500000) {
+                    alert('<?php echo t('Annual Cost'); ?>' + ' - total cannot be greater than 500,000');
+                 }
+            	 $('#annual_cost').val(total);
             });
 
             $('#select_employee_transition_option').change(function (e) { /* watch the two transition drop downs */
@@ -128,35 +138,36 @@
             }).change(); // fire once
         });
 
-        (function ($) {
+//         (function ($) {
 
-            $.fn.calcFieldsMoney = function (selector, errField) {
-                var flds = $(selector);
-                if (!flds.length)
-                    return;
+//             $.fn.calcFieldsMoney = function (selector, errField) {
+//                 var flds = $(selector);
+//                 if (!flds.length)
+//                     return;
 
-                var total = 0;
-                $('.dec_warning').remove();
-                flds.each(function (i, val) {
-                    //TA:#282 accept decimal values
-                    var new_val = ($(this).val()) ? parseFloat($(this).val()) : 0;
-                    total += new_val;
-                });
+//                 var total = 0;
+//                 $('.dec_warning').remove();
+//                 flds.each(function (i, val) {
+//                     //TA:#282 accept decimal values
+//                     var new_val = ($(this).val()) ? parseFloat($(this).val()) : 0;
+//                     total += new_val;
+//                 });
 
-                if (isNaN(total))
-                    total = '?';
+//                 if (isNaN(total))
+//                     total = '?';
 
-                if (total > 2000000) {
-                    alert('<?php echo t('Annual Cost'); ?>' + ' - total cannot be greater than 2,000,000');
-                    $(this).val(null);
-                }
-                else {
-                    $(this).val(total);
-                }
-                return this;
+//                 //TA:#477
+//                 if (total > 500000) {
+//                    alert('<?php //echo t('Annual Cost'); ?>' + ' - total cannot be greater than 500,000');
+//                     $(this).val(null);
+//                 }
+//                 else {
+//                     $(this).val(total);
+//                 }
+//                 return this;
 
-            };
-        })(jQuery);
+//             };
+//         })(jQuery);
 
         //TA:#224   TA:#416
         function addSite() {    
@@ -305,12 +316,35 @@
                      "eldsdmodel_field" + SITE_ROWS_COUNT + ".onchange = function () {" +
                               "var selected = $(this).find('option:selected').text(); " +
                                                  "if (selected == 'Facility site - Roving' || selected == 'Ward Based Outreach Team - WBOT') {" +
+                                                 
+                                                 //TA:#473 START not working yet
+                                                   "var wbot = false; " +
+                                               	"if(selected == 'Ward Based Outreach Team - WBOT'){ " + 
+                                                  	"wbot = true; " +
+                                              	"} " + 
+                                                "var optList = '<option value=\"\">--select--</option>';"+
+                                                 "var teamData = window.ITECH.teamData;" +
+                                                 "for (var i = 0; i < teamData_lenght; i++) {   " + 
+                                                 "if(wbot){" +
+                                                     "if((teamData[i]['dsdteam']).includes('WBOT_')){" + 
+                                                  	   "optList += '<option value=\"' + teamData[i]['partner_id'] + '_' + teamData[i]['team_id'] + '\">' + teamData[i]['dsdteam'] + '</option>';" +
+                                                    " }" + 
+                                                 " }else{ " +
+                                                    "if(!(teamData[i]['dsdteam']).includes('WBOT_')){" +
+                                                 	   "optList += '<option value=\"' + teamData[i]['partner_id'] + '_' + teamData[i]['team_id'] + '\">' + teamData[i]['dsdteam'] + '</option>';" +
+                                                  	  " }" + 
+                                                    	 " }" + 
+                                                   	 " }" + 
+                                                 "$('#dsd_team" + SITE_ROWS_COUNT + "').html(optList);" +
+                                                   //TA:#473 END
+
+                                                 
                                                  	"eldsdteam_field" + SITE_ROWS_COUNT + ".disabled = false; " +
                                                "  }else{" + 
                                                  "	eldsdteam_field" + SITE_ROWS_COUNT + ".disabled = true; "+
                                                  	" $('#dsd_team" + SITE_ROWS_COUNT + "').val(''); " +
                                               "   }}; " +
-                     "eldsdmodel_field" + SITE_ROWS_COUNT + ".onchange();<\/script>");
+                     "<\/script>");
 
               SITE_ROWS_COUNT++;
               ///
@@ -476,6 +510,12 @@
          	    validated = false;
             }
             ///
+
+            //TA:#477
+            if(parseInt($('#annual_cost').val()) > 500000){
+            	displayErrorMessage('annual_cost', '<?php echo t('Annual Cost');?> - total cannot be greater than 500,000');
+            	validated = false;
+            }
 
             window.scroll(0,0);
             return validated;
@@ -775,6 +815,7 @@
                     <div id='site_script'></div>
                     <input type='hidden' id='multi_sites_table_data_count' name='multi_sites_table_data_count'/>
                     <!--  <table style="width:100%"><tr><td>-->
+                   
                         <table cellpadding="0" cellspacing="0" border="1" class="display tablegrid" id="multi_sites_table" style="width:100%">
                    <thead>
                 <tr>
@@ -826,15 +867,37 @@
                         </select>
                         </td>
                         <td id='<?php echo $siteData['dsd_team_id'];?>'>
-                        <select id='dsd_team<?php echo $rows;?>' name='dsd_team<?php echo $rows;?>'style='max-width: 200px; min-width: 200px; width: 200px !important'>
-                        <option value=''>-- select --</option>
+                        
+                        <!-- TA:#473 START -->
+                        <?php 
+                        $disabled = "";
+                        if($siteData['sds_model_name'] !== 'Facility site - Roving' && $siteData['sds_model_name'] !== 'Ward Based Outreach Team - WBOT'){
+                            $disabled = " disabled='disabled' ";
+                        }
+                        ?>
+                        <select id='dsd_team<?php echo $rows;?>' name='dsd_team<?php echo $rows;?>'style='max-width: 200px; min-width: 200px; width: 200px !important' <?php echo $disabled;?>>
+                        <!-- TA:#473 END -->
+                        
+                        <option value=''>--select--</option>
                         <?php
                         foreach ($this->dsd_team as $ID => $team) {
                             $selected_team = "";
                             if($team['team_id'] === $siteData['dsd_team_id']){
                                 $selected_team = " selected='selected' ";
                             }
-                            echo "<option value='" . $team['team_id'] . "' " . $selected_team . ">" . $team['dsdteam'] . "</option>";
+                            
+                            //TA:#473 START
+                             if ($siteData['sds_model_name'] === 'Facility site - Roving') {
+                               if(strpos($team['dsdteam'], 'WBOT_') === false){
+                                   echo "<option value='" . $team['team_id'] . "' " . $selected_team . ">" . $team['dsdteam'] . "</option>";
+                               }
+                             }else if($siteData['sds_model_name'] === 'Ward Based Outreach Team - WBOT'){
+                                if(strpos($team['dsdteam'], 'WBOT_') !== false){
+                                    echo "<option value='" . $team['team_id'] . "' " . $selected_team . ">" . $team['dsdteam'] . "</option>";
+                                }
+                            }
+                            ////
+                                
                         } 
                         ?>
                         </select>
@@ -874,6 +937,29 @@
                                             }else{
                                             	var selected = $(this).find('option:selected').text();
                                                 if (selected == 'Facility site - Roving' || selected == 'Ward Based Outreach Team - WBOT') {
+                                                    
+                                                    //TA:#473 START
+                                                	var wbot = false;
+                                                	if(selected == 'Ward Based Outreach Team - WBOT'){
+                                                    	wbot = true;
+                                                	}
+                                                	$('#dsd_team<?php echo $rows;?>').empty(); 
+                                                    var optList = '<option value="">--select--</option>';
+                                                    var teamData = window.ITECH.teamData;
+                                                     for (var i = 0; i < teamData_lenght; i++) {    
+                                                     if(wbot){
+                                                        if((teamData[i]['dsdteam']).includes("WBOT_")){
+                                                     	   optList += '<option value="' + teamData[i]['partner_id'] + '_' + teamData[i]['team_id'] + '">' + teamData[i]['dsdteam'] + '</option>';
+                                                        }
+                                                      }else{
+                                                         if(!(teamData[i]['dsdteam']).includes("WBOT_")){
+                                                     	    optList += '<option value="' + teamData[i]['partner_id'] + '_' + teamData[i]['team_id'] + '">' + teamData[i]['dsdteam'] + '</option>';
+                                                          } 
+                                                        }
+                                                     }
+                                                    $('#dsd_team<?php echo $rows;?>').html(optList);
+                                                    ///// TA:#473 END
+                                                    
                                                 	eldsdteam_field<?php echo $rows;?>.disabled = false;
                                                 }else{
                                                 	eldsdteam_field<?php echo $rows;?>.disabled = true;
@@ -882,9 +968,8 @@
                                             	//selectNASiteName();
                                                // elSubProvince.disabled = false; 
                                             }
-                                            // eldsdteam_field.onchange();
                                         }
-                    eldsdmodel_field<?php echo $rows;?>.onchange();
+                   
                     </script>
                 <?php $rows++;
                 } ?>
@@ -990,7 +1075,31 @@
                         }else{
                         	var selected = $(this).find('option:selected').text();
                             if (selected == 'Facility site - Roving' || selected == 'Ward Based Outreach Team - WBOT') {
-                            	eldsdteam_field.disabled = false;
+                            	
+                            	//TA:#473 START
+                            	var wbot = false;
+                            	if(selected == 'Ward Based Outreach Team - WBOT'){
+                                	wbot = true;
+                            	}
+                            	$('#dsd_team').empty(); 
+                                var optList = '<option value="">--select--</option>';
+                                var teamData = window.ITECH.teamData;
+                                for (var i = 0; i < teamData_lenght; i++) {    
+                                if(wbot){
+                                    if((teamData[i]['dsdteam']).includes("WBOT_")){
+                                 	   optList += '<option value="' + teamData[i]['partner_id'] + '_' + teamData[i]['team_id'] + '">' + teamData[i]['dsdteam'] + '</option>';
+                                    }
+                                 }else{
+                                    if(!(teamData[i]['dsdteam']).includes("WBOT_")){
+                                 	   optList += '<option value="' + teamData[i]['partner_id'] + '_' + teamData[i]['team_id'] + '">' + teamData[i]['dsdteam'] + '</option>';
+                                    } 
+                                   }
+                                }
+                                $('#dsd_team').html(optList);
+                                ////TA:#473 END
+
+                                eldsdteam_field.disabled = false;
+                            	
                             }else{
                             	eldsdteam_field.disabled = true;
                             	$('#dsd_team').val('');//TA:#443
@@ -1127,6 +1236,8 @@
                                 <option value="">&mdash; select &mdash;</option>
                                 <option value="salaried" <?php echo ( $this->employee['salary_or_stipend'] !== 'salaried' ? '': 'selected="selected"');?>>Salaried</option>
                                 <option value="stipend" <?php echo ( $this->employee['salary_or_stipend'] !== 'stipend' ? '': 'selected="selected"');?>>Stipend</option>
+                            <!-- TA:#485 -->
+                            <option value="na" <?php echo ( $this->employee['salary_or_stipend'] !== 'na' ? '': 'selected="selected"');?>>Not Applicable</option>
                             </select>
                         </div>
                         <?php
