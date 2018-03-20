@@ -834,6 +834,7 @@ protected function sendData($data) {
 		$id = $row->save();
 		return $id;
 		} catch (Exception $e) {
+		    echo "\nERROR: " . $e->getMessage() . "!!!\n";
 		    return false;
 		}
 	}

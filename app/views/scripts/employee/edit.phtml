@@ -115,6 +115,27 @@
                     alert('<?php echo t('Annual Cost'); ?>' + ' - total cannot be greater than 500,000');
                  }
             	 $('#annual_cost').val(total);
+
+            	//TA:#484
+            	 if($(this).attr('id') == 'benefits'){
+                	 if($(this).val() == '' || $(this).val() == '0.00'){
+                		 <?php
+                		 echo "$('#employee_financial_benefits_description_required').hide();";
+                	             foreach ($this->finanBenefDescArray as $item) {
+                	                 echo "$('#employee_financial_benefits_description_option_id_" . $item['id'] . "').prop('disabled', true);";
+                	                 echo "$('#employee_financial_benefits_description_option_id_" . $item['id'] . "').prop('checked', false);";
+                	                 
+                	         }
+                	        ?>
+                	 }else{
+                		 <?php
+                		 echo "$('#employee_financial_benefits_description_required').show();";
+                	             foreach ($this->finanBenefDescArray as $item) {
+                	                 echo "$('#employee_financial_benefits_description_option_id_" . $item['id'] . "').prop('disabled', false);";
+                	         }
+                	        ?>
+                	 }
+            	 }
             });
 
             $('#select_employee_transition_option').change(function (e) { /* watch the two transition drop downs */
