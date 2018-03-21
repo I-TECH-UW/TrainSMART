@@ -66,19 +66,7 @@
            	        ?>
            	 }
 
-           	 //TA:#484  benefits
-           	 if($('#benefits').val() == '0.00' || $('#benefits').val() == '0'){
-           		 <?php
-           		 echo "$('#employee_financial_benefits_description_required').hide();";
-           	             foreach ($this->finanBenefDescArray as $item) {
-           	                 echo "$('#employee_financial_benefits_description_option_id_" . $item['id'] . "').prop('disabled', true);";
-           	                 echo "$('#employee_financial_benefits_description_option_id_" . $item['id'] . "').prop('checked', false);";
-           	                 
-           	         }
-           	        ?>
-           	 }
-
-           //TA:#484  benefits
+           //TA:#484  non_financial_benefits
            	 if($('#non_financial_benefits').val() == '0.00' || $('#non_financial_benefits').val() == '0'){
            		 <?php
            		 echo "$('#employee_non_financial_benefits_description_required').hide();";
