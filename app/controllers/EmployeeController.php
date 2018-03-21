@@ -478,21 +478,11 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                         }
                         //////
                         
-                    //TA:#466 
-              //  if ($this->getSanParam ( 'employee_financial_benefits_description_option_id' )) {
+                    //TA:#484
                     MultiOptionList::updateOptions ( 'employee_to_financial_benefits_description_option', 'employee_financial_benefits_description_option', 'employee_id', $id, 'employee_financial_benefits_description_option_id', $this->getSanParam ( 'employee_financial_benefits_description_option_id' ), null, null );
-             //   }
-                
-                //TA:#468
-                if ($this->getSanParam ( 'employee_non_financial_benefits_description_option_id' )) {
                     MultiOptionList::updateOptions ( 'employee_to_non_financial_benefits_description_option', 'employee_non_financial_benefits_description_option', 'employee_id', $id, 'employee_non_financial_benefits_description_option_id', $this->getSanParam ( 'employee_non_financial_benefits_description_option_id' ), null, null );
-                }
-                
-                //TA:#474
-                if ($this->getSanParam ( 'employee_professional_development_description_option_id' )) {
                     MultiOptionList::updateOptions ( 'employee_to_professional_development_description_option', 'employee_professional_development_description_option', 'employee_id', $id, 'employee_professional_development_description_option_id', $this->getSanParam ( 'employee_professional_development_description_option_id' ), null, null );
-                }
-                        
+                
                         $status->setStatusMessage(t('The position was saved.'));
                         $this->_redirect("employee/edit/id/$id");
                     }
