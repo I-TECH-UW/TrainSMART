@@ -3001,7 +3001,9 @@ class Helper extends ITechTable
 					$compids = implode(",", $comps);
 
 					// Getting all questions
-					$qquery = "SELECT * FROM competencies_questions WHERE competencyid IN (" . $compids . ") AND status = 1";
+					//TA:#515
+// 					$qquery = "SELECT * FROM competencies_questions WHERE competencyid IN (" . $compids . ") AND status = 1";
+					$qquery = "SELECT id FROM competencies_questions WHERE competencyid IN (" . $compids . ") AND itemtype like 'question%' AND status = 1";
 #echo $qquery . "<br>";
 					$qresult = $db->query($qquery);
 					$qrows = $qresult->fetchAll();
@@ -3010,10 +3012,10 @@ class Helper extends ITechTable
 					$qids = array();
 					foreach ($qrows as $q){
 						$questions[] = $q;
-						if (substr($q['itemtype'],0,8) == "question"){
+						//if (substr($q['itemtype'],0,8) == "question"){//TA:#515
 							$required++;
 							$qids[] = $q['id'];
-						}
+						//}
 					}
 
 					// Getting all answers
