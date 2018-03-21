@@ -456,6 +456,7 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                     preg_replace('/\s+/', '', $params['transition_complete_other']);
                                      
                     $id = $this->_findOrCreateSaveGeneric('employee', $params);
+                   // $id='43850';
 
                     if (!$id) {
                         //TA:#171 add more details to error message and redirect to employee edit page for edit or stay on the same page
@@ -477,10 +478,10 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                         }
                         //////
                         
-                    //TA:#466
-                if ($this->getSanParam ( 'employee_financial_benefits_description_option_id' )) {
+                    //TA:#466 
+              //  if ($this->getSanParam ( 'employee_financial_benefits_description_option_id' )) {
                     MultiOptionList::updateOptions ( 'employee_to_financial_benefits_description_option', 'employee_financial_benefits_description_option', 'employee_id', $id, 'employee_financial_benefits_description_option_id', $this->getSanParam ( 'employee_financial_benefits_description_option_id' ), null, null );
-                }
+             //   }
                 
                 //TA:#468
                 if ($this->getSanParam ( 'employee_non_financial_benefits_description_option_id' )) {
