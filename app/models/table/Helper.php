@@ -2963,6 +2963,7 @@ class Helper extends ITechTable
 		return $return;
 	}
 
+	//TA:#515 need to be rewritten. Performance issue. it calls for each person the same query. It si not optimal. Also uses SELECT * to fetch uncesessary data that overloads memory
 	function getPersonCompetencies($pid, $get_secondary = false){
 		$db = $this->dbfunc();
 		$query = "SELECT * FROM person WHERE id = " . $pid;

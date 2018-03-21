@@ -1398,6 +1398,8 @@ class PersonController extends ReportFilterHelpers
                 }
             }
 
+            //TA:#515 need to be rewritten. Performance issue. it calls for each person the same query. It si not optimal. Also uses SELECT * to fetch uncesessary data that overloads memory
+            //it seems that it only needs to take how many questions were answered if not all then allow to edit
             $_arr = array();
             foreach ($rowArray as $key => $row) {
                 $comps = $helper->getPersonCompetencies($row['id'], true);
