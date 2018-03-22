@@ -90,16 +90,18 @@
                                 alert('Class Name is required');
                                 $("#classname").focus();
                             }
-                            else if ($("#startdate").val() == ""){
-                                alert ('Please enter a start date');
-                                $("#startdate").focus();
-                            } else if ($("#enddate").val() == ""){
-                                alert ('Please enter an end date');
-                                $("#enddate").focus();
-                            } else if (Date.parse($("#enddate").val()) <= Date.parse($("#startdate").val())){
-                                alert ('<?php //echo t('The end date cannot be before the start date')?>');
-                                $("#enddate").focus();
-                            } else {
+                            //TA:#491
+//                             else if ($("#startdate").val() == ""){
+//                                 alert ('Please enter a start date');
+//                                 $("#startdate").focus();
+//                             } else if ($("#enddate").val() == ""){
+//                                 alert ('Please enter an end date');
+//                                 $("#enddate").focus();
+//                             } else if (Date.parse($("#enddate").val()) <= Date.parse($("#startdate").val())){
+ //                               alert ('<?php //echo t('The end date cannot be before the start date')?>');
+//                                 $("#enddate").focus();
+//                             } 
+                            else {
                                 $( this ).dialog( "close" );
                                 document.getElementById("editclass").submit();
                             }
@@ -347,10 +349,12 @@
                 $this->coursetypes); ?>
             <label for="coursetopic"><?php echo t('Topic');?></label>
             <input type="text" name="coursetopic" id="coursetopic" class="text ui-widget-content ui-corner-all" />
+            <!-- TA:#491 
             <label for="startdate"><?php echo t('Start date');?></label>
             <input type="text" name="startdate" id="startdate" class="calendarbox text ui-widget-content ui-corner-all" />
             <label for="enddate"><?php echo t('End date');?></label>
             <input type="text" name="enddate" id="enddate" class="calendarbox text ui-widget-content ui-corner-all" />
+            -->
             <label for="instructorid"><?php echo t('Instructor');?></label>
 
             <select name="instructorid" id="instructorid" class="text ui-widget-content ui-corner-all">
@@ -392,8 +396,8 @@
 				<tr>
 					<th><?php echo t('Class Name'); ?></th>
 					<th><?php echo t('Instructor'); ?></th>
-					<th><?php echo t('Start date'); ?></th>
-					<th><?php echo t('End date'); ?></th>
+					<!-- TA:#491 <th><?php echo t('Start date'); ?></th>
+					<th><?php echo t('End date'); ?></th>-->
 				</tr>
 			</thead>
 			<tbody>
@@ -413,8 +417,8 @@
 								<td><input type="checkbox" name="class[<?php echo $classes['id']; ?>][id]" id="class[<?php echo $classes['id']; ?>][id]" value="<?php echo $classes['id']; ?>"<?php echo ($found ? " checked" : "") ?>> <?php echo $classes['classname']; ?></td>
 							<?php } ?>
 							<td><?php echo $classes['first_name'] . " " . $classes['last_name']; ?></td>
-							<td><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); } ?></td>
-							<td><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); } ?></td>
+							<!-- TA:#491 <td><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); } ?></td>
+							<td><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); } ?></td>-->
 						</tr>
 						<?php
 					}
@@ -703,8 +707,8 @@
 								<tr>
 									<th><?php echo t('Class Name'); ?></th>
 									<th><?php echo t('Tutor'); ?></th>
-									<th><?php echo t('Start date'); ?></th>
-									<th><?php echo t('End date'); ?></th>
+									<!-- TA:#491 <th><?php echo t('Start date'); ?></th>
+									<th><?php echo t('End date'); ?></th>-->
 								</tr>
 							</thead>
 							<tbody>
@@ -724,8 +728,8 @@
 												echo $classes['classname'];
 											}?></td>
 										<td style="width : 160px;"><?php echo $classes['first_name'] . " " . $classes['last_name'];?></td>
-										<td style="width : 120px;"><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); }?></td>
-										<td style="width : 120px;"><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); }?></td>
+										<!-- TA:#491<td style="width : 120px;"><?php if (strlen($classes['startdate'])) { echo date("m/d/Y", strtotime($classes['startdate'])); }?></td>
+										<td style="width : 120px;"><?php if (strlen($classes['enddate'])) { echo date("m/d/Y", strtotime($classes['enddate'])); }?></td>-->
 									</tr>
 									<?php
 								}

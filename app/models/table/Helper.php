@@ -1115,7 +1115,7 @@ class Helper extends ITechTable
 	    }
 	    
 	    $result = $this->dbfunc()->fetchAll($select);
-	    print $select;
+	   // print $select;
 	    return $result;
 	}
 
