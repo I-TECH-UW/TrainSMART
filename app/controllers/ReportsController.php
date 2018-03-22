@@ -7404,7 +7404,7 @@ join user_to_organizer_access on user_to_organizer_access.training_organizer_opt
 
 		$helper = new Helper();
 		$this->view->assign('mode', 'id');
-		$this->view->assign('institutions', $helper->getInstitutions());
+		$this->view->assign('institutions', $helper->getInstitutions(false));//TA:#460
 		$this->view->assign('cadres', $helper->getCadres());
 		$this->view->assign('institutiontypes', $helper->AdminInstitutionTypes());
 		$this->view->assign('cohorts', $helper->getCohorts());
