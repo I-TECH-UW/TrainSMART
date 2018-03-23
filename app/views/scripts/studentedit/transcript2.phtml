@@ -93,6 +93,35 @@
         ?>
         </tbody>
     </table>
+  
+  <!-- TA:#502 -->  
+    <br><br>
+<table border=1>
+        <thead>
+        <tr>
+            <th><?php echo t('Practicum name'); ?></th>
+            <th><?php echo t('Hours required'); ?></th>
+            <th><?php echo t('Hours completed'); ?></th>
+            <th><?php echo t('Grade'); ?></th>
+            <th><?php echo t('Grade Description'); ?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        foreach ($this->clinical_allocation as $row) {
+            ?>
+            <tr>
+                <td><?php echo $row['practicumname']; ?></td>
+                <td style="width : 80px;"><?php echo $row['hoursrequired']; ?></td>
+                <td style="width : 80px;"><?php echo $row['hourscompleted']; ?></td>
+                <td style="width : 80px;"><?php echo $row['grade']; ?></td>
+                <td style="width : 80px;"><?php echo $row['grade_description']; ?></td>    
+            </tr>
+            <?php
+        }
+        ?>
+        </tbody>
+    </table>
 
     <table>
     <br><br>

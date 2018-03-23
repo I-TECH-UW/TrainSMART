@@ -1118,6 +1118,8 @@ class StudenteditController extends ITechController
 	    $this->view->assign('lookupfunding', $helper->getFunding());
 	    $this->view->assign('studentfunding', $studentedit->getStudentFunding($details['student'][0]['id']));
 	    $this->view->assign('currentclasses', $helper->listcurrentclasses($details['link_cohort'][0]['id_cohort'], $details['student'][0]['id']));
+	    //TA:#502
+	    $this->view->assign('clinical_allocation', $helper->ListCurrentPracticum($details['link_cohort'][0]['id_cohort'], $details['student'][0]['id']));
 	
 	}
 
