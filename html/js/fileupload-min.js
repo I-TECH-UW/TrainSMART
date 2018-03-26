@@ -2,6 +2,7 @@
 
 
 function initUploadButton(){
+	
 	var onUploadButtonClick = function(e){
 
 		uploadForm = YAHOO.util.Dom.get('uploadFileForm');

@@ -465,6 +465,7 @@ class CohortController extends ITechController {
 		$students = $cohortedit->getAllStudentsForTranscript($cohortid);
 		foreach ($students as $row) {
 		    $row['classes'] = $helper->listcurrentclasses($cohortid, $row['sid']);
+		    $row['clinical_allocation'] = $helper->ListCurrentPracticum($cohortid, $row['sid']);//TA:#502
 		    array_push($students_final,$row);
 		}
 		$this->view->assign('students', $students_final);
