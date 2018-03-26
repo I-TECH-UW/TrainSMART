@@ -54,6 +54,43 @@
             setDefaultSitesFields(); //TA:#438
             setActive();//TA:#411
 
+          //TA:#484  benefits
+           	 if($('#benefits').val() == '0.00' || $('#benefits').val() == '0'){
+           		 <?php
+           		 echo "$('#employee_financial_benefits_description_required').hide();";
+           	             foreach ($this->finanBenefDescArray as $item) {
+           	                 echo "$('#employee_financial_benefits_description_option_id_" . $item['id'] . "').prop('disabled', true);";
+           	                 echo "$('#employee_financial_benefits_description_option_id_" . $item['id'] . "').prop('checked', false);";
+           	                 
+           	         }
+           	        ?>
+           	 }
+
+           //TA:#484  non_financial_benefits
+           	 if($('#non_financial_benefits').val() == '0.00' || $('#non_financial_benefits').val() == '0'){
+           		 <?php
+           		 echo "$('#employee_non_financial_benefits_description_required').hide();";
+           	             foreach ($this->nonfinanBenefDescArray as $item) {
+           	                 echo "$('#employee_non_financial_benefits_description_option_id_" . $item['id'] . "').prop('disabled', true);";
+           	                 echo "$('#employee_non_financial_benefits_description_option_id_" . $item['id'] . "').prop('checked', false);";
+           	                 
+           	         }
+           	        ?>
+           	 }
+
+           	 //TA:#484  professional_development
+           	 if($('#professional_development').val() == '0.00' || $('#professional_development').val() == '0'){
+           		 <?php
+           		 echo "$('#employee_professional_development_description_required').hide();";
+           		 foreach ($this->professionalDevelopmentDescArray as $item) {
+           	                 echo "$('#employee_professional_development_description_option_id_" . $item['id'] . "').prop('disabled', true);";
+           	                 echo "$('#employee_professional_development_description_option_id_" . $item['id'] . "').prop('checked', false);";
+           	                 
+           	         }
+           	        ?>
+           	 }
+       	
+
         });
 
         //TA:#411
@@ -105,8 +142,7 @@
 
             //TA:#481
             $('#salary,#benefits,#non_financial_benefits,#professional_development,#stipend').change(function () { /* calc amounts */
-                //$('#annual_cost').calcFieldsMoney('#salary,#benefits,#additional_expenses,#stipend', '#annual_cost');
-            	var total = parseFloat($('#salary').val());
+                var total = parseFloat($('#salary').val());
             	total = total + parseFloat($('#benefits').val());
             	total = total + parseFloat($('#non_financial_benefits').val());
             	total = total + parseFloat($('#professional_development').val());
@@ -115,6 +151,72 @@
                     alert('<?php echo t('Annual Cost'); ?>' + ' - total cannot be greater than 500,000');
                  }
             	 $('#annual_cost').val(total);
+
+            	//TA:#484  benefits
+            	 if($(this).attr('id') == 'benefits'){
+                	 if($(this).val() == '' || $(this).val() == '0.00' || $(this).val() == '0'){
+                		 $(this).val('0.00');
+                		 <?php
+                		 echo "$('#employee_financial_benefits_description_required').hide();";
+                	             foreach ($this->finanBenefDescArray as $item) {
+                	                 echo "$('#employee_financial_benefits_description_option_id_" . $item['id'] . "').prop('disabled', true);";
+                	                 echo "$('#employee_financial_benefits_description_option_id_" . $item['id'] . "').prop('checked', false);";
+                	                 
+                	         }
+                	        ?>
+                	 }else{
+                		 <?php
+                		 echo "$('#employee_financial_benefits_description_required').show();";
+                	             foreach ($this->finanBenefDescArray as $item) {
+                	                 echo "$('#employee_financial_benefits_description_option_id_" . $item['id'] . "').prop('disabled', false);";
+                	         }
+                	        ?>
+                	 }
+            	 }
+
+            	//TA:#484  non-benefits
+            	 if($(this).attr('id') == 'non_financial_benefits'){
+                	 if($(this).val() == '' || $(this).val() == '0.00' || $(this).val() == '0'){
+                		 $(this).val('0.00');
+                		 <?php
+                		 echo "$('#employee_non_financial_benefits_description_required').hide();";
+                		      foreach ($this->nonfinanBenefDescArray as $item) {
+                	                 echo "$('#employee_non_financial_benefits_description_option_id_" . $item['id'] . "').prop('disabled', true);";
+                	                 echo "$('#employee_non_financial_benefits_description_option_id_" . $item['id'] . "').prop('checked', false);";
+                	                 
+                	         }
+                	        ?>
+                	 }else{
+                		 <?php
+                		 echo "$('#employee_non_financial_benefits_description_required').show();";
+                		 foreach ($this->nonfinanBenefDescArray as $item) {
+                	                 echo "$('#employee_non_financial_benefits_description_option_id_" . $item['id'] . "').prop('disabled', false);";
+                	         }
+                	        ?>
+                	 }
+            	 }
+
+            	//TA:#484  professional_development
+            	 if($(this).attr('id') == 'professional_development'){
+                	 if($(this).val() == '' || $(this).val() == '0.00' || $(this).val() == '0'){
+                		 $(this).val('0.00');
+                		 <?php
+                		 echo "$('#employee_professional_development_description_required').hide();";
+                		      foreach ($this->nonfinanBenefDescArray as $item) {
+                	                 echo "$('#employee_professional_development_description_option_id_" . $item['id'] . "').prop('disabled', true);";
+                	                 echo "$('#employee_professional_development_description_option_id_" . $item['id'] . "').prop('checked', false);";
+                	                 
+                	         }
+                	        ?>
+                	 }else{
+                		 <?php
+                		 echo "$('#employee_professional_development_description_required').show();";
+                		 foreach ($this->professionalDevelopmentDescArray as $item) {
+                	                 echo "$('#employee_professional_development_description_option_id_" . $item['id'] . "').prop('disabled', false);";
+                	         }
+                	        ?>
+                	 }
+            	 }
             });
 
             $('#select_employee_transition_option').change(function (e) { /* watch the two transition drop downs */
@@ -440,28 +542,34 @@
             if(!validateTextField(validated, 'benefits', '<?php echo t("Benefits");?>')){
             	validated = false;
             }
-            //TA:#466
-            if(!$(".employee_financial_benefits_description_option_id_class").is(":checked")){
-               displayErrorMessage('employee_financial_benefits_description', '<?php echo t("Financial Benefits Description");?> (required)');
-              	validated = false;
-            }
+            //TA:#466 #484
+            if($("#benefits").val() > 0){
+            	if(!$(".employee_financial_benefits_description_option_id_class").is(":checked")){
+               		displayErrorMessage('employee_financial_benefits_description', '<?php echo t("Financial Benefits Description");?> (required)');
+              		validated = false;
+            	}
+        	}
             //TA:#466
             if(!validateTextField(validated, 'non_financial_benefits', '<?php echo t("Non-financial Benefits");?>')){
             	validated = false;
             }
-            //TA:#467
-            if(!$(".employee_non_financial_benefits_description_option_id_class").is(":checked")){
+          //TA:#466 #484
+            if($("#non_financial_benefits").val() > 0){
+            	if(!$(".employee_non_financial_benefits_description_option_id_class").is(":checked")){
                displayErrorMessage('employee_non_financial_benefits_description', '<?php echo t("Non-financial Benefits Description");?> (required)');
               	validated = false;
+            	}
             }
             //TA:#469
             if(!validateTextField(validated, 'professional_development', '<?php echo t("Professional Development");?>')){
             	validated = false;
             }
-            //TA:#474
+            //TA:#466 #484
+            if($("#professional_development").val() > 0){
             if(!$(".employee_professional_development_description_option_id_class").is(":checked")){
                displayErrorMessage('employee_professional_development_description', '<?php echo t("Professional Development Description");?> (required)');
               	validated = false;
+            }
             }
             
             if(!validateTextField(validated, 'stipend', '<?php echo t("Stipend");?>')){
@@ -1252,9 +1360,10 @@
                             echo labelAndField($this, t('Benefits'), 'currency', 'benefits', $this->employee['benefits']);
                         }
                         
-                        //TA:#466 START
+                        //TA:#466 #484 START
                         ?>
-                        <div class="fieldLabel" id="employee_financial_benefits_description_lbl"><span class="required">*</span><?php tp('Financial Benefits Description'); ?></div>
+                        <div class="fieldLabel" id="employee_financial_benefits_description_lbl">
+                        <span id="employee_financial_benefits_description_required" class="required">*</span><?php tp('Financial Benefits Description'); ?></div>
                         <div class="fieldInput" id="finbendescContainer">
         <div style="line-height:1.5em;margin-bottom:0.5em;"><?php tp('Check all that apply below'); ?>    </div>
         <?php
@@ -1276,9 +1385,10 @@
                         //TA:#467
                             echo labelAndField($this, t('Non-financial Benefits (R)'), 'currency', 'non_financial_benefits', $this->employee['non_financial_benefits']);
                         
-                        //TA:#468 START
+                        //TA:#468  #484 START
                         ?>
-                                                <div class="fieldLabel" id="employee_non_financial_benefits_description_lbl"><span class="required">*</span><?php tp('Non-financial Benefits Description'); ?></div>
+                                                <div class="fieldLabel" id="employee_non_financial_benefits_description_lbl">
+                                                <span id="employee_non_financial_benefits_description_required" class="required">*</span><?php tp('Non-financial Benefits Description'); ?></div>
                                                 <div class="fieldInput" id="finbendescContainer">
                                 <div style="line-height:1.5em;margin-bottom:0.5em;"><?php tp('Check all that apply below'); ?>    </div>
                                 <?php
@@ -1304,7 +1414,8 @@
                                                 
                              //TA:#474 START
                              ?>
-                             <div class="fieldLabel" id="employee_professional_development_description_lbl"><span class="required">*</span><?php tp('Professional Development Description'); ?></div>
+                             <div class="fieldLabel" id="employee_professional_development_description_lbl">
+                             <span id="employee_professional_development_description_required" class="required">*</span><?php tp('Professional Development Description'); ?></div>
                              <div class="fieldInput" id="finbendescContainer">
                              <div style="line-height:1.5em;margin-bottom:0.5em;"><?php tp('Check all that apply below'); ?>    </div>
                              <?php
