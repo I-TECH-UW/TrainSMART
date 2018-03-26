@@ -424,11 +424,17 @@ class UserController extends ReportFilterHelpers {
 		$db = $this->dbfunc();
 		$select = $db->select()
 		->from('mechanism_option', array())
+		//TA:#511
+		->joinLeft('partner', 'partner.id=mechanism_option.owner_id', array())
+		->joinLeft('training_organizer_option', 'training_organizer_option.id=partner.organizer_option_id', array())
+		//
 		->joinLeft('user_to_mechanism_access', 'user_to_mechanism_access.mechanism_option_id = mechanism_option.id and  user_to_mechanism_access.user_id=' . $user_id, array())
-		->joinLeft('user_to_organizer_access', 'user_to_organizer_access.training_organizer_option_id=mechanism_option.owner_id', array())
+		//->joinLeft('user_to_organizer_access', 'user_to_organizer_access.training_organizer_option_id=mechanism_option.owner_id', array())
+		->joinLeft('user_to_organizer_access', 'user_to_organizer_access.training_organizer_option_id=partner.organizer_option_id', array())	
 		->group('mechanism_option.id')
 		->order('mechanism_phrase')
-		->columns(array('mechanism_option.id', 'mechanism_option.owner_id' ,'mechanism_option.mechanism_phrase', 'user_to_mechanism_access.user_id'
+		//TA:#511
+		->columns(array('mechanism_option.id', 'mechanism_option.owner_id' ,'mechanism_option.mechanism_phrase', 'user_to_mechanism_access.user_id', 'partner.organizer_option_id'
 		));
         $mechanism_array = $this->dbfunc()->fetchAll($select);
 		$this->viewAssignEscaped ( 'mechanism', $mechanism_array );

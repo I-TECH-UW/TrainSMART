@@ -395,7 +395,7 @@
 							//print_r($this->mechanism);
 							foreach( $this->mechanism as $mech ) {
 							    $display = 'style="display:none;"';
-								echo '<div id="' . $mech['owner_id'] . '" ' . $display . '><div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50">
+								echo '<div id="' . $mech['organizer_option_id'] . '" ' . $display . '><div class="fieldLabelThin"></div><div class="fieldInput"><div class="float50">
     <input type="checkbox" name="mechanism_option_id[]" id="mechanism_option_'.$mech['id'].'" value="'.$mech['id'].'" '.(@$mech['user_id']? 'CHECKED':'').' />
 			    <label for="mechanism_option_'.$mech['id'].'">'.$mech['mechanism_phrase'].'</label></div></div></div>';
 							}
