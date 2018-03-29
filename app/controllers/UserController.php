@@ -430,7 +430,7 @@ class UserController extends ReportFilterHelpers {
 		//
 		->joinLeft('user_to_mechanism_access', 'user_to_mechanism_access.mechanism_option_id = mechanism_option.id and  user_to_mechanism_access.user_id=' . $user_id, array())
 		//->joinLeft('user_to_organizer_access', 'user_to_organizer_access.training_organizer_option_id=mechanism_option.owner_id', array())
-		->joinLeft('user_to_organizer_access', 'user_to_organizer_access.training_organizer_option_id=partner.organizer_option_id', array())	
+		->joinLeft('user_to_organizer_access', 'user_to_organizer_access.training_organizer_option_id=partner.organizer_option_id', array())//TA:#511	
 		->group('mechanism_option.id')
 		->order('mechanism_phrase')
 		//TA:#511

@@ -572,6 +572,7 @@ class StudenteditController extends ITechController
 
 			ValidationContainer::instance()->setStatusMessage(t('The person was saved.'));
 			$_SESSION['status'] = t('The person was saved');
+			$this->_redirect(Settings::$COUNTRY_BASE_URL . '/studentedit/personedit/id/' . $request->getparam('id'));//TA:#508
 		}
 
 //TA:51 10/05/2015
@@ -844,6 +845,12 @@ class StudenteditController extends ITechController
         if ($this->setting('display_student_prior_transcript')) {
             $this->view->assign('prior_education', $studentedit->getStudentPriorEducation($details['student'][0]['id']));
             $this->view->assign('prior_education_courses', array("0" => '--' . t("choose") . '--') + $helper->getPriorEducationCourses());
+            //TA:#508
+            require_once 'views/helpers/FileUpload.php';
+            FileUpload::displayFiles ( $this, 'student', $details['student'][0]['id'], true );
+            $this->view->assign ( 'studentid',$details['student'][0]['id']);
+            $this->view->assign ( 'filesForm', FileUpload::displayUploadForm ( 'student', $details['student'][0]['id'], array('doc', 'docx', 'pdf') ) );
+            ////
         }
 
 

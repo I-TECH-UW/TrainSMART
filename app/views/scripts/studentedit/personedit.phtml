@@ -21,6 +21,8 @@
 	    
 			$(document).ready(function() {
 
+				YAHOO.util.Event.on(window, 'load', initUploadButton);//TA:#508
+
 			    $('#prior_courses_to_delete').data('assoc_ids', []);
 			    $('#funding_to_delete').data('assoc_ids_funding', []);//TA:#388
 
@@ -126,6 +128,20 @@
                     $(event.target.parentNode).addClass('row_selected');
                 });
                 //////
+                
+                //TA:#508
+               $( "#prior-education-docs" ).dialog({
+					autoOpen: false,
+					height: 200,
+					width: 600,
+					modal: true,
+					buttons: {
+						<?php echo t('Close')?>: function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				});
+				////
 
 				$( "#dialog-form-license" ).dialog({
 					autoOpen: false,
@@ -193,6 +209,11 @@
                 $('#prior_courses_to_add').data('new_courses', {});
                 $('#funding_to_add').data('new_funding', {});//TA:#388
 			});
+
+			//#508
+			function upload_file(){
+					$( "#prior-education-docs" ).dialog( "open" );
+				}
 
 			//TA:#407.2
 			function downloadPriorCourse() {
@@ -323,7 +344,13 @@
 			}
 		</script>
 	</head>
-	<body>
+	<body class="yui-skin-sam">
+	
+	<!-- TA:#508 START -->
+	<div id="prior-education-docs" title="<?php echo t("Upload prior education files")?>">
+         <?php echo $this->filesForm; ?>		   
+	</div>
+	<!-- TA:#508 END -->
 
 <!--
 ######################################
@@ -993,6 +1020,13 @@
                                 //TA:#407.2
                                 echo " " . $this->formButton('download_prior_course', 'Download', array('class' => 'tsbutton green large', 'style' => 'margin-bottom: 2em;',
                                     'onclick' => 'downloadPriorCourse();'));
+                                
+                                //TA:#508
+                                echo $this->formLabel('prior_education_docs_l', t('Prior Education Files:'), array());
+                                echo $this->editTableFiles . "<br/>";
+                                echo '<input type="button"  value="Upload File" class="tsbutton green large" onclick="upload_file();"/>';
+                                echo "<br/></br/>";
+                                ///
                             }
                                 if($this->escape($this->label_equivalence)){
 									echo "<label>" . t($this->escape($this->label_equivalence)) . "</label>";
