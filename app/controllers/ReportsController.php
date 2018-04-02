@@ -10722,6 +10722,21 @@ die (__LINE__ . " - " . $sql);
         $this->view->assign('criteria', $criteria);
     }
     
+    //TA:#513
+    public function getCurrentQuarter() {
+        $n = date('n');
+        if($n < 4){
+            return "1";
+        } elseif($n > 3 && $n <7){
+            return "2";
+        } elseif($n >6 && $n < 10){
+            return "3";
+        } elseif($n >9){
+            return "4";
+        }
+        return "";
+    }
+    
     //TA:#499
     public function employees2Action(){
         $locations = Location::getAll();
@@ -11651,6 +11666,9 @@ if($order !== ""){
         //TA:#293.1
         //         $helper = new Helper();
         //         $this->viewAssignEscaped('sites', $helper->getFacilities());
+        
+      
+        $this->view->assign('quarter', $this->getCurrentQuarter());//TA:#513
         
         $this->view->assign('criteria', $criteria);
     }
