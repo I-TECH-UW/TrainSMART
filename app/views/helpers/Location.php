@@ -173,7 +173,7 @@ function renderFilter(&$locations, $tier, $widget_id, $default_val_id = false, $
     ?>
     <select id="<?php echo $widget_id;?>" name="<?php echo $widget_id;?><?php if ($is_multiple) echo '[]';?>" <?php if ($readonly) echo 'disabled="disabled"'?> <?php if ( $is_multiple) echo 'multiple="multiple" size="10"';?>
             <?php if ($child_widget_id ) { ?>onchange="setChildStatus_<?php echo str_replace('-', '_', $widget_id);?>();" <?php }?>>
-        <option value="">--<?php tp('choose');?>--</option>
+        <option value="">--<?php tp('All');?>--</option>
         <?php
         foreach ($locations as $val) {
             if ($val['tier'] == $tier) {

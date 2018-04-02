@@ -122,7 +122,7 @@
                         echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
                         
                         echo labelAndField($this, t('Active') . ' HRH',
-                            $this->formSelect('is_active', isset($this->criteria['is_active']) ? $this->criteria['is_active'] : null, array(), array(""=>"-- choose --", "1"=>"Active", "0"=>"Inactive")), 'is_active');
+                            $this->formSelect('is_active', isset($this->criteria['is_active']) ? $this->criteria['is_active'] : null, array(), array(""=>"--All--", "1"=>"Active", "0"=>"Inactive")), 'is_active');
                         
                         //NEW ?>
                        <div class="fieldLabel positionid" id="positionid_lbl"><?php echo t('Position ID');?></div>
@@ -174,7 +174,7 @@
 //                         echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
 
                         echo labelTwoFields($this, t('Hours Worked per Week (per Site)'), t('to'), 'fte_min', 'fte_max',
-                            isset($this->criteria['fte_min']) ? $this->criteria['fte_min'] : '0',
+                            isset($this->criteria['fte_min']) ? $this->criteria['fte_min'] : '',
                             isset($this->criteria['fte_max']) ? $this->criteria['fte_max'] : '');
                         
                         echo labelAndField($this, t('Implementing Mechanism Name'),
@@ -222,7 +222,7 @@
                         
                         echo labelAndField($this, t('Salaried or Stipend'),
                             $this->formSelect('salary_or_stipend', isset($this->criteria['salary_or_stipend']) ? $this->criteria['salary_or_stipend'] : null, array(), 
-                                array(""=>"-- choose --", "salaried"=>"Salaried", "stipend"=>"Stipend")), 'salary_or_stipend');
+                                array(""=>"--All--", "salaried"=>"Salaried", "stipend"=>"Stipend")), 'salary_or_stipend');
                           
                         echo labelTwoFields($this, t('Hours Worked per Week (FTE)'), t('to'), 'hours_min', 'hours_max',
                             isset($this->criteria['hours_min']) ? $this->criteria['hours_min'] : '',
