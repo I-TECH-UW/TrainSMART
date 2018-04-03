@@ -99,6 +99,10 @@ class PartnerController extends ReportFilterHelpers
 
     public function addAction()
     {
+        //TA:#516
+        if (!$this->hasACL('acl_add_partner')) {
+            $this->doNoAccessError();
+        }
         $this->view->assign('mode', 'add');
         return $this->editAction();
     }

@@ -824,6 +824,21 @@
 									value="view_studenttutorinst" 
 									<?php if ( array_search('view_studenttutorinst',$this->user['acls']) !== false ) echo 'CHECKED'; ?>> <?php tp('View only');?></label>
 							</div>
+							
+							<!-- TA:#516 START -->
+							<br/>
+							<div class="fieldLabelThin"> <?php tp('Employee');?></div>
+							<div class="fieldInput">
+						<div class="float50">
+							<label for="acl_add_partner"><input type="checkbox"
+								id="acl_add_partner" name="acl_add_partner"
+								<?php if ( array_search('acl_add_partner',$this->user['acls']) !== false ) echo 'CHECKED'; ?>><label
+									for="acl_add_partner"> <?php echo t('Add Partner');?></label>
+						
+						</div>
+					</div>
+							<!-- TA:#516 END -->
+							
 				</fieldset>
 					<?php if ( !$this->user['is_blocked'] ) { ?>
 					<div style="margin-left: 2em;">

@@ -139,7 +139,10 @@ if($_SERVER ['SERVER_NAME'] !== 'phc.trainingdata.org'){ //TA:UK:1712:4 do not s
     'index' => t('Home'), // file => label (use "index" for root)
     ));
     $navMain['partner'] = array( 'index' => t('Partners') );
-    $navMain['partner']['add']     = t('Add Partner');
+    //TA:#516
+    if ( $this->hasACL('acl_add_partner')) {
+        $navMain['partner']['add']     = t('Add Partner');
+    }
     $navMain['partner']['search']  = t('View/Edit Partner');
     if($this->hasACL('position_access')){//TA:#421
         $navMain['employee'] = array( 'index' => t('Employees') );// BS:1:10/06/2014 translate employee/employees
