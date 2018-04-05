@@ -10662,15 +10662,20 @@ die (__LINE__ . " - " . $sql);
         $agencies = $choose + $db->fetchPairs($db->select()
             ->from('partner_funder_option', array('id', 'funder_phrase'))
             ->order('funder_phrase ASC'));
-        $mechanism_ids = $choose + $db->fetchPairs($db->select()
-            ->from('mechanism_option', array('external_id', 'external_id'))
-            ->group('external_id')
-            ->where('external_id is not null')
-            ->order('external_id ASC')
-        );
-        $mechanism_names = $choose + $db->fetchPairs($db->select()
-            ->from('mechanism_option', array('id', 'mechanism_phrase'))
-            ->order('mechanism_phrase ASC'));
+        //TA:#510
+//         $mechanism_ids = $db->fetchAll($db->select()
+//             ->from('mechanism_option', array('external_id','GROUP_CONCAT(owner_id) as owner_id'))
+//             ->group('external_id')
+//             ->where('external_id is not null')
+//             ->order('external_id ASC')
+//             );
+// //         print_r($mechanism_ids);
+//         //
+//         //TA:#510
+//         $mechanism_names = $db->fetchAll($db->select()
+//             ->from('mechanism_option', array('id', 'mechanism_phrase', 'owner_id'))
+//             ->order('mechanism_phrase ASC'));
+       // print_r($mechanism_names);
         //
 
         $bases = $choose + $db->fetchPairs($db->select()
