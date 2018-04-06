@@ -77,13 +77,10 @@
          mechNameData_lenght = <?php echo count($this->mechanism_names); ?>;
          window.ITECH.mechIdsData = <?php echo json_encode($this->mechanism_ids, JSON_HEX_APOS); ?>;
          mechIdsData_lenght = <?php echo count($this->mechanism_ids); ?>;
+         window.ITECH.mechPartnerData = <?php echo json_encode($this->mech_partners, JSON_HEX_APOS); ?>;
+         mechPartnerData_lenght = <?php echo count($this->mech_partners); ?>;   
           $( "#partner" ).change(function() {
          	 var selectedValues = $(this).val();
-         	 alert(selectedValues);
-         	 if(selectedValues == null || selectedValues.length == 0){
-             	 return;
-         	 }
-         	 alert("ADD");
          	 
          	 //change mechanism names list
          	 $('#mechanism_names').empty();
@@ -95,12 +92,12 @@
              	 if(criteria_mech_names != null && criteria_mech_names.includes(mechNameData[i]['id'])){
              		 selected = " selected='selected' ";
              	 }
-//              	 if(selectedValues.includes("0")){// 'All' selected, then add all items
-//              		 optList += '<option value="' + mechNameData[i]['id'] + '" ' + selected + '>' + mechNameData[i]['mechanism_phrase'] + '</option>';
-//                   }else if(selectedValues.includes(mechNameData[i]['owner_id'])){
-//                        	  optList += '<option value="' + mechNameData[i]['id'] + '" ' + selected + '>' + mechNameData[i]['mechanism_phrase'] + '</option>';
-//                       }
-//                   }
+             	 if(selectedValues == null || selectedValues.includes("0")){// 'All' or nothing selected, then add all items
+             		 optList += '<option value="' + mechNameData[i]['id'] + '" ' + selected + '>' + mechNameData[i]['mechanism_phrase'] + '</option>';
+                  }else if(selectedValues.includes(mechNameData[i]['owner_id'])){
+                       	  optList += '<option value="' + mechNameData[i]['id'] + '" ' + selected + '>' + mechNameData[i]['mechanism_phrase'] + '</option>';
+                      }
+                  }
               $('#mechanism_names').html(optList);
 
             //change mechanism ids list
@@ -113,13 +110,41 @@
              	 if(criteria_mech_ids != null && criteria_mech_ids.includes(mechIdsData[i]['id'])){
              		 selected = " selected='selected' ";
              	 }
-             	 if(selectedValues.length == 0){
+             	if(selectedValues == null || selectedValues.includes("0")){// 'All' or nothing selected, then add all items
              		 optListIds += '<option value="' + mechIdsData[i]['external_id'] + '" ' + selected + '>' + mechIdsData[i]['external_id'] + '</option>';
-                  }else if(selectedValues.includes(mechIdsData[i]['owner_id'])){
-                 	 optListIds += '<option value="' + mechIdsData[i]['external_id'] + '" ' + selected + '>' + mechIdsData[i]['external_id'] + '</option>';
+                  }else{
+                	  var owner_ids = mechIdsData[i]['owner_id'].split(',');
+                	  for(j=0;j<owner_ids.length; j++){
+                    	  if(selectedValues.includes(owner_ids[j])){
+                    		  optListIds += '<option value="' + mechIdsData[i]['external_id'] + '" ' + selected + '>' + mechIdsData[i]['external_id'] + '</option>'; 
+                    	  }
+                	  }
                       }
                   }
               $('#mechanism_ids').html(optListIds);	 
+
+            //change mech_partners list
+          	 $('#mech_partners').empty();
+          	 var mechPartnerData = window.ITECH.mechPartnerData;
+          	 var optListPartner = '<option value="">--All--</option>'; 
+          	 var criteria_mech_partners = <?php echo json_encode($this->criteria['mech_partners']); ?>;
+               for (var i = 0; i <mechPartnerData_lenght; i++) {
+              	 var selected = "";
+              	 if(criteria_mech_partners != null && criteria_mech_partners.includes(mechPartnerData[i]['id'])){
+              		 selected = " selected='selected' ";
+              	 }
+              	if(selectedValues == null || selectedValues.includes("0")){// 'All' or nothing selected, then add all items
+              		optListPartner += '<option value="' + mechPartnerData[i]['id'] + '" ' + selected + '>' + mechPartnerData[i]['partner'] + '</option>';
+                   }else{
+                 	  var owner_ids_partner = mechPartnerData[i]['owner_id'].split(',');
+                 	  for(j=0;j<owner_ids_partner.length; j++){
+                     	  if(selectedValues.includes(owner_ids_partner[j])){
+                     		 optListPartner += '<option value="' + mechPartnerData[i]['id'] + '" ' + selected + '>' + mechPartnerData[i]['partner'] + '</option>'; 
+                     	  }
+                 	  }
+                       }
+                   }
+               $('#mech_partners').html(optListPartner);
           });
           
           $( "#partner" ).change();
@@ -236,23 +261,14 @@
                         $selected = (isset($this->criteria['show_mechanism_names']) && $this->criteria['show_mechanism_names'])? ' CHECKED ' : '';
                         echo "<div class='fieldInput'><div class='leftBorderPad'><input type='checkbox' name='show_mechanism_names' " . $selected . "/></div></div>";
                         echo "<div class='leftBorder'><select name='mechanism_names[]' id='mechanism_names' multiple='multiple'>";
-                        echo '<option value="">--All--</option>';
-                        foreach ($this->mechanism_names as $mechanismID => $mechData) {
-                            echo "<option value='" . $mechData['id'] . "'>" . $mechData['mechanism_phrase'] . "</option>";
-                        }
-                        echo "</select></div><div class='clear pad20'>&nbsp;</div><div class='clear pad20'>&nbsp;</div><div class='clear pad20'>&nbsp;</div>";
-                        //     
+                        echo "</select></div><div class='clear pad20'>&nbsp;</div><div class='clear pad20'>&nbsp;</div><div class='clear pad20'>&nbsp;</div>";    
                         //TA:#510
                         echo "<div class='fieldLabel mechanism_ids' id='mechanism_ids_lbl'>" . t('Implementing Mechanism Identifier') . "</div>";
                         $selected = (isset($this->criteria['show_mechanism_ids']) && $this->criteria['show_mechanism_ids'])? ' CHECKED ' : '';
                         echo "<div class='fieldInput'><div class='leftBorderPad'><input type='checkbox' name='show_mechanism_ids' " . $selected . "/></div></div>";
                         echo "<div class='leftBorder'><select name='mechanism_ids[]' id='mechanism_ids' multiple='multiple'>";
-                        echo '<option value="">--All--</option>';
-                        foreach ($this->mechanism_ids as $mechanismID => $mechData) {
-                            echo "<option value='" . $mechData['external_id'] . "'>" . $mechData['external_id'] . "</option>";
-                        }
                         echo "</select></div><div class='clear pad20'>&nbsp;</div><div class='clear pad20'>&nbsp;</div><div class='clear pad20'>&nbsp;</div>";
-                        //
+                        
                         echo labelTwoFields($this, t('Implementing Mechanism Funding End Date'), t('to'), 'mech_fund_date_start', 'mech_fund_date_end',
                             isset($this->criteria['mech_fund_date_start']) ? $this->criteria['mech_fund_date_start'] : '',
                             isset($this->criteria['mech_fund_date_end']) ? $this->criteria['mech_fund_date_end'] : '');
@@ -343,9 +359,15 @@
                             $this->formSelect('agencies', isset($this->criteria['agencies']) ? $this->criteria['agencies'] : null, array('multiple' => true), $this->agencies), 'agencies');
                         echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
                        
-                        echo labelAndField($this, t('Implementing Mechanism Prime Partner Name'), 
-                           $this->formSelect('mech_partners', isset($this->criteria['mech_partners']) ? $this->criteria['mech_partners'] : null, array('multiple' => true), $this->mech_partners), 'mech_partners');
-                       echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        //TA:#510
+//                         echo labelAndField($this, t('Implementing Mechanism Prime Partner Name'), 
+//                            $this->formSelect('mech_partners', isset($this->criteria['mech_partners']) ? $this->criteria['mech_partners'] : null, array('multiple' => true), $this->mech_partners), 'mech_partners');
+//                        echo '<div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div><div class="clear pad20">&nbsp;</div>';
+                        echo "<div class='fieldLabel mech_partners' id='mech_partners_lbl'>" . t('Implementing Mechanism Prime Partner Name') . "</div>";
+                        $selected = (isset($this->criteria['show_mech_partners']) && $this->criteria['show_mech_partners'])? ' CHECKED ' : '';
+                        echo "<div class='fieldInput'><div class='leftBorderPad'><input type='checkbox' name='show_mech_partners' " . $selected . "/></div></div>";
+                        echo "<div class='leftBorder'><select name='mech_partners[]' id='mech_partners' multiple='multiple'>";
+                        echo "</select></div><div class='clear pad20'>&nbsp;</div><div class='clear pad20'>&nbsp;</div><div class='clear pad20'>&nbsp;</div>";
 
                        //NEW
                        echo labelTwoFields($this, t('Timestamp Created'), t('to'), 'timestamp_created_start_date', 'timestamp_created_end_date',
