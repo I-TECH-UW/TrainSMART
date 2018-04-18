@@ -436,6 +436,7 @@ class PartnerController extends ReportFilterHelpers
                 $headers = array(t('ID'), t('Partner') . ' ' . t('Name'), t('Region A (Province)'),
                     t('Region B (Health District)'), t('Region C (Local Region)'), t('Sub Partner'),
                     t('Funder'), t('Mechanism'), t('Funder End Date'));
+                //print $select;//TA:1000
                 $output = $db->fetchAll($select);
 
                 // post-process the mechanism_info column into 3 columns

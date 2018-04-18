@@ -11498,18 +11498,25 @@ FROM
 	)
 LEFT JOIN partner_funder_option ON mechanism_option.funder_id = partner_funder_option.id ";
 
-                
+//TA:#511 new version display prime partners and subpartners 
 if (!$this->hasACL('mechanism_option_all')) {
-    if($where !== ""){ $where .= " AND "; }
-  $where .= " partner.id in (select id from partner where id in (select owner_id from mechanism_option where id in (select mechanism_option_id from user_to_mechanism_access where user_id=" . $this->isLoggedIn() . ")))        ";  
+       if($where !== ""){ $where .= " AND "; }
+       //   old version display only prime partners, no subpartners 
+       //$where .= " partner.id in (select id from partner where id in (select owner_id from mechanism_option where id in (select mechanism_option_id from user_to_mechanism_access where user_id=" . $this->isLoggedIn() . ")))        ";
+       $where .= " ( partner.id in (select id from partner where id in (select owner_id from mechanism_option where id in (select mechanism_option_id from user_to_mechanism_access where user_id=" . $this->isLoggedIn() . "))) ";
+       $where .= " OR partner.id IN (select subpartner.id FROM partner
+           LEFT JOIN mechanism_option ON partner.id = mechanism_option.owner_id 
+           LEFT JOIN link_mechanism_partner ON link_mechanism_partner.mechanism_option_id = mechanism_option.id 
+           LEFT JOIN partner AS subpartner ON link_mechanism_partner.partner_id = subpartner.id AND link_mechanism_partner.partner_id <> mechanism_option.owner_id
+           WHERE mechanism_option.id IN (SELECT mechanism_option_id FROM user_to_mechanism_access WHERE user_id = " . $this->isLoggedIn() . ") AND subpartner.id IS NOT NULL )) ";
 }else{
-                    if (!$this->hasACL('training_organizer_option_all')) {
-                        if($where !== ""){ $where .= " AND "; }
-                        $where .= "
-partner.id  in (
-select id from partner where partner.organizer_option_id in
-(select training_organizer_option_id from user_to_organizer_access where user_to_organizer_access.user_id=" . $this->isLoggedIn() . ")) ";
-                    }
+      if (!$this->hasACL('training_organizer_option_all')) {
+                            if($where !== ""){ $where .= " AND "; }
+                            $where .= "
+    partner.id  in (
+    select id from partner where partner.organizer_option_id in
+    (select training_organizer_option_id from user_to_organizer_access where user_to_organizer_access.user_id=" . $this->isLoggedIn() . ")) ";
+                        }
 }
                 
 if($more_join !== ""){
@@ -11528,7 +11535,7 @@ if($order !== ""){
     $select = $select . " ORDER BY " . $order ;
 }
 
-//print $select;
+print $select;//TA:1000
                 $this->view->assign('output',$db->fetchAll($select));
             }
         }
