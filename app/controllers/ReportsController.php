@@ -11535,7 +11535,7 @@ if($order !== ""){
     $select = $select . " ORDER BY " . $order ;
 }
 
-print $select;//TA:1000
+//print $select;//TA:1000
                 $this->view->assign('output',$db->fetchAll($select));
             }
         }
