@@ -54,6 +54,10 @@
             setDefaultSitesFields(); //TA:#438
             setActive();//TA:#411
 
+          //TA:#518
+           	elQualification = YAHOO.util.Dom.get("employee_qualification_option_id");
+            elQualification.onchange();
+
           //TA:#484  benefits
            	 if($('#benefits').val() == '0.00' || $('#benefits').val() == '0'){
            		 <?php
@@ -89,7 +93,6 @@
            	         }
            	        ?>
            	 }
-       	
 
         });
 
@@ -855,7 +858,25 @@
                                 elTitle.options[i].selected = true;
                             }
                         }
+                    } 
+                    
+
+                    //TA:#518
+                    elQualification = YAHOO.util.Dom.get("employee_qualification_option_id");
+                    elQualification.onchange = function () {
+                    	var selected = $(this).find('option:selected').text().startsWith("**");
+                    	document.getElementById("funded_hours_per_week").disabled = !selected;
+                		document.getElementById("salary_or_stipend").disabled = !selected;
+                		document.getElementById("salary").disabled = !selected;
+                		document.getElementById("benefits").disabled = !selected;
+                		if(!selected){
+                        	document.getElementById("funded_hours_per_week").value = "0";
+                        	document.getElementById("salary_or_stipend").value = "na";
+                        	document.getElementById("salary").value = "0.00";
+                        	document.getElementById("benefits").value = "0.00";
+                		}	
                     }
+                    
                 </script>
                         <?php
                          
