@@ -160,15 +160,7 @@
 
             //TA:#481
             $('#salary,#benefits,#non_financial_benefits,#professional_development,#stipend').change(function () { /* calc amounts */
-                var total = parseFloat($('#salary').val());
-            	total = total + parseFloat($('#benefits').val());
-            	total = total + parseFloat($('#non_financial_benefits').val());
-            	total = total + parseFloat($('#professional_development').val());
-            	total = total + parseFloat($('#stipend').val())
-                if (total > 500000) {
-                    alert('<?php echo t('Annual Cost'); ?>' + ' - total cannot be greater than 500,000');
-                 }
-            	 $('#annual_cost').val(total);
+                calculate_annual_cost();//TA:#518
 
             	//TA:#484  benefits
             	 if($(this).attr('id') == 'benefits'){
@@ -258,36 +250,18 @@
             }).change(); // fire once
         });
 
-//         (function ($) {
-
-//             $.fn.calcFieldsMoney = function (selector, errField) {
-//                 var flds = $(selector);
-//                 if (!flds.length)
-//                     return;
-
-//                 var total = 0;
-//                 $('.dec_warning').remove();
-//                 flds.each(function (i, val) {
-//                     //TA:#282 accept decimal values
-//                     var new_val = ($(this).val()) ? parseFloat($(this).val()) : 0;
-//                     total += new_val;
-//                 });
-
-//                 if (isNaN(total))
-//                     total = '?';
-
-//                 //TA:#477
-//                 if (total > 500000) {
-//                    alert('<?php //echo t('Annual Cost'); ?>' + ' - total cannot be greater than 500,000');
-//                     $(this).val(null);
-//                 }
-//                 else {
-//                     $(this).val(total);
-//                 }
-//                 return this;
-
-//             };
-//         })(jQuery);
+        //TA:#518
+        function calculate_annual_cost(){
+        	var total = parseFloat($('#salary').val());
+    		total = total + parseFloat($('#benefits').val());
+    		total = total + parseFloat($('#non_financial_benefits').val());
+    		total = total + parseFloat($('#professional_development').val());
+    		total = total + parseFloat($('#stipend').val())
+        	if (total > 500000) {
+            	alert('<?php echo t('Annual Cost'); ?>' + ' - total cannot be greater than 500,000');
+         	}
+    	 	$('#annual_cost').val(total);
+        }
 
         //TA:#224   TA:#416
         function addSite() {    
@@ -535,16 +509,7 @@
             if(!validateTextField(validated, 'transition_date', '<?php echo t("Intended Transition Date");?>')){
             	validated = false;
             }
-            //TA:#465
-            if($("#salary_or_stipend").val() == ''){
-            	displayErrorMessage('', '<?php echo t('Salaried or Stipend');?> (required)');
-            	validated = false;
-            }
-            ///
-            if($("#funded_hours_per_week").val() == 0 || $("#funded_hours_per_week").val() == ''){
-            	displayErrorMessage('', '<?php echo t("Funded hours per week");?> (required)');
-            	validated = false;
-            }
+            
             //TA:#411 Date of intended transition should be after the current date
             if($("#is_active").is(":checked")){
                 //new Date() generates month starts with 0
@@ -554,45 +519,69 @@
                	   validated = false;
             	}
             }
-            if(!validateTextField(validated, 'salary', '<?php echo t("Salary");?>')){
-            	validated = false;
+
+            validated = getSiteTableData(validated);
+
+          //TA#518 if CTC required
+            if($('#employee_qualification_option_id option:selected').val().startsWith("**")){
+            	 if($("#salary_or_stipend").val() == ''){
+                 	displayErrorMessage('', '<?php echo t('Salaried or Stipend');?> (required)');
+                 	validated = false;
+                 }
+            	if($("#funded_hours_per_week").val() == 0 || $("#funded_hours_per_week").val() == ''){
+                	displayErrorMessage('', '<?php echo t("Funded hours per week");?> (required)');
+                	validated = false;
+                }
+            	 if(!validateTextField(validated, 'salary', '<?php echo t("Salary");?>')){
+                 	validated = false;
+                 }
+                 if(!validateTextField(validated, 'benefits', '<?php echo t("Benefits");?>')){
+                 	validated = false;
+                 }
+                 if($("#benefits").val() > 0){
+                 	if(!$(".employee_financial_benefits_description_option_id_class").is(":checked")){
+                    		displayErrorMessage('employee_financial_benefits_description', '<?php echo t("Financial Benefits Description");?> (required)');
+                   		validated = false;
+                 	}
+             	}
+                 if(!validateTextField(validated, 'non_financial_benefits', '<?php echo t("Non-financial Benefits");?>')){
+                 	validated = false;
+                 }
+                 if($("#non_financial_benefits").val() > 0){
+                 	if(!$(".employee_non_financial_benefits_description_option_id_class").is(":checked")){
+                    displayErrorMessage('employee_non_financial_benefits_description', '<?php echo t("Non-financial Benefits Description");?> (required)');
+                   	validated = false;
+                 	}
+                 }
+                 if(!validateTextField(validated, 'professional_development', '<?php echo t("Professional Development");?>')){
+                 	validated = false;
+                 }
+                 //TA:#466 #484
+                 if($("#professional_development").val() > 0){
+                 if(!$(".employee_professional_development_description_option_id_class").is(":checked")){
+                    displayErrorMessage('employee_professional_development_description', '<?php echo t("Professional Development Description");?> (required)');
+                   	validated = false;
+                 }
+                 }
+                 if(!validateTextField(validated, 'stipend', '<?php echo t("Stipend");?>')){
+                 	validated = false;
+                 }
+                 if(parseInt($('#annual_cost').val()) > 500000){
+                 	displayErrorMessage('annual_cost', '<?php echo t('Annual Cost');?> - total cannot be greater than 500,000');
+                 	validated = false;
+                 }
+                 if(parseInt($('#funded_hours_per_week').val())< 1 || parseInt($('#funded_hours_per_week').val()) > 45){
+                 	displayErrorMessage('funded_hours_per_week', '<?php echo t('Funded hours per week');?> should be between 1 and 45');
+                 	validated = false;
+                 }
+                 if(parseInt($('#funded_hours_per_week').val()) < parseInt($('#multi_sites_table_data_fte_total').val())){
+                 	displayErrorMessage('funded_hours_per_week', "The total 'Hours Worked per Week per site' should be less or equal to 'Hours Worked per Week for Annual Cost To Company'.");
+                 	var $rows = $("#multi_sites_table > tfoot > tr");
+                 	$($rows[0]).children().first().next().next().next().next().next().next().next()[0].style.color = 'red';
+              	    validated = false;
+                 }
             }
-            if(!validateTextField(validated, 'benefits', '<?php echo t("Benefits");?>')){
-            	validated = false;
-            }
-            //TA:#466 #484
-            if($("#benefits").val() > 0){
-            	if(!$(".employee_financial_benefits_description_option_id_class").is(":checked")){
-               		displayErrorMessage('employee_financial_benefits_description', '<?php echo t("Financial Benefits Description");?> (required)');
-              		validated = false;
-            	}
-        	}
-            //TA:#466
-            if(!validateTextField(validated, 'non_financial_benefits', '<?php echo t("Non-financial Benefits");?>')){
-            	validated = false;
-            }
-          //TA:#466 #484
-            if($("#non_financial_benefits").val() > 0){
-            	if(!$(".employee_non_financial_benefits_description_option_id_class").is(":checked")){
-               displayErrorMessage('employee_non_financial_benefits_description', '<?php echo t("Non-financial Benefits Description");?> (required)');
-              	validated = false;
-            	}
-            }
-            //TA:#469
-            if(!validateTextField(validated, 'professional_development', '<?php echo t("Professional Development");?>')){
-            	validated = false;
-            }
-            //TA:#466 #484
-            if($("#professional_development").val() > 0){
-            if(!$(".employee_professional_development_description_option_id_class").is(":checked")){
-               displayErrorMessage('employee_professional_development_description', '<?php echo t("Professional Development Description");?> (required)');
-              	validated = false;
-            }
-            }
-            
-            if(!validateTextField(validated, 'stipend', '<?php echo t("Stipend");?>')){
-            	validated = false;
-            }
+            //
             
             //TA:#411 
             if(!$("#is_active").is(":checked")){
@@ -619,28 +608,6 @@
                 	displayErrorMessage('transition_complete_date', '<?php echo t("Actual Transition Date");?> should be before or equal to Today.');
                	   validated = false;
             	}
-            }
-
-            //TA:#447
-            if(parseInt($('#funded_hours_per_week').val())< 1 || parseInt($('#funded_hours_per_week').val()) > 45){
-            	displayErrorMessage('funded_hours_per_week', '<?php echo t('Funded hours per week');?> should be between 1 and 45');
-            	validated = false;
-            }
-
-            //TA:438, TA:#464
-            validated = getSiteTableData(validated);
-            if(parseInt($('#funded_hours_per_week').val()) < parseInt($('#multi_sites_table_data_fte_total').val())){
-            	displayErrorMessage('funded_hours_per_week', "The total 'Hours Worked per Week per site' should be less or equal to 'Hours Worked per Week for Annual Cost To Company'.");
-            	var $rows = $("#multi_sites_table > tfoot > tr");
-            	$($rows[0]).children().first().next().next().next().next().next().next().next()[0].style.color = 'red';
-         	    validated = false;
-            }
-            ///
-
-            //TA:#477
-            if(parseInt($('#annual_cost').val()) > 500000){
-            	displayErrorMessage('annual_cost', '<?php echo t('Annual Cost');?> - total cannot be greater than 500,000');
-            	validated = false;
             }
 
             window.scroll(0,0);
@@ -899,7 +866,8 @@
 
                 		benefitSelectedAction();
                 		nonbenefitSelectedAction();
-                        professional_developmentAction(); 	
+                        professional_developmentAction();
+                        calculate_annual_cost(); 	
                     }
                     
                 </script>
