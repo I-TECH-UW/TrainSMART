@@ -523,7 +523,7 @@
             validated = getSiteTableData(validated);
 
           //TA#518 if CTC required
-            if($('#employee_qualification_option_id option:selected').val().startsWith("**")){
+            if($('#employee_qualification_option_id option:selected').text().startsWith("**")){
             	 if($("#salary_or_stipend").val() == ''){
                  	displayErrorMessage('', '<?php echo t('Salaried or Stipend');?> (required)');
                  	validated = false;
