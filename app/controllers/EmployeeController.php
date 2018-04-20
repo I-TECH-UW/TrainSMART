@@ -407,36 +407,7 @@ AND (employee.agreement_end_date < SUBSTRING_INDEX(now(), ' ', 1) OR transition_
                 } 
 
                 //TA:#383
-                $status->checkRequired($this, 'transition_date', t('Intended Transition Date'));
-
-                $status->checkRequired($this, 'funded_hours_per_week', t('Funded hours per week'));
-                //TA:#447
-                if ($params['funded_hours_per_week'] < 1 || $params['funded_hours_per_week'] > 45) {
-                    $status->addError('funded_hours_per_week',  t('Funded hours per week') . ' should be between 1 and 45');
-                }
-                
-                $costaccum = 0;
-                if ($this->setting('display_employee_salary')) {
-                    $status->checkRequired($this, 'salary', t('Salary'));
-                    $costaccum += $params['salary'];
-                }
-                if ($this->setting('display_employee_benefits')) {
-                    $status->checkRequired($this, 'benefits', t('Benefits'));
-                    $costaccum += $params['benefits'];
-                }
-                
-                //TA:#470
-//                 if ($this->setting('display_employee_additional_expenses')) {
-//                     $status->checkRequired($this, 'additional_expenses', t('Additional Expenses'));
-//                     $costaccum += $params['additional_expenses'];
-//                 }
-                if ($this->setting('display_employee_stipend')) {
-                    $status->checkRequired($this, 'stipend', t('Stipend'));
-                    $costaccum += $params['stipend'];
-                }
-                if ($costaccum > 2000000) {
-                    $status->addError('annual_cost', t('Total') . ' ' . t('Annual Cost') . ' ' . t("can not be more than 2,000,000."));
-                }
+                $status->checkRequired($this, 'transition_date', t('Intended Transition Date'));        
 
                 $total_percent = 0;
                 foreach ($params['percentage'] as $i => $val) {
