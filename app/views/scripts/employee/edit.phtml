@@ -58,43 +58,58 @@
            	elQualification = YAHOO.util.Dom.get("employee_qualification_option_id");
             elQualification.onchange();
 
-          //TA:#484  benefits
-           	 if($('#benefits').val() == '0.00' || $('#benefits').val() == '0'){
-           		 <?php
-           		 echo "$('#employee_financial_benefits_description_required').hide();";
-           	             foreach ($this->finanBenefDescArray as $item) {
-           	                 echo "$('#employee_financial_benefits_description_option_id_" . $item['id'] . "').prop('disabled', true);";
-           	                 echo "$('#employee_financial_benefits_description_option_id_" . $item['id'] . "').prop('checked', false);";
-           	                 
-           	         }
-           	        ?>
-           	 }
-
-           //TA:#484  non_financial_benefits
-           	 if($('#non_financial_benefits').val() == '0.00' || $('#non_financial_benefits').val() == '0'){
-           		 <?php
-           		 echo "$('#employee_non_financial_benefits_description_required').hide();";
-           	             foreach ($this->nonfinanBenefDescArray as $item) {
-           	                 echo "$('#employee_non_financial_benefits_description_option_id_" . $item['id'] . "').prop('disabled', true);";
-           	                 echo "$('#employee_non_financial_benefits_description_option_id_" . $item['id'] . "').prop('checked', false);";
-           	                 
-           	         }
-           	        ?>
-           	 }
-
-           	 //TA:#484  professional_development
-           	 if($('#professional_development').val() == '0.00' || $('#professional_development').val() == '0'){
-           		 <?php
-           		 echo "$('#employee_professional_development_description_required').hide();";
-           		 foreach ($this->professionalDevelopmentDescArray as $item) {
-           	                 echo "$('#employee_professional_development_description_option_id_" . $item['id'] . "').prop('disabled', true);";
-           	                 echo "$('#employee_professional_development_description_option_id_" . $item['id'] . "').prop('checked', false);";
-           	                 
-           	         }
-           	        ?>
-           	 }
+          //TA:#518
+           benefitSelectedAction();
+           nonbenefitSelectedAction();
+           professional_developmentAction();
+           //
 
         });
+
+        //TA:#518
+        function benefitSelectedAction(){
+		//  benefits
+      	 if($('#benefits').val() == '0.00' || $('#benefits').val() == '0'){
+      		 <?php
+      		 echo "$('#employee_financial_benefits_description_required').hide();";
+      	             foreach ($this->finanBenefDescArray as $item) {
+      	                 echo "$('#employee_financial_benefits_description_option_id_" . $item['id'] . "').prop('disabled', true);";
+      	                 echo "$('#employee_financial_benefits_description_option_id_" . $item['id'] . "').prop('checked', false);";
+      	                 
+      	         }
+      	        ?>
+      	 }
+        }
+
+      //TA:#518
+        function nonbenefitSelectedAction(){
+        //  non_financial_benefits
+        	 if($('#non_financial_benefits').val() == '0.00' || $('#non_financial_benefits').val() == '0'){
+        		 <?php
+        		 echo "$('#employee_non_financial_benefits_description_required').hide();";
+        	             foreach ($this->nonfinanBenefDescArray as $item) {
+        	                 echo "$('#employee_non_financial_benefits_description_option_id_" . $item['id'] . "').prop('disabled', true);";
+        	                 echo "$('#employee_non_financial_benefits_description_option_id_" . $item['id'] . "').prop('checked', false);";
+        	                 
+        	         }
+        	        ?>
+        	 }
+        }
+
+      //TA:#518
+        	function professional_developmentAction(){
+        	 //  professional_development
+        	 if($('#professional_development').val() == '0.00' || $('#professional_development').val() == '0'){
+        		 <?php
+        		 echo "$('#employee_professional_development_description_required').hide();";
+        		 foreach ($this->professionalDevelopmentDescArray as $item) {
+        	                 echo "$('#employee_professional_development_description_option_id_" . $item['id'] . "').prop('disabled', true);";
+        	                 echo "$('#employee_professional_development_description_option_id_" . $item['id'] . "').prop('checked', false);";
+        	                 
+        	         }
+        	        ?>
+        	 }	
+        	}
 
         //TA:#411
         function basedAtOther() {
@@ -869,12 +884,22 @@
                 		document.getElementById("salary_or_stipend").disabled = !selected;
                 		document.getElementById("salary").disabled = !selected;
                 		document.getElementById("benefits").disabled = !selected;
+                		document.getElementById("non_financial_benefits").disabled = !selected;
+                		document.getElementById("professional_development").disabled = !selected;
+                		document.getElementById("stipend").disabled = !selected;
                 		if(!selected){
                         	document.getElementById("funded_hours_per_week").value = "0";
                         	document.getElementById("salary_or_stipend").value = "na";
                         	document.getElementById("salary").value = "0.00";
                         	document.getElementById("benefits").value = "0.00";
-                		}	
+                        	document.getElementById("non_financial_benefits").value = "0.00";
+                        	document.getElementById("professional_development").value = "0.00";
+                        	document.getElementById("stipend").value = "0.00";
+                		}
+
+                		benefitSelectedAction();
+                		nonbenefitSelectedAction();
+                        professional_developmentAction(); 	
                     }
                     
                 </script>
