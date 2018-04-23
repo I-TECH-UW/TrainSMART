@@ -664,6 +664,13 @@ class PersonController extends ReportFilterHelpers
                             }
                         }
                     }
+                    
+                    //TA: make first letter capital
+                    $personrow->first_name = ucfirst(strtolower($personrow->first_name));
+                    $personrow->last_name = ucfirst(strtolower($personrow->last_name));
+                    if(isset($personrow->middle_name)){
+                        $personrow->middle_name = ucfirst(strtolower($personrow->middle_name));
+                    }
 
                     if ($personrow->save()) {
                         $status->setStatusMessage(t('The person was saved. Refreshing change history...'));
