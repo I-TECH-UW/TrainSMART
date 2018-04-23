@@ -166,7 +166,14 @@ class Person extends ITechTable
 		//cheezy way to get the id
 		$parts = explode('=',$where[0]);
 		$historyTable->tableInsert($this, trim($parts[1]));
-
+		
+		//TA: make first letter capital 
+		$data['first_name'] = ucfirst(strtolower($data['first_name']));
+		$data['last_name'] = ucfirst(strtolower($data['last_name']));
+		if(isset($data['middle_name'])){
+		  $data['middle_name'] = ucfirst(strtolower($data['middle_name']));
+		}
+		
 		$rslt = parent::update($data,$where);
 
 		return $rslt;
