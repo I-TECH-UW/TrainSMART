@@ -1208,6 +1208,9 @@ msgid "Trainers"
 msgstr "Tренери"
 
 msgid "Trainer"
+msgstr "Tренер"
+
+msgid "Trainer"
 msgstr "Інструктор"
 
 msgid "Total"
@@ -4239,4 +4242,8 @@ msgstr "Офіційна назва ВНЗ"
 
 msgid "Training type"
 msgstr "Вид тренінгу"
+
+msgid "use only English"
+msgstr "використовувати тільки англійську"
+
 
