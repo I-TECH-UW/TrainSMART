@@ -4243,8 +4243,8 @@ msgstr "Офіційна назва ВНЗ"
 msgid "Training type"
 msgstr "Вид тренінгу"
 
-msgid "use only English"
-msgstr "використовувати тільки англійську"
+msgid "in English only"
+msgstr "лише англійською мовою"
 
 msgid "Application-training request"
 msgstr "Заявка-запит тренінгу"
