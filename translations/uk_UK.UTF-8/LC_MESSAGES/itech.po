@@ -4252,4 +4252,7 @@ msgstr "Заявка-запит тренінгу"
 msgid "Additional Information"
 msgstr "Додаткова інформація"
 
+msgid "Type of certification document"
+msgstr "Тип сертифікаційного документу"
+
 
