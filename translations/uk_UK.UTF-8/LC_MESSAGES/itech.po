@@ -4270,4 +4270,16 @@ msgstr "Стаж роботи,всього років"
 msgid "Years in specialty"
 msgstr "Років за фахом"
 
+msgid "Type of Education"
+msgstr "Тип освіти"
+
+msgid "Official School Name"
+msgstr "Офіційна назва школи"
+
+msgid "Education Country"
+msgstr "Освіта країни"
+
+msgid "Attestation Level"
+msgstr "Атестаційний рівень"
+
 
