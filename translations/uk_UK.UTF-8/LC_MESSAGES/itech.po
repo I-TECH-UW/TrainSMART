@@ -4300,6 +4300,9 @@ msgstr "По батькові"
 msgid "Return trainings with NULL values in these fields"
 msgstr "Повернутися тренінгів без значень у цих полях"
 
+msgid "Street name, house and apartment number"
+msgstr "Назва вулиці, номер будинку та квартири"
+
 
 
 
