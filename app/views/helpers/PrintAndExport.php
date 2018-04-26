@@ -67,7 +67,7 @@ class Zend_View_Helper_PrintAndExport {
 	//	return '<span class="printAndExport"><a href="javascript:window.print();">'.t('Print').'</a>&nbsp;&nbsp;<a href="'.$munged.'">'.t('Export').'</a>&nbsp;&nbsp;<a  href="'.$munged.'"><img src="'.(Settings::$COUNTRY_BASE_URL).'/images/excel.jpg" /></a></span>';
     //TA:#487	return '<span class="printAndExport"><a href="javascript:print_part()">'.t('Print').'</a>&nbsp;&nbsp;<a href="'.$munged.'">'.t('Export').'</a>&nbsp;&nbsp;<a  href="'.$munged.'"><img src="'.(Settings::$COUNTRY_BASE_URL).'/images/excel.jpg" /></a></span>';
         return '<span class="printAndExport"><a href="javascript:print_part()">'.t('Print').'</a>&nbsp;&nbsp;
-            <a href="'.$munged.'">'.t('Export to CSV').'</a>&nbsp;&nbsp;
-            <a href="'.$munged_excel.'">'.t('Export to MS Excel').'</a>&nbsp;<a  href="'.$munged_excel.'"><img src="'.(Settings::$COUNTRY_BASE_URL).'/images/excel.jpg" /></a></span>';
+            <a href="'.$munged.'">'.t('Export to').' CSV</a>&nbsp;&nbsp;
+            <a href="'.$munged_excel.'">'.t('Export to').' MS Excel</a>&nbsp;<a  href="'.$munged_excel.'"><img src="'.(Settings::$COUNTRY_BASE_URL).'/images/excel.jpg" /></a></span>';
     }
 }

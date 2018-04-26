@@ -4282,4 +4282,14 @@ msgstr "Освіта країни"
 msgid "Attestation Level"
 msgstr "Атестаційний рівень"
 
+msgid "Name of the training"
+msgstr "Назва тренінгу"
+
+msgid "Executor of the training"
+msgstr "Виконавець тренінгу"
+
+msgid "Export to"
+msgstr "Експортувати в"
+
+
 
