@@ -4255,4 +4255,19 @@ msgstr "Додаткова інформація"
 msgid "Type of certification document"
 msgstr "Тип сертифікаційного документу"
 
+msgid "Diploma number"
+msgstr "Серія,номер диплому"
+
+msgid "Year of issue of the diploma"
+msgstr "Рік видачі диплому"
+
+msgid "Sex"
+msgstr "Стать"
+
+msgid "Work experience, all years"
+msgstr "Стаж роботи,всього років"
+
+msgid "Years in specialty"
+msgstr "Років за фахом"
+
 
