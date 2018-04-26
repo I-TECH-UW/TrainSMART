@@ -3070,13 +3070,13 @@ msgstr "Результат до тесту"
 msgid "Post test score"
 msgstr "Результат після тесту"
 
-msgid "Particpant Training Completion"
+msgid "Participant Training Completion"
 msgstr "Завершення тренінгу учасника"
 
 msgid "Training Completion"
 msgstr "Завершення тренінгу"
 
-msgid "Particpant Viewing Location"
+msgid "Participant Viewing Location"
 msgstr "Перегляд розташування учасника"
 
 msgid "Participant Budget Code"
@@ -4245,5 +4245,11 @@ msgstr "Вид тренінгу"
 
 msgid "use only English"
 msgstr "використовувати тільки англійську"
+
+msgid "Application-training request"
+msgstr "Заявка-запит тренінгу"
+
+msgid "Additional Information"
+msgstr "Додаткова інформація"
 
 
