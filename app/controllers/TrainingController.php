@@ -315,7 +315,7 @@ class TrainingController extends ReportFilterHelpers {
 					$row->is_deleted = 1;
 					$trainingObj->delete ( 'id = ' . $row->id );
 				} else {
-					$status->setStatusMessage ( t ( 'This' ).' '.t( 'Training' ).' '.t( 'session could not be deleted. Some participants or trainers may still be attached.' ) );
+					$status->setStatusMessage ( t ( 'This Training session could not be deleted. Some participants or trainers may still be attached.' ) );
 
 				}
 			}
@@ -817,8 +817,8 @@ class TrainingController extends ReportFilterHelpers {
 		}
 		
 		//TA:107
-		$trainerFields ['birthdate'] = $this->tr ( 'Date of Birth' );
-		$trainerFields ['facility_name'] = $this->tr ( 'Facility Name' );
+		$trainerFields ['birthdate'] = t ( 'Date of Birth' );
+		$trainerFields ['facility_name'] = t ( 'Facility Name' );
 		///
 		
 		//TA:107

@@ -4291,5 +4291,13 @@ msgstr "Виконавець тренінгу"
 msgid "Export to"
 msgstr "Експортувати в"
 
+msgid "Course goals"
+msgstr "Цілі курсу"
+
+msgid "Middle Name"
+msgstr "По батькові"
+
+
+
 
 
