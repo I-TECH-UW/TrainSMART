@@ -4297,6 +4297,9 @@ msgstr "Цілі курсу"
 msgid "Middle Name"
 msgstr "По батькові"
 
+msgid "Return trainings with NULL values in these fields"
+msgstr "Повернутися тренінгів без значень у цих полях"
+
 
 
 
