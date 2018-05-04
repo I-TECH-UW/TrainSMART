@@ -24,7 +24,7 @@
      	// show_employee_code_cb.checked = true;
      	 //show_employee_code_cb.disabled = true;
 
-      	//TA:#419.2 setdefault check box are checked
+      	//TA:#419.2 set default check box are checked
      	 <?php 
      	 if(!isset($this->criteria['go'])){
      	     echo "(document.getElementsByName('show_partnerid')[0]).checked = true;";
@@ -37,7 +37,7 @@
      	     echo "(document.getElementsByName('show_employee_code')[0]).checked = true;";
      	     echo "(document.getElementsByName('show_dsd_model')[0]).checked = true;";
      	     echo "(document.getElementsByName('show_dsd_team')[0]).checked = true;"; 
-     	     echo "(document.getElementsByName('province_id[]')[0]).value = '12197';"; //National province selected by default
+     	     //echo "(document.getElementsByName('province_id[]')[0]).value = '12197';"; //National province selected by default
      	     echo "(document.getElementsByName('showProvince')[0]).checked = true;";
      	     echo "(document.getElementsByName('showDistrict')[0]).checked = true;";
      	     echo "(document.getElementsByName('showRegionC')[0]).checked = true;";
@@ -66,9 +66,31 @@
      	     echo "(document.getElementsByName('show_stipend_min')[0]).checked = true;";
      	     echo "(document.getElementsByName('show_cost_min')[0]).checked = true;";
      	     echo "(document.getElementsByName('show_agencies')[0]).checked = true;";
-     	     echo "(document.getElementsByName('show_mech_partners')[0]).checked = true;";    
+     	     echo "(document.getElementsByName('show_mech_partners')[0]).checked = true;"; 
      	     echo "(document.getElementsByName('show_timestamp_created_start_date')[0]).checked = true;";
      	     echo "(document.getElementsByName('show_timestamp_updated_start_date')[0]).checked = true;";
+     	     
+     	     //default: ALL selected
+     	     echo "(document.getElementsByName('partner[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('primary_role[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('classification[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('dsd_model[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('dsd_team[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('province_id[]')[0]).value = '';"; 
+     	     echo "(document.getElementsByName('region_c_id[]')[0]).value = '';";
+     	     echo "(document.getElementsByName('district_id[]')[0]).value = '';"; 
+     	     echo "(document.getElementsByName('facilityInput[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('mechanism_names[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('mechanism_ids[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('intended_transition[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('intended_transition_other[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('actual_transition[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('actual_transition_other[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('employee_financial_benefits_description[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('employee_non_financial_benefits_description[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('employee_professional_development_description[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('mech_partners[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('agencies[]')[0]).value = '0';";
      	 }
      	 ?>  		
      });
