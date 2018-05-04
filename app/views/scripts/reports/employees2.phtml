@@ -91,6 +91,12 @@
      	     echo "(document.getElementsByName('employee_professional_development_description[]')[0]).value = '0';";
      	     echo "(document.getElementsByName('mech_partners[]')[0]).value = '0';";
      	     echo "(document.getElementsByName('agencies[]')[0]).value = '0';";
+     	 }else{
+     	     if(!isset($this->criteria['province_id'])){
+     	         echo "(document.getElementsByName('province_id[]')[0]).value = '';";
+     	         echo "(document.getElementsByName('district_id[]')[0]).value = '';";
+     	         echo "(document.getElementsByName('region_c_id[]')[0]).value = '';";
+     	     }
      	 }
      	 ?>  		
      });

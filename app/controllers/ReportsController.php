@@ -11678,6 +11678,7 @@ if($order !== ""){
         $this->view->assign('quarter', $this->getCurrentQuarter());//TA:#513
         
         $this->view->assign('criteria', $criteria);
+        
     }
     
 
