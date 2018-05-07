@@ -10662,16 +10662,16 @@ die (__LINE__ . " - " . $sql);
         $agencies = $choose + $db->fetchPairs($db->select()
             ->from('partner_funder_option', array('id', 'funder_phrase'))
             ->order('funder_phrase ASC'));
-        $mechanism_ids = $choose + $db->fetchPairs($db->select()
-            ->from('mechanism_option', array('external_id', 'external_id'))
-            ->group('external_id')
-            ->where('external_id is not null')
-            ->order('external_id ASC')
-        );
-        $mechanism_names = $choose + $db->fetchPairs($db->select()
-            ->from('mechanism_option', array('id', 'mechanism_phrase'))
-            ->order('mechanism_phrase ASC'));
-        //
+        
+        $mechanism_ids = $db->fetchPairs($db->select()
+            ->from('mechanism_option', array('external_id','external_id'))
+                    ->group('external_id')
+                    ->where('external_id is not null')
+                    ->order('external_id ASC')
+                    );
+       $mechanism_names = $db->fetchAll($db->select()
+                    ->from('mechanism_option', array('id', 'mechanism_phrase'))
+                    ->order('mechanism_phrase ASC'));
 
         $bases = $choose + $db->fetchPairs($db->select()
                 ->from('employee_base_option', array('id', 'base_phrase'))
@@ -11555,6 +11555,34 @@ if($order !== ""){
         
         $partners = $choose + $db->fetchPairs($select);
         
+        //TA:#510
+        $select = $db->select()
+        ->from('partner', array('id', 'partner'))
+        ->order('partner ASC');  
+        if (!$this->hasACL('training_organizer_option_all')) {
+            $uid = $this->isLoggedIn();
+            $select->join(array('user_to_organizer_access'),
+                'user_to_organizer_access.training_organizer_option_id = partner.organizer_option_id', array())
+                ->where('user_to_organizer_access.user_id = ?', $uid);
+        } 
+        $select = "
+select partner_impl.id as id, partner_impl.partner, GROUP_CONCAT(DISTINCT partner.id) as owner_id from employee
+left join partner on partner.id=employee.partner_id
+left join link_employee_facility on link_employee_facility.employee_id=employee.id
+left join mechanism_option on mechanism_option.id=link_employee_facility.mechanism_option_id
+left join partner as partner_impl on partner_impl.id=mechanism_option.owner_id ";
+        if (!$this->hasACL('training_organizer_option_all')) {
+            $select .= " left join user_to_organizer_access on user_to_organizer_access.training_organizer_option_id = partner_impl.organizer_option_id ";
+        }
+        $select .=" where partner_impl.id is not null ";
+        if (!$this->hasACL('training_organizer_option_all')) {
+            $select .= " AND user_to_organizer_access.user_id=" . $this->isLoggedIn();
+        }
+        $select .= " group by partner_impl.id order by partner_impl.partner";
+        $mech_partners = $db->fetchAll($select);
+       // print_r($mech_partners);
+        //
+        
         $facilities = $choose + $db->fetchPairs($db->select()
             ->from('facility', array('id', 'facility_name'))
             ->order('facility_name ASC')
@@ -11617,16 +11645,17 @@ if($order !== ""){
         $agencies = $choose + $db->fetchPairs($db->select()
             ->from('partner_funder_option', array('id', 'funder_phrase'))
             ->order('funder_phrase ASC'));
-        $mechanism_ids = $choose + $db->fetchPairs($db->select()
-            ->from('mechanism_option', array('external_id', 'external_id'))
-            ->group('external_id')
-            ->where('external_id is not null')
-            ->order('external_id ASC')
-            );
-        $mechanism_names = $choose + $db->fetchPairs($db->select()
-            ->from('mechanism_option', array('id', 'mechanism_phrase'))
+        //TA:#510
+        $mechanism_ids = $db->fetchAll($db->select()
+                    ->from('mechanism_option', array('external_id','GROUP_CONCAT(DISTINCT owner_id) as owner_id'))
+                    ->group('external_id')
+                    ->where('external_id is not null')
+                    ->order('external_id ASC')
+                    );
+        //TA:#510
+        $mechanism_names = $db->fetchAll($db->select()
+            ->from('mechanism_option', array('id', 'mechanism_phrase', 'owner_id'))
             ->order('mechanism_phrase ASC'));
-        //
         
         $bases = $choose + $db->fetchPairs($db->select()
             ->from('employee_base_option', array('id', 'base_phrase'))
@@ -11634,7 +11663,7 @@ if($order !== ""){
             );
         
         $this->view->assign('partners', $partners);
-        $this->view->assign('mech_partners', $partners);//TA:#419
+        $this->view->assign('mech_partners', $mech_partners);//TA:#510
         
         //TA:#466
         $select = $db->select()->from('employee_financial_benefits_description_option', array('id', 'financial_benefits_description_option'))->order('financial_benefits_description_option ASC');
