@@ -10737,6 +10737,21 @@ die (__LINE__ . " - " . $sql);
         return "";
     }
     
+    //TA:#511
+    public function getCurrentQuarterStartDate(){
+        $month = date('n');
+        $year = date('Y');
+        if ($month < 4) {
+            return "01/01/" . $year;
+        } elseif ($month > 3 && $n < 7) {
+            return "04/01/" . $year;
+        } elseif ($month > 6 && $n < 10) {
+            return "07/01/" . $year;
+        } elseif ($month > 9) {
+            return "10/01/" . $year;
+        } 
+    }
+    
     //TA:#499
     public function employees2Action(){
         $locations = Location::getAll();
@@ -11202,7 +11217,7 @@ die (__LINE__ . " - " . $sql);
             if (isset($criteria['transition_start_date']) && $criteria['transition_start_date']) {
                 if($where !== ""){ $where .= " AND "; }
                 $d = DateTime::createFromFormat('d/m/Y', $criteria['transition_start_date']);
-                $where .=" transition_complete_date >= '" . $d->format('Y-m-d') . "'";
+                $where .=" (transition_complete_date >= '" . $d->format('Y-m-d') . "' OR transition_complete_date like '0000-00-00%' OR transition_complete_date IS NULL) ";//TA:#511
             }
             if (isset($criteria['transition_end_date']) && $criteria['transition_end_date']) {
                 if($where !== ""){ $where .= " AND "; }
@@ -11705,6 +11720,7 @@ left join partner as partner_impl on partner_impl.id=mechanism_option.owner_id "
         
       
         $this->view->assign('quarter', $this->getCurrentQuarter());//TA:#513
+        $this->view->assign('quarter_start_date', $this->getCurrentQuarterStartDate());//TA:#511
         
         $this->view->assign('criteria', $criteria);
         

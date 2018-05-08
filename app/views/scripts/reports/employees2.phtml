@@ -80,8 +80,8 @@
      	     echo "(document.getElementsByName('region_c_id[]')[0]).value = '';";
      	     echo "(document.getElementsByName('district_id[]')[0]).value = '';"; 
      	     echo "(document.getElementsByName('facilityInput[]')[0]).value = '0';";
-     	     echo "(document.getElementsByName('mechanism_names[]')[0]).value = '0';";
-     	     echo "(document.getElementsByName('mechanism_ids[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('mechanism_names[]')[0]).value = '';";
+     	     echo "(document.getElementsByName('mechanism_ids[]')[0]).value = '';";
      	     echo "(document.getElementsByName('intended_transition[]')[0]).value = '0';";
      	     echo "(document.getElementsByName('intended_transition_other[]')[0]).value = '0';";
      	     echo "(document.getElementsByName('actual_transition[]')[0]).value = '0';";
@@ -89,7 +89,7 @@
      	     echo "(document.getElementsByName('employee_financial_benefits_description[]')[0]).value = '0';";
      	     echo "(document.getElementsByName('employee_non_financial_benefits_description[]')[0]).value = '0';";
      	     echo "(document.getElementsByName('employee_professional_development_description[]')[0]).value = '0';";
-     	     echo "(document.getElementsByName('mech_partners[]')[0]).value = '0';";
+     	     echo "(document.getElementsByName('mech_partners[]')[0]).value = '';";
      	     echo "(document.getElementsByName('agencies[]')[0]).value = '0';";
      	 }else{
      	     if(!isset($this->criteria['province_id'])){
@@ -127,6 +127,7 @@
                       }
                   }
               $('#mechanism_names').html(optList);
+              
 
             //change mechanism ids list
          	 $('#mechanism_ids').empty();
@@ -149,7 +150,7 @@
                 	  }
                       }
                   }
-              $('#mechanism_ids').html(optListIds);	 
+              $('#mechanism_ids').html(optListIds);	
 
             //change mech_partners list
           	 $('#mech_partners').empty();
@@ -176,7 +177,15 @@
           });
           
           $( "#partner" ).change();
-          ///  		
+          (document.getElementsByName('mechanism_names[]')[0]).value = '';//TA:#512
+          (document.getElementsByName('mechanism_ids[]')[0]).value = '';//TA:#512
+          (document.getElementsByName('mech_partners[]')[0]).value = '';//TA:#512 
+          ///  
+
+          //TA:#511
+          $( '#transition_start_date').val('<?php echo $this->quarter_start_date;?>');
+          $( '#transition_start_date').prop("readonly", true);
+          $( '#transition_start_date').width("120px");
      });
     
      </script>
@@ -211,7 +220,7 @@
 
                         <?php
                         $this->required_fields = array();                      
-                        $this->calendar_fields = array('transition_start_date', 'transition_end_date', 'contract_start_date_from', 'contract_start_date_to',
+                        $this->calendar_fields = array('transition_end_date', 'contract_start_date_from', 'contract_start_date_to',
                             'contract_end_date_from', 'contract_end_date_to', 'intended_transition_start_date', 'intended_transition_end_date',
                             'mech_fund_date_start', 'mech_fund_date_end', 
                             'timestamp_created_start_date', 'timestamp_created_end_date', 'timestamp_updated_start_date', 'timestamp_updated_end_date'
