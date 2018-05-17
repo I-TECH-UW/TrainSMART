@@ -183,9 +183,12 @@
           ///  
 
           //TA:#511
-          $( '#transition_start_date').val('<?php echo $this->quarter_start_date;?>');
+          $( '#transition_start_date').val('<?php echo $this->prev_quarter_start_date;?>');
           $( '#transition_start_date').prop("readonly", true);
           $( '#transition_start_date').width("120px");
+          $( '#contract_start_date_to').val('<?php echo $this->prev_quarter_end_date;?>');
+          $( '#contract_start_date_to').prop("readonly", true);
+          $( '#contract_start_date_to').width("120px");
      });
     
      </script>
@@ -220,7 +223,7 @@
 
                         <?php
                         $this->required_fields = array();                      
-                        $this->calendar_fields = array('transition_end_date', 'contract_start_date_from', 'contract_start_date_to',
+                        $this->calendar_fields = array('transition_end_date', 'contract_start_date_from',
                             'contract_end_date_from', 'contract_end_date_to', 'intended_transition_start_date', 'intended_transition_end_date',
                             'mech_fund_date_start', 'mech_fund_date_end', 
                             'timestamp_created_start_date', 'timestamp_created_end_date', 'timestamp_updated_start_date', 'timestamp_updated_end_date'

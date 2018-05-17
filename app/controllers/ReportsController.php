@@ -10752,6 +10752,38 @@ die (__LINE__ . " - " . $sql);
         } 
     }
     
+    //TA:#511
+    public function getPreviousQuarterStartDate(){
+        $month = date('n');
+        //$month = "1";
+        $year = date('Y');
+        if ($month < 4) {
+            return "10/01/" . $year-1;
+        } elseif ($month > 3 && $n < 7) {
+            return "01/01/" . $year;
+        } elseif ($month > 6 && $n < 10) {
+            return "04/01/" . $year;
+        } elseif ($month > 9) {
+            return "07/01/" . $year;
+        }
+    }
+    
+    //TA:#511
+    public function getPreviousQuarterEndDate(){
+        $month = date('n');
+       // $month = "1";
+        $year = date('Y');
+        if ($month < 4) {
+            return "12/31/" . $year-1;
+        } elseif ($month > 3 && $n < 7) {
+            return "31/03/" . $year;
+        } elseif ($month > 6 && $n < 10) {
+            return "06/30/" . $year;
+        } elseif ($month > 9) {
+            return "09/30/" . $year;
+        }
+    }
+    
     //TA:#499
     public function employees2Action(){
         $locations = Location::getAll();
@@ -11720,7 +11752,8 @@ left join partner as partner_impl on partner_impl.id=mechanism_option.owner_id "
         
       
         $this->view->assign('quarter', $this->getCurrentQuarter());//TA:#513
-        $this->view->assign('quarter_start_date', $this->getCurrentQuarterStartDate());//TA:#511
+        $this->view->assign('prev_quarter_start_date', $this->getPreviousQuarterStartDate());//TA:#511
+        $this->view->assign('prev_quarter_end_date', $this->getPreviousQuarterEndDate());//TA:#511
         
         $this->view->assign('criteria', $criteria);
         
