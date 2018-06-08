@@ -847,16 +847,16 @@
                     elQualification = YAHOO.util.Dom.get("employee_qualification_option_id");
                     elQualification.onchange = function () {
                     	var selected = $(this).find('option:selected').text().startsWith("**");
-                    	document.getElementById("funded_hours_per_week").disabled = !selected;
-                		document.getElementById("salary_or_stipend").disabled = !selected;
+                    	//TA:#535 document.getElementById("funded_hours_per_week").disabled = !selected;
+                    	//TA:#534 document.getElementById("salary_or_stipend").disabled = !selected;
                 		document.getElementById("salary").disabled = !selected;
                 		document.getElementById("benefits").disabled = !selected;
                 		document.getElementById("non_financial_benefits").disabled = !selected;
                 		document.getElementById("professional_development").disabled = !selected;
                 		document.getElementById("stipend").disabled = !selected;
                 		if(!selected){
-                        	document.getElementById("funded_hours_per_week").value = "0";
-                        	document.getElementById("salary_or_stipend").value = "na";
+                			//TA:#535 document.getElementById("funded_hours_per_week").value = "0";
+                        	//TA:#534 document.getElementById("salary_or_stipend").value = "na";
                         	document.getElementById("salary").value = "0.00";
                         	document.getElementById("benefits").value = "0.00";
                         	document.getElementById("non_financial_benefits").value = "0.00";
