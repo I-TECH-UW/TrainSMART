@@ -29,7 +29,7 @@
 
 			<h1><?php tp('Search Partners');?></h1>
 			<form action="" method="get" class="form_employee">
-				<fieldset><legend><?php tp('Select Criteria');?></legend>
+				<fieldset style="border:1px solid #999;border-radius:8px;"><legend><?php tp('Select Criteria');?></legend>
 					<?php
 						$this->required_fields = array();
 						echo '<input type="text" width="0" style="width: 0; height: 0; top: -100px; position: absolute;"/>'; // bugfix so jquery datepicker doesnt open on dom ready (first element in chrome thats a textbox will focus and trigger..=[)

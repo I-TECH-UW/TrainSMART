@@ -37,7 +37,7 @@
 
         <h1><?php print(t('Search').space.t('Employees'));?></h1>
         <form action="" method="get" class="form_employee">
-            <fieldset><legend><?php tp('Select Criteria');?></legend>
+            <fieldset style="border:1px solid #999;border-radius:8px;"><legend><?php tp('Select Criteria');?></legend>
 
 
                 <?php
@@ -64,7 +64,7 @@
                 ?>
                 <div class="clear"></div>
                 <input type="hidden" name="limit" id="limit" value="1" />
-                <input type="submit" class="submitNoArrow" name="go" value="<?php tp('Preview');?>" />
+                <div  style="float : right;" ><input type="submit" class="tsbutton green large" name="go" value="<?php tp('Preview');?>" /></div>
             </fieldset>
         </form>
 
