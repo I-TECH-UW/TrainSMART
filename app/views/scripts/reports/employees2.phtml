@@ -211,7 +211,7 @@
             </div>
           
             <form action="" method="get" class="form_employee">
-                <fieldset id="criteria">
+                <fieldset id="criteria" style="border:1px solid #999;border-radius:8px;">
                     <legend><?php tp('Select Criteria'); ?></legend>
                     <div class="fieldLabel"></div>
                     <div class="fieldInput criteria-header">
@@ -421,8 +421,10 @@
                         
                         ?>
                     </div>
-                   <?php echo "<br>" . $this->partial('reports/ps-search-preview-button-partial.phtml', array()); ?>
-
+                   <div  style="float : right;" >
+        <input type="submit" name="go" value="<?php tp('Preview');?> &raquo;" class="tsbutton green large">
+    </div>
+              </fieldset>
             </form>
             <?php if (isset($this->output)) {
                 echo $this->partial('reports/ps-jquery-table-search-results-preview-partial.phtml',
