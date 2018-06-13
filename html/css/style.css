@@ -14,7 +14,8 @@
 
 /* body margin and padding off as a foundation for YUI CSS treatments. */
 
-body { margin-top:20px; padding:0; font-family:verdana; }
+/*body { margin-top:20px; padding:0; font-family:verdana; }*/
+body { padding:0; font-family:verdana; }
 
 html, body, .yui-skin-sam { background:#3669aa; }
 
@@ -365,7 +366,8 @@ table.tableChoices td { padding-bottom:0.5em; } /* checkbox choices */
 
  * Layout       */
 
-#pageHolder { min-width: 960px; margin:0px 20px; padding-bottom:20px; text-align:left;}
+/*#pageHolder { min-width: 960px; margin:0px 20px; padding-bottom:20px; text-align:left;}*/
+#pageHolder { min-width: 960px; text-align:left;}
 
 
 
