@@ -65,12 +65,11 @@ class ValidationContainer {
     //TA:#536
     public function isAcceptableSANationalID($fieldName, $textName, $value) {
         
-        $phNumber = str_replace(' ', '', $value);
-        if ((strlen($phNumber) == 13) && ctype_digit($phNumber)) {
+        $IdNumber = str_replace(' ', '', $value);
+        if ((strlen($IdNumber) == 13) && ctype_digit($IdNumber)) {
             return true;
-        }
-        else {
-            $this->addError($fieldName, t('Please enter a 13 digits') . ' '. $textName);
+        }else {
+            $this->addError($fieldName, t('Please enter a 13-digits') . ' '. $textName);
             return false;
         }
     }
