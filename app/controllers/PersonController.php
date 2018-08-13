@@ -445,6 +445,9 @@ class PersonController extends ReportFilterHelpers
                 $birthParam = (@$this->getSanParam('birth-year')) . '-' . (@$this->getSanParam('birth-month')) . '-' . (@$this->getSanParam('birth-day'));
                 if ($birthParam !== '--' and $birthParam !== '0000-00-00')
                     $status->isValidDate($this, 'birth-day', t('Birthdate'), $birthParam);
+                
+                    //TA:#536
+                    print "+" . $this->getSanParam('nationality_id') . "+";
 
 
                 //trainer only
