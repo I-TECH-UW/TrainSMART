@@ -449,18 +449,8 @@ class PersonController extends ReportFilterHelpers
                     //TA:#536
                     //print_r($this->getAllParams());
                     if($this->getSanParam('nationality_id') === '1'){
-                        //$status->checkRequired($this, 'national_id', t("National ID"));
-                        $national_id = $this->getSanParam('national_id');
- //                        $l = strlen($this->getSanParam('national_id'));
-//                         if($l < 14){
-//                             $status->addError('national_id', t("National ID") . t(' field should equals to 13 digits.'));
-//                             return false;
-// //                             $errortext .= t("National ID") . t(' field should equals to 13 digits.') . "<br>";
-// //                             error_log(t("National ID") . t(' field should equals to 13 digits.'));
-//                         }
+                        $status->isAcceptableSAPhoneNumber('national_id', t('National ID'), $params['national_id']);
                     }
-                    ///
-
 
                 //trainer only
                 if ($this->getSanParam('is_trainer') || $this->getSanParam('active_trainer_option_id') || $this->getSanParam('trainer_type_option_id')) {

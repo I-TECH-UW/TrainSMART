@@ -61,6 +61,19 @@ class ValidationContainer {
             return false;
         }
     }
+    
+    //TA:#536
+    public function isAcceptableSANationalID($fieldName, $textName, $value) {
+        
+        $phNumber = str_replace(' ', '', $value);
+        if ((strlen($phNumber) == 13) && ctype_digit($phNumber)) {
+            return true;
+        }
+        else {
+            $this->addError($fieldName, t('Please enter a 13 digits') . ' '. $textName);
+            return false;
+        }
+    }
 
 	public function isValidDate($controller, $fieldname, $textName, $dateString) {
 		require_once('Zend/Date.php');
