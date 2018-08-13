@@ -450,7 +450,8 @@ class PersonController extends ReportFilterHelpers
                     //print_r($this->getAllParams());
                     if($this->getSanParam('nationality_id') === '1'){
                         //$status->checkRequired($this, 'national_id', t("National ID"));
-                        if(strlen($this->getSanParam('national_id')) < 5){
+                        $l = strlen($this->getSanParam('national_id'));
+                        if($l < 14){
                             $status->addError('national_id', t("National ID") . t(' field should equals to 13 digits.'));
                             return false;
 //                             $errortext .= t("National ID") . t(' field should equals to 13 digits.') . "<br>";
