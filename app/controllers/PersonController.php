@@ -447,11 +447,16 @@ class PersonController extends ReportFilterHelpers
                     $status->isValidDate($this, 'birth-day', t('Birthdate'), $birthParam);
                 
                     //TA:#536
-                    if($this->getSanParam('nationality_id') === 1){
-                        print "++++++++++++++++++++++++++++++++";
-                    }else{
-                        print "---------------------------------";
+                    //print_r($this->getAllParams());
+                    if($this->getSanParam('nationality_id') === '1'){
+                        //$status->checkRequired($this, 'national_id', t("National ID"));
+                        if(strlen($this->getSanParam('national_id')) < 5){
+                            $status->addError('national_id', t("National ID") . t(' field should equals to 13 digits.'));
+                            $errortext .= t("National ID") . t(' field should equals to 13 digits.') . "<br>";
+                            error_log(t("National ID") . t(' field should equals to 13 digits.'));
+                        }
                     }
+                    ///
 
 
                 //trainer only
