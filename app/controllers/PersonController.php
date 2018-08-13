@@ -449,7 +449,7 @@ class PersonController extends ReportFilterHelpers
                     //TA:#536
                     //print_r($this->getAllParams());
                     if($this->getSanParam('nationality_id') === '1'){
-                        $status->isAcceptableSANationalID('national_id', t('National ID'), $params['national_id']);
+                        $status->isAcceptableSANationalID('national_id', t('National ID'), $this->getSanParam('national_id'));
                     }
 
                 //trainer only
