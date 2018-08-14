@@ -446,9 +446,9 @@ class PersonController extends ReportFilterHelpers
                 if ($birthParam !== '--' and $birthParam !== '0000-00-00')
                     $status->isValidDate($this, 'birth-day', t('Birthdate'), $birthParam);
                 
-                    //TA:#536
+                    //TA:#536.1
                     //print_r($this->getAllParams());
-                    if($this->getSanParam('nationality_id') === '1'){
+                    if($this->getSanParam('nationality') === 'South African'){
                         $status->isAcceptableSANationalID('national_id', t('National ID'), $this->getSanParam('national_id'));
                     }
 

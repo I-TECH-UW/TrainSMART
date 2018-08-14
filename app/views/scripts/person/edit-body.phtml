@@ -29,14 +29,16 @@
 
     YAHOO.util.Event.onDOMReady(updateAge);
 
-  //TA:#536
- function selectNatiolity(){
-	 if($('#nationality_id').val() == 1){
-	 	$('#national_id_required').show();
-	 }else{
-		$('#national_id_required').hide();
-	 }
-}
+  //TA:#536.1
+    function selectNatiolity(){
+   	 var nationality = $( "#nationality_id option:selected" ).text();
+   	 $('#nationality').val(nationality);
+   	 if(nationality == 'South African'){
+   	 	$('#national_id_required').show();
+   	 }else{
+   		$('#national_id_required').hide();
+   	 }
+   }
 
 
     // submit form, then redirect
@@ -54,7 +56,7 @@
 
     function init() {
 
-    	selectNatiolity();//TA:#536
+    	selectNatiolity();//TA:#536.1
 
         // Define various event handlers for Dialog
         var handleSubmit = function() {
@@ -407,9 +409,10 @@
             <?php } ?>
 
             <?php if ($this->setting['display_mod_skillsmart']) { ?>
+            <input type='hidden' id='nationality' name='nationality'/><!-- TA:#536.1 -->
                 <div class="fieldLabel"><label for="nationality_id"><?php echo @$this->translation['Nationality'] != '' ? @$this->translation['Nationality'] : t('Nationality'); ?></label></div>
                 <div class="fieldInput" style="clear:none;">
-                    <select id="nationality_id" name="nationality_id" onchange='selectNatiolity();'> <!-- TA:#536 -->
+                    <select id="nationality_id" name="nationality_id" onchange='selectNatiolity();'> <!-- TA:#536.1 -->
                         <option value="0"><?php echo t('Select...'); ?></option>
                         <?php
                         foreach ($this->lookupnationalities as $nationality){
@@ -424,7 +427,7 @@
 
             <?php if ( $this->setting['display_national_id'] ) { ?>
                 <div class="fieldLabel" id="national_id_lbl">
-                <span id="national_id_required" class="required">*</span> <!-- TA:#536 -->
+                <span id="national_id_required" class="required">*</span> <!-- TA:#536.1 -->
                 <?php echo (@$this->translation['National ID']); ?></div>
                 <div class="fieldInput">
                 <input type="text" id="national_id" name="national_id" size="24" maxlength="32" value="<?php echo $this->person['national_id'];?>"/></div>
