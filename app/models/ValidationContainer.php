@@ -62,14 +62,14 @@ class ValidationContainer {
         }
     }
     
-    //TA:#536
+    //TA:#536.1
     public function isAcceptableSANationalID($fieldName, $textName, $value) {
         
         $IdNumber = str_replace(' ', '', $value);
         if ((strlen($IdNumber) == 13) ) {
             return true;
         }else {
-            $this->addError($fieldName, t('Please enter a 13-digits') . ' '. $textName);
+            $this->addError($fieldName, t('Please enter 13-digit South African ID number ') . ' '. $textName);
             return false;
         }
     }
