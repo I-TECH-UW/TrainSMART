@@ -69,7 +69,7 @@ class ValidationContainer {
         if ((strlen($IdNumber) == 13) ) {
             return true;
         }else {
-            $this->addError($fieldName, t('Please enter 13-digit South African ') . ' '. $textName);
+            $this->addError($fieldName, t('Please enter 13-digit South African ID number'));
             return false;
         }
     }
