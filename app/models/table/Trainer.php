@@ -44,6 +44,11 @@ class Trainer extends ITechTable
 	public static function suggestionListByMiddleName($match = false, $limit = 100, $middleNameLast = false) {
 		return self::suggestionList($match,$limit,$middleNameLast, array('middle_name','last_name','first_name'));
 	}
+	
+	//TA:#536.2
+	public static function suggestionListByBirthdate($match = false, $limit = 100, $middleNameLast = false) {
+	    return self::suggestionList($match,$limit,$middleNameLast, array('birthdate'));
+	}
 
 
   /**
