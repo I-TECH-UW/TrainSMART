@@ -15,13 +15,13 @@ class Trainer extends ITechTable
 
 	public static function suggestionList($match = false, $limit = 100, $middleNameLast = false, $priority = array('last_name','first_name','middle_name')) {
 		if ( !$middleNameLast )
-		    //TA:113
+		    //TA:113 TA:#536.2
 			//$additionalCols = array('p.first_name','p.middle_name','p.last_name','p.id');
-		    $additionalCols = array('p.first_name','p.middle_name','p.last_name','p.id','f.facility_name','f.location_id', 'p.birthdate');
+		    $additionalCols = array('p.first_name','p.middle_name','p.last_name','p.id','f.facility_name','f.location_id', 'p.birthdate', 'p.national_id');
 		else
-		    //TA:113
+		    //TA:113 TA:#536.2
 			//$additionalCols = array('p.first_name','p.last_name','p.middle_name','p.id');
-		    $additionalCols = array('p.first_name','p.last_name','p.middle_name','p.id','f.facility_name','f.location_id', 'p.birthdate');
+		    $additionalCols = array('p.first_name','p.last_name','p.middle_name','p.id','f.facility_name','f.location_id', 'p.birthdate', 'p.national_id');
 
 		$rowArray = array();
 
@@ -48,6 +48,11 @@ class Trainer extends ITechTable
 	//TA:#536.2
 	public static function suggestionListByBirthdate($match = false, $limit = 100, $middleNameLast = false) {
 	    return self::suggestionList($match,$limit,$middleNameLast, array('birthdate'));
+	}
+	
+	//TA:#536.2
+	public static function suggestionListByNationalId($match = false, $limit = 100, $middleNameLast = false) {
+	    return self::suggestionList($match,$limit,$middleNameLast, array('national_id'));
 	}
 
 
@@ -78,7 +83,10 @@ class Trainer extends ITechTable
         	}
      	}
      	$select->where('p.is_deleted = 0');
-    	$select->order("$field ASC");
+     	//TA:#536.2
+     	if($field !== 'national_id'){
+            $select->order("$field ASC");
+     	}
      //	foreach($fieldsSelect as $otherfield) {
      		$select->order( "last_name ASC" );
      		$select->order( "first_name ASC" );
@@ -89,9 +97,7 @@ class Trainer extends ITechTable
     		$select->limit($limit,0);
 
      	$rows = $topicTable->fetchAll($select);
-
-
- 
+     	
     	return $rows;
 	}
 	

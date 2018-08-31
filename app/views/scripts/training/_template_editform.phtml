@@ -723,6 +723,14 @@ if ($this->row['has_known_participants']) :
                         if (objRef.value == "<?php echo tp('Birthdate');?>")
                             objRef.value = '';
                     }
+                    function nationalIdOnBlur(objRef) {
+                        if (objRef.value == '')
+                            objRef.value = "<?php echo tp('National ID');?>";
+                    }
+                    function nationalIdOnFocus(objRef) {
+                        if (objRef.value == "<?php echo tp('National ID');?>")
+                            objRef.value = '';
+                    }
                     ///
                 </script>
                 <input type="text" id="trainer_first_name" size="15"
@@ -745,6 +753,10 @@ if ($this->row['has_known_participants']) :
                 <!-- TA:#536.2 make autocomplete -->
                 <input type="text" id="trainer_birthdate" size="9" value="<?php tp('Birthdate'); ?>" alt="Birthdate" 
                        onfocus="birthdateOnFocus(this)" onblur="birthdateOnBlur(this)"> 
+                       <!-- TA:#536.2 make autocomplete -->
+                <input type="text" id="trainer_nationalId" size="9" value="<?php tp('National ID'); ?>" alt="<?php tp('National ID'); ?>" 
+                       onfocus="nationalIdOnFocus(this)" onblur="nationalIdOnBlur(this)">
+                       
                 <input type="text" id="trainer_facility" size="15" disabled="true" value="<?php tp('Facility'); ?>"
                        alt="Facility">
                 <?php
@@ -781,7 +793,9 @@ if ($this->row['has_known_participants']) :
                 <?php if ($this->setting['display_middle_name'] && $this->setting['display_middle_name_last']) { ?>
                     <div id="trainerContainerMiddle" class="autocomplete" style="margin-left:135px;z-index:9001;"></div>
                 <?php } ?>
+                <!-- TA:536.2 -->
                 <div id="trainerContainerBirthdate" class="autocomplete" style="z-index:9001;"></div>
+                <div id="trainerContainerNationalId" class="autocomplete" style="z-index:9001;"></div>
             </div>
 
             <script type="text/javascript">
@@ -811,6 +825,13 @@ if ($this->row['has_known_participants']) :
                     formatBirthdateAutocomplete(autoCompBirthdate);
                     YAHOO.util.Dom.get('trainerContainerBirthdate').style.position = "absolute";
                     YAHOO.util.Dom.get('trainerContainerBirthdate').style.top = '0px';
+                    //
+                    
+                     //TA:#536.2 NationalId
+                    var autoCompNationalId = makeAutocomplete('trainer_nationalId', 'trainerContainerNationalId', '<?php echo $this->base_url;?>/training/trainer-NationalId-list/outputType/text/');
+                    formatNationalIdAutocomplete(autoCompNationalId);
+                    YAHOO.util.Dom.get('trainerContainerNationalId').style.position = "absolute";
+                    YAHOO.util.Dom.get('trainerContainerNationalId').style.top = '0px';
                     //
 
                     var oTrainerFirst = YAHOO.util.Dom.get('trainer_first_name');
@@ -876,12 +897,25 @@ if ($this->row['has_known_participants']) :
                         oTrainerMiddle.value = elItem[2][3];
                     };
 
+                  //TA:#536.2
+                    function suggestTrainerNationalID(oSelf, elItem, oData) {
+                        oTrainerId.value = elItem[2][4];
+                        oIsTrainer.value = elItem[2][8];
+                        oTrainerBday.value = elItem[2][7];
+                        oTrainerFacility.value = elItem[2][5];
+                        OTrainerHealth.value = elItem[2][<?php echo $location_idx;?>];
+                        oTrainerLast.value = elItem[2][2];
+                        oTrainerFirst.value = elItem[2][1];
+                        oTrainerMiddle.value = elItem[2][3];
+                    };
+
                     autoComp.itemSelectEvent.subscribe(suggestTrainerName);
                     autoCompFirst.itemSelectEvent.subscribe(suggestTrainerName);
                     <?php if ( $this->setting['display_middle_name'] ) {?>
                     autoCompMiddle.itemSelectEvent.subscribe(suggestTrainerName);
                     <?php } ?>
                     autoCompBirthdate.itemSelectEvent.subscribe(suggestTrainerBirthdate);//TA:#536.2
+                    autoCompNationalId.itemSelectEvent.subscribe(suggestTrainerNationalID);//TA:#536.2
                 });
                 // fired on "insert" button click
                 function addTrainer(oButton) {

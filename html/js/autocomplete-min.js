@@ -128,7 +128,10 @@
 		      }
 		      // TA:113 is trainer
 		      if(typeof aResultItem[8] != "undefined" && aResultItem[8] != "" && aResultItem[8] != "0") {
-		        aMarkup [aMarkup.length] = " - " + aResultItem[8] + "";  
+		    	//TA:#536.2 aMarkup [aMarkup.length] = " - " + aResultItem[8] + "";
+		    	  if(aResultItem[8] === '1'){
+		    		  aMarkup [aMarkup.length] = " (Trainer)";
+		    	  }
 		      }
 		      
 		      
@@ -142,94 +145,77 @@
 		// This function returns markup that bolds the original query,
 		// and also displays to additional pieces of supplemental data.
 		autoComp.formatResult = function(aResultItem, sQuery) {
-
 		   SPAN_BEGIN = "<span style='font-weight:bold'>";
 		   SPAN_END = "</span>";
-
 		   var aMarkup = ["<div id='ysearchresult'>"];
-
 		   var spanInner = '';
-		   
 		   for(var i = 1; i <= 3; i++) {
 			   aMarkup [aMarkup.length] = aResultItem[i] + " "; 
-		   }
-		      
+		   }  
 		   aMarkup [aMarkup.length] = " (";
-	
 		            if(sQuery == aResultItem[7].substr(0,sQuery.length)) {
 		              aMarkup [aMarkup.length] = SPAN_BEGIN;
 		              aMarkup [aMarkup.length] = aResultItem[7].substr(0,sQuery.length);
 		              aMarkup [aMarkup.length] = SPAN_END;
 		              aMarkup [aMarkup.length] = aResultItem[7].substr(sQuery.length);
 		            } 
-//		            else {
-//				      	  aMarkup [aMarkup.length]= aResultItem[7];
-//		            }
-		            
 		            aMarkup [aMarkup.length] = ")";  
-		      
-		     
 		      // facility
 		      if(typeof aResultItem[5] != "undefined" && aResultItem[5] != "" && aResultItem[5] != "0") {
 		        aMarkup [aMarkup.length] = " - " + aResultItem[5] + "";  
 		      }
 		      // TA:113 is trainer
 		      if(typeof aResultItem[8] != "undefined" && aResultItem[8] != "" && aResultItem[8] != "0") {
-		        aMarkup [aMarkup.length] = " - " + aResultItem[8] + "";  
-		      }
-		      
-		      
+		        //TA:#536.2 aMarkup [aMarkup.length] = " - " + aResultItem[8] + "";
+		    	  if(aResultItem[8] === '1'){
+		    		  aMarkup [aMarkup.length] = " (Trainer)";
+		    	  }
+		      }   
 		      aMarkup [aMarkup.length]= "</div>";
 		  return (aMarkup.join(""));
 		};
 	}
 	
-//	function formatNameAutocomplete(autoComp) {
-//		// This function returns markup that bolds the original query,
-//		// and also displays to additional pieces of supplemental data.
-//		autoComp.formatResult = function(aResultItem, sQuery) {
-//		   var sKey = aResultItem[0]; // the entire result key
-//		   var sKeyQuery = sKey.substr(0, sQuery.length); // the query itself
-//		   var sKeyRemainder = sKey.substr(sQuery.length); // the rest of the result
-//
-//		   SPAN_BEGIN = "<span style='font-weight:bold'>";
-//		   SPAN_END = "</span>";
-//
-//		   var aMarkup = ["<div id='ysearchresult'>"];
-//
-//		   var spanInner = '';
-//
-//		      for(var i = 1; i <= 3; i++) {
-//					if (aMarkup.length > 1)
-//						aMarkup [aMarkup.length]= ' ';
-//		            // match an additional result item (e.g., when searching both last and first names)
-//					//TA: toUpperCase() does not work for some international chars. It is bug in https://bugzilla.mozilla.org/show_bug.cgi?id=394604 that was not fixed 
-//		            if(sQuery.toUpperCase() == aResultItem[i].substr(0,sQuery.length).toUpperCase()) {
-//		              aMarkup [aMarkup.length] = SPAN_BEGIN;
-//		              aMarkup [aMarkup.length] = aResultItem[i].substr(0,sQuery.length);
-//		              aMarkup [aMarkup.length] = SPAN_END;
-//		              aMarkup [aMarkup.length] = aResultItem[i].substr(sQuery.length);
-//		            } else {
-//				      	  aMarkup [aMarkup.length]= aResultItem[i];
-//		            }
-//
-//		      }
-//		      
-//		      // birthdate
-//		      if(typeof aResultItem[7] != "undefined" && aResultItem[7] != "") {
-//		        aMarkup [aMarkup.length] = " (" + aResultItem[7] + ")";  
-//		      }
-//		      // facility
-//		      if(typeof aResultItem[5] != "undefined" && aResultItem[5] != "" && aResultItem[5] != "0") {
-//		        aMarkup [aMarkup.length] = " - " + aResultItem[5] + "";  
-//		      }
-//		      // TA:113 is trainer
-//		      if(typeof aResultItem[8] != "undefined" && aResultItem[8] != "" && aResultItem[8] != "0") {
-//		        aMarkup [aMarkup.length] = " - " + aResultItem[8] + "";  
-//		      }
-//		      
-//		      
-//		      aMarkup [aMarkup.length]= "</div>";
-//		  return (aMarkup.join(""));
-//		};
-//	}
+	//TA:#536.2
+	function formatNationalIdAutocomplete(autoComp) {
+		// This function returns markup that bolds the original query,
+		// and also displays to additional pieces of supplemental data.
+		autoComp.formatResult = function(aResultItem, sQuery) {
+		   SPAN_BEGIN = "<span style='font-weight:bold'>";
+		   SPAN_END = "</span>";
+		   var aMarkup = ["<div id='ysearchresult'>"];
+		   var spanInner = '';
+		   for(var i = 1; i <= 3; i++) {
+			   aMarkup [aMarkup.length] = aResultItem[i] + " "; 
+		   } 
+		   // birthdate
+		   aMarkup [aMarkup.length] = " (";
+		      if(typeof aResultItem[7] != "undefined" && aResultItem[7] != "" && aResultItem[7] != "0") {
+		        aMarkup [aMarkup.length] = " - " + aResultItem[7] + "";  
+		      }
+		      aMarkup [aMarkup.length] = ")";  
+		        
+		      aMarkup [aMarkup.length] = " - "; 
+		      if(sQuery == aResultItem[8].substr(0,sQuery.length)) {
+		              aMarkup [aMarkup.length] = SPAN_BEGIN;
+		              aMarkup [aMarkup.length] = aResultItem[8].substr(0,sQuery.length);
+		              aMarkup [aMarkup.length] = SPAN_END;
+		              aMarkup [aMarkup.length] = aResultItem[8].substr(sQuery.length);
+		            } 
+		            
+		      // facility
+		      if(typeof aResultItem[5] != "undefined" && aResultItem[5] != "" && aResultItem[5] != "0") {
+		        aMarkup [aMarkup.length] = " - " + aResultItem[5] + "";  
+		      }
+		      // TA:113 is trainer
+		      if(typeof aResultItem[9] != "undefined" && aResultItem[9] != "" && aResultItem[9] != "0") {
+		    	  if(aResultItem[9] === '1'){
+		    		  aMarkup [aMarkup.length] = " (Trainer)";
+		    	  }  
+		      }   
+		      aMarkup [aMarkup.length]= "</div>";
+		  return (aMarkup.join(""));
+		};
+	}
+	
+
