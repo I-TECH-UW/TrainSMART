@@ -796,7 +796,6 @@ if ($this->row['has_known_participants']) :
                 <!-- TA:536.2 -->
                 <div id="trainerContainerBirthdate" class="autocomplete" style="z-index:9001;"></div>
                 <div id="trainerContainerNationalId" class="autocomplete" style="z-index:9001;"></div>
-            </div>
 
             <script type="text/javascript">
                 YAHOO.util.Event.onDOMReady(function () {
@@ -1028,8 +1027,13 @@ if ($this->row['has_known_participants']) :
 <input type="text" id="person_middle_name" size="15" value="<?php echo $this->translation['Middle Name']; ?>"
        onfocus="middleNameOnFocus(this)" onblur="middleNameOnBlur(this)">
 <?php } ?>
-<input type="text" id="person_birthdate" size="9" disabled="true" value="<?php tp('Birthdate'); ?>" alt="Birthdate">
-<input type="text" id="person_facility" size="15" disabled="true" value="<?php tp('Facility'); ?>" alt="Facility">
+<!-- TA:#536.3 make autocomplete -->
+<input type="text" id="person_birthdate" size="9" value="<?php tp('Birthdate'); ?>" alt="Birthdate"
+      onfocus="birthdateOnFocus(this)" onblur="birthdateOnBlur(this)"/>
+<!-- TA:#536.3 make autocomplete -->
+<input type="text" id="person_nationalId" size="9" value="<?php tp('National ID'); ?>" alt="<?php tp('National ID'); ?>" 
+      onfocus="nationalIdOnFocus(this)" onblur="nationalIdOnBlur(this)"/>
+<input type="text" id="person_facility" size="15" disabled="true" value="<?php tp('Facility'); ?>" alt="Facility"/>
 <?php
 if ($this->setting ['display_region_c']) {
     $location_title = $this->translation['Region C (Local Region)'];
@@ -1044,6 +1048,12 @@ if ($this->setting ['display_region_c']) {
 ?>
 <input type="text" id="person_health" size="15" disabled="true" value="<?php echo $location_title; ?>" alt="Location">
 <input type="hidden" id="person_id" value="0"/>
+&nbsp;&nbsp;&nbsp;
+<input type="button" name="Insert" value="<?php tp("Insert"); ?>" class="insert" id="personInsertButton"
+                   onclick="addPerson(this);return false;">
+            &nbsp;&nbsp;&nbsp;
+            <a href="javascript:submitThenRedirect('<?php echo $this->base_url; ?>/person/add/trainingredirect/<?php echo $this->row['id']; ?>');"><?php tp('New Participant Form'); ?></a>
+        
 
     <div>
         <div id="personContainerFirst" class="autoComplete" style="z-index: 9001;"></div>
@@ -1054,15 +1064,11 @@ if ($this->setting ['display_region_c']) {
         <?php if ($this->setting['display_middle_name'] && $this->setting['display_middle_name_last']) { ?>
             <div id="personContainerMiddle" class="autoComplete" style="margin-left:135px;z-index: 9001;"></div>
         <?php } ?>
-
-
-        <div class="actionBtn" style="float:right; margin-top: -18px;">
-            <input type="button" name="Insert" value="<?php tp("Insert"); ?>" class="insert" id="personInsertButton"
-                   onclick="addPerson(this);return false;">
-            &nbsp;&nbsp;&nbsp;
-            <a href="javascript:submitThenRedirect('<?php echo $this->base_url; ?>/person/add/trainingredirect/<?php echo $this->row['id']; ?>');"><?php tp('New Participant Form'); ?></a>
+        
+        <!-- TA:536.3 -->
+                <div id="personContainerBirthdate" class="autocomplete" style="z-index:9001;"></div>
+                <div id="personContainerNationalId" class="autocomplete" style="z-index:9001;"></div>
         </div>
-
 
         <script type="text/javascript">
             YAHOO.util.Event.onDOMReady(function () {
@@ -1085,6 +1091,20 @@ if ($this->setting ['display_region_c']) {
                 YAHOO.util.Dom.get('personContainerMiddle').style.position = "absolute"; // fix position
                 YAHOO.util.Dom.get('personContainerMiddle').style.top = '0px';
                 <?php } ?>
+
+              //TA:#536.3 birthdate
+                var autoCompPersonBirthdate = makeAutocomplete('person_birthdate', 'personContainerBirthdate', '<?php echo $this->base_url;?>/training/person-birthdate-list/outputType/text/');
+                formatBirthdateAutocomplete(autoCompPersonBirthdate);
+                YAHOO.util.Dom.get('personContainerBirthdate').style.position = "absolute";
+                YAHOO.util.Dom.get('personContainerBirthdate').style.top = '0px';
+                //
+                
+                 //TA:#536.3 NationalId
+                var autoCompPersonNationalId = makeAutocomplete('person_nationalId', 'personContainerNationalId', '<?php echo $this->base_url;?>/training/person-NationalId-list/outputType/text/');
+                formatNationalIdAutocomplete(autoCompPersonNationalId);
+                YAHOO.util.Dom.get('personContainerNationalId').style.position = "absolute";
+                YAHOO.util.Dom.get('personContainerNationalId').style.top = '0px';
+                //
 
                 var oPFirst = YAHOO.util.Dom.get('person_first_name');
                 var oPLast = YAHOO.util.Dom.get('person_last_name');
@@ -1129,11 +1149,36 @@ if ($this->setting ['display_region_c']) {
 
                 };
 
+              //TA:#536.3
+                function suggestPersonBirthdate(oSelf, elItem, oData) {
+                    oPId.value = elItem[2][4];
+                    oPBday.value = elItem[2][7];
+                    oPFacility.value = elItem[2][5];
+                    OPHealth.value = elItem[2][<?php echo $location_idx;?>];
+                    oPLast.value = elItem[2][2];
+                    oPFirst.value = elItem[2][1];
+                    oPMiddle.value = elItem[2][3];
+                };
+
+              //TA:#536.3
+                function suggestPersonNationalID(oSelf, elItem, oData) {
+                	oPId.value = elItem[2][4];
+                	oPBday.value = elItem[2][7];
+                    oPFacility.value = elItem[2][5];
+                    OPHealth.value = elItem[2][<?php echo $location_idx;?>];
+                    oPLast.value = elItem[2][2];
+                    oPFirst.value = elItem[2][1];
+                    oPMiddle.value = elItem[2][3];
+                };
+
                 autoCompPerson.itemSelectEvent.subscribe(suggestPersonName);
                 autoCompPersonFirst.itemSelectEvent.subscribe(suggestPersonName);
                 <?php if ( $this->setting['display_middle_name'] ) { ?>
                 autoCompPersonMiddle.itemSelectEvent.subscribe(suggestPersonName);
                 <?php } ?>
+
+                autoCompPersonBirthdate.itemSelectEvent.subscribe(suggestPersonBirthdate);//TA:#536.3
+                autoCompPersonNationalId.itemSelectEvent.subscribe(suggestPersonNationalID);//TA:#536.3
 
             });
 

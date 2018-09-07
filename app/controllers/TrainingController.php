@@ -2132,6 +2132,27 @@ class TrainingController extends ReportFilterHelpers {
 	    $rowArray = $this->_attach_locations ( $rowArray );
 	    $this->sendData ( $rowArray );
 	}
+	
+	/**
+	 * TA:#536.3 autocomplete ajax (person)
+	 */
+	public function personBirthdateListAction() {
+	    require_once ('models/table/Person.php');
+	    $rowArray = Person::suggestionListByBirthdate ( $this->getParam ( 'query' ), 100 , $this->setting ( 'display_middle_name_last' ));
+	    $rowArray = $this->_attach_locations ( $rowArray );
+	    $this->sendData ( $rowArray );
+	}
+	
+	/**
+	 * TA:#536.3 autocomplete ajax (person)
+	 */
+	public function personNationalidListAction() {
+	    require_once ('models/table/Person.php');
+	    $rowArray = Person::suggestionListByNationalId ( $this->getParam ( 'query' ), 100 , $this->setting ( 'display_middle_name_last' ));
+	    $rowArray = $this->_attach_locations ( $rowArray );
+	    $this->sendData ( $rowArray );
+	}
+	
 
 	/**
 	* autocomplete ajax (person)

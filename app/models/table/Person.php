@@ -75,10 +75,12 @@ class Person extends ITechTable
 
 	public static function suggestionList($match = false, $limit = 100, $middleNameLast = false, $priority = array('last_name','first_name','middle_name')) {
 		if ( !$middleNameLast )
-		$additionalCols = array('p.first_name','p.middle_name','p.last_name','p.id','f.facility_name','f.location_id', 'p.birthdate');
+		    //TA:#536.3 $additionalCols = array('p.first_name','p.middle_name','p.last_name','p.id','f.facility_name','f.location_id', 'p.birthdate');
+		    $additionalCols = array('p.first_name','p.middle_name','p.last_name','p.id','f.facility_name','f.location_id', 'p.birthdate', 'p.national_id');
 		else
-		$additionalCols = array('p.first_name','p.last_name','p.middle_name','p.id','f.facility_name','f.location_id', 'p.birthdate');
-
+		    //TA:#536.3 $additionalCols = array('p.first_name','p.last_name','p.middle_name','p.id','f.facility_name','f.location_id', 'p.birthdate');
+		    $additionalCols = array('p.first_name','p.last_name','p.middle_name','p.id','f.facility_name','f.location_id', 'p.birthdate', 'p.national_id');
+		
 		$rowArray = array();
 
 		foreach( $priority as $keyrow ) {
@@ -100,6 +102,16 @@ class Person extends ITechTable
 
 	public static function suggestionListByMiddleName($match = false, $limit = 100, $middleNameLast = false) {
 		return self::suggestionList($match,$limit,$middleNameLast, array('middle_name','last_name','first_name'));
+	}
+	
+	//TA:#536.3
+	public static function suggestionListByBirthdate($match = false, $limit = 100, $middleNameLast = false) {
+	    return self::suggestionList($match,$limit,$middleNameLast, array('birthdate'));
+	}
+	
+	//TA:#536.3
+	public static function suggestionListByNationalId($match = false, $limit = 100, $middleNameLast = false) {
+	    return self::suggestionList($match,$limit,$middleNameLast, array('national_id'));
 	}
 
 	public static function suggestionFindDupes($match_last_name, $limit = 100, $middleNameLast = false, $fieldAndWhere = array()) {
