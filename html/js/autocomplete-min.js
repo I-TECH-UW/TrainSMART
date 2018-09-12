@@ -127,9 +127,10 @@
 		        aMarkup [aMarkup.length] = " - " + aResultItem[5] + "";  
 		      }
 		      // TA:113 is trainer
-		      if(typeof aResultItem[8] != "undefined" && aResultItem[8] != "" && aResultItem[8] != "0") {
+		      //if(typeof aResultItem[8] != "undefined" && aResultItem[8] != "" && aResultItem[8] != "0") {
 		    	//TA:#536.2 aMarkup [aMarkup.length] = " - " + aResultItem[8] + "";
-		    	  if(aResultItem[8] === '1'){
+		      if(typeof aResultItem[9] != "undefined" && aResultItem[9] != "" && aResultItem[9] != "0") {
+		    	  if(aResultItem[9] === '1'){
 		    		  aMarkup [aMarkup.length] = " (Trainer)";
 		    	  }
 		      }
@@ -165,9 +166,10 @@
 		        aMarkup [aMarkup.length] = " - " + aResultItem[5] + "";  
 		      }
 		      // TA:113 is trainer
-		      if(typeof aResultItem[8] != "undefined" && aResultItem[8] != "" && aResultItem[8] != "0") {
+//		      if(typeof aResultItem[8] != "undefined" && aResultItem[8] != "" && aResultItem[8] != "0") {
 		        //TA:#536.2 aMarkup [aMarkup.length] = " - " + aResultItem[8] + "";
-		    	  if(aResultItem[8] === '1'){
+		      if(typeof aResultItem[9] != "undefined" && aResultItem[9] != "" && aResultItem[9] != "0") {
+		    	  if(aResultItem[9] === '1'){
 		    		  aMarkup [aMarkup.length] = " (Trainer)";
 		    	  }
 		      }   
