@@ -1238,7 +1238,7 @@ class TrainingController extends ReportFilterHelpers {
 				if ($result == - 1) {
 					$sendRay ['error'] = t ( 'This' ).' '.t( 'trainer' ).' '.t( 'is already in this training session.' );
 				}else if($result == null){//TA:#345
-				    $sendRay ['error'] = t ( 'This person cannot be added to this training session.' );
+				    $sendRay ['error'] = t ( 'This person cannot be added to this training session.' );//TA:#536.2
 				}
 				$this->sendData ( $sendRay );
 

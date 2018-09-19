@@ -847,7 +847,7 @@ if ($this->row['has_known_participants']) :
 
                         //TA:113
                         oTrainerId.value = elItem[2][4];
-                        oIsTrainer.value = elItem[2][8];
+                        oIsTrainer.value = elItem[2][9];//TA:#536.3 oIsTrainer.value = elItem[2][8];
                         oTrainerBday.value = elItem[2][7];
                         oTrainerFacility.value = elItem[2][5];
                         OTrainerHealth.value = elItem[2][<?php echo $location_idx;?>];
@@ -887,7 +887,7 @@ if ($this->row['has_known_participants']) :
                     //TA:#536.2
                     function suggestTrainerBirthdate(oSelf, elItem, oData) {
                         oTrainerId.value = elItem[2][4];
-                        oIsTrainer.value = elItem[2][8];
+                        oIsTrainer.value = elItem[2][9]; //TA:#536.3 oIsTrainer.value = elItem[2][8];
                         oTrainerBday.value = elItem[2][7];
                         oTrainerFacility.value = elItem[2][5];
                         OTrainerHealth.value = elItem[2][<?php echo $location_idx;?>];
@@ -899,7 +899,7 @@ if ($this->row['has_known_participants']) :
                   //TA:#536.2
                     function suggestTrainerNationalID(oSelf, elItem, oData) {
                         oTrainerId.value = elItem[2][4];
-                        oIsTrainer.value = elItem[2][8];
+                        oIsTrainer.value = elItem[2][9]; //TA:#536.3 oIsTrainer.value = elItem[2][8];
                         oTrainerBday.value = elItem[2][7];
                         oTrainerFacility.value = elItem[2][5];
                         OTrainerHealth.value = elItem[2][<?php echo $location_idx;?>];
@@ -939,7 +939,7 @@ if ($this->row['has_known_participants']) :
                     //   return;
                     //    }
                     <?php //TA:#345 if (@$this->setting['require_trainer_skill']) : ?>
-                    if (oIsTrainer.value == 0) {
+                    if (oIsTrainer.value != 1) {//TA:#536
                         if (confirm("<?php echo t('You must edit this person\'s') . ' ' . t('trainer') . ' ' . t('profile before adding them to this session.\n\nWould you like to do this now?');?>")) {
                             submitThenRedirect('<?php echo $this->base_url;?>/person/edit/id/' + oTrainerId.value + '/trainingredirect/<?php echo $this->row['id']; ?>/maketrainer/1/days/1' + '#training');
                         }
