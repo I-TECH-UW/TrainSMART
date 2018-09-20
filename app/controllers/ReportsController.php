@@ -11028,9 +11028,10 @@ die (__LINE__ . " - " . $sql);
             
             // FACILITY NAME - SITE
             if (isset($criteria['show_facilityInput']) && $criteria['show_facilityInput']) {
-                $header_names['facility_name'] =  t('Facility Name');
+                $header_names['facility_name'] =  t('Site Name');
+                $header_names['facility_id'] =  t('Site ID');
                 if($select !== ""){ $select .= ", "; }
-                $select .= " facility.facility_name AS facility_name ";
+                $select .= " facility.facility_name AS facility_name, facility.id AS facility_id"; //TA:#541
             }
             if (isset($criteria['facilityInput']) && $criteria['facilityInput']) {if(is_array($criteria['facilityInput'])){
                     if($criteria['facilityInput'][0] > 0){
@@ -11285,7 +11286,7 @@ die (__LINE__ . " - " . $sql);
             
             // salary
             if (isset($criteria['show_salary_min']) && $criteria['show_salary_min']) {
-                $header_names['salary'] =  t('Annual Salary (R)');
+                $header_names['salary'] =  t('Salary (R)');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " employee.salary AS salary ";
             }
@@ -11300,7 +11301,7 @@ die (__LINE__ . " - " . $sql);
             
             // benefits
             if (isset($criteria['show_benefits_min']) && $criteria['show_benefits_min']) {
-                $header_names['benefits'] =  t('Annual Benefits (R)');
+                $header_names['benefits'] =  t('Financial Benefits (R)');
                 if($select !== ""){ $select .= ", "; }
                 $select .= " employee.benefits AS benefits ";
             }
@@ -11417,7 +11418,7 @@ LEFT JOIN employee_financial_benefits_description_option ON employee_financial_b
                 
             // stipend min
             if (isset($criteria['show_stipend_min']) && $criteria['show_stipend_min']) {
-                $header_names['stipend'] =  t('Annual Stipend (R)');
+                $header_names['stipend'] =  t('Stipend (R)');
                 if($select !== ""){ $select .= ", "; }
                 $select .= "employee.stipend AS stipend ";
             }
@@ -11432,7 +11433,7 @@ LEFT JOIN employee_financial_benefits_description_option ON employee_financial_b
             
             //COST MIN
             if (isset($criteria['show_cost_min']) && $criteria['show_cost_min']) {
-                $header_names['annual_cost'] =  t('Annual Cost (R)');
+                $header_names['annual_cost'] =  t('Total Cost for Quarter');
                 if($select !== ""){ $select .= ", "; }
                 $select .= "employee.annual_cost AS annual_cost ";
             }
