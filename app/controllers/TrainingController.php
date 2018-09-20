@@ -1238,7 +1238,7 @@ class TrainingController extends ReportFilterHelpers {
 				if ($result == - 1) {
 					$sendRay ['error'] = t ( 'This' ).' '.t( 'trainer' ).' '.t( 'is already in this training session.' );
 				}else if($result == null){//TA:#345
-				    $sendRay ['error'] = t ( 'This person cannot be added to this training session.' );
+				    $sendRay ['error'] = t ( 'This person cannot be added to this training session.' );//TA:#536.2
 				}
 				$this->sendData ( $sendRay );
 
@@ -2112,6 +2112,47 @@ class TrainingController extends ReportFilterHelpers {
 		$rowArray = $this->_attach_locations ( $rowArray );
 		$this->sendData ( $rowArray );
 	}
+	
+	/**
+	 * TA:#536.2 autocomplete ajax (trainer)
+	 */
+	public function trainerBirthdateListAction() {
+	    require_once ('models/table/Trainer.php');
+	    $rowArray = Trainer::suggestionListByBirthdate ( $this->getParam ( 'query' ), 100 , $this->setting ( 'display_middle_name_last' ));
+	    $rowArray = $this->_attach_locations ( $rowArray );
+	    $this->sendData ( $rowArray );
+	}
+	
+	/**
+	 * TA:#536.2 autocomplete ajax (trainer)
+	 */
+	public function trainerNationalidListAction() {
+	    require_once ('models/table/Trainer.php');
+	    $rowArray = Trainer::suggestionListByNationalId ( $this->getParam ( 'query' ), 100 , $this->setting ( 'display_middle_name_last' ));
+	    $rowArray = $this->_attach_locations ( $rowArray );
+	    $this->sendData ( $rowArray );
+	}
+	
+	/**
+	 * TA:#536.3 autocomplete ajax (person)
+	 */
+	public function personBirthdateListAction() {
+	    require_once ('models/table/Person.php');
+	    $rowArray = Person::suggestionListByBirthdate ( $this->getParam ( 'query' ), 100 , $this->setting ( 'display_middle_name_last' ));
+	    $rowArray = $this->_attach_locations ( $rowArray );
+	    $this->sendData ( $rowArray );
+	}
+	
+	/**
+	 * TA:#536.3 autocomplete ajax (person)
+	 */
+	public function personNationalidListAction() {
+	    require_once ('models/table/Person.php');
+	    $rowArray = Person::suggestionListByNationalId ( $this->getParam ( 'query' ), 100 , $this->setting ( 'display_middle_name_last' ));
+	    $rowArray = $this->_attach_locations ( $rowArray );
+	    $this->sendData ( $rowArray );
+	}
+	
 
 	/**
 	* autocomplete ajax (person)

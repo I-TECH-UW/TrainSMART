@@ -713,6 +713,25 @@ if ($this->row['has_known_participants']) :
                         if (objRef.value == "<?php echo $this->translation['Middle Name'];?>")
                             objRef.value = '';
                     }
+
+                    //TA:#536.2
+                    function birthdateOnBlur(objRef) {
+                        if (objRef.value == '')
+                            objRef.value = "<?php echo tp('Birthdate');?>";
+                    }
+                    function birthdateOnFocus(objRef) {
+                        if (objRef.value == "<?php echo tp('Birthdate');?>")
+                            objRef.value = '';
+                    }
+                    function nationalIdOnBlur(objRef) {
+                        if (objRef.value == '')
+                            objRef.value = "<?php echo tp('National ID');?>";
+                    }
+                    function nationalIdOnFocus(objRef) {
+                        if (objRef.value == "<?php echo tp('National ID');?>")
+                            objRef.value = '';
+                    }
+                    ///
                 </script>
                 <input type="text" id="trainer_first_name" size="15"
                        value="<?php echo $this->translation['First Name']; ?>" onfocus="firstNameOnFocus(this)"
@@ -731,8 +750,13 @@ if ($this->row['has_known_participants']) :
                            onblur="middleNameOnBlur(this)">
                 <?php } ?>
                 <!-- TA:113 add birthday, facility, distyrict fields as well -->
-                <input type="text" id="trainer_birthdate" size="9" disabled="true" value="<?php tp('Birthdate'); ?>"
-                       alt="Birthdate">
+                <!-- TA:#536.2 make autocomplete -->
+                <input type="text" id="trainer_birthdate" size="9" value="<?php tp('Birthdate'); ?>" alt="Birthdate" 
+                       onfocus="birthdateOnFocus(this)" onblur="birthdateOnBlur(this)"> 
+                       <!-- TA:#536.2 make autocomplete -->
+                <input type="text" id="trainer_nationalId" size="9" value="<?php tp('National ID'); ?>" alt="<?php tp('National ID'); ?>" 
+                       onfocus="nationalIdOnFocus(this)" onblur="nationalIdOnBlur(this)">
+                       
                 <input type="text" id="trainer_facility" size="15" disabled="true" value="<?php tp('Facility'); ?>"
                        alt="Facility">
                 <?php
@@ -769,7 +793,9 @@ if ($this->row['has_known_participants']) :
                 <?php if ($this->setting['display_middle_name'] && $this->setting['display_middle_name_last']) { ?>
                     <div id="trainerContainerMiddle" class="autocomplete" style="margin-left:135px;z-index:9001;"></div>
                 <?php } ?>
-            </div>
+                <!-- TA:536.2 -->
+                <div id="trainerContainerBirthdate" class="autocomplete" style="z-index:9001;"></div>
+                <div id="trainerContainerNationalId" class="autocomplete" style="z-index:9001;"></div>
 
             <script type="text/javascript">
                 YAHOO.util.Event.onDOMReady(function () {
@@ -793,6 +819,20 @@ if ($this->row['has_known_participants']) :
                     YAHOO.util.Dom.get('trainerContainerMiddle').style.top = '0px';
                     <?php } ?>
 
+                    //TA:#536.2 birthdate
+                    var autoCompBirthdate = makeAutocomplete('trainer_birthdate', 'trainerContainerBirthdate', '<?php echo $this->base_url;?>/training/trainer-birthdate-list/outputType/text/');
+                    formatBirthdateAutocomplete(autoCompBirthdate);
+                    YAHOO.util.Dom.get('trainerContainerBirthdate').style.position = "absolute";
+                    YAHOO.util.Dom.get('trainerContainerBirthdate').style.top = '0px';
+                    //
+                    
+                     //TA:#536.2 NationalId
+                    var autoCompNationalId = makeAutocomplete('trainer_nationalId', 'trainerContainerNationalId', '<?php echo $this->base_url;?>/training/trainer-NationalId-list/outputType/text/');
+                    formatNationalIdAutocomplete(autoCompNationalId);
+                    YAHOO.util.Dom.get('trainerContainerNationalId').style.position = "absolute";
+                    YAHOO.util.Dom.get('trainerContainerNationalId').style.top = '0px';
+                    //
+
                     var oTrainerFirst = YAHOO.util.Dom.get('trainer_first_name');
                     var oTrainerLast = YAHOO.util.Dom.get('trainer_last_name');
                     var oTrainerMiddle = YAHOO.util.Dom.get('trainer_middle_name');
@@ -807,7 +847,7 @@ if ($this->row['has_known_participants']) :
 
                         //TA:113
                         oTrainerId.value = elItem[2][4];
-                        oIsTrainer.value = elItem[2][8];
+                        oIsTrainer.value = elItem[2][9];//TA:#536.3 oIsTrainer.value = elItem[2][8];
                         oTrainerBday.value = elItem[2][7];
                         oTrainerFacility.value = elItem[2][5];
                         OTrainerHealth.value = elItem[2][<?php echo $location_idx;?>];
@@ -844,11 +884,37 @@ if ($this->row['has_known_participants']) :
                         //YAHOO.util.Dom.get('trainer_days').focus();
                     };
 
+                    //TA:#536.2
+                    function suggestTrainerBirthdate(oSelf, elItem, oData) {
+                        oTrainerId.value = elItem[2][4];
+                        oIsTrainer.value = elItem[2][9]; //TA:#536.3 oIsTrainer.value = elItem[2][8];
+                        oTrainerBday.value = elItem[2][7];
+                        oTrainerFacility.value = elItem[2][5];
+                        OTrainerHealth.value = elItem[2][<?php echo $location_idx;?>];
+                        oTrainerLast.value = elItem[2][2];
+                        oTrainerFirst.value = elItem[2][1];
+                        oTrainerMiddle.value = elItem[2][3];
+                    };
+
+                  //TA:#536.2
+                    function suggestTrainerNationalID(oSelf, elItem, oData) {
+                        oTrainerId.value = elItem[2][4];
+                        oIsTrainer.value = elItem[2][9]; //TA:#536.3 oIsTrainer.value = elItem[2][8];
+                        oTrainerBday.value = elItem[2][7];
+                        oTrainerFacility.value = elItem[2][5];
+                        OTrainerHealth.value = elItem[2][<?php echo $location_idx;?>];
+                        oTrainerLast.value = elItem[2][2];
+                        oTrainerFirst.value = elItem[2][1];
+                        oTrainerMiddle.value = elItem[2][3];
+                    };
+
                     autoComp.itemSelectEvent.subscribe(suggestTrainerName);
                     autoCompFirst.itemSelectEvent.subscribe(suggestTrainerName);
                     <?php if ( $this->setting['display_middle_name'] ) {?>
                     autoCompMiddle.itemSelectEvent.subscribe(suggestTrainerName);
                     <?php } ?>
+                    autoCompBirthdate.itemSelectEvent.subscribe(suggestTrainerBirthdate);//TA:#536.2
+                    autoCompNationalId.itemSelectEvent.subscribe(suggestTrainerNationalID);//TA:#536.2
                 });
                 // fired on "insert" button click
                 function addTrainer(oButton) {
@@ -873,7 +939,7 @@ if ($this->row['has_known_participants']) :
                     //   return;
                     //    }
                     <?php //TA:#345 if (@$this->setting['require_trainer_skill']) : ?>
-                    if (oIsTrainer.value == 0) {
+                    if (oIsTrainer.value != 1) {//TA:#536
                         if (confirm("<?php echo t('You must edit this person\'s') . ' ' . t('trainer') . ' ' . t('profile before adding them to this session.\n\nWould you like to do this now?');?>")) {
                             submitThenRedirect('<?php echo $this->base_url;?>/person/edit/id/' + oTrainerId.value + '/trainingredirect/<?php echo $this->row['id']; ?>/maketrainer/1/days/1' + '#training');
                         }
@@ -961,8 +1027,13 @@ if ($this->row['has_known_participants']) :
 <input type="text" id="person_middle_name" size="15" value="<?php echo $this->translation['Middle Name']; ?>"
        onfocus="middleNameOnFocus(this)" onblur="middleNameOnBlur(this)">
 <?php } ?>
-<input type="text" id="person_birthdate" size="9" disabled="true" value="<?php tp('Birthdate'); ?>" alt="Birthdate">
-<input type="text" id="person_facility" size="15" disabled="true" value="<?php tp('Facility'); ?>" alt="Facility">
+<!-- TA:#536.3 make autocomplete -->
+<input type="text" id="person_birthdate" size="9" value="<?php tp('Birthdate'); ?>" alt="Birthdate"
+      onfocus="birthdateOnFocus(this)" onblur="birthdateOnBlur(this)"/>
+<!-- TA:#536.3 make autocomplete -->
+<input type="text" id="person_nationalId" size="9" value="<?php tp('National ID'); ?>" alt="<?php tp('National ID'); ?>" 
+      onfocus="nationalIdOnFocus(this)" onblur="nationalIdOnBlur(this)"/>
+<input type="text" id="person_facility" size="15" disabled="true" value="<?php tp('Facility'); ?>" alt="Facility"/>
 <?php
 if ($this->setting ['display_region_c']) {
     $location_title = $this->translation['Region C (Local Region)'];
@@ -977,6 +1048,12 @@ if ($this->setting ['display_region_c']) {
 ?>
 <input type="text" id="person_health" size="15" disabled="true" value="<?php echo $location_title; ?>" alt="Location">
 <input type="hidden" id="person_id" value="0"/>
+&nbsp;&nbsp;&nbsp;
+<input type="button" name="Insert" value="<?php tp("Insert"); ?>" class="insert" id="personInsertButton"
+                   onclick="addPerson(this);return false;">
+            &nbsp;&nbsp;&nbsp;
+            <a href="javascript:submitThenRedirect('<?php echo $this->base_url; ?>/person/add/trainingredirect/<?php echo $this->row['id']; ?>');"><?php tp('New Participant Form'); ?></a>
+        
 
     <div>
         <div id="personContainerFirst" class="autoComplete" style="z-index: 9001;"></div>
@@ -987,15 +1064,11 @@ if ($this->setting ['display_region_c']) {
         <?php if ($this->setting['display_middle_name'] && $this->setting['display_middle_name_last']) { ?>
             <div id="personContainerMiddle" class="autoComplete" style="margin-left:135px;z-index: 9001;"></div>
         <?php } ?>
-
-
-        <div class="actionBtn" style="float:right; margin-top: -18px;">
-            <input type="button" name="Insert" value="<?php tp("Insert"); ?>" class="insert" id="personInsertButton"
-                   onclick="addPerson(this);return false;">
-            &nbsp;&nbsp;&nbsp;
-            <a href="javascript:submitThenRedirect('<?php echo $this->base_url; ?>/person/add/trainingredirect/<?php echo $this->row['id']; ?>');"><?php tp('New Participant Form'); ?></a>
+        
+        <!-- TA:536.3 -->
+                <div id="personContainerBirthdate" class="autocomplete" style="z-index:9001;"></div>
+                <div id="personContainerNationalId" class="autocomplete" style="z-index:9001;"></div>
         </div>
-
 
         <script type="text/javascript">
             YAHOO.util.Event.onDOMReady(function () {
@@ -1018,6 +1091,20 @@ if ($this->setting ['display_region_c']) {
                 YAHOO.util.Dom.get('personContainerMiddle').style.position = "absolute"; // fix position
                 YAHOO.util.Dom.get('personContainerMiddle').style.top = '0px';
                 <?php } ?>
+
+              //TA:#536.3 birthdate
+                var autoCompPersonBirthdate = makeAutocomplete('person_birthdate', 'personContainerBirthdate', '<?php echo $this->base_url;?>/training/person-birthdate-list/outputType/text/');
+                formatBirthdateAutocomplete(autoCompPersonBirthdate);
+                YAHOO.util.Dom.get('personContainerBirthdate').style.position = "absolute";
+                YAHOO.util.Dom.get('personContainerBirthdate').style.top = '0px';
+                //
+                
+                 //TA:#536.3 NationalId
+                var autoCompPersonNationalId = makeAutocomplete('person_nationalId', 'personContainerNationalId', '<?php echo $this->base_url;?>/training/person-NationalId-list/outputType/text/');
+                formatNationalIdAutocomplete(autoCompPersonNationalId);
+                YAHOO.util.Dom.get('personContainerNationalId').style.position = "absolute";
+                YAHOO.util.Dom.get('personContainerNationalId').style.top = '0px';
+                //
 
                 var oPFirst = YAHOO.util.Dom.get('person_first_name');
                 var oPLast = YAHOO.util.Dom.get('person_last_name');
@@ -1062,11 +1149,36 @@ if ($this->setting ['display_region_c']) {
 
                 };
 
+              //TA:#536.3
+                function suggestPersonBirthdate(oSelf, elItem, oData) {
+                    oPId.value = elItem[2][4];
+                    oPBday.value = elItem[2][7];
+                    oPFacility.value = elItem[2][5];
+                    OPHealth.value = elItem[2][<?php echo $location_idx;?>];
+                    oPLast.value = elItem[2][2];
+                    oPFirst.value = elItem[2][1];
+                    oPMiddle.value = elItem[2][3];
+                };
+
+              //TA:#536.3
+                function suggestPersonNationalID(oSelf, elItem, oData) {
+                	oPId.value = elItem[2][4];
+                	oPBday.value = elItem[2][7];
+                    oPFacility.value = elItem[2][5];
+                    OPHealth.value = elItem[2][<?php echo $location_idx;?>];
+                    oPLast.value = elItem[2][2];
+                    oPFirst.value = elItem[2][1];
+                    oPMiddle.value = elItem[2][3];
+                };
+
                 autoCompPerson.itemSelectEvent.subscribe(suggestPersonName);
                 autoCompPersonFirst.itemSelectEvent.subscribe(suggestPersonName);
                 <?php if ( $this->setting['display_middle_name'] ) { ?>
                 autoCompPersonMiddle.itemSelectEvent.subscribe(suggestPersonName);
                 <?php } ?>
+
+                autoCompPersonBirthdate.itemSelectEvent.subscribe(suggestPersonBirthdate);//TA:#536.3
+                autoCompPersonNationalId.itemSelectEvent.subscribe(suggestPersonNationalID);//TA:#536.3
 
             });
 
