@@ -167,12 +167,11 @@ class Tutoredit extends ITechTable
 
 			//'home_location_id'=>"$param[city]"
 		);
-		//print_r($data);
 
 		$db->update('person',$data,"id = '".$param['id']."'");
 		return $data;
 	}
-
+	
 	public function UpdateTutor($param){
 		$db = $this->dbfunc();
 
@@ -194,23 +193,27 @@ class Tutoredit extends ITechTable
 			'degreeyear'		=>	$param['degreeyear'],
 			'nationalityid'		=>	$param['nationality'],
 			'positionsheld'		=>	$param['position'],
-			'comments'			=>	$param['comments'],
+// 			'comments'			=>	$param['comments'],
+		    'comments'			=>	'a',
 			'facilityid'		=>	$param['facilityid'],
-			'cadreid'			=>	$param['cadreid'],
+// 			'cadreid'			=>	$param['cadreid'],
+		    'cadreid'			=>	'1',
       'institutionid'    =>  $param['institutionid'],
-				'specialty'    =>  $param['specialty'], //TA: added 7/22/2014
-				'contract_type'    =>  $param['contract_type'], //TA: added 7/22/2014
+			//	'specialty'    =>  $param['specialty'], //TA: added 7/22/2014
+		    'specialty'    =>  'a', //TA: added 7/22/2014
+// 				'contract_type'    =>  $param['contract_type'], //TA: added 7/22/2014
+		    'contract_type'    =>  '1', //TA: added 7/22/2014
 		);
 
 		$db->update('tutor',$tutor,"personid = '".$param['id']."'");
 		
-		//TA:#254
+ 		//TA:#254
 		require_once('Person.php');
 		$person = new Person();
-		if($param['tutor_not_active']){
-		  $person->update(array ('active'=>'inactive'),'id='.$param['id']);
+		if(isset($param['tutor_not_active']) && $param['tutor_not_active'] === 'on'){
+		   $person->update(array ('active'=>'inactive'),'id='.$param['id']);
 		}else{
-		  $person->update(array ('active'=>'active'),'id='.$param['id']);
+		   $person->update(array ('active'=>'active'),'id='.$param['id']);
 		}
 
 		$select = $this->dbfunc()->select()
@@ -292,7 +295,7 @@ class Tutoredit extends ITechTable
 */
 
 
-		return $tutor;
+ 		return $tutor;
 
 	}
 
