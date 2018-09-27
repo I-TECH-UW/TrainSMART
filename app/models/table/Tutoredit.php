@@ -207,7 +207,7 @@ class Tutoredit extends ITechTable
 		//TA:#254
 		require_once('Person.php');
 		$person = new Person();
-		if($param['tutor_not_active']){
+		if(isset($param['tutor_not_active']) && $param['tutor_not_active'] === 'on'){ //TA:#538
 		  $person->update(array ('active'=>'inactive'),'id='.$param['id']);
 		}else{
 		  $person->update(array ('active'=>'active'),'id='.$param['id']);
