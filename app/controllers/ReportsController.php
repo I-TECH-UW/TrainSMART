@@ -10759,9 +10759,9 @@ die (__LINE__ . " - " . $sql);
         $year = date('Y');
         if ($month < 4) {
             return "10/01/" . $year-1;
-        } elseif ($month > 3 && $n < 7) {
+        } elseif ($month > 3 && $month < 7) {
             return "01/01/" . $year;
-        } elseif ($month > 6 && $n < 10) {
+        } elseif ($month > 6 && $month < 10) {
             return "04/01/" . $year;
         } elseif ($month > 9) {
             return "07/01/" . $year;
@@ -10775,14 +10775,15 @@ die (__LINE__ . " - " . $sql);
         $year = date('Y');
         if ($month < 4) {
             return "12/31/" . $year-1;
-        } elseif ($month > 3 && $n < 7) {
+        } elseif ($month > 3 && $month < 7) {
             return "31/03/" . $year;
-        } elseif ($month > 6 && $n < 10) {
+        } elseif ($month > 6 && $month < 10) {
             return "06/30/" . $year;
         } elseif ($month > 9) {
             return "09/30/" . $year;
         }
     }
+  
     
     //TA:#499
     public function employees2Action(){
