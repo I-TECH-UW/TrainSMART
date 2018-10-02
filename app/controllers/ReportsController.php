@@ -10789,7 +10789,7 @@ die (__LINE__ . " - " . $sql);
     public function employees2Action(){
         $locations = Location::getAll();
         $criteria = $this->getAllParams();
-        
+       
         $db = $this->dbfunc();
         
         if (isset($criteria['go']) && $criteria['go']) {
@@ -11106,12 +11106,12 @@ die (__LINE__ . " - " . $sql);
                     $select .= " SUBSTRING_INDEX(mechanism_option.end_date, ' ', 1) AS mechanism_end_date ";
                     if(isset($criteria['mech_fund_date_start']) && $criteria['mech_fund_date_start']){
                         if($where !== ""){ $where .= " AND "; }
-                        $d = DateTime::createFromFormat('d/m/Y', $criteria['mech_fund_date_start']);
+                        $d = DateTime::createFromFormat('m/d/Y', $criteria['mech_fund_date_start']);
                         $where .= " mechanism_option.end_date >= '" . $d->format('Y-m-d') . "'";
                     }
                     if(isset($criteria['mech_fund_date_end']) && $criteria['mech_fund_date_end']){
                         if($where !== ""){ $where .= " AND "; }
-                        $d = DateTime::createFromFormat('d/m/Y', $criteria['mech_fund_date_end']);
+                        $d = DateTime::createFromFormat('m/d/Y', $criteria['mech_fund_date_end']);
                         $where .= " mechanism_option.end_date <= '" .  $d->format('Y-m-d') . "'";
                     }
                 }
@@ -11124,12 +11124,12 @@ die (__LINE__ . " - " . $sql);
                         $select .= " SUBSTRING_INDEX(employee.agreement_start_date, ' ', 1) AS contract_start_date ";
                         if($criteria['contract_start_date_from']){
                             if($where !== ""){ $where .= " AND "; }
-                            $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_start_date_from']);
+                            $d = DateTime::createFromFormat('m/d/Y', $criteria['contract_start_date_from']);
                             $where .= " employee.agreement_start_date >= '" .  $d->format('Y-m-d') . "'";
                         }
                         if($criteria['contract_start_date_to']){
                             if($where !== ""){ $where .= " AND "; }
-                            $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_start_date_to']);
+                            $d = DateTime::createFromFormat('m/d/Y', $criteria['contract_start_date_to']);
                             $where .= " employee.agreement_start_date <= '" . $d->format('Y-m-d'). "'";
                         } 
             }
@@ -11142,12 +11142,12 @@ die (__LINE__ . " - " . $sql);
                     $select .= " SUBSTRING_INDEX(employee.agreement_end_date, ' ', 1) AS contract_end_date ";
                     if($criteria['contract_end_date_from']){
                         if($where !== ""){ $where .= " AND "; }
-                        $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_end_date_from']);
+                        $d = DateTime::createFromFormat('m/d/Y', $criteria['contract_end_date_from']);
                         $where .= " employee.agreement_end_date >= '" .  $d->format('Y-m-d') . "'";
                     }
                     if($criteria['contract_end_date_to']){
                         if($where !== ""){ $where .= " AND "; }
-                        $d = DateTime::createFromFormat('d/m/Y', $criteria['contract_end_date_to']);
+                        $d = DateTime::createFromFormat('m/d/Y', $criteria['contract_end_date_to']);
                         $where .= " employee.agreement_end_date <= '" . $d->format('Y-m-d'). "'";
                     }
                 }
@@ -11196,12 +11196,12 @@ die (__LINE__ . " - " . $sql);
                     $select .= " SUBSTRING_INDEX(employee.transition_date, ' ', 1) AS transition_date ";
                     if($criteria['intended_transition_start_date']){
                         if($where !== ""){ $where .= " AND "; }
-                        $d = DateTime::createFromFormat('d/m/Y', $criteria['intended_transition_start_date']);
+                        $d = DateTime::createFromFormat('m/d/Y', $criteria['intended_transition_start_date']);
                         $where .= " employee.transition_date >= '" . $d->format('Y-m-d') . "'";
                     }
                     if($criteria['intended_transition_end_date']){
                         if($where !== ""){ $where .= " AND "; }
-                        $d = DateTime::createFromFormat('d/m/Y', $criteria['intended_transition_end_date']);
+                        $d = DateTime::createFromFormat('m/d/Y', $criteria['intended_transition_end_date']);
                         $where .= " employee.transition_date <= '" . $d->format('Y-m-d') . "'";
                     }
             }
@@ -11250,12 +11250,12 @@ die (__LINE__ . " - " . $sql);
             }
             if (isset($criteria['transition_start_date']) && $criteria['transition_start_date']) {
                 if($where !== ""){ $where .= " AND "; }
-                $d = DateTime::createFromFormat('d/m/Y', $criteria['transition_start_date']);
+                $d = DateTime::createFromFormat('m/d/Y', $criteria['transition_start_date']);
                 $where .=" (transition_complete_date >= '" . $d->format('Y-m-d') . "' OR transition_complete_date like '0000-00-00%' OR transition_complete_date IS NULL) ";//TA:#511
             }
             if (isset($criteria['transition_end_date']) && $criteria['transition_end_date']) {
                 if($where !== ""){ $where .= " AND "; }
-                $d = DateTime::createFromFormat('d/m/Y', $criteria['transition_end_date']);
+                $d = DateTime::createFromFormat('m/d/Y', $criteria['transition_end_date']);
                 $where .=" transition_complete_date <= '" . $d->format('Y-m-d'). "'";
             }
             
