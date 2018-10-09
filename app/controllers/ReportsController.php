@@ -11318,12 +11318,14 @@ die (__LINE__ . " - " . $sql);
             //benefits description
             if ((isset($criteria['show_employee_financial_benefits_description']) && $criteria['show_employee_financial_benefits_description']) ||
                 (isset($criteria['employee_financial_benefits_description']) && $criteria['employee_financial_benefits_description'])) {
-                    $header_names['financial_benefits_description_option'] =  t('Financial Benefits Description');
-                    if($select !== ""){ $select .= ", "; }
-                    $select .= " GROUP_CONCAT(DISTINCT  employee_financial_benefits_description_option.financial_benefits_description_option) as financial_benefits_description_option ";
                    $more_join .= "  
 LEFT JOIN employee_to_financial_benefits_description_option ON employee_to_financial_benefits_description_option.employee_id = employee.id 
-LEFT JOIN employee_financial_benefits_description_option ON employee_financial_benefits_description_option.id = employee_to_financial_benefits_description_option.employee_financial_benefits_description_option_id ";
+LEFT JOIN employee_financial_benefits_description_option ON employee_financial_benefits_description_option.id = employee_to_financial_benefits_description_option.employee_financial_benefits_description_option_id ";       
+                   if (isset($criteria['show_employee_financial_benefits_description']) && $criteria['show_employee_financial_benefits_description']){
+                       $header_names['financial_benefits_description_option'] =  t('Financial Benefits Description');
+                       if($select !== ""){ $select .= ", "; }
+                       $select .= " GROUP_CONCAT(DISTINCT  employee_financial_benefits_description_option.financial_benefits_description_option) as financial_benefits_description_option ";
+                   }
                    if (isset($criteria['employee_financial_benefits_description']) && $criteria['employee_financial_benefits_description']){
                        if(is_array($criteria['employee_financial_benefits_description'])){
                            if($criteria['employee_financial_benefits_description'][0] > 0){
@@ -11448,11 +11450,12 @@ LEFT JOIN employee_financial_benefits_description_option ON employee_financial_b
             }
             
             //AGENCY
-            if ((isset($criteria['show_agencies']) && $criteria['show_agencies']) || (isset($criteria['agencies']) && $criteria['agencies'])) {
-                $header_names['funder_phrase'] =  t('Implementing Agency');
-                if($select !== ""){ $select .= ", "; }
-                $select .= "partner_funder_option.funder_phrase AS funder_phrase ";
-                if (isset($criteria['agencies']) && $criteria['agencies']){
+            if(isset($criteria['show_agencies']) && $criteria['show_agencies']){
+                    $header_names['funder_phrase'] =  t('Implementing Agency');
+                    if($select !== ""){ $select .= ", "; }
+                    $select .= "partner_funder_option.funder_phrase AS funder_phrase ";
+            }
+            if (isset($criteria['agencies']) && $criteria['agencies']){
                     if(is_array($criteria['agencies'])){
                         if($criteria['agencies'][0] > 0){
                             if($where !== ""){ $where .= " AND "; }
@@ -11462,8 +11465,7 @@ LEFT JOIN employee_financial_benefits_description_option ON employee_financial_b
                         if($where !== ""){ $where .= " AND "; }
                         $where .= ' mechanism_option.funder_id = '. $criteria['agencies'];
                     }
-                }
-            }
+             }
             
             //MECHANISM PARTNERS
             if ((isset($criteria['show_mech_partners']) && $criteria['show_mech_partners']) || (isset($criteria['mech_partners']) && $criteria['mech_partners'])) {
