@@ -199,7 +199,7 @@ class FacilityController extends ReportFilterHelpers {
 			// save row
 			if ($location_id) {
 				// map db field names to FORM field names
-			    $facilityRow->facility_name = str_replace('"','\\\\"', $this->getSanParam ( 'facility_name' )); //$this->getSanParam ( 'facility_name' );
+			    $facilityRow->facility_name = str_replace('"','\/"', $this->getSanParam ( 'facility_name' )); //$this->getSanParam ( 'facility_name' );
 				$facilityRow->location_id = $location_id;
 				$facilityRow->type_option_id = ($this->getSanParam ( 'facility_type_id' ) ? $this->getSanParam ( 'facility_type_id' ) : null);
 				$facilityRow->facility_comments = $this->getParam ( 'facility_comments' );
