@@ -200,7 +200,8 @@ class FacilityController extends ReportFilterHelpers {
 			if ($location_id) {
 				// map db field names to FORM field names
 			    //$facilityRow->facility_name = str_replace('"','&quot', $this->getSanParam ( 'facility_name' )); 
-			    $facilityRow->facility_name = stripslashes(stripslashes(str_replace('"','//"',$this->getSanParam ( 'facility_name' ))));
+			    //$facilityRow->facility_name = stripslashes(stripslashes(str_replace('"','//"',$this->getSanParam ( 'facility_name' ))));
+			    $facilityRow->facility_name = stripslashes($this->getSanParam ( 'facility_name' ));
 				$facilityRow->location_id = $location_id;
 				$facilityRow->type_option_id = ($this->getSanParam ( 'facility_type_id' ) ? $this->getSanParam ( 'facility_type_id' ) : null);
 				$facilityRow->facility_comments = $this->getParam ( 'facility_comments' );
@@ -214,6 +215,7 @@ class FacilityController extends ReportFilterHelpers {
 				$facilityRow->email = $this->getSanParam ( 'facility_email' );//TA:UK:1712:25
 				$facilityRow->custom_1 = $this->getSanParam ( 'facility_custom1' );//TA:25 use 'custom_1' not 'CUSTOM_1'
 				$facilityRow->sponsor_option_id = $sponsor_id;
+				
 				
 				// dupecheck
 				$dupe = new Facility ();
