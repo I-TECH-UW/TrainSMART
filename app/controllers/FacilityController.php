@@ -91,6 +91,9 @@ class FacilityController extends ReportFilterHelpers {
 	}
 	
 	protected function validateAndSave($facilityRow, $checkName = true) {
+	    
+	    print_r($facilityRow); //TA:#525
+	    
 		$status = ValidationContainer::instance ();
 		
 		// check for required fields
@@ -313,7 +316,7 @@ class FacilityController extends ReportFilterHelpers {
 			$status = ValidationContainer::instance ();
 			if ($validateOnly) {
 				if ($rslt) {
-					$status->setRedirect ( '/site/edit/id/' . $id ); //TA:#382
+					//TA:#525 $status->setRedirect ( '/site/edit/id/' . $id ); //TA:#382
 				}
 				$this->sendData ( $status );
 			} else {
