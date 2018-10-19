@@ -92,8 +92,6 @@ class FacilityController extends ReportFilterHelpers {
 	
 	protected function validateAndSave($facilityRow, $checkName = true) {
 	    
-	    print_r($facilityRow); //TA:#525
-	    
 		$status = ValidationContainer::instance ();
 		
 		// check for required fields
@@ -228,6 +226,8 @@ class FacilityController extends ReportFilterHelpers {
 					$status->setStatusMessage ( t ( 'The facility could not be saved. A facility with this name already exists in that location.' ) );
 					return false;
 				}
+				
+				print_r($facilityRow); //TA:#525
 				
 				$obj_id = $facilityRow->save ();
 				$_SESSION ['status'] = t ( 'The facility was saved.' );
