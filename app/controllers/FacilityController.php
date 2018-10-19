@@ -201,7 +201,7 @@ class FacilityController extends ReportFilterHelpers {
 			if ($location_id) {
 				// map db field names to FORM field names
 				//TA:#525
-			    $facilityRow->facility_name = str_replace('"','\'\'', $this->getSanParam ( 'facility_name' )); 
+			    $facilityRow->facility_name = str_replace('"','\'', $this->getSanParam ( 'facility_name' )); 
 			    //$facilityRow->facility_name = stripslashes(stripslashes(str_replace('"','//"',$this->getSanParam ( 'facility_name' ))));
 			    //$facilityRow->facility_name = $this->getSanParam ( 'facility_name' );
 				$facilityRow->location_id = $location_id;
@@ -228,20 +228,8 @@ class FacilityController extends ReportFilterHelpers {
 					return false;
 				}
 				
- 		//		print_r($facilityRow); //TA:#525
  				$obj_id = $facilityRow->save ();
-				
-				//TA:#525 resave facility
-// 				$facility2 = new Facility ();
-// 				$facility_obj2 = $facility2->fetchRow ( 'id = ' . $obj_id );
-// 				if ($facility_obj2) {
-// 				    $facilityRow2 = $facility_obj2->toArray ();
-// 				} 
-// 				$facilityRow2->facility_name = str_replace('""','"', $facilityRow2->facility_name); 
-// 				$facilityRow2->save();
-// 				////
-				
-				
+
 				$_SESSION ['status'] = t ( 'The facility was saved.' );
 				if ($obj_id) {
 					if ($this->setting ( 'display_facility_sponsor' ) && ! Facility::saveSponsors ( $obj_id, $sponsor_array, $sponsor_date_array, $sponsor_end_date_array )) {
