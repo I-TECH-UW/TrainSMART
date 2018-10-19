@@ -20,13 +20,13 @@ print ScriptContainer::$instance->renderJSHead();
 
 		<h1><?php tp('Add new Facility');?></h1>
 
-		<form id="edit" action="" method="post">
+		<form id="add" action="" method="post">
 
 		<?php require_once('addfacility-form.phtml');?>
 		<div class="clear" ></div>
 		<button type="button" id="submitFacility"><?php tp('Add Facility');?></button><br>
 		<script type="text/javascript">
-			addAjaxSubmit('submitFacility','edit','<?php echo $this->base_url;?>/facility/add/outputType/json');
+			addAjaxSubmit('submitFacility','add','<?php echo $this->base_url;?>/facility/add/outputType/json');
 		</script>
 		</form>
 		<div class="clear" ></div>
