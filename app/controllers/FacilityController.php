@@ -229,8 +229,8 @@ class FacilityController extends ReportFilterHelpers {
 					return false;
 				}
 				
-// 				//print_r($facilityRow); //TA:#525
-// 				$obj_id = $facilityRow->save ();
+ 				print_r($facilityRow); //TA:#525
+ 				$obj_id = $facilityRow->save ();
 				
 // 				//TA:#525 resave facility
 // 				$facility2 = new Facility ();
