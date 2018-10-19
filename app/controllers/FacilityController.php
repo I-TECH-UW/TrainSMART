@@ -203,7 +203,7 @@ class FacilityController extends ReportFilterHelpers {
 				//TA:#525
 			    //$facilityRow->facility_name = $this->getSanParam ( 'facility_name' ); 
 // 			    $facilityRow->facility_name = str_replace('"','\'', $this->getSanParam ( 'facility_name' )); 
-			//    $facilityRow->facility_name = str_replace('"',"\"", $this->getSanParam ( 'facility_name' ));
+			    $facilityRow->facility_name = str_replace('"','\\\\"', $this->getSanParam ( 'facility_name' ));
 				$facilityRow->location_id = $location_id;
 				$facilityRow->type_option_id = ($this->getSanParam ( 'facility_type_id' ) ? $this->getSanParam ( 'facility_type_id' ) : null);
 				$facilityRow->facility_comments = $this->getParam ( 'facility_comments' );
@@ -228,11 +228,7 @@ class FacilityController extends ReportFilterHelpers {
 					return false;
 				}
 				
-				$facilityRow->facility_name = str_replace('"','\'', $this->getSanParam ( 'facility_name' ));//TA:#525
- 				$obj_id = $facilityRow->save ();
- 				$facilityRow->facility_name = str_replace('\'','"', $this->getSanParam ( 'facility_name' ));//TA:#525
- 				$stable = new ITechTable ( array ('name' => 'facility' ) );//TA:#525
- 				$select = $stable->update($facilityRow, "id = " . $obj_id);//TA:#525
+				$obj_id = $facilityRow->save ();
  				
 				$_SESSION ['status'] = t ( 'The facility was saved.' );
 				if ($obj_id) {
