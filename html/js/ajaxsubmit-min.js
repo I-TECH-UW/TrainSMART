@@ -1,6 +1,5 @@
 function addAjaxSubmit(buttonId, formId, postUrl) {
     (function () {
-    	alert(postUrl);//TA:#525
         var _button = new YAHOO.widget.Button(buttonId);
         var handleSuccess = function (o) {
             try {

@@ -200,9 +200,10 @@ class FacilityController extends ReportFilterHelpers {
 			// save row
 			if ($location_id) {
 				// map db field names to FORM field names
-			    //$facilityRow->facility_name = str_replace('"','&quot', $this->getSanParam ( 'facility_name' )); 
+				//TA:#525
+			    $facilityRow->facility_name = str_replace('"','""', $this->getSanParam ( 'facility_name' )); 
 			    //$facilityRow->facility_name = stripslashes(stripslashes(str_replace('"','//"',$this->getSanParam ( 'facility_name' ))));
-			    $facilityRow->facility_name = $this->getSanParam ( 'facility_name' );
+			    //$facilityRow->facility_name = $this->getSanParam ( 'facility_name' );
 				$facilityRow->location_id = $location_id;
 				$facilityRow->type_option_id = ($this->getSanParam ( 'facility_type_id' ) ? $this->getSanParam ( 'facility_type_id' ) : null);
 				$facilityRow->facility_comments = $this->getParam ( 'facility_comments' );
@@ -316,7 +317,7 @@ class FacilityController extends ReportFilterHelpers {
 			$status = ValidationContainer::instance ();
 			if ($validateOnly) {
 				if ($rslt) {
-					//TA:#525 $status->setRedirect ( '/site/edit/id/' . $id ); //TA:#382
+					$status->setRedirect ( '/site/edit/id/' . $id ); //TA:#382
 				}
 				$this->sendData ( $status );
 			} else {
@@ -332,7 +333,8 @@ class FacilityController extends ReportFilterHelpers {
 		$facilitiesArray = array ();
 		foreach ( $rowArray as $key => $val ) {
 			if ($val ['id'] != 0)
-				$facilitiesArray [] = $val;
+			    //$facilitiesArray [] = $val; //TA:#525
+			    $facilitiesArray [] = str_replace('""','"', $val); 
 		}
 		$this->viewAssignEscaped ( 'facilities', $facilitiesArray );
 		
