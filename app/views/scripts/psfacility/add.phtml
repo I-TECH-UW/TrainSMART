@@ -4,6 +4,10 @@
   <title><?php echo $this->translation['Application Name'];?> | <?php tp('Add Facility');?></title>
 <?php
 require_once('views/helpers/ScriptContainer.php');
+
+require_once('views/helpers/Location.php');
+require_once('views/helpers/TrainingViewHelper.php');
+require_once('views/helpers/FormHelper.php');
 print ScriptContainer::$instance->renderCSSHead();
 print ScriptContainer::$instance->renderJSHead();
 ?>
