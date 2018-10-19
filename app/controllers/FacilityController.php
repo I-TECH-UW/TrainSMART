@@ -201,7 +201,8 @@ class FacilityController extends ReportFilterHelpers {
 			if ($location_id) {
 				// map db field names to FORM field names
 				//TA:#525
-			    $facilityRow->facility_name = str_replace('"','""', $this->getSanParam ( 'facility_name' )); 
+			    $facility_name = str_replace('"','""', $this->getSanParam ( 'facility_name' ));
+			    $facilityRow->facility_name = str_replace('""','"', $facility_name); 
 			    //$facilityRow->facility_name = stripslashes(stripslashes(str_replace('"','//"',$this->getSanParam ( 'facility_name' ))));
 			    //$facilityRow->facility_name = $this->getSanParam ( 'facility_name' );
 				$facilityRow->location_id = $location_id;
@@ -228,30 +229,17 @@ class FacilityController extends ReportFilterHelpers {
 					return false;
 				}
 				
-				//print_r($facilityRow); //TA:#525
-				$obj_id = $facilityRow->save ();
+// 				//print_r($facilityRow); //TA:#525
+// 				$obj_id = $facilityRow->save ();
 				
-				//TA:#525 resave facility
-				$facility2 = new Facility ();
-				$facilityRow2 = $facility2->fetchRow ( 'id = ' . $obj_id );
-				if ($facilityRow2) {
-				    $facilityArray2 = $facilityRow2->toArray ();
-				} 
-// 				$facilityRow2->location_id = $location_id;
-// 				$facilityRow2->type_option_id = ($this->getSanParam ( 'facility_type_id' ) ? $this->getSanParam ( 'facility_type_id' ) : null);
-// 				$facilityRow2->facility_comments = $this->getParam ( 'facility_comments' );
-// 				$facilityRow2->address_1 = $this->getSanParam ( 'facility_address1' );
-// 				$facilityRow2->address_2 = $this->getSanParam ( 'facility_address2' );
-// 				$facilityRow2->lat = $lat;
-// 				$facilityRow2->long = $long;
-// 				$facilityRow2->postal_code = $this->getSanParam ( 'facility_postal_code' );
-// 				$facilityRow2->phone = $this->getSanParam ( 'facility_phone' );
-// 				$facilityRow2->fax = $this->getSanParam ( 'facility_fax' );
-// 				$facilityRow2->email = $this->getSanParam ( 'facility_email' );
-// 				$facilityRow2->custom_1 = $this->getSanParam ( 'facility_custom1' );
-// 				$facilityRow2->sponsor_option_id = $sponsor_id;
-				$facilityRow2->save();
-				////
+// 				//TA:#525 resave facility
+// 				$facility2 = new Facility ();
+// 				$facilityRow2 = $facility2->fetchRow ( 'id = ' . $obj_id );
+// 				if ($facilityRow2) {
+// 				    $facilityArray2 = $facilityRow2->toArray ();
+// 				} 
+// 				$facilityRow2->save();
+// 				////
 				
 				
 				$_SESSION ['status'] = t ( 'The facility was saved.' );
