@@ -201,7 +201,7 @@ class FacilityController extends ReportFilterHelpers {
 			if ($location_id) {
 				// map db field names to FORM field names
 				//TA:#525
-			    $facilityRow->facility_name = str_replace('"','""', $this->getSanParam ( 'facility_name' )); 
+			    $facilityRow->facility_name = str_replace('"','"', $this->getSanParam ( 'facility_name' )); 
 			    //$facilityRow->facility_name = stripslashes(stripslashes(str_replace('"','//"',$this->getSanParam ( 'facility_name' ))));
 			    //$facilityRow->facility_name = $this->getSanParam ( 'facility_name' );
 				$facilityRow->location_id = $location_id;
@@ -232,13 +232,13 @@ class FacilityController extends ReportFilterHelpers {
  				$obj_id = $facilityRow->save ();
 				
 				//TA:#525 resave facility
-				$facility2 = new Facility ();
-				$facility_obj2 = $facility2->fetchRow ( 'id = ' . $obj_id );
-				if ($facility_obj2) {
-				    $facilityRow2 = $facility_obj2->toArray ();
-				} 
-				$facilityRow2->facility_name = str_replace('""','"', $facilityRow2->facility_name); 
-				$facilityRow2->save();
+// 				$facility2 = new Facility ();
+// 				$facility_obj2 = $facility2->fetchRow ( 'id = ' . $obj_id );
+// 				if ($facility_obj2) {
+// 				    $facilityRow2 = $facility_obj2->toArray ();
+// 				} 
+// 				$facilityRow2->facility_name = str_replace('""','"', $facilityRow2->facility_name); 
+// 				$facilityRow2->save();
 // 				////
 				
 				
