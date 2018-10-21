@@ -67,12 +67,7 @@ class FacilityController extends ReportFilterHelpers {
 		if ($request->isPost ()) {
 			
 			$facilityObj = new Facility ();
-			//TA:#525
-			$row = $facilityObj->findOrCreate ( false );
-			$obj_id = $this->validateAndSave ( @$row->toArray (), false );
-			//
-			
-			//$obj_id = $this->validateAndSave ( $facilityObj->createRow (), false );
+			$obj_id = $this->validateAndSave ( $facilityObj->createRow (), false );
 			
 			// validate
 			$status = ValidationContainer::instance ();
