@@ -37,7 +37,7 @@ print ScriptContainer::$instance->renderJSHead();
 	<!-- TA:#525<div class="fieldInput"><input type="text" name="facility_name"  id="facility_name" value="<?php echo $this->facility['facility_name'];?>" size="40" maxlength="128"/></div>-->
 	<!-- TA:#525 -->
 	<div class="fieldInput"><input type="text" name="facility_name"  id="facility_name" 
-	value="<?php echo str_replace('\'','"', $this->facility['facility_name'])?>" size="40" maxlength="128"/></div>
+	value="<?php echo str_replace("'",'\"', $this->facility['facility_name'])?>" size="40" maxlength="128"/></div>
 	
 	<input type="hidden" name="id" value="<?php echo $this->facility['id'];?>"></input>
 	<div class="fieldLabel" id="facility_address1_lbl"><?php tp('Address 1');?></div>
