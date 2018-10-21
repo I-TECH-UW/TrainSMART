@@ -67,7 +67,12 @@ class FacilityController extends ReportFilterHelpers {
 		if ($request->isPost ()) {
 			
 			$facilityObj = new Facility ();
-			$obj_id = $this->validateAndSave ( $facilityObj->createRow (), false );
+			//TA:#525
+			$row = $facilityObj->findOrCreate ( false );
+			$obj_id = $this->validateAndSave ( @$row->toArray (), false );
+			//
+			
+			//$obj_id = $this->validateAndSave ( $facilityObj->createRow (), false );
 			
 			// validate
 			$status = ValidationContainer::instance ();
@@ -201,13 +206,13 @@ class FacilityController extends ReportFilterHelpers {
 			// save row
 			if ($location_id) {
 				// map db field names to FORM field names
-			    //$facilityRow->facility_name = $this->getSanParam ( 'facility_name' );
+			    $facilityRow->facility_name = $this->getSanParam ( 'facility_name' );
 				//TA:#525
-			    if($this->getSanParam ( 'action' ) === 'add'){
-			        $facilityRow->facility_name = str_replace('"','\'', $this->getSanParam ( 'facility_name' ));
-			    }else{
-			        $facilityRow->facility_name = $this->getSanParam ( 'facility_name' );
-			    }
+// 			    if($this->getSanParam ( 'action' ) === 'add'){
+// 			        $facilityRow->facility_name = str_replace('"','\'', $this->getSanParam ( 'facility_name' ));
+// 			    }else{
+// 			        $facilityRow->facility_name = $this->getSanParam ( 'facility_name' );
+// 			    }
                 //
 				$facilityRow->location_id = $location_id;
 				$facilityRow->type_option_id = ($this->getSanParam ( 'facility_type_id' ) ? $this->getSanParam ( 'facility_type_id' ) : null);
