@@ -5626,8 +5626,9 @@ echo $sql . "<br>";
 				<tr>';
 				$headers = array();
 				$headers []= $this->tr ( 'Last Name' );
-				if ( $this->setting ( 'display_middle_name') ) $headers []= $this->tr ( 'Middle Name' );
+				if ( $this->setting ( 'display_middle_name') && !$this->setting('display_middle_name_last')) $headers []= $this->tr ( 'Middle Name' ); //TA:#544
 				$headers []= $this->tr ( 'First Name' );
+				if ( $this->setting ( 'display_middle_name') && $this->setting('display_middle_name_last')) $headers []= $this->tr ( 'Middle Name' ); //TA:#544
 				$headers []= t ( 'Date of Birth' );
 				$headers []= $this->tr ( 'Facility' );
 				if ( $add_additional ) {
