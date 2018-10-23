@@ -5695,8 +5695,9 @@ echo $sql . "<br>";
 					echo "<tr><td>";
 					$body_fields = array();
 					$body_fields[] = $r['last_name'];
-					if ( $this->setting ( 'display_middle_name') ) $body_fields[] = $r['middle_name'];
+					if ( $this->setting ( 'display_middle_name') && !$this->setting('display_middle_name_last')) $body_fields[] = $r['middle_name'];//TA:#544
 					$body_fields[] = $r['first_name'];
+					if ( $this->setting ( 'display_middle_name') && $this->setting('display_middle_name_last')) $body_fields[] = $r['middle_name'];//TA:#544
 					$body_fields[] = $r['birthdate'];
 					$body_fields[] = $r['facility_name'];
 					if ( $add_additional ) {
