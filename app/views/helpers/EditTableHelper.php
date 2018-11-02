@@ -105,25 +105,25 @@ class EditTableHelper {
             //TA:106 set width for some columns
             if($key == 'id'){
                 $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) .
-                '", width:15, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+                '", width:15, sortable:true, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
                 
             }else if($key == 'training_start_date'){//TA:#278 => The best way to add column width
                 $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) .
-                '", width:50, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+                '", width:50, sortable:true, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
                 
             }else if($key == 'creator' || $key == 'creator_name' || $key == 'first_name' || $key == 'last_name'){//TA:#278 => The best way to add column width
                 $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) .
-                '", width:100, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+                '", width:100, sortable:true, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
                 
             }else if($key == 'facility_name' || $key == 'location_name'){//TA:#317 wrap text
                             $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) . 
- 			 '", style:"overflow:auto;", resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+ 			 '", style:"overflow:auto;", sortable:true, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
             }else if($key == 'training_organizer_phrase'){//TA: 
                 $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) .
                 '", width:60, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
             }else{//TA if width is not working then use above way (//TA:#278) how to set up column width
                 $colDefsClone[$key] = '{key:"' . htmlspecialchars($key) . 
-  			 '", width:'.($key == 'training_title'?120:(strlen($lbl)*6)).', resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
+  			 '", width:'.($key == 'training_title'?120:(strlen($lbl)*6)).', sortable:true, resizeable:true , label:"' . htmlspecialchars($lbl) . '"' . (!in_array($key, $colStatic) ? ', editor:"textbox"' : '') . $customDef . '}';
             }
 		}
 
