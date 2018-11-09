@@ -3269,8 +3269,9 @@ echo $sql . "<br>";
 			} else {
 				$count = count ( $rowArray );
 			}
-			if ($this->getParam ( 'outputType' ))
-			$this->sendData ( $this->reportHeaders ( false, $rowArray ) );
+			if ($this->getParam ( 'outputType' )){
+			  $this->sendData ( $this->reportHeaders ( false, $rowArray ) );
+			}
 
 		} else {
 			$count = 0;
@@ -5486,6 +5487,7 @@ echo $sql . "<br>";
 
 			$sql .= $where;
 			$rowArray = $db->fetchAll ( $sql );
+			if ($rowArray){
 
 			// now we have trainings, lets get participants trainers and evaluations
 			require_once ('models/table/Training.php');
@@ -5496,9 +5498,8 @@ echo $sql . "<br>";
 			$tableObj = new Training ( );
 
 			$output = array();
-			echo '<html><body>';
-			if (! $rowArray)
-			echo 'No trainings found.';
+			$text = "<html><body>";//TA:#526
+			$text .= '<a href="'. str_replace('?','/outputType/excel/?',$_SERVER['REQUEST_URI']) .'">' . t('Export to').' MS Excel</a>&nbsp;<img src="'.(Settings::$COUNTRY_BASE_URL).'/images/excel.jpg" /></a>';    
 
 			$locations = Location::getAll();
 			$answers = $db->fetchAll( 'SELECT * FROM evaluation_question_response' );
@@ -5506,12 +5507,20 @@ echo $sql . "<br>";
 											LEFT JOIN evaluation_to_training ett ON ett.id = evaluation_response.evaluation_to_training_id ORDER BY training_id ASC');
 			// response list is basically a hash of training_id, evaluation_to_training_id, evaluation_id, evaluation_response.id, and trainer_person_id, cool!
 			$questionz = array();
+			
+			//TA:#526
+			require_once('Output/PHPExcel/IOFactory.php');
+			$objPHPExcel = new PHPExcel();
+			$ActiveSheet = $objPHPExcel->setActiveSheetIndex(0);
+			$rowIndex = 1;
+			//
 
 			// loop through trainings
 			foreach ( $rowArray as $row ) {
 				if (!isset($row['id']) || empty($row['id']))
 					continue;
 
+				$output_row = array();//TA:#526
 				$rowRay = @$tableObj->getTrainingInfo ( $row ['id'] );
 
 				// calculate end date
@@ -5538,7 +5547,8 @@ echo $sql . "<br>";
 
 				if (! $rowRay['training_title']) $rowRay['training_title'] = t('Unknown');
 
-				echo "
+			
+				$text .= "
 				<p>
 				<strong>" . t ('Training').' '.t('ID' ) . ":</strong> {$rowRay['id']}<br />
 				<strong>" . t ('Training').' '.t('Name' ) . ":</strong> {$rowRay['training_title']}<br />
@@ -5554,7 +5564,38 @@ echo $sql . "<br>";
 				" . ($rowRay ['objectives'] ? "<strong>" . $this->tr ( 'Course Objectives' ) . ":</strong> " . nl2br ( $rowRay ['objectives'] ) : '') . "
 				</p>
 				";
-
+				
+				//TA:#526
+				$ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex, t ('Training').' '.t('ID' ) . ": " . $rowRay['id']);
+				$ActiveSheet->getStyle('A' . $rowIndex)->getFont()->setBold(true);
+				$rowIndex++;
+				$ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex, t ('Training').' '.t('Name' ) . ": " . $rowRay['training_title']);
+				$rowIndex++;
+				$ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex, t ('Training Center').' ' . ": " . $rowRay['training_location_name']);
+				$rowIndex++;
+				$ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex, t ('Dates').' ' . ": " . $rowRay['training_start_date'] . 
+				    ($rowRay ['training_start_date'] != $rowRay ['training_end_date'] ? ' - ' . $rowRay ['training_end_date'] : ''));
+				$rowIndex++;
+				$ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex, t ('Course Length').' ' . ": " . $rowRay['duration']);
+				$rowIndex++;
+				$ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex, t ('Training').' '.t('Topic' ) . ": " . $rowRay['training_topic_phrase']);
+				$rowIndex++;
+				$ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex, t ('Training').' '.t('Level' ) . ": " . $rowRay['training_level_phrase']);
+				$rowIndex++;
+				if($rowRay ['comments']){
+				    $ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex, t ('Comments').' ' . ": " . $rowRay['comments']);
+				    $rowIndex++;
+				}
+				if($rowRay ['pepfar']){
+				    $ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex, t ('PEPFAR Category').' ' . ": " . $rowRay['pepfar']);
+				    $rowIndex++;
+				}
+				if($rowRay ['objectives']){
+				    $ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex, t ('Course Objectives').' ' . ": " . $rowRay['objectives']);
+				    $rowIndex++;
+				}
+				///
+				
 				// evaluations
 				$question_lookup = array(); // questions needed by attached evaluations
 
@@ -5595,7 +5636,7 @@ echo $sql . "<br>";
 				/* Trainers */
 				$trainers = @TrainingToTrainer::getTrainers ( $row ['id'] )->toArray();
 				if ($trainers){
-					echo '
+				    $text .= '
 				<table border="1" style="border-collapse:collapse;" cellpadding="3">
 					<caption style="text-align:left;"><em>' . t ('Course').' '.t('Trainers') . '</em></caption>
 				<tr>
@@ -5605,7 +5646,7 @@ echo $sql . "<br>";
 				</tr>
 				';
 				foreach ( $trainers as $tRow ) {
-					echo "
+				    $text .= "
 					<tr>
 					<td>{$tRow['last_name']}</td>
 					<td>{$tRow['first_name']}</td>
@@ -5613,17 +5654,49 @@ echo $sql . "<br>";
 					</tr>
 					";
 				}
-
-					echo '</table><br>';
+				$text .= '</table><br>';
+				
+				    //TA:#526
+				    $ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex, t ('Course').' '.t('Trainers'));
+				    $ActiveSheet->getStyle('A' . $rowIndex)->getFont()->setBold(true);
+				    $ActiveSheet->getStyle('A' . $rowIndex)->getFont()->setItalic(true);
+				    $rowIndex++;
+				    $ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex, $this->tr ( 'Last Name' ));
+				    $ActiveSheet->getStyle('A' . $rowIndex)->getFont()->setBold(true);
+				    $ActiveSheet->getStyle('A' . $rowIndex)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+				    $ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(1) . $rowIndex, $this->tr ( 'First Name' ));
+				    $ActiveSheet->getStyle('B' . $rowIndex)->getFont()->setBold(true);
+				    $ActiveSheet->getStyle('B' . $rowIndex)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+				    $ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(2) . $rowIndex, t ( 'Days' ));
+				    $ActiveSheet->getStyle('C' . $rowIndex)->getFont()->setBold(true);
+				    $ActiveSheet->getStyle('C' . $rowIndex)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+				    $rowIndex++;
+				    foreach ( $trainers as $tRow ) {
+				        $ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex, $tRow['last_name']);
+				        $ActiveSheet->getStyle(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+				        $ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(1) . $rowIndex, $tRow['first_name']);
+				        $ActiveSheet->getStyle(PHPExcel_Cell::stringFromColumnIndex(1) . $rowIndex)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+				        $ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(2) . $rowIndex, $tRow['duration_days']);
+				        $ActiveSheet->getStyle(PHPExcel_Cell::stringFromColumnIndex(2) . $rowIndex)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+				        $rowIndex++;
+				    }
+				    ///
 				}
-
-
+				
 				$persons = @PersonToTraining::getParticipants ( $row ['id'] )->toArray ();
 
-				echo '
+				$text .= '
 				<table border="1" style="border-collapse:collapse;" cellpadding="3">
 				<caption style="text-align:left;"><em>' . t ( 'Course Participants' ) . '</em></caption>
 				<tr>';
+				
+				//TA:#526
+				$ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex, t ( 'Course Participants' ));
+				$ActiveSheet->getStyle('A' . $rowIndex)->getFont()->setBold(true);
+				$ActiveSheet->getStyle('A' . $rowIndex)->getFont()->setItalic(true);
+				$rowIndex++;
+				///
+				
 				$headers = array();
 				$headers []= $this->tr ( 'Last Name' );
 				if ( $this->setting ( 'display_middle_name') && !$this->setting('display_middle_name_last')) $headers []= $this->tr ( 'Middle Name' ); //TA:#544
@@ -5675,8 +5748,19 @@ echo $sql . "<br>";
 				foreach ($scoreOtherHeaders as $h)
 					$headers [] = $h;
 
-				echo '<th>'.implode('</th><th>', $headers);
-				echo '</th></tr>';
+					$text .= '<th>'.implode('</th><th>', $headers);
+					$text .= '</th></tr>';
+					
+					//TA:#526
+					$colIndex=0;
+					foreach ($headers as $h){
+					    $ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex($colIndex) . $rowIndex, $h);
+					    $ActiveSheet->getStyle(PHPExcel_Cell::stringFromColumnIndex($colIndex) . $rowIndex)->getFont()->setBold(true);
+					    $ActiveSheet->getStyle(PHPExcel_Cell::stringFromColumnIndex($colIndex) . $rowIndex)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+					    $colIndex++;
+			        }
+					$rowIndex++;
+					///
 
 				/* Participants */
 				foreach ( $persons as $r ) {
@@ -5692,7 +5776,7 @@ echo $sql . "<br>";
 						$r ['score_change'] = $r ['score_post'] - $r ['score_pre'];
 					}
 
-					echo "<tr><td>";
+					$text .= "<tr><td>";
 					$body_fields = array();
 					$body_fields[] = $r['last_name'];
 					if ( $this->setting ( 'display_middle_name') && !$this->setting('display_middle_name_last')) $body_fields[] = $r['middle_name'];//TA:#544
@@ -5739,18 +5823,34 @@ echo $sql . "<br>";
 
 					}
 
-					echo implode('</td><td>', $body_fields);
-					echo "</td></tr>";
+					$text .= implode('</td><td>', $body_fields);
+					$text .= "</td></tr>";
+					
+					//TA:#526
+					$colIndex=0;
+					foreach ($body_fields as $body_field){
+					    $ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex($colIndex) . $rowIndex, $body_field);
+					    $ActiveSheet->getStyle(PHPExcel_Cell::stringFromColumnIndex($colIndex) . $rowIndex)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+					    $colIndex++;
+					}
+					$rowIndex++;
+					///
 				}
 
-				echo '</table><br>';
+				$text .= '</table><br>';
 
 				// evaluations
 				if ($row['answers'])
 				{
-					echo '
+				    $text .= '
 						<table border="1" style="border-collapse:collapse;" cellpadding="3">
 						<caption style="text-align:left;"><em>' . t ('Evaluations') . '</em></caption>';
+				    
+				    //TA:#526
+// 				    $ActiveSheet->setCellValue(PHPExcel_Cell::stringFromColumnIndex(0) . $rowIndex, t ('Evaluations'));
+// 				    $rowIndex++;
+				    ///
+				    
 					$qnames = array();
 					$answer = array();
 					$qids   = array();
@@ -5771,7 +5871,7 @@ echo $sql . "<br>";
 								break;
 							}
 							if($hdr_txt)
-								echo "<tr>$hdr_txt</tr>";
+							    $text .= "<tr>$hdr_txt</tr>";
 						}
 
 						foreach ( $evalresponse as $reponseid => $answerrow ) {
@@ -5786,24 +5886,50 @@ echo $sql . "<br>";
 							}
 							ksort($answerrow); // due to filling in missing answers above, need to resort here
 
-							echo '<tr><td>'.implode('</td><td>', $answerrow).'</td></tr>';
+							$text .= '<tr><td>'.implode('</td><td>', $answerrow).'</td></tr>';
 						}
 					}
-					echo '</table><br>';
+					$text .= '</table><br>';
 
 			}
 				// done
-				echo '<br><hr size="1">';
+			$text .= '<br><hr size="1">';
+			
+			//TA:#526
+			$rowIndex++;
+				
 			}
 
-			echo '</html></body>';
-
-			foreach ($output as $key => $value) {
-				echo utf8_decode($value);
-				echo PHP_EOL;
+			$text .= '</html></body>';
+			
+			//TA:#526
+			if ($this->getParam('outputType') === 'excel') {
+			    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+			    $isIE = strstr( $_SERVER['HTTP_USER_AGENT'], 'MSIE' );
+			    if ( $isIE ) {
+			        header('Content-Disposition: inline; filename="roster.xlsx"');
+			        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+			        header('Pragma: "public"');
+			    }else{
+			        header('Content-Disposition: attachment;filename="roster.xlsx"');
+			        header('Pragma: no-cache');
+			    }
+			    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+			    $objWriter->save('php://output');
+			}else{
+			    echo $text; 
 			}
+			///
+
+// 			foreach ($output as $key => $value) {
+// 			    $text .= utf8_decode($value);
+// 			    $text .= PHP_EOL;
+// 			}
 
 			exit ();
+			}else{
+			    echo '<script>alert("No trainings found.");</script>';
+			}
 
 			} catch (Exception $e) {
 				echo $e->getMessage() . '<br>' . PHP_EOL;
