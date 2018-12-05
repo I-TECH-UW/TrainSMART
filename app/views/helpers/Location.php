@@ -377,7 +377,7 @@ function renderFacilityDropDown($facilities, $selected_index, $readonly)
   //TA:#410  add for #person_facility_province_id and #person_facility_district_id as well
   $js = '
       $(function () {
-        regionSelectElements = $("#province_id,#district_id,#region_c_id,#region_d_id,#region_e_id,#region_f_id,#region_g_id,#region_h_id,#region_i_id,#person_facility_province_id,#person_facility_district_id")
+        regionSelectElements = $("#province_id,#district_id,#region_c_id,#region_d_id,#region_e_id,#region_f_id,#region_g_id,#region_h_id,#region_i_id,#person_facility_province_id,#person_facility_district_id, #person_facility_region_c_id")
         .change(function () {
         if(Array.isArray($(this).val())){
             var compare_id = [];
