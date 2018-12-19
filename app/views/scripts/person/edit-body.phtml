@@ -667,6 +667,11 @@
                 <?php require_once('edit-body-addtl.phtml'); ?>
                 <?php require_once('edit-body-rec.phtml');?>
                 <?php if($this->mode == 'edit') require_once('edit-body-class-history.phtml');?>
+                
+                <!-- TA:#529 -->
+                <?php if($this->setting['display_people_funding_options']){
+                    require_once('edit-body-funding.phtml'); 
+                }?>
 
                 <?php if($this->trainingredirect) : ?>
                     <input type="hidden" name="trainingredirect" value="<?php echo $this->trainingredirect; ?>">

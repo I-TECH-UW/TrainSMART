@@ -876,6 +876,7 @@ class AdminController extends UserController
 			'check_people_comments'	=> 'display_people_comments', //TA:17: 09/09/2014
 			'check_people_facilitator' => 'display_people_facilitator', //TA:17: 09/09/2014
 			'check_people_birthdate' => 'display_people_birthdate', //TA:17: 09/10/2014
+		    'check_people_funding_options' => 'display_people_funding_options'//TA:#529
 		);
 
 		if($this->getRequest()->isPost()) { // Update db
@@ -4518,6 +4519,19 @@ public function peopleSchoolmergeAction(){
 	    $editTable->table   = 'attestation_level_option';
 	    $editTable->fields  = array('attestation_level_phrase' => t('Attestation Level'));
 	    $editTable->label   = t('Attestation Level');
+	    $editTable->execute($controller->getRequest());
+	}
+	
+	//TA:#529
+	public function peopleFundingAction(){
+	    $controller = &$this;
+	    $editTable = new EditTableController($controller->getRequest(), $controller->getResponse());
+	    $editTable->setParentController($controller);
+	    $editTable->table   = 'people_funding_option';
+	    $editTable->fields  = array('funding_phrase' => t('Funding'));
+	    $editTable->label   = t('Funding');
+// 	    $editTable->dependencies = array('training_to_training_funding_option');
+ 	    $editTable->allowDefault = true;
 	    $editTable->execute($controller->getRequest());
 	}
 }

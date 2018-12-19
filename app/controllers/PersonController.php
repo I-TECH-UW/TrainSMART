@@ -748,6 +748,18 @@ class PersonController extends ReportFilterHelpers
                         }
 
                         TrainingRecommend::saveRecommendedforPerson($person_id, $this->getSanParam('training_recommend'));
+                        
+                        //TA:#529     funding
+                        $amount_extra_col = '';
+                        $amount_extra_vals = array ();
+                        $amount_extra_col = 'funding_amount';
+                        if ($person_id) {
+                            foreach ( $this->getSanParam ( 'funding_id' ) as $funding_id ) {
+                                $amount_extra_vals [] = $this->getSanParam ( 'funding_id_amount_' . $funding_id );
+                            }
+                        }
+                        MultiOptionList::updateOptions ( 'people_to_people_funding_option', 'people_funding_option', 'person_id', $person_id, 'people_funding_option_id', $this->getSanParam ( 'funding_id' ), $amount_extra_col, $amount_extra_vals );
+                        //
 
                         if ($this->getParam('redirectUrl')) {
                             $status->redirect = $this->getParam('redirectUrl');
@@ -1089,6 +1101,28 @@ class PersonController extends ReportFilterHelpers
             if ($this->getParam('days')) {
                 $this->view->assign('days', $this->getParam('days'));
             }
+            
+            //TA:#529     funding
+            $fundingArray = MultiOptionList::choicesList ( 'people_to_people_funding_option', 'person_id', $person_id, 'people_funding_option', array ('funding_phrase', 'is_default' ) );
+            if (/*$this->setting ( 'display_funding_amount' ) &&*/ $person_id) {
+                //lame to do another query, but it's easy
+                $tableObj = new ITechTable ( array ('name' => 'people_to_people_funding_option' ) );
+                $amountRows = $tableObj->fetchAll ( $tableObj->select ( array ('people_funding_option_id', 'id', 'funding_amount' ) )->where ( 'person_id = ' . $person_id ) );
+                foreach ( $amountRows as $amt_row ) {
+                    foreach ( $fundingArray as $k => $funding_row ) {
+                        if ($funding_row ['id'] == $amt_row->people_funding_option_id) {
+                            $fundingArray [$k] ['funding_amount'] = $amt_row->funding_amount;
+                        }
+                    }
+                }
+            }
+            $this->view->assign ( 'fundingArray', $fundingArray );
+            if ($this->hasACL ( 'acl_editor_funding' )) {
+              $this->view->assign ( 'fundingJsonUrl', Settings::$COUNTRY_BASE_URL . '/person/insert-table/table/people_funding_option/column/funding_phrase/outputType/json' );
+              $this->view->assign ( "fundingInsertLink", ' <a href="#" onclick="addCheckbox(\''.t('Please enter the name your new funding item:') .  '\', \'funding_id\', \'fundingContainer\', \''.$this->view->fundingJsonUrl.'\'); return false;">'.t('Insert New').'</a>' );
+            }
+          //////  
+            
 
         } catch (Exception $e) {
             print $e->getMessage();

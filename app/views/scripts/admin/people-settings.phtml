@@ -343,6 +343,14 @@ print ScriptContainer::$instance->renderJSHead();
    	<td><input type="text" name="label_attestation_year" value="<?php echo $this->label_attestation_year; ?>"></td>
    	<td></td>
  </tr>
+ 
+ <!-- TA:#529 -->
+ <tr>
+	<td class="fieldTitle"><?php echo t('Participants Funding'); ?></td>
+	<td><input type="checkbox" name="check_people_funding_options" <?php if($this->check_people_funding_options) echo 'checked'; ?> id="check_people_funding_options"></td>
+	<td></td>
+	<td><a href="<?php echo $this->base_url;?>/admin/people-funding" onclick="return submitAdminForm(this);"><?php echo t('Add/Edit'); ?></a></td>
+</tr>
 
 </table>
 
