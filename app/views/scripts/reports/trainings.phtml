@@ -356,6 +356,29 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 															<?php } ?>
 
 															</div>
+															
+															<!-- TA:17: 9/3/2014  START -->
+															<?php if($this->setting['display_training_start_date']){?>
+															<div class="clear"></div><br/><br/>
+															<div class="fieldLabel"><?php tp('Start date');?></div>
+															<div class="fieldInput" id="startdate">
+																<?php tp('Day');?> <input id="start-day" class="dayfield" type="text" name="start-day" maxlength="2" value="<?php echo $this->criteria['start-day']; ?>"  />
+																/ <?php tp('Month');?> <input id="start-month" class="monthfield" type="text" name="start-month" maxlength="2" value="<?php echo $this->criteria['start-month']; ?>"  />
+																/ <?php tp('Year');?> <input id="start-year" class="yearfield" type="text" name="start-year" maxlength="4" value="<?php echo $this->criteria['start-year'];  ?>" />
+																<script  type="text/javascript">
+																	YAHOO.util.Event.onDOMReady(function () {
+																		//makeCalendar("startdate","start-day", "start-month", "start-year");
+																		<?php //TA:#350
+											                                    $locale = ITechTranslate::getLocale();
+											                                    if ( $locale !== null && $locale == 'uk_UK.UTF-8'){ ?>
+											                                         makeCalendarUkraine("startdate", "start-day", "start-month", "start-year", null, "calendarpicker", "buttoncalendar1");
+											                                    <?php }else{?>
+											                                         makeCalendarDefault("startdate", "start-day", "start-month", "start-year", null, "calendarpicker", "buttoncalendar1");
+											                                    <?php }?>
+																	});
+																</script>
+															</div>
+															<?php }?>
 												
 			
 															<!-- TA:17: 9/3/2014  START -->
@@ -687,8 +710,8 @@ $(document).ready( function	() {
             $locale = ITechTranslate::getLocale();
             if ( $locale !== null && $locale == 'uk_UK.UTF-8'){ ?>
             $('.trainingReportCreationDate').datepicker({
-        		monthNames: ["Ð¡Ñ–Ñ‡ÐµÐ½ÑŒ", "Ð›ÑŽÑ‚Ð¸Ð¹", "Ð‘ÐµÑ€ÐµÐ·ÐµÐ½ÑŒ", "ÐšÐ²Ñ–Ñ‚ÐµÐ½ÑŒ", "Ð¢Ñ€Ð°Ð²ÐµÐ½ÑŒ", "Ð§ÐµÑ€Ð²ÐµÐ½ÑŒ", "Ð›Ð¸Ð¿ÐµÐ½ÑŒ", "Ð¡ÐµÑ€Ð¿ÐµÐ½ÑŒ", "Ð’ÐµÑ€ÐµÑ�ÐµÐ½ÑŒ", "Ð–Ð¾Ð²Ñ‚ÐµÐ½ÑŒ", "Ð›Ð¸Ñ�Ñ‚Ð¾Ð¿Ð°Ð´", "Ð“Ñ€ÑƒÐ´ÐµÐ½ÑŒ"], 
-        		dayNamesMin: ["Ð�Ð´", "ÐŸÐ½", "Ð’Ñ‚", "Ð¡Ñ€", "Ð§Ñ‚", "ÐŸÑ‚", "Ð¡Ð±"],
+        		monthNames: ["Ã�Â¡Ã‘â€“Ã‘â€¡Ã�ÂµÃ�Â½Ã‘Å’", "Ã�â€ºÃ‘Å½Ã‘â€šÃ�Â¸Ã�Â¹", "Ã�â€˜Ã�ÂµÃ‘â‚¬Ã�ÂµÃ�Â·Ã�ÂµÃ�Â½Ã‘Å’", "Ã�Å¡Ã�Â²Ã‘â€“Ã‘â€šÃ�ÂµÃ�Â½Ã‘Å’", "Ã�Â¢Ã‘â‚¬Ã�Â°Ã�Â²Ã�ÂµÃ�Â½Ã‘Å’", "Ã�Â§Ã�ÂµÃ‘â‚¬Ã�Â²Ã�ÂµÃ�Â½Ã‘Å’", "Ã�â€ºÃ�Â¸Ã�Â¿Ã�ÂµÃ�Â½Ã‘Å’", "Ã�Â¡Ã�ÂµÃ‘â‚¬Ã�Â¿Ã�ÂµÃ�Â½Ã‘Å’", "Ã�â€™Ã�ÂµÃ‘â‚¬Ã�ÂµÃ‘ï¿½Ã�ÂµÃ�Â½Ã‘Å’", "Ã�â€“Ã�Â¾Ã�Â²Ã‘â€šÃ�ÂµÃ�Â½Ã‘Å’", "Ã�â€ºÃ�Â¸Ã‘ï¿½Ã‘â€šÃ�Â¾Ã�Â¿Ã�Â°Ã�Â´", "Ã�â€œÃ‘â‚¬Ã‘Æ’Ã�Â´Ã�ÂµÃ�Â½Ã‘Å’"], 
+        		dayNamesMin: ["Ã�ï¿½Ã�Â´", "Ã�Å¸Ã�Â½", "Ã�â€™Ã‘â€š", "Ã�Â¡Ã‘â‚¬", "Ã�Â§Ã‘â€š", "Ã�Å¸Ã‘â€š", "Ã�Â¡Ã�Â±"],
         		firstDay: 1,
         		dateFormat: 'mm/dd/yy'
         			});

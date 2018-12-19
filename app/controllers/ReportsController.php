@@ -2644,6 +2644,7 @@ echo $sql . "<br>";
 		$criteria ['training_organizer_id']        = $this->getSanParam ( 'training_organizer_id' );
 		$criteria ['training_organizer_option_id'] = $this->getSanParam ( 'training_organizer_option_id' );
 		$criteria ['training_method_option_id'] = $this->getSanParam ( 'training_method_option_id' );//TA:#514
+		$criteria ['people_funding_id'] = $this->getSanParam ( 'people_funding_id' );//TA:#529
 		$criteria ['funding_id']                   = $this->getSanParam ( 'funding_id' );
 		$criteria ['custom_1_id']                  = $this->getSanParam ( 'custom_1_id' );
 		$criteria ['custom_2_id']                  = $this->getSanParam ( 'custom_2_id' );
@@ -2707,6 +2708,7 @@ echo $sql . "<br>";
 		$criteria ['showHighestEd']     = ($this->getSanParam ( 'showHighestEd' ));
 		$criteria ['showReason']        = ($this->getSanParam ( 'showReason' ));
 		$criteria ['showViewingLoc']    = $this->getSanParam ( 'showViewingLoc' );
+		$criteria ['showPeopleFund']    = $this->getSanParam ( 'showPeopleFund' );//TA:#529
 
 		$criteria ['primary_responsibility_option_id'] = $this->getSanParam ( 'primary_responsibility_option_id' );
 		$criteria ['secondary_responsibility_option_id'] = $this->getSanParam ( 'secondary_responsibility_option_id' );
@@ -2770,6 +2772,11 @@ echo $sql . "<br>";
 			}
 			if ($criteria ['showTrainingTitle']) {
 				$sql .= ', pt.training_title ';
+			}
+			//TA:#529
+			if ($criteria ['showPeopleFund'] || $criteria ['people_funding_id'][0]) {
+			   // $sql .= ', pt.funding_phrase, pt.funding_amount ';
+			    $sql .= ', pt.people_funding_option_id, GROUP_CONCAT( DISTINCT CONCAT(pt.funding_phrase, CONCAT (CONCAT("(", pt.funding_amount), ")"))  ORDER BY pt.funding_phrase SEPARATOR ", ") as people_funding ';
 			}
 			if ($criteria ['showDistrict']) {
 				$sql .= ', pt.district_name ';
@@ -2916,9 +2923,18 @@ echo $sql . "<br>";
 			$sql .= 'CASE WHEN person.gender IS NULL THEN \'na\' WHEN person.gender = \'\' THEN \'na\' ELSE person.gender END as "gender", ';
 			$sql .= 'primary_qualification_option_id, primary_responsibility_option_id, secondary_responsibility_option_id, highest_edu_level_option_id, attend_reason_option_id, attend_reason_other, tto.training_title_phrase AS training_title,facility.facility_name, ';
 			$sql .= $intersection_table.'.id AS ptt_id, l.'.implode(', l.',$field_name);
+			//TA:#529
+			if ($criteria ['showPeopleFund'] || $criteria ['people_funding_id'][0]) {
+			    $sql .= ' , people_funding_option.funding_phrase,  people_to_people_funding_option.funding_amount, people_to_people_funding_option.people_funding_option_id ';
+			}
 			$sql .= ' FROM training LEFT JOIN training_title_option tto ON training.training_title_option_id = tto.id ';
 			$sql .= '    INNER JOIN '.$intersection_table.' ON training.id = '.$intersection_table.'.training_id ';
 			$sql .= '    INNER JOIN person ON person.id = '.$intersection_table.'.'.$intersection_person_id;
+			//TA:#529
+			if ($criteria ['showPeopleFund'] || $criteria ['people_funding_id'][0]) {
+			    $sql .= ' LEFT JOIN people_to_people_funding_option ON people_to_people_funding_option.person_id=person.id
+    LEFT JOIN people_funding_option ON people_funding_option.id=people_to_people_funding_option.people_funding_option_id ';
+			}
 			$sql .= '    INNER JOIN facility ON person.facility_id = facility.id ';
 			$sql .= '    LEFT JOIN ('.$location_sub_query.') AS l ON facility.location_id = l.id ';
 			$sql .= '    LEFT  JOIN person_suffix_option suffix ON person.suffix_option_id = suffix.id ';
@@ -3147,6 +3163,12 @@ echo $sql . "<br>";
 					$where [] = ' spost.score_value > ' . $criteria ['score_min'];
 				}
 			}
+			
+			//TA:#529
+			if ($criteria ['people_funding_id'][0]) {
+			    $where [] = ' pt.people_funding_option_id IN (' . $criteria ['people_funding_id'] . ')';
+			}
+			
 
 			if ($where)
 			$sql .= ' WHERE ' . implode ( ' AND ', $where );
@@ -3245,19 +3267,21 @@ echo $sql . "<br>";
 				if ($criteria ['showViewingLoc'] || $criteria['person_to_training_viewing_loc_option_id']) {
 					$groupBy []= ' viewloc.viewing_location_option_id ';
 				}
-
-
+				
 				if ($groupBy ) {
 					$groupBy = ' GROUP BY ' . implode(', ',$groupBy);
 					$sql .= $groupBy;
 				}
 			} else {
-				if ($criteria ['showPepfar'] || $criteria ['showTopic'] || $criteria ['showFunding']) {
+				//TA:#529 
+			    if ($criteria ['showPepfar'] || $criteria ['showTopic'] || $criteria ['showFunding'] || $criteria ['showPeopleFund'] || $criteria ['people_funding_id'][0]) {
 					$sql .= ' GROUP BY person_id, pt.id';
 				}
 			}
 			
-   
+			print_r($criteria); print "<br><br>";
+			
+   print $sql;//TA:#529
 			$rowArray = $db->fetchAll ( $sql);
 			
 
@@ -3345,7 +3369,10 @@ echo $sql . "<br>";
 		//qualifications (secondary)
 		$qualsArray = OptionList::suggestionList ( 'person_qualification_option', 'qualification_phrase', false, false, false, 'parent_id IS NOT NULL' );
 		$this->viewAssignEscaped ( 'qualifications_secondary', $qualsArray );
-
+		
+		//TA:#529 funding
+		$fundsArray = OptionList::suggestionList ( 'people_funding_option', 'funding_phrase', false, false, false);
+		$this->viewAssignEscaped ( 'people_funding', $fundsArray );
 
 		$qualsArray = OptionList::suggestionList ( 'person_primary_responsibility_option', 'responsibility_phrase', false, false, false );
 		$this->viewAssignEscaped ( 'responsibility_primary', $qualsArray );

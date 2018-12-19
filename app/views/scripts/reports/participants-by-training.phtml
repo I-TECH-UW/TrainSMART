@@ -429,6 +429,20 @@ if ( $this->setting['display_viewing_location'] && $this->mode != 'search' && ! 
 
 <?php } ?>
 
+<!-- TA:#529 -->
+															<?php if($this->setting['display_people_funding_options']){?>
+															<div class="fieldLabel" id="district_id_lbl"><?php tp('Participants Funding'); ?></div><div class="fieldInput">
+															<div  class="leftBorderPad"><input type="checkbox" name="showPeopleFund" id="showPeopleFund" <?php  if ($this->criteria['showPeopleFund']) echo 'CHECKED';?> /></div>
+														  	<div  class="leftBorder"><select id="people_funding_id" name="people_funding_id">
+																<option value="">--<?php tp('All');?>--</option>
+																<?php
+																foreach ( $this->people_funding as $vals ) {
+																		echo '<option value="'.$vals['id'].'" '.((@$this->criteria['people_funding_id']) == $vals['id'] ? 'SELECTED':'').' >'.$vals['funding_phrase'].'</option>';
+																}
+																?>
+															</select></div></div>
+															<?php }?>
+
 </div>
 
 <?php if(strstr($path[2], 'participantsByTraining') == TRUE or strstr($path[2], 'participantsByName') == TRUE OR ( strstr($path[2], 'participants-by-name') == TRUE )) { //TA:63?>
@@ -594,6 +608,10 @@ if($this->setting['display_last_name_first']){ //TA:UK:1712:23 shaw different na
 		echo ',"'.$row['pepfar_category_phrase'].'"';
 	if ( $this->criteria['showFunding'] )
 		echo ',"'.$row['funding_phrase'].'"';
+	//TA:#529
+	if ( $this->criteria['showPeopleFund'] ){
+		    echo ',"'.$row['people_funding'].'"';
+	}
 	if ( $this->criteria['showCustom1'] )
 		echo ',"'.$row['custom1_phrase'].'"';
 	if ( $this->criteria['showCustom2'] )
@@ -778,6 +796,11 @@ var trainingColumnDefs = [
 <?php if ( $this->criteria['showFunding'] ) { ?>
    ,{key:"funding_phrase", label: "<?php tp('Funding');?>", sortable:true, resizeable:true}
  <?php } ?>
+ //TA:#529
+ <?php if ( $this->criteria['showPeopleFund'] ) { ?>
+ ,{key:"funding_phrase", label: "<?php tp('Participants Funding');?>", sortable:true, resizeable:true}
+<?php } ?>
+//
 <?php 	if ( $this->criteria['showCustom1'] ) { ?>
   ,{key:"custom1_phrase", label: "<?php echo (@$this->translation['People Custom 1']); ?>", sortable:true, resizeable:true}
  <?php } ?>
