@@ -1,0 +1,52 @@
+<!-- TA:#529 -->
+<hr>
+<div class="fieldIndentNoMargin"><?php tp('Funding');?></div>
+    <div class="pad20 clear"></div>
+							
+							
+							<script type="text/javascript">
+    function updateFundingCheck(parent_check, funding_amount) {
+        if (YAHOO.util.Dom.get(funding_amount).value) {
+            YAHOO.util.Dom.get(parent_check).checked = "checked";
+        }
+    }
+</script>
+
+<?php //if ($this->setting['display_funding_options']) : ?>
+
+    <div class="fieldInput" id="fundingContainer">
+        <div style="line-height:1.5em;margin-bottom:0.5em;">
+            <?php if (!$this->viewonly) : ?>
+                <?php tp('Check all that apply below'); ?>
+                <?php //echo $this->fundingInsertLink; ?>
+                <?php //echo hasACLEdit('acl_editor_funding', 'admin/people-funding', $this); ?>
+            <?php endif; ?>
+        </div>
+        <?php
+        // table used to align checkboxes w/labels
+        $fundingChunked = array($this->fundingArray);
+        foreach ($fundingChunked as $fundingRay) {
+            echo '<div class="fieldLabel">&nbsp;</div><div class="float50"><table class="tableChoices">';
+            foreach ($fundingRay as $item) {
+                $isChecked = ((isset($item['person_id']) && $item['person_id']) || ($this->is_new && $item['is_default'])) ? ' checked' : '';
+                echo '<tr><td valign="top">';
+                echo '<input type="checkbox" name="funding_id[]" value="' . $item['id'] . '" id="funding_id_' . $item['id'] . '"' . $isChecked . ' ' . $this->viewonly . '> ';
+                echo '</td><td valign="top">';
+                echo '<label for="funding_id_' . $item['id'] . '">' . $item['funding_phrase'] . '</label>';
+                echo '</td>';
+                if ($this->setting['display_funding_amounts']) {
+                    echo '<td valign="top" nowrap="nowrap">';
+                    echo '&nbsp;&nbsp;$&nbsp;<input type="text" onkeyup="updateFundingCheck(\'funding_id_' . $item['id'] . '\', \'funding_id_amount_' . $item['id'] . '\')" size="6" name="funding_id_amount_' . $item['id'] . '" value="' . (@$item['funding_amount']) . '" id="funding_id_amount_' . $item['id'] . '" ' . $this->viewonly . ' />';
+                    echo '</td>';
+                }
+                echo '</tr>';
+            }
+            echo '</table></div>';
+        }
+
+        ?>
+
+    </div><br/><br clear="both"/>
+    <hr>
+
+<?php //endif; ?>
