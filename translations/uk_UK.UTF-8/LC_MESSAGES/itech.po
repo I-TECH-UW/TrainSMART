@@ -3,4307 +3,4623 @@ msgstr ""
 "Project-Id-Version: Trainsmart\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-09-24 16:51-0800\n"
-"PO-Revision-Date: 2018-01-22 11:59-0800\n"
+"PO-Revision-Date: 2018-12-19 15:12-0800\n"
 "Last-Translator: DB\n"
 "Language-Team: Fuse IQ <todd@fuseiq.com>\n"
 "Language: uk_UA\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && n"
+"%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: iso-8859-1\n"
 "X-Loco-Source-Locale: ru_RU\n"
 "X-Poedit-KeywordsList: t;tp\n"
-"X-Poedit-Basepath: c:\\wamp\\www\\d\\app\n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Poedit-Basepath: c:/wamp/www/d/app\n"
+"X-Generator: Poedit 2.0.7\n"
 "X-Loco-Parser: loco_parse_po\n"
 "X-Loco-Target-Locale: uk_UA\n"
 "X-Poedit-SearchPath-0: controllers\n"
 "X-Poedit-SearchPath-1: views\n"
 
 msgid "Your settings have been updated."
-msgstr "Ваші налаштування були оновлені."
+msgstr "Ð’Ð°ÑˆÑ– Ð½Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ� Ð±ÑƒÐ»Ð¸ Ð¾Ð½Ð¾Ð²Ð»ÐµÐ½Ñ–."
 
 msgid "No future trainings found."
-msgstr "Не знайдено майбутні тренінги."
+msgstr "Ð�Ðµ Ð·Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾ Ð¼Ð°Ð¹Ð±ÑƒÑ‚Ð½Ñ– Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸."
 
 msgid "A record already exists with this value."
-msgstr "Запис вже існує з цим значенням."
+msgstr "Ð—Ð°Ð¿Ð¸Ñ� Ð²Ð¶Ðµ Ñ–Ñ�Ð½ÑƒÑ” Ð· Ñ†Ð¸Ð¼ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ�Ð¼."
 
 msgid "The evaluation could not be loaded."
-msgstr "Не вдалося завантажити деталі процесу визначення якості."
+msgstr ""
+"Ð�Ðµ Ð²Ð´Ð°Ð»Ð¾Ñ�Ñ� Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸ Ð´ÐµÑ‚Ð°Ð»Ñ– Ð¿Ñ€Ð¾Ñ†ÐµÑ�Ñƒ "
+"Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–."
 
 msgid "Are you sure you wish to delete this evaluation?"
-msgstr "Ви впевнені, що хочете видалити деталі процесу визначення якості?"
+msgstr ""
+"Ð’Ð¸ Ð²Ð¿ÐµÐ²Ð½ÐµÐ½Ñ–, Ñ‰Ð¾ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ð´ÐµÑ‚Ð°Ð»Ñ– Ð¿Ñ"
+"€Ð¾Ñ†ÐµÑ�Ñƒ Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–?"
 
 msgid "The evaluation could not be saved."
-msgstr "Неможливо зберегти деталі процесу визначення якості."
+msgstr ""
+"Ð�ÐµÐ¼Ð¾Ð¶Ð»Ð¸Ð²Ð¾ Ð·Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ð´ÐµÑ‚Ð°Ð»Ñ– Ð¿Ñ€Ð¾Ñ†ÐµÑ�Ñƒ Ð²Ð¸Ð·Ð½Ð"
+"°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–."
 
 msgid "Title"
-msgstr "Назва"
+msgstr "Ð�Ð°Ð·Ð²Ð°"
 
 msgid "You must choose a question type for each question."
-msgstr "Ви повинні вибрати тип питання для кожного питання."
+msgstr ""
+"Ð’Ð¸ Ð¿Ð¾Ð²Ð¸Ð½Ð½Ñ– Ð²Ð¸Ð±Ñ€Ð°Ñ‚Ð¸ Ñ‚Ð¸Ð¿ Ð¿Ð¸Ñ‚Ð°Ð½Ð½Ñ� Ð´Ð»Ñ� "
+"ÐºÐ¾Ð¶Ð½Ð¾Ð³Ð¾ Ð¿Ð¸Ñ‚Ð°Ð½Ð½Ñ�."
 
 msgid "You must enter question text for each question."
-msgstr "Введіть текст запитання для кожного питання."
+msgstr ""
+"Ð’Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ñ‚ÐµÐºÑ�Ñ‚ Ð·Ð°Ð¿Ð¸Ñ‚Ð°Ð½Ð½Ñ� Ð´Ð»Ñ� ÐºÐ¾Ð¶Ð½Ð¾Ð³Ð¾ Ð¿Ð¸Ñ‚Ð"
+"°Ð½Ð½Ñ�."
 
 msgid "The new evaluation was created."
-msgstr "Новий процес визначення якості створений."
+msgstr ""
+"Ð�Ð¾Ð²Ð¸Ð¹ Ð¿Ñ€Ð¾Ñ†ÐµÑ� Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ– Ñ�Ñ‚Ð²Ð¾Ñ€ÐµÐ½Ð¸Ð¹."
 
 msgid "This evaluation has been deleted."
-msgstr "Цей процес визначення якості видалений."
+msgstr ""
+"Ð¦ÐµÐ¹ Ð¿Ñ€Ð¾Ñ†ÐµÑ� Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ– Ð²Ð¸Ð´Ð°Ð»ÐµÐ½Ð¸Ð¹."
 
 msgid "The trainings have been assigned."
-msgstr "Тренінги були призначені."
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð±ÑƒÐ»Ð¸ Ð¿Ñ€Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ñ–."
 
 msgid "The evaluation has been assigned."
-msgstr "Процес визначення якості призначений."
+msgstr "ÐŸÑ€Ð¾Ñ†ÐµÑ� Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ– Ð¿Ñ€Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ð¹."
 
 msgid "Training start"
-msgstr "Початок  тренінгу"
+msgstr "ÐŸÐ¾Ñ‡Ð°Ñ‚Ð¾Ðº  Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "The person could not be saved."
-msgstr "Не вдалося зберегти особу."
+msgstr "Ð�Ðµ Ð²Ð´Ð°Ð»Ð¾Ñ�Ñ� Ð·Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ð¾Ñ�Ð¾Ð±Ñƒ."
 
 msgid "The external course could not be saved."
-msgstr "Не вдалося зберегти зовнішній курс."
+msgstr "Ð�Ðµ Ð²Ð´Ð°Ð»Ð¾Ñ�Ñ� Ð·Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ð·Ð¾Ð²Ð½Ñ–ÑˆÐ½Ñ–Ð¹ ÐºÑƒÑ€Ñ�."
 
 msgid "That name already exists."
-msgstr "Таке ім'я вже існує."
+msgstr "Ð¢Ð°ÐºÐµ Ñ–Ð¼'Ñ� Ð²Ð¶Ðµ Ñ–Ñ�Ð½ÑƒÑ”."
 
 msgid "Facility type"
-msgstr "Тип закладу"
+msgstr "Ð¢Ð¸Ð¿ Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
-msgid "That city does not appear to be located in the chosen region. If you want to create a new city, check the new city box."
-msgstr "Схоже, що місто не знаходиться у вибраному регіоні. Якщо Ви хочете створити нове місто, то поставте позначку про нове місто."
+msgid ""
+"That city does not appear to be located in the chosen region. If you want to "
+"create a new city, check the new city box."
+msgstr ""
+"Ð¡Ñ…Ð¾Ð¶Ðµ, Ñ‰Ð¾ Ð¼Ñ–Ñ�Ñ‚Ð¾ Ð½Ðµ Ð·Ð½Ð°Ñ…Ð¾Ð´Ð¸Ñ‚ÑŒÑ�Ñ� Ñƒ Ð²Ð¸Ð±Ñ€Ð"
+"°Ð½Ð¾Ð¼Ñƒ Ñ€ÐµÐ³Ñ–Ð¾Ð½Ñ–. Ð¯ÐºÑ‰Ð¾ Ð’Ð¸ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ñ�Ñ‚Ð²Ð¾Ñ€Ð¸Ñ‚Ð¸ "
+"Ð½Ð¾Ð²Ðµ Ð¼Ñ–Ñ�Ñ‚Ð¾, Ñ‚Ð¾ Ð¿Ð¾Ñ�Ñ‚Ð°Ð²Ñ‚Ðµ Ð¿Ð¾Ð·Ð½Ð°Ñ‡ÐºÑƒ Ð¿Ñ€Ð¾ Ð½Ð¾Ð²Ðµ "
+"Ð¼Ñ–Ñ�Ñ‚Ð¾."
 
 msgid "The facility could not be saved."
-msgstr "Не вдалося зберегти заклад."
+msgstr "Ð�Ðµ Ð²Ð´Ð°Ð»Ð¾Ñ�Ñ� Ð·Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ð·Ð°ÐºÐ»Ð°Ð´."
 
 msgid "Could not save that city."
-msgstr "Неможливо зберегти місто."
+msgstr "Ð�ÐµÐ¼Ð¾Ð¶Ð»Ð¸Ð²Ð¾ Ð·Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ð¼Ñ–Ñ�Ñ‚Ð¾."
 
 msgid "The facility was saved."
-msgstr "Заклад було збережено."
+msgstr "Ð—Ð°ÐºÐ»Ð°Ð´ Ð±ÑƒÐ»Ð¾ Ð·Ð±ÐµÑ€ÐµÐ¶ÐµÐ½Ð¾."
 
 msgid "ERROR: The facility could not be saved."
-msgstr "ПОМИЛКА: Неможливо зберегти установу."
+msgstr "ÐŸÐžÐœÐ˜Ð›ÐšÐ�: Ð�ÐµÐ¼Ð¾Ð¶Ð»Ð¸Ð²Ð¾ Ð·Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ ÑƒÑ�Ñ‚Ð°Ð½Ð¾Ð²Ñƒ."
 
 msgid "That facility was deleted."
-msgstr "Заклад було видалено."
+msgstr "Ð—Ð°ÐºÐ»Ð°Ð´ Ð±ÑƒÐ»Ð¾ Ð²Ð¸Ð´Ð°Ð»ÐµÐ½Ð¾."
 
 msgid "That facility could not be found."
-msgstr "Не вдалося знайти заклад. "
+msgstr "Ð�Ðµ Ð²Ð´Ð°Ð»Ð¾Ñ�Ñ� Ð·Ð½Ð°Ð¹Ñ‚Ð¸ Ð·Ð°ÐºÐ»Ð°Ð´. "
 
 msgid "That facility is in use and could not be deleted."
-msgstr "Цей заклад знаходиться у використанні й не може бути видалений."
+msgstr ""
+"Ð¦ÐµÐ¹ Ð·Ð°ÐºÐ»Ð°Ð´ Ð·Ð½Ð°Ñ…Ð¾Ð´Ð¸Ñ‚ÑŒÑ�Ñ� Ñƒ Ð²Ð¸ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚Ð°Ð½Ð½Ñ– Ð¹ "
+"Ð½Ðµ Ð¼Ð¾Ð¶Ðµ Ð±ÑƒÑ‚Ð¸ Ð²Ð¸Ð´Ð°Ð»ÐµÐ½Ð¸Ð¹."
 
 msgid "That location was deleted."
-msgstr "Місцезнаходження було видалено."
+msgstr "ÐœÑ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� Ð±ÑƒÐ»Ð¾ Ð²Ð¸Ð´Ð°Ð»ÐµÐ½Ð¾."
 
 msgid "That location could not be found."
-msgstr "Не вдалося знайти таке місцезнаходження."
+msgstr ""
+"Ð�Ðµ Ð²Ð´Ð°Ð»Ð¾Ñ�Ñ� Ð·Ð½Ð°Ð¹Ñ‚Ð¸ Ñ‚Ð°ÐºÐµ Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ�."
 
 msgid "That location is in use and could not be deleted."
-msgstr "Це місцезнаходження використовується і не може бути видалено."
+msgstr ""
+"Ð¦Ðµ Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� Ð²Ð¸ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚Ð¾Ð²ÑƒÑ”Ñ‚ÑŒÑ�Ñ� Ñ– "
+"Ð½Ðµ Ð¼Ð¾Ð¶Ðµ Ð±ÑƒÑ‚Ð¸ Ð²Ð¸Ð´Ð°Ð»ÐµÐ½Ð¾."
 
 msgid "Course Name"
-msgstr "Назва курсу"
+msgstr "Ð�Ð°Ð·Ð²Ð° ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "Start Date"
-msgstr "Дата початку"
+msgstr "Ð”Ð°Ñ‚Ð° Ð¿Ð¾Ñ‡Ð°Ñ‚ÐºÑƒ"
 
 msgid "Training Center"
-msgstr "Центр навчання"
+msgstr "Ð¦ÐµÐ½Ñ‚Ñ€ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Training Centre"
-msgstr "Центр навчання"
+msgstr "Ð¦ÐµÐ½Ñ‚Ñ€ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Created By"
-msgstr "Створено"
+msgstr "Ð¡Ñ‚Ð²Ð¾Ñ€ÐµÐ½Ð¾"
 
 msgid "Message"
-msgstr "Повідомлення"
+msgstr "ÐŸÐ¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ�"
 
 msgid "You do not have access rights to the requested action."
-msgstr "У вас немає прав доступу для запитаної дії."
+msgstr ""
+"Ð£ Ð²Ð°Ñ� Ð½ÐµÐ¼Ð°Ñ” Ð¿Ñ€Ð°Ð² Ð´Ð¾Ñ�Ñ‚ÑƒÐ¿Ñƒ Ð´Ð»Ñ� Ð·Ð°Ð¿Ð¸Ñ‚Ð°Ð½Ð¾Ñ— Ð´Ñ–Ñ"
+"—."
 
 msgid "That person was deleted."
-msgstr "Цю особу було видалено."
+msgstr "Ð¦ÑŽ Ð¾Ñ�Ð¾Ð±Ñƒ Ð±ÑƒÐ»Ð¾ Ð²Ð¸Ð´Ð°Ð»ÐµÐ½Ð¾."
 
 msgid "That person could not be found."
-msgstr "Не вдалося знайти цю особу. "
+msgstr "Ð�Ðµ Ð²Ð´Ð°Ð»Ð¾Ñ�Ñ� Ð·Ð½Ð°Ð¹Ñ‚Ð¸ Ñ†ÑŽ Ð¾Ñ�Ð¾Ð±Ñƒ. "
 
-msgid "That person is an active participant or trainer and could not be deleted."
-msgstr "Ця особа є діючим учасником або інструктором і не може бути видалена."
+msgid ""
+"That person is an active participant or trainer and could not be deleted."
+msgstr ""
+"Ð¦Ñ� Ð¾Ñ�Ð¾Ð±Ð° Ñ” Ð´Ñ–ÑŽÑ‡Ð¸Ð¼ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ¾Ð¼ Ð°Ð±Ð¾ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ"
+"€Ð¾Ð¼ Ñ– Ð½Ðµ Ð¼Ð¾Ð¶Ðµ Ð±ÑƒÑ‚Ð¸ Ð²Ð¸Ð´Ð°Ð»ÐµÐ½Ð°."
 
 msgid "The person was saved. Refreshing history..."
-msgstr "Дана особа була збережена. Йде оновлення журналу ..."
+msgstr ""
+"Ð”Ð°Ð½Ð° Ð¾Ñ�Ð¾Ð±Ð° Ð±ÑƒÐ»Ð° Ð·Ð±ÐµÑ€ÐµÐ¶ÐµÐ½Ð°. Ð™Ð´Ðµ Ð¾Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ� "
+"Ð¶ÑƒÑ€Ð½Ð°Ð»Ñƒ ..."
 
 msgid "The person was saved."
-msgstr "Дана особа була збережена."
+msgstr "Ð”Ð°Ð½Ð° Ð¾Ñ�Ð¾Ð±Ð° Ð±ÑƒÐ»Ð° Ð·Ð±ÐµÑ€ÐµÐ¶ÐµÐ½Ð°."
 
 msgid "Gender"
-msgstr "Стать"
+msgstr "Ð¡Ñ‚Ð°Ñ‚ÑŒ"
 
 msgid "Professional qualification"
-msgstr "Професійна кваліфікація"
+msgstr "ÐŸÑ€Ð¾Ñ„ÐµÑ�Ñ–Ð¹Ð½Ð° ÐºÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ�"
 
 msgid "Professional Qualification"
-msgstr "Професійна кваліфікація"
+msgstr "ÐŸÑ€Ð¾Ñ„ÐµÑ�Ñ–Ð¹Ð½Ð° ÐºÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ�"
 
 msgid "Birthdate"
-msgstr "Дата народження"
+msgstr "Ð”Ð°Ñ‚Ð° Ð½Ð°Ñ€Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "Trainer type"
-msgstr "Тип Тренера"
+msgstr "Ð¢Ð¸Ð¿ Ð¢Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Trainer skill"
-msgstr "Навички Тренера"
+msgstr "Ð�Ð°Ð²Ð¸Ñ‡ÐºÐ¸ Ð¢Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Enter a reason, or select a different reason above."
-msgstr "Вкажіть причину, або виберіть іншу причину вище."
+msgstr ""
+"Ð’ÐºÐ°Ð¶Ñ–Ñ‚ÑŒ Ð¿Ñ€Ð¸Ñ‡Ð¸Ð½Ñƒ, Ð°Ð±Ð¾ Ð²Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ñ–Ð½ÑˆÑƒ Ð¿Ñ"
+"€Ð¸Ñ‡Ð¸Ð½Ñƒ Ð²Ð¸Ñ‰Ðµ."
 
 msgid "You can not type in a reason with the reason selected above."
-msgstr "Ви не можете ввести причину обрану вище."
+msgstr ""
+"Ð’Ð¸ Ð½Ðµ Ð¼Ð¾Ð¶ÐµÑ‚Ðµ Ð²Ð²ÐµÑ�Ñ‚Ð¸ Ð¿Ñ€Ð¸Ñ‡Ð¸Ð½Ñƒ Ð¾Ð±Ñ€Ð°Ð½Ñƒ Ð²Ð¸Ñ‰Ðµ."
 
 msgid "Facility"
-msgstr "Заклад"
+msgstr "Ð—Ð°ÐºÐ»Ð°Ð´"
 
 msgid "That facility name could not be found."
-msgstr "Не вдалося знайти цю назву установи."
+msgstr "Ð�Ðµ Ð²Ð´Ð°Ð»Ð¾Ñ�Ñ� Ð·Ð½Ð°Ð¹Ñ‚Ð¸ Ñ†ÑŽ Ð½Ð°Ð·Ð²Ñƒ ÑƒÑ�Ñ‚Ð°Ð½Ð¾Ð²Ð¸."
 
 msgid "The person was saved. Refreshing change history..."
-msgstr "Дана особа була збережена. Йде оновлення журналу змін ..."
+msgstr ""
+"Ð”Ð°Ð½Ð° Ð¾Ñ�Ð¾Ð±Ð° Ð±ÑƒÐ»Ð° Ð·Ð±ÐµÑ€ÐµÐ¶ÐµÐ½Ð°. Ð™Ð´Ðµ Ð¾Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ� "
+"Ð¶ÑƒÑ€Ð½Ð°Ð»Ñƒ Ð·Ð¼Ñ–Ð½ ..."
 
 msgid "The trainer information could not be saved."
-msgstr "Не вдалося зберегти інформацію тренера."
+msgstr ""
+"Ð�Ðµ Ð²Ð´Ð°Ð»Ð¾Ñ�Ñ� Ð·Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–ÑŽ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°."
 
 msgid "ERROR: The person could not be saved."
-msgstr "ПОМИЛКА: Неможливо зберегти особу."
+msgstr "ÐŸÐžÐœÐ˜Ð›ÐšÐ�: Ð�ÐµÐ¼Ð¾Ð¶Ð»Ð¸Ð²Ð¾ Ð·Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ð¾Ñ�Ð¾Ð±Ñƒ."
 
 msgid "No trainings selected."
-msgstr "Не вибрано тренінг."
+msgstr "Ð�Ðµ Ð²Ð¸Ð±Ñ€Ð°Ð½Ð¾ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³."
 
 msgid "Count"
-msgstr "Кількість"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ"
 
 msgid "Language"
-msgstr "Мова"
+msgstr "ÐœÐ¾Ð²Ð°"
 
 msgid "Location"
-msgstr "Місцезнаходження"
+msgstr "ÐœÑ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "Date"
-msgstr "Дата"
+msgstr "Ð”Ð°Ñ‚Ð°"
 
 msgid "Training Topic"
-msgstr "Тема тренінгу"
+msgstr "Ð¢ÐµÐ¼Ð° Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Funding"
-msgstr "Джерелo фінансування"
+msgstr "Ð”Ð¶ÐµÑ€ÐµÐ»o Ñ„Ñ–Ð½Ð°Ð½Ñ�ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Facility Name"
-msgstr "Назва закладу"
+msgstr "Ð�Ð°Ð·Ð²Ð° Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Facility Type"
-msgstr "Тип закладу"
+msgstr "Ð¢Ð¸Ð¿ Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Facility Sponsor"
-msgstr "Спонсор закладу"
+msgstr "Ð¡Ð¿Ð¾Ð½Ñ�Ð¾Ñ€ Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Recommended classes"
-msgstr "Рекомендовані заняття"
+msgstr "Ð ÐµÐºÐ¾Ð¼ÐµÐ½Ð´Ð¾Ð²Ð°Ð½Ñ– Ð·Ð°Ð½Ñ�Ñ‚Ñ‚Ñ�"
 
 msgid "Recommended"
-msgstr "Рекомендований"
+msgstr "Ð ÐµÐºÐ¾Ð¼ÐµÐ½Ð´Ð¾Ð²Ð°Ð½Ð¸Ð¹"
 
 msgid "Qualification"
-msgstr "Кваліфікація"
+msgstr "ÐšÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ�"
 
 msgid "(primary)"
-msgstr "(основний)"
+msgstr "(Ð¾Ñ�Ð½Ð¾Ð²Ð½Ð¸Ð¹)"
 
 msgid "(secondary)"
-msgstr "(додатковий)"
+msgstr "(Ð´Ð¾Ð´Ð°Ñ‚ÐºÐ¾Ð²Ð¸Ð¹)"
 
 msgid "Name"
-msgstr "Ім'я"
+msgstr "Ð†Ð¼'Ñ�"
 
 msgid "Email"
-msgstr "Електронна пошта"
+msgstr "Ð•Ð»ÐµÐºÑ‚Ñ€Ð¾Ð½Ð½Ð° Ð¿Ð¾ÑˆÑ‚Ð°"
 
 msgid "Phone"
-msgstr "Телефон"
+msgstr "Ð¢ÐµÐ»ÐµÑ„Ð¾Ð½"
 
 msgid "Category"
-msgstr "Категорія"
+msgstr "ÐšÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–Ñ�"
 
 msgid "Type"
-msgstr "Тип"
+msgstr "Ð¢Ð¸Ð¿"
 
 msgid "Skill"
-msgstr "Навички"
+msgstr "Ð�Ð°Ð²Ð¸Ñ‡ÐºÐ¸"
 
 msgid "Topics Taught"
-msgstr "Прочитані теми"
+msgstr "ÐŸÑ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ð½Ñ– Ñ‚ÐµÐ¼Ð¸"
 
 msgid "Work Phone"
-msgstr "Робочий телефон"
+msgstr "Ð Ð¾Ð±Ð¾Ñ‡Ð¸Ð¹ Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½"
 
 msgid "Home Phone"
-msgstr "Домашній телефон"
+msgstr "Ð”Ð¾Ð¼Ð°ÑˆÐ½Ñ–Ð¹ Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½"
 
 msgid "Mobile Phone"
-msgstr "Мобільний телефон"
+msgstr "ÐœÐ¾Ð±Ñ–Ð»ÑŒÐ½Ð¸Ð¹ Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½"
 
 msgid "Participants"
-msgstr "Учасники"
+msgstr "Ð£Ñ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸"
 
 msgid "Unique Participants"
-msgstr "Унікальні учасники"
+msgstr "Ð£Ð½Ñ–ÐºÐ°Ð»ÑŒÐ½Ñ– ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸"
 
 msgid "Yes"
-msgstr "Так"
+msgstr "Ð¢Ð°Ðº"
 
 msgid "No"
-msgstr "Ні"
+msgstr "Ð�Ñ–"
 
 msgid "Unknown"
-msgstr "Невідомий"
+msgstr "Ð�ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹"
 
 msgid "Female"
-msgstr "Жіночий"
+msgstr "Ð–Ñ–Ð½Ð¾Ñ‡Ð¸Ð¹"
 
 msgid "Male"
-msgstr "Чоловічий"
+msgstr "Ð§Ð¾Ð»Ð¾Ð²Ñ–Ñ‡Ð¸Ð¹"
 
 msgid "Dates"
-msgstr "Дати"
+msgstr "Ð”Ð°Ñ‚Ð¸"
 
 msgid "Course Length"
-msgstr "Тривалість курсу"
+msgstr "Ð¢Ñ€Ð¸Ð²Ð°Ð»Ñ–Ñ�Ñ‚ÑŒ ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "Course Trainers"
-msgstr "Інструктори курсу"
+msgstr "Ð†Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ð¸ ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "Days"
-msgstr "Дні"
+msgstr "Ð”Ð½Ñ–"
 
 msgid "Months"
-msgstr "Місяці"
+msgstr "ÐœÑ–Ñ�Ñ�Ñ†Ñ–"
 
 msgid "Quarter"
-msgstr "Квартал"
+msgstr "ÐšÐ²Ð°Ñ€Ñ‚Ð°Ð»"
 
 msgid "Course Participants"
-msgstr "Учасники курсу"
+msgstr "Ð£Ñ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸ ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "Date of Birth"
-msgstr "Дата народження"
+msgstr "Ð”Ð°Ñ‚Ð° Ð½Ð°Ñ€Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "Primary Qualification"
-msgstr "Основна кваліфікація"
+msgstr "ÐžÑ�Ð½Ð¾Ð²Ð½Ð° ÐºÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ�"
 
 msgid "Secondary Qualification"
-msgstr "Додаткова кваліфікація"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚ÐºÐ¾Ð²Ð° ÐºÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ�"
 
 msgid "Pre-Test"
-msgstr "До тесту"
+msgstr "Ð”Ð¾ Ñ‚ÐµÑ�Ñ‚Ñƒ"
 
 msgid "Post-Test"
-msgstr "Після тесту"
+msgstr "ÐŸÑ–Ñ�Ð»Ñ� Ñ‚ÐµÑ�Ñ‚Ñƒ"
 
 msgid "Change in Score"
-msgstr "Зміна в результаті"
+msgstr "Ð—Ð¼Ñ–Ð½Ð° Ð² Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ñ–"
 
 msgid "There was a problem with file types <code>"
-msgstr "Виникла проблема з типами файлів"
+msgstr "Ð’Ð¸Ð½Ð¸ÐºÐ»Ð° Ð¿Ñ€Ð¾Ð±Ð»ÐµÐ¼Ð° Ð· Ñ‚Ð¸Ð¿Ð°Ð¼Ð¸ Ñ„Ð°Ð¹Ð»Ñ–Ð²"
 
 msgid "There was a problem creating <code>"
-msgstr "Виникла проблема при створенні"
+msgstr "Ð’Ð¸Ð½Ð¸ÐºÐ»Ð° Ð¿Ñ€Ð¾Ð±Ð»ÐµÐ¼Ð° Ð¿Ñ€Ð¸ Ñ�Ñ‚Ð²Ð¾Ñ€ÐµÐ½Ð½Ñ–"
 
 msgid "There was a problem moving files <code>"
-msgstr "Виникла проблема під час переміщення файлів"
+msgstr ""
+"Ð’Ð¸Ð½Ð¸ÐºÐ»Ð° Ð¿Ñ€Ð¾Ð±Ð»ÐµÐ¼Ð° Ð¿Ñ–Ð´ Ñ‡Ð°Ñ� Ð¿ÐµÑ€ÐµÐ¼Ñ–Ñ‰ÐµÐ½Ð½Ñ� Ñ„Ð"
+"°Ð¹Ð»Ñ–Ð²"
 
 msgid "Sync database file uploaded."
-msgstr "Синхронізація файлів бази даних завантажена."
+msgstr ""
+"Ð¡Ð¸Ð½Ñ…Ñ€Ð¾Ð½Ñ–Ð·Ð°Ñ†Ñ–Ñ� Ñ„Ð°Ð¹Ð»Ñ–Ð² Ð±Ð°Ð·Ð¸ Ð´Ð°Ð½Ð¸Ñ… Ð·Ð°Ð²Ð°Ð½Ñ‚Ð"
+"°Ð¶ÐµÐ½Ð°."
 
 msgid "Invalid desktop database file"
-msgstr "Невірний файл бази даних"
+msgstr "Ð�ÐµÐ²Ñ–Ñ€Ð½Ð¸Ð¹ Ñ„Ð°Ð¹Ð» Ð±Ð°Ð·Ð¸ Ð´Ð°Ð½Ð¸Ñ…"
 
 msgid "Please upload a file to continue"
-msgstr "Будь ласка, завантажте файл щоб продовжити"
+msgstr ""
+"Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ñ‚Ðµ Ñ„Ð°Ð¹Ð» Ñ‰Ð¾Ð± Ð¿Ñ€Ð¾Ð"
+"´Ð¾Ð²Ð¶Ð¸Ñ‚Ð¸"
 
 msgid "Done"
-msgstr "Завершено"
+msgstr "Ð—Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð¾"
 
 msgid "Add New Training"
-msgstr "Додати новий тренінг"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð¾Ð²Ð¸Ð¹ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "View/Edit Training"
-msgstr "Переглянути/редагувати тренінг"
+msgstr "ÐŸÐµÑ€ÐµÐ³Ð»Ñ�Ð½ÑƒÑ‚Ð¸/Ñ€ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "View Training"
-msgstr "Переглянути тренінг"
+msgstr "ÐŸÐµÑ€ÐµÐ³Ð»Ñ�Ð½ÑƒÑ‚Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "Training Length"
-msgstr "Тривалість тренінгу"
+msgstr "Ð¢Ñ€Ð¸Ð²Ð°Ð»Ñ–Ñ�Ñ‚ÑŒ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Training Interval"
-msgstr "Інтервал тренінгу"
+msgstr "Ð†Ð½Ñ‚ÐµÑ€Ð²Ð°Ð» Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Training length is required."
-msgstr "Потрібно вказати тривалість тренінгу."
+msgstr "ÐŸÐ¾Ñ‚Ñ€Ñ–Ð±Ð½Ð¾ Ð²ÐºÐ°Ð·Ð°Ñ‚Ð¸ Ñ‚Ñ€Ð¸Ð²Ð°Ð»Ñ–Ñ�Ñ‚ÑŒ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ."
 
 msgid "must be numeric."
-msgstr "повинен бути числовим."
+msgstr "Ð¿Ð¾Ð²Ð¸Ð½ÐµÐ½ Ð±ÑƒÑ‚Ð¸ Ñ‡Ð¸Ñ�Ð»Ð¾Ð²Ð¸Ð¼."
 
 msgid "must be between 1-100."
-msgstr "повинен бути між 1-100."
+msgstr "Ð¿Ð¾Ð²Ð¸Ð½ÐµÐ½ Ð±ÑƒÑ‚Ð¸ Ð¼Ñ–Ð¶ 1-100."
 
 msgid "Training end"
-msgstr "Завершення тренінгу"
+msgstr "Ð—Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "End date must be after start date."
-msgstr "Дата закінчення має бути після дати початку."
+msgstr ""
+"Ð”Ð°Ñ‚Ð° Ð·Ð°ÐºÑ–Ð½Ñ‡ÐµÐ½Ð½Ñ� Ð¼Ð°Ñ” Ð±ÑƒÑ‚Ð¸ Ð¿Ñ–Ñ�Ð»Ñ� Ð´Ð°Ñ‚Ð¸ Ð¿Ð¾Ñ‡Ð"
+"°Ñ‚ÐºÑƒ."
 
 msgid "Number of days is required."
-msgstr "Потрібно вказати кількість днів."
+msgstr "ÐŸÐ¾Ñ‚Ñ€Ñ–Ð±Ð½Ð¾ Ð²ÐºÐ°Ð·Ð°Ñ‚Ð¸ ÐºÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ Ð´Ð½Ñ–Ð²."
 
 #, c-format
 msgid "Total training length is %s, but PEPFAR category total is %d days. "
-msgstr "Загальна тривалість навчання у %s, а категорія ПЕПФАР становить %d всіх днів."
+msgstr ""
+"Ð—Ð°Ð³Ð°Ð»ÑŒÐ½Ð° Ñ‚Ñ€Ð¸Ð²Ð°Ð»Ñ–Ñ�Ñ‚ÑŒ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ� Ñƒ %s, Ð° ÐºÐ"
+"°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–Ñ� ÐŸÐ•ÐŸÐ¤Ð�Ð  Ñ�Ñ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ %d Ð²Ñ�Ñ–Ñ… Ð´Ð½Ñ–Ð²."
 
 msgid "day"
-msgstr "день"
+msgstr "Ð´ÐµÐ½ÑŒ"
 
 msgid "days"
-msgstr "днів"
+msgstr "Ð´Ð½Ñ–Ð²"
 
-msgid "This training session could not be deleted. Some participants or trainers may still be attached."
-msgstr "Даний тренінг видалити не вдалося. Деякі учасники або інструктори можуть досі бути учасниками тренінгу."
+msgid ""
+"This training session could not be deleted. Some participants or trainers "
+"may still be attached."
+msgstr ""
+"Ð”Ð°Ð½Ð¸Ð¹ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³ Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ð½Ðµ Ð²Ð´Ð°Ð»Ð¾Ñ�Ñ�. Ð”ÐµÑ�ÐºÑ– "
+"ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸ Ð°Ð±Ð¾ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ð¸ Ð¼Ð¾Ð¶ÑƒÑ‚ÑŒ Ð´Ð¾Ñ�Ñ– Ð"
+"±ÑƒÑ‚Ð¸ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ°Ð¼Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ."
 
 msgid "This training session could not be saved."
-msgstr "Даний тренінг зберегти не вдалося."
+msgstr "Ð”Ð°Ð½Ð¸Ð¹ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³ Ð·Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ð½Ðµ Ð²Ð´Ð°Ð»Ð¾Ñ�Ñ�."
 
 msgid "This training session has been saved."
-msgstr "Даний тренінг був збережений."
+msgstr "Ð”Ð°Ð½Ð¸Ð¹ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³ Ð±ÑƒÐ² Ð·Ð±ÐµÑ€ÐµÐ¶ÐµÐ½Ð¸Ð¹."
 
 msgid "Please enter your new"
-msgstr "Будь ласка, введіть свій новий"
+msgstr "Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð²Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ñ�Ð²Ñ–Ð¹ Ð½Ð¾Ð²Ð¸Ð¹"
 
 msgid "Insert new"
-msgstr "Ввести новий"
+msgstr "Ð’Ð²ÐµÑ�Ñ‚Ð¸ Ð½Ð¾Ð²Ð¸Ð¹"
 
 msgid "Scores"
-msgstr "Результати"
+msgstr "Ð ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð¸"
 
-msgid "Training session has been duplicated.<br>You can edit the duplicate session below."
-msgstr "Навчальна сесія продубльована. Ви можете редагувати сесію-дублікат нижче."
+msgid ""
+"Training session has been duplicated.<br>You can edit the duplicate session "
+"below."
+msgstr ""
+"Ð�Ð°Ð²Ñ‡Ð°Ð»ÑŒÐ½Ð° Ñ�ÐµÑ�Ñ–Ñ� Ð¿Ñ€Ð¾Ð´ÑƒÐ±Ð»ÑŒÐ¾Ð²Ð°Ð½Ð°. Ð’Ð¸ Ð¼Ð¾Ð¶ÐµÑ‚Ðµ Ñ"
+"€ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ñ�ÐµÑ�Ñ–ÑŽ-Ð´ÑƒÐ±Ð»Ñ–ÐºÐ°Ñ‚ Ð½Ð¸Ð¶Ñ‡Ðµ."
 
 msgid "already exists"
-msgstr "вже існує"
+msgstr "Ð²Ð¶Ðµ Ñ–Ñ�Ð½ÑƒÑ”"
 
 msgid "This trainer is already in this training session."
-msgstr "Даний інструктор вже знаходиться в цьому тренінгу."
+msgstr ""
+"Ð”Ð°Ð½Ð¸Ð¹ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€ Ð²Ð¶Ðµ Ð·Ð½Ð°Ñ…Ð¾Ð´Ð¸Ñ‚ÑŒÑ�Ñ� Ð² Ñ†ÑŒÐ¾Ð¼Ñƒ "
+"Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ."
 
 msgid "Could not update this record."
-msgstr "Неможливо оновити цей запис."
+msgstr "Ð�ÐµÐ¼Ð¾Ð¶Ð»Ð¸Ð²Ð¾ Ð¾Ð½Ð¾Ð²Ð¸Ñ‚Ð¸ Ñ†ÐµÐ¹ Ð·Ð°Ð¿Ð¸Ñ�."
 
 msgid "This participant is already in this training session."
-msgstr "Даний учасник вже знаходиться в цьому тренінгу."
+msgstr ""
+"Ð”Ð°Ð½Ð¸Ð¹ ÑƒÑ‡Ð°Ñ�Ð½Ð¸Ðº Ð²Ð¶Ðµ Ð·Ð½Ð°Ñ…Ð¾Ð´Ð¸Ñ‚ÑŒÑ�Ñ� Ð² Ñ†ÑŒÐ¾Ð¼Ñƒ Ñ‚Ñ"
+"€ÐµÐ½Ñ–Ð½Ð³Ñƒ."
 
 msgid "The training center has been updated."
-msgstr "Центр навчання був оновлений."
+msgstr "Ð¦ÐµÐ½Ñ‚Ñ€ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ� Ð±ÑƒÐ² Ð¾Ð½Ð¾Ð²Ð»ÐµÐ½Ð¸Ð¹."
 
 msgid "The training center has been saved."
-msgstr "Центр навчання був збережений."
+msgstr "Ð¦ÐµÐ½Ñ‚Ñ€ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ� Ð±ÑƒÐ² Ð·Ð±ÐµÑ€ÐµÐ¶ÐµÐ½Ð¸Ð¹."
 
 msgid "The training center could not be saved."
-msgstr "Не вдалося зберегти центр навчання."
+msgstr "Ð�Ðµ Ð²Ð´Ð°Ð»Ð¾Ñ�Ñ� Ð·Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ñ†ÐµÐ½Ñ‚Ñ€ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�."
 
 msgid "Label"
-msgstr "Етикетка"
+msgstr "Ð•Ñ‚Ð¸ÐºÐµÑ‚ÐºÐ°"
 
 msgid "Score"
-msgstr "Результат"
+msgstr "Ð ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚"
 
 msgid "select"
-msgstr "обрати"
+msgstr "Ð¾Ð±Ñ€Ð°Ñ‚Ð¸"
 
 msgid "Preview"
-msgstr "Попередній перегляд"
+msgstr "ÐŸÐ¾Ð¿ÐµÑ€ÐµÐ´Ð½Ñ–Ð¹ Ð¿ÐµÑ€ÐµÐ³Ð»Ñ�Ð´"
 
 msgid "That partner could not be found."
-msgstr "Не вдалося знайти партнера."
+msgstr "Ð�Ðµ Ð²Ð´Ð°Ð»Ð¾Ñ�Ñ� Ð·Ð½Ð°Ð¹Ñ‚Ð¸ Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ð°."
 
 msgid "The partner was saved."
-msgstr "Партнер був збережений."
+msgstr "ÐŸÐ°Ñ€Ñ‚Ð½ÐµÑ€ Ð±ÑƒÐ² Ð·Ð±ÐµÑ€ÐµÐ¶ÐµÐ½Ð¸Ð¹."
 
 msgid "ERROR: The partner could not be saved."
-msgstr "ПОМИЛКА: Неможливо зберегти партнера."
+msgstr "ÐŸÐžÐœÐ˜Ð›ÐšÐ�: Ð�ÐµÐ¼Ð¾Ð¶Ð»Ð¸Ð²Ð¾ Ð·Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ð°."
 
 msgid "That partner was deleted."
-msgstr "Партнер був видалений."
+msgstr "ÐŸÐ°Ñ€Ñ‚Ð½ÐµÑ€ Ð±ÑƒÐ² Ð²Ð¸Ð´Ð°Ð»ÐµÐ½Ð¸Ð¹."
 
 msgid "That partner is in use and could not be deleted."
-msgstr "Даний партнер використовується і не може бути видалений."
+msgstr ""
+"Ð”Ð°Ð½Ð¸Ð¹ Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€ Ð²Ð¸ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚Ð¾Ð²ÑƒÑ”Ñ‚ÑŒÑ�Ñ� Ñ– Ð½Ðµ Ð¼Ð¾Ð¶Ðµ Ð"
+"±ÑƒÑ‚Ð¸ Ð²Ð¸Ð´Ð°Ð»ÐµÐ½Ð¸Ð¹."
 
 msgid "Starting..."
-msgstr "Початок..."
+msgstr "ÐŸÐ¾Ñ‡Ð°Ñ‚Ð¾Ðº..."
 
 msgid "Login"
-msgstr "Логін"
+msgstr "Ð›Ð¾Ð³Ñ–Ð½"
 
 msgid "Password"
-msgstr "Пароль"
+msgstr "ÐŸÐ°Ñ€Ð¾Ð»ÑŒ"
 
 msgid "The system could not log you in."
-msgstr "Система не змогла прийняти ваш логін."
+msgstr "Ð¡Ð¸Ñ�Ñ‚ÐµÐ¼Ð° Ð½Ðµ Ð·Ð¼Ð¾Ð³Ð»Ð° Ð¿Ñ€Ð¸Ð¹Ð½Ñ�Ñ‚Ð¸ Ð²Ð°Ñˆ Ð»Ð¾Ð³Ñ–Ð½."
 
 msgid "That user account has been disabled."
-msgstr "Цей обліковий запис користувача було відключено."
+msgstr ""
+"Ð¦ÐµÐ¹ Ð¾Ð±Ð»Ñ–ÐºÐ¾Ð²Ð¸Ð¹ Ð·Ð°Ð¿Ð¸Ñ� ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð° Ð±ÑƒÐ»Ð¾ Ð²Ñ–Ð"
+"´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¾."
 
 msgid "That username or password is invalid."
-msgstr "Ім'я користувача або пароль недійсні."
+msgstr "Ð†Ð¼'Ñ� ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð° Ð°Ð±Ð¾ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ Ð½ÐµÐ´Ñ–Ð¹Ñ�Ð½Ñ–."
 
 msgid "Sunday"
-msgstr "Неділя"
+msgstr "Ð�ÐµÐ´Ñ–Ð»Ñ�"
 
 msgid "Monday"
-msgstr "Понеділок"
+msgstr "ÐŸÐ¾Ð½ÐµÐ´Ñ–Ð»Ð¾Ðº"
 
 msgid "Tuesday"
-msgstr "Вівторок"
+msgstr "Ð’Ñ–Ð²Ñ‚Ð¾Ñ€Ð¾Ðº"
 
 msgid "Wednesday"
-msgstr "Середа"
+msgstr "Ð¡ÐµÑ€ÐµÐ´Ð°"
 
 msgid "Thursday"
-msgstr "Четвер"
+msgstr "Ð§ÐµÑ‚Ð²ÐµÑ€"
 
 msgid "Friday"
-msgstr "П'ятниця"
+msgstr "ÐŸ'Ñ�Ñ‚Ð½Ð¸Ñ†Ñ�"
 
 msgid "Saturday"
-msgstr "Субота"
+msgstr "Ð¡ÑƒÐ±Ð¾Ñ‚Ð°"
 
 msgid "choose"
-msgstr "обрати"
+msgstr "Ð¾Ð±Ñ€Ð°Ñ‚Ð¸"
 
 msgid "All"
-msgstr "Всі"
+msgstr "Ð’Ñ�Ñ–"
 
 msgid "Filename"
-msgstr "Назва файлу"
+msgstr "Ð�Ð°Ð·Ð²Ð° Ñ„Ð°Ð¹Ð»Ñƒ"
 
 msgid "Size"
-msgstr "Розмір"
+msgstr "Ð Ð¾Ð·Ð¼Ñ–Ñ€"
 
 msgid "Author"
-msgstr "Автор"
+msgstr "Ð�Ð²Ñ‚Ð¾Ñ€"
 
 msgid "Upload Date"
-msgstr "Дата завантаження"
+msgstr "Ð”Ð°Ñ‚Ð° Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "Allowed file extensions"
-msgstr "Дозволені розширення файлу"
+msgstr "Ð”Ð¾Ð·Ð²Ð¾Ð»ÐµÐ½Ñ– Ñ€Ð¾Ð·ÑˆÐ¸Ñ€ÐµÐ½Ð½Ñ� Ñ„Ð°Ð¹Ð»Ñƒ"
 
 msgid "Max upload size: "
-msgstr "Максимальний розмір завантаження:"
+msgstr "ÐœÐ°ÐºÑ�Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¸Ð¹ Ñ€Ð¾Ð·Ð¼Ñ–Ñ€ Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÐµÐ½Ð½Ñ�:"
 
 msgid "First Name"
-msgstr "Ім'я"
+msgstr "Ð†Ð¼'Ñ�"
 
 msgid "Middle Name"
-msgstr "По батькові"
+msgstr "ÐŸÐ¾ Ð±Ð°Ñ‚ÑŒÐºÐ¾Ð²Ñ–"
 
 msgid "Last Name"
-msgstr "Прiзвище"
+msgstr "ÐŸÑ€iÐ·Ð²Ð¸Ñ‰Ðµ"
 
 msgid "Surname"
-msgstr "Призвище"
+msgstr "ÐŸÑ€Ð¸Ð·Ð²Ð¸Ñ‰Ðµ"
 
 msgid "National ID"
-msgstr "Державне посвідчення особи"
+msgstr "Ð”ÐµÑ€Ð¶Ð°Ð²Ð½Ðµ Ð¿Ð¾Ñ�Ð²Ñ–Ð´Ñ‡ÐµÐ½Ð½Ñ� Ð¾Ñ�Ð¾Ð±Ð¸"
 
 msgid "File Number"
-msgstr "Номер файлу "
+msgstr "Ð�Ð¾Ð¼ÐµÑ€ Ñ„Ð°Ð¹Ð»Ñƒ "
 
 msgid "Phone (work)"
-msgstr "Телефон (робочий)"
+msgstr "Ð¢ÐµÐ»ÐµÑ„Ð¾Ð½ (Ñ€Ð¾Ð±Ð¾Ñ‡Ð¸Ð¹)"
 
 msgid "Phone (mobile)"
-msgstr "Телефон (мобільний)"
+msgstr "Ð¢ÐµÐ»ÐµÑ„Ð¾Ð½ (Ð¼Ð¾Ð±Ñ–Ð»ÑŒÐ½Ð¸Ð¹)"
 
 msgid "Fax"
-msgstr "Факс"
+msgstr "Ð¤Ð°ÐºÑ�"
 
 msgid "Comments"
-msgstr "Коментарі"
+msgstr "ÐšÐ¾Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ñ–"
 
 msgid "Deleted"
-msgstr "Видалено"
+msgstr "Ð’Ð¸Ð´Ð°Ð»ÐµÐ½Ð¾"
 
 msgid "Active"
-msgstr "Діючий"
+msgstr "Ð”Ñ–ÑŽÑ‡Ð¸Ð¹"
 
 msgid "Responsibility"
-msgstr "Відповідальність"
+msgstr "Ð’Ñ–Ð´Ð¿Ð¾Ð²Ñ–Ð´Ð°Ð»ÑŒÐ½Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Address"
-msgstr "Адреса"
+msgstr "Ð�Ð´Ñ€ÐµÑ�Ð°"
 
 msgid "Department"
-msgstr "Відділ"
+msgstr "Ð’Ñ–Ð´Ð´Ñ–Ð»"
 
 msgid "City"
-msgstr "Місто"
+msgstr "ÐœÑ–Ñ�Ñ‚Ð¾"
 
 msgid "Training Name"
-msgstr "Назва тренінгу"
+msgstr "Ð�Ð°Ð·Ð²Ð° Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Training Organizer"
-msgstr "Організатор тренінгу"
+msgstr "ÐžÑ€Ð³Ð°Ð½Ñ–Ð·Ð°Ñ‚Ð¾Ñ€ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Training Level"
-msgstr "Рівень тренінгу"
+msgstr "Ð Ñ–Ð²ÐµÐ½ÑŒ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "PEPFAR topic"
-msgstr "Тема ПЕПФАР"
+msgstr "Ð¢ÐµÐ¼Ð° ÐŸÐ•ÐŸÐ¤Ð�Ð "
 
 msgid "Training of Trainers"
-msgstr "Трейнінг інструкторів"
+msgstr "Ð¢Ñ€ÐµÐ¹Ð½Ñ–Ð½Ð³ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñ–Ð²"
 
 msgid "Course Objectives"
-msgstr "Цілі курсу"
+msgstr "Ð¦Ñ–Ð»Ñ– ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "Pre Test Score"
-msgstr "Результат до тесту"
+msgstr "Ð ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚ Ð´Ð¾ Ñ‚ÐµÑ�Ñ‚Ñƒ"
 
 msgid "Post Test Score"
-msgstr "Результат після тесту"
+msgstr "Ð ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚ Ð¿Ñ–Ñ�Ð»Ñ� Ñ‚ÐµÑ�Ñ‚Ñƒ"
 
 msgid "Custom field"
-msgstr "Поле користувача"
+msgstr "ÐŸÐ¾Ð»Ðµ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð°"
 
 msgid "Is Active"
-msgstr "Діючий"
+msgstr "Ð”Ñ–ÑŽÑ‡Ð¸Ð¹"
 
 msgid "English"
 msgstr "English"
 
 msgid "French"
-msgstr "Французький"
+msgstr "Ð¤Ñ€Ð°Ð½Ñ†ÑƒÐ·ÑŒÐºÐ¸Ð¹"
 
 msgid "Russian"
-msgstr "Російський"
+msgstr "Ð Ð¾Ñ�Ñ–Ð¹Ñ�ÑŒÐºÐ¸Ð¹"
 
 msgid "Print"
-msgstr "Друк"
+msgstr "Ð”Ñ€ÑƒÐº"
 
 msgid "Export"
-msgstr "Експортувати"
+msgstr "Ð•ÐºÑ�Ð¿Ð¾Ñ€Ñ‚ÑƒÐ²Ð°Ñ‚Ð¸"
 
 msgid "Developed and funded by I-TECH. For questions or help,"
-msgstr "Розроблено та профінансовано I-TECH. З питаннями або за допомогою звертайтеся,"
+msgstr ""
+"Ð Ð¾Ð·Ñ€Ð¾Ð±Ð»ÐµÐ½Ð¾ Ñ‚Ð° Ð¿Ñ€Ð¾Ñ„Ñ–Ð½Ð°Ð½Ñ�Ð¾Ð²Ð°Ð½Ð¾ I-TECH. Ð— Ð¿Ð¸Ñ‚Ð"
+"°Ð½Ð½Ñ�Ð¼Ð¸ Ð°Ð±Ð¾ Ð·Ð° Ð´Ð¾Ð¿Ð¾Ð¼Ð¾Ð³Ð¾ÑŽ Ð·Ð²ÐµÑ€Ñ‚Ð°Ð¹Ñ‚ÐµÑ�Ñ�,"
 
 msgid "click here"
-msgstr "натисніть тут"
+msgstr "Ð½Ð°Ñ‚Ð¸Ñ�Ð½Ñ–Ñ‚ÑŒ Ñ‚ÑƒÑ‚"
 
 msgid "Home"
-msgstr "Головна"
+msgstr "Ð“Ð¾Ð»Ð¾Ð²Ð½Ð°"
 
 msgid "Trainings"
-msgstr "Тренінги"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸"
 
 msgid "Training"
-msgstr "Тренінг"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "People"
-msgstr "Люди "
+msgstr "Ð›ÑŽÐ´Ð¸ "
 
 msgid "View/Edit Person"
-msgstr "Подивитися/редагувати особу"
+msgstr "ÐŸÐ¾Ð´Ð¸Ð²Ð¸Ñ‚Ð¸Ñ�Ñ�/Ñ€ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ð¾Ñ�Ð¾Ð±Ñƒ"
 
 msgid "Add New Person"
-msgstr "Додати нову особу"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð¾Ð²Ñƒ Ð¾Ñ�Ð¾Ð±Ñƒ"
 
 msgid "View person"
-msgstr "Подивитися особу"
+msgstr "ÐŸÐ¾Ð´Ð¸Ð²Ð¸Ñ‚Ð¸Ñ�Ñ� Ð¾Ñ�Ð¾Ð±Ñƒ"
 
 msgid "Places"
-msgstr "Місця"
+msgstr "ÐœÑ–Ñ�Ñ†Ñ�"
 
 msgid "View/Edit Facility"
-msgstr "Подивитися/Редагувати заклад"
+msgstr "ÐŸÐ¾Ð´Ð¸Ð²Ð¸Ñ‚Ð¸Ñ�Ñ�/Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ð·Ð°ÐºÐ»Ð°Ð´"
 
 msgid "View facility"
-msgstr "Переглянути заклад"
+msgstr "ÐŸÐµÑ€ÐµÐ³Ð»Ñ�Ð½ÑƒÑ‚Ð¸ Ð·Ð°ÐºÐ»Ð°Ð´"
 
 msgid "Add Facility"
-msgstr "Додати заклад"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð·Ð°ÐºÐ»Ð°Ð´"
 
 msgid "View/Edit Training Location"
-msgstr "Подивитися/редагувати місцезнаходження тренінгу"
+msgstr ""
+"ÐŸÐ¾Ð´Ð¸Ð²Ð¸Ñ‚Ð¸Ñ�Ñ�/Ñ€ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� "
+"Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "View Training Location"
-msgstr "Подивитися місцезнаходження тренінгу"
+msgstr "ÐŸÐ¾Ð´Ð¸Ð²Ð¸Ñ‚Ð¸Ñ�Ñ� Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Add Training Location"
-msgstr "Додати місцезнаходження тренінгу"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Reports"
-msgstr "Звіти "
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ "
 
 msgid "Training Reports"
-msgstr "Звіти по тренінгам"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð°Ð¼"
 
 msgid "Participant Reports"
-msgstr "Звіти по учасниках"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ°Ñ…"
 
 msgid "Trainer Reports"
-msgstr "Звіти по тренерах"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°Ñ…"
 
 msgid "Facility Reports"
-msgstr "Звіти по закладах"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ð·Ð°ÐºÐ»Ð°Ð´Ð°Ñ…"
 
 msgid "Facility Search"
-msgstr "Пошук по закладах"
+msgstr "ÐŸÐ¾ÑˆÑƒÐº Ð¿Ð¾ Ð·Ð°ÐºÐ»Ð°Ð´Ð°Ñ…"
 
 msgid "Assessment Reports"
-msgstr "Звіти по оцінюванню"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ð¾Ñ†Ñ–Ð½ÑŽÐ²Ð°Ð½Ð½ÑŽ"
 
 msgid "Roster Reports"
-msgstr "Звіти по реєстрах"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ñ€ÐµÑ”Ñ�Ñ‚Ñ€Ð°Ñ…"
 
 msgid "Data Downloads"
-msgstr "Завантаження даних"
+msgstr "Ð—Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÐµÐ½Ð½Ñ� Ð´Ð°Ð½Ð¸Ñ…"
 
 msgid "Evaluations"
-msgstr "Процес визначення якості"
+msgstr "ÐŸÑ€Ð¾Ñ†ÐµÑ� Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–"
 
 msgid "Pre-service"
-msgstr "Система попереднього навчання"
+msgstr "Ð¡Ð¸Ñ�Ñ‚ÐµÐ¼Ð° Ð¿Ð¾Ð¿ÐµÑ€ÐµÐ´Ð½ÑŒÐ¾Ð³Ð¾ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "My Account"
-msgstr "Мій облiковий запис"
+msgstr "ÐœÑ–Ð¹ Ð¾Ð±Ð»iÐºÐ¾Ð²Ð¸Ð¹ Ð·Ð°Ð¿Ð¸Ñ�"
 
 msgid "Country Setup"
-msgstr "Налаштування країни"
+msgstr "Ð�Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ� ÐºÑ€Ð°Ñ—Ð½Ð¸"
 
 msgid "Training Settings"
-msgstr "Налаштування тренінгу"
+msgstr "Ð�Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "People Settings"
-msgstr "Налаштування людей"
+msgstr "Ð�Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ� Ð»ÑŽÐ´ÐµÐ¹"
 
 msgid "Facility Settings"
-msgstr "Налаштування закладу"
+msgstr "Ð�Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ� Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Training Partners"
-msgstr "Партнери тренінгу"
+msgstr "ÐŸÐ°Ñ€Ñ‚Ð½ÐµÑ€Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Add New User"
-msgstr "Додати нового користувача "
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð¾Ð²Ð¾Ð³Ð¾ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð° "
 
 msgid "Edit User"
-msgstr "Редагувати користувача "
+msgstr "Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð° "
 
 msgid "Create App Now"
-msgstr "Створити додаток"
+msgstr "Ð¡Ñ‚Ð²Ð¾Ñ€Ð¸Ñ‚Ð¸ Ð´Ð¾Ð´Ð°Ñ‚Ð¾Ðº"
 
 msgid "Download Application"
-msgstr "Завантажити додаток"
+msgstr "Ð—Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸ Ð´Ð¾Ð´Ð°Ñ‚Ð¾Ðº"
 
 msgid "Download"
-msgstr "Завантажити"
+msgstr "Ð—Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸"
 
 msgid "Upload Data"
-msgstr "Завантажити дані"
+msgstr "Ð—Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸ Ð´Ð°Ð½Ñ–"
 
 msgid "login"
-msgstr "вхід"
+msgstr "Ð²Ñ…Ñ–Ð´"
 
 msgid "logout"
-msgstr "вихід"
+msgstr "Ð²Ð¸Ñ…Ñ–Ð´"
 
 msgid "Welcome"
-msgstr "Ласкаво просимо"
+msgstr "Ð›Ð°Ñ�ÐºÐ°Ð²Ð¾ Ð¿Ñ€Ð¾Ñ�Ð¸Ð¼Ð¾"
 
 msgid "Region Setup"
-msgstr "Регіональні настройки"
+msgstr "Ð ÐµÐ³Ñ–Ð¾Ð½Ð°Ð»ÑŒÐ½Ñ– Ð½Ð°Ñ�Ñ‚Ñ€Ð¾Ð¹ÐºÐ¸"
 
 msgid "Move Regions"
-msgstr "Перемістити регіони"
+msgstr "ÐŸÐµÑ€ÐµÐ¼Ñ–Ñ�Ñ‚Ð¸Ñ‚Ð¸ Ñ€ÐµÐ³Ñ–Ð¾Ð½Ð¸"
 
 msgid "Training Category"
-msgstr "Категорія тренінгу"
+msgstr "ÐšÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Assign Titles"
-msgstr "Надати назви"
+msgstr "Ð�Ð°Ð´Ð°Ñ‚Ð¸ Ð½Ð°Ð·Ð²Ð¸"
 
 msgid "Training Title"
-msgstr "Назва тренінгу"
+msgstr "Ð�Ð°Ð·Ð²Ð° Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "PEPFAR Category"
-msgstr "Категорія ПЕПФАР"
+msgstr "ÐšÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–Ñ� ÐŸÐ•ÐŸÐ¤Ð�Ð "
 
 msgid "Recommended Topic"
-msgstr "Рекомендована тема"
+msgstr "Ð ÐµÐºÐ¾Ð¼ÐµÐ½Ð´Ð¾Ð²Ð°Ð½Ð° Ñ‚ÐµÐ¼Ð°"
 
 msgid "Nat. Curriculum"
-msgstr "Учбовий план"
+msgstr "Ð£Ñ‡Ð±Ð¾Ð²Ð¸Ð¹ Ð¿Ð»Ð°Ð½"
 
 msgid "Training Method"
-msgstr "Метод тренінгу"
+msgstr "ÐœÐµÑ‚Ð¾Ð´ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Training Methods"
-msgstr "Методи тренінгу"
+msgstr "ÐœÐµÑ‚Ð¾Ð´Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Method"
-msgstr "Метод"
+msgstr "ÐœÐµÑ‚Ð¾Ð´"
 
 msgid "Qualifications"
-msgstr "Категорії персоналу"
+msgstr "ÐšÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–Ñ— Ð¿ÐµÑ€Ñ�Ð¾Ð½Ð°Ð»Ñƒ"
 
 msgid "Trainer Types"
-msgstr "Тип Тренера"
+msgstr "Ð¢Ð¸Ð¿ Ð¢Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Trainer Skills"
-msgstr "Навички Тренера"
+msgstr "Ð�Ð°Ð²Ð¸Ñ‡ÐºÐ¸ Ð¢Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Trainer Skill"
-msgstr "Навичка Тренера"
+msgstr "Ð�Ð°Ð²Ð¸Ñ‡ÐºÐ° Ð¢Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Languages"
-msgstr "Мови"
+msgstr "ÐœÐ¾Ð²Ð¸"
 
 msgid "Affiliations"
-msgstr "Приналежність"
+msgstr "ÐŸÑ€Ð¸Ð½Ð°Ð»ÐµÐ¶Ð½Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Affiliation"
-msgstr "Приєднання"
+msgstr "ÐŸÑ€Ð¸Ñ”Ð´Ð½Ð°Ð½Ð½Ñ�"
 
 msgid "Titles"
-msgstr "Назви"
+msgstr "Ð�Ð°Ð·Ð²Ð¸"
 
 msgid "Suffix"
-msgstr "Суфікс"
+msgstr "Ð¡ÑƒÑ„Ñ–ÐºÑ�"
 
 msgid "Facilities"
-msgstr "Заклади"
+msgstr "Ð—Ð°ÐºÐ»Ð°Ð´Ð¸"
 
 msgid "Facilities Settings"
-msgstr "Налаштування закладів"
+msgstr "Ð�Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ� Ð·Ð°ÐºÐ»Ð°Ð´Ñ–Ð²"
 
 msgid "Facility Types"
-msgstr "Тип закладу"
+msgstr "Ð¢Ð¸Ð¿ Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Facility Sponsors"
-msgstr "Спонсори закладу"
+msgstr "Ð¡Ð¿Ð¾Ð½Ñ�Ð¾Ñ€Ð¸ Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Preservice"
-msgstr "Система попереднього навчання"
+msgstr "Ð¡Ð¸Ñ�Ñ‚ÐµÐ¼Ð° Ð¿Ð¾Ð¿ÐµÑ€ÐµÐ´Ð½ÑŒÐ¾Ð³Ð¾ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Classes"
-msgstr "Курси"
+msgstr "ÐšÑƒÑ€Ñ�Ð¸"
 
 msgid "Cadres"
-msgstr "Кадри"
+msgstr "ÐšÐ°Ð´Ñ€Ð¸"
 
 msgid "Degrees"
-msgstr "Ступені освіти"
+msgstr "Ð¡Ñ‚ÑƒÐ¿ÐµÐ½Ñ– Ð¾Ñ�Ð²Ñ–Ñ‚Ð¸"
 
 msgid "Add degree"
-msgstr "Додати ступень освіти "
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ñ�Ñ‚ÑƒÐ¿ÐµÐ½ÑŒ Ð¾Ñ�Ð²Ñ–Ñ‚Ð¸ "
 
 msgid "Update degree"
-msgstr "Оновити ступень освіти"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ñ�Ñ‚ÑƒÐ¿ÐµÐ½ÑŒ Ð¾Ñ�Ð²Ñ–Ñ‚Ð¸"
 
 msgid "Degree"
-msgstr "Ступінь"
+msgstr "Ð¡Ñ‚ÑƒÐ¿Ñ–Ð½ÑŒ"
 
 msgid "Institution types"
-msgstr "Типи інституту"
+msgstr "Ð¢Ð¸Ð¿Ð¸ Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñƒ"
 
 msgid "Institution type"
-msgstr "Тип інституту"
+msgstr "Ð¢Ð¸Ð¿ Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñƒ"
 
 msgid "Nationalities"
-msgstr "Національності"
+msgstr "Ð�Ð°Ñ†Ñ–Ð¾Ð½Ð°Ð»ÑŒÐ½Ð¾Ñ�Ñ‚Ñ–"
 
 msgid "Join & drop reasons"
-msgstr "Причини реєстрації/відрахування"
+msgstr "ÐŸÑ€Ð¸Ñ‡Ð¸Ð½Ð¸ Ñ€ÐµÑ”Ñ�Ñ‚Ñ€Ð°Ñ†Ñ–Ñ—/Ð²Ñ–Ð´Ñ€Ð°Ñ…ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Join"
-msgstr "Реєстрація"
+msgstr "Ð ÐµÑ”Ñ�Ñ‚Ñ€Ð°Ñ†Ñ–Ñ�"
 
 msgid "Drop"
-msgstr "Відрахування"
+msgstr "Ð’Ñ–Ð´Ñ€Ð°Ñ…ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Sponsors"
-msgstr "Спонсори"
+msgstr "Ð¡Ð¿Ð¾Ð½Ñ�Ð¾Ñ€Ð¸"
 
 msgid "Tutor types"
-msgstr "Типи інструкторів"
+msgstr "Ð¢Ð¸Ð¿Ð¸ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñ–Ð²"
 
 msgid "Course types"
-msgstr "Типи курсів"
+msgstr "Ð¢Ð¸Ð¿Ð¸ ÐºÑƒÑ€Ñ�Ñ–Ð²"
 
 msgid "Course type"
-msgstr "Типи курсу"
+msgstr "Ð¢Ð¸Ð¿Ð¸ ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "Religious denominations"
-msgstr "Належність до релігій"
+msgstr "Ð�Ð°Ð»ÐµÐ¶Ð½Ñ–Ñ�Ñ‚ÑŒ Ð´Ð¾ Ñ€ÐµÐ»Ñ–Ð³Ñ–Ð¹"
 
 msgid "Religious denomination"
-msgstr "Належність до релігії"
+msgstr "Ð�Ð°Ð»ÐµÐ¶Ð½Ñ–Ñ�Ñ‚ÑŒ Ð´Ð¾ Ñ€ÐµÐ»Ñ–Ð³Ñ–Ñ—"
 
 msgid "Users"
-msgstr "Користуачі"
+msgstr "ÐšÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ°Ñ‡Ñ–"
 
 msgid "Add Users"
-msgstr "Додати користувачів"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ñ–Ð²"
 
 msgid "Institutions"
-msgstr "Інститути"
+msgstr "Ð†Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ð¸"
 
 msgid "Institution Search"
-msgstr "Пошук інститутів"
+msgstr "ÐŸÐ¾ÑˆÑƒÐº Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñ–Ð²"
 
 msgid "Add New Institution"
-msgstr "Додати новий інститут"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð¾Ð²Ð¸Ð¹ Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚"
 
 msgid "Course"
-msgstr "Курс"
+msgstr "ÐšÑƒÑ€Ñ�"
 
 msgid "Cohorts"
-msgstr "Групи"
+msgstr "Ð“Ñ€ÑƒÐ¿Ð¸"
 
 msgid "Cohort Search"
-msgstr "Пошук групи"
+msgstr "ÐŸÐ¾ÑˆÑƒÐº Ð³Ñ€ÑƒÐ¿Ð¸"
 
 msgid "Add New Cohort"
-msgstr "Додати нову групу"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð¾Ð²Ñƒ Ð³Ñ€ÑƒÐ¿Ñƒ"
 
 msgid "Cohort"
-msgstr "Група"
+msgstr "Ð“Ñ€ÑƒÐ¿Ð°"
 
 msgid "People Search"
-msgstr "Пошук людей"
+msgstr "ÐŸÐ¾ÑˆÑƒÐº Ð»ÑŽÐ´ÐµÐ¹"
 
 msgid "Add People"
-msgstr "Додати людей"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð»ÑŽÐ´ÐµÐ¹"
 
 msgid "Students Trained"
-msgstr "Студенти, які пройшли навчання"
+msgstr "Ð¡Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ð¸, Ñ�ÐºÑ– Ð¿Ñ€Ð¾Ð¹ÑˆÐ»Ð¸ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Students By Name"
-msgstr "Студенти за ім`ям"
+msgstr "Ð¡Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ð¸ Ð·Ð° Ñ–Ð¼`Ñ�Ð¼"
 
 msgid "Graduated Students"
-msgstr "Випускники"
+msgstr "Ð’Ð¸Ð¿ÑƒÑ�ÐºÐ½Ð¸ÐºÐ¸"
 
 msgid "Course by Student Count"
-msgstr "Курс за кількістю студентів"
+msgstr "ÐšÑƒÑ€Ñ� Ð·Ð° ÐºÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŽ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "Course by Name"
-msgstr "Курс за назвою"
+msgstr "ÐšÑƒÑ€Ñ� Ð·Ð° Ð½Ð°Ð·Ð²Ð¾ÑŽ"
 
 msgid "PS Classes"
-msgstr "СПО курси"
+msgstr "Ð¡ÐŸÐž ÐºÑƒÑ€Ñ�Ð¸"
 
 msgid "PS Cadres"
-msgstr "СПО кадри"
+msgstr "Ð¡ÐŸÐž ÐºÐ°Ð´Ñ€Ð¸"
 
 msgid "PS Degrees"
-msgstr "СПО ступені освіти"
+msgstr "Ð¡ÐŸÐž Ñ�Ñ‚ÑƒÐ¿ÐµÐ½Ñ– Ð¾Ñ�Ð²Ñ–Ñ‚Ð¸"
 
 msgid "PS Funding"
-msgstr "СПО Джерелo фінансування"
+msgstr "Ð¡ÐŸÐž Ð”Ð¶ÐµÑ€ÐµÐ»o Ñ„Ñ–Ð½Ð°Ð½Ñ�ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "PS Institution Types"
-msgstr "СПО типи інститутів"
+msgstr "Ð¡ÐŸÐž Ñ‚Ð¸Ð¿Ð¸ Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñ–Ð²"
 
 msgid "PS Join & Drop Reasons"
-msgstr "СПО Причини реєстрації/відрахування"
+msgstr "Ð¡ÐŸÐž ÐŸÑ€Ð¸Ñ‡Ð¸Ð½Ð¸ Ñ€ÐµÑ”Ñ�Ñ‚Ñ€Ð°Ñ†Ñ–Ñ—/Ð²Ñ–Ð´Ñ€Ð°Ñ…ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "PS Languages"
-msgstr "СПО мови"
+msgstr "Ð¡ÐŸÐž Ð¼Ð¾Ð²Ð¸"
 
 msgid "PS Nationalities"
-msgstr "СПО Національності"
+msgstr "Ð¡ÐŸÐž Ð�Ð°Ñ†Ñ–Ð¾Ð½Ð°Ð»ÑŒÐ½Ð¾Ñ�Ñ‚Ñ–"
 
 msgid "PS Sponsors"
-msgstr "СПО Спонсори"
+msgstr "Ð¡ÐŸÐž Ð¡Ð¿Ð¾Ð½Ñ�Ð¾Ñ€Ð¸"
 
 msgid "PS Student Types"
-msgstr "СПО Типи студентів"
+msgstr "Ð¡ÐŸÐž Ð¢Ð¸Ð¿Ð¸ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "PS Tutor Types"
-msgstr "СПО Типи інструкторів"
+msgstr "Ð¡ÐŸÐž Ð¢Ð¸Ð¿Ð¸ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñ–Ð²"
 
 msgid "PS Course Types"
-msgstr "СПО Типи курсів"
+msgstr "Ð¡ÐŸÐž Ð¢Ð¸Ð¿Ð¸ ÐºÑƒÑ€Ñ�Ñ–Ð²"
 
 msgid "Move"
-msgstr "Переміщення"
+msgstr "ÐŸÐµÑ€ÐµÐ¼Ñ–Ñ‰ÐµÐ½Ð½Ñ�"
 
 msgid "City or Town"
-msgstr "Місто"
+msgstr "ÐœÑ–Ñ�Ñ‚Ð¾"
 
 msgid "Training Calendar"
-msgstr "Календар тренінгу"
+msgstr "ÐšÐ°Ð»ÐµÐ½Ð´Ð°Ñ€ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Print Calendar"
-msgstr "Друк календарю "
+msgstr "Ð”Ñ€ÑƒÐº ÐºÐ°Ð»ÐµÐ½Ð´Ð°Ñ€ÑŽ "
 
 msgid "Data"
-msgstr "Дані"
+msgstr "Ð”Ð°Ð½Ñ–"
 
 msgid "Persons"
-msgstr "Особи"
+msgstr "ÐžÑ�Ð¾Ð±Ð¸"
 
 msgid "Database Export"
-msgstr "Експорт бази даних"
+msgstr "Ð•ÐºÑ�Ð¿Ð¾Ñ€Ñ‚ Ð±Ð°Ð·Ð¸ Ð´Ð°Ð½Ð¸Ñ…"
 
 msgid "A training was approved by "
-msgstr "Тренінг було схвалено"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³ Ð±ÑƒÐ»Ð¾ Ñ�Ñ…Ð²Ð°Ð»ÐµÐ½Ð¾"
 
 msgid "You have been assigned a new temporary password."
-msgstr "Вам надали новий тимчасовий пароль."
+msgstr "Ð’Ð°Ð¼ Ð½Ð°Ð´Ð°Ð»Ð¸ Ð½Ð¾Ð²Ð¸Ð¹ Ñ‚Ð¸Ð¼Ñ‡Ð°Ñ�Ð¾Ð²Ð¸Ð¹ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ."
 
 msgid "Please change your password once you log in"
-msgstr "Будь ласка, змініть свій пароль, коли увійдете"
+msgstr ""
+"Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð·Ð¼Ñ–Ð½Ñ–Ñ‚ÑŒ Ñ�Ð²Ñ–Ð¹ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ, ÐºÐ¾Ð»Ð¸ ÑƒÐ²Ñ–Ð¹Ð"
+"´ÐµÑ‚Ðµ"
 
 msgid "here"
-msgstr "тут"
+msgstr "Ñ‚ÑƒÑ‚"
 
 msgid "Your login is as follows:"
-msgstr "Ваш логін наступний:"
+msgstr "Ð’Ð°Ñˆ Ð»Ð¾Ð³Ñ–Ð½ Ð½Ð°Ñ�Ñ‚ÑƒÐ¿Ð½Ð¸Ð¹:"
 
 msgid "password:"
-msgstr "пароль:"
+msgstr "Ð¿Ð°Ñ€Ð¾Ð»ÑŒ:"
 
 msgid "Dear"
-msgstr "Шановний"
+msgstr "Ð¨Ð°Ð½Ð¾Ð²Ð½Ð¸Ð¹"
 
 msgid "Your new account has been created and is ready for use."
-msgstr "Ваш новий обліковий запис створено і готов для використання."
+msgstr ""
+"Ð’Ð°Ñˆ Ð½Ð¾Ð²Ð¸Ð¹ Ð¾Ð±Ð»Ñ–ÐºÐ¾Ð²Ð¸Ð¹ Ð·Ð°Ð¿Ð¸Ñ� Ñ�Ñ‚Ð²Ð¾Ñ€ÐµÐ½Ð¾ Ñ– "
+"Ð³Ð¾Ñ‚Ð¾Ð² Ð´Ð»Ñ� Ð²Ð¸ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚Ð°Ð½Ð½Ñ�."
 
 msgid "website:"
-msgstr "вебсайт"
+msgstr "Ð²ÐµÐ±Ñ�Ð°Ð¹Ñ‚"
 
 msgid "Your password has been changed as requested."
-msgstr "Ваш пароль був змінений за запитом."
+msgstr "Ð’Ð°Ñˆ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ Ð±ÑƒÐ² Ð·Ð¼Ñ–Ð½ÐµÐ½Ð¸Ð¹ Ð·Ð° Ð·Ð°Ð¿Ð¸Ñ‚Ð¾Ð¼."
 
 msgid "You can log into our website at: "
-msgstr "Ви можете увійти на наш сайт за адресою:"
+msgstr ""
+"Ð’Ð¸ Ð¼Ð¾Ð¶ÐµÑ‚Ðµ ÑƒÐ²Ñ–Ð¹Ñ‚Ð¸ Ð½Ð° Ð½Ð°Ñˆ Ñ�Ð°Ð¹Ñ‚ Ð·Ð° Ð°Ð´Ñ€ÐµÑ�Ð¾ÑŽ:"
 
 msgid "A training was rejected by "
-msgstr "Тренінг був відхилений"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³ Ð±ÑƒÐ² Ð²Ñ–Ð´Ñ…Ð¸Ð»ÐµÐ½Ð¸Ð¹"
 
 msgid "A training was resubmitted by "
-msgstr "Тренінг був знову представлений"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³ Ð±ÑƒÐ² Ð·Ð½Ð¾Ð²Ñƒ Ð¿Ñ€ÐµÐ´Ñ�Ñ‚Ð°Ð²Ð»ÐµÐ½Ð¸Ð¹"
 
 msgid "Please change your password once you log in here"
-msgstr "Будь ласка, змініть свій пароль, як тільки увійдете тут"
+msgstr ""
+"Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð·Ð¼Ñ–Ð½Ñ–Ñ‚ÑŒ Ñ�Ð²Ñ–Ð¹ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ, Ñ�Ðº Ñ‚Ñ–Ð»ÑŒÐºÐ¸ "
+"ÑƒÐ²Ñ–Ð¹Ð´ÐµÑ‚Ðµ Ñ‚ÑƒÑ‚"
 
 msgid "You can log into our website at:"
-msgstr "Ви можете увійти на наш сайт за адресою:"
+msgstr ""
+"Ð’Ð¸ Ð¼Ð¾Ð¶ÐµÑ‚Ðµ ÑƒÐ²Ñ–Ð¹Ñ‚Ð¸ Ð½Ð° Ð½Ð°Ñˆ Ñ�Ð°Ð¹Ñ‚ Ð·Ð° Ð°Ð´Ñ€ÐµÑ�Ð¾ÑŽ:"
 
 msgid "Oops"
-msgstr "Ой"
+msgstr "ÐžÐ¹"
 
-msgid "Sorry. An error just occurred. Please try again, or contact a system administrator."
-msgstr "Вибачте. Щойно сталася помилка. Будь ласка, спробуйте ще раз або зверніться до системного адміністратора."
+msgid ""
+"Sorry. An error just occurred. Please try again, or contact a system "
+"administrator."
+msgstr ""
+"Ð’Ð¸Ð±Ð°Ñ‡Ñ‚Ðµ. Ð©Ð¾Ð¹Ð½Ð¾ Ñ�Ñ‚Ð°Ð»Ð°Ñ�Ñ� Ð¿Ð¾Ð¼Ð¸Ð»ÐºÐ°. Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ"
+"°, Ñ�Ð¿Ñ€Ð¾Ð±ÑƒÐ¹Ñ‚Ðµ Ñ‰Ðµ Ñ€Ð°Ð· Ð°Ð±Ð¾ Ð·Ð²ÐµÑ€Ð½Ñ–Ñ‚ÑŒÑ�Ñ� Ð´Ð¾ "
+"Ñ�Ð¸Ñ�Ñ‚ÐµÐ¼Ð½Ð¾Ð³Ð¾ Ð°Ð´Ð¼Ñ–Ð½Ñ–Ñ�Ñ‚Ñ€Ð°Ñ‚Ð¾Ñ€Ð°."
 
 msgid "Enter title of Evaluation"
-msgstr "Ввести назву процесу визначення якості"
+msgstr ""
+"Ð’Ð²ÐµÑ�Ñ‚Ð¸ Ð½Ð°Ð·Ð²Ñƒ Ð¿Ñ€Ð¾Ñ†ÐµÑ�Ñƒ Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–"
 
 msgid "Number"
-msgstr "Номер"
+msgstr "Ð�Ð¾Ð¼ÐµÑ€"
 
 msgid "Question"
-msgstr "Питання"
+msgstr "ÐŸÐ¸Ñ‚Ð°Ð½Ð½Ñ�"
 
 msgid "Text"
-msgstr "Текст"
+msgstr "Ð¢ÐµÐºÑ�Ñ‚"
 
 msgid "Add Evaluation"
-msgstr "Додати  процес визначення якості"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸  Ð¿Ñ€Ð¾Ñ†ÐµÑ� Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–"
 
 msgid "Assign Evaluation to Training"
-msgstr "Призначити оцінку до тренінгу"
+msgstr "ÐŸÑ€Ð¸Ð·Ð½Ð°Ñ‡Ð¸Ñ‚Ð¸ Ð¾Ñ†Ñ–Ð½ÐºÑƒ Ð´Ð¾ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Assign"
-msgstr "Призначити"
+msgstr "ÐŸÑ€Ð¸Ð·Ð½Ð°Ñ‡Ð¸Ñ‚Ð¸"
 
 msgid "Submit"
-msgstr "Подати"
+msgstr "ÐŸÐ¾Ð´Ð°Ñ‚Ð¸"
 
 msgid "Copy"
-msgstr "Копіювати"
+msgstr "ÐšÐ¾Ð¿Ñ–ÑŽÐ²Ð°Ñ‚Ð¸"
 
 msgid "Date created"
-msgstr "Дата створення"
+msgstr "Ð”Ð°Ñ‚Ð° Ñ�Ñ‚Ð²Ð¾Ñ€ÐµÐ½Ð½Ñ�"
 
 msgid "Add New Evaluation"
-msgstr "Додавання нового процесу визначення якості"
+msgstr ""
+"Ð”Ð¾Ð´Ð°Ð²Ð°Ð½Ð½Ñ� Ð½Ð¾Ð²Ð¾Ð³Ð¾ Ð¿Ñ€Ð¾Ñ†ÐµÑ�Ñƒ Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� "
+"Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–"
 
 msgid "Evaluation Data Entry"
-msgstr "Введення даних процесу визначення якості"
+msgstr ""
+"Ð’Ð²ÐµÐ´ÐµÐ½Ð½Ñ� Ð´Ð°Ð½Ð¸Ñ… Ð¿Ñ€Ð¾Ñ†ÐµÑ�Ñƒ Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–"
 
 msgid "Save and Exit"
-msgstr "Зберегти та вийти"
+msgstr "Ð—Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ñ‚Ð° Ð²Ð¸Ð¹Ñ‚Ð¸"
 
 msgid "Save and Continue"
-msgstr "Зберегти та продовжити"
+msgstr "Ð—Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ñ‚Ð° Ð¿Ñ€Ð¾Ð´Ð¾Ð²Ð¶Ð¸Ñ‚Ð¸"
 
 msgid "Add External Course"
-msgstr "Додати зовнішній курс"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð·Ð¾Ð²Ð½Ñ–ÑˆÐ½Ñ–Ð¹ ÐºÑƒÑ€Ñ�"
 
 msgid "Add new External Course for "
-msgstr "Додати зовнішній курс для"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð·Ð¾Ð²Ð½Ñ–ÑˆÐ½Ñ–Ð¹ ÐºÑƒÑ€Ñ� Ð´Ð»Ñ�"
 
 msgid "Day"
-msgstr "День"
+msgstr "Ð”ÐµÐ½ÑŒ"
 
 msgid "Month"
-msgstr "Місяц"
+msgstr "ÐœÑ–Ñ�Ñ�Ñ†"
 
 msgid "Year"
-msgstr "Рік"
+msgstr "Ð Ñ–Ðº"
 
 msgid "Length"
-msgstr "Тривалість"
+msgstr "Ð¢Ñ€Ð¸Ð²Ð°Ð»Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Who Funded"
-msgstr "Ким фінансується"
+msgstr "ÐšÐ¸Ð¼ Ñ„Ñ–Ð½Ð°Ð½Ñ�ÑƒÑ”Ñ‚ÑŒÑ�Ñ�"
 
 msgid "Add Course"
-msgstr "Додати курс"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ ÐºÑƒÑ€Ñ�"
 
 msgid "Please enter training location information"
-msgstr "Будь ласка, додайте інформацію про місцезнаходження тренінгу"
+msgstr ""
+"Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð´Ð¾Ð´Ð°Ð¹Ñ‚Ðµ Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–ÑŽ Ð¿Ñ€Ð¾ Ð¼Ñ–"
+"Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Add Location"
-msgstr "Додати місцезнаходження"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "Add new Facility"
-msgstr "Додати новий заклад"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð¾Ð²Ð¸Ð¹ Ð·Ð°ÐºÐ»Ð°Ð´"
 
 msgid "Address 1"
-msgstr "Адреса 1"
+msgstr "Ð�Ð´Ñ€ÐµÑ�Ð° 1"
 
 msgid "Address 2"
-msgstr "Адреса 2"
+msgstr "Ð�Ð´Ñ€ÐµÑ�Ð° 2"
 
 msgid "New city"
-msgstr "Нове місто"
+msgstr "Ð�Ð¾Ð²Ðµ Ð¼Ñ–Ñ�Ñ‚Ð¾"
 
 msgid "Postal code"
-msgstr "Поштовий індекс"
+msgstr "ÐŸÐ¾ÑˆÑ‚Ð¾Ð²Ð¸Ð¹ Ñ–Ð½Ð´ÐµÐºÑ�"
 
 msgid "Facility sponsor"
-msgstr "Спонсор закладу"
+msgstr "Ð¡Ð¿Ð¾Ð½Ñ�Ð¾Ñ€ Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Facility Comments"
-msgstr "Коментарі закладу"
+msgstr "ÐšÐ¾Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ñ– Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Delete Location"
-msgstr "Видалити місцезнахлдження"
+msgstr "Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð»Ð´Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "Delete Facility"
-msgstr "Видалити заклад"
+msgstr "Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ð·Ð°ÐºÐ»Ð°Ð´"
 
 msgid "Edit Facility"
-msgstr "Редагувати заклад"
+msgstr "Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ð·Ð°ÐºÐ»Ð°Ð´"
 
 msgid "Facility name"
-msgstr "Назва закладу"
+msgstr "Ð�Ð°Ð·Ð²Ð° Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Address "
-msgstr "Адреса"
+msgstr "Ð�Ð´Ñ€ÐµÑ�Ð°"
 
 msgid "Save changes"
-msgstr "Зберегти зміни "
+msgstr "Ð—Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ð·Ð¼Ñ–Ð½Ð¸ "
 
 msgid "Are you sure you wish to delete this facility?"
-msgstr "Ви впевнені, що хочете видалити цей заклад?"
+msgstr ""
+"Ð’Ð¸ Ð²Ð¿ÐµÐ²Ð½ÐµÐ½Ñ–, Ñ‰Ð¾ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ñ†ÐµÐ¹ Ð·Ð°ÐºÐ»Ð°Ð"
+"´?"
 
 msgid "Search for Training Location"
-msgstr "Пошук за масцезнаходженням тренінгу"
+msgstr "ÐŸÐ¾ÑˆÑƒÐº Ð·Ð° Ð¼Ð°Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ�Ð¼ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Select Criteria"
-msgstr "Обрати критерії"
+msgstr "ÐžÐ±Ñ€Ð°Ñ‚Ð¸ ÐºÑ€Ð¸Ñ‚ÐµÑ€Ñ–Ñ—"
 
 msgid "Training Location Name"
-msgstr "Назва місцезнаходження тренінгу"
+msgstr "Ð�Ð°Ð·Ð²Ð° Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Training locations"
-msgstr "Місцезнаходження тренінгу"
+msgstr "ÐœÑ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Results"
-msgstr "Результати "
+msgstr "Ð ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð¸ "
 
 msgid "Add new training location"
-msgstr "Додати нове місцезнаходження тренінгу"
+msgstr ""
+"Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð¾Ð²Ðµ Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Location Name"
-msgstr "Назва місцезнаходження "
+msgstr "Ð�Ð°Ð·Ð²Ð° Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� "
 
 msgid "Limited to 100 rows"
-msgstr "Обмежено до 100 рядків"
+msgstr "ÐžÐ±Ð¼ÐµÐ¶ÐµÐ½Ð¾ Ð´Ð¾ 100 Ñ€Ñ�Ð´ÐºÑ–Ð²"
 
 msgid "Full Results"
-msgstr "Повні результати"
+msgstr "ÐŸÐ¾Ð²Ð½Ñ– Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð¸"
 
 msgid "Search Facilities"
-msgstr "Пошук закладів"
+msgstr "ÐŸÐ¾ÑˆÑƒÐº Ð·Ð°ÐºÐ»Ð°Ð´Ñ–Ð²"
 
 msgid "Add New Facility"
-msgstr "Додати новий заклад"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð¾Ð²Ð¸Ð¹ Ð·Ð°ÐºÐ»Ð°Ð´"
 
 msgid "ID"
-msgstr "Ідентифікація"
+msgstr "Ð†Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ�"
 
 msgid "UUID"
-msgstr "Унікальна ідентифікація"
+msgstr "Ð£Ð½Ñ–ÐºÐ°Ð»ÑŒÐ½Ð° Ñ–Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ�"
 
 msgid "Sponsor"
-msgstr "Спонсор"
+msgstr "Ð¡Ð¿Ð¾Ð½Ñ�Ð¾Ñ€"
 
 msgid "unknown"
-msgstr "невідомий"
+msgstr "Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹"
 
 msgid "Save Changes"
-msgstr "Зберегти зміни"
+msgstr "Ð—Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ð·Ð¼Ñ–Ð½Ð¸"
 
 msgid "Are you sure you wish to delete this location?"
-msgstr "Ви впевнені, що хочете видалити це місцезнаходження?"
+msgstr ""
+"Ð’Ð¸ Ð²Ð¿ÐµÐ²Ð½ÐµÐ½Ñ–, Ñ‰Ð¾ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ñ†Ðµ Ð¼Ñ–"
+"Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ�?"
 
 msgid "View Facility"
-msgstr "Переглянути заклад"
+msgstr "ÐŸÐµÑ€ÐµÐ³Ð»Ñ�Ð½ÑƒÑ‚Ð¸ Ð·Ð°ÐºÐ»Ð°Ð´"
 
 msgid "Postal Code"
-msgstr "Поштовий індекс"
+msgstr "ÐŸÐ¾ÑˆÑ‚Ð¾Ð²Ð¸Ð¹ Ñ–Ð½Ð´ÐµÐºÑ�"
 
 msgid "Welcome to"
-msgstr "Ласкаво просимо до"
+msgstr "Ð›Ð°Ñ�ÐºÐ°Ð²Ð¾ Ð¿Ñ€Ð¾Ñ�Ð¸Ð¼Ð¾ Ð´Ð¾"
 
 msgid "Training System Monitoring and Reporting Tool"
-msgstr "Інструмент моніторингу та звітності системи навчання"
+msgstr ""
+"Ð†Ð½Ñ�Ñ‚Ñ€ÑƒÐ¼ÐµÐ½Ñ‚ Ð¼Ð¾Ð½Ñ–Ñ‚Ð¾Ñ€Ð¸Ð½Ð³Ñƒ Ñ‚Ð° Ð·Ð²Ñ–Ñ‚Ð½Ð¾Ñ�Ñ‚Ñ– "
+"Ñ�Ð¸Ñ�Ñ‚ÐµÐ¼Ð¸ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Data Summary"
-msgstr "Зведення даних"
+msgstr "Ð—Ð²ÐµÐ´ÐµÐ½Ð½Ñ� Ð´Ð°Ð½Ð¸Ñ…"
 
 msgid "unique"
-msgstr "унікальний"
+msgstr "ÑƒÐ½Ñ–ÐºÐ°Ð»ÑŒÐ½Ð¸Ð¹"
 
 msgid "Trainers"
-msgstr "Tренери"
+msgstr "TÑ€ÐµÐ½ÐµÑ€Ð¸"
 
+#, fuzzy
 msgid "Trainer"
-msgstr "Tренер"
-
-msgid "Trainer"
-msgstr "Інструктор"
+msgstr ""
+"#-#-#-#-#  catalog.po (Trainsmart)  #-#-#-#-#\n"
+"TÑ€ÐµÐ½ÐµÑ€\n"
+"#-#-#-#-#  catalog.po (Trainsmart)  #-#-#-#-#\n"
+"Ð†Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€"
 
 msgid "Total"
-msgstr "Всього"
+msgstr "Ð’Ñ�ÑŒÐ¾Ð³Ð¾"
 
 msgid "Fiscal Year"
-msgstr "Фінансовий рік"
+msgstr "Ð¤Ñ–Ð½Ð°Ð½Ñ�Ð¾Ð²Ð¸Ð¹ Ñ€Ñ–Ðº"
 
 msgid "Future Trainings"
-msgstr "Майбутні тренінги"
+msgstr "ÐœÐ°Ð¹Ð±ÑƒÑ‚Ð½Ñ– Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸"
 
 msgid "Future Training"
-msgstr "Майбутній тренінг"
+msgstr "ÐœÐ°Ð¹Ð±ÑƒÑ‚Ð½Ñ–Ð¹ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "Past Training"
-msgstr "Минулий тренінг"
+msgstr "ÐœÐ¸Ð½ÑƒÐ»Ð¸Ð¹ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "Future"
-msgstr "Майбутній "
+msgstr "ÐœÐ°Ð¹Ð±ÑƒÑ‚Ð½Ñ–Ð¹ "
 
 msgid "View Printable Calendar"
-msgstr "Подивитися календар, який можна роздрукувати"
+msgstr ""
+"ÐŸÐ¾Ð´Ð¸Ð²Ð¸Ñ‚Ð¸Ñ�Ñ� ÐºÐ°Ð»ÐµÐ½Ð´Ð°Ñ€, Ñ�ÐºÐ¸Ð¹ Ð¼Ð¾Ð¶Ð½Ð° Ñ€Ð¾Ð·Ð´Ñ"
+"€ÑƒÐºÑƒÐ²Ð°Ñ‚Ð¸"
 
 msgid "To be Approved"
-msgstr "Підлягає затвердженню"
+msgstr "ÐŸÑ–Ð´Ð»Ñ�Ð³Ð°Ñ” Ð·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÐµÐ½Ð½ÑŽ"
 
 msgid "Attached Documents"
-msgstr "Документи, що додаються"
+msgstr "Ð”Ð¾ÐºÑƒÐ¼ÐµÐ½Ñ‚Ð¸, Ñ‰Ð¾ Ð´Ð¾Ð´Ð°ÑŽÑ‚ÑŒÑ�Ñ�"
 
 msgid "Right-click and select \"Save Target As...\" to download."
-msgstr "Натисніть праву клавішу миші та виберіть  \"Зберегти як ... \" щоб завантажити."
+msgstr ""
+"Ð�Ð°Ñ‚Ð¸Ñ�Ð½Ñ–Ñ‚ÑŒ Ð¿Ñ€Ð°Ð²Ñƒ ÐºÐ»Ð°Ð²Ñ–ÑˆÑƒ Ð¼Ð¸ÑˆÑ– Ñ‚Ð° Ð²Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ  "
+"\"Ð—Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ñ�Ðº ... \" Ñ‰Ð¾Ð± Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸."
 
 msgid "Document Upload"
-msgstr "Загрузка документу"
+msgstr "Ð—Ð°Ð³Ñ€ÑƒÐ·ÐºÐ° Ð´Ð¾ÐºÑƒÐ¼ÐµÐ½Ñ‚Ñƒ"
 
 msgid "Please login below"
-msgstr "Будь ласка, увійдіть в систему нижче"
+msgstr "Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, ÑƒÐ²Ñ–Ð¹Ð´Ñ–Ñ‚ÑŒ Ð² Ñ�Ð¸Ñ�Ñ‚ÐµÐ¼Ñƒ Ð½Ð¸Ð¶Ñ‡Ðµ"
 
 msgid "User name"
-msgstr "Ім'я користувача"
+msgstr "Ð†Ð¼'Ñ� ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð°"
 
 msgid "Forgot your password?"
-msgstr "Забули пароль?"
+msgstr "Ð—Ð°Ð±ÑƒÐ»Ð¸ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ?"
 
 msgid "Add Person"
-msgstr "Додати особу"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð¾Ñ�Ð¾Ð±Ñƒ"
 
 msgid "Assign Person to Training"
-msgstr "Записати людину на тренінг"
+msgstr "Ð—Ð°Ð¿Ð¸Ñ�Ð°Ñ‚Ð¸ Ð»ÑŽÐ´Ð¸Ð½Ñƒ Ð½Ð° Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "Delete Person"
-msgstr "Видалити особу"
+msgstr "Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ð¾Ñ�Ð¾Ð±Ñƒ"
 
 msgid "Current Contact Information"
-msgstr "Поточна контактна інформація"
+msgstr "ÐŸÐ¾Ñ‚Ð¾Ñ‡Ð½Ð° ÐºÐ¾Ð½Ñ‚Ð°ÐºÑ‚Ð½Ð° Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ�"
 
 msgid "Insert new facility"
-msgstr "Ввести новий заклад"
+msgstr "Ð’Ð²ÐµÑ�Ñ‚Ð¸ Ð½Ð¾Ð²Ð¸Ð¹ Ð·Ð°ÐºÐ»Ð°Ð´"
 
 msgid "Address and Phone"
-msgstr "Адреса і телефон"
+msgstr "Ð�Ð´Ñ€ÐµÑ�Ð° Ñ– Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½"
 
 msgid "Work phone"
-msgstr "Робочий телефон"
+msgstr "Ð Ð¾Ð±Ð¾Ñ‡Ð¸Ð¹ Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½"
 
 msgid "Mobile phone"
-msgstr "Мобільний телефон"
+msgstr "ÐœÐ¾Ð±Ñ–Ð»ÑŒÐ½Ð¸Ð¹ Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½"
 
 msgid "Email Secondary"
-msgstr "Додаткова електрона пошта"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚ÐºÐ¾Ð²Ð° ÐµÐ»ÐµÐºÑ‚Ñ€Ð¾Ð½Ð° Ð¿Ð¾ÑˆÑ‚Ð°"
 
 msgid "Qualification Comments"
-msgstr "Коментарі до кваліфікації"
+msgstr "ÐšÐ¾Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ñ– Ð´Ð¾ ÐºÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ—"
 
 msgid "Trainer Information"
-msgstr "Інформація про тренера"
+msgstr "Ð†Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ� Ð¿Ñ€Ð¾ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Show/Hide"
-msgstr "Показати/Сховати"
+msgstr "ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚Ð¸/Ð¡Ñ…Ð¾Ð²Ð°Ñ‚Ð¸"
 
 msgid "Is person an active trainer?"
-msgstr "Ця особа є діючим інструктором?"
+msgstr "Ð¦Ñ� Ð¾Ñ�Ð¾Ð±Ð° Ñ” Ð´Ñ–ÑŽÑ‡Ð¸Ð¼ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ð¾Ð¼?"
 
 msgid "Trainer Affiliation"
-msgstr "Приналежність Тренера"
+msgstr "ÐŸÑ€Ð¸Ð½Ð°Ð»ÐµÐ¶Ð½Ñ–Ñ�Ñ‚ÑŒ Ð¢Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Trainer skills"
-msgstr "Навички Тренера"
+msgstr "Ð�Ð°Ð²Ð¸Ñ‡ÐºÐ¸ Ð¢Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "check all that apply"
-msgstr "відмітити все, що підходить"
+msgstr "Ð²Ñ–Ð´Ð¼Ñ–Ñ‚Ð¸Ñ‚Ð¸ Ð²Ñ�Ðµ, Ñ‰Ð¾ Ð¿Ñ–Ð´Ñ…Ð¾Ð´Ð¸Ñ‚ÑŒ"
 
 msgid "Primary language"
-msgstr "Основна мова"
+msgstr "ÐžÑ�Ð½Ð¾Ð²Ð½Ð° Ð¼Ð¾Ð²Ð°"
 
 msgid "Secondary languages"
-msgstr "Додаткові мови"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚ÐºÐ¾Ð²Ñ– Ð¼Ð¾Ð²Ð¸"
 
 msgid "Secondary language"
-msgstr "Додаткова мова"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚ÐºÐ¾Ð²Ð° Ð¼Ð¾Ð²Ð°"
 
 msgid "Created by"
-msgstr "Створено"
+msgstr "Ð¡Ñ‚Ð²Ð¾Ñ€ÐµÐ½Ð¾"
 
 msgid "Date modified"
-msgstr "Дата внесення змін"
+msgstr "Ð”Ð°Ñ‚Ð° Ð²Ð½ÐµÑ�ÐµÐ½Ð½Ñ� Ð·Ð¼Ñ–Ð½"
 
 msgid "Modified by"
-msgstr "Змінено"
+msgstr "Ð—Ð¼Ñ–Ð½ÐµÐ½Ð¾"
 
 msgid "Delete this Person"
-msgstr "Видалити цю особу"
+msgstr "Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ñ†ÑŽ Ð¾Ñ�Ð¾Ð±Ñƒ"
 
 msgid "Are you sure you wish to delete this person?"
-msgstr "Ви впевнені, що хочете видалити цю особу?"
+msgstr ""
+"Ð’Ð¸ Ð²Ð¿ÐµÐ²Ð½ÐµÐ½Ñ–, Ñ‰Ð¾ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ñ†ÑŽ Ð¾Ñ�Ð¾Ð±Ñƒ?"
 
 msgid "Edit person's record"
-msgstr "Редагувати запис особи"
+msgstr "Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ð·Ð°Ð¿Ð¸Ñ� Ð¾Ñ�Ð¾Ð±Ð¸"
 
 msgid "Add person's record"
-msgstr "Додати запис особи"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð·Ð°Ð¿Ð¸Ñ� Ð¾Ñ�Ð¾Ð±Ð¸"
 
 msgid "Personal Information"
-msgstr "Особиста інформація"
+msgstr "ÐžÑ�Ð¾Ð±Ð¸Ñ�Ñ‚Ð° Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ�"
 
 msgid "Birth date"
-msgstr "Дата народження"
+msgstr "Ð”Ð°Ñ‚Ð° Ð½Ð°Ñ€Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "Duplicate Check"
-msgstr "Перевірка дубліката"
+msgstr "ÐŸÐµÑ€ÐµÐ²Ñ–Ñ€ÐºÐ° Ð´ÑƒÐ±Ð»Ñ–ÐºÐ°Ñ‚Ð°"
 
 msgid "Continue"
-msgstr "Продовжити"
+msgstr "ÐŸÑ€Ð¾Ð´Ð¾Ð²Ð¶Ð¸Ñ‚Ð¸"
 
 msgid "If the person already exists, please select their name below."
-msgstr "Якщо особа вже існує, будь ласка, виберіть ім'я нижче."
+msgstr ""
+"Ð¯ÐºÑ‰Ð¾ Ð¾Ñ�Ð¾Ð±Ð° Ð²Ð¶Ðµ Ñ–Ñ�Ð½ÑƒÑ”, Ð±ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð²Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ "
+"Ñ–Ð¼'Ñ� Ð½Ð¸Ð¶Ñ‡Ðµ."
 
 msgid "Please enter a first and last name."
-msgstr "Будь ласка, введіть ім'я та прізвище."
+msgstr "Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð²Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ñ–Ð¼'Ñ� Ñ‚Ð° Ð¿Ñ€Ñ–Ð·Ð²Ð¸Ñ‰Ðµ."
 
 msgid "Submission failed:"
-msgstr "Подача на вдалася:"
+msgstr "ÐŸÐ¾Ð´Ð°Ñ‡Ð° Ð½Ð° Ð²Ð´Ð°Ð»Ð°Ñ�Ñ�:"
 
 msgid "Primary responsibility"
-msgstr "Основна відповідальність"
+msgstr "ÐžÑ�Ð½Ð¾Ð²Ð½Ð° Ð²Ñ–Ð´Ð¿Ð¾Ð²Ñ–Ð´Ð°Ð»ÑŒÐ½Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Secondary responsibility"
-msgstr "Додаткова відповідальність"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚ÐºÐ¾Ð²Ð° Ð²Ñ–Ð´Ð¿Ð¾Ð²Ñ–Ð´Ð°Ð»ÑŒÐ½Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Trainer languages"
-msgstr "Мови Тренера"
+msgstr "ÐœÐ¾Ð²Ð¸ Ð¢Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Recommended Training Topics"
-msgstr "Рекомендовані теми тренінгу"
+msgstr "Ð ÐµÐºÐ¾Ð¼ÐµÐ½Ð´Ð¾Ð²Ð°Ð½Ñ– Ñ‚ÐµÐ¼Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "No recommended classes were found for the above primary qualification"
-msgstr "Рекомендовані заняття для вищевказаної основної кваліфікації не знайдені."
+msgstr ""
+"Ð ÐµÐºÐ¾Ð¼ÐµÐ½Ð´Ð¾Ð²Ð°Ð½Ñ– Ð·Ð°Ð½Ñ�Ñ‚Ñ‚Ñ� Ð´Ð»Ñ� Ð²Ð¸Ñ‰ÐµÐ²ÐºÐ°Ð·Ð°Ð½Ð¾Ñ— "
+"Ð¾Ñ�Ð½Ð¾Ð²Ð½Ð¾Ñ— ÐºÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ— Ð½Ðµ Ð·Ð½Ð°Ð¹Ð´ÐµÐ½Ñ–."
 
 msgid "Upcoming Trainings"
-msgstr "Майбутні тренінги"
+msgstr "ÐœÐ°Ð¹Ð±ÑƒÑ‚Ð½Ñ– Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸"
 
 msgid "Topic(s)"
-msgstr "Тема (и)"
+msgstr "Ð¢ÐµÐ¼Ð° (Ð¸)"
 
 msgid "Class History"
-msgstr "Журнал курсів"
+msgstr "Ð–ÑƒÑ€Ð½Ð°Ð» ÐºÑƒÑ€Ñ�Ñ–Ð²"
 
 msgid "Topics(s)"
-msgstr "Тема (и)"
+msgstr "Ð¢ÐµÐ¼Ð° (Ð¸)"
 
 msgid "Topics"
-msgstr "Теми"
+msgstr "Ð¢ÐµÐ¼Ð¸"
 
 msgid "Please add or verify the trainer information below."
-msgstr "Будь ласка, додайте або підтвердіть нижче інформацію про тренера."
+msgstr ""
+"Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð´Ð¾Ð´Ð°Ð¹Ñ‚Ðµ Ð°Ð±Ð¾ Ð¿Ñ–Ð´Ñ‚Ð²ÐµÑ€Ð´Ñ–Ñ‚ÑŒ Ð½Ð¸Ð¶Ñ‡Ðµ "
+"Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–ÑŽ Ð¿Ñ€Ð¾ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°."
 
 msgid "Please enter facility information"
-msgstr "Будь ласка, введіть інформацію про заклад"
+msgstr ""
+"Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð²Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–ÑŽ Ð¿Ñ€Ð¾ Ð·Ð°ÐºÐ»Ð°Ð´"
 
 msgid "Assign this person to a class"
-msgstr "Зареєструвати на заняття"
+msgstr "Ð—Ð°Ñ€ÐµÑ”Ñ�Ñ‚Ñ€ÑƒÐ²Ð°Ñ‚Ð¸ Ð½Ð° Ð·Ð°Ð½Ñ�Ñ‚Ñ‚Ñ�"
 
 msgid "External Class History"
-msgstr "Журнал зовнішніх курсів"
+msgstr "Ð–ÑƒÑ€Ð½Ð°Ð» Ð·Ð¾Ð²Ð½Ñ–ÑˆÐ½Ñ–Ñ… ÐºÑƒÑ€Ñ�Ñ–Ð²"
 
 msgid "Add an external class"
-msgstr "Додати зовнішній курс"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð·Ð¾Ð²Ð½Ñ–ÑˆÐ½Ñ–Ð¹ ÐºÑƒÑ€Ñ�"
 
 msgid "Change History"
-msgstr "Журнал змін"
+msgstr "Ð–ÑƒÑ€Ð½Ð°Ð» Ð·Ð¼Ñ–Ð½"
 
 msgid "Change"
-msgstr "Змінити"
+msgstr "Ð—Ð¼Ñ–Ð½Ð¸Ñ‚Ð¸"
 
 msgid "Previous entry"
-msgstr "Попередній запис"
+msgstr "ÐŸÐ¾Ð¿ÐµÑ€ÐµÐ´Ð½Ñ–Ð¹ Ð·Ð°Ð¿Ð¸Ñ�"
 
 msgid "No duplicates found."
-msgstr "Дублікати не знайдені."
+msgstr "Ð”ÑƒÐ±Ð»Ñ–ÐºÐ°Ñ‚Ð¸ Ð½Ðµ Ð·Ð½Ð°Ð¹Ð´ÐµÐ½Ñ–."
 
 msgid "Age"
-msgstr "Вік"
+msgstr "Ð’Ñ–Ðº"
 
 msgid "Edit Person"
-msgstr "Редагувати особу"
+msgstr "Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ð¾Ñ�Ð¾Ð±Ñƒ"
 
 msgid "Person Search"
-msgstr "Пошук особи"
+msgstr "ÐŸÐ¾ÑˆÑƒÐº Ð¾Ñ�Ð¾Ð±Ð¸"
 
 msgid "Trainers only"
-msgstr "Лише інструктори"
+msgstr "Ð›Ð¸ÑˆÐµ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ð¸"
 
 msgid "Participants only"
-msgstr "Лише учасники"
+msgstr "Ð›Ð¸ÑˆÐµ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸"
 
 msgid "Unattached only"
-msgstr "Лише не прикріплені"
+msgstr "Ð›Ð¸ÑˆÐµ Ð½Ðµ Ð¿Ñ€Ð¸ÐºÑ€Ñ–Ð¿Ð»ÐµÐ½Ñ–"
 
 msgid "Everyone"
-msgstr "Кожен"
+msgstr "ÐšÐ¾Ð¶ÐµÐ½"
 
 msgid "View Person"
-msgstr "Подивитися особу"
+msgstr "ÐŸÐ¾Ð´Ð¸Ð²Ð¸Ñ‚Ð¸Ñ�Ñ� Ð¾Ñ�Ð¾Ð±Ñƒ"
 
 msgid "First name"
-msgstr "Ім'я"
+msgstr "Ð†Ð¼'Ñ�"
 
 msgid "Middle name"
-msgstr "По батькові"
+msgstr "ÐŸÐ¾ Ð±Ð°Ñ‚ÑŒÐºÐ¾Ð²Ñ–"
 
 msgid "Last name"
-msgstr "Прiзвище"
+msgstr "ÐŸÑ€iÐ·Ð²Ð¸Ñ‰Ðµ"
 
 msgid "Trainer Type"
-msgstr "Тип Тренера"
+msgstr "Ð¢Ð¸Ð¿ Ð¢Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Training History"
-msgstr "Журнал тренінгу"
+msgstr "Ð–ÑƒÑ€Ð½Ð°Ð» Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Search"
-msgstr "Пошук"
+msgstr "ÐŸÐ¾ÑˆÑƒÐº"
 
 msgid "show"
-msgstr "показати"
+msgstr "Ð¿Ð¾ÐºÐ°Ð·Ð°Ñ‚Ð¸"
 
 msgid "group"
-msgstr "група"
+msgstr "Ð³Ñ€ÑƒÐ¿Ð°"
 
 msgid "course name"
-msgstr "Назва курсу"
+msgstr "Ð�Ð°Ð·Ð²Ð° ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "Min"
-msgstr "мінімальний"
+msgstr "Ð¼Ñ–Ð½Ñ–Ð¼Ð°Ð»ÑŒÐ½Ð¸Ð¹"
 
 msgid "Max"
-msgstr "Максимальний"
+msgstr "ÐœÐ°ÐºÑ�Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¸Ð¹"
 
 msgid "End date"
-msgstr "Дата закінчення"
+msgstr "Ð”Ð°Ñ‚Ð° Ð·Ð°ÐºÑ–Ð½Ñ‡ÐµÐ½Ð½Ñ�"
 
 msgid "Start date"
-msgstr "Дата початку"
+msgstr "Ð”Ð°Ñ‚Ð° Ð¿Ð¾Ñ‡Ð°Ñ‚ÐºÑƒ"
 
 msgid "Trainings with known participants only"
-msgstr "Тренінги тільки з відомими учасниками"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ñ‚Ñ–Ð»ÑŒÐºÐ¸ Ð· Ð²Ñ–Ð´Ð¾Ð¼Ð¸Ð¼Ð¸ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ°Ð¼Ð¸"
 
 msgid "Trainings with unknown participants only"
-msgstr "Тренінги тільки з невідомими учасниками"
+msgstr ""
+"Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ñ‚Ñ–Ð»ÑŒÐºÐ¸ Ð· Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¼Ð¸ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ°Ð¼Ð¸"
 
 msgid "All trainings"
-msgstr "Всі тренінги"
+msgstr "Ð’Ñ�Ñ– Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸"
 
 msgid "End Date"
-msgstr "Дата закінчення"
+msgstr "Ð”Ð°Ñ‚Ð° Ð·Ð°ÐºÑ–Ð½Ñ‡ÐµÐ½Ð½Ñ�"
 
 msgid "Refresher"
-msgstr "Підвищення кваліфікації"
+msgstr "ÐŸÑ–Ð´Ð²Ð¸Ñ‰ÐµÐ½Ð½Ñ� ÐºÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ—"
 
 msgid "facility"
-msgstr "заклад"
+msgstr "Ð·Ð°ÐºÐ»Ð°Ð´"
 
 msgid "Trainings matched with Facilities"
-msgstr "Тренінги, зіставлені із закладами"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸, Ð·Ñ–Ñ�Ñ‚Ð°Ð²Ð»ÐµÐ½Ñ– Ñ–Ð· Ð·Ð°ÐºÐ»Ð°Ð´Ð°Ð¼Ð¸"
 
 msgid "Training Location"
-msgstr "Місце проведення тренінгу"
+msgstr "ÐœÑ–Ñ�Ñ†Ðµ Ð¿Ñ€Ð¾Ð²ÐµÐ´ÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "PEPFAR"
-msgstr "ПЕПФАР"
+msgstr "ÐŸÐ•ÐŸÐ¤Ð�Ð "
 
 msgid "Evaluation Reports"
-msgstr "Звіти по процесах визначення якості"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ð¿Ñ€Ð¾Ñ†ÐµÑ�Ð°Ñ… Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–"
 
 msgid "Evaluation Report"
-msgstr "Звіт по процесах визначення якості"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ð¿Ð¾ Ð¿Ñ€Ð¾Ñ†ÐµÑ�Ð°Ñ… Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–"
 
 msgid "Evaluation"
-msgstr "Процес визначення якості"
+msgstr "ÐŸÑ€Ð¾Ñ†ÐµÑ� Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–"
 
 msgid "Generate Report"
-msgstr "Створити звіт"
+msgstr "Ð¡Ñ‚Ð²Ð¾Ñ€Ð¸Ñ‚Ð¸ Ð·Ð²Ñ–Ñ‚"
 
 msgid "Evaluation Name"
-msgstr "Назва процесу визначення якості"
+msgstr "Ð�Ð°Ð·Ð²Ð° Ð¿Ñ€Ð¾Ñ†ÐµÑ�Ñƒ Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–"
 
 msgid "Responses"
-msgstr "Відповіді"
+msgstr "Ð’Ñ–Ð´Ð¿Ð¾Ð²Ñ–Ð´Ñ–"
 
 msgid "Select facility report"
-msgstr "Вибрати звіт про заклад"
+msgstr "Ð’Ð¸Ð±Ñ€Ð°Ñ‚Ð¸ Ð·Ð²Ñ–Ñ‚ Ð¿Ñ€Ð¾ Ð·Ð°ÐºÐ»Ð°Ð´"
 
 msgid "Trainings by Facility Name"
-msgstr "Тренінги за назвою закладу"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð·Ð° Ð½Ð°Ð·Ð²Ð¾ÑŽ Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Trainings by Facility Participant Count"
-msgstr "Тренінги за кількістю учасників закладу"
+msgstr ""
+"Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð·Ð° ÐºÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŽ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–Ð² Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "filter"
-msgstr "фільтр"
+msgstr "Ñ„Ñ–Ð»ÑŒÑ‚Ñ€"
 
 msgid "Training location"
-msgstr "Місце проведення тренінгу"
+msgstr "ÐœÑ–Ñ�Ñ†Ðµ Ð¿Ñ€Ð¾Ð²ÐµÐ´ÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Report"
-msgstr "Звіт"
+msgstr "Ð—Ð²Ñ–Ñ‚"
 
 msgid "Select trainer report"
-msgstr "Вибрати звіт про тренера"
+msgstr "Ð’Ð¸Ð±Ñ€Ð°Ñ‚Ð¸ Ð·Ð²Ñ–Ñ‚ Ð¿Ñ€Ð¾ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Trainers by Skill, Language, and PEPFAR"
-msgstr "Тренери за напрямками і мовою"
+msgstr "Ð¢Ñ€ÐµÐ½ÐµÑ€Ð¸ Ð·Ð° Ð½Ð°Ð¿Ñ€Ñ�Ð¼ÐºÐ°Ð¼Ð¸ Ñ– Ð¼Ð¾Ð²Ð¾ÑŽ"
 
 msgid "Select training report"
-msgstr "Вибрати звіт про тренінг"
+msgstr "Ð’Ð¸Ð±Ñ€Ð°Ñ‚Ð¸ Ð·Ð²Ñ–Ñ‚ Ð¿Ñ€Ð¾ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "Trainings by Name"
-msgstr "Тренінги за назвою"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð·Ð° Ð½Ð°Ð·Ð²Ð¾ÑŽ"
 
 msgid "Trainings by Participant Count"
-msgstr "Тренінги за кількістю учасників"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð·Ð° ÐºÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŽ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "Pre-service reports"
-msgstr "Звіти по системі попереднього навчання"
+msgstr ""
+"Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ñ�Ð¸Ñ�Ñ‚ÐµÐ¼Ñ– Ð¿Ð¾Ð¿ÐµÑ€ÐµÐ´Ð½ÑŒÐ¾Ð³Ð¾ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Course By Student Count"
-msgstr "Курс за кількістю студентів"
+msgstr "ÐšÑƒÑ€Ñ� Ð·Ð° ÐºÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŽ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "Course By Name"
-msgstr "Курс за назвою"
+msgstr "ÐšÑƒÑ€Ñ� Ð·Ð° Ð½Ð°Ð·Ð²Ð¾ÑŽ"
 
 msgid "Cohort By Participant Count"
-msgstr "Група за кількістю учасників"
+msgstr "Ð“Ñ€ÑƒÐ¿Ð° Ð·Ð° ÐºÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŽ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "Institution Information"
-msgstr "Інформація про інститут"
+msgstr "Ð†Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ� Ð¿Ñ€Ð¾ Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚"
 
 msgid "Tutor By Name"
-msgstr "Інструктор за ім`ям"
+msgstr "Ð†Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€ Ð·Ð° Ñ–Ð¼`Ñ�Ð¼"
 
 msgid "Facility Report"
-msgstr "Звіт закладу"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "primary"
-msgstr "основний"
+msgstr "Ð¾Ñ�Ð½Ð¾Ð²Ð½Ð¸Ð¹"
 
 msgid "secondary"
-msgstr "додатковий"
+msgstr "Ð´Ð¾Ð´Ð°Ñ‚ÐºÐ¾Ð²Ð¸Ð¹"
 
 msgid "Classes taken"
-msgstr "Пройдені курси"
+msgstr "ÐŸÑ€Ð¾Ð¹Ð´ÐµÐ½Ñ– ÐºÑƒÑ€Ñ�Ð¸"
 
 msgid "Upcoming classes"
-msgstr "Майбутні тренінги"
+msgstr "ÐœÐ°Ð¹Ð±ÑƒÑ‚Ð½Ñ– Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸"
 
 msgid "Training topic"
-msgstr "Тема тренінгу"
+msgstr "Ð¢ÐµÐ¼Ð° Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Recommended topics"
-msgstr "Рекомендовані теми "
+msgstr "Ð ÐµÐºÐ¾Ð¼ÐµÐ½Ð´Ð¾Ð²Ð°Ð½Ñ– Ñ‚ÐµÐ¼Ð¸ "
 
 msgid "Combine First and Last Names"
-msgstr "Об'єднати ім'я та прізвище"
+msgstr "ÐžÐ±'Ñ”Ð´Ð½Ð°Ñ‚Ð¸ Ñ–Ð¼'Ñ� Ñ‚Ð° Ð¿Ñ€Ñ–Ð·Ð²Ð¸Ñ‰Ðµ"
 
 msgid "Person Count"
-msgstr "Кількість осіб"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ Ð¾Ñ�Ñ–Ð±"
 
 msgid "Select person report"
-msgstr "Вибрати звіт про особу"
+msgstr "Ð’Ð¸Ð±Ñ€Ð°Ñ‚Ð¸ Ð·Ð²Ñ–Ñ‚ Ð¿Ñ€Ð¾ Ð¾Ñ�Ð¾Ð±Ñƒ"
 
 msgid "Needs by Person's Name"
-msgstr "Потрібно за ім'ям особи"
+msgstr "ÐŸÐ¾Ñ‚Ñ€Ñ–Ð±Ð½Ð¾ Ð·Ð° Ñ–Ð¼'Ñ�Ð¼ Ð¾Ñ�Ð¾Ð±Ð¸"
 
 msgid "Needs by Person Count"
-msgstr "Потрібно за кількістю осіб"
+msgstr "ÐŸÐ¾Ñ‚Ñ€Ñ–Ð±Ð½Ð¾ Ð·Ð° ÐºÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŽ Ð¾Ñ�Ñ–Ð±"
 
 msgid "Unique by"
-msgstr "Унікальний за"
+msgstr "Ð£Ð½Ñ–ÐºÐ°Ð»ÑŒÐ½Ð¸Ð¹ Ð·Ð°"
 
 msgid "and"
-msgstr "і"
+msgstr "Ñ–"
 
 msgid "Not unique overall."
-msgstr "Не унікально в цілому."
+msgstr "Ð�Ðµ ÑƒÐ½Ñ–ÐºÐ°Ð»ÑŒÐ½Ð¾ Ð² Ñ†Ñ–Ð»Ð¾Ð¼Ñƒ."
 
 msgid "Unique by "
-msgstr "Унікальний за"
+msgstr "Ð£Ð½Ñ–ÐºÐ°Ð»ÑŒÐ½Ð¸Ð¹ Ð·Ð°"
 
 msgid "facility location"
-msgstr "Місцезнаходження закладу"
+msgstr "ÐœÑ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Total Participants by"
-msgstr "Всього учасників за"
+msgstr "Ð’Ñ�ÑŒÐ¾Ð³Ð¾ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–Ð² Ð·Ð°"
 
 msgid "Participants Report"
-msgstr "Звіт учасників"
+msgstr "Ð—Ð²Ñ–Ñ‚ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "male"
-msgstr "чоловічий"
+msgstr "Ñ‡Ð¾Ð»Ð¾Ð²Ñ–Ñ‡Ð¸Ð¹"
 
 msgid "female"
-msgstr "жіночий"
+msgstr "Ð¶Ñ–Ð½Ð¾Ñ‡Ð¸Ð¹"
 
 msgid "na"
-msgstr "не відноситься"
+msgstr "Ð½Ðµ Ð²Ñ–Ð´Ð½Ð¾Ñ�Ð¸Ñ‚ÑŒÑ�Ñ�"
 
 msgid "min"
-msgstr "мінімальний"
+msgstr "Ð¼Ñ–Ð½Ñ–Ð¼Ð°Ð»ÑŒÐ½Ð¸Ð¹"
 
 msgid "max"
-msgstr "максимальний"
+msgstr "Ð¼Ð°ÐºÑ�Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¸Ð¹"
 
 msgid "clear"
-msgstr "очистити"
+msgstr "Ð¾Ñ‡Ð¸Ñ�Ñ‚Ð¸Ñ‚Ð¸"
 
 msgid "active"
-msgstr "діючий"
+msgstr "Ð´Ñ–ÑŽÑ‡Ð¸Ð¹"
 
 msgid "inactive"
-msgstr "недіючий"
+msgstr "Ð½ÐµÐ´Ñ–ÑŽÑ‡Ð¸Ð¹"
 
-msgid "Note: This report may contain multiple rows for participants who attended multiple trainings"
-msgstr "Примітка: цей звіт може містити багато рядків для учасників, які відвідали багато тренінгів"
+msgid ""
+"Note: This report may contain multiple rows for participants who attended "
+"multiple trainings"
+msgstr ""
+"ÐŸÑ€Ð¸Ð¼Ñ–Ñ‚ÐºÐ°: Ñ†ÐµÐ¹ Ð·Ð²Ñ–Ñ‚ Ð¼Ð¾Ð¶Ðµ Ð¼Ñ–Ñ�Ñ‚Ð¸Ñ‚Ð¸ Ð±Ð°Ð³Ð°Ñ‚Ð¾ Ñ€Ñ�Ð"
+"´ÐºÑ–Ð² Ð´Ð»Ñ� ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–Ð², Ñ�ÐºÑ– Ð²Ñ–Ð´Ð²Ñ–Ð´Ð°Ð»Ð¸ Ð±Ð°Ð³Ð°Ñ‚Ð¾ Ñ‚Ñ"
+"€ÐµÐ½Ñ–Ð½Ð³Ñ–Ð²"
 
 msgid "Participant Count"
-msgstr "Кількість учасників"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "Trainers by Name"
-msgstr "Інструктори за ім`ям"
+msgstr "Ð†Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ð¸ Ð·Ð° Ñ–Ð¼`Ñ�Ð¼"
 
 msgid "Show post-test scores above"
-msgstr "Показати вище результати після тесту"
+msgstr "ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚Ð¸ Ð²Ð¸Ñ‰Ðµ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð¸ Ð¿Ñ–Ñ�Ð»Ñ� Ñ‚ÐµÑ�Ñ‚Ñƒ"
 
 msgid "Show score increase above"
-msgstr "Показати вище зростання результатів"
+msgstr "ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚Ð¸ Ð²Ð¸Ñ‰Ðµ Ð·Ñ€Ð¾Ñ�Ñ‚Ð°Ð½Ð½Ñ� Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ñ–Ð²"
 
 msgid "Return Unique Participants"
-msgstr "Повернути унікальних учасників"
+msgstr "ÐŸÐ¾Ð²ÐµÑ€Ð½ÑƒÑ‚Ð¸ ÑƒÐ½Ñ–ÐºÐ°Ð»ÑŒÐ½Ð¸Ñ… ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "Trainings Attended"
-msgstr "Відвідані тренінги"
+msgstr "Ð’Ñ–Ð´Ð²Ñ–Ð´Ð°Ð½Ñ– Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸"
 
 msgid "% Change"
-msgstr "% змін"
+msgstr "% Ð·Ð¼Ñ–Ð½"
 
 msgid "Match primary/secondary"
-msgstr "Відповідність основний/додатковий"
+msgstr "Ð’Ñ–Ð´Ð¿Ð¾Ð²Ñ–Ð´Ð½Ñ–Ñ�Ñ‚ÑŒ Ð¾Ñ�Ð½Ð¾Ð²Ð½Ð¸Ð¹/Ð´Ð¾Ð´Ð°Ñ‚ÐºÐ¾Ð²Ð¸Ð¹"
 
 msgid "Recommended classes (based on topic)"
-msgstr "Рекомендовані заняття (залежно від теми)"
+msgstr ""
+"Ð ÐµÐºÐ¾Ð¼ÐµÐ½Ð´Ð¾Ð²Ð°Ð½Ñ– Ð·Ð°Ð½Ñ�Ñ‚Ñ‚Ñ� (Ð·Ð°Ð»ÐµÐ¶Ð½Ð¾ Ð²Ñ–Ð´ Ñ‚ÐµÐ¼Ð¸)"
 
 msgid "Select participant report"
-msgstr "Вибрати звіт про учасника"
+msgstr "Ð’Ð¸Ð±Ñ€Ð°Ñ‚Ð¸ Ð·Ð²Ñ–Ñ‚ Ð¿Ñ€Ð¾ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ°"
 
 msgid "Unique Participants by "
-msgstr "Унікальні учасники за"
+msgstr "Ð£Ð½Ñ–ÐºÐ°Ð»ÑŒÐ½Ñ– ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸ Ð·Ð°"
 
 msgid "Unique Participants by"
-msgstr "Унікальні учасники за"
+msgstr "Ð£Ð½Ñ–ÐºÐ°Ð»ÑŒÐ½Ñ– ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸ Ð·Ð°"
 
 msgid "Unique Participants by Qualification"
-msgstr "Унікальні учасники за кваліфікацією"
+msgstr "Ð£Ð½Ñ–ÐºÐ°Ð»ÑŒÐ½Ñ– ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸ Ð·Ð° ÐºÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ”ÑŽ"
 
 msgid "Participants Trained"
-msgstr "Учасники, які пройшли навчання"
+msgstr "Ð£Ñ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸, Ñ�ÐºÑ– Ð¿Ñ€Ð¾Ð¹ÑˆÐ»Ð¸ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Participants by Facility"
-msgstr "Учасники за закладом"
+msgstr "Ð£Ñ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸ Ð·Ð° Ð·Ð°ÐºÐ»Ð°Ð´Ð¾Ð¼"
 
 msgid "Participants by Name"
-msgstr "Учасники за ім`ям"
+msgstr "Ð£Ñ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸ Ð·Ð° Ñ–Ð¼`Ñ�Ð¼"
 
 msgid "Participants with Scores"
-msgstr "Учасники із результатами"
+msgstr "Ð£Ñ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸ Ñ–Ð· Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð°Ð¼Ð¸"
 
 msgid "Course By Name Report"
-msgstr "Курс за назвою звіту"
+msgstr "ÐšÑƒÑ€Ñ� Ð·Ð° Ð½Ð°Ð·Ð²Ð¾ÑŽ Ð·Ð²Ñ–Ñ‚Ñƒ"
 
 msgid "Course By Student Count Report"
-msgstr "Звіт курсу за кількістю студентів"
+msgstr "Ð—Ð²Ñ–Ñ‚ ÐºÑƒÑ€Ñ�Ñƒ Ð·Ð° ÐºÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŽ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "Graduated Students Report"
-msgstr "Звіт студентів-випускників"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²-Ð²Ð¸Ð¿ÑƒÑ�ÐºÐ½Ð¸ÐºÑ–Ð²"
 
 msgid "Missing Cohort By Participant Count Report"
-msgstr "Звіт відсутніх груп за кількістю учасників"
+msgstr ""
+"Ð—Ð²Ñ–Ñ‚ Ð²Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ–Ñ… Ð³Ñ€ÑƒÐ¿ Ð·Ð° ÐºÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŽ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–"
+"Ð²"
 
 msgid "Missing Cohort By Participant Count"
-msgstr "Відсутні групи за кількістю учасників"
+msgstr "Ð’Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ– Ð³Ñ€ÑƒÐ¿Ð¸ Ð·Ð° ÐºÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŽ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "Missing Course By Name Report"
-msgstr "Звіт відсутніх курсів за назвою"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ð²Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ–Ñ… ÐºÑƒÑ€Ñ�Ñ–Ð² Ð·Ð° Ð½Ð°Ð·Ð²Ð¾ÑŽ"
 
 msgid "Missing Course By Name"
-msgstr "Відсутні курси за назвою"
+msgstr "Ð’Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ– ÐºÑƒÑ€Ñ�Ð¸ Ð·Ð° Ð½Ð°Ð·Ð²Ð¾ÑŽ"
 
 msgid "Missing Course By Student Count Report"
-msgstr "Звіт відсутніх курсів за кількістю студентів"
+msgstr ""
+"Ð—Ð²Ñ–Ñ‚ Ð²Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ–Ñ… ÐºÑƒÑ€Ñ�Ñ–Ð² Ð·Ð° ÐºÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŽ Ñ�Ñ‚ÑƒÐ"
+"´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "Missing Course By Student Count"
-msgstr "Відсутні курси за кількістю студентів"
+msgstr "Ð’Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ– ÐºÑƒÑ€Ñ�Ð¸ Ð·Ð° ÐºÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŽ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "Missing Facility Report Report"
-msgstr "Звіт відсутніх закладів"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ð²Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ–Ñ… Ð·Ð°ÐºÐ»Ð°Ð´Ñ–Ð²"
 
 msgid "Missing Facility Report"
-msgstr "Звіт відсутніх установ"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ð²Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ–Ñ… ÑƒÑ�Ñ‚Ð°Ð½Ð¾Ð²"
 
 msgid "Missing Graduated Students Report"
-msgstr "Звіт відсутніх студентів-випускників"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ð²Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ–Ñ… Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²-Ð²Ð¸Ð¿ÑƒÑ�ÐºÐ½Ð¸ÐºÑ–Ð²"
 
 msgid "Missing Graduated Students"
-msgstr "Відсутні студенти-випускники"
+msgstr "Ð’Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ– Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ð¸-Ð²Ð¸Ð¿ÑƒÑ�ÐºÐ½Ð¸ÐºÐ¸"
 
 msgid "Missing Institution Information Report"
-msgstr "Звіт відсутніх інститутів"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ð²Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ–Ñ… Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñ–Ð²"
 
 msgid "Missing Institution Information"
-msgstr "Відсутні інститути"
+msgstr "Ð’Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ– Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ð¸"
 
 msgid "Missing Students By Name Report"
-msgstr "Звіт відсутніх студентів за ім'ям"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ð²Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ–Ñ… Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð² Ð·Ð° Ñ–Ð¼'Ñ�Ð¼"
 
 msgid "Missing Students By Name"
-msgstr "Відсутні студенти за ім`ям"
+msgstr "Ð’Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ– Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ð¸ Ð·Ð° Ñ–Ð¼`Ñ�Ð¼"
 
 msgid "Missing Students Trained Report"
-msgstr "Звіт відсутніх студентів, які пройшли навчання"
+msgstr ""
+"Ð—Ð²Ñ–Ñ‚ Ð²Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ–Ñ… Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð², Ñ�ÐºÑ– Ð¿Ñ€Ð¾Ð¹ÑˆÐ»Ð¸ Ð½Ð"
+"°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Missing Students Trained"
-msgstr "Відсутні студенти, які пройшли навчання"
+msgstr ""
+"Ð’Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ– Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ð¸, Ñ�ÐºÑ– Ð¿Ñ€Ð¾Ð¹ÑˆÐ»Ð¸ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Missing Tutor By Name Report"
-msgstr "Звіт відсутніх інструкторів зв ім'ям"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ð²Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ–Ñ… Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñ–Ð² Ð·Ð² Ñ–Ð¼'Ñ�Ð¼"
 
 msgid "Missing Tutor By Name"
-msgstr "Відсутні тренера за ім`ям"
+msgstr "Ð’Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ– Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð° Ð·Ð° Ñ–Ð¼`Ñ�Ð¼"
 
 msgid "Students By Name Report"
-msgstr "Звіт студентів за ім'ям"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð² Ð·Ð° Ñ–Ð¼'Ñ�Ð¼"
 
 msgid "training location"
-msgstr "Місце проведення тренінгу"
+msgstr "ÐœÑ–Ñ�Ñ†Ðµ Ð¿Ñ€Ð¾Ð²ÐµÐ´ÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Students Trained Report"
-msgstr "Звіт студентів, які пройшли навчання"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð², Ñ�ÐºÑ– Ð¿Ñ€Ð¾Ð¹ÑˆÐ»Ð¸ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Trainings By Participants Report"
-msgstr "Тренінги за звітами учасників"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð·Ð° Ð·Ð²Ñ–Ñ‚Ð°Ð¼Ð¸ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "Trainings By Participants"
-msgstr "Тренінги за учасниками"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð·Ð° ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ°Ð¼Ð¸"
 
 msgid "Trainings By Name Report"
-msgstr "Тренінги за назвою звіту"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð·Ð° Ð½Ð°Ð·Ð²Ð¾ÑŽ Ð·Ð²Ñ–Ñ‚Ñƒ"
 
 msgid "Trainings By Name"
-msgstr "Тренінги за назвою"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð·Ð° Ð½Ð°Ð·Ð²Ð¾ÑŽ"
 
 msgid "Extended Report with Test Scores"
-msgstr "Розширений звіт із результатами тестів"
+msgstr ""
+"Ð Ð¾Ð·ÑˆÐ¸Ñ€ÐµÐ½Ð¸Ð¹ Ð·Ð²Ñ–Ñ‚ Ñ–Ð· Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð°Ð¼Ð¸ Ñ‚ÐµÑ�Ñ‚Ñ–Ð²"
 
 msgid "Extended Report with Regions and Qualification"
-msgstr "Розширений звіт із регіонами і кваліфікацією"
+msgstr ""
+"Ð Ð¾Ð·ÑˆÐ¸Ñ€ÐµÐ½Ð¸Ð¹ Ð·Ð²Ñ–Ñ‚ Ñ–Ð· Ñ€ÐµÐ³Ñ–Ð¾Ð½Ð°Ð¼Ð¸ Ñ– ÐºÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ"
+"°Ñ†Ñ–Ñ”ÑŽ"
 
 msgid "Trainer Report"
-msgstr "Звіт по тренерах"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ð¿Ð¾ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°Ñ…"
 
 msgid "trainer report"
-msgstr "звіт по тренерах"
+msgstr "Ð·Ð²Ñ–Ñ‚ Ð¿Ð¾ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°Ñ…"
 
 msgid "Trainer language"
-msgstr "Мова Tренера"
+msgstr "ÐœÐ¾Ð²Ð° TÑ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Select topic taught"
-msgstr "Вибрати прочитану тему"
+msgstr "Ð’Ð¸Ð±Ñ€Ð°Ñ‚Ð¸ Ð¿Ñ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ð½Ñƒ Ñ‚ÐµÐ¼Ñƒ"
 
 msgid "Combine first and last names"
-msgstr "Об'єднати ім'я та прізвище"
+msgstr "ÐžÐ±'Ñ”Ð´Ð½Ð°Ñ‚Ð¸ Ñ–Ð¼'Ñ� Ñ‚Ð° Ð¿Ñ€Ñ–Ð·Ð²Ð¸Ñ‰Ðµ"
 
 msgid "with Unknown Participants"
-msgstr "з невідомими учасниками"
+msgstr "Ð· Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¼Ð¸ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ°Ð¼Ð¸"
 
 msgid "Trainings with Unknown Participants"
-msgstr "Тренінги з невідомими учасниками"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð· Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¼Ð¸ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ°Ð¼Ð¸"
 
 msgid "Age Range"
-msgstr "Віковий діапазон"
+msgstr "Ð’Ñ–ÐºÐ¾Ð²Ð¸Ð¹ Ð´Ñ–Ð°Ð¿Ð°Ð·Ð¾Ð½"
 
 msgid "Mechanism ID"
-msgstr "Ідентифікація механізму"
+msgstr "Ð†Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ� Ð¼ÐµÑ…Ð°Ð½Ñ–Ð·Ð¼Ñƒ"
 
 msgid "Mechanism"
-msgstr "Механізм"
+msgstr "ÐœÐµÑ…Ð°Ð½Ñ–Ð·Ð¼"
 
 msgid "Data Synchronization"
-msgstr "Синхронізація даних"
+msgstr "Ð¡Ð¸Ð½Ñ…Ñ€Ð¾Ð½Ñ–Ð·Ð°Ñ†Ñ–Ñ� Ð´Ð°Ð½Ð¸Ñ…"
 
 msgid "Uploaded Data"
-msgstr "Завантажені дані"
+msgstr "Ð—Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÐµÐ½Ñ– Ð´Ð°Ð½Ñ–"
 
 msgid "Existing Data"
-msgstr "Існуючи дані"
+msgstr "Ð†Ñ�Ð½ÑƒÑŽÑ‡Ð¸ Ð´Ð°Ð½Ñ–"
 
 msgid "Conflict(s)"
-msgstr "Помилка (и)"
+msgstr "ÐŸÐ¾Ð¼Ð¸Ð»ÐºÐ° (Ð¸)"
 
 msgid "Resolution"
-msgstr "Рішення"
+msgstr "Ð Ñ–ÑˆÐµÐ½Ð½Ñ�"
 
 msgid "Preview Upload Data"
-msgstr "Попередній перегляд завантажених даних"
+msgstr ""
+"ÐŸÐ¾Ð¿ÐµÑ€ÐµÐ´Ð½Ñ–Ð¹ Ð¿ÐµÑ€ÐµÐ³Ð»Ñ�Ð´ Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÐµÐ½Ð¸Ñ… Ð´Ð°Ð½Ð¸Ñ…"
 
 msgid "Import Summary"
-msgstr "Зведення даних"
+msgstr "Ð—Ð²ÐµÐ´ÐµÐ½Ð½Ñ� Ð´Ð°Ð½Ð¸Ñ…"
 
 msgid "Record"
-msgstr "Запис"
+msgstr "Ð—Ð°Ð¿Ð¸Ñ�"
 
 msgid "Additions"
-msgstr "Додавання"
+msgstr "Ð”Ð¾Ð´Ð°Ð²Ð°Ð½Ð½Ñ�"
 
 msgid "Modifications"
-msgstr "Виправлення"
+msgstr "Ð’Ð¸Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð½Ñ�"
 
 msgid "Deletions"
-msgstr "Видалення"
+msgstr "Ð’Ð¸Ð´Ð°Ð»ÐµÐ½Ð½Ñ�"
 
 msgid "Add Alias (Duplicate)"
-msgstr "Додати псевдоніма (дублікат)"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð¿Ñ�ÐµÐ²Ð´Ð¾Ð½Ñ–Ð¼Ð° (Ð´ÑƒÐ±Ð»Ñ–ÐºÐ°Ñ‚)"
 
 msgid "Conflicts"
-msgstr "Помилки"
+msgstr "ÐŸÐ¾Ð¼Ð¸Ð»ÐºÐ¸"
 
 msgid "Training Conflicts"
-msgstr "Помилка інформації про тренінг"
+msgstr "ÐŸÐ¾Ð¼Ð¸Ð»ÐºÐ° Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ— Ð¿Ñ€Ð¾ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "People Conflicts"
-msgstr "Помилка інформації про особу"
+msgstr "ÐŸÐ¾Ð¼Ð¸Ð»ÐºÐ° Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ— Ð¿Ñ€Ð¾ Ð¾Ñ�Ð¾Ð±Ñƒ"
 
 msgid "Facility Conflicts"
-msgstr "Помилка інформації про заклад"
+msgstr "ÐŸÐ¾Ð¼Ð¸Ð»ÐºÐ° Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ— Ð¿Ñ€Ð¾ Ð·Ð°ÐºÐ»Ð°Ð´"
 
 msgid "Training Location Conflicts"
-msgstr "Помилка інформації про місцезнаходження тренінгу"
+msgstr ""
+"ÐŸÐ¾Ð¼Ð¸Ð»ÐºÐ° Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ— Ð¿Ñ€Ð¾ Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� "
+"Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
-msgid "Select the file that contains the exported data (*.sqlite database) you want to import."
-msgstr "Виберіть файл, який містить експортовані дані (* .sqlite бази даних), які ви хочете імпортувати."
+msgid ""
+"Select the file that contains the exported data (*.sqlite database) you want "
+"to import."
+msgstr ""
+"Ð’Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ñ„Ð°Ð¹Ð», Ñ�ÐºÐ¸Ð¹ Ð¼Ñ–Ñ�Ñ‚Ð¸Ñ‚ÑŒ ÐµÐºÑ�Ð¿Ð¾Ñ€Ñ‚Ð¾Ð²Ð°Ð½Ñ– Ð"
+"´Ð°Ð½Ñ– (* .sqlite Ð±Ð°Ð·Ð¸ Ð´Ð°Ð½Ð¸Ñ…), Ñ�ÐºÑ– Ð²Ð¸ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ñ–Ð¼Ð¿Ð¾Ñ"
+"€Ñ‚ÑƒÐ²Ð°Ñ‚Ð¸."
 
 msgid "File to upload"
-msgstr "Файл для завантаження"
+msgstr "Ð¤Ð°Ð¹Ð» Ð´Ð»Ñ� Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "Training Session Deleted"
-msgstr "Даний тренінг був видалений"
+msgstr "Ð”Ð°Ð½Ð¸Ð¹ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³ Ð±ÑƒÐ² Ð²Ð¸Ð´Ð°Ð»ÐµÐ½Ð¸Ð¹"
 
 msgid "This training session has been deleted."
-msgstr "Данный тренинг был удалён."
+msgstr "Ð”Ð°Ð½Ð½Ñ‹Ð¹ Ñ‚Ñ€ÐµÐ½Ð¸Ð½Ð³ Ð±Ñ‹Ð» ÑƒÐ´Ð°Ð»Ñ‘Ð½."
 
 msgid "Edit Topics"
-msgstr "Редагувати теми"
+msgstr "Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ñ‚ÐµÐ¼Ð¸"
 
 msgid "Edit Trainer Topic"
-msgstr "Редагувати тему тренера"
+msgstr "Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ñ‚ÐµÐ¼Ñƒ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Training Roster"
-msgstr "Реєстр тренінгу"
+msgstr "Ð ÐµÑ”Ñ�Ñ‚Ñ€ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Course Roster"
-msgstr "Реєстр курсу"
+msgstr "Ð ÐµÑ”Ñ�Ñ‚Ñ€ ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "Start Date:"
-msgstr "Дата початку:"
+msgstr "Ð”Ð°Ñ‚Ð° Ð¿Ð¾Ñ‡Ð°Ñ‚ÐºÑƒ:"
 
 msgid "End Date:"
-msgstr "Дата закінчення:"
+msgstr "Ð”Ð°Ñ‚Ð° Ð·Ð°ÐºÑ–Ð½Ñ‡ÐµÐ½Ð½Ñ�:"
 
 msgid "Total Trainers:"
-msgstr "Всього тренерiв:"
+msgstr "Ð’Ñ�ÑŒÐ¾Ð³Ð¾ Ñ‚Ñ€ÐµÐ½ÐµÑ€iÐ²:"
 
 msgid "Total Trainers"
-msgstr "Всього тренерiв"
+msgstr "Ð’Ñ�ÑŒÐ¾Ð³Ð¾ Ñ‚Ñ€ÐµÐ½ÐµÑ€iÐ²"
 
 msgid "Total Participants:"
-msgstr "Всього учасників:"
+msgstr "Ð’Ñ�ÑŒÐ¾Ð³Ð¾ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–Ð²:"
 
 msgid "Return to training"
-msgstr "Повернутися до тренінгу"
+msgstr "ÐŸÐ¾Ð²ÐµÑ€Ð½ÑƒÑ‚Ð¸Ñ�Ñ� Ð´Ð¾ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Person"
-msgstr "Особа"
+msgstr "ÐžÑ�Ð¾Ð±Ð°"
 
 msgid "Are you sure you wish to delete this score?"
-msgstr "Ви впевнені, що хочете видалити цей результат?"
+msgstr ""
+"Ð’Ð¸ Ð²Ð¿ÐµÐ²Ð½ÐµÐ½Ñ–, Ñ‰Ð¾ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ñ†ÐµÐ¹ Ñ"
+"€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚?"
 
 msgid "Return to Training Session"
-msgstr "Повернутися до тренінгу"
+msgstr "ÐŸÐ¾Ð²ÐµÑ€Ð½ÑƒÑ‚Ð¸Ñ�Ñ� Ð´Ð¾ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Return to Training"
-msgstr "Повернутися до тренінгу"
+msgstr "ÐŸÐ¾Ð²ÐµÑ€Ð½ÑƒÑ‚Ð¸Ñ�Ñ� Ð´Ð¾ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Save Training"
-msgstr "Зберегти тренінг"
+msgstr "Ð—Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "Add new Training Location"
-msgstr "Додати нове місцезнаходження тренінгу"
+msgstr ""
+"Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð¾Ð²Ðµ Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Please enter training location information:"
-msgstr "Будь ласка, додайте інформацію про місцезнаходження тренінгу:"
+msgstr ""
+"Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð´Ð¾Ð´Ð°Ð¹Ñ‚Ðµ Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–ÑŽ Ð¿Ñ€Ð¾ Ð¼Ñ–"
+"Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ:"
 
-msgid "It looks like the training dates do not match the length. Please double check these fields."
-msgstr "Схоже, що дати тренінгу не збігаються з його тривалістю. Будь ласка, перевірте ці поля ще раз."
+msgid ""
+"It looks like the training dates do not match the length. Please double "
+"check these fields."
+msgstr ""
+"Ð¡Ñ…Ð¾Ð¶Ðµ, Ñ‰Ð¾ Ð´Ð°Ñ‚Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ Ð½Ðµ Ð·Ð±Ñ–Ð³Ð°ÑŽÑ‚ÑŒÑ�Ñ� Ð· "
+"Ð¹Ð¾Ð³Ð¾ Ñ‚Ñ€Ð¸Ð²Ð°Ð»Ñ–Ñ�Ñ‚ÑŽ. Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð¿ÐµÑ€ÐµÐ²Ñ–Ñ€Ñ‚Ðµ Ñ†Ñ– "
+"Ð¿Ð¾Ð»Ñ� Ñ‰Ðµ Ñ€Ð°Ð·."
 
 msgid "Cancel"
-msgstr "Скасувати"
+msgstr "Ð¡ÐºÐ°Ñ�ÑƒÐ²Ð°Ñ‚Ð¸"
 
 msgid "Date created:"
-msgstr "Дата створення:"
+msgstr "Ð”Ð°Ñ‚Ð° Ñ�Ñ‚Ð²Ð¾Ñ€ÐµÐ½Ð½Ñ�:"
 
 msgid "Created by:"
-msgstr "Створено:"
+msgstr "Ð¡Ñ‚Ð²Ð¾Ñ€ÐµÐ½Ð¾:"
 
 msgid "Date modified:"
-msgstr "Дата внесення змін:"
+msgstr "Ð”Ð°Ñ‚Ð° Ð²Ð½ÐµÑ�ÐµÐ½Ð½Ñ� Ð·Ð¼Ñ–Ð½:"
 
 msgid "Modified by:"
-msgstr "Змінено:"
+msgstr "Ð—Ð¼Ñ–Ð½ÐµÐ½Ð¾:"
 
 msgid "View/Print Training Roster"
-msgstr "Подивитися/роздрукувати реєстр тренінгу"
+msgstr ""
+"ÐŸÐ¾Ð´Ð¸Ð²Ð¸Ñ‚Ð¸Ñ�Ñ�/Ñ€Ð¾Ð·Ð´Ñ€ÑƒÐºÑƒÐ²Ð°Ñ‚Ð¸ Ñ€ÐµÑ”Ñ�Ñ‚Ñ€ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Enter Evaluation Data"
-msgstr "Ввести данні процесу визначення якості"
+msgstr ""
+"Ð’Ð²ÐµÑ�Ñ‚Ð¸ Ð´Ð°Ð½Ð½Ñ– Ð¿Ñ€Ð¾Ñ†ÐµÑ�Ñƒ Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–"
 
 msgid "View Data"
-msgstr "Подивитися дані"
+msgstr "ÐŸÐ¾Ð´Ð¸Ð²Ð¸Ñ‚Ð¸Ñ�Ñ� Ð´Ð°Ð½Ñ–"
 
 msgid "unassigned"
-msgstr "непризначений"
+msgstr "Ð½ÐµÐ¿Ñ€Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ð¹"
 
 msgid "Duplicate this Training"
-msgstr "Дублювати цей тренінг"
+msgstr "Ð”ÑƒÐ±Ð»ÑŽÐ²Ð°Ñ‚Ð¸ Ñ†ÐµÐ¹ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "Delete this Training"
-msgstr "Видалити цей тренінг"
+msgstr "Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ñ†ÐµÐ¹ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "Training start date"
-msgstr "Дата початку  тренінгу:"
+msgstr "Ð”Ð°Ñ‚Ð° Ð¿Ð¾Ñ‡Ð°Ñ‚ÐºÑƒ  Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ:"
 
 msgid "Training end date"
-msgstr "Дата закінчення тренінгу:"
+msgstr "Ð”Ð°Ñ‚Ð° Ð·Ð°ÐºÑ–Ð½Ñ‡ÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ:"
 
 msgid "Training length"
-msgstr "Тривалість тренінгу"
+msgstr "Ð¢Ñ€Ð¸Ð²Ð°Ð»Ñ–Ñ�Ñ‚ÑŒ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "hours"
-msgstr "години"
+msgstr "Ð³Ð¾Ð´Ð¸Ð½Ð¸"
 
 msgid "weeks"
-msgstr "тижні"
+msgstr "Ñ‚Ð¸Ð¶Ð½Ñ–"
 
 msgid "Participants are known"
-msgstr "Відомі учасники"
+msgstr "Ð’Ñ–Ð´Ð¾Ð¼Ñ– ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸"
 
 msgid "Check all that apply below"
-msgstr "Нижче відмітити все, що підходить"
+msgstr "Ð�Ð¸Ð¶Ñ‡Ðµ Ð²Ñ–Ð´Ð¼Ñ–Ñ‚Ð¸Ñ‚Ð¸ Ð²Ñ�Ðµ, Ñ‰Ð¾ Ð¿Ñ–Ð´Ñ…Ð¾Ð´Ð¸Ñ‚ÑŒ"
 
 msgid "Please enter the name your new funding item:"
-msgstr "Будь ласка, введіть назву вашого нового фінансованого елементу:"
+msgstr ""
+"Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð²Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ð½Ð°Ð·Ð²Ñƒ Ð²Ð°ÑˆÐ¾Ð³Ð¾ Ð½Ð¾Ð²Ð¾Ð³Ð¾ Ñ„Ñ–"
+"Ð½Ð°Ð½Ñ�Ð¾Ð²Ð°Ð½Ð¾Ð³Ð¾ ÐµÐ»ÐµÐ¼ÐµÐ½Ñ‚Ñƒ:"
 
 msgid "Insert"
-msgstr "Вставити"
+msgstr "Ð’Ñ�Ñ‚Ð°Ð²Ð¸Ñ‚Ð¸"
 
 msgid "New Person Form"
-msgstr "Додатинового учасника"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸Ð½Ð¾Ð²Ð¾Ð³Ð¾ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ°"
 
 msgid "The entered trainer name could not be found."
-msgstr "Введене ім'я тренера не знайдено."
+msgstr "Ð’Ð²ÐµÐ´ÐµÐ½Ðµ Ñ–Ð¼'Ñ� Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð° Ð½Ðµ Ð·Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾."
 
 msgid "The entered person could not be found."
-msgstr "Введене ім'я людини не знайдено."
+msgstr "Ð’Ð²ÐµÐ´ÐµÐ½Ðµ Ñ–Ð¼'Ñ� Ð»ÑŽÐ´Ð¸Ð½Ð¸ Ð½Ðµ Ð·Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾."
 
 msgid "Please select one from the list or add a new person."
-msgstr "Будь ласка, виберіть зі списку або додайте нову людину. "
+msgstr ""
+"Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð²Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ð·Ñ– Ñ�Ð¿Ð¸Ñ�ÐºÑƒ Ð°Ð±Ð¾ Ð´Ð¾Ð´Ð"
+"°Ð¹Ñ‚Ðµ Ð½Ð¾Ð²Ñƒ Ð»ÑŽÐ´Ð¸Ð½Ñƒ. "
 
 msgid "Please enter the number of days for this trainer."
-msgstr "Будь ласка, введіть кількість днів для даного тренера."
+msgstr ""
+"Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð²Ð²ÐµÐ´Ñ–Ñ‚ÑŒ ÐºÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ Ð´Ð½Ñ–Ð² Ð´Ð»Ñ� Ð´Ð"
+"°Ð½Ð¾Ð³Ð¾ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°."
 
-msgid "You must edit this person's trainer profile before adding them to this session.\\n\\nWould you like to do this now?"
-msgstr "Ви повинні відредагувати інформацію про даного тренера перед тим як додати його до цієї сессіі.Ви хочете зробити це зараз?"
+msgid ""
+"You must edit this person's trainer profile before adding them to this "
+"session.\\n\\nWould you like to do this now?"
+msgstr ""
+"Ð’Ð¸ Ð¿Ð¾Ð²Ð¸Ð½Ð½Ñ– Ð²Ñ–Ð´Ñ€ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–ÑŽ Ð¿Ñ€Ð¾ Ð"
+"´Ð°Ð½Ð¾Ð³Ð¾ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð° Ð¿ÐµÑ€ÐµÐ´ Ñ‚Ð¸Ð¼ Ñ�Ðº Ð´Ð¾Ð´Ð°Ñ‚Ð¸ Ð¹Ð¾Ð³Ð¾ Ð´Ð¾ "
+"Ñ†Ñ–Ñ”Ñ— Ñ�ÐµÑ�Ñ�Ñ–Ñ–.Ð’Ð¸ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ð·Ñ€Ð¾Ð±Ð¸Ñ‚Ð¸ Ñ†Ðµ Ð·Ð°Ñ€Ð°Ð·?"
 
 msgid "Participant Information"
-msgstr "Інформація про учасника"
+msgstr "Ð†Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ� Ð¿Ñ€Ð¾ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ°"
 
 msgid "Course Average Test Scores"
-msgstr "Середні результати тестування по курсу"
+msgstr ""
+"Ð¡ÐµÑ€ÐµÐ´Ð½Ñ– Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð¸ Ñ‚ÐµÑ�Ñ‚ÑƒÐ²Ð°Ð½Ð½Ñ� Ð¿Ð¾ ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "You need to choose a qualification for all recorded participants."
-msgstr "Вам потрібно вибрати кваліфікацію для всіх записаних учасників."
+msgstr ""
+"Ð’Ð°Ð¼ Ð¿Ð¾Ñ‚Ñ€Ñ–Ð±Ð½Ð¾ Ð²Ð¸Ð±Ñ€Ð°Ñ‚Ð¸ ÐºÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–ÑŽ Ð´Ð»Ñ� Ð²Ñ�Ñ–"
+"Ñ… Ð·Ð°Ð¿Ð¸Ñ�Ð°Ð½Ð¸Ñ… ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–Ð²."
 
 msgid "Participant Qualifications"
-msgstr "Кваліфікації учасника"
+msgstr "ÐšÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ— ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ°"
 
 msgid "Approval Status"
-msgstr "Затверджений статус"
+msgstr "Ð—Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÐµÐ½Ð¸Ð¹ Ñ�Ñ‚Ð°Ñ‚ÑƒÑ�"
 
 msgid "Location name"
-msgstr "Назва місцезнаходження "
+msgstr "Ð�Ð°Ð·Ð²Ð° Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� "
 
 msgid "Add new Training Partner"
-msgstr "Додати нового партнера тренінгу"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð¾Ð²Ð¾Ð³Ð¾ Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ð° Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Training Sub Partner"
-msgstr "Субпартнер тренінгу"
+msgstr "Ð¡ÑƒÐ±Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Funder Name"
-msgstr "Назва засновника"
+msgstr "Ð�Ð°Ð·Ð²Ð° Ð·Ð°Ñ�Ð½Ð¾Ð²Ð½Ð¸ÐºÐ°"
 
 msgid "Funder ID"
-msgstr "Ідентифікація засновника"
+msgstr "Ð†Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ� Ð·Ð°Ñ�Ð½Ð¾Ð²Ð½Ð¸ÐºÐ°"
 
 msgid "Delete Training Partner"
-msgstr "Видалити партнера тренінгу"
+msgstr "Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ð° Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Edit Training Partner"
-msgstr "Редагувати партнера тренінгу"
+msgstr "Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ð° Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Are you sure you wish to delete this partner?"
-msgstr "Ви впевнені, що хочете видалити цього партнера?"
+msgstr ""
+"Ð’Ð¸ Ð²Ð¿ÐµÐ²Ð½ÐµÐ½Ñ–, Ñ‰Ð¾ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ñ†ÑŒÐ¾Ð³Ð¾ Ð¿Ð°Ñ"
+"€Ñ‚Ð½ÐµÑ€Ð°?"
 
 msgid "Search for Training Partner"
-msgstr "Пошук партнера тренінгу"
+msgstr "ÐŸÐ¾ÑˆÑƒÐº Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ð° Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Training Partner Name"
-msgstr "Ім`я партнера тренінгу"
+msgstr "Ð†Ð¼`Ñ� Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ð° Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Funder"
-msgstr "Засновник"
+msgstr "Ð—Ð°Ñ�Ð½Ð¾Ð²Ð½Ð¸Ðº"
 
 msgid "View Training Partner"
-msgstr "Подивитися партнера тренінгу"
+msgstr "ÐŸÐ¾Ð´Ð¸Ð²Ð¸Ñ‚Ð¸Ñ�Ñ� Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ð° Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Training organizer"
-msgstr "Організатор тренінгу"
+msgstr "ÐžÑ€Ð³Ð°Ð½Ñ–Ð·Ð°Ñ‚Ð¾Ñ€ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Activate User"
-msgstr "Активувати користувача"
+msgstr "Ð�ÐºÑ‚Ð¸Ð²ÑƒÐ²Ð°Ñ‚Ð¸ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð°"
 
 msgid "Add User"
-msgstr "Додати користувача"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð°"
 
 msgid "User Set Up"
-msgstr "Настройки користувача"
+msgstr "Ð�Ð°Ñ�Ñ‚Ñ€Ð¾Ð¹ÐºÐ¸ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð°"
 
 msgid "Block User"
-msgstr "Блокувати користувача"
+msgstr "Ð‘Ð»Ð¾ÐºÑƒÐ²Ð°Ñ‚Ð¸ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð°"
 
 msgid "Edit Account"
-msgstr "Редагувати обліковий запис"
+msgstr "Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ð¾Ð±Ð»Ñ–ÐºÐ¾Ð²Ð¸Ð¹ Ð·Ð°Ð¿Ð¸Ñ�"
 
 msgid "E-mail"
-msgstr "Електрона пошта"
+msgstr "Ð•Ð»ÐµÐºÑ‚Ñ€Ð¾Ð½Ð° Ð¿Ð¾ÑˆÑ‚Ð°"
 
 msgid "New password"
-msgstr "Новий пароль"
+msgstr "Ð�Ð¾Ð²Ð¸Ð¹ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ"
 
 msgid "Confirm new password"
-msgstr "Підтвердити новий пароль"
+msgstr "ÐŸÑ–Ð´Ñ‚Ð²ÐµÑ€Ð´Ð¸Ñ‚Ð¸ Ð½Ð¾Ð²Ð¸Ð¹ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ"
 
 msgid "Access Level"
-msgstr "Рівень доступу"
+msgstr "Ð Ñ–Ð²ÐµÐ½ÑŒ Ð´Ð¾Ñ�Ñ‚ÑƒÐ¿Ñƒ"
 
 msgid "Add/Edit/Delete"
-msgstr "Додати/редагувати/видалити"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸/Ñ€ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸/Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸"
 
 msgid "View only"
-msgstr "Лише перегляд"
+msgstr "Ð›Ð¸ÑˆÐµ Ð¿ÐµÑ€ÐµÐ³Ð»Ñ�Ð´"
 
 msgid "View/create reports"
-msgstr "Переглянути/створити звіти"
+msgstr "ÐŸÐµÑ€ÐµÐ³Ð»Ñ�Ð½ÑƒÑ‚Ð¸/Ñ�Ñ‚Ð²Ð¾Ñ€Ð¸Ñ‚Ð¸ Ð·Ð²Ñ–Ñ‚Ð¸"
 
 msgid "Edit country options"
-msgstr "Змінити параметри країни"
+msgstr "Ð—Ð¼Ñ–Ð½Ð¸Ñ‚Ð¸ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ð¸ ÐºÑ€Ð°Ñ—Ð½Ð¸"
 
 msgid "Add Training Titles"
-msgstr "Додати назву тренінгу"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð°Ð·Ð²Ñƒ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Use Offline Application"
-msgstr "Використання програми поза інтернетом"
+msgstr ""
+"Ð’Ð¸ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚Ð°Ð½Ð½Ñ� Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¸ Ð¿Ð¾Ð·Ð° Ñ–Ð½Ñ‚ÐµÑ€Ð½ÐµÑ‚Ð¾Ð¼"
 
 msgid "Add/Edit users"
-msgstr "Додати/змінити користувачів"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸/Ð·Ð¼Ñ–Ð½Ð¸Ñ‚Ð¸ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ñ–Ð²"
 
 msgid "Approval"
-msgstr "Затвердження:"
+msgstr "Ð—Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÐµÐ½Ð½Ñ�:"
 
 msgid "Approve trainings"
-msgstr "Затвердити тренінги"
+msgstr "Ð—Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¸Ñ‚Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸"
 
 msgid "Files"
-msgstr "Файли"
+msgstr "Ð¤Ð°Ð¹Ð»Ð¸"
 
 msgid "Upload and delete"
-msgstr "Загрузити та видалити"
+msgstr "Ð—Ð°Ð³Ñ€ÑƒÐ·Ð¸Ñ‚Ð¸ Ñ‚Ð° Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸"
 
 msgid "Organizer access"
-msgstr "Доступ організатора"
+msgstr "Ð”Ð¾Ñ�Ñ‚ÑƒÐ¿ Ð¾Ñ€Ð³Ð°Ð½Ñ–Ð·Ð°Ñ‚Ð¾Ñ€Ð°"
 
 msgid "All Training Organizers"
-msgstr "Всі організатори навчання"
+msgstr "Ð’Ñ�Ñ– Ð¾Ñ€Ð³Ð°Ð½Ñ–Ð·Ð°Ñ‚Ð¾Ñ€Ð¸ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Block this User"
-msgstr "Блокувати користувача"
+msgstr "Ð‘Ð»Ð¾ÐºÑƒÐ²Ð°Ñ‚Ð¸ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð°"
 
 msgid "Are you sure you wish to block this user?"
-msgstr "Ви впевнені, що хочете блокувати цього користувача?"
+msgstr ""
+"Ð’Ð¸ Ð²Ð¿ÐµÐ²Ð½ÐµÐ½Ñ–, Ñ‰Ð¾ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ð±Ð»Ð¾ÐºÑƒÐ²Ð°Ñ‚Ð¸ Ñ†ÑŒÐ¾Ð³Ð¾ ÐºÐ¾Ñ"
+"€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð°?"
 
 msgid "Activate this User"
-msgstr "Активувати користувача"
+msgstr "Ð�ÐºÑ‚Ð¸Ð²ÑƒÐ²Ð°Ñ‚Ð¸ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð°"
 
 msgid "Are you sure you wish to activate this user?"
-msgstr "Ви впевекеы, що хочете активувати цього користувача?"
+msgstr ""
+"Ð’Ð¸ Ð²Ð¿ÐµÐ²ÐµÐºÐµÑ‹, Ñ‰Ð¾ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ð°ÐºÑ‚Ð¸Ð²ÑƒÐ²Ð°Ñ‚Ð¸ Ñ†ÑŒÐ¾Ð³Ð¾ "
+"ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð°?"
 
 msgid "Forgot Password"
-msgstr "Забули пароль"
+msgstr "Ð—Ð°Ð±ÑƒÐ»Ð¸ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ"
 
-msgid "Enter your email address, and a new temporary password will be sent to you."
-msgstr "Введіть свою адресу електронної пошти і вам відправлять новий тимчасовий пароль."
+msgid ""
+"Enter your email address, and a new temporary password will be sent to you."
+msgstr ""
+"Ð’Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ñ�Ð²Ð¾ÑŽ Ð°Ð´Ñ€ÐµÑ�Ñƒ ÐµÐ»ÐµÐºÑ‚Ñ€Ð¾Ð½Ð½Ð¾Ñ— Ð¿Ð¾ÑˆÑ‚Ð¸ Ñ– Ð²Ð"
+"°Ð¼ Ð²Ñ–Ð´Ð¿Ñ€Ð°Ð²Ð»Ñ�Ñ‚ÑŒ Ð½Ð¾Ð²Ð¸Ð¹ Ñ‚Ð¸Ð¼Ñ‡Ð°Ñ�Ð¾Ð²Ð¸Ð¹ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ."
 
 msgid "Send Password"
-msgstr "Надіслати пароль"
+msgstr "Ð�Ð°Ð´Ñ–Ñ�Ð»Ð°Ñ‚Ð¸ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ"
 
 msgid "Confirm New password"
-msgstr "Підтвердити новий пароль"
+msgstr "ÐŸÑ–Ð´Ñ‚Ð²ÐµÑ€Ð´Ð¸Ñ‚Ð¸ Ð½Ð¾Ð²Ð¸Ð¹ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ"
 
 msgid "User List"
-msgstr "Список користувачів"
+msgstr "Ð¡Ð¿Ð¸Ñ�Ð¾Ðº ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ñ–Ð²"
 
 msgid "Browse Users"
-msgstr "Переглянути користувачів"
+msgstr "ÐŸÐµÑ€ÐµÐ³Ð»Ñ�Ð½ÑƒÑ‚Ð¸ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ñ–Ð²"
 
 msgid "blocked"
-msgstr "заблокований"
+msgstr "Ð·Ð°Ð±Ð»Ð¾ÐºÐ¾Ð²Ð°Ð½Ð¸Ð¹"
 
 msgid "First"
-msgstr "Перший"
+msgstr "ÐŸÐµÑ€ÑˆÐ¸Ð¹"
 
 msgid "Last"
-msgstr "Останній"
+msgstr "ÐžÑ�Ñ‚Ð°Ð½Ð½Ñ–Ð¹"
 
 msgid "Username"
-msgstr "Ім`я користувача"
+msgstr "Ð†Ð¼`Ñ� ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð°"
 
 msgid "Status"
-msgstr "Статус"
+msgstr "Ð¡Ñ‚Ð°Ñ‚ÑƒÑ�"
 
 msgid "Admin"
-msgstr "Адмін"
+msgstr "Ð�Ð´Ð¼Ñ–Ð½"
 
 msgid "Pre-Service"
-msgstr "Система попереднього навчання"
+msgstr "Ð¡Ð¸Ñ�Ñ‚ÐµÐ¼Ð° Ð¿Ð¾Ð¿ÐµÑ€ÐµÐ´Ð½ÑŒÐ¾Ð³Ð¾ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Pre-service access"
-msgstr "Доступ до системи попереднього навчання"
+msgstr ""
+"Ð”Ð¾Ñ�Ñ‚ÑƒÐ¿ Ð´Ð¾ Ñ�Ð¸Ñ�Ñ‚ÐµÐ¼Ð¸ Ð¿Ð¾Ð¿ÐµÑ€ÐµÐ´Ð½ÑŒÐ¾Ð³Ð¾ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Send email with login information"
-msgstr "Надіслати електронного листа з інформацією про логін"
+msgstr ""
+"Ð�Ð°Ð´Ñ–Ñ�Ð»Ð°Ñ‚Ð¸ ÐµÐ»ÐµÐºÑ‚Ñ€Ð¾Ð½Ð½Ð¾Ð³Ð¾ Ð»Ð¸Ñ�Ñ‚Ð° Ð· Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–"
+"Ñ”ÑŽ Ð¿Ñ€Ð¾ Ð»Ð¾Ð³Ñ–Ð½"
 
 msgid "Finished"
-msgstr "Завершений"
+msgstr "Ð—Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð¸Ð¹"
 
 msgid "Monthly Email Reports"
-msgstr "Щомісячні звіти електронною поштою"
+msgstr "Ð©Ð¾Ð¼Ñ–Ñ�Ñ�Ñ‡Ð½Ñ– Ð·Ð²Ñ–Ñ‚Ð¸ ÐµÐ»ÐµÐºÑ‚Ñ€Ð¾Ð½Ð½Ð¾ÑŽ Ð¿Ð¾ÑˆÑ‚Ð¾ÑŽ"
 
 msgid "View/Edit"
-msgstr "Подивитися/Редагувати"
+msgstr "ÐŸÐ¾Ð´Ð¸Ð²Ð¸Ñ‚Ð¸Ñ�Ñ�/Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸"
 
 msgid "Add"
-msgstr "Додати "
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ "
 
 msgid "Add New"
-msgstr "Додати новий "
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð¾Ð²Ð¸Ð¹ "
 
 msgid "City is required."
-msgstr "Поле місто обов'язково"
+msgstr "ÐŸÐ¾Ð»Ðµ Ð¼Ñ–Ñ�Ñ‚Ð¾ Ð¾Ð±Ð¾Ð²'Ñ�Ð·ÐºÐ¾Ð²Ð¾"
 
 msgid "Trainer affiliation"
-msgstr "Приналежність тренера"
+msgstr "ÐŸÑ€Ð¸Ð½Ð°Ð»ÐµÐ¶Ð½Ñ–Ñ�Ñ‚ÑŒ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°"
 
-msgid "Your new password has been sent. Please check your email for further instructions."
-msgstr "Ваш новий пароль було надіслано. Будь ласка, перевірте свою електронну пошту для отримання подальших інструкцій."
+msgid ""
+"Your new password has been sent. Please check your email for further "
+"instructions."
+msgstr ""
+"Ð’Ð°Ñˆ Ð½Ð¾Ð²Ð¸Ð¹ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ Ð±ÑƒÐ»Ð¾ Ð½Ð°Ð´Ñ–Ñ�Ð»Ð°Ð½Ð¾. Ð‘ÑƒÐ´ÑŒ Ð»Ð"
+"°Ñ�ÐºÐ°, Ð¿ÐµÑ€ÐµÐ²Ñ–Ñ€Ñ‚Ðµ Ñ�Ð²Ð¾ÑŽ ÐµÐ»ÐµÐºÑ‚Ñ€Ð¾Ð½Ð½Ñƒ Ð¿Ð¾ÑˆÑ‚Ñƒ Ð´Ð»Ñ� "
+"Ð¾Ñ‚Ñ€Ð¸Ð¼Ð°Ð½Ð½Ñ� Ð¿Ð¾Ð´Ð°Ð»ÑŒÑˆÐ¸Ñ… Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ†Ñ–Ð¹."
 
 msgid "Participant"
-msgstr "Учасник"
+msgstr "Ð£Ñ‡Ð°Ñ�Ð½Ð¸Ðº"
 
 msgid "Facilitator"
-msgstr "Посередник"
+msgstr "ÐŸÐ¾Ñ�ÐµÑ€ÐµÐ´Ð½Ð¸Ðº"
 
 msgid "Roster"
-msgstr "Реєстр"
+msgstr "Ð ÐµÑ”Ñ�Ñ‚Ñ€"
 
 msgid "Get Required .NET"
-msgstr "Отримати необхідний .NET"
+msgstr "ÐžÑ‚Ñ€Ð¸Ð¼Ð°Ñ‚Ð¸ Ð½ÐµÐ¾Ð±Ñ…Ñ–Ð´Ð½Ð¸Ð¹ .NET"
 
 msgid "Administration"
-msgstr "Адміністрування"
+msgstr "Ð�Ð´Ð¼Ñ–Ð½Ñ–Ñ�Ñ‚Ñ€ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Appearance"
-msgstr "Зовнішній вигляд"
+msgstr "Ð—Ð¾Ð²Ð½Ñ–ÑˆÐ½Ñ–Ð¹ Ð²Ð¸Ð³Ð»Ñ�Ð´"
 
 msgid "Application name"
-msgstr "Ім'я програми"
+msgstr "Ð†Ð¼'Ñ� Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¸"
 
 msgid "Logo"
-msgstr "Логотип"
+msgstr "Ð›Ð¾Ð³Ð¾Ñ‚Ð¸Ð¿"
 
 msgid "Approximate image dimensions"
-msgstr "Приблизні розміри логотипу"
+msgstr "ÐŸÑ€Ð¸Ð±Ð»Ð¸Ð·Ð½Ñ– Ñ€Ð¾Ð·Ð¼Ñ–Ñ€Ð¸ Ð»Ð¾Ð³Ð¾Ñ‚Ð¸Ð¿Ñƒ"
 
 msgid "Refresh this page, or go to the home page to see changes applied."
-msgstr "Оновити цю сторінку, або перейдіть на головну сторінку щоб побачити зміни."
+msgstr ""
+"ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ñ†ÑŽ Ñ�Ñ‚Ð¾Ñ€Ñ–Ð½ÐºÑƒ, Ð°Ð±Ð¾ Ð¿ÐµÑ€ÐµÐ¹Ð´Ñ–Ñ‚ÑŒ Ð½Ð° "
+"Ð³Ð¾Ð»Ð¾Ð²Ð½Ñƒ Ñ�Ñ‚Ð¾Ñ€Ñ–Ð½ÐºÑƒ Ñ‰Ð¾Ð± Ð¿Ð¾Ð±Ð°Ñ‡Ð¸Ñ‚Ð¸ Ð·Ð¼Ñ–Ð½Ð¸."
 
 msgid "Settings"
-msgstr "Налаштування"
+msgstr "Ð�Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Field"
-msgstr "Поле "
+msgstr "ÐŸÐ¾Ð»Ðµ "
 
 msgid "Actions"
-msgstr "Дії"
+msgstr "Ð”Ñ–Ñ—"
 
 msgid "Action"
-msgstr "Дія"
+msgstr "Ð”Ñ–Ñ�"
 
 msgid "Options"
-msgstr "Опції"
+msgstr "ÐžÐ¿Ñ†Ñ–Ñ—"
 
 msgid "Option"
-msgstr "Опція"
+msgstr "ÐžÐ¿Ñ†Ñ–Ñ�"
 
 msgid "Country"
-msgstr "Країна"
+msgstr "ÐšÑ€Ð°Ñ—Ð½Ð°"
 
 msgid "Region"
-msgstr "Область"
+msgstr "ÐžÐ±Ð»Ð°Ñ�Ñ‚ÑŒ"
 
 msgid "Add region"
-msgstr "Додати регіон"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ñ€ÐµÐ³Ñ–Ð¾Ð½"
 
 msgid "Delete region"
-msgstr "Видалити регіон"
+msgstr "Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ñ€ÐµÐ³Ñ–Ð¾Ð½"
 
 msgid "Add/Edit"
-msgstr "Додати/редагувати"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸/Ñ€ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸"
 
 msgid "Employee"
-msgstr "Співробітник"
+msgstr "Ð¡Ð¿Ñ–Ð²Ñ€Ð¾Ð±Ñ–Ñ‚Ð½Ð¸Ðº"
 
 msgid "Employees"
-msgstr "Співробітники"
+msgstr "Ð¡Ð¿Ñ–Ð²Ñ€Ð¾Ð±Ñ–Ñ‚Ð½Ð¸ÐºÐ¸"
 
 msgid "Employer"
-msgstr "Роботодавець"
+msgstr "Ð Ð¾Ð±Ð¾Ñ‚Ð¾Ð´Ð°Ð²ÐµÑ†ÑŒ"
 
 msgid "since"
-msgstr "з"
+msgstr "Ð·"
 
 msgid "Incomplete trainings that already occurred"
-msgstr "Незаповнені тренінги, які вже відбулися"
+msgstr ""
+"Ð�ÐµÐ·Ð°Ð¿Ð¾Ð²Ð½ÐµÐ½Ñ– Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸, Ñ�ÐºÑ– Ð²Ð¶Ðµ Ð²Ñ–Ð´Ð±ÑƒÐ»Ð¸Ñ�Ñ�"
 
 msgid "City/Town"
-msgstr "Місто"
+msgstr "ÐœÑ–Ñ�Ñ‚Ð¾"
 
 msgid "Fiscal Year Start"
-msgstr "Початок фінансового року"
+msgstr "ÐŸÐ¾Ñ‡Ð°Ñ‚Ð¾Ðº Ñ„Ñ–Ð½Ð°Ð½Ñ�Ð¾Ð²Ð¾Ð³Ð¾ Ñ€Ð¾ÐºÑƒ"
 
 msgid "Modules"
-msgstr "Модулі"
+msgstr "ÐœÐ¾Ð´ÑƒÐ»Ñ–"
 
 msgid "Enable"
-msgstr "Включити"
+msgstr "Ð’ÐºÐ»ÑŽÑ‡Ð¸Ñ‚Ð¸"
 
 msgid "Tracking"
-msgstr "Облік"
+msgstr "ÐžÐ±Ð»Ñ–Ðº"
 
 msgid "SkillSmart"
-msgstr "Навички"
+msgstr "Ð�Ð°Ð²Ð¸Ñ‡ÐºÐ¸"
 
 msgid "Training Organizer Partners"
-msgstr "Партнери тренінгу"
+msgstr "ÐŸÐ°Ñ€Ñ‚Ð½ÐµÑ€Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Attendance Tracking"
-msgstr "Облік відвідуваності"
+msgstr "ÐžÐ±Ð»Ñ–Ðº Ð²Ñ–Ð´Ð²Ñ–Ð´ÑƒÐ²Ð°Ð½Ð¾Ñ�Ñ‚Ñ–"
 
 msgid "Unknown Participants"
-msgstr "Невідомі учасники"
+msgstr "Ð�ÐµÐ²Ñ–Ð´Ð¾Ð¼Ñ– ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸"
 
 msgid "Approvals"
-msgstr "Затвердження"
+msgstr "Ð—Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "Default"
-msgstr "За замовчуванням"
+msgstr "Ð—Ð° Ð·Ð°Ð¼Ð¾Ð²Ñ‡ÑƒÐ²Ð°Ð½Ð½Ñ�Ð¼"
 
 msgid "German"
-msgstr "Німецька"
+msgstr "Ð�Ñ–Ð¼ÐµÑ†ÑŒÐºÐ°"
 
 msgid "Ukrainian"
-msgstr "Українська"
+msgstr "Ð£ÐºÑ€Ð°Ñ—Ð½Ñ�ÑŒÐºÐ°"
 
 msgid "Spanish"
-msgstr "Іспанська"
+msgstr "Ð†Ñ�Ð¿Ð°Ð½Ñ�ÑŒÐºÐ°"
 
 msgid "Portuguese"
-msgstr "Португальська"
+msgstr "ÐŸÐ¾Ñ€Ñ‚ÑƒÐ³Ð°Ð»ÑŒÑ�ÑŒÐºÐ°"
 
 msgid "Save"
-msgstr "Зберегти "
+msgstr "Ð—Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ "
 
 msgid "Dutch"
-msgstr "Голландська"
+msgstr "Ð“Ð¾Ð»Ð»Ð°Ð½Ð´Ñ�ÑŒÐºÐ°"
 
 msgid "Save & Continue"
-msgstr "Зберегти та продовжити"
+msgstr "Ð—Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ñ‚Ð° Ð¿Ñ€Ð¾Ð´Ð¾Ð²Ð¶Ð¸Ñ‚Ð¸"
 
 msgid "Refresher Course"
-msgstr "Курс підвищення кваліфікації"
+msgstr "ÐšÑƒÑ€Ñ� Ð¿Ñ–Ð´Ð²Ð¸Ñ‰ÐµÐ½Ð½Ñ� ÐºÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ—"
 
 msgid "Approvers"
-msgstr "Особи, які затверджують"
+msgstr "ÐžÑ�Ð¾Ð±Ð¸, Ñ�ÐºÑ– Ð·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÑƒÑŽÑ‚ÑŒ"
 
 msgid "Approver"
-msgstr "Особа, яка затверджує"
+msgstr "ÐžÑ�Ð¾Ð±Ð°, Ñ�ÐºÐ° Ð·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÑƒÑ”"
 
 msgid "Master Approver"
-msgstr "Головна особа, яка затверджує"
+msgstr "Ð“Ð¾Ð»Ð¾Ð²Ð½Ð° Ð¾Ñ�Ð¾Ð±Ð°, Ñ�ÐºÐ° Ð·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÑƒÑ”"
 
 msgid "Make Low Level Approver"
-msgstr "Знизити рівень особи, яка затверджує"
+msgstr "Ð—Ð½Ð¸Ð·Ð¸Ñ‚Ð¸ Ñ€Ñ–Ð²ÐµÐ½ÑŒ Ð¾Ñ�Ð¾Ð±Ð¸, Ñ�ÐºÐ° Ð·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÑƒÑ”"
 
 msgid "Make Master"
-msgstr "Призначити головним"
+msgstr "ÐŸÑ€Ð¸Ð·Ð½Ð°Ñ‡Ð¸Ñ‚Ð¸ Ð³Ð¾Ð»Ð¾Ð²Ð½Ð¸Ð¼"
 
 msgid "People Merge"
-msgstr "Об'єднання записів людей"
+msgstr "ÐžÐ±'Ñ”Ð´Ð½Ð°Ð½Ð½Ñ� Ð·Ð°Ð¿Ð¸Ñ�Ñ–Ð² Ð»ÑŽÐ´ÐµÐ¹"
 
 msgid "Facilities Merge"
-msgstr "Об'єднання записів установ"
+msgstr "ÐžÐ±'Ñ”Ð´Ð½Ð°Ð½Ð½Ñ� Ð·Ð°Ð¿Ð¸Ñ�Ñ–Ð² ÑƒÑ�Ñ‚Ð°Ð½Ð¾Ð²"
 
 msgid "Person Merge"
-msgstr "Об'єднання записів людей"
+msgstr "ÐžÐ±'Ñ”Ð´Ð½Ð°Ð½Ð½Ñ� Ð·Ð°Ð¿Ð¸Ñ�Ñ–Ð² Ð»ÑŽÐ´ÐµÐ¹"
 
 msgid "Edit Users"
-msgstr "Редагувати користувачів"
+msgstr "Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ñ–Ð²"
 
 msgid "Individual Report"
-msgstr "Індивідуальний звіт"
+msgstr "Ð†Ð½Ð´Ð¸Ð²Ñ–Ð´ÑƒÐ°Ð»ÑŒÐ½Ð¸Ð¹ Ð·Ð²Ñ–Ñ‚"
 
 msgid "Individual Reports"
-msgstr "Індивідуальні звіти"
+msgstr "Ð†Ð½Ð´Ð¸Ð²Ñ–Ð´ÑƒÐ°Ð»ÑŒÐ½Ñ– Ð·Ð²Ñ–Ñ‚Ð¸"
 
 msgid "Professional Reports"
-msgstr "Професійні звіти"
+msgstr "ÐŸÑ€Ð¾Ñ„ÐµÑ�Ñ–Ð¹Ð½Ñ– Ð·Ð²Ñ–Ñ‚Ð¸"
 
 msgid "Competence Overview Report"
-msgstr "Оглядовий звіт компетентності"
+msgstr "ÐžÐ³Ð»Ñ�Ð´Ð¾Ð²Ð¸Ð¹ Ð·Ð²Ñ–Ñ‚ ÐºÐ¾Ð¼Ð¿ÐµÑ‚ÐµÐ½Ñ‚Ð½Ð¾Ñ�Ñ‚Ñ–"
 
 msgid "Competence Compare Reports"
-msgstr "Порівняльні звіти компетентності"
+msgstr "ÐŸÐ¾Ñ€Ñ–Ð²Ð½Ñ�Ð»ÑŒÐ½Ñ– Ð·Ð²Ñ–Ñ‚Ð¸ ÐºÐ¾Ð¼Ð¿ÐµÑ‚ÐµÐ½Ñ‚Ð½Ð¾Ñ�Ñ‚Ñ–"
 
 msgid "Question Compare Reports"
-msgstr "Питання порівняльних звітів"
+msgstr "ÐŸÐ¸Ñ‚Ð°Ð½Ð½Ñ� Ð¿Ð¾Ñ€Ñ–Ð²Ð½Ñ�Ð»ÑŒÐ½Ð¸Ñ… Ð·Ð²Ñ–Ñ‚Ñ–Ð²"
 
 msgid "Budget Code Reports"
-msgstr "Звіти по бюджетах"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ð±ÑŽÐ´Ð¶ÐµÑ‚Ð°Ñ…"
 
 msgid "Budget Code Report"
-msgstr "Звіт бюджету"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ð±ÑŽÐ´Ð¶ÐµÑ‚Ñƒ"
 
 msgid "Student Reports"
-msgstr "Звіти про учнів"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ñ€Ð¾ ÑƒÑ‡Ð½Ñ–Ð²"
 
 msgid "Course Reports"
-msgstr "Звіти по курсах"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ ÐºÑƒÑ€Ñ�Ð°Ñ…"
 
 msgid "Select course report"
-msgstr "Вибрати звіт по курсу"
+msgstr "Ð’Ð¸Ð±Ñ€Ð°Ñ‚Ð¸ Ð·Ð²Ñ–Ñ‚ Ð¿Ð¾ ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "Cohort Reports"
-msgstr "Звіти по групах"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ð³Ñ€ÑƒÐ¿Ð°Ñ…"
 
 msgid "Institution Reports"
-msgstr "Звіти по інститутах"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ð°Ñ…"
 
 msgid "Tutor Reports"
-msgstr "Звіти по інструкторах"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ð°Ñ…"
 
 msgid "Partners"
-msgstr "Партнери"
+msgstr "ÐŸÐ°Ñ€Ñ‚Ð½ÐµÑ€Ð¸"
 
 msgid "Partner"
-msgstr "Партнер"
+msgstr "ÐŸÐ°Ñ€Ñ‚Ð½ÐµÑ€"
 
 msgid "Add Partner"
-msgstr "Додати партнера"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ð°"
 
 msgid "View/Edit Partner"
-msgstr "Подивитися/Редагувати партнера"
+msgstr "ÐŸÐ¾Ð´Ð¸Ð²Ð¸Ñ‚Ð¸Ñ�Ñ�/Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ð°"
 
 msgid "Add Employee"
-msgstr "Додати співробітника"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ñ�Ð¿Ñ–Ð²Ñ€Ð¾Ð±Ñ–Ñ‚Ð½Ð¸ÐºÐ°"
 
 msgid "View/Edit Employee"
-msgstr "Подивитися/Редагувати співробітника"
+msgstr "ÐŸÐ¾Ð´Ð¸Ð²Ð¸Ñ‚Ð¸Ñ�Ñ�/Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ñ�Ð¿Ñ–Ð²Ñ€Ð¾Ð±Ñ–Ñ‚Ð½Ð¸ÐºÐ°"
 
 msgid "PS Field labels"
-msgstr "Поля для системи попереднього навчання (СПН)"
+msgstr ""
+"ÐŸÐ¾Ð»Ñ� Ð´Ð»Ñ� Ñ�Ð¸Ñ�Ñ‚ÐµÐ¼Ð¸ Ð¿Ð¾Ð¿ÐµÑ€ÐµÐ´Ð½ÑŒÐ¾Ð³Ð¾ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ� "
+"(Ð¡ÐŸÐ�)"
 
 msgid "Field labels"
-msgstr "Поля для системи попереднього навчання (СПН)"
+msgstr ""
+"ÐŸÐ¾Ð»Ñ� Ð´Ð»Ñ� Ñ�Ð¸Ñ�Ñ‚ÐµÐ¼Ð¸ Ð¿Ð¾Ð¿ÐµÑ€ÐµÐ´Ð½ÑŒÐ¾Ð³Ð¾ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ� "
+"(Ð¡ÐŸÐ�)"
 
 msgid "PS Religions"
-msgstr "Релігії (СПН)"
+msgstr "Ð ÐµÐ»Ñ–Ð³Ñ–Ñ— (Ð¡ÐŸÐ�)"
 
 msgid "Enter locations for this country or import a CSV file."
-msgstr "Введіть місце розташування для цієї країни або імпортуйте файл CSV."
+msgstr ""
+"Ð’Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ð¼Ñ–Ñ�Ñ†Ðµ Ñ€Ð¾Ð·Ñ‚Ð°ÑˆÑƒÐ²Ð°Ð½Ð½Ñ� Ð´Ð»Ñ� Ñ†Ñ–Ñ”Ñ— ÐºÑ€Ð°Ñ—"
+"Ð½Ð¸ Ð°Ð±Ð¾ Ñ–Ð¼Ð¿Ð¾Ñ€Ñ‚ÑƒÐ¹Ñ‚Ðµ Ñ„Ð°Ð¹Ð» CSV."
 
 msgid "Import"
-msgstr "Імпорт"
+msgstr "Ð†Ð¼Ð¿Ð¾Ñ€Ñ‚"
 
 msgid "Select the Region below to add values"
-msgstr "Оберіть регіон нижче для додавання значень"
+msgstr ""
+"ÐžÐ±ÐµÑ€Ñ–Ñ‚ÑŒ Ñ€ÐµÐ³Ñ–Ð¾Ð½ Ð½Ð¸Ð¶Ñ‡Ðµ Ð´Ð»Ñ� Ð´Ð¾Ð´Ð°Ð²Ð°Ð½Ð½Ñ� Ð·Ð½Ð"
+"°Ñ‡ÐµÐ½ÑŒ"
 
 msgid "Please select a location"
-msgstr "Будь ласка, виберіть місцезнаходження"
+msgstr "Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð²Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "Filter by"
-msgstr "Фільтр за:"
+msgstr "Ð¤Ñ–Ð»ÑŒÑ‚Ñ€ Ð·Ð°:"
 
 msgid "options"
-msgstr "опції"
+msgstr "Ð¾Ð¿Ñ†Ñ–Ñ—"
 
 msgid "State"
-msgstr "Область/Край"
+msgstr "ÐžÐ±Ð»Ð°Ñ�Ñ‚ÑŒ/ÐšÑ€Ð°Ð¹"
 
 msgid "Geopolitical Zone"
-msgstr "Геополітична зона"
+msgstr "Ð“ÐµÐ¾Ð¿Ð¾Ð»Ñ–Ñ‚Ð¸Ñ‡Ð½Ð° Ð·Ð¾Ð½Ð°"
 
 msgid "Local Government Area"
-msgstr "Місцеве самоврядування"
+msgstr "ÐœÑ–Ñ�Ñ†ÐµÐ²Ðµ Ñ�Ð°Ð¼Ð¾Ð²Ñ€Ñ�Ð´ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Duplicate entry"
-msgstr "Запис, що повторюється"
+msgstr "Ð—Ð°Ð¿Ð¸Ñ�, Ñ‰Ð¾ Ð¿Ð¾Ð²Ñ‚Ð¾Ñ€ÑŽÑ”Ñ‚ÑŒÑ�Ñ�"
 
 msgid "Merge into one"
-msgstr "Об'єднати в один"
+msgstr "ÐžÐ±'Ñ”Ð´Ð½Ð°Ñ‚Ð¸ Ð² Ð¾Ð´Ð¸Ð½"
 
 msgid "Merge Selected"
-msgstr "Об'єднання обраних"
+msgstr "ÐžÐ±'Ñ”Ð´Ð½Ð°Ð½Ð½Ñ� Ð¾Ð±Ñ€Ð°Ð½Ð¸Ñ…"
 
 msgid "Unable to merge phrases."
-msgstr "Не вдається об'єднати фрази."
+msgstr "Ð�Ðµ Ð²Ð´Ð°Ñ”Ñ‚ÑŒÑ�Ñ� Ð¾Ð±'Ñ”Ð´Ð½Ð°Ñ‚Ð¸ Ñ„Ñ€Ð°Ð·Ð¸."
 
-msgid "The phrases below will be merged into one.  Please select the primary phrase you wish to use:"
-msgstr "Нижче фрази будуть об'єднані в одну. Будь ласка, виберіть основну фразу, яку ви хочете використовувати:"
+msgid ""
+"The phrases below will be merged into one.  Please select the primary phrase "
+"you wish to use:"
+msgstr ""
+"Ð�Ð¸Ð¶Ñ‡Ðµ Ñ„Ñ€Ð°Ð·Ð¸ Ð±ÑƒÐ´ÑƒÑ‚ÑŒ Ð¾Ð±'Ñ”Ð´Ð½Ð°Ð½Ñ– Ð² Ð¾Ð´Ð½Ñƒ. Ð‘ÑƒÐ´ÑŒ "
+"Ð»Ð°Ñ�ÐºÐ°, Ð²Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ð¾Ñ�Ð½Ð¾Ð²Ð½Ñƒ Ñ„Ñ€Ð°Ð·Ñƒ, Ñ�ÐºÑƒ Ð²Ð¸ Ñ…"
+"Ð¾Ñ‡ÐµÑ‚Ðµ Ð²Ð¸ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚Ð¾Ð²ÑƒÐ²Ð°Ñ‚Ð¸:"
 
 msgid "Edit"
-msgstr "Редагувати"
+msgstr "Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸"
 
 msgid "edit"
-msgstr "редагувати"
+msgstr "Ñ€ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸"
 
 msgid "Evaluations Reports"
-msgstr "Звіти по процесах визначення якості"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ð¿Ñ€Ð¾Ñ†ÐµÑ�Ð°Ñ… Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–"
 
 msgid "Select the region level you want to move"
-msgstr "Виберіть рівень регіону, який потрібно перемістити"
+msgstr ""
+"Ð’Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ñ€Ñ–Ð²ÐµÐ½ÑŒ Ñ€ÐµÐ³Ñ–Ð¾Ð½Ñƒ, Ñ�ÐºÐ¸Ð¹ Ð¿Ð¾Ñ‚Ñ€Ñ–Ð±Ð½Ð¾ Ð¿ÐµÑ"
+"€ÐµÐ¼Ñ–Ñ�Ñ‚Ð¸Ñ‚Ð¸"
 
 msgid "Select the region to move to"
-msgstr "Оберіть регіон, щоб перемістити в"
+msgstr "ÐžÐ±ÐµÑ€Ñ–Ñ‚ÑŒ Ñ€ÐµÐ³Ñ–Ð¾Ð½, Ñ‰Ð¾Ð± Ð¿ÐµÑ€ÐµÐ¼Ñ–Ñ�Ñ‚Ð¸Ñ‚Ð¸ Ð²"
 
 msgid "Local Region"
-msgstr "Локальний регіон"
+msgstr "Ð›Ð¾ÐºÐ°Ð»ÑŒÐ½Ð¸Ð¹ Ñ€ÐµÐ³Ñ–Ð¾Ð½"
 
 msgid "Turn on Level 1 of Reports"
-msgstr "Включити перший рівень звітів"
+msgstr "Ð’ÐºÐ»ÑŽÑ‡Ð¸Ñ‚Ð¸ Ð¿ÐµÑ€ÑˆÐ¸Ð¹ Ñ€Ñ–Ð²ÐµÐ½ÑŒ Ð·Ð²Ñ–Ñ‚Ñ–Ð²"
 
 msgid "Turn on Level 2 of Reports"
-msgstr "Включити другий рівень звітів"
+msgstr "Ð’ÐºÐ»ÑŽÑ‡Ð¸Ñ‚Ð¸ Ð´Ñ€ÑƒÐ³Ð¸Ð¹ Ñ€Ñ–Ð²ÐµÐ½ÑŒ Ð·Ð²Ñ–Ñ‚Ñ–Ð²"
 
 msgid "Turn on Level 3 of Reports"
-msgstr "Включити третій рівень звітів"
+msgstr "Ð’ÐºÐ»ÑŽÑ‡Ð¸Ñ‚Ð¸ Ñ‚Ñ€ÐµÑ‚Ñ–Ð¹ Ñ€Ñ–Ð²ÐµÐ½ÑŒ Ð·Ð²Ñ–Ñ‚Ñ–Ð²"
 
 msgid "Federal Level Users"
-msgstr "Федеральний рівень користувачів"
+msgstr "Ð¤ÐµÐ´ÐµÑ€Ð°Ð»ÑŒÐ½Ð¸Ð¹ Ñ€Ñ–Ð²ÐµÐ½ÑŒ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ñ–Ð²"
 
 msgid "State Level Users"
-msgstr "Обласний/Крайовий рівень користувачів"
+msgstr ""
+"ÐžÐ±Ð»Ð°Ñ�Ð½Ð¸Ð¹/ÐšÑ€Ð°Ð¹Ð¾Ð²Ð¸Ð¹ Ñ€Ñ–Ð²ÐµÐ½ÑŒ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ñ–Ð²"
 
 msgid "LGA Level Users"
-msgstr "Районний рівень користувачів"
+msgstr "Ð Ð°Ð¹Ð¾Ð½Ð½Ð¸Ð¹ Ñ€Ñ–Ð²ÐµÐ½ÑŒ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ñ–Ð²"
 
 msgid "Enter Emails of Federal Level Recipients, separated by a comma"
-msgstr "Введіть адреси електронної пошти федерального рівня одержувачів, розділені комами"
+msgstr ""
+"Ð’Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ð°Ð´Ñ€ÐµÑ�Ð¸ ÐµÐ»ÐµÐºÑ‚Ñ€Ð¾Ð½Ð½Ð¾Ñ— Ð¿Ð¾ÑˆÑ‚Ð¸ Ñ„ÐµÐ´ÐµÑ€Ð"
+"°Ð»ÑŒÐ½Ð¾Ð³Ð¾ Ñ€Ñ–Ð²Ð½Ñ� Ð¾Ð´ÐµÑ€Ð¶ÑƒÐ²Ð°Ñ‡Ñ–Ð², Ñ€Ð¾Ð·Ð´Ñ–Ð»ÐµÐ½Ñ– ÐºÐ¾Ð¼Ð"
+"°Ð¼Ð¸"
 
 msgid "Enter Emails of State Level Recipients, separated by a comma"
-msgstr "Введіть адреси електронної пошти обласного/крайового рівня одержувачів, розділені комами"
+msgstr ""
+"Ð’Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ð°Ð´Ñ€ÐµÑ�Ð¸ ÐµÐ»ÐµÐºÑ‚Ñ€Ð¾Ð½Ð½Ð¾Ñ— Ð¿Ð¾ÑˆÑ‚Ð¸ Ð¾Ð±Ð»Ð"
+"°Ñ�Ð½Ð¾Ð³Ð¾/ÐºÑ€Ð°Ð¹Ð¾Ð²Ð¾Ð³Ð¾ Ñ€Ñ–Ð²Ð½Ñ� Ð¾Ð´ÐµÑ€Ð¶ÑƒÐ²Ð°Ñ‡Ñ–Ð², Ñ€Ð¾Ð·Ð´Ñ–"
+"Ð»ÐµÐ½Ñ– ÐºÐ¾Ð¼Ð°Ð¼Ð¸"
 
 msgid "Enter Emails of LGA Level Recipients, separated by a comma"
-msgstr "Введіть адреси електронної пошти районного рівня одержувачів, розділені комами"
+msgstr ""
+"Ð’Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ð°Ð´Ñ€ÐµÑ�Ð¸ ÐµÐ»ÐµÐºÑ‚Ñ€Ð¾Ð½Ð½Ð¾Ñ— Ð¿Ð¾ÑˆÑ‚Ð¸ Ñ€Ð"
+"°Ð¹Ð¾Ð½Ð½Ð¾Ð³Ð¾ Ñ€Ñ–Ð²Ð½Ñ� Ð¾Ð´ÐµÑ€Ð¶ÑƒÐ²Ð°Ñ‡Ñ–Ð², Ñ€Ð¾Ð·Ð´Ñ–Ð»ÐµÐ½Ñ– ÐºÐ¾Ð¼Ð"
+"°Ð¼Ð¸"
 
 msgid "View/Edit Cohort"
-msgstr "Перегляд / редагування групи"
+msgstr "ÐŸÐµÑ€ÐµÐ³Ð»Ñ�Ð´ / Ñ€ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ð½Ð½Ñ� Ð³Ñ€ÑƒÐ¿Ð¸"
 
 msgid "Add Cohort"
-msgstr "Додати групу"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð³Ñ€ÑƒÐ¿Ñƒ"
 
 msgid "In-service"
-msgstr "Система навчання без відриву від виробництва"
+msgstr ""
+"Ð¡Ð¸Ñ�Ñ‚ÐµÐ¼Ð° Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ� Ð±ÐµÐ· Ð²Ñ–Ð´Ñ€Ð¸Ð²Ñƒ Ð²Ñ–Ð´ Ð²Ð¸Ñ€Ð¾Ð"
+"±Ð½Ð¸Ñ†Ñ‚Ð²Ð°"
 
 msgid "Please select the TrainSmart module to enter"
-msgstr "Будь ласка, виберіть TrainSmart модуль для входу"
+msgstr ""
+"Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð²Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ TrainSmart Ð¼Ð¾Ð´ÑƒÐ»ÑŒ Ð´Ð»Ñ� Ð²Ñ…Ð¾Ð"
+"´Ñƒ"
 
 msgid "In-Service Training Tracking System"
-msgstr "Моніторинг системи навчання без відриву від виробництва"
+msgstr ""
+"ÐœÐ¾Ð½Ñ–Ñ‚Ð¾Ñ€Ð¸Ð½Ð³ Ñ�Ð¸Ñ�Ñ‚ÐµÐ¼Ð¸ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ� Ð±ÐµÐ· Ð²Ñ–Ð´Ñ€Ð¸Ð²Ñƒ "
+"Ð²Ñ–Ð´ Ð²Ð¸Ñ€Ð¾Ð±Ð½Ð¸Ñ†Ñ‚Ð²Ð°"
 
 msgid "In-Service"
-msgstr "Система навчання без відриву від виробництва"
+msgstr ""
+"Ð¡Ð¸Ñ�Ñ‚ÐµÐ¼Ð° Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ� Ð±ÐµÐ· Ð²Ñ–Ð´Ñ€Ð¸Ð²Ñƒ Ð²Ñ–Ð´ Ð²Ð¸Ñ€Ð¾Ð"
+"±Ð½Ð¸Ñ†Ñ‚Ð²Ð°"
 
 msgid "In-service access"
-msgstr "Доступ до системи навчання без відриву від виробництва"
+msgstr ""
+"Ð”Ð¾Ñ�Ñ‚ÑƒÐ¿ Ð´Ð¾ Ñ�Ð¸Ñ�Ñ‚ÐµÐ¼Ð¸ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ� Ð±ÐµÐ· Ð²Ñ–Ð´Ñ€Ð¸Ð²Ñƒ Ð²Ñ–Ð"
+"´ Ð²Ð¸Ñ€Ð¾Ð±Ð½Ð¸Ñ†Ñ‚Ð²Ð°"
 
 msgid "Pre-Service Training Tracking System"
-msgstr "Моніторинг системи попереднього навчання (СПН)"
+msgstr ""
+"ÐœÐ¾Ð½Ñ–Ñ‚Ð¾Ñ€Ð¸Ð½Ð³ Ñ�Ð¸Ñ�Ñ‚ÐµÐ¼Ð¸ Ð¿Ð¾Ð¿ÐµÑ€ÐµÐ´Ð½ÑŒÐ¾Ð³Ð¾ Ð½Ð°Ð²Ñ‡Ð"
+"°Ð½Ð½Ñ� (Ð¡ÐŸÐ�)"
 
 msgid "Training Centre Reports"
-msgstr "Звіти по центрах навчання"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ñ†ÐµÐ½Ñ‚Ñ€Ð°Ñ… Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Training Center Reports"
-msgstr "Звіти по центрах навчання"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ñ†ÐµÐ½Ñ‚Ñ€Ð°Ñ… Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
-msgid "Центр обучения Reports"
-msgstr "Звіти по центрах навчання"
+msgid "Ð¦ÐµÐ½Ñ‚Ñ€ Ð¾Ð±ÑƒÑ‡ÐµÐ½Ð¸Ñ� Reports"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ñ†ÐµÐ½Ñ‚Ñ€Ð°Ñ… Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Select criteria"
-msgstr "Обрати критерії"
+msgstr "ÐžÐ±Ñ€Ð°Ñ‚Ð¸ ÐºÑ€Ð¸Ñ‚ÐµÑ€Ñ–Ñ—"
 
 msgid "Institution Name"
-msgstr "Назва інституту"
+msgstr "Ð�Ð°Ð·Ð²Ð° Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñƒ"
 
 msgid "Institution Sponsor"
-msgstr "Спонсор інституту"
+msgstr "Ð¡Ð¿Ð¾Ð½Ñ�Ð¾Ñ€ Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñƒ"
 
 msgid "Institution Type"
-msgstr "Тип інституту"
+msgstr "Ð¢Ð¸Ð¿ Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñƒ"
 
 msgid "Select"
-msgstr "Обрати "
+msgstr "ÐžÐ±Ñ€Ð°Ñ‚Ð¸ "
 
 msgid "Select..."
-msgstr "Обрати..."
+msgstr "ÐžÐ±Ñ€Ð°Ñ‚Ð¸..."
 
 msgid "Any"
-msgstr "Будь який"
+msgstr "Ð‘ÑƒÐ´ÑŒ Ñ�ÐºÐ¸Ð¹"
 
 msgid "N/A"
-msgstr "Відсутній"
+msgstr "Ð’Ñ–Ð´Ñ�ÑƒÑ‚Ð½Ñ–Ð¹"
 
 msgid "Add Institution"
-msgstr "Додати інститут"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚"
 
 msgid "Institution details"
-msgstr "Деталі інституту"
+msgstr "Ð”ÐµÑ‚Ð°Ð»Ñ– Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñƒ"
 
 msgid "Cadres Trained"
-msgstr "Навчені кадри"
+msgstr "Ð�Ð°Ð²Ñ‡ÐµÐ½Ñ– ÐºÐ°Ð´Ñ€Ð¸"
 
 msgid "Qualification Attained"
-msgstr "Досягнута кваліфікація"
+msgstr "Ð”Ð¾Ñ�Ñ�Ð³Ð½ÑƒÑ‚Ð° ÐºÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ�"
 
 msgid "Number of Computers"
-msgstr "Кількість комп`ютерів"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ ÐºÐ¾Ð¼Ð¿`ÑŽÑ‚ÐµÑ€Ñ–Ð²"
 
 msgid "Dormitories"
-msgstr "Гуртожитки"
+msgstr "Ð“ÑƒÑ€Ñ‚Ð¾Ð¶Ð¸Ñ‚ÐºÐ¸"
 
 msgid "y/n"
-msgstr "так/ні"
+msgstr "Ñ‚Ð°Ðº/Ð½Ñ–"
 
 msgid "Number of Dormitories"
-msgstr "Кількість гуртожитків"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ Ð³ÑƒÑ€Ñ‚Ð¾Ð¶Ð¸Ñ‚ÐºÑ–Ð²"
 
 msgid "Number of beds (students)"
-msgstr "Кількість спальних місць (студентів)"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ Ñ�Ð¿Ð°Ð»ÑŒÐ½Ð¸Ñ… Ð¼Ñ–Ñ�Ñ†ÑŒ (Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²)"
 
 msgid "Tutor housing"
-msgstr "Житло для інструкторів"
+msgstr "Ð–Ð¸Ñ‚Ð»Ð¾ Ð´Ð»Ñ� Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñ–Ð²"
 
 msgid "Number of Tutor houses"
-msgstr "Кількість житла для інструкторів"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ Ð¶Ð¸Ñ‚Ð»Ð° Ð´Ð»Ñ� Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñ–Ð²"
 
 msgid "Year Founded"
-msgstr "Фінансовий рік"
+msgstr "Ð¤Ñ–Ð½Ð°Ð½Ñ�Ð¾Ð²Ð¸Ð¹ Ñ€Ñ–Ðº"
 
 msgid "Edit/View Institution Record"
-msgstr "Редагування/перегляд запису інституту"
+msgstr ""
+"Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ð½Ð½Ñ�/Ð¿ÐµÑ€ÐµÐ³Ð»Ñ�Ð´ Ð·Ð°Ð¿Ð¸Ñ�Ñƒ Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñƒ"
 
 msgid "Enter details"
-msgstr "Ввести деталі"
+msgstr "Ð’Ð²ÐµÑ�Ñ‚Ð¸ Ð´ÐµÑ‚Ð°Ð»Ñ–"
 
 msgid "Institution ID"
-msgstr "Ідентифікація інституту"
+msgstr "Ð†Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ� Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñƒ"
 
 msgid "Back"
-msgstr "Назад"
+msgstr "Ð�Ð°Ð·Ð°Ð´"
 
 msgid "Update Institution"
-msgstr "Оновити деталі інституту"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð´ÐµÑ‚Ð°Ð»Ñ– Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñƒ"
 
 msgid "Principal/Key Staff Members"
-msgstr "Головні/ключові співробітники"
+msgstr "Ð“Ð¾Ð»Ð¾Ð²Ð½Ñ–/ÐºÐ»ÑŽÑ‡Ð¾Ð²Ñ– Ñ�Ð¿Ñ–Ð²Ñ€Ð¾Ð±Ñ–Ñ‚Ð½Ð¸ÐºÐ¸"
 
 msgid "Add/Edit Staff Members"
-msgstr "Додати/редагувати співробітників"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸/Ñ€ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ñ�Ð¿Ñ–Ð²Ñ€Ð¾Ð±Ñ–Ñ‚Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "Tutor to Student Ratio"
-msgstr "Відношення кількості інструкторів до кількості студентів"
+msgstr ""
+"Ð’Ñ–Ð´Ð½Ð¾ÑˆÐµÐ½Ð½Ñ� ÐºÑ–Ð»ÑŒÐºÐ¾Ñ�Ñ‚Ñ– Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñ–Ð² Ð´Ð¾ ÐºÑ–"
+"Ð»ÑŒÐºÐ¾Ñ�Ñ‚Ñ– Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "Number of Tutors"
-msgstr "Кількість інструкторів"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñ–Ð²"
 
 msgid "Number of Students"
-msgstr "Кількість студентів"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "Cohort Name"
-msgstr "Назва групи"
+msgstr "Ð�Ð°Ð·Ð²Ð° Ð³Ñ€ÑƒÐ¿Ð¸"
 
 msgid "Cohort ID"
-msgstr "Ідентифікація групи"
+msgstr "Ð†Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ� Ð³Ñ€ÑƒÐ¿Ð¸"
 
 msgid "Cohort Start Date"
-msgstr "Дата початку групи"
+msgstr "Ð”Ð°Ñ‚Ð° Ð¿Ð¾Ñ‡Ð°Ñ‚ÐºÑƒ Ð³Ñ€ÑƒÐ¿Ð¸"
 
 msgid "Cohort Graduation Date"
-msgstr "Дата завершення групи"
+msgstr "Ð”Ð°Ñ‚Ð° Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð½Ñ� Ð³Ñ€ÑƒÐ¿Ð¸"
 
 msgid "Institution"
-msgstr "Інститут"
+msgstr "Ð†Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚"
 
 msgid "Cadre"
-msgstr "Кадри"
+msgstr "ÐšÐ°Ð´Ñ€Ð¸"
 
 msgid "Graduation Date"
-msgstr "Дата завершення"
+msgstr "Ð”Ð°Ñ‚Ð° Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð½Ñ�"
 
 msgid "Number of members"
-msgstr "Кількість членів"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ Ñ‡Ð»ÐµÐ½Ñ–Ð²"
 
 msgid "Add Cohort Record"
-msgstr "Додати запис групи"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð·Ð°Ð¿Ð¸Ñ� Ð³Ñ€ÑƒÐ¿Ð¸"
 
 msgid "Enter Criteria"
-msgstr "Введіть критерії"
+msgstr "Ð’Ð²ÐµÐ´Ñ–Ñ‚ÑŒ ÐºÑ€Ð¸Ñ‚ÐµÑ€Ñ–Ñ—"
 
 msgid "Edit/View Cohort Record"
-msgstr "Перегляд/редагування групи"
+msgstr "ÐŸÐµÑ€ÐµÐ³Ð»Ñ�Ð´/Ñ€ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ð½Ð½Ñ� Ð³Ñ€ÑƒÐ¿Ð¸"
 
 msgid "Cohort details"
-msgstr "Деталі групи"
+msgstr "Ð”ÐµÑ‚Ð°Ð»Ñ– Ð³Ñ€ÑƒÐ¿Ð¸"
 
 msgid "Degree Information"
-msgstr "Ступень освіти"
+msgstr "Ð¡Ñ‚ÑƒÐ¿ÐµÐ½ÑŒ Ð¾Ñ�Ð²Ñ–Ñ‚Ð¸"
 
 msgid "Cohort Participants at Start"
-msgstr "Учасники групи на початку"
+msgstr "Ð£Ñ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸ Ð³Ñ€ÑƒÐ¿Ð¸ Ð½Ð° Ð¿Ð¾Ñ‡Ð°Ñ‚ÐºÑƒ"
 
 msgid "Cohort Participants Dropped Out"
-msgstr "Учасники групи, які кинули навчання"
+msgstr "Ð£Ñ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸ Ð³Ñ€ÑƒÐ¿Ð¸, Ñ�ÐºÑ– ÐºÐ¸Ð½ÑƒÐ»Ð¸ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Cohort Current or Graduating Number"
-msgstr "Учасники групи, які навчаються або закінчили навчання"
+msgstr ""
+"Ð£Ñ‡Ð°Ñ�Ð½Ð¸ÐºÐ¸ Ð³Ñ€ÑƒÐ¿Ð¸, Ñ�ÐºÑ– Ð½Ð°Ð²Ñ‡Ð°ÑŽÑ‚ÑŒÑ�Ñ� Ð°Ð±Ð¾ Ð·Ð°ÐºÑ–"
+"Ð½Ñ‡Ð¸Ð»Ð¸ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Update"
-msgstr "Оновити"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸"
 
 msgid "Students associated with the cohort"
-msgstr "Студенти, асоційовані з групою"
+msgstr "Ð¡Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ð¸, Ð°Ñ�Ð¾Ñ†Ñ–Ð¹Ð¾Ð²Ð°Ð½Ñ– Ð· Ð³Ñ€ÑƒÐ¿Ð¾ÑŽ"
 
 msgid "Student ID"
-msgstr "Ідентифікація студента"
+msgstr "Ð†Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ� Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ð°"
 
 msgid "DOB"
-msgstr "Дата народження"
+msgstr "Ð”Ð°Ñ‚Ð° Ð½Ð°Ñ€Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "Date of birth"
-msgstr "Дата народження"
+msgstr "Ð”Ð°Ñ‚Ð° Ð½Ð°Ñ€Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "Update associated students"
-msgstr "Оновити студентів, асоційованих з групою"
+msgstr ""
+"ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð², Ð°Ñ�Ð¾Ñ†Ñ–Ð¹Ð¾Ð²Ð°Ð½Ð¸Ñ… Ð· Ð³Ñ€ÑƒÐ¿Ð¾ÑŽ"
 
 msgid "Graduated"
-msgstr "Випускник"
+msgstr "Ð’Ð¸Ð¿ÑƒÑ�ÐºÐ½Ð¸Ðº"
 
 msgid "Dropped"
-msgstr "Які покинули навчання"
+msgstr "Ð¯ÐºÑ– Ð¿Ð¾ÐºÐ¸Ð½ÑƒÐ»Ð¸ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "License / Registration"
-msgstr "Ліцензія/Реєстрація"
+msgstr "Ð›Ñ–Ñ†ÐµÐ½Ð·Ñ–Ñ�/Ð ÐµÑ”Ñ�Ñ‚Ñ€Ð°Ñ†Ñ–Ñ�"
 
 msgid "Add a license"
-msgstr "Додати ліцензію"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð»Ñ–Ñ†ÐµÐ½Ð·Ñ–ÑŽ"
 
 msgid "Add license"
-msgstr "Додати ліцензію"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð»Ñ–Ñ†ÐµÐ½Ð·Ñ–ÑŽ"
 
 msgid "Classes associated with the Cohort"
-msgstr "Курси, асоційовані з групою"
+msgstr "ÐšÑƒÑ€Ñ�Ð¸, Ð°Ñ�Ð¾Ñ†Ñ–Ð¹Ð¾Ð²Ð°Ð½Ñ– Ð· Ð³Ñ€ÑƒÐ¿Ð¾ÑŽ"
 
 msgid "Class Name"
-msgstr "Найменування курсу"
+msgstr "Ð�Ð°Ð¹Ð¼ÐµÐ½ÑƒÐ²Ð°Ð½Ð½Ñ� ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "Tutor"
-msgstr "Інструктор"
+msgstr "Ð†Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€"
 
 msgid "Update associated classes"
-msgstr "Оновити заняття, асоційовані з групою"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð·Ð°Ð½Ñ�Ñ‚Ñ‚Ñ�, Ð°Ñ�Ð¾Ñ†Ñ–Ð¹Ð¾Ð²Ð°Ð½Ñ– Ð· Ð³Ñ€ÑƒÐ¿Ð¾ÑŽ"
 
 msgid "Clinical Allocation"
-msgstr "Клінічний розподіл"
+msgstr "ÐšÐ»Ñ–Ð½Ñ–Ñ‡Ð½Ð¸Ð¹ Ñ€Ð¾Ð·Ð¿Ð¾Ð´Ñ–Ð»"
 
 msgid "Advisor"
-msgstr "Консультант"
+msgstr "ÐšÐ¾Ð½Ñ�ÑƒÐ»ÑŒÑ‚Ð°Ð½Ñ‚"
 
 msgid "Hours Required"
-msgstr "Потрібно годин"
+msgstr "ÐŸÐ¾Ñ‚Ñ€Ñ–Ð±Ð½Ð¾ Ð³Ð¾Ð´Ð¸Ð½"
 
 msgid "Add a practicum"
-msgstr "Додайте практикум"
+msgstr "Ð”Ð¾Ð´Ð°Ð¹Ñ‚Ðµ Ð¿Ñ€Ð°ÐºÑ‚Ð¸ÐºÑƒÐ¼"
 
 msgid "Assessment associated with Cohort"
-msgstr "Оцінки, асоційовані з групою"
+msgstr "ÐžÑ†Ñ–Ð½ÐºÐ¸, Ð°Ñ�Ð¾Ñ†Ñ–Ð¹Ð¾Ð²Ð°Ð½Ñ– Ð· Ð³Ñ€ÑƒÐ¿Ð¾ÑŽ"
 
 msgid "Update students"
-msgstr "Оновити студентів"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "All form fields are required"
-msgstr "Всі поля форми обов'язкові"
+msgstr "Ð’Ñ�Ñ– Ð¿Ð¾Ð»Ñ� Ñ„Ð¾Ñ€Ð¼Ð¸ Ð¾Ð±Ð¾Ð²'Ñ�Ð·ÐºÐ¾Ð²Ñ–"
 
 msgid "Update classes"
-msgstr "Оновити заняття"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð·Ð°Ð½Ñ�Ñ‚Ñ‚Ñ�"
 
 msgid "Instructor"
-msgstr "Інструктор"
+msgstr "Ð†Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€"
 
 msgid "Delete"
-msgstr "Видалити"
+msgstr "Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸"
 
 msgid "delete"
-msgstr "видалити"
+msgstr "Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸"
 
 msgid "Student cadre"
-msgstr "Студентські кадри"
+msgstr "Ð¡Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ�ÑŒÐºÑ– ÐºÐ°Ð´Ñ€Ð¸"
 
 msgid "Return"
-msgstr "Повернути"
+msgstr "ÐŸÐ¾Ð²ÐµÑ€Ð½ÑƒÑ‚Ð¸"
 
 msgid "Students"
-msgstr "Студенти"
+msgstr "Ð¡Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ð¸"
 
 msgid "Personal"
-msgstr "Особиста інформація"
+msgstr "ÐžÑ�Ð¾Ð±Ð¸Ñ�Ñ‚Ð° Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ�"
 
 msgid "Add a person"
-msgstr "Додати особу"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð¾Ñ�Ð¾Ð±Ñƒ"
 
 msgid "Add person"
-msgstr "Додати особу"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð¾Ñ�Ð¾Ð±Ñƒ"
 
 msgid "Add a New Student or Tutor Record"
-msgstr "Додати запис нового студента або тренера"
+msgstr ""
+"Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð·Ð°Ð¿Ð¸Ñ� Ð½Ð¾Ð²Ð¾Ð³Ð¾ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ð° Ð°Ð±Ð¾ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Local address"
-msgstr "Місцева адреса"
+msgstr "ÐœÑ–Ñ�Ñ†ÐµÐ²Ð° Ð°Ð´Ñ€ÐµÑ�Ð°"
 
 msgid "Local Address"
-msgstr "Місцева адреса"
+msgstr "ÐœÑ–Ñ�Ñ†ÐµÐ²Ð° Ð°Ð´Ñ€ÐµÑ�Ð°"
 
 msgid "Edit Student Record"
-msgstr "Редагувати запис студента"
+msgstr "Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ð·Ð°Ð¿Ð¸Ñ� Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ð°"
 
 msgid "Nationality"
-msgstr "Національність"
+msgstr "Ð�Ð°Ñ†Ñ–Ð¾Ð½Ð°Ð»ÑŒÐ½Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Marital Status"
-msgstr "Сімейний стан"
+msgstr "Ð¡Ñ–Ð¼ÐµÐ¹Ð½Ð¸Ð¹ Ñ�Ñ‚Ð°Ð½"
 
 msgid "Single"
-msgstr "Неодружений/незаміжня"
+msgstr "Ð�ÐµÐ¾Ð´Ñ€ÑƒÐ¶ÐµÐ½Ð¸Ð¹/Ð½ÐµÐ·Ð°Ð¼Ñ–Ð¶Ð½Ñ�"
 
 msgid "Married"
-msgstr "Одружений/Заміжня"
+msgstr "ÐžÐ´Ñ€ÑƒÐ¶ÐµÐ½Ð¸Ð¹/Ð—Ð°Ð¼Ñ–Ð¶Ð½Ñ�"
 
 msgid "Divorced"
-msgstr "Розлучений (а)"
+msgstr "Ð Ð¾Ð·Ð»ÑƒÑ‡ÐµÐ½Ð¸Ð¹ (Ð°)"
 
 msgid "Widowed"
-msgstr "Вдова/Вдівець"
+msgstr "Ð’Ð´Ð¾Ð²Ð°/Ð’Ð´Ñ–Ð²ÐµÑ†ÑŒ"
 
 msgid "Other Contact Information"
-msgstr "Додаткова контактна інформація"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚ÐºÐ¾Ð²Ð° ÐºÐ¾Ð½Ñ‚Ð°ÐºÑ‚Ð½Ð° Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ�"
 
 msgid "Postal Code / ZIP"
-msgstr "Поштовий індекс"
+msgstr "ÐŸÐ¾ÑˆÑ‚Ð¾Ð²Ð¸Ð¹ Ñ–Ð½Ð´ÐµÐºÑ�"
 
 msgid "Postal Code/ZIP"
-msgstr "Поштовий індекс"
+msgstr "ÐŸÐ¾ÑˆÑ‚Ð¾Ð²Ð¸Ð¹ Ñ–Ð½Ð´ÐµÐºÑ�"
 
 msgid "ZIP"
-msgstr "Поштовий індекс"
+msgstr "ÐŸÐ¾ÑˆÑ‚Ð¾Ð²Ð¸Ð¹ Ñ–Ð½Ð´ÐµÐºÑ�"
 
 msgid "ZIP Code"
-msgstr "Поштовий індекс"
+msgstr "ÐŸÐ¾ÑˆÑ‚Ð¾Ð²Ð¸Ð¹ Ñ–Ð½Ð´ÐµÐºÑ�"
 
 msgid "Residential Address"
-msgstr "Адреса місця проживання"
+msgstr "Ð�Ð´Ñ€ÐµÑ�Ð° Ð¼Ñ–Ñ�Ñ†Ñ� Ð¿Ñ€Ð¾Ð¶Ð¸Ð²Ð°Ð½Ð½Ñ�"
 
 msgid "Next of Kin"
-msgstr "Найближчий родич"
+msgstr "Ð�Ð°Ð¹Ð±Ð»Ð¸Ð¶Ñ‡Ð¸Ð¹ Ñ€Ð¾Ð´Ð¸Ñ‡"
 
 msgid "Permanent Address"
-msgstr "Постійна адреса"
+msgstr "ÐŸÐ¾Ñ�Ñ‚Ñ–Ð¹Ð½Ð° Ð°Ð´Ñ€ÐµÑ�Ð°"
 
 msgid "Cellphone"
-msgstr "Мобільній телефон"
+msgstr "ÐœÐ¾Ð±Ñ–Ð»ÑŒÐ½Ñ–Ð¹ Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½"
 
 msgid "Emergency Contact"
-msgstr "Контакт для екстрених випадків"
+msgstr "ÐšÐ¾Ð½Ñ‚Ð°ÐºÑ‚ Ð´Ð»Ñ� ÐµÐºÑ�Ñ‚Ñ€ÐµÐ½Ð¸Ñ… Ð²Ð¸Ð¿Ð°Ð´ÐºÑ–Ð²"
 
 msgid "Student Information"
-msgstr "Інформація про студента"
+msgstr "Ð†Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ� Ð¿Ñ€Ð¾ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ð°"
 
 msgid "Religious Denomination 2"
-msgstr "Належність до релігії 2"
+msgstr "Ð�Ð°Ð»ÐµÐ¶Ð½Ñ–Ñ�Ñ‚ÑŒ Ð´Ð¾ Ñ€ÐµÐ»Ñ–Ð³Ñ–Ñ— 2"
 
 msgid "Date of Enrollment"
-msgstr "Дата реєстрації"
+msgstr "Ð”Ð°Ñ‚Ð° Ñ€ÐµÑ”Ñ�Ñ‚Ñ€Ð°Ñ†Ñ–Ñ—"
 
 msgid "Reason for Enrollment"
-msgstr "Причина реєстрації"
+msgstr "ÐŸÑ€Ð¸Ñ‡Ð¸Ð½Ð° Ñ€ÐµÑ”Ñ�Ñ‚Ñ€Ð°Ñ†Ñ–Ñ—"
 
 msgid "Reason"
-msgstr "Причина"
+msgstr "ÐŸÑ€Ð¸Ñ‡Ð¸Ð½Ð°"
 
 msgid "Date of Separation"
-msgstr "Дата відрахування"
+msgstr "Ð”Ð°Ñ‚Ð° Ð²Ñ–Ð´Ñ€Ð°Ñ…ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Clear date"
-msgstr "Очистити дату"
+msgstr "ÐžÑ‡Ð¸Ñ�Ñ‚Ð¸Ñ‚Ð¸ Ð´Ð°Ñ‚Ñƒ"
 
 msgid "Clear"
-msgstr "очистити"
+msgstr "Ð¾Ñ‡Ð¸Ñ�Ñ‚Ð¸Ñ‚Ð¸"
 
 msgid "Reason for Separation"
-msgstr "Причина відрахування"
+msgstr "ÐŸÑ€Ð¸Ñ‡Ð¸Ð½Ð° Ð²Ñ–Ð´Ñ€Ð°Ñ…ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Years of Study"
-msgstr "Кількість років навчання"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ Ñ€Ð¾ÐºÑ–Ð² Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Remove separation date"
-msgstr "Очистити дату відрахування"
+msgstr "ÐžÑ‡Ð¸Ñ�Ñ‚Ð¸Ñ‚Ð¸ Ð´Ð°Ñ‚Ñƒ Ð²Ñ–Ð´Ñ€Ð°Ñ…ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Program Enrolled In"
-msgstr "Зареєстрований в програмі"
+msgstr "Ð—Ð°Ñ€ÐµÑ”Ñ�Ñ‚Ñ€Ð¾Ð²Ð°Ð½Ð¸Ð¹ Ð² Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ñ–"
 
 msgid "Prior Education"
-msgstr "Раніше отримана освіта"
+msgstr "Ð Ð°Ð½Ñ–ÑˆÐµ Ð¾Ñ‚Ñ€Ð¸Ð¼Ð°Ð½Ð° Ð¾Ñ�Ð²Ñ–Ñ‚Ð°"
 
 msgid "Facility After Graduation"
-msgstr "Місце роботи/навчання після закінчення навчання"
+msgstr ""
+"ÐœÑ–Ñ�Ñ†Ðµ Ñ€Ð¾Ð±Ð¾Ñ‚Ð¸/Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ� Ð¿Ñ–Ñ�Ð»Ñ� Ð·Ð°ÐºÑ–Ð½Ñ‡ÐµÐ½Ð½Ñ� Ð½Ð"
+"°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "High School Completion Date"
-msgstr "Дата завершення середньої школи"
+msgstr "Ð”Ð°Ñ‚Ð° Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð½Ñ� Ñ�ÐµÑ€ÐµÐ´Ð½ÑŒÐ¾Ñ— ÑˆÐºÐ¾Ð»Ð¸"
 
 msgid "Last School Attended"
-msgstr "Школа, відвідувана востаннє"
+msgstr "Ð¨ÐºÐ¾Ð»Ð°, Ð²Ñ–Ð´Ð²Ñ–Ð´ÑƒÐ²Ð°Ð½Ð° Ð²Ð¾Ñ�Ñ‚Ð°Ð½Ð½Ñ”"
 
 msgid "Admission to School Date"
-msgstr "Дата прийому до школу"
+msgstr "Ð”Ð°Ñ‚Ð° Ð¿Ñ€Ð¸Ð¹Ð¾Ð¼Ñƒ Ð´Ð¾ ÑˆÐºÐ¾Ð»Ñƒ"
 
 msgid "Equivalence"
-msgstr "Еквівалентність"
+msgstr "Ð•ÐºÐ²Ñ–Ð²Ð°Ð»ÐµÐ½Ñ‚Ð½Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Last University Attended"
-msgstr "Університет, відвідуваний востаннє"
+msgstr "Ð£Ð½Ñ–Ð²ÐµÑ€Ñ�Ð¸Ñ‚ÐµÑ‚, Ð²Ñ–Ð´Ð²Ñ–Ð´ÑƒÐ²Ð°Ð½Ð¸Ð¹ Ð²Ð¾Ñ�Ñ‚Ð°Ð½Ð½Ñ”"
 
 msgid "Person In Charge"
-msgstr "Відповідальна особа"
+msgstr "Ð’Ñ–Ð´Ð¿Ð¾Ð²Ñ–Ð´Ð°Ð»ÑŒÐ½Ð° Ð¾Ñ�Ð¾Ð±Ð°"
 
 msgid "Topic"
-msgstr "Тема"
+msgstr "Ð¢ÐµÐ¼Ð°"
 
 msgid "Grade"
-msgstr "Оцінка"
+msgstr "ÐžÑ†Ñ–Ð½ÐºÐ°"
 
 msgid "Exam Mark"
-msgstr "Оцінка за іспит"
+msgstr "ÐžÑ†Ñ–Ð½ÐºÐ° Ð·Ð° Ñ–Ñ�Ð¿Ð¸Ñ‚"
 
 msgid "Credits"
-msgstr "Кредити"
+msgstr "ÐšÑ€ÐµÐ´Ð¸Ñ‚Ð¸"
 
 msgid "Practicum name"
-msgstr "Назва практикума"
+msgstr "Ð�Ð°Ð·Ð²Ð° Ð¿Ñ€Ð°ÐºÑ‚Ð¸ÐºÑƒÐ¼Ð°"
 
 msgid "Hours required"
-msgstr "Потрібно годин"
+msgstr "ÐŸÐ¾Ñ‚Ñ€Ñ–Ð±Ð½Ð¾ Ð³Ð¾Ð´Ð¸Ð½"
 
 msgid "Hours completed"
-msgstr "Завершені години"
+msgstr "Ð—Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ñ– Ð³Ð¾Ð´Ð¸Ð½Ð¸"
 
 msgid "License name"
-msgstr "Назва ліцензії"
+msgstr "Ð�Ð°Ð·Ð²Ð° Ð»Ñ–Ñ†ÐµÐ½Ð·Ñ–Ñ—"
 
 msgid "Update exams"
-msgstr "Оновити іспити"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ñ–Ñ�Ð¿Ð¸Ñ‚Ð¸"
 
 msgid "Update clinical allocation"
-msgstr "Оновити клінічний розподіл"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ ÐºÐ»Ñ–Ð½Ñ–Ñ‡Ð½Ð¸Ð¹ Ñ€Ð¾Ð·Ð¿Ð¾Ð´Ñ–Ð»"
 
 msgid "Practicum date"
-msgstr "Дата практикума"
+msgstr "Ð”Ð°Ñ‚Ð° Ð¿Ñ€Ð°ÐºÑ‚Ð¸ÐºÑƒÐ¼Ð°"
 
 msgid "School ID"
-msgstr "Ідентифікація школи"
+msgstr "Ð†Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ� ÑˆÐºÐ¾Ð»Ð¸"
 
 msgid "Student Transcript Report"
-msgstr "Звіт за успішністю студентів"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ð·Ð° ÑƒÑ�Ð¿Ñ–ÑˆÐ½Ñ–Ñ�Ñ‚ÑŽ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "Date updated"
-msgstr "Оновити дату"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð´Ð°Ñ‚Ñƒ"
 
 msgid "Updated by"
-msgstr "Оновлено"
+msgstr "ÐžÐ½Ð¾Ð²Ð»ÐµÐ½Ð¾"
 
 msgid "Insert New"
-msgstr "Ввести новий"
+msgstr "Ð’Ð²ÐµÑ�Ñ‚Ð¸ Ð½Ð¾Ð²Ð¸Ð¹"
 
 msgid "Commodity Information"
-msgstr "Інформація про товар"
+msgstr "Ð†Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ� Ð¿Ñ€Ð¾ Ñ‚Ð¾Ð²Ð°Ñ€"
 
 msgid "Commodity Report"
-msgstr "Звіт по товарах"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ð¿Ð¾ Ñ‚Ð¾Ð²Ð°Ñ€Ð°Ñ…"
 
 msgid "Commodity Reports"
-msgstr "Звіти по товарах"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ñ‚Ð¾Ð²Ð°Ñ€Ð°Ñ…"
 
 msgid "Total Commodities"
-msgstr "Всього товарів"
+msgstr "Ð’Ñ�ÑŒÐ¾Ð³Ð¾ Ñ‚Ð¾Ð²Ð°Ñ€Ñ–Ð²"
 
 msgid "Commodity Name"
-msgstr "Назва товару"
+msgstr "Ð�Ð°Ð·Ð²Ð° Ñ‚Ð¾Ð²Ð°Ñ€Ñƒ"
 
 msgid "Consumption"
-msgstr "Розхід"
+msgstr "Ð Ð¾Ð·Ñ…Ñ–Ð´"
 
 msgid "Out of Stock"
-msgstr "Немає у наявності на складі"
+msgstr "Ð�ÐµÐ¼Ð°Ñ” Ñƒ Ð½Ð°Ñ�Ð²Ð½Ð¾Ñ�Ñ‚Ñ– Ð½Ð° Ñ�ÐºÐ»Ð°Ð´Ñ–"
 
 msgid "Y/N"
-msgstr "Так/Ні"
+msgstr "Ð¢Ð°Ðº/Ð�Ñ–"
 
 msgid "Y"
-msgstr "Так"
+msgstr "Ð¢Ð°Ðº"
 
 msgid "N"
-msgstr "Ні"
+msgstr "Ð�Ñ–"
 
 msgid "MM/YY"
-msgstr "ММ/РР"
+msgstr "ÐœÐœ/Ð Ð "
 
 msgid "MM"
-msgstr "ММ"
+msgstr "ÐœÐœ"
 
 msgid "YY"
-msgstr "РР"
+msgstr "Ð Ð "
 
 msgid "Import facility from Excel"
-msgstr "Імпорт закладу із файла Excel"
+msgstr "Ð†Ð¼Ð¿Ð¾Ñ€Ñ‚ Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ Ñ–Ð· Ñ„Ð°Ð¹Ð»Ð° Excel"
 
 msgid "Please enter your new Facility sponsor"
-msgstr "Будь ласка, введіть нового спонсора закладу"
+msgstr ""
+"Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð²Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ð½Ð¾Ð²Ð¾Ð³Ð¾ Ñ�Ð¿Ð¾Ð½Ñ�Ð¾Ñ€Ð° Ð·Ð°ÐºÐ»Ð°Ð"
+"´Ñƒ"
 
 msgid "to"
-msgstr "до"
+msgstr "Ð´Ð¾"
 
 msgid "Go back to Facility Edit Page"
-msgstr "Повернутися до сторінки редагування закладу"
+msgstr ""
+"ÐŸÐ¾Ð²ÐµÑ€Ð½ÑƒÑ‚Ð¸Ñ�Ñ� Ð´Ð¾ Ñ�Ñ‚Ð¾Ñ€Ñ–Ð½ÐºÐ¸ Ñ€ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ð½Ð½Ñ� Ð·Ð°ÐºÐ»Ð"
+"°Ð´Ñƒ"
 
 msgid "Employee Tracking"
-msgstr "Облік співробітників"
+msgstr "ÐžÐ±Ð»Ñ–Ðº Ñ�Ð¿Ñ–Ð²Ñ€Ð¾Ð±Ñ–Ñ‚Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "Site Data Share"
-msgstr "Сторінка загальних даних"
+msgstr "Ð¡Ñ‚Ð¾Ñ€Ñ–Ð½ÐºÐ° Ð·Ð°Ð³Ð°Ð»ÑŒÐ½Ð¸Ñ… Ð´Ð°Ð½Ð¸Ñ…"
 
 msgid "Change our password"
-msgstr "Зміна паролю"
+msgstr "Ð—Ð¼Ñ–Ð½Ð° Ð¿Ð°Ñ€Ð¾Ð»ÑŽ"
 
 msgid "Drag me down"
-msgstr "Перетягніть униз"
+msgstr "ÐŸÐµÑ€ÐµÑ‚Ñ�Ð³Ð½Ñ–Ñ‚ÑŒ ÑƒÐ½Ð¸Ð·"
 
 msgid "Order"
-msgstr "Порядок"
+msgstr "ÐŸÐ¾Ñ€Ñ�Ð´Ð¾Ðº"
 
 msgid "Parent"
-msgstr "Ісходник"
+msgstr "Ð†Ñ�Ñ…Ð¾Ð´Ð½Ð¸Ðº"
 
 msgid "Favorite color"
-msgstr "Улюблений колір"
+msgstr "Ð£Ð»ÑŽÐ±Ð»ÐµÐ½Ð¸Ð¹ ÐºÐ¾Ð»Ñ–Ñ€"
 
 msgid "Display"
-msgstr "Показати"
+msgstr "ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚Ð¸"
 
 msgid "TOT"
-msgstr "Навчання інструкторів"
+msgstr "Ð�Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ� Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñ–Ð²"
 
 msgid "Mutiple checkbox field"
-msgstr "Поле для декількох відміток"
+msgstr "ÐŸÐ¾Ð»Ðµ Ð´Ð»Ñ� Ð´ÐµÐºÑ–Ð»ÑŒÐºÐ¾Ñ… Ð²Ñ–Ð´Ð¼Ñ–Ñ‚Ð¾Ðº"
 
 msgid "Funding Amount"
-msgstr "Сума фінансування"
+msgstr "Ð¡ÑƒÐ¼Ð° Ñ„Ñ–Ð½Ð°Ð½Ñ�ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Nat. Curriculum Comment"
-msgstr "Коментарі до національного навчального плану"
+msgstr ""
+"ÐšÐ¾Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ñ– Ð´Ð¾ Ð½Ð°Ñ†Ñ–Ð¾Ð½Ð°Ð»ÑŒÐ½Ð¾Ð³Ð¾ Ð½Ð°Ð²Ñ‡Ð°Ð»ÑŒÐ½Ð¾Ð³Ð¾ "
+"Ð¿Ð»Ð°Ð½Ñƒ"
 
 msgid "National Curriculum"
-msgstr "Національний навчальний план"
+msgstr "Ð�Ð°Ñ†Ñ–Ð¾Ð½Ð°Ð»ÑŒÐ½Ð¸Ð¹ Ð½Ð°Ð²Ñ‡Ð°Ð»ÑŒÐ½Ð¸Ð¹ Ð¿Ð»Ð°Ð½"
 
 msgid "Pre test score"
-msgstr "Результат до тесту"
+msgstr "Ð ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚ Ð´Ð¾ Ñ‚ÐµÑ�Ñ‚Ñƒ"
 
 msgid "Post test score"
-msgstr "Результат після тесту"
+msgstr "Ð ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚ Ð¿Ñ–Ñ�Ð»Ñ� Ñ‚ÐµÑ�Ñ‚Ñƒ"
 
 msgid "Participant Training Completion"
-msgstr "Завершення тренінгу учасника"
+msgstr "Ð—Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ°"
 
 msgid "Training Completion"
-msgstr "Завершення тренінгу"
+msgstr "Ð—Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Participant Viewing Location"
-msgstr "Перегляд розташування учасника"
+msgstr "ÐŸÐµÑ€ÐµÐ³Ð»Ñ�Ð´ Ñ€Ð¾Ð·Ñ‚Ð°ÑˆÑƒÐ²Ð°Ð½Ð½Ñ� ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ°"
 
 msgid "Participant Budget Code"
-msgstr "Код бюджету учасника"
+msgstr "ÐšÐ¾Ð´ Ð±ÑŽÐ´Ð¶ÐµÑ‚Ñƒ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ°"
 
 msgid "Budget Code"
-msgstr "Код бюджету"
+msgstr "ÐšÐ¾Ð´ Ð±ÑŽÐ´Ð¶ÐµÑ‚Ñƒ"
 
 msgid "Training score"
-msgstr "Оцінка тренінгу"
+msgstr "ÐžÑ†Ñ–Ð½ÐºÐ° Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Complete Status"
-msgstr "Статус завершення"
+msgstr "Ð¡Ñ‚Ð°Ñ‚ÑƒÑ� Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð½Ñ�"
 
 msgid "Person Qualification"
-msgstr "Кваліфікація особи"
+msgstr "ÐšÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ� Ð¾Ñ�Ð¾Ð±Ð¸"
 
 msgid "Primary Responsibility"
-msgstr "Основна відповідальність"
+msgstr "ÐžÑ�Ð½Ð¾Ð²Ð½Ð° Ð²Ñ–Ð´Ð¿Ð¾Ð²Ñ–Ð´Ð°Ð»ÑŒÐ½Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Secondary Responsibility"
-msgstr "Додаткова відповідальність"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚ÐºÐ¾Ð²Ð° Ð²Ñ–Ð´Ð¿Ð¾Ð²Ñ–Ð´Ð°Ð»ÑŒÐ½Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Specialty"
-msgstr "Спеціальність"
+msgstr "Ð¡Ð¿ÐµÑ†Ñ–Ð°Ð»ÑŒÐ½Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Contract Type"
-msgstr "Тип контракту"
+msgstr "Ð¢Ð¸Ð¿ ÐºÐ¾Ð½Ñ‚Ñ€Ð°ÐºÑ‚Ñƒ"
 
 msgid "Commodity Type"
-msgstr "Тип товару"
+msgstr "Ð¢Ð¸Ð¿ Ñ‚Ð¾Ð²Ð°Ñ€Ñƒ"
 
 msgid "Highest Education Level"
-msgstr "Рівень освіти"
+msgstr "Ð Ñ–Ð²ÐµÐ½ÑŒ Ð¾Ñ�Ð²Ñ–Ñ‚Ð¸"
 
 msgid "Reason Attending"
-msgstr "Причина реєстрації"
+msgstr "ÐŸÑ€Ð¸Ñ‡Ð¸Ð½Ð° Ñ€ÐµÑ”Ñ�Ñ‚Ñ€Ð°Ñ†Ñ–Ñ—"
 
 msgid "Occupational Category"
-msgstr "Професійна категорія"
+msgstr "ÐŸÑ€Ð¾Ñ„ÐµÑ�Ñ–Ð¹Ð½Ð° ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–Ñ�"
 
 msgid "Partner Type"
-msgstr "Тип партнера"
+msgstr "Ð¢Ð¸Ð¿ Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ð°"
 
 msgid "Staff Category"
-msgstr "Категорія персоналу"
+msgstr "ÐšÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–Ñ� Ð¿ÐµÑ€Ñ�Ð¾Ð½Ð°Ð»Ñƒ"
 
 msgid "Base"
-msgstr "Основа"
+msgstr "ÐžÑ�Ð½Ð¾Ð²Ð°"
 
 msgid "Full Time"
-msgstr "Повний робочий день"
+msgstr "ÐŸÐ¾Ð²Ð½Ð¸Ð¹ Ñ€Ð¾Ð±Ð¾Ñ‡Ð¸Ð¹ Ð´ÐµÐ½ÑŒ"
 
 msgid "Race"
-msgstr "Раса"
+msgstr "Ð Ð°Ñ�Ð°"
 
 msgid "Primary Role"
-msgstr "Основна роль"
+msgstr "ÐžÑ�Ð½Ð¾Ð²Ð½Ð° Ñ€Ð¾Ð»ÑŒ"
 
 msgid "Primary Roles for employees"
-msgstr "Основні ролі співробітників"
+msgstr "ÐžÑ�Ð½Ð¾Ð²Ð½Ñ– Ñ€Ð¾Ð»Ñ– Ñ�Ð¿Ñ–Ð²Ñ€Ð¾Ð±Ñ–Ñ‚Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "Intended Transitions"
-msgstr "Призначений перехід"
+msgstr "ÐŸÑ€Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ð¹ Ð¿ÐµÑ€ÐµÑ…Ñ–Ð´"
 
 msgid "Relationship"
-msgstr "Зв'язок/Відношення"
+msgstr "Ð—Ð²'Ñ�Ð·Ð¾Ðº/Ð’Ñ–Ð´Ð½Ð¾ÑˆÐµÐ½Ð½Ñ�"
 
 msgid "Referral Mechanism"
-msgstr "Механізм перенаправлення"
+msgstr "ÐœÐµÑ…Ð°Ð½Ñ–Ð·Ð¼ Ð¿ÐµÑ€ÐµÐ½Ð°Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð½Ñ�"
 
 msgid "Training Provided"
-msgstr "Наданий тренінг"
+msgstr "Ð�Ð°Ð´Ð°Ð½Ð¸Ð¹ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "Importance"
-msgstr "Значення"
+msgstr "Ð—Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ�"
 
 msgid "Agency"
-msgstr "Агенство"
+msgstr "Ð�Ð³ÐµÐ½Ñ�Ñ‚Ð²Ð¾"
 
 msgid "Subpartner"
-msgstr "Суб-партнер"
+msgstr "Ð¡ÑƒÐ±-Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€"
 
 msgid "Funding End Date"
-msgstr "Дата закінчення фінансування"
+msgstr "Ð”Ð°Ñ‚Ð° Ð·Ð°ÐºÑ–Ð½Ñ‡ÐµÐ½Ð½Ñ� Ñ„Ñ–Ð½Ð°Ð½Ñ�ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Funding  Mechanisms"
-msgstr "Механізми фінансування"
+msgstr "ÐœÐµÑ…Ð°Ð½Ñ–Ð·Ð¼Ð¸ Ñ„Ñ–Ð½Ð°Ð½Ñ�ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Mechanisms"
-msgstr "Механізми"
+msgstr "ÐœÐµÑ…Ð°Ð½Ñ–Ð·Ð¼Ð¸"
 
 msgid "Merge?"
-msgstr "Об`єднати?"
+msgstr "ÐžÐ±`Ñ”Ð´Ð½Ð°Ñ‚Ð¸?"
 
 msgid "Merge"
-msgstr "Об`єднати"
+msgstr "ÐžÐ±`Ñ”Ð´Ð½Ð°Ñ‚Ð¸"
 
 msgid "Allow multiple PEPFAR categories"
-msgstr "Дозволяється декілька категорій ПЕПФАР"
+msgstr ""
+"Ð”Ð¾Ð·Ð²Ð¾Ð»Ñ�Ñ”Ñ‚ÑŒÑ�Ñ� Ð´ÐµÐºÑ–Ð»ÑŒÐºÐ° ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–Ð¹ ÐŸÐ•ÐŸÐ¤Ð�Ð "
 
 msgid "Allow multiple Training topics"
-msgstr "Дозволяється декілька навчальних тем"
+msgstr "Ð”Ð¾Ð·Ð²Ð¾Ð»Ñ�Ñ”Ñ‚ÑŒÑ�Ñ� Ð´ÐµÐºÑ–Ð»ÑŒÐºÐ° Ð½Ð°Ð²Ñ‡Ð°Ð»ÑŒÐ½Ð¸Ñ… Ñ‚ÐµÐ¼"
 
 msgid "Display recommended trainings per individual"
-msgstr "Показати рекомендовані тренінги для людини"
+msgstr ""
+"ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚Ð¸ Ñ€ÐµÐºÐ¾Ð¼ÐµÐ½Ð´Ð¾Ð²Ð°Ð½Ñ– Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð´Ð»Ñ� Ð»ÑŽÐ"
+"´Ð¸Ð½Ð¸"
 
 msgid "Require at least one trainer skill per trainer"
-msgstr "Потрібно щонайменше один навик для тренера"
+msgstr ""
+"ÐŸÐ¾Ñ‚Ñ€Ñ–Ð±Ð½Ð¾ Ñ‰Ð¾Ð½Ð°Ð¹Ð¼ÐµÐ½ÑˆÐµ Ð¾Ð´Ð¸Ð½ Ð½Ð°Ð²Ð¸Ðº Ð´Ð»Ñ� Ñ‚Ñ€ÐµÐ½ÐµÑ"
+"€Ð°"
 
 msgid "Assign Training Titles to Categories"
-msgstr "Присвоїти назви тренінгу до категорій"
+msgstr "ÐŸÑ€Ð¸Ñ�Ð²Ð¾Ñ—Ñ‚Ð¸ Ð½Ð°Ð·Ð²Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ Ð´Ð¾ ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–Ð¹"
 
 msgid "Add/edit Recommended Training Topics"
-msgstr "Додати/редагувати рекомендовані теми тренінгу"
+msgstr ""
+"Ð”Ð¾Ð´Ð°Ñ‚Ð¸/Ñ€ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ñ€ÐµÐºÐ¾Ð¼ÐµÐ½Ð´Ð¾Ð²Ð°Ð½Ñ– Ñ‚ÐµÐ¼Ð¸ Ñ‚Ñ"
+"€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Select the recommended topics for this qualification"
-msgstr "Виберіть рекомендовані теми для цієї кваліфікації"
+msgstr ""
+"Ð’Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ñ€ÐµÐºÐ¾Ð¼ÐµÐ½Ð´Ð¾Ð²Ð°Ð½Ñ– Ñ‚ÐµÐ¼Ð¸ Ð´Ð»Ñ� Ñ†Ñ–Ñ”Ñ— ÐºÐ²Ð"
+"°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ—"
 
 msgid "Are you sure you wish to remove these recommendations?"
-msgstr "Ви впевнені, що хочете видалити ці рекомендації?"
+msgstr ""
+"Ð’Ð¸ Ð²Ð¿ÐµÐ²Ð½ÐµÐ½Ñ–, Ñ‰Ð¾ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ñ†Ñ– Ñ"
+"€ÐµÐºÐ¾Ð¼ÐµÐ½Ð´Ð°Ñ†Ñ–Ñ—?"
 
 msgid "Are you sure you wish to unasign this?"
-msgstr "Ви впевнені, що хочете прибрати це призначення?"
+msgstr ""
+"Ð’Ð¸ Ð²Ð¿ÐµÐ²Ð½ÐµÐ½Ñ–, Ñ‰Ð¾ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ð¿Ñ€Ð¸Ð±Ñ€Ð°Ñ‚Ð¸ Ñ†Ðµ Ð¿Ñ€Ð¸Ð·Ð½Ð"
+"°Ñ‡ÐµÐ½Ð½Ñ�?"
 
 msgid "Two Levels of Approval"
-msgstr "Два рівня затвердження"
+msgstr "Ð”Ð²Ð° Ñ€Ñ–Ð²Ð½Ñ� Ð·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "That user is now a regular approver"
-msgstr "В даний момент цей користувач є регулярною особою, яка затверджує"
+msgstr ""
+"Ð’ Ð´Ð°Ð½Ð¸Ð¹ Ð¼Ð¾Ð¼ÐµÐ½Ñ‚ Ñ†ÐµÐ¹ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡ Ñ” Ñ€ÐµÐ³ÑƒÐ»Ñ�Ñ"
+"€Ð½Ð¾ÑŽ Ð¾Ñ�Ð¾Ð±Ð¾ÑŽ, Ñ�ÐºÐ° Ð·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÑƒÑ”"
 
 msgid "Unable to remove that user as a master approve"
-msgstr "Не вдається видалити цього користувача як головну особу, яка затверджує"
+msgstr ""
+"Ð�Ðµ Ð²Ð´Ð°Ñ”Ñ‚ÑŒÑ�Ñ� Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ñ†ÑŒÐ¾Ð³Ð¾ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð° "
+"Ñ�Ðº Ð³Ð¾Ð»Ð¾Ð²Ð½Ñƒ Ð¾Ñ�Ð¾Ð±Ñƒ, Ñ�ÐºÐ° Ð·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÑƒÑ”"
 
 msgid "That user is now a master approver"
-msgstr "В даний момент цей користувач є головною особою, яка затверджує"
+msgstr ""
+"Ð’ Ð´Ð°Ð½Ð¸Ð¹ Ð¼Ð¾Ð¼ÐµÐ½Ñ‚ Ñ†ÐµÐ¹ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡ Ñ” Ð³Ð¾Ð»Ð¾Ð²Ð½Ð¾ÑŽ "
+"Ð¾Ñ�Ð¾Ð±Ð¾ÑŽ, Ñ�ÐºÐ° Ð·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÑƒÑ”"
 
 msgid "Unable to make that user a master approve"
-msgstr "Неможливо зробити цього користувача головною особою, яка затверджує "
+msgstr ""
+"Ð�ÐµÐ¼Ð¾Ð¶Ð»Ð¸Ð²Ð¾ Ð·Ñ€Ð¾Ð±Ð¸Ñ‚Ð¸ Ñ†ÑŒÐ¾Ð³Ð¾ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð° "
+"Ð³Ð¾Ð»Ð¾Ð²Ð½Ð¾ÑŽ Ð¾Ñ�Ð¾Ð±Ð¾ÑŽ, Ñ�ÐºÐ° Ð·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÑƒÑ” "
 
 msgid "That user is no longer an approver"
-msgstr "Цей користувач вже не є особою, яка затверджує"
+msgstr ""
+"Ð¦ÐµÐ¹ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡ Ð²Ð¶Ðµ Ð½Ðµ Ñ” Ð¾Ñ�Ð¾Ð±Ð¾ÑŽ, Ñ�ÐºÐ° Ð·Ð°Ñ‚Ð²ÐµÑ€Ð"
+"´Ð¶ÑƒÑ”"
 
 msgid "Unable to delete that approver"
-msgstr "Неможливо видалити цю особу, яка затверджує"
+msgstr ""
+"Ð�ÐµÐ¼Ð¾Ð¶Ð»Ð¸Ð²Ð¾ Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ñ†ÑŽ Ð¾Ñ�Ð¾Ð±Ñƒ, Ñ�ÐºÐ° Ð·Ð°Ñ‚Ð²ÐµÑ€Ð"
+"´Ð¶ÑƒÑ”"
 
 msgid "Home Address"
-msgstr "Домашня адреса"
+msgstr "Ð”Ð¾Ð¼Ð°ÑˆÐ½Ñ� Ð°Ð´Ñ€ÐµÑ�Ð°"
 
 msgid "External Classes"
-msgstr "Зовнішні курси"
+msgstr "Ð—Ð¾Ð²Ð½Ñ–ÑˆÐ½Ñ– ÐºÑƒÑ€Ñ�Ð¸"
 
 msgid "Second email"
-msgstr "Додаткова електрона пошта"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚ÐºÐ¾Ð²Ð° ÐµÐ»ÐµÐºÑ‚Ñ€Ð¾Ð½Ð° Ð¿Ð¾ÑˆÑ‚Ð°"
 
 msgid "M&E Responsibility"
-msgstr "Відповідальність за моніторинг і процес визначення якості"
+msgstr ""
+"Ð’Ñ–Ð´Ð¿Ð¾Ð²Ñ–Ð´Ð°Ð»ÑŒÐ½Ñ–Ñ�Ñ‚ÑŒ Ð·Ð° Ð¼Ð¾Ð½Ñ–Ñ‚Ð¾Ñ€Ð¸Ð½Ð³ Ñ– Ð¿Ñ€Ð¾Ñ†ÐµÑ� "
+"Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–"
 
 msgid "Active trainer"
-msgstr "Діючий інструктор"
+msgstr "Ð”Ñ–ÑŽÑ‡Ð¸Ð¹ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€"
 
 msgid "Active Trainer"
-msgstr "Діючий інструктор"
+msgstr "Ð”Ñ–ÑŽÑ‡Ð¸Ð¹ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€"
 
 msgid "Facilitator Information"
-msgstr "Інформація про посередника"
+msgstr "Ð†Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ� Ð¿Ñ€Ð¾ Ð¿Ð¾Ñ�ÐµÑ€ÐµÐ´Ð½Ð¸ÐºÐ°"
 
 msgid "People Approval"
-msgstr "Затвердження людей"
+msgstr "Ð—Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÐµÐ½Ð½Ñ� Ð»ÑŽÐ´ÐµÐ¹"
 
 msgid "Display Last"
-msgstr "Показати останнім"
+msgstr "ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚Ð¸ Ð¾Ñ�Ñ‚Ð°Ð½Ð½Ñ–Ð¼"
 
 msgid "Enabled"
-msgstr "Включено"
+msgstr "Ð’ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¾"
 
 msgid "People Awaiting Approval"
-msgstr "Люди, що очікують затвердження"
+msgstr "Ð›ÑŽÐ´Ð¸, Ñ‰Ð¾ Ð¾Ñ‡Ñ–ÐºÑƒÑŽÑ‚ÑŒ Ð·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "Unapproved People"
-msgstr "Незатверджені люди"
+msgstr "Ð�ÐµÐ·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÐµÐ½Ñ– Ð»ÑŽÐ´Ð¸"
 
 msgid "look for duplicates"
-msgstr "шукати дублікати"
+msgstr "ÑˆÑƒÐºÐ°Ñ‚Ð¸ Ð´ÑƒÐ±Ð»Ñ–ÐºÐ°Ñ‚Ð¸"
 
 msgid "approve"
-msgstr "затвердити"
+msgstr "Ð·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¸Ñ‚Ð¸"
 
 msgid "Both Names"
-msgstr "За ім`ям та призвищем"
+msgstr "Ð—Ð° Ñ–Ð¼`Ñ�Ð¼ Ñ‚Ð° Ð¿Ñ€Ð¸Ð·Ð²Ð¸Ñ‰ÐµÐ¼"
 
 msgid "That person has been approved"
-msgstr "Ця особа була затверджена"
+msgstr "Ð¦Ñ� Ð¾Ñ�Ð¾Ð±Ð° Ð±ÑƒÐ»Ð° Ð·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÐµÐ½Ð°"
 
 msgid "Error approving person: That account could not be found."
-msgstr "Помилка затвердження особистості: не вдалося знайти обліковий запис."
+msgstr ""
+"ÐŸÐ¾Ð¼Ð¸Ð»ÐºÐ° Ð·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÐµÐ½Ð½Ñ� Ð¾Ñ�Ð¾Ð±Ð¸Ñ�Ñ‚Ð¾Ñ�Ñ‚Ñ–: Ð½Ðµ Ð²Ð´Ð"
+"°Ð»Ð¾Ñ�Ñ� Ð·Ð½Ð°Ð¹Ñ‚Ð¸ Ð¾Ð±Ð»Ñ–ÐºÐ¾Ð²Ð¸Ð¹ Ð·Ð°Ð¿Ð¸Ñ�."
 
 msgid "Government employee"
-msgstr "Державний службовець"
+msgstr "Ð”ÐµÑ€Ð¶Ð°Ð²Ð½Ð¸Ð¹ Ñ�Ð»ÑƒÐ¶Ð±Ð¾Ð²ÐµÑ†ÑŒ"
 
 msgid "Professional bodies"
-msgstr "Професійні органи"
+msgstr "ÐŸÑ€Ð¾Ñ„ÐµÑ�Ñ–Ð¹Ð½Ñ– Ð¾Ñ€Ð³Ð°Ð½Ð¸"
 
 msgid "Professional Registration Number"
-msgstr "Професійний реєстраційний номер"
+msgstr "ÐŸÑ€Ð¾Ñ„ÐµÑ�Ñ–Ð¹Ð½Ð¸Ð¹ Ñ€ÐµÑ”Ñ�Ñ‚Ñ€Ð°Ñ†Ñ–Ð¹Ð½Ð¸Ð¹ Ð½Ð¾Ð¼ÐµÑ€"
 
 msgid "Registration Number"
-msgstr "Реєстраційний номер"
+msgstr "Ð ÐµÑ”Ñ�Ñ‚Ñ€Ð°Ñ†Ñ–Ð¹Ð½Ð¸Ð¹ Ð½Ð¾Ð¼ÐµÑ€"
 
 msgid "Disability"
-msgstr "Інвалідність"
+msgstr "Ð†Ð½Ð²Ð°Ð»Ñ–Ð´Ð½Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Nurse Trainer Type"
-msgstr "Тип тренера"
+msgstr "Ð¢Ð¸Ð¿ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Year you started providing care"
-msgstr "Рік, коли ви почали надавати допомогу"
+msgstr "Ð Ñ–Ðº, ÐºÐ¾Ð»Ð¸ Ð²Ð¸ Ð¿Ð¾Ñ‡Ð°Ð»Ð¸ Ð½Ð°Ð´Ð°Ð²Ð°Ñ‚Ð¸ Ð´Ð¾Ð¿Ð¾Ð¼Ð¾Ð³Ñƒ"
 
 msgid "Rank patient groups based on time"
-msgstr "Ранг групи пацієнтів, засновані на часі"
+msgstr ""
+"Ð Ð°Ð½Ð³ Ð³Ñ€ÑƒÐ¿Ð¸ Ð¿Ð°Ñ†Ñ–Ñ”Ð½Ñ‚Ñ–Ð², Ð·Ð°Ñ�Ð½Ð¾Ð²Ð°Ð½Ñ– Ð½Ð° Ñ‡Ð°Ñ�Ñ–"
 
 msgid "Pregnant women"
-msgstr "Вагітні жінки"
+msgstr "Ð’Ð°Ð³Ñ–Ñ‚Ð½Ñ– Ð¶Ñ–Ð½ÐºÐ¸"
 
 msgid "Adults"
-msgstr "Дорослі"
+msgstr "Ð”Ð¾Ñ€Ð¾Ñ�Ð»Ñ–"
 
 msgid "Children"
-msgstr "Діти"
+msgstr "Ð”Ñ–Ñ‚Ð¸"
 
 msgid "Supervised"
-msgstr "Забезпечення контролю"
+msgstr "Ð—Ð°Ð±ÐµÐ·Ð¿ÐµÑ‡ÐµÐ½Ð½Ñ� ÐºÐ¾Ð½Ñ‚Ñ€Ð¾Ð»ÑŽ"
 
 msgid "Indicate the training you received"
-msgstr "Вкажіть тренінг, який ви отримали"
+msgstr "Ð’ÐºÐ°Ð¶Ñ–Ñ‚ÑŒ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³, Ñ�ÐºÐ¸Ð¹ Ð²Ð¸ Ð¾Ñ‚Ñ€Ð¸Ð¼Ð°Ð»Ð¸"
 
 msgid "Import person from Excel"
-msgstr "Імпорт людини із файла Excel"
+msgstr "Ð†Ð¼Ð¿Ð¾Ñ€Ñ‚ Ð»ÑŽÐ´Ð¸Ð½Ð¸ Ñ–Ð· Ñ„Ð°Ð¹Ð»Ð° Excel"
 
 msgid "Training Institution"
-msgstr "Інститут тренінгу"
+msgstr "Ð†Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Import a person"
-msgstr "Імпорт особи"
+msgstr "Ð†Ð¼Ð¿Ð¾Ñ€Ñ‚ Ð¾Ñ�Ð¾Ð±Ð¸"
 
-msgid "Select the file that contains the data (Excel Comma Seperated Values database - CSV) you want to import."
-msgstr "Виберіть файл, який містить дані (значення, розділені комами у базі даних Excel - CSV), які ви хочете імпортувати."
+msgid ""
+"Select the file that contains the data (Excel Comma Seperated Values "
+"database - CSV) you want to import."
+msgstr ""
+"Ð’Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ñ„Ð°Ð¹Ð», Ñ�ÐºÐ¸Ð¹ Ð¼Ñ–Ñ�Ñ‚Ð¸Ñ‚ÑŒ Ð´Ð°Ð½Ñ– (Ð·Ð½Ð"
+"°Ñ‡ÐµÐ½Ð½Ñ�, Ñ€Ð¾Ð·Ð´Ñ–Ð»ÐµÐ½Ñ– ÐºÐ¾Ð¼Ð°Ð¼Ð¸ Ñƒ Ð±Ð°Ð·Ñ– Ð´Ð°Ð½Ð¸Ñ… Excel - "
+"CSV), Ñ�ÐºÑ– Ð²Ð¸ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ñ–Ð¼Ð¿Ð¾Ñ€Ñ‚ÑƒÐ²Ð°Ñ‚Ð¸."
 
 msgid "Get sample template"
-msgstr "Отримати зразок файлу"
+msgstr "ÐžÑ‚Ñ€Ð¸Ð¼Ð°Ñ‚Ð¸ Ð·Ñ€Ð°Ð·Ð¾Ðº Ñ„Ð°Ð¹Ð»Ñƒ"
 
 msgid "Max file upload size"
-msgstr "Максимальний розмір файлу для завантаження"
+msgstr ""
+"ÐœÐ°ÐºÑ�Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¸Ð¹ Ñ€Ð¾Ð·Ð¼Ñ–Ñ€ Ñ„Ð°Ð¹Ð»Ñƒ Ð´Ð»Ñ� Ð·Ð°Ð²Ð°Ð½Ñ‚Ð"
+"°Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "If facility is a hospital, please click specific department"
-msgstr "Якщо установа є лікарнею, будь ласка, виберіть спеціальний департамент"
+msgstr ""
+"Ð¯ÐºÑ‰Ð¾ ÑƒÑ�Ñ‚Ð°Ð½Ð¾Ð²Ð° Ñ” Ð»Ñ–ÐºÐ°Ñ€Ð½ÐµÑŽ, Ð±ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð²Ð¸Ð±ÐµÑ"
+"€Ñ–Ñ‚ÑŒ Ñ�Ð¿ÐµÑ†Ñ–Ð°Ð»ÑŒÐ½Ð¸Ð¹ Ð´ÐµÐ¿Ð°Ñ€Ñ‚Ð°Ð¼ÐµÐ½Ñ‚"
 
 msgid "Residential Address?"
-msgstr "Адреса місця проживання?"
+msgstr "Ð�Ð´Ñ€ÐµÑ�Ð° Ð¼Ñ–Ñ�Ñ†Ñ� Ð¿Ñ€Ð¾Ð¶Ð¸Ð²Ð°Ð½Ð½Ñ�?"
 
 msgid "Reason (if Other selected above)"
-msgstr "Причина (якщо Інші обрані вище)"
+msgstr "ÐŸÑ€Ð¸Ñ‡Ð¸Ð½Ð° (Ñ�ÐºÑ‰Ð¾ Ð†Ð½ÑˆÑ– Ð¾Ð±Ñ€Ð°Ð½Ñ– Ð²Ð¸Ñ‰Ðµ)"
 
 msgid "required"
-msgstr "обов'язкове поле"
+msgstr "Ð¾Ð±Ð¾Ð²'Ñ�Ð·ÐºÐ¾Ð²Ðµ Ð¿Ð¾Ð»Ðµ"
 
 msgid "Required"
-msgstr "Обов'язкове поле"
+msgstr "ÐžÐ±Ð¾Ð²'Ñ�Ð·ÐºÐ¾Ð²Ðµ Ð¿Ð¾Ð»Ðµ"
 
 msgid "Show me Trainings From"
-msgstr "Показати тренінги за"
+msgstr "ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð·Ð°"
 
 msgid "Trainings by Participants Viewing Location"
-msgstr "Тренінги за місцезнаходженням учасників"
+msgstr ""
+"Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð·Ð° Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ�Ð¼ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "Days Attended"
-msgstr "Дні відвідування"
+msgstr "Ð”Ð½Ñ– Ð²Ñ–Ð´Ð²Ñ–Ð´ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Complete"
-msgstr "Завершено"
+msgstr "Ð—Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð¾"
 
 msgid "Participant Test Scores"
-msgstr "Результати учасників тестування"
+msgstr "Ð ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð¸ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–Ð² Ñ‚ÐµÑ�Ñ‚ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Approved"
-msgstr "Затверджений"
+msgstr "Ð—Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÐµÐ½Ð¸Ð¹"
 
 msgid "Rejected"
-msgstr "Відхилено"
+msgstr "Ð’Ñ–Ð´Ñ…Ð¸Ð»ÐµÐ½Ð¾"
 
 msgid "Import Scores"
-msgstr "Імпортувати результати"
+msgstr "Ð†Ð¼Ð¿Ð¾Ñ€Ñ‚ÑƒÐ²Ð°Ñ‚Ð¸ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð¸"
 
 msgid "Test scores"
-msgstr "Бали тестування"
+msgstr "Ð‘Ð°Ð»Ð¸ Ñ‚ÐµÑ�Ñ‚ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Score Import"
-msgstr "Імпорт результатів"
+msgstr "Ð†Ð¼Ð¿Ð¾Ñ€Ñ‚ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ñ–Ð²"
 
 msgid "Enter scores by importing a CSV file."
-msgstr "Введіть оцінки шляхом імпорту файлу CSV."
+msgstr ""
+"Ð’Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ð¾Ñ†Ñ–Ð½ÐºÐ¸ ÑˆÐ»Ñ�Ñ…Ð¾Ð¼ Ñ–Ð¼Ð¿Ð¾Ñ€Ñ‚Ñƒ Ñ„Ð°Ð¹Ð»Ñƒ CSV."
 
 msgid "Get sample Excel template"
-msgstr "Отримати зразок файлу Excel"
+msgstr "ÐžÑ‚Ñ€Ð¸Ð¼Ð°Ñ‚Ð¸ Ð·Ñ€Ð°Ð·Ð¾Ðº Ñ„Ð°Ð¹Ð»Ñƒ Excel"
 
 msgid "No Trainings selected"
-msgstr "Жодного тренінгу не обрано"
+msgstr "Ð–Ð¾Ð´Ð½Ð¾Ð³Ð¾ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ Ð½Ðµ Ð¾Ð±Ñ€Ð°Ð½Ð¾"
 
 msgid "The Training (s) have been assigned."
-msgstr "Тренінги були призначені."
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð±ÑƒÐ»Ð¸ Ð¿Ñ€Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ñ–."
 
 msgid "Merge From"
-msgstr "Об`єднати з"
+msgstr "ÐžÐ±`Ñ”Ð´Ð½Ð°Ñ‚Ð¸ Ð·"
 
 msgid "Merge To"
-msgstr "Об`єднати в"
+msgstr "ÐžÐ±`Ñ”Ð´Ð½Ð°Ñ‚Ð¸ Ð²"
 
 msgid "You must select a valid person to merge"
-msgstr "Необхідно вибрати особистість для об'єднання записів"
+msgstr ""
+"Ð�ÐµÐ¾Ð±Ñ…Ñ–Ð´Ð½Ð¾ Ð²Ð¸Ð±Ñ€Ð°Ñ‚Ð¸ Ð¾Ñ�Ð¾Ð±Ð¸Ñ�Ñ‚Ñ–Ñ�Ñ‚ÑŒ Ð´Ð»Ñ� Ð¾Ð±'Ñ”Ð´Ð½Ð"
+"°Ð½Ð½Ñ� Ð·Ð°Ð¿Ð¸Ñ�Ñ–Ð²"
 
 msgid "You must select a valid facility to merge"
-msgstr "Необхідно вибрати заклад для об'єднання записів"
+msgstr ""
+"Ð�ÐµÐ¾Ð±Ñ…Ñ–Ð´Ð½Ð¾ Ð²Ð¸Ð±Ñ€Ð°Ñ‚Ð¸ Ð·Ð°ÐºÐ»Ð°Ð´ Ð´Ð»Ñ� Ð¾Ð±'Ñ”Ð´Ð½Ð°Ð½Ð½Ñ� Ð·Ð"
+"°Ð¿Ð¸Ñ�Ñ–Ð²"
 
 msgid "Enter Secondary Qualifications for this qualification."
-msgstr "Введіть додаткову кваліфікацію для цієї кваліфікації."
+msgstr ""
+"Ð’Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ð´Ð¾Ð´Ð°Ñ‚ÐºÐ¾Ð²Ñƒ ÐºÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–ÑŽ Ð´Ð»Ñ� Ñ†Ñ–Ñ”Ñ— "
+"ÐºÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ—."
 
 msgid "Allow Multiple Facility Sponsors"
-msgstr "Дозволяється декілька спонсорів закладу"
+msgstr ""
+"Ð”Ð¾Ð·Ð²Ð¾Ð»Ñ�Ñ”Ñ‚ÑŒÑ�Ñ� Ð´ÐµÐºÑ–Ð»ÑŒÐºÐ° Ñ�Ð¿Ð¾Ð½Ñ�Ð¾Ñ€Ñ–Ð² Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Facility Approval"
-msgstr "Затвердження закладу"
+msgstr "Ð—Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÐµÐ½Ð½Ñ� Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Commodity Table"
-msgstr "Таблиця товарів"
+msgstr "Ð¢Ð°Ð±Ð»Ð¸Ñ†Ñ� Ñ‚Ð¾Ð²Ð°Ñ€Ñ–Ð²"
 
 msgid "Commodity Table Column: Commodity Name"
-msgstr "Стовпець таблиці товарів: Ім'я товару"
+msgstr "Ð¡Ñ‚Ð¾Ð²Ð¿ÐµÑ†ÑŒ Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ– Ñ‚Ð¾Ð²Ð°Ñ€Ñ–Ð²: Ð†Ð¼'Ñ� Ñ‚Ð¾Ð²Ð°Ñ€Ñƒ"
 
 msgid "Commodity Table Column: Date"
-msgstr "Стовпець таблиці товарів: Дата"
+msgstr "Ð¡Ñ‚Ð¾Ð²Ð¿ÐµÑ†ÑŒ Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ– Ñ‚Ð¾Ð²Ð°Ñ€Ñ–Ð²: Ð”Ð°Ñ‚Ð°"
 
 msgid "Commodity Table Column: Consumption"
-msgstr "Стовпець таблиці товарів: Витрати"
+msgstr "Ð¡Ñ‚Ð¾Ð²Ð¿ÐµÑ†ÑŒ Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ– Ñ‚Ð¾Ð²Ð°Ñ€Ñ–Ð²: Ð’Ð¸Ñ‚Ñ€Ð°Ñ‚Ð¸"
 
 msgid "Commodity Table Column: Out of Stock"
-msgstr "Стовпець таблиці товарів: Немає у наявності на складі"
+msgstr ""
+"Ð¡Ñ‚Ð¾Ð²Ð¿ÐµÑ†ÑŒ Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ– Ñ‚Ð¾Ð²Ð°Ñ€Ñ–Ð²: Ð�ÐµÐ¼Ð°Ñ” Ñƒ Ð½Ð"
+"°Ñ�Ð²Ð½Ð¾Ñ�Ñ‚Ñ– Ð½Ð° Ñ�ÐºÐ»Ð°Ð´Ñ–"
 
 msgid "Latitude and Longitude"
-msgstr "Широта і довгота"
+msgstr "Ð¨Ð¸Ñ€Ð¾Ñ‚Ð° Ñ– Ð´Ð¾Ð²Ð³Ð¾Ñ‚Ð°"
 
 msgid "Latitude"
-msgstr "Широта"
+msgstr "Ð¨Ð¸Ñ€Ð¾Ñ‚Ð°"
 
 msgid "Longitude"
-msgstr "Довгота"
+msgstr "Ð”Ð¾Ð²Ð³Ð¾Ñ‚Ð°"
 
 msgid "Sponsor Date"
-msgstr "Дати спонсорування"
+msgstr "Ð”Ð°Ñ‚Ð¸ Ñ�Ð¿Ð¾Ð½Ñ�Ð¾Ñ€ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Commodity Names"
-msgstr "Назви товару"
+msgstr "Ð�Ð°Ð·Ð²Ð¸ Ñ‚Ð¾Ð²Ð°Ñ€Ñƒ"
 
 msgid "Commodity Types"
-msgstr "Типу товару"
+msgstr "Ð¢Ð¸Ð¿Ñƒ Ñ‚Ð¾Ð²Ð°Ñ€Ñƒ"
 
 msgid "Update Labels"
-msgstr "Оновити поля"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð¿Ð¾Ð»Ñ�"
 
 msgid "License And Registration"
-msgstr "Ліцензія та Реєстрація"
+msgstr "Ð›Ñ–Ñ†ÐµÐ½Ð·Ñ–Ñ� Ñ‚Ð° Ð ÐµÑ”Ñ�Ñ‚Ñ€Ð°Ñ†Ñ–Ñ�"
 
 msgid "Type Of Contract"
-msgstr "Тип контракту"
+msgstr "Ð¢Ð¸Ð¿ ÐºÐ¾Ð½Ñ‚Ñ€Ð°ÐºÑ‚Ñƒ"
 
 msgid "ps custom field"
-msgstr "поле користувача"
+msgstr "Ð¿Ð¾Ð»Ðµ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡Ð°"
 
 msgid "Spouse Names"
-msgstr "Імена подружжя"
+msgstr "Ð†Ð¼ÐµÐ½Ð° Ð¿Ð¾Ð´Ñ€ÑƒÐ¶Ð¶Ñ�"
 
 msgid "CA Mark"
-msgstr "Відмітка"
+msgstr "Ð’Ñ–Ð´Ð¼Ñ–Ñ‚ÐºÐ°"
 
 msgid "Add class"
-msgstr "Додати курс"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ ÐºÑƒÑ€Ñ�"
 
 msgid "Add cadre"
-msgstr "Додати кадр"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ ÐºÐ°Ð´Ñ€"
 
 msgid "All form fields are required."
-msgstr "Всі поля форми обов'язкові"
+msgstr "Ð’Ñ�Ñ– Ð¿Ð¾Ð»Ñ� Ñ„Ð¾Ñ€Ð¼Ð¸ Ð¾Ð±Ð¾Ð²'Ñ�Ð·ÐºÐ¾Ð²Ñ–"
 
 msgid "Cadre name"
-msgstr "Ім`я кадру"
+msgstr "Ð†Ð¼`Ñ� ÐºÐ°Ð´Ñ€Ñƒ"
 
 msgid "Class name"
-msgstr "Найменування курсу"
+msgstr "Ð�Ð°Ð¹Ð¼ÐµÐ½ÑƒÐ²Ð°Ð½Ð½Ñ� ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "The end date cannot be before the start date"
-msgstr "Дата закінчення не може бути раніше дати початку"
+msgstr ""
+"Ð”Ð°Ñ‚Ð° Ð·Ð°ÐºÑ–Ð½Ñ‡ÐµÐ½Ð½Ñ� Ð½Ðµ Ð¼Ð¾Ð¶Ðµ Ð±ÑƒÑ‚Ð¸ Ñ€Ð°Ð½Ñ–ÑˆÐµ Ð´Ð°Ñ‚Ð¸ "
+"Ð¿Ð¾Ñ‡Ð°Ñ‚ÐºÑƒ"
 
 msgid "Update class"
-msgstr "Оновити курс"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ ÐºÑƒÑ€Ñ�"
 
 msgid "Update cadre"
-msgstr "Оновити кадр"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ ÐºÐ°Ð´Ñ€"
 
 msgid "Employee Tracking System"
-msgstr "Система моніторингу співробітників"
+msgstr "Ð¡Ð¸Ñ�Ñ‚ÐµÐ¼Ð° Ð¼Ð¾Ð½Ñ–Ñ‚Ð¾Ñ€Ð¸Ð½Ð³Ñƒ Ñ�Ð¿Ñ–Ð²Ñ€Ð¾Ð±Ñ–Ñ‚Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "Funding sources"
-msgstr "Джерела фінансування"
+msgstr "Ð”Ð¶ÐµÑ€ÐµÐ»Ð° Ñ„Ñ–Ð½Ð°Ð½Ñ�ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Funding source"
-msgstr "Джерела фінансування"
+msgstr "Ð”Ð¶ÐµÑ€ÐµÐ»Ð° Ñ„Ñ–Ð½Ð°Ð½Ñ�ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Add funding"
-msgstr "Додати джерело фінансування"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð´Ð¶ÐµÑ€ÐµÐ»Ð¾ Ñ„Ñ–Ð½Ð°Ð½Ñ�ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Update funding"
-msgstr "Оновити джерело фінансування"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð´Ð¶ÐµÑ€ÐµÐ»Ð¾ Ñ„Ñ–Ð½Ð°Ð½Ñ�ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Add institution type"
-msgstr "Додати тип інституту"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ñ‚Ð¸Ð¿ Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñƒ"
 
 msgid "Update institution type"
-msgstr "Оновити тип інституту"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ñ‚Ð¸Ð¿ Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñƒ"
 
 msgid "Abbreviation"
-msgstr "Абревіатура"
+msgstr "Ð�Ð±Ñ€ÐµÐ²Ñ–Ð°Ñ‚ÑƒÑ€Ð°"
 
 msgid "Add language"
-msgstr "Додати мову"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð¼Ð¾Ð²Ñƒ"
 
 msgid "Update language"
-msgstr "Оновити мову"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð¼Ð¾Ð²Ñƒ"
 
 msgid "Add nationality"
-msgstr "Додати національність"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð°Ñ†Ñ–Ð¾Ð½Ð°Ð»ÑŒÐ½Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Update nationality"
-msgstr "Оновити національність"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð½Ð°Ñ†Ñ–Ð¾Ð½Ð°Ð»ÑŒÐ½Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Add reason"
-msgstr "Додати причину"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð¿Ñ€Ð¸Ñ‡Ð¸Ð½Ñƒ"
 
 msgid "Update reason"
-msgstr "Оновити причину"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð¿Ñ€Ð¸Ñ‡Ð¸Ð½Ñƒ"
 
 msgid "Add sponsor"
-msgstr "Додати спонсора"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ñ�Ð¿Ð¾Ð½Ñ�Ð¾Ñ€Ð°"
 
 msgid "Update sponsor"
-msgstr "Оновити спонсора"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ñ�Ð¿Ð¾Ð½Ñ�Ð¾Ñ€Ð°"
 
 msgid "Add tutor type"
-msgstr "Додатти тип інструктору"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ñ‚Ð¸ Ñ‚Ð¸Ð¿ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñƒ"
 
 msgid "Update tutor type"
-msgstr "Оновити тип інструктору"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ñ‚Ð¸Ð¿ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñƒ"
 
 msgid "Tutor type"
-msgstr "Тип тренера"
+msgstr "Ð¢Ð¸Ð¿ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Add course type"
-msgstr "Додати тип курсу"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ñ‚Ð¸Ð¿ ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "Update course type"
-msgstr "Оновити тип курсу"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ñ‚Ð¸Ð¿ ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "Add religious denomination"
-msgstr "Додати належність до релігії"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð°Ð»ÐµÐ¶Ð½Ñ–Ñ�Ñ‚ÑŒ Ð´Ð¾ Ñ€ÐµÐ»Ñ–Ð³Ñ–Ñ—"
 
 msgid "Update religious denomination"
-msgstr "Оновити належність до релігії"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð½Ð°Ð»ÐµÐ¶Ð½Ñ–Ñ�Ñ‚ÑŒ Ð´Ð¾ Ñ€ÐµÐ»Ñ–Ð³Ñ–Ñ—"
 
 msgid "Employee Module"
-msgstr "Модуль співробітників"
+msgstr "ÐœÐ¾Ð´ÑƒÐ»ÑŒ Ñ�Ð¿Ñ–Ð²Ñ€Ð¾Ð±Ñ–Ñ‚Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "Access Employees"
-msgstr "Доступ до модулю співробітників"
+msgstr "Ð”Ð¾Ñ�Ñ‚ÑƒÐ¿ Ð´Ð¾ Ð¼Ð¾Ð´ÑƒÐ»ÑŽ Ñ�Ð¿Ñ–Ð²Ñ€Ð¾Ð±Ñ–Ñ‚Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "Restrict Access"
-msgstr "Обмеження доступу"
+msgstr "ÐžÐ±Ð¼ÐµÐ¶ÐµÐ½Ð½Ñ� Ð´Ð¾Ñ�Ñ‚ÑƒÐ¿Ñƒ"
 
 msgid "All organizations data"
-msgstr "Всі дані організації"
+msgstr "Ð’Ñ�Ñ– Ð´Ð°Ð½Ñ– Ð¾Ñ€Ð³Ð°Ð½Ñ–Ð·Ð°Ñ†Ñ–Ñ—"
 
 msgid "Only selected organizations"
-msgstr "Лише обрані організації"
+msgstr "Ð›Ð¸ÑˆÐµ Ð¾Ð±Ñ€Ð°Ð½Ñ– Ð¾Ñ€Ð³Ð°Ð½Ñ–Ð·Ð°Ñ†Ñ–Ñ—"
 
 msgid "Ability to duplicate Training"
-msgstr "Здатність дублювати тренінг"
+msgstr "Ð—Ð´Ð°Ñ‚Ð½Ñ–Ñ�Ñ‚ÑŒ Ð´ÑƒÐ±Ð»ÑŽÐ²Ð°Ñ‚Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "Approve people and facilities"
-msgstr "Затвердити людей та установи"
+msgstr "Ð—Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¸Ñ‚Ð¸ Ð»ÑŽÐ´ÐµÐ¹ Ñ‚Ð° ÑƒÑ�Ñ‚Ð°Ð½Ð¾Ð²Ð¸"
 
 msgid "All Institutions"
-msgstr "Всі інститути"
+msgstr "Ð’Ñ�Ñ– Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ð¸"
 
-msgid "User is Administrator or can edit drop down lists, titles, and data, or import excel records"
-msgstr "Користувач є адміністратором або можна редагувати списки, що розкриваються, заголовкі і дані, або імпортувати звіти Excel"
+msgid ""
+"User is Administrator or can edit drop down lists, titles, and data, or "
+"import excel records"
+msgstr ""
+"ÐšÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡ Ñ” Ð°Ð´Ð¼Ñ–Ð½Ñ–Ñ�Ñ‚Ñ€Ð°Ñ‚Ð¾Ñ€Ð¾Ð¼ Ð°Ð±Ð¾ Ð¼Ð¾Ð¶Ð½Ð° Ñ"
+"€ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ñ�Ð¿Ð¸Ñ�ÐºÐ¸, Ñ‰Ð¾ Ñ€Ð¾Ð·ÐºÑ€Ð¸Ð²Ð°ÑŽÑ‚ÑŒÑ�Ñ�, Ð·Ð"
+"°Ð³Ð¾Ð»Ð¾Ð²ÐºÑ– Ñ– Ð´Ð°Ð½Ñ–, Ð°Ð±Ð¾ Ñ–Ð¼Ð¿Ð¾Ñ€Ñ‚ÑƒÐ²Ð°Ñ‚Ð¸ Ð·Ð²Ñ–Ñ‚Ð¸ Excel"
 
 msgid "Next User"
-msgstr "Наступний користувач"
+msgstr "Ð�Ð°Ñ�Ñ‚ÑƒÐ¿Ð½Ð¸Ð¹ ÐºÐ¾Ñ€Ð¸Ñ�Ñ‚ÑƒÐ²Ð°Ñ‡"
 
 msgid "SkillSmart Main Settings"
-msgstr "Головні настройки навичок"
+msgstr "Ð“Ð¾Ð»Ð¾Ð²Ð½Ñ– Ð½Ð°Ñ�Ñ‚Ñ€Ð¾Ð¹ÐºÐ¸ Ð½Ð°Ð²Ð¸Ñ‡Ð¾Ðº"
 
 msgid "Professional Bodies"
-msgstr "Професійні органи"
+msgstr "ÐŸÑ€Ð¾Ñ„ÐµÑ�Ñ–Ð¹Ð½Ñ– Ð¾Ñ€Ð³Ð°Ð½Ð¸"
 
 msgid "Supervision"
-msgstr "Забезпечення контролю"
+msgstr "Ð—Ð°Ð±ÐµÐ·Ð¿ÐµÑ‡ÐµÐ½Ð½Ñ� ÐºÐ¾Ð½Ñ‚Ñ€Ð¾Ð»ÑŽ"
 
 msgid "Add supervised"
-msgstr "Додати забезпечення контролю"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð·Ð°Ð±ÐµÐ·Ð¿ÐµÑ‡ÐµÐ½Ð½Ñ� ÐºÐ¾Ð½Ñ‚Ñ€Ð¾Ð»ÑŽ"
 
 msgid "Update supervised"
-msgstr "Оновити забезпечення контролю"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð·Ð°Ð±ÐµÐ·Ð¿ÐµÑ‡ÐµÐ½Ð½Ñ� ÐºÐ¾Ð½Ñ‚Ñ€Ð¾Ð»ÑŽ"
 
 msgid "Supervision frequency"
-msgstr "Забезпечення частоти контролю"
+msgstr "Ð—Ð°Ð±ÐµÐ·Ð¿ÐµÑ‡ÐµÐ½Ð½Ñ� Ñ‡Ð°Ñ�Ñ‚Ð¾Ñ‚Ð¸ ÐºÐ¾Ð½Ñ‚Ñ€Ð¾Ð»ÑŽ"
 
 msgid "Add supervision frequency"
-msgstr "Додати забезпечення частоти контролю"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð·Ð°Ð±ÐµÐ·Ð¿ÐµÑ‡ÐµÐ½Ð½Ñ� Ñ‡Ð°Ñ�Ñ‚Ð¾Ñ‚Ð¸ ÐºÐ¾Ð½Ñ‚Ñ€Ð¾Ð»ÑŽ"
 
 msgid "Update supervision frequency"
-msgstr "Оновити забезпечення частоти контролю"
+msgstr ""
+"ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð·Ð°Ð±ÐµÐ·Ð¿ÐµÑ‡ÐµÐ½Ð½Ñ� Ñ‡Ð°Ñ�Ñ‚Ð¾Ñ‚Ð¸ ÐºÐ¾Ð½Ñ‚Ñ€Ð¾Ð»ÑŽ"
 
 msgid "Training received"
-msgstr "Отриманий тренінг"
+msgstr "ÐžÑ‚Ñ€Ð¸Ð¼Ð°Ð½Ð¸Ð¹ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "Add training received"
-msgstr "Додати тренінг, який отримали"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³, Ñ�ÐºÐ¸Ð¹ Ð¾Ñ‚Ñ€Ð¸Ð¼Ð°Ð»Ð¸"
 
 msgid "Add trainings"
-msgstr "Додати тренінги"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸"
 
 msgid "Update training received"
-msgstr "Оновити тренінг, що отримали"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³, Ñ‰Ð¾ Ð¾Ñ‚Ñ€Ð¸Ð¼Ð°Ð»Ð¸"
 
 msgid "Facility Departments"
-msgstr "Відділи закладу"
+msgstr "Ð’Ñ–Ð´Ð´Ñ–Ð»Ð¸ Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Facility department"
-msgstr "Відділ закладу"
+msgstr "Ð’Ñ–Ð´Ð´Ñ–Ð» Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Add facility department"
-msgstr "Додати відділ закладу"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð²Ñ–Ð´Ð´Ñ–Ð» Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Update facility department"
-msgstr "Оновити відділ закладу"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð²Ñ–Ð´Ð´Ñ–Ð» Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Competencies"
-msgstr "Компетенції"
+msgstr "ÐšÐ¾Ð¼Ð¿ÐµÑ‚ÐµÐ½Ñ†Ñ–Ñ—"
 
 msgid "Competency"
-msgstr "Компетенція"
+msgstr "ÐšÐ¾Ð¼Ð¿ÐµÑ‚ÐµÐ½Ñ†Ñ–Ñ�"
 
 msgid "Add competency"
-msgstr "Додати компетенцію"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ ÐºÐ¾Ð¼Ð¿ÐµÑ‚ÐµÐ½Ñ†Ñ–ÑŽ"
 
 msgid "Update competency"
-msgstr "Оновити компетенцію"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ ÐºÐ¾Ð¼Ð¿ÐµÑ‚ÐµÐ½Ñ†Ñ–ÑŽ"
 
 msgid "Nurse trainer type"
-msgstr "Тип тренера"
+msgstr "Ð¢Ð¸Ð¿ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Occupational Categories"
-msgstr "Професійні категорії"
+msgstr "ÐŸÑ€Ð¾Ñ„ÐµÑ�Ñ–Ð¹Ð½Ñ– ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–Ñ—"
 
 msgid "Add race"
-msgstr "Додати расу"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ñ€Ð°Ñ�Ñƒ"
 
 msgid "Update race"
-msgstr "Оновити расу"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ñ€Ð°Ñ�Ñƒ"
 
 msgid "Add disability"
-msgstr "Додати інвалідність"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ñ–Ð½Ð²Ð°Ð»Ñ–Ð´Ð½Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Update disability"
-msgstr "Оновити інвалідність"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ñ–Ð½Ð²Ð°Ð»Ñ–Ð´Ð½Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Add professional body"
-msgstr "Додати професійну організацію"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð¿Ñ€Ð¾Ñ„ÐµÑ�Ñ–Ð¹Ð½Ñƒ Ð¾Ñ€Ð³Ð°Ð½Ñ–Ð·Ð°Ñ†Ñ–ÑŽ"
 
 msgid "Update professional body"
-msgstr "Оновити професійну організацію"
+msgstr "ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð¿Ñ€Ð¾Ñ„ÐµÑ�Ñ–Ð¹Ð½Ñƒ Ð¾Ñ€Ð³Ð°Ð½Ñ–Ð·Ð°Ñ†Ñ–ÑŽ"
 
 msgid "Professional body"
-msgstr "Професійна організація"
+msgstr "ÐŸÑ€Ð¾Ñ„ÐµÑ�Ñ–Ð¹Ð½Ð° Ð¾Ñ€Ð³Ð°Ð½Ñ–Ð·Ð°Ñ†Ñ–Ñ�"
 
 msgid "Question, A-E options"
-msgstr "Питання, А-Е варіанти"
+msgstr "ÐŸÐ¸Ñ‚Ð°Ð½Ð½Ñ�, Ð�-Ð• Ð²Ð°Ñ€Ñ–Ð°Ð½Ñ‚Ð¸"
 
 msgid "Question, yes/no options"
-msgstr "Питання так/ні варіанти"
+msgstr "ÐŸÐ¸Ñ‚Ð°Ð½Ð½Ñ� Ñ‚Ð°Ðº/Ð½Ñ– Ð²Ð°Ñ€Ñ–Ð°Ð½Ñ‚Ð¸"
 
 msgid "Question, textbox"
-msgstr "Питання, текстове поле"
+msgstr "ÐŸÐ¸Ñ‚Ð°Ð½Ð½Ñ�, Ñ‚ÐµÐºÑ�Ñ‚Ð¾Ð²Ðµ Ð¿Ð¾Ð»Ðµ"
 
 msgid "Field order"
-msgstr "Порядок поля"
+msgstr "ÐŸÐ¾Ñ€Ñ�Ð´Ð¾Ðº Ð¿Ð¾Ð»Ñ�"
 
 msgid "Text header"
-msgstr "Текст заголовку"
+msgstr "Ð¢ÐµÐºÑ�Ñ‚ Ð·Ð°Ð³Ð¾Ð»Ð¾Ð²ÐºÑƒ"
 
 msgid "Field type"
-msgstr "Тип поля"
+msgstr "Ð¢Ð¸Ð¿ Ð¿Ð¾Ð»Ñ�"
 
 msgid "Qualification group"
-msgstr "Кваліфікаційна група"
+msgstr "ÐšÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ð¹Ð½Ð° Ð³Ñ€ÑƒÐ¿Ð°"
 
 msgid "Link to qualification"
-msgstr "Посилання на кваліфікацію"
+msgstr "ÐŸÐ¾Ñ�Ð¸Ð»Ð°Ð½Ð½Ñ� Ð½Ð° ÐºÐ²Ð°Ð»Ñ–Ñ„Ñ–ÐºÐ°Ñ†Ñ–ÑŽ"
 
 msgid "Edit name"
-msgstr "Редагувати назву"
+msgstr "Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ð½Ð°Ð·Ð²Ñƒ"
 
 msgid "Employee Settings"
-msgstr "Налаштування співробітника"
+msgstr "Ð�Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ� Ñ�Ð¿Ñ–Ð²Ñ€Ð¾Ð±Ñ–Ñ‚Ð½Ð¸ÐºÐ°"
 
 msgid "Partner Importance"
-msgstr "Значення партнера"
+msgstr "Ð—Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ð°"
 
 msgid "Build Funding"
-msgstr "Механізм фінансування"
+msgstr "ÐœÐµÑ…Ð°Ð½Ñ–Ð·Ð¼ Ñ„Ñ–Ð½Ð°Ð½Ñ�ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Delete Funding"
-msgstr "Видалити фінансування"
+msgstr "Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ñ„Ñ–Ð½Ð°Ð½Ñ�ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Local Currency"
-msgstr "Регіональна валюта"
+msgstr "Ð ÐµÐ³Ñ–Ð¾Ð½Ð°Ð»ÑŒÐ½Ð° Ð²Ð°Ð»ÑŽÑ‚Ð°"
 
 msgid "Sub Partner"
-msgstr "Субпартнер "
+msgstr "Ð¡ÑƒÐ±Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€ "
 
 msgid "Type of Partner"
-msgstr "Тип партнера"
+msgstr "Ð¢Ð¸Ð¿ Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ð°"
 
 msgid "Employee Base"
-msgstr "База співробітника"
+msgstr "Ð‘Ð°Ð·Ð° Ñ�Ð¿Ñ–Ð²Ñ€Ð¾Ð±Ñ–Ñ‚Ð½Ð¸ÐºÐ°"
 
 msgid "Site Type"
-msgstr "Тип сторінки"
+msgstr "Ð¢Ð¸Ð¿ Ñ�Ñ‚Ð¾Ñ€Ñ–Ð½ÐºÐ¸"
 
 msgid "Funded hours per week"
-msgstr "Фінансування годин на тиждень"
+msgstr "Ð¤Ñ–Ð½Ð°Ð½Ñ�ÑƒÐ²Ð°Ð½Ð½Ñ� Ð³Ð¾Ð´Ð¸Ð½ Ð½Ð° Ñ‚Ð¸Ð¶Ð´ÐµÐ½ÑŒ"
 
 msgid "Disability Comments"
-msgstr "Коментарі до інвалідності"
+msgstr "ÐšÐ¾Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ñ– Ð´Ð¾ Ñ–Ð½Ð²Ð°Ð»Ñ–Ð´Ð½Ð¾Ñ�Ñ‚Ñ–"
 
 msgid "Annual Cost"
-msgstr "Щорічні витрати"
+msgstr "Ð©Ð¾Ñ€Ñ–Ñ‡Ð½Ñ– Ð²Ð¸Ñ‚Ñ€Ð°Ñ‚Ð¸"
 
 msgid "Benefits"
-msgstr "Пільги"
+msgstr "ÐŸÑ–Ð»ÑŒÐ³Ð¸"
 
 msgid "Additional Expenses"
-msgstr "Додаткові витрати"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚ÐºÐ¾Ð²Ñ– Ð²Ð¸Ñ‚Ñ€Ð°Ñ‚Ð¸"
 
 msgid "Stipend"
-msgstr "Стипендія"
+msgstr "Ð¡Ñ‚Ð¸Ð¿ÐµÐ½Ð´Ñ–Ñ�"
 
 msgid "Landing Page Comments"
-msgstr "Коментарі до основної сторінки"
+msgstr "ÐšÐ¾Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ñ– Ð´Ð¾ Ð¾Ñ�Ð½Ð¾Ð²Ð½Ð¾Ñ— Ñ�Ñ‚Ð¾Ñ€Ñ–Ð½ÐºÐ¸"
 
 msgid "Hours per Mechanism"
-msgstr "Годин за механізмом"
+msgstr "Ð“Ð¾Ð´Ð¸Ð½ Ð·Ð° Ð¼ÐµÑ…Ð°Ð½Ñ–Ð·Ð¼Ð¾Ð¼"
 
 msgid "Annual Cost to Mechanism"
-msgstr "Щорічні витрати механізму"
+msgstr "Ð©Ð¾Ñ€Ñ–Ñ‡Ð½Ñ– Ð²Ð¸Ñ‚Ñ€Ð°Ñ‚Ð¸ Ð¼ÐµÑ…Ð°Ð½Ñ–Ð·Ð¼Ñƒ"
 
 msgid "Site Name"
-msgstr "Назва сайту"
+msgstr "Ð�Ð°Ð·Ð²Ð° Ñ�Ð°Ð¹Ñ‚Ñƒ"
 
 msgid "CHW Supervisor"
-msgstr "Керівник"
+msgstr "ÐšÐµÑ€Ñ–Ð²Ð½Ð¸Ðº"
 
 msgid "Actual Transition Date"
-msgstr "Дата фактичного переходу"
+msgstr "Ð”Ð°Ñ‚Ð° Ñ„Ð°ÐºÑ‚Ð¸Ñ‡Ð½Ð¾Ð³Ð¾ Ð¿ÐµÑ€ÐµÑ…Ð¾Ð´Ñƒ"
 
 msgid "Actual Transition"
-msgstr "Фактичний перехід"
+msgstr "Ð¤Ð°ÐºÑ‚Ð¸Ñ‡Ð½Ð¸Ð¹ Ð¿ÐµÑ€ÐµÑ…Ñ–Ð´"
 
 msgid "Transition confirmed"
-msgstr "Затверджений перехід"
+msgstr "Ð—Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÐµÐ½Ð¸Ð¹ Ð¿ÐµÑ€ÐµÑ…Ñ–Ð´"
 
 msgid "Intended Transition"
-msgstr "Передбачуваний перехід"
+msgstr "ÐŸÐµÑ€ÐµÐ´Ð±Ð°Ñ‡ÑƒÐ²Ð°Ð½Ð¸Ð¹ Ð¿ÐµÑ€ÐµÑ…Ñ–Ð´"
 
 msgid "Agreement end date"
-msgstr "Дата закінчення договору"
+msgstr "Ð”Ð°Ñ‚Ð° Ð·Ð°ÐºÑ–Ð½Ñ‡ÐµÐ½Ð½Ñ� Ð´Ð¾Ð³Ð¾Ð²Ð¾Ñ€Ñƒ"
 
 msgid "Contract end date"
-msgstr "Дата закінчення контракту"
+msgstr "Ð”Ð°Ñ‚Ð° Ð·Ð°ÐºÑ–Ð½Ñ‡ÐµÐ½Ð½Ñ� ÐºÐ¾Ð½Ñ‚Ñ€Ð°ÐºÑ‚Ñƒ"
 
 msgid "ID/Passport Number"
-msgstr "Державне посвідчення особи"
+msgstr "Ð”ÐµÑ€Ð¶Ð°Ð²Ð½Ðµ Ð¿Ð¾Ñ�Ð²Ñ–Ð´Ñ‡ÐµÐ½Ð½Ñ� Ð¾Ñ�Ð¾Ð±Ð¸"
 
 msgid "Incoming partner"
-msgstr "Вхідний партнер"
+msgstr "Ð’Ñ…Ñ–Ð´Ð½Ð¸Ð¹ Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€"
 
 msgid "What training do you provide"
-msgstr "Яке навчання ви надаєте"
+msgstr "Ð¯ÐºÐµ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ� Ð²Ð¸ Ð½Ð°Ð´Ð°Ñ”Ñ‚Ðµ"
 
 msgid "Courses Completed"
-msgstr "Завершені курси"
+msgstr "Ð—Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ñ– ÐºÑƒÑ€Ñ�Ð¸"
 
 msgid "Salary"
-msgstr "Зарплата"
+msgstr "Ð—Ð°Ñ€Ð¿Ð»Ð°Ñ‚Ð°"
 
 msgid "Add/edit questions"
-msgstr "Додати/редагувати питання"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸/Ñ€ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ Ð¿Ð¸Ñ‚Ð°Ð½Ð½Ñ�"
 
 msgid "Occupational category"
-msgstr "Професійна категорія"
+msgstr "ÐŸÑ€Ð¾Ñ„ÐµÑ�Ñ–Ð¹Ð½Ð° ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–Ñ�"
 
 msgid "Past"
-msgstr "Минулий"
+msgstr "ÐœÐ¸Ð½ÑƒÐ»Ð¸Ð¹"
 
 msgid "Legend"
-msgstr "Легенда"
+msgstr "Ð›ÐµÐ³ÐµÐ½Ð´Ð°"
 
 msgid "Today"
-msgstr "Сьогодні"
+msgstr "Ð¡ÑŒÐ¾Ð³Ð¾Ð´Ð½Ñ–"
 
 msgid "January"
-msgstr "Січень"
+msgstr "Ð¡Ñ–Ñ‡ÐµÐ½ÑŒ"
 
 msgid "February"
-msgstr "Лютий "
+msgstr "Ð›ÑŽÑ‚Ð¸Ð¹ "
 
 msgid "March"
-msgstr "Березень"
+msgstr "Ð‘ÐµÑ€ÐµÐ·ÐµÐ½ÑŒ"
 
 msgid "April"
-msgstr "Квітень"
+msgstr "ÐšÐ²Ñ–Ñ‚ÐµÐ½ÑŒ"
 
 msgid "May"
-msgstr "Травень"
+msgstr "Ð¢Ñ€Ð°Ð²ÐµÐ½ÑŒ"
 
 msgid "June"
-msgstr "Червень"
+msgstr "Ð§ÐµÑ€Ð²ÐµÐ½ÑŒ"
 
 msgid "July"
-msgstr "Липень"
+msgstr "Ð›Ð¸Ð¿ÐµÐ½ÑŒ"
 
 msgid "August"
-msgstr "Серпень"
+msgstr "Ð¡ÐµÑ€Ð¿ÐµÐ½ÑŒ"
 
 msgid "September"
-msgstr "Вересень"
+msgstr "Ð’ÐµÑ€ÐµÑ�ÐµÐ½ÑŒ"
 
 msgid "October"
-msgstr "Жовтень"
+msgstr "Ð–Ð¾Ð²Ñ‚ÐµÐ½ÑŒ"
 
 msgid "November"
-msgstr "Листопад"
+msgstr "Ð›Ð¸Ñ�Ñ‚Ð¾Ð¿Ð°Ð´"
 
 msgid "December"
-msgstr "Грудень"
+msgstr "Ð“Ñ€ÑƒÐ´ÐµÐ½ÑŒ"
 
 msgid "Import trainings from Excel"
-msgstr "Імпортувати тренінги із файла Excel"
+msgstr "Ð†Ð¼Ð¿Ð¾Ñ€Ñ‚ÑƒÐ²Ð°Ñ‚Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ñ–Ð· Ñ„Ð°Ð¹Ð»Ð° Excel"
 
 msgid "Import location from Excel"
-msgstr "Імпортувати місцезнаходження із файла Excel"
+msgstr ""
+"Ð†Ð¼Ð¿Ð¾Ñ€Ñ‚ÑƒÐ²Ð°Ñ‚Ð¸ Ð¼Ñ–Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� Ñ–Ð· Ñ„Ð°Ð¹Ð»Ð° Excel"
 
 msgid "Please enter Training location information"
-msgstr "Будь ласка, введіть інформацію про місцезнаходження тренінгу"
+msgstr ""
+"Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð²Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–ÑŽ Ð¿Ñ€Ð¾ Ð¼Ñ–"
+"Ñ�Ñ†ÐµÐ·Ð½Ð°Ñ…Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Personal number"
-msgstr "Особистий номер"
+msgstr "ÐžÑ�Ð¾Ð±Ð¸Ñ�Ñ‚Ð¸Ð¹ Ð½Ð¾Ð¼ÐµÑ€"
 
 msgid "Competence Overview Reports"
-msgstr "Оглядовий звіт компетентності"
+msgstr "ÐžÐ³Ð»Ñ�Ð´Ð¾Ð²Ð¸Ð¹ Ð·Ð²Ñ–Ñ‚ ÐºÐ¾Ð¼Ð¿ÐµÑ‚ÐµÐ½Ñ‚Ð½Ð¾Ñ�Ñ‚Ñ–"
 
 msgid "Please select a competence"
-msgstr "Будь ласка, виберіть компетентність"
+msgstr "Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ð²Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ ÐºÐ¾Ð¼Ð¿ÐµÑ‚ÐµÐ½Ñ‚Ð½Ñ–Ñ�Ñ‚ÑŒ"
 
 msgid "Select All"
-msgstr "Обрати все"
+msgstr "ÐžÐ±Ñ€Ð°Ñ‚Ð¸ Ð²Ñ�Ðµ"
 
 msgid "Competence"
-msgstr "Компетенція"
+msgstr "ÐšÐ¾Ð¼Ð¿ÐµÑ‚ÐµÐ½Ñ†Ñ–Ñ�"
 
 msgid "Select an occupational category first"
-msgstr "Спочатку виберіть професійну категорію"
+msgstr ""
+"Ð¡Ð¿Ð¾Ñ‡Ð°Ñ‚ÐºÑƒ Ð²Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ð¿Ñ€Ð¾Ñ„ÐµÑ�Ñ–Ð¹Ð½Ñƒ ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–ÑŽ"
 
 msgid "Please select an occupational category first"
-msgstr "Будь ласка, спочатку виберіть професійну категорію"
+msgstr ""
+"Ð‘ÑƒÐ´ÑŒ Ð»Ð°Ñ�ÐºÐ°, Ñ�Ð¿Ð¾Ñ‡Ð°Ñ‚ÐºÑƒ Ð²Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ð¿Ñ€Ð¾Ñ„ÐµÑ�Ñ–Ð¹Ð½Ñƒ "
+"ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–ÑŽ"
 
 msgid "Province"
-msgstr "Провінція"
+msgstr "ÐŸÑ€Ð¾Ð²Ñ–Ð½Ñ†Ñ–Ñ�"
 
 msgid "District"
-msgstr "Місто"
+msgstr "ÐœÑ–Ñ�Ñ‚Ð¾"
 
 msgid "Sub-district"
-msgstr "Район"
+msgstr "Ð Ð°Ð¹Ð¾Ð½"
 
 msgid "Add Criteria"
-msgstr "Додати критерій"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ ÐºÑ€Ð¸Ñ‚ÐµÑ€Ñ–Ð¹"
 
 msgid "Trainer by Name"
-msgstr "За ім`ям тренера"
+msgstr "Ð—Ð° Ñ–Ð¼`Ñ�Ð¼ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Partcipant or Trainer"
-msgstr "Учасник або Інструктор"
+msgstr "Ð£Ñ‡Ð°Ñ�Ð½Ð¸Ðº Ð°Ð±Ð¾ Ð†Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€"
 
 msgid "All People Data"
-msgstr "Дані за всіма людьми"
+msgstr "Ð”Ð°Ð½Ñ– Ð·Ð° Ð²Ñ�Ñ–Ð¼Ð° Ð»ÑŽÐ´ÑŒÐ¼Ð¸"
 
 msgid "All Facilities Data"
-msgstr "Дані за всіма закладами"
+msgstr "Ð”Ð°Ð½Ñ– Ð·Ð° Ð²Ñ�Ñ–Ð¼Ð° Ð·Ð°ÐºÐ»Ð°Ð´Ð°Ð¼Ð¸"
 
 msgid "All Training Data"
-msgstr "Дані за всіма тренінгами"
+msgstr "Ð”Ð°Ð½Ñ– Ð·Ð° Ð²Ñ�Ñ–Ð¼Ð° Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð°Ð¼Ð¸"
 
 msgid "Select Trainings"
-msgstr "Обрати тренінги"
+msgstr "ÐžÐ±Ñ€Ð°Ñ‚Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸"
 
 msgid "Question Number"
-msgstr "Номер питання"
+msgstr "Ð�Ð¾Ð¼ÐµÑ€ Ð¿Ð¸Ñ‚Ð°Ð½Ð½Ñ�"
 
 msgid "Question Type"
-msgstr "Тип питання"
+msgstr "Ð¢Ð¸Ð¿ Ð¿Ð¸Ñ‚Ð°Ð½Ð½Ñ�"
 
 msgid "Question Text"
-msgstr "Текст питання"
+msgstr "Ð¢ÐµÐºÑ�Ñ‚ Ð¿Ð¸Ñ‚Ð°Ð½Ð½Ñ�"
 
 msgid "Average"
-msgstr "Середній"
+msgstr "Ð¡ÐµÑ€ÐµÐ´Ð½Ñ–Ð¹"
 
 msgid "Response"
-msgstr "Відповідь"
+msgstr "Ð’Ñ–Ð´Ð¿Ð¾Ð²Ñ–Ð´ÑŒ"
 
 msgid "Select student report"
-msgstr "Оберіть з0віт студенту "
+msgstr "ÐžÐ±ÐµÑ€Ñ–Ñ‚ÑŒ Ð·0Ð²Ñ–Ñ‚ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñƒ "
 
 msgid "Terminated early"
-msgstr "Припинено дострокова"
+msgstr "ÐŸÑ€Ð¸Ð¿Ð¸Ð½ÐµÐ½Ð¾ Ð´Ð¾Ñ�Ñ‚Ñ€Ð¾ÐºÐ¾Ð²Ð°"
 
 msgid "Facility @ graduation"
-msgstr "Заклад закінчення навчання"
+msgstr "Ð—Ð°ÐºÐ»Ð°Ð´ Ð·Ð°ÐºÑ–Ð½Ñ‡ÐµÐ½Ð½Ñ� Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Tutor advisor"
-msgstr "Консультант"
+msgstr "ÐšÐ¾Ð½Ñ�ÑƒÐ»ÑŒÑ‚Ð°Ð½Ñ‚"
 
 msgid "Return unique participants"
-msgstr "Повернути унікальних учасників"
+msgstr "ÐŸÐ¾Ð²ÐµÑ€Ð½ÑƒÑ‚Ð¸ ÑƒÐ½Ñ–ÐºÐ°Ð»ÑŒÐ½Ð¸Ñ… ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "Start date between"
-msgstr "Дата початку між"
+msgstr "Ð”Ð°Ñ‚Ð° Ð¿Ð¾Ñ‡Ð°Ñ‚ÐºÑƒ Ð¼Ñ–Ð¶"
 
 msgid "Course Name And Exam Scores To Date"
-msgstr "Назва курсів і результати іспитів на сьогоднішній день"
+msgstr ""
+"Ð�Ð°Ð·Ð²Ð° ÐºÑƒÑ€Ñ�Ñ–Ð² Ñ– Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð¸ Ñ–Ñ�Ð¿Ð¸Ñ‚Ñ–Ð² Ð½Ð° "
+"Ñ�ÑŒÐ¾Ð³Ð¾Ð´Ð½Ñ–ÑˆÐ½Ñ–Ð¹ Ð´ÐµÐ½ÑŒ"
 
 msgid "Graduation date"
-msgstr "Дата завершення навчання"
+msgstr "Ð”Ð°Ñ‚Ð° Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð½Ñ� Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Graduation date between"
-msgstr "Дата завершення навчання між"
+msgstr "Ð”Ð°Ñ‚Ð° Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð½Ñ� Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ� Ð¼Ñ–Ð¶"
 
 msgid "Grades"
-msgstr "Оцінки"
+msgstr "ÐžÑ†Ñ–Ð½ÐºÐ¸"
 
 msgid "# of Exams"
-msgstr "# іспитів"
+msgstr "# Ñ–Ñ�Ð¿Ð¸Ñ‚Ñ–Ð²"
 
 msgid "Year In School"
-msgstr "Кількість років у школі"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ Ñ€Ð¾ÐºÑ–Ð² Ñƒ ÑˆÐºÐ¾Ð»Ñ–"
 
 msgid "# of Students"
-msgstr "# студентів"
+msgstr "# Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "Student Count"
-msgstr "Кількість студентів"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "Student names"
-msgstr "Імена студентів"
+msgstr "Ð†Ð¼ÐµÐ½Ð° Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "Student"
-msgstr "Студент"
+msgstr "Ð¡Ñ‚ÑƒÐ´ÐµÐ½Ñ‚"
 
 msgid "Participation"
-msgstr "Участь"
+msgstr "Ð£Ñ‡Ð°Ñ�Ñ‚ÑŒ"
 
 msgid "Your search criteria returned no results"
-msgstr "Ваші критерії пошуку не дали результатів"
+msgstr ""
+"Ð’Ð°ÑˆÑ– ÐºÑ€Ð¸Ñ‚ÐµÑ€Ñ–Ñ— Ð¿Ð¾ÑˆÑƒÐºÑƒ Ð½Ðµ Ð´Ð°Ð»Ð¸ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ñ–Ð²"
 
 msgid "Output"
-msgstr "Вихід"
+msgstr "Ð’Ð¸Ñ…Ñ–Ð´"
 
 msgid "# of Computers"
-msgstr "# комп`ютерів"
+msgstr "# ÐºÐ¾Ð¼Ð¿`ÑŽÑ‚ÐµÑ€Ñ–Ð²"
 
 msgid "Computer Count"
-msgstr "Кількість комп`ютерів"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ ÐºÐ¾Ð¼Ð¿`ÑŽÑ‚ÐµÑ€Ñ–Ð²"
 
 msgid "# of Tutors"
-msgstr "# інструкторів"
+msgstr "# Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñ–Ð²"
 
 msgid "Tutor Count"
-msgstr "Кількість інструкторів"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñ–Ð²"
 
 msgid "# of Beds"
-msgstr "# спальних місць"
+msgstr "# Ñ�Ð¿Ð°Ð»ÑŒÐ½Ð¸Ñ… Ð¼Ñ–Ñ�Ñ†ÑŒ"
 
 msgid "Tutor Student Ratio"
-msgstr "Відношення кількості інструкторів до кількості студентів"
+msgstr ""
+"Ð’Ñ–Ð´Ð½Ð¾ÑˆÐµÐ½Ð½Ñ� ÐºÑ–Ð»ÑŒÐºÐ¾Ñ�Ñ‚Ñ– Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñ–Ð² Ð´Ð¾ ÐºÑ–"
+"Ð»ÑŒÐºÐ¾Ñ�Ñ‚Ñ– Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "Bed Count"
-msgstr "Кількість спальних місць"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ Ñ�Ð¿Ð°Ð»ÑŒÐ½Ð¸Ñ… Ð¼Ñ–Ñ�Ñ†ÑŒ"
 
 msgid "Dorm Count"
-msgstr "Кількість гуртожиків"
+msgstr "ÐšÑ–Ð»ÑŒÐºÑ–Ñ�Ñ‚ÑŒ Ð³ÑƒÑ€Ñ‚Ð¾Ð¶Ð¸ÐºÑ–Ð²"
 
 msgid "Tutor Advisor"
-msgstr "Консультант"
+msgstr "ÐšÐ¾Ð½Ñ�ÑƒÐ»ÑŒÑ‚Ð°Ð½Ñ‚"
 
 msgid "# of Graduates"
-msgstr "# випускників"
+msgstr "# Ð²Ð¸Ð¿ÑƒÑ�ÐºÐ½Ð¸ÐºÑ–Ð²"
 
 msgid "# of Patients"
-msgstr "# пацієнтів"
+msgstr "# Ð¿Ð°Ñ†Ñ–Ñ”Ð½Ñ‚Ñ–Ð²"
 
 msgid "Year of Graduates"
-msgstr "Рік випуску"
+msgstr "Ð Ñ–Ðº Ð²Ð¸Ð¿ÑƒÑ�ÐºÑƒ"
 
 msgid "Tutors By Name Report"
-msgstr "Звіт інструкторів за іменами"
+msgstr "Ð—Ð²Ñ–Ñ‚ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñ–Ð² Ð·Ð° Ñ–Ð¼ÐµÐ½Ð°Ð¼Ð¸"
 
 msgid "Tutors By Name"
-msgstr "Інструктори за іменами"
+msgstr "Ð†Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ð¸ Ð·Ð° Ñ–Ð¼ÐµÐ½Ð°Ð¼Ð¸"
 
 msgid "Facility (work)"
-msgstr "Заклад (місце роботи)"
+msgstr "Ð—Ð°ÐºÐ»Ð°Ð´ (Ð¼Ñ–Ñ�Ñ†Ðµ Ñ€Ð¾Ð±Ð¾Ñ‚Ð¸)"
 
 msgid "Degree Institution"
-msgstr "Ступень інституту"
+msgstr "Ð¡Ñ‚ÑƒÐ¿ÐµÐ½ÑŒ Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñƒ"
 
 msgid "Degree year"
-msgstr "Рік завершення"
+msgstr "Ð Ñ–Ðº Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð½Ñ�"
 
 msgid "Languages Spoken"
-msgstr "Мови спілкування"
+msgstr "ÐœÐ¾Ð²Ð¸ Ñ�Ð¿Ñ–Ð»ÐºÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "# of Students Advised"
-msgstr "# студентів, які отримали консультації"
+msgstr "# Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð², Ñ�ÐºÑ– Ð¾Ñ‚Ñ€Ð¸Ð¼Ð°Ð»Ð¸ ÐºÐ¾Ð½Ñ�ÑƒÐ»ÑŒÑ‚Ð°Ñ†Ñ–Ñ—"
 
 msgid "Tutor Length"
-msgstr "Тривалість курсу"
+msgstr "Ð¢Ñ€Ð¸Ð²Ð°Ð»Ñ–Ñ�Ñ‚ÑŒ ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "Length with Curr. Inst."
-msgstr "Тривалість навчання в цьому інституті"
+msgstr "Ð¢Ñ€Ð¸Ð²Ð°Ð»Ñ–Ñ�Ñ‚ÑŒ Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ� Ð² Ñ†ÑŒÐ¾Ð¼Ñƒ Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ñ–"
 
 msgid "Employees Access"
-msgstr "Доступ до модуля Співробітники"
+msgstr "Ð”Ð¾Ñ�Ñ‚ÑƒÐ¿ Ð´Ð¾ Ð¼Ð¾Ð´ÑƒÐ»Ñ� Ð¡Ð¿Ñ–Ð²Ñ€Ð¾Ð±Ñ–Ñ‚Ð½Ð¸ÐºÐ¸"
 
 msgid "Institution access"
-msgstr "Доступ до модуля Інститути"
+msgstr "Ð”Ð¾Ñ�Ñ‚ÑƒÐ¿ Ð´Ð¾ Ð¼Ð¾Ð´ÑƒÐ»Ñ� Ð†Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚Ð¸"
 
 msgid "Program access"
-msgstr "Доступ до модуля Програми"
+msgstr "Ð”Ð¾Ñ�Ñ‚ÑƒÐ¿ Ð´Ð¾ Ð¼Ð¾Ð´ÑƒÐ»Ñ� ÐŸÑ€Ð¾Ð³Ñ€Ð°Ð¼Ð¸"
 
 msgid "Your account information was saved."
-msgstr "Дані вашого облікового запису були збережені."
+msgstr ""
+"Ð”Ð°Ð½Ñ– Ð²Ð°ÑˆÐ¾Ð³Ð¾ Ð¾Ð±Ð»Ñ–ÐºÐ¾Ð²Ð¾Ð³Ð¾ Ð·Ð°Ð¿Ð¸Ñ�Ñƒ Ð±ÑƒÐ»Ð¸ Ð·Ð±ÐµÑ"
+"€ÐµÐ¶ÐµÐ½Ñ–."
 
 msgid "Your account information could not be saved."
-msgstr "Дані вашого облікового запису не були збережені."
+msgstr ""
+"Ð”Ð°Ð½Ñ– Ð²Ð°ÑˆÐ¾Ð³Ð¾ Ð¾Ð±Ð»Ñ–ÐºÐ¾Ð²Ð¾Ð³Ð¾ Ð·Ð°Ð¿Ð¸Ñ�Ñƒ Ð½Ðµ Ð±ÑƒÐ»Ð¸ Ð·Ð±ÐµÑ"
+"€ÐµÐ¶ÐµÐ½Ñ–."
 
 msgid "All Programs"
-msgstr "Всі програми"
+msgstr "Ð’Ñ�Ñ– Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¸"
 
 msgid "Admin access"
-msgstr "Адміністративний доступ"
+msgstr "Ð�Ð´Ð¼Ñ–Ð½Ñ–Ñ�Ñ‚Ñ€Ð°Ñ‚Ð¸Ð²Ð½Ð¸Ð¹ Ð´Ð¾Ñ�Ñ‚ÑƒÐ¿"
 
 msgid "select all admin capabilities"
-msgstr "Виберіть всі можливості адміністратора"
+msgstr ""
+"Ð’Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ð²Ñ�Ñ– Ð¼Ð¾Ð¶Ð»Ð¸Ð²Ð¾Ñ�Ñ‚Ñ– Ð°Ð´Ð¼Ñ–Ð½Ñ–Ñ�Ñ‚Ñ€Ð°Ñ‚Ð¾Ñ€Ð°"
 
 msgid "de-select all"
-msgstr "скасувати вибір всіх"
+msgstr "Ñ�ÐºÐ°Ñ�ÑƒÐ²Ð°Ñ‚Ð¸ Ð²Ð¸Ð±Ñ–Ñ€ Ð²Ñ�Ñ–Ñ…"
 
 msgid "Restricted Settings"
-msgstr "обмежені налаштування"
+msgstr "Ð¾Ð±Ð¼ÐµÐ¶ÐµÐ½Ñ– Ð½Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Fields on/off and Labels"
-msgstr "Поля вкл/викл та мітки"
+msgstr "ÐŸÐ¾Ð»Ñ� Ð²ÐºÐ»/Ð²Ð¸ÐºÐ» Ñ‚Ð° Ð¼Ñ–Ñ‚ÐºÐ¸"
 
 msgid "Delete Student/Tutor"
-msgstr "Видалити студента/тренера"
+msgstr "Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ð°/Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Student/Tutor/Cadre/Institution"
-msgstr "Студент/інструктор/кадри/інститут"
+msgstr "Ð¡Ñ‚ÑƒÐ´ÐµÐ½Ñ‚/Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€/ÐºÐ°Ð´Ñ€Ð¸/Ñ–Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚"
 
 msgid "Sponsor Dates"
-msgstr "Дати спонсорування"
+msgstr "Ð”Ð°Ñ‚Ð¸ Ñ�Ð¿Ð¾Ð½Ñ�Ð¾Ñ€ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Employees Settings"
-msgstr "Налаштування співробітників"
+msgstr "Ð�Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ� Ñ�Ð¿Ñ–Ð²Ñ€Ð¾Ð±Ñ–Ñ‚Ð½Ð¸ÐºÑ–Ð²"
 
 msgid "Training institution"
-msgstr "Інститут тренінгу"
+msgstr "Ð†Ð½Ñ�Ñ‚Ð¸Ñ‚ÑƒÑ‚ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "# of students"
-msgstr "# студентів"
+msgstr "# Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "# of tutors"
-msgstr "# інструкторів"
+msgstr "# Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñ–Ð²"
 
 msgid "Student/Tutor Ratio"
-msgstr "Відношення кількості інструкторів до кількості студентів"
+msgstr ""
+"Ð’Ñ–Ð´Ð½Ð¾ÑˆÐµÐ½Ð½Ñ� ÐºÑ–Ð»ÑŒÐºÐ¾Ñ�Ñ‚Ñ– Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ñ–Ð² Ð´Ð¾ ÐºÑ–"
+"Ð»ÑŒÐºÐ¾Ñ�Ñ‚Ñ– Ñ�Ñ‚ÑƒÐ´ÐµÐ½Ñ‚Ñ–Ð²"
 
 msgid "# of grads"
-msgstr "# випускників"
+msgstr "# Ð²Ð¸Ð¿ÑƒÑ�ÐºÐ½Ð¸ÐºÑ–Ð²"
 
 msgid "Early terminations"
-msgstr "Припинено дострокова"
+msgstr "ÐŸÑ€Ð¸Ð¿Ð¸Ð½ÐµÐ½Ð¾ Ð´Ð¾Ñ�Ñ‚Ñ€Ð¾ÐºÐ¾Ð²Ð°"
 
-msgid "Инструктор Reports"
-msgstr "Звіти по інструкторах"
+msgid "Ð˜Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€ Reports"
+msgstr "Ð—Ð²Ñ–Ñ‚Ð¸ Ð¿Ð¾ Ñ–Ð½Ñ�Ñ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€Ð°Ñ…"
 
 msgid "Download Complete Excel Data for these trainings"
-msgstr "Завантажити повні дані у форматі Excel для цих тренінгів"
+msgstr ""
+"Ð—Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸ Ð¿Ð¾Ð²Ð½Ñ– Ð´Ð°Ð½Ñ– Ñƒ Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚Ñ– Excel Ð´Ð»Ñ� "
+"Ñ†Ð¸Ñ… Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñ–Ð²"
 
 msgid "Answer"
-msgstr "Відповідь"
+msgstr "Ð’Ñ–Ð´Ð¿Ð¾Ð²Ñ–Ð´ÑŒ"
 
 msgid "Re-Label Answers"
-msgstr "Переназвати відповіді"
+msgstr "ÐŸÐµÑ€ÐµÐ½Ð°Ð·Ð²Ð°Ñ‚Ð¸ Ð²Ñ–Ð´Ð¿Ð¾Ð²Ñ–Ð´Ñ–"
 
 msgid "Re-Label Likert Answers"
-msgstr "Переназвати відповіді за Лайкертом"
+msgstr "ÐŸÐµÑ€ÐµÐ½Ð°Ð·Ð²Ð°Ñ‚Ð¸ Ð²Ñ–Ð´Ð¿Ð¾Ð²Ñ–Ð´Ñ– Ð·Ð° Ð›Ð°Ð¹ÐºÐµÑ€Ñ‚Ð¾Ð¼"
 
 msgid "Add 20 more rows"
-msgstr "Додати ще 20 рядків"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ñ‰Ðµ 20 Ñ€Ñ�Ð´ÐºÑ–Ð²"
 
 msgid "Paste"
-msgstr "Вставити"
+msgstr "Ð’Ñ�Ñ‚Ð°Ð²Ð¸Ñ‚Ð¸"
 
 msgid "Copy to All"
-msgstr "Копіювати все"
+msgstr "ÐšÐ¾Ð¿Ñ–ÑŽÐ²Ð°Ñ‚Ð¸ Ð²Ñ�Ðµ"
 
 msgid "Physical Questions"
-msgstr "Фізичні питання"
+msgstr "Ð¤Ñ–Ð·Ð¸Ñ‡Ð½Ñ– Ð¿Ð¸Ñ‚Ð°Ð½Ð½Ñ�"
 
 msgid "Not Applicable"
-msgstr "Не застосовується"
+msgstr "Ð�Ðµ Ð·Ð°Ñ�Ñ‚Ð¾Ñ�Ð¾Ð²ÑƒÑ”Ñ‚ÑŒÑ�Ñ�"
 
 msgid "Likert"
-msgstr "Лайкерт"
+msgstr "Ð›Ð°Ð¹ÐºÐµÑ€Ñ‚"
 
-msgid "Select the file that contains the data in MS Excel format (*.xlsx) you want to import."
-msgstr "Виберіть файл, який містить дані у форматі MS Excel (* .xlsx), які ви хочете імпортувати."
+msgid ""
+"Select the file that contains the data in MS Excel format (*.xlsx) you want "
+"to import."
+msgstr ""
+"Ð’Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ñ„Ð°Ð¹Ð», Ñ�ÐºÐ¸Ð¹ Ð¼Ñ–Ñ�Ñ‚Ð¸Ñ‚ÑŒ Ð´Ð°Ð½Ñ– Ñƒ Ñ„Ð¾Ñ€Ð¼Ð"
+"°Ñ‚Ñ– MS Excel (* .xlsx), Ñ�ÐºÑ– Ð²Ð¸ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ñ–Ð¼Ð¿Ð¾Ñ€Ñ‚ÑƒÐ²Ð°Ñ‚Ð¸."
 
 msgid "Import a training"
-msgstr "Імпортувати тренінг"
+msgstr "Ð†Ð¼Ð¿Ð¾Ñ€Ñ‚ÑƒÐ²Ð°Ñ‚Ð¸ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³"
 
 msgid "No records found."
-msgstr "Записів не знайдено."
+msgstr "Ð—Ð°Ð¿Ð¸Ñ�Ñ–Ð² Ð½Ðµ Ð·Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾."
 
 msgid "County"
-msgstr "Oкруг"
+msgstr "OÐºÑ€ÑƒÐ³"
 
 msgid "Facilities Awaiting Approval"
-msgstr "Заклади, що чекають затвердження"
+msgstr "Ð—Ð°ÐºÐ»Ð°Ð´Ð¸, Ñ‰Ð¾ Ñ‡ÐµÐºÐ°ÑŽÑ‚ÑŒ Ð·Ð°Ñ‚Ð²ÐµÑ€Ð´Ð¶ÐµÐ½Ð½Ñ�"
 
 msgid "Upload"
-msgstr "Завантажити"
+msgstr "Ð—Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸"
 
 msgid "Trainer Category"
-msgstr "Категорія тренера"
+msgstr "ÐšÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–Ñ� Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "Performer of Training"
-msgstr "Виконавець  тренiнгу"
+msgstr "Ð’Ð¸ÐºÐ¾Ð½Ð°Ð²ÐµÑ†ÑŒ  Ñ‚Ñ€ÐµÐ½iÐ½Ð³Ñƒ"
 
 msgid "Signature"
-msgstr "Підпис"
+msgstr "ÐŸÑ–Ð´Ð¿Ð¸Ñ�"
 
 msgid "New Trainer Form"
-msgstr "Додати нового тренера"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð¾Ð²Ð¾Ð³Ð¾ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°"
 
 msgid "New Participant Form"
-msgstr "Додати нового учасника"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð½Ð¾Ð²Ð¾Ð³Ð¾ ÑƒÑ‡Ð°Ñ�Ð½Ð¸ÐºÐ°"
 
 msgid "Classes Taught"
-msgstr "Проведені тренінги"
+msgstr "ÐŸÑ€Ð¾Ð²ÐµÐ´ÐµÐ½Ñ– Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸"
 
 msgid "Training Reports Training Search"
-msgstr "Пошук звітів за тренінгами"
+msgstr "ÐŸÐ¾ÑˆÑƒÐº Ð·Ð²Ñ–Ñ‚Ñ–Ð² Ð·Ð° Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ð°Ð¼Ð¸"
 
 msgid "Trainings by Multiple Names"
-msgstr "Тренінги за кількома назвами"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð·Ð° ÐºÑ–Ð»ÑŒÐºÐ¾Ð¼Ð° Ð½Ð°Ð·Ð²Ð°Ð¼Ð¸"
 
 msgid "Trainings with missing information"
-msgstr "Тренінги з відсутньою інформацією"
+msgstr "Ð¢Ñ€ÐµÐ½Ñ–Ð½Ð³Ð¸ Ð· Ð²Ñ–Ð´Ñ�ÑƒÑ‚Ð½ÑŒÐ¾ÑŽ Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ”ÑŽ"
 
 msgid "Date Added"
-msgstr "Дата створення"
+msgstr "Ð”Ð°Ñ‚Ð° Ñ�Ñ‚Ð²Ð¾Ñ€ÐµÐ½Ð½Ñ�"
 
-msgid "Да"
-msgstr "Так"
+msgid "Ð”Ð°"
+msgstr "Ð¢Ð°Ðº"
 
-msgid "Нет"
-msgstr "Ні"
+msgid "Ð�ÐµÑ‚"
+msgstr "Ð�Ñ–"
 
 msgid "Display First"
-msgstr "Показати першими"
+msgstr "ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚Ð¸ Ð¿ÐµÑ€ÑˆÐ¸Ð¼Ð¸"
 
 msgid "Responsibility for monitoring and quality assurance process"
-msgstr "Відповідальність за моніторинг і процес визначення якості"
+msgstr ""
+"Ð’Ñ–Ð´Ð¿Ð¾Ð²Ñ–Ð´Ð°Ð»ÑŒÐ½Ñ–Ñ�Ñ‚ÑŒ Ð·Ð° Ð¼Ð¾Ð½Ñ–Ñ‚Ð¾Ñ€Ð¸Ð½Ð³ Ñ– Ð¿Ñ€Ð¾Ñ†ÐµÑ� "
+"Ð²Ð¸Ð·Ð½Ð°Ñ‡ÐµÐ½Ð½Ñ� Ñ�ÐºÐ¾Ñ�Ñ‚Ñ–"
 
 msgid "Academic status"
-msgstr "Вчене звання"
+msgstr "Ð’Ñ‡ÐµÐ½Ðµ Ð·Ð²Ð°Ð½Ð½Ñ�"
 
 msgid "Scientific degree"
-msgstr "Наукова ступінь"
+msgstr "Ð�Ð°ÑƒÐºÐ¾Ð²Ð° Ñ�Ñ‚ÑƒÐ¿Ñ–Ð½ÑŒ"
 
 msgid "Medical and preventive institution"
-msgstr "Лікувально-профілактичний заклад"
+msgstr "Ð›Ñ–ÐºÑƒÐ²Ð°Ð»ÑŒÐ½Ð¾-Ð¿Ñ€Ð¾Ñ„Ñ–Ð»Ð°ÐºÑ‚Ð¸Ñ‡Ð½Ð¸Ð¹ Ð·Ð°ÐºÐ»Ð°Ð´"
 
 msgid "Comments of the institution"
-msgstr "Коментарі закладу"
+msgstr "ÐšÐ¾Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ñ– Ð·Ð°ÐºÐ»Ð°Ð´Ñƒ"
 
 msgid "Identification code"
-msgstr "Ідентифікаційний код"
+msgstr "Ð†Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ð¹Ð½Ð¸Ð¹ ÐºÐ¾Ð´"
 
 msgid "Source of funding"
-msgstr "Джерело фінансування"
+msgstr "Ð”Ð¶ÐµÑ€ÐµÐ»Ð¾ Ñ„Ñ–Ð½Ð°Ð½Ñ�ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Amount of funding"
-msgstr "Сума фінансування"
+msgstr "Ð¡ÑƒÐ¼Ð° Ñ„Ñ–Ð½Ð°Ð½Ñ�ÑƒÐ²Ð°Ð½Ð½Ñ�"
 
 msgid "Education history"
-msgstr "Історія освіти"
+msgstr "Ð†Ñ�Ñ‚Ð¾Ñ€Ñ–Ñ� Ð¾Ñ�Ð²Ñ–Ñ‚Ð¸"
 
 msgid "Education type"
-msgstr "Вид освіти"
+msgstr "Ð’Ð¸Ð´ Ð¾Ñ�Ð²Ñ–Ñ‚Ð¸"
 
 msgid "Country of study"
-msgstr "Країна навчання"
+msgstr "ÐšÑ€Ð°Ñ—Ð½Ð° Ð½Ð°Ð²Ñ‡Ð°Ð½Ð½Ñ�"
 
 msgid "Year of Graduation/Completion"
-msgstr "Рік закінчення/завершення"
+msgstr "Ð Ñ–Ðº Ð·Ð°ÐºÑ–Ð½Ñ‡ÐµÐ½Ð½Ñ�/Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð½Ñ�"
 
 msgid "Attestation Progress"
-msgstr "Атестаційний процесс"
+msgstr "Ð�Ñ‚ÐµÑ�Ñ‚Ð°Ñ†Ñ–Ð¹Ð½Ð¸Ð¹ Ð¿Ñ€Ð¾Ñ†ÐµÑ�Ñ�"
 
 msgid "Certified in specialty"
-msgstr "Атестований за фахом"
+msgstr "Ð�Ñ‚ÐµÑ�Ñ‚Ð¾Ð²Ð°Ð½Ð¸Ð¹ Ð·Ð° Ñ„Ð°Ñ…Ð¾Ð¼"
 
 msgid "Attestation Category"
-msgstr "Атестаційна категорія"
+msgstr "Ð�Ñ‚ÐµÑ�Ñ‚Ð°Ñ†Ñ–Ð¹Ð½Ð° ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ñ–Ñ�"
 
 msgid "Attestation Year"
-msgstr "Атестаційний рік"
+msgstr "Ð�Ñ‚ÐµÑ�Ñ‚Ð°Ñ†Ñ–Ð¹Ð½Ð¸Ð¹ Ñ€Ñ–Ðº"
 
-msgid "ВНЗ official name"
-msgstr "Офіційна назва ВНЗ"
+msgid "Ð’Ð�Ð— official name"
+msgstr "ÐžÑ„Ñ–Ñ†Ñ–Ð¹Ð½Ð° Ð½Ð°Ð·Ð²Ð° Ð’Ð�Ð—"
 
 msgid "Training type"
-msgstr "Вид тренінгу"
+msgstr "Ð’Ð¸Ð´ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "in English only"
-msgstr "лише англійською мовою"
+msgstr "Ð»Ð¸ÑˆÐµ Ð°Ð½Ð³Ð»Ñ–Ð¹Ñ�ÑŒÐºÐ¾ÑŽ Ð¼Ð¾Ð²Ð¾ÑŽ"
 
 msgid "Application-training request"
-msgstr "Заявка-запит тренінгу"
+msgstr "Ð—Ð°Ñ�Ð²ÐºÐ°-Ð·Ð°Ð¿Ð¸Ñ‚ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Additional Information"
-msgstr "Додаткова інформація"
+msgstr "Ð”Ð¾Ð´Ð°Ñ‚ÐºÐ¾Ð²Ð° Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ�"
 
 msgid "Type of certification document"
-msgstr "Тип сертифікаційного документу"
+msgstr "Ð¢Ð¸Ð¿ Ñ�ÐµÑ€Ñ‚Ð¸Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ð¹Ð½Ð¾Ð³Ð¾ Ð´Ð¾ÐºÑƒÐ¼ÐµÐ½Ñ‚Ñƒ"
 
 msgid "Diploma number"
-msgstr "Серія,номер диплому"
+msgstr "Ð¡ÐµÑ€Ñ–Ñ�,Ð½Ð¾Ð¼ÐµÑ€ Ð´Ð¸Ð¿Ð»Ð¾Ð¼Ñƒ"
 
 msgid "Year of issue of the diploma"
-msgstr "Рік видачі диплому"
+msgstr "Ð Ñ–Ðº Ð²Ð¸Ð´Ð°Ñ‡Ñ– Ð´Ð¸Ð¿Ð»Ð¾Ð¼Ñƒ"
 
 msgid "Sex"
-msgstr "Стать"
+msgstr "Ð¡Ñ‚Ð°Ñ‚ÑŒ"
 
 msgid "Work experience, all years"
-msgstr "Стаж роботи,всього років"
+msgstr "Ð¡Ñ‚Ð°Ð¶ Ñ€Ð¾Ð±Ð¾Ñ‚Ð¸,Ð²Ñ�ÑŒÐ¾Ð³Ð¾ Ñ€Ð¾ÐºÑ–Ð²"
 
 msgid "Years in specialty"
-msgstr "Років за фахом"
+msgstr "Ð Ð¾ÐºÑ–Ð² Ð·Ð° Ñ„Ð°Ñ…Ð¾Ð¼"
 
 msgid "Type of Education"
-msgstr "Тип освіти"
+msgstr "Ð¢Ð¸Ð¿ Ð¾Ñ�Ð²Ñ–Ñ‚Ð¸"
 
 msgid "Official School Name"
-msgstr "Офіційна назва школи"
+msgstr "ÐžÑ„Ñ–Ñ†Ñ–Ð¹Ð½Ð° Ð½Ð°Ð·Ð²Ð° ÑˆÐºÐ¾Ð»Ð¸"
 
 msgid "Education Country"
-msgstr "Освіта країни"
+msgstr "ÐžÑ�Ð²Ñ–Ñ‚Ð° ÐºÑ€Ð°Ñ—Ð½Ð¸"
 
 msgid "Attestation Level"
-msgstr "Атестаційний рівень"
+msgstr "Ð�Ñ‚ÐµÑ�Ñ‚Ð°Ñ†Ñ–Ð¹Ð½Ð¸Ð¹ Ñ€Ñ–Ð²ÐµÐ½ÑŒ"
 
 msgid "Name of the training"
-msgstr "Назва тренінгу"
+msgstr "Ð�Ð°Ð·Ð²Ð° Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Executor of the training"
-msgstr "Виконавець тренінгу"
+msgstr "Ð’Ð¸ÐºÐ¾Ð½Ð°Ð²ÐµÑ†ÑŒ Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñƒ"
 
 msgid "Export to"
-msgstr "Експортувати в"
+msgstr "Ð•ÐºÑ�Ð¿Ð¾Ñ€Ñ‚ÑƒÐ²Ð°Ñ‚Ð¸ Ð²"
 
 msgid "Course goals"
-msgstr "Цілі курсу"
-
-msgid "Middle Name"
-msgstr "По батькові"
+msgstr "Ð¦Ñ–Ð»Ñ– ÐºÑƒÑ€Ñ�Ñƒ"
 
 msgid "Return trainings with NULL values in these fields"
-msgstr "Повернутися тренінгів без значень у цих полях"
+msgstr ""
+"ÐŸÐ¾Ð²ÐµÑ€Ð½ÑƒÑ‚Ð¸Ñ�Ñ� Ñ‚Ñ€ÐµÐ½Ñ–Ð½Ð³Ñ–Ð² Ð±ÐµÐ· Ð·Ð½Ð°Ñ‡ÐµÐ½ÑŒ Ñƒ Ñ†Ð¸Ñ… "
+"Ð¿Ð¾Ð»Ñ�Ñ…"
 
 msgid "Street name, house and apartment number"
-msgstr "Назва вулиці, номер будинку та квартири"
+msgstr ""
+"Ð�Ð°Ð·Ð²Ð° Ð²ÑƒÐ»Ð¸Ñ†Ñ–, Ð½Ð¾Ð¼ÐµÑ€ Ð±ÑƒÐ´Ð¸Ð½ÐºÑƒ Ñ‚Ð° ÐºÐ²Ð°Ñ€Ñ‚Ð¸Ñ€Ð¸"
 
-
-
-
-
+msgid "Participants Funding"
+msgstr "Фінансування учасників"
