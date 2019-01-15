@@ -380,30 +380,6 @@ echo DropDown::render_report_filter('training_primary_language_option', 'showPri
 															</div>
 															<?php }?>
 												
-			
-															<!-- TA:17: 9/3/2014  START -->
-															<?php if($this->setting['display_training_start_date']){?>
-															<div class="clear"></div><br/><br/>
-															<div class="fieldLabel"><?php tp('Start date');?></div>
-															<div class="fieldInput" id="startdate">
-																<?php tp('Day');?> <input id="start-day" class="dayfield" type="text" name="start-day" maxlength="2" value="<?php echo $this->criteria['start-day']; ?>"  />
-																/ <?php tp('Month');?> <input id="start-month" class="monthfield" type="text" name="start-month" maxlength="2" value="<?php echo $this->criteria['start-month']; ?>"  />
-																/ <?php tp('Year');?> <input id="start-year" class="yearfield" type="text" name="start-year" maxlength="4" value="<?php echo $this->criteria['start-year'];  ?>" />
-																<script  type="text/javascript">
-																	YAHOO.util.Event.onDOMReady(function () {
-																		//makeCalendar("startdate","start-day", "start-month", "start-year");
-																		<?php //TA:#350
-											                                    $locale = ITechTranslate::getLocale();
-											                                    if ( $locale !== null && $locale == 'uk_UK.UTF-8'){ ?>
-											                                         makeCalendarUkraine("startdate", "start-day", "start-month", "start-year", null, "calendarpicker", "buttoncalendar1");
-											                                    <?php }else{?>
-											                                         makeCalendarDefault("startdate", "start-day", "start-month", "start-year", null, "calendarpicker", "buttoncalendar1");
-											                                    <?php }?>
-																	});
-																</script>
-															</div>
-															<?php }?>
-															<!-- TA:17: 9/3/2014  END -->
 															
 															<!-- TA:17: 09/09/2014 fixed bug to on/off end date -->
 			
