@@ -10910,10 +10910,9 @@ die (__LINE__ . " - " . $sql);
     //TA:#511
     public function getPreviousQuarterStartDate(){
         $month = date('n');
-        //$month = "1";
         $year = date('Y');
         if ($month < 4) {
-            return "10/01/" . $year-1;
+            return "10/01/" . ($year-1);
         } elseif ($month > 3 && $month < 7) {
             return "01/01/" . $year;
         } elseif ($month > 6 && $month < 10) {
@@ -10926,10 +10925,9 @@ die (__LINE__ . " - " . $sql);
     //TA:#511
     public function getPreviousQuarterEndDate(){
         $month = date('n');
-       // $month = "1";
         $year = date('Y');
         if ($month < 4) {
-            return "12/31/" . $year-1;
+            return "12/31/" . ($year-1);
         } elseif ($month > 3 && $month < 7) {
             return "31/03/" . $year;
         } elseif ($month > 6 && $month < 10) {
@@ -11284,8 +11282,9 @@ die (__LINE__ . " - " . $sql);
                         }
                         if($criteria['contract_start_date_to']){
                             if($where !== ""){ $where .= " AND "; }
-                            $d = DateTime::createFromFormat('m/d/Y', $criteria['contract_start_date_to']);
-                            $where .= " employee.agreement_start_date <= '" . $d->format('Y-m-d'). "'";
+                            print "+" . $criteria['contract_start_date_to'] . "+";
+                              $d = DateTime::createFromFormat('m/d/Y', $criteria['contract_start_date_to']);
+                              $where .= " employee.agreement_start_date <= '" . $d->format('Y-m-d') . "'";
                         } 
             }
             
@@ -11741,7 +11740,7 @@ if($order !== ""){
     $select = $select . " ORDER BY " . $order ;
 }
 
-//print $select;//TA:1000
+print $select;//TA:1000
                 $this->view->assign('output',$db->fetchAll($select));
             }
         }
