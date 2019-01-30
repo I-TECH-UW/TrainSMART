@@ -257,8 +257,8 @@
     		total = total + parseFloat($('#non_financial_benefits').val());
     		total = total + parseFloat($('#professional_development').val());
     		total = total + parseFloat($('#stipend').val())
-        	if (total < 500000 || total > 800000) { //TA:#547
-            	alert('<?php echo t('Annual Cost'); ?>' + ' - total cannot be less than 500,000 and greater than 800,000');
+        	if (total > 800000) {//TA:#548
+            	alert('<?php echo t('Annual Cost'); ?>' + ' - total cannot be greater than 800,000');
          	}
     	 	$('#annual_cost').val(total);
         }
