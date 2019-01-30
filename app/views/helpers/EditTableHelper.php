@@ -33,7 +33,9 @@ class EditTableHelper {
 		
 		// Format column defs
 		foreach($colDefs as $key => $lbl) {
-			$def = 'key:"' . htmlspecialchars($key) . '", label:"' . htmlspecialchars($lbl) . '"';
+
+			$def = 'key:"' . htmlspecialchars($key) . '", sortable:true, resizeable:true, label:"' . htmlspecialchars($lbl) . '"'; //TA:UKR
+			
 
 			if(isset($customColDefs[$key])) {
 				$def .= ', ' . $customColDefs[$key];
