@@ -257,8 +257,8 @@
     		total = total + parseFloat($('#non_financial_benefits').val());
     		total = total + parseFloat($('#professional_development').val());
     		total = total + parseFloat($('#stipend').val())
-        	if (total > 500000) {
-            	alert('<?php echo t('Annual Cost'); ?>' + ' - total cannot be greater than 500,000');
+        	if (total > 800000) {//TA:#548
+            	alert('<?php echo t('Annual Cost'); ?>' + ' - total cannot be greater than 800,000');
          	}
     	 	$('#annual_cost').val(total);
         }
@@ -566,8 +566,8 @@
                  if(!validateTextField(validated, 'stipend', '<?php echo t("Stipend");?>')){
                  	validated = false;
                  }
-                 if(parseInt($('#annual_cost').val()) > 500000){
-                 	displayErrorMessage('annual_cost', '<?php echo t('Annual Cost');?> - total cannot be greater than 500,000');
+                 if(parseInt($('#annual_cost').val()) > 800000){ //TA:#548
+                 	displayErrorMessage('annual_cost', '<?php echo t('Annual Cost');?> - total cannot be greater than 800,000');
                  	validated = false;
                  }
                  if(parseInt($('#funded_hours_per_week').val())< 1 || parseInt($('#funded_hours_per_week').val()) > 45){
