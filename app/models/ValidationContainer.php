@@ -95,7 +95,7 @@ class ValidationContainer {
 		if ( intval($parts[0]) < 1900 )
 			$rtn = false;
 
-		$rtn = $rtn and Zend_Date::isDate($dateString, 'Y-m-d');
+		# Does not work for new version $rtn = $rtn and Zend_Date::isDate($dateString, 'Y-m-d');
 
 		if ( !$rtn )
    			$this->addError($fieldname, $textName.' '.t('is not a valid date').'.');
