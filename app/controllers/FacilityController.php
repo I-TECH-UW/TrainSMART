@@ -632,7 +632,8 @@ class FacilityController extends ReportFilterHelpers {
 		if ($id = $this->getSanParam ( 'id' )) {
 			if ($this->hasACL ( 'edit_people' )) {
 				// redirect to edit mode
-				$this->_redirect ( str_replace ( 'view', 'edit', '//' . $_SERVER ['SERVER_NAME'] . ':' . $_SERVER ['SERVER_PORT'] . $_SERVER ['REQUEST_URI'] ) );
+				//$this->_redirect ( str_replace ( 'view', 'edit', '//' . $_SERVER ['SERVER_NAME'] . ':' . $_SERVER ['SERVER_PORT'] . $_SERVER ['REQUEST_URI'] ) );
+			    $this->_redirect ( str_replace ( 'view', 'edit', '//' . $_SERVER ['SERVER_NAME'] . $_SERVER ['REQUEST_URI'] ) );    
 			}
 			
 			$facility = new Facility ();
