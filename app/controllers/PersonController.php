@@ -918,7 +918,7 @@ class PersonController extends ReportFilterHelpers
                 $educationCountryArray = OptionList::suggestionList('education_country_option', 'education_country_phrase', false, false);
                 $this->viewAssignEscaped('people_education_country', $educationCountryArray);
                 $person = new Person ();
-                $education = array();//TA:#549
+                $education = array();//TA:#549 otherwise it does show in page
                 if ($person_id){//TA:#527
                     $education = $person->getPersonEducation($person_id);
                 }
