@@ -918,6 +918,7 @@ class PersonController extends ReportFilterHelpers
                 $educationCountryArray = OptionList::suggestionList('education_country_option', 'education_country_phrase', false, false);
                 $this->viewAssignEscaped('people_education_country', $educationCountryArray);
                 $person = new Person ();
+                $education = array();//TA:#549
                 if ($person_id){//TA:#527
                     $education = $person->getPersonEducation($person_id);
                 }
@@ -954,12 +955,12 @@ class PersonController extends ReportFilterHelpers
                 }
                 $elements = json_encode($elements);
                // $customColDefs['education_date_graduation']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";//allow edit
-                if ($person_id){//TA:#527
+               //TA:#549  if ($person_id){//TA:#527
                     $this->view->assign ( 'education', $education );
                     require_once 'views/helpers/EditTableHelper.php';
                     $html = EditTableHelper::generateHtml('education', $education, $tableFields, $customColDefs, array(), !$this->viewonly);//working editable cells
                     $this->view->assign ( 'tableEducation', $html );
-                }
+              // }
             }
             //////////////////////////////////////////////////////////////////////
             
@@ -971,6 +972,7 @@ class PersonController extends ReportFilterHelpers
                 $attestationLevelArray = OptionList::suggestionList('attestation_level_option', 'attestation_level_phrase', false, false);
                 $this->viewAssignEscaped('people_attestation_level', $attestationLevelArray);
                 $person = new Person ();
+                $attestation = array();//TA:#549
                 if ($person_id){//TA:#527
                     $attestation = $person->getPersonAttestation($person_id);
                 }
@@ -1000,12 +1002,12 @@ class PersonController extends ReportFilterHelpers
                 }
                 $elements = json_encode($elements);
                 // $customColDefs['attestation_date']       = "editor:'dropdown', editorOptions: {dropdownOptions: $elements }";//allow edit
-                if ($person_id){//TA:#527
+                //TA:#549  if ($person_id){//TA:#527
                     $this->view->assign ( 'attestation', $attestation );
                     require_once 'views/helpers/EditTableHelper.php';
                     $html = EditTableHelper::generateHtml('attestation', $attestation, $tableFields, $customColDefs, array(), !$this->viewonly);//working editable cells
                     $this->view->assign ( 'tableAttestation', $html ); 
-                }
+             //   }
             }
             //////////////////////////////////////////////////////////////////////
 
