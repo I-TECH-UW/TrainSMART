@@ -1016,6 +1016,1041 @@ echo $sql . "<br>";
 
 		return $this->trainingReport ();
 	}
+	
+	//TA:SA-DLT
+// 	public function trainingByParticipantcountAction(){
+	    
+// 	    $this->view->assign ( 'mode', 'count' );
+// 	    $this->_countrySettings = array();
+// 	    $this->_countrySettings = System::getAll();
+	    
+// 	    require_once ('models/table/TrainingLocation.php');
+// 	    require_once('views/helpers/TrainingViewHelper.php');
+	    
+// 	    $criteria = array ();
+// 	    $where = array ();
+// 	    $display_training_partner = ( isset($this->_countrySettings['display_training_partner']) && $this->_countrySettings['display_training_partner'] == 1 ) ? true : false;
+	    
+// 	    //find the first date in the database
+// 	    $db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+// 	    $sql = "SELECT MIN(training_start_date) as \"start\" FROM training WHERE is_deleted = 0";
+// 	    $rowArray = $db->fetchAll ( $sql );
+// 	    $start_default = $rowArray [0] ['start'];
+// 	    $parts = explode('-', $start_default );
+// 	    $criteria ['start-year'] = @$parts [0];
+// 	    $criteria ['start-month'] = @$parts [1];
+// 	    $criteria ['start-day'] = @$parts [2];
+	    
+// 	    if ($this->getSanParam ( 'start-year' ))
+// 	        $criteria ['start-year'] = $this->getSanParam ( 'start-year' );
+// 	        if ($this->getSanParam ( 'start-month' ))
+// 	            $criteria ['start-month'] = $this->getSanParam ( 'start-month' );
+// 	            if ($this->getSanParam ( 'start-day' ))
+// 	                $criteria ['start-day'] = $this->getSanParam ( 'start-day' );
+// 	                if ($this->view->mode == 'search') {
+// 	                    $sql = "SELECT MAX(training_start_date) as \"start\" FROM training ";
+// 	                    $rowArray = $db->fetchAll ( $sql );
+// 	                    $end_default = $rowArray [0] ['start'];
+// 	                    $parts = explode('-', $end_default );
+// 	                    $criteria ['end-year'] = @$parts [0];
+// 	                    $criteria ['end-month'] = @$parts [1];
+// 	                    $criteria ['end-day'] = @$parts [2];
+// 	                } else {
+// 	                    $criteria ['end-year'] = date ( 'Y' );
+// 	                    $criteria ['end-month'] = date ( 'm' );
+// 	                    $criteria ['end-day'] = date ( 'd' );
+// 	                }
+	                
+// 	                if ($this->getSanParam ( 'end-year' ))
+// 	                    $criteria ['end-year'] = $this->getSanParam ( 'end-year' );
+// 	                    if ($this->getSanParam ( 'end-month' ))
+// 	                        $criteria ['end-month'] = $this->getSanParam ( 'end-month' );
+// 	                        if ($this->getSanParam ( 'end-day' ))
+// 	                            $criteria ['end-day'] = $this->getSanParam ( 'end-day' );
+	                            
+// 	                            // find training name from new category/title format: categoryid_titleid
+// 	                            $ct_ids = $criteria ['training_category_and_title_id'] = $this->getSanParam ( 'training_category_and_title_id' );
+// 	                            $criteria ['training_title_option_id'] = $this->_pop_all($ct_ids);
+// 	                            $criteria ['training_title'] = $this->getSanParam ( 'training_title' );
+// 	                            $criteria ['training_location_id'] =                     $this->getSanParam ( 'training_location_id' );
+// 	                            $criteria ['training_organizer_id'] =                    $this->getSanParam ( 'training_organizer_id' );
+// 	                            $criteria ['training_pepfar_id'] =                       $this->getSanParam ( 'training_pepfar_id' );
+// 	                            $criteria ['training_method_id'] =                       $this->getSanParam ( 'training_method_id' );
+// 	                            $criteria ['mechanism_id'] =                             $this->getSanParam ( 'mechanism_id' );
+// 	                            $criteria ['training_topic_id'] =                        $this->getSanParam ( 'training_topic_id' );
+// 	                            $criteria ['training_level_id'] =                        $this->getSanParam ( 'training_level_id' );
+// 	                            $criteria ['training_primary_language_option_id'] =      $this->getSanParam ( 'training_primary_language_option_id' );
+// 	                            $criteria ['training_secondary_language_option_id'] =    $this->getSanParam ( 'training_secondary_language_option_id' );
+// 	                            $criteria ['training_category_id'] =                     $this->getSanParam ( 'training_category_id' ); //reset(explode('_',$ct_ids));//
+// 	                            $criteria ['training_got_curric_id'] =                   $this->getSanParam ( 'training_got_curric_id' );
+// 	                            $criteria ['is_tot'] =                                   $this->getSanParam ( 'is_tot' );
+// 	                            $criteria ['funding_id'] =                               $this->getSanParam ( 'funding_id' );
+// 	                            $criteria ['custom_1_id'] =                              $this->getSanParam ( 'custom_1_id' );
+// 	                            $criteria ['custom_2_id'] =                              $this->getSanParam ( 'custom_2_id' );
+// 	                            $criteria ['custom_3_id'] =                              $this->getSanParam ( 'custom_3_id' );
+// 	                            $criteria ['custom_4_id'] =                              $this->getSanParam ( 'custom_4_id' );
+// 	                            $criteria ['created_by'] =                               $this->getSanParam ( 'created_by' );
+// 	                            $criteria ['creation_dates'] =                           $this->getSanParam ( 'creation_dates' );
+// 	                            $criteria ['funding_min'] =                              $this->getSanParam ( 'funding_min' );
+// 	                            $criteria ['funding_max'] =                              $this->getSanParam ( 'funding_max' );
+// 	                            $criteria ['refresher_id'] =                             $this->getSanParam ( 'refresher_id' );
+// 	                            $criteria ['person_to_training_viewing_loc_option_id'] = $this->getSanParam('person_to_training_viewing_loc_option_id');
+// 	                            $criteria ['primary_responsibility_option_id'] =         $this->getSanParam ( 'primary_responsibility_option_id' );
+// 	                            $criteria ['secondary_responsibility_option_id'] =       $this->getSanParam ( 'secondary_responsibility_option_id' );
+// 	                            $criteria ['highest_edu_level_option_id'] =              $this->getSanParam ( 'highest_edu_level_option_id' );
+// 	                            $criteria ['qualification_id'] =                         $this->getSanParam ( 'qualification_id' );
+// 	                            $criteria ['qualification_secondary_id'] =               $this->getSanParam ( 'qualification_secondary_id' );
+// 	                            $criteria ['doCount'] =       ($this->view->mode == 'count');
+// 	                            $criteria ['doName'] =       ($this->view->mode == 'name');
+	                            
+// 	                            if($criteria['doCount'] || $criteria ['doName']) {
+// 	                                $criteria ['age_max'] =                                $this->getSanParam ( 'age_max' );
+// 	                                $criteria ['age_min'] =                                $this->getSanParam ( 'age_min' );
+// 	                                $criteria ['training_gender'] =                       $this->getSanParam ( 'training_gender' );
+// 	                            }
+	                            
+// 	                            //TA:26 fix bug, get http parameter
+// 	                            $criteria ['province_id'] = $this->getSanParam ( 'province_id' );
+// 	                            $arr_dist = $this->getSanParam ( 'district_id' );
+// 	                            // level 2 location has parameter as [parent_location_id]_[location_id], we need to take only location_ids
+// 	                            for($i=0;$i<sizeof($arr_dist); $i++){
+// 	                                if ( strstr($arr_dist[$i], '_') !== false ) {
+// 	                                    $parts = explode('_',$arr_dist[$i]);
+// 	                                    $arr_dist[$i] = $parts[1];
+// 	                                }
+// 	                            }
+// 	                            $criteria ['district_id'] = $arr_dist;
+	                            
+// 	                            $criteria ['go'] = $this->getSanParam ( 'go' );
+// 	                            $criteria ['showProvince'] =  'on';
+// 	                            $criteria ['showDistrict'] =  'on';
+// 	                            $criteria ['showRegionC'] =   'on';
+// 	                            $criteria ['showRegionD'] =   ($this->getSanParam ( 'showRegionD' ) or ($criteria ['doCount'] and ($criteria ['region_d_id'] or ! empty ( $criteria ['region_d_id'] ))));
+// 	                            $criteria ['showRegionE'] =   ($this->getSanParam ( 'showRegionE' ) or ($criteria ['doCount'] and ($criteria ['region_e_id'] or ! empty ( $criteria ['region_e_id'] ))));
+// 	                            $criteria ['showRegionF'] =   ($this->getSanParam ( 'showRegionF' ) or ($criteria ['doCount'] and ($criteria ['region_f_id'] or ! empty ( $criteria ['region_f_id'] ))));
+// 	                            $criteria ['showRegionG'] =   ($this->getSanParam ( 'showRegionG' ) or ($criteria ['doCount'] and ($criteria ['region_g_id'] or ! empty ( $criteria ['region_g_id'] ))));
+// 	                            $criteria ['showRegionH'] =   ($this->getSanParam ( 'showRegionH' ) or ($criteria ['doCount'] and ($criteria ['region_h_id'] or ! empty ( $criteria ['region_h_id'] ))));
+// 	                            $criteria ['showRegionI'] =   ($this->getSanParam ( 'showRegionI' ) or ($criteria ['doCount'] and ($criteria ['region_i_id'] or ! empty ( $criteria ['region_i_id'] ))));
+// 	                            $criteria ['showTrainingTitle'] = 'on';
+// 	                            $criteria ['showTrainingStartDate'] = 'on';
+// 	                            $criteria ['showLocation'] =  'on';
+// 	                            $criteria ['showOrganizer'] = ($this->getSanParam ( 'showOrganizer' ) or ($criteria ['doCount'] and ($criteria ['training_organizer_id'])));
+// 	                            $criteria ['showMechanism'] = ($this->getSanParam ( 'showMechanism' ) or ($criteria ['doCount'] and $criteria ['mechanism_id']));
+// 	                            $criteria ['showPepfar'] =    ($this->getSanParam ( 'showPepfar' ) or ($criteria ['doCount'] and ($criteria ['training_pepfar_id'] or $criteria ['training_pepfar_id'] === '0')));
+// 	                            $criteria ['showMethod'] =    ($this->getSanParam ( 'showMethod' ) or ($criteria ['doCount'] and ($criteria ['training_method_id'] or $criteria ['training_method_id'] === '0')));
+// 	                            $criteria ['showTopic'] =     ($this->getSanParam ( 'showTopic' ) or ($criteria ['doCount'] and ($criteria ['training_topic_id'] or $criteria ['training_topic_id'] === '0')));
+// 	                            $criteria ['showLevel'] =     ($this->getSanParam ( 'showLevel' ) or ($criteria ['doCount'] and $criteria ['training_level_id']));
+// 	                            $criteria ['showTot'] =       ($this->getSanParam ( 'showTot' ) or ($criteria ['doCount'] and $criteria ['is_tot'] or $criteria ['is_tot'] === '0'));
+// 	                            $criteria ['showRefresher'] = ($this->getSanParam ( 'showRefresher' ));
+// 	                            $criteria ['showGotComment'] = ($this->getSanParam ( 'showGotComment' ));
+// 	                            $criteria ['showPrimaryLanguage'] = ($this->getSanParam ( 'showPrimaryLanguage' ) or ($criteria ['doCount'] and $criteria ['training_primary_language_option_id'] or $criteria ['training_primary_language_option_id'] === '0'));
+// 	                            $criteria ['showSecondaryLanguage'] = ($this->getSanParam ( 'showSecondaryLanguage' ) or ($criteria ['doCount'] and $criteria ['training_secondary_language_option_id'] or $criteria ['training_secondary_language_option_id'] === '0'));
+// 	                            $criteria ['showFunding'] =   ($this->getSanParam ( 'showFunding' ) or ($criteria ['doCount'] and $criteria ['funding_id'] or $criteria ['funding_id'] === '0' or $criteria ['funding_min'] or $criteria ['funding_max']));
+// 	                            $criteria ['showCategory'] =  ($this->getSanParam ( 'showCategory' ) or ($criteria ['doCount'] and $criteria ['training_category_id'] or $criteria ['training_category_id'] === '0'));
+// 	                            $criteria ['showGotCurric'] = ($this->getSanParam ( 'showGotCurric' ) or ($criteria ['doCount'] and $criteria ['training_got_curric_id'] or $criteria ['training_got_curric_id'] === '0'));
+// 	                            $criteria ['showCustom1'] =   ($this->getSanParam ( 'showCustom1' ));
+// 	                            $criteria ['showCustom2'] =   ($this->getSanParam ( 'showCustom2' ));
+// 	                            $criteria ['showCustom3'] =   ($this->getSanParam ( 'showCustom3' ));
+// 	                            $criteria ['showCustom4'] =   ($this->getSanParam ( 'showCustom4' ));
+// 	                            $criteria ['showCreatedBy'] = ($this->getSanParam ( 'showCreatedBy' ));
+// 	                            $criteria['showCreationDate']=($this->getSanParam ( 'showCreationDate' ));
+// 	                            $criteria ['showStartDate'] =   ($this->getSanParam ( 'showStartDate')); //TA:17: 9/3/2014
+// 	                            $criteria ['showEndDate'] =   ($this->getSanParam ( 'showEndDate'));
+// 	                            $criteria ['showRespPrim'] =  ($this->getSanParam ( 'showRespPrim' ));
+// 	                            $criteria ['showRespSecond'] =($this->getSanParam ( 'showRespSecond' ));
+// 	                            $criteria ['showHighestEd'] = ($this->getSanParam ( 'showHighestEd' ));
+// 	                            //$criteria ['showReason'] =  ($this->getSanParam ( 'showReason' ));
+// 	                            $criteria ['showAge'] =       ($this->getSanParam ( 'showAge' ) && $criteria ['doCount']) || ($this->getSanParam ( 'showAge' ) && $criteria ['doName']);
+// 	                            $criteria ['showGender'] =    ($this->getSanParam ( 'showGender' ) && $criteria ['doCount']) || ($this->getSanParam ( 'showGender' ) && $criteria ['doName']);
+// 	                            $criteria ['showViewingLoc'] = $this->getSanParam ( 'showViewingLoc');
+// 	                            $criteria ['showQualPrim']   = 'on';
+	                            
+	                            
+// 	                            $criteria ['training_participants_type'] = $this->getSanParam ( 'training_participants_type' );
+	                            
+// 	                            // row creation dates - explaination: server might be in NYC and client in Africa, server needs to check for trainings created at the day selected, minus the time difference (or plus it), accomplished by hidden input field storing clients javascript time. testing this (bugfix)
+// 	                            $criteria['date_added'] = array();
+// 	                            $userTime = $this->getSanParam('date_localtime') ? strtotime($this->getSanParam('date_localtime')) : time();
+// 	                            if ( $criteria['creation_dates'][0] && !empty($criteria['creation_dates'][0]) ) {
+// 	                                $difference = time() - $userTime;
+// 	                                $date1 = strtotime( $criteria['creation_dates'][0]);
+// 	                                $criteria['date_added'][0] = date( 'Y-m-d H:i:s', $date1 + $difference ); // keep the original date in same format for template
+// 	                            }
+// 	                            if ( $criteria['creation_dates'][1] && !empty($criteria['creation_dates'][1]) ) {
+// 	                                $difference = time() - $userTime;
+// 	                                $date2 = strtotime( $criteria['creation_dates'][1]);
+// 	                                $date2 = strtotime("+1 day", $date2); // 11:59
+// 	                                $criteria['date_added'][1] = date ('Y-m-d H:i:s', $date2 + $difference );
+// 	                            }
+	                            
+// 	                            /////////////////////////////////
+// 	                            // missing fields report
+// 	                            //
+// 	                            /////////////////////////////////
+// 	                            if ($this->view->missing_info)
+// 	                            {
+// 	                                $flds = array(
+// 	                                    'Training name'          =>			'training_title',
+// 	                                    'Training end date'      =>			'training_end_date',
+// 	                                    'Training organizer'     =>			'training_organizer_option_id',
+// 	                                    'Training location'      =>			'training_location_id',
+// 	                                    'Training level'         =>			'training_level_option_id',
+// 	                                    'PEPFAR category'        =>			'tpep.training_pepfar_categories_option_id',
+// 	                                    'Training Method'        =>			'training_method_option_id',
+// 	                                    'Training topic'         =>			'ttopic.training_topic_option_id',
+// 	                                    'Training of Trainers'   =>			'is_tot',
+// 	                                    'Refresher course'       =>			'is_refresher',
+// 	                                    'Funding'                =>			'tfund.training_funding_option_id',
+// 	                                    'National curriculum'    =>			'training_got_curriculum_option_id',
+// 	                                    'National curriculum comment' =>	'got_comments',
+// 	                                    'Training Comments'      =>			'comments',
+// 	                                    'Course Objectives'      =>			'course_id', //objectives
+// 	                                    'Primary Language'       =>			'training_primary_language_option_id',
+// 	                                    'Secondary Language'     =>			'training_secondary_language_option_id',
+// 	                                    'No Trainers'            =>			'report_no_trainers',
+// 	                                    'No Participant'         =>			'report_no_participants',
+// 	                                    'No Scores for Participants' =>		'report_no_scores',
+// 	                                    'Pre Test Average'       =>			'pre',
+// 	                                    'Post Test Averages'     =>			'post',
+// 	                                    'Custom 1'               =>			'training_custom_1_option_id',
+// 	                                    'Custom 2'               =>			'training_custom_2_option_id',
+// 	                                    'Custom 3'               =>			'custom_3',
+// 	                                    'Custom 4'               =>			'custom_4',
+// 	                                    'Approval Status'        =>			'is_approved',
+// 	                                    'Approved Trainings'     =>			'report_is_approved1',
+// 	                                    'Rejected Trainings'     =>			'report_is_approved0',
+// 	                                    'With Attached Documents' =>		'report_with_attachments',
+// 	                                    'WithOut Attached Documents' =>		'report_without_attachments'
+// 	                                );
+// 	                                $this->view->assign('flds', $flds); // we'll use these again in the view to print our options
+	                                
+// 	                                $criteria['searchflds'] = $this->getSanParam('searchflds'); // user selected these fields
+// 	                                $w = array();	// temporary placeholder for our where clauses
+// 	                                $normalFields = array(); // we can just use a 'where [normalField] is null' here
+// 	                                // criteria and joins
+// 	                                foreach ($criteria['searchflds'] as $i => $v) {
+// 	                                    if ( $v == 'tpep.training_pepfar_categories_option_id' ) { $criteria ['showPepfar'] = 'on'; continue; }
+// 	                                    if ( $v == 'ttopic.training_topic_option_id' ) { $criteria ['showTopic'] = 'on'; continue; }
+// 	                                    if ( $v == 'tfund.training_funding_option_id' ) { $criteria ['showFunding'] = 'on'; continue; }
+// 	                                    if ( $v == 'report_no_trainers' ) {         $w[] = 'pt.has_known_participants = 1 and pt.id not in (select distinct training_id from training_to_trainer)'; continue; }
+// 	                                    if ( $v == 'report_no_participants' ) {     $w[] = 'pt.has_known_participants = 1 and pt.id not in (select distinct training_id from person_to_training )'; continue; }
+// 	                                    if ( $v == 'report_no_scores' ) {           $w[] = 'pt.id not in (select distinct training_id from person_to_training inner join score on person_to_training_id = person_to_training.id)'; continue; }
+// 	                                    if ( $v == 'report_is_approved1' ) {        $w[] = 'is_approved = 1'; continue; }
+// 	                                    if ( $v == 'report_is_approved0' ) {        $w[] = 'is_approved = 0'; continue; }
+// 	                                    if ( $v == 'report_with_attachments' ) {    $w[] = "pt.id   in   (select distinct parent_id from file where parent_table = 'training')"; continue; }
+// 	                                    if ( $v == 'report_without_attachments' ) { $w[] = "pt.id not in (select distinct parent_id from file where parent_table = 'training')"; continue; }
+// 	                                    $normalFields[] = $v;
+// 	                                }
+	                                
+// 	                                // wheres
+// 	                                foreach($normalFields as $row){
+// 	                                    $w[] = "($row is null or $row = 0 or $row = '')";
+// 	                                }
+// 	                                if ( count($w) && $criteria['go'] )
+// 	                                    $where[] = '(' . implode(' or ', $w) . ')';
+// 	                            } // end missing fields report
+	                            
+// 	                            // defaults
+// 	                            if (! $criteria ['go']) {
+// 	                                $criteria ['showTrainingTitle'] = 1;
+// 	                            }
+	                            
+// 	                            // run report
+// 	                            if ($criteria ['go']) {
+	                                
+// 	                                $sql = 'SELECT ';
+	                                
+// 	                                if ($criteria ['doCount']) {
+// 	                                    $sql .= ' COUNT(pt.person_id) as "cnt" ';
+// 	                                } else {
+// 	                                    //TA:110 show only those column in export Excel report
+// 	                                    //		$sql .= ' DISTINCT pt.id as "id", ptc.pcnt, pt.training_start_date, pt.training_end_date, pt.has_known_participants  ';
+// 	                                    $sql .= ' DISTINCT pt.id as "id", pt.training_start_date, pt.training_end_date ';
+// 	                                }
+	                                
+// 	                                //TA:SA
+// 	                                if ($criteria ['showTrainingStartDate']) {
+// 	                                    $sql .= ', training_start_date ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showTrainingTitle']) {
+// 	                                    $sql .= ', training_title ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showProvince']) {
+// 	                                    $sql .= ', pt.province_name ';
+// 	                                }
+// 	                                if ($criteria ['showDistrict']) {
+// 	                                    $sql .= ', pt.district_name ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showRegionC']) {
+// 	                                    $sql .= ', pt.region_c_name ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showRegionD']) {
+// 	                                    $sql .= ', pt.region_d_name ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showRegionE']) {
+// 	                                    $sql .= ', pt.region_e_name ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showRegionG']) {
+// 	                                    $sql .= ', pt.region_g_name ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showRegionH']) {
+// 	                                    $sql .= ', pt.region_h_name ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showRegionI']) {
+// 	                                    $sql .= ', pt.region_i_name ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showRegionF']) {
+// 	                                    $sql .= ', pt.region_f_name ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showCategory']) {
+// 	                                    $sql .= ', tcat.training_category_phrase ';
+// 	                                }
+	                                
+	                                
+// 	                                if ($criteria ['showLocation']) {
+// 	                                    $sql .= ', pt.training_location_name ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showOrganizer']) {
+// 	                                    $sql .= ', torg.training_organizer_phrase ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showMechanism'] && $display_training_partner) {
+// 	                                    $sql .= ', organizer_partners.mechanism_id ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showLevel']) {
+// 	                                    $sql .= ', tlev.training_level_phrase ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showMethod']) {
+// 	                                    $sql .= ', tmeth.training_method_phrase ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showPepfar'] || $criteria ['training_pepfar_id'] || $criteria ['training_pepfar_id'] === '0') {
+// 	                                    if ($criteria ['doCount']) {
+// 	                                        $sql .= ', tpep.pepfar_category_phrase ';
+// 	                                    } else {
+// 	                                        $sql .= ', GROUP_CONCAT(DISTINCT tpep.pepfar_category_phrase) as "pepfar_category_phrase" ';
+// 	                                    }
+// 	                                }
+	                                
+// 	                                if ($criteria ['showTopic']) {
+// 	                                    if ($criteria ['doCount']) {
+// 	                                        $sql .= ', ttopic.training_topic_phrase ';
+// 	                                    } else {
+// 	                                        $sql .= ', GROUP_CONCAT(DISTINCT ttopic.training_topic_phrase ORDER BY training_topic_phrase) AS "training_topic_phrase" ';
+// 	                                    }
+// 	                                }
+	                                
+// 	                                if ($criteria ['showTot']) {
+// 	                                    $sql .= ", IF(is_tot,'" . t ( 'Yes' ) . "','" . t ( 'No' ) . "') AS is_tot";
+// 	                                }
+	                                
+// 	                                if ($criteria ['showRefresher']) {
+// 	                                    $sql .= ", IF(is_refresher,'" . t ( 'Yes' ) . "','" . t ( 'No' ) . "') AS is_refresher";
+// 	                                }
+	                                
+// 	                                if ($criteria ['showSecondaryLanguage']) {
+// 	                                    $sql .= ', tlos.language_phrase as "secondary_language_phrase" ';
+// 	                                }
+// 	                                if ($criteria ['showPrimaryLanguage']) {
+// 	                                    $sql .= ', tlop.language_phrase as "primary_language_phrase" ';
+// 	                                }
+// 	                                if ($criteria ['showGotComment']) {
+// 	                                    $sql .= ", pt.got_comments";
+// 	                                }
+// 	                                if ($criteria ['showGotCurric']) {
+// 	                                    $sql .= ', tgotc.training_got_curriculum_phrase ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showFunding']) {
+// 	                                    if ($criteria ['doCount']) {
+// 	                                        $sql .= ', tfund.funding_phrase ';
+// 	                                    } else {
+// 	                                        $sql .= ', GROUP_CONCAT(DISTINCT tfund.funding_phrase ORDER BY funding_phrase) as "funding_phrase" ';
+// 	                                    }
+// 	                                }
+// 	                                if ( $criteria['showCustom1'] ) {
+// 	                                    $sql .= ', tqc.custom1_phrase ';
+// 	                                } // todo custom2-4
+// 	                                if ( $criteria['showCreatedBy'] ) {
+// 	                                    $sql .= ", CONCAT(user.first_name, CONCAT(' ', user.last_name)) as created_by_user ";
+// 	                                }
+// 	                                if ( $criteria['showCreationDate'] ) {
+// 	                                    $sql .= ", DATE_FORMAT(pt.timestamp_created, '%Y-%m-%d') as created_date  ";
+// 	                                }
+// 	                                if ($criteria ['showGender']) {
+// 	                                    $sql .= ', gender ';
+// 	                                }
+// 	                                if ($criteria ['showAge']) {
+// 	                                    $sql .= ', age ';
+// 	                                }
+// 	                                if ($criteria ['showActive']) {
+// 	                                    $sql .= ', pt.active ';
+// 	                                }
+// 	                                if ( $criteria['showViewingLoc'] ) {
+// 	                                    $sql .= ', location_phrase, GROUP_CONCAT(DISTINCT location_phrase ORDER BY location_phrase) as "location_phrases" ';
+// 	                                }
+// 	                                if ( $criteria['showCustom1'] ) {
+// 	                                    $sql .= ', tqc.custom1_phrase ';
+// 	                                }
+// 	                                if ( $criteria['showCustom2'] ) {
+// 	                                    $sql .= ', tqc2.custom2_phrase';
+// 	                                }
+// 	                                if ( $criteria['showCustom3'] ) {
+// 	                                    $sql .= ', pt.custom_3';
+// 	                                }
+// 	                                if ( $criteria['showCustom4'] ) {
+// 	                                    $sql .= ', pt.custom_4';
+// 	                                }
+// 	                                if (($criteria['doCount'] && $criteria ['showQualPrim']) || ($criteria['doName'] && $criteria ['showQualPrim'])) {
+// 	                                    $sql .= ', pq.qualification_phrase ';
+// 	                                }
+// 	                                if (($criteria['doCount'] && $criteria ['showQualSecond']) || ($criteria['doName'] && $criteria ['showQualSecond'])) {
+// 	                                    $sql .= ', pqs.qualification_phrase AS qualification_secondary_phrase';
+// 	                                }
+	                                
+// 	                                //TA:110 show participant column as a last
+// 	                                if ($criteria ['doCount']) {
+// 	                                } else {
+// 	                                    $sql .= ', ptc.pcnt  ';
+// 	                                }
+	                                
+	                                
+// 	                                // prepare the location sub query
+// 	                                $num_locs = $this->setting('num_location_tiers');
+// 	                                list($field_name,$location_sub_query) = Location::subquery($num_locs, $location_tier, $location_id, true);
+	                                
+// 	                                //if we're doing a participant count, then LEFT JOIN with the participants
+// 	                                //otherwise just select the core training info
+	                                
+// 	                                if ($criteria ['doCount'] || $criteria ['doName']) {
+// 	                                    $sql .= ' FROM (SELECT training.*, pers.person_id as "person_id", tto.training_title_phrase AS training_title, training_location.training_location_name, primary_qualification_option_id, pers.location_phrase as location_phrase,'.implode(',',$field_name).
+// 	                                    '         FROM training ' .
+// 	                                    '         LEFT JOIN training_title_option tto ON (`training`.training_title_option_id = tto.id)' .
+// 	                                    '         LEFT JOIN training_location ON training.training_location_id = training_location.id ' .
+// 	                                    '         LEFT JOIN ('.$location_sub_query.') as l ON training_location.location_id = l.id ' .
+// 	                                    '         LEFT JOIN (SELECT person_id,training_id, person_to_training_viewing_loc_option.location_phrase,primary_qualification_option_id,
+// 											person.custom_3 as person_custom_3, person.custom_4 as person_custom_4, person.custom_5 as person_custom_5
+// 										FROM person
+// 										JOIN person_to_training ON person_to_training.person_id = person.id
+// 										LEFT JOIN person_to_training_viewing_loc_option ON person_to_training.viewing_location_option_id = person_to_training_viewing_loc_option.id
+// 									) as pers ON training.id = pers.training_id WHERE training.is_deleted=0) as pt ';
+// 	                                } else {
+// 	                                    $sql .= ' FROM (SELECT training.*, tto.training_title_phrase AS training_title,training_location.training_location_name, '.implode(',',$field_name).
+// 	                                    '       FROM training  ' .
+// 	                                    '         LEFT JOIN training_title_option tto ON (`training`.training_title_option_id = tto.id) ' .
+// 	                                    '         LEFT JOIN training_location ON training.training_location_id = training_location.id ' .
+// 	                                    '         LEFT JOIN ('.$location_sub_query.') as l ON training_location.location_id = l.id ' .
+// 	                                    '  WHERE training.is_deleted=0) as pt ';
+// 	                                    //$sql .= " LEFT JOIN (SELECT COUNT(id) as `pcnt`,training_id FROM person_to_training GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
+// 	                                    //TA:64 12/18/2015 take only persons which are not deleted
+// 	                                    $sql .= " LEFT JOIN (SELECT COUNT(person_to_training.id) as `pcnt`,training_id FROM person_to_training left join person on person.id=person_to_training.person_id where person.is_deleted=0 GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
+// 	                                }
+// 	                                if ($criteria ['doName']) {
+// 	                                    //$sql .= " LEFT JOIN (SELECT COUNT(id) as `pcnt`,training_id FROM person_to_training GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
+// 	                                    //TA:64 12/18/2015 take only persons which are not deleted
+// 	                                    $sql .= " LEFT JOIN (SELECT COUNT(person_to_training.id) as `pcnt`,training_id FROM person_to_training left join person on person.id=person_to_training.person_id where person.is_deleted=0 GROUP BY training_id) as ptc ON ptc.training_id = pt.id ";
+// 	                                }
+// 	                                if (!($criteria['doCount'] || $criteria['doName']) && ($criteria['showViewingLoc'] || $criteria['person_to_training_viewing_loc_option_id'])) {
+// 	                                    $sql .= ' LEFT JOIN person_to_training ON person_id = person_to_training.person_id AND person_to_training.training_id = pt.id ';
+// 	                                    $sql .= ' LEFT JOIN person_to_training_viewing_loc_option ON person_to_training.viewing_location_option_id = person_to_training_viewing_loc_option.id ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showOrganizer'] or $criteria ['training_organizer_id'] || $criteria ['showMechanism']  || $criteria ['mechanism_id']) {
+// 	                                    $sql .= '	JOIN training_organizer_option as torg ON torg.id = pt.training_organizer_option_id ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showMechanism'] || $criteria ['mechanism_id'] && $display_training_partner) {
+// 	                                    $sql .= ' LEFT JOIN organizer_partners ON organizer_partners.organizer_id = torg.id';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showLevel'] || $criteria ['training_level_id']) {
+// 	                                    $sql .= '	JOIN training_level_option as tlev ON tlev.id = pt.training_level_option_id ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showMethod'] || $criteria ['training_method_id']) {
+// 	                                    $sql .= ' JOIN training_method_option as tmeth ON tmeth.id = pt.training_method_option_id ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showPepfar'] || $criteria ['training_pepfar_id'] || $criteria ['training_pepfar_id'] === '0') {
+// 	                                    $sql .= '	LEFT JOIN (SELECT training_id, ttpco.training_pepfar_categories_option_id, pepfar_category_phrase FROM training_to_training_pepfar_categories_option as ttpco JOIN training_pepfar_categories_option as tpco ON ttpco.training_pepfar_categories_option_id = tpco.id) as tpep ON tpep.training_id = pt.id ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showTopic'] || $criteria ['training_topic_id']) {
+// 	                                    $sql .= '	LEFT JOIN (SELECT training_id, ttto.training_topic_option_id, training_topic_phrase FROM training_to_training_topic_option as ttto JOIN training_topic_option as tto ON ttto.training_topic_option_id = tto.id) as ttopic ON ttopic.training_id = pt.id ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showPrimaryLanguage'] || $criteria ['training_primary_language_option_id']) {
+// 	                                    $sql .= ' LEFT JOIN trainer_language_option as tlop ON tlop.id = pt.training_primary_language_option_id ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showSecondaryLanguage'] || $criteria ['training_secondary_language_option_id']) {
+// 	                                    $sql .= ' LEFT JOIN trainer_language_option as tlos ON tlos.id = pt.training_secondary_language_option_id ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showFunding'] || (intval ( $criteria ['funding_min'] ) or intval ( $criteria ['funding_max'] ))) {
+// 	                                    $sql .= '	LEFT JOIN (SELECT training_id, ttfo.training_funding_option_id, funding_phrase, ttfo.funding_amount FROM training_to_training_funding_option as ttfo JOIN training_funding_option as tfo ON ttfo.training_funding_option_id = tfo.id) as tfund ON tfund.training_id = pt.id ';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showGotCurric'] || $criteria ['training_got_curric_id']) {
+// 	                                    $sql .= '	LEFT JOIN training_got_curriculum_option as tgotc ON tgotc.id = pt.training_got_curriculum_option_id';
+// 	                                }
+	                                
+// 	                                if ($criteria ['showCategory'] or ! empty ( $criteria ['training_category_id'] )) {
+// 	                                    $sql .= '
+// 				LEFT JOIN training_category_option_to_training_title_option tcotto ON (tcotto.training_title_option_id = pt.training_title_option_id)
+// 				LEFT JOIN training_category_option tcat ON (tcotto.training_category_option_id = tcat.id)
+// 				';
+// 	                                }
+// 	                                if ( $criteria['showCustom1'] || $criteria ['custom_1_id'] ) {
+// 	                                    $sql .= ' LEFT JOIN training_custom_1_option as tqc ON pt.training_custom_1_option_id = tqc.id  ';
+// 	                                }
+// 	                                if ( $criteria['showCustom2'] || $criteria ['custom_2_id'] ) {
+// 	                                    $sql .= ' LEFT JOIN training_custom_2_option as tqc2 ON pt.training_custom_2_option_id = tqc2.id  ';
+// 	                                }
+	                                
+// 	                                if ( $criteria['showCreatedBy'] || $criteria ['created_by'] ) {
+// 	                                    $sql .= ' LEFT JOIN user ON user.id = pt.created_by  ';
+// 	                                }
+	                                
+// 	                                if ($criteria['showGender'] || $criteria['showAge'] || $criteria['training_gender'] || $criteria['age_min'] || $criteria['age_max']) {
+// 	                                    $personAlias  = ($criteria['doCount'] || $criteria['doName']) ? 'pt.person_id'  : 'person_id';
+	                                    
+// 	                                    $sql .= " LEFT JOIN person_to_training as ptt on ptt.training_id = pt.id AND $personAlias = ptt.person_id AND pt.is_deleted = 0 ";
+// 	                                    $sql .= ' LEFT JOIN (SELECT id as pid, gender
+// 								,CASE WHEN birthdate  IS NULL OR birthdate = \'0000-00-00\' THEN NULL ELSE ((date_format(now(),\'%Y\') - date_format(birthdate,\'%Y\')) - (date_format(now(),\'00-%m-%d\') < date_format(birthdate,\'00-%m-%d\')) ) END as "age"
+// 								FROM person where is_deleted = 0) as perssexage ON perssexage.pid = ptt.person_id ';
+// 	                                }
+	                                
+// 	                                if ( ($criteria['doCount'] || $criteria['doName']) && ($criteria ['showQualPrim'] || $criteria ['showQualSecond'] || $criteria ['qualification_id']  || $criteria ['qualification_secondary_id']) ) {
+// 	                                    // primary qualifications
+// 	                                    $sql .= 'LEFT JOIN person_qualification_option as pq ON (
+// 							(pt.primary_qualification_option_id = pq.id AND pq.parent_id IS NULL)
+// 							OR
+// 							pq.id = (SELECT parent_id FROM person_qualification_option WHERE id = pt.primary_qualification_option_id LIMIT 1))';
+	                                    
+// 	                                    // secondary qualifications
+// 	                                    $sql .= 'LEFT JOIN person_qualification_option as pqs ON (pt.primary_qualification_option_id = pqs.id AND pqs.parent_id IS NOT NULL)';
+// 	                                }
+	                                
+// 	                                $where [] = ' pt.is_deleted=0 ';
+	                                
+// 	                                // restricted access?? only show trainings we have the ACL to view
+// 	                                $org_allowed_ids = allowed_organizer_access($this);
+// 	                                if ($org_allowed_ids) { // doesnt have acl 'training_organizer_option_all'
+// 	                                    $org_allowed_ids = implode(',', $org_allowed_ids);
+// 	                                    $where [] = " pt.training_organizer_option_id in ($org_allowed_ids) ";
+// 	                                }
+// 	                                // restricted access?? only show organizers that belong to this site if its a multi org site
+// 	                                $site_orgs = allowed_organizer_in_this_site($this); // for sites to host multiple training organizers on one domain
+// 	                                if ($site_orgs)
+// 	                                    $where []= " pt.training_organizer_option_id in ($site_orgs) ";
+	                                    
+// 	                                    // criteria
+// 	                                    if ($criteria ['training_participants_type']) {
+// 	                                        if ($criteria ['training_participants_type'] == 'has_known_participants') {
+// 	                                            $where [] = ' pt.has_known_participants = 1 ';
+// 	                                        }
+// 	                                        if ($criteria ['training_participants_type'] == 'has_unknown_participants') {
+// 	                                            $where [] = ' pt.has_known_participants = 0 ';
+	                                            
+// 	                                        }
+// 	                                    }
+	                                    
+	                                    
+// 	                                    if ($this->_is_not_filter_all($criteria['training_title_option_id']) && ($criteria ['training_title_option_id'] or $criteria ['training_title_option_id'] === '0')) {
+// 	                                        $where [] = 'pt.training_title_option_id in (' . $this->_sql_implode($criteria ['training_title_option_id']) . ')';
+// 	                                    }
+// 	                                    if ($criteria ['training_title']) {
+// 	                                        $where [] = ' training_title = \'' . $criteria ['training_title'] . '\'';
+// 	                                    }
+// 	                                    if ($criteria ['training_location_id']) {
+// 	                                        $where [] = ' pt.training_location_id = \'' . $criteria ['training_location_id'] . '\'';
+// 	                                    }
+	                                    
+// 	                                    if ($this->_is_not_filter_all($criteria['training_organizer_id']) && $criteria ['training_organizer_id'] or $criteria ['training_organizer_id'] === '0') {
+// 	                                        $where [] = ' pt.training_organizer_option_id in (' . $this->_sql_implode($criteria ['training_organizer_id']) . ')';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['mechanism_id'] or $criteria ['mechanism_id'] === '0' && $display_training_partner) {
+// 	                                        $where [] = ' organizer_partners.mechanism_id = \'' . $criteria ['mechanism_id'] . '\'';
+// 	                                    }
+	                                    
+// 	                                    if ($this->_is_not_filter_all($criteria['training_topic_id']) && $criteria ['training_topic_id'] or $criteria ['training_topic_id'] === '0') {
+// 	                                        $where [] = ' ttopic.training_topic_option_id in (' . $this->_sql_implode($criteria ['training_topic_id']) . ')';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['training_level_id']) {
+// 	                                        $where [] = ' pt.training_level_option_id = \'' . $criteria ['training_level_id'] . '\'';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['training_pepfar_id'] or $criteria ['training_pepfar_id'] === '0') {
+// 	                                        $where [] = ' tpep.training_pepfar_categories_option_id = \'' . $criteria ['training_pepfar_id'] . '\'';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['training_method_id'] or $criteria ['training_method_id'] === '0') {
+// 	                                        $where [] = ' tmeth.id = \'' . $criteria ['training_method_id'] . '\'';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['training_primary_language_option_id'] or $criteria ['training_primary_language_option_id'] === '0') {
+// 	                                        $where [] = ' pt.training_primary_language_option_id = \'' . $criteria ['training_primary_language_option_id'] . '\'';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['training_secondary_language_option_id'] or $criteria ['training_secondary_language_option_id'] === '0') {
+// 	                                        $where [] = ' pt.training_secondary_language_option_id = \'' . $criteria ['training_secondary_language_option_id'] . '\'';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['province_id'] && ! empty ( $criteria ['province_id'] )) {
+// 	                                        $where [] = ' pt.province_id IN (' . implode ( ',', $criteria ['province_id'] ) . ')';
+// 	                                    }
+	                                    
+	                                    
+// 	                                    if ($criteria ['district_id'] && ! empty ( $criteria ['district_id'] )) {
+// 	                                        $where [] = ' pt.district_id IN (' . implode ( ',', $criteria ['district_id'] ) . ')';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['region_c_id'] && ! empty ( $criteria ['region_c_id'] )) {
+// 	                                        $where [] = ' pt.region_c_id IN (' . implode ( ',', $criteria ['region_c_id'] ) . ')';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['region_d_id'] && ! empty ( $criteria ['region_d_id'] )) {
+// 	                                        $where [] = ' pt.region_d_id IN (' . implode ( ',', $criteria ['region_d_id'] ) . ')';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['region_e_id'] && ! empty ( $criteria ['region_e_id'] )) {
+// 	                                        $where [] = ' pt.region_e_id IN (' . implode ( ',', $criteria ['region_e_id'] ) . ')';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['region_f_id'] && ! empty ( $criteria ['region_f_id'] )) {
+// 	                                        $where [] = ' pt.region_f_id IN (' . implode ( ',', $criteria ['region_f_id'] ) . ')';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['region_g_id'] && ! empty ( $criteria ['region_g_id'] )) {
+// 	                                        $where [] = ' pt.region_g_id IN (' . implode ( ',', $criteria ['region_g_id'] ) . ')';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['region_h_id'] && ! empty ( $criteria ['region_h_id'] )) {
+// 	                                        $where [] = ' pt.region_h_id IN (' . implode ( ',', $criteria ['region_h_id'] ) . ')';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['region_i_id'] && ! empty ( $criteria ['region_i_id'] )) {
+// 	                                        $where [] = ' pt.region_i_id IN (' . implode ( ',', $criteria ['region_i_id'] ) . ')';
+// 	                                    }
+	                                    
+// 	                                    if (intval ( $criteria ['end-year'] ) and $criteria ['start-year']) {
+// 	                                        $startDate = $criteria ['start-year'] . '-' . $criteria ['start-month'] . '-' . $criteria ['start-day'];
+// 	                                        $endDate = $criteria ['end-year'] . '-' . $criteria ['end-month'] . '-' . $criteria ['end-day'];
+// 	                                        $where [] = ' training_start_date >= \'' . $startDate . '\'  AND training_start_date <= \'' . $endDate . '\'  ';
+// 	                                    }
+	                                    
+// 	                                    if (intval ( $criteria ['funding_min'] ) or intval ( $criteria ['funding_max'] )) {
+// 	                                        if (intval ( $criteria ['funding_min'] ))
+// 	                                            $where [] = 'tfund.funding_amount >= \'' . $criteria ['funding_min'] . '\' ';
+// 	                                            if (intval ( $criteria ['funding_max'] ))
+// 	                                                $where [] = 'tfund.funding_amount <= \'' . $criteria ['funding_max'] . '\' ';
+// 	                                    }
+	                                    
+// 	                                    if (intval ( $criteria ['is_tot'] )) {
+// 	                                        $where [] = ' is_tot = ' . $criteria ['is_tot'];
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['funding_id'] or $criteria ['funding_id'] === '0') {
+// 	                                        $where [] = ' tfund.training_funding_option_id = \'' . $criteria ['funding_id'] . '\'';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['training_category_id'] or $criteria ['training_category_id'] === '0') {
+// 	                                        $where [] = ' tcat.id = \'' . $criteria ['training_category_id'] . '\'';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['training_got_curric_id'] or $criteria ['training_got_curric_id'] === '0') {
+// 	                                        $where [] = ' tgotc.id = \'' . $criteria ['training_got_curric_id'] . '\'';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['custom_1_id'] or $criteria ['custom_1_id'] === '0') {
+// 	                                        $where [] = ' pt.training_custom_1_option_id = \'' . $criteria ['custom_1_id'] . '\'';
+// 	                                    }
+// 	                                    if ($criteria ['custom_2_id'] or $criteria ['custom_2_id'] === '0') {
+// 	                                        $where [] = ' pt.training_custom_2_option_id = \'' . $criteria ['custom_2_id'] . '\'';
+// 	                                    }
+// 	                                    if ($criteria ['custom_3_id'] or $criteria ['custom_3_id'] === '0') {
+// 	                                        $where [] = ' pt.custom_3 = \'' . $criteria ['custom_3_id'] . '\'';
+// 	                                    }
+// 	                                    if ($criteria ['custom_4_id'] or $criteria ['custom_4_id'] === '0') {
+// 	                                        $where [] = ' pt.custom_4 = \'' . $criteria ['custom_4_id'] . '\'';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['created_by'] or $criteria ['created_by'] === '0') {
+// 	                                        $where [] = ' pt.created_by in (' . $this->_trainsmart_implode($criteria ['created_by']) . ')';
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['date_added']) {
+// 	                                        if ( isset( $criteria['date_added'][0] ) && !empty( $criteria['date_added'][0] ) ){
+// 	                                            $where [] = " pt.timestamp_created >= '".$criteria['date_added'][0]."' ";
+// 	                                        }
+// 	                                        if ( isset( $criteria['date_added'][1] ) && !empty( $criteria['date_added'][1] ) ){
+// 	                                            $where [] = " pt.timestamp_created <= '".$criteria['date_added'][1]."' ";
+// 	                                        }
+// 	                                    }
+// 	                                    if ($criteria ['training_gender']) {
+// 	                                        $where [] = " gender = '{$criteria['training_gender']}'";
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['age_min']) {
+// 	                                        $where [] = " age >= {$criteria['age_min']}";
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['age_max']) {
+// 	                                        $where [] = " age <= {$criteria['age_max']}";
+// 	                                    }
+	                                    
+// 	                                    if ($criteria ['person_to_training_viewing_loc_option_id']) {
+// 	                                        $where [] = 'person_to_training.viewing_location_option_id = ' . $criteria['person_to_training_viewing_loc_option_id'];
+// 	                                    }
+	                                    
+// 	                                    if (($criteria['doCount'] && $criteria ['qualification_id']) || ($criteria['doName'] && $criteria ['qualification_id'])) {
+// 	                                        $where [] = ' (pq.id = ' . $criteria ['qualification_id'] . ' OR pqs.parent_id = ' . $criteria ['qualification_id'] . ') ';
+// 	                                    }
+// 	                                    if (($criteria['doCount'] && $criteria ['qualification_secondary_id']) || ($criteria['doName'] && $criteria ['qualification_secondary_id'])) {
+// 	                                        $where [] = ' pqs.id = ' . $criteria ['qualification_secondary_id'];
+// 	                                    }
+	                                    
+// 	                                    if ($where)
+// 	                                        $sql .= ' WHERE ' . implode ( ' AND ', $where );
+	                                        
+// 	                                        if ($criteria ['doCount']) {
+	                                            
+// 	                                            $groupBy = array();
+	                                            
+// 	                                            if ($criteria ['showTrainingTitle'])     $groupBy []=  '  pt.training_title_option_id';
+// 	                                            if ($criteria ['showProvince'])          $groupBy []=  '  pt.province_id';
+// 	                                            if ($criteria ['showDistrict'])          $groupBy []=  '  pt.district_id';
+// 	                                            if ($criteria ['showRegionC'])           $groupBy []=  '  pt.region_c_id';
+// 	                                            if ($criteria ['showRegionD'])           $groupBy []=  '  pt.region_d_id';
+// 	                                            if ($criteria ['showRegionE'])           $groupBy []=  '  pt.region_e_id';
+// 	                                            if ($criteria ['showRegionF'])           $groupBy []=  '  pt.region_f_id';
+// 	                                            if ($criteria ['showRegionG'])           $groupBy []=  '  pt.region_g_id';
+// 	                                            if ($criteria ['showRegionH'])           $groupBy []=  '  pt.region_h_id';
+// 	                                            if ($criteria ['showRegionI'])           $groupBy []=  '  pt.region_i_id';
+// 	                                            if ($criteria ['showLocation'])          $groupBy []=  '  pt.training_location_id';
+// 	                                            if ($criteria ['showOrganizer'])         $groupBy []=  '  pt.training_organizer_option_id';
+// 	                                            if ($criteria ['showMechanism'] && $display_training_partner) $groupBy []=  '  organizer_partners.mechanism_id';
+// 	                                            if ($criteria ['showCustom1'])           $groupBy []=  '  pt.training_custom_1_option_id';
+// 	                                            if ($criteria ['showCustom2'])           $groupBy []=  '  pt.training_custom_2_option_id';
+// 	                                            if ($criteria ['showCustom3'])           $groupBy []=  '  pt.custom_3';
+// 	                                            if ($criteria ['showCustom4'])           $groupBy []=  '  pt.custom_4';
+// 	                                            if ($criteria ['showTopic'])             $groupBy []=  '  ttopic.training_topic_option_id';
+// 	                                            if ($criteria ['showLevel'])             $groupBy []=  '  pt.training_level_option_id';
+// 	                                            if ($criteria ['showPepfar'])            $groupBy []=  '  tpep.training_pepfar_categories_option_id';
+// 	                                            if ($criteria ['showMethod'])            $groupBy []=  '  tmeth.id';
+// 	                                            if ($criteria ['showTot'])               $groupBy []=  '  pt.is_tot';
+// 	                                            if ($criteria ['showRefresher'])         $groupBy []=  '  pt.is_refresher';
+// 	                                            if ($criteria ['showGotCurric'])         $groupBy []=  '  pt.training_got_curriculum_option_id';
+// 	                                            if ($criteria ['showPrimaryLanguage'])   $groupBy []=  '  pt.training_primary_language_option_id';
+// 	                                            if ($criteria ['showSecondaryLanguage']) $groupBy []=  '  pt.training_secondary_language_option_id';
+// 	                                            if ($criteria ['showFunding'])           $groupBy []=  '  tfund.training_funding_option_id';
+// 	                                            if ($criteria ['showCreatedBy'])         $groupBy []=  '  pt.created_by';
+// 	                                            if ($criteria ['showCreationDate'])      $groupBy []=  '  pt.timestamp_created';
+// 	                                            if ($criteria ['showGender'])            $groupBy []=  '  gender';
+// 	                                            if ($criteria ['showAge'])               $groupBy []=  '  age';
+// 	                                            if ($criteria ['showViewingLoc'])        $groupBy []=  '  location_phrase';
+// 	                                            if ($criteria ['showQualPrim'])          $groupBy []=  '  pq.qualification_phrase';
+// 	                                            if ($criteria ['showQualSecond'])        $groupBy []=  '  pqs.qualification_phrase';
+	                                            
+// 	                                            if ($groupBy) {
+// 	                                                $sql .= ' GROUP BY ' . implode(',',$groupBy);
+// 	                                            }
+	                                            
+// 	                                            if ($criteria['showAge'] || $criteria['showGender']) {
+// 	                                                $sql .= ' HAVING count(pt.person_id) > 0 ';
+// 	                                            }
+// 	                                        } else {    
+// 	                                            $sql .= ' GROUP BY pt.id';                                  
+// 	                                        }
+// 	                                        if ($this->view->mode == 'search') {
+// 	                                            $sql .= ' ORDER BY training_start_date DESC';
+// 	                                        }
+	                                        
+// 	                                        //TA:UK 
+// 	                                        print $sql;
+// 	                                        $rowArray = $db->fetchAll ( $sql );
+	                                        
+// 	                                        if ($criteria ['doCount']) {
+// 	                                            $count = 0;
+// 	                                            foreach ( $rowArray as $row ) {
+// 	                                                $count += $row ['cnt'];
+// 	                                            }
+// 	                                        } else {
+// 	                                            $count = count ( $rowArray );
+// 	                                        }
+	                                        
+// 	                                        if ($this->getParam ( 'outputType' )){
+// 	                                            $this->sendData ( $this->reportHeaders ( false, $rowArray ) ); //TA:110 export Excel/csv report - array inside has correct encoded cyrillic
+// 	                                        }                                        
+// 	                            } else {
+// 	                                $count = 0;
+// 	                                $rowArray = array ();
+// 	                            }                            
+// 	}
+
+public function trainingByParticipantcountAction(){
+    
+    $this->view->assign ( 'mode', 'count' );
+
+//by person facilities
+$sql = "SELECT 
+    COUNT(pt.person_id) AS 'cnt',
+    training_start_date,
+    training_title,
+    /*pt.province_name,
+    pt.district_name,
+    pt.region_c_name,*/
+    pt.training_location_name as 'Training location',
+    province_name_f as 'Province',
+    district_name_f as 'District',
+    region_c_name_f as 'Sub-District',
+    facility.facility_name,
+    pq.qualification_phrase
+FROM
+    (SELECT 
+        training.*,
+            pers.person_id AS 'person_id',
+            tto.training_title_phrase AS training_title,
+            training_location.training_location_name,
+            primary_qualification_option_id,
+            pers.location_phrase AS location_phrase,
+            province_name,
+            province_id,
+            district_name,
+            district_id,
+            region_c_name,
+            region_c_id,
+            city_name,
+            city_id,
+            facility_id
+    FROM
+        training
+    LEFT JOIN training_title_option tto ON (`training`.training_title_option_id = tto.id)
+    LEFT JOIN training_location ON training.training_location_id = training_location.id
+    LEFT JOIN (SELECT DISTINCT
+        l4.id AS id,
+            l4.location_name AS city_name,
+            l4.id AS city_id,
+            l3.location_name AS region_c_name,
+            l3.id AS region_c_id,
+            l2.location_name AS district_name,
+            l2.id AS district_id,
+            l1.location_name AS province_name,
+            l1.id AS province_id
+    FROM
+        location l4
+    LEFT JOIN location l3 ON l4.parent_id = l3.id AND l3.tier = 3
+    LEFT JOIN location l2 ON l3.parent_id = l2.id AND l2.tier = 2
+    LEFT JOIN location l1 ON l2.parent_id = l1.id AND l1.tier = 1
+    WHERE
+        l4.tier = 4 UNION SELECT DISTINCT
+        l3.id AS id,
+            'unknown' AS city_name,
+            'unknown' AS city_id,
+            l3.location_name AS region_c_name,
+            l3.id AS region_c_id,
+            l2.location_name AS district_name,
+            l2.id AS district_id,
+            l1.location_name AS province_name,
+            l1.id AS province_id
+    FROM
+        location l3
+    LEFT JOIN location l2 ON l3.parent_id = l2.id AND l2.tier = 2
+    LEFT JOIN location l1 ON l2.parent_id = l1.id AND l1.tier = 1
+    WHERE
+        l3.tier = 3) AS l ON training_location.location_id = l.id
+    LEFT JOIN (SELECT 
+        person_id,
+            training_id,
+            person_to_training_viewing_loc_option.location_phrase,
+            primary_qualification_option_id,
+            person.custom_3 AS person_custom_3,
+            person.custom_4 AS person_custom_4,
+            person.custom_5 AS person_custom_5,
+            facility_id
+    FROM
+        person
+        
+    JOIN person_to_training ON person_to_training.person_id = person.id
+    LEFT JOIN person_to_training_viewing_loc_option ON person_to_training.viewing_location_option_id = person_to_training_viewing_loc_option.id) AS pers ON training.id = pers.training_id
+    WHERE
+        training.is_deleted = 0) AS pt
+        LEFT JOIN
+    person_qualification_option AS pq ON ((pt.primary_qualification_option_id = pq.id
+        AND pq.parent_id IS NULL)
+        OR pq.id = (SELECT 
+            parent_id
+        FROM
+            person_qualification_option
+        WHERE
+            id = pt.primary_qualification_option_id
+        LIMIT 1))
+        LEFT JOIN
+    person_qualification_option AS pqs ON (pt.primary_qualification_option_id = pqs.id
+        AND pqs.parent_id IS NOT NULL)
+	JOIN facility on facility.id=pt.facility_id
+    LEFT JOIN (SELECT DISTINCT
+        l4_f.id AS id_f,
+            l4_f.location_name AS city_name_f,
+            l4_f.id AS city_id_f,
+            l3_f.location_name AS region_c_name_f,
+            l3_f.id AS region_c_id_f,
+            l2_f.location_name AS district_name_f,
+            l2_f.id AS district_id_f,
+            l1_f.location_name AS province_name_f,
+            l1_f.id AS province_id_f
+    FROM
+        location l4_f
+    LEFT JOIN location l3_f ON l4_f.parent_id = l3_f.id AND l3_f.tier = 3
+    LEFT JOIN location l2_f ON l3_f.parent_id = l2_f.id AND l2_f.tier = 2
+    LEFT JOIN location l1_f ON l2_f.parent_id = l1_f.id AND l1_f.tier = 1
+    WHERE
+        l4_f.tier = 4 UNION SELECT DISTINCT
+        l3_f.id AS id_f,
+            'unknown' AS city_name_f,
+            'unknown' AS city_id_f,
+            l3_f.location_name AS region_c_name_f,
+            l3_f.id AS region_c_id_f,
+            l2_f.location_name AS district_name_f,
+            l2_f.id AS district_id_f,
+            l1_f.location_name AS province_name_f,
+            l1_f.id AS province_id_f
+    FROM
+        location l3_f
+    LEFT JOIN location l2_f ON l3_f.parent_id = l2_f.id AND l2_f.tier = 2
+    LEFT JOIN location l1_f ON l2_f.parent_id = l1_f.id AND l1_f.tier = 1
+    WHERE
+        l3_f.tier = 3) AS l_f ON facility.location_id = l_f.id_f
+WHERE
+    pt.is_deleted = 0
+       AND training_title = '" . $this->getSanParam ( 'training_title' ) . "'
+GROUP BY training_start_date, pt.training_location_id, facility.id, pq.qualification_phrase
+order by pt.training_location_id, training_start_date, facility.facility_name, pq.qualification_phrase;";
+
+/////////// consolidate data
+require_once 'Zend/Loader.php';
+require_once 'Zend/Db.php';
+require_once 'Zend/Db/Table/Abstract.php';
+
+$db = Zend_Db::factory('PDO_MYSQL', array(
+    'host' => Settings::$DB_SERVER,
+    'username' => Settings::$DB_USERNAME,
+    'password' => Settings::$DB_PWD,
+    'dbname' => 'itechweb_gauteng'
+));
+Zend_Db_Table_Abstract::setDefaultAdapter($db);
+$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+$rowArray_gauteng = $db->fetchAll ( $sql );
+
+$db = Zend_Db::factory('PDO_MYSQL', array(
+    'host' => Settings::$DB_SERVER,
+    'username' => Settings::$DB_USERNAME,
+    'password' => Settings::$DB_PWD,
+    'dbname' => 'itechweb_limpopo'
+));
+Zend_Db_Table_Abstract::setDefaultAdapter($db);
+$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+$rowArray_limpopo = $db->fetchAll ( $sql );
+
+$rowArray = array_merge($rowArray_gauteng, $rowArray_limpopo);
+
+$db = Zend_Db::factory('PDO_MYSQL', array(
+    'host' => Settings::$DB_SERVER,
+    'username' => Settings::$DB_USERNAME,
+    'password' => Settings::$DB_PWD,
+    'dbname' => 'itechweb_mpumalanga'
+));
+Zend_Db_Table_Abstract::setDefaultAdapter($db);
+$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+$rowArray_mpumalanga = $db->fetchAll ( $sql );
+
+$rowArray = array_merge($rowArray, $rowArray_mpumalanga);
+
+$db = Zend_Db::factory('PDO_MYSQL', array(
+    'host' => Settings::$DB_SERVER,
+    'username' => Settings::$DB_USERNAME,
+    'password' => Settings::$DB_PWD,
+    'dbname' => 'itechweb_easterncape'
+));
+Zend_Db_Table_Abstract::setDefaultAdapter($db);
+$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+$rowArray_easterncape = $db->fetchAll ( $sql );
+
+$rowArray = array_merge($rowArray, $rowArray_easterncape);
+
+$db = Zend_Db::factory('PDO_MYSQL', array(
+    'host' => Settings::$DB_SERVER,
+    'username' => Settings::$DB_USERNAME,
+    'password' => Settings::$DB_PWD,
+    'dbname' => 'itechweb_freestate'
+));
+Zend_Db_Table_Abstract::setDefaultAdapter($db);
+$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+$rowArray_freestate = $db->fetchAll ( $sql );
+
+$rowArray = array_merge($rowArray, $rowArray_freestate);
+
+$db = Zend_Db::factory('PDO_MYSQL', array(
+    'host' => Settings::$DB_SERVER,
+    'username' => Settings::$DB_USERNAME,
+    'password' => Settings::$DB_PWD,
+    'dbname' => 'itechweb_northerncape'
+));
+Zend_Db_Table_Abstract::setDefaultAdapter($db);
+$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+$rowArray_northerncape = $db->fetchAll ( $sql );
+
+$rowArray = array_merge($rowArray, $rowArray_northerncape);
+
+$db = Zend_Db::factory('PDO_MYSQL', array(
+    'host' => Settings::$DB_SERVER,
+    'username' => Settings::$DB_USERNAME,
+    'password' => Settings::$DB_PWD,
+    'dbname' => 'itechweb_northwest'
+));
+Zend_Db_Table_Abstract::setDefaultAdapter($db);
+$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+$rowArray_northwest = $db->fetchAll ( $sql );
+
+$rowArray = array_merge($rowArray, $rowArray_northwest);
+
+$db = Zend_Db::factory('PDO_MYSQL', array(
+    'host' => Settings::$DB_SERVER,
+    'username' => Settings::$DB_USERNAME,
+    'password' => Settings::$DB_PWD,
+    'dbname' => 'itechweb_westerncape'
+));
+Zend_Db_Table_Abstract::setDefaultAdapter($db);
+$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
+$rowArray_westerncape = $db->fetchAll ( $sql );
+
+$rowArray = array_merge($rowArray, $rowArray_westerncape);
+
+////////////////////////////////
+
+//$rowArray = $db->fetchAll ( $sql ); // if not consolidation required then uncomment
+                                        
+                                        if ($this->getParam ( 'outputType' )){
+                                            $this->sendData ( $this->reportHeaders ( false, $rowArray ) ); 
+                                        }
+                       
+}
 
 	public function trainingByTitleAction() {
 		$this->view->assign ( 'mode', 'name' );
